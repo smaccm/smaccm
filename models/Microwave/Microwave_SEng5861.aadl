@@ -277,7 +277,7 @@ system Microwave_Control
 					
 	annex agree {** 
 			
-		eq time : int = (left_digit * 60) + (middle_digit * 10) + right_digit;
+		eq ctime : int = (left_digit * 60) + (middle_digit * 10) + right_digit;
 		
 		guarantee "heating_element_on implies door_closed_sensor" : 
 			heating_element_on => door_closed ;  
@@ -286,7 +286,7 @@ system Microwave_Control
 			true -> (not start and heating_element_on => (time <= pre(time))); 
 					
 		guarantee "time to cook = 0 implies heating_element_off" : 
-			time = 0 => not heating_element_on; 
+			ctime = 0 => not heating_element_on; 
 		
 			
 	**};	

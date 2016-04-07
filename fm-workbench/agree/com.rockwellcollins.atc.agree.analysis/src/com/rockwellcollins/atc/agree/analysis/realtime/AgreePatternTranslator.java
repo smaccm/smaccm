@@ -47,6 +47,7 @@ import jkind.lustre.VarDecl;
 public class AgreePatternTranslator {
 
     private static final String TIME_PREFIX = "__TIME__";
+    private static final String TIME_WILL_PREFIX = "__TIME_WILL__";
     private static final String EFFECT_PREFIX = "__EVENT__";
     private static final String CAUSE_PREFIX = "__CAUSE__";
     private static final String EFFECT_TIME_RANGE_PREFIX = "__EFFECT_TIME_RANGE__";
@@ -62,28 +63,27 @@ public class AgreePatternTranslator {
     private static final String RECORD_PREFIX = "__RECORD__";
     private static final String WINDOW_PREFIX = "__WINDOW__";
     private static final String NEW_CAUSE_PREFIX = "__NEW_CAUSE__";
+    private static final String END_INTERVAL = "__END_INTERVAL__";
 
-    
+    private final Map<String, AgreeVar> timeOfMap = new HashMap<>();
     private static final Expr NEG_ONE = new RealExpr(BigDecimal.valueOf(-1));
 
-    private static int eventIndex;
-    private static int patternIndex;
-    private static List<Node> patternLustreNodes;
+    private int eventIndex = 0;
+    private int patternIndex = 0;
     public static final IdExpr timeExpr = new IdExpr("time");
 
     public static AgreeProgram translate(AgreeProgram program) {
-        patternLustreNodes = new ArrayList<>();
-
-        AgreeNode topNode = translateNode(program.topNode, true);
+        List<Node> patternLustreNodes = new ArrayList<>();
+        
+        AgreeNode topNode = new AgreePatternTranslator().translateNode(program.topNode, true);
         List<AgreeNode> agreeNodes = gatherNodes(topNode);
         patternLustreNodes.addAll(program.globalLustreNodes);
 
         return new AgreeProgram(agreeNodes, patternLustreNodes, program.globalTypes, topNode);
     }
 
-    private static AgreeNode translateNode(AgreeNode node, boolean isTopNode) {
-        eventIndex = 0;
-        patternIndex = 0;
+    private AgreeNode translateNode(AgreeNode node, boolean isTopNode) {
+
         AgreeNodeBuilder builder = new AgreeNodeBuilder(node);
 
         // this has to be done first because the pattern translation
@@ -126,7 +126,7 @@ public class AgreePatternTranslator {
 
         builder.clearSubNodes();
         for (AgreeNode subNode : node.subNodes) {
-            builder.addSubNode(translateNode(subNode, false));
+            builder.addSubNode(new AgreePatternTranslator().translateNode(subNode, false));
         }
 
         builder.addInput(new AgreeVar(timeExpr.id, NamedType.REAL, null, node.compInst));
@@ -143,7 +143,7 @@ public class AgreePatternTranslator {
         return nodes;
     }
     
-    private static Expr translatePattern(AgreePattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
+    private Expr translatePattern(AgreePattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
         patternIndex++;
 
         if(pattern instanceof AgreeCauseEffectPattern){
@@ -154,7 +154,7 @@ public class AgreePatternTranslator {
         throw new AgreeException("Unhandled Pattern: "+pattern.getClass().toString());
     }
     
-    private static Expr translatePattern(AgreeRealtimePattern pattern, AgreeNodeBuilder builder, boolean isProperty){
+    private Expr translatePattern(AgreeRealtimePattern pattern, AgreeNodeBuilder builder, boolean isProperty){
         if(pattern instanceof AgreePeriodicPattern){
             return translatePattern((AgreePeriodicPattern)pattern, builder, isProperty);
         }else if(pattern instanceof AgreeSporadicPattern){
@@ -163,7 +163,7 @@ public class AgreePatternTranslator {
         throw new AgreeException("Unhandled Pattern: "+pattern.getClass().toString());
     }
     
-    private static Expr translatePattern(AgreeSporadicPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
+    private Expr translatePattern(AgreeSporadicPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
         if(isProperty){
             throw new AgreeException("We have not translated this pattern to properties yet");
         }
@@ -220,7 +220,7 @@ public class AgreePatternTranslator {
         return eventExpr;
     }
     
-    private static Expr translatePattern(AgreePeriodicPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
+    private Expr translatePattern(AgreePeriodicPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
         
         if(isProperty){
             throw new AgreeException("We have not translated this pattern to properties yet");
@@ -272,7 +272,7 @@ public class AgreePatternTranslator {
     }
     
 
-    private static Expr translatePattern(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
+    private Expr translatePattern(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder, boolean isProperty) {
 
         if (pattern instanceof AgreeTimesPattern) {
             return translatePattern((AgreeTimesPattern) pattern, builder);
@@ -305,7 +305,7 @@ public class AgreePatternTranslator {
 
     }
 
-    private static Expr translatePatternConstraint(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
+    private Expr translatePatternConstraint(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
             IdExpr causeId, IdExpr effectId) {
         addPatternConstraintProperty(pattern, builder, causeId, effectId);
         switch(pattern.effectType){
@@ -318,8 +318,31 @@ public class AgreePatternTranslator {
         }
     }
     
+    private AgreeVar getTimeOf(String varName, AgreeNodeBuilder builder, EObject reference){
+        if(timeOfMap.containsKey(varName)){
+            return timeOfMap.get(varName);
+        }
+        AgreeVar timeCause = new AgreeVar(TIME_PREFIX + varName, NamedType.REAL, reference);
+        builder.addLocal(timeCause);
+        timeOfMap.put(varName, timeCause);
+        
+        Equation equation = equation("timeCause = if cause then time else (-1.0 -> pre timeCause);",
+                to("timeCause", timeCause),
+                to("cause", varName),
+                to("time", timeExpr));
+        builder.addLocalEquation(new AgreeEquation(equation, reference));
+        
+        Expr lemmaExpr = expr("timeCause <= time and timeCause >= -1.0",
+                to("timeCause", timeCause),
+                to("time", timeExpr));
+        
+        //add this assertion to help with proofs (it should always be true)
+        builder.addAssertion(new AgreeStatement("", lemmaExpr, reference));
+        
+        return timeCause;
+    }
 
-    private static Expr translatePatternProperty(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
+    private Expr translatePatternProperty(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
             IdExpr causeId, IdExpr effectId) {
         switch(pattern.effectType){
         case EVENT :
@@ -331,7 +354,7 @@ public class AgreePatternTranslator {
         
     }
 
-    private static Expr translatePatternEventProperty(AgreeCauseEffectPattern pattern,
+    private Expr translatePatternEventProperty(AgreeCauseEffectPattern pattern,
             AgreeNodeBuilder builder, IdExpr causeId, IdExpr effectId) {
         EObject varReference = pattern.reference;
         AgreeVar timerVar = new AgreeVar(TIMER_PREFIX+patternIndex, NamedType.REAL, varReference);
@@ -402,33 +425,26 @@ public class AgreePatternTranslator {
         return new BinaryExpr(timerId, right, pattern.effectInterval.high);
     }
     
-    private static Expr translatePatternConditionProperty(AgreeCauseEffectPattern pattern,
+    private Expr translatePatternConditionProperty(AgreeCauseEffectPattern pattern,
             AgreeNodeBuilder builder, IdExpr causeId, IdExpr effectId) {
         EObject varReference = pattern.reference;
         AgreeVar recordVar = new AgreeVar(RECORD_PREFIX+patternIndex, NamedType.BOOL, varReference);
-        AgreeVar timeRecordVar = new AgreeVar(TIME_PREFIX + recordVar.id,NamedType.REAL, varReference);
         AgreeVar windowVar = new AgreeVar(WINDOW_PREFIX+patternIndex, NamedType.BOOL, varReference);
 
         builder.addInput(recordVar);
         builder.addLocal(windowVar);
-        builder.addLocal(timeRecordVar);
+        AgreeVar tRecord = getTimeOf(recordVar.id, builder, pattern);
         
         Expr expr = expr("record => cause", to("record", recordVar), to("cause", causeId));
         builder.addAssertion(new AgreeStatement(null, expr, varReference));
-        
-        Equation eq = equation("trecord = if record then time else -1.0 -> pre(trecord);",
-                to("trecord", timeRecordVar),
-                to("record", recordVar),
-                to("time", timeExpr));
-        builder.addLocalEquation(new AgreeEquation(eq, varReference));
-        
+
         BinaryOp left = getIntervalLeftOp(pattern.effectInterval);
         BinaryOp right = getIntervalRightOp(pattern.effectInterval);
         
-        eq = equation("in_window = (trecord <> -1.0) and "
+        Equation eq = equation("in_window = (trecord <> -1.0) and "
                 + "(l + trecord "+left+" time) and (time "+right+" h + trecord);",
                 to("in_window", windowVar),
-                to("trecord", timeRecordVar),
+                to("trecord", tRecord),
                 to("time", timeExpr),
                 to("l", pattern.effectInterval.low),
                 to("h", pattern.effectInterval.high));
@@ -439,26 +455,14 @@ public class AgreePatternTranslator {
     
 
     
-    private static void addPatternConstraintProperty(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
+    private void addPatternConstraintProperty(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
             IdExpr causeId, IdExpr effectId) {
-        AgreeVar timeEffect = new AgreeVar("__OCURRED__"+TIME_PREFIX + effectId.id, NamedType.REAL, pattern);
-        AgreeVar timeCause = new AgreeVar("__OCURRED__"+TIME_PREFIX + causeId.id, NamedType.REAL, pattern);
         AgreeVar newCause = new AgreeVar(NEW_CAUSE_PREFIX + causeId.id, NamedType.BOOL, pattern);
-
-        builder.addLocal(timeEffect);
-        builder.addLocal(timeCause);
         builder.addLocal(newCause);
         
-        IdExpr timeEffectId = new IdExpr(timeEffect.id);
-        IdExpr timeCauseId = new IdExpr(timeCause.id);
+        AgreeVar timeCauseVar = getTimeOf(causeId.id, builder, pattern);
+        IdExpr timeCauseId = new IdExpr(timeCauseVar.id);
         IdExpr newCauseId = new IdExpr(newCause.id);
-        
-        {
-        Expr preTimeCause = new UnaryExpr(UnaryOp.PRE, timeCauseId);
-        preTimeCause = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, preTimeCause);
-        Expr timeCauseExpr = new IfThenElseExpr(causeId, timeExpr, preTimeCause);
-            builder.addLocalEquation(new AgreeEquation(timeCauseId, timeCauseExpr, pattern));
-        }
         
         Expr preTimeCause = new UnaryExpr(UnaryOp.PRE, timeCauseId);
         Expr newCauseExpr = new BinaryExpr(preTimeCause, BinaryOp.NOTEQUAL, timeCauseId);
@@ -468,11 +472,10 @@ public class AgreePatternTranslator {
         
         
         if (pattern.effectType == TriggerType.EVENT) {
-            Expr preTimeEffect = new UnaryExpr(UnaryOp.PRE, timeEffectId);
-            preTimeEffect = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, preTimeEffect);
-            Expr timeEffectExpr = new IfThenElseExpr(effectId, timeExpr, preTimeEffect);
-            builder.addLocalEquation(new AgreeEquation(timeEffectId, timeEffectExpr, pattern));
             
+            AgreeVar timeEffectVar = getTimeOf(effectId.id, builder, pattern);
+            IdExpr timeEffectId = new IdExpr(timeEffectVar.id);
+
             Expr preTimeCausePlusL = new BinaryExpr(preTimeCause, BinaryOp.PLUS, pattern.effectInterval.low);
             BinaryOp left = getIntervalLeftOp(pattern.effectInterval);
             Expr inInterval = new BinaryExpr(preTimeCausePlusL, left, timeEffectId);
@@ -481,14 +484,17 @@ public class AgreePatternTranslator {
             AgreeStatement statement = new AgreeStatement(" pattern "+patternIndex+" in bounds", propExpr, pattern);
             builder.addPatternProp(statement);
         } else {
+            AgreeVar timeEndVar = new AgreeVar(END_INTERVAL+patternIndex, NamedType.REAL, pattern);
+            builder.addLocal(timeEndVar);
+            
             Equation eq = equation("timeEnd = timeCause + h;",
-                    to("timeEnd", timeEffectId),
+                    to("timeEnd", timeEndVar),
                     to("timeCause", timeCauseId),
                     to("h", pattern.effectInterval.high));
             builder.addLocalEquation(new AgreeEquation(eq, pattern));
             
             Expr expr = expr("true -> (newCause => pre(timeEnd) < time)",
-                    to("timeEnd", timeEffectId),
+                    to("timeEnd", timeEndVar),
                     to("newCause", newCauseId),
                     to("time",timeExpr));
             AgreeStatement statement = new AgreeStatement(" pattern "+patternIndex+" in bounds", expr, pattern);
@@ -497,24 +503,10 @@ public class AgreePatternTranslator {
         
     }
     
-    private static Expr translatePatternEffectHoldConstraint(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
+    private Expr translatePatternEffectHoldConstraint(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
             IdExpr causeId, IdExpr effectId) {
         
-        AgreeVar timeCauseVar = new AgreeVar(TIME_PREFIX + causeId.id, NamedType.REAL, pattern);
-        builder.addLocal(timeCauseVar);
-        
-        Equation eq = equation("timeCause = if causeId then time else (-1.0 -> pre timeCause);",
-                to("timeCause", timeCauseVar),
-                to("causeId", causeId),
-                to("time", timeExpr));
-        builder.addLocalEquation(new AgreeEquation(eq, pattern));
-        
-        Expr lemmaExpr = expr("timeCause <= time and timeCause >= -1.0",
-                to("timeCause", timeCauseVar),
-                to("time", timeExpr));
-        
-        //add this assertion to help with proofs (it should always be true)
-        builder.addAssertion(new AgreeStatement("", lemmaExpr, pattern));
+        AgreeVar timeCauseVar = getTimeOf(causeId.id, builder, pattern);
         
         BinaryOp left = getIntervalLeftOp(pattern.effectInterval);
         BinaryOp right = getIntervalRightOp(pattern.effectInterval);
@@ -546,17 +538,17 @@ public class AgreePatternTranslator {
         return expr;
     }
 
-    private static Expr translatePatternEffectEventConstraint(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
+    private Expr translatePatternEffectEventConstraint(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
             IdExpr causeId, IdExpr effectId) {
-        AgreeVar timeEffect = new AgreeVar(TIME_PREFIX + effectId.id, NamedType.REAL, pattern);
         AgreeVar effectTimeRangeVar =
                 new AgreeVar(EFFECT_TIME_RANGE_PREFIX + patternIndex, NamedType.REAL, pattern);
-        builder.addInput(timeEffect);
         builder.addInput(effectTimeRangeVar);
-
-        IdExpr timeEffectId = new IdExpr(timeEffect.id);
         IdExpr effectTimeRangeId = new IdExpr(effectTimeRangeVar.id);
-
+        
+        AgreeVar timeEffectVar = new AgreeVar(TIME_WILL_PREFIX + effectId.id, NamedType.REAL, pattern);
+        builder.addOutput(timeEffectVar);
+        IdExpr timeEffectId = new IdExpr(timeEffectVar.id);
+        
         Expr effectTimeRangeConstraint = getTimeRangeConstraint(effectTimeRangeId, pattern.effectInterval);
         builder.addAssertion(new AgreeStatement(null, effectTimeRangeConstraint, pattern.reference));
         // make a constraint that triggers when the event WILL happen
@@ -566,9 +558,17 @@ public class AgreePatternTranslator {
                 to("causeId", causeId),
                 to("effectTimeRangeId", effectTimeRangeId));
         
-        builder.addAssertion(new AgreeStatement(null, expr, pattern.reference));
+        builder.addAssertion(new AgreeStatement(null, expr, pattern));
+        
+        Expr lemmaExpr = expr("timeEffect <= effectTimeRange and timeEffect >= -1.0",
+                to("timeEffect", timeEffectId),
+                to("effectTimeRange", effectTimeRangeId));
+        
+        //add this assertion to help with proofs (it should always be true)
+        builder.addAssertion(new AgreeStatement(null, lemmaExpr, pattern));
+        
         // register the event time
-        builder.addEventTime(timeEffect);
+        builder.addEventTime(timeEffectVar);
         // make the equation that triggers the event at the correct ime
         Expr timeEqualsPreTime = new BinaryExpr(timeExpr, BinaryOp.EQUAL, timeEffectId);
         // if the event is exclusive it only occurs when scheduled

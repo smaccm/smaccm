@@ -521,7 +521,6 @@ public class LustreAstBuilder {
         List<Equation> equations = new ArrayList<>();
         List<Expr> assertions = new ArrayList<>();
         
-//        Expr assumeConjExpr = new BoolExpr(true);
         
         //add assumption history variable
         IdExpr assumHist = new IdExpr(assumeSuffix+"__HIST");//new NodeCallExpr(historyNodeName, assumeConjExpr);
@@ -546,17 +545,6 @@ public class LustreAstBuilder {
             }
         }
 
-//        String assumeHistName = assumeSuffix + "__HIST";
-//        String assumeConjName = assumeSuffix + "__CONJ";
-//        IdExpr assumeHistId = new IdExpr(assumeHistName);
-//        IdExpr assumeConjId = new IdExpr(assumeConjName);
-//
-//        locals.add(new VarDecl(assumeHistName, NamedType.BOOL));
-//        locals.add(new VarDecl(assumeConjName, NamedType.BOOL));
-//
-//        equations.add(new Equation(assumeConjId, assumeConjExpr));
-//        equations.add(getHist(assumeHistId, assumeConjId));
-
         Expr guarConjExpr = new BoolExpr(true);
         for (AgreeStatement statement : agreeNode.guarantees) {
             guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
@@ -566,10 +554,7 @@ public class LustreAstBuilder {
                 guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
             }
         }
-//        
-//        assertions.add(new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr));
-//        
-//        
+       
         //assert that of the assumptions have held historically, then the gurantees hold
         assertions.add(new BinaryExpr(assumHist, BinaryOp.IMPLIES, guarConjExpr));
 
