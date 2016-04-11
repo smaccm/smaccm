@@ -1,0 +1,2 @@
+apps-$(CONFIG_APP_SMACCMPHASEIII) += SmaccmPhaseIII
+SmaccmPhaseIII: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

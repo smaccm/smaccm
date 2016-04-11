@@ -1,0 +1,229 @@
+-- File generated from Tower-AADL compiler
+
+package controllableVehicleConsumerOutput
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread controllableVehicleConsumerOutput
+  features
+    Input_parse_frame_2: in event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_parse_frame_2");
+        Source_Text => ("user_code/controllableVehicleConsumerOutput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_parse_frame_2_0, 1 Output_parse_frame_2_1, 1 Output_parse_frame_2_2, 1 Output_parse_frame_2_3, 1 Output_parse_frame_2_4, 1 Output_parse_frame_2_5, 1 Output_parse_frame_2_6, 1 Output_parse_frame_2_7, 1 Output_parse_frame_2_8, 1 Output_parse_frame_2_9, 1 Output_parse_frame_2_10, 1 Output_parse_frame_2_11, 1 Output_parse_frame_2_12, 1 Output_parse_frame_2_13, 1 Output_parse_frame_2_14, 1 Output_parse_frame_2_15, 1 Output_parse_frame_2_16, 1 Output_parse_frame_2_17, 1 Output_parse_frame_2_18, 1 Output_parse_frame_2_19, 1 Output_parse_frame_2_20, 1 Output_parse_frame_2_21, 1 Output_parse_frame_2_22, 1 Output_parse_frame_2_23, 1 Output_parse_frame_2_24, 1 Output_parse_frame_2_25, 1 Output_parse_frame_2_26, 1 Output_parse_frame_2_27, 1 Output_parse_frame_2_28, 1 Output_parse_frame_2_29, 1 Output_parse_frame_2_30, 1 Output_parse_frame_2_31, 1 Output_parse_frame_2_32, 1 Output_parse_frame_2_33, 1 Output_parse_frame_2_34, 1 Output_parse_frame_2_35, 1 Output_parse_frame_2_36, 1 Output_parse_frame_2_37, 1 Output_parse_frame_2_38, 1 Output_parse_frame_2_39, 1 Output_parse_frame_2_40, 1 Output_parse_frame_2_41, 1 Output_parse_frame_2_42, 1 Output_parse_frame_2_43, 1 Output_parse_frame_2_44, 1 Output_parse_frame_2_45, 1 Output_parse_frame_2_46, 1 Output_parse_frame_2_47, 1 Output_parse_frame_2_48, 1 Output_parse_frame_2_49, 1 Output_parse_frame_2_50}}";
+      };
+    Output_parse_frame_2_0: out event data port Data_Types::sequence_numbered_reboot
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_68";
+      };
+    Output_parse_frame_2_1: out event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_69";
+      };
+    Output_parse_frame_2_2: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_70";
+      };
+    Output_parse_frame_2_3: out event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_71";
+      };
+    Output_parse_frame_2_4: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_72";
+      };
+    Output_parse_frame_2_5: out event data port Data_Types::sequence_numbered_throttle_ui
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_73";
+      };
+    Output_parse_frame_2_6: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_74";
+      };
+    Output_parse_frame_2_7: out event data port Data_Types::sequence_numbered_stab_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_75";
+      };
+    Output_parse_frame_2_8: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_76";
+      };
+    Output_parse_frame_2_9: out event data port Data_Types::sequence_numbered_stab_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_77";
+      };
+    Output_parse_frame_2_10: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_78";
+      };
+    Output_parse_frame_2_11: out event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_79";
+      };
+    Output_parse_frame_2_12: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_80";
+      };
+    Output_parse_frame_2_13: out event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_81";
+      };
+    Output_parse_frame_2_14: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_82";
+      };
+    Output_parse_frame_2_15: out event data port Data_Types::sequence_numbered_tristate
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_83";
+      };
+    Output_parse_frame_2_16: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_84";
+      };
+    Output_parse_frame_2_17: out event data port Data_Types::sequence_numbered_control_modes
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_85";
+      };
+    Output_parse_frame_2_18: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_86";
+      };
+    Output_parse_frame_2_19: out event data port Data_Types::sequence_numbered_user_input
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_87";
+      };
+    Output_parse_frame_2_20: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_88";
+      };
+    Output_parse_frame_2_21: out event data port Data_Types::sequence_numbered_rgb_led_setting
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_89";
+      };
+    Output_parse_frame_2_22: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_90";
+      };
+    Output_parse_frame_2_23: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_91";
+      };
+    Output_parse_frame_2_24: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_92";
+      };
+    Output_parse_frame_2_25: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_93";
+      };
+    Output_parse_frame_2_26: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_94";
+      };
+    Output_parse_frame_2_27: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_95";
+      };
+    Output_parse_frame_2_28: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_96";
+      };
+    Output_parse_frame_2_29: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_97";
+      };
+    Output_parse_frame_2_30: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_98";
+      };
+    Output_parse_frame_2_31: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_99";
+      };
+    Output_parse_frame_2_32: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_100";
+      };
+    Output_parse_frame_2_33: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_101";
+      };
+    Output_parse_frame_2_34: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_102";
+      };
+    Output_parse_frame_2_35: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_103";
+      };
+    Output_parse_frame_2_36: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_104";
+      };
+    Output_parse_frame_2_37: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_105";
+      };
+    Output_parse_frame_2_38: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_106";
+      };
+    Output_parse_frame_2_39: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_107";
+      };
+    Output_parse_frame_2_40: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_108";
+      };
+    Output_parse_frame_2_41: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_109";
+      };
+    Output_parse_frame_2_42: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_110";
+      };
+    Output_parse_frame_2_43: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_111";
+      };
+    Output_parse_frame_2_44: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_112";
+      };
+    Output_parse_frame_2_45: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_113";
+      };
+    Output_parse_frame_2_46: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_114";
+      };
+    Output_parse_frame_2_47: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_115";
+      };
+    Output_parse_frame_2_48: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_116";
+      };
+    Output_parse_frame_2_49: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_117";
+      };
+    Output_parse_frame_2_50: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_2_chan_118";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end controllableVehicleConsumerOutput;
+
+end controllableVehicleConsumerOutput;

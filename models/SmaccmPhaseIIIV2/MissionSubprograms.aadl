@@ -1,0 +1,115 @@
+package MissionSubprograms
+public
+	with Base_Types;
+	with DATA_TYPES;
+	with SMACCM_DATA;
+	
+subprogram get_uart_packet
+	features
+		result: out parameter Data_Types::ivory_string_UartPacket;
+end get_uart_packet;
+
+subprogram send_uart_packet
+	features
+		input: in parameter Data_Types::ivory_string_UartPacket;
+end send_uart_packet;
+	
+subprogram send_input
+	features
+		input: in parameter SMACCM_DATA::ServerInputData.i;
+end send_input;
+
+subprogram receive_input
+  features
+    input: out parameter SMACCM_DATA::ServerInputData.i;
+end receive_input;
+
+subprogram send_server_output
+	features
+		result: in parameter SMACCM_DATA::ServerOutputData.i;
+end send_server_output;
+
+subprogram get_server_output
+  features
+    result: out parameter SMACCM_DATA::ServerOutputData.i;
+end get_server_output;
+
+subprogram get_pixhawk_data
+	features
+    result : out parameter SMACCM_DATA::PixHawkData.i;
+end get_pixhawk_data;
+
+subprogram send_pixhawk_data
+  features
+    result : in parameter SMACCM_DATA::PixHawkData.i;
+end send_pixhawk_data;
+
+subprogram get_camera_data
+	features
+		result : out parameter SMACCM_DATA::CameraData.i;
+end get_camera_data;
+
+subprogram send_camera_data
+  features
+    result : in parameter SMACCM_DATA::CameraData.i;
+end send_camera_data;
+
+subprogram send_to_can
+	features
+		input : in parameter SMACCM_DATA::CanSenderData.i;
+end send_to_can;
+
+subprogram send_to_proxy
+  features
+    input : in parameter Data_Types::can_message;
+end send_to_proxy;
+
+subprogram get_from_can
+  features
+    input : out parameter Data_Types::can_message;
+end get_from_can;
+
+subprogram get_from_proxy
+	features
+		result : out parameter SMACCM_DATA::CanSenderData.i;
+end get_from_proxy;
+	
+subprogram group UART_Group
+	features
+		send_packet : provides subprogram access MissionSubprograms::send_uart_packet;
+		recieve_packet : provides subprogram access MissionSubprograms::get_uart_packet;
+end UART_Group;
+
+subprogram group Server_Inputs
+	features
+		send_input : provides subprogram access send_input;
+		receive_input : provides subprogram access receive_input;
+end Server_Inputs;
+
+subprogram group Server_Outputs
+	features
+		send_output : provides subprogram access send_server_output;
+		get_output : provides subprogram access get_server_output;
+end Server_outputs;
+
+subprogram group Pixhawk_group
+	features
+		get_pixhawk_data : provides subprogram access MissionSubprograms::get_pixhawk_data;
+    send_pixhawk_data : provides subprogram access MissionSubprograms::send_pixhawk_data;
+end Pixhawk_group;
+	
+subprogram group Camera_group
+	features
+		get_camera_data : provides subprogram access get_camera_data;
+		send_camera_data : provides subprogram access send_camera_data;
+end Camera_group;
+
+subprogram group CAN_group
+	features
+		get_from_proxy : provides subprogram access get_from_proxy;
+		send_to_can : provides subprogram access send_to_can;
+		get_from_can : provides subprogram access get_from_can;
+		send_to_proxy : provides subprogram access send_to_proxy;
+end CAN_group;
+
+end MissionSubprograms;

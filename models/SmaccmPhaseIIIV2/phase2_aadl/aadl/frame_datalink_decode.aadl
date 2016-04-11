@@ -1,0 +1,29 @@
+-- File generated from Tower-AADL compiler
+
+package frame_datalink_decode
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread frame_datalink_decode
+  features
+    Input_decoder_serial_in: in event data port Base_Types::Unsigned_8
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_decoder_serial_in");
+        Source_Text => ("user_code/frame_datalink_decode_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_decoder_serial_in_0}}";
+      };
+    Output_decoder_serial_in_0: out event data port Data_Types::array_96_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_decoder_serial_in_chan_130";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end frame_datalink_decode;
+
+end frame_datalink_decode;
