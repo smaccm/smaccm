@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<units size='2'>
+  <unit id='com.rockwellcollins.atc.z3' version='4.4.1' singleton='false'>
+    <update id='com.rockwellcollins.atc.z3' range='[0.0.0,4.4.1)' severity='0'/>
+    <properties size='5'>
+      <property name='org.eclipse.equinox.p2.name' value='Z3 Plugin'/>
+      <property name='org.eclipse.equinox.p2.provider' value='Rockwell Collins, Inc.'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='com.rockwellcollins.atc.z3'/>
+      <property name='maven-version' value='4.4.1'/>
+    </properties>
+    <provides size='4'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='com.rockwellcollins.atc.z3' version='4.4.1'/>
+      <provided namespace='osgi.bundle' name='com.rockwellcollins.atc.z3' version='4.4.1'/>
+      <provided namespace='java.package' name='com.rockwellcollins.atc.z3' version='0.0.0'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+    </provides>
+    <requires size='1'>
+      <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
+    </requires>
+    <artifacts size='1'>
+      <artifact classifier='osgi.bundle' id='com.rockwellcollins.atc.z3' version='4.4.1'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='manifest'>
+          Bundle-SymbolicName: com.rockwellcollins.atc.z3&#xA;Bundle-Version: 4.4.1&#xA;
+        </instruction>
+      </instructions>
+    </touchpointData>
+  </unit>
+  <unit id='com.rockwellcollins.atc.z3.source' version='4.4.1' singleton='false'>
+    <update id='com.rockwellcollins.atc.z3.source' range='[0.0.0,4.4.1)' severity='0'/>
+    <properties size='9'>
+      <property name='df_LT.bundleVendor' value='Rockwell Collins, Inc.'/>
+      <property name='df_LT.bundleName' value='Z3 Plugin Source'/>
+      <property name='org.eclipse.equinox.p2.name' value='%bundleName'/>
+      <property name='org.eclipse.equinox.p2.provider' value='%bundleVendor'/>
+      <property name='org.eclipse.equinox.p2.bundle.localization' value='OSGI-INF/l10n/bundle-src'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='com.rockwellcollins.atc.z3'/>
+      <property name='maven-version' value='4.4.1'/>
+      <property name='maven-classifier' value='sources'/>
+    </properties>
+    <provides size='4'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='com.rockwellcollins.atc.z3.source' version='4.4.1'/>
+      <provided namespace='osgi.bundle' name='com.rockwellcollins.atc.z3.source' version='4.4.1'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='source' version='1.0.0'/>
+      <provided namespace='org.eclipse.equinox.p2.localization' name='df_LT' version='1.0.0'/>
+    </provides>
+    <artifacts size='1'>
+      <artifact classifier='osgi.bundle' id='com.rockwellcollins.atc.z3.source' version='4.4.1'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='manifest'>
+          Bundle-SymbolicName: com.rockwellcollins.atc.z3.source&#xA;Bundle-Version: 4.4.1&#xA;
+        </instruction>
+      </instructions>
+    </touchpointData>
+  </unit>
+</units>
