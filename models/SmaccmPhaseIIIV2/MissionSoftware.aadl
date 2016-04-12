@@ -130,7 +130,7 @@ thread Server
 		output_data : requires subprogram group access MissionSubprograms::Server_Outputs;
 	properties
 		Dispatch_Protocol => Periodic;
-		SMACCM_SYS::Thread_Type => Passive;
+		SMACCM_SYS::Thread_Type => Active;
 		Priority => 1;
 		Stack_Size => 1024 Bytes;
 	  Compute_Execution_Time => 10 us .. 100 us;
@@ -160,7 +160,7 @@ thread Output
 		pixhawk_state : requires subprogram group access MissionSubprograms::Server_Outputs;
 	properties
 		Dispatch_Protocol => Periodic;
-		SMACCM_SYS::Thread_Type => Passive;
+		SMACCM_SYS::Thread_Type => Active;
 		Priority => 1;
 		Stack_Size => 1024 Bytes;
 	  Compute_Execution_Time => 10 us .. 100 us;
