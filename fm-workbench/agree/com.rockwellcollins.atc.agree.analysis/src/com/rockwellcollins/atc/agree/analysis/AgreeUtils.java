@@ -96,36 +96,6 @@ public class AgreeUtils {
         }
     }
 
-    static public AgreeVarDecl dataTypeToVarType(DataSubcomponent sub) {
-
-        DataType type = (DataType) sub.getAllClassifier();
-        String varName = sub.getName();
-
-        do {
-            String name = type.getQualifiedName();
-            switch (name) {
-            case "Base_Types::Boolean":
-                return new AgreeVarDecl(varName, new NamedType("bool"));
-            case "Base_Types::Integer":
-            case "Base_Types::Unsigned":
-            case "Base_Types::Unsigned_32":
-            case "Base_Types::Unsigned_16":
-            case "Base_Types::Unsigned_8":
-            case "Base_Types::Integer_32":
-            case "Base_Types::Integer_16":
-            case "Base_Types::Integer_8":
-                return new AgreeVarDecl(varName, new NamedType("int"));
-            case "Base_Types::Float":
-                return new AgreeVarDecl(varName, new NamedType("real"));
-            }
-            type = (DataType) type.getExtended();
-
-        } while (type != null);
-
-        return null;
-
-    }
-
     public static NamedElement getFinalNestId(NestedDotID dotId) {
         while (dotId.getSub() != null) {
             dotId = dotId.getSub();
