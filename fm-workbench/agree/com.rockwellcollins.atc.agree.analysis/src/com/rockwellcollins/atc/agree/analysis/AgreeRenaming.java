@@ -1,7 +1,9 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +14,7 @@ import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 
 import jkind.JKindException;
 import jkind.api.results.Renaming;
+import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
 import jkind.results.Property;
 import jkind.results.UnknownProperty;
@@ -83,9 +86,9 @@ public class AgreeRenaming extends Renaming {
                     renamedInvalid.getRuntime());
         }else if(property instanceof UnknownProperty){
             UnknownProperty renamedUnknown = (UnknownProperty)property;
-            return new UnknownProperty(renamedUnknown.getName(), 
+            UnknownProperty newProp =  new UnknownProperty(renamedUnknown.getName(), 
                     renamedUnknown.getTrueFor(), 
-                    rename(renamedUnknown.getInductiveCounterexample()), 
+                    rename(renamedUnknown.getInductiveCounterexamples()), 
                     renamedUnknown.getRuntime());
         }
         if(!(property instanceof ValidProperty)){
