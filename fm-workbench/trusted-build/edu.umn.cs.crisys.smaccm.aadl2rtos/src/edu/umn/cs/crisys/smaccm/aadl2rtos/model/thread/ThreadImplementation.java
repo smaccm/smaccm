@@ -247,6 +247,15 @@ public class ThreadImplementation {
     return dispatchers;
   }
   
+  public Set<PortConnection> getActiveThreadConnectionList() {
+    Set<PortConnection> frontier = new HashSet<>(); 
+    for (DispatchableInputPort d : getDispatcherList()) {
+      DispatcherTraverser dt = new DispatcherTraverser();
+      dt.dispatcherActiveThreadConnections(d, frontier);
+    }
+    return frontier;
+  }
+  
   public Set<PortConnection> getNonlocalActiveThreadConnectionFrontier() {
     Set<PortConnection> frontier = new HashSet<>(); 
     for (DispatchableInputPort d : getDispatcherList()) {

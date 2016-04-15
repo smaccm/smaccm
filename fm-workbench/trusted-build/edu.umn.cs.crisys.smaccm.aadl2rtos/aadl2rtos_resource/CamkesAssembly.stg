@@ -131,8 +131,8 @@ connectActiveToDispatcher(connection, threadImpl, model) ::= <<
 
 // assemblyConnectActiveChildToActiveThreads(threadImpl, model)
 
-assemblyConnectActiveToActiveThreads(threadImpl, model) ::= <<
-<threadImpl.nonlocalActiveThreadConnectionFrontier:connectActiveToDispatcher(threadImpl, model)>
+assemblyConnectThreadToActiveThreads(threadImpl, model) ::= <<
+<threadImpl.activeThreadConnectionList:connectActiveToDispatcher(threadImpl, model)>
 >>
 
 connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
@@ -292,7 +292,7 @@ assembly {
 		<model.activeThreadImplementations:assemblyConnectActiveToPassiveThreads(model)>	
 		
 		// connections from active dispatcher send/receive to other active dispatcher send/receive
-		<model.activeThreadImplementations:assemblyConnectActiveToActiveThreads(model)>
+		<model.threadImplementations:assemblyConnectThreadToActiveThreads(model)>
 
 		<if(model.threadCalendar.hasDispatchers)>
 		// Periodic dispatcher connections

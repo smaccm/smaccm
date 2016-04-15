@@ -52,6 +52,11 @@ public class PortNames {
     return tyn;
   }
   
+  // we should never enqueue more than 32k messages!
+  public String getIndexMax() {
+	  return "32767";
+  }
+  
   public ThreadImplementationNames getThreadImplementation() {
     return new ThreadImplementationNames(dp.getOwner());
   }

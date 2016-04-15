@@ -81,6 +81,14 @@ public class ThreadImplementationNames {
     }
     return dnList;
   }
+
+  public List<PortConnectionNames> getActiveThreadConnectionList() {
+	    ArrayList<PortConnectionNames> dnList = new ArrayList<>();
+	    for (PortConnection d : ti.getActiveThreadConnectionList()) {
+	      dnList.add(new PortConnectionNames(d));
+	    }
+	    return dnList;
+	  }
   
   public List<PortConnectionNames> getLocalActiveThreadConnectionFrontier() {
     ArrayList<PortConnectionNames> dnList = new ArrayList<>();
