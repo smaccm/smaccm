@@ -354,13 +354,37 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 			//check if the name is an input or a local
 			//if local, replace . with _
 			if(!inputSet.contains(name)){
-				updatedName = updatedName.replaceAll("\\.","_");
+				//reverse the sequence of the words separated by .
+				//to put the last part after . first
+				//so that after truncation the name still makes sense
+				if(updatedName.contains(".")){
+					String[] nameWords = updatedName.split("\\.");
+					StringBuilder builder = new StringBuilder("");
+					for(int i=nameWords.length - 1; i>=0; i--){
+						builder.append(nameWords[i]);
+						if(i>0){
+							builder.append("_");
+						}
+					}
+					updatedName = builder.toString();
+				}
+			}
+			//check if the name is longer than 63 characters
+			//(the maximum variable length supported by MATLAB)
+			//if yes, truncate it to 63 characters
+			if(updatedName.length() > 63){
+				updatedName = updatedName.substring(0,63);
 			}
 			nameToCheck = updatedName;
 			//check if the updated name and recordId tuple is in the map values
 			//if yes, update the name further so it's unique from existing values
 			while(idMap.containsValue(new UniqueID(nameToCheck, recordId))){
 				varIndex++;
+				//make sure the updated name is not longer than 63 characters
+				int indexLength = String.valueOf(varIndex).length();
+				if((updatedName.length()+indexLength) > 63){
+					updatedName = updatedName.substring(0,(63-indexLength));
+				}
 				nameToCheck = updatedName + "_"+varIndex;
 			}
 			updatedName = nameToCheck;
