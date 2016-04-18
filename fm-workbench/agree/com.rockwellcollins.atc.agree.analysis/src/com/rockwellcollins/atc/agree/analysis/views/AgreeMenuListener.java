@@ -136,7 +136,7 @@ public class AgreeMenuListener implements IMenuListener {
                 final Map<String, EObject> refMap = tempRefMap;
 
                 MenuManager sub = new MenuManager(
-                        "View " + cexType + " from " + cex.getSource() + " Counterexample in");
+                        "View " + cexType + "Counterexample from " + cex.getSource() + " in");
                 manager.add(sub);
 
                 sub.add(new Action("Console") {
