@@ -6,13 +6,11 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt64Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABSingleType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt32Type;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt64Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt8Type;
 import com.rockwellcollins.atc.agree.codegen.translation.LustreToMATLABTranslator;
 
@@ -48,11 +46,7 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 			case PreferenceConstants.INT_INT32:
 				return new MATLABInt32Type();
 			case PreferenceConstants.INT_UINT32:
-				return new MATLABUInt32Type();
-			case PreferenceConstants.INT_INT64:
-				return new MATLABInt64Type();
-			case PreferenceConstants.INT_UINT64:
-				return new MATLABUInt64Type();       		
+				return new MATLABUInt32Type();   		
 			default:
 				throw new IllegalArgumentException("Unknown int type: "+LustreToMATLABTranslator.intTypeStr);
 			}

@@ -18,7 +18,6 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABImpliesFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt64Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABLocalBusVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarDecl;
@@ -31,7 +30,6 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABStatement;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt32Type;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt64Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
@@ -414,18 +412,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 
 	@Override
 	public Void visit(MATLABUInt16Type type) {
-		write(type.name);
-		return null;
-	}
-
-	@Override
-	public Void visit(MATLABInt64Type type) {
-		write(type.name);
-		return null;
-	}
-
-	@Override
-	public Void visit(MATLABUInt64Type type) {
 		write(type.name);
 		return null;
 	}
