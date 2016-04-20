@@ -32,6 +32,14 @@ public class OutgoingDispatchContractNames {
     return pdl;
   }
 
+  public List<DispatchContractNames> getPassiveContracts() {
+    List<DispatchContractNames> pdl = new ArrayList<>(); 
+    for (Map.Entry<OutputEventPort, Integer> elem : odc.getPassiveContract().entrySet()) {
+      pdl.add(new DispatchContractNames(owner, elem));
+    }
+    return pdl;
+  }
+  
   public PortNames getOwner() {
     return new PortNames(owner);
   }

@@ -372,7 +372,7 @@ userEntrypointCallerFn(dispatcher) ::= <<
  * 
  ************************************************************************/
 <userEntrypointCallerPrototype(dispatcher)> {
-	<dispatcher.maxDispatchContracts.contracts:userEntrypointCallerAssignGlobals(dispatcher)>
+	<dispatcher.maxDispatchContracts.passiveContracts:userEntrypointCallerAssignGlobals(dispatcher)>
 	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
 }	
 
@@ -417,7 +417,7 @@ userSendDefinition(port) ::= <<
 
 bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
 <if(port.singletonConnection.destPort.threadImplementation.isActive)>
-	return <outgoingPortWriterName(destPort, srcPort)>(<port:userSendOptConstAadlInputArg()>);		
+	return <outgoingPortWriterName(port.singletonConnection.destPort, port)>(<port.name>);		
 <else>	
 	if (<port.globalMaxDispatchSize> > 0 && 
 		 *<port.globalIndex> \< <port.globalMaxDispatchSize>) {
@@ -727,7 +727,11 @@ static <port.indexType.name> <port.globalMaxDispatchSize>;
 
 portDispatchVarDeclarations(port) ::= <<
 <if(port.singletonConnection.destPort.threadImplementation.isPassive)>
-portPassiveDispatchVarDeclarations(port);
+// Writing dispatch variables for port <port.name>
+<portPassiveDispatchVarDeclarations(port)>
+<else>
+// NOT writing dispatch variables for port <port.name>
+<endif>
 >>
 
 ///////////////////////////////////////////////////////////////////////////

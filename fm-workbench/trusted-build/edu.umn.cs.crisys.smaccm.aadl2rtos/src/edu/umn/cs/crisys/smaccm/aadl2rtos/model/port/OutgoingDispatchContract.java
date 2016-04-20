@@ -36,6 +36,19 @@ public class OutgoingDispatchContract {
     return contract;
   }
   
+  /* Note: this function is 'brittle' in the face of fan-out, which is of course not allowed by seL4 
+   * This might break the ground team's use of AADL */
+  
+  public HashMap<OutputEventPort, Integer> getPassiveContract() {
+	  HashMap<OutputEventPort, Integer> passiveContract = new HashMap<>();
+	  for (Map.Entry<OutputEventPort, Integer> entry : this.getContract().entrySet()) {
+		  if (entry.getKey().getSingletonConnection().getDestPort().getOwner().getIsPassive()) {
+			  passiveContract.put(entry.getKey(), entry.getValue());
+		  }
+	  }
+	  return passiveContract;
+  }
+  
   public void add(OutputEventPort oep, int value) {
     if (contract.containsKey(oep)) {
       value += contract.get(oep);

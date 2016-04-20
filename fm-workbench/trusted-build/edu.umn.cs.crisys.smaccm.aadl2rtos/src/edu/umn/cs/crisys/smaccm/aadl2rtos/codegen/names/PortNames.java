@@ -169,12 +169,7 @@ public class PortNames {
   }
   
   public PortConnectionNames getSingletonConnection() {
-	  if (dp.getConnections().size() != 1) {
-		  throw new Aadl2RtosException("Error: getSingletonConnection: cardinality of connection != 1");
-	  }
-	  else {
-		  return new PortConnectionNames(dp.getConnections().get(0));
-	  }
+	  return new PortConnectionNames(dp.getSingletonConnection());
   }
   
   //////////////////////////////////////////////////////////////
@@ -312,7 +307,7 @@ public class PortNames {
     OutgoingDispatchContract odc = 
         OutgoingDispatchContract.maxDispatcherUse(dip.getDispatchLimits());
     List<DispatchContractNames> pdl = new ArrayList<>(); 
-    for (Map.Entry<OutputEventPort, Integer> elem : odc.getContract().entrySet()) {
+    for (Map.Entry<OutputEventPort, Integer> elem : odc.getPassiveContract().entrySet()) {
       DispatchContractNames names = new DispatchContractNames(dip, elem);
       if (names.getCanDispatch()) {
         pdl.add(new DispatchContractNames(dip, elem));
