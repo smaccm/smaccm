@@ -12,8 +12,6 @@ public class PreferenceConstants {
     public static final String INT_UINT16 = "uint16";
     public static final String INT_INT32 = "int32";
     public static final String INT_UINT32 = "uint32";
-    public static final String INT_INT64 = "int64";
-    public static final String INT_UINT64 = "uint64";
 
     public static final String PREF_REAL = "real";
 
