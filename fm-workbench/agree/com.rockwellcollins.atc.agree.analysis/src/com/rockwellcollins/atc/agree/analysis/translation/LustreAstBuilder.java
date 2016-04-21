@@ -847,7 +847,7 @@ public class LustreAstBuilder {
         nodes.add(node);
     }
     
-    private static List<TypeDef> getTypes(AgreeProgram agreeProgram) {
+    protected static List<TypeDef> getTypes(AgreeProgram agreeProgram) {
         List<TypeDef> types = new ArrayList<>();
         for (Type type : agreeProgram.globalTypes) {
             RecordType recType = (RecordType) type;
