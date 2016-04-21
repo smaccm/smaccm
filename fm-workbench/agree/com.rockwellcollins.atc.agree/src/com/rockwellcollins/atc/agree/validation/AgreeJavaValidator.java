@@ -845,7 +845,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 			typeName = recEl.getName();
 		} else if (recEl instanceof DataType) {
-		    typeName = ((DataType)recEl).getName();
+		    return getAgreeType((ComponentClassifier)recEl);
 		}
 		typeName = packName + "::" + typeName;
 
@@ -1851,14 +1851,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public static boolean matches(AgreeType expected, AgreeType actual) {
 		if (expected.equals(ERROR) || actual.equals(ERROR)) {
 			return false;
-		}
-		
-		if (integerMatch(expected, actual)){
+		}else if (integerMatch(expected, actual)){
 		    return true;
 		}else if(floatingPointMatch(expected,actual)){
 		    return true;
 		}
-
 		return expected.equals(actual);
 	}
 

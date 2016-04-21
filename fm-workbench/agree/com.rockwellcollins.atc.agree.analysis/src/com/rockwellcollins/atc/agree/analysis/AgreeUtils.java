@@ -258,13 +258,13 @@ public class AgreeUtils {
     }
     
     private static Expr getInitValueFromType(NamedType type){
-        if(type.equals(NamedType.BOOL)){
+        if(typeMatchesBool(type)){
             return new BoolExpr(false);
         }
-        if(type.equals(NamedType.INT)){
+        if(typeMatchesInteger(type)){
             return new IntExpr(BigInteger.ZERO);
         }
-        if(type.equals(NamedType.REAL)){
+        if(typeMatchesReal(type)){
             return new RealExpr(BigDecimal.ZERO);
         }
         throw new AgreeException("Unhandled initial type for type '"+type+"'");
@@ -321,6 +321,22 @@ public class AgreeUtils {
         ct.eResource().getContents().add(ci);
 
         return ci;
+    }
+    
+    public static boolean typeMatchesBool(NamedType type){
+        return type.equals(NamedType.BOOL) ||
+                type.toString().startsWith("Base_Types__Boolean");
+    }
+    
+    public static boolean typeMatchesInteger(NamedType type){
+        return type.equals(NamedType.INT) ||
+                type.toString().startsWith("Base_Types__Unsigned") ||
+                type.toString().startsWith("Base_Types__Integer");
+    }
+    
+    public static boolean typeMatchesReal(NamedType type){
+        return type.equals(NamedType.REAL) ||
+                type.toString().startsWith("Base_Types__Float");
     }
 
 }
