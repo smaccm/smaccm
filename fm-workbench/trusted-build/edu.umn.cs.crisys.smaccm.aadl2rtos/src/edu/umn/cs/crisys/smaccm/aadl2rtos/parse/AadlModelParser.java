@@ -133,9 +133,12 @@ public class AadlModelParser {
 	    this.logger.error("OS target: [" + OS + "] not recognized by aadl2rtos");
 	    throw new Aadl2RtosException("Parse failure on OS target property ");
 	  }
-
+	  
 	  String HW = PropertyUtil.getHW(sysimpl); 
 	  model.setHWTarget(HW);
+	  
+	  // Determine whether to use real-time extensions
+	  model.setUseOSRealTimeExtensions(PropertyUtil.getUseOsRealTimeExtensions(sysimpl));
 	  
 	  // note: may be null, and that's o.k.
 	  model.setOutputDirectory(Util.getStringValueOpt(sysimpl, PropertyUtil.SMACCM_SYS_OUTPUT_DIRECTORY));
@@ -418,6 +421,16 @@ public class AadlModelParser {
             "Hybrid".equalsIgnoreCase(dpName))) {
         throw new Aadl2RtosException(
             "For active thread " + tti.getFullName() + ", dispatch protocol must be one of {Sporadic, Periodic, Hybrid}.");
+      } else {
+    	  try {
+    		  double periodInUs = PropertyUtil.getPeriodInMicroseconds(tti);
+    		  ti.setPeriodInMicroseconds((int) periodInUs);
+    	  } catch (Exception e) {
+    	        throw new Aadl2RtosException(
+    	                "For thread " + tti.getFullName()
+    	                    + " with dispatch protocol " + dpName
+    	                    + " property 'Period' is required.");
+    	  }
       }
     }
     ti.setDispatchProtocol(dispatchProtocol.getName());
@@ -599,8 +612,8 @@ public class AadlModelParser {
     List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(tti);
     List<String> externalSemaphoreList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(tti);
             
-    ti.setMinExecutionTime(minComputeTime);
-    ti.setMaxExecutionTime(maxComputeTime);
+    ti.setMinExecutionTimeInMicroseconds((int) minComputeTime);
+    ti.setMaxExecutionTimeInMicroseconds((int) maxComputeTime);
     ti.setIsExternal(isExternal);
     ti.setRequiresTimeServices(requiresTimeServices);
     ti.setExternalMutexList(externalMutexList);

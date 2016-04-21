@@ -91,7 +91,23 @@ public class Model {
 	int camkesInternalTimerTimersPerClient; 
 	int camkesTimeServerAadlThreadMinIndex; 
 	int camkesDataportRpcMinIndex;
+	boolean useOSRealTimeExtensions; 
 	
+	/**
+	 * @return the useOSRealTimeExtensions
+	 */
+	public boolean isUseOSRealTimeExtensions() {
+		return useOSRealTimeExtensions;
+	}
+
+	/**
+	 * @param useOSRealTimeExtensions the useOSRealTimeExtensions to set
+	 */
+	public void setUseOSRealTimeExtensions(boolean useOSRealTimeExtensions) {
+		this.useOSRealTimeExtensions = useOSRealTimeExtensions;
+	}
+
+
 	// eChronos-specific properties
 	boolean eChronosGenerateCModules;
 	String eChronosCModulePath;

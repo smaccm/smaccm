@@ -53,6 +53,7 @@ property set SMACCM_SYS is
 	
 	-- For CAmkES, specifically
 	CAmkES_Owner_Thread : aadlstring applies to ( data );
+	Use_OS_Real_Time_Extensions : aadlboolean => true applies to (system implementation);
 	
 	-- For eChronos, specifically.  These properties are used to set the relative module 
 	-- path for the generated code from the place where prj is invoked
