@@ -259,6 +259,14 @@ public class AgreePatternTranslator {
 
         builder.addAssertion(new AgreeStatement(null, expr, pattern.reference));
         
+        //helper assertion (should be true)
+        Expr lemma = expr("period - time < p and period >= time",
+                to("period", periodVar),
+                to("p", pattern.period),
+                to("time", timeExpr));
+        
+        builder.addAssertion(new AgreeStatement(null, lemma, pattern.reference));
+        
         //timeout = pnext + jitter
         Expr timeoutExpr = new BinaryExpr(periodId, BinaryOp.PLUS, jitterId);
         timeoutExpr = new BinaryExpr(timeoutId, BinaryOp.EQUAL, timeoutExpr);
@@ -560,12 +568,12 @@ public class AgreePatternTranslator {
         
         builder.addAssertion(new AgreeStatement(null, expr, pattern));
         
-        Expr lemmaExpr = expr("timeEffect <= effectTimeRange and timeEffect >= -1.0",
-                to("timeEffect", timeEffectId),
-                to("effectTimeRange", effectTimeRangeId));
-        
-        //add this assertion to help with proofs (it should always be true)
-        builder.addAssertion(new AgreeStatement(null, lemmaExpr, pattern));
+//        Expr lemmaExpr = expr("timeEffect <= effectTimeRangeId and timeEffect >= -1.0",
+//                to("timeEffect", timeEffectId),
+//                to("effectTimeRangeId", effectTimeRangeId));
+//        
+//        //add this assertion to help with proofs (it should always be true)
+//        builder.addAssertion(new AgreeStatement(null, lemmaExpr, pattern));
         
         // register the event time
         builder.addEventTime(timeEffectVar);

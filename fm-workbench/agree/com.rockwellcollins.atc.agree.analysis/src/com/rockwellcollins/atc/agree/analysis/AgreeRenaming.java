@@ -129,6 +129,8 @@ public class AgreeRenaming extends Renaming {
                 return "time";
             } else if (original.endsWith(AgreeASTBuilder.clockIDSuffix)){
                 return newName;
+            } else if (original.endsWith(LustreAstBuilder.assumeHistSufix)){
+                return newName;
             }
             return null;
         }

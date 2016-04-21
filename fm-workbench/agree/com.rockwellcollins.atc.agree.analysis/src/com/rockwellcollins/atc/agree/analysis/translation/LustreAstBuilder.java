@@ -59,6 +59,7 @@ public class LustreAstBuilder {
     protected static final String assumeSuffix = "__ASSUME";
     protected static final String lemmaSuffix = "__LEMMA";
     protected static final String historyNodeName = "__HIST";
+    public static final String assumeHistSufix = assumeSuffix + historyNodeName;
     protected static final String patternPropSuffix = "__PATTERN";
     public static final String LATCHED_INPUTS_PREFIX = "__LATCHED_INPUTS";
 
@@ -523,7 +524,7 @@ public class LustreAstBuilder {
         
         
         //add assumption history variable
-        IdExpr assumHist = new IdExpr(assumeSuffix+"__HIST");//new NodeCallExpr(historyNodeName, assumeConjExpr);
+        IdExpr assumHist = new IdExpr(assumeHistSufix);//new NodeCallExpr(historyNodeName, assumeConjExpr);
         inputs.add(new AgreeVar(assumHist.id, NamedType.BOOL, null, agreeNode.compInst));
         
         int i = 0;
@@ -684,7 +685,7 @@ public class LustreAstBuilder {
                 assumConj = new BinaryExpr(varId, BinaryOp.AND, assumConj);
             }
         }
-        assumConj = new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumConj);
+        //assumConj = new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumConj);
         Expr histCall = new NodeCallExpr(historyNodeName, assumConj);
         Expr assertExpr = new BinaryExpr(new IdExpr(prefix + assumeSuffix+"__HIST"), BinaryOp.EQUAL, histCall);
         assertions.add(new AgreeStatement("", assertExpr, null));
