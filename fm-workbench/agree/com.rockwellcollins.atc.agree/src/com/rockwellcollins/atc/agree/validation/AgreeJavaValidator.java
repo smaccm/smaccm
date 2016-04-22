@@ -546,8 +546,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		NestedDotID recId = recType.getRecord();
 		NamedElement finalId = getFinalNestId(recId);
 
-		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
-			error(recType, "types must be record definition or data implementation");
+		if (!(finalId instanceof DataImplementation) && 
+		        !(finalId instanceof RecordDefExpr) &&
+		        !(finalId instanceof DataType)) {
+			error(recType, "types must be record definition, data implementation, or datatype");
 		}
 
 		if (finalId instanceof DataImplementation) {
@@ -566,6 +568,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 
 			dataImplCycleCheck(recId);
+			return;
+		}
+		
+		if(finalId instanceof DataType){
+		    AgreeType agreeType = getAgreeType((ComponentClassifier) finalId);
+            if (agreeType.equals(AgreeType.ERROR)) {
+                error(recType, "AADL Datatypes must extend"
+                        + " a Base_Type that AGREE can reason about.");
+                return;
+            }
 		}
 	}
 
@@ -832,6 +844,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				return nativeType;
 			}
 			typeName = recEl.getName();
+		} else if (recEl instanceof DataType) {
+		    return getAgreeType((ComponentClassifier)recEl);
 		}
 		typeName = packName + "::" + typeName;
 
@@ -1837,8 +1851,29 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public static boolean matches(AgreeType expected, AgreeType actual) {
 		if (expected.equals(ERROR) || actual.equals(ERROR)) {
 			return false;
+		}else if (integerMatch(expected, actual)){
+		    return true;
+		}else if(floatingPointMatch(expected,actual)){
+		    return true;
 		}
-
 		return expected.equals(actual);
 	}
+
+    private static boolean floatingPointMatch(AgreeType expected, AgreeType actual) {
+        if(expected.toString().equals("real") && actual.toString().startsWith("Base_Types::Float")){
+            return true;
+        }if(actual.toString().equals("real") && expected.toString().startsWith("Base_Types::Float")){
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean integerMatch(AgreeType expected, AgreeType actual) {
+        if(expected.toString().equals("int") && actual.toString().startsWith("Base_Types::Integer")){
+            return true;
+        }if(actual.toString().equals("int") && expected.toString().startsWith("Base_Types::Integer")){
+            return true;
+        }
+        return false;
+    }
 }
