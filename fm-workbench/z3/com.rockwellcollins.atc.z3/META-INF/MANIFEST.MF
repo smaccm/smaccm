@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Z3 Plugin
+Bundle-SymbolicName: com.rockwellcollins.atc.z3
+Bundle-Version: 4.4.1
+Bundle-Activator: com.rockwellcollins.atc.z3.Activator
+Bundle-Vendor: Rockwell Collins, Inc.
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: com.rockwellcollins.atc.z3
