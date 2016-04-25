@@ -19,11 +19,11 @@ import jkind.results.ValidProperty;
 
 public class AgreeRenaming extends Renaming {
 
-    private Map<String, String> explicitRenames = new HashMap<>();
-    private Map<String, EObject> refMap;
+    protected Map<String, String> explicitRenames = new HashMap<>();
+    protected Map<String, EObject> refMap;
 
     public AgreeRenaming() {
-        this.refMap = new HashMap<String, EObject>();
+        //this.refMap = new HashMap<String, EObject>();
     }
 
     public void addRenamings(AgreeRenaming renaming) {
@@ -35,13 +35,8 @@ public class AgreeRenaming extends Renaming {
         this.explicitRenames.put(oldName, newName);
     }
     
-    public void addToRefMap(String str, EObject ref) {
-        if (str != null) {
-            str = rename(str);
-            if (str != null) {
-                refMap.put(str, ref);
-            }
-        }
+    public void addSupportExplicitRename(String oldName, String newName) {
+        this.explicitRenames.put(oldName, newName);
     }
     
     public Map<String, EObject> getRefMap(){
@@ -97,7 +92,7 @@ public class AgreeRenaming extends Renaming {
     @Override
     public String rename(String original) {
 
-        String newName = this.explicitRenames.get(original);
+    	String newName = this.explicitRenames.get(original);
         if (newName != null) {
             return newName;
         }
@@ -112,9 +107,6 @@ public class AgreeRenaming extends Renaming {
             } else if(newName.matches(".*\\[[0-9]*\\]")){
                 //kind2 hacks
                newName = this.explicitRenames.get(newName);
-//               if(newName == null){
-//                   return original;
-//               }
                return newName;
             } else if(newName.matches("time")){
                 return "time";

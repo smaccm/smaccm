@@ -9,17 +9,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
-import jkind.JKindException;
-import jkind.api.JRealizabilityApi;
-import jkind.api.KindApi;
-import jkind.api.results.AnalysisResult;
-import jkind.api.results.CompositeAnalysisResult;
-import jkind.api.results.JKindResult;
-import jkind.api.results.JRealizabilityResult;
-import jkind.lustre.Node;
-import jkind.lustre.Program;
-import jkind.lustre.VarDecl;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -57,15 +46,17 @@ import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.impl.AssignStatementImpl;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
-import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
+import com.rockwellcollins.atc.agree.analysis.AgreeSupportRenaming;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
@@ -79,6 +70,18 @@ import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuild
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
 
+import jkind.JKindException;
+import jkind.api.JRealizabilityApi;
+import jkind.api.KindApi;
+import jkind.api.results.AnalysisResult;
+import jkind.api.results.CompositeAnalysisResult;
+import jkind.api.results.JKindResult;
+import jkind.api.results.JRealizabilityResult;
+import jkind.lustre.NamedType;
+import jkind.lustre.Node;
+import jkind.lustre.Program;
+import jkind.lustre.VarDecl;
+
 public abstract class VerifyHandler extends AadlHandler {
     protected AgreeResultsLinker linker = new AgreeResultsLinker();
     protected Queue<JKindResult> queue = new ArrayDeque<>();
@@ -89,6 +92,8 @@ public abstract class VerifyHandler extends AadlHandler {
     private IHandlerActivation terminateActivation;
     private IHandlerActivation terminateAllActivation;
     private IHandlerService handlerService;
+    
+    protected static final String topPrefix = "_TOP__";
 
     private enum AnalysisType {
         AssumeGuarantee, Consistency, Realizability
@@ -162,9 +167,8 @@ public abstract class VerifyHandler extends AadlHandler {
             SystemInstance si = getSysInstance(root);
 
             AnalysisResult result;
+           
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
-
-            // SystemType sysType = si.getSystemImplementation().getType();
             ComponentType sysType = AgreeUtils.getInstanceType(si);
             EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
                     AgreePackage.eINSTANCE.getAgreeContractSubclause());
@@ -173,7 +177,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 throw new AgreeException(
                         "There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
             }
-
+            
             if (isRecursive()) {
                 if(AgreeUtils.usingKind2()){
                     throw new AgreeException("Kind2 only supports monolithic verification");
@@ -188,7 +192,7 @@ public abstract class VerifyHandler extends AadlHandler {
                         createVerification("Realizability Check", si, program, agreeProgram, AnalysisType.Realizability));
                 result = wrapper;
             } else {
-                wrapVerificationResult(si, wrapper);
+            	 wrapVerificationResult(si, wrapper);
                 result = wrapper;
             }
             showView(result, linker);
@@ -278,21 +282,24 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram,
             AnalysisType analysisType) {
 
-        AgreeRenaming renaming = new AgreeRenaming();
+        AgreeSupportRenaming renaming = new AgreeSupportRenaming();
+        
         AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
+        List<String> properties = new ArrayList<>();
+        
         for (Node node : lustreProgram.nodes) {
             if (node.id.equals(lustreProgram.main)) {
                 mainNode = node;
-                break;
             }
+            addRenamings(renaming, properties, layout, node, agreeProgram);
         }
+        
+       addSupportRenamings(renaming, layout, agreeProgram);
+        
         if (mainNode == null) {
             throw new AgreeException("Could not find main lustre node after translation");
         }
-
-        List<String> properties = new ArrayList<>();
-        addRenamings(renaming, properties, layout, mainNode, agreeProgram);
 
         JKindResult result;
         switch (analysisType) {
@@ -318,29 +325,30 @@ public abstract class VerifyHandler extends AadlHandler {
         linker.setLayout(result, layout);
         linker.setReferenceMap(result, renaming.getRefMap());
         linker.setLog(result, AgreeLogger.getLog());
-
-        // System.out.println(program);
         return result;
-
     }
-
-    private void addRenamings(AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
-            Node mainNode, AgreeProgram agreeProgram) {
-        for (VarDecl var : mainNode.inputs) {
+    
+    private void addRenamings(AgreeSupportRenaming renaming, List<String> properties, AgreeLayout layout, Node node, AgreeProgram agreeProgram) {
+    	
+        for (VarDecl var : node.inputs) {
             if (var instanceof AgreeVar) {
                 addReference(renaming, layout, var);
+                
+            }
+        }      	
+        for (VarDecl var : node.locals) {
+            if (var instanceof AgreeVar) {
+		        	addReference(renaming, layout, var);
+		        	// Anitha added this for support string renaming <componentname.localvarname>
+		            if (!AgreeUtils.usingKind2() ){ //&& !isMonolithic()){
+		            	addReferenceForSupport(node, renaming, layout, var, agreeProgram);                		
+		            }
             }
         }
         
-        for (VarDecl var : mainNode.locals) {
+        for (VarDecl var : node.outputs) {
             if (var instanceof AgreeVar) {
-                addReference(renaming, layout, var);
-            }
-        }
-        
-        for (VarDecl var : mainNode.outputs) {
-            if (var instanceof AgreeVar) {
-                addReference(renaming, layout, var);
+            	addReference(renaming, layout, var);
             }
         }
         
@@ -348,12 +356,21 @@ public abstract class VerifyHandler extends AadlHandler {
         if(AgreeUtils.usingKind2()){
             addKind2Properties(agreeProgram.topNode, properties, renaming, "_TOP", "");
         }else{
-            properties.addAll(mainNode.properties);
+            properties.addAll(node.properties);
         }
-        
+    }
+
+    private void addSupportRenamings(AgreeSupportRenaming renaming, AgreeLayout layout,
+            AgreeProgram agreeProgram) {
+    	for (AgreeNode subNode : agreeProgram.agreeNodes) { 
+		  		ComponentClassifier compClass = subNode.compInst.getComponentClassifier();
+		  		AgreeVar nodeIdVar= new AgreeVar(subNode.id, NamedType.BOOL,null, subNode.compInst);
+		  		String componentName = (compClass.getQualifiedName()).substring(0,(compClass.getQualifiedName()).indexOf(':'));
+		  		addSpecificReference(renaming, layout, nodeIdVar,componentName);
+			}
     }
     
-    void addKind2Properties(AgreeNode agreeNode, List<String> properties, AgreeRenaming renaming, String prefix, String userPropPrefix){
+    void addKind2Properties(AgreeNode agreeNode, List<String> properties, AgreeSupportRenaming renaming, String prefix, String userPropPrefix){
         int i = 0;
         
         String propPrefix = (userPropPrefix.equals("")) ? "" : userPropPrefix + ": ";
@@ -370,20 +387,55 @@ public abstract class VerifyHandler extends AadlHandler {
         for(AgreeNode subNode : agreeNode.subNodes){
             addKind2Properties(subNode, properties, renaming, prefix+"."+subNode.id, userPropPrefix + subNode.id);
         }
+    }    
+    
+    //Anitha: adding these additional references to rename support elements of form ComponentName.SupportElement 
+    private void addReferenceForSupport(Node node, AgreeSupportRenaming renaming, AgreeLayout layout,
+           VarDecl var, AgreeProgram agreeProgram) {
+    	   String componentName =  node.id; //layout.getCategory(node.id);
+    	   String varId=var.id; 	  
+    	   String varReference=getReferenceStr((AgreeVar) var);
+    	   
+		   componentName = layout.getCategory(node.id);
+		   varReference=getReferenceStr((AgreeVar) var);
+		   if (!componentName.isEmpty() && varId != null && varId.contains(componentName)) {	
+			   varId = topPrefix+componentName+"."+varId;
+			  // varReference=componentName+"."+varReference;
+			   
+		   }
+		  
+		    renaming.addExplicitRename(varId, varReference);	
+		    //renaming.addSupportToRefMap(varReference, ((AgreeVar) var).reference);
+			renaming.addSupportToRefMap(varId, ((AgreeVar) var).reference);
+			
+			String category = getCategory((AgreeVar) var);
+			if (category != null && !layout.getCategories().contains(category)) {
+			    layout.addCategory(category);
+			}
+			layout.addElement(category, varReference, SigType.INPUT);	
+			
+		   return;
     }
 
-    private void addReference(AgreeRenaming renaming, AgreeLayout layout,
-            VarDecl var) {
+    private void addReference(AgreeSupportRenaming renaming, AgreeLayout layout, VarDecl var) {
         String refStr = getReferenceStr((AgreeVar) var);
-        renaming.addExplicitRename(var.id, refStr);
+        addSpecificReference(renaming, layout, var, refStr);
+    }
+
+    private void addSpecificReference(AgreeSupportRenaming renaming, AgreeLayout layout,
+            VarDecl var, String refStr) {
+    	
+    	renaming.addExplicitRename(var.id, refStr);
         renaming.addToRefMap(var.id, ((AgreeVar) var).reference);
+        
         String category = getCategory((AgreeVar) var);
         if (category != null && !layout.getCategories().contains(category)) {
             layout.addCategory(category);
         }
         layout.addElement(category, refStr, SigType.INPUT);
+        return;
     }
-
+    
     private String getCategory(AgreeVar var) {
         if (var.compInst == null || var.reference == null) {
             return null;
@@ -392,7 +444,11 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private String getReferenceStr(AgreeVar var) {
-
+    	
+    	if(var.equals(null)){
+    		return null;
+    	}
+    	
         String prefix = getCategory(var);
         if (prefix == null) {
             return null;
@@ -404,13 +460,26 @@ public abstract class VerifyHandler extends AadlHandler {
         String seperator = (prefix == "" ? "" : ".");
         EObject reference = var.reference;
         if (reference instanceof GuaranteeStatement) {
-            return ((GuaranteeStatement) reference).getStr();
+            return prefix + seperator +((GuaranteeStatement) reference).getStr();
         } else if (reference instanceof AssumeStatement) {
-            return prefix + " assume: " + ((AssumeStatement) reference).getStr();
+        	return prefix + "assumption: " + ((AssumeStatement) reference).getStr();
+        	//Anitha: commented this and added the above line
+			// return ((AssumeStatement) reference).getStr();
         } else if (reference instanceof LemmaStatement) {
             return prefix + " lemma: " + ((LemmaStatement) reference).getStr();
         } else if (reference instanceof AssertStatement) {
-            throw new AgreeException("We really didn't expect to see an assert statement here");
+        	String referenceString =  "Assertion";
+        	//TODO: Anitha: I am not able to get a reference name for assert ?
+        	if (var.id.contains("_TOP__ASSERT__")) {
+        		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        	}else{
+        		if (var.id.contains("ASSERT__")) {
+            		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        		}
+        	}
+        	
+        	return (referenceString);
+        	//throw new AgreeException("We really didn't expect to see an assert statement here");
         } else if (reference instanceof Arg) {
             return prefix + seperator + ((Arg) reference).getName();
         } else if (reference instanceof DataPort) {
@@ -424,7 +493,27 @@ public abstract class VerifyHandler extends AadlHandler {
         } else if (reference instanceof ComponentType || reference instanceof ComponentImplementation) {
             return "Result";
         }
-        throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
+        //Anitha Added this to include reference for equations
+        else if (reference instanceof EqStatement) {
+        	 EList<Arg> args = ((EqStatement) reference).getLhs();
+        	 if (!args.isEmpty() && args.size() >= 0) {
+        		 return (prefix + seperator + (args.get(0).getName()));         
+        	 } else{
+        		 return (prefix + seperator + ((EqStatement) reference).getLhs().toString()); 
+        	 }
+        } else if (reference instanceof AssignStatementImpl) {
+        	String referenceString = "Assignment";
+        	//TODO: Anitha: I am not able to get a reference name for assert ?
+        	if (var.id.contains("_TOP__ASSERT__")) {
+        		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        	}else{
+        		if (var.id.contains("ASSERT__")) {
+            		referenceString = referenceString +"__" +var.id.substring(var.id.indexOf("ASSERT__")+8,var.id.length());
+        		}
+        	}
+        	return (referenceString);
+       }
+       throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
     }
 
     private AgreeSubclause getContract(ComponentImplementation ci) {

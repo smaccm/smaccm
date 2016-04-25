@@ -5,6 +5,8 @@ package com.rockwellcollins.atc.agree.analysis.preferences;
  */
 public class PreferenceConstants {
     public static final String PREF_INDUCT_CEX = "inductiveCounterexamples";
+    //Anitha: added this for set of support
+    public static final String PREF_SUPPORT = "setOfSupport"; 
 
     public static final String PREF_SMOOTH_CEX = "smoothCounterexamples";
 

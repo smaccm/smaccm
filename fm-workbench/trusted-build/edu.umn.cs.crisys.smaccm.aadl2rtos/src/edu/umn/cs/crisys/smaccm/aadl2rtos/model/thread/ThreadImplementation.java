@@ -42,6 +42,7 @@ public class ThreadImplementation {
 	private int eChronosThreadLocation; 
 	
 	
+  // Data port lists.  This is stupid.  
 	private List<DataPort> ports = new ArrayList<DataPort>();
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
   

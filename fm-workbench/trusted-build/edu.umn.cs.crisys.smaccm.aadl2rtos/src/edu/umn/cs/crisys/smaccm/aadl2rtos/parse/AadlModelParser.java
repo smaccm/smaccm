@@ -355,7 +355,7 @@ public class AadlModelParser {
       if (port.getDirection() == DirectionType.IN) {
         // handle IRQs specially
         if (PropertyUtil.getIsIsr(port)) {
-            throw new Aadl2RtosException("ISR ports must be event-data ports with type Base_Types::Integer_64.");
+          dp = addIrqHandler(port, ti); 
         } else {
           dp = addInputEventPort(port, new UnitType(), ti);
         }
@@ -365,11 +365,7 @@ public class AadlModelParser {
     } else if (port.getCategory() == PortCategory.EVENT_DATA) {
       if (port.getDirection() == DirectionType.IN) {
         if (PropertyUtil.getIsIsr(port)) {
-        	if (datatype.equals(new IntType(64, true))) { 
-        		dp = addIrqHandler(port, ti); 
-        	} else {
-        		throw new Aadl2RtosException("ISR ports must be event-data ports with type Base_Types::Integer_64.");
-        	}
+          throw new Aadl2RtosException("ISR ports can only be event ports.");
         } else {
           dp = addInputEventPort(port, datatype, ti);
         }
@@ -567,7 +563,9 @@ public class AadlModelParser {
     
     if (!(isPassive || isExternal)) {
       priority = PropertyUtil.getPriority(tti);
-      stackSize = PropertyUtil.getStackSizeInBytes(tti);
+      
+      // MWW TODO: temporary until after May 15 code drop
+      stackSize = java.lang.Math.max(PropertyUtil.getStackSizeInBytes(tti), 4096);
     } else {
       // TODO: Compute priorities for passive threads.
       priority = 200; 

@@ -4,41 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.SortedMap;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.xtext.util.Tuples;
-import org.eclipse.xtext.util.Pair;
-import org.osate.aadl2.ComponentClassifier;
-import org.osate.aadl2.ComponentImplementation;
-import org.osate.aadl2.instance.ComponentInstance;
-
-import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.AssertStatement;
-import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.EqStatement;
-import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.analysis.Activator;
-import com.rockwellcollins.atc.agree.analysis.AgreeException;
-import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
-import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
-import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriter;
-import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -62,12 +28,40 @@ import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
+import org.osate.aadl2.PortConnection;
+
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.impl.AssignStatementImpl;
+import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriter;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+
 public class LustreAstBuilder {
 
     protected static List<Node> nodes;
     protected static final String guarSuffix = "__GUARANTEE";
     protected static final String assumeSuffix = "__ASSUME";
     protected static final String lemmaSuffix = "__LEMMA";
+    protected static final String topPrefix = "_TOP__";
+    
+    //Anitha added this to avoid entering this frequently while adding support elements
+    public static final String dotChar = "__";
 
     public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram) {
 
@@ -162,22 +156,41 @@ public class LustreAstBuilder {
         nodes = new ArrayList<>();
         List<TypeDef> types = getTypes(agreeProgram);
 
-        AgreeNode flatNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__", monolithic);
+        AgreeNode flatNode = flattenAgreeNode(agreeProgram.topNode, topPrefix, monolithic);
         List<Expr> assertions = new ArrayList<>();
         List<VarDecl> locals = new ArrayList<>();
         List<VarDecl> inputs = new ArrayList<>();
         List<Equation> equations = new ArrayList<>();
         List<String> properties = new ArrayList<>();
-
-        for (AgreeStatement assumption : flatNode.assumptions) {
-            assertions.add(assumption.expr);
-        }
-
-        for (AgreeStatement assertion : flatNode.assertions) {
-            assertions.add(assertion.expr);
-        }
+        List<String> setofsupport = new ArrayList<>();
 
         int i = 0;
+        for (AgreeStatement assumption : flatNode.assumptions) {
+            String assumeName = topPrefix + "ASSUME" + dotChar + i++;
+            locals.add(new AgreeVar(assumeName, NamedType.BOOL, assumption.reference, flatNode.compInst));
+            // making each assumption an expression assigned to a new variable.
+            equations.add(new Equation(new IdExpr(assumeName), assumption.expr));
+            assertions.add(new IdExpr(assumeName));
+            setofsupport.add(assumeName);
+        }
+        
+        //Anitha: If an assertion is not a connection, then we need to add to set of support
+        i = 0;
+        for(AgreeStatement assertion : flatNode.assertions){
+        	if(assertion.reference != null && !(assertion.reference instanceof PortConnection)){
+        		String assertName = topPrefix+"ASSERT"+dotChar+i++;
+        		locals.add(new AgreeVar(assertName, NamedType.BOOL, assertion.reference, flatNode.compInst));
+                //AgreeVarDecl assertVar = new AgreeVarDecl(assertName, NamedType.BOOL);
+                IdExpr assertId = new IdExpr(assertName);
+                equations.add(new Equation(assertId, assertion.expr));
+                assertions.add(assertId);
+                setofsupport.add(assertName);
+            } else{
+            	assertions.add(assertion.expr);
+            }
+        }
+        
+        i = 0;
         for (AgreeStatement guarantee : flatNode.lemmas) {
             String guarName = guarSuffix + i++;
             locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, flatNode.compInst));
@@ -209,6 +222,8 @@ public class LustreAstBuilder {
         builder.addEquations(equations);
         builder.addProperties(properties);
         builder.addAssertions(assertions);
+      //Anitha: Added this for adding support elements
+        builder.addIvcs(setofsupport);
         
         Node main = builder.build();
         nodes.add(main);
@@ -240,7 +255,7 @@ public class LustreAstBuilder {
         for (AgreeNode subNode : agreeProgram.topNode.subNodes) {
             nodes = new ArrayList<>();
             if (monolithic) {
-                subNode = flattenAgreeNode(subNode, "_TOP__", true);
+                subNode = flattenAgreeNode(subNode, topPrefix, true);
             }
             Node subConsistNode = getConsistencyLustreNode(subNode, monolithic);
             for (Node node : agreeProgram.globalLustreNodes) {
@@ -253,7 +268,7 @@ public class LustreAstBuilder {
         }
 
         nodes = new ArrayList<>();
-        AgreeNode compositionNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__", monolithic);
+        AgreeNode compositionNode = flattenAgreeNode(agreeProgram.topNode, topPrefix, monolithic);
 
         Node topCompositionConsist = getConsistencyLustreNode(compositionNode, true);
         for (Node node : agreeProgram.globalLustreNodes) {
@@ -430,25 +445,27 @@ public class LustreAstBuilder {
 
     protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic) {
 
-        List<VarDecl> inputs = new ArrayList<>();
+    	List<VarDecl> inputs = new ArrayList<>();
         List<VarDecl> locals = new ArrayList<>();
         List<Equation> equations = new ArrayList<>();
         List<Expr> assertions = new ArrayList<>();
+      //Anitha: Added this for adding support elements
+        List<String> setofsupport = new ArrayList<>();
 
         Expr assumeConjExpr = new BoolExpr(true);
-        int i = 0;
+        int count = 0;
         for (AgreeStatement statement : agreeNode.assumptions) {
-            String inputName = assumeSuffix + i++;
+        	String inputName = assumeSuffix + count++;
             inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
             IdExpr assumeId = new IdExpr(inputName);
             assertions.add(new BinaryExpr(assumeId, BinaryOp.EQUAL, statement.expr));
             assumeConjExpr = new BinaryExpr(assumeId, BinaryOp.AND, assumeConjExpr);
         }
 
-        int j = 0;
+        count = 0;
         if (monolithic) {
-            for (AgreeStatement statement : agreeNode.lemmas) {
-                String inputName = lemmaSuffix + j++;
+        	for (AgreeStatement statement : agreeNode.lemmas) {
+                String inputName = lemmaSuffix + count++;
                 inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
                 IdExpr lemmaId = new IdExpr(inputName);
                 assertions.add(new BinaryExpr(lemmaId, BinaryOp.EQUAL, statement.expr));
@@ -467,30 +484,83 @@ public class LustreAstBuilder {
         equations.add(getHist(assumeHistId, assumeConjId));
 
         Expr guarConjExpr = new BoolExpr(true);
-        for (AgreeStatement statement : agreeNode.guarantees) {
-            guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
-        }
         if (monolithic) {
-            for (AgreeStatement statement : agreeNode.lemmas) {
-                guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
-            }
+        	count=0;
+            //do not care about set of support for monolithic stuff
+	        for (AgreeStatement statement : agreeNode.guarantees) {
+	           //Anitha: added this for monolithic
+	        	String guaranteeName = dotChar+agreeNode.id+dotChar+"PROP"+dotChar+count++;
+	            locals.add(new AgreeVar(guaranteeName, NamedType.BOOL,statement.reference, agreeNode.compInst));
+                IdExpr newPropName = new IdExpr(guaranteeName);
+	            equations.add(new Equation(newPropName, statement.expr));
+	            guarConjExpr = new BinaryExpr(newPropName, BinaryOp.AND, guarConjExpr);
+	            setofsupport.add(guaranteeName);
+	         // guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
+	        }
+	        count=0;
+	        for (AgreeStatement statement : agreeNode.lemmas) {
+	        	//Anitha: added this for monolithic
+	        	String lemmaName = dotChar+agreeNode.id+dotChar+"LEMMA"+dotChar+count++;
+	            locals.add(new AgreeVar(lemmaName, NamedType.BOOL,statement.reference, agreeNode.compInst));
+                IdExpr newPropName = new IdExpr(lemmaName);
+	            equations.add(new Equation(newPropName, statement.expr));
+	            guarConjExpr = new BinaryExpr(newPropName, BinaryOp.AND, guarConjExpr);
+	            setofsupport.add(lemmaName);
+	        	//guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);	            
+	        }
+        }else{
+            count=0;
+	        for (AgreeStatement statement : agreeNode.guarantees) {
+	        	String guaranteeName = dotChar+agreeNode.id+dotChar+"PROP"+dotChar+count++;
+	            locals.add(new AgreeVar(guaranteeName, NamedType.BOOL,statement.reference, agreeNode.compInst));
+                IdExpr newPropName = new IdExpr(guaranteeName);
+	            equations.add(new Equation(newPropName, statement.expr));
+	            guarConjExpr = new BinaryExpr(newPropName, BinaryOp.AND, guarConjExpr);
+	            setofsupport.add(guaranteeName);
+	        }
         }
         assertions.add(new BinaryExpr(assumeHistId, BinaryOp.IMPLIES, guarConjExpr));
-
+       
         // we only add the assertions of an agreenode if we are performing
         // monolithic verification. However, we should add EQ statements
         // with left hand sides which part of the agreeNode assertions
+
+        count=0;
         for (AgreeStatement statement : agreeNode.assertions) {
-            if (monolithic ||  AgreeUtils.statementIsContractEqOrProperty(statement)) {
-                assertions.add(statement.expr);
-            }
-        }
-
-        Expr assertExpr = new BoolExpr(true);
-        for (Expr expr : assertions) {
-            assertExpr = new BinaryExpr(expr, BinaryOp.AND, assertExpr);
-        }
-
+          if (monolithic) {
+        	 //Anitha: added this for monolithic
+        	  if (AgreeUtils.statementIsContractEqOrProperty(statement)){
+        		  if(statement.reference != null){
+        			  String assertName = dotChar+agreeNode.id+dotChar+"ASSERT"+dotChar+count++;
+	                  locals.add(new AgreeVar(assertName, NamedType.BOOL, statement.reference,  agreeNode.compInst));
+	                  //AgreeVarDecl assertVar = new AgreeVarDecl(assertName, NamedType.BOOL);
+	                  IdExpr assertId = new IdExpr(assertName);
+	                  equations.add(new Equation(assertId, statement.expr));
+	                  assertions.add(assertId);
+	                  setofsupport.add(assertName);
+	        	  }
+        	  }else{
+        		  assertions.add(statement.expr);
+        	  }
+          } else {
+        	  if (AgreeUtils.statementIsContractEqOrProperty(statement)){
+        		  if(statement.reference != null){
+	                  String assertName = dotChar+agreeNode.id+dotChar+"ASSERT"+dotChar+count++;
+	                  locals.add(new AgreeVar(assertName, NamedType.BOOL, statement.reference,  agreeNode.compInst));
+	                  //AgreeVarDecl assertVar = new AgreeVarDecl(assertName, NamedType.BOOL);
+	                  IdExpr assertId = new IdExpr(assertName);
+	                  equations.add(new Equation(assertId, statement.expr));
+	                  assertions.add(assertId);
+	                  setofsupport.add(assertName);
+	        	  }
+        	  }
+         }  
+      }
+      Expr assertExpr = new BoolExpr(true);
+      for (Expr expr : assertions) {
+          assertExpr = new BinaryExpr(expr, BinaryOp.AND, assertExpr);
+      }
+      
         String outputName = "__ASSERT";
         List<VarDecl> outputs = new ArrayList<>();
         outputs.add(new VarDecl(outputName, NamedType.BOOL));
@@ -509,6 +579,8 @@ public class LustreAstBuilder {
         builder.addOutputs(outputs);
         builder.addLocals(locals);
         builder.addEquations(equations);
+        //Anitha: Added this to add support elements
+        builder.addIvcs(setofsupport);
         
         return builder.build();
     }

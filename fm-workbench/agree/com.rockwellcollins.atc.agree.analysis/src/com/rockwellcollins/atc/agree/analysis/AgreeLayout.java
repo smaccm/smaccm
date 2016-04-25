@@ -48,13 +48,16 @@ public class AgreeLayout implements Layout {
     @Override
     public String getCategory(String signal) {
         // TODO this could give false results
-        
-        for (String cat : categories) {
-            if (signal.startsWith(cat + ".")) {
-                return cat;
-            }
-        }
-        return categories.get(categories.size() - 1);
+        //Anitha: Added this size check, since it was giving exception
+       // if(categories.size() > 0) {
+	        for (String cat : categories) {
+	            if (signal.startsWith(cat + ".")) {
+	                return cat;
+	            }
+	        }
+	        return categories.get(categories.size() - 1);
+        //}else
+        //	return null;
 
     }
 
