@@ -467,8 +467,13 @@ public class LustreAstBuilder {
         equations.add(getHist(assumeHistId, assumeConjId));
 
         Expr guarConjExpr = new BoolExpr(true);
+        int k = 0;
         for (AgreeStatement statement : agreeNode.guarantees) {
-            guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
+            String inputName = guarSuffix + k++;
+            inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+            IdExpr guarId = new IdExpr(inputName);
+            assertions.add(new BinaryExpr(guarId, BinaryOp.EQUAL, statement.expr));
+            guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
         }
         if (monolithic) {
             for (AgreeStatement statement : agreeNode.lemmas) {
