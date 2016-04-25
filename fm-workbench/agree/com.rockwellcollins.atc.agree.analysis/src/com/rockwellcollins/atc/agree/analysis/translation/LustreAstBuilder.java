@@ -430,10 +430,12 @@ public class LustreAstBuilder {
 
     protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic) {
 
+        List<VarDecl> outputs = new ArrayList<>();
         List<VarDecl> inputs = new ArrayList<>();
         List<VarDecl> locals = new ArrayList<>();
         List<Equation> equations = new ArrayList<>();
         List<Expr> assertions = new ArrayList<>();
+        List<String> ivcs = new ArrayList<>();
 
         Expr assumeConjExpr = new BoolExpr(true);
         int i = 0;
@@ -470,9 +472,10 @@ public class LustreAstBuilder {
         int k = 0;
         for (AgreeStatement statement : agreeNode.guarantees) {
             String inputName = guarSuffix + k++;
-            inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+            locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
             IdExpr guarId = new IdExpr(inputName);
-            assertions.add(new BinaryExpr(guarId, BinaryOp.EQUAL, statement.expr));
+            equations.add(new Equation(guarId, statement.expr));
+            ivcs.add(guarId.id);
             guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
         }
         if (monolithic) {
@@ -497,7 +500,6 @@ public class LustreAstBuilder {
         }
 
         String outputName = "__ASSERT";
-        List<VarDecl> outputs = new ArrayList<>();
         outputs.add(new VarDecl(outputName, NamedType.BOOL));
         equations.add(new Equation(new IdExpr(outputName), assertExpr));
 
@@ -514,6 +516,7 @@ public class LustreAstBuilder {
         builder.addOutputs(outputs);
         builder.addLocals(locals);
         builder.addEquations(equations);
+        builder.addIvcs(ivcs);
         
         return builder.build();
     }
