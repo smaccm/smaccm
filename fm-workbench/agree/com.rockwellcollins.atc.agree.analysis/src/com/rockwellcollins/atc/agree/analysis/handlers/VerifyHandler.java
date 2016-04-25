@@ -73,6 +73,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.RenamingVisitor;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
@@ -292,7 +293,9 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         List<String> properties = new ArrayList<>();
-        addRenamings(renaming, properties, layout, mainNode, agreeProgram);
+        
+        RenamingVisitor.addRenamings(lustreProgram, renaming, layout);
+        addProperties(renaming, properties, mainNode, agreeProgram);
 
         JKindResult result;
         switch (analysisType) {
@@ -324,33 +327,17 @@ public abstract class VerifyHandler extends AadlHandler {
 
     }
 
-    private void addRenamings(AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
-            Node mainNode, AgreeProgram agreeProgram) {
-        for (VarDecl var : mainNode.inputs) {
-            if (var instanceof AgreeVar) {
-                addReference(renaming, layout, var);
-            }
-        }
-        
-        for (VarDecl var : mainNode.locals) {
-            if (var instanceof AgreeVar) {
-                addReference(renaming, layout, var);
-            }
-        }
-        
-        for (VarDecl var : mainNode.outputs) {
-            if (var instanceof AgreeVar) {
-                addReference(renaming, layout, var);
-            }
-        }
-        
-        //there is a special case in the AgreeRenaming which handles this translation
-        if(AgreeUtils.usingKind2()){
+    private void addProperties(AgreeRenaming renaming, List<String> properties, Node mainNode,
+            AgreeProgram agreeProgram) {
+
+        // there is a special case in the AgreeRenaming which handles this
+        // translation
+        if (AgreeUtils.usingKind2()) {
             addKind2Properties(agreeProgram.topNode, properties, renaming, "_TOP", "");
-        }else{
+        } else {
             properties.addAll(mainNode.properties);
         }
-        
+
     }
     
     void addKind2Properties(AgreeNode agreeNode, List<String> properties, AgreeRenaming renaming, String prefix, String userPropPrefix){
