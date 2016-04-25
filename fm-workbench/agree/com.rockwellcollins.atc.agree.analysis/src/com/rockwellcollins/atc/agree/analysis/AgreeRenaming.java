@@ -55,6 +55,10 @@ public class AgreeRenaming extends Renaming {
 
         // magic to remove the prefix
         String newName;
+        if(original.startsWith(LustreAstBuilder.LATCHED_VAR_PREFIX)){
+            original = original.replaceAll(LustreAstBuilder.LATCHED_VAR_PREFIX, "");
+            original += "__LATCHED";
+        }
         newName = original.replaceAll("___Nod([^_]_?)*_", "");
         newName = newName.replace("~condact", "");
         newName = newName.replaceAll("~[0-9]*", "");
@@ -105,11 +109,11 @@ public class AgreeRenaming extends Renaming {
             return newName;
         }
         
-        //hacky, but we do not want any of the "latched inputs" from
-        //models with "synchrony latched" to appear in counter examples
-        if(original.contains(LustreAstBuilder.LATCHED_INPUTS_PREFIX)){
-            return null;
-        }
+//        //hacky, but we do not want any of the "latched inputs" from
+//        //models with "synchrony latched" to appear in counter examples
+//        if(original.contains(LustreAstBuilder.LATCHED_INPUTS_PREFIX)){
+//            return null;
+//        }
         
         newName = forceRename(original);
 

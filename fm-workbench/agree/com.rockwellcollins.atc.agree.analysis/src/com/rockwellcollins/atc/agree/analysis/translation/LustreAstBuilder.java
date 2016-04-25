@@ -62,6 +62,7 @@ public class LustreAstBuilder {
     public static final String assumeHistSufix = assumeSuffix + historyNodeName;
     protected static final String patternPropSuffix = "__PATTERN";
     public static final String LATCHED_INPUTS_PREFIX = "__LATCHED_INPUTS";
+    public static final String LATCHED_VAR_PREFIX = "__LATCHED__";
 
     public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram) {
 
@@ -911,8 +912,8 @@ public class LustreAstBuilder {
         List<VarDecl> latchedVars = new ArrayList<>();
         
         for (AgreeVar var : subAgreeNode.inputs) {
-            String latchedName = "__LATCHED__" + prefix + var.id;
-            AgreeVar latchedVar = new AgreeVar(latchedName, var.type, null /*var.reference*/, subAgreeNode.compInst);
+            String latchedName = LATCHED_VAR_PREFIX + prefix + var.id;
+            AgreeVar latchedVar = new AgreeVar(latchedName, var.type, var.reference, subAgreeNode.compInst);
             inputs.add(latchedVar);
             latchedVars.add(latchedVar);
             nonLatchedInputs.add(new IdExpr(prefix + var.id));
@@ -932,6 +933,7 @@ public class LustreAstBuilder {
         } else {
             latchedInputEq = latchedInputs.get(0);
         }
+        
         latchedInputEq = new BinaryExpr(latchedInputEq, BinaryOp.EQUAL, latchedNodeCall);
         assertions.add(new AgreeStatement("", latchedInputEq, null));
 
