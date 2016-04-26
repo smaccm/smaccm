@@ -72,6 +72,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
     public HashMap<String, MATLABFunction> functionMap = new HashMap<String, MATLABFunction>();
     public HashMap<String, MATLABExpr> persistentVarMap = new HashMap<String, MATLABExpr>();
     public HashMap<String, MATLABType> localVarTypeMap = new HashMap<String, MATLABType>();
+    public HashMap<String, SortedMap<String, MATLABType>> recordTypeMap = new HashMap<String, SortedMap<String, MATLABType>>();
     public List<MATLABPersistentVarInit> persistentVarInits = new ArrayList<>();
     public List<MATLABLocalBusVarInit> localBusVarInits = new ArrayList<>();
     public HashMap<UniqueID, UniqueID> idMap = new HashMap<UniqueID, UniqueID>();
@@ -229,8 +230,10 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 		Iterator<Entry<String, Expr>> iterator = e.fields.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Expr> entry = iterator.next();
+			//get the type for the field
+			MATLABType type = recordTypeMap.get(e.id).get(updateName(entry.getKey(),e.id));
 			//conduct explicit type cast if a field value is a constant of double type or int type 
-			MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
+			MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor(type);
 			MATLABExpr fieldExpr = typeCastVisitor.visit(entry.getValue().accept(this));
 			fields.put(updateName(entry.getKey(),e.id), fieldExpr);
 		}
@@ -242,15 +245,34 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 
 	@Override
 	public MATLABExpr visit(RecordUpdateExpr e) {
-		MATLABIdExpr recordIdExpr = (MATLABIdExpr) e.record.accept(this);
-		
+		MATLABIdExpr recordIdExpr = (MATLABIdExpr) e.record.accept(this);	
 		//Assign the specific field of the variable created from the recordExpr associated with it
 		//to the value specified in the RecordUpdateExpr
 		SortedMap<String, MATLABExpr> fields = new TreeMap<>(new StringNaturalOrdering());
+		//get the type for the field
+		Expr curExpr = e;
+		while (curExpr instanceof RecordUpdateExpr){
+			curExpr = ((RecordUpdateExpr)curExpr).record;
+		}
+		
+		MATLABType type = null;		
+		String recordName = "";
+		if (curExpr instanceof RecordExpr){
+			recordName = ((RecordExpr)curExpr).id;
+			if(recordTypeMap.get(recordName) != null){
+				String fieldName = e.field;
+				fieldName = updateName(fieldName, recordName);
+				type = recordTypeMap.get(recordName).get(fieldName);
+			}
+		}
+		else{
+			recordName = recordIdExpr.id;
+		}
+		
 		//conduct explicit type cast if a field value is a constant of double type or int type 
-		MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
+		MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor(type);
 		MATLABExpr fieldExpr = typeCastVisitor.visit(e.value.accept(this));
-		fields.put(updateName(e.field,recordIdExpr.id), fieldExpr);
+		fields.put(updateName(e.field,recordName), fieldExpr);
 		
 		String originalVar = null;
 		if(e.record instanceof IdExpr){

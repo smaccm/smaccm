@@ -5,6 +5,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABSingleType;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt8Type;
@@ -27,6 +28,15 @@ import com.rockwellcollins.atc.agree.codegen.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.codegen.translation.LustreToMATLABTranslator;
 
 public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> {
+	
+	MATLABType type = null;
+	
+	public MATLABTypeCastExprVisitor() {
+	} 
+	
+	public MATLABTypeCastExprVisitor(MATLABType type) {
+		this.type = type;
+	} 
 	
 	@Override
 	public MATLABExpr visit(MATLABBinaryExpr e) {
@@ -62,21 +72,26 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 
 	@Override
 	public MATLABExpr visit(MATLABIntExpr e) {
-		switch (LustreToMATLABTranslator.intTypeStr) {
-		case PreferenceConstants.INT_INT8:
-			return new MATLABTypeCastExpr(new MATLABInt8Type(),e);
-		case PreferenceConstants.INT_UINT8:
-			return new MATLABTypeCastExpr(new MATLABUInt8Type(),e);
-		case PreferenceConstants.INT_INT16:
-			return new MATLABTypeCastExpr(new MATLABInt16Type(),e);
-		case PreferenceConstants.INT_UINT16:
-			return new MATLABTypeCastExpr(new MATLABUInt16Type(),e);
-		case PreferenceConstants.INT_INT32:
-			return new MATLABTypeCastExpr(new MATLABInt32Type(),e);
-		case PreferenceConstants.INT_UINT32:
-			return new MATLABTypeCastExpr(new MATLABUInt32Type(),e);
-		default:
-			throw new IllegalArgumentException("Unknown int type: "+LustreToMATLABTranslator.intTypeStr);
+		if (type != null) {
+			return new MATLABTypeCastExpr(type, e);
+		} else {
+			switch (LustreToMATLABTranslator.intTypeStr) {
+			case PreferenceConstants.INT_INT8:
+				return new MATLABTypeCastExpr(new MATLABInt8Type(), e);
+			case PreferenceConstants.INT_UINT8:
+				return new MATLABTypeCastExpr(new MATLABUInt8Type(), e);
+			case PreferenceConstants.INT_INT16:
+				return new MATLABTypeCastExpr(new MATLABInt16Type(), e);
+			case PreferenceConstants.INT_UINT16:
+				return new MATLABTypeCastExpr(new MATLABUInt16Type(), e);
+			case PreferenceConstants.INT_INT32:
+				return new MATLABTypeCastExpr(new MATLABInt32Type(), e);
+			case PreferenceConstants.INT_UINT32:
+				return new MATLABTypeCastExpr(new MATLABUInt32Type(), e);
+			default:
+				throw new IllegalArgumentException("Unknown int type: "
+						+ LustreToMATLABTranslator.intTypeStr);
+			}
 		}
 	}
 
@@ -95,14 +110,19 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 
 	@Override
 	public MATLABExpr visit(MATLABDoubleExpr e) {
-        switch (LustreToMATLABTranslator.realTypeStr) {
-    		case PreferenceConstants.REAL_SINGLE:
-    			return new MATLABTypeCastExpr(new MATLABSingleType(),e);
-    		case PreferenceConstants.REAL_DOUBLE:
-    			return new MATLABTypeCastExpr(new MATLABDoubleType(),e);
-    		default:
-    			throw new IllegalArgumentException("Unknown real type: "+LustreToMATLABTranslator.realTypeStr);
-        	}
+		if (type != null) {
+			return new MATLABTypeCastExpr(type, e);
+		} else {
+			switch (LustreToMATLABTranslator.realTypeStr) {
+			case PreferenceConstants.REAL_SINGLE:
+				return new MATLABTypeCastExpr(new MATLABSingleType(), e);
+			case PreferenceConstants.REAL_DOUBLE:
+				return new MATLABTypeCastExpr(new MATLABDoubleType(), e);
+			default:
+				throw new IllegalArgumentException("Unknown real type: "
+						+ LustreToMATLABTranslator.realTypeStr);
+			}
+		}
 	}
 
 	@Override
