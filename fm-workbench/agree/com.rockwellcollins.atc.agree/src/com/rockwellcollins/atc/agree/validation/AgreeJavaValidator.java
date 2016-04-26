@@ -719,14 +719,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				NestedDotID subRec = ((RecordType) type).getRecord();
 				NamedElement finalId = getFinalNestId(subRec);
 
-				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
-					error(type, "types must be record definition or data implementation");
-					return;
-				}
+//				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
+//					error(type, "types must be record definition or data implementation");
+//					return;
+//				}
 
 				if (finalId instanceof RecordDefExpr) {
 					recordClosure.add((RecordDefExpr) finalId);
-				} else {
+				} else if(finalId instanceof DataImplementation){
 					dataImplCycleCheck(subRec);
 				}
 			}
