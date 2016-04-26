@@ -1,8 +1,5 @@
 package com.rockwellcollins.atc.agree.analysis.lustre.visitors;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -35,12 +32,11 @@ public class RenamingVisitor extends AstIterVisitor{
     private final AgreeLayout layout;
     private final Program program;
     private boolean isMainNode;
+    private String nodeName;
     
     public static void addRenamings(Program program, AgreeRenaming renaming, AgreeLayout layout){
         RenamingVisitor visitor = new RenamingVisitor(program, renaming, layout);
-        for(Node node : program.nodes){
-            visitor.visit(node);
-        }
+        visitor.visit(program);
     }
     
     private RenamingVisitor(Program program, AgreeRenaming renaming, AgreeLayout layout){
@@ -52,32 +48,36 @@ public class RenamingVisitor extends AstIterVisitor{
     @Override
     public Void visit(Node node){
         isMainNode = node.id.equals(program.main);
+        nodeName = node.id;
         visitVarDecls(node.inputs);
         visitVarDecls(node.outputs);
         visitVarDecls(node.locals);
         return null;
     }
-    
+
     @Override
     public Void visit(VarDecl e) {
-        String prefix;
-
         if (e instanceof AgreeVar) {
             AgreeVar var = (AgreeVar) e;
+            String category = getCategory(var);
+            String refStr = getReferenceStr(var);
 
-            if (!isMainNode && !(var.reference instanceof GuaranteeStatement)) {
+            if (isMainNode) {
+                if (var.reference instanceof AssumeStatement && category.equals("")) {
+                    renaming.addSupportRename(var.id, var.id);
+                    renaming.addSupportRefString(var.id, refStr);
+                    renaming.getRefMap().put(refStr, var.reference);
+                } else {
+                    renaming.addExplicitRename(var.id, refStr);
+                    renaming.addToRefMap(var.id, var.reference);
+                }
+            } else if (var.reference instanceof GuaranteeStatement) {
+                renaming.addSupportRename(nodeName + "." + var.id, category + "." + var.id);
+                renaming.addSupportRefString(nodeName + "." + var.id, refStr);
+                renaming.getRefMap().put(refStr, var.reference);
+            } else {
                 return null;
             }
-
-            String category = getCategory(var);
-            if (isMainNode) {
-                prefix = "";
-            } else {
-                prefix = category + ".";
-            }
-            String refStr = getReferenceStr(var);
-            renaming.addExplicitRename(prefix + var.id, refStr);
-            renaming.addToRefMap(prefix + var.id, var.reference);
 
             if (!layout.getCategories().contains(category)) {
                 layout.addCategory(category);

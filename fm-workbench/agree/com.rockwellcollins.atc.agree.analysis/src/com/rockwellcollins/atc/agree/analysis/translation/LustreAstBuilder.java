@@ -168,9 +168,16 @@ public class LustreAstBuilder {
         List<VarDecl> inputs = new ArrayList<>();
         List<Equation> equations = new ArrayList<>();
         List<String> properties = new ArrayList<>();
+        List<String> ivcs = new ArrayList<>();
 
+        int j = 0;
         for (AgreeStatement assumption : flatNode.assumptions) {
-            assertions.add(assumption.expr);
+            String assumName = assumeSuffix + j++;
+            locals.add(new AgreeVar(assumName, NamedType.BOOL, assumption.reference, flatNode.compInst));
+            IdExpr assumId = new IdExpr(assumName);
+            equations.add(new Equation(assumId, assumption.expr));
+            assertions.add(assumId);
+            ivcs.add(assumId.id);
         }
 
         for (AgreeStatement assertion : flatNode.assertions) {
@@ -209,6 +216,7 @@ public class LustreAstBuilder {
         builder.addEquations(equations);
         builder.addProperties(properties);
         builder.addAssertions(assertions);
+        builder.addIvcs(ivcs);
         
         Node main = builder.build();
         nodes.add(main);

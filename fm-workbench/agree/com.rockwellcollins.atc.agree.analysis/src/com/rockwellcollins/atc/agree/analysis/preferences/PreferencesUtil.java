@@ -84,6 +84,9 @@ public class PreferencesUtil {
         if (prefs.getBoolean(PreferenceConstants.PREF_SMOOTH_CEX) && solver == SolverOption.YICES) {
             api.setSmoothCounterexamples();
         }
+        if (prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
+        	api.setIvcReduction();
+        }
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
         api.setPdrMax(prefs.getInt(PreferenceConstants.PREF_PDR_MAX));
