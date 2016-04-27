@@ -45,19 +45,7 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 				throw new IllegalArgumentException("Base_Types__Unsigned mismatch with "+LustreToMATLABTranslator.intTypeStr);
 			}
 		}
-		else if(e.name.equals("Base_Types__Integer")){
-			switch (LustreToMATLABTranslator.intTypeStr) {
-			case PreferenceConstants.INT_INT8:
-				return new MATLABInt8Type();
-			case PreferenceConstants.INT_INT16:
-				return new MATLABInt16Type();
-			case PreferenceConstants.INT_INT32:
-				return new MATLABInt32Type();    		
-			default:
-				throw new IllegalArgumentException("Base_Types__Integer mismatch with "+LustreToMATLABTranslator.intTypeStr);
-			}
-		}
-		else if(e.name.equals("int")){
+		else if(e.name.equals("int") || e.name.equals("Base_Types__Integer")){
 			switch (LustreToMATLABTranslator.intTypeStr) {
 			case PreferenceConstants.INT_INT8:
 				return new MATLABInt8Type();
