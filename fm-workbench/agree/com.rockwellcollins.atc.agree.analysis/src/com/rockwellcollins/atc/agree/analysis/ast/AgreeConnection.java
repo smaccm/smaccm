@@ -2,31 +2,38 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 
 import org.eclipse.emf.ecore.EObject;
 
-public class AgreeConnection {
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeAstVisitor;
+
+public class AgreeConnection implements AgreeAst{
     public enum ConnectionType {
         EVENT, DATA
     }
 
-    public final AgreeNode sourceNode;
-    public final AgreeNode destinationNode;
-    public final String sourceVarName;
-    public final String destinationVarName;
+    public final String sourceNode;
+    public final String destinationNode;
+    public final AgreeVar sourVar;
+    public final AgreeVar destVar;
     public final ConnectionType type;
     public final EObject reference;
     public final boolean latched;
     public final boolean delayed;
 
-    public AgreeConnection(AgreeNode sourceNode, AgreeNode destinationNode, String sourceVarName,
-            String destinationVarName, ConnectionType type, boolean latched, boolean delayed,
+    public AgreeConnection(String sourceNode, String destinationNode, AgreeVar sourceVarName,
+            AgreeVar destinationVarName, ConnectionType type, boolean latched, boolean delayed,
             EObject reference) {
         this.sourceNode = sourceNode;
         this.destinationNode = destinationNode;
-        this.sourceVarName = sourceVarName;
-        this.destinationVarName = destinationVarName;
+        this.sourVar = sourceVarName;
+        this.destVar = destinationVarName;
         this.type = type;
         this.latched = latched;
         this.delayed = delayed;
         this.reference = reference;
+    }
+
+    @Override
+    public <T> T accept(AgreeAstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

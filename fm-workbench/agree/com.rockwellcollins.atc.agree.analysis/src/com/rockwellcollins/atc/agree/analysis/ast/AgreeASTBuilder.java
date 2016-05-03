@@ -571,12 +571,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                     continue;
                 }
                 connType = ConnectionType.EVENT;
-
-                AgreeConnection agreeConnection = new AgreeConnection(sourceNode, destNode, sourPort.getName() + eventSuffix,
-                        destPort.getName() + eventSuffix, connType, latched, delayed, conn);
                 
-                if(!destinationSet.add(agreeConnection.destinationVarName)){
-                    AgreeLogger.logWarning("Multiple connections to feature '"+agreeConnection.destinationVarName+"'");
+                AgreeVar sourceVar = new AgreeVar(sourPort.getName() + eventSuffix, NamedType.BOOL, sourPort);
+                AgreeVar destVar = new AgreeVar(destPort.getName() + eventSuffix, NamedType.BOOL, destPort);
+
+                AgreeConnection agreeConnection = new AgreeConnection(sourceNode.id, destNode.id, sourceVar,
+                        destVar, connType, latched, delayed, conn);
+                
+                if(!destinationSet.add(agreeConnection.destVar.id)){
+                    AgreeLogger.logWarning("Multiple connections to feature '"+agreeConnection.destVar+"'");
                 }
                 
                 agreeConns.add(agreeConnection);
@@ -600,17 +603,25 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 dataClass = eventDataPort.getDataFeatureClassifier();
             }
 
-            if (dataClass == null || getNamedType(
-                    AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null) {
+            NamedType type =
+                    getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes));
+
+            if (dataClass == null || type == null) {
                 // we don't reason about this type
                 continue;
             }
-
-            AgreeConnection agreeConnection = new AgreeConnection(sourceNode, destNode, sourPort.getName(), destPort.getName(),
-                    connType, latched, delayed, conn);
             
-            if(!destinationSet.add(agreeConnection.destinationVarName)){
-                AgreeLogger.logWarning("Multiple connections to feature '"+agreeConnection.destinationVarName+"'");
+            AgreeVar sourVar = new AgreeVar(sourPort.getName(), type, sourPort);
+            AgreeVar destVar = new AgreeVar(destPort.getName(), type, destPort);
+            
+            String sourNodeName = sourceNode == null ? null : sourceNode.id;
+            String destNodeName = destNode == null ? null : destNode.id;
+
+            AgreeConnection agreeConnection = new AgreeConnection(sourNodeName, destNodeName, sourVar,
+                    destVar, connType, latched, delayed, conn);
+
+            if (!destinationSet.add(agreeConnection.destVar.id)) {
+                AgreeLogger.logWarning("Multiple connections to feature '"+agreeConnection.destVar+"'");
             }
             
             agreeConns.add(agreeConnection);

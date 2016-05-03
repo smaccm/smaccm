@@ -9,6 +9,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.util.Tuples;
+import org.osate.aadl2.impl.DataPortImpl;
 import org.eclipse.xtext.util.Pair;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -21,6 +22,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
@@ -63,9 +65,14 @@ public class LustreAstBuilder {
     protected static final String patternPropSuffix = "__PATTERN";
     public static final String LATCHED_INPUTS_PREFIX = "__LATCHED_INPUTS";
     public static final String LATCHED_VAR_PREFIX = "__LATCHED__";
+    
+    private static AgreeProgram translate(AgreeProgram program){
+        return AgreeInlineLatchedConnections.translate(program);
+    }
 
     public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram) {
-
+        
+        agreeProgram = translate(agreeProgram);
         List<TypeDef> types = new ArrayList<>();
         for (Type type : agreeProgram.globalTypes) {
             RecordType recType = (RecordType) type;
@@ -162,6 +169,7 @@ public class LustreAstBuilder {
     
     public static Program getAssumeGuaranteeLustreProgram(AgreeProgram agreeProgram, boolean monolithic) {
 
+        agreeProgram = translate(agreeProgram);
         nodes = new ArrayList<>();
         List<TypeDef> types = new ArrayList<>();
         for (Type type : agreeProgram.globalTypes) {
@@ -261,6 +269,7 @@ public class LustreAstBuilder {
     public static List<Pair<String, Program>> getConsistencyChecks(AgreeProgram agreeProgram,
             boolean monolithic) {
 
+        
         List<Pair<String, Program>> programs = new ArrayList<>();
         List<TypeDef> types = new ArrayList<>();
         for (Type type : agreeProgram.globalTypes) {
@@ -302,7 +311,7 @@ public class LustreAstBuilder {
         }
 
         nodes = new ArrayList<>();
-        
+        agreeProgram = translate(agreeProgram);
         AgreeNode compositionNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__", monolithic);
 
         Node topCompositionConsist = getConsistencyLustreNode(compositionNode, true);
@@ -615,9 +624,11 @@ public class LustreAstBuilder {
         List<AgreeVar> inputs = new ArrayList<>();
         List<AgreeVar> outputs = new ArrayList<>();
         List<AgreeVar> locals = new ArrayList<>();
+        List<AgreeEquation> equations = new ArrayList<>();
         List<AgreeStatement> assertions = new ArrayList<>();
         Set<AgreeVar> timeEvents = new HashSet<>(agreeNode.eventTimes);
-
+        
+        
         Expr someoneTicks = null;
         for (AgreeNode subAgreeNode : agreeNode.subNodes) {
             String prefix = subAgreeNode.id + AgreeASTBuilder.dotChar;
@@ -643,7 +654,7 @@ public class LustreAstBuilder {
 
             addTimeEvents(timeEvents, flatNode, prefix, assertions);
             
-            addCondactCall(agreeNode, nodePrefix, inputs, assertions, flatNode, prefix, clockExpr,
+            addCondactCall(agreeNode, nodePrefix, inputs, assertions, equations, flatNode, prefix, clockExpr,
                     lustreNode);
 
             addHistoricalAssumptionConstraint(agreeNode, prefix, clockExpr, assertions, lustreNode);
@@ -670,8 +681,9 @@ public class LustreAstBuilder {
         inputs.addAll(agreeNode.inputs);
         outputs.addAll(agreeNode.outputs);
         locals.addAll(agreeNode.locals);
+        equations.addAll(agreeNode.localEquations);
 
-        return new AgreeNode(agreeNode.id, inputs, outputs, locals, agreeNode.localEquations, null, agreeNode.subNodes, assertions,
+        return new AgreeNode(agreeNode.id, inputs, outputs, locals, equations, null, agreeNode.subNodes, assertions,
                 agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, agreeNode.patternProps, new BoolExpr(true),
                 agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, timeEvents,
                 agreeNode.compInst);
@@ -705,13 +717,13 @@ public class LustreAstBuilder {
     protected static void addConnectionConstraints(AgreeNode agreeNode, List<AgreeStatement> assertions) {
         for (AgreeConnection conn : agreeNode.connections) {
             String destName =
-                    conn.destinationNode == null ? "" : conn.destinationNode.id + AgreeASTBuilder.dotChar;
-            destName = destName + conn.destinationVarName;
+                    conn.destinationNode == null ? "" : conn.destinationNode + AgreeASTBuilder.dotChar;
+            destName = destName + conn.destVar.id;
 
-            String sourName = conn.sourceNode == null ? "" : conn.sourceNode.id + AgreeASTBuilder.dotChar;
-            sourName = sourName + conn.sourceVarName;
+            String sourName = conn.sourceNode == null ? "" : conn.sourceNode + AgreeASTBuilder.dotChar;
+            sourName = sourName + conn.sourVar.id;
 
-            Expr connExpr;
+            Expr connExpr; 
             
             if(!conn.delayed){
                 connExpr = new BinaryExpr(new IdExpr(sourName), BinaryOp.EQUAL, new IdExpr(destName));
@@ -719,16 +731,7 @@ public class LustreAstBuilder {
                 //we need to get the correct type for the connection
                 //we can assume that the source and destination types are
                 //the same at this point
-                Type type = null;
-                for(AgreeVar var : conn.sourceNode.outputs){
-                    if(var.id.equals(conn.sourceVarName)){
-                        type = var.type;
-                    }
-                }
-                if(type == null){
-                    throw new AgreeException("Could not find type for variable '"+sourName);
-                }
-                Expr initExpr = AgreeUtils.getInitValueFromType(type);
+                Expr initExpr = AgreeUtils.getInitValueFromType(conn.sourVar.type);
                 Expr preSource = new UnaryExpr(UnaryOp.PRE, new IdExpr(sourName));
                 Expr sourExpr = new BinaryExpr(initExpr, BinaryOp.ARROW, preSource);
                 connExpr = new BinaryExpr(sourExpr, BinaryOp.EQUAL, new IdExpr(destName));
@@ -813,16 +816,25 @@ public class LustreAstBuilder {
     }
 
     protected static void addCondactCall(AgreeNode agreeNode, String nodePrefix, List<AgreeVar> inputs,
-            List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, Expr clockExpr,
+            List<AgreeStatement> assertions, List<AgreeEquation> equations, AgreeNode subAgreeNode, String prefix, Expr clockExpr,
             Node lustreNode) {
+        
+        
         List<Expr> inputIds = new ArrayList<>();
         for (VarDecl var : lustreNode.inputs) {
-            inputIds.add(new IdExpr(prefix + var.id));
+            String suffix = "";
+            if (agreeNode.timing == TimingModel.LATCHED) {
+                EObject ref = ((AgreeVar) var).reference;
+                if (ref instanceof DataPortImpl && ((DataPortImpl) ref).isIn()) {
+                    suffix = AgreeInlineLatchedConnections.LATCHED_SUFFIX;
+                }
+            }
+            inputIds.add(new IdExpr(prefix + var.id + suffix));
         }
 
-        if (agreeNode.timing == TimingModel.LATCHED) {
-            addLatchedConstraints(nodePrefix, inputs, assertions, subAgreeNode, prefix, inputIds);
-        }
+//        if (agreeNode.timing == TimingModel.LATCHED) {
+//            addLatchedConstraints(nodePrefix, inputs, assertions, subAgreeNode, prefix, inputIds);
+//        }
 
         Expr condactExpr = new CondactExpr(clockExpr, new NodeCallExpr(lustreNode.id, inputIds),
                 Collections.singletonList(new BoolExpr(true)));

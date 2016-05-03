@@ -55,6 +55,7 @@ public class AgreeNodeBuilder {
         this.lemmas = new ArrayList<>(node.lemmas);
         this.localEquations = new ArrayList<>(node.localEquations);
         this.patternProps = new ArrayList<>(node.patternProps);
+        this.eventTimes = new HashSet<>(node.eventTimes);
         this.clockConstraint = node.clockConstraint;
         this.initialConstraint = node.initialConstraint;
         this.clockVar = node.clockVar;

@@ -568,6 +568,15 @@ public class AgreePatternTranslator {
         
         builder.addAssertion(new AgreeStatement(null, expr, pattern));
         
+        //a lemma that may be helpful
+        
+        Expr lemma = expr("timeEffect <= time + intHigh",
+                to("timeEffect", timeEffectVar),
+                to("time", timeExpr),
+                to("intHigh", pattern.effectInterval.high));
+        
+        builder.addAssertion(new AgreeStatement(null, lemma, pattern));
+        
 //        Expr lemmaExpr = expr("timeEffect <= effectTimeRangeId and timeEffect >= -1.0",
 //                to("timeEffect", timeEffectId),
 //                to("effectTimeRangeId", effectTimeRangeId));
