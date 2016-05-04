@@ -77,6 +77,7 @@ import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
@@ -317,6 +318,42 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(event, "Argument of event expression must be an event data port");
 		}
 	}
+	
+	@Check(CheckType.FAST)
+    public void checkLatchedExpr(LatchedExpr latched) {
+        NestedDotID nestId = latched.getId();
+        NamedElement namedEl = getFinalNestId(nestId);
+        
+        //get container
+        EObject container = latched.eContainer();
+        AgreeContract contract = null;
+        while(!(container instanceof ComponentClassifier)){
+            if(container instanceof AgreeContract){
+                contract = (AgreeContract) container;
+            }
+            container = container.eContainer();
+        }
+        
+        if(container instanceof ComponentImplementation){
+            boolean foundLatchedStatement = false;
+            for(SpecStatement spec : contract.getSpecs()){
+                if(spec instanceof LatchedStatement){
+                    foundLatchedStatement = true;
+                    break;
+                }
+            }
+            if(!foundLatchedStatement){
+                error(latched, "Latched expressiosn can only appear in component implementations "
+                        + "that contain a latched synchrony statement");
+            }
+        }else{
+            error(latched, "Latched expressions can only appear in component implementations");
+        }
+        
+        if (!(namedEl instanceof DataPort) || !((DataPort)namedEl).isIn()) {
+            error(latched, "Latched expressions are only valid for input data ports");
+        }
+    }
 
 	@Check(CheckType.FAST)
 	public void checkSynchStatement(SynchStatement sync) {
@@ -2085,6 +2122,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return BOOL;
 		} else if (expr instanceof TimeExpr) {
 		    return REAL;
+		} else if (expr instanceof LatchedExpr){
+		    return getAgreeType(((LatchedExpr) expr).getId());
 		}
 
 		return ERROR;

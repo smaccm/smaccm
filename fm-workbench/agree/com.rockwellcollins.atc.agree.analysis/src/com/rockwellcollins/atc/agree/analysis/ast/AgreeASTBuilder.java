@@ -86,6 +86,7 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
@@ -119,6 +120,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeVarDecl;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
@@ -1391,6 +1393,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return new IdExpr(eventStr);
     }
 
+    @Override
+    public Expr caseLatchedExpr(LatchedExpr expr){
+        
+        IdExpr nestIdExpr = (IdExpr) doSwitch(expr.getId());
+        String eventStr = nestIdExpr.id + AgreeInlineLatchedConnections.LATCHED_SUFFIX;
+        return new IdExpr(eventStr);
+    }
+    
     @Override
     public Expr casePrevExpr(PrevExpr expr) {
         Expr delayExpr = doSwitch(expr.getDelay());

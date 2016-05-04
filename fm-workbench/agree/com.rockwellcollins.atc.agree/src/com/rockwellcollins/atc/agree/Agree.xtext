@@ -216,6 +216,7 @@ TermExpr returns Expr:
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
 	| {EventExpr} 'event' '(' id = NestedDotID ')'
+	| {LatchedExpr} 'latched' '(' id = NestedDotID ')'
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?

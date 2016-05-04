@@ -228,6 +228,9 @@
     <genClasses ecoreClass="Agree.ecore#//EventExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EventExpr/id"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LatchedExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LatchedExpr/id"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RealLitExpr">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//RealLitExpr/val"/>
     </genClasses>

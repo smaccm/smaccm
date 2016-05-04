@@ -644,6 +644,15 @@ public interface AgreeFactory extends EFactory
   EventExpr createEventExpr();
 
   /**
+   * Returns a new object of class '<em>Latched Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Latched Expr</em>'.
+   * @generated
+   */
+  LatchedExpr createLatchedExpr();
+
+  /**
    * Returns a new object of class '<em>Real Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

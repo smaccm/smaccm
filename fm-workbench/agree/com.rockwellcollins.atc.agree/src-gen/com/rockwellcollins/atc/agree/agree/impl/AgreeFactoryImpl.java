@@ -133,6 +133,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
       case AgreePackage.EVENT_EXPR: return createEventExpr();
+      case AgreePackage.LATCHED_EXPR: return createLatchedExpr();
       case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
       case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
       case AgreePackage.THIS_EXPR: return createThisExpr();
@@ -902,6 +903,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     EventExprImpl eventExpr = new EventExprImpl();
     return eventExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LatchedExpr createLatchedExpr()
+  {
+    LatchedExprImpl latchedExpr = new LatchedExprImpl();
+    return latchedExpr;
   }
 
   /**

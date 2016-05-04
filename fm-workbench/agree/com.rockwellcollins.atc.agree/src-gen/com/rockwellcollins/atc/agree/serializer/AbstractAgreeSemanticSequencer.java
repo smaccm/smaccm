@@ -32,6 +32,7 @@ import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
@@ -282,6 +283,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.INT_LIT_EXPR:
 				sequence_TermExpr(context, (IntLitExpr) semanticObject); 
+				return; 
+			case AgreePackage.LATCHED_EXPR:
+				sequence_TermExpr(context, (LatchedExpr) semanticObject); 
 				return; 
 			case AgreePackage.LATCHED_STATEMENT:
 				sequence_SynchStatement(context, (LatchedStatement) semanticObject); 
@@ -803,6 +807,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     val=INTEGER_LIT
 	 */
 	protected void sequence_TermExpr(EObject context, IntLitExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     id=NestedDotID
+	 */
+	protected void sequence_TermExpr(EObject context, LatchedExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
