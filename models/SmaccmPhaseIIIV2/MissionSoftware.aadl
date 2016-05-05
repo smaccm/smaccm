@@ -2,7 +2,6 @@ package MissionSoftware
 public
 	with SMACCM_SYS;
 	with SMACCM_DATA;
-	with Data_Model;
   with Base_Types;
 
 system top
@@ -59,6 +58,7 @@ thread UART_HW
 	    Dispatch_Protocol => Sporadic;
 	    SMACCM_SYS::Thread_Type => Active;
 	    Compute_Execution_Time => 10 us .. 100 us;
+      SMACCM_SYS::Sends_Events_To => "{{}}";
 	    Source_Text => ();
 	    Period => 100ms;
 end UART_HW;
@@ -67,11 +67,7 @@ thread UART_in
 	features
 		--not sure what the dimension of this array should be
 		get_packet : in event data port SMACCM_DATA::ivory_string_UartPacket.i;
-		send_gidl: out event data port SMACCM_DATA::Array.i
-		{
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-    };
+		send_gidl: out event data port SMACCM_DATA::Array.U8_80;
 	properties
 		Dispatch_Protocol => Periodic;
 		SMACCM_SYS::Thread_Type => Active;
@@ -80,56 +76,39 @@ thread UART_in
 	  Compute_Execution_Time => 10 us .. 100 us;
 	  Period => 100ms;
 	  Source_Text => ("usercode/UART_in.c");
-	  Compute_Entrypoint_Source_Text => "entry";
+    SMACCM_SYS::Sends_Events_To => "{{}}";
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+    Initialize_Entrypoint_Source_Text => "component_init";
+	  
+    --SMACCM_SYS::Sends_Events_To => "{{send_gidl 1}}";
 end UART_in;
 
 thread UART_out
   features
     --not sure what the dimension of this array should be
-    send_packet : out event data port SMACCM_DATA::ivory_string_HXCyphertext.i;
-    get_gidl: in event data port SMACCM_DATA::Array.i
-    {
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-    };
+    get_gidl: in event data port SMACCM_DATA::Array.U8_80;
     recv_response: in event data port Base_Types::Boolean;
+    send_packet : out event data port SMACCM_DATA::ivory_string_HXCyphertext.i;
   properties
     Dispatch_Protocol => Periodic;
     SMACCM_SYS::Thread_Type => Active;
     Priority => 1;
     Stack_Size => 1024 Bytes;
-      Compute_Execution_Time => 10 us .. 100 us;
-      Period => 100ms;
-      Source_Text => ("usercode/UART_out.c");
-      Compute_Entrypoint_Source_Text => "entry";
+    Compute_Execution_Time => 10 us .. 100 us;
+    Period => 100ms;
+    Source_Text => ("usercode/UART_out.c");
+    SMACCM_SYS::Sends_Events_To => "{{}}";
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+    Initialize_Entrypoint_Source_Text => "component_init";
+    --SMACCM_SYS::Sends_Events_To => "{{send_packet 1}, {}}";
 end UART_out;
 
 thread Server
-	features
-		get_input : in event data port SMACCM_DATA::Array.i
-    {
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-    };
-    
-    get_can : in event data port SMACCM_DATA::Array.i
-    {
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-    };
-    
-    send_output : out event data port SMACCM_DATA::Array.i
-    {
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-    };
-    
-    send_can : out event data port SMACCM_DATA::Array.i
-    {
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-    };
-    
+	features  
+    send_output : out event data port SMACCM_DATA::Array.U8_80;
+    send_can : out event data port SMACCM_DATA::Array.U8_80;
+    get_input : in event data port SMACCM_DATA::Array.U8_80;
+    get_can : in event data port SMACCM_DATA::Array.U8_80;  
     camera_data : in data port SMACCM_DATA::camera_data.i;
 	properties
 		Dispatch_Protocol => Periodic;
@@ -138,27 +117,20 @@ thread Server
 		Stack_Size => 1024 Bytes;
 	  Compute_Execution_Time => 10 us .. 100 us;
 	  Source_Text => ("usercode/Server.c");
+	  SMACCM_SYS::Sends_Events_To => "{{}}";
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+    Initialize_Entrypoint_Source_Text => "component_init";
 	  Period => 100ms;
 end Server;
 
 thread CAN
 	features
-	  from_server : in event data port SMACCM_DATA::Array.i
-    {
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-    };
-    
-    to_server : out data port SMACCM_DATA::Array.i
-    {
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-    };
-    
+    to_server : out data port SMACCM_DATA::Array.U8_80;
     send_abort : out event data port Base_Types::Boolean;
-    get_status : in event data port Base_Types::Boolean;
     fragment_request : out event data port SMACCM_DATA::can_message.i;
     fragment_complete : out event data port SMACCM_DATA::can_message.i;
+    from_server : in event data port SMACCM_DATA::Array.U8_80;
+    get_status : in event data port Base_Types::Boolean;
     fragement_reasembly : in event data port SMACCM_DATA::can_message.i;
 	properties
     Dispatch_Protocol => Periodic;
@@ -167,22 +139,25 @@ thread CAN
     Stack_Size => 1024 Bytes;
     Compute_Execution_Time => 10 us .. 100 us;
     Source_Text => ("usercode/CAN.c");
+    SMACCM_SYS::Sends_Events_To => "{{}}";
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+    Initialize_Entrypoint_Source_Text => "component_init";
     Period => 100ms;
 end CAN;
 
 thread CAN_hw
   features
-    get_abort : in event data port Base_Types::Boolean;
+    fragement_reassembly : out event data port SMACCM_DATA::can_message.i;
     send_status : out event data port Base_Types::Boolean;
-    
+    get_abort : in event data port Base_Types::Boolean;
     fragment_request : in event data port SMACCM_DATA::can_message.i;
     fragment_complete : in event data port SMACCM_DATA::can_message.i;
-    fragement_reassembly : out event data port SMACCM_DATA::can_message.i;
   properties
       SMACCM_SYS::Is_External => true;
       Dispatch_Protocol => Sporadic;
       SMACCM_SYS::Thread_Type => Active;
       Compute_Execution_Time => 10 us .. 100 us;
+      SMACCM_SYS::Sends_Events_To => "{{}}";
       Source_Text => ();
 end CAN_hw;
 
