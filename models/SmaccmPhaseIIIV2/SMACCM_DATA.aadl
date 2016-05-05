@@ -7,13 +7,16 @@ data Array
   properties
     Data_Model::Data_Representation => Array;
 end Array;
+
+data implementation Array.i
+end Array.i;
 	
 data ivory_string_UartPacket
 end ivory_string_UartPacket;
     
 data implementation ivory_string_UartPacket.i
   subcomponents
-    ivory_string_UartPacket_data: data Array{
+    ivory_string_UartPacket_data: data Array.i{
       Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
       Data_Model::Dimension => (255);};
     ivory_string_UartPacket_len : data Base_Types::Integer_32;
@@ -35,7 +38,7 @@ end ivory_string_HXCyphertext;
     
 data implementation ivory_string_HXCyphertext.i
   subcomponents
-    ivory_string_HXCyphertext_data: data Array{
+    ivory_string_HXCyphertext_data: data Array.i{
       Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
       Data_Model::Dimension => (195);};
     ivory_string_HXCyphertext_len : data Base_Types::Integer_32;
@@ -47,7 +50,7 @@ end can_message;
 data implementation can_message.i
 	subcomponents
 		can_message_len: data Base_Types::Integer_32;
-		can_message_buf: data Array{
+		can_message_buf: data Array.i{
       Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
       Data_Model::Dimension => (8);};
 end can_message.i;
