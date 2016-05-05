@@ -2,6 +2,9 @@ package MissionSoftware
 public
 	with SMACCM_SYS;
 	with MissionSubprograms;
+	with SMACCM_DATA;
+	with Data_Model;
+  with Base_Types;
 
 system top
 end top;
@@ -19,48 +22,20 @@ end MissionSoftware;
 
 process implementation MissionSoftware.i
 	subcomponents
-		uart : thread UART;
-		uart_rec_mon : thread UART_Receive_Monitor;
-    uart_send_mon : thread UART_Send_Monitor;
-		input : thread Input;
-		input_mon : thread Input_Monitor;
+		uart_hw : thread UART_HW;
+		uart_in : thread UART_in;
+    uart_out : thread UART_out;
 		server : thread Server;
-		output : thread Output;
-		output_mon : thread Output_Monitor;
-		pproxy : thread PixhawkProxy;
-		pproxy_mon : thread PixhawkProxy_Monitor;
 		can : thread CAN;
-		can_mon : thread CAN_Monitor;
 		vm : thread VM;
-		vm_mon : thread VM_Monitor;
 
-	connections
-		uart_to_rec_mon : subprogram group access uart.receive_interface <-> uart_rec_mon.interface;
-		uart_mon_to_input : subprogram group access input.uart <-> uart_rec_mon.interface;
-		input_to_mon : subprogram group access input.to_svr <-> input_mon.interface;
-		
-		input_mon_to_svr : subprogram group access server.from_input <-> input_mon.interface;
-		vm_mon_to_svr : subprogram group access server.camera_data <-> vm_mon.interface;
-		proxy_to_svr : subprogram group access server.pixhawk_data <-> pproxy_mon.interface;
-		svr_to_output_mon : subprogram group access server.output_data <-> output_mon.interface;
-		
-		vm_mon_to_vm : subprogram group access vm.camera_data <-> vm_mon.interface;
-		
-		proxy_to_proxy_mon : subprogram group access pproxy.to_server <-> pproxy_mon.interface;
-		proxy_to_can_mon : subprogram group access pproxy.to_and_from_can <-> can_mon.interface;
-		
-		can_to_can_proxy : subprogram group access can.to_and_from <-> can_mon.interface;
-		
-		output_mon_to_output: subprogram group access output.pixhawk_state <-> output_mon.interface;
-		output_to_uart_mon : subprogram group access output.uart <-> uart_send_mon.interface;
-		uart_send_mon_to_uart : subprogram group access uart.send_interface <-> uart_send_mon.interface;
-		
+	
 end MissionSoftware.i;
 
-thread UART
+thread UART_HW
 	features
-		receive_interface : requires subprogram group access MissionSubprograms::UART_group;
-    send_interface : requires subprogram group access MissionSubprograms::UART_group;
+		get_packet : in event data port SMACCM_DATA::ivory_string_HXCyphertext.i;
+    send_packet : out event data port SMACCM_DATA::ivory_string_UartPacket.i;
 	properties
 	    SMACCM_SYS::Is_External => true;
 	    Dispatch_Protocol => Sporadic;
@@ -68,173 +43,132 @@ thread UART
 	    Compute_Execution_Time => 10 us .. 100 us;
 	    Source_Text => ();
 	    Period => 100ms;
-end UART;
-
-thread UART_Send_Monitor
-  features
-    interface : provides subprogram group access MissionSubprograms::UART_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-      Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/uart_send_monitor.c");
-end UART_Send_Monitor;
-
-thread UART_Receive_Monitor
-  features
-    interface : provides subprogram group access MissionSubprograms::UART_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-      Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/uart_receive_monitor.c");
-end UART_Receive_Monitor;
+end UART_HW;
 	
-thread Input
+thread UART_in
 	features
 		--not sure what the dimension of this array should be
-		uart : requires subprogram group access MissionSubprograms::UART_group;
-		to_svr : requires subprogram group access MissionSubprograms::Server_Inputs;
+		get_packet : in event data port SMACCM_DATA::ivory_string_UartPacket.i;
+		send_gidl: out event data port SMACCM_DATA::Array
+		{
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+    };
 	properties
 		Dispatch_Protocol => Periodic;
 		SMACCM_SYS::Thread_Type => Active;
 		Priority => 1;
 		Stack_Size => 1024 Bytes;
-	    Compute_Execution_Time => 10 us .. 100 us;
-	    Period => 100ms;
-	    Source_Text => ("usercode/input.c");
-	    Compute_Entrypoint_Source_Text => "entry";
-end Input;
+	  Compute_Execution_Time => 10 us .. 100 us;
+	  Period => 100ms;
+	  Source_Text => ("usercode/UART_in.c");
+	  Compute_Entrypoint_Source_Text => "entry";
+end UART_in;
 
-thread Input_Monitor
+thread UART_out
   features
-    interface : provides subprogram group access MissionSubprograms::Server_Inputs;
+    --not sure what the dimension of this array should be
+    send_packet : out event data port SMACCM_DATA::ivory_string_HXCyphertext.i;
+    get_gidl: in event data port SMACCM_DATA::Array
+    {
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+    };
+    recv_response: in event data port Base_Types::Boolean;
   properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Periodic;
+    SMACCM_SYS::Thread_Type => Active;
     Priority => 1;
     Stack_Size => 1024 Bytes;
       Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/input_monitor.c");
-end Input_Monitor;
-	
+      Period => 100ms;
+      Source_Text => ("usercode/UART_out.c");
+      Compute_Entrypoint_Source_Text => "entry";
+end UART_out;
+
 thread Server
 	features
-		from_input : requires subprogram group access MissionSubprograms::Server_Inputs;
-		camera_data : requires subprogram group access MissionSubprograms::Camera_group;
-		pixhawk_data : requires subprogram group access MissionSubprograms::Pixhawk_group;
-		output_data : requires subprogram group access MissionSubprograms::Server_Outputs;
+		get_input : in event data port SMACCM_DATA::Array
+    {
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+    };
+    
+    get_can : in event data port SMACCM_DATA::Array
+    {
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+    };
+    
+    send_output : out event data port SMACCM_DATA::Array
+    {
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+    };
+    
+    send_can : out event data port SMACCM_DATA::Array
+    {
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+    };
 	properties
 		Dispatch_Protocol => Periodic;
 		SMACCM_SYS::Thread_Type => Active;
 		Priority => 1;
 		Stack_Size => 1024 Bytes;
 	  Compute_Execution_Time => 10 us .. 100 us;
-	  Source_Text => ("usercode/server.c");
+	  Source_Text => ("usercode/Server.c");
 	  Period => 100ms;
-	    --we should not need the output_state_sem anyway since the output
-	    --thread should just run with the RPC from the server
-	    --SMACCM_SYS::External_Semaphore_List => ("pixhawk_state_sem", "output_state_sem");
-	    
 end Server;
 
-thread Output_Monitor
-	features
-		interface : provides subprogram group access MissionSubprograms::Server_Outputs;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-      Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/output_monitor.c");
-end Output_Monitor;
-	
-thread Output
-	features
-		uart : requires subprogram group access MissionSubprograms::UART_group;
-		pixhawk_state : requires subprogram group access MissionSubprograms::Server_Outputs;
-	properties
-		Dispatch_Protocol => Periodic;
-		SMACCM_SYS::Thread_Type => Active;
-		Priority => 1;
-		Stack_Size => 1024 Bytes;
-	  Compute_Execution_Time => 10 us .. 100 us;
-    Period => 100ms;
-	  Source_Text => ("usercode/output.c");
-	  --SMACCM_SYS::External_Semaphore_List => ("output_state_sem");
-end Output;
-
-thread PixhawkProxy_Monitor
-	features
-		interface : provides subprogram group access MissionSubprograms::Pixhawk_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-    Compute_Execution_Time => 10 us .. 100 us;
-    Source_Text => ("usercode/pixhawk_monitor.c");
-end PixhawkProxy_Monitor;
-	
-thread PixhawkProxy
-	features
-		to_server : requires subprogram group access MissionSubprograms::Pixhawk_group;
-		to_and_from_can : requires subprogram group access MissionSubprograms::CAN_group;		
-	properties
-		Dispatch_Protocol => Periodic;
-		SMACCM_SYS::Thread_Type => Active;
-		Priority => 1;
-		Stack_Size => 1024 Bytes;
-	  Compute_Execution_Time => 10 us .. 100 us;
-	  Period => 100ms;
-	  Source_Text => ("usercode/pixhawk_proxy.c");
-	  Compute_Entrypoint_Source_Text => "entry";
-	  --SMACCM_SYS::External_Semaphore_List => ("pixhawk_state_sem");
-end PixhawkProxy;
-	
-thread CAN_Monitor
-	features
-		interface : provides subprogram group access MissionSubprograms::CAN_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-    Compute_Execution_Time => 10 us .. 100 us;
-    Source_Text => ("usercode/can_monitor.c");
-end CAN_Monitor;
-	
 thread CAN
 	features
-		to_and_from : requires subprogram group access MissionSubprograms::CAN_group;
+	  from_server : in event data port SMACCM_DATA::Array
+    {
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+    };
+    
+    to_server : out data port SMACCM_DATA::Array
+    {
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+    };
+    
+    send_abort : out event data port Base_Types::Boolean;
+    get_status : in event data port Base_Types::Boolean;
+    fragment_request : out event data port SMACCM_DATA::can_message.i;
+    fragment_complete : out event data port SMACCM_DATA::can_message.i;
+    fragement_reasembly : in event data port SMACCM_DATA::can_message.i;
 	properties
-	    SMACCM_SYS::Is_External => true;
-	    Dispatch_Protocol => Sporadic;
-	    SMACCM_SYS::Thread_Type => Active;
-	    Compute_Execution_Time => 10 us .. 100 us;
-	    Source_Text => ();
-end CAN;
-
-thread VM_Monitor
-	features
-		interface : provides subprogram group access MissionSubprograms::Camera_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Periodic;
+    SMACCM_SYS::Thread_Type => Active;
     Priority => 1;
     Stack_Size => 1024 Bytes;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ("usercode/CAN.c");
+    Period => 100ms;
+end CAN;
+
+thread CAN_hw
+  features
+    get_abort : in event data port Base_Types::Boolean;
+    send_status : out event data port Base_Types::Boolean;
+    
+    fragment_request : in event data port SMACCM_DATA::can_message.i;
+    fragment_complete : in event data port SMACCM_DATA::can_message.i;
+    fragement_reasembly : out event data port SMACCM_DATA::can_message.i;
+  properties
+      SMACCM_SYS::Is_External => true;
+      Dispatch_Protocol => Sporadic;
+      SMACCM_SYS::Thread_Type => Active;
       Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/vm_monitor.c");
-end VM_Monitor;
+      Source_Text => ();
+end CAN_hw;
 
 thread VM
 	features
-		camera_data : requires subprogram group access MissionSubprograms::Camera_group;
+		camera_data : out data port SMACCM_DATA::Camera_Data;
 	properties
 		SMACCM_SYS::Is_External => true;
 	  Dispatch_Protocol => Sporadic;
