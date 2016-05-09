@@ -159,6 +159,10 @@ public class PortNames {
   // Destination function (for input ports)
   // 
   //////////////////////////////////////////////////////////
+  public boolean getHasConnection() {
+	  return dp.getConnections().size() > 0; 
+  }
+  
   public List<PortConnectionNames> getConnections() {
 	  
 	  List<PortConnectionNames> connections = new ArrayList<>();

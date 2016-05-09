@@ -42,8 +42,14 @@ public class OutgoingDispatchContract {
   public HashMap<OutputEventPort, Integer> getPassiveContract() {
 	  HashMap<OutputEventPort, Integer> passiveContract = new HashMap<>();
 	  for (Map.Entry<OutputEventPort, Integer> entry : this.getContract().entrySet()) {
-		  if (entry.getKey().getSingletonConnection().getDestPort().getOwner().getIsPassive()) {
-			  passiveContract.put(entry.getKey(), entry.getValue());
+		  
+		  // it is possible that output port is not connected to anything!
+		  if (entry.getKey().getConnections().size() > 0) {
+			  if (entry.getKey().getSingletonConnection().getDestPort().getOwner().getIsPassive()) {
+				  passiveContract.put(entry.getKey(), entry.getValue());
+			  }
+		  } else {
+			  System.out.println("Warning: unconnected output.");
 		  }
 	  }
 	  return passiveContract;
