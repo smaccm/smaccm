@@ -20,13 +20,12 @@ import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.visitors.ExprMapVisitor;
 
-public class AgreeInlineLatchedConnections extends ExprMapVisitor implements AgreeAstVisitor<AgreeAst>{
+public class AgreeInlineLatchedConnections extends ExprMapVisitor implements AgreeAstVisitor<AgreeAst> {
 
     private final List<AgreeNode> nodes = new ArrayList<>();
     public static final String LATCHED_SUFFIX = "__LATCHED_";
-    
-    
-    public static AgreeProgram translate(AgreeProgram program){
+
+    public static AgreeProgram translate(AgreeProgram program) {
         return (AgreeProgram) program.accept(new AgreeInlineLatchedConnections());
     }
 
@@ -40,18 +39,18 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
     public AgreeNode visit(AgreeNode node) {
         AgreeNodeBuilder builder = new AgreeNodeBuilder(node);
         builder.clearSubNodes();
-        
-        for(AgreeNode subNode : node.subNodes){
+
+        for (AgreeNode subNode : node.subNodes) {
             AgreeNode newSubNode = visit(subNode);
             builder.addSubNode(newSubNode);
         }
-        
-        if(node.timing == AgreeNode.TimingModel.LATCHED){
-            for(AgreeNode subNode : builder.build().subNodes){
+
+        if (node.timing == AgreeNode.TimingModel.LATCHED) {
+            for (AgreeNode subNode : builder.build().subNodes) {
                 addLatchedInputEqs(builder, subNode);
             }
         }
-        
+
         AgreeNode finalNode = builder.build();
         nodes.add(finalNode);
         return finalNode;
@@ -65,12 +64,10 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
 
             Expr clockExpr = new IdExpr(subNode.id + AgreeASTBuilder.clockIDSuffix);
             String sourceVarName = subNode.id + "__" + var.id;
-           
-            Equation latchEq =
-                    equation(
-                            "latchVar = " + sourceVarName + " -> if pre clockVar then pre latchVar else "
-                                    + sourceVarName + ";",
-                            to("latchVar", latchVar), to("clockVar", clockExpr));
+
+            Equation latchEq = equation("latchVar = " + sourceVarName
+                    + " -> if pre clockVar or not clockVar then pre latchVar else " + sourceVarName + ";",
+                    to("latchVar", latchVar), to("clockVar", clockExpr));
             builder.addLocalEquation(new AgreeEquation(latchEq, var.reference));
         }
     }
@@ -89,6 +86,5 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
     public AgreeConnection visit(AgreeConnection conn) {
         throw new AgreeException("Should not visit here");
     }
-
 
 }

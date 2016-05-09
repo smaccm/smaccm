@@ -192,6 +192,14 @@ public class LustreAstBuilder {
             assertions.add(assertion.expr);
         }
         
+        //add assumption and monolithic lemmas first (helps with proving)
+        for (AgreeVar var : flatNode.outputs) {
+            if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
+                properties.add(var.id);
+            }
+            inputs.add(var);
+        }
+        
         int k = 0;
         for (AgreeStatement patternPropState : flatNode.patternProps) {
             String patternVarName = patternPropSuffix + k++;
@@ -216,21 +224,6 @@ public class LustreAstBuilder {
         }
 
         for (AgreeVar var : flatNode.inputs) {
-            inputs.add(var);
-        }
-
-        for (AgreeVar var : flatNode.outputs) {
-            if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
-                properties.add(var.id);
-            }
-            if (var.reference instanceof AgreeStatement){
-                AgreeStatement statement = (AgreeStatement) var.reference;
-                if (statement.reference instanceof AgreePattern) {
-                    // this variable is a reference to a pattern bounding
-                    // property
-                    properties.add(var.id);
-                }
-            }
             inputs.add(var);
         }
         
@@ -608,7 +601,12 @@ public class LustreAstBuilder {
             locals.add(var);
         }
         
-        equations.addAll(agreeNode.localEquations);
+        
+        for(AgreeEquation equation : agreeNode.localEquations){
+            if (monolithic ||  AgreeUtils.referenceIsInContract(equation.reference)) {
+                equations.add(equation);
+            }
+        }
 
         NodeBuilder builder = new NodeBuilder(nodePrefix + agreeNode.id);
         builder.addInputs(inputs);

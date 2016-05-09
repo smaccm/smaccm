@@ -91,7 +91,7 @@ public class AgreePatternTranslator {
         builder.clearAssertions();
         for (AgreeStatement statement : node.assertions) {
             if (statement instanceof AgreePattern) {
-                Expr transExpr = translatePattern((AgreePattern) statement, builder, !isTopNode);
+                Expr transExpr = translatePattern((AgreePattern) statement, builder, false);
                 statement = new AgreeStatement(statement.string, transExpr, statement.reference);
             }
             builder.addAssertion(statement);
