@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.Node;
+import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
+import jkind.lustre.RecordType;
+import jkind.util.StringNaturalOrdering;
 
 import com.rockwellcollins.atc.agree.codegen.Activator;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
@@ -25,6 +29,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABProperty;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABStatement;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
 import com.rockwellcollins.atc.agree.codegen.visitors.LustreToMATLABExprVisitor;
@@ -36,7 +41,7 @@ public class LustreToMATLABTranslator {
 	public static String realTypeStr = null;
 	
     public static MATLABPrimaryFunction translate(Node lustreNode, AgreeProgram agreeProgram){
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+    	IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         intTypeStr = prefs.getString(PreferenceConstants.PREF_INT);
         realTypeStr = prefs.getString(PreferenceConstants.PREF_REAL);
     	
@@ -50,6 +55,20 @@ public class LustreToMATLABTranslator {
         
         //get function name
     	String functionName = "check_"+lustreNode.id;
+    	
+    	//add record types
+    	for(Type type : agreeProgram.globalTypes){
+    		if(type instanceof RecordType){
+    		    RecordType recordType =	(RecordType)type;
+    			SortedMap<String, MATLABType> fields = new TreeMap<>(new StringNaturalOrdering());			
+    			Iterator<Entry<String, Type>> iterator = recordType.fields.entrySet().iterator();
+    			while (iterator.hasNext()) {
+    				Entry<String, Type> entry = iterator.next();
+    				fields.put(exprVisitor.updateName(entry.getKey(),recordType.id),entry.getValue().accept(typeVisitor));
+    			}
+    			exprVisitor.recordTypeMap.put(recordType.id, fields);
+    		}
+    	}
     	
     	//add input variables
 		for (VarDecl inputVar : lustreNode.inputs){

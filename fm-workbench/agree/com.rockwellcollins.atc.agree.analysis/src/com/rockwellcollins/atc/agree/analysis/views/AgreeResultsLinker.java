@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentImplementation;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
+import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 
 public class AgreeResultsLinker {
     private Map<AnalysisResult, Program> programs = new HashMap<>();
@@ -19,7 +20,16 @@ public class AgreeResultsLinker {
     private Map<AnalysisResult, Layout> layouts = new HashMap<>();
     private Map<AnalysisResult, Map<String, EObject>> referenceMaps = new HashMap<>();
     private Map<AnalysisResult, String> logs = new HashMap<>();
+    private Map<AnalysisResult, AgreeRenaming> renamingMap = new HashMap<>();
 
+    public void setRenaming(AnalysisResult result, AgreeRenaming renaming){
+        this.renamingMap.put(result, renaming);
+    }
+    
+    public AgreeRenaming getRenaming(AnalysisResult result){
+        return this.renamingMap.get(result);
+    }
+    
     public void setProgram(AnalysisResult result, Program program) {
         programs.put(result, program);
     }

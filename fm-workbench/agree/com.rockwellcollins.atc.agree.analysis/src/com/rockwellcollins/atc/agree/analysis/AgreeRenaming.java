@@ -20,6 +20,8 @@ import jkind.results.ValidProperty;
 public class AgreeRenaming extends Renaming {
 
     private Map<String, String> explicitRenames = new HashMap<>();
+    private Map<String, String> supportRenames = new HashMap<>();
+    private Map<String, String> supportRefStrings = new HashMap<>();
     private Map<String, EObject> refMap;
 
     public AgreeRenaming() {
@@ -29,6 +31,23 @@ public class AgreeRenaming extends Renaming {
     public void addRenamings(AgreeRenaming renaming) {
         this.explicitRenames.putAll(renaming.explicitRenames);
         this.refMap.putAll(renaming.refMap);
+    }
+    
+    public void addSupportRename(String from, String to){
+        this.supportRenames.put(from, to);
+    }
+    
+    public void addSupportRefString(String from, String refStr){
+        this.supportRefStrings.put(renameIVC(from), refStr);
+    }
+    
+    @Override
+    public String renameIVC(String ivc){
+        return this.supportRenames.get(ivc);
+    }
+    
+    public String getSupportRefString(String ivc){
+        return this.supportRefStrings.get(ivc);
     }
 
     public void addExplicitRename(String oldName, String newName) {

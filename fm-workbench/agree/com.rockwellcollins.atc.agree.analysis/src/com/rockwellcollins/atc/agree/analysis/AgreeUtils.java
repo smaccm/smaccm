@@ -96,36 +96,6 @@ public class AgreeUtils {
         }
     }
 
-    static public AgreeVarDecl dataTypeToVarType(DataSubcomponent sub) {
-
-        DataType type = (DataType) sub.getAllClassifier();
-        String varName = sub.getName();
-
-        do {
-            String name = type.getQualifiedName();
-            switch (name) {
-            case "Base_Types::Boolean":
-                return new AgreeVarDecl(varName, new NamedType("bool"));
-            case "Base_Types::Integer":
-            case "Base_Types::Unsigned":
-            case "Base_Types::Unsigned_32":
-            case "Base_Types::Unsigned_16":
-            case "Base_Types::Unsigned_8":
-            case "Base_Types::Integer_32":
-            case "Base_Types::Integer_16":
-            case "Base_Types::Integer_8":
-                return new AgreeVarDecl(varName, new NamedType("int"));
-            case "Base_Types::Float":
-                return new AgreeVarDecl(varName, new NamedType("real"));
-            }
-            type = (DataType) type.getExtended();
-
-        } while (type != null);
-
-        return null;
-
-    }
-
     public static NamedElement getFinalNestId(NestedDotID dotId) {
         while (dotId.getSub() != null) {
             dotId = dotId.getSub();
@@ -288,13 +258,13 @@ public class AgreeUtils {
     }
     
     private static Expr getInitValueFromType(NamedType type){
-        if(type.equals(NamedType.BOOL)){
+        if(typeMatchesBool(type)){
             return new BoolExpr(false);
         }
-        if(type.equals(NamedType.INT)){
+        if(typeMatchesInteger(type)){
             return new IntExpr(BigInteger.ZERO);
         }
-        if(type.equals(NamedType.REAL)){
+        if(typeMatchesReal(type)){
             return new RealExpr(BigDecimal.ZERO);
         }
         throw new AgreeException("Unhandled initial type for type '"+type+"'");
@@ -351,6 +321,22 @@ public class AgreeUtils {
         ct.eResource().getContents().add(ci);
 
         return ci;
+    }
+    
+    public static boolean typeMatchesBool(NamedType type){
+        return type.equals(NamedType.BOOL) ||
+                type.toString().startsWith("Base_Types__Boolean");
+    }
+    
+    public static boolean typeMatchesInteger(NamedType type){
+        return type.equals(NamedType.INT) ||
+                type.toString().startsWith("Base_Types__Unsigned") ||
+                type.toString().startsWith("Base_Types__Integer");
+    }
+    
+    public static boolean typeMatchesReal(NamedType type){
+        return type.equals(NamedType.REAL) ||
+                type.toString().startsWith("Base_Types__Float");
     }
 
 }

@@ -24,9 +24,7 @@ public class MATLABCodeGenPreferencePage extends
             { PreferenceConstants.INT_INT16, PreferenceConstants.INT_INT16 },
             { PreferenceConstants.INT_UINT16, PreferenceConstants.INT_UINT16 },
             { PreferenceConstants.INT_INT32, PreferenceConstants.INT_INT32 },
-            { PreferenceConstants.INT_UINT32, PreferenceConstants.INT_UINT32 },
-            { PreferenceConstants.INT_INT64, PreferenceConstants.INT_INT64 },
-            { PreferenceConstants.INT_UINT64, PreferenceConstants.INT_UINT64 }     
+            { PreferenceConstants.INT_UINT32, PreferenceConstants.INT_UINT32 }   
     };
     private ComboFieldEditor intTypeFieldEditor;
     private String selectedIntType;
