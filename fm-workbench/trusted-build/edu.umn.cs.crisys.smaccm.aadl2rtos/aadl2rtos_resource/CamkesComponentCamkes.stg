@@ -121,9 +121,13 @@ component <threadImpl.componentName> {
 include "<threadImpl.model.systemTypeHeaderName>";
 <if(threadImpl.isActive)>
 	control;
+<endif>
+
+<threadImpl.activeThreadConnectionList:constructSenderInterface()>
+
+<if(threadImpl.isActive)>
     has semaphore <threadImpl.dispatcherComponentSemaphoreName>;
 
-	<threadImpl.nonlocalActiveThreadConnectionFrontier:constructSenderInterface()>
 
 	// references to passive thread receivers	(if any)
 	<threadImpl.passiveThreadRegion:writeToPassiveReceiver()>

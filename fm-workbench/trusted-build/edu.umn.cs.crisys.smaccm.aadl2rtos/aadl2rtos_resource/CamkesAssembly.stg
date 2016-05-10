@@ -116,7 +116,6 @@ connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
 
 assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 <threadImpl.passiveThreadRegion:connectPassiveToActive(threadImpl, model)>
-
 >>
 
 
@@ -131,8 +130,8 @@ connectActiveToDispatcher(connection, threadImpl, model) ::= <<
 
 // assemblyConnectActiveChildToActiveThreads(threadImpl, model)
 
-assemblyConnectActiveToActiveThreads(threadImpl, model) ::= <<
-<threadImpl.nonlocalActiveThreadConnectionFrontier:connectActiveToDispatcher(threadImpl, model)>
+assemblyConnectThreadToActiveThreads(threadImpl, model) ::= <<
+<threadImpl.activeThreadConnectionList:connectActiveToDispatcher(threadImpl, model)>
 >>
 
 connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
@@ -203,6 +202,16 @@ assemblySetStackSize(threadImpl) ::= <<
 <threadImpl.componentInstanceName>._control_stack_size = <threadImpl.osSpecificStackSize>;	
 
 <endif>
+>>
+
+assemblySetSchedulingContext(threadImpl) ::= <<
+// MWW: todo: set scheduling contexts for interfaces for thread <threadImpl.componentInstanceName>.
+
+>>	
+
+assemblySetTiming(threadImpl) ::= <<
+<threadImpl.componentInstanceName>._period = <threadImpl.periodInMicroseconds>;
+<threadImpl.componentInstanceName>._budget = <threadImpl.maxExecutionTimeInMicroseconds>;
 >>
 
 assemblyConnectTimeServices(threadImpl, model) ::= <<
@@ -292,7 +301,7 @@ assembly {
 		<model.activeThreadImplementations:assemblyConnectActiveToPassiveThreads(model)>	
 		
 		// connections from active dispatcher send/receive to other active dispatcher send/receive
-		<model.activeThreadImplementations:assemblyConnectActiveToActiveThreads(model)>
+		<model.threadImplementations:assemblyConnectThreadToActiveThreads(model)>
 
 		<if(model.threadCalendar.hasDispatchers)>
 		// Periodic dispatcher connections
@@ -330,9 +339,12 @@ assembly {
 		<endif>
 		<model.irqDispatchers:constructIRQConfig()>
 		<model.threadImplementations:assemblySetPriorities()>
-		<model.threadImplementations:assemblySetStackSize()>		
+		<model.threadImplementations:assemblySetStackSize()>
+<if(model.useOSRealTimeExtensions)>		
+		<model.threadImplementations:assemblySetSchedulingContext()>
+		<model.activeThreadImplementations:assemblySetTiming()>
+<endif>
 		<model.threadImplementations:configConnectTimeServices(model)>
-
 		<model.activeThreadImplementations:configActiveToPassiveRegionDataportId(model)>	
 
     }

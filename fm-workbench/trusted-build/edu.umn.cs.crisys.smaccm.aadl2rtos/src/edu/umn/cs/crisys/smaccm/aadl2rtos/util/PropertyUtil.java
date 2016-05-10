@@ -60,6 +60,7 @@ public abstract class PropertyUtil {
   final public static String THREAD_TYPE_NAME = "SMACCM_SYS::Thread_Type";
   final public static String SMACCM_SYS_SENDS_EVENTS_TO_NAME = "SMACCM_SYS::Sends_Events_To";
   final public static String CAMKES_OWNER_THREAD_NAME = "SMACCM_SYS::CAmkES_Owner_Thread";
+  final public static String USE_OS_REAL_TIME_EXTENSIONS_NAME = "SMACCM_SYS::Use_OS_Real_Time_Extensions";
 
 	final public static String DISPATCH_PROTOCOL_NAME = "Dispatch_Protocol";
 	final public static String QUEUE_SIZE_NAME = "QUEUE_SIZE";
@@ -130,6 +131,8 @@ public abstract class PropertyUtil {
       .getPropertyDefinitionInWorkspace(SMACCM_SYS_SENDS_EVENTS_TO_NAME);
   final public static Property CAMKES_OWNER_THREAD = Util
       .getPropertyDefinitionInWorkspace(CAMKES_OWNER_THREAD_NAME);
+  final public static Property USE_OS_REAL_TIME_EXTENSIONS = Util
+	  .getPropertyDefinitionInWorkspace(USE_OS_REAL_TIME_EXTENSIONS_NAME);
   final public static Property C_TYPE_NAME = Util
       .getPropertyDefinitionInWorkspace(C_TYPE_NAME_NAME);
   final public static Property PASS_BY_REFERENCE = Util
@@ -433,6 +436,9 @@ public abstract class PropertyUtil {
     }   
   }
 
+  public static boolean getUseOsRealTimeExtensions(NamedElement elem) {
+      return (boolean) PropertyUtils.getBooleanValue(elem, PropertyUtil.USE_OS_REAL_TIME_EXTENSIONS);
+  }
   /*
   public static String getCommPrimSourceTextOpt(org.osate.aadl2.Port port) {
     try {
