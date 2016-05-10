@@ -2,10 +2,22 @@
  * Compiler version  0.1.0.3
  */
 #include "UART_out.h"
+#include "../components/UART_out/include/smaccm_UART_out.h"
 
 static void component_entry_aux(void);
 
 static void component_entry_aux_2(void);
+
+//entry points and functions defined by Backes
+
+
+
+bool Server_UART_out_get_pt_data(uint8_t * pData)
+{
+
+
+}
+
 
 void component_entry(void)
 {

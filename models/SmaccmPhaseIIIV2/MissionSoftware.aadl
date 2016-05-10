@@ -22,7 +22,7 @@ process implementation MissionSoftware.i
 	subcomponents
 		uart_hw : thread UART_HW;
 		uart_in : thread UART_in;
-    uart_out : thread UART_out;
+        uart_out : thread UART_out;
 		server : thread Server;
 		can : thread CAN;
 		can_hw : thread CAN_hw;
