@@ -180,9 +180,11 @@ public class AgreeRecordUtils {
                 case "Base_Types::Boolean":
                 case "Base_Types::Integer":
                 case "Base_Types::Unsigned":
+                case "Base_Types::Unsigned_64":
                 case "Base_Types::Unsigned_32":
                 case "Base_Types::Unsigned_16":
                 case "Base_Types::Unsigned_8":
+                case "Base_Types::Integer_64":
                 case "Base_Types::Integer_32":
                 case "Base_Types::Integer_16":
                 case "Base_Types::Integer_8":
