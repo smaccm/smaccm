@@ -73,6 +73,13 @@ public class ThreadImplementationNames {
     return threadNames;
   }
   
+  public String getPeriodInMicroseconds() {
+	  return Integer.toString(ti.getPeriodInMicroseconds());
+  }
+  
+  public String getMaxExecutionTimeInMicroseconds() {
+	  return Integer.toString(ti.getMaxExecutionTimeInMicroseconds());
+  }
   
   public List<PortConnectionNames> getNonlocalActiveThreadConnectionFrontier() {
     ArrayList<PortConnectionNames> dnList = new ArrayList<>();
@@ -81,6 +88,14 @@ public class ThreadImplementationNames {
     }
     return dnList;
   }
+
+  public List<PortConnectionNames> getActiveThreadConnectionList() {
+	    ArrayList<PortConnectionNames> dnList = new ArrayList<>();
+	    for (PortConnection d : ti.getActiveThreadConnectionList()) {
+	      dnList.add(new PortConnectionNames(d));
+	    }
+	    return dnList;
+	  }
   
   public List<PortConnectionNames> getLocalActiveThreadConnectionFrontier() {
     ArrayList<PortConnectionNames> dnList = new ArrayList<>();

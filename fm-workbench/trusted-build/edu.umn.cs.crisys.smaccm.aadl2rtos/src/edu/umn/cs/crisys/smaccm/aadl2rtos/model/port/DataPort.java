@@ -3,6 +3,8 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.PortConnectionNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
@@ -140,6 +142,16 @@ public abstract class DataPort {
     return connections;
   }
 
+  public PortConnection getSingletonConnection() {
+	  if (getConnections().size() != 1) {
+		  throw new Aadl2RtosException("Error: getSingletonConnection: cardinality of connection != 1");
+	  }
+	  else {
+		  return getConnections().get(0);
+	  }
+  }	  
+	  
+  
   /**
    * @param connections the connections to set
    */

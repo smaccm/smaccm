@@ -199,14 +199,14 @@ public abstract class CodeGeneratorBase {
         //if (d.hasData()) {
         //  dispatchRecordType.addField("input", d.getType());
         //}
-        for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getContract().entrySet()) {
+        for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getPassiveContract().entrySet()) {
           OutputEventPort outp = entry.getKey();
+          
           if (outp.hasData()) {
             ArrayType dispatchArrayType = new ArrayType(outp.getType(), entry.getValue());
             PortNames outpn = new PortNames(outp);
             
             dispatchRecordType.addField(outpn.getData(), dispatchArrayType);
-            // dispatchRecordType.addField(outpn.getDataMaxsizeName(), new IntType(32, false));
             dispatchRecordType.addField(outpn.getIndex(), new IntType(32, false));
           }
         }

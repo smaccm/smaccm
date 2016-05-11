@@ -197,9 +197,15 @@ bool <port.queueIsEmptyName>() {
  ************************************************************************/
 
 bool <incomingPortWriterName(port)>() {
+	bool result; 
 	<portLockStmt(port)> 
-	// Note: possibility for overflow here - should I worry about MAXINT messages?
-	<port.index>++;
+	// Note: possibility for overflow here - I have set (arbitrary) maximum.
+	if (<port.index> <\u003C> <port.indexMax>) {
+	  result = true; 
+	  <port.index>++;
+	} else {
+	  result = false;
+	}
 	<portUnlockStmt(port)>
 	<if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port)><endif>
 	return true;
@@ -309,7 +315,7 @@ componentRemoteCallerFunction(destPort, srcPort) ::= <<
  *  <srcPort.aadlWriterFnName>: 
  * Invoked from user code in the local thread.
  * 
- * This is the function invoked by the local active thread to make a 
+ * This is the function invoked by the local thread to make a 
  * call to write to a remote data port.
  * 
  ************************************************************************/
@@ -321,7 +327,9 @@ bool <srcPort.aadlWriterFnName>(const <srcPort.type.aadlInputType.name> <srcPort
 >>
 
 componentRemoteWriterDecl(srcPort) ::= <<
+<if(srcPort.hasConnection)>
 <componentRemoteCallerFunction(srcPort.singletonConnection.destPort, srcPort)>
+<endif>
 >>
 
 /////////////////////////////////////////////////////////////////////
@@ -366,7 +374,7 @@ userEntrypointCallerFn(dispatcher) ::= <<
  * 
  ************************************************************************/
 <userEntrypointCallerPrototype(dispatcher)> {
-	<dispatcher.maxDispatchContracts.contracts:userEntrypointCallerAssignGlobals(dispatcher)>
+	<dispatcher.maxDispatchContracts.passiveContracts:userEntrypointCallerAssignGlobals(dispatcher)>
 	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
 }	
 
@@ -380,7 +388,7 @@ userEntrypointCallerFn(dispatcher) ::= <<
 // userSendDefinition: 
 // 
 // These declarations construct the callback functions for user code
-// in order to 'send' a message to other components.  In truth, they
+// in order to 'send' a message to other passive components.  In truth, they
 // queue the message to be sent in local data; the actual 'send' is
 // performed on the queued messages after the user code completes. 
 //
@@ -402,12 +410,18 @@ userSendDefinition(port) ::= <<
  * Invoked from local active or passive thread.
  * 
  * This is the comm function invoked by a user-level thread to send a message 
- * to another thread.  It enqueues the request to be sent when the user thread
+ * to another thread.  If the target is an active thread, it calls an 
+ * RPC on the target thread to queue the data.  If it is a passive thread, 
+ * it locally enqueues the request to be sent when the user thread
  * completes execution.
  * 
  ************************************************************************/
 
 bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
+<if(port.hasConnection)>
+<if(port.singletonConnection.destPort.threadImplementation.isActive)>
+	return <outgoingPortWriterName(port.singletonConnection.destPort, port)>(<port.name>);		
+<else>	
 	if (<port.globalMaxDispatchSize> > 0 && 
 		 *<port.globalIndex> \< <port.globalMaxDispatchSize>) {
 		<if(port.hasData)><userSendCopyAadlInputToGlobalStmt(port)><endif>
@@ -416,9 +430,12 @@ bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
 	} else {
 		return false;
 	}
+<endif>
+<endif>
 }
 
 >>
+
 
 /*  If we want to abort on comm failure.
  * 		 assert(<port.globalMaxDispatchSize> > 0 && 
@@ -468,23 +485,14 @@ aadlDispatcherCallPassiveTarget(portDest,structName,portSrc) ::= <<
 <activeThreadInternalDispatcherName(portDest)>(<aadlDispatcherWritePassiveArg(structName,portSrc)>);	
 >>
 
-aadlDispatcherCallActiveTarget(portDest,structName,portSrc) ::= <<
-// Calling an active dispatch target.
-{
-  // MWW: FIX: Right now there is no 'assert' in eChronos.
-  // So I'm disabling this code.
-   bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
-   <osSpecificAssert({remoteCallSuccessful})>;
-}
->>
-
 aadlDispatcherSendLoop(dispatchContract, structName) ::= <<
 for (smaccm_it = 0; smaccm_it \< <structName>.<dispatchContract.port.index> && smaccm_it \< <dispatchContract.maxDispatchSize>; smaccm_it++) {
    <dispatchContract.passiveDispatchTargetList:aadlDispatcherCallPassiveTarget(structName, dispatchContract.port)>
-   <dispatchContract.activeDispatchTargetList:aadlDispatcherCallActiveTarget(structName, dispatchContract.port)>
 }
 
 >>
+
+
 
 /////////////////////////////////////////////////////////////
 // if the thread is *not* passive and it is a dispatcher, 
@@ -638,7 +646,7 @@ while (<dispatcher.aadlReaderFnName>()) {
 eventDataDispatcher(dispatcher) ::= <<
 while (!<dispatcher.isEmptyFnCall>) {
 	<dispatcher.varDecl>;
-	<dispatcher.queueReadName>(<dispatcher.type.valToAadlOutput><dispatcher.name>);
+	<dispatcher.aadlReaderFnName>(<dispatcher.type.valToAadlOutput><dispatcher.name>);
 	<activeThreadInternalDispatcherName(dispatcher)>(<dispatcher.type.valToAadlInput><dispatcher.name>); 
 }
 
@@ -714,13 +722,24 @@ int <osSpecificThreadEntrypoint(threadImpl)>() {
 ///////////////////////////////////////////////////////////////////////////
 
 
-portDispatchVarDeclarations(port) ::= <<
+portPassiveDispatchVarDeclarations(port) ::= <<
 <if(port.hasData)>static <port.type.queueType.name> <port.globalData>; <endif>
 static <port.indexType.aadlOutputType.name> <port.globalIndex>;
 static <port.indexType.name> <port.globalMaxDispatchSize>; 	
 
 >>
 
+portDispatchVarDeclarations(port) ::= <<
+
+<if(port.hasConnection)>
+<if(port.singletonConnection.destPort.threadImplementation.isPassive)>
+// Writing dispatch variables for port <port.name>
+<portPassiveDispatchVarDeclarations(port)>
+<else>
+// NOT writing dispatch variables for port <port.name>
+<endif>
+<endif>
+>>
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -772,3 +791,19 @@ componentCFileDecls(threadImpl) ::= <<
 
 >>
 
+
+
+/*
+aadlDispatcherCallActiveTarget(portDest,structName,portSrc) ::= <<
+// Calling an active dispatch target.
+{
+  // MWW: FIX: Right now there is no 'assert' in eChronos.
+  // So I'm disabling this code.
+   bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
+   <osSpecificAssert({remoteCallSuccessful})>;
+}
+>>
+
+from aadlDispatcherSendLoop:
+   <dispatchContract.activeDispatchTargetList:aadlDispatcherCallActiveTarget(structName, dispatchContract.port)>
+*/
