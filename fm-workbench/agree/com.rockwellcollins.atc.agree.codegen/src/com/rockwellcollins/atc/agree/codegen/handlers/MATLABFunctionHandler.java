@@ -236,7 +236,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 	}
 
 	protected String getJobName() {
-		return "AGREE - Generate Matlab Function Single Layer";
+		return "AGREE - Generate Simulink Observer";
 	}
 
 	public void writeToFile(Path filePath, String contentStr) {
