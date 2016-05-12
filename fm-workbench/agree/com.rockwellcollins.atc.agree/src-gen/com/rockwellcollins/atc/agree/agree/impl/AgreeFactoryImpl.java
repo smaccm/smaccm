@@ -68,12 +68,18 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.AGREE_SUBCLAUSE: return createAgreeSubclause();
       case AgreePackage.CONTRACT: return createContract();
       case AgreePackage.SPEC_STATEMENT: return createSpecStatement();
+      case AgreePackage.PATTERN_STATEMENT: return createPatternStatement();
+      case AgreePackage.WHEN_STATEMENT: return createWhenStatement();
+      case AgreePackage.WHENEVER_STATEMENT: return createWheneverStatement();
+      case AgreePackage.REAL_TIME_STATEMENT: return createRealTimeStatement();
+      case AgreePackage.TIME_INTERVAL: return createTimeInterval();
       case AgreePackage.SYNCH_STATEMENT: return createSynchStatement();
       case AgreePackage.ORDER_STATEMENT: return createOrderStatement();
       case AgreePackage.CALL_DEF: return createCallDef();
       case AgreePackage.PROPERTY_STATEMENT: return createPropertyStatement();
       case AgreePackage.CONST_STATEMENT: return createConstStatement();
       case AgreePackage.EQ_STATEMENT: return createEqStatement();
+      case AgreePackage.INPUT_STATEMENT: return createInputStatement();
       case AgreePackage.ASSIGN_STATEMENT: return createAssignStatement();
       case AgreePackage.FN_DEF_EXPR: return createFnDefExpr();
       case AgreePackage.NODE_DEF_EXPR: return createNodeDefExpr();
@@ -96,6 +102,19 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
       case AgreePackage.CONNECTION_STATEMENT: return createConnectionStatement();
+      case AgreePackage.ALWAYS_STATEMENT: return createAlwaysStatement();
+      case AgreePackage.WHEN_HOLDS_STATEMENT: return createWhenHoldsStatement();
+      case AgreePackage.WHEN_OCCURS_STATMENT: return createWhenOccursStatment();
+      case AgreePackage.WHENEVER_OCCURS_STATEMENT: return createWheneverOccursStatement();
+      case AgreePackage.WHENEVER_BECOMES_TRUE_STATEMENT: return createWheneverBecomesTrueStatement();
+      case AgreePackage.WHENEVER_HOLDS_STATEMENT: return createWheneverHoldsStatement();
+      case AgreePackage.WHENEVER_IMPLIES_STATEMENT: return createWheneverImpliesStatement();
+      case AgreePackage.PERIODIC_STATEMENT: return createPeriodicStatement();
+      case AgreePackage.SPORADIC_STATEMENT: return createSporadicStatement();
+      case AgreePackage.CLOSED_TIME_INTERVAL: return createClosedTimeInterval();
+      case AgreePackage.OPEN_LEFT_TIME_INTERVAL: return createOpenLeftTimeInterval();
+      case AgreePackage.OPEN_RIGHT_TIME_INTERVAL: return createOpenRightTimeInterval();
+      case AgreePackage.OPEN_TIME_INTERVAL: return createOpenTimeInterval();
       case AgreePackage.MN_SYNCH_STATEMENT: return createMNSynchStatement();
       case AgreePackage.CALEN_STATEMENT: return createCalenStatement();
       case AgreePackage.ASYNCH_STATEMENT: return createAsynchStatement();
@@ -112,9 +131,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
       case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       case AgreePackage.ARRAY_ACCESS_EXPR: return createArrayAccessExpr();
+      case AgreePackage.TIME_EXPR: return createTimeExpr();
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
       case AgreePackage.EVENT_EXPR: return createEventExpr();
+      case AgreePackage.LATCHED_EXPR: return createLatchedExpr();
       case AgreePackage.THIS_EXPR: return createThisExpr();
       case AgreePackage.FLOOR_CAST: return createFloorCast();
       case AgreePackage.REAL_CAST: return createRealCast();
@@ -169,6 +190,61 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     SpecStatementImpl specStatement = new SpecStatementImpl();
     return specStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public PatternStatement createPatternStatement()
+  {
+    PatternStatementImpl patternStatement = new PatternStatementImpl();
+    return patternStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WhenStatement createWhenStatement()
+  {
+    WhenStatementImpl whenStatement = new WhenStatementImpl();
+    return whenStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverStatement createWheneverStatement()
+  {
+    WheneverStatementImpl wheneverStatement = new WheneverStatementImpl();
+    return wheneverStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RealTimeStatement createRealTimeStatement()
+  {
+    RealTimeStatementImpl realTimeStatement = new RealTimeStatementImpl();
+    return realTimeStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TimeInterval createTimeInterval()
+  {
+    TimeIntervalImpl timeInterval = new TimeIntervalImpl();
+    return timeInterval;
   }
 
   /**
@@ -235,6 +311,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     EqStatementImpl eqStatement = new EqStatementImpl();
     return eqStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public InputStatement createInputStatement()
+  {
+    InputStatementImpl inputStatement = new InputStatementImpl();
+    return inputStatement;
   }
 
   /**
@@ -484,6 +571,149 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public AlwaysStatement createAlwaysStatement()
+  {
+    AlwaysStatementImpl alwaysStatement = new AlwaysStatementImpl();
+    return alwaysStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WhenHoldsStatement createWhenHoldsStatement()
+  {
+    WhenHoldsStatementImpl whenHoldsStatement = new WhenHoldsStatementImpl();
+    return whenHoldsStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WhenOccursStatment createWhenOccursStatment()
+  {
+    WhenOccursStatmentImpl whenOccursStatment = new WhenOccursStatmentImpl();
+    return whenOccursStatment;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverOccursStatement createWheneverOccursStatement()
+  {
+    WheneverOccursStatementImpl wheneverOccursStatement = new WheneverOccursStatementImpl();
+    return wheneverOccursStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverBecomesTrueStatement createWheneverBecomesTrueStatement()
+  {
+    WheneverBecomesTrueStatementImpl wheneverBecomesTrueStatement = new WheneverBecomesTrueStatementImpl();
+    return wheneverBecomesTrueStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverHoldsStatement createWheneverHoldsStatement()
+  {
+    WheneverHoldsStatementImpl wheneverHoldsStatement = new WheneverHoldsStatementImpl();
+    return wheneverHoldsStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public WheneverImpliesStatement createWheneverImpliesStatement()
+  {
+    WheneverImpliesStatementImpl wheneverImpliesStatement = new WheneverImpliesStatementImpl();
+    return wheneverImpliesStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public PeriodicStatement createPeriodicStatement()
+  {
+    PeriodicStatementImpl periodicStatement = new PeriodicStatementImpl();
+    return periodicStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SporadicStatement createSporadicStatement()
+  {
+    SporadicStatementImpl sporadicStatement = new SporadicStatementImpl();
+    return sporadicStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ClosedTimeInterval createClosedTimeInterval()
+  {
+    ClosedTimeIntervalImpl closedTimeInterval = new ClosedTimeIntervalImpl();
+    return closedTimeInterval;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OpenLeftTimeInterval createOpenLeftTimeInterval()
+  {
+    OpenLeftTimeIntervalImpl openLeftTimeInterval = new OpenLeftTimeIntervalImpl();
+    return openLeftTimeInterval;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OpenRightTimeInterval createOpenRightTimeInterval()
+  {
+    OpenRightTimeIntervalImpl openRightTimeInterval = new OpenRightTimeIntervalImpl();
+    return openRightTimeInterval;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OpenTimeInterval createOpenTimeInterval()
+  {
+    OpenTimeIntervalImpl openTimeInterval = new OpenTimeIntervalImpl();
+    return openTimeInterval;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public MNSynchStatement createMNSynchStatement()
   {
     MNSynchStatementImpl mnSynchStatement = new MNSynchStatementImpl();
@@ -660,6 +890,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public TimeExpr createTimeExpr()
+  {
+    TimeExprImpl timeExpr = new TimeExprImpl();
+    return timeExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public IntLitExpr createIntLitExpr()
   {
     IntLitExprImpl intLitExpr = new IntLitExprImpl();
@@ -686,6 +927,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     EventExprImpl eventExpr = new EventExprImpl();
     return eventExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LatchedExpr createLatchedExpr()
+  {
+    LatchedExprImpl latchedExpr = new LatchedExprImpl();
+    return latchedExpr;
   }
 
   /**

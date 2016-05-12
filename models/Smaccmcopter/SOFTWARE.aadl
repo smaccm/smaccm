@@ -41,8 +41,7 @@ public
       
     connections
       conn: feature group sensors <-> SS.sensors_in;
-      -- Not supported in current version of Osate: 
-      -- {Communication_Properties::Timing => immediate;}
+
       conn0: port motors_and_radios.flight_control_commands -> RC.commands_in;
       conn1: port motors_and_radios.mavlink -> DC.encrypt_in;
       conn2: port DC.decrypt_out -> CCT.mavlink_in;

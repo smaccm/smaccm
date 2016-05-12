@@ -1,14 +1,20 @@
 package com.rockwellcollins.atc.agree.analysis;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
+
 import jkind.JKindException;
 import jkind.api.results.Renaming;
+import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
 import jkind.results.Property;
 import jkind.results.UnknownProperty;
@@ -49,6 +55,10 @@ public class AgreeRenaming extends Renaming {
 
         // magic to remove the prefix
         String newName;
+        if(original.startsWith(LustreAstBuilder.LATCHED_VAR_PREFIX)){
+            original = original.replaceAll(LustreAstBuilder.LATCHED_VAR_PREFIX, "");
+            original += "__LATCHED";
+        }
         newName = original.replaceAll("___Nod([^_]_?)*_", "");
         newName = newName.replace("~condact", "");
         newName = newName.replaceAll("~[0-9]*", "");
@@ -80,9 +90,9 @@ public class AgreeRenaming extends Renaming {
                     renamedInvalid.getRuntime());
         }else if(property instanceof UnknownProperty){
             UnknownProperty renamedUnknown = (UnknownProperty)property;
-            return new UnknownProperty(renamedUnknown.getName(), 
+            UnknownProperty newProp =  new UnknownProperty(renamedUnknown.getName(), 
                     renamedUnknown.getTrueFor(), 
-                    rename(renamedUnknown.getInductiveCounterexample()), 
+                    rename(renamedUnknown.getInductiveCounterexamples()), 
                     renamedUnknown.getRuntime());
         }
         if(!(property instanceof ValidProperty)){
@@ -98,9 +108,16 @@ public class AgreeRenaming extends Renaming {
         if (newName != null) {
             return newName;
         }
+        
+//        //hacky, but we do not want any of the "latched inputs" from
+//        //models with "synchrony latched" to appear in counter examples
+//        if(original.contains(LustreAstBuilder.LATCHED_INPUTS_PREFIX)){
+//            return null;
+//        }
+        
         newName = forceRename(original);
 
-        if (findBestReference(original) == null) {
+        if (findBestReference(newName) == null) {
             if (original.equals("%REALIZABLE")) {
                 return "Realizability Result";
             } else if (original.contains("__nodeLemma")) {
@@ -119,7 +136,12 @@ public class AgreeRenaming extends Renaming {
                     }
                 }
                 return renamed;
-
+            } else if (newName.matches("time")) {
+                return "time";
+            } else if (original.endsWith(AgreeASTBuilder.clockIDSuffix)) {
+                return newName;
+            } else if (original.endsWith(LustreAstBuilder.assumeHistSufix)) {
+                return newName;
             }
             return null;
         }
@@ -131,10 +153,9 @@ public class AgreeRenaming extends Renaming {
     private EObject findBestReference(String refStr) {
 
         EObject ref = null;
-        refStr = refStr.replace(".", "__");
         while (ref == null && refStr != null && !refStr.equals("")) {
             ref = refMap.get(refStr);
-            int index = refStr.lastIndexOf("__");
+            int index = refStr.lastIndexOf(".");
             if (index == -1) {
                 break;
             }

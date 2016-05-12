@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis.views;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -49,9 +50,11 @@ import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
 
 public class AgreeMenuListener implements IMenuListener {
     private static final GlobalURIEditorOpener globalURIEditorOpener = AgreeUtils.getGlobalURIEditorOpener();
@@ -111,61 +114,64 @@ public class AgreeMenuListener implements IMenuListener {
     }
 
     private void addViewCounterexampleMenu(IMenuManager manager, AnalysisResult result) {
-        final Counterexample cex = getCounterexample(result);
+        final List<Counterexample> cexs = getCounterexamples(result);
         CexExtractorRegistry cexReg =
                 (CexExtractorRegistry) ExtensionRegistry.getRegistry(ExtensionRegistry.CEX_EXTRACTOR_EXT_ID);
         List<CexExtractor> extractors = cexReg.getCexExtractors();
 
-        if (cex != null) {
-            final String cexType = getCounterexampleType(result);
+        if (cexs != null) {
+            for (Counterexample cex : cexs) {
+                final String cexType = getCounterexampleType(result);
 
-            Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
-            if (tempRefMap == null) {
-                tempRefMap = linker.getReferenceMap(result);
-            }
-            Layout tempLayout = linker.getLayout(result.getParent());
-            if (tempLayout == null) {
-                tempLayout = linker.getLayout(result);
-            }
-
-            final Layout layout = tempLayout;
-            final Map<String, EObject> refMap = tempRefMap;
-
-            MenuManager sub = new MenuManager("View " + cexType + "Counterexample in");
-            manager.add(sub);
-
-            sub.add(new Action("Console") {
-                @Override
-                public void run() {
-                    viewCexConsole(cex, layout, refMap);
+                Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
+                if (tempRefMap == null) {
+                    tempRefMap = linker.getReferenceMap(result);
                 }
-            });
-
-            sub.add(new Action("Eclipse") {
-                @Override
-                public void run() {
-                    viewCexEclipse(cex, layout, refMap);
+                Layout tempLayout = linker.getLayout(result.getParent());
+                if (tempLayout == null) {
+                    tempLayout = linker.getLayout(result);
                 }
-            });
 
-            sub.add(new Action("Spreadsheet") {
-                @Override
-                public void run() {
-                    viewCexSpreadsheet(cex, layout);
-                }
-            });
+                final Layout layout = tempLayout;
+                final Map<String, EObject> refMap = tempRefMap;
 
-            // send counterexamples to external plugins
-            EObject property = refMap.get(result.getName());
-            ComponentImplementation compImpl = linker.getComponent(result.getParent());
+                MenuManager sub = new MenuManager(
+                        "View " + cexType + "Counterexample from " + cex.getSource() + " in");
+                manager.add(sub);
 
-            for (CexExtractor ex : extractors) {
-                sub.add(new Action(ex.getDisplayText()) {
+                sub.add(new Action("Console") {
                     @Override
                     public void run() {
-                        ex.receiveCex(compImpl, property, cex, refMap);
+                        viewCexConsole(cex, layout, refMap);
                     }
                 });
+
+                sub.add(new Action("Eclipse") {
+                    @Override
+                    public void run() {
+                        viewCexEclipse(cex, layout, refMap);
+                    }
+                });
+
+                sub.add(new Action("Spreadsheet") {
+                    @Override
+                    public void run() {
+                        viewCexSpreadsheet(cex, layout);
+                    }
+                });
+
+                // send counterexamples to external plugins
+                EObject property = refMap.get(result.getName());
+                ComponentImplementation compImpl = linker.getComponent(result.getParent());
+
+                for (CexExtractor ex : extractors) {
+                    sub.add(new Action(ex.getDisplayText()) {
+                        @Override
+                        public void run() {
+                            ex.receiveCex(compImpl, property, cex, refMap);
+                        }
+                    });
+                }
             }
         }
     }
@@ -197,22 +203,29 @@ public class AgreeMenuListener implements IMenuListener {
             if (property instanceof FnCallExpr) {
                 manager.add(createHyperlinkAction("Go To Node Call", property));
             }
+            if(property instanceof AgreeStatement){
+                AgreeStatement statement = (AgreeStatement)property;
+                if(statement.reference instanceof AgreePattern){
+                    AgreePattern pattern = (AgreePattern)statement.reference;
+                    manager.add(createHyperlinkAction("Go To Pattern", pattern.reference));
+                }
+            }
         }
     }
 
-    private static Counterexample getCounterexample(AnalysisResult result) {
+    private static List<Counterexample> getCounterexamples(AnalysisResult result) {
         if (result instanceof PropertyResult) {
             Property prop = ((PropertyResult) result).getProperty();
             if (prop instanceof InvalidProperty) {
-                return ((InvalidProperty) prop).getCounterexample();
+                return Collections.singletonList(((InvalidProperty) prop).getCounterexample());
             } else if (prop instanceof UnknownProperty) {
-                return ((UnknownProperty) prop).getInductiveCounterexample();
+                return ((UnknownProperty) prop).getInductiveCounterexamples();
             }
         } else if (result instanceof JRealizabilityResult) {
             PropertyResult propResult = ((JRealizabilityResult) result).getPropertyResult();
             Property prop = propResult.getProperty();
             if (prop instanceof InvalidProperty) {
-                return ((InvalidProperty) prop).getCounterexample();
+                return Collections.singletonList(((InvalidProperty) prop).getCounterexample());
             }
 
         }

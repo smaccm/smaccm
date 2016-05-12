@@ -107,6 +107,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         
         nodes.addAll(agreeProgram.globalLustreNodes);
         nodes.add(main);
+        
         Program program = new Program(types, null, nodes, main.id);
 
         return program;
@@ -164,9 +165,9 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         outputs.addAll(agreeNode.outputs);
         locals.addAll(agreeNode.locals);
 
-        return new AgreeNode(agreeNode.id, inputs, outputs, locals, null, agreeNode.subNodes, assertions,
-                agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, new BoolExpr(true),
-                agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
+        return new AgreeNode(agreeNode.id, inputs, outputs, locals, agreeNode.localEquations, null, agreeNode.subNodes, assertions,
+                agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, agreeNode.patternProps, new BoolExpr(true),
+                agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, agreeNode.eventTimes,
                 agreeNode.compInst);
     }
 
@@ -201,7 +202,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
         for (AgreeStatement statement : agreeNode.assertions) {
             assertions.add(statement.expr);
-            if(AgreeUtils.statementIsContractEqOrProperty(statement)){
+            if(AgreeUtils.referenceIsInContract(statement.reference)){
                 ensures.add(statement.expr);
             }
         }

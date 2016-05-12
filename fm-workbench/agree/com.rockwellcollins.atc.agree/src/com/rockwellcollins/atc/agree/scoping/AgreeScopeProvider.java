@@ -50,6 +50,7 @@ import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -87,6 +88,7 @@ public class AgreeScopeProvider extends
     }
     
     IScope scope_NamedElement(AgreeDataType ctx, EReference ref) {
+
         return getScope(ctx.eContainer(), ref);
     }
 
@@ -166,7 +168,9 @@ public class AgreeScopeProvider extends
             if (spec instanceof EqStatement) {
                 EqStatement eq = (EqStatement) spec;
                 result.addAll(eq.getLhs());
-            } else {
+            }else if (spec instanceof InputStatement){
+                result.addAll(((InputStatement) spec).getLhs());
+            }else{
                 result.add(spec);
             }
         }

@@ -1,15 +1,21 @@
 package com.rockwellcollins.atc.agree.analysis.ast;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
 
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeAstVisitor;
+
+import jkind.lustre.Equation;
 import jkind.lustre.Expr;
+import jkind.lustre.IdExpr;
 import jkind.lustre.Node;
 import jkind.lustre.Type;
 
-public class AgreeNode {
+public class AgreeNode implements AgreeAst{
     public enum TimingModel {
         SYNC, ASYNC, LATCHED
     };
@@ -24,22 +30,28 @@ public class AgreeNode {
     public final List<AgreeStatement> assumptions;
     public final List<AgreeStatement> guarantees;
     public final List<AgreeStatement> lemmas;
+    public final List<AgreeStatement> patternProps;
+    public final List<AgreeEquation> localEquations;
     public final Expr clockConstraint;
     public final Expr initialConstraint;
     public final AgreeVar clockVar;
     public final EObject reference;
     public final TimingModel timing;
     public final ComponentInstance compInst;
+    
+    public final Set<AgreeVar> eventTimes;
 
     public AgreeNode(String id, List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeVar> locals,
-            List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
-            List<AgreeStatement> assumptions, List<AgreeStatement> guarantees, List<AgreeStatement> lemmas,
+            List<AgreeEquation> localEquations, List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
+            List<AgreeStatement> assumptions, List<AgreeStatement> guarantees, List<AgreeStatement> lemmas, List<AgreeStatement> patternProps,
             Expr clockConstraint, Expr initialConstraint, AgreeVar clockVar, EObject reference,
-            TimingModel timing, ComponentInstance compinst) {
+            TimingModel timing, Set<AgreeVar> eventTimes, ComponentInstance compinst) {
         this.id = id;
         this.inputs = jkind.util.Util.safeList(inputs);
         this.outputs = jkind.util.Util.safeList(outputs);
         this.locals = jkind.util.Util.safeList(locals);
+        this.patternProps = jkind.util.Util.safeList(patternProps);
+        this.localEquations = jkind.util.Util.safeList(localEquations);
         this.connections = jkind.util.Util.safeList(connections);
         this.subNodes = jkind.util.Util.safeList(subNodes);
         this.assertions = jkind.util.Util.safeList(assertions);
@@ -52,6 +64,16 @@ public class AgreeNode {
         this.reference = reference;
         this.timing = timing;
         this.compInst = compinst;
+        if (eventTimes == null) {
+            this.eventTimes = Collections.emptySet();
+        } else {
+            this.eventTimes = Collections.unmodifiableSet(eventTimes);
+        }
+    }
+
+    @Override
+    public <T> T accept(AgreeAstVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

@@ -86,7 +86,9 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
+import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
@@ -97,6 +99,8 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
+import com.rockwellcollins.atc.agree.agree.PatternStatement;
+import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -108,10 +112,19 @@ import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TimeExpr;
+import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
+import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
+import com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement;
+import com.rockwellcollins.atc.agree.agree.WheneverHoldsStatement;
+import com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement;
+import com.rockwellcollins.atc.agree.agree.WheneverOccursStatement;
 import com.rockwellcollins.atc.agree.visitors.ExprCycleVisitor;
 
 /** 
@@ -338,6 +351,42 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(event, "Argument of event expression must be an event data port");
 		}
 	}
+	
+	@Check(CheckType.FAST)
+    public void checkLatchedExpr(LatchedExpr latched) {
+        NestedDotID nestId = latched.getId();
+        NamedElement namedEl = getFinalNestId(nestId);
+        
+        //get container
+        EObject container = latched.eContainer();
+        AgreeContract contract = null;
+        while(!(container instanceof ComponentClassifier)){
+            if(container instanceof AgreeContract){
+                contract = (AgreeContract) container;
+            }
+            container = container.eContainer();
+        }
+        
+        if(container instanceof ComponentImplementation){
+            boolean foundLatchedStatement = false;
+            for(SpecStatement spec : contract.getSpecs()){
+                if(spec instanceof LatchedStatement){
+                    foundLatchedStatement = true;
+                    break;
+                }
+            }
+            if(!foundLatchedStatement){
+                error(latched, "Latched expressiosn can only appear in component implementations "
+                        + "that contain a latched synchrony statement");
+            }
+        }else{
+            error(latched, "Latched expressions can only appear in component implementations");
+        }
+        
+        if (!(namedEl instanceof DataPort) || !((DataPort)namedEl).isIn()) {
+            error(latched, "Latched expressions are only valid for input data ports");
+        }
+    }
 
 	@Check(CheckType.FAST)
 	public void checkSynchStatement(SynchStatement sync) {
@@ -401,12 +450,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(assume, "Assume statements are only allowed in component types");
 		}
 
-		AgreeType exprType = getAgreeType(assume.getExpr());
-		if (!matches(BOOL, exprType)) {
-			error(assume, "Expression for assume statement is of type '" + exprType.toString()
-					+ "' but must be of type 'bool'");
-		}
-	}
+		//the expression could be null if a pattern is used
+		Expr expr = assume.getExpr();
+        if (expr != null) {
+            AgreeType exprType = getAgreeType(expr);
+            if (!matches(BOOL, exprType)) {
+                error(assume, "Expression for assume statement is of type '" + exprType.toString()
+                        + "' but must be of type 'bool'");
+            }
+        }
+    }
 
 	@Check(CheckType.FAST)
 	public void checkInitialStatement(InitialStatement statement) {
@@ -456,11 +509,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(asser, "Assert statements are only allowed in component implementations.");
 		}
 
-		AgreeType exprType = getAgreeType(asser.getExpr());
-		if (!matches(BOOL, exprType)) {
-			error(asser, "Expression for assert statement is of type '" + exprType.toString()
-					+ "' but must be of type 'bool'");
-		}
+		//the expression could be null if a pattern is used
+		Expr expr = asser.getExpr();
+        if (expr != null) {
+            AgreeType exprType = getAgreeType(expr);
+            if (!matches(BOOL, exprType)) {
+                error(asser, "Expression for assert statement is of type '" + exprType.toString()
+                        + "' but must be of type 'bool'");
+            }
+        }
 		
 		
 //		warning(asser, "We highly discourage the use of assert statements. "
@@ -488,12 +545,253 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (!(comp instanceof ComponentType)) {
 			error(guar, "Guarantee statements are only allowed in component types");
 		}
+		
+		//the expression could be null if a pattern is used
+		Expr expr = guar.getExpr();
+        if (expr != null) {
+            AgreeType exprType = getAgreeType(expr);
+            if (!matches(BOOL, exprType)) {
+                error(guar, "Expression for guarantee statement is of type '" + exprType.toString()
+                        + "' but must be of type 'bool'");
+            }
+        }
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkPeriodicStatement(PeriodicStatement statement){
+	    Expr event = statement.getEvent();
+	    Expr jitter = statement.getJitter();
+	    Expr period = statement.getPeriod();
+	    
+	    AgreeType eventType = getAgreeType(event);
+	    if(!matches(BOOL, eventType)){
+	        error(event, "Expression is of type '"+eventType+"' but must be of type 'bool'");
+	    }
 
-		AgreeType exprType = getAgreeType(guar.getExpr());
-		if (!matches(BOOL, exprType)) {
-			error(guar, "Expression for guarantee statement is of type '" + exprType.toString()
-					+ "' but must be of type 'bool'");
-		}
+        if (jitter != null) {
+            if (!(jitter instanceof RealLitExpr || isConst(jitter))) {
+                error(jitter, "The specified jitter must be a real literal");
+            } else {
+                Double val = getRealConstVal(jitter);
+                if(val < 0){
+                    error(jitter, "The specified jitter must be positive");
+                }
+            }
+        }
+        
+        if (!(period instanceof RealLitExpr || isConst(period))) {
+            error(period, "The specified period must be a real literal");
+        } else {
+            Double val = getRealConstVal(period);
+            if(val < 0){
+                error(period, "The specified period must be positive");
+            }
+        }
+	}
+	
+	private double getRealConstVal(Expr expr){
+	    if (expr instanceof RealLitExpr) {
+            RealLitExpr realLit = (RealLitExpr) expr;
+            return Double.valueOf(realLit.getVal());
+        }else if (expr instanceof NestedDotID) {
+            NestedDotID id = (NestedDotID) expr;
+            NamedElement finalId = getFinalNestId(id);
+            if (finalId instanceof ConstStatement) {
+                ConstStatement constState = (ConstStatement) finalId;
+                return getRealConstVal(constState.getExpr());
+            }
+        }
+	    throw new IllegalArgumentException("not constant or literal value evalued");
+	}
+	
+	@Check(CheckType.FAST)
+    public void checkSporadicStatement(SporadicStatement statement){
+	    Expr event = statement.getEvent();
+        Expr jitter = statement.getJitter();
+        Expr iat = statement.getIat();
+        
+        AgreeType eventType = getAgreeType(event);
+        if(!matches(BOOL, eventType)){
+            error(event, "Expression is of type '"+eventType+"' but must be of type 'bool'");
+        }
+
+        if (jitter != null) {
+            if (!(jitter instanceof RealLitExpr || isConst(jitter))) {
+                error(jitter, "The specified jitter must be a real literal");
+            } else {
+                Double val = getRealConstVal(jitter);
+                if(val < 0){
+                    error(jitter, "The specified jitter must be positive");
+                }
+            }
+        }
+        
+        if (!(iat instanceof RealLitExpr || isConst(iat))) {
+            error(iat, "The specified interarrival time must be a real literal");
+        } else {
+            Double val = getRealConstVal(iat);
+            if(val < 0){
+                error(iat, "The specified interarrival time must be positive");
+            }
+        }
+    }
+	
+	@Check(CheckType.FAST)
+	public void checkWhenHoldsStatement(WhenHoldsStatement when){
+	    Expr condition = when.getCondition();
+	    Expr event = when.getEvent();
+	    TimeInterval condInterval = when.getConditionInterval();
+	    	    
+	    if(condInterval != null){
+	        Expr lowExpr = condInterval.getLow();
+	        if (lowExpr instanceof RealLitExpr) {
+                RealLitExpr realExpr = (RealLitExpr) lowExpr;
+                if(!realExpr.getVal().equals("0.0")){
+                    error(lowExpr, "The lower bound of this interval must be zero");
+                }
+            }
+	    }else{
+	        error(when, "Statement most of a cause interval");
+	    }
+	    
+        AgreeType type = getAgreeType(condition);
+	    if(!matches(BOOL, type)){
+	        error(condition, "The condition of a when statement is of type '" +type +"'"
+	                + " but must be of type 'bool'");
+	    }
+	    type = getAgreeType(event);
+	    if(!matches(BOOL, type)){
+	        error(event, "The effect of a when statement is of type '" +type+"'"
+	                + " but must be of type 'bool'");
+	    }
+	}
+	
+	@Check(CheckType.FAST)
+    public void checkWhenOccursStatment(WhenOccursStatment when){
+        Expr condition = when.getCondition();
+        Expr event = when.getEvent();
+        Expr times = when.getTimes();
+                
+        AgreeType type = getAgreeType(condition);
+        if(!matches(BOOL, type)){
+            error(condition, "The condition of the 'when' statement is of type '" +type +"'"
+                    + " but must be of type 'bool'");
+        }
+        type = getAgreeType(event);
+        if(!matches(BOOL, type)){
+            error(event, "The effect of the 'when' statement is of type '" +type+"'"
+                    + " but must be of type 'bool'");
+        }
+        type = getAgreeType(times);
+        if(!matches(INT, type)){
+            error(event, "The 'times' of the 'when' statement is of type '" +type+"'"
+                    + " but must be of type 'int'");
+        }    
+        
+    }
+	
+	
+	@Check(CheckType.FAST)
+	public void checkWheneverOccursStatement(WheneverOccursStatement whenever){
+	    Expr cause = whenever.getCause();
+	    Expr effect = whenever.getEffect();
+	    	    
+	    AgreeType type = getAgreeType(cause);
+	    if(!matches(BOOL, type)){
+	        error(cause, "The cause of the 'whenever' statement is of type '"+type+"' "
+	                + "but must be of type 'bool'");
+	    }
+	    type = getAgreeType(effect);
+        if(!matches(BOOL, type)){
+            error(effect, "The effect of the 'whenever' statement is of type '"+type+"' "
+                    + "but must be of type 'bool'");
+        }
+	}
+	
+	@Check(CheckType.FAST)
+    public void checkWheneverBecomesTrueStatement(WheneverBecomesTrueStatement whenever){
+        Expr cause = whenever.getCause();
+        Expr effect = whenever.getEffect();
+                
+        AgreeType type = getAgreeType(cause);
+        if(!matches(BOOL, type)){
+            error(cause, "The cause of the 'whenever' statement is of type '"+type+"' "
+                    + "but must be of type 'bool'");
+        }
+        type = getAgreeType(effect);
+        if(!matches(BOOL, type)){
+            error(effect, "The effect of the 'whenever' statement is of type '"+type+"' "
+                    + "but must be of type 'bool'");
+        }
+    }
+
+    @Check(CheckType.FAST)
+    public void checkWheneverHoldsStatement(WheneverHoldsStatement whenever) {
+        Expr cause = whenever.getCause();
+        Expr effect = whenever.getEffect();
+
+        AgreeType type = getAgreeType(cause);
+        if (!matches(BOOL, type)) {
+            error(cause, "The cause of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+        type = getAgreeType(effect);
+        if (!matches(BOOL, type)) {
+            error(effect, "The effect of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+    }
+	
+    @Check(CheckType.FAST)
+    public void checkWheneverImpliesStatement(WheneverImpliesStatement whenever) {
+        Expr cause = whenever.getCause();
+        Expr lhs = whenever.getLhs();
+        Expr rhs = whenever.getRhs();
+        
+        AgreeType type = getAgreeType(cause);
+        if (!matches(BOOL, type)) {
+            error(cause, "The cause of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+        
+        type = getAgreeType(lhs);
+        if (!matches(BOOL, type)) {
+            error(lhs, "The left hand side of the 'implies' of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+        
+        type = getAgreeType(rhs);
+        if (!matches(BOOL, type)) {
+            error(lhs, "The rhs hand side of the 'implies' of the 'whenever' statement is of type '" + type + "' "
+                    + "but must be of type 'bool'");
+        }
+    }
+    
+	@Check(CheckType.FAST)
+	public void checkTimeInterval(TimeInterval interval){
+	    Expr lower = interval.getLow();
+	    Expr higher = interval.getHigh();
+	    
+//	    AgreeType lowerType = getAgreeType(lower);
+//	    AgreeType higherType = getAgreeType(higher);
+	    
+	    if(!(lower instanceof RealLitExpr || isConst(lower))){
+	        error(lower, "Lower interval must be a real valued literal");
+	    }
+	    
+	    if(!(higher instanceof RealLitExpr || isConst(higher))){
+            error(higher, "higher interval must be a real valued literal");
+        }
+	            
+	}
+	
+	private boolean isConst(Expr expr){
+	    if (expr instanceof NestedDotID) {
+            NestedDotID id = (NestedDotID) expr;
+            NamedElement finalId = getFinalNestId(id);
+            return (finalId instanceof ConstStatement);
+        }
+	    return false;
 	}
 
 	@Check(CheckType.FAST)
@@ -543,6 +841,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	}
 
+	@Check(CheckType.FAST)
+	public void checkInputStatement(InputStatement input){
+	    ComponentType comp = EcoreUtil2.getContainerOfType(input, ComponentType.class);
+        if (comp == null) {
+            error(input, "Input statements are only allowed in component types");
+        }
+	    
+	}
+	
 	@Check(CheckType.FAST)
 	public void checkRecordUpdateExpr(RecordUpdateExpr upExpr) {
 
@@ -1861,6 +2168,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		    return getAgreeType((ArrayAccessExpr) expr);
 		} else if(expr instanceof QuantExpr){
 		    return BOOL;
+		} else if (expr instanceof TimeExpr) {
+		    return REAL;
+		} else if (expr instanceof LatchedExpr){
+		    return getAgreeType(((LatchedExpr) expr).getId());
 		}
 
 		return ERROR;

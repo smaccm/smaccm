@@ -65,8 +65,10 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
+import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
@@ -304,19 +306,38 @@ public class AgreeUtils {
         throw new AgreeException("Unhandled initial type for type '"+type+"'");
     }
     
-    public static boolean statementIsContractEqOrProperty(AgreeStatement statement){
-        if (statement.reference instanceof EqStatement
-                || statement.reference instanceof PropertyStatement) {
-            EObject container = statement.reference.eContainer();
-            while (!(container instanceof ComponentClassifier)) {
-                container = container.eContainer();
-            }
-            if (container instanceof ComponentImplementation) {
-                return false;
-            }
-            return true;
+//    public static boolean referenceIsNullOrContractEqOrProperty(EObject reference){
+//        if(reference == null){
+//            throw new AgreeException("AgreeStatement must have a reference");
+//        }
+//        if (reference instanceof EqStatement
+//                || reference instanceof PropertyStatement
+//                || reference instanceof GuaranteeStatement
+//                || reference instanceof AssumeStatement) {
+//            EObject container = reference.eContainer();
+//            while (!(container instanceof ComponentClassifier)) {
+//                container = container.eContainer();
+//            }
+//            if (container instanceof ComponentImplementation) {
+//                return false;
+//            }
+//            return true;
+//        }
+//        return false;
+//    }
+
+    public static boolean referenceIsInContract(EObject reference) {
+        if(reference == null){
+            return false;
         }
-        return false;
+        EObject container = reference;
+        while (!(container instanceof ComponentClassifier)) {
+            container = container.eContainer();
+        }
+        if (container instanceof ComponentImplementation) {
+            return false;
+        }
+        return true;
     }
     
     public static GlobalURIEditorOpener getGlobalURIEditorOpener() {

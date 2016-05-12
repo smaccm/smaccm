@@ -72,6 +72,8 @@ public class PreferencesUtil {
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
         api.setPdrMax(prefs.getInt(PreferenceConstants.PREF_PDR_MAX));
+        //TODO set pdr invariants as preferences option
+        api.setPdrInvariants();
         if (prefs.getBoolean(PreferenceConstants.PREF_NO_KINDUCTION)) {
             api.disableKInduction();
         }

@@ -101,6 +101,31 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createSpecStatementAdapter();
       }
       @Override
+      public Adapter casePatternStatement(PatternStatement object)
+      {
+        return createPatternStatementAdapter();
+      }
+      @Override
+      public Adapter caseWhenStatement(WhenStatement object)
+      {
+        return createWhenStatementAdapter();
+      }
+      @Override
+      public Adapter caseWheneverStatement(WheneverStatement object)
+      {
+        return createWheneverStatementAdapter();
+      }
+      @Override
+      public Adapter caseRealTimeStatement(RealTimeStatement object)
+      {
+        return createRealTimeStatementAdapter();
+      }
+      @Override
+      public Adapter caseTimeInterval(TimeInterval object)
+      {
+        return createTimeIntervalAdapter();
+      }
+      @Override
       public Adapter caseSynchStatement(SynchStatement object)
       {
         return createSynchStatementAdapter();
@@ -129,6 +154,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseEqStatement(EqStatement object)
       {
         return createEqStatementAdapter();
+      }
+      @Override
+      public Adapter caseInputStatement(InputStatement object)
+      {
+        return createInputStatementAdapter();
       }
       @Override
       public Adapter caseAssignStatement(AssignStatement object)
@@ -241,6 +271,71 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createConnectionStatementAdapter();
       }
       @Override
+      public Adapter caseAlwaysStatement(AlwaysStatement object)
+      {
+        return createAlwaysStatementAdapter();
+      }
+      @Override
+      public Adapter caseWhenHoldsStatement(WhenHoldsStatement object)
+      {
+        return createWhenHoldsStatementAdapter();
+      }
+      @Override
+      public Adapter caseWhenOccursStatment(WhenOccursStatment object)
+      {
+        return createWhenOccursStatmentAdapter();
+      }
+      @Override
+      public Adapter caseWheneverOccursStatement(WheneverOccursStatement object)
+      {
+        return createWheneverOccursStatementAdapter();
+      }
+      @Override
+      public Adapter caseWheneverBecomesTrueStatement(WheneverBecomesTrueStatement object)
+      {
+        return createWheneverBecomesTrueStatementAdapter();
+      }
+      @Override
+      public Adapter caseWheneverHoldsStatement(WheneverHoldsStatement object)
+      {
+        return createWheneverHoldsStatementAdapter();
+      }
+      @Override
+      public Adapter caseWheneverImpliesStatement(WheneverImpliesStatement object)
+      {
+        return createWheneverImpliesStatementAdapter();
+      }
+      @Override
+      public Adapter casePeriodicStatement(PeriodicStatement object)
+      {
+        return createPeriodicStatementAdapter();
+      }
+      @Override
+      public Adapter caseSporadicStatement(SporadicStatement object)
+      {
+        return createSporadicStatementAdapter();
+      }
+      @Override
+      public Adapter caseClosedTimeInterval(ClosedTimeInterval object)
+      {
+        return createClosedTimeIntervalAdapter();
+      }
+      @Override
+      public Adapter caseOpenLeftTimeInterval(OpenLeftTimeInterval object)
+      {
+        return createOpenLeftTimeIntervalAdapter();
+      }
+      @Override
+      public Adapter caseOpenRightTimeInterval(OpenRightTimeInterval object)
+      {
+        return createOpenRightTimeIntervalAdapter();
+      }
+      @Override
+      public Adapter caseOpenTimeInterval(OpenTimeInterval object)
+      {
+        return createOpenTimeIntervalAdapter();
+      }
+      @Override
       public Adapter caseMNSynchStatement(MNSynchStatement object)
       {
         return createMNSynchStatementAdapter();
@@ -321,6 +416,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createArrayAccessExprAdapter();
       }
       @Override
+      public Adapter caseTimeExpr(TimeExpr object)
+      {
+        return createTimeExprAdapter();
+      }
+      @Override
       public Adapter caseIntLitExpr(IntLitExpr object)
       {
         return createIntLitExprAdapter();
@@ -334,6 +434,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseEventExpr(EventExpr object)
       {
         return createEventExprAdapter();
+      }
+      @Override
+      public Adapter caseLatchedExpr(LatchedExpr object)
+      {
+        return createLatchedExprAdapter();
       }
       @Override
       public Adapter caseThisExpr(ThisExpr object)
@@ -478,6 +583,81 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.PatternStatement <em>Pattern Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.PatternStatement
+   * @generated
+   */
+  public Adapter createPatternStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WhenStatement <em>When Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WhenStatement
+   * @generated
+   */
+  public Adapter createWhenStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WheneverStatement <em>Whenever Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WheneverStatement
+   * @generated
+   */
+  public Adapter createWheneverStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.RealTimeStatement <em>Real Time Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.RealTimeStatement
+   * @generated
+   */
+  public Adapter createRealTimeStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TimeInterval <em>Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.TimeInterval
+   * @generated
+   */
+  public Adapter createTimeIntervalAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.SynchStatement <em>Synch Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -563,6 +743,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createEqStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.InputStatement <em>Input Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.InputStatement
+   * @generated
+   */
+  public Adapter createInputStatementAdapter()
   {
     return null;
   }
@@ -898,6 +1093,201 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AlwaysStatement <em>Always Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.AlwaysStatement
+   * @generated
+   */
+  public Adapter createAlwaysStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WhenHoldsStatement <em>When Holds Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WhenHoldsStatement
+   * @generated
+   */
+  public Adapter createWhenHoldsStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WhenOccursStatment <em>When Occurs Statment</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WhenOccursStatment
+   * @generated
+   */
+  public Adapter createWhenOccursStatmentAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WheneverOccursStatement <em>Whenever Occurs Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WheneverOccursStatement
+   * @generated
+   */
+  public Adapter createWheneverOccursStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement <em>Whenever Becomes True Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement
+   * @generated
+   */
+  public Adapter createWheneverBecomesTrueStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WheneverHoldsStatement <em>Whenever Holds Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WheneverHoldsStatement
+   * @generated
+   */
+  public Adapter createWheneverHoldsStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement <em>Whenever Implies Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement
+   * @generated
+   */
+  public Adapter createWheneverImpliesStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.PeriodicStatement <em>Periodic Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.PeriodicStatement
+   * @generated
+   */
+  public Adapter createPeriodicStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.SporadicStatement <em>Sporadic Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.SporadicStatement
+   * @generated
+   */
+  public Adapter createSporadicStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ClosedTimeInterval <em>Closed Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ClosedTimeInterval
+   * @generated
+   */
+  public Adapter createClosedTimeIntervalAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval <em>Open Left Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval
+   * @generated
+   */
+  public Adapter createOpenLeftTimeIntervalAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval <em>Open Right Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval
+   * @generated
+   */
+  public Adapter createOpenRightTimeIntervalAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.OpenTimeInterval <em>Open Time Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.OpenTimeInterval
+   * @generated
+   */
+  public Adapter createOpenTimeIntervalAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.MNSynchStatement <em>MN Synch Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1138,6 +1528,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TimeExpr <em>Time Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.TimeExpr
+   * @generated
+   */
+  public Adapter createTimeExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.IntLitExpr <em>Int Lit Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1178,6 +1583,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createEventExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LatchedExpr <em>Latched Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.LatchedExpr
+   * @generated
+   */
+  public Adapter createLatchedExprAdapter()
   {
     return null;
   }
