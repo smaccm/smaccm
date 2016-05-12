@@ -1362,6 +1362,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             break;
         case "exists":
             op = QuantOp.EXISTS;
+            break;
         default:
             throw new AgreeException("Unknown quantifier '"+quantExpr.getQuant()+"'");
         }
