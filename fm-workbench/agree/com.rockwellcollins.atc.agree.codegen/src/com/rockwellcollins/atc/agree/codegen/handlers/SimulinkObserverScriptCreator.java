@@ -44,8 +44,6 @@ public class SimulinkObserverScriptCreator extends ScriptCreator{
 		newline();
 		write("scriptName = " +"'"+scriptName+"';");
 		newline();
-		write("close_system(src_path,0);");
-		newline();
 		write("[dir_path,originalMdlNameNoExtension,~] = fileparts(src_path);");
 		newline();
 		write("[~,updatedMdlNameNoExtension,~] = fileparts(destMdlName);");
@@ -55,8 +53,6 @@ public class SimulinkObserverScriptCreator extends ScriptCreator{
 		write("dest_path = fullfile(dir_path,destMdlName);");
 		newline();
 		write("if(~strcmp(originalMdlNameNoExtension,updatedMdlNameNoExtension))");
-		newline();
-		write("  close_system(dest_path,0);");
 		newline();
 		write("  copyfile(src_path,dest_path,'f');");
 		newline();

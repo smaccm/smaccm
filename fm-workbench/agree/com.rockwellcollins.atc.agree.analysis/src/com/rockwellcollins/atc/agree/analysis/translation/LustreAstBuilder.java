@@ -880,10 +880,12 @@ public class LustreAstBuilder {
         
         types.add(new TypeDef("Base_Types__Boolean", NamedType.BOOL));
         types.add(new TypeDef("Base_Types__Unsigned", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_64", NamedType.INT));
         types.add(new TypeDef("Base_Types__Unsigned_32", NamedType.INT));
         types.add(new TypeDef("Base_Types__Unsigned_16", NamedType.INT));
         types.add(new TypeDef("Base_Types__Unsigned_8", NamedType.INT));
         types.add(new TypeDef("Base_Types__Integer", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_64", NamedType.INT));
         types.add(new TypeDef("Base_Types__Integer_32", NamedType.INT));
         types.add(new TypeDef("Base_Types__Integer_16", NamedType.INT));
         types.add(new TypeDef("Base_Types__Integer_8", NamedType.INT));

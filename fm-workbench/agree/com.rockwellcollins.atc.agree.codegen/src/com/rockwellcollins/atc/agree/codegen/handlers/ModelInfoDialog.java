@@ -105,7 +105,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Model Info for Inserting Simulink Observer");
+		setTitle("Model Info for Inserting Simulink Observer (Script Generator)");
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		browseOutputButton.addListener(SWT.Selection, new DirChooserListner());
 
 		Label originalLabel = new Label(container, SWT.NONE);
-		originalLabel.setText("Original Model Name:");
+		originalLabel.setText("Original Model Path:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 150;
 		originalLabel.setLayoutData(gridData);
@@ -184,7 +184,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		browseOriginalButton.addListener(SWT.Selection, new OriginalMdlChooserListner());
 
 		Label updatedLabel = new Label(container, SWT.NONE);
-		updatedLabel.setText("Updated Model Name:");
+		updatedLabel.setText("Model to Insert Observer:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 150;
 		updatedLabel.setLayoutData(gridData);
@@ -202,7 +202,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		updatedTextError.hide();
 
 		Label subsystemLabel = new Label(container, SWT.NONE);
-		subsystemLabel.setText("Subsystem Name:");
+		subsystemLabel.setText("Subsystem to Verify:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 150;
 		subsystemLabel.setLayoutData(gridData);
@@ -223,8 +223,6 @@ public class ModelInfoDialog extends TitleAreaDialog{
 				ModelInfoDialogConstants.EXPORT_LABEL, true);
 		createButton(parent, ModelInfoDialogConstants.UPDATE_MODEL_ID,
 				ModelInfoDialogConstants.UPDATE_LABEL, true);
-		createButton(parent, ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID,
-				ModelInfoDialogConstants.VERIFY_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
 	}
@@ -240,7 +238,6 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	protected void validate() {
 		boolean exportButtonEnabled = false;
 		boolean updateButtonEnabled = false;
-		boolean verifyButtonEnabled = false;
 		boolean outputDirError = false;
 		boolean originalMdlError = false;
 		boolean updatedMdlError = false;
@@ -268,9 +265,6 @@ public class ModelInfoDialog extends TitleAreaDialog{
 				write("Original model must have .slx extension");
 				newline();
 				originalMdlError = true;
-			} else {
-				if(exportButtonEnabled)
-					updateButtonEnabled = true;
 			}	
 		}
 		
@@ -285,14 +279,13 @@ public class ModelInfoDialog extends TitleAreaDialog{
 
 		//not flagging an error if the subsystemText is empty
 		if (!subsystemText.getText().equals("")) {
-			if(exportButtonEnabled && updateButtonEnabled){
-				verifyButtonEnabled = true;
+			if(exportButtonEnabled && !originalMdlError && !updatedMdlError){
+				updateButtonEnabled = true;
 			}	
 		}
 		
 		setExportEnabled(exportButtonEnabled);
 		setUpdateEnabled(updateButtonEnabled);
-		setVerifyEnabled(verifyButtonEnabled);
 		
 		if(!outputDirError && !originalMdlError && !updatedMdlError){
 			setErrorMessage(null);
@@ -320,8 +313,6 @@ public class ModelInfoDialog extends TitleAreaDialog{
 			exportPressed();
 		} else if (ModelInfoDialogConstants.UPDATE_MODEL_ID == buttonId) {
 			updatePressed();
-		} else if (ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID == buttonId) {
-			verifyPressed();
 		} else if (IDialogConstants.CANCEL_ID == buttonId) {
 			cancelPressed();
 		}
@@ -340,13 +331,6 @@ public class ModelInfoDialog extends TitleAreaDialog{
 			update.setEnabled(enabled);
 		}
 	}
-	
-	private void setVerifyEnabled(boolean enabled) {
-		Button verify = getButton(ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID);
-		if (verify != null) {
-			verify.setEnabled(enabled);
-		}
-	}
 
 	protected void exportPressed() {
 		// for source text property saved in AADL, need to update the separator in the path string
@@ -361,11 +345,5 @@ public class ModelInfoDialog extends TitleAreaDialog{
 				subsystemText.getText(), false, true, false);
 		super.okPressed();
 	}
-	
-	protected void verifyPressed() {
-		// for source text property saved in AADL, need to update the separator in the path string
-		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
-				subsystemText.getText(), false, false, true);
-		super.okPressed();
-	}
+
 }
