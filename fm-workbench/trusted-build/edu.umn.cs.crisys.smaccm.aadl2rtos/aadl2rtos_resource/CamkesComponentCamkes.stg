@@ -57,8 +57,7 @@ createDataports(threadImpl, destPort) ::= <<
 
 
 constructSenderInterface(connection) ::= <<
-// connection to active thread 'send' interface
-uses <connection.destPort.type.readerWriterInterfaceName> <connection.sourcePort.qualifiedName>;
+uses <connection.destPort.type.readerWriterInterfaceName> <connection.name>;
 
 >>
 
@@ -123,6 +122,7 @@ include "<threadImpl.model.systemTypeHeaderName>";
 	control;
 <endif>
 
+// connection to active thread 'send' interfaces
 <threadImpl.activeThreadConnectionList:constructSenderInterface()>
 
 <if(threadImpl.isActive)>

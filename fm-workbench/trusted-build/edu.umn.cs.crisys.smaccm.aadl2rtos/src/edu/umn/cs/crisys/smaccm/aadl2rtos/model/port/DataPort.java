@@ -141,15 +141,6 @@ public abstract class DataPort {
   public List<PortConnection> getConnections() {
     return connections;
   }
-
-  public PortConnection getSingletonConnection() {
-	  if (getConnections().size() != 1) {
-		  throw new Aadl2RtosException("Error: getSingletonConnection: cardinality of connection != 1");
-	  }
-	  else {
-		  return getConnections().get(0);
-	  }
-  }	  
 	  
   
   /**

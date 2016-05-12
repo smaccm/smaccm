@@ -9,8 +9,8 @@ import "CommonComponentC.stg"
 
 incomingPortWriterName(port) ::= "<port.name>_<port.type.writerFn>"
 
-outgoingPortWriterName(destPort, srcPort) ::= <<
-<srcPort.qualifiedName>_<srcPort.type.writerFn>
+outgoingPortWriterName(connection) ::= <<
+<connection.name>_<connection.sourcePort.type.writerFn>
 >>
 
 osSpecificThreadEntrypoint(threadImpl) ::= "run"
@@ -55,7 +55,7 @@ osSpecificRegisterIrqs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name
 
 osSpecificComponentLocalCallerFunction(connection) ::= <<
 /************************************************************************
- * <outgoingPortWriterName(connection.destPort,connection.sourcePort)>: 
+ * <outgoingPortWriterName(connection)>: 
  * Invoked from user code in the local thread.
  * 
  * This function is necessary to mimic a remote call by a passive
@@ -64,7 +64,7 @@ osSpecificComponentLocalCallerFunction(connection) ::= <<
  * 
  ************************************************************************/
 
-bool <outgoingPortWriterName(connection.destPort,connection.sourcePort)>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
+bool <outgoingPortWriterName(connection)>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
 	return <incomingPortWriterName(connection.destPort)>(<connection.sourcePort.name>);
 }
 >>

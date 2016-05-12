@@ -310,9 +310,9 @@ componentLocalReaderDecl(port) ::= <<
 >>
 
 
-componentRemoteCallerFunction(destPort, srcPort) ::= <<
+componentRemoteCallerFunction(connection) ::= <<
 /************************************************************************
- *  <srcPort.aadlWriterFnName>: 
+ *  <connection.sourcePort.aadlWriterFnName>: 
  * Invoked from user code in the local thread.
  * 
  * This is the function invoked by the local thread to make a 
@@ -320,17 +320,16 @@ componentRemoteCallerFunction(destPort, srcPort) ::= <<
  * 
  ************************************************************************/
 
-bool <srcPort.aadlWriterFnName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
-	return <outgoingPortWriterName(destPort, srcPort)>(<srcPort.name>);
+bool <connection.sourcePort.aadlWriterFnName>(const <connection.sourcePort.type.aadlInputType.name> <srcPort.name>) {
+	return <outgoingPortWriterName(connection)>(<connection.sourcePort.name>);
 }
 
 >>
 
 componentRemoteWriterDecl(srcPort) ::= <<
-<if(srcPort.hasConnection)>
-<componentRemoteCallerFunction(srcPort.singletonConnection.destPort, srcPort)>
-<endif>
+<srcPort.connections:componentRemoteCallerFunction()>}>
 >>
+
 
 /////////////////////////////////////////////////////////////////////
 //
@@ -404,6 +403,13 @@ userSendCopyAadlInputToGlobalStmt(port) ::= <<
 userSendOptConstAadlInputArg(port) ::= "<if(port.hasData)>const <port.type.aadlInputType.name> <port.name><endif>"
 userSendOptAadlOutputArg(port) ::= "<if(port.hasData)><port.type.aadlOutputType.name> <port.name><endif>"
 
+connectionActiveSendDefinition(connection, port) ::= <<
+<if(connection.destPort.threadImplementation.isActive)>
+result &= <outgoingPortWriterName(connection)>(<port.name>);			
+<endif>
+
+>>
+
 userSendDefinition(port) ::= << 
 /************************************************************************
  * <port.aadlWriterFnName> 
@@ -418,30 +424,23 @@ userSendDefinition(port) ::= <<
  ************************************************************************/
 
 bool <port.aadlWriterFnName>(<port:userSendOptConstAadlInputArg()>) {
-<if(port.hasConnection)>
-<if(port.singletonConnection.destPort.threadImplementation.isActive)>
-	return <outgoingPortWriterName(port.singletonConnection.destPort, port)>(<port.name>);		
-<else>	
+	bool result = true;
+	<port.connections:connectionActiveSendDefinition(port)>
+
+<if(port.hasPassiveConnectionDestination)>
 	if (<port.globalMaxDispatchSize> > 0 && 
 		 *<port.globalIndex> \< <port.globalMaxDispatchSize>) {
 		<if(port.hasData)><userSendCopyAadlInputToGlobalStmt(port)><endif>
 		(*<port.globalIndex>)++;
-		return true;
 	} else {
-		return false;
+		result = false;
 	}
 <endif>
-<endif>
+	return result;
 }
 
 >>
 
-
-/*  If we want to abort on comm failure.
- * 		 assert(<port.globalMaxDispatchSize> > 0 && 
-		 		*<port.globalIndex> \< <port.globalMaxDispatchSize>);
- 
- */
   
 /////////////////////////////////////////////////////////////////////
 //
@@ -731,13 +730,11 @@ static <port.indexType.name> <port.globalMaxDispatchSize>;
 
 portDispatchVarDeclarations(port) ::= <<
 
-<if(port.hasConnection)>
-<if(port.singletonConnection.destPort.threadImplementation.isPassive)>
+<if(port.hasPassiveConnectionDestination)>
 // Writing dispatch variables for port <port.name>
 <portPassiveDispatchVarDeclarations(port)>
 <else>
 // NOT writing dispatch variables for port <port.name>
-<endif>
 <endif>
 >>
 
@@ -791,19 +788,3 @@ componentCFileDecls(threadImpl) ::= <<
 
 >>
 
-
-
-/*
-aadlDispatcherCallActiveTarget(portDest,structName,portSrc) ::= <<
-// Calling an active dispatch target.
-{
-  // MWW: FIX: Right now there is no 'assert' in eChronos.
-  // So I'm disabling this code.
-   bool remoteCallSuccessful = <outgoingPortWriterName(portDest,portSrc)>(<aadlDispatcherWriteActiveArg(structName,portSrc)>);	
-   <osSpecificAssert({remoteCallSuccessful})>;
-}
->>
-
-from aadlDispatcherSendLoop:
-   <dispatchContract.activeDispatchTargetList:aadlDispatcherCallActiveTarget(structName, dispatchContract.port)>
-*/
