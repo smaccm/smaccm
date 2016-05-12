@@ -426,10 +426,16 @@ public class AadlModelParser {
     		  double periodInUs = PropertyUtil.getPeriodInMicroseconds(tti);
     		  ti.setPeriodInMicroseconds((int) periodInUs);
     	  } catch (Exception e) {
+    		  if ("Periodic".equalsIgnoreCase(dpName)) {
     	        throw new Aadl2RtosException(
     	                "For thread " + tti.getFullName()
     	                    + " with dispatch protocol " + dpName
     	                    + " property 'Period' is required.");
+    		  } else {
+    			  this.logger.warn("For thread " + tti.getFullName()
+                  + " with dispatch protocol " + dpName
+                  + " property 'Period' is not specified; this is necessary for schedulability analysis.");
+    		  }
     	  }
       }
     }
