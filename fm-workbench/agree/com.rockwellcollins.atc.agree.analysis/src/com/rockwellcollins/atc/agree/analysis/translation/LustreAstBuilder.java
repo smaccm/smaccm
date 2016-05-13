@@ -648,7 +648,7 @@ public class LustreAstBuilder {
 
             Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode, monolithic);
 
-            addInputsAndOutputs(inputs, outputs, flatNode, lustreNode, prefix, monolithic);
+            addInputsAndOutputs(inputs, outputs, locals, flatNode, lustreNode, prefix, monolithic);
 
             addTimeEvents(timeEvents, flatNode, prefix, assertions);
             
@@ -671,7 +671,7 @@ public class LustreAstBuilder {
             assertions.add(new AgreeStatement("someone ticks", someoneTicks, null));
         }
 
-        addConnectionConstraints(agreeNode, assertions);
+        addConnectionConstraints(agreeNode, equations, inputs, locals);
 
         // add any clock constraints
         assertions.addAll(agreeNode.assertions);
@@ -712,7 +712,8 @@ public class LustreAstBuilder {
         assertions.add(new AgreeStatement("", new BinaryExpr(timeId, BinaryOp.EQUAL, new IdExpr(prefix + timeId.id)), null));
     }
 
-    protected static void addConnectionConstraints(AgreeNode agreeNode, List<AgreeStatement> assertions) {
+    protected static void addConnectionConstraints(AgreeNode agreeNode, List<AgreeEquation> equations,
+            List<AgreeVar> inputs, List<AgreeVar> locals) {
         for (AgreeConnection conn : agreeNode.connections) {
             String destName =
                     conn.destinationNode == null ? "" : conn.destinationNode + AgreeASTBuilder.dotChar;
@@ -724,7 +725,7 @@ public class LustreAstBuilder {
             Expr connExpr; 
             
             if(!conn.delayed){
-                connExpr = new BinaryExpr(new IdExpr(sourName), BinaryOp.EQUAL, new IdExpr(destName));
+                connExpr = new IdExpr(sourName);
             }else{
                 //we need to get the correct type for the connection
                 //we can assume that the source and destination types are
@@ -732,10 +733,23 @@ public class LustreAstBuilder {
                 Expr initExpr = AgreeUtils.getInitValueFromType(conn.sourVar.type);
                 Expr preSource = new UnaryExpr(UnaryOp.PRE, new IdExpr(sourName));
                 Expr sourExpr = new BinaryExpr(initExpr, BinaryOp.ARROW, preSource);
-                connExpr = new BinaryExpr(sourExpr, BinaryOp.EQUAL, new IdExpr(destName));
+                connExpr = sourExpr;
+            }
+            
+            //add the destination variable to locals iff it is in the inputs
+            AgreeVar var = null;
+            for(AgreeVar inputVar : inputs){
+                if(inputVar.id.equals(destName)){
+                    var = inputVar;
+                    break;
+                }
+            }
+            if(var != null){
+                inputs.remove(var);
+                locals.add(var);
             }
 
-            assertions.add(new AgreeStatement("", connExpr, conn.reference));
+            equations.add(new AgreeEquation(new Equation(new IdExpr(destName), connExpr), conn.reference));
   
         }
     }
@@ -841,7 +855,7 @@ public class LustreAstBuilder {
         assertions.add(condactCall);
     }
 
-    protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs,
+    protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeVar> locals,
             AgreeNode subAgreeNode, Node lustreNode, String prefix, boolean monolithic) {
         int varCount = 0;
         for (AgreeVar var : subAgreeNode.inputs) {
@@ -853,15 +867,8 @@ public class LustreAstBuilder {
         for (AgreeVar var : subAgreeNode.outputs) {
             varCount++;
             AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
-            outputs.add(output);
+            locals.add(output);
         }
-
-        // right now we do not support local variables in our translation
-//        for (AgreeVar var : subAgreeNode.locals) {
-//            varCount++;
-//            AgreeVar local = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
-//            outputs.add(local);
-//        }
 
         int i = 0;
         for (AgreeStatement statement : subAgreeNode.assumptions) {

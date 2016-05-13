@@ -35,6 +35,7 @@ import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
@@ -86,11 +87,17 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
             outputs.add(var);
         }
 
+        for (AgreeVar var : flatNode.locals) {
+            locals.add(var);
+        }
+
         for (AgreeVar var : flatNode.outputs) {
             if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
                 throw new AgreeException("This shouldn't happen");
             }
         }
+        
+        equations.addAll(flatNode.localEquations);
 
         Contract contract = new Contract(requires, ensures);
 
@@ -120,6 +127,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         List<AgreeVar> outputs = new ArrayList<>();
         List<AgreeVar> locals = new ArrayList<>();
         List<AgreeStatement> assertions = new ArrayList<>();
+        List<AgreeEquation> equations = new ArrayList<>();
 
         Expr someoneTicks = null;
         for (AgreeNode subAgreeNode : agreeNode.subNodes) {
@@ -137,13 +145,12 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
             Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode);
 
-            addInputsAndOutputs(inputs, outputs, flatNode, lustreNode, prefix);
+            addInputsAndOutputs(inputs, outputs, locals, flatNode, lustreNode, prefix);
 
-            addCondactCall(agreeNode, nodePrefix, inputs, assertions, flatNode, prefix, clockExpr,
+            addCondactCall(agreeNode, nodePrefix, inputs, equations, flatNode, prefix, clockExpr,
                     lustreNode);
 
-            // addClockHolds(agreeNode, assertions, flatNode, clockExpr, prefix,
-            // lustreNode);
+            addClockHolds(agreeNode, assertions, flatNode, clockExpr, prefix, lustreNode);
 
             addInitConstraint(agreeNode, outputs, assertions, flatNode, prefix, clockExpr, lustreNode);
 
@@ -156,7 +163,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
             assertions.add(new AgreeStatement("someone ticks", someoneTicks, null));
         }
 
-        addConnectionConstraints(agreeNode, assertions);
+        addConnectionConstraints(agreeNode, equations, inputs, locals);
 
         // add any clock constraints
         assertions.addAll(agreeNode.assertions);
@@ -164,8 +171,9 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         inputs.addAll(agreeNode.inputs);
         outputs.addAll(agreeNode.outputs);
         locals.addAll(agreeNode.locals);
+        equations.addAll(agreeNode.localEquations);
 
-        return new AgreeNode(agreeNode.id, inputs, outputs, locals, agreeNode.localEquations, null, agreeNode.subNodes, assertions,
+        return new AgreeNode(agreeNode.id, inputs, outputs, locals, equations, null, agreeNode.subNodes, assertions,
                 agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, agreeNode.patternProps, new BoolExpr(true),
                 agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null, agreeNode.eventTimes,
                 agreeNode.compInst);
@@ -229,7 +237,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         return builder.build();
     }
 
-    protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs,
+    protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeVar> locals,
             AgreeNode subAgreeNode, Node lustreNode, String prefix) {
         for (AgreeVar var : subAgreeNode.inputs) {
             AgreeVar input = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
@@ -238,16 +246,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
         for (AgreeVar var : subAgreeNode.outputs) {
             AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
-            outputs.add(output);
-        }
-
-        // right now we do not support local variables in our translation
-        for (AgreeVar var : subAgreeNode.locals) {
-            throw new AgreeException("What is an example of this?");
-            // varCount++;
-            // AgreeVar local = new AgreeVar(prefix+var.id, var.type,
-            // var.reference, var.compInst);
-            // outputs.add(local);
+            locals.add(output);
         }
 
         inputs.add(subAgreeNode.clockVar);
@@ -255,7 +254,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
     }
 
     protected static void addCondactCall(AgreeNode agreeNode, String nodePrefix, List<AgreeVar> inputs,
-            List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, Expr clockExpr,
+            List<AgreeEquation> equations, AgreeNode subAgreeNode, String prefix, Expr clockExpr,
             Node lustreNode) {
         List<Expr> inputIds = new ArrayList<>();
         List<Expr> initOutputsVals = new ArrayList<>();
@@ -278,21 +277,14 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         }
 
         if (agreeNode.timing == TimingModel.LATCHED) {
-            addLatchedConstraints(nodePrefix, inputs, assertions, subAgreeNode, prefix, inputIds);
+            throw new AgreeException("this was refactored for jkind but never fixed for kind2");
+            //addLatchedConstraints(nodePrefix, inputs, assertions, subAgreeNode, prefix, inputIds);
         }
 
         Expr condactExpr =
                 new CondactExpr(clockExpr, new NodeCallExpr(lustreNode.id, inputIds), initOutputsVals);
 
-        Expr condactOutput;
-        if(nodeOutputIds.size() > 1){
-            condactOutput = new TupleExpr(nodeOutputIds);
-        }else{
-            condactOutput = nodeOutputIds.get(0);
-        }
-        
-        Expr condactCall = new BinaryExpr(condactOutput, BinaryOp.EQUAL, condactExpr);
-        assertions.add(new AgreeStatement("", condactCall, null));
+        equations.add(new AgreeEquation(new Equation(nodeOutputIds, condactExpr), null));
     }
 
 }
