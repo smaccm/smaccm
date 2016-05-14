@@ -391,7 +391,8 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 							builder.append("_");
 						}
 					}
-					updatedName = builder.toString();
+					//remove preceding "_" after the update
+					updatedName = builder.toString().replaceAll("^_+", "");
 				}
 			}
 			//check if the name is longer than 63 characters
