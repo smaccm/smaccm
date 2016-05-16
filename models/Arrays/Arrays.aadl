@@ -1,0 +1,76 @@
+package Arrays
+public
+  with Base_Types;
+  with Data_Model;
+	
+	data array
+	end array;
+	
+	data implementation array.int5
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Integer));
+    Data_Model::Dimension => (5);
+  end array.int5;
+	
+	system array_sum
+    features
+      input : in data port Base_Types::Integer;
+      array : out data port array.int5;
+    annex agree {** 
+       eq input_sum : int = input -> pre(input_sum) + input;
+       eq array_sum : int = array[0] + array[1] + array[2] + array[3] + array[4];
+        
+       assume "input is bounded" : 0 <= input and input <= 4;
+       guarantee "always true" : input_sum = array_sum;
+    **};
+  end array_sum;
+  
+  system implementation array_sum.explicit
+    annex agree {**
+         assert array[0] = 0 and
+                (array[1] = ((if input = 1 then 1 else 0) + (0 -> pre(array)[1]))) and
+                (array[2] = ((if input = 2 then 2 else 0) + (0 -> pre(array)[2]))) and
+                (array[3] = ((if input = 3 then 3 else 0) + (0 -> pre(array)[3]))) and
+                (array[4] = ((if input = 4 then 4 else 0) + (0 -> pre(array)[4])));
+
+    **};
+  end array_sum.explicit;
+  
+  system implementation array_sum.quant
+    annex agree {**
+         assert 
+           forall (x : int) . 0 <= x and x <= 4 => 
+             (array[x] = (if(x = input) then input else 0) + (0 -> pre(array)[x]));
+    **};
+  end array_sum.quant;
+	
+	
+	
+	system array_sum2
+    features
+      input : in data port Base_Types::Integer;
+      array : out data port array.int5;
+    annex agree {** 
+       eq input_sum : int = input -> pre(input_sum) + input;
+       eq accum : Arrays::array.int5;
+       
+       assume "input is bounded" : 0 <= input and input <= 4;
+       guarantee "always true" : input_sum = accum[4];
+    **};
+  end array_sum2;
+	
+	  system implementation array_sum2.quant
+    annex agree {**
+      assert "accumulator" : 
+        accum[0] = array[0] and 
+        (forall (n : int) . 
+          0 < n and n < 5 => accum[n] = accum[n-1] + array[n]); 
+        
+      assert 
+        forall (x : int) . 0 <= x and x <= 4 => 
+          (array[x] = (if(x = input) then input else 0) + (0 -> pre(array)[x]));
+    **};
+  end array_sum2.quant;
+	
+end Arrays;
