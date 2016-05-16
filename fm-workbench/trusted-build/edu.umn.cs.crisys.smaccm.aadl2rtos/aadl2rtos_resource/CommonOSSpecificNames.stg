@@ -6,7 +6,9 @@
  *   outgoingActiveThreadDispatchName
  *   incomingUserEntrypointCallerName
  *   outgoingUserEntrypointCallerName
- * 	 portDispatcherLock
+ * 	 portLockStmt
+ *   portUnlockStmt
+ *   portDispatcherLock
  *   portDispatcherUnlock
  *   dispatcherMainInitializeLockStmt
  *   dispatcherMainLockWaitStmt

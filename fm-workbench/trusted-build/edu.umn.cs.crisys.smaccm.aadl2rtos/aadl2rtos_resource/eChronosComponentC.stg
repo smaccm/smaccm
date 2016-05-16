@@ -19,20 +19,24 @@ incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.
 
 outgoingUserEntrypointCallerName(dispatcher) ::= "<incomingUserEntrypointCallerName(dispatcher)>"
 
-portLockStmt(port) ::= <<
-	rtos_mutex_lock(<port.eChronosMutexConst>); 
+portLockStmt(port) ::= << 
+rtos_mutex_lock(<port.eChronosMutexConst>);  
+
 >>
 
 portUnlockStmt(port) ::= <<
-	rtos_mutex_unlock(<port.eChronosMutexConst>); 
+rtos_mutex_unlock(<port.eChronosMutexConst>); 
+
 >>
 
 portDispatcherLock(dispatcher) ::= <<
-	rtos_mutex_lock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
+rtos_mutex_lock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
+
 >>
 
 portDispatcherUnlock(dispatcher) ::= <<
-	rtos_mutex_unlock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
+rtos_mutex_unlock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
+
 >>
 
 dispatcherMainInitializeLockStmt(threadImpl) ::= " "

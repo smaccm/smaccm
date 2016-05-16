@@ -373,8 +373,10 @@ userEntrypointCallerFn(dispatcher) ::= <<
  * 
  ************************************************************************/
 <userEntrypointCallerPrototype(dispatcher)> {
+	<portDispatcherLock(dispatcher)>
 	<dispatcher.maxDispatchContracts.passiveContracts:userEntrypointCallerAssignGlobals(dispatcher)>
 	<dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
+	<portDispatcherUnlock(dispatcher)>
 }	
 
 
@@ -527,11 +529,9 @@ static <dispatcher.dispatchStructTypeName> <dispatcher.dispatchStructArgName>;
 
 void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
 	
-	<portDispatcherLock(dispatcher)>
 	// make the call: 
 	<aadlDispatcherFunctionName(dispatcher)>(<aadlDispatcherFunctionArgs(dispatcher)>	
 		); 
-	<portDispatcherUnlock(dispatcher)>
 	
 <if(dispatcher.dispatchableContracts)>
 	// call the aadl dispatchers for any generated output events.
@@ -576,7 +576,9 @@ static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
  * Invoked from remote periodic dispatch thread.
  * 
  * This function records the current time and triggers the active thread 
- * dispatch from a periodic event.
+ * dispatch from a periodic event.  Note that the periodic dispatch 
+ * thread is the *only* thread that triggers a dispatch, so we do not
+ * mutex lock the function.
  * 
  ************************************************************************/
 
@@ -600,7 +602,8 @@ static bool <dispatcher.dispatchOccurredVar>;
  * 
  * This function records an IRQ event, calls the first-level interrupt handler,
  * and triggers the thread to dispatch (which will invoke the second-level
- * interrupt handler).
+ * interrupt handler).  Note that the ISR is the *only* thread that triggers 
+ * a dispatch, so we do not mutex lock the function.
  * 
  ************************************************************************/
 <osSpecificIrqDispatcher(dispatcher)>
