@@ -210,9 +210,9 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
         for (AgreeStatement statement : agreeNode.assertions) {
             assertions.add(statement.expr);
-            if(AgreeUtils.referenceIsInContract(statement.reference)){
-                ensures.add(statement.expr);
-            }
+//            if(AgreeUtils.referenceIsInContract(statement.reference)){
+//                ensures.add(statement.expr);
+//            }
         }
 
         // gather the remaining inputs
@@ -246,7 +246,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
         for (AgreeVar var : subAgreeNode.outputs) {
             AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
-            locals.add(output);
+            outputs.add(output);
         }
 
         inputs.add(subAgreeNode.clockVar);

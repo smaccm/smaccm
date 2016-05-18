@@ -1,0 +1,1264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aadl2:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:agree="http://www.rockwellcollins.com/atc/agree/Agree" name="Geofence" publicSection="#//@ownedPublicSection">
+  <ownedPublicSection importedUnit="aadl2:Package ../Plugin_Resources/Base_Types.aadl#Base_Types aadl2:PropertySet ../Plugin_Resources/Data_Model.aadl#Data_Model">
+    <ownedClassifier xsi:type="aadl2:DataType" name="route"/>
+    <ownedClassifier xsi:type="aadl2:DataImplementation" name="route.i">
+      <ownedPropertyAssociation property="../Plugin_Resources/Data_Model.aadl#Data_Model.Data_Representation">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Data_Model.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Data_Model.aadl#Data_Model.Base_Type">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:ClassifierValue" classifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Float"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Data_Model.aadl#Data_Model.Dimension">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:IntegerLiteral" value="1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.0"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DataType" name="coord"/>
+    <ownedClassifier xsi:type="aadl2:DataImplementation" name="coord.i">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.2"/>
+      <ownedDataSubcomponent name="x" dataSubcomponentType="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Float"/>
+      <ownedDataSubcomponent name="y" dataSubcomponentType="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Float"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:DataType" name="fence"/>
+    <ownedClassifier xsi:type="aadl2:DataImplementation" name="fence.i">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.4"/>
+      <ownedDataSubcomponent name="t" dataSubcomponentType="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Float"/>
+      <ownedDataSubcomponent name="b" dataSubcomponentType="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Float"/>
+      <ownedDataSubcomponent name="l" dataSubcomponentType="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Float"/>
+      <ownedDataSubcomponent name="r" dataSubcomponentType="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Float"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:SystemType" name="vehicle">
+      <ownedAnnexSubclause xsi:type="aadl2:DefaultAnnexSubclause" name="agree" sourceText="{**&#xD;&#xA; &#x9;    &#xD;&#xA; &#x9;  eq cur_fence : Geofence::fence.i =&#xD;&#xA; &#x9;    if event(fence) then&#xD;&#xA; &#x9;      fence&#xD;&#xA; &#x9;    else&#xD;&#xA; &#x9;      Geofence::fence.i&#xD;&#xA; &#x9;        { t = 0.0; b = 0.0; r = 0.0; l = 0.0} ->&#xD;&#xA; &#x9;      pre(cur_fence);&#xD;&#xA; &#x9;      &#xD;&#xA; &#x9;  eq cur_dest : Geofence::coord.i =&#xD;&#xA; &#x9;    if event(dest) then&#xD;&#xA; &#x9;      dest&#xD;&#xA; &#x9;    else&#xD;&#xA; &#x9;      Geofence::coord.i&#xD;&#xA; &#x9;        {x = 0.0; y = 0.0} ->&#xD;&#xA; &#x9;      pre(cur_dest);&#xD;&#xA; &#x9;      &#xD;&#xA; &#x9;  assume &quot;a new fence is always over a new destination&quot; : &#xD;&#xA; &#x9;    event(fence) and event(dest) =>&#xD;&#xA; &#x9;      Geofence.coord_in_fence(dest, fence);&#xD;&#xA; &#x9;      &#xD;&#xA; &#x9;  assume &quot;a new fence is always over the old destination&quot; : true ->&#xD;&#xA; &#x9;    event(fence) and not event(dest) =>&#xD;&#xA; &#x9;      Geofence.coord_in_fence(pre(cur_dest), fence);&#xD;&#xA; &#x9;  &#xD;&#xA; &#x9;  assume &quot;a new destination is always in the old fence&quot; : true ->&#xD;&#xA; &#x9;    event(dest) and not event(fence) =>&#xD;&#xA; &#x9;      Geofence.coord_in_fence(dest, pre(cur_fence));&#xD;&#xA; &#x9;      &#xD;&#xA; &#x9;  eq loc_in_fence : bool = Geofence.coord_in_fence(loc, cur_fence);&#xD;&#xA; &#x9;  &#xD;&#xA; &#x9;  guarantee &quot;if we are in the fence, then we stay in&quot; : true ->&#xD;&#xA; &#x9;    pre(loc_in_fence) and not event(fence) => loc_in_fence;&#xD;&#xA;-- &#x9;    &#xD;&#xA;-- &#x9;  guarantee &quot;if we reach the destination then we stay there&quot; : true ->&#xD;&#xA;-- &#x9;    pre(loc = cur_dest) and not event(dest) and not event(fence) => loc = pre(cur_dest);&#xD;&#xA; &#x9;    &#xD;&#xA; &#x9;    &#xD;&#xA; &#x9;**}">
+        <parsedAnnexSubclause xsi:type="agree:AgreeContractSubclause" name="agree">
+          <contract xsi:type="agree:AgreeContract">
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="cur_fence">
+                <type xsi:type="agree:AgreeDataType">
+                  <data base="#//@ownedPublicSection/@ownedClassifier.5"/>
+                </type>
+              </lhs>
+              <expr xsi:type="agree:IfThenElseExpr">
+                <a xsi:type="agree:EventExpr">
+                  <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+                </a>
+                <b xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+                <c xsi:type="agree:BinaryExpr" op="->">
+                  <left xsi:type="agree:RecordExpr" args="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.0 #//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.1 #//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.3 #//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.2">
+                    <record base="#//@ownedPublicSection/@ownedClassifier.5"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                  </left>
+                  <right xsi:type="agree:PreExpr">
+                    <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0"/>
+                  </right>
+                </c>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="cur_dest">
+                <type xsi:type="agree:AgreeDataType">
+                  <data base="#//@ownedPublicSection/@ownedClassifier.3"/>
+                </type>
+              </lhs>
+              <expr xsi:type="agree:IfThenElseExpr">
+                <a xsi:type="agree:EventExpr">
+                  <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+                </a>
+                <b xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+                <c xsi:type="agree:BinaryExpr" op="->">
+                  <left xsi:type="agree:RecordExpr" args="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.0 #//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.1">
+                    <record base="#//@ownedPublicSection/@ownedClassifier.3"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                  </left>
+                  <right xsi:type="agree:PreExpr">
+                    <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@lhs.0"/>
+                  </right>
+                </c>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssumeStatement" str="a new fence is always over a new destination">
+              <expr xsi:type="agree:BinaryExpr" op="=>">
+                <left xsi:type="agree:BinaryExpr" op="and">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+                  </left>
+                  <right xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+                  </right>
+                </left>
+                <right xsi:type="agree:FnCallExpr">
+                  <fn base="#/">
+                    <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1"/>
+                  </fn>
+                  <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+                  <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssumeStatement" str="a new fence is always over the old destination">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:EventExpr">
+                      <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+                    </left>
+                    <right xsi:type="agree:UnaryExpr" op="not">
+                      <expr xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+                      </expr>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:FnCallExpr">
+                    <fn base="#/">
+                      <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1"/>
+                    </fn>
+                    <args xsi:type="agree:PreExpr">
+                      <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@lhs.0"/>
+                    </args>
+                    <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssumeStatement" str="a new destination is always in the old fence">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:EventExpr">
+                      <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+                    </left>
+                    <right xsi:type="agree:UnaryExpr" op="not">
+                      <expr xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+                      </expr>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:FnCallExpr">
+                    <fn base="#/">
+                      <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1"/>
+                    </fn>
+                    <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+                    <args xsi:type="agree:PreExpr">
+                      <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0"/>
+                    </args>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="loc_in_fence">
+                <type xsi:type="agree:PrimType" string="bool"/>
+              </lhs>
+              <expr xsi:type="agree:FnCallExpr">
+                <fn base="#/">
+                  <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1"/>
+                </fn>
+                <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.0"/>
+                <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0"/>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="if we are in the fence, then we stay in">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:PreExpr">
+                      <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@lhs.0"/>
+                    </left>
+                    <right xsi:type="agree:UnaryExpr" op="not">
+                      <expr xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+                      </expr>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.6/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@lhs.0"/>
+                </right>
+              </expr>
+            </specs>
+          </contract>
+        </parsedAnnexSubclause>
+      </ownedAnnexSubclause>
+      <ownedDataPort name="loc" out="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.3"/>
+      <ownedEventDataPort name="fence" in="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.5"/>
+      <ownedEventDataPort name="dest" in="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.3"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:SystemType" name="mission_planner">
+      <ownedAnnexSubclause xsi:type="aadl2:DefaultAnnexSubclause" name="agree" sourceText="{**&#xD;&#xA;    eq cur_fence : Geofence::fence.i =&#xD;&#xA;      if event(fence) then&#xD;&#xA;        fence&#xD;&#xA;      else&#xD;&#xA;        Geofence::fence.i&#xD;&#xA;          { t = 0.0; b = 0.0; r = 0.0; l = 0.0} ->&#xD;&#xA;        pre(cur_fence);&#xD;&#xA;        &#xD;&#xA;    eq cur_dest : Geofence::coord.i =&#xD;&#xA;      if event(dest) then&#xD;&#xA;        dest&#xD;&#xA;      else&#xD;&#xA;        Geofence::coord.i&#xD;&#xA;          {x = 0.0; y = 0.0} ->&#xD;&#xA;        pre(cur_dest);&#xD;&#xA;        &#xD;&#xA;    assume &quot;a new fence is always over the old destination&quot; : true ->&#xD;&#xA;      event(fence) and not event(dest) =>&#xD;&#xA;        Geofence.coord_in_fence(pre(cur_dest), fence);&#xD;&#xA;    &#xD;&#xA;    assume &quot;a new destination is always in the old fence&quot; : true ->&#xD;&#xA;      event(dest) and not event(fence) =>&#xD;&#xA;        Geofence.coord_in_fence(dest, pre(cur_fence));&#xD;&#xA;        &#xD;&#xA;    guarantee &quot;plan x and y are sent at the same time&quot; :&#xD;&#xA;      event(plan_x) = event(plan_y) and event(route_len) = event(plan_y);&#xD;&#xA;        &#xD;&#xA;    guarantee &quot;only produce a new plan if we get a new fence or destination&quot; : true ->&#xD;&#xA;      event(plan_x) = (event(fence) or event(dest));&#xD;&#xA;      &#xD;&#xA;    guarantee &quot;there is always an initial plan&quot; :&#xD;&#xA;      event(plan_x) -> true;&#xD;&#xA;    &#xD;&#xA;    guarantee &quot;all of the plan coordinates are in the fence&quot; :&#xD;&#xA;      forall(i : int) . 0 &lt;= i and i &lt;= GeoFence.ROUTE_LEN-1 =>&#xD;&#xA;        cur_fence.l &lt;= plan_x[i] and plan_x[i] &lt;= cur_fence.r and&#xD;&#xA;        cur_fence.b &lt;= plan_y[i] and plan_y[i] &lt;= cur_fence.t;&#xD;&#xA;        &#xD;&#xA;    guarantee &quot;the destination is in the plan&quot; :&#xD;&#xA;      exists(j : int) . 0 &lt; j and j &lt;= GeoFence.ROUTE_LEN and&#xD;&#xA;        plan_x[j-1] = cur_dest.x and plan_y[j-1] = dest.y and&#xD;&#xA;        route_len = j;&#xD;&#xA;        &#xD;&#xA;    guarantee &quot;route len values&quot; :&#xD;&#xA;      0 &lt; route_len and route_len &lt;= Geofence.ROUTE_LEN;&#xD;&#xA;        &#xD;&#xA;  **}">
+        <parsedAnnexSubclause xsi:type="agree:AgreeContractSubclause" name="agree">
+          <contract xsi:type="agree:AgreeContract">
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="cur_fence">
+                <type xsi:type="agree:AgreeDataType">
+                  <data base="#//@ownedPublicSection/@ownedClassifier.5"/>
+                </type>
+              </lhs>
+              <expr xsi:type="agree:IfThenElseExpr">
+                <a xsi:type="agree:EventExpr">
+                  <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+                </a>
+                <b xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+                <c xsi:type="agree:BinaryExpr" op="->">
+                  <left xsi:type="agree:RecordExpr" args="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.0 #//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.1 #//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.3 #//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.2">
+                    <record base="#//@ownedPublicSection/@ownedClassifier.5"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                  </left>
+                  <right xsi:type="agree:PreExpr">
+                    <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0"/>
+                  </right>
+                </c>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="cur_dest">
+                <type xsi:type="agree:AgreeDataType">
+                  <data base="#//@ownedPublicSection/@ownedClassifier.3"/>
+                </type>
+              </lhs>
+              <expr xsi:type="agree:IfThenElseExpr">
+                <a xsi:type="agree:EventExpr">
+                  <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+                </a>
+                <b xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+                <c xsi:type="agree:BinaryExpr" op="->">
+                  <left xsi:type="agree:RecordExpr" args="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.0 #//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.1">
+                    <record base="#//@ownedPublicSection/@ownedClassifier.3"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                    <argExpr xsi:type="agree:RealLitExpr" val="0.0"/>
+                  </left>
+                  <right xsi:type="agree:PreExpr">
+                    <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@lhs.0"/>
+                  </right>
+                </c>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssumeStatement" str="a new fence is always over the old destination">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:EventExpr">
+                      <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+                    </left>
+                    <right xsi:type="agree:UnaryExpr" op="not">
+                      <expr xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+                      </expr>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:FnCallExpr">
+                    <fn base="#/">
+                      <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1"/>
+                    </fn>
+                    <args xsi:type="agree:PreExpr">
+                      <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@lhs.0"/>
+                    </args>
+                    <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssumeStatement" str="a new destination is always in the old fence">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:EventExpr">
+                      <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+                    </left>
+                    <right xsi:type="agree:UnaryExpr" op="not">
+                      <expr xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+                      </expr>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:FnCallExpr">
+                    <fn base="#/">
+                      <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1"/>
+                    </fn>
+                    <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+                    <args xsi:type="agree:PreExpr">
+                      <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0"/>
+                    </args>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="plan x and y are sent at the same time">
+              <expr xsi:type="agree:BinaryExpr" op="and">
+                <left xsi:type="agree:BinaryExpr" op="=">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                  </left>
+                  <right xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                  </right>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.4"/>
+                  </left>
+                  <right xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="only produce a new plan if we get a new fence or destination">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="or">
+                    <left xsi:type="agree:EventExpr">
+                      <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+                    </left>
+                    <right xsi:type="agree:EventExpr">
+                      <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+                    </right>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="there is always an initial plan">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:EventExpr">
+                  <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                </left>
+                <right xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="all of the plan coordinates are in the fence">
+              <expr xsi:type="agree:QuantExpr" quant="forall">
+                <args name="i">
+                  <type xsi:type="agree:PrimType" string="int"/>
+                </args>
+                <expr xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:IntLitExpr" val="0"/>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@expr/@args.0"/>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@expr/@args.0"/>
+                      <right xsi:type="agree:BinaryExpr" op="-">
+                        <left xsi:type="agree:NestedDotID" base="#/">
+                          <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                        </left>
+                        <right xsi:type="agree:IntLitExpr" val="1"/>
+                      </right>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="and">
+                      <left xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                          <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0">
+                            <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.2"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@expr/@args.0"/>
+                          </right>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0">
+                            <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.3"/>
+                          </right>
+                        </right>
+                      </left>
+                      <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                        <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0">
+                          <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.1"/>
+                        </left>
+                        <right xsi:type="agree:ArrayAccessExpr">
+                          <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                          <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@expr/@args.0"/>
+                        </right>
+                      </right>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:ArrayAccessExpr">
+                        <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                        <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@expr/@args.0"/>
+                      </left>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0">
+                        <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.0"/>
+                      </right>
+                    </right>
+                  </right>
+                </expr>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="the destination is in the plan">
+              <expr xsi:type="agree:QuantExpr" quant="exists">
+                <args name="j">
+                  <type xsi:type="agree:PrimType" string="int"/>
+                </args>
+                <expr xsi:type="agree:BinaryExpr" op="and">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="and">
+                      <left xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="&lt;">
+                          <left xsi:type="agree:IntLitExpr" val="0"/>
+                          <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.8/@expr/@args.0"/>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                          <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.8/@expr/@args.0"/>
+                          <right xsi:type="agree:NestedDotID" base="#/">
+                            <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                          </right>
+                        </right>
+                      </left>
+                      <right xsi:type="agree:BinaryExpr" op="=">
+                        <left xsi:type="agree:ArrayAccessExpr">
+                          <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                          <args xsi:type="agree:BinaryExpr" op="-">
+                            <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.8/@expr/@args.0"/>
+                            <right xsi:type="agree:IntLitExpr" val="1"/>
+                          </args>
+                        </left>
+                        <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@lhs.0">
+                          <sub base="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.0"/>
+                        </right>
+                      </right>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="=">
+                      <left xsi:type="agree:ArrayAccessExpr">
+                        <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                        <args xsi:type="agree:BinaryExpr" op="-">
+                          <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.8/@expr/@args.0"/>
+                          <right xsi:type="agree:IntLitExpr" val="1"/>
+                        </args>
+                      </left>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1">
+                        <sub base="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.1"/>
+                      </right>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="=">
+                    <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.4"/>
+                    <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.8/@expr/@args.0"/>
+                  </right>
+                </expr>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="route len values">
+              <expr xsi:type="agree:BinaryExpr" op="and">
+                <left xsi:type="agree:BinaryExpr" op="&lt;">
+                  <left xsi:type="agree:IntLitExpr" val="0"/>
+                  <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.4"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                  <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.4"/>
+                  <right xsi:type="agree:NestedDotID" base="#/">
+                    <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+          </contract>
+        </parsedAnnexSubclause>
+      </ownedAnnexSubclause>
+      <ownedEventDataPort name="fence" in="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.5"/>
+      <ownedEventDataPort name="dest" in="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.3"/>
+      <ownedEventDataPort name="plan_x" out="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.1"/>
+      <ownedEventDataPort name="plan_y" out="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.1"/>
+      <ownedEventDataPort name="route_len" out="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Integer"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:SystemImplementation" name="mission_planner.i">
+      <ownedAnnexSubclause xsi:type="aadl2:DefaultAnnexSubclause" name="agree" sourceText="{**&#xD;&#xA;        &#xD;&#xA;    assert &quot;plan x and y are sent at the same time&quot; :&#xD;&#xA;      event(plan_x) = event(plan_y) and event(route_len) = event(plan_y);&#xD;&#xA;        &#xD;&#xA;    assert &quot;only produce a new plan if we get a new fence or destination&quot; : true ->&#xD;&#xA;      event(plan_x) = (event(fence) or event(dest));&#xD;&#xA;      &#xD;&#xA;    assert &quot;there is always an initial plan&quot; :&#xD;&#xA;      event(plan_x) -> true;&#xD;&#xA;    &#xD;&#xA;    assert &quot;all of the plan coordinates are in the fence&quot; :&#xD;&#xA;      forall(k : int) . 0 &lt;= k and k &lt;= GeoFence.ROUTE_LEN-1 =>&#xD;&#xA;        cur_fence.l &lt;= plan_x[k] and plan_x[k] &lt;= cur_fence.r and&#xD;&#xA;        cur_fence.b &lt;= plan_y[k] and plan_y[k] &lt;= cur_fence.t;&#xD;&#xA;        &#xD;&#xA;    assert &quot;the destination is in the plan&quot; :&#xD;&#xA;      exists(l : int) . 0 &lt; l and l &lt;= GeoFence.ROUTE_LEN and&#xD;&#xA;        plan_x[l-1] = cur_dest.x and plan_y[l-1] = dest.y and&#xD;&#xA;        route_len = l;&#xD;&#xA;        &#xD;&#xA;  **}">
+        <parsedAnnexSubclause xsi:type="agree:AgreeContractSubclause" name="agree">
+          <contract xsi:type="agree:AgreeContract">
+            <specs xsi:type="agree:AssertStatement" str="plan x and y are sent at the same time">
+              <expr xsi:type="agree:BinaryExpr" op="and">
+                <left xsi:type="agree:BinaryExpr" op="=">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                  </left>
+                  <right xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                  </right>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.4"/>
+                  </left>
+                  <right xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssertStatement" str="only produce a new plan if we get a new fence or destination">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="or">
+                    <left xsi:type="agree:EventExpr">
+                      <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+                    </left>
+                    <right xsi:type="agree:EventExpr">
+                      <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+                    </right>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssertStatement" str="there is always an initial plan">
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:EventExpr">
+                  <id base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                </left>
+                <right xsi:type="agree:BoolLitExpr">
+                  <val value="true"/>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssertStatement" str="all of the plan coordinates are in the fence">
+              <expr xsi:type="agree:QuantExpr" quant="forall">
+                <args name="k">
+                  <type xsi:type="agree:PrimType" string="int"/>
+                </args>
+                <expr xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:IntLitExpr" val="0"/>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@expr/@args.0"/>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@expr/@args.0"/>
+                      <right xsi:type="agree:BinaryExpr" op="-">
+                        <left xsi:type="agree:NestedDotID" base="#/">
+                          <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                        </left>
+                        <right xsi:type="agree:IntLitExpr" val="1"/>
+                      </right>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="and">
+                      <left xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                          <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0">
+                            <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.2"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@expr/@args.0"/>
+                          </right>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0">
+                            <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.3"/>
+                          </right>
+                        </right>
+                      </left>
+                      <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                        <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0">
+                          <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.1"/>
+                        </left>
+                        <right xsi:type="agree:ArrayAccessExpr">
+                          <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                          <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@expr/@args.0"/>
+                        </right>
+                      </right>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:ArrayAccessExpr">
+                        <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                        <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@expr/@args.0"/>
+                      </left>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@lhs.0">
+                        <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.0"/>
+                      </right>
+                    </right>
+                  </right>
+                </expr>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssertStatement" str="the destination is in the plan">
+              <expr xsi:type="agree:QuantExpr" quant="exists">
+                <args name="l">
+                  <type xsi:type="agree:PrimType" string="int"/>
+                </args>
+                <expr xsi:type="agree:BinaryExpr" op="and">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="and">
+                      <left xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="&lt;">
+                          <left xsi:type="agree:IntLitExpr" val="0"/>
+                          <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.4/@expr/@args.0"/>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                          <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.4/@expr/@args.0"/>
+                          <right xsi:type="agree:NestedDotID" base="#/">
+                            <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                          </right>
+                        </right>
+                      </left>
+                      <right xsi:type="agree:BinaryExpr" op="=">
+                        <left xsi:type="agree:ArrayAccessExpr">
+                          <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+                          <args xsi:type="agree:BinaryExpr" op="-">
+                            <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.4/@expr/@args.0"/>
+                            <right xsi:type="agree:IntLitExpr" val="1"/>
+                          </args>
+                        </left>
+                        <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@lhs.0">
+                          <sub base="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.0"/>
+                        </right>
+                      </right>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="=">
+                      <left xsi:type="agree:ArrayAccessExpr">
+                        <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+                        <args xsi:type="agree:BinaryExpr" op="-">
+                          <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.4/@expr/@args.0"/>
+                          <right xsi:type="agree:IntLitExpr" val="1"/>
+                        </args>
+                      </left>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1">
+                        <sub base="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.1"/>
+                      </right>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="=">
+                    <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.4"/>
+                    <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.8/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.4/@expr/@args.0"/>
+                  </right>
+                </expr>
+              </expr>
+            </specs>
+          </contract>
+        </parsedAnnexSubclause>
+      </ownedAnnexSubclause>
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.7"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:SystemType" name="controller">
+      <ownedAnnexSubclause xsi:type="aadl2:DefaultAnnexSubclause" name="agree" sourceText="{**&#xD;&#xA;      &#xD;&#xA;    assume &quot;we always receive x and y plans at the same time&quot; :&#xD;&#xA;      event(plan_x) = event(plan_y) and event(plan_y) = event(route_len);&#xD;&#xA;      &#xD;&#xA;    assume &quot;we always receive a route with at least one waypoint&quot; :&#xD;&#xA;      event(route_len) => 0 &lt; route_len and route_len &lt;= Geofence.ROUTE_LEN;&#xD;&#xA;      &#xD;&#xA;    eq cur_plan_x : Geofence::route.i;&#xD;&#xA;    eq cur_plan_y : Geofence::route.i;&#xD;&#xA;    &#xD;&#xA;    eq cur_route_len : int = &#xD;&#xA;      if event(route_len) then&#xD;&#xA;        route_len&#xD;&#xA;      else&#xD;&#xA;        1 -> pre(cur_route_len);&#xD;&#xA;    &#xD;&#xA;    &#xD;&#xA;    guarantee &quot;initial plan x and and y&quot; :&#xD;&#xA;      forall (i : int) . 0 &lt;= i and i &lt;= Geofence.ROUTE_LEN-1 =>&#xD;&#xA;      (if event(plan_x) then      &#xD;&#xA;         cur_plan_x[i] = plan_x[i] and cur_plan_y[i] = plan_y[i]&#xD;&#xA;      else&#xD;&#xA;          plan_x[i] = 0.0 and plan_y[i] = 0.0) -> true;&#xD;&#xA;          &#xD;&#xA;    guarantee &quot;not initial plan x and and y&quot; : &#xD;&#xA;      forall (j : int) . 0 &lt;= j and j &lt;= Geofence.ROUTE_LEN-1 => (true ->&#xD;&#xA;      (if event(plan_x) then &#xD;&#xA;        cur_plan_x[j] = plan_x[j] and cur_plan_y[j] = plan_y[j]&#xD;&#xA;      else&#xD;&#xA;        cur_plan_x[j] = pre(plan_x[j]) and cur_plan_y[j] = pre(plan_y[j])));  &#xD;&#xA;      &#xD;&#xA;    eq plan_index : int = 0 ->&#xD;&#xA;      if(event(plan_x)) then&#xD;&#xA;        0&#xD;&#xA;      else if pre(cur_route_len = plan_index + 1) then&#xD;&#xA;        pre(plan_index)&#xD;&#xA;      else if pre(loc = cur_waypoint) then&#xD;&#xA;        pre(plan_index) + 1&#xD;&#xA;      else&#xD;&#xA;        pre(plan_index);&#xD;&#xA;      &#xD;&#xA;    eq cur_waypoint : Geofence::coord.i = &#xD;&#xA;      Geofence::coord.i {x = cur_plan_x[plan_index]; y = cur_plan_y[plan_index]};&#xD;&#xA;        &#xD;&#xA;    guarantee &quot;we immediately move to the next waypoint&quot; :&#xD;&#xA;      loc = cur_waypoint;&#xD;&#xA;      &#xD;&#xA;    guarantee &quot;plan index guarantee&quot; :&#xD;&#xA;      plan_index &lt; Geofence.ROUTE_LEN;&#xD;&#xA;  **}">
+        <parsedAnnexSubclause xsi:type="agree:AgreeContractSubclause" name="agree">
+          <contract xsi:type="agree:AgreeContract">
+            <specs xsi:type="agree:AssumeStatement" str="we always receive x and y plans at the same time">
+              <expr xsi:type="agree:BinaryExpr" op="and">
+                <left xsi:type="agree:BinaryExpr" op="=">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                  </left>
+                  <right xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                  </right>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="=">
+                  <left xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                  </left>
+                  <right xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssumeStatement" str="we always receive a route with at least one waypoint">
+              <expr xsi:type="agree:BinaryExpr" op="=>">
+                <left xsi:type="agree:EventExpr">
+                  <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+                </left>
+                <right xsi:type="agree:BinaryExpr" op="and">
+                  <left xsi:type="agree:BinaryExpr" op="&lt;">
+                    <left xsi:type="agree:IntLitExpr" val="0"/>
+                    <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                    <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+                    <right xsi:type="agree:NestedDotID" base="#/">
+                      <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                    </right>
+                  </right>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="cur_plan_x">
+                <type xsi:type="agree:AgreeDataType">
+                  <data base="#//@ownedPublicSection/@ownedClassifier.1"/>
+                </type>
+              </lhs>
+            </specs>
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="cur_plan_y">
+                <type xsi:type="agree:AgreeDataType">
+                  <data base="#//@ownedPublicSection/@ownedClassifier.1"/>
+                </type>
+              </lhs>
+            </specs>
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="cur_route_len">
+                <type xsi:type="agree:PrimType" string="int"/>
+              </lhs>
+              <expr xsi:type="agree:IfThenElseExpr">
+                <a xsi:type="agree:EventExpr">
+                  <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+                </a>
+                <b xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+                <c xsi:type="agree:BinaryExpr" op="->">
+                  <left xsi:type="agree:IntLitExpr" val="1"/>
+                  <right xsi:type="agree:PreExpr">
+                    <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.4/@lhs.0"/>
+                  </right>
+                </c>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="initial plan x and and y">
+              <expr xsi:type="agree:QuantExpr" quant="forall">
+                <args name="i">
+                  <type xsi:type="agree:PrimType" string="int"/>
+                </args>
+                <expr xsi:type="agree:BinaryExpr" op="->">
+                  <left xsi:type="agree:BinaryExpr" op="=>">
+                    <left xsi:type="agree:BinaryExpr" op="and">
+                      <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                        <left xsi:type="agree:IntLitExpr" val="0"/>
+                        <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@expr/@args.0"/>
+                      </left>
+                      <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                        <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@expr/@args.0"/>
+                        <right xsi:type="agree:BinaryExpr" op="-">
+                          <left xsi:type="agree:NestedDotID" base="#/">
+                            <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                          </left>
+                          <right xsi:type="agree:IntLitExpr" val="1"/>
+                        </right>
+                      </right>
+                    </left>
+                    <right xsi:type="agree:IfThenElseExpr">
+                      <a xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                      </a>
+                      <b xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.2/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@expr/@args.0"/>
+                          </right>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@expr/@args.0"/>
+                          </right>
+                        </right>
+                      </b>
+                      <c xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:RealLitExpr" val="0.0"/>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.5/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:RealLitExpr" val="0.0"/>
+                        </right>
+                      </c>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BoolLitExpr">
+                    <val value="true"/>
+                  </right>
+                </expr>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="not initial plan x and and y">
+              <expr xsi:type="agree:QuantExpr" quant="forall">
+                <args name="j">
+                  <type xsi:type="agree:PrimType" string="int"/>
+                </args>
+                <expr xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:IntLitExpr" val="0"/>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                      <right xsi:type="agree:BinaryExpr" op="-">
+                        <left xsi:type="agree:NestedDotID" base="#/">
+                          <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                        </left>
+                        <right xsi:type="agree:IntLitExpr" val="1"/>
+                      </right>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="->">
+                    <left xsi:type="agree:BoolLitExpr">
+                      <val value="true"/>
+                    </left>
+                    <right xsi:type="agree:IfThenElseExpr">
+                      <a xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                      </a>
+                      <b xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.2/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                          </right>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                          </right>
+                        </right>
+                      </b>
+                      <c xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.2/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:PreExpr">
+                            <expr xsi:type="agree:ArrayAccessExpr">
+                              <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                              <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                            </expr>
+                          </right>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:PreExpr">
+                            <expr xsi:type="agree:ArrayAccessExpr">
+                              <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                              <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.6/@expr/@args.0"/>
+                            </expr>
+                          </right>
+                        </right>
+                      </c>
+                    </right>
+                  </right>
+                </expr>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="plan_index">
+                <type xsi:type="agree:PrimType" string="int"/>
+              </lhs>
+              <expr xsi:type="agree:BinaryExpr" op="->">
+                <left xsi:type="agree:IntLitExpr" val="0"/>
+                <right xsi:type="agree:IfThenElseExpr">
+                  <a xsi:type="agree:EventExpr">
+                    <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                  </a>
+                  <b xsi:type="agree:IntLitExpr" val="0"/>
+                  <c xsi:type="agree:IfThenElseExpr">
+                    <a xsi:type="agree:PreExpr">
+                      <expr xsi:type="agree:BinaryExpr" op="=">
+                        <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.4/@lhs.0"/>
+                        <right xsi:type="agree:BinaryExpr" op="+">
+                          <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@lhs.0"/>
+                          <right xsi:type="agree:IntLitExpr" val="1"/>
+                        </right>
+                      </expr>
+                    </a>
+                    <b xsi:type="agree:PreExpr">
+                      <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@lhs.0"/>
+                    </b>
+                    <c xsi:type="agree:IfThenElseExpr">
+                      <a xsi:type="agree:PreExpr">
+                        <expr xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedDataPort.0"/>
+                          <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.8/@lhs.0"/>
+                        </expr>
+                      </a>
+                      <b xsi:type="agree:BinaryExpr" op="+">
+                        <left xsi:type="agree:PreExpr">
+                          <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@lhs.0"/>
+                        </left>
+                        <right xsi:type="agree:IntLitExpr" val="1"/>
+                      </b>
+                      <c xsi:type="agree:PreExpr">
+                        <expr xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@lhs.0"/>
+                      </c>
+                    </c>
+                  </c>
+                </right>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:EqStatement">
+              <lhs name="cur_waypoint">
+                <type xsi:type="agree:AgreeDataType">
+                  <data base="#//@ownedPublicSection/@ownedClassifier.3"/>
+                </type>
+              </lhs>
+              <expr xsi:type="agree:RecordExpr" args="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.0 #//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.1">
+                <record base="#//@ownedPublicSection/@ownedClassifier.3"/>
+                <argExpr xsi:type="agree:ArrayAccessExpr">
+                  <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.2/@lhs.0"/>
+                  <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@lhs.0"/>
+                </argExpr>
+                <argExpr xsi:type="agree:ArrayAccessExpr">
+                  <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@lhs.0"/>
+                  <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@lhs.0"/>
+                </argExpr>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="we immediately move to the next waypoint">
+              <expr xsi:type="agree:BinaryExpr" op="=">
+                <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedDataPort.0"/>
+                <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.8/@lhs.0"/>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:GuaranteeStatement" str="plan index guarantee">
+              <expr xsi:type="agree:BinaryExpr" op="&lt;">
+                <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.7/@lhs.0"/>
+                <right xsi:type="agree:NestedDotID" base="#/">
+                  <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                </right>
+              </expr>
+            </specs>
+          </contract>
+        </parsedAnnexSubclause>
+      </ownedAnnexSubclause>
+      <ownedDataPort name="loc" out="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.3"/>
+      <ownedEventDataPort name="plan_x" in="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.1"/>
+      <ownedEventDataPort name="plan_y" in="true" dataFeatureClassifier="#//@ownedPublicSection/@ownedClassifier.1"/>
+      <ownedEventDataPort name="route_len" in="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Integer"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:SystemImplementation" name="controller.i">
+      <ownedAnnexSubclause xsi:type="aadl2:DefaultAnnexSubclause" name="agree" sourceText="{**&#xD;&#xA;      &#xD;&#xA;    assert &quot;initial plan x and and y&quot; :&#xD;&#xA;      forall (k : int) . 0 &lt;= k and k &lt;= Geofence.ROUTE_LEN-1 =>&#xD;&#xA;      (if event(plan_x) then      &#xD;&#xA;         cur_plan_x[k] = plan_x[k] and cur_plan_y[k] = plan_y[k]&#xD;&#xA;      else&#xD;&#xA;          plan_x[k] = 0.0 and plan_y[k] = 0.0) -> true;&#xD;&#xA;          &#xD;&#xA;    assert &quot;not initial plan x and and y&quot; : &#xD;&#xA;      forall (l : int) . 0 &lt;= l and l &lt;= Geofence.ROUTE_LEN-1 => (true ->&#xD;&#xA;      (if event(plan_x) then &#xD;&#xA;        cur_plan_x[l] = plan_x[l] and cur_plan_y[l] = plan_y[l]&#xD;&#xA;      else&#xD;&#xA;        cur_plan_x[l] = pre(plan_x[l]) and cur_plan_y[l] = pre(plan_y[l])));  &#xD;&#xA;      &#xD;&#xA;    assert &quot;we immediately move to the next waypoint&quot; :&#xD;&#xA;      loc = cur_waypoint;&#xD;&#xA;  **}">
+        <parsedAnnexSubclause xsi:type="agree:AgreeContractSubclause" name="agree">
+          <contract xsi:type="agree:AgreeContract">
+            <specs xsi:type="agree:AssertStatement" str="initial plan x and and y">
+              <expr xsi:type="agree:QuantExpr" quant="forall">
+                <args name="k">
+                  <type xsi:type="agree:PrimType" string="int"/>
+                </args>
+                <expr xsi:type="agree:BinaryExpr" op="->">
+                  <left xsi:type="agree:BinaryExpr" op="=>">
+                    <left xsi:type="agree:BinaryExpr" op="and">
+                      <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                        <left xsi:type="agree:IntLitExpr" val="0"/>
+                        <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@expr/@args.0"/>
+                      </left>
+                      <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                        <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@expr/@args.0"/>
+                        <right xsi:type="agree:BinaryExpr" op="-">
+                          <left xsi:type="agree:NestedDotID" base="#/">
+                            <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                          </left>
+                          <right xsi:type="agree:IntLitExpr" val="1"/>
+                        </right>
+                      </right>
+                    </left>
+                    <right xsi:type="agree:IfThenElseExpr">
+                      <a xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                      </a>
+                      <b xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.2/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@expr/@args.0"/>
+                          </right>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@expr/@args.0"/>
+                          </right>
+                        </right>
+                      </b>
+                      <c xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:RealLitExpr" val="0.0"/>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.0/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:RealLitExpr" val="0.0"/>
+                        </right>
+                      </c>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BoolLitExpr">
+                    <val value="true"/>
+                  </right>
+                </expr>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssertStatement" str="not initial plan x and and y">
+              <expr xsi:type="agree:QuantExpr" quant="forall">
+                <args name="l">
+                  <type xsi:type="agree:PrimType" string="int"/>
+                </args>
+                <expr xsi:type="agree:BinaryExpr" op="=>">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:IntLitExpr" val="0"/>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                      <right xsi:type="agree:BinaryExpr" op="-">
+                        <left xsi:type="agree:NestedDotID" base="#/">
+                          <sub base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.0"/>
+                        </left>
+                        <right xsi:type="agree:IntLitExpr" val="1"/>
+                      </right>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="->">
+                    <left xsi:type="agree:BoolLitExpr">
+                      <val value="true"/>
+                    </left>
+                    <right xsi:type="agree:IfThenElseExpr">
+                      <a xsi:type="agree:EventExpr">
+                        <id base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                      </a>
+                      <b xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.2/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                          </right>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                          </right>
+                        </right>
+                      </b>
+                      <c xsi:type="agree:BinaryExpr" op="and">
+                        <left xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.2/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:PreExpr">
+                            <expr xsi:type="agree:ArrayAccessExpr">
+                              <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+                              <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                            </expr>
+                          </right>
+                        </left>
+                        <right xsi:type="agree:BinaryExpr" op="=">
+                          <left xsi:type="agree:ArrayAccessExpr">
+                            <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.3/@lhs.0"/>
+                            <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                          </left>
+                          <right xsi:type="agree:PreExpr">
+                            <expr xsi:type="agree:ArrayAccessExpr">
+                              <array xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+                              <args xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.10/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.1/@expr/@args.0"/>
+                            </expr>
+                          </right>
+                        </right>
+                      </c>
+                    </right>
+                  </right>
+                </expr>
+              </expr>
+            </specs>
+            <specs xsi:type="agree:AssertStatement" str="we immediately move to the next waypoint">
+              <expr xsi:type="agree:BinaryExpr" op="=">
+                <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedDataPort.0"/>
+                <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedClassifier.9/@ownedAnnexSubclause.0/@parsedAnnexSubclause/@contract/@specs.8/@lhs.0"/>
+              </expr>
+            </specs>
+          </contract>
+        </parsedAnnexSubclause>
+      </ownedAnnexSubclause>
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.9"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:SystemImplementation" name="vehicle.i">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.6"/>
+      <ownedPortConnection name="conn_fence">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+        <source connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="conn_dest">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+        <source connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="conn_route_len">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.4"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="conn_plan_x">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="conn_plan_y">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="conn_loc">
+        <destination connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.0"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.11/@ownedSystemSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.9/@ownedDataPort.0"/>
+      </ownedPortConnection>
+      <ownedSystemSubcomponent name="planner" systemSubcomponentType="#//@ownedPublicSection/@ownedClassifier.8"/>
+      <ownedSystemSubcomponent name="controller" systemSubcomponentType="#//@ownedPublicSection/@ownedClassifier.10"/>
+    </ownedClassifier>
+    <ownedAnnexLibrary xsi:type="aadl2:DefaultAnnexLibrary" name="agree" sourceText="{**&#xD;&#xA;  const ROUTE_LEN : int = 1;&#xD;&#xA;  &#xD;&#xA;  node coord_in_fence(coord : Geofence::coord.i , fence : Geofence::fence.i )&#xD;&#xA;  returns (ret : bool);&#xD;&#xA;  let&#xD;&#xA;    ret = fence.l &lt;= coord.x and &#xD;&#xA;          coord.x &lt;= fence.r and&#xD;&#xA;          fence.b &lt;= coord.y and&#xD;&#xA;          coord.y &lt;= fence.t;&#xD;&#xA;  tel;&#xD;&#xA;  &#xD;&#xA;  &#xD;&#xA;**}">
+      <parsedAnnexLibrary xsi:type="agree:AgreeContractLibrary" name="agree">
+        <contract xsi:type="agree:AgreeContract">
+          <specs xsi:type="agree:ConstStatement" name="ROUTE_LEN">
+            <type xsi:type="agree:PrimType" string="int"/>
+            <expr xsi:type="agree:IntLitExpr" val="1"/>
+          </specs>
+          <specs xsi:type="agree:NodeDefExpr" name="coord_in_fence">
+            <args name="coord">
+              <type xsi:type="agree:AgreeDataType">
+                <data base="#//@ownedPublicSection/@ownedClassifier.3"/>
+              </type>
+            </args>
+            <args name="fence">
+              <type xsi:type="agree:AgreeDataType">
+                <data base="#//@ownedPublicSection/@ownedClassifier.5"/>
+              </type>
+            </args>
+            <rets name="ret">
+              <type xsi:type="agree:PrimType" string="bool"/>
+            </rets>
+            <nodeBody>
+              <stmts xsi:type="agree:NodeEq" lhs="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@rets.0">
+                <expr xsi:type="agree:BinaryExpr" op="and">
+                  <left xsi:type="agree:BinaryExpr" op="and">
+                    <left xsi:type="agree:BinaryExpr" op="and">
+                      <left xsi:type="agree:BinaryExpr" op="&lt;=">
+                        <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@args.1">
+                          <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.2"/>
+                        </left>
+                        <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@args.0">
+                          <sub base="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.0"/>
+                        </right>
+                      </left>
+                      <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                        <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@args.0">
+                          <sub base="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.0"/>
+                        </left>
+                        <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@args.1">
+                          <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.3"/>
+                        </right>
+                      </right>
+                    </left>
+                    <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                      <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@args.1">
+                        <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.1"/>
+                      </left>
+                      <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@args.0">
+                        <sub base="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.1"/>
+                      </right>
+                    </right>
+                  </left>
+                  <right xsi:type="agree:BinaryExpr" op="&lt;=">
+                    <left xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@args.0">
+                      <sub base="#//@ownedPublicSection/@ownedClassifier.3/@ownedDataSubcomponent.1"/>
+                    </left>
+                    <right xsi:type="agree:NestedDotID" base="#//@ownedPublicSection/@ownedAnnexLibrary.0/@parsedAnnexLibrary/@contract/@specs.1/@args.1">
+                      <sub base="#//@ownedPublicSection/@ownedClassifier.5/@ownedDataSubcomponent.0"/>
+                    </right>
+                  </right>
+                </expr>
+              </stmts>
+            </nodeBody>
+          </specs>
+        </contract>
+      </parsedAnnexLibrary>
+    </ownedAnnexLibrary>
+  </ownedPublicSection>
+</aadl2:Package>

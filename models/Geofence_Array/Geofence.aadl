@@ -1,0 +1,292 @@
+package Geofence
+public
+  with Base_Types;
+  with Data_Model;
+  
+annex agree {**
+  const ROUTE_LEN : int = 2;
+  
+  node coord_in_fence(coord : Geofence::coord.i , fence : Geofence::fence.i )
+  returns (ret : bool);
+  let
+    ret = fence.l <= coord.x and 
+          coord.x <= fence.r and
+          fence.b <= coord.y and
+          coord.y <= fence.t;
+  tel;
+  
+  
+**};
+  
+  data route
+  end route;
+  
+  data implementation route.i
+    properties
+      Data_Model::Data_Representation => Array;
+      Data_Model::Base_Type => (classifier (Base_types::Float));
+      Data_Model::Dimension => (2);
+  end route.i;
+  
+  data coord
+  end coord;
+  
+  data implementation coord.i
+  	subcomponents
+  		x : data Base_Types::Float;
+  		y : data Base_Types::Float;
+  end coord.i;
+  
+  data fence
+  end fence;
+  
+  data implementation fence.i
+  	subcomponents
+  		t : data Base_Types::Float;
+  		b : data Base_Types::Float;
+  		l : data Base_Types::Float;
+  		r : data Base_Types::Float;
+  end fence.i;
+  
+ system vehicle
+ 	features
+ 		fence : in event data port Geofence::fence.i;
+ 		dest : in event data port Geofence::coord.i;
+ 		loc : out data port Geofence::coord.i;
+ 	annex agree {**
+ 	    
+ 	  eq cur_fence : Geofence::fence.i =
+ 	    if event(fence) then
+ 	      fence
+ 	    else
+ 	      Geofence::fence.i
+ 	        { t = 0.0; b = 0.0; r = 0.0; l = 0.0} ->
+ 	      pre(cur_fence);
+ 	      
+ 	  eq cur_dest : Geofence::coord.i =
+ 	    if event(dest) then
+ 	      dest
+ 	    else
+ 	      Geofence::coord.i
+ 	        {x = 0.0; y = 0.0} -> 
+ 	      pre(cur_dest);
+ 	      
+ 	  assume "a new fence is always over a new destination" : 
+ 	    event(fence) and event(dest) =>
+ 	      Geofence.coord_in_fence(dest, fence);
+ 	      
+ 	  assume "a new fence is always over the old destination" : true ->
+ 	    event(fence) and not event(dest) =>
+ 	      Geofence.coord_in_fence(pre(cur_dest), fence);
+ 	  
+ 	  assume "a new destination is always in the old fence" : true ->
+ 	    event(dest) and not event(fence) =>
+ 	      Geofence.coord_in_fence(dest, pre(cur_fence));
+ 	      
+ 	  eq loc_in_fence : bool = Geofence.coord_in_fence(loc, cur_fence);
+ 	  
+ 	  guarantee "if we are in the fence, then we stay in" : true ->
+ 	    pre(loc_in_fence) and not event(fence) => loc_in_fence;
+-- 	    
+-- 	  guarantee "if we reach the destination then we stay there" : true ->
+-- 	    pre(loc = cur_dest) and not event(dest) and not event(fence) => loc = pre(cur_dest);
+ 	    
+ 	    
+ 	**};
+ 		
+ end vehicle;
+ 
+system mission_planner
+	features
+    fence : in event data port Geofence::fence.i;
+    dest : in event data port Geofence::coord.i;
+    plan_x : out event data port Geofence::route.i;
+    plan_y : out event data port Geofence::route.i;
+    route_len : out event data port Base_types::Integer;
+    
+  annex agree {**
+    eq cur_fence : Geofence::fence.i =
+      if event(fence) then
+        fence
+      else
+        Geofence::fence.i
+          { t = 0.0; b = 0.0; r = 0.0; l = 0.0} ->
+        pre(cur_fence);
+        
+    eq cur_dest : Geofence::coord.i =
+      if event(dest) then
+        dest
+      else
+        Geofence::coord.i
+          {x = 0.0; y = 0.0} ->
+        pre(cur_dest);
+        
+    assume "a new fence is always over the old destination" : true ->
+      event(fence) and not event(dest) =>
+        Geofence.coord_in_fence(pre(cur_dest), fence);
+    
+    assume "a new destination is always in the old fence" : true ->
+      event(dest) and not event(fence) =>
+        Geofence.coord_in_fence(dest, pre(cur_fence));
+        
+    guarantee "plan x and y are sent at the same time" :
+      event(plan_x) = event(plan_y) and event(route_len) = event(plan_y);
+        
+    guarantee "only produce a new plan if we get a new fence or destination" : true ->
+      event(plan_x) = (event(fence) or event(dest));
+      
+    guarantee "there is always an initial plan" :
+      event(plan_x) -> true;
+    
+    guarantee "all of the plan coordinates are in the fence" :
+      forall(i : int) . 0 <= i and i <= GeoFence.ROUTE_LEN-1 =>
+        cur_fence.l <= plan_x[i] and plan_x[i] <= cur_fence.r and
+        cur_fence.b <= plan_y[i] and plan_y[i] <= cur_fence.t;
+        
+    guarantee "the destination is in the plan" :
+      exists(j : int) . 0 < j and j <= GeoFence.ROUTE_LEN and
+        plan_x[j-1] = cur_dest.x and plan_y[j-1] = dest.y and
+        route_len = j;
+        
+    guarantee "route len values" :
+      0 < route_len and route_len <= Geofence.ROUTE_LEN;
+        
+  **};
+		
+end mission_planner;
+
+system implementation mission_planner.i
+    annex agree {**
+        
+    assert "plan x and y are sent at the same time" :
+      event(plan_x) = event(plan_y) and event(route_len) = event(plan_y);
+        
+    assert "only produce a new plan if we get a new fence or destination" : true ->
+      event(plan_x) = (event(fence) or event(dest));
+      
+    assert "there is always an initial plan" :
+      event(plan_x) -> true;
+    
+    assert "all of the plan coordinates are in the fence" :
+      forall(k : int) . 0 <= k and k <= GeoFence.ROUTE_LEN-1 =>
+        cur_fence.l <= plan_x[k] and plan_x[k] <= cur_fence.r and
+        cur_fence.b <= plan_y[k] and plan_y[k] <= cur_fence.t;
+        
+    assert "the destination is in the plan" :
+      exists(l : int) . 0 < l and l <= GeoFence.ROUTE_LEN and
+        plan_x[l-1] = cur_dest.x and plan_y[l-1] = dest.y and
+        route_len = l;
+        
+  **};
+end mission_planner.i;
+
+
+system controller
+  features
+    plan_x : in event data port Geofence::route.i;
+    plan_y : in event data port Geofence::route.i;
+    route_len : in event data port Base_Types::Integer;
+    loc : out data port Geofence::coord.i;
+    
+  annex agree {**
+      
+    assume "we always receive x and y plans at the same time" :
+      event(plan_x) = event(plan_y) and event(plan_y) = event(route_len);
+      
+    assume "we always receive a route with at least one waypoint" :
+      event(route_len) => 0 < route_len and route_len <= Geofence.ROUTE_LEN;
+      
+    eq cur_plan_x : Geofence::route.i;
+    eq cur_plan_y : Geofence::route.i;
+    
+    eq cur_route_len : int = 
+      if event(route_len) then
+        route_len
+      else
+        1 -> pre(cur_route_len);
+    
+    
+    guarantee "initial plan x and and y" :
+      forall (i : int) . 0 <= i and i <= Geofence.ROUTE_LEN-1 =>
+      (if event(plan_x) then      
+         cur_plan_x[i] = plan_x[i] and cur_plan_y[i] = plan_y[i]
+      else
+          cur_plan_x[i] = 0.0 and cur_plan_y[i] = 0.0) -> true;
+          
+    guarantee "not initial plan x and and y" : 
+      forall (j : int) . 0 <= j and j <= Geofence.ROUTE_LEN-1 => (true ->
+      (if event(plan_x) then 
+        cur_plan_x[j] = plan_x[j] and cur_plan_y[j] = plan_y[j]
+      else
+        cur_plan_x[j] = pre(cur_plan_x[j]) and cur_plan_y[j] = pre(cur_plan_y[j])));  
+      
+    eq plan_index : int = 0 ->
+      if(event(plan_x)) then
+        0
+      else if pre(cur_route_len = plan_index + 1) then
+        pre(plan_index)
+      else if pre(loc = cur_waypoint) then
+        pre(plan_index) + 1
+      else
+        pre(plan_index);
+      
+    eq cur_waypoint : Geofence::coord.i = 
+      Geofence::coord.i {x = cur_plan_x[plan_index]; y = cur_plan_y[plan_index]};
+        
+    guarantee "we immediately move to the next waypoint" :
+      loc = cur_waypoint;
+      
+    guarantee "plan index guarantee" :
+      0 <= plan_index and plan_index < Geofence.ROUTE_LEN;
+      
+    guarantee "cur_route_len at least 1" :
+      0 < cur_route_len and cur_route_len <= Geofence.ROUTE_LEN;
+  **};
+end controller;
+
+system implementation controller.i
+    annex agree {**
+      
+    assert "initial plan x and and y" :
+      forall (k : int) . 0 <= k and k <= Geofence.ROUTE_LEN-1 =>
+      (if event(plan_x) then      
+         cur_plan_x[k] = plan_x[k] and cur_plan_y[k] = plan_y[k]
+      else
+          cur_plan_x[k] = 0.0 and cur_plan_y[k] = 0.0) -> true;
+          
+    assert "not initial plan x and and y" : 
+      forall (l : int) . 0 <= l and l <= Geofence.ROUTE_LEN-1 => (true ->
+      (if event(plan_x) then 
+        cur_plan_x[l] = plan_x[l] and cur_plan_y[l] = plan_y[l]
+      else
+        cur_plan_x[l] = pre(cur_plan_x[l]) and cur_plan_y[l] = pre(cur_plan_y[l])));  
+      
+    assert "we immediately move to the next waypoint" :
+      loc = cur_waypoint;
+  **};
+end controller.i;
+
+system implementation vehicle.i
+	subcomponents
+		planner : system mission_planner.i;
+		controller : system controller.i;
+		
+	connections
+		conn_fence: port fence -> planner.fence;
+		conn_dest: port dest -> planner.dest;
+		
+		conn_route_len: port planner.route_len -> controller.route_len;
+		conn_plan_x: port planner.plan_x -> controller.plan_x;
+		conn_plan_y: port planner.plan_y -> controller.plan_y;
+		
+		conn_loc: port controller.loc -> loc;
+		
+  annex agree {**
+    lemma "controllers destination" :
+      controller.cur_plan_x[controller.cur_route_len-1] = cur_dest.x;
+  **};
+
+end vehicle.i;
+
+
+end Geofence;

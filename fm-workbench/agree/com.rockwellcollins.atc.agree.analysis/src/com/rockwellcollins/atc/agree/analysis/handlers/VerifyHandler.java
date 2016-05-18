@@ -67,6 +67,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
+import com.rockwellcollins.atc.agree.analysis.Kind2Renaming;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
@@ -252,7 +253,12 @@ public abstract class VerifyHandler extends AadlHandler {
     private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram,
             AnalysisType analysisType) {
 
-        AgreeRenaming renaming = new AgreeRenaming();
+        AgreeRenaming renaming;
+        if(AgreeUtils.usingKind2()){
+            renaming = new Kind2Renaming();
+        }else{
+            renaming = new AgreeRenaming();
+        }
         AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
         for (Node node : lustreProgram.nodes) {
