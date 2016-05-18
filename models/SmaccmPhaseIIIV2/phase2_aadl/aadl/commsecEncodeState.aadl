@@ -1,0 +1,35 @@
+-- File generated from Tower-AADL compiler
+
+package commsecEncodeState
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread commsecEncodeState
+  features
+    Input_gec_encode_init: in event data port Data_Types::array_24_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_gec_encode_init");
+        Source_Text => ("user_code/commsecEncodeState_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+      };
+    Input_plaintext_encode: in event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_plaintext_encode");
+        Source_Text => ("user_code/commsecEncodeState_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_plaintext_encode_0}}";
+      };
+    Output_plaintext_encode_0: out event data port Data_Types::array_96_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_plaintext_encode_chan_120";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end commsecEncodeState;
+
+end commsecEncodeState;

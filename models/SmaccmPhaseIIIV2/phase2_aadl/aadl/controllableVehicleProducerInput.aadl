@@ -1,0 +1,539 @@
+-- File generated from Tower-AADL compiler
+
+package controllableVehicleProducerInput
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread controllableVehicleProducerInput
+  features
+    Input_rebootSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_rebootSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_rebootSetRespProducer_0}}";
+      };
+    Input_altitudeRatePidSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_altitudeRatePidSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_altitudeRatePidSetRespProducer_0}}";
+      };
+    Input_altitudeRatePidGetRespProducer: in event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_altitudeRatePidGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_altitudeRatePidGetRespProducer_0}}";
+      };
+    Input_altitudePositionPidSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_altitudePositionPidSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_altitudePositionPidSetRespProducer_0}}";
+      };
+    Input_altitudePositionPidGetRespProducer: in event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_altitudePositionPidGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_altitudePositionPidGetRespProducer_0}}";
+      };
+    Input_throttleUiSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_throttleUiSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_throttleUiSetRespProducer_0}}";
+      };
+    Input_throttleUiGetRespProducer: in event data port Data_Types::sequence_numbered_throttle_ui
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_throttleUiGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_throttleUiGetRespProducer_0}}";
+      };
+    Input_attitudeRollStabSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_attitudeRollStabSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_attitudeRollStabSetRespProducer_0}}";
+      };
+    Input_attitudeRollStabGetRespProducer: in event data port Data_Types::sequence_numbered_stab_config
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_attitudeRollStabGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_attitudeRollStabGetRespProducer_0}}";
+      };
+    Input_attitudePitchStabSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_attitudePitchStabSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_attitudePitchStabSetRespProducer_0}}";
+      };
+    Input_attitudePitchStabGetRespProducer: in event data port Data_Types::sequence_numbered_stab_config
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_attitudePitchStabGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_attitudePitchStabGetRespProducer_0}}";
+      };
+    Input_yawRatePidSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_yawRatePidSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_yawRatePidSetRespProducer_0}}";
+      };
+    Input_yawRatePidGetRespProducer: in event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_yawRatePidGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_yawRatePidGetRespProducer_0}}";
+      };
+    Input_yawPositionPidSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_yawPositionPidSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_yawPositionPidSetRespProducer_0}}";
+      };
+    Input_yawPositionPidGetRespProducer: in event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_yawPositionPidGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_yawPositionPidGetRespProducer_0}}";
+      };
+    Input_armingRequestSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_armingRequestSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_armingRequestSetRespProducer_0}}";
+      };
+    Input_armingRequestGetRespProducer: in event data port Data_Types::sequence_numbered_tristate
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_armingRequestGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_armingRequestGetRespProducer_0}}";
+      };
+    Input_controlModesRequestSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_controlModesRequestSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_controlModesRequestSetRespProducer_0}}";
+      };
+    Input_controlModesRequestGetRespProducer: in event data port Data_Types::sequence_numbered_control_modes
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_controlModesRequestGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_controlModesRequestGetRespProducer_0}}";
+      };
+    Input_userInputRequestSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_userInputRequestSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_userInputRequestSetRespProducer_0}}";
+      };
+    Input_userInputRequestGetRespProducer: in event data port Data_Types::sequence_numbered_user_input
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_userInputRequestGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_userInputRequestGetRespProducer_0}}";
+      };
+    Input_rgbLedSetRespProducer: in event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_rgbLedSetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_rgbLedSetRespProducer_0}}";
+      };
+    Input_rgbLedGetRespProducer: in event data port Data_Types::sequence_numbered_rgb_led_setting
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_rgbLedGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_rgbLedGetRespProducer_0}}";
+      };
+    Input_cameraTargetInputGetRespProducer: in event data port Data_Types::sequence_numbered_camera_target
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_cameraTargetInputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_cameraTargetInputGetRespProducer_0}}";
+      };
+    Input_heartbeatProducer: in event data port Data_Types::heartbeat
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_heartbeatProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_heartbeatProducer_0}}";
+      };
+    Input_packedStatusGetRespProducer: in event data port Data_Types::sequence_numbered_packed_status
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_packedStatusGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_packedStatusGetRespProducer_0}}";
+      };
+    Input_controlLawGetRespProducer: in event data port Data_Types::sequence_numbered_control_law
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_controlLawGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_controlLawGetRespProducer_0}}";
+      };
+    Input_rcInputGetRespProducer: in event data port Data_Types::sequence_numbered_rc_input
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_rcInputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_rcInputGetRespProducer_0}}";
+      };
+    Input_userInputGetRespProducer: in event data port Data_Types::sequence_numbered_user_input_result
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_userInputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_userInputGetRespProducer_0}}";
+      };
+    Input_sensorsOutputGetRespProducer: in event data port Data_Types::sequence_numbered_sensors_result
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_sensorsOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_sensorsOutputGetRespProducer_0}}";
+      };
+    Input_gyroRawOutputGetRespProducer: in event data port Data_Types::sequence_numbered_gyroscope_sample
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_gyroRawOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_gyroRawOutputGetRespProducer_0}}";
+      };
+    Input_gyroCalibrationGetRespProducer: in event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_gyroCalibrationGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_gyroCalibrationGetRespProducer_0}}";
+      };
+    Input_gyroOutputCalibrationGetRespProducer: in event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_gyroOutputCalibrationGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_gyroOutputCalibrationGetRespProducer_0}}";
+      };
+    Input_gyroOutputGetRespProducer: in event data port Data_Types::sequence_numbered_gyroscope_sample
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_gyroOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_gyroOutputGetRespProducer_0}}";
+      };
+    Input_accelRawOutputGetRespProducer: in event data port Data_Types::sequence_numbered_accelerometer_sample
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_accelRawOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_accelRawOutputGetRespProducer_0}}";
+      };
+    Input_accelCalibrationGetRespProducer: in event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_accelCalibrationGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_accelCalibrationGetRespProducer_0}}";
+      };
+    Input_accelOutputCalibrationGetRespProducer: in event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_accelOutputCalibrationGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_accelOutputCalibrationGetRespProducer_0}}";
+      };
+    Input_accelOutputGetRespProducer: in event data port Data_Types::sequence_numbered_accelerometer_sample
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_accelOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_accelOutputGetRespProducer_0}}";
+      };
+    Input_baroOutputGetRespProducer: in event data port Data_Types::sequence_numbered_barometer_sample
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_baroOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_baroOutputGetRespProducer_0}}";
+      };
+    Input_magRawOutputGetRespProducer: in event data port Data_Types::sequence_numbered_magnetometer_sample
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_magRawOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_magRawOutputGetRespProducer_0}}";
+      };
+    Input_magCalibrationGetRespProducer: in event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_magCalibrationGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_magCalibrationGetRespProducer_0}}";
+      };
+    Input_magOutputCalibrationGetRespProducer: in event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_magOutputCalibrationGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_magOutputCalibrationGetRespProducer_0}}";
+      };
+    Input_magOutputGetRespProducer: in event data port Data_Types::sequence_numbered_magnetometer_sample
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_magOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_magOutputGetRespProducer_0}}";
+      };
+    Input_gpsOutputGetRespProducer: in event data port Data_Types::sequence_numbered_position_sample
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_gpsOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_gpsOutputGetRespProducer_0}}";
+      };
+    Input_controlSetpointGetRespProducer: in event data port Data_Types::sequence_numbered_control_setpoint
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_controlSetpointGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_controlSetpointGetRespProducer_0}}";
+      };
+    Input_controlOutputGetRespProducer: in event data port Data_Types::sequence_numbered_control_output
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_controlOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_controlOutputGetRespProducer_0}}";
+      };
+    Input_motorOutputGetRespProducer: in event data port Data_Types::sequence_numbered_quadcopter_motors
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_motorOutputGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_motorOutputGetRespProducer_0}}";
+      };
+    Input_attControlDebugGetRespProducer: in event data port Data_Types::sequence_numbered_att_control_debug
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_attControlDebugGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_attControlDebugGetRespProducer_0}}";
+      };
+    Input_altControlDebugGetRespProducer: in event data port Data_Types::sequence_numbered_alt_control_debug
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_altControlDebugGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_altControlDebugGetRespProducer_0}}";
+      };
+    Input_px4ioStateGetRespProducer: in event data port Data_Types::sequence_numbered_px4io_state
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_px4ioStateGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_px4ioStateGetRespProducer_0}}";
+      };
+    Input_armingStatusGetRespProducer: in event data port Data_Types::sequence_numbered_arming_status
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_armingStatusGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_armingStatusGetRespProducer_0}}";
+      };
+    Input_batteryVoltageGetRespProducer: in event data port Data_Types::sequence_numbered_float
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_batteryVoltageGetRespProducer");
+        Source_Text => ("user_code/controllableVehicleProducerInput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_batteryVoltageGetRespProducer_0}}";
+      };
+    Output_rebootSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_rebootSetRespProducer_chan_67";
+      };
+    Output_altitudeRatePidSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_altitudeRatePidSetRespProducer_chan_67";
+      };
+    Output_altitudeRatePidGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_altitudeRatePidGetRespProducer_chan_67";
+      };
+    Output_altitudePositionPidSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_altitudePositionPidSetRespProducer_chan_67";
+      };
+    Output_altitudePositionPidGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_altitudePositionPidGetRespProducer_chan_67";
+      };
+    Output_throttleUiSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_throttleUiSetRespProducer_chan_67";
+      };
+    Output_throttleUiGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_throttleUiGetRespProducer_chan_67";
+      };
+    Output_attitudeRollStabSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_attitudeRollStabSetRespProducer_chan_67";
+      };
+    Output_attitudeRollStabGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_attitudeRollStabGetRespProducer_chan_67";
+      };
+    Output_attitudePitchStabSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_attitudePitchStabSetRespProducer_chan_67";
+      };
+    Output_attitudePitchStabGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_attitudePitchStabGetRespProducer_chan_67";
+      };
+    Output_yawRatePidSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_yawRatePidSetRespProducer_chan_67";
+      };
+    Output_yawRatePidGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_yawRatePidGetRespProducer_chan_67";
+      };
+    Output_yawPositionPidSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_yawPositionPidSetRespProducer_chan_67";
+      };
+    Output_yawPositionPidGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_yawPositionPidGetRespProducer_chan_67";
+      };
+    Output_armingRequestSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_armingRequestSetRespProducer_chan_67";
+      };
+    Output_armingRequestGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_armingRequestGetRespProducer_chan_67";
+      };
+    Output_controlModesRequestSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_controlModesRequestSetRespProducer_chan_67";
+      };
+    Output_controlModesRequestGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_controlModesRequestGetRespProducer_chan_67";
+      };
+    Output_userInputRequestSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_userInputRequestSetRespProducer_chan_67";
+      };
+    Output_userInputRequestGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_userInputRequestGetRespProducer_chan_67";
+      };
+    Output_rgbLedSetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_rgbLedSetRespProducer_chan_67";
+      };
+    Output_rgbLedGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_rgbLedGetRespProducer_chan_67";
+      };
+    Output_cameraTargetInputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_cameraTargetInputGetRespProducer_chan_67";
+      };
+    Output_heartbeatProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_heartbeatProducer_chan_67";
+      };
+    Output_packedStatusGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_packedStatusGetRespProducer_chan_67";
+      };
+    Output_controlLawGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_controlLawGetRespProducer_chan_67";
+      };
+    Output_rcInputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_rcInputGetRespProducer_chan_67";
+      };
+    Output_userInputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_userInputGetRespProducer_chan_67";
+      };
+    Output_sensorsOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_sensorsOutputGetRespProducer_chan_67";
+      };
+    Output_gyroRawOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_gyroRawOutputGetRespProducer_chan_67";
+      };
+    Output_gyroCalibrationGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_gyroCalibrationGetRespProducer_chan_67";
+      };
+    Output_gyroOutputCalibrationGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_gyroOutputCalibrationGetRespProducer_chan_67";
+      };
+    Output_gyroOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_gyroOutputGetRespProducer_chan_67";
+      };
+    Output_accelRawOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_accelRawOutputGetRespProducer_chan_67";
+      };
+    Output_accelCalibrationGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_accelCalibrationGetRespProducer_chan_67";
+      };
+    Output_accelOutputCalibrationGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_accelOutputCalibrationGetRespProducer_chan_67";
+      };
+    Output_accelOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_accelOutputGetRespProducer_chan_67";
+      };
+    Output_baroOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_baroOutputGetRespProducer_chan_67";
+      };
+    Output_magRawOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_magRawOutputGetRespProducer_chan_67";
+      };
+    Output_magCalibrationGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_magCalibrationGetRespProducer_chan_67";
+      };
+    Output_magOutputCalibrationGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_magOutputCalibrationGetRespProducer_chan_67";
+      };
+    Output_magOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_magOutputGetRespProducer_chan_67";
+      };
+    Output_gpsOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_gpsOutputGetRespProducer_chan_67";
+      };
+    Output_controlSetpointGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_controlSetpointGetRespProducer_chan_67";
+      };
+    Output_controlOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_controlOutputGetRespProducer_chan_67";
+      };
+    Output_motorOutputGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_motorOutputGetRespProducer_chan_67";
+      };
+    Output_attControlDebugGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_attControlDebugGetRespProducer_chan_67";
+      };
+    Output_altControlDebugGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_altControlDebugGetRespProducer_chan_67";
+      };
+    Output_px4ioStateGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_px4ioStateGetRespProducer_chan_67";
+      };
+    Output_armingStatusGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_armingStatusGetRespProducer_chan_67";
+      };
+    Output_batteryVoltageGetRespProducer_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_batteryVoltageGetRespProducer_chan_67";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end controllableVehicleProducerInput;
+
+end controllableVehicleProducerInput;

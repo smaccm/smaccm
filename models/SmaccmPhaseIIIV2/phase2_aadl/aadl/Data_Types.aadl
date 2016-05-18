@@ -1,0 +1,385 @@
+-- File generated from Tower-AADL compiler
+
+package Data_Types
+public
+  with Base_Types;
+  with Data_Model;
+  with SMACCM_SYS;
+
+data array_24_Unsigned_8
+
+end array_24_Unsigned_8;
+
+data implementation array_24_Unsigned_8.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (24);
+end array_24_Unsigned_8.impl;
+data array_80_Unsigned_8
+
+end array_80_Unsigned_8;
+
+data implementation array_80_Unsigned_8.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (80);
+end array_80_Unsigned_8.impl;
+data array_96_Unsigned_8
+
+end array_96_Unsigned_8;
+
+data implementation array_96_Unsigned_8.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (96);
+end array_96_Unsigned_8.impl;
+data camera_data
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "towerCameraVMDeps.h";
+end camera_data;
+data array_8_Unsigned_8
+
+end array_8_Unsigned_8;
+
+data implementation array_8_Unsigned_8.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (8);
+end array_8_Unsigned_8.impl;
+data can_message
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "canDriverTypes.h";
+end can_message;
+data heartbeat
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "heartbeat_types.h";
+end heartbeat;
+data array_195_Unsigned_8
+
+end array_195_Unsigned_8;
+
+data implementation array_195_Unsigned_8.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (195);
+end array_195_Unsigned_8.impl;
+data ivory_string_HXCyphertext
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "hx_cyphertext.h";
+end ivory_string_HXCyphertext;
+data array_255_Unsigned_8
+
+end array_255_Unsigned_8;
+
+data implementation array_255_Unsigned_8.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (255);
+end array_255_Unsigned_8.impl;
+data ivory_string_UartPacket
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "towerUartDeps.h";
+end ivory_string_UartPacket;
+data xyz
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "xyz_types.h";
+end xyz;
+data accelerometer_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "accelerometer_sample_types.h";
+end accelerometer_sample;
+data sequence_numbered_accelerometer_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_accelerometer_sample_types.h";
+end sequence_numbered_accelerometer_sample;
+data pid_state
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "pid_state_types.h";
+end pid_state;
+data alt_control_debug
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "alt_control_debug_types.h";
+end alt_control_debug;
+data sequence_numbered_alt_control_debug
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_alt_control_debug_types.h";
+end sequence_numbered_alt_control_debug;
+data arming_status
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "arming_status_types.h";
+end arming_status;
+data sequence_numbered_arming_status
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_arming_status_types.h";
+end sequence_numbered_arming_status;
+data att_control_debug
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "att_control_debug_types.h";
+end att_control_debug;
+data sequence_numbered_att_control_debug
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_att_control_debug_types.h";
+end sequence_numbered_att_control_debug;
+data barometer_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "barometer_sample_types.h";
+end barometer_sample;
+data sequence_numbered_barometer_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_barometer_sample_types.h";
+end sequence_numbered_barometer_sample;
+data camera_target
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "camera_target_types.h";
+end camera_target;
+data sequence_numbered_camera_target
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_camera_target_types.h";
+end sequence_numbered_camera_target;
+data control_modes
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "control_modes_types.h";
+end control_modes;
+data control_law
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "control_law_types.h";
+end control_law;
+data sequence_numbered_control_law
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_control_law_types.h";
+end sequence_numbered_control_law;
+data sequence_numbered_control_modes
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_control_modes_types.h";
+end sequence_numbered_control_modes;
+data control_output
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "control_output_types.h";
+end control_output;
+data sequence_numbered_control_output
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_control_output_types.h";
+end sequence_numbered_control_output;
+data control_setpoint
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "control_setpoint_types.h";
+end control_setpoint;
+data sequence_numbered_control_setpoint
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_control_setpoint_types.h";
+end sequence_numbered_control_setpoint;
+data sequence_numbered_float
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_float_types.h";
+end sequence_numbered_float;
+data gyroscope_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "gyroscope_sample_types.h";
+end gyroscope_sample;
+data sequence_numbered_gyroscope_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_gyroscope_sample_types.h";
+end sequence_numbered_gyroscope_sample;
+data magnetometer_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "magnetometer_sample_types.h";
+end magnetometer_sample;
+data sequence_numbered_magnetometer_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_magnetometer_sample_types.h";
+end sequence_numbered_magnetometer_sample;
+data packed_status
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "packed_status_types.h";
+end packed_status;
+data sequence_numbered_packed_status
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_packed_status_types.h";
+end sequence_numbered_packed_status;
+data pid_config
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "pid_config_types.h";
+end pid_config;
+data sequence_numbered_pid_config
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_pid_config_types.h";
+end sequence_numbered_pid_config;
+data position_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "position_sample_types.h";
+end position_sample;
+data sequence_numbered_position_sample
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_position_sample_types.h";
+end sequence_numbered_position_sample;
+data px4io_status
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "px4io_status_types.h";
+end px4io_status;
+data px4io_alarms
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "px4io_alarms_types.h";
+end px4io_alarms;
+data rc_input
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "rc_input_types.h";
+end rc_input;
+data px4io_state
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "px4io_state_types.h";
+end px4io_state;
+data sequence_numbered_px4io_state
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_px4io_state_types.h";
+end sequence_numbered_px4io_state;
+data quadcopter_motors
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "quadcopter_motors_types.h";
+end quadcopter_motors;
+data sequence_numbered_quadcopter_motors
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_quadcopter_motors_types.h";
+end sequence_numbered_quadcopter_motors;
+data sequence_numbered_rc_input
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_rc_input_types.h";
+end sequence_numbered_rc_input;
+data reboot
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "reboot_types.h";
+end reboot;
+data sequence_numbered_reboot
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_reboot_types.h";
+end sequence_numbered_reboot;
+data rgb_led_setting
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "rgb_led_setting_types.h";
+end rgb_led_setting;
+data sequence_numbered_rgb_led_setting
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_rgb_led_setting_types.h";
+end sequence_numbered_rgb_led_setting;
+data sensors_result
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sensors_result_types.h";
+end sensors_result;
+data sequence_numbered_sensors_result
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_sensors_result_types.h";
+end sequence_numbered_sensors_result;
+data stab_config
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "stab_config_types.h";
+end stab_config;
+data sequence_numbered_stab_config
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_stab_config_types.h";
+end sequence_numbered_stab_config;
+data throttle_ui
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "throttle_ui_types.h";
+end throttle_ui;
+data sequence_numbered_throttle_ui
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_throttle_ui_types.h";
+end sequence_numbered_throttle_ui;
+data sequence_numbered_tristate
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_tristate_types.h";
+end sequence_numbered_tristate;
+data user_input
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "user_input_types.h";
+end user_input;
+data sequence_numbered_user_input
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_user_input_types.h";
+end sequence_numbered_user_input;
+data user_input_result
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "user_input_result_types.h";
+end user_input_result;
+data sequence_numbered_user_input_result
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_user_input_result_types.h";
+end sequence_numbered_user_input_result;
+data xyz_calibration
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "xyz_calibration_types.h";
+end xyz_calibration;
+data sequence_numbered_xyz_calibration
+  properties
+    SMACCM_SYS::Is_External => true;
+    SMACCM_SYS::CommPrim_Source_Header => "sequence_numbered_xyz_calibration_types.h";
+end sequence_numbered_xyz_calibration;
+
+end Data_Types;

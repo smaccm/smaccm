@@ -20,10 +20,6 @@ public
       CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
       
       TLM_MODE_OUT: out data port DATATYPES::Top_Level_Mode_Outputs.Impl;
-		properties
-			Source_Text => ("C:\\Project_Files\\ATC\\MATLAB\\To_commit\\Test5\\scripts",
-								"C:\\Project_Files\\ATC\\MATLAB\\To_commit\\Test5\\models\\Subsystems\\Top_Level_Mode\\Top_Level_Mode_Verification.slx",
-								"Top_Level_Mode_Verification_After.slx", "Functional_Model");
             
     annex agree {**
 	--assume "not_system_start_and_system_stop" : not(OP_CMD_IN.System_Start and OP_CMD_IN.System_Stop);

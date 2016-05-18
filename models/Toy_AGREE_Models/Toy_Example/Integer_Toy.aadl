@@ -1,20 +1,15 @@
 package Integer_Toy
 public 
    with Base_Types;
-   with Programming_Properties;
+   
    
 system A
 	features
 		Input: in data port Base_Types::Integer;
 		Output: out data port Base_Types::Integer;
-		properties
-			Source_Text => ("C:\\Project_Files\\ATC\\Simulink\\applications\\MC\\data",
-								"C:\\Project_Files\\ATC\\Simulink\\applications\\MC\\models\\MC_ToyA_sl.slx", "MC_ToyA_After_sl.slx",
-								"MC_ToyA");
 			
 	annex agree {** 
 		assume "A input range" : Input < 20;
-		assume "A input range new" : Input >= 1;
 		guarantee "A output range" : Output < 2*Input;
 	**};	
 end A ; 
@@ -23,15 +18,10 @@ system B
 	features
 		Input: in data port Base_Types::Integer;
 		Output: out data port Base_Types::Integer;
-		properties
-			Source_Text => ("C:\\Project_Files\\ATC\\Simulink\\applications\\MC\\data",
-								"C:\\Project_Files\\ATC\\Simulink\\applications\\MC\\models\\MC_ToyB_sl.slx", "MC_ToyB_After_sl.slx",
-								"MC_ToyB");
 			
 	annex agree {** 
 		assume "B input range" : Input < 20;
 		guarantee "B output range" : Output < Input + 15;
-		eq d : int = 0;
 	**};	
 end B ; 
 
@@ -40,10 +30,6 @@ system C
 		Input1: in data port Base_Types::Integer;
 		Input2: in data port Base_Types::Integer;
 		Output: out data port Base_Types::Integer;
-		properties
-			Source_Text => ("C:\\Project_Files\\ATC\\Simulink\\applications\\MC\\models\\data",
-								"C:\\Project_Files\\ATC\\Simulink\\applications\\MC\\models\\MC_ToyC_sl.slx", "MC_ToyC_sl_After.slx",
-								"MC_ToyC");
 			
 	annex agree {** 
 		guarantee "C output range" : Output = Input1 + Input2;
@@ -54,17 +40,10 @@ system top_level
 	features
 		Input: in data port Base_Types::Integer;
 		Output: out data port Base_Types::Integer;
-		
-	properties
-		Programming_Properties::Source_Text => ("model", "model1");
-		
 	annex agree {** 
-		assume "System input range " : 
-		Input < 10;
+		assume "System input range " : Input < 10;
 		guarantee "System output range" : Output < 50;
-
 	**};	
-
 end top_level;
 
 system implementation top_level.Impl

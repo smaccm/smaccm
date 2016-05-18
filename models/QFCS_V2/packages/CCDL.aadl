@@ -5,8 +5,6 @@ public
 system CLAW
   features
     acts : out data port DATA_TYPES::ACTUATORS.impl;
-		properties
-			Source_Text => ("C:\\Project_Files\\ATC\\QFCS(March30_16)\\scripts", "", "", "");
     
   annex agree {**
   	
@@ -29,10 +27,9 @@ system CLAW
       bound_rec(acts.FLAPLO, AGREE_CONSTANTS.FLAPLO_range_low, AGREE_CONSTANTS.FLAPLO_range_high) and
       bound_rec(acts.FLAPRO, AGREE_CONSTANTS.FLAPRO_range_low, AGREE_CONSTANTS.FLAPRO_range_high) and
       bound_rec(acts.FLAPRI, AGREE_CONSTANTS.FLAPRI_range_low, AGREE_CONSTANTS.FLAPRI_range_high) and
-      bound_rec(acts.STAB, AGREE_CONSTANTS.STAB_range_low, AGREE_CONSTANTS.STAB_range_high);
-      --bound_rec(acts.GEAR, AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high) and
-      --bound_rec(acts.BRAKE, AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high) and
-      --bound_rec(acts.STEER, AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high);
+      bound_rec(acts.GEAR, AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high) and
+      bound_rec(acts.BRAKE, AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high) and
+      bound_rec(acts.STEER, AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high);
         
     node bound_rec(act : real, low : real, high : real) returns (ret : bool);
     let

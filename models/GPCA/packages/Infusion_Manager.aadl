@@ -16,11 +16,7 @@ public
       CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
       ALARM_IN: in data port DATATYPES::Alarm_Outputs.Impl;
       SYS_STAT_IN: in data port DATATYPES::System_Status_Outputs.Impl;      
-      IM_OUT: out data port DATATYPES::Infusion_Manager_Outputs.Impl;
-		properties
-			Source_Text => ("C:\\Project_Files\\ATC\\MATLAB\\To_commit\\Test5\\scripts",
-								"C:\\Project_Files\\ATC\\MATLAB\\To_commit\\Test5\\models\\Subsystems\\Infusion_Mgr\\INFUSION_MGR_Verification.slx",
-								"INFUSION_MGR_Verification_After.slx", "Functional_Model");          
+      IM_OUT: out data port DATATYPES::Infusion_Manager_Outputs.Impl;          
       
       annex agree {**      	
 	-- assume "not_inhibit_and_cancel" : not(OP_CMD_IN.Infusion_Inhibit and OP_CMD_IN.Infusion_Cancel);

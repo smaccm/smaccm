@@ -1,0 +1,35 @@
+-- File generated from Tower-AADL compiler
+
+package fragment_drop
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread fragment_drop
+  features
+    Input_new_msg: in event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_new_msg");
+        Source_Text => ("user_code/fragment_drop_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_new_msg_0}}";
+      };
+    Input_fragment_done: in event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_fragment_done");
+        Source_Text => ("user_code/fragment_drop_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+      };
+    Output_new_msg_0: out event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_new_msg_chan_132";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end fragment_drop;
+
+end fragment_drop;

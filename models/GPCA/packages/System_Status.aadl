@@ -23,10 +23,6 @@ public
       CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
 	  
 	  SYS_STAT_OUT: out data port DATATYPES::System_Status_Outputs.Impl;
-		properties
-			Source_Text => ("C:\\Project_Files\\ATC\\MATLAB\\To_commit\\Test5\\scripts",
-								"C:\\Project_Files\\ATC\\MATLAB\\To_commit\\Test5\\models\\Subsystems\\System_Status\\SYS_STATS_Verification.slx",
-								"SYS_STATS_Verification_After.slx", "Functional_Model");
 	            
        annex agree {**
 
