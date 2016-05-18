@@ -48,6 +48,8 @@ system FCC
     acts_out : out data port DATA_TYPES::Actuators.impl;
     sovs1: out data port DATA_TYPES::BoolActuators.impl;
     sovs2: out data port DATA_TYPES::BoolActuators.impl;
+		properties
+			Source_Text => ("C:\\Project_Files\\ATC\\QFCS(March30_16)\\scripts", "", "", "");
 
         
   annex agree {**
@@ -96,10 +98,12 @@ system FCC
       (pre(acts_fail.SPLRIB) => acts_fail.SPLRIB) and
       (pre(acts_fail.FLAPLI) => acts_fail.FLAPLI) and
       (pre(acts_fail.FLAPLO) => acts_fail.FLAPLO) and
-      (pre(acts_fail.FLAPRI) => acts_fail.FLAPRI) and
-      (pre(acts_fail.GEAR) => acts_fail.GEAR) and
-      (pre(acts_fail.BRAKE) => acts_fail.BRAKE) and
-      (pre(acts_fail.STEER) => acts_fail.STEER);
+      (pre(acts_fail.FLAPRI) => acts_fail.FLAPRI)  and
+      (pre(acts_fail.STAB) => acts_fail.STAB); 
+      --(pre(acts_fail.STAB) => acts_fail.STEER);      
+      --(pre(acts_fail.GEAR) => acts_fail.GEAR) and
+      --(pre(acts_fail.BRAKE) => acts_fail.BRAKE) and
+      --(pre(acts_fail.STEER) => acts_fail.STEER);
       
     eq claw_acts : DATA_TYPES::Actuators.impl;
     eq osas_failure : bool;

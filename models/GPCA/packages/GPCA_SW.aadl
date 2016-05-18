@@ -15,7 +15,11 @@ public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, 
 		SENSOR_IN: in data port DATATYPES::Device_Sensor_Inputs.Impl;
 		CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
 		DB_IN: in data port DATATYPES::Drug_Database_Inputs.Impl;		  
-		GPCA_SW_OUT: out data port DATATYPES::GPCA_SW_Outputs.Impl;   				 
+		GPCA_SW_OUT: out data port DATATYPES::GPCA_SW_Outputs.Impl;
+		properties
+			Source_Text => ("C:\\Project_Files\\ATC\\MATLAB\\To_commit\\Test5\\scripts",
+								"C:\\Project_Files\\ATC\\MATLAB\\To_commit\\Test5\\models\\Top_Level_Sys\\GPCA_SW_Verification.slx",
+								"GPCA_SW_Verification_After.slx", "Model");   				 
 		 
 	  annex agree {** 
 	  	

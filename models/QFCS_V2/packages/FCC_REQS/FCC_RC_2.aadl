@@ -67,15 +67,18 @@ annex agree {**
       	output_range(num_valid_acts.FLAPRO, acts_out.FLAPRO, 
       		AGREE_CONSTANTS.FLAPRO_range_low, AGREE_CONSTANTS.FLAPRO_range_high 
       	) and
-      	output_range(num_valid_acts.GEAR, acts_out.GEAR, 
-      		AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high
-      	) and
-      	output_range(num_valid_acts.BRAKE, acts_out.BRAKE, 
-      		AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high
-      	) and
-      	output_range(num_valid_acts.STEER, acts_out.STEER, 
-      		AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high
-      	);
+      	output_range(num_valid_acts.STAB, acts_out.STAB, 
+      		AGREE_CONSTANTS.STAB_range_low, AGREE_CONSTANTS.STAB_range_high
+      	);  	
+--      	output_range(num_valid_acts.GEAR, acts_out.GEAR, 
+--      		AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high
+--      	) and
+--      	output_range(num_valid_acts.BRAKE, acts_out.BRAKE, 
+--      		AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high
+--      	) and
+--      	output_range(num_valid_acts.STEER, acts_out.STEER, 
+--      		AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high
+--      	);
   tel;
   
   node output_range(num_valid : int, act : real, low : real, high : real)

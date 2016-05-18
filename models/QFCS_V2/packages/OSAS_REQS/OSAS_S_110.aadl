@@ -22,7 +22,8 @@ annex agree {**
   let
   	res = req_helper(acts.AILL, acts_ret.AILL, fail_counts.AILL) and 
   	      req_helper(acts.AILR, acts_ret.AILR, fail_counts.AILR) and
-  	      req_helper(acts.BRAKE, acts_ret.BRAKE, fail_counts.BRAKE) and
+  	      req_helper(acts.STAB, acts_ret.STAB, fail_counts.STAB) and
+  	      --req_helper(acts.BRAKE, acts_ret.BRAKE, fail_counts.BRAKE) and
   	      req_helper(acts.ELLIB, acts_ret.ELLIB, fail_counts.ELLIB) and 
   	      req_helper(acts.ELLOB, acts_ret.ELLOB, fail_counts.ELLOB) and
   	      req_helper(acts.ELRIB, acts_ret.ELRIB, fail_counts.ELRIB) and
@@ -31,14 +32,14 @@ annex agree {**
   	      req_helper(acts.FLAPLO, acts_ret.FLAPLO, fail_counts.FLAPLO) and
   	      req_helper(acts.FLAPRI, acts_ret.FLAPRI, fail_counts.FLAPRI) and
   	      req_helper(acts.FLAPRO, acts_ret.FLAPRO, fail_counts.FLAPRO) and 
-  	      req_helper(acts.GEAR, acts_ret.GEAR, fail_counts.GEAR) and
+  	      --req_helper(acts.GEAR, acts_ret.GEAR, fail_counts.GEAR) and
   	      req_helper(acts.RUDLO, acts_ret.RUDLO, fail_counts.RUDLO) and
   	      req_helper(acts.RUDUP, acts_ret.RUDUP, fail_counts.RUDUP) and
   	      req_helper(acts.SPLLIB, acts_ret.SPLLIB, fail_counts.SPLLIB) and
   	      req_helper(acts.SPLLOB, acts_ret.SPLLOB, fail_counts.SPLLOB) and
   	      req_helper(acts.SPLRIB, acts_ret.SPLRIB, fail_counts.SPLRIB) and
   	      req_helper(acts.SPLROB, acts_ret.SPLROB, fail_counts.SPLROB) and
-  	      req_helper(acts.STEER, acts_ret.STEER, fail_counts.STEER) and
+  	      --req_helper(acts.STEER, acts_ret.STEER, fail_counts.STEER) and
   	      req_helper(acts.THROTR, acts_ret.THROTR, fail_counts.THROTR) and
   	      req_helper(acts.THROTL, acts_ret.THROTL, fail_counts.THROTL);
   tel;    

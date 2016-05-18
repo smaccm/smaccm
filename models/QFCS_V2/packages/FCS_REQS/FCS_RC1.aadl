@@ -15,8 +15,10 @@ annex agree {**
     	AGREE_CONSTANTS.AILL_range_low, AGREE_CONSTANTS.AILL_range_high) and 
     	sum_in_range(acts1.AILR, acts2.AILR, acts3.AILR, acts4.AILR,
     	AGREE_CONSTANTS.AILR_range_low, AGREE_CONSTANTS.AILR_range_high) and 
-    	sum_in_range(acts1.BRAKE, acts2.BRAKE, acts3.BRAKE, acts4.BRAKE,
-    	AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high) and 
+    	sum_in_range(acts1.STAB, acts2.STAB, acts3.STAB, acts4.STAB,
+    	AGREE_CONSTANTS.STAB_range_low, AGREE_CONSTANTS.STAB_range_high) and 	
+    	--sum_in_range(acts1.BRAKE, acts2.BRAKE, acts3.BRAKE, acts4.BRAKE,
+    	--AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high) and 
     	sum_in_range(acts1.ELLIB, acts2.ELLIB, acts3.ELLIB, acts4.ELLIB,
     	AGREE_CONSTANTS.ELLIB_range_low, AGREE_CONSTANTS.ELLIB_range_high) and 
     	sum_in_range(acts1.ELLOB, acts2.ELLOB, acts3.ELLOB, acts4.ELLOB,
@@ -33,8 +35,8 @@ annex agree {**
     	AGREE_CONSTANTS.FLAPRI_range_low, AGREE_CONSTANTS.FLAPRI_range_high) and 
     	sum_in_range(acts1.FLAPRO, acts2.FLAPRO, acts3.FLAPRO, acts4.FLAPRO,
     	AGREE_CONSTANTS.FLAPRO_range_low, AGREE_CONSTANTS.FLAPRO_range_high) and 
-    	sum_in_range(acts1.GEAR, acts2.GEAR, acts3.GEAR, acts4.GEAR,
-    	AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high) and 
+    	--sum_in_range(acts1.GEAR, acts2.GEAR, acts3.GEAR, acts4.GEAR,
+    	--AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high) and 
     	sum_in_range(acts1.RUDLO, acts2.RUDLO, acts3.RUDLO, acts4.RUDLO,
     	AGREE_CONSTANTS.RUDLO_range_low, AGREE_CONSTANTS.RUDLO_range_high) and 
     	sum_in_range(acts1.RUDUP, acts2.RUDUP, acts3.RUDUP, acts4.RUDUP,
@@ -47,8 +49,8 @@ annex agree {**
     	AGREE_CONSTANTS.SPLRIB_range_low, AGREE_CONSTANTS.SPLRIB_range_high) and 
     	sum_in_range(acts1.SPLROB, acts2.SPLROB, acts3.SPLROB, acts4.SPLROB,
     	AGREE_CONSTANTS.SPLROB_range_low, AGREE_CONSTANTS.SPLROB_range_high) and  
-    	sum_in_range(acts1.STEER, acts2.STEER, acts3.STEER, acts4.STEER,
-    	AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high) and 
+    	--sum_in_range(acts1.STEER, acts2.STEER, acts3.STEER, acts4.STEER,
+    	--AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high) and 
     	sum_in_range(acts1.THROTL, acts2.THROTL, acts3.THROTL, acts4.THROTL,
     	AGREE_CONSTANTS.THROTL_range_low, AGREE_CONSTANTS.THROTL_range_high) and 
     	sum_in_range(acts1.THROTR, acts2.THROTR, acts3.THROTR, acts4.THROTR,
@@ -110,9 +112,10 @@ annex agree {**
   	           valid_to_num(f1.FLAPLO, f2.FLAPLO, f3.FLAPLO, f4.FLAPLO, num_valids.FLAPLO) and
   	           valid_to_num(f1.FLAPRI, f2.FLAPRI, f3.FLAPRI, f4.FLAPRI, num_valids.FLAPRI) and
   	           valid_to_num(f1.FLAPRO, f2.FLAPRO, f3.FLAPRO, f4.FLAPRO, num_valids.FLAPRO) and
-  	           valid_to_num(f1.GEAR, f2.GEAR, f3.GEAR, f4.GEAR, num_valids.GEAR) and
-  	           valid_to_num(f1.BRAKE, f2.BRAKE, f3.BRAKE, f4.BRAKE, num_valids.BRAKE) and
-  	           valid_to_num(f1.STEER, f2.STEER, f3.STEER, f4.STEER, num_valids.STEER);
+  	           valid_to_num(f1.STAB, f2.STAB, f3.STAB, f4.STAB, num_valids.STAB);
+  	           --valid_to_num(f1.GEAR, f2.GEAR, f3.GEAR, f4.GEAR, num_valids.GEAR) and
+  	           --valid_to_num(f1.BRAKE, f2.BRAKE, f3.BRAKE, f4.BRAKE, num_valids.BRAKE) and
+  	           --valid_to_num(f1.STEER, f2.STEER, f3.STEER, f4.STEER, num_valids.STEER);
        tel;
 
     

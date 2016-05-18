@@ -11,7 +11,8 @@ annex agree {**
   let
   	res = req_helper(acts_gain.AILL, ccdl_failed) and 
   	      req_helper(acts_gain.AILR, ccdl_failed) and
-  	      req_helper(acts_gain.BRAKE, ccdl_failed) and
+  	      req_helper(acts_gain.STAB, ccdl_failed) and  	      
+  	      --req_helper(acts_gain.BRAKE, ccdl_failed) and
   	      req_helper(acts_gain.ELLIB, ccdl_failed) and 
   	      req_helper(acts_gain.ELLOB, ccdl_failed) and
   	      req_helper(acts_gain.ELRIB, ccdl_failed) and
@@ -20,14 +21,14 @@ annex agree {**
   	      req_helper(acts_gain.FLAPLO, ccdl_failed) and
   	      req_helper(acts_gain.FLAPRI, ccdl_failed) and
   	      req_helper(acts_gain.FLAPRO, ccdl_failed) and
-  	      req_helper(acts_gain.GEAR, ccdl_failed) and
+  	      --req_helper(acts_gain.GEAR, ccdl_failed) and
   	      req_helper(acts_gain.RUDLO, ccdl_failed) and
   	      req_helper(acts_gain.RUDUP, ccdl_failed) and
   	      req_helper(acts_gain.SPLLIB, ccdl_failed) and 
   	      req_helper(acts_gain.SPLLOB, ccdl_failed) and
   	      req_helper(acts_gain.SPLRIB, ccdl_failed) and
   	      req_helper(acts_gain.SPLROB, ccdl_failed) and
-  	      req_helper(acts_gain.STEER, ccdl_failed) and
+  	      --req_helper(acts_gain.STEER, ccdl_failed) and
   	      req_helper(acts_gain.THROTR, ccdl_failed) and
   	      req_helper(acts_gain.THROTL, ccdl_failed);
   tel;

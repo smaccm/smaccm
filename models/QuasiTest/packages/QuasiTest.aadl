@@ -351,7 +351,7 @@ system Vehicle
 		const pend_right : int = 5;
 		
 		const init_state : int = Get_Property(this, QuasiTestProps::Init_State);
-		  
+		
 		eq is_pending : bool = state >= 3 or state <= 5;
 		
 		guarantee "state range":

@@ -12,7 +12,8 @@ annex agree {**
   let
   	res = req_helper(acts_in.AILL, acts_out.AILL, acts_gain.AILL) and 
   	      req_helper(acts_in.AILR, acts_out.AILR, acts_gain.AILR) and
-  	      req_helper(acts_in.BRAKE, acts_out.BRAKE, acts_gain.BRAKE) and
+  	      req_helper(acts_in.STAB, acts_out.STAB, acts_gain.STAB) and  	      
+  	      --req_helper(acts_in.BRAKE, acts_out.BRAKE, acts_gain.BRAKE) and
   	      req_helper(acts_in.ELLIB, acts_out.ELLIB, acts_gain.ELLIB) and 
   	      req_helper(acts_in.ELLOB, acts_out.ELLOB, acts_gain.ELLOB) and
   	      req_helper(acts_in.ELRIB, acts_out.ELRIB, acts_gain.ELRIB) and
@@ -21,16 +22,16 @@ annex agree {**
   	      req_helper(acts_in.FLAPLO, acts_out.FLAPLO, acts_gain.FLAPLO) and
   	      req_helper(acts_in.FLAPRI, acts_out.FLAPRI, acts_gain.FLAPRI) and
   	      req_helper(acts_in.FLAPRO, acts_out.FLAPRO, acts_gain.FLAPRO) and
-  	      req_helper(acts_in.GEAR, acts_out.GEAR, acts_gain.GEAR) and
+  	     -- req_helper(acts_in.GEAR, acts_out.GEAR, acts_gain.GEAR) and
   	      req_helper(acts_in.RUDLO, acts_out.RUDLO, acts_gain.RUDLO) and
   	      req_helper(acts_in.RUDUP, acts_out.RUDUP, acts_gain.RUDUP) and
   	      req_helper(acts_in.SPLLIB, acts_out.SPLLIB, acts_gain.SPLLIB) and
   	      req_helper(acts_in.SPLLOB, acts_out.SPLLOB, acts_gain.SPLLOB) and
   	      req_helper(acts_in.SPLRIB, acts_out.SPLRIB, acts_gain.SPLRIB) and
-  	      req_helper(acts_in.SPLROB, acts_out.SPLROB, acts_gain.SPLROB) and
-  	      req_helper(acts_in.STEER, acts_out.STEER, acts_gain.STEER) and
-  	      req_helper(acts_in.THROTR, acts_out.THROTR, acts_gain.THROTR) and
-  	      req_helper(acts_in.THROTL, acts_out.THROTL, acts_gain.THROTL);
+  	      req_helper(acts_in.SPLROB, acts_out.SPLROB, acts_gain.SPLROB); --and
+  	      --req_helper(acts_in.STEER, acts_out.STEER, acts_gain.STEER) and
+  	      --req_helper(acts_in.THROTR, acts_out.THROTR, acts_gain.THROTR) and
+  	     -- req_helper(acts_in.THROTL, acts_out.THROTL, acts_gain.THROTL);
   tel;
    
   node req_helper

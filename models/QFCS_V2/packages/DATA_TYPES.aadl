@@ -16,7 +16,7 @@ data implementation Spoilers.treal
     SPLIB : data Base_Types::Float;
     SPROB : data Base_Types::Float;
     SPRIB : data Base_Types::Float;
-    TIME_STAMP : data Base_Types::Integer;
+    Time_Stamp : data Base_Types::Integer;
 end Spoilers.treal;
 
 data implementation Spoilers.tbool
@@ -51,11 +51,16 @@ end Elevators;
 
 data implementation Elevators.treal
   subcomponents
-    ELLOB : data Base_Types::Float;
-    ELLIB : data Base_Types::Float;
-    ELROB : data Base_Types::Float;
-    ELRIB : data Base_Types::Float;
-    TIME_STAMP : data Base_Types::Integer;
+--    ELLOB : data Base_Types::Float;
+--    ELLIB : data Base_Types::Float;
+--    ELROB : data Base_Types::Float;
+--    ELRIB : data Base_Types::Float;
+--    Time_Stamp : data Base_Types::Integer;
+    ELLOB : data Base_Types::Float_32;
+    ELLIB : data Base_Types::Float_32;
+    ELROB : data Base_Types::Float_32;
+    ELRIB : data Base_Types::Float_32;
+    Time_Stamp : data Base_Types::Float_64;
 end Elevators.treal;
 
 data implementation Elevators.tbool
@@ -92,7 +97,7 @@ data implementation Ailerons.treal
   subcomponents
     AILL : data Base_Types::Float;
     AILR : data Base_Types::Float;
-    TIME_STAMP : data Base_Types::Integer;
+    Time_Stamp : data Base_Types::Integer;
 end Ailerons.treal;
 
 
@@ -114,7 +119,7 @@ data implementation Rudders.treal
   subcomponents
     RUDU : data Base_Types::Float;
     RUDL : data Base_Types::Float;
-    TIME_STAMP : data Base_Types::Integer;
+    Time_Stamp : data Base_Types::Integer;
 end Rudders.treal;
 
 data QUAD_Rudders
@@ -137,7 +142,7 @@ data implementation Flaps.treal
     FLLIB : data Base_Types::Float;
     FLROB : data Base_Types::Float;
     FLRIB : data Base_Types::Float;
-    TIME_STAMP : data Base_Types::Integer;
+    Time_Stamp : data Base_Types::Integer;
 end Flaps.treal;
 
 data QUAD_Flaps
@@ -157,7 +162,7 @@ end AoA;
 data implementation AoA.treal
   subcomponents
     AOA : data Base_Types::Float;  
-    TIME_STAMP : data Base_Types::Integer;
+    Time_Stamp : data Base_Types::Integer;
 end AoA.treal;
 
 data DUAL_AoA
@@ -178,7 +183,7 @@ data implementation AirData.treal
     TotPres : data Base_Types::Float;
     Pres : data Base_Types::Float;
     Temp : data Base_Types::Float;
-    TIME_STAMP : data Base_Types::Integer;
+    Time_Stamp : data Base_Types::Integer;
 end AirData.treal;
 
 data DUAL_AirData
@@ -196,7 +201,7 @@ end Stabilizer;
 data implementation Stabilizer.treal
   subcomponents
     VAL : data Base_Types::Float;
-    TIME_STAMP : data Base_Types::Integer;
+    Time_Stamp : data Base_Types::Integer;
 end Stabilizer.treal;
 
 data QUAD_Stabilizer
@@ -242,7 +247,7 @@ data implementation EGI.treal
     XTACC : data Base_Types::Float;
     FPACCEL : data Base_Types::Float;
     HDD : data Base_Types::Float;
-    TIME_STAMP : data Base_Types::Integer;
+    Time_Stamp : data Base_Types::Integer;
 end EGI.treal;
 
 data QUAD_EGI
@@ -395,9 +400,10 @@ data implementation Actuators.impl
     FLAPLO : data Base_Types::Float;
     FLAPRI : data Base_Types::Float;
     FLAPRO : data Base_Types::Float;
-    GEAR : data Base_Types::Float;
-    BRAKE : data Base_Types::Float;
-    STEER : data Base_Types::Float;
+    STAB : data Base_Types::Float;
+    --GEAR : data Base_Types::Float;
+    --BRAKE : data Base_Types::Float;
+    --STEER : data Base_Types::Float;
 end Actuators.impl;
 
 data NumActuators
@@ -423,9 +429,10 @@ data implementation NumActuators.impl
     FLAPLO : data Base_Types::Integer;
     FLAPRI : data Base_Types::Integer;
     FLAPRO : data Base_Types::Integer;
-    GEAR : data Base_Types::Integer;
-    BRAKE : data Base_Types::Integer;
-    STEER : data Base_Types::Integer;
+    STAB : data Base_Types::Integer;
+    --GEAR : data Base_Types::Integer;
+    --BRAKE : data Base_Types::Integer;
+    --STEER : data Base_Types::Integer;
 end NumActuators.impl;
 
 data BoolActuators
@@ -451,9 +458,10 @@ data implementation BoolActuators.impl
     FLAPLO : data Base_Types::Boolean;
     FLAPRI : data Base_Types::Boolean;
     FLAPRO : data Base_Types::Boolean;
-    GEAR : data Base_Types::Boolean;
-    BRAKE : data Base_Types::Boolean;
-    STEER : data Base_Types::Boolean;
+    STAB : data Base_Types::Boolean;
+    --GEAR : data Base_Types::Boolean;
+    --BRAKE : data Base_Types::Boolean;
+    --STEER : data Base_Types::Boolean;
 end BoolActuators.impl;
 
 data ACTUATORS_SOV_Data

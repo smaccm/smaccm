@@ -36,6 +36,8 @@ system FCS
     
     sovs14: out data port DATA_TYPES::BoolActuators.impl;
     sovs24: out data port DATA_TYPES::BoolActuators.impl;
+		properties
+			Source_Text => ("C:\\Project_Files\\ATC\\QFCS(March30_16)\\scripts", "", "", "");
     
   annex agree {**
   	guarantee "bounded actuators" : 
@@ -140,9 +142,10 @@ system implementation FCS.impl
           num_valids.FLAPLI <= pre(num_valids.FLAPLI) and
           num_valids.FLAPLO <= pre(num_valids.FLAPLO) and
           num_valids.FLAPRI <= pre(num_valids.FLAPRI) and
-          num_valids.GEAR <= pre(num_valids.GEAR) and
-          num_valids.BRAKE <= pre(num_valids.BRAKE) and
-          num_valids.STEER <= pre(num_valids.STEER);
+          num_valids.STAB <= pre(num_valids.STAB);
+          --num_valids.GEAR <= pre(num_valids.GEAR) and
+          --num_valids.BRAKE <= pre(num_valids.BRAKE) and
+          --num_valids.STEER <= pre(num_valids.STEER);
     		                         
     		                         
     	
