@@ -122,7 +122,7 @@ assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 connectActiveToDispatcher(connection, threadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName, 
 	threadImpl.componentInstanceName,
-    connection.sourcePort.qualifiedName, 
+    connection.name, 
 	connection.destPort.threadImplementation.componentInstanceName,
 	connection.destPort.name)> 
 	
@@ -152,7 +152,7 @@ connectReaderWriter(connection, srcThreadImpl, model) ::= <<
 <if(connection.sourcePort.isOutputData)><\\>
 <rpcConnection(model.generateConnectionName, 
 	srcThreadImpl.componentInstanceName,
-	connection.sourcePort.qualifiedName,
+	connection.srcPort.qualifiedName,
 	connection.destPortThreadImplementation.componentInstanceName,
 	connection.destPort.name)>
 <endif>
@@ -248,8 +248,6 @@ camkesAssemblyBody(model) ::= <<
 import <\u003C>std_connector.camkes<\u003E>;
 <if(model.threadCalendar.hasDispatchers)>import "<model.threadCalendar.periodicDispatcherPathName>";
 
-<endif>
-
 <if(!model.externalTimerComponent)>
 <if(model.isQemuTarget)>import <\u003C>TimeServerKZM/TimeServer.camkes<\u003E>;
 
@@ -264,6 +262,9 @@ import <\u003C>std_connector.camkes<\u003E>;
 
 <endif>
 
+<endif>
+
+
 
 <model.threadImplementations:assemblyThreadImplementationImports()>
 
@@ -277,10 +278,10 @@ connector seL4RPCCallDataport {
 
 assembly {
 	composition {
-        // Periodic components
+        // Periodic components (if any)
         <constructPeriodicComponent(model.threadCalendar)>
 
-		<if(!model.externalTimerComponent)>
+		<if(model.threadCalendar.hasDispatchers && !model.externalTimerComponent)>
 		<if(model.isQemuTarget)>
 		component TimeServerKZM time_server;
 		<elseif(model.isOdroidTarget)>

@@ -13,7 +13,7 @@ public
 -- Example of a periodically dispatched "Active" thread.   
 thread sender
 	features
-		Input1: in event port {
+		Input1: in event data port Base_Types::Integer_64 {
 		  Source_Text => ("user_code/user_sender.c", 
 		                  "user_code/qemu_clock_driver.c", 
 		                  "user_code/clock_driver.h");

@@ -1,5 +1,4 @@
 #include <smaccm_sender.h>
-#include <inttypes.h>
 #include "clock_driver.h"
 #include <debug.h>
 
@@ -30,7 +29,7 @@ void timer_flih() {
 	clock_irq_callback();
 }
 
-void timer_slih() {
+void timer_slih(const int64_t *dummy) {
 	smaccm_thread_calendar(); 
 }
 

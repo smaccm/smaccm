@@ -426,10 +426,16 @@ public class AadlModelParser {
     		  double periodInUs = PropertyUtil.getPeriodInMicroseconds(tti);
     		  ti.setPeriodInMicroseconds((int) periodInUs);
     	  } catch (Exception e) {
+    		  if ("Periodic".equalsIgnoreCase(dpName)) {
     	        throw new Aadl2RtosException(
     	                "For thread " + tti.getFullName()
     	                    + " with dispatch protocol " + dpName
     	                    + " property 'Period' is required.");
+    		  } else {
+    			  this.logger.warn("For thread " + tti.getFullName()
+                  + " with dispatch protocol " + dpName
+                  + " property 'Period' is not specified; this is necessary for schedulability analysis.");
+    		  }
     	  }
       }
     }
@@ -534,11 +540,7 @@ public class AadlModelParser {
       if (sendsEventsTo != null) {
         threadSurrogate = constructDispatchLimit(sendsEventsTo, outputs); 
       }
-      
-      // ti.setDispatchLimits(surrogate.getContracts());
-      // the dispatch limits really should be defined per dispatcher.  For now,
-      // we are setting them per-thread.
-      
+            
       List<DispatchableInputPort> dispList = ti.getDispatcherList();
       for (DispatchableInputPort d : dispList) {
         if (d.getOptSendsEventsToString() != null) {
@@ -548,7 +550,11 @@ public class AadlModelParser {
         } else if (threadSurrogate != null){
           d.setDispatchLimits(threadSurrogate.getContracts());
         } else {
-          throw new Aadl2RtosException("No dispatch limit (Sends_Events_To) specified for dispatcher " + d.getName());
+          if (ti.getIsExternal()) {
+        	  this.logger.warn("Port: " + d.getName() + " of external thread: " + ti.getName() + " does not have dispatch limits");
+        	  d.setDispatchLimits(new ArrayList<>());
+          } else 
+        	  throw new Aadl2RtosException("No dispatch limit (Sends_Events_To) specified for dispatcher " + d.getName());
         }
       }
     }
