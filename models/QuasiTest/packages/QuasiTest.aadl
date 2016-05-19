@@ -419,7 +419,7 @@ system implementation Vehicle.impl
 					right
 				else if(pre(state) = pend_left and pre(neighbor_state0) != left and pre(neighbor_state1) != left) then
 					left
-				else if(defs.rising(left_shift)) then
+				else if(defs.rising(left_shift)) then 
 					if(pre(state) = leader) then
 						pend_left
 					else if (pre(state) = left) then

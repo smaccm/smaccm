@@ -65,6 +65,8 @@ public class LustreAstBuilder {
     protected static final String patternPropSuffix = "__PATTERN";
     public static final String LATCHED_INPUTS_PREFIX = "__LATCHED_INPUTS";
     public static final String LATCHED_VAR_PREFIX = "__LATCHED__";
+    public static final String CONSIST_NODE_NAME = "__CONSIST";
+    public static final String CONSIST_PROP_NAME = "__PROP";
     
     private static AgreeProgram translate(AgreeProgram program){
         return AgreeInlineLatchedConnections.translate(program);
@@ -420,7 +422,7 @@ public class LustreAstBuilder {
         AgreeVar countVar = new AgreeVar("__COUNT", NamedType.INT, null);
         AgreeVar stuffVar = new AgreeVar("__STUFF", NamedType.BOOL, null);
         AgreeVar histVar = new AgreeVar("__HIST", NamedType.BOOL, null);
-        AgreeVar propVar = new AgreeVar("__PROP", NamedType.BOOL, classifier, agreeNode.compInst);
+        AgreeVar propVar = new AgreeVar(CONSIST_PROP_NAME, NamedType.BOOL, classifier, agreeNode.compInst);
 
         locals.add(countVar);
         locals.add(histVar);
@@ -453,7 +455,7 @@ public class LustreAstBuilder {
         equations.add(new Equation(propId, new UnaryExpr(UnaryOp.NOT, propExpr)));
         properties.add(propId.id);
 
-        NodeBuilder builder = new NodeBuilder("consistency");
+        NodeBuilder builder = new NodeBuilder(CONSIST_NODE_NAME);
         builder.addInputs(inputs);
         builder.addLocals(locals);
         builder.addEquations(equations);

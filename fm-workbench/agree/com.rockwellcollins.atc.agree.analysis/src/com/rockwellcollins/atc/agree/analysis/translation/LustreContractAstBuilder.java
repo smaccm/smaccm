@@ -222,6 +222,13 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         for (AgreeVar var : agreeNode.outputs) {
             outputs.add(var);
         }
+        
+        for (AgreeVar var : agreeNode.locals){
+            locals.add(var);
+        }
+        
+        equations.addAll(agreeNode.localEquations);
+        
         //Contract contract = new Contract(nodePrefix + agreeNode.id, requires, ensures);
         Contract contract = new Contract(requires, ensures);
 

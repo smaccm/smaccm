@@ -130,37 +130,38 @@ public class AgreeScopeProvider extends
     IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
         EObject container = ctx.eContainer().eContainer();
         while(container != null && !(container instanceof ComponentClassifier)){
-        	container = container.eContainer();
+            container = container.eContainer();
         }
-        
-        if(container != null && container instanceof ComponentImplementation){
+
+        if (container != null && container instanceof ComponentImplementation) {
             ComponentType compType = ((ComponentImplementation) container).getType();
-            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+            for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(compType,
+                    AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
                 if (subclause instanceof AgreeContractSubclause) {
-                    IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(),
-                            ref);
+                    IScope scopeOfType = getScope(((AgreeContractSubclause) subclause).getContract(), ref);
                     return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), scopeOfType);
                 }
             }
-        }
-        
-        Set<Element> result = new HashSet<>();
-        ComponentType component = (ComponentType)container;
-        for (Element el : component.getOwnedElements()) {
-            if(!(el instanceof DefaultAnnexSubclause)){
+        } else if (container != null) {
+
+            Set<Element> result = new HashSet<>();
+            ComponentType component = (ComponentType) container;
+            for (Element el : component.getOwnedElements()) {
+                if (!(el instanceof DefaultAnnexSubclause)) {
+                    result.add(el);
+                }
+            }
+            for (Element el : component.getAllFeatures()) {
                 result.add(el);
             }
+
+            result.addAll(getAllElementsFromSpecs(ctx.getSpecs()));
+
+            return Scopes.scopeFor(result, IScope.NULLSCOPE);
         }
-        for (Element el : component.getAllFeatures()) {
-            result.add(el);
-        }
-        
-        result.addAll(getAllElementsFromSpecs(ctx.getSpecs()));
-        
-        return Scopes.scopeFor(result, IScope.NULLSCOPE);
-                
+
+        return IScope.NULLSCOPE;
     }
-    
 
     private Set<Element> getAllElementsFromSpecs(EList<SpecStatement> specs) {
         Set<Element> result = new HashSet<>();

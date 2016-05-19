@@ -18,6 +18,7 @@ import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
+import jkind.api.xml.XmlParseThread;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
 import jkind.lustre.VarDecl;
@@ -277,8 +278,16 @@ public abstract class VerifyHandler extends AadlHandler {
         JKindResult result;
         switch (analysisType) {
         case Consistency:
-            result = new ConsistencyResult(resultName, mainNode.properties, Collections.singletonList(true),
-                    renaming);
+            properties.clear();
+            if (AgreeUtils.usingKind2()) {
+                renaming.addExplicitRename(
+                        LustreAstBuilder.CONSIST_NODE_NAME + "." + LustreAstBuilder.CONSIST_PROP_NAME,
+                        "Result");
+                properties.add(LustreAstBuilder.CONSIST_PROP_NAME);
+            } else {
+                properties.addAll(mainNode.properties);
+            }
+            result = new ConsistencyResult(resultName, properties, Collections.singletonList(true), renaming);
             break;
         case Realizability:
             result = new JRealizabilityResult(resultName, renaming);
@@ -326,7 +335,7 @@ public abstract class VerifyHandler extends AadlHandler {
         
         //there is a special case in the AgreeRenaming which handles this translation
         if(AgreeUtils.usingKind2()){
-            addKind2Properties(agreeProgram.topNode, properties, renaming, "_TOP", "");
+            addKind2Properties(agreeProgram.topNode, properties, renaming, "", "");
         }else{
             properties.addAll(mainNode.properties);
         }
@@ -338,17 +347,26 @@ public abstract class VerifyHandler extends AadlHandler {
         
         String propPrefix = (userPropPrefix.equals("")) ? "" : userPropPrefix + ": ";
         for(AgreeStatement statement : agreeNode.lemmas){
-            renaming.addExplicitRename(prefix+"["+(++i)+"]", propPrefix + statement.string);
-            properties.add(prefix.replaceAll("\\.", AgreeASTBuilder.dotChar)+"["+i+"]");
+            renaming.addExplicitRename(prefix+"guarantee["+(++i)+"]", propPrefix + statement.string);
+            properties.add(prefix.replaceAll("\\.", AgreeASTBuilder.dotChar)+"guarantee["+i+"]");
         }
+        
         for(AgreeStatement statement : agreeNode.guarantees){
-            renaming.addExplicitRename(prefix+"["+(++i)+"]", propPrefix + statement.string);
-            properties.add(prefix.replaceAll("\\.", AgreeASTBuilder.dotChar)+"["+i+"]");
+            renaming.addExplicitRename(prefix+"guarantee["+(++i)+"]", propPrefix + statement.string);
+            properties.add(prefix.replaceAll("\\.", AgreeASTBuilder.dotChar)+"guarantee["+i+"]");
         }
         
         userPropPrefix = userPropPrefix.equals("") ? "" : userPropPrefix + ".";
         for(AgreeNode subNode : agreeNode.subNodes){
-            addKind2Properties(subNode, properties, renaming, prefix+"."+subNode.id, userPropPrefix + subNode.id);
+            addKind2Properties(subNode, properties, renaming, prefix+subNode.id+".", userPropPrefix + subNode.id);
+        }
+
+        if (!prefix.equals("")) {
+            int j = 0;
+            for (AgreeStatement statement : agreeNode.assumptions) {
+                renaming.addExplicitRename(prefix + "assume[" + (++j) + "]", propPrefix + statement.string);
+                properties.add(prefix.replaceAll("\\.", AgreeASTBuilder.dotChar) + "assume[" + j + "]");
+            }
         }
     }
 

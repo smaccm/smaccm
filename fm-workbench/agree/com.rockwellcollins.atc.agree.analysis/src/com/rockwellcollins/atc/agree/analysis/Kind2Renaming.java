@@ -14,8 +14,12 @@ public class Kind2Renaming extends AgreeRenaming {
         if(newName.startsWith("_TOP.")){
             newName = newName.replaceFirst("_TOP.", "");
         }
+        //yes we need to do this twice because of how kind2 labels assumptions...
+        if(newName.startsWith("_TOP.")){
+            newName = newName.replaceFirst("_TOP.", "");
+        }
         newName = newName.replaceAll("\\[l[0-9]*c[0-9]*\\]", "");
-        newName = newName.replaceAll(".guarantee", "");
+        //newName = newName.replaceAll(".guarantee", "");
         return newName;
     }
 
