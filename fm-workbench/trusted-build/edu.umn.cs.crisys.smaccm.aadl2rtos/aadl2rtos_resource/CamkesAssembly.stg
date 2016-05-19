@@ -118,7 +118,6 @@ assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 <threadImpl.passiveThreadRegion:connectPassiveToActive(threadImpl, model)>
 >>
 
-
 connectActiveToDispatcher(connection, threadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName, 
 	threadImpl.componentInstanceName,

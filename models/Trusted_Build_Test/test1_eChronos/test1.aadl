@@ -89,7 +89,7 @@ system implementation test1.impl
 		SMACCM_SYS::HW => PIXHAWK;
 		-- SMACCM_SYS::Output_Directory => "./out";
 		-- Defaults to 'false'.  If true, generates module for each C file.
-		SMACCM_SYS::eChronos_Generate_C_Modules => true;
+		SMACCM_SYS::eChronos_Generate_C_Modules => false;
 		-- Defaults to 'gen'
 		SMACCM_SYS::eChronos_C_Module_Path => "aadl2rtos.gen";
 end test1.impl;

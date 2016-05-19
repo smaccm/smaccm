@@ -61,6 +61,10 @@ public class PortNames {
     return new ThreadImplementationNames(dp.getOwner());
   }
 
+  public boolean getHasFanout() {
+	  return dp.getConnections().size() > 1;
+  }
+  
   public boolean getHasInitializeEntrypoint() {
     boolean result = dp.getInitializeEntrypointSourceText() != null;
     return result;
