@@ -139,8 +139,6 @@ public class SimulinkObserverScriptCreator extends ScriptCreator{
 		newline();
 		write("opts.ProvingStrategy = 'Prove';");
 		newline();
-		write("opts.SaveHarnessModel = 'on';");
-		newline();
 		write("opts.SaveReport = 'on';");
 		newline();
 		write("opts.OutputDir = './sldv_output';");

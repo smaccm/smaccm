@@ -11,7 +11,7 @@ public interface ModelInfoDialogLabelKeys extends IDialogLabelKeys {
      * 
      * @since 3.7
      */
-    public String EXPORT_LABEL_KEY = "Script for AGREE Contracts"; //$NON-NLS-1$
+    public String EXPORT_LABEL_KEY = "Export Contracts"; //$NON-NLS-1$
 
     /**
      * The key used to retrieve the label for UPDATE buttons.
@@ -20,7 +20,17 @@ public interface ModelInfoDialogLabelKeys extends IDialogLabelKeys {
      * to retrieve the label dynamically when using multiple locales.
      * @since 3.7
      */
-    public String UPDATE_LABEL_KEY = "Script to Insert Observer"; //$NON-NLS-1$
+    public String UPDATE_LABEL_KEY = "Insert Observer"; //$NON-NLS-1$
+    
+    
+    /**
+     * The key used to retrieve the label for VERIFY buttons.
+     * Clients should use the pattern
+     * <code>JFaceResources.getString(IDialogLabelKeys.VERIFY_LABEL_KEY)</code>
+     * to retrieve the label dynamically when using multiple locales.
+     * @since 3.7
+     */
+    public String VERIFY_LABEL_KEY = "Verify Subsystem"; //$NON-NLS-1$
 	
 	
 }

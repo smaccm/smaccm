@@ -37,6 +37,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABImpliesFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt64Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABLocalBusVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
@@ -45,6 +46,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABPreLocalVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt16Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt32Type;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt64Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt8Type;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrayAccessExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABArrowFunctionCall;
@@ -126,6 +128,15 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 				case PreferenceConstants.INT_UINT32:
 					type = new MATLABUInt32Type();
 					break;
+				case PreferenceConstants.INT_INT64:
+					type = new MATLABInt64Type();
+					break;
+				case PreferenceConstants.INT_UINT64:
+					type = new MATLABUInt64Type();
+					break;	
+				default:
+					throw new IllegalArgumentException("Unknown int type: "
+							+ LustreToMATLABTranslator.intTypeStr);	
 				}
 				MATLABTypeCastExpr castLeftExpr = new MATLABTypeCastExpr(type,
 						leftExpr);
@@ -380,7 +391,8 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 							builder.append("_");
 						}
 					}
-					updatedName = builder.toString();
+					//remove preceding "_" after the update
+					updatedName = builder.toString().replaceAll("^_+", "");
 				}
 			}
 			//check if the name is longer than 63 characters

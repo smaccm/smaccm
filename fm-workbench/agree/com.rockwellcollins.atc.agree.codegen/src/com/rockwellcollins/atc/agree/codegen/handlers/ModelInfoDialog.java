@@ -223,6 +223,8 @@ public class ModelInfoDialog extends TitleAreaDialog{
 				ModelInfoDialogConstants.EXPORT_LABEL, true);
 		createButton(parent, ModelInfoDialogConstants.UPDATE_MODEL_ID,
 				ModelInfoDialogConstants.UPDATE_LABEL, true);
+		createButton(parent, ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID,
+				ModelInfoDialogConstants.VERIFY_LABEL, true);		
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
 	}
@@ -238,6 +240,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	protected void validate() {
 		boolean exportButtonEnabled = false;
 		boolean updateButtonEnabled = false;
+		boolean verifyButtonEnabled = false;		
 		boolean outputDirError = false;
 		boolean originalMdlError = false;
 		boolean updatedMdlError = false;
@@ -281,11 +284,13 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		if (!subsystemText.getText().equals("")) {
 			if(exportButtonEnabled && !originalMdlError && !updatedMdlError){
 				updateButtonEnabled = true;
+				verifyButtonEnabled = true;
 			}	
 		}
-		
+
 		setExportEnabled(exportButtonEnabled);
 		setUpdateEnabled(updateButtonEnabled);
+		setVerifyEnabled(verifyButtonEnabled);
 		
 		if(!outputDirError && !originalMdlError && !updatedMdlError){
 			setErrorMessage(null);
@@ -313,6 +318,8 @@ public class ModelInfoDialog extends TitleAreaDialog{
 			exportPressed();
 		} else if (ModelInfoDialogConstants.UPDATE_MODEL_ID == buttonId) {
 			updatePressed();
+		} else if (ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID == buttonId) {
+			verifyPressed();	
 		} else if (IDialogConstants.CANCEL_ID == buttonId) {
 			cancelPressed();
 		}
@@ -331,6 +338,13 @@ public class ModelInfoDialog extends TitleAreaDialog{
 			update.setEnabled(enabled);
 		}
 	}
+	
+	private void setVerifyEnabled(boolean enabled) {
+		Button verify = getButton(ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID);
+		if (verify != null) {
+			verify.setEnabled(enabled);
+		}
+	}
 
 	protected void exportPressed() {
 		// for source text property saved in AADL, need to update the separator in the path string
@@ -343,6 +357,13 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		// for source text property saved in AADL, need to update the separator in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
 				subsystemText.getText(), false, true, false);
+		super.okPressed();
+	}
+	
+	protected void verifyPressed() {
+		// for source text property saved in AADL, need to update the separator in the path string
+		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
+				subsystemText.getText(), false, false, true);
 		super.okPressed();
 	}
 
