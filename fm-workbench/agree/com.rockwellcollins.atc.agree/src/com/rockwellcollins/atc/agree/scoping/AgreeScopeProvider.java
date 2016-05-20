@@ -43,6 +43,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeDataType;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ArrayAccessExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
@@ -338,7 +339,8 @@ public class AgreeScopeProvider extends
         	
         	return result;
         	
-        }else if (container instanceof RecordUpdateExpr){
+        }else if (container instanceof RecordUpdateExpr || 
+                container instanceof ArrayAccessExpr){
         	
         	while(!(container instanceof AgreeContract)
         		&& !(container instanceof NodeDefExpr)){
