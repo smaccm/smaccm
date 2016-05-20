@@ -42,9 +42,9 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if(match_TermExpr_LeftParenthesisKeyword_9_0_a.equals(syntax))
+			if (match_TermExpr_LeftParenthesisKeyword_9_0_a.equals(syntax))
 				emit_TermExpr_LeftParenthesisKeyword_9_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_TermExpr_LeftParenthesisKeyword_9_0_p.equals(syntax))
+			else if (match_TermExpr_LeftParenthesisKeyword_9_0_p.equals(syntax))
 				emit_TermExpr_LeftParenthesisKeyword_9_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
