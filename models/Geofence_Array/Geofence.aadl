@@ -4,7 +4,7 @@ public
   with Data_Model;
   
 annex agree {**
-  const ROUTE_LEN : int = 2;
+  const ROUTE_LEN : int = 10;
   
   node coord_in_fence(coord : Geofence::coord.i , fence : Geofence::fence.i )
   returns (ret : bool);
@@ -14,8 +14,7 @@ annex agree {**
           fence.b <= coord.y and
           coord.y <= fence.t;
   tel;
-  
-  
+
 **};
   
   data route
@@ -25,7 +24,7 @@ annex agree {**
     properties
       Data_Model::Data_Representation => Array;
       Data_Model::Base_Type => (classifier (Base_types::Float));
-      Data_Model::Dimension => (2);
+      Data_Model::Dimension => (10);
   end route.i;
   
   data coord
@@ -71,6 +70,10 @@ annex agree {**
  	        {x = 0.0; y = 0.0} -> 
  	      pre(cur_dest);
  	      
+ 	  assume "if we get a new fence initially without a new destination" :
+ 	    (event(fence) and not event(dest) => 
+ 	      Geofence.coord_in_fence( Geofence::coord.i{x = 0.0; y = 0.0}, fence)) -> true;
+ 	      
  	  assume "a new fence is always over a new destination" : 
  	    event(fence) and event(dest) =>
  	      Geofence.coord_in_fence(dest, fence);
@@ -86,10 +89,10 @@ annex agree {**
  	  eq loc_in_fence : bool = Geofence.coord_in_fence(loc, cur_fence);
  	  
  	  guarantee "if we are in the fence, then we stay in" : true ->
- 	    pre(loc_in_fence) and not event(fence) => loc_in_fence;
--- 	    
--- 	  guarantee "if we reach the destination then we stay there" : true ->
--- 	    pre(loc = cur_dest) and not event(dest) and not event(fence) => loc = pre(cur_dest);
+ 	    pre(loc_in_fence) and not (event(fence) or event(dest)) => loc_in_fence;
+ 	    
+ 	  guarantee "if we reach the destination then we stay there" : true ->
+ 	    pre(loc = cur_dest) and not event(dest) and not event(fence) => loc = pre(cur_dest);
  	    
  	    
  	**};
@@ -145,7 +148,7 @@ system mission_planner
         
     guarantee "the destination is in the plan" :
       exists(j : int) . 0 < j and j <= GeoFence.ROUTE_LEN and
-        plan_x[j-1] = cur_dest.x and plan_y[j-1] = dest.y and
+        plan_x[j-1] = cur_dest.x and plan_y[j-1] = cur_dest.y and
         route_len = j;
         
     guarantee "route len values" :
@@ -174,7 +177,7 @@ system implementation mission_planner.i
         
     assert "the destination is in the plan" :
       exists(l : int) . 0 < l and l <= GeoFence.ROUTE_LEN and
-        plan_x[l-1] = cur_dest.x and plan_y[l-1] = dest.y and
+        plan_x[l-1] = cur_dest.x and plan_y[l-1] = cur_dest.y and
         route_len = l;
         
   **};
@@ -237,7 +240,7 @@ system controller
       loc = cur_waypoint;
       
     guarantee "plan index guarantee" :
-      0 <= plan_index and plan_index < Geofence.ROUTE_LEN;
+      0 <= plan_index and plan_index < cur_route_len;
       
     guarantee "cur_route_len at least 1" :
       0 < cur_route_len and cur_route_len <= Geofence.ROUTE_LEN;
@@ -283,7 +286,24 @@ system implementation vehicle.i
 		
   annex agree {**
     lemma "controllers destination" :
-      controller.cur_plan_x[controller.cur_route_len-1] = cur_dest.x;
+      controller.cur_plan_x[controller.cur_route_len-1] = cur_dest.x and
+      controller.cur_plan_y[controller.cur_route_len-1] = cur_dest.y;
+    
+    lemma "planner's current destination is correct" :
+      planner.cur_dest.x = cur_dest.x and
+      planner.cur_dest.y = cur_dest.y;
+      
+    lemma "planner's current fence is correct" :
+      planner.cur_fence = cur_fence;
+      
+    lemma "the current destination is always in the fence" :
+      Geofence.coord_in_fence(cur_dest, cur_fence);
+            
+    lemma "all of the controller coordinates are in the fence" : 
+      forall(i : int) . 0 <= i and i <= GeoFence.ROUTE_LEN-1 =>
+        cur_fence.l <= controller.cur_plan_x[i] and controller.cur_plan_x[i] <= cur_fence.r and
+        cur_fence.b <= controller.cur_plan_y[i] and controller.cur_plan_y[i] <= cur_fence.t;
+      
   **};
 
 end vehicle.i;
