@@ -29,6 +29,7 @@ import jkind.lustre.TypeDef;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -210,10 +211,14 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         }
 
         for (AgreeStatement statement : agreeNode.assertions) {
-            assertions.add(statement.expr);
-//            if(AgreeUtils.referenceIsInContract(statement.reference)){
-//                ensures.add(statement.expr);
-//            }
+            if (statement.reference instanceof AssignStatement) {
+                Expr var = ((BinaryExpr) statement.expr).left;
+                Expr expr = ((BinaryExpr) statement.expr).right;
+                equations.add(new AgreeEquation(new Equation((IdExpr) var, expr), statement.reference));
+            } else {
+                assertions.add(statement.expr);
+            }
+
         }
 
         // gather the remaining inputs

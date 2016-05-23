@@ -88,7 +88,7 @@ annex agree {**
  	      
  	  eq loc_in_fence : bool = Geofence.coord_in_fence(loc, cur_fence);
  	  
- 	  guarantee "if we are in the fence, then we stay in" : true ->
+ 	  guarantee "if we are in the fence, then we stay in" : true -> 
  	    pre(loc_in_fence) and not (event(fence) or event(dest)) => loc_in_fence;
  	    
  	  guarantee "if we reach the destination then we stay there" : true ->
@@ -175,7 +175,7 @@ system implementation mission_planner.i
         cur_fence.l <= plan_x[k] and plan_x[k] <= cur_fence.r and
         cur_fence.b <= plan_y[k] and plan_y[k] <= cur_fence.t;
         
-    assert "the destination is in the plan" :
+    assert "the destination is in the plan" : 
       exists(l : int) . 0 < l and l <= GeoFence.ROUTE_LEN and
         plan_x[l-1] = cur_dest.x and plan_y[l-1] = cur_dest.y and
         route_len = l;
@@ -207,8 +207,7 @@ system controller
         route_len
       else
         1 -> pre(cur_route_len);
-    
-    
+
     guarantee "initial plan x and and y" :
       forall (i : int) . 0 <= i and i <= Geofence.ROUTE_LEN-1 =>
       (if event(plan_x) then      
