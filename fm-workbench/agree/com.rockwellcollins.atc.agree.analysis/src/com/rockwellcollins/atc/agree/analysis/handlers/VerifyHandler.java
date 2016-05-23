@@ -18,6 +18,7 @@ import jkind.api.results.AnalysisResult;
 import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
+import jkind.api.results.Kind2Result;
 import jkind.api.xml.XmlParseThread;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
@@ -182,16 +183,17 @@ public abstract class VerifyHandler extends AadlHandler {
         // using
       
         Program program;
+        List<Pair<String, Program>> consistencies;
         if (AgreeUtils.usingKind2()) {
             if(!isMonolithic()){
                 throw new AgreeException("Kind2 now only supports monolithic verification");
             }
             program = LustreContractAstBuilder.getContractLustreProgram(agreeProgram);
+            consistencies = LustreContractAstBuilder.getConsistencyChecks(agreeProgram, isMonolithic());
         } else {
             program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, isMonolithic());
+            consistencies = LustreAstBuilder.getConsistencyChecks(agreeProgram, isMonolithic());
         }
-        List<Pair<String, Program>> consistencies =
-                LustreAstBuilder.getConsistencyChecks(agreeProgram, isMonolithic());
 
         wrapper.addChild(
                 createVerification("Contract Guarantees", si, program, agreeProgram, AnalysisType.AssumeGuarantee));
@@ -293,7 +295,11 @@ public abstract class VerifyHandler extends AadlHandler {
             result = new JRealizabilityResult(resultName, renaming);
             break;
         case AssumeGuarantee:
-            result = new JKindResult(resultName, properties, renaming);
+            if (AgreeUtils.usingKind2()) {
+                result = new Kind2Result(resultName, properties, renaming);
+            } else {
+                result = new JKindResult(resultName, properties, renaming);
+            }
             break;
         default:
             throw new AgreeException("Unhandled Analysis Type");

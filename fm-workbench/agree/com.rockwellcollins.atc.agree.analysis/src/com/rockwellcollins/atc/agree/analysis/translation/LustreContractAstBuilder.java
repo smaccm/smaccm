@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.util.Pair;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 
@@ -292,6 +293,15 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
                 new CondactExpr(clockExpr, new NodeCallExpr(lustreNode.id, inputIds), initOutputsVals);
 
         equations.add(new AgreeEquation(new Equation(nodeOutputIds, condactExpr), null));
+    }
+
+    
+    public static List<Pair<String, Program>> getConsistencyChecks(AgreeProgram agreeProgram,
+            boolean monolithic) {
+        List<Pair<String, Program>> consistencies = LustreAstBuilder.getConsistencyChecks(agreeProgram, monolithic);
+        //TODO there is a bug right now with computing composition consistency
+        consistencies.remove(consistencies.size()-1);
+        return consistencies;
     }
 
 }
