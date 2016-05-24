@@ -26,6 +26,8 @@ import jkind.lustre.RecordType;
 import jkind.lustre.TupleExpr;
 import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
+import jkind.lustre.UnaryExpr;
+import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 
@@ -37,6 +39,7 @@ import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
@@ -309,4 +312,46 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         return consistencies;
     }
 
+    protected static void addConnectionConstraints(AgreeNode agreeNode, List<AgreeEquation> equations,
+            List<AgreeVar> inputs, List<AgreeVar> locals) {
+        for (AgreeConnection conn : agreeNode.connections) {
+            String destName =
+                    conn.destinationNode == null ? "" : conn.destinationNode + AgreeASTBuilder.dotChar;
+            destName = destName + conn.destVar.id;
+
+            String sourName = conn.sourceNode == null ? "" : conn.sourceNode + AgreeASTBuilder.dotChar;
+            sourName = sourName + conn.sourVar.id;
+
+            Expr connExpr; 
+            
+            if(!conn.delayed){
+                connExpr = new IdExpr(sourName);
+            }else{
+                //we need to get the correct type for the connection
+                //we can assume that the source and destination types are
+                //the same at this point
+                Expr initExpr = AgreeUtils.getInitValueFromType(conn.sourVar.type);
+                Expr preSource = new UnaryExpr(UnaryOp.PRE, new IdExpr(sourName));
+                Expr sourExpr = new BinaryExpr(initExpr, BinaryOp.ARROW, preSource);
+                connExpr = sourExpr;
+            }
+            
+            //add the destination variable to locals iff it is in the inputs
+            AgreeVar var = null;
+            for(AgreeVar inputVar : inputs){
+                if(inputVar.id.equals(destName)){
+                    var = inputVar;
+                    break;
+                }
+            }
+            if(var != null){
+                inputs.remove(var);
+                locals.add(var);
+            }
+
+            equations.add(new AgreeEquation(new Equation(new IdExpr(destName), connExpr), conn.reference));
+  
+        }
+    }
+    
 }
