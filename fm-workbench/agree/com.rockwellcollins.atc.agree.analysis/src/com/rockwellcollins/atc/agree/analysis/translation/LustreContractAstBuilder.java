@@ -214,6 +214,9 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         }
 
         for (AgreeStatement statement : agreeNode.assertions) {
+            if(AgreeUtils.referenceIsInContract(statement.reference)){
+                ensures.add(statement.expr);
+            }
             if (statement.reference instanceof AssignStatement) {
                 Expr var = ((BinaryExpr) statement.expr).left;
                 Expr expr = ((BinaryExpr) statement.expr).right;

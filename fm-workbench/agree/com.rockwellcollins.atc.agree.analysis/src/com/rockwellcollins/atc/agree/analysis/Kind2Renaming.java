@@ -34,6 +34,9 @@ public class Kind2Renaming extends AgreeRenaming {
                 // kind2 and array hacks
                 String renamed = this.explicitRenames.get(newName);
                 if (renamed == null) {
+                    if(newName.matches(".*\\.guarantee\\[[0-9]*\\]")){
+                        return null;
+                    }
                     // get the index of the array bound
                     int accessIndex = newName.indexOf("[");
                     String arrayName = newName.substring(0, accessIndex);
