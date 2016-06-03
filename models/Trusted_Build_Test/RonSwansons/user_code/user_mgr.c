@@ -109,7 +109,7 @@ void pollclient(int client) {
 	}
 }
 
-void process(const uint64_t * periodic) {
+void process(const int64_t * periodic_dispatcher) {
 	int i = 0;
 	for(;i<CLIENTS;i++) {
 		pollclient(((i+start)%CLIENTS)+1);

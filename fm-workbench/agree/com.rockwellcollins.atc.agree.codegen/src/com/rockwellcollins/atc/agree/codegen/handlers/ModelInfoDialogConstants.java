@@ -15,13 +15,10 @@ public interface ModelInfoDialogConstants extends IDialogConstants {
      */
     public int UPDATE_MODEL_ID = 258;
     
-    
     /**
      * Button id for a "Verify Subsystem" button (value 259).
      */
     public int VERIFY_SUBSYSTEM_ID = 259;
-    
- 
     
     /**
      * The label for export buttons.
@@ -44,8 +41,6 @@ public interface ModelInfoDialogConstants extends IDialogConstants {
      */
     public String UPDATE_LABEL = JFaceResources.getString(ModelInfoDialogLabelKeys.UPDATE_LABEL_KEY);
 	
-    
-    
     /**
      * The label for verify buttons.
      * Using this static label string provides optimum performance by looking

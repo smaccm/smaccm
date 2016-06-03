@@ -44,6 +44,10 @@ public class ThreadCalendar {
       }
       return a;
   }
+
+  private int lcm(int a, int b) {
+	  return Math.multiplyExact(a, b) / gcd(a, b);
+  }
   
   public int getLongestPeriodInMilliseconds() {
     int longest = 0;
@@ -64,8 +68,20 @@ public class ThreadCalendar {
     return gcdVal;
   }
   
+  
+  public int getLeastCommonMultipleInMilliseconds() {
+     if (periodicDispatchers.size() == 0) {
+         throw new Aadl2RtosException("Attempting to compute the GCD of periodic threads, but no periodic threads in model.");
+     }
+     int lcmVal = periodicDispatchers.get(0).getPeriod();
+     for (InputPeriodicPort d : periodicDispatchers) {
+    	 lcmVal = lcm(d.getPeriod(), lcmVal);
+     }
+	 return lcmVal; 
+  }
+  
   public int getHyperperiodSubdivisions() {
-    return (this.getLongestPeriodInMilliseconds() / this.getGreatestCommonDivisorInMilliseconds());
+    return (this.getLeastCommonMultipleInMilliseconds() / this.getGreatestCommonDivisorInMilliseconds());
   }
 
   @Override

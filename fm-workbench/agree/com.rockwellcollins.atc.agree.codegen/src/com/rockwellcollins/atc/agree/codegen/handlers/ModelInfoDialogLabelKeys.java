@@ -11,7 +11,7 @@ public interface ModelInfoDialogLabelKeys extends IDialogLabelKeys {
      * 
      * @since 3.7
      */
-    public String EXPORT_LABEL_KEY = "Export Script"; //$NON-NLS-1$
+    public String EXPORT_LABEL_KEY = "Export Contracts"; //$NON-NLS-1$
 
     /**
      * The key used to retrieve the label for UPDATE buttons.
@@ -20,7 +20,7 @@ public interface ModelInfoDialogLabelKeys extends IDialogLabelKeys {
      * to retrieve the label dynamically when using multiple locales.
      * @since 3.7
      */
-    public String UPDATE_LABEL_KEY = "Update Model"; //$NON-NLS-1$
+    public String UPDATE_LABEL_KEY = "Insert Observer"; //$NON-NLS-1$
     
     
     /**

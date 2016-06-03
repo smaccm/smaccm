@@ -61,6 +61,10 @@ public class PortNames {
     return new ThreadImplementationNames(dp.getOwner());
   }
 
+  public boolean getHasFanout() {
+	  return dp.getConnections().size() > 1;
+  }
+  
   public boolean getHasInitializeEntrypoint() {
     boolean result = dp.getInitializeEntrypointSourceText() != null;
     return result;
@@ -159,8 +163,13 @@ public class PortNames {
   // Destination function (for input ports)
   // 
   //////////////////////////////////////////////////////////
-  public boolean getHasConnection() {
-	  return dp.getConnections().size() > 0; 
+  public boolean getHasPassiveConnectionDestination() {
+	  for (PortConnection i: dp.getConnections()) {
+		  if (i.getDestPort().getOwner().getIsPassive()) {
+			  return true;
+		  }
+	  }
+	  return false;
   }
   
   public List<PortConnectionNames> getConnections() {
@@ -171,11 +180,7 @@ public class PortNames {
 	  }
 	  return connections;
   }
-  
-  public PortConnectionNames getSingletonConnection() {
-	  return new PortConnectionNames(dp.getSingletonConnection());
-  }
-  
+    
   //////////////////////////////////////////////////////////////
   //
   // Names for mutex function calls
