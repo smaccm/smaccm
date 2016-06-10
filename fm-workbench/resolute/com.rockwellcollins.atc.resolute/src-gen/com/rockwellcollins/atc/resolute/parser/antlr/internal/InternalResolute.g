@@ -4464,7 +4464,7 @@ ruleContainmentPathElement returns [EObject current=null]
 	    }
 
 )
-)?)(	otherlv_2='.' 
+)*)(	otherlv_2='.' 
     {
     	newLeafNode(otherlv_2, grammarAccess.getContainmentPathElementAccess().getFullStopKeyword_1_0());
     }

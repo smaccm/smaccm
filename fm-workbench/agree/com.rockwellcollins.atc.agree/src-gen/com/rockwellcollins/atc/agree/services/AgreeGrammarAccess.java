@@ -3814,7 +3814,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//// from AADL2
 	//// need to add annex path element
 	//ContainmentPathElement aadl2::ContainmentPathElement:
-	//	(namedElement=[aadl2::NamedElement] arrayRange+=ArrayRange?) ('.' path=ContainmentPathElement)?
+	//	(namedElement=[aadl2::NamedElement] arrayRange+=ArrayRange*) ('.' path=ContainmentPathElement)?
 	public PropertiesGrammarAccess.ContainmentPathElementElements getContainmentPathElementAccess() {
 		return gaProperties.getContainmentPathElementAccess();
 	}

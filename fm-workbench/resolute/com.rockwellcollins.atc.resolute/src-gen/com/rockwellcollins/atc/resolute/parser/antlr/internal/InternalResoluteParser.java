@@ -12318,7 +12318,7 @@ public class InternalResoluteParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleContainmentPathElement"
-    // InternalResolute.g:4432:1: ruleContainmentPathElement returns [EObject current=null] : ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) ;
+    // InternalResolute.g:4432:1: ruleContainmentPathElement returns [EObject current=null] : ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) ;
     public final EObject ruleContainmentPathElement() throws RecognitionException {
         EObject current = null;
 
@@ -12332,14 +12332,14 @@ public class InternalResoluteParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // InternalResolute.g:4435:28: ( ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) )
-            // InternalResolute.g:4436:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
+            // InternalResolute.g:4435:28: ( ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) )
+            // InternalResolute.g:4436:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
             {
-            // InternalResolute.g:4436:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
-            // InternalResolute.g:4436:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )?
+            // InternalResolute.g:4436:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
+            // InternalResolute.g:4436:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= '.' ( (lv_path_3_0= ruleContainmentPathElement ) ) )?
             {
-            // InternalResolute.g:4436:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? )
-            // InternalResolute.g:4436:3: ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )?
+            // InternalResolute.g:4436:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* )
+            // InternalResolute.g:4436:3: ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )*
             {
             // InternalResolute.g:4436:3: ( (otherlv_0= RULE_ID ) )
             // InternalResolute.g:4437:1: (otherlv_0= RULE_ID )
@@ -12366,51 +12366,58 @@ public class InternalResoluteParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalResolute.g:4449:2: ( (lv_arrayRange_1_0= ruleArrayRange ) )?
-            int alt57=2;
-            int LA57_0 = input.LA(1);
+            // InternalResolute.g:4449:2: ( (lv_arrayRange_1_0= ruleArrayRange ) )*
+            loop57:
+            do {
+                int alt57=2;
+                int LA57_0 = input.LA(1);
 
-            if ( (LA57_0==135) ) {
-                alt57=1;
-            }
-            switch (alt57) {
-                case 1 :
-                    // InternalResolute.g:4450:1: (lv_arrayRange_1_0= ruleArrayRange )
-                    {
-                    // InternalResolute.g:4450:1: (lv_arrayRange_1_0= ruleArrayRange )
-                    // InternalResolute.g:4451:3: lv_arrayRange_1_0= ruleArrayRange
-                    {
-                    if ( state.backtracking==0 ) {
-                       
-                      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getArrayRangeArrayRangeParserRuleCall_0_1_0()); 
-                      	    
-                    }
-                    pushFollow(FOLLOW_26);
-                    lv_arrayRange_1_0=ruleArrayRange();
-
-                    state._fsp--;
-                    if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      	        if (current==null) {
-                      	            current = createModelElementForParent(grammarAccess.getContainmentPathElementRule());
-                      	        }
-                             		add(
-                             			current, 
-                             			"arrayRange",
-                              		lv_arrayRange_1_0, 
-                              		"org.osate.xtext.aadl2.properties.Properties.ArrayRange");
-                      	        afterParserOrEnumRuleCall();
-                      	    
-                    }
-
-                    }
+                if ( (LA57_0==135) ) {
+                    alt57=1;
+                }
 
 
-                    }
-                    break;
+                switch (alt57) {
+            	case 1 :
+            	    // InternalResolute.g:4450:1: (lv_arrayRange_1_0= ruleArrayRange )
+            	    {
+            	    // InternalResolute.g:4450:1: (lv_arrayRange_1_0= ruleArrayRange )
+            	    // InternalResolute.g:4451:3: lv_arrayRange_1_0= ruleArrayRange
+            	    {
+            	    if ( state.backtracking==0 ) {
+            	       
+            	      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getArrayRangeArrayRangeParserRuleCall_0_1_0()); 
+            	      	    
+            	    }
+            	    pushFollow(FOLLOW_48);
+            	    lv_arrayRange_1_0=ruleArrayRange();
 
-            }
+            	    state._fsp--;
+            	    if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      	        if (current==null) {
+            	      	            current = createModelElementForParent(grammarAccess.getContainmentPathElementRule());
+            	      	        }
+            	             		add(
+            	             			current, 
+            	             			"arrayRange",
+            	              		lv_arrayRange_1_0, 
+            	              		"org.osate.xtext.aadl2.properties.Properties.ArrayRange");
+            	      	        afterParserOrEnumRuleCall();
+            	      	    
+            	    }
+
+            	    }
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop57;
+                }
+            } while (true);
 
 
             }

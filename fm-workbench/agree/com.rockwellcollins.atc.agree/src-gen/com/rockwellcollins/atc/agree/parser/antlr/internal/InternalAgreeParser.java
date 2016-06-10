@@ -14359,7 +14359,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleContainmentPathElement"
-    // InternalAgreeParser.g:5488:1: ruleContainmentPathElement returns [EObject current=null] : ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) ;
+    // InternalAgreeParser.g:5488:1: ruleContainmentPathElement returns [EObject current=null] : ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) ;
     public final EObject ruleContainmentPathElement() throws RecognitionException {
         EObject current = null;
 
@@ -14373,14 +14373,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // InternalAgreeParser.g:5491:28: ( ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) )
-            // InternalAgreeParser.g:5492:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
+            // InternalAgreeParser.g:5491:28: ( ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) )
+            // InternalAgreeParser.g:5492:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
             {
-            // InternalAgreeParser.g:5492:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
-            // InternalAgreeParser.g:5492:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )?
+            // InternalAgreeParser.g:5492:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
+            // InternalAgreeParser.g:5492:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )?
             {
-            // InternalAgreeParser.g:5492:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? )
-            // InternalAgreeParser.g:5492:3: ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )?
+            // InternalAgreeParser.g:5492:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* )
+            // InternalAgreeParser.g:5492:3: ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )*
             {
             // InternalAgreeParser.g:5492:3: ( (otherlv_0= RULE_ID ) )
             // InternalAgreeParser.g:5493:1: (otherlv_0= RULE_ID )
@@ -14407,51 +14407,58 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalAgreeParser.g:5505:2: ( (lv_arrayRange_1_0= ruleArrayRange ) )?
-            int alt74=2;
-            int LA74_0 = input.LA(1);
+            // InternalAgreeParser.g:5505:2: ( (lv_arrayRange_1_0= ruleArrayRange ) )*
+            loop74:
+            do {
+                int alt74=2;
+                int LA74_0 = input.LA(1);
 
-            if ( (LA74_0==LeftSquareBracket) ) {
-                alt74=1;
-            }
-            switch (alt74) {
-                case 1 :
-                    // InternalAgreeParser.g:5506:1: (lv_arrayRange_1_0= ruleArrayRange )
-                    {
-                    // InternalAgreeParser.g:5506:1: (lv_arrayRange_1_0= ruleArrayRange )
-                    // InternalAgreeParser.g:5507:3: lv_arrayRange_1_0= ruleArrayRange
-                    {
-                    if ( state.backtracking==0 ) {
-                       
-                      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getArrayRangeArrayRangeParserRuleCall_0_1_0()); 
-                      	    
-                    }
-                    pushFollow(FollowSets000.FOLLOW_51);
-                    lv_arrayRange_1_0=ruleArrayRange();
-
-                    state._fsp--;
-                    if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      	        if (current==null) {
-                      	            current = createModelElementForParent(grammarAccess.getContainmentPathElementRule());
-                      	        }
-                             		add(
-                             			current, 
-                             			"arrayRange",
-                              		lv_arrayRange_1_0, 
-                              		"org.osate.xtext.aadl2.properties.Properties.ArrayRange");
-                      	        afterParserOrEnumRuleCall();
-                      	    
-                    }
-
-                    }
+                if ( (LA74_0==LeftSquareBracket) ) {
+                    alt74=1;
+                }
 
 
-                    }
-                    break;
+                switch (alt74) {
+            	case 1 :
+            	    // InternalAgreeParser.g:5506:1: (lv_arrayRange_1_0= ruleArrayRange )
+            	    {
+            	    // InternalAgreeParser.g:5506:1: (lv_arrayRange_1_0= ruleArrayRange )
+            	    // InternalAgreeParser.g:5507:3: lv_arrayRange_1_0= ruleArrayRange
+            	    {
+            	    if ( state.backtracking==0 ) {
+            	       
+            	      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getArrayRangeArrayRangeParserRuleCall_0_1_0()); 
+            	      	    
+            	    }
+            	    pushFollow(FollowSets000.FOLLOW_68);
+            	    lv_arrayRange_1_0=ruleArrayRange();
 
-            }
+            	    state._fsp--;
+            	    if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      	        if (current==null) {
+            	      	            current = createModelElementForParent(grammarAccess.getContainmentPathElementRule());
+            	      	        }
+            	             		add(
+            	             			current, 
+            	             			"arrayRange",
+            	              		lv_arrayRange_1_0, 
+            	              		"org.osate.xtext.aadl2.properties.Properties.ArrayRange");
+            	      	        afterParserOrEnumRuleCall();
+            	      	    
+            	    }
+
+            	    }
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop74;
+                }
+            } while (true);
 
 
             }
@@ -16050,11 +16057,6 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             case PlusSign:
                 {
                 switch ( input.LA(2) ) {
-                case RULE_ID:
-                    {
-                    alt83=3;
-                    }
-                    break;
                 case RULE_REAL_LIT:
                     {
                     alt83=1;
@@ -16063,6 +16065,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                 case RULE_INTEGER_LIT:
                     {
                     alt83=2;
+                    }
+                    break;
+                case RULE_ID:
+                    {
+                    alt83=3;
                     }
                     break;
                 default:

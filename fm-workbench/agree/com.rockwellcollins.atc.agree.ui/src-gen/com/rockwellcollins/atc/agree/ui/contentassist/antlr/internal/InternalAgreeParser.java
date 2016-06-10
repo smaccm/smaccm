@@ -10174,6 +10174,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             case HyphenMinus:
                 {
                 switch ( input.LA(2) ) {
+                case RULE_REAL_LIT:
+                    {
+                    alt29=1;
+                    }
+                    break;
                 case RULE_ID:
                     {
                     alt29=3;
@@ -10182,11 +10187,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                 case RULE_INTEGER_LIT:
                     {
                     alt29=2;
-                    }
-                    break;
-                case RULE_REAL_LIT:
-                    {
-                    alt29=1;
                     }
                     break;
                 default:
@@ -47037,42 +47037,49 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ContainmentPathElement__Group_0__1__Impl"
-    // InternalAgreeParser.g:16963:1: rule__ContainmentPathElement__Group_0__1__Impl : ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? ) ;
+    // InternalAgreeParser.g:16963:1: rule__ContainmentPathElement__Group_0__1__Impl : ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* ) ;
     public final void rule__ContainmentPathElement__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:16967:1: ( ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? ) )
-            // InternalAgreeParser.g:16968:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? )
+            // InternalAgreeParser.g:16967:1: ( ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* ) )
+            // InternalAgreeParser.g:16968:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* )
             {
-            // InternalAgreeParser.g:16968:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? )
-            // InternalAgreeParser.g:16969:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )?
+            // InternalAgreeParser.g:16968:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* )
+            // InternalAgreeParser.g:16969:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1()); 
             }
-            // InternalAgreeParser.g:16970:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )?
-            int alt80=2;
-            int LA80_0 = input.LA(1);
+            // InternalAgreeParser.g:16970:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )*
+            loop80:
+            do {
+                int alt80=2;
+                int LA80_0 = input.LA(1);
 
-            if ( (LA80_0==LeftSquareBracket) ) {
-                alt80=1;
-            }
-            switch (alt80) {
-                case 1 :
-                    // InternalAgreeParser.g:16970:2: rule__ContainmentPathElement__ArrayRangeAssignment_0_1
-                    {
-                    pushFollow(FollowSets000.FOLLOW_2);
-                    rule__ContainmentPathElement__ArrayRangeAssignment_0_1();
+                if ( (LA80_0==LeftSquareBracket) ) {
+                    alt80=1;
+                }
 
-                    state._fsp--;
-                    if (state.failed) return ;
 
-                    }
-                    break;
+                switch (alt80) {
+            	case 1 :
+            	    // InternalAgreeParser.g:16970:2: rule__ContainmentPathElement__ArrayRangeAssignment_0_1
+            	    {
+            	    pushFollow(FollowSets000.FOLLOW_92);
+            	    rule__ContainmentPathElement__ArrayRangeAssignment_0_1();
 
-            }
+            	    state._fsp--;
+            	    if (state.failed) return ;
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop80;
+                }
+            } while (true);
 
             if ( state.backtracking==0 ) {
                after(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1()); 
@@ -47429,7 +47436,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17114:1: ( rule__ArrayRange__Group__2__Impl rule__ArrayRange__Group__3 )
             // InternalAgreeParser.g:17115:2: rule__ArrayRange__Group__2__Impl rule__ArrayRange__Group__3
             {
-            pushFollow(FollowSets000.FOLLOW_92);
+            pushFollow(FollowSets000.FOLLOW_93);
             rule__ArrayRange__Group__2__Impl();
 
             state._fsp--;
@@ -47518,7 +47525,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17143:1: ( rule__ArrayRange__Group__3__Impl rule__ArrayRange__Group__4 )
             // InternalAgreeParser.g:17144:2: rule__ArrayRange__Group__3__Impl rule__ArrayRange__Group__4
             {
-            pushFollow(FollowSets000.FOLLOW_92);
+            pushFollow(FollowSets000.FOLLOW_93);
             rule__ArrayRange__Group__3__Impl();
 
             state._fsp--;
@@ -47855,7 +47862,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17275:1: ( rule__SignedConstant__Group__0__Impl rule__SignedConstant__Group__1 )
             // InternalAgreeParser.g:17276:2: rule__SignedConstant__Group__0__Impl rule__SignedConstant__Group__1
             {
-            pushFollow(FollowSets000.FOLLOW_93);
+            pushFollow(FollowSets000.FOLLOW_94);
             rule__SignedConstant__Group__0__Impl();
 
             state._fsp--;
@@ -48212,7 +48219,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17397:1: ( rule__SignedInt__Group__0__Impl rule__SignedInt__Group__1 )
             // InternalAgreeParser.g:17398:2: rule__SignedInt__Group__0__Impl rule__SignedInt__Group__1
             {
-            pushFollow(FollowSets000.FOLLOW_94);
+            pushFollow(FollowSets000.FOLLOW_95);
             rule__SignedInt__Group__0__Impl();
 
             state._fsp--;
@@ -48570,7 +48577,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17519:1: ( rule__SignedReal__Group__0__Impl rule__SignedReal__Group__1 )
             // InternalAgreeParser.g:17520:2: rule__SignedReal__Group__0__Impl rule__SignedReal__Group__1
             {
-            pushFollow(FollowSets000.FOLLOW_95);
+            pushFollow(FollowSets000.FOLLOW_96);
             rule__SignedReal__Group__0__Impl();
 
             state._fsp--;
@@ -48744,7 +48751,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17580:1: ( rule__NumericRangeTerm__Group__0__Impl rule__NumericRangeTerm__Group__1 )
             // InternalAgreeParser.g:17581:2: rule__NumericRangeTerm__Group__0__Impl rule__NumericRangeTerm__Group__1
             {
-            pushFollow(FollowSets000.FOLLOW_96);
+            pushFollow(FollowSets000.FOLLOW_97);
             rule__NumericRangeTerm__Group__0__Impl();
 
             state._fsp--;
@@ -48833,7 +48840,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17609:1: ( rule__NumericRangeTerm__Group__1__Impl rule__NumericRangeTerm__Group__2 )
             // InternalAgreeParser.g:17610:2: rule__NumericRangeTerm__Group__1__Impl rule__NumericRangeTerm__Group__2
             {
-            pushFollow(FollowSets000.FOLLOW_93);
+            pushFollow(FollowSets000.FOLLOW_94);
             rule__NumericRangeTerm__Group__1__Impl();
 
             state._fsp--;
@@ -48912,7 +48919,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17640:1: ( rule__NumericRangeTerm__Group__2__Impl rule__NumericRangeTerm__Group__3 )
             // InternalAgreeParser.g:17641:2: rule__NumericRangeTerm__Group__2__Impl rule__NumericRangeTerm__Group__3
             {
-            pushFollow(FollowSets000.FOLLOW_97);
+            pushFollow(FollowSets000.FOLLOW_98);
             rule__NumericRangeTerm__Group__2__Impl();
 
             state._fsp--;
@@ -49096,7 +49103,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17705:1: ( rule__NumericRangeTerm__Group_3__0__Impl rule__NumericRangeTerm__Group_3__1 )
             // InternalAgreeParser.g:17706:2: rule__NumericRangeTerm__Group_3__0__Impl rule__NumericRangeTerm__Group_3__1
             {
-            pushFollow(FollowSets000.FOLLOW_93);
+            pushFollow(FollowSets000.FOLLOW_94);
             rule__NumericRangeTerm__Group_3__0__Impl();
 
             state._fsp--;
@@ -57999,12 +58006,13 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         public static final BitSet FOLLOW_89 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000100L});
         public static final BitSet FOLLOW_90 = new BitSet(new long[]{0x0000002000000000L});
         public static final BitSet FOLLOW_91 = new BitSet(new long[]{0x0000800400409040L,0x0000003501015800L});
-        public static final BitSet FOLLOW_92 = new BitSet(new long[]{0x8000000000000000L,0x0000000002000000L});
-        public static final BitSet FOLLOW_93 = new BitSet(new long[]{0x0000000000000000L,0x0000002500014000L});
-        public static final BitSet FOLLOW_94 = new BitSet(new long[]{0x0000000000000000L,0x0000000400014000L});
-        public static final BitSet FOLLOW_95 = new BitSet(new long[]{0x0000000000000000L,0x0000000100014000L});
-        public static final BitSet FOLLOW_96 = new BitSet(new long[]{0x8000000000000000L});
-        public static final BitSet FOLLOW_97 = new BitSet(new long[]{0x0000000100000000L});
+        public static final BitSet FOLLOW_92 = new BitSet(new long[]{0x0000000000000002L,0x0000000001000000L});
+        public static final BitSet FOLLOW_93 = new BitSet(new long[]{0x8000000000000000L,0x0000000002000000L});
+        public static final BitSet FOLLOW_94 = new BitSet(new long[]{0x0000000000000000L,0x0000002500014000L});
+        public static final BitSet FOLLOW_95 = new BitSet(new long[]{0x0000000000000000L,0x0000000400014000L});
+        public static final BitSet FOLLOW_96 = new BitSet(new long[]{0x0000000000000000L,0x0000000100014000L});
+        public static final BitSet FOLLOW_97 = new BitSet(new long[]{0x8000000000000000L});
+        public static final BitSet FOLLOW_98 = new BitSet(new long[]{0x0000000100000000L});
     }
 
 

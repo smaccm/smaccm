@@ -6990,11 +6990,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
                     {
                     int LA11_4 = input.LA(3);
 
-                    if ( (LA11_4==107) ) {
-                        alt11=3;
-                    }
-                    else if ( (LA11_4==108) ) {
+                    if ( (LA11_4==108) ) {
                         alt11=2;
+                    }
+                    else if ( (LA11_4==107) ) {
+                        alt11=3;
                     }
                     else {
                         if (state.backtracking>0) {state.failed=true; return ;}
@@ -32449,42 +32449,49 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
 
 
     // $ANTLR start "rule__ContainmentPathElement__Group_0__1__Impl"
-    // InternalResolute.g:11400:1: rule__ContainmentPathElement__Group_0__1__Impl : ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? ) ;
+    // InternalResolute.g:11400:1: rule__ContainmentPathElement__Group_0__1__Impl : ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* ) ;
     public final void rule__ContainmentPathElement__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalResolute.g:11404:1: ( ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? ) )
-            // InternalResolute.g:11405:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? )
+            // InternalResolute.g:11404:1: ( ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* ) )
+            // InternalResolute.g:11405:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* )
             {
-            // InternalResolute.g:11405:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? )
-            // InternalResolute.g:11406:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )?
+            // InternalResolute.g:11405:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* )
+            // InternalResolute.g:11406:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1()); 
             }
-            // InternalResolute.g:11407:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )?
-            int alt60=2;
-            int LA60_0 = input.LA(1);
+            // InternalResolute.g:11407:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )*
+            loop60:
+            do {
+                int alt60=2;
+                int LA60_0 = input.LA(1);
 
-            if ( (LA60_0==129) ) {
-                alt60=1;
-            }
-            switch (alt60) {
-                case 1 :
-                    // InternalResolute.g:11407:2: rule__ContainmentPathElement__ArrayRangeAssignment_0_1
-                    {
-                    pushFollow(FOLLOW_2);
-                    rule__ContainmentPathElement__ArrayRangeAssignment_0_1();
+                if ( (LA60_0==129) ) {
+                    alt60=1;
+                }
 
-                    state._fsp--;
-                    if (state.failed) return ;
 
-                    }
-                    break;
+                switch (alt60) {
+            	case 1 :
+            	    // InternalResolute.g:11407:2: rule__ContainmentPathElement__ArrayRangeAssignment_0_1
+            	    {
+            	    pushFollow(FOLLOW_66);
+            	    rule__ContainmentPathElement__ArrayRangeAssignment_0_1();
 
-            }
+            	    state._fsp--;
+            	    if (state.failed) return ;
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop60;
+                }
+            } while (true);
 
             if ( state.backtracking==0 ) {
                after(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1()); 
@@ -32841,7 +32848,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:11551:1: ( rule__ArrayRange__Group__2__Impl rule__ArrayRange__Group__3 )
             // InternalResolute.g:11552:2: rule__ArrayRange__Group__2__Impl rule__ArrayRange__Group__3
             {
-            pushFollow(FOLLOW_66);
+            pushFollow(FOLLOW_67);
             rule__ArrayRange__Group__2__Impl();
 
             state._fsp--;
@@ -32930,7 +32937,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:11580:1: ( rule__ArrayRange__Group__3__Impl rule__ArrayRange__Group__4 )
             // InternalResolute.g:11581:2: rule__ArrayRange__Group__3__Impl rule__ArrayRange__Group__4
             {
-            pushFollow(FOLLOW_66);
+            pushFollow(FOLLOW_67);
             rule__ArrayRange__Group__3__Impl();
 
             state._fsp--;
@@ -33267,7 +33274,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:11712:1: ( rule__SignedConstant__Group__0__Impl rule__SignedConstant__Group__1 )
             // InternalResolute.g:11713:2: rule__SignedConstant__Group__0__Impl rule__SignedConstant__Group__1
             {
-            pushFollow(FOLLOW_67);
+            pushFollow(FOLLOW_68);
             rule__SignedConstant__Group__0__Impl();
 
             state._fsp--;
@@ -33440,7 +33447,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:11775:1: ( rule__NumericRangeTerm__Group__0__Impl rule__NumericRangeTerm__Group__1 )
             // InternalResolute.g:11776:2: rule__NumericRangeTerm__Group__0__Impl rule__NumericRangeTerm__Group__1
             {
-            pushFollow(FOLLOW_68);
+            pushFollow(FOLLOW_69);
             rule__NumericRangeTerm__Group__0__Impl();
 
             state._fsp--;
@@ -33529,7 +33536,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:11804:1: ( rule__NumericRangeTerm__Group__1__Impl rule__NumericRangeTerm__Group__2 )
             // InternalResolute.g:11805:2: rule__NumericRangeTerm__Group__1__Impl rule__NumericRangeTerm__Group__2
             {
-            pushFollow(FOLLOW_67);
+            pushFollow(FOLLOW_68);
             rule__NumericRangeTerm__Group__1__Impl();
 
             state._fsp--;
@@ -33608,7 +33615,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:11835:1: ( rule__NumericRangeTerm__Group__2__Impl rule__NumericRangeTerm__Group__3 )
             // InternalResolute.g:11836:2: rule__NumericRangeTerm__Group__2__Impl rule__NumericRangeTerm__Group__3
             {
-            pushFollow(FOLLOW_69);
+            pushFollow(FOLLOW_70);
             rule__NumericRangeTerm__Group__2__Impl();
 
             state._fsp--;
@@ -33792,7 +33799,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:11900:1: ( rule__NumericRangeTerm__Group_3__0__Impl rule__NumericRangeTerm__Group_3__1 )
             // InternalResolute.g:11901:2: rule__NumericRangeTerm__Group_3__0__Impl rule__NumericRangeTerm__Group_3__1
             {
-            pushFollow(FOLLOW_67);
+            pushFollow(FOLLOW_68);
             rule__NumericRangeTerm__Group_3__0__Impl();
 
             state._fsp--;
@@ -33955,7 +33962,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:11964:1: ( rule__QPREF__Group__0__Impl rule__QPREF__Group__1 )
             // InternalResolute.g:11965:2: rule__QPREF__Group__0__Impl rule__QPREF__Group__1
             {
-            pushFollow(FOLLOW_70);
+            pushFollow(FOLLOW_71);
             rule__QPREF__Group__0__Impl();
 
             state._fsp--;
@@ -34569,7 +34576,7 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
             // InternalResolute.g:12180:1: ( rule__QCREF__Group_0__0__Impl rule__QCREF__Group_0__1 )
             // InternalResolute.g:12181:2: rule__QCREF__Group_0__0__Impl rule__QCREF__Group_0__1
             {
-            pushFollow(FOLLOW_70);
+            pushFollow(FOLLOW_71);
             rule__QCREF__Group_0__0__Impl();
 
             state._fsp--;
@@ -40449,10 +40456,11 @@ public class InternalResoluteParser extends AbstractInternalContentAssistParser 
     public static final BitSet FOLLOW_63 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000004L});
     public static final BitSet FOLLOW_64 = new BitSet(new long[]{0x00000000000000F0L,0x0000188000000003L,0x000000000000301BL});
     public static final BitSet FOLLOW_65 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000002L});
-    public static final BitSet FOLLOW_66 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000024L});
-    public static final BitSet FOLLOW_67 = new BitSet(new long[]{0x00000000000000B0L,0x0000000000000003L});
-    public static final BitSet FOLLOW_68 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000020L});
-    public static final BitSet FOLLOW_69 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000080L});
+    public static final BitSet FOLLOW_66 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000000L,0x0000000000000002L});
+    public static final BitSet FOLLOW_67 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000024L});
+    public static final BitSet FOLLOW_68 = new BitSet(new long[]{0x00000000000000B0L,0x0000000000000003L});
+    public static final BitSet FOLLOW_69 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000020L});
+    public static final BitSet FOLLOW_70 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000040L});
+    public static final BitSet FOLLOW_71 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000080L});
 
 }
