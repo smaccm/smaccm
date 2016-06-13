@@ -30,12 +30,12 @@ component uartbase {
 
 assembly {
   composition {
-    // "component uart uart_driver_inst" will be defined by the outer camkes file
+    // "component uart UART_driver_inst" will be defined by the outer camkes file
     component uartbase uartbase_obj;
 
     // UART hardware connection
-    connection seL4HardwareMMIO uartbase_mem(from uart_driver_inst.vaddr, to uartbase_obj.mem);
-    connection seL4HardwareInterrupt uartbase_irq(from uartbase_obj.irq, to uart_driver_inst.interrupt);
+    connection seL4HardwareMMIO uartbase_mem(from UART_driver_inst.vaddr, to uartbase_obj.mem);
+    connection seL4HardwareInterrupt uartbase_irq(from uartbase_obj.irq, to UART_driver_inst.interrupt);
   }
 
   configuration {

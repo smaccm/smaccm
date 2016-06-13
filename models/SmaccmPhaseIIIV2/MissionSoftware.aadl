@@ -58,7 +58,7 @@ thread UART_driver
 	    SMACCM_SYS::Thread_Type => Active;
 	    Compute_Execution_Time => 10 us .. 100 us;
       SMACCM_SYS::Sends_Events_To => "{{}}";
-	    Source_Text => ();
+	    Source_Text => ("UART_driver.c");
 	    Period => 100ms;
 end UART_driver;
 	
@@ -155,7 +155,7 @@ thread CAN_driver
       SMACCM_SYS::Thread_Type => Active;
       Compute_Execution_Time => 10 us .. 100 us;
       SMACCM_SYS::Sends_Events_To => "{{}}";
-      Source_Text => ();
+      Source_Text => ("CAN_driver.c");
       end CAN_driver;
 
 thread Virtual_Machine

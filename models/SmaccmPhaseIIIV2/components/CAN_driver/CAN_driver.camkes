@@ -4,11 +4,11 @@ import "../../interfaces/CAN_driver_interface.idl4";
 import "../../interfaces/bool_writer.idl4";
 import "../../interfaces/SMACCM_DATA__can_message_i_writer.idl4";
 
-// Idl files for shared data accessors
-
-// Idl files for RPCs
-
-// Passive component dispatch interfaces 
+// hand coded other components
+import "../clk/clk.camkes";
+import "../gpio/gpio.camkes";
+import "../spi/spi.camkes";
+import "../can/can.camkes";
 
 component CAN_driver {
 include "smaccm_top_i_types.h";
