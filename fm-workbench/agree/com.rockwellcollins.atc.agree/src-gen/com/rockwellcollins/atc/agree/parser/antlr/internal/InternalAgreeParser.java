@@ -14359,7 +14359,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleContainmentPathElement"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5481:1: ruleContainmentPathElement returns [EObject current=null] : ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5481:1: ruleContainmentPathElement returns [EObject current=null] : ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) ;
     public final EObject ruleContainmentPathElement() throws RecognitionException {
         EObject current = null;
 
@@ -14373,14 +14373,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5484:28: ( ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5484:28: ( ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:1: ( ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )? )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* ) (otherlv_2= FullStop ( (lv_path_3_0= ruleContainmentPathElement ) ) )?
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )? )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:3: ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )?
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:2: ( ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )* )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:3: ( (otherlv_0= RULE_ID ) ) ( (lv_arrayRange_1_0= ruleArrayRange ) )*
             {
             // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5485:3: ( (otherlv_0= RULE_ID ) )
             // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5486:1: (otherlv_0= RULE_ID )
@@ -14407,51 +14407,58 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5498:2: ( (lv_arrayRange_1_0= ruleArrayRange ) )?
-            int alt74=2;
-            int LA74_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5498:2: ( (lv_arrayRange_1_0= ruleArrayRange ) )*
+            loop74:
+            do {
+                int alt74=2;
+                int LA74_0 = input.LA(1);
 
-            if ( (LA74_0==LeftSquareBracket) ) {
-                alt74=1;
-            }
-            switch (alt74) {
-                case 1 :
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5499:1: (lv_arrayRange_1_0= ruleArrayRange )
-                    {
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5499:1: (lv_arrayRange_1_0= ruleArrayRange )
-                    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5500:3: lv_arrayRange_1_0= ruleArrayRange
-                    {
-                    if ( state.backtracking==0 ) {
-                       
-                      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getArrayRangeArrayRangeParserRuleCall_0_1_0()); 
-                      	    
-                    }
-                    pushFollow(FollowSets000.FOLLOW_ruleArrayRange_in_ruleContainmentPathElement11795);
-                    lv_arrayRange_1_0=ruleArrayRange();
-
-                    state._fsp--;
-                    if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
-
-                      	        if (current==null) {
-                      	            current = createModelElementForParent(grammarAccess.getContainmentPathElementRule());
-                      	        }
-                             		add(
-                             			current, 
-                             			"arrayRange",
-                              		lv_arrayRange_1_0, 
-                              		"ArrayRange");
-                      	        afterParserOrEnumRuleCall();
-                      	    
-                    }
-
-                    }
+                if ( (LA74_0==LeftSquareBracket) ) {
+                    alt74=1;
+                }
 
 
-                    }
-                    break;
+                switch (alt74) {
+            	case 1 :
+            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5499:1: (lv_arrayRange_1_0= ruleArrayRange )
+            	    {
+            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5499:1: (lv_arrayRange_1_0= ruleArrayRange )
+            	    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:5500:3: lv_arrayRange_1_0= ruleArrayRange
+            	    {
+            	    if ( state.backtracking==0 ) {
+            	       
+            	      	        newCompositeNode(grammarAccess.getContainmentPathElementAccess().getArrayRangeArrayRangeParserRuleCall_0_1_0()); 
+            	      	    
+            	    }
+            	    pushFollow(FollowSets000.FOLLOW_ruleArrayRange_in_ruleContainmentPathElement11795);
+            	    lv_arrayRange_1_0=ruleArrayRange();
 
-            }
+            	    state._fsp--;
+            	    if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
+
+            	      	        if (current==null) {
+            	      	            current = createModelElementForParent(grammarAccess.getContainmentPathElementRule());
+            	      	        }
+            	             		add(
+            	             			current, 
+            	             			"arrayRange",
+            	              		lv_arrayRange_1_0, 
+            	              		"ArrayRange");
+            	      	        afterParserOrEnumRuleCall();
+            	      	    
+            	    }
+
+            	    }
+
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop74;
+                }
+            } while (true);
 
 
             }
@@ -16050,11 +16057,6 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             case PlusSign:
                 {
                 switch ( input.LA(2) ) {
-                case RULE_ID:
-                    {
-                    alt83=3;
-                    }
-                    break;
                 case RULE_REAL_LIT:
                     {
                     alt83=1;
@@ -16063,6 +16065,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                 case RULE_INTEGER_LIT:
                     {
                     alt83=2;
+                    }
+                    break;
+                case RULE_ID:
+                    {
+                    alt83=3;
                     }
                     break;
                 default:
@@ -17585,9 +17592,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     static final String DFA39_specialS =
         "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\2\uffff}>";
     static final String[] DFA39_transitionS = {
-            "\1\10\4\uffff\1\10\4\uffff\3\10\3\uffff\1\10\4\uffff\1\7\1"+
-            "\10\3\uffff\1\2\1\6\1\10\1\4\3\uffff\1\10\2\uffff\5\10\1\uffff"+
-            "\3\10\1\1\1\5\1\3\3\uffff\1\10",
+            "\1\10\4\uffff\1\10\4\uffff\3\10\3\uffff\1\10\4\uffff\1\7\1\10\3\uffff\1\2\1\6\1\10\1\4\3\uffff\1\10\2\uffff\5\10\1\uffff\3\10\1\1\1\5\1\3\3\uffff\1\10",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
@@ -17761,8 +17766,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     static final String DFA51_specialS =
         "\13\uffff}>";
     static final String[] DFA51_transitionS = {
-            "\1\4\1\6\1\10\10\uffff\1\11\1\uffff\1\7\1\6\12\uffff\1\3\20"+
-            "\uffff\1\12\24\uffff\1\5\1\uffff\1\2\2\uffff\1\1",
+            "\1\4\1\6\1\10\10\uffff\1\11\1\uffff\1\7\1\6\12\uffff\1\3\20\uffff\1\12\24\uffff\1\5\1\uffff\1\2\2\uffff\1\1",
             "",
             "",
             "",
@@ -17813,20 +17817,15 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     static final String DFA69_eofS =
         "\10\uffff\1\17\1\21\1\23\3\uffff\1\17\1\uffff\1\21\3\uffff\1\23";
     static final String DFA69_minS =
-        "\1\6\5\uffff\2\140\3\24\3\uffff\1\24\1\uffff\1\24\1\uffff\1\145"+
-        "\1\uffff\1\24";
+        "\1\6\5\uffff\2\140\3\24\3\uffff\1\24\1\uffff\1\24\1\uffff\1\145\1\uffff\1\24";
     static final String DFA69_maxS =
-        "\1\145\5\uffff\4\145\1\124\3\uffff\1\124\1\uffff\1\124\1\uffff"+
-        "\1\145\1\uffff\1\124";
+        "\1\145\5\uffff\4\145\1\124\3\uffff\1\124\1\uffff\1\124\1\uffff\1\145\1\uffff\1\124";
     static final String DFA69_acceptS =
-        "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7"+
-        "\1\uffff\1\10\1\uffff\1\13\1\uffff";
+        "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7\1\uffff\1\10\1\uffff\1\13\1\uffff";
     static final String DFA69_specialS =
         "\25\uffff}>";
     static final String[] DFA69_transitionS = {
-            "\1\3\5\uffff\1\2\11\uffff\1\4\13\uffff\1\14\14\uffff\1\14\33"+
-            "\uffff\1\13\2\uffff\1\6\1\uffff\1\7\7\uffff\1\1\7\uffff\1\10"+
-            "\1\uffff\1\11\1\uffff\1\5\1\12",
+            "\1\3\5\uffff\1\2\11\uffff\1\4\13\uffff\1\14\14\uffff\1\14\33\uffff\1\13\2\uffff\1\6\1\uffff\1\7\7\uffff\1\1\7\uffff\1\10\1\uffff\1\11\1\uffff\1\5\1\12",
             "",
             "",
             "",
@@ -17834,25 +17833,19 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             "",
             "\1\10\1\uffff\1\11\2\uffff\1\15",
             "\1\10\1\uffff\1\11\2\uffff\1\15",
-            "\1\17\52\uffff\1\15\10\uffff\1\17\3\uffff\1\17\2\uffff\1\17"+
-            "\4\uffff\1\17\20\uffff\1\16",
-            "\1\21\52\uffff\1\15\10\uffff\1\21\3\uffff\1\21\2\uffff\1\21"+
-            "\4\uffff\1\21\20\uffff\1\20",
-            "\1\23\52\uffff\1\15\1\22\7\uffff\1\23\3\uffff\1\23\2\uffff"+
-            "\1\23\4\uffff\1\23",
+            "\1\17\52\uffff\1\15\10\uffff\1\17\3\uffff\1\17\2\uffff\1\17\4\uffff\1\17\20\uffff\1\16",
+            "\1\21\52\uffff\1\15\10\uffff\1\21\3\uffff\1\21\2\uffff\1\21\4\uffff\1\21\20\uffff\1\20",
+            "\1\23\52\uffff\1\15\1\22\7\uffff\1\23\3\uffff\1\23\2\uffff\1\23\4\uffff\1\23",
             "",
             "",
             "",
-            "\1\17\52\uffff\1\15\10\uffff\1\17\3\uffff\1\17\2\uffff\1\17"+
-            "\4\uffff\1\17",
+            "\1\17\52\uffff\1\15\10\uffff\1\17\3\uffff\1\17\2\uffff\1\17\4\uffff\1\17",
             "",
-            "\1\21\52\uffff\1\15\10\uffff\1\21\3\uffff\1\21\2\uffff\1\21"+
-            "\4\uffff\1\21",
+            "\1\21\52\uffff\1\15\10\uffff\1\21\3\uffff\1\21\2\uffff\1\21\4\uffff\1\21",
             "",
             "\1\24",
             "",
-            "\1\23\52\uffff\1\15\10\uffff\1\23\3\uffff\1\23\2\uffff\1\23"+
-            "\4\uffff\1\23"
+            "\1\23\52\uffff\1\15\10\uffff\1\23\3\uffff\1\23\2\uffff\1\23\4\uffff\1\23"
     };
 
     static final short[] DFA69_eot = DFA.unpackEncodedString(DFA69_eotS);
@@ -18380,7 +18373,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         public static final BitSet FOLLOW_ruleContainmentPathElement_in_entryRuleContainmentPathElement11718 = new BitSet(new long[]{0x0000000000000000L});
         public static final BitSet FOLLOW_EOF_in_entryRuleContainmentPathElement11728 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_RULE_ID_in_ruleContainmentPathElement11774 = new BitSet(new long[]{0x0000000000000002L,0x0000000001020000L});
-        public static final BitSet FOLLOW_ruleArrayRange_in_ruleContainmentPathElement11795 = new BitSet(new long[]{0x0000000000000002L,0x0000000000020000L});
+        public static final BitSet FOLLOW_ruleArrayRange_in_ruleContainmentPathElement11795 = new BitSet(new long[]{0x0000000000000002L,0x0000000001020000L});
         public static final BitSet FOLLOW_FullStop_in_ruleContainmentPathElement11811 = new BitSet(new long[]{0x0000000000000000L,0x0000002000000000L});
         public static final BitSet FOLLOW_ruleContainmentPathElement_in_ruleContainmentPathElement11831 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_rulePlusMinus_in_entryRulePlusMinus11871 = new BitSet(new long[]{0x0000000000000000L});
