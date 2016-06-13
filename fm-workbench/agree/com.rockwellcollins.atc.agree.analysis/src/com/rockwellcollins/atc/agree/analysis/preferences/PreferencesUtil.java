@@ -18,6 +18,7 @@ import org.osgi.framework.Bundle;
 
 import com.rockwellcollins.atc.agree.analysis.Activator;
 //import com.rockwellcollins.atc.z3.Z3Plugin;
+import com.rockwellcollins.atc.z3.Z3Plugin;
 
 public class PreferencesUtil {
     public static KindApi getKindApi() {
@@ -66,12 +67,12 @@ public class PreferencesUtil {
         IPreferenceStore prefs = getPreferenceStore();
         JKindApi api = new JKindApi();
         api.setJKindJar(getJKindJar());
-//		try {
-//			api.setEnvironment("Z3_HOME", Z3Plugin.getZ3Directory());
-//		} catch (NoClassDefFoundError e) {
-//			e.printStackTrace();
-//			// Z3Plugin not present
-//		}
+		try {
+			api.setEnvironment("Z3_HOME", Z3Plugin.getZ3Directory());
+		} catch (NoClassDefFoundError e) {
+			e.printStackTrace();
+			// Z3Plugin not present
+		}
 
         String solverString =
                 prefs.getString(PreferenceConstants.PREF_SOLVER).toUpperCase().replaceAll(" ", "");
