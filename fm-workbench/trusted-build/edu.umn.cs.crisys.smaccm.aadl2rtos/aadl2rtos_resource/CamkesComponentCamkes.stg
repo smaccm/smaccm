@@ -58,7 +58,6 @@ createDataports(threadImpl, destPort) ::= <<
 
 constructSenderInterface(connection) ::= <<
 uses <connection.destPort.type.readerWriterInterfaceName> <connection.name>;
-
 >>
 
 
