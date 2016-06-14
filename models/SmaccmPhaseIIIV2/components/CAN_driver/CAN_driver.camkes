@@ -11,10 +11,10 @@ import "../spi/spi.camkes";
 import "../can/can.camkes";
 
 component CAN_driver {
-include "smaccm_top_i_types.h";
 	control;
 
     // AADL interface
+    include "smaccm_top_i_types.h";
 	uses bool_writer CAN_driver_status;
 	uses SMACCM_DATA__can_message_i_writer CAN_driver_receive;
 	provides SMACCM_DATA__can_message_i_writer send; 

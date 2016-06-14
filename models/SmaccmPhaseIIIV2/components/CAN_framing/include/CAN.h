@@ -6,10 +6,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <CAN_CAN_hw_intermon.h>
-#include <CAN_Server_intermon.h>
-#include <CAN_hw_CAN_intermon.h>
-#include <Server_CAN_intermon.h>
 #include "input_CAN_hw_CAN_get_can_message_monitor.h"
 #include "input_CAN_hw_CAN_get_status_monitor.h"
 #include "input_Server_CAN_get_pt_data_monitor.h"

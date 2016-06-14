@@ -1,6 +1,6 @@
 #include <string.h>
-#include <CAN_driver.h>
 #include <smaccm_top_i_types.h>
+#include <CAN_driver.h>
 #include <stdio.h>
 
 static bool STATIC_TRUE = true;

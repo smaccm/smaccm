@@ -166,7 +166,7 @@ thread Virtual_Machine
 	  Dispatch_Protocol => Sporadic;
 	  SMACCM_SYS::Thread_Type => Active;
 	  Compute_Execution_Time => 10 us .. 100 us;
-	  Source_Text => ("usercode/Camera_VM.c", "usercode/Camera_VM.h", "usercode/Camera_VM.c", "usercode/Camera_VM.h", "usercode/Camera_VM_Server_intermon.c", "usercode/Camera_VM_Server_intermon.h", "usercode/ivory.c", "usercode/ivory.h", "usercode/ivory_asserts.c", "usercode/ivory_asserts.h", "usercode/ivory_templates.c", "usercode/ivory_templates.h");
+	  Source_Text => ("Virtual_Machine.c");
 end Virtual_machine;
 	
 end MissionSoftware;
