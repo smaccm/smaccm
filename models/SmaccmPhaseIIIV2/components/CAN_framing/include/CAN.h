@@ -10,8 +10,8 @@ extern "C" {
 #include "input_CAN_hw_CAN_get_status_monitor.h"
 #include "input_Server_CAN_get_pt_data_monitor.h"
 #include "ivory.h"
-void component_entry(void);
-void component_init(void);
+//void component_entry(void);
+//void component_init(void);
 
 #ifdef __cplusplus
 }

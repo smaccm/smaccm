@@ -44,7 +44,6 @@ extern "C"
     cx->n_col = 8   29 23 19 17 14
 */
 
-
 #if defined( REDUCE_CODE_SIZE )
 #  define ls_box ls_sub
    uint_32t ls_sub(const uint_32t t, const uint_32t n);
