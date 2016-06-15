@@ -2,8 +2,10 @@
  * Compiler version  0.1.0.3
  */
 #include "output_CAN_CAN_hw_put_can_message_monitor.h"
+#include "smaccm_CAN_framing.h"
 
 void callback_output_CAN_CAN_hw_put_can_message_2(const struct can_message *n_var0)
 {
-    CAN_CAN_hw_put_can_message(n_var0);
+    //CAN_CAN_hw_put_can_message(n_var0);
+    CAN_framing_write_fragment_request(n_var0);
 }

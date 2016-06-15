@@ -6,8 +6,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <UART_hw_UART_in_intermon.h>
-#include <UART_in_Server_intermon.h>
 #include "commsecDecodeStaticKey_monitor.h"
 #include "frameBuffer_monitor.h"
 #include "input_UART_hw_UART_in_get_packet_monitor.h"

@@ -2,6 +2,7 @@
  * Compiler version  0.1.0.3
  */
 #include "CAN.h"
+#include "smaccm_CAN_framing.h"
 
 static void component_entry_aux(void);
 
@@ -31,8 +32,10 @@ void component_entry_aux(void)
 {
     uint8_t n_local0[80U] = {};
     uint8_t *n_ref1 = n_local0;
-    bool n_r2 = Server_CAN_get_pt_data(n_ref1);
+    //bool n_r2 = Server_CAN_get_pt_data(n_ref1);
+    bool n_r2 = CAN_framing_read_from_server(n_local0);
     
+
     if (n_r2) {
         callback_input_Server_CAN_get_pt_data_handler(n_ref1);
     }
@@ -43,7 +46,8 @@ void component_entry_aux_2(void)
 {
     struct can_message n_local0 = {};
     struct can_message *n_ref1 = &n_local0;
-    bool n_r2 = CAN_hw_CAN_get_can_message(n_ref1);
+    //bool n_r2 = CAN_hw_CAN_get_can_message(n_ref1);
+    bool n_r2 = CAN_framing_read_fragement_reasembly(n_ref1);
     
     if (n_r2) {
         callback_input_CAN_hw_CAN_get_can_message_handler(n_ref1);
@@ -55,7 +59,8 @@ void component_entry_aux_3(void)
 {
     bool n_local0 = false;
     bool *n_ref1 = &n_local0;
-    bool n_r2 = CAN_hw_CAN_get_status(n_ref1);
+    //bool n_r2 = CAN_hw_CAN_get_status(n_ref1);
+    bool n_r2 = CAN_framing_read_get_status(n_ref1);
     
     if (n_r2) {
         callback_input_CAN_hw_CAN_get_status_handler(n_ref1);
