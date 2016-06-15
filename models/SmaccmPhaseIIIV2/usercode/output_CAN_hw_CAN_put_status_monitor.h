@@ -6,6 +6,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <stdbool.h>
+#include <stdint.h>
 void callback_output_CAN_hw_CAN_put_status_2(const bool *n_var0);
 
 #ifdef __cplusplus

@@ -6,6 +6,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <stdbool.h>
+#include <stdint.h>
 void callback_input_UART_hw_UART_out_get_bool_handler(const bool *n_var0);
 
 #ifdef __cplusplus

@@ -21,7 +21,7 @@
 #include <sel4vchan/libvchan.h>
 #include <sel4vchan/vchan_component.h>
 
-#include <camera_vm.h>
+#include <smaccm_Virtual_Machine.h>
 
 #include <camkes/dataport.h>
 

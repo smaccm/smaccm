@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+#include <stdint.h>
 void callback_output_UART_hw_UART_out_put_bool_2(const bool *n_var0);
 
 #ifdef __cplusplus

@@ -13,7 +13,7 @@
 #include <platsupport/chardev.h>
 #include <platsupport/serial.h>
 #include <utils/util.h>
-#include <UART_Driver.h>
+#include <smaccm_UART_driver.h>
 
 //#define BAUD_RATE 115200
 #define BAUD_RATE 57600

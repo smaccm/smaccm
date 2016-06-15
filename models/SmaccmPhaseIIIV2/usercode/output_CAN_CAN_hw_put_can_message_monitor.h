@@ -6,6 +6,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <stdbool.h>
+#include <stdint.h>
 void callback_output_CAN_CAN_hw_put_can_message_2(const struct can_message *n_var0);
 
 #ifdef __cplusplus

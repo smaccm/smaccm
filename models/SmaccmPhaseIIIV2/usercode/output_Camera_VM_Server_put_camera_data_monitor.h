@@ -6,6 +6,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <stdbool.h>
+#include <stdint.h>
 void callback_output_Camera_VM_Server_put_camera_data_2(const struct camera_data *n_var0);
 
 #ifdef __cplusplus

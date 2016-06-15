@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+#include <stdint.h>
 void callback_output_Server_UART_out_put_pt_data_2(const uint8_t n_var0[80U]);
 
 #ifdef __cplusplus

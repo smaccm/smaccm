@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+#include <stdint.h>
 void callback_input_UART_hw_UART_in_get_packet_handler(const struct ivory_string_UartPacket *n_var0);
 
 #ifdef __cplusplus
