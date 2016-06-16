@@ -7,7 +7,7 @@ static void component_entry_aux(void);
 
 static void component_entry_aux_2(void);
 
-void component_entry(void)
+void component_entry(const int64_t * periodic_dispatcher)
 {
     component_entry_aux();
     component_entry_aux_2();
@@ -18,7 +18,7 @@ void component_entry(void)
     return;
 }
 
-void component_init(void)
+void component_init(const int64_t * Encrypt_initializer)
 {
     int64_t n_local0 = (int64_t) 0;
     int64_t *n_ref1 = &n_local0;
@@ -30,7 +30,7 @@ void component_entry_aux(void)
 {
     uint8_t n_local0[80U] = {};
     uint8_t *n_ref1 = n_local0;
-    bool n_r2 = UART_out_read_get_gidl(n_ref1);
+    bool n_r2 = Encrypt_read_get_gidl(n_local0);
     //bool n_r2 = Server_UART_out_get_pt_data(n_ref1);
     
     if (n_r2) {
@@ -43,7 +43,7 @@ void component_entry_aux_2(void)
 {
     bool n_local0 = false;
     bool *n_ref1 = &n_local0;
-    bool n_r2 = UART_out_read_recv_response(n_ref1);
+    bool n_r2 = Encrypt_read_recv_response(n_ref1);
     //bool n_r2 = UART_hw_UART_out_get_bool(n_ref1);
     
     if (n_r2) {

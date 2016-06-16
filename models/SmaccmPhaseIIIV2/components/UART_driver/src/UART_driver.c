@@ -14,6 +14,7 @@
 #include <platsupport/serial.h>
 #include <utils/util.h>
 #include <smaccm_UART_driver.h>
+#include <UART_driver.h>
 
 //#define BAUD_RATE 115200
 #define BAUD_RATE 57600
@@ -96,7 +97,8 @@ write_callback(ps_chardevice_t* device, enum chardev_status stat,
     t = (struct uart_token*) token;
     t->cur_bytes += bytes_transfered;
     if (t->cur_bytes == t->req_bytes) {
-      uart_Output_recv_resp_0_write_bool(&b);
+      //uart_Output_recv_resp_0_write_bool(&b);
+      UART_driver_recv_resp_write_bool(&b);
     }
 }
 

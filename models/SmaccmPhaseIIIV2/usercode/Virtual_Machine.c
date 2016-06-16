@@ -64,7 +64,7 @@ static void rec_packet(libvchan_t * con) {
     ca.bbox_t = data[2];
     ca.bbox_b = data[3];
 
-    if (Virtual_Machine_write_camera_data(&ca)) {
+    if (Virtual_Machine_camera_data_write_SMACCM_DATA__camera_data_i(&ca)) {
         DVM("wrote bounding box\n");
     } else {
         DVM("failed to write bouding box\n");

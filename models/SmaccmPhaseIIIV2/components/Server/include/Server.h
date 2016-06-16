@@ -10,7 +10,8 @@ extern "C" {
 #include "input_Camera_VM_Server_get_camera_data_monitor.h"
 #include "input_UART_in_Server_get_pt_data_monitor.h"
 #include "ivory.h"
-#include "towerCameraVMDeps.h"
+#include <smaccm_Server.h>
+#include <smaccm_top_i_types.h>
 void component_entry(void);
 void component_init(void);
 

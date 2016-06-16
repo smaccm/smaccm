@@ -10,8 +10,7 @@ extern "C" {
 #include "input_Server_UART_out_get_pt_data_monitor.h"
 #include "input_UART_hw_UART_out_get_bool_monitor.h"
 #include "ivory.h"
-void component_entry(void);
-void component_init(void);
+#include "smaccm_Encrypt.h"
 
 #ifdef __cplusplus
 }

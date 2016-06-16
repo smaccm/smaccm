@@ -10,8 +10,7 @@ extern "C" {
 #include "frameBuffer_monitor.h"
 #include "input_UART_hw_UART_in_get_packet_monitor.h"
 #include "ivory.h"
-void component_entry(void);
-void component_init(void);
+#include "smaccm_Decrypt.h"
 
 #ifdef __cplusplus
 }

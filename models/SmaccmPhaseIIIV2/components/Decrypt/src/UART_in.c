@@ -5,7 +5,7 @@
 
 static void component_entry_aux(void);
 
-void component_entry(void)
+void component_entry(const int64_t * periodic_dispatcher)
 {
     component_entry_aux();
     
@@ -16,7 +16,7 @@ void component_entry(void)
     return;
 }
 
-void component_init(void)
+void component_init(const int64_t * Decrypt_initializer)
 {
     int64_t n_local0 = (int64_t) 0;
     int64_t *n_ref1 = &n_local0;
@@ -26,9 +26,13 @@ void component_init(void)
 
 void component_entry_aux(void)
 {
-    struct ivory_string_UartPacket n_local0 = {};
-    struct ivory_string_UartPacket *n_ref1 = &n_local0;
-    bool n_r2 = UART_hw_UART_in_get_packet(n_ref1);
+    //struct ivory_string_UartPacket n_local0 = {};
+    //struct ivory_string_UartPacket *n_ref1 = &n_local0;
+    //bool n_r2 = UART_hw_UART_in_get_packet(n_ref1);
+
+    struct SMACCM_DATA__UartPacket_i n_local0 = {};
+    struct SMACCM_DATA__UartPacket_i *n_ref1 = &n_local0;
+    bool n_r2 = Decrypt_read_get_packet(n_ref1);
     
     if (n_r2) {
         callback_input_UART_hw_UART_in_get_packet_handler(n_ref1);
