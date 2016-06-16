@@ -21,11 +21,10 @@
 #include <sel4vchan/libvchan.h>
 #include <sel4vchan/vchan_component.h>
 
-#include <smaccm_Virtual_Machine.h>
-
 #include <camkes/dataport.h>
 
 #include "smaccm_Virtual_Machine.h"
+#include "Virtual_Machine.h"
 
 static camkes_vchan_con_t con = {
     .connect = &vchan_con_new_connection,
@@ -53,7 +52,7 @@ static camkes_vchan_con_t con = {
 static void rec_packet(libvchan_t * con) {
     char done = 1;
     int data[4];
-    struct camera_data ca;
+    SMACCM_DATA__camera_data_i ca;
 
     libvchan_wait(con);
     int readSize = libvchan_recv(con, data, 4*sizeof(int));

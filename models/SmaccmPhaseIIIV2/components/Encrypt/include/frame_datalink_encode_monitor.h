@@ -6,6 +6,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <stdint.h>
+#include <stdbool.h>
+#include <hxstream_state_module.h>
 extern bool pending;
 void callback_encoder_ct_in(const uint8_t n_var0[96U]);
 void callback_complete(const bool *n_var0);

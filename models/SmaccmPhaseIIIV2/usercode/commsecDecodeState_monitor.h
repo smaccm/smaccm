@@ -9,6 +9,7 @@ extern "C" {
 #include <gec.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <commsecDecodeState_monitor.h>
 
 extern bool validkey;
 extern struct gec_sym_key ctx_dl_global_gec_sym_key_dec;

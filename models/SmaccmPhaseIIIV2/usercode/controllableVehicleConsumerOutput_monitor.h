@@ -9,6 +9,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "sequence_numbered_pid_config_types.h"
 void callback_parse_frame_2(const uint8_t n_var0[80U]);
 
 #ifdef __cplusplus
