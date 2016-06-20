@@ -1,0 +1,55 @@
+import "../../interfaces/uart_interface.idl4";
+import "../../interfaces/bool_writer.idl4";
+import "../../interfaces/void_writer.idl4";
+import "../../interfaces/ivory_string_UartPacket_writer.idl4";
+
+component uart {
+  control;
+
+  include "smaccm_sys_impl_types.h";
+  provides ivory_string_UartPacket_writer Input_send;
+  uses ivory_string_UartPacket_writer uart_Output_recv_rx_0;
+  uses bool_writer uart_Output_recv_resp_0;
+
+  // Hardware interface
+  dataport Buf            vaddr;
+  consumes DataAvailable  interrupt;
+
+  // Internal components
+  has semaphore           read_sem;
+}
+
+component uartbase {
+  hardware;
+  dataport Buf mem;
+  emits DataAvailable irq;
+}
+
+assembly {
+  composition {
+    // "component uart uart_inst" will be defined by the outer camkes file
+    component uartbase uartbase_obj;
+
+    // UART hardware connection
+    connection seL4HardwareMMIO uartbase_mem(from uart_inst.vaddr, to uartbase_obj.mem);
+    connection seL4HardwareInterrupt uartbase_irq(from uartbase_obj.irq, to uart_inst.interrupt);
+  }
+
+  configuration {
+    // UART #0 - LIDAR on daughterboard (unconfirmed)
+    // uartbase_obj.mem_attributes = "0x12C00000:0x1000";
+    // uartbase_obj.irq_attributes = 83;
+
+    // UART #1 - Telem on daughterboard
+    uartbase_obj.mem_attributes = "0x12C10000:0x1000";
+    uartbase_obj.irq_attributes = 84;
+
+    // UART #2 - Serial console on ODROID-XU
+    // uartbase_obj.mem_attributes = "0x12C20000:0x1000";
+    // uartbase_obj.irq_attributes = 85;
+
+    // UART #3 - GPS on daughterboard (unconfirmed)
+    // uartbase_obj.mem_attributes = "0x12C30000:0x1000";
+    // uartbase_obj.irq_attributes = 86;
+  }
+}

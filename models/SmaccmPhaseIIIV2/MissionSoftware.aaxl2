@@ -1,0 +1,1186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aadl2:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" name="MissionSoftware" publicSection="#//@ownedPublicSection">
+  <ownedPublicSection importedUnit="aadl2:PropertySet ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS aadl2:Package SMACCM_DATA.aadl#SMACCM_DATA aadl2:Package ../Plugin_Resources/Base_Types.aadl#Base_Types">
+    <ownedClassifier xsi:type="aadl2:SystemType" name="top"/>
+    <ownedClassifier xsi:type="aadl2:SystemImplementation" name="top.i">
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.OS">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.13/@ownedPropertyType/@ownedLiteral.1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.HW">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.14/@ownedPropertyType/@ownedLiteral.3"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.0"/>
+      <ownedProcessSubcomponent name="proc" processSubcomponentType="#//@ownedPublicSection/@ownedClassifier.3"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ProcessType" name="MissionSoftware"/>
+    <ownedClassifier xsi:type="aadl2:ProcessImplementation" name="MissionSoftware.i">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.2"/>
+      <ownedPortConnection name="recv_rx">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.5/@ownedEventDataPort.0"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.2"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="recv_resp">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.2" connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.0"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="send_translate">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.1"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.2" connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.2"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="decrypt_conn">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.3" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.2"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.5/@ownedEventDataPort.1"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="send_can">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.4" connectionEnd="#//@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.2"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.3" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.1"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="get_can">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.3" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.3"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.4" connectionEnd="#//@ownedPublicSection/@ownedClassifier.8/@ownedDataPort.0"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="encrypt_conn">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.2" connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.3" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedEventDataPort.0"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="frag_req">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.5" connectionEnd="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.4" connectionEnd="#//@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.0"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="frag_com">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.5" connectionEnd="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.2"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.4" connectionEnd="#//@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.1"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="status">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.4" connectionEnd="#//@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.3"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.5" connectionEnd="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.1"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="reasm">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.4" connectionEnd="#//@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.4"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.5" connectionEnd="#//@ownedPublicSection/@ownedClassifier.9/@ownedEventDataPort.0"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="cam">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.3" connectionEnd="#//@ownedPublicSection/@ownedClassifier.7/@ownedDataPort.0"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.6" connectionEnd="#//@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+      </ownedPortConnection>
+      <ownedThreadSubcomponent name="uart_driver" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.4"/>
+      <ownedThreadSubcomponent name="decrypt" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.5"/>
+      <ownedThreadSubcomponent name="encrypt" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.6"/>
+      <ownedThreadSubcomponent name="server" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.7"/>
+      <ownedThreadSubcomponent name="can_framing" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.8"/>
+      <ownedThreadSubcomponent name="can_driver" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.9"/>
+      <ownedThreadSubcomponent name="virtual_machine" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.10"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="UART_driver">
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Is_External">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:BooleanLiteral" value="true"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.3/@ownedLiteral.1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Thread_Type">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.10/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RangeValue">
+            <minimum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="10"/>
+            <maximum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="100"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Sends_Events_To">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="{{}}"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_driver.c"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Period">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.3" value="100"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedEventDataPort name="recv_resp" out="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Boolean"/>
+      <ownedEventDataPort name="get_packet" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.UartPacket.i"/>
+      <ownedEventDataPort name="send_packet" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.UartPacket.i"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="Decrypt">
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.3/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Thread_Type">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.10/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Priority">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" value="1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Memory_Properties.aadl#Memory_Properties.Stack_Size">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.11/@ownedLiteral.1" value="1024"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RangeValue">
+            <minimum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="10"/>
+            <maximum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="100"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Period">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.3" value="100"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/accelerometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/accelerometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/alt_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/alt_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_mode_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/att_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/att_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/barometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/barometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/camera_target_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/camera_target_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/canDriverTypes.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/canDriverTypes.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/commsecDecodeState_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/commsecDecodeState_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/commsecDecodeStaticKey_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/commsecDecodeStaticKey_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_law_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_law_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_modes_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_modes_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_output_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_output_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_setpoint_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_setpoint_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_source_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_source_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/frame_datalink_decode_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/frame_datalink_decode_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/frameBuffer_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/frameBuffer_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gps_fix_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gps_fix_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gyroscope_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gyroscope_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/heartbeat_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/heartbeat_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hx_cyphertext.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hx_cyphertext.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hxstream_state_module.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hxstream_state_module.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_UART_hw_UART_in_get_packet_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_UART_hw_UART_in_get_packet_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_asserts.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_asserts.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_serialize.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_serialize.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_templates.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_templates.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/aes.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/brg_types..h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/curve25519-donna.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/ed25519-hash.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/ed25519.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/gcm.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/gec..h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/gf128mul.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/ivory_serialize_prim.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/magnetometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/magnetometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_UART_in_Server_put_pt_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_UART_in_Server_put_pt_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/packed_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/packed_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/position_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/position_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_alarms_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_alarms_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/quadcopter_motors_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/quadcopter_motors_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rc_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rc_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_magic_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_magic_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_req_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_req_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rgb_led_setting_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rgb_led_setting_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sensors_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sensors_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_num_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_num_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_accelerometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_accelerometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_alt_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_alt_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_arming_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_arming_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_att_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_att_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_barometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_barometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_camera_target_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_camera_target_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_law_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_law_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_modes_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_modes_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_output_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_output_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_setpoint_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_setpoint_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_float_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_float_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_gyroscope_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_gyroscope_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_magnetometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_magnetometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_packed_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_packed_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_pid_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_pid_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_position_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_position_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_px4io_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_px4io_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_quadcopter_motors_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_quadcopter_motors_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rc_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rc_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_reboot_req_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_reboot_req_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rgb_led_setting_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rgb_led_setting_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_sensors_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_sensors_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_stab_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_stab_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_throttle_ui_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_throttle_ui_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_tristate_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_tristate_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_xyz_calibration_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_xyz_calibration_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/stab_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/stab_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_mode_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_ui_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_ui_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/time_micros_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/time_micros_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/to_hx_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/to_hx_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerUartDeps.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerUartDeps.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/tristate_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/tristate_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_hw_UART_in_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_hw_UART_in_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_in.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_in.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_in.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_in.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_in_Server_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_in_Server_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_calibration_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_calibration_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/yaw_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/yaw_mode_types.h"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Sends_Events_To">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="{{}}"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Compute_Entrypoint_Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="component_entry"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Initialize_Entrypoint_Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="component_init"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedEventDataPort name="get_packet" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.UartPacket.i"/>
+      <ownedEventDataPort name="send_gidl" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.Array.U8_80"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="Encrypt">
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.3/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Thread_Type">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.10/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Priority">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" value="1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Memory_Properties.aadl#Memory_Properties.Stack_Size">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.11/@ownedLiteral.1" value="1024"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RangeValue">
+            <minimum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="10"/>
+            <maximum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="100"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Period">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.3" value="100"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/accelerometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/accelerometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/alt_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/alt_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_mode_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/att_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/att_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/barometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/barometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/camera_target_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/camera_target_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/canDriverTypes.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/canDriverTypes.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/commsecEncodeState_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/commsecEncodeState_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/commsecEncodeStaticKey_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/commsecEncodeStaticKey_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_law_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_law_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_modes_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_modes_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_output_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_output_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_setpoint_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_setpoint_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_source_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_source_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/frame_datalink_encode_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/frame_datalink_encode_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gps_fix_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gps_fix_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gyroscope_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gyroscope_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/heartbeat_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/heartbeat_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hx_cyphertext.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hx_cyphertext.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hxstream_state_module.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hxstream_state_module.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_Server_UART_out_get_pt_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_Server_UART_out_get_pt_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_UART_hw_UART_out_get_bool_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_UART_hw_UART_out_get_bool_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_asserts.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_asserts.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_serialize.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_serialize.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_templates.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_templates.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/aes.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/brg_types..h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/curve25519-donna.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/ed25519-hash.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/ed25519.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/gcm.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/gec.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/gf128mul.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/ivory_serialize_prim.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/magnetometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/magnetometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_UART_out_UART_hw_put_packet_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_UART_out_UART_hw_put_packet_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/packed_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/packed_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/position_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/position_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_alarms_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_alarms_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/quadcopter_motors_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/quadcopter_motors_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rc_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rc_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_magic_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_magic_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_req_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_req_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rgb_led_setting_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rgb_led_setting_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sensors_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sensors_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_num_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_num_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_accelerometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_accelerometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_alt_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_alt_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_arming_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_arming_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_att_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_att_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_barometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_barometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_camera_target_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_camera_target_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_law_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_law_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_modes_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_modes_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_output_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_output_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_setpoint_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_setpoint_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_float_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_float_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_gyroscope_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_gyroscope_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_magnetometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_magnetometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_packed_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_packed_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_pid_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_pid_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_position_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_position_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_px4io_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_px4io_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_quadcopter_motors_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_quadcopter_motors_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rc_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rc_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_reboot_req_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_reboot_req_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rgb_led_setting_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rgb_led_setting_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_sensors_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_sensors_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_stab_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_stab_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_throttle_ui_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_throttle_ui_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_tristate_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_tristate_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_xyz_calibration_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_xyz_calibration_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server_UART_out_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server_UART_out_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/stab_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/stab_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_mode_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_ui_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_ui_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/time_micros_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/time_micros_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerUartDeps.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerUartDeps.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/tristate_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/tristate_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_hw_UART_out_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_hw_UART_out_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_out.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_out.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_out.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_out.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_out_UART_hw_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_out_UART_hw_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_calibration_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_calibration_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/yaw_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/yaw_mode_types.h"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Sends_Events_To">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="{{}}"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Compute_Entrypoint_Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="component_entry"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Initialize_Entrypoint_Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="component_init"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedEventDataPort name="get_gidl" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.Array.U8_80"/>
+      <ownedEventDataPort name="recv_response" in="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Boolean"/>
+      <ownedEventDataPort name="send_packet" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.UartPacket.i"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="Server">
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.3/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Thread_Type">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.10/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Priority">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" value="1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Memory_Properties.aadl#Memory_Properties.Stack_Size">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.11/@ownedLiteral.1" value="1024"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RangeValue">
+            <minimum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="10"/>
+            <maximum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="100"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/accelerometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/accelerometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/alt_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/alt_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_mode_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/att_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/att_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/barometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/barometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/camera_target_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/camera_target_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Camera_VM_Server_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Camera_VM_Server_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN_Server_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN_Server_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/canDriverTypes.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/canDriverTypes.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_law_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_law_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_modes_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_modes_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_output_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_output_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_setpoint_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_setpoint_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_source_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_source_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/controllableVehicleConsumerInput_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/controllableVehicleConsumerInput_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/controllableVehicleConsumerOutput_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/controllableVehicleConsumerOutput_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/controllableVehicleProducerInput_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/controllableVehicleProducerInput_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/controllableVehicleProducerOutput_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/controllableVehicleProducerOutput_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gps_fix_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gps_fix_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gyroscope_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gyroscope_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/heartbeat_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/heartbeat_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hx_cyphertext.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hx_cyphertext.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_Camera_VM_Server_get_camera_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_Camera_VM_Server_get_camera_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_CAN_Server_get_pt_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_CAN_Server_get_pt_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_UART_in_Server_get_pt_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_UART_in_Server_get_pt_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_asserts.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_asserts.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_serialize.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_serialize.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_templates.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_templates.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/ivory_serialize_prim.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/magnetometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/magnetometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_Server_CAN_put_pt_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_Server_CAN_put_pt_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_Server_UART_out_put_pt_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_Server_UART_out_put_pt_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/packed_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/packed_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/periodic_camera_injector_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/periodic_camera_injector_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/position_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/position_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_alarms_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_alarms_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/quadcopter_motors_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/quadcopter_motors_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rc_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rc_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_magic_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_magic_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_req_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_req_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rgb_led_setting_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rgb_led_setting_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sensors_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sensors_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_num_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_num_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_accelerometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_accelerometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_alt_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_alt_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_arming_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_arming_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_att_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_att_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_barometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_barometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_camera_target_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_camera_target_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_law_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_law_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_modes_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_modes_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_output_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_output_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_setpoint_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_setpoint_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_float_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_float_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_gyroscope_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_gyroscope_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_magnetometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_magnetometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_packed_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_packed_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_pid_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_pid_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_position_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_position_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_px4io_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_px4io_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_quadcopter_motors_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_quadcopter_motors_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rc_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rc_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_reboot_req_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_reboot_req_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rgb_led_setting_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rgb_led_setting_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_sensors_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_sensors_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_stab_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_stab_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_throttle_ui_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_throttle_ui_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_tristate_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_tristate_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_xyz_calibration_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_xyz_calibration_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server_CAN_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server_CAN_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server_UART_out_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server_UART_out_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/stab_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/stab_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_mode_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_ui_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_ui_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/time_micros_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/time_micros_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerUartDeps.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerUartDeps.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/tristate_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/tristate_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_in_Server_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/UART_in_Server_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_calibration_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_calibration_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/yaw_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/yaw_mode_types.h"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Sends_Events_To">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="{{}}"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Compute_Entrypoint_Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="component_entry"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Initialize_Entrypoint_Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="component_init"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Period">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.3" value="100"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedDataPort name="camera_data" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.camera_data.i"/>
+      <ownedEventDataPort name="send_output" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.Array.U8_80"/>
+      <ownedEventDataPort name="send_can" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.Array.U8_80"/>
+      <ownedEventDataPort name="get_input" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.Array.U8_80"/>
+      <ownedEventDataPort name="get_can" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.Array.U8_80"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="CAN_framing">
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.3/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Thread_Type">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.10/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Priority">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" value="1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Memory_Properties.aadl#Memory_Properties.Stack_Size">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.11/@ownedLiteral.1" value="1024"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RangeValue">
+            <minimum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="10"/>
+            <maximum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="100"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/accelerometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/accelerometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/alt_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/alt_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_mode_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/arming_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/att_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/att_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/barometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/barometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/camera_target_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/camera_target_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN_CAN_hw_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN_CAN_hw_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN_hw_CAN_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN_hw_CAN_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN_Server_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/CAN_Server_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/canDriverTypes.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/canDriverTypes.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_law_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_law_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_modes_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_modes_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_output_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_output_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_setpoint_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_setpoint_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_source_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/control_source_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/fragment_0x200_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/fragment_0x200_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/fragment_drop_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/fragment_drop_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/fragment_reassembly_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/fragment_reassembly_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gps_fix_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gps_fix_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gyroscope_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/gyroscope_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/heartbeat_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/heartbeat_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hx_cyphertext.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/hx_cyphertext.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_CAN_hw_CAN_get_can_message_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_CAN_hw_CAN_get_can_message_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_CAN_hw_CAN_get_status_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_CAN_hw_CAN_get_status_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_Server_CAN_get_pt_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/input_Server_CAN_get_pt_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_asserts.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_asserts.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_serialize.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_serialize.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_templates.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/ivory_templates.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/libminitower/include/ivory_serialize_prim.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/magnetometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/magnetometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_CAN_CAN_hw_put_abort_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_CAN_CAN_hw_put_abort_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_CAN_CAN_hw_put_can_message_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_CAN_CAN_hw_put_can_message_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_CAN_Server_put_pt_data_monitor.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/output_CAN_Server_put_pt_data_monitor.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/packed_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/packed_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/pid_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/position_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/position_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_alarms_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_alarms_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/px4io_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/quadcopter_motors_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/quadcopter_motors_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rc_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rc_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_magic_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_magic_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_req_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/reboot_req_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rgb_led_setting_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/rgb_led_setting_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sensors_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sensors_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_num_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_num_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_accelerometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_accelerometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_alt_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_alt_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_arming_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_arming_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_att_control_debug_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_att_control_debug_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_barometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_barometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_camera_target_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_camera_target_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_law_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_law_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_modes_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_modes_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_output_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_output_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_setpoint_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_control_setpoint_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_float_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_float_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_gyroscope_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_gyroscope_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_magnetometer_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_magnetometer_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_packed_status_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_packed_status_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_pid_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_pid_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_position_sample_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_position_sample_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_px4io_state_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_px4io_state_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_quadcopter_motors_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_quadcopter_motors_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rc_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rc_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_reboot_req_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_reboot_req_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rgb_led_setting_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_rgb_led_setting_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_sensors_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_sensors_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_stab_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_stab_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_throttle_ui_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_throttle_ui_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_tristate_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_tristate_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_user_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_xyz_calibration_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/sequence_numbered_xyz_calibration_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server_CAN_intermon.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Server_CAN_intermon.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/stab_config_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/stab_config_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_mode_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_ui_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/throttle_ui_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/time_micros_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/time_micros_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerUartDeps.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerUartDeps.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/tristate_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/tristate_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_result_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_result_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/user_input_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_calibration_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_calibration_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/xyz_types.h"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/yaw_mode_types.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/yaw_mode_types.h"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Sends_Events_To">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="{{}}"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Compute_Entrypoint_Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="component_entry"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Initialize_Entrypoint_Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="component_init"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Period">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.3" value="100"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedDataPort name="to_server" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.Array.U8_80"/>
+      <ownedEventDataPort name="fragment_request" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.can_message.i"/>
+      <ownedEventDataPort name="fragment_complete" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.can_message.i"/>
+      <ownedEventDataPort name="from_server" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.Array.U8_80"/>
+      <ownedEventDataPort name="get_status" in="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Boolean"/>
+      <ownedEventDataPort name="fragement_reasembly" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.can_message.i"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="CAN_driver">
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Is_External">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:BooleanLiteral" value="true"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.3/@ownedLiteral.1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Thread_Type">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.10/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RangeValue">
+            <minimum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="10"/>
+            <maximum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="100"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Sends_Events_To">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:StringLiteral" value="{{}}"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="CAN_driver.c"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedEventDataPort name="receive" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.can_message.i"/>
+      <ownedEventDataPort name="status" out="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Boolean"/>
+      <ownedEventDataPort name="send" in="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.can_message.i"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="Virtual_Machine">
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Is_External">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:BooleanLiteral" value="true"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.3/@ownedLiteral.1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#SMACCM_SYS.Thread_Type">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/aadl2rtos_resource/SMACCM_SYS.aadl#/0/@ownedProperty.10/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RangeValue">
+            <minimum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="10"/>
+            <maximum xsi:type="aadl2:IntegerLiteral" unit="../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#/0/@ownedPropertyType.12/@ownedLiteral.2" value="100"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Programming_Properties.aadl#Programming_Properties.Source_Text">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:ListValue">
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/Virtual_Machine.c"/>
+            <ownedListElement xsi:type="aadl2:StringLiteral" value="usercode/towerCameraVMDeps.h"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedDataPort name="camera_data" out="true" dataFeatureClassifier="aadl2:DataImplementation SMACCM_DATA.aadl#SMACCM_DATA.camera_data.i"/>
+    </ownedClassifier>
+  </ownedPublicSection>
+</aadl2:Package>

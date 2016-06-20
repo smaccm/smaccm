@@ -1,0 +1,20 @@
+/*
+ * Copyright 2014, NICTA
+ *
+ * This software may be distributed and modified according to the terms of
+ * the BSD 2-Clause license. Note that NO WARRANTY is provided.
+ * See "LICENSE_BSD2.txt" for details.
+ *
+ * @TAG(NICTA_BSD)
+ */
+
+import "../../interfaces/clk.idl4"; 
+
+
+component clk {
+        provides clk_inf       clktree;
+        dataport Buf           cmu_cpu_clk;
+        dataport Buf           cmu_top_clk;
+        dataport Buf           cmu_core_clk;
+}
+

@@ -186,7 +186,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		Label updatedLabel = new Label(container, SWT.NONE);
 		updatedLabel.setText("Model to Insert Observer:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gridData.widthHint = 150;
+		gridData.widthHint = 180;
 		updatedLabel.setLayoutData(gridData);
 
 		updatedText = new Text(container, SWT.BORDER);
