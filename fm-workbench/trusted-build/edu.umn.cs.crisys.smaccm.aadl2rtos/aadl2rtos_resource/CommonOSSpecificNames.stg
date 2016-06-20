@@ -15,7 +15,7 @@
  *   dispatcherMainLockReleaseStmt
  *   osSpecificIncludeFiles
  *   osSpecificIrqDispatcher
- *   osSpecificRegisterIrqs
+ *   osSpecificThreadInitializer
  *   osSpecificThreadEntrypoint
  *   osSpecificComponentLocalCallerFunction
  *   osSpecificAssert
@@ -92,8 +92,8 @@ dispatcherMainLockReleaseStmt(dispatcher, threadImpl) ::= <<
 <threadImpl.dispatcherMainLockReleaseStmtDoesntExist>
 >>
 
-osSpecificIrqDispatcher(dispatcher) ::= <<
-<genericFailure("osSpecificIrqDispatcher")>
+osSpecificThreadPostInitializer(threadImpl) ::= <<
+<genericFailure("osSpecificThreadInitializer")>
 <dispatcher.osSpecificIrqDispatcherDoesntExist>
 >>
 

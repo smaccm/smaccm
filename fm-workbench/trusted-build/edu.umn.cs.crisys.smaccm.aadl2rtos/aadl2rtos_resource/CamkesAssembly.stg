@@ -151,7 +151,7 @@ connectReaderWriter(connection, srcThreadImpl, model) ::= <<
 <if(connection.sourcePort.isOutputData)><\\>
 <rpcConnection(model.generateConnectionName, 
 	srcThreadImpl.componentInstanceName,
-	connection.srcPort.qualifiedName,
+	connection.sourcePort.qualifiedName,
 	connection.destPortThreadImplementation.componentInstanceName,
 	connection.destPort.name)>
 <endif>

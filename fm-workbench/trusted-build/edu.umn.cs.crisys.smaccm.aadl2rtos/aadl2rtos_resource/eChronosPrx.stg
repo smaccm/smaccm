@@ -128,13 +128,13 @@ $writeMutex(port.mutex)$
 >> 
 
 writeActiveThreadMutexes(threadImpl) ::= <<
-$writeMutex(threadImpl.eChronosThreadDispatcherMutex)$
+$writeMutex(threadImpl.threadDispatcherMutex)$
 $threadImpl.inputPortList:writeInputPortMutex()$
 $threadImpl.externalMutexes:writeMutex()$
 >>
 
 writePassiveThreadMutexes(threadImpl) ::= <<
-$writeMutex(threadImpl.eChronosThreadDispatcherMutex)$
+$writeMutex(threadImpl.threadDispatcherMutex)$
 $threadImpl.externalMutexes:writeMutex()$
 >>
 

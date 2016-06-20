@@ -47,7 +47,7 @@ public class Model {
 	private String systemImplementationName;
 	private String systemInstanceName;
 	
-	public enum OSTarget {CAmkES, eChronos}; 
+	public enum OSTarget {CAmkES, eChronos, VxWorks}; 
 	private OSTarget osTarget = OSTarget.eChronos;
 		
 	// Currently supported targets: QEMU, ODROID, PX4, X86

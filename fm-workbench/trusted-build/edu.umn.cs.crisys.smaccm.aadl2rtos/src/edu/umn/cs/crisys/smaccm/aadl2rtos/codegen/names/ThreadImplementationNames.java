@@ -266,12 +266,12 @@ public class ThreadImplementationNames {
     return tn;
   }
   
-  public String getEChronosThreadDispatcherMutex() {
+  public String getThreadDispatcherMutex() {
 	  return "smaccm_" + ti.getNormalizedName() + "_dispatcher_mtx";
   }
   
   public String getEChronosThreadDispatcherMutexConst() {
-	  return (ModelNames.getEChronosPrefix() + "_MUTEX_ID_" + this.getEChronosThreadDispatcherMutex()).toUpperCase();
+	  return (ModelNames.getEChronosPrefix() + "_MUTEX_ID_" + this.getThreadDispatcherMutex()).toUpperCase();
   }
 
   public String getEChronosTaskIdConst() {

@@ -129,6 +129,8 @@ public class AadlModelParser {
 	    model.setOsTarget(Model.OSTarget.eChronos);
 	  } else if ("camkes".equalsIgnoreCase(OS)) {
 	    model.setOsTarget(Model.OSTarget.CAmkES);
+	  } else if ("vxworks".equalsIgnoreCase(OS)) {
+		model.setOsTarget(Model.OSTarget.VxWorks);  
 	  } else {
 	    this.logger.error("OS target: [" + OS + "] not recognized by aadl2rtos");
 	    throw new Aadl2RtosException("Parse failure on OS target property ");

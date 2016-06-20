@@ -46,10 +46,12 @@ writeUdePrototype(dispatcher) ::= <<
 
 writePortWriterPrototype(port) ::= <<
 bool <port.aadlWriterFnName>(<if(port.hasData)>const <port.type.aadlInputType.name> <port.name><else>void<endif>); 
+
 >>
 
 writePortReaderPrototype(port) ::= <<
 bool <port.aadlReaderFnName>(<if(port.hasData)><port.type.aadlOutputType.name> <port.name><else>void<endif>); 
+
 >>
 
 

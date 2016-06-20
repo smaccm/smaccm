@@ -13,7 +13,8 @@ outgoingPortWriterName(connection) ::= <<
 <connection.name>_<connection.sourcePort.type.writerFn>
 >>
 
-osSpecificThreadEntrypoint(threadImpl) ::= "run"
+osSpecificThreadEntrypoint(threadImpl) ::= "int run(void)"
+osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
 
 incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
 outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
@@ -52,6 +53,10 @@ void <incomingActiveThreadDispatchName(dispatcher)>() {
 
 osSpecificRegisterIrqs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL);
 <endif> >>
+
+osSpecificThreadPostInitializer(threadImpl) ::= <<
+<threadImpl.dispatchers:osSpecificRegisterIrqs()>
+>>
 
 osSpecificComponentLocalCallerFunction(connection) ::= <<
 /************************************************************************

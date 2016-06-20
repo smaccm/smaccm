@@ -320,7 +320,7 @@ componentRemoteCallerFunction(connection) ::= <<
  * 
  ************************************************************************/
 
-bool <connection.sourcePort.aadlWriterFnName>(const <connection.sourcePort.type.aadlInputType.name> <srcPort.name>) {
+bool <connection.sourcePort.aadlWriterFnName>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
 	return <outgoingPortWriterName(connection)>(<connection.sourcePort.name>);
 }
 
@@ -689,7 +689,7 @@ dispatcherComponentMainFunction(threadImpl) ::= <<
  * 
  ************************************************************************/
 
-int <osSpecificThreadEntrypoint(threadImpl)>() {
+<osSpecificThreadEntrypoint(threadImpl)> {
 	// port initialization routines (if any)... 
 	<threadImpl.portList:portInitializer()>
 	
@@ -699,7 +699,7 @@ int <osSpecificThreadEntrypoint(threadImpl)>() {
 	  <activeThreadInternalDispatcherName(threadImpl.initializeEntrypointOpt)>(&dummy_time);<endif>
 
 	// register interrupt handlers (if any)...
-	<threadImpl.dispatchers:osSpecificRegisterIrqs()>
+	<osSpecificThreadPostInitializer(threadImpl)>	
 	
 	// initial lock to await dispatch input.
 	<dispatcherMainInitializeLockStmt(threadImpl)>
@@ -710,7 +710,7 @@ int <osSpecificThreadEntrypoint(threadImpl)>() {
 		<threadImpl.dispatchers:drainDispatcher()>
 	}
 	// won't ever get here, but form must be followed
-	return 0;
+	<osSpecificThreadReturnStmt(threadImpl)>
 }
 
 

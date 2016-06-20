@@ -4,10 +4,9 @@ import "CommonComponentC.stg"
  * Overrides for OS-specific names/behavior for generated C code.
  * 
  */
-// import "eChronosCNames.stg"
-// import does not override declarations.  Why?
-osSpecificThreadEntrypoint(threadImpl) ::= "int <threadImpl.threadImplMainFnName>(void)"
-osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
+
+osSpecificThreadEntrypoint(threadImpl) ::= "<threadImpl.threadImplMainFnName>"
+osSpecificThreadReturnStmt(threadImpl) ::= "return; "
 
 incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerFn>"
 
@@ -21,29 +20,30 @@ incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.
 outgoingUserEntrypointCallerName(dispatcher) ::= "<incomingUserEntrypointCallerName(dispatcher)>"
 
 portLockStmt(port) ::= << 
-rtos_mutex_lock(<port.eChronosMutexConst>);  
+semTake(<port.mutex>, WAIT_FOREVER);  
 
 >>
 
 portUnlockStmt(port) ::= <<
-rtos_mutex_unlock(<port.eChronosMutexConst>); 
+semGive(<port.mutex>); 
 
 >>
 
 portDispatcherLock(dispatcher) ::= <<
-rtos_mutex_lock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
-
+semTake(<dispatcher.threadImplementation.threadDispatcherMutex>, WAIT_FOREVER);
 >>
 
 portDispatcherUnlock(dispatcher) ::= <<
-rtos_mutex_unlock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
-
+semGive(<dispatcher.threadImplementation.threadDispatcherMutex>);
 >>
 
 dispatcherMainInitializeLockStmt(threadImpl) ::= " "
 
+osSpecificThreadPostInitializer(threadImpl) ::= " "
+
+
 dispatcherMainLockWaitStmt(threadImpl) ::= <<
-	rtos_signal_wait(<threadImpl.eChronosDispatchSignalConst>);
+	semTake(<threadImpl.threadDispatcherMutex>);
 >>
 
 dispatcherMainLockReleaseStmt(dispatcher) ::= <<
@@ -56,7 +56,7 @@ dispatcherMainLockReleaseStmt(dispatcher) ::= <<
 osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u003C>smaccm_decls.h<\u003E>
 #include <\u003C>string.h<\u003E>
-
+#include <\u003C>wdLib.h<\u003E>
 >>
 
 osSpecificIrqDispatcher(dispatcher) ::= << 
@@ -68,7 +68,7 @@ bool <incomingActiveThreadDispatchName(dispatcher)>() {
 }
 >>
 
-osSpecificThreadPostInitializer(threadImpl) ::= ""
+osSpecificRegisterIrqs(dispatcher) ::= ""
 
 osSpecificComponentLocalCallerFunction(connection) ::= ""
 
