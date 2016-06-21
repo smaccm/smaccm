@@ -104,7 +104,7 @@ deleteTasks(model) ::= <<
 //
 /////////////////////////////////////////////////////////////////////
 mainFunction(model) ::= <<
-int trusted_build_main(uint runDurationInSeconds) {
+int trusted_build_main(uint32_t runDurationInSeconds) {
 
 	<createMutexes(model)>
 
@@ -135,7 +135,8 @@ int trusted_build_main(uint runDurationInSeconds) {
 
 body(model) ::= <<
 
-#include <\u003C>smaccm_decls.h<\u003E>
+#include <\u0022>smaccm_decls.h<\u0022>
+#include <\u003C>unistd.h<\u003E>
 
 <mainFunction(model)>
 

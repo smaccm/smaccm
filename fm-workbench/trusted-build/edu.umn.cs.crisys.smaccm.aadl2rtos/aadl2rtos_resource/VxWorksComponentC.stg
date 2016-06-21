@@ -5,8 +5,8 @@ import "CommonComponentC.stg"
  * 
  */
 
-osSpecificThreadEntrypoint(threadImpl) ::= "<threadImpl.threadImplMainFnName>"
-osSpecificThreadReturnStmt(threadImpl) ::= "return; "
+osSpecificThreadEntrypoint(threadImpl) ::= "void <threadImpl.threadImplMainFnName>()"
+osSpecificThreadReturnStmt(threadImpl) ::= " "
 
 incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerFn>"
 
@@ -37,26 +37,69 @@ portDispatcherUnlock(dispatcher) ::= <<
 semGive(<dispatcher.threadImplementation.threadDispatcherMutex>);
 >>
 
-dispatcherMainInitializeLockStmt(threadImpl) ::= " "
+dispatcherMainInitializeLockStmt(threadImpl) ::= <<
+semTake(<threadImpl.threadDispatcherMutex>, WAIT_FOREVER);
+>>
 
-osSpecificThreadPostInitializer(threadImpl) ::= " "
+osSpecificThreadPostInitializer(threadImpl) ::= << 
+
+/* TODO: ADD VXWORKS TIMER INITIALIZATION FOR PERIODIC DISPATCH HERE */
+>>
 
 
 dispatcherMainLockWaitStmt(threadImpl) ::= <<
-	semTake(<threadImpl.threadDispatcherMutex>);
+semTake(<threadImpl.threadDispatcherMutex>, WAIT_FOREVER);
 >>
 
 dispatcherMainLockReleaseStmt(dispatcher) ::= <<
-	<if(dispatcher.isIRQ || dispatcher.isPeriodic)>
-	rtos_interrupt_event_raise(<dispatcher.threadImplementation.eChronosInterruptSignalConst>);<else>
-	rtos_signal_send(<dispatcher.threadImplementation.eChronosTaskIdConst>, <dispatcher.threadImplementation.eChronosDispatchSignalConst>);
-	<endif>
+semGive(<dispatcher.threadImplementation.threadDispatcherMutex>);
 >>
 
+
+activeThreadDecls(threadImpl) ::= <<
+// task id for the thread
+int <threadImpl.normalizedName>;
+>>
+
+passiveThreadDecls(threadImpl) ::= << >>
+
+
+writeActiveThreadMutexes(threadImpl) ::= <<
+/* dispatcher, input port, and external mutexes for active thread <threadImpl.normalizedName> */
+SEM_ID <threadImpl.threadDispatcherMutex>;
+<threadImpl.inputPortList:{port | SEM_ID <port.mutex>;
+}>
+<threadImpl.externalMutexes:{ m | SEM_ID <m>;
+}>
+>>
+
+writePassiveThreadMutexes(threadImpl) ::= <<
+/* dispatcher and external mutex for passive thread (monitor) <threadImpl.normalizedName> */
+SEM_ID <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m | SEM_ID <m>;
+}>
+>>
+
+writeDecls(threadImpl) ::= <<
+<if(threadImpl.isActive)>
+<activeThreadDecls(threadImpl)>
+<writeActiveThreadMutexes(threadImpl)>
+<else>
+<passiveThreadDecls(threadImpl)>
+<writePassiveThreadMutexes(threadImpl)>
+<endif>
+>>
+
+
 osSpecificIncludeFiles(threadImpl) ::= <<
-#include <\u003C>smaccm_decls.h<\u003E>
+#include <\u0022>smaccm_decls.h<\u0022>
 #include <\u003C>string.h<\u003E>
-#include <\u003C>wdLib.h<\u003E>
+#include <\u003C>timers.h<\u003E>
+#include <\u003C>unistd.h<\u003E>
+
+<writeDecls(threadImpl)>
+/* TODO: VXWORKS: ADD DECLARATIONS FOR TIMER FOR PERIODIC THREADS HERE */
+
 >>
 
 osSpecificIrqDispatcher(dispatcher) ::= << 

@@ -59,7 +59,8 @@ bool <incomingPortWriterName(port)><if(port.hasData)>(const <port.type.camkesInp
 
 activeThreadDecls(threadImpl) ::= <<
 // task id for the thread
-int <threadImpl.normalizedName>;
+extern int <threadImpl.normalizedName>;
+<osSpecificThreadEntrypoint(threadImpl)>;
 <threadImpl.inputPortList:writerDecl()>
 >>
 
@@ -70,23 +71,23 @@ passiveThreadDecls(threadImpl) ::= <<
 
 writeActiveThreadMutexes(threadImpl) ::= <<
 /* dispatcher, input port, and external mutexes for active thread <threadImpl.normalizedName> */
-SEM_ID <threadImpl.threadDispatcherMutex>;
-<threadImpl.inputPortList:{port | SEM_ID <port.mutex>;
+extern SEM_ID <threadImpl.threadDispatcherMutex>;
+<threadImpl.inputPortList:{port | extern SEM_ID <port.mutex>;
 }>
-<threadImpl.externalMutexes:{ m | SEM_ID <m>;
+<threadImpl.externalMutexes:{ m | extern SEM_ID <m>;
 }>
 >>
 
 writePassiveThreadMutexes(threadImpl) ::= <<
 /* dispatcher and external mutex for passive thread (monitor) <threadImpl.normalizedName> */
-SEM_ID <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m | SEM_ID <m>;
+extern SEM_ID <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m | extern SEM_ID <m>;
 }>
 >>
 
 writeMutexes(model) ::= <<
 /* model-level external mutexes */
-<model.externalMutexList:{ m | SEM_ID <m>;
+<model.externalMutexList:{ m | extern SEM_ID <m>;
 }>
 
 <model.activeThreadImplementations:writeActiveThreadMutexes()>
@@ -101,13 +102,13 @@ headerBody(model) ::= <<
 #include \<stdint.h>
 #include \<semLib.h>
 #include \<taskLib.h>
-#include <\u003C><model.systemTypeHeaderName><\u003E>
+#include <\u0022><model.systemTypeHeaderName><\u0022>
 
 // to initialize periodic dispatcher.  Call from main() before
 // starting OS.
 
 bool initialize_periodic_dispatcher(); 
-bool trusted_build_main(); 
+int trusted_build_main(uint32_t runDurationInSeconds); 
    <model.activeThreadImplementations:activeThreadDecls()>
    <model.passiveThreadImplementations:passiveThreadDecls()>
    

@@ -10,11 +10,19 @@ import "CommonCPrototypes.stg"
  *   outgoingActiveThreadDispatchName
  *   incomingUserEntrypoingCallerName
  *   outgoingUserEntrypointCallerName
- * 	 portDispatcherLock
+ * 	 portLockStmt
+ *   portUnlockStmt
+ *   portDispatcherLock
  *   portDispatcherUnlock
  *   dispatcherMainInitializeLockStmt
  *   dispatcherMainLockWaitStmt
  *   dispatcherMainLockReleaseStmt
+ *   osSpecificIncludeFiles
+ *   osSpecificIrqDispatcher
+ *   osSpecificThreadInitializer
+ *   osSpecificThreadEntrypoint
+ *   osSpecificComponentLocalCallerFunction
+ *   osSpecificAssert
  *
  * Dummy declarations are provided by CommonOSSpecificNames.
  * These must be overridden by redefinition (see CamkesComponentC.stg
@@ -322,12 +330,12 @@ componentRemoteCallerFunction(connection) ::= <<
 
 bool <connection.sourcePort.aadlWriterFnName>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
 	return <outgoingPortWriterName(connection)>(<connection.sourcePort.name>);
-}
+} 
 
 >>
 
 componentRemoteWriterDecl(srcPort) ::= <<
-<srcPort.connections:componentRemoteCallerFunction()>}>
+<srcPort.connections:componentRemoteCallerFunction()>
 >>
 
 
@@ -749,7 +757,7 @@ portDispatchVarDeclarations(port) ::= <<
 
 componentCFileDecls(threadImpl) ::= <<
 
-#include <\u003C><threadImpl.componentGlueCodeHFileName><\u003E>
+#include <\u0022><threadImpl.componentGlueCodeHFileName><\u0022>
 <osSpecificIncludeFiles(threadImpl)>
 
 <if(threadImpl.isActive)><\\>

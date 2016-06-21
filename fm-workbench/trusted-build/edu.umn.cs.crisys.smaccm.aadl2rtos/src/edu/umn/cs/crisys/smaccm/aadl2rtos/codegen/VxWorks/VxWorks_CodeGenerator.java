@@ -90,23 +90,10 @@ public class VxWorks_CodeGenerator extends CodeGeneratorBase {
   }
   
   // create this only if we have periodic threads.
-  
+ 
+  // this is a no-op for VxWorks.
   @Override
-  public void createPeriodicDispatcherComponent() throws Aadl2RtosFailure {
-    ModelNames mn = new ModelNames(model); 
-    
-    File componentDirectory = getComponentDirectory(componentsDirectory, mn.getThreadCalendar().getPeriodicDispatcherComponentName());
-    componentDirectory.mkdirs();
-  
-    File srcDirectory = getComponentSourceDirectory(componentDirectory);
-    srcDirectory.mkdirs();
-    
-    File includeDirectory = getComponentHeaderDirectory(componentDirectory);
-    includeDirectory.mkdirs();
-    
-    createClockDriver(srcDirectory, includeDirectory);
-    createPeriodicDispatcherCFile(srcDirectory); 
-  }
+  public void createPeriodicDispatcherComponent() throws Aadl2RtosFailure {   }
 
 
   @Override
