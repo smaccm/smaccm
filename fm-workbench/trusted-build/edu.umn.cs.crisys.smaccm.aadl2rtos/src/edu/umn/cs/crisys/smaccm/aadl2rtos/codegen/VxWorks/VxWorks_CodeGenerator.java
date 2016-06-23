@@ -75,8 +75,6 @@ public class VxWorks_CodeGenerator extends CodeGeneratorBase {
   }
 
   public void createPeriodicDispatcherCFile(File srcDirectory) throws Aadl2RtosFailure {
-	  // MWW: TODO
-	  /*
 	ModelNames mn = new ModelNames(model);
     ThreadCalendarNames tcn = new ThreadCalendarNames(model.getThreadCalendar());
 
@@ -86,7 +84,6 @@ public class VxWorks_CodeGenerator extends CodeGeneratorBase {
         tcn.getPeriodicDispatcherComponentName(), false, tcn.getPeriodicDispatcherCFileName());
     
     model.getSourceFiles().add(tcn.getPeriodicDispatcherCFileName());
-*/
   }
   
   // create this only if we have periodic threads.
