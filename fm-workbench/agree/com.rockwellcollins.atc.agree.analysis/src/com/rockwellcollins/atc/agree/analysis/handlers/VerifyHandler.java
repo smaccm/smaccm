@@ -141,7 +141,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             } else if (isRealizability()) {
-                AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+                AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, false);
                 Program program = LustreAstBuilder.getRealizabilityLustreProgram(agreeProgram);
                 wrapper.addChild(
                         createVerification("Realizability Check", si, program, agreeProgram, AnalysisType.Realizability));
@@ -159,7 +159,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private void wrapVerificationResult(ComponentInstance si, CompositeAnalysisResult wrapper) {
-        AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+        AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, isMonolithic());
  
         // generate different lustre depending on which model checker we are
         // using
@@ -171,10 +171,10 @@ public abstract class VerifyHandler extends AadlHandler {
             }
             program = LustreContractAstBuilder.getContractLustreProgram(agreeProgram);
         } else {
-            program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, isMonolithic());
+            program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram);
         }
         List<Pair<String, Program>> consistencies =
-                LustreAstBuilder.getConsistencyChecks(agreeProgram, isMonolithic());
+                LustreAstBuilder.getConsistencyChecks(agreeProgram);
 
         wrapper.addChild(
                 createVerification("Contract Guarantees", si, program, agreeProgram, AnalysisType.AssumeGuarantee));

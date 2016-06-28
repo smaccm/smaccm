@@ -140,14 +140,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private static Set<RecordType> globalTypes;
     private static Map<NamedElement, String> typeMap;
     private ComponentInstance curInst; // used for Get_Property Expressions
+    private boolean isMonolithic = false;
 
-    public AgreeProgram getAgreeProgram(ComponentInstance compInst) {
+    public AgreeProgram getAgreeProgram(ComponentInstance compInst, boolean isMonolithic) {
 
+    	this.isMonolithic = isMonolithic;
         globalNodes = new ArrayList<>();
         globalTypes = new HashSet<>();
         typeMap = new HashMap<>();
 
-        AgreeNode topNode = getAgreeNode(compInst);
+        AgreeNode topNode = getAgreeNode(compInst, true);
         List<AgreeNode> agreeNodes = gatherNodes(topNode);
 
         // have to convert the types. The reason we use Record types in the
@@ -158,6 +160,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
         // if there are any patterns in the AgreeProgram we need to inline them
         program = AgreePatternTranslator.translate(program);
+        program = AgreeInlineLatchedConnections.translate(program);
 
         // go through the extension registries and transform the program
         AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
@@ -181,7 +184,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return nodes;
     }
 
-    private AgreeNode getAgreeNode(ComponentInstance compInst) {
+    private AgreeNode getAgreeNode(ComponentInstance compInst, boolean isTop) {
         List<AgreeVar> inputs = new ArrayList<>();
         List<AgreeVar> outputs = new ArrayList<>();
         List<AgreeVar> locals = new ArrayList<>();
@@ -204,12 +207,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         boolean foundSubNode = false;
         boolean hasDirectAnnex = false;
         ComponentClassifier compClass = compInst.getComponentClassifier();
-        if (compClass instanceof ComponentImplementation) {
+        if (compClass instanceof ComponentImplementation && (isTop || isMonolithic)) {
             AgreeContractSubclause annex = getAgreeAnnex(compClass);
 
             for (ComponentInstance subInst : compInst.getComponentInstances()) {
                 curInst = subInst;
-                AgreeNode subNode = getAgreeNode(subInst);
+                AgreeNode subNode = getAgreeNode(subInst, false);
                 if (subNode != null) {
                     foundSubNode = true;
                     subNodes.add(subNode);
@@ -249,6 +252,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             // make compClass the type so we can get it's other contract
             // elements
             compClass = ((ComponentImplementation) compClass).getType();
+        }else if (compClass instanceof ComponentImplementation)  {
+        	compClass = ((ComponentImplementation) compClass).getType();
         }
         curInst = compInst;
 

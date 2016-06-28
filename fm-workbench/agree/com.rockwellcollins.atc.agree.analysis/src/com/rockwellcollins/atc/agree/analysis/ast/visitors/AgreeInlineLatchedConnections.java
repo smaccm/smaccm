@@ -41,7 +41,7 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
         builder.clearSubNodes();
 
         for (AgreeNode subNode : node.subNodes) {
-            AgreeNode newSubNode = visit(subNode);
+            AgreeNode newSubNode = (AgreeNode) subNode.accept(this);
             builder.addSubNode(newSubNode);
         }
 
@@ -59,7 +59,7 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
     private void addLatchedInputEqs(AgreeNodeBuilder builder, AgreeNode subNode) {
         for (AgreeVar var : subNode.inputs) {
             AgreeVar latchVar =
-                    new AgreeVar(subNode.id + "__" + var.id + LATCHED_SUFFIX, var.type, var.reference);
+                    new AgreeVar(subNode.id + "__" + var.id + LATCHED_SUFFIX, var.type, null);
             builder.addLocal(latchVar);
 
             Expr clockExpr = new IdExpr(subNode.id + AgreeASTBuilder.clockIDSuffix);
@@ -68,7 +68,8 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
             Equation latchEq = equation("latchVar = " + sourceVarName
                     + " -> if pre clockVar or not clockVar then pre latchVar else " + sourceVarName + ";",
                     to("latchVar", latchVar), to("clockVar", clockExpr));
-            builder.addLocalEquation(new AgreeEquation(latchEq, var.reference));
+
+            builder.addLocalEquation(new AgreeEquation(latchEq, null));
         }
     }
 

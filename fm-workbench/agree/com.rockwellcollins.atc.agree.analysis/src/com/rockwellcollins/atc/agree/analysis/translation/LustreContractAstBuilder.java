@@ -278,7 +278,8 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         }
 
         if (agreeNode.timing == TimingModel.LATCHED) {
-            addLatchedConstraints(nodePrefix, inputs, assertions, subAgreeNode, prefix, inputIds);
+            throw new AgreeException("check how we do this in the generic lustre translation now"
+            		+ " to make sure that it is correct");
         }
 
         Expr condactExpr =
