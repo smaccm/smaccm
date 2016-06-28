@@ -232,11 +232,7 @@ public class LustreAstBuilder {
 		}
 
 		equations.addAll(flatNode.localEquations);
-
-		// add realtime constraints
-		if (flatNode.eventTimes.size() != 0) {
-			assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
-		}
+	    assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
 
 		NodeBuilder builder = new NodeBuilder("main");
 		builder.addInputs(inputs);
@@ -387,10 +383,7 @@ public class LustreAstBuilder {
 				}
 			}
 		}
-
-		if (eventTimes.size() != 0) {
-			assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(eventTimes));
-		}
+		assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(eventTimes));
 
 		for (AgreeVar var : agreeNode.inputs) {
 			inputs.add(var);
