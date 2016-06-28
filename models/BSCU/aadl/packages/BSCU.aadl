@@ -138,6 +138,9 @@ with Base_Types,QS_Properties;
       Fail: in data port Base_Types::Boolean;
     properties
       QS_Properties::Primary_Side => false;
+Source_Text => ("C:\\Users\\jdbackes\\git\\smaccm\\models\\Simulink_models\\BSCU\\scripts",
+								"C:\\Users\\jdbackes\\git\\smaccm\\models\\Simulink_models\\BSCU\\models\\MON_sl.slx", "MON_sl_after.slx",
+								"MON_Functional");
     annex agree {**
       
       -- Inserted from /contracts/MON.txt
