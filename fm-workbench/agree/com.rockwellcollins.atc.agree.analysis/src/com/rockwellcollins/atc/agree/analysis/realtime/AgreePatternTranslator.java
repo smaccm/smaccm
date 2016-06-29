@@ -410,6 +410,12 @@ public class AgreePatternTranslator {
         builder.addLocalEquation(new AgreeEquation(timerId, timerExpr, varReference));
         }
         
+        //property that should be true for timer to help induction
+        {
+        Expr expr = new BinaryExpr(timerId, BinaryOp.GREATEREQUAL, new RealExpr(BigDecimal.ZERO));
+        builder.addAssertion(new AgreeStatement(null, expr, varReference));	
+        }
+        
         //record => cause and not (e and (l = 0))
         
         {
@@ -653,7 +659,7 @@ public class AgreePatternTranslator {
         //causeHeld = (t = causeHeldTimeout)
         Expr causeHeldExpr = new BinaryExpr(timeExpr, BinaryOp.EQUAL, causeHeldTimeoutId);
         builder.addLocalEquation(new AgreeEquation(causeHeldId, causeHeldExpr, pattern));
-        }
+        }		
         
         return causeHeldId;
     }
