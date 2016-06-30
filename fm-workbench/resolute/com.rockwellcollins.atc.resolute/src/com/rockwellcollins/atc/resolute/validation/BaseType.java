@@ -1,8 +1,16 @@
 package com.rockwellcollins.atc.resolute.validation;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.osate.aadl2.Access;
 import org.osate.aadl2.ComponentCategory;
+import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.instance.InstanceObject;
 
 import com.rockwellcollins.atc.resolute.resolute.Type;
 
@@ -67,17 +75,27 @@ public class BaseType extends ResoluteType {
 		this.name = name;
 	}
 
-	public BaseType(ComponentCategory category) {
-		this.name = category.getName().replace(" ", "_");
+	public BaseType(InstanceObject io) {
+		if (io instanceof FeatureInstance) {
+			FeatureInstance fi = (FeatureInstance) io;
+			String prefix = "";
+			if (fi.getFeature() instanceof Access) {
+				Access acc = (Access) fi.getFeature();
+				prefix = acc.getKind().toString() + "_";
+			}
+			this.name = prefix + convertCamelCase(fi.getCategory().toString());
+		} else if (io instanceof ComponentInstance) {
+			ComponentInstance ci = (ComponentInstance) io;
+			this.name = ci.getCategory().getName().replace(" ", "_");
+		} else if (io instanceof ConnectionInstance) {
+			this.name = "connection";
+		} else {
+			this.name = "aadl";
+		}
 	}
 
-	public BaseType(FeatureInstance fi) {
-		String prefix = "";
-		if (fi.getFeature() instanceof Access) {
-			Access acc = (Access) fi.getFeature();
-			prefix = acc.getKind().toString() + "_";
-		}
-		this.name = prefix + convertCamelCase(fi.getCategory().toString());
+	public BaseType(ComponentCategory cc) {
+		this.name = cc.getName().replace(" ", "_");
 	}
 
 	private String convertCamelCase(String str) {
@@ -92,6 +110,17 @@ public class BaseType extends ResoluteType {
 			}
 		}
 		return result.toString();
+	}
+
+	private final BaseType[] INSTANCE_TYPES = { AADL, COMPONENT, ABSTRACT, BUS, DATA, DEVICE, MEMORY, PROCESSOR,
+			PROCESS, SUBPROGRAM_GROUP, SUBPROGRAM, SYSTEM, THREAD_GROUP, THREAD, VIRTUAL_BUS, VIRTUAL_PROCESSOR,
+			CONNECTION, PROPERTY, FEATURE, PORT, DATA_PORT, EVENT_PORT, EVENT_DATA_PORT, FEATURE_GROUP, ACCESS,
+			BUS_ACCESS, PROVIDES_BUS_ACCESS, REQUIRES_BUS_ACCESS, DATA_ACCESS, PROVIDES_DATA_ACCESS,
+			REQUIRES_DATA_ACCESS, SUBPROGRAM_ACCESS, PROVIDES_SUBPROGRAM_ACCESS, REQUIRES_SUBPROGRAM_ACCESS,
+			SUBPROGRAM_GROUP_ACCESS, PROVIDES_SUBPROGRAM_GROUP_ACCESS, REQUIRES_SUBPROGRAM_GROUP_ACCESS };
+
+	public List<BaseType> getAllSuperTypes() {
+		return Arrays.stream(INSTANCE_TYPES).filter(this::subtypeOf).collect(toList());
 	}
 
 	@Override
@@ -114,7 +143,7 @@ public class BaseType extends ResoluteType {
 		}
 
 		if ((name.equalsIgnoreCase("real")) && (otherType.toString().equalsIgnoreCase("int"))) {
-//			System.out.println("case from int to real");
+			// System.out.println("case from int to real");
 			return true;
 		}
 
@@ -154,8 +183,8 @@ public class BaseType extends ResoluteType {
 				return subtypeOf(PROVIDES_SUBPROGRAM_GROUP_ACCESS) || subtypeOf(REQUIRES_SUBPROGRAM_GROUP_ACCESS);
 
 			default: {
-//				System.out.println("this=" + this.name);
-//				System.out.println("other=" + otherType.toString());
+				// System.out.println("this=" + this.name);
+				// System.out.println("other=" + otherType.toString());
 				return false;
 			}
 			}
@@ -205,11 +234,10 @@ public class BaseType extends ResoluteType {
 			com.rockwellcollins.atc.resolute.resolute.BaseType bt = (com.rockwellcollins.atc.resolute.resolute.BaseType) otherType;
 			String otherTypeName = bt.getType();
 
-//			System.out.println("other type=" + otherTypeName);
-//			System.out.println("this  type=" + name);
+			// System.out.println("other type=" + otherTypeName);
+			// System.out.println("this type=" + name);
 			return otherTypeName.equalsIgnoreCase(name);
 		}
 		return false;
 	}
-
 }
