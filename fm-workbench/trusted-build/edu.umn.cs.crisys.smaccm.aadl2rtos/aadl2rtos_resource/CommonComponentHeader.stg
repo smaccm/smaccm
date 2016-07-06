@@ -60,7 +60,7 @@ portInitializer(port) ::= <<
 <endif>
 >>
 
-componentGlueCodeHeaderBody(threadImpl) ::= <<
+componentGlueCodeHeaderBodyFunctions(threadImpl) ::= << 
 	// These are functions that are expected to be provided by the user.
 	<threadImpl.dispatchers:writeUdePrototype()>
 	<threadImpl.portList:portInitializer()>
@@ -76,6 +76,10 @@ componentGlueCodeHeaderBody(threadImpl) ::= <<
 		//
 		//////////////////////////////////////////////////////////////////////////
 	<endif>	
+>>
+
+componentGlueCodeHeaderBody(threadImpl) ::= <<
+<componentGlueCodeHeaderBodyFunctions(threadImpl)>
 >>
 
 filePostfix(name, path) ::= <<

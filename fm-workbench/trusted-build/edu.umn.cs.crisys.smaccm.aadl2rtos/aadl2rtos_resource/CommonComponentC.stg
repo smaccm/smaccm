@@ -535,7 +535,7 @@ aadlDispatcherFunction(dispatcher) ::= <<
  ******************************************************************************/
 static <dispatcher.dispatchStructTypeName> <dispatcher.dispatchStructArgName>;
 
-void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
+static void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
 	
 	// make the call: 
 	<aadlDispatcherFunctionName(dispatcher)>(<aadlDispatcherFunctionArgs(dispatcher)>	
@@ -545,8 +545,10 @@ void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><d
 	// call the aadl dispatchers for any generated output events.
 	// to prevent misuse by malicious clients, we ensure that the number 
 	// of dispatches is less than the maximum allowed dispatch count.
-	uint32_t smaccm_it; 
-	<dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher.dispatchStructArgName)>
+	{
+	  uint32_t smaccm_it; 
+	  <dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher.dispatchStructArgName)>
+	}
 <endif>
 }
 

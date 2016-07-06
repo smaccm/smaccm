@@ -1,6 +1,7 @@
 import "Common.stg"
 import "CommonOSSpecificNames.stg"
 import "CommonCPrototypes.stg"
+import "VxWorksAssemblyHeader.stg"
 
 /*********************************************************************
  *
@@ -116,6 +117,11 @@ deleteTasks(model) ::= <<
 }>
 >>
 
+sharedDataDefinition(sharedData) ::= <<
+<sharedData.type.name> <sharedData.varName>;
+	
+>>
+
 /////////////////////////////////////////////////////////////////////
 //
 // Main function
@@ -148,6 +154,7 @@ int trusted_build_main(uint32_t runDurationInSeconds) {
 >>
 
 
+
 ///////////////////////////////////////////////////////////////////////////
 //
 // Putting it all together...
@@ -160,6 +167,14 @@ body(model) ::= <<
 #include <\u003C>unistd.h<\u003E>
 #include <\u003C>sysLib.h<\u003E>
 #include <\u003C>assert.h<\u003E>
+
+<if(model.sharedData)>
+// shared data definitions for tasks
+<model.sharedData:sharedDataDefinition()>
+<endif>
+
+<writeModelMutexes(model, "")>
+
 
 <mainFunction(model)>
 

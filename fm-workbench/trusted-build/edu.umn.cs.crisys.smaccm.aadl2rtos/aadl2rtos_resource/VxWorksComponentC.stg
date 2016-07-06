@@ -50,8 +50,14 @@ createWatchdogs(threadImpl) ::= <<
 <threadImpl.dispatchers:{dispatcher |<createWatchdog(dispatcher)> }>
 >>
 
+invokeWatchdog(dispatcher) ::= <<
+<if(dispatcher.isPeriodic)> <periodicClock(dispatcher)> = wdCreate();
+<periodicClockFn(dispatcher)>();
+<endif> >>  
+
+
 invokeWatchdogs(threadImpl) ::= <<
-<threadImpl.dispatchers:{dispatcher |<periodicClockFn(dispatcher)>; }>
+<threadImpl.dispatchers:invokeWatchdog()>
 >>
 
 osSpecificThreadPostInitializer(threadImpl) ::= << 
@@ -77,6 +83,10 @@ int <threadImpl.normalizedName>;
 
 passiveThreadDecls(threadImpl) ::= << >>
 
+sharedDataDecl(sharedDataAccessor) ::= <<
+extern <sharedDataAccessor.type.name> <sharedDataAccessor.sharedData.varName>;
+<sharedDataAccessor.type.name> *<sharedDataAccessor.name> = &<sharedDataAccessor.sharedData.varName>;
+>>
 
 writeActiveThreadMutexes(threadImpl) ::= <<
 /* dispatcher, input port, and external mutexes for active thread <threadImpl.normalizedName> */
@@ -102,9 +112,14 @@ writeDecls(threadImpl) ::= <<
 <passiveThreadDecls(threadImpl)>
 <writePassiveThreadMutexes(threadImpl)>
 <endif>
+<if(threadImpl.sharedDataAccessorList)>
+
+// shared data declarations
+<threadImpl.sharedDataAccessorList:sharedDataDecl()>
+<endif>
 >>
 
-periodicClockFn(dispatcher) ::= "<dispatcher.name>_callback(void)" 
+periodicClockFn(dispatcher) ::= "<dispatcher.name>_callback" 
 
 periodicClock(dispatcher) ::= "<dispatcher.name>_clock"
 
@@ -120,7 +135,7 @@ osSpecificCreateWatchdog(dispatcher) ::= <<
 
 WDOG_ID <periodicClock(dispatcher)>;
 
-static void <periodicClockFn(dispatcher)>
+static void <periodicClockFn(dispatcher)>(void)
 {
 	bool dispatcherOk;
 	dispatcherOk = wdStart(<periodicClock(dispatcher)>, 
@@ -137,6 +152,7 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u003C>string.h<\u003E>
 #include <\u003C>wdLib.h<\u003E>
 #include <\u003C>unistd.h<\u003E>
+#include <\u003C>assert.h<\u003E>
 
 
 <writeDecls(threadImpl)>
