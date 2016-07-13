@@ -615,7 +615,7 @@ public class AgreePatternTranslator {
         builder.addLocal(causeRiseTimeVar);
         builder.addLocal(causeFallTimeVar);
         builder.addLocal(causeHeldVar);
-        builder.addLocal(causeHeldTimeoutVar);
+        builder.addInput(causeHeldTimeoutVar);
         
         IdExpr causeFallTimeId = new IdExpr(causeFallTimeVar.id);
         IdExpr causeHeldId = new IdExpr(causeHeldVar.id);
@@ -651,7 +651,8 @@ public class AgreePatternTranslator {
         
         Expr heldTime = new BinaryExpr(causeRiseTimeId, BinaryOp.PLUS, pattern.causeInterval.high);
         Expr ifExpr = new IfThenElseExpr(cond, heldTime, NEG_ONE);
-        builder.addLocalEquation(new AgreeEquation(causeHeldTimeoutId, ifExpr, pattern));
+        //builder.addLocalEquation(new AgreeEquation(causeHeldTimeoutId, ifExpr, pattern));
+        builder.addAssertion(new AgreeStatement(null, new BinaryExpr(causeHeldTimeoutId, BinaryOp.EQUAL, ifExpr), pattern));
         builder.addEventTime(causeHeldTimeoutVar);
         }
         
