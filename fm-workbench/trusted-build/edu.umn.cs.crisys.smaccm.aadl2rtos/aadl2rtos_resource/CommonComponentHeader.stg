@@ -21,7 +21,7 @@ filePrefix(name, date, path, datatypesHeader) ::= <<
 #ifndef <componentGlueCodeHeaderIfdef(name)>
 #define <componentGlueCodeHeaderIfdef(name)>
 
-#include <\u003C><datatypesHeader><\u003E>
+#include <\u0022><datatypesHeader><\u0022>
 	
 <DARPALicenseComment()>
 
@@ -60,7 +60,7 @@ portInitializer(port) ::= <<
 <endif>
 >>
 
-componentGlueCodeHeaderBody(threadImpl) ::= <<
+componentGlueCodeHeaderBodyFunctions(threadImpl) ::= << 
 	// These are functions that are expected to be provided by the user.
 	<threadImpl.dispatchers:writeUdePrototype()>
 	<threadImpl.portList:portInitializer()>
@@ -76,6 +76,10 @@ componentGlueCodeHeaderBody(threadImpl) ::= <<
 		//
 		//////////////////////////////////////////////////////////////////////////
 	<endif>	
+>>
+
+componentGlueCodeHeaderBody(threadImpl) ::= <<
+<componentGlueCodeHeaderBodyFunctions(threadImpl)>
 >>
 
 filePostfix(name, path) ::= <<

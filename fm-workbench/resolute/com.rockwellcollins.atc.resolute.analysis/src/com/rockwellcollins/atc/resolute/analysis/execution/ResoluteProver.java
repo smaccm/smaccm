@@ -81,8 +81,8 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 	}
 
 	/**
-	 * The ResoluteProver will only be called on formulas. Everything else is handled by the
-	 * ResoluteEvaluator.
+	 * The ResoluteProver will only be called on formulas. Everything else is
+	 * handled by the ResoluteEvaluator.
 	 */
 	@Override
 	public ResoluteResult defaultCase(EObject object) {
@@ -210,26 +210,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 
 	@Override
 	public ResoluteResult caseFailExpr(FailExpr object) {
-		String str;
-		str = "unknown failure";
-
-		if (object.getVal() instanceof BinaryExpr) {
-			BinaryExpr binExpr = (BinaryExpr) object.getVal();
-			Object val = doSwitch(binExpr);
-			StringValue strVal = (StringValue) val;
-			str = strVal.getString();
-		}
-
-		if (object.getVal() instanceof StringExpr) {
-			StringExpr stringExpr = (StringExpr) object.getVal();
-			str = stringExpr.getVal().getValue();
-		}
-
-		if (!object.getFailmsg().isEmpty()) {
-			str = createClaimText(object.getFailmsg());
-		}
-
-		return new FailResult("Fail Statement: " + str.replaceAll("\"", ""), object);
+		return createFailResult("Failure: ", object);
 	}
 
 	@Override
@@ -261,13 +242,39 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		try {
 			subResult = doSwitch(body.getExpr());
 		} catch (ResoluteFailException e) {
-			subResult = new FailResult(e.getMessage(), e.getLocation());
+			if (e.getLocation() instanceof FailExpr) {
+				subResult = createFailResult(e.getMessage(), (FailExpr) e.getLocation());
+			} else {
+				subResult = new FailResult(e.getMessage(), e.getLocation());
+			}
 		}
 
 		varStack.pop();
 		claimCallContexts.remove(context);
 
 		return new ClaimResult(text, subResult, references, funcDef);
+	}
+
+	private ResoluteResult createFailResult(String message, FailExpr object) {
+		String str = "unknown failure";
+
+		if (object.getVal() instanceof BinaryExpr) {
+			BinaryExpr binExpr = (BinaryExpr) object.getVal();
+			Object val = doSwitch(binExpr);
+			StringValue strVal = (StringValue) val;
+			str = strVal.getString();
+		}
+
+		if (object.getVal() instanceof StringExpr) {
+			StringExpr stringExpr = (StringExpr) object.getVal();
+			str = stringExpr.getVal().getValue();
+		}
+
+		if (!object.getFailmsg().isEmpty()) {
+			str = createClaimText(object.getFailmsg());
+		}
+
+		return new FailResult("Failure: " + str.replaceAll("\"", ""), object);
 	}
 
 	private String createClaimText(EList<ClaimText> claimBody) {
@@ -277,7 +284,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			if (claim instanceof ClaimArg) {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
 				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
-//				text.append("'");
+				// text.append("'");
 				ResoluteValue val = varStack.peek().get(claimArg);
 				if (val == null) {
 					if (claimArg instanceof ConstantDefinition) {
@@ -303,7 +310,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				if (claimArgUnit != null) {
 					text.append(" " + claimArgUnit.getName());
 				}
-//				text.append("'");
+				// text.append("'");
 			} else if (claim instanceof ClaimString) {
 				text.append(((ClaimString) claim).getStr());
 			} else {

@@ -25,7 +25,7 @@ property set SMACCM_SYS is
 	Output_Directory: aadlstring applies to (system implementation);
 	
 	OS : enumeration (eChronos, CAmkES, VxWorks) applies to (system implementation); 
-	HW : enumeration (PIXHAWK, ODROID, x86, QEMU) applies to (system implementation); 
+	HW : enumeration (PIXHAWK, PPC, ODROID, x86, QEMU) applies to (system implementation); 
 	
 	-- For integrating with other code 
 	Is_External: aadlboolean => false applies to (thread, subprogram group access, data);

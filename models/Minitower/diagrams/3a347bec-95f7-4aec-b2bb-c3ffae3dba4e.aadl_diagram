@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?>
+<pi:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:al="http://eclipse.org/graphiti/mm/algorithms" xmlns:pi="http://eclipse.org/graphiti/mm/pictograms" visible="true" gridUnit="10" diagramTypeId="AADL Diagram" name="MissionSoftware::new_classifier" snapToGrid="true" version="0.11.0">
+  <properties key="independentObject" value="classifier MissionSoftware::CAN"/>
+  <graphicsAlgorithm xsi:type="al:Rectangle" background="//@colors.1" foreground="//@colors.0" lineWidth="1" transparency="0.0" width="1000" height="1000"/>
+  <children xsi:type="pi:ContainerShape" visible="true" active="true">
+    <properties key="is_ghost" value="false"/>
+    <properties key="is_layed_out" value="true"/>
+    <properties key="independentObject" value="classifier MissionSoftware::CAN"/>
+    <graphicsAlgorithm xsi:type="al:Polygon" lineStyle="UNSPECIFIED" filled="false" width="300" height="325" x="80" y="80" style="//@styles.0/@styles.0">
+      <points x="20"/>
+      <points x="300"/>
+      <points x="280" y="325"/>
+      <points y="325"/>
+    </graphicsAlgorithm>
+    <anchors xsi:type="pi:ChopboxAnchor">
+      <properties key="name" value="chopbox"/>
+    </anchors>
+  </children>
+  <styles background="//@colors.1" foreground="//@colors.2" lineWidth="1" lineVisible="true" transparency="0.0" id="classifier" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED">
+    <styles lineWidth="2" lineStyle="DASH" id="thread" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  </styles>
+  <colors red="227" green="238" blue="249"/>
+  <colors red="255" green="255" blue="255"/>
+  <colors/>
+</pi:Diagram>

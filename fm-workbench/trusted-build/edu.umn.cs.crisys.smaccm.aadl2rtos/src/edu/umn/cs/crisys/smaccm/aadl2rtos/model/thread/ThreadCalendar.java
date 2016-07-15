@@ -71,7 +71,7 @@ public class ThreadCalendar {
   
   public int getLeastCommonMultipleInMilliseconds() {
      if (periodicDispatchers.size() == 0) {
-         throw new Aadl2RtosException("Attempting to compute the GCD of periodic threads, but no periodic threads in model.");
+         throw new Aadl2RtosException("Attempting to compute the LCM of periodic threads, but no periodic threads in model.");
      }
      int lcmVal = periodicDispatchers.get(0).getPeriod();
      for (InputPeriodicPort d : periodicDispatchers) {

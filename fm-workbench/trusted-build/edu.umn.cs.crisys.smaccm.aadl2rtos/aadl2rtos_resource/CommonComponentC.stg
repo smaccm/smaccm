@@ -10,11 +10,19 @@ import "CommonCPrototypes.stg"
  *   outgoingActiveThreadDispatchName
  *   incomingUserEntrypoingCallerName
  *   outgoingUserEntrypointCallerName
- * 	 portDispatcherLock
+ * 	 portLockStmt
+ *   portUnlockStmt
+ *   portDispatcherLock
  *   portDispatcherUnlock
  *   dispatcherMainInitializeLockStmt
  *   dispatcherMainLockWaitStmt
  *   dispatcherMainLockReleaseStmt
+ *   osSpecificIncludeFiles
+ *   osSpecificIrqDispatcher
+ *   osSpecificThreadInitializer
+ *   osSpecificThreadEntrypoint
+ *   osSpecificComponentLocalCallerFunction
+ *   osSpecificAssert
  *
  * Dummy declarations are provided by CommonOSSpecificNames.
  * These must be overridden by redefinition (see CamkesComponentC.stg
@@ -322,12 +330,12 @@ componentRemoteCallerFunction(connection) ::= <<
 
 bool <connection.sourcePort.aadlWriterFnName>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
 	return <outgoingPortWriterName(connection)>(<connection.sourcePort.name>);
-}
+} 
 
 >>
 
 componentRemoteWriterDecl(srcPort) ::= <<
-<srcPort.connections:componentRemoteCallerFunction()>}>
+<srcPort.connections:componentRemoteCallerFunction()>
 >>
 
 
@@ -527,7 +535,7 @@ aadlDispatcherFunction(dispatcher) ::= <<
  ******************************************************************************/
 static <dispatcher.dispatchStructTypeName> <dispatcher.dispatchStructArgName>;
 
-void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
+static void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><dispatcher.type.aadlInputType.name> <dispatcher.name><endif>) {
 	
 	// make the call: 
 	<aadlDispatcherFunctionName(dispatcher)>(<aadlDispatcherFunctionArgs(dispatcher)>	
@@ -537,8 +545,10 @@ void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasData)><d
 	// call the aadl dispatchers for any generated output events.
 	// to prevent misuse by malicious clients, we ensure that the number 
 	// of dispatches is less than the maximum allowed dispatch count.
-	uint32_t smaccm_it; 
-	<dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher.dispatchStructArgName)>
+	{
+	  uint32_t smaccm_it; 
+	  <dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher.dispatchStructArgName)>
+	}
 <endif>
 }
 
@@ -749,7 +759,7 @@ portDispatchVarDeclarations(port) ::= <<
 
 componentCFileDecls(threadImpl) ::= <<
 
-#include <\u003C><threadImpl.componentGlueCodeHFileName><\u003E>
+#include <\u0022><threadImpl.componentGlueCodeHFileName><\u0022>
 <osSpecificIncludeFiles(threadImpl)>
 
 <if(threadImpl.isActive)><\\>
