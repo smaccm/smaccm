@@ -404,7 +404,8 @@ private String name;
   public List<DispatchableInputPort> getDispatcherList() {
     List<DispatchableInputPort> l = new ArrayList<>(); 
     for (DataPort p: this.ports) {
-      if (p instanceof DispatchableInputPort) {
+      if (p instanceof DispatchableInputPort &&
+    		  ((DispatchableInputPort)p).getHasHandler()) {
         l.add((DispatchableInputPort)p);
       }
     }

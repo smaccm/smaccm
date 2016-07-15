@@ -8,6 +8,8 @@ property set SMACCM_SYS is
 	-- For including additional libraries into the build process
 	Link_Libraries : list of aadlstring applies to (system, system implementation);
 	
+	Connection_Impl: enumeration (mutex, lock_free) => mutex applies to (connection); 
+	
 	-- for dealing with ISR/IRQs
 	Signal_Name: aadlstring applies to (port);
 	Signal_Number: aadlinteger applies to (port);
