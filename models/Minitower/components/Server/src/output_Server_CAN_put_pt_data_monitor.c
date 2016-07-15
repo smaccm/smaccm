@@ -6,5 +6,5 @@
 void callback_output_Server_CAN_put_pt_data_2(const uint8_t n_var0[80U])
 {
     //Server_CAN_put_pt_data(n_var0);
-    Server_write_send_can(n_var0);
+    Server_write_self2framing(n_var0);
 }

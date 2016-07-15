@@ -6,5 +6,5 @@
 void callback_output_UART_in_Server_put_pt_data_2(const uint8_t n_var0[80U])
 {
     //UART_in_Server_put_pt_data(n_var0);
-    Decrypt_write_send_gidl(n_var0);
+    Decrypt_write_self2server(n_var0);
 }

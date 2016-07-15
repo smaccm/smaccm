@@ -9,61 +9,62 @@ public
 
 	system implementation top.i
 		subcomponents
-			proc: process MissionSoftware.i;
+			proc: process Mission_Software.i;
 		properties
 			SMACCM_SYS::OS => CAmkES;
 			SMACCM_SYS::HW => ODROID;
 	end top.i;
 
-	process MissionSoftware
-	end MissionSoftware;
+	process Mission_Software
+	end Mission_Software;
 
-	process implementation MissionSoftware.i
+	process implementation Mission_Software.i
 		subcomponents
-			uart_driver: thread UART_driver;
+			uart_driver: thread UART_Driver;
 			decrypt: thread Decrypt;
 			encrypt: thread Encrypt;
 			server: thread Server;
-			can_framing: thread CAN_framing;
-			can_driver: thread CAN_driver;
+			can_framing: thread CAN_Framing;
+			can_driver: thread CAN_Driver;
 			virtual_machine: thread Virtual_Machine;
 
 		connections
-			recv_rx: port uart_driver.send_packet -> decrypt.get_packet;
-			recv_resp: port uart_driver.recv_resp -> encrypt.recv_response;
-			send_translate: port encrypt.send_packet -> uart_driver.get_packet;
-			decrypt_conn: port decrypt.send_gidl -> server.get_input;
-			send_can: port server.send_can -> can_framing.from_server;
-			get_can: port can_framing.to_server -> server.get_can;
-			encrypt_conn: port server.send_output -> encrypt.get_gidl;
+			uart2decrypt: port uart_driver.self2decrypt -> decrypt.uart2self;
+			uart2encrypt: port uart_driver.self2encrypt -> encrypt.uart2self;
+			encrypt2uart: port encrypt.self2uart -> uart_driver.encrypt2self;
 
-			-- can framing to can driver
-			frag_req: port can_framing.fragment_request -> can_driver.send;
-			frag_com: port can_framing.fragment_complete -> can_driver.send;
-			status: port can_driver.status -> can_framing.get_status;
-			reasm: port can_driver.receive -> can_framing.fragment_reassembly;
+			decrypt2server: port decrypt.self2server -> server.decrypt2self;
+			server2encrypt: port server.self2encrypt -> encrypt.server2self;
 
-			cam: port virtual_machine.camera_data -> server.camera_data;
-	end MissionSoftware.i;
+			server2framing: port server.self2framing -> can_framing.server2self;
+			framing2server: port can_framing.self2server -> server.framing2self;
 
-	thread UART_driver
+			framing2can_request: port can_framing.self2can_request -> can_driver.framing2self;
+			framing2can_complete: port can_framing.self2can_complete -> can_driver.framing2self;
+			can2framing_status: port can_driver.self2framing_status -> can_framing.can2self_status;
+			can2framing_frame: port can_driver.self2framing_frame -> can_framing.can2self_frame;
+
+			vm2server: port virtual_machine.self2server -> server.vm2self;
+	end Mission_Software.i;
+
+	thread UART_Driver
 		features
-			recv_resp: out event data port Base_Types::Boolean;
-			get_packet: in event data port SMACCM_DATA::UartPacket.i;
-			send_packet: out event data port SMACCM_DATA::UartPacket.i;
+			self2decrypt: out event data port SMACCM_DATA::UART_Packet.i;
+
+			encrypt2self: in event data port SMACCM_DATA::UART_Packet.i;
+			self2encrypt: out event data port Base_Types::Boolean;
 		properties
 			SMACCM_SYS::Is_External => true;
 			Dispatch_Protocol => Sporadic;
 			SMACCM_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
 			SMACCM_SYS::Sends_Events_To => "{{}}";
-	end UART_driver;
+	end UART_Driver;
 
 	thread Decrypt
 		features
-		--not sure what the dimension of this array should be
-			get_packet: in event data port SMACCM_DATA::UartPacket.i;
-			send_gidl: out event data port SMACCM_DATA::Array.U8_80;
+			uart2self: in event data port SMACCM_DATA::UART_Packet.i;
+			self2server: out event data port SMACCM_DATA::GIDL;
 		properties
 			Dispatch_Protocol => Periodic;
 			SMACCM_SYS::Thread_Type => Active;
@@ -74,17 +75,14 @@ public
 			SMACCM_SYS::Sends_Events_To => "{{}}";
 			SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
-
-			--SMACCM_SYS::Sends_Events_To => "{{send_gidl 1}}";
-
 	end Decrypt;
 
 	thread Encrypt
 		features
-		--not sure what the dimension of this array should be
-			get_gidl: in event data port SMACCM_DATA::Array.U8_80;
-			recv_response: in event data port Base_Types::Boolean;
-			send_packet: out event data port SMACCM_DATA::UartPacket.i;
+			server2self: in event data port SMACCM_DATA::GIDL;
+
+			self2uart: out event data port SMACCM_DATA::UART_Packet.i;
+			uart2self: in event data port Base_Types::Boolean;
 		properties
 			Dispatch_Protocol => Periodic;
 			SMACCM_SYS::Thread_Type => Active;
@@ -95,17 +93,17 @@ public
 			SMACCM_SYS::Sends_Events_To => "{{}}";
 			SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
-			--SMACCM_SYS::Sends_Events_To => "{{send_packet 1}, {}}";
-
 	end Encrypt;
 
 	thread Server
 		features
-			send_output: out event data port SMACCM_DATA::Array.U8_80;
-			send_can: out event data port SMACCM_DATA::Array.U8_80;
-			get_input: in event data port SMACCM_DATA::Array.U8_80;
-			get_can: in event data port SMACCM_DATA::Array.U8_80;
-			camera_data: in data port SMACCM_DATA::camera_data.i;
+			self2encrypt: out event data port SMACCM_DATA::GIDL;
+			decrypt2self: in event data port SMACCM_DATA::GIDL;
+
+			self2framing: out event data port SMACCM_DATA::GIDL;
+			framing2self: in event data port SMACCM_DATA::GIDL;
+
+			vm2self: in data port SMACCM_DATA::Camera_Bounding_Box.i;
 		properties
 			Dispatch_Protocol => Periodic;
 			SMACCM_SYS::Thread_Type => Active;
@@ -118,14 +116,18 @@ public
 			Period => 5 ms;
 	end Server;
 
-	thread CAN_framing
+	thread CAN_Framing
 		features
-			to_server: out data port SMACCM_DATA::Array.U8_80;
-			fragment_request: out event data port SMACCM_DATA::can_message.i;
-			fragment_complete: out event data port SMACCM_DATA::can_message.i;
-			from_server: in event data port SMACCM_DATA::Array.U8_80;
-			get_status: in event data port Base_Types::Boolean;
-			fragment_reassembly: in event data port SMACCM_DATA::can_message.i;
+			server2self: in event data port SMACCM_DATA::GIDL;
+			self2server: out data port SMACCM_DATA::GIDL;
+
+			can2self_frame: in event data port SMACCM_DATA::CAN_Frame.i {
+						Queue_Size => 10;
+					};
+			can2self_status: in event data port Base_Types::Boolean;
+			self2can_request: out event data port SMACCM_DATA::CAN_Frame.i;
+			self2can_complete: out event data port SMACCM_DATA::CAN_Frame.i;
+
 		properties
 			Dispatch_Protocol => Periodic;
 			SMACCM_SYS::Thread_Type => Active;
@@ -136,28 +138,29 @@ public
 			SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
 			Period => 5 ms;
-	end CAN_framing;
+	end CAN_Framing;
 
-	thread CAN_driver
+	thread CAN_Driver
 		features
-			receive: out event data port SMACCM_DATA::can_message.i;
-			status: out event data port Base_Types::Boolean;
-			send: in event data port SMACCM_DATA::can_message.i;
+			framing2self: in event data port SMACCM_DATA::CAN_Frame.i;
+			self2framing_status: out event data port Base_Types::Boolean;
+			self2framing_frame: out event data port SMACCM_DATA::CAN_Frame.i;
 		properties
 			SMACCM_SYS::Is_External => true;
 			Dispatch_Protocol => Sporadic;
 			SMACCM_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
 			SMACCM_SYS::Sends_Events_To => "{{}}";
-	end CAN_driver;
+	end CAN_Driver;
 
 	thread Virtual_Machine
 		features
-			camera_data: out data port SMACCM_DATA::camera_data.i;
+			self2server: out data port SMACCM_DATA::Camera_Bounding_Box.i;
 		properties
 			SMACCM_SYS::Is_External => true;
 			Dispatch_Protocol => Sporadic;
 			SMACCM_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
 	end Virtual_machine;
+
 end MissionSoftware;
