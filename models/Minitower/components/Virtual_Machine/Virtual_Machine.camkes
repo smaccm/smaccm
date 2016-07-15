@@ -3,25 +3,22 @@ import <std_connector.camkes>;
 import "../VM/VM.camkes";
 import <Vchan/Vchan.camkes>;
 import <VchanInterface.idl4>;
-//import "../Vchan/Vchan.camkes";
-//import "../../interfaces/VchanInterface.idl4";
-// Mikeisms
 import "../../interfaces/Virtual_Machine_interface.idl4";
-import "../../interfaces/SMACCM_DATA__camera_data_i_writer.idl4";
+import "../../interfaces/SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4";
 
 component Virtual_Machine {
 include "smaccm_top_i_types.h";
-	control;
+    control;
+
     // AADL interface
     has semaphore smaccm_dispatch_sem;
-	uses SMACCM_DATA__camera_data_i_writer Virtual_Machine_camera_data;
+    uses SMACCM_DATA__Camera_Bounding_Box_i_writer Virtual_Machine_self2server;
 
     // Interface to internal vchan wrapper world
     include "sel4vchan/vchan_sharemem.h";
     dataport vchan_headers_t share_mem;
     uses VchanInterface vchan_con;
     consumes VchanEvent vevent;
-
 }
 
 assembly {
@@ -109,7 +106,7 @@ assembly {
 
         vm.priority = 101;
         vchan_0.priority = 102;
-	    Virtual_Machine_inst.priority = 103;
+        Virtual_Machine_inst.priority = 103;
 
         vm.sem_value = 0;
         vm.num_extra_frame_caps = 0;

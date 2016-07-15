@@ -2,86 +2,57 @@ package SMACCM_DATA
 public
 	with Data_Model;
 	with Base_Types;
-	
-data Array
-end Array;
 
-data implementation Array.packet
-	properties
-		  Data_Model::Data_Representation => Array;
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (255);
-end Array.packet;
+	data UART_Packet
+	end UART_Packet;
 
-data implementation Array.can
-  properties
-      Data_Model::Data_Representation => Array;
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (8);
-end Array.can;
+	data implementation UART_Packet.i
+		subcomponents
+			buf: data UART_Buffer;
+			buf_len: data Base_Types::Integer_32;
+	end UART_Packet.i;
 
-data implementation Array.cypher
-  properties
-      Data_Model::Data_Representation => Array;
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (195);
-end Array.cypher;
-	
-data implementation Array.U8_80
-  properties
-      Data_Model::Data_Representation => Array;
-      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-      Data_Model::Dimension => (80);
-end Array.U8_80;
-	
-data UartPacket
-end UartPacket; 
-     
-data implementation UartPacket.i
-  subcomponents
-    buff: data Array.packet;
-    len : data Base_Types::Integer_32;
-end ivory_string_UartPacket.i;
-    
-data camera_data
-end camera_data;
+	data UART_Buffer
+		properties
+			Data_Model::Data_Representation => Array;
+			Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+			Data_Model::Dimension => (255);
+	end UART_Buffer;
 
-data implementation camera_data.i
-	subcomponents
-		bbox_l : data Base_Types::Unsigned_16;
-    bbox_r : data Base_Types::Unsigned_16;
-    bbox_t : data Base_Types::Unsigned_16;
-    bbox_b : data Base_Types::Unsigned_16;
-end camera_data.i;
+	data GIDL
+		properties
+			Data_Model::Data_Representation => Array;
+			Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+			Data_Model::Dimension => (80);
+	end GIDL;
 
-data ivory_string_HXCyphertext
-end ivory_string_HXCyphertext;
-    
-data implementation ivory_string_HXCyphertext.i
-  subcomponents
-    ivory_string_HXCyphertext_data: data Array.cypher;
-    ivory_string_HXCyphertext_len : data Base_Types::Integer_32;
-end ivory_string_HXCyphertext.i;
+	data Camera_Bounding_Box
+	end Camera_Bounding_Box;
 
-data can_message
-end can_message;
+	data implementation Camera_Bounding_Box.i
+		subcomponents
+			left: data Base_Types::Unsigned_16;
+			right: data Base_Types::Unsigned_16;
+			top: data Base_Types::Unsigned_16;
+			bottom: data Base_Types::Unsigned_16;
+	end Camera_Bounding_Box.i;
 
-data implementation can_message.i
-  subcomponents
-    id: data Base_Types::Unsigned_32; -- CAN id (11 bits for standard frame, 29 bits if extended frame)
-    dlc: data Base_Types::Unsigned_8; -- Data Length Code (0 ~ 8)
-    payload: data can_payload.i;      -- Frame payload (8 bytes maximum)
-end can_message.i;
+	data CAN_Frame
+	end CAN_Frame;
 
-data can_payload
-end can_payload;
+	data implementation CAN_Frame.i
+		subcomponents
+			id: data Base_Types::Unsigned_32; -- CAN id (11 bits for standard frame, 29 bits if extended frame)
+			buf: data CAN_Buffer; -- Data field (8 bytes maximum)
+			buf_len: data Base_Types::Unsigned_8; -- Data length code (0 ~ 8)
 
-data implementation can_payload.i
-  properties
-    Data_Model::Data_Representation => Array;
-    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
-    Data_Model::Dimension => (8);
-end can_payload.i;
+	end CAN_Frame.i;
 
-    
+	data CAN_Buffer
+		properties
+			Data_Model::Data_Representation => Array;
+			Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+			Data_Model::Dimension => (8);
+	end CAN_Buffer;
+
 end SMACCM_DATA;

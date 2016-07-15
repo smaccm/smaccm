@@ -52,25 +52,25 @@ static camkes_vchan_con_t con = {
 static void rec_packet(libvchan_t * con) {
     char done = 1;
     int data[4];
-    SMACCM_DATA__camera_data_i ca;
+    SMACCM_DATA__Camera_Bounding_Box_i bbox;
 
     libvchan_wait(con);
     int readSize = libvchan_recv(con, data, 4*sizeof(int));
     assert(readSize == 4*sizeof(int));
     DVM("received bounding box packet\n");
 
-    ca.bbox_l = data[0];
-    ca.bbox_r = data[1];
-    ca.bbox_t = data[2];
-    ca.bbox_b = data[3];
+    bbox.left = data[0];
+    bbox.right = data[1];
+    bbox.top = data[2];
+    bbox.bottom = data[3];
 
-    if (Virtual_Machine_camera_data_write_SMACCM_DATA__camera_data_i(&ca)) {
+    if (Virtual_Machine_self2server_write_SMACCM_DATA__Camera_Bounding_Box_i(&bbox)) {
         DVM("wrote bounding box\n");
     } else {
         DVM("failed to write bouding box\n");
     }
 
-    DVM("camera_vm: sending ack\n");
+    DVM("Virtual_Machine: sending ack\n");
     libvchan_send(con, &done, sizeof(char));
 }
 
@@ -78,7 +78,7 @@ static void rec_packet(libvchan_t * con) {
 int run(void) {
     libvchan_t *connection;
 
-    DVM("vm_camera wrapper init\n");
+    DVM("virtual machine wrapper init\n");
 
     con.data_buf = (void *)share_mem;
     connection = libvchan_server_init(0, 25, 0, 0);
@@ -87,10 +87,10 @@ int run(void) {
     }
     assert(connection != NULL);
 
-    DVM("vm_camera connection active\n");
+    DVM("virtual machine connection active\n");
 
     while(1) {
-        DVM("camera_vm.packet\n");
+        DVM("virtual machine packet\n");
         rec_packet(connection);
     }
 }

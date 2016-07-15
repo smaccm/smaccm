@@ -30,9 +30,9 @@ void component_entry_aux(void)
     //struct ivory_string_UartPacket *n_ref1 = &n_local0;
     //bool n_r2 = UART_hw_UART_in_get_packet(n_ref1);
 
-    struct SMACCM_DATA__UartPacket_i n_local0 = {};
-    struct SMACCM_DATA__UartPacket_i *n_ref1 = &n_local0;
-    bool n_r2 = Decrypt_read_get_packet(n_ref1);
+    struct SMACCM_DATA__UART_Packet_i n_local0 = {};
+    struct SMACCM_DATA__UART_Packet_i *n_ref1 = &n_local0;
+    bool n_r2 = Decrypt_read_uart2self(n_ref1);
     
     if (n_r2) {
         callback_input_UART_hw_UART_in_get_packet_handler(n_ref1);

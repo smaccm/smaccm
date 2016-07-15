@@ -30,7 +30,7 @@ void component_entry_aux(void)
 {
     uint8_t n_local0[80U] = {};
     uint8_t *n_ref1 = n_local0;
-    bool n_r2 = Encrypt_read_get_gidl(n_local0);
+    bool n_r2 = Encrypt_read_server2self(n_local0);
     //bool n_r2 = Server_UART_out_get_pt_data(n_ref1);
     
     if (n_r2) {
@@ -43,7 +43,7 @@ void component_entry_aux_2(void)
 {
     bool n_local0 = false;
     bool *n_ref1 = &n_local0;
-    bool n_r2 = Encrypt_read_recv_response(n_ref1);
+    bool n_r2 = Encrypt_read_uart2self(n_ref1);
     //bool n_r2 = UART_hw_UART_out_get_bool(n_ref1);
     
     if (n_r2) {

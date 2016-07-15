@@ -7,8 +7,8 @@
 
 void callback_output_UART_out_UART_hw_put_packet_2(const struct ivory_string_HXCyphertext *n_var0)
 {
-    SMACCM_DATA__UartPacket_i packet;
-    packet.len = n_var0->ivory_string_HXCyphertext_len;
-    memcpy(packet.buff, n_var0->ivory_string_HXCyphertext_data, packet.len);
-    Encrypt_write_send_packet(&packet);
+    SMACCM_DATA__UART_Packet_i packet;
+    packet.buf_len = n_var0->ivory_string_HXCyphertext_len;
+    memcpy(packet.buf, n_var0->ivory_string_HXCyphertext_data, packet.buf_len);
+    Encrypt_write_self2uart(&packet);
 }
