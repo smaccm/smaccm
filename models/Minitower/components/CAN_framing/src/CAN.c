@@ -47,10 +47,17 @@ void component_entry_aux_2(void)
     struct can_message n_local0 = {};
     struct can_message *n_ref1 = &n_local0;
     //bool n_r2 = CAN_hw_CAN_get_can_message(n_ref1);
-    bool n_r2 = CAN_framing_read_fragement_reasembly(n_ref1);
-    
-    if (n_r2) {
+
+    struct SMACCM_DATA__can_message_i smaccm_can_message = {};
+    bool n_r2 = CAN_framing_read_fragment_reassembly(&smaccm_can_message);
+
+    while (n_r2) {
+	n_local0.can_message_id = smaccm_can_message.id;
+	n_local0.can_message_len = smaccm_can_message.dlc;
+	memcpy(n_local0.can_message_buf, smaccm_can_message.payload, smaccm_can_message.dlc);
+
         callback_input_CAN_hw_CAN_get_can_message_handler(n_ref1);
+	n_r2 = CAN_framing_read_fragment_reassembly(&smaccm_can_message);
     }
     return;
 }

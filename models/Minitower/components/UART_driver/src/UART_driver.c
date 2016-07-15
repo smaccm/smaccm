@@ -122,7 +122,10 @@ int run(void)
 	while (1) {
 		int r = uart_read((char*) p.buff, 255);
 		p.len = r;
-		UART_driver_send_packet_write_SMACCM_DATA__UartPacket_i(&p);
+		bool b = UART_driver_send_packet_write_SMACCM_DATA__UartPacket_i(&p);
+		if (!b) {
+		    printf("ERROR: UART Driver: Unable to put UART packet in queue\n");
+		}
 	}
 	return 0;
 }

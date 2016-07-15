@@ -7,5 +7,3 @@ CFLAGS += -DODROID
 -include apps/smaccmpilot/componentlibs.mk
 
 -include apps/smaccmpilot/camkesmakefile.mk
-
-

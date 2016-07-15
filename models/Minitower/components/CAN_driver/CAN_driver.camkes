@@ -11,13 +11,13 @@ import "../spi/spi.camkes";
 import "../can/can.camkes";
 
 component CAN_driver {
-	control;
+    control;
 
     // AADL interface
     include "smaccm_top_i_types.h";
-	uses bool_writer CAN_driver_status;
-	uses SMACCM_DATA__can_message_i_writer CAN_driver_receive;
-	provides SMACCM_DATA__can_message_i_writer send; 
+    uses bool_writer CAN_driver_status;
+    uses SMACCM_DATA__can_message_i_writer CAN_driver_receive;
+    provides SMACCM_DATA__can_message_i_writer send; 
 
     // Internal (Driver) interface
     has semaphore status_0_semaphore;
@@ -52,28 +52,28 @@ component gpiobase {
 }
 
 component spibase {
-   hardware;
-   dataport Buf spi1_reg;
-   emits DataAvailable spi1_int;
+     hardware;
+     dataport Buf spi1_reg;
+     emits DataAvailable spi1_int;
 }
 
 assembly {
     composition {
         component clkbase clkbase_obj;
         component gpiobase gpiobase_obj;
-	component spibase spibase_obj;
+        component spibase spibase_obj;
 
         // "component CAN_driver CAN_driver_inst" will be defined by the outer camkes file
         component can can_obj;
-	component spi spi_obj;
-	component gpio gpio_obj;
-	component clk clk_obj;
+        component spi spi_obj;
+        component gpio gpio_obj;
+        component clk clk_obj;
 
-	connection seL4RPC CAN_driver_inst_can_tx(from CAN_driver_inst.can_tx, to can_obj.can_tx);
-	connection seL4RPC CAN_driver_inst_can_rx(from CAN_driver_inst.can_rx, to can_obj.can_rx);
-	connection seL4Asynch txb0_ack(from can_obj.txb0_ack, to CAN_driver_inst.txb0_ack);
-	connection seL4Asynch txb1_ack(from can_obj.txb1_ack, to CAN_driver_inst.txb1_ack);
-	connection seL4Asynch txb2_ack(from can_obj.txb2_ack, to CAN_driver_inst.txb2_ack);
+        connection seL4RPC CAN_driver_inst_can_tx(from CAN_driver_inst.can_tx, to can_obj.can_tx);
+        connection seL4RPC CAN_driver_inst_can_rx(from CAN_driver_inst.can_rx, to can_obj.can_rx);
+        connection seL4Asynch txb0_ack(from can_obj.txb0_ack, to CAN_driver_inst.txb0_ack);
+        connection seL4Asynch txb1_ack(from can_obj.txb1_ack, to CAN_driver_inst.txb1_ack);
+        connection seL4Asynch txb2_ack(from can_obj.txb2_ack, to CAN_driver_inst.txb2_ack);
 
         connection seL4HardwareMMIO clk_cmu_cpu_mem(from clk_obj.cmu_cpu_clk, to clkbase_obj.cmu_cpu_clk);
         connection seL4HardwareMMIO clk_cmu_top_mem(from clk_obj.cmu_top_clk, to clkbase_obj.cmu_top_clk);
@@ -113,7 +113,7 @@ assembly {
         spibase_obj.spi1_reg_attributes = "0x12D30000:0x1000"; //SPI1
         spibase_obj.spi1_int_attributes = 101; //SPI1  interrupt
 
-	    clkbase_obj.cmu_cpu_clk_attributes = "0x10010000:0x1000"; //CMU_CPU
+        clkbase_obj.cmu_cpu_clk_attributes = "0x10010000:0x1000"; //CMU_CPU
         clkbase_obj.cmu_core_clk_attributes = "0x10014000:0x1000"; //CMU_CORE
         clkbase_obj.cmu_top_clk_attributes = "0x10020000:0x1000"; //CMU_TOP
     }

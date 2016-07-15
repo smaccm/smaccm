@@ -71,7 +71,7 @@ bool sendit(int txb_idx, const SMACCM_DATA__can_message_i *a_frame) {
     // Right-shift 20: 2 bits to drop flags; 18 to recover 11-bit Ids.
     d_frame.ident.id = a_frame->id >> 20;
 
-    d_frame.ident.exide = false; // TODO: Support extended IDs
+    d_frame.ident.exide = false;
     d_frame.ident.rtr = false;
     d_frame.ident.err = false;
     d_frame.prio = 0;
@@ -90,7 +90,6 @@ bool sendit(int txb_idx, const SMACCM_DATA__can_message_i *a_frame) {
 
 bool send_write_SMACCM_DATA__can_message_i(const SMACCM_DATA__can_message_i *a_frame) {
     status_0_semaphore_post();
-	printf("Send\n");
     return sendit(0, a_frame);
 }
 
@@ -103,13 +102,15 @@ int run(void) {
 	a_frame.id = d_frame.ident.id << 20;
 	a_frame.dlc = d_frame.dlc;
 	uint8_t len = a_frame.dlc;
-	printf("Recv\n");
 	if (len > MAX_FRAME_LEN) {
 	    printf("Unexpected frame length of %d!\n", len);
 	    return 1;
 	} else {
 	    memcpy(a_frame.payload, d_frame.data, len);
-	    CAN_driver_receive_write_SMACCM_DATA__can_message_i(&a_frame);
+	    bool b = CAN_driver_receive_write_SMACCM_DATA__can_message_i(&a_frame);
+	    if (!b) {
+		printf("ERROR: CAN Driver: Unable to put CAN message in queue\n");
+	    }
 	}
     }
     return 0;

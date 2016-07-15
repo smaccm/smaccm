@@ -41,10 +41,9 @@ public
 			frag_req: port can_framing.fragment_request -> can_driver.send;
 			frag_com: port can_framing.fragment_complete -> can_driver.send;
 			status: port can_driver.status -> can_framing.get_status;
-			reasm: port can_driver.receive -> can_framing.fragement_reasembly;
+			reasm: port can_driver.receive -> can_framing.fragment_reassembly;
 
 			cam: port virtual_machine.camera_data -> server.camera_data;
-
 	end MissionSoftware.i;
 
 	thread UART_driver
@@ -122,12 +121,11 @@ public
 	thread CAN_framing
 		features
 			to_server: out data port SMACCM_DATA::Array.U8_80;
-			--    send_abort : out event data port Base_Types::Boolean;
 			fragment_request: out event data port SMACCM_DATA::can_message.i;
 			fragment_complete: out event data port SMACCM_DATA::can_message.i;
 			from_server: in event data port SMACCM_DATA::Array.U8_80;
 			get_status: in event data port Base_Types::Boolean;
-			fragement_reasembly: in event data port SMACCM_DATA::can_message.i;
+			fragment_reassembly: in event data port SMACCM_DATA::can_message.i;
 		properties
 			Dispatch_Protocol => Periodic;
 			SMACCM_SYS::Thread_Type => Active;
