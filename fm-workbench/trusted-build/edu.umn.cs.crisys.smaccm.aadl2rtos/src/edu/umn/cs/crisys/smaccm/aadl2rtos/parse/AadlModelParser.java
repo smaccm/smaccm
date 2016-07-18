@@ -214,6 +214,12 @@ public class AadlModelParser {
 		// grab all files referenced in the model.
 		initializeFiles();
 		initializeLegacyIRQs();
+
+		// grab system implementation level external mutexes
+	    List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(systemImplementation);
+	    List<String> externalSemList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(systemImplementation);
+	    this.model.legacyMutexList.addAll(externalMutexList);
+	    this.model.legacySemaphoreList.addAll(externalSemList);
 		
 		// Harvest model type data
 		harvestModelTypeData();

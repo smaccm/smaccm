@@ -78,11 +78,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
 	@Override
 	public ResoluteValue caseFailExpr(FailExpr object) {
-		if (object.getVal() != null || object.getFailmsg() != null) {
-			return FALSE;
-		} else {
-			throw new ResoluteFailException("Fail Statement Reached", object);
-		}
+		throw new ResoluteFailException("Failure: ", object);
 	}
 
 	@Override
