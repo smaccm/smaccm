@@ -13,7 +13,7 @@ include "smaccm_top_i_types.h";
     // AADL interface
     has semaphore smaccm_dispatch_sem;
     uses SMACCM_DATA__Camera_Bounding_Box_i_writer Virtual_Machine_self2server;
-    provides bool_writer server2self_reboot;
+    provides void_writer server2self_reboot;
 
     // Interface to internal vchan wrapper world
     include "sel4vchan/vchan_sharemem.h";
