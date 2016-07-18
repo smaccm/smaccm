@@ -415,9 +415,12 @@ userSendOptAadlOutputArg(port) ::= "<if(port.hasData)><port.type.aadlOutputType.
 
 connectionActiveSendDefinition(connection, port) ::= <<
 <if(connection.destPort.threadImplementation.isActive)>
+<if(port.hasData)>
 result &= <outgoingPortWriterName(connection)>(<port.name>);			
+<else>
+result &= <outgoingPortWriterName(connection)>(void); 
 <endif>
-
+<endif>
 >>
 
 userSendDefinition(port) ::= << 
@@ -717,7 +720,7 @@ dispatcherComponentMainFunction(threadImpl) ::= <<
 		<dispatcherMainLockWaitStmt(threadImpl)>
 		
 		// drain the queues 
-		<threadImpl.dispatchers:drainDispatcher()>
+		<threadImpl.dispatchersWithEntrypoints:drainDispatcher()>
 	}
 	// won't ever get here, but form must be followed
 	<osSpecificThreadReturnStmt(threadImpl)>
