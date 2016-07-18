@@ -697,7 +697,7 @@ int <osSpecificThreadEntrypoint(threadImpl)>() {
 		<dispatcherMainLockWaitStmt(threadImpl)>
 		
 		// drain the queues 
-		<threadImpl.dispatchers:drainDispatcher()>
+		<threadImpl.dispatchersWithEntrypoints:drainDispatcher()>
 	}
 	// won't ever get here, but form must be followed
 	return 0;

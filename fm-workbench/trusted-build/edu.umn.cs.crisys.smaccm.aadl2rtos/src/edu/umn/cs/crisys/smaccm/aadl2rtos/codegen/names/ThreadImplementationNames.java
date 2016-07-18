@@ -142,6 +142,10 @@ public class ThreadImplementationNames {
     return constructPortNames(ti.getDispatcherList());
   }
   
+  public List<PortNames> getDispatchersWithEntrypoints() {
+	  return constructPortNames(ti.getDispatcherListWithEntrypoints());
+  }
+  
   public List<PortNames> getAllOutputEventPorts() {
     return constructPortNames(ti.getAllOutputEventPorts());
   }
