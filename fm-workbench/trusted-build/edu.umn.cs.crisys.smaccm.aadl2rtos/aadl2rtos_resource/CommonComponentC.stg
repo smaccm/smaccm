@@ -418,7 +418,7 @@ connectionActiveSendDefinition(connection, port) ::= <<
 <if(port.hasData)>
 result &= <outgoingPortWriterName(connection)>(<port.name>);			
 <else>
-result &= <outgoingPortWriterName(connection)>(void); 
+result &= <outgoingPortWriterName(connection)>(); 
 <endif>
 <endif>
 >>
