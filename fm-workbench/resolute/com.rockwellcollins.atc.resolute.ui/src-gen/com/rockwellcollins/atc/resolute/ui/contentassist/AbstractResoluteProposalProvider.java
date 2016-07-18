@@ -65,6 +65,8 @@ public class AbstractResoluteProposalProvider extends org.osate.xtext.aadl2.prop
 		// subclasses may override
 		// subclasses may override
 		// subclasses may override
+		// subclasses may override
+		// subclasses may override
 	}
 	public void completeArg_Name(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
