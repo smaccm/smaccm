@@ -14,10 +14,9 @@ component VM {
     control;
     include "cmks_vchan_vm.h";
 
- //   uses pwm_inf pwm;
-    has semaphore vm_sem;
+    consumes restart restart_event;
 
-    has mutex vm_lock;
+    has mutex reinitializable_vm_lock;
     uses VchanInterface vchan_con;
     consumes VchanEvent vevent;
     dataport vchan_headers_t share_mem;

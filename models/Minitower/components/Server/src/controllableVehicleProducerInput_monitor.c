@@ -11,7 +11,7 @@ void callback_rebootReqSetRespProducer(const uint32_t *n_var0)
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
     bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 8U) < (uint32_t) 80U);
-    
+
     if (n_cse1) {
         uint32_t n_local5 = (uint32_t) 701552887U;
         uint32_t *n_ref6 = &n_local5;
@@ -28,6 +28,9 @@ void callback_rebootReqSetRespProducer(const uint32_t *n_var0)
         uint32_t n_deref7 = *n_ref3;
         
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
+
+	bool arg = true;
+	Server_self2vm_reboot_write_bool(&arg);
     }
     if (n_cse1) {
         callback_output_Server_UART_out_put_pt_data_2(n_ref1);
