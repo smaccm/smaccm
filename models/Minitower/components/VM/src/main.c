@@ -371,7 +371,7 @@ main_continued(void)
         seL4_MessageInfo_t tag;
         seL4_Word sender_badge;
 
-        tag = seL4_Wait(_fault_endpoint, &sender_badge);
+        seL4_Wait(_fault_endpoint, &sender_badge); // AJG: Removed tag = ...
         if (sender_badge == 0) {
             seL4_Word label;
             label = seL4_MessageInfo_get_label(tag);
