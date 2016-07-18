@@ -10,9 +10,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.EndpointConnection;
@@ -155,6 +158,14 @@ public class ThreadImplementationNames {
   
   public List<PortNames> getDispatchers() {
     return constructPortNames(ti.getDispatcherList());
+  }
+  
+  public List<PortNames> getDispatchersWithEntrypoints() {
+	  List<DispatchableInputPort> l = ti.getDispatcherList();
+	  l = l.stream().
+			filter(e -> !e.getExternalHandlerList().isEmpty()).
+			collect(Collectors.toList());
+	  return constructPortNames(l);
   }
   
   public List<PortNames> getAllOutputEventPorts() {
