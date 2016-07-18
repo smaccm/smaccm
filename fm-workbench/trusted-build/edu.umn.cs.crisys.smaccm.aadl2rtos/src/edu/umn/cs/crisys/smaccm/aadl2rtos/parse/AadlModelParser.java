@@ -554,7 +554,7 @@ public class AadlModelParser {
         } else {
           if (ti.getIsExternal()) {
         	  this.logger.warn("Port: " + d.getName() + " of external thread: " + ti.getName() + " does not have dispatch limits");
-        	  d.setDispatchLimits(new ArrayList<>());
+        	  d.setDispatchLimits(new ArrayList<OutgoingDispatchContract>());
           } else 
         	  throw new Aadl2RtosException("No dispatch limit (Sends_Events_To) specified for dispatcher " + d.getName());
         }
