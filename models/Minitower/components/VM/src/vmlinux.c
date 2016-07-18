@@ -87,42 +87,13 @@ vm_shutdown_cb(vm_t* vm, void* token)
     return -1;
 }
 
+void restart_component(void);
+
 static int
 vm_reboot_cb(vm_t* vm, void* token)
 {
-    struct pwr_token* pwr_token = (struct pwr_token*)token;
-    uint32_t dtb_addr;
-    void* entry;
-    int err;
-    printf("Received reboot from linux\n");
-
-    //pwm_vmsig(0);
-    vm_sem_wait();
-
+    restart_component();
     return 0;
-
-//    pwm_linux_action(1);
-    return -1;
-#if 0
-    entry = install_linux_kernel(vm, pwr_token->linux_bin);
-    dtb_addr = install_linux_dtb(vm, pwr_token->device_tree);
-    if (entry == NULL || dtb_addr == 0) {
-        printf("Failed to reload linux\n");
-        return -1;
-    }
-    err = vm_set_bootargs(vm, entry, MACH_TYPE, dtb_addr);
-    if (err) {
-        printf("Failed to set boot args\n");
-        return -1;
-    }
-    err = vm_start(vm);
-    if (err) {
-        printf("Failed to restart linux\n");
-        return -1;
-    }
-    printf("VM restarted\n");
-    return 0;
-#endif
 }
 
 static int

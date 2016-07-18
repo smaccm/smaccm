@@ -94,3 +94,9 @@ int run(void) {
         rec_packet(connection);
     }
 }
+
+bool server2self_reboot_write_bool(const bool *arg) {
+    printf("Reboot requested\n");
+    restart_vm_emit();
+    return true;
+}

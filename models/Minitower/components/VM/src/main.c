@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
+#include <setjmp.h>
 
 #include <allocman/allocman.h>
 #include <allocman/bootstrap.h>
@@ -35,6 +36,7 @@
 #include <dma/dma.h>
 
 #include <camkes.h>
+#include <camkes/tls.h>
 
 #include "vmlinux.h"
 #include "cmks_vchan_vm.h"
@@ -69,6 +71,7 @@ struct ps_io_ops _io_ops;
 
 extern char _cpio_archive[];
 
+static jmp_buf restart_jmp_buf;
 
 static void
 print_cpio_info(void)
@@ -225,20 +228,22 @@ vmm_init(void)
     return 0;
 }
 
-#define RAM_START 0x40000000
-#define RAM_END   0x60000000
-
 static void
 map_unity_ram(vm_t* vm)
 {
+    /* Dimensions of physical memory that we'll use. Note that we do not map the entirety of RAM.
+     */
+    static const uintptr_t paddr_start = RAM_BASE;
+    static const uintptr_t paddr_end = 0x60000000;
+
     int err;
 
     uintptr_t start;
     reservation_t res;
     unsigned int bits = 21;
-    res = vspace_reserve_range_at(&vm->vm_vspace, (void*)RAM_START, RAM_END - RAM_START, seL4_AllRights, 1);
+    res = vspace_reserve_range_at(&vm->vm_vspace, (void*)paddr_start, paddr_end - paddr_start, seL4_AllRights, 1);
     assert(res.res);
-    for (start = RAM_START;; start += BIT(bits)) {
+    for (start = paddr_start;; start += BIT(bits)) {
         cspacepath_t frame;
         err = vka_cspace_alloc_path(vm->vka, &frame);
         assert(!err);
@@ -252,11 +257,77 @@ map_unity_ram(vm_t* vm)
     }
 }
 
+void restart_component(void) {
+    longjmp(restart_jmp_buf, 1);
+}
+
+extern char __data_start[];
+extern char __data_end[];
+extern char __bss_start[];
+extern char __bss_end[];
+extern char __sysinfo[];
+extern char __libc[];
+extern char morecore_area[];
+extern char morecore_size[];
+
+void reset_resources(void) {
+    simple_t simple;
+    camkes_make_simple(&simple);
+    int i;
+    seL4_CPtr root = simple_get_cnode(&simple);
+    int error;
+    /* revoke any of our initial untyped resources */
+    for (i = 0; i < simple_get_untyped_count(&simple); i++) {
+        uint32_t size_bits;
+        uint32_t paddr;
+        seL4_CPtr ut = simple_get_nth_untyped(&simple, i, &size_bits, &paddr);
+        error = seL4_CNode_Revoke(root, ut, 32);
+        assert(error == seL4_NoError);
+    }
+    /* delete anything from any slots that should be empty */
+    for (i = simple_last_valid_cap(&simple) + 1; i < BIT(simple_get_cnode_size_bits(&simple)); i++) {
+        error = seL4_CNode_Delete(root, i, 32);
+    }
+    /* save some pieces of the bss that we actually don't want to zero */
+    char save_sysinfo[4];
+    char save_libc[34];
+    char save_morecore_area[4];
+    char save_morecore_size[4];
+    memcpy(save_libc, __libc, 34);
+    memcpy(save_sysinfo, __sysinfo, 4);
+    memcpy(save_morecore_area, morecore_area, 4);
+    memcpy(save_morecore_size, morecore_size, 4);
+    /* zero the bss */
+    memset(__bss_start, 0, (uintptr_t)__bss_end - (uintptr_t)__bss_start);
+    /* restore these pieces */
+    memcpy(__libc, save_libc, 34);
+    memcpy(__sysinfo, save_sysinfo, 4);
+    memcpy(morecore_area, save_morecore_area, 4);
+    memcpy(morecore_size, save_morecore_size, 4);
+    mutex_reinitializable_vm_lock_init();
+}
+
+static seL4_CPtr restart_tcb;
+
+static void restart_event(void *arg) {
+    restart_event_reg_callback(&restart_event, NULL);
+    seL4_UserContext context;
+    context.pc = restart_component;
+    seL4_TCB_WriteRegisters(restart_tcb, true, 0, 1, &context);
+}
+
 int
 main_continued(void)
 {
     vm_t vm;
     int err;
+
+    /* setup for restart with a setjmp */
+    while (setjmp(restart_jmp_buf) != 0) {
+        reset_resources();
+    }
+    restart_tcb = camkes_get_tls()->tcb_cap;
+    restart_event_reg_callback(restart_event, NULL);
 
     err = vmm_init();
     assert(!err);
@@ -337,4 +408,3 @@ run(void) {
     }
     return main_continued();
 }
-
