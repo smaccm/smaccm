@@ -24,7 +24,7 @@
 #define SPI_CS_RELEASE 1
 #define SPI_CS_ASSERT  0
 
-struct spi_slave_config {
+struct spi_slave_params {
     int id;
     spi_dev_port_p* port;
     int speed_hz;
@@ -44,7 +44,7 @@ struct spi_slave_config {
             .cs = g                     \
         }
 
-const static struct spi_slave_config slave_params[] = {
+const static struct spi_slave_params slave_params[] = {
     SLAVE_PARAMS(CAN_APP_ID, &spi1_can, 10000000,  10, &gpio_spi_can_nss),
     SLAVE_PARAMS(-1        , NULL     ,        0,   0, &gpio_spi_mpu_nss),
     SLAVE_PARAMS(-1        , NULL     ,        0,   0, &gpio_spi_acc_mag_nss),
@@ -61,7 +61,7 @@ static long spi_cur_speed;
 /**
  * Pulls the slave configuration from the database
  */
-static const struct spi_slave_config*
+static const struct spi_slave_params*
 get_slave_config(int id)
 {
     int i;
@@ -74,14 +74,14 @@ get_slave_config(int id)
 }
 
 static inline void
-chip_select(const struct spi_slave_config* cfg, int state)
+chip_select(const struct spi_slave_params* cfg, int state)
 {
     cfg->cs(state);
     udelay(cfg->nss_usdelay);
 }
 
 static inline void
-set_speed(const struct spi_slave_config* cfg)
+set_speed(const struct spi_slave_params* cfg)
 {
     if(spi_cur_speed != cfg->speed_hz){
         clktree_set_spi1_freq(cfg->speed_hz);
@@ -137,7 +137,7 @@ spi__init(void)
  * Performs an SPI transfer
  */
 static int
-do_spi_transfer(const struct spi_slave_config* cfg, void* txbuf, unsigned int wcount, 
+do_spi_transfer(const struct spi_slave_params* cfg, void* txbuf, unsigned int wcount, 
                 void* rxbuf, unsigned int rcount)
 {
     int ret;
@@ -163,7 +163,7 @@ do_spi_transfer(const struct spi_slave_config* cfg, void* txbuf, unsigned int wc
 int
 spi_transfer(int id, unsigned int wcount, unsigned int rcount)
 {
-    const struct spi_slave_config* cfg;
+    const struct spi_slave_params* cfg;
     /* Find the slave configuration */
     cfg = get_slave_config(id);
     assert(cfg);
@@ -180,7 +180,7 @@ spi_transfer(int id, unsigned int wcount, unsigned int rcount)
 int
 spi_transfer_byte(int id, char byte)
 {
-    const struct spi_slave_config* cfg;
+    const struct spi_slave_params* cfg;
     char data[2];
     int ret;
     /* Find the slave configuration */
