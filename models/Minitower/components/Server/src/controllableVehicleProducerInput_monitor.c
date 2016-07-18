@@ -29,8 +29,7 @@ void callback_rebootReqSetRespProducer(const uint32_t *n_var0)
         
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
 
-	bool arg = true;
-	Server_self2vm_reboot_write_bool(&arg);
+	Server_self2vm_reboot_write_void();
     }
     if (n_cse1) {
         callback_output_Server_UART_out_put_pt_data_2(n_ref1);
