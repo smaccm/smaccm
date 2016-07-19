@@ -66,6 +66,8 @@ has mutex <port.mutex>;
 
 >>
 
+inputDataPortDecl(port) ::= "<inputPortDecl(port)>"
+
 outputDataPortDecl(port) ::= <<
 uses <port.type.readerWriterInterfaceName> <port.qualifiedName>;
 
@@ -151,7 +153,7 @@ component <threadImpl.componentName> {
     <threadImpl.endpoints:writeRpgInterface()>
 
     <commentIf("Provided interfaces for input data ports",
-               (threadImpl.inputDataPortList:inputPortDecl()))><\\>
+               (threadImpl.inputDataPortList:inputDataPortDecl()))><\\>
 
     <commentIf("Provided interfaces for output data ports",
                (threadImpl.outputDataPortList:outputDataPortDecl()))><\\>

@@ -72,6 +72,7 @@ public abstract class PropertyUtil {
   final public static String CAMKES_EXTERNAL_TIMER_COMPLETE_PATH_NAME = "SMACCM_SYS::CAmkES_External_Timer_Complete_Path";
   final public static String CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT_NAME = "SMACCM_SYS::CAmkES_Internal_Timer_Timers_Per_Client"; 
   final public static String CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX_NAME = "SMACCM_SYS::CAmkES_Time_Server_AADL_Thread_Min_Index"; 
+  final public static String MAILBOX_NAME = "SMACCM_SYS::Mailbox"; 
   final public static String REQUIRES_TIME_SERVICES_NAME = "SMACCM_SYS::Requires_Time_Services";
   final public static String CAMKES_DATAPORT_RPC_MIN_INDEX_NAME = "SMACCM_SYS::CAmkES_Dataport_RPC_Min_Index";
   final public static String ECHRONOS_GENERATE_C_MODULES_NAME = "SMACCM_SYS::eChronos_Generate_C_Modules";
@@ -147,6 +148,8 @@ public abstract class PropertyUtil {
       .getPropertyDefinitionInWorkspace(CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT_NAME);
   final public static Property CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX = Util
       .getPropertyDefinitionInWorkspace(CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX_NAME);
+  final public static Property MAILBOX = Util
+	  .getPropertyDefinitionInWorkspace(MAILBOX_NAME); 
   final public static Property REQUIRES_TIME_SERVICES = Util
       .getPropertyDefinitionInWorkspace(REQUIRES_TIME_SERVICES_NAME);
   final public static Property CAMKES_DATAPORT_RPC_MIN_INDEX = Util

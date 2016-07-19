@@ -793,11 +793,19 @@ public class AadlModelParser {
     
     
     // create connection object and connect to ports and thread instances.
-    PortConnection conn = new PortConnection(srcThreadInstance, dstThreadInstance, sourcePort, destPort);
+    PortConnection conn = new PortConnection(ci.getName(), srcThreadInstance, dstThreadInstance, sourcePort, destPort);
     srcThreadInstance.addIsSrcOfConnection(conn);
     dstThreadInstance.addIsDstOfConnection(conn);
     sourcePort.addConnection(conn);
     destPort.addConnection(conn);
+    
+    // 7/1/2016 Check for Mailbox property
+	boolean useMailbox = false; 
+    try {
+		useMailbox = PropertyUtils.getBooleanValue(ci, PropertyUtil.MAILBOX);
+	} catch(Exception e) {}
+    conn.setIsMailbox(useMailbox);
+    
     return conn;
 	}
 
