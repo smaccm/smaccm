@@ -8,13 +8,23 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
  */
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.PortNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatcherTraverser;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InitializerPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutgoingDispatchContract;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
@@ -249,13 +259,16 @@ private String name;
     return dispatchers;
   }
   
-  public Set<PortConnection> getActiveThreadConnectionList() {
-    Set<PortConnection> frontier = new HashSet<>(); 
+  public List<PortConnection> getActiveThreadConnectionList() {
+    Set<PortConnection> frontier = new HashSet<>();
     for (DispatchableInputPort d : getDispatcherList()) {
       DispatcherTraverser dt = new DispatcherTraverser();
       dt.dispatcherActiveThreadConnections(d, frontier);
     }
-    return frontier;
+    
+    List<PortConnection> result = new ArrayList<>(frontier);
+    result.sort(Comparator.comparing(PortConnection::getConnectionID));
+    return result;
   }
   
   public Set<PortConnection> getNonlocalActiveThreadConnectionFrontier() {

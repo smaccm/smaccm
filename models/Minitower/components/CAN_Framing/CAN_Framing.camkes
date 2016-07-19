@@ -39,10 +39,10 @@
 import "../../interfaces/CAN_Framing_interface.idl4";
 
 // Idl files for ports
-import "../../interfaces/int64_t_writer.idl4";
-import "../../interfaces/bool_writer.idl4";
 import "../../interfaces/SMACCM_DATA__CAN_Frame_i_writer.idl4";
 import "../../interfaces/SMACCM_DATA__GIDL_writer.idl4";
+import "../../interfaces/bool_writer.idl4";
+import "../../interfaces/int64_t_writer.idl4";
 
 
 component CAN_Framing {
@@ -51,8 +51,8 @@ component CAN_Framing {
 
     // Connection to active thread 'send' interfaces
     uses SMACCM_DATA__GIDL_writer CAN_Framing_self2server;
-    uses SMACCM_DATA__CAN_Frame_i_writer CAN_Framing_self2can_complete;
     uses SMACCM_DATA__CAN_Frame_i_writer CAN_Framing_self2can_request;
+    uses SMACCM_DATA__CAN_Frame_i_writer CAN_Framing_self2can_complete;
 
     has semaphore smaccm_dispatch_sem;
 

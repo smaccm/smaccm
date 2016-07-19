@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos.parse;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -251,7 +252,7 @@ public class Model {
 	}
 	*/
 	public List<ThreadImplementation> getAllThreadImplementations() {
-    return this.threadImplementationList;
+		return threadImplementationList;
 	}
 	
 	public List<ThreadImplementation> getActiveThreadImplementations() {
@@ -466,5 +467,4 @@ public class Model {
     connNumber++; 
     return connNumber;
   }
-
 }

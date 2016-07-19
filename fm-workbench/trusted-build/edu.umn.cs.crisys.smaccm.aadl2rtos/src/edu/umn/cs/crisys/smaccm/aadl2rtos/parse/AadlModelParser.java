@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos.parse;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -226,6 +227,7 @@ public class AadlModelParser {
 		
 		// initialize the model thread and shared data lists.
 		this.model.threadImplementationList = new ArrayList<ThreadImplementation>(this.threadImplementationMap.values());
+		this.model.threadImplementationList.sort(Comparator.comparing(ThreadImplementation::getNormalizedName));
 		this.model.sharedDataList = new ArrayList<SharedData>(this.sharedDataMap.values());
 	}
 

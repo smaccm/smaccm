@@ -46,14 +46,14 @@
 
 // AADL-defined types
 typedef 
-      struct smaccm_Encrypt_uart2self_struct { 
-         uint32_t unused  ; 
-      } smaccm_Encrypt_uart2self_struct ; 
-
-typedef 
       struct smaccm_CAN_Framing_can2self_status_struct { 
          uint32_t unused  ; 
       } smaccm_CAN_Framing_can2self_status_struct ; 
+
+typedef 
+      struct smaccm_Encrypt_uart2self_struct { 
+         uint32_t unused  ; 
+      } smaccm_Encrypt_uart2self_struct ; 
 
 typedef 
       struct smaccm_CAN_Driver_framing2self_struct { 
@@ -158,14 +158,14 @@ typedef
       } smaccm_Server_framing2self_struct ; 
 
 typedef 
-      struct smaccm_UART_Driver_encrypt2self_struct { 
-         uint32_t unused  ; 
-      } smaccm_UART_Driver_encrypt2self_struct ; 
-
-typedef 
       struct smaccm_Decrypt_uart2self_struct { 
          uint32_t unused  ; 
       } smaccm_Decrypt_uart2self_struct ; 
+
+typedef 
+      struct smaccm_UART_Driver_encrypt2self_struct { 
+         uint32_t unused  ; 
+      } smaccm_UART_Driver_encrypt2self_struct ; 
 
 typedef 
       struct smaccm_SMACCM_DATA__GIDL_container { 

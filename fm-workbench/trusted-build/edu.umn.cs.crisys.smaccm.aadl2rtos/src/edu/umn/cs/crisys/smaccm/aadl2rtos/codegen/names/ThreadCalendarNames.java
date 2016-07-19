@@ -4,6 +4,7 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
@@ -42,6 +43,7 @@ public class ThreadCalendarNames {
     for (InputPeriodicPort d: c.getPeriodicDispatchers()) {
       dl.add(new PortNames(d));
     }
+    dl.sort(Comparator.comparing(PortNames::getQualifiedName));
     return dl;
   }
 
