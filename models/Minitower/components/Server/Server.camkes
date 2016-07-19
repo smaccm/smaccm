@@ -41,8 +41,8 @@ import "../../interfaces/Server_interface.idl4";
 // Idl files for ports
 import "../../interfaces/int64_t_writer.idl4";
 import "../../interfaces/void_writer.idl4";
-import "../../interfaces/SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4";
 import "../../interfaces/SMACCM_DATA__GIDL_writer.idl4";
+import "../../interfaces/SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4";
 
 
 component Server {
@@ -50,8 +50,8 @@ component Server {
     control;
 
     // Connection to active thread 'send' interfaces
-    uses SMACCM_DATA__GIDL_writer Server_self2framing;
     uses SMACCM_DATA__GIDL_writer Server_self2encrypt;
+    uses SMACCM_DATA__GIDL_writer Server_self2framing;
     uses void_writer Server_self2vm_reboot;
 
     has semaphore smaccm_dispatch_sem;
