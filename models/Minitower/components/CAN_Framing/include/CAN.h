@@ -10,7 +10,7 @@ extern "C" {
 #include "input_CAN_hw_CAN_get_status_monitor.h"
 #include "input_Server_CAN_get_pt_data_monitor.h"
 #include "ivory.h"
-#include "smaccm_CAN_framing.h"
+#include "smaccm_CAN_Framing.h"
 
 #ifdef __cplusplus
 }
