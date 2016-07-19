@@ -27,47 +27,47 @@ uint32_t the_interval = 0;
 
 void clock_init()
 {
-	pwm_config_t config;
+    pwm_config_t config;
 
-	/*
-	 * Provide hardware info to platsupport.
-	 */
-	config.vaddr = (void*)mem;
+    /*
+     * Provide hardware info to platsupport.
+     */
+    config.vaddr = (void*)mem;
 
-	timer_drv = pwm_get_timer(&config);
-	if (!timer_drv) {
-		printf("PWM timer does not exist.\n");
-	}
+    timer_drv = pwm_get_timer(&config);
+    if (!timer_drv) {
+        printf("PWM timer does not exist.\n");
+    }
 }
 
 /* Set interrupt interval, in milliseconds. */
 void clock_set_interval_in_ms(uint32_t interval)
 {
-	timer_periodic(timer_drv, ((uint64_t)interval)*NS_IN_MS);
-	the_interval = interval;
+    timer_periodic(timer_drv, ((uint64_t)interval)*NS_IN_MS);
+    the_interval = interval;
 }
 
 void clock_start_timer(void) {
-	timer_start(timer_drv);
+    timer_start(timer_drv);
 }
 
 /* Does not seem to be implemented!
  *
 uint64_t clock_get_time() {
-	return timer_get_time(timer_drv);
+    return timer_get_time(timer_drv);
 }
 */
 
 uint64_t clock_get_time()
 {
-	return ticks*((uint64_t)the_interval) ;
+    return ticks*((uint64_t)the_interval) ;
 }
 
 void clock_irq_callback() {
-	/* Hardware routine. */
-	ticks++;
-	timer_handle_irq(timer_drv, PWM_T4_INTERRUPT);
+    /* Hardware routine. */
+    ticks++;
+    timer_handle_irq(timer_drv, PWM_T4_INTERRUPT);
 
-	/* Signal other components (currently unimplemented) */
-	/* timer_update_emit(); */
+    /* Signal other components (currently unimplemented) */
+    /* timer_update_emit(); */
 }

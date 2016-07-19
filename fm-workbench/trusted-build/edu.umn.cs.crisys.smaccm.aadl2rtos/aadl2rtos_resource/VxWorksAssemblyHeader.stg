@@ -5,11 +5,11 @@ import "CommonCPrototypes.stg"
 ////////////////////////////////////////////////////////////////////////////
 //
 // Declarations related to eChronos .prx file
-// 
+//
 ////////////////////////////////////////////////////////////////////////////
 
 filePurpose(sysInstanceName) ::= <<
-This file contains the declarations required for the cross-component 
+This file contains the declarations required for the cross-component
 RPC calls for VxWorks.
 >>
 
@@ -36,24 +36,24 @@ filePostfix(name, path) ::= <<
 
 /*
 dataWriterDecl(port) ::= <<
-bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg); 
->> 
+bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg);
+>>
 */
 
 writerDecl(port) ::= <<
 <if(port.isIRQ)>
 <else>
-bool <incomingPortWriterName(port)><if(port.hasData)>(const <port.type.camkesInputType.name> arg);<else>();<endif> 
+bool <incomingPortWriterName(port)><if(port.hasData)>(const <port.type.camkesInputType.name> arg);<else>();<endif>
 <endif>
 >>
 
 /*
  * In CAmkES, we write to the output port.
  * In eChronos and VxWorks, we should write to the input port.
- * So, we only want the input ports.  We don't 
+ * So, we only want the input ports.  We don't
  * even want the dispatchers.  However, for event
- * and event data ports, we need to know whether 
- * the thread is active or passive so that we know 
+ * and event data ports, we need to know whether
+ * the thread is active or passive so that we know
  * what can subsequently dispatch.
  */
 
@@ -85,7 +85,7 @@ writePassiveThreadMutexes(threadImpl, extern) ::= <<
 }>
 >>
 
-writeModelMutexes(model, extern) ::= << 
+writeModelMutexes(model, extern) ::= <<
 /* model-level external mutexes */
 <model.externalMutexList:{ m | <extern> SEM_ID <m>;
 }>
@@ -110,10 +110,10 @@ headerBody(model) ::= <<
 // to initialize periodic dispatcher.  Call from main() before
 // starting OS.
 
-bool initialize_periodic_dispatcher(); 
-int trusted_build_main(uint32_t runDurationInSeconds); 
+bool initialize_periodic_dispatcher();
+int trusted_build_main(uint32_t runDurationInSeconds);
    <model.activeThreadImplementations:activeThreadDecls()>
    <model.passiveThreadImplementations:passiveThreadDecls()>
-   
+
    <writeMutexes(model, "extern")>
 >>

@@ -121,7 +121,7 @@ public
 	thread CAN_Framing
 		features
 			server2self: in event data port SMACCM_DATA::GIDL;
-			self2server: out data port SMACCM_DATA::GIDL;
+			self2server: out event data port SMACCM_DATA::GIDL;
 
 			can2self_frame: in event data port SMACCM_DATA::CAN_Frame.i {
 						Queue_Size => 10;

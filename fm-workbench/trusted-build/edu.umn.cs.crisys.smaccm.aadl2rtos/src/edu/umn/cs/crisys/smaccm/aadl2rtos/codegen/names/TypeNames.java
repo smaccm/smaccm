@@ -207,7 +207,7 @@ public class TypeNames {
   public String getAadlInputToCamkesInput() {
     if (t_structural instanceof ArrayType) {
       String wrapperName = TypeNames.getCamkesArrayContainerName((IdType)t);
-      return "(" + wrapperName + " *)"; 
+      return "(" + wrapperName + " *) "; 
     }
     else 
       return "";

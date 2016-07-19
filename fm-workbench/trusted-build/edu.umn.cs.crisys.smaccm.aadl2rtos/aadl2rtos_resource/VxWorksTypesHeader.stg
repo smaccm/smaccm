@@ -8,14 +8,14 @@ filePrefix(name, date, path) ::= <<
 <DARPALicenseComment()>
 
 <filenameBlockComment(date, path, datatypesblockPurpose(name))>
-	
+
 #include \<../usr/h/stdbool.h>
 #include \<stddef.h>
 #include \<../usr/h/stdint.h>
 
 >>
 
-writeExternal(string) ::= << 
-#include "<string>" 
+writeExternal(string) ::= <<
+#include "<string>"
 
 >>

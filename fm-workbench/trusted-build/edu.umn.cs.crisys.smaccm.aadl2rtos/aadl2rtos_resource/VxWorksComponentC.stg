@@ -2,7 +2,7 @@ import "CommonComponentC.stg"
 
 /*
  * Overrides for OS-specific names/behavior for generated C code.
- * 
+ *
  */
 
 osSpecificThreadEntrypoint(threadImpl) ::= "void <threadImpl.threadImplMainFnName>()"
@@ -19,13 +19,13 @@ incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.
 
 outgoingUserEntrypointCallerName(dispatcher) ::= "<incomingUserEntrypointCallerName(dispatcher)>"
 
-portLockStmt(port) ::= << 
-semTake(<port.mutex>, WAIT_FOREVER);  
+portLockStmt(port) ::= <<
+semTake(<port.mutex>, WAIT_FOREVER);
 
 >>
 
 portUnlockStmt(port) ::= <<
-semGive(<port.mutex>); 
+semGive(<port.mutex>);
 
 >>
 
@@ -41,10 +41,10 @@ dispatcherMainInitializeLockStmt(threadImpl) ::= <<
 semTake(<threadImpl.threadDispatcherMutex>, WAIT_FOREVER);
 >>
 
-createWatchdog(dispatcher) ::= << 
+createWatchdog(dispatcher) ::= <<
 <if(dispatcher.isPeriodic)> <periodicClock(dispatcher)> = wdCreate();
-assert(<periodicClock(dispatcher)> != NULL); 
-<endif> >>  
+assert(<periodicClock(dispatcher)> != NULL);
+<endif> >>
 
 createWatchdogs(threadImpl) ::= <<
 <threadImpl.dispatchers:{dispatcher |<createWatchdog(dispatcher)> }>
@@ -53,14 +53,14 @@ createWatchdogs(threadImpl) ::= <<
 invokeWatchdog(dispatcher) ::= <<
 <if(dispatcher.isPeriodic)> <periodicClock(dispatcher)> = wdCreate();
 <periodicClockFn(dispatcher)>();
-<endif> >>  
+<endif> >>
 
 
 invokeWatchdogs(threadImpl) ::= <<
 <threadImpl.dispatchers:invokeWatchdog()>
 >>
 
-osSpecificThreadPostInitializer(threadImpl) ::= << 
+osSpecificThreadPostInitializer(threadImpl) ::= <<
 
 <createWatchdogs(threadImpl)>
 <invokeWatchdogs(threadImpl)>
@@ -119,7 +119,7 @@ writeDecls(threadImpl) ::= <<
 <endif>
 >>
 
-periodicClockFn(dispatcher) ::= "<dispatcher.name>_callback" 
+periodicClockFn(dispatcher) ::= "<dispatcher.name>_callback"
 
 periodicClock(dispatcher) ::= "<dispatcher.name>_clock"
 
@@ -137,12 +137,12 @@ WDOG_ID <periodicClock(dispatcher)>;
 
 static void <periodicClockFn(dispatcher)>(void)
 {
-	bool dispatcherOk;
-	dispatcherOk = wdStart(<periodicClock(dispatcher)>, 
-						   <dispatcher.periodicDispatcherPeriod>, (FUNCPTR)<periodicClockFn(dispatcher)>, 0 ); 
-	assert(dispatcherOk == OK); 
-	dispatcherOk = <dispatcherMainLockReleaseStmt(dispatcher)>
-	assert(dispatcherOk == OK); 
+    bool dispatcherOk;
+    dispatcherOk = wdStart(<periodicClock(dispatcher)>,
+                           <dispatcher.periodicDispatcherPeriod>, (FUNCPTR)<periodicClockFn(dispatcher)>, 0 );
+    assert(dispatcherOk == OK);
+    dispatcherOk = <dispatcherMainLockReleaseStmt(dispatcher)>
+    assert(dispatcherOk == OK);
 }
 <endif>
 >>
@@ -165,12 +165,12 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 // <osSpecificCreateWatchdog(threadImpl.dispatchers)>;
 
 
-osSpecificIrqDispatcher(dispatcher) ::= << 
+osSpecificIrqDispatcher(dispatcher) ::= <<
 bool <incomingActiveThreadDispatchName(dispatcher)>() {
-	<dispatcher.firstLevelInterruptHandler>();
-	<dispatcher.dispatchOccurredVar> = true;
-	<dispatcherMainLockReleaseStmt(dispatcher)>
-	return true;
+    <dispatcher.firstLevelInterruptHandler>();
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcherMainLockReleaseStmt(dispatcher)>
+    return true;
 }
 >>
 
@@ -180,4 +180,3 @@ osSpecificComponentLocalCallerFunction(connection) ::= ""
 
 // TODO: add an eChronos assert function.
 osSpecificAssert(predicate) ::= ""
-
