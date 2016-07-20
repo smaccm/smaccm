@@ -9,22 +9,21 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include <platsupport/chardev.h>
 #include <platsupport/serial.h>
 #include <utils/util.h>
-#include "GPS_Driver.h"
+#include <camkes.h>
+#include <ubx.h>
 
+//#define BAUD_RATE 4800
+//#define BAUD_RATE 9600
+#define BAUD_RATE 38400
+//#define BAUD_RATE 57600
 //#define BAUD_RATE 115200
-#define BAUD_RATE 57600
 
-#ifdef CONFIG_PLAT_EXYNOS5410
-#define DEV_ID  PS_SERIAL1
-#elif CONFIG_PLAT_IMX31
-#define DEV_ID  IMX31_UART1
-#else
-#error
-#endif
+#define DEV_ID PS_SERIAL3
 
 struct uart_token {
     size_t cur_bytes;
@@ -92,24 +91,18 @@ static void
 write_callback(ps_chardevice_t* device, enum chardev_status stat,
                size_t bytes_transfered, void* token) {
     struct uart_token* t;
-    const bool b;
     t = (struct uart_token*) token;
     t->cur_bytes += bytes_transfered;
     if (t->cur_bytes == t->req_bytes) {
-        //put call to receiving response here
-        printf("uart received response\n");
     }
 }
 
-bool write_to_uart(void) {
+bool write(char *buf, int buf_len) {
     struct uart_token token;
-    char buff[1];
-    buff[0] = 0;
-    
-    printf("writing char %c\n", buff[0]);
+
     token.cur_bytes = 0;
-    token.req_bytes = 1;
-    token.buf = (char*) buff;
+    token.req_bytes = buf_len;
+    token.buf = (char*) buf;
     if (ps_cdev_write(&serial_device, token.buf, token.req_bytes, &write_callback, &token) < 0) {
         printf("Error writing to UART\n");
         return false;
@@ -118,14 +111,113 @@ bool write_to_uart(void) {
     return true;
 }
 
+static void handle_nav_sol(struct UBX_nav_sol *nav_sol) {
+    char *gpsFixText = nav_sol->gpsFix < 0x06 ? GPS_FIX_TEXT[nav_sol->gpsFix] : "Reserved";
+    printf("GPS Fix: %s\n", gpsFixText);
+    printf("3D Position Accuracy Estimate: %.2fm\n", nav_sol->pAcc / 100.0);
+}
+
+static void handle_nav_posllh(struct UBX_nav_posllh *nav_posllh) {
+    float lat = nav_posllh->lat * 1.0e-7;
+    float lon = nav_posllh->lon * 1.0e-7;
+    printf("Latitude: %f\n", lat);
+    printf("Longitude: %f\n", lon);
+    printf("http://maps.google.com/?q=%f,%f\n", lat, lon);
+}
+
+static void handle_payload(uint8_t class, uint8_t id, uint16_t len, union UBX_payload* payload) {
+    if (class == UBX_nav_class && id == UBX_nav_sol_id) {
+	if (len == UBX_nav_sol_length) {
+	    handle_nav_sol(&payload->nav_sol);
+	} else {
+	    printf("Bad length %d for UBX NAV-SOL\n", len);
+	}
+    } else if (class == UBX_nav_class && id == UBX_nav_posllh_id) {
+	if (len == UBX_nav_posllh_length) {
+	    handle_nav_posllh(&payload->nav_posllh);
+	} else {
+	    printf("Bad length %d for UBX NAV-POSLLH\n", len);
+	}
+    }
+}
+
+
+#define MAX_PAYLOAD 100
+
+static int handle_packet(uint8_t *buf, int n) {
+    if (n < 8) {
+	// Not enough bytes for even a minimal packet
+	return n;
+    }
+
+    if (buf[0] != UBX_sync1) {
+	printf("Bad sync1: %02x\n", buf[0]);
+	return 1;
+    }
+    if (buf[1] != UBX_sync2) {
+	printf("Bad sync2: %02x\n", buf[1]);
+	return 2;
+    }
+    
+    uint8_t class = buf[2];
+    uint8_t id = buf[3];
+    uint16_t len = buf[4] | (buf[5] << 8);
+
+    if (len + 2 > n) {
+	// Not enough bytes for payload + checksums
+	return n;
+    }
+
+    if (len > MAX_PAYLOAD) {
+	printf("Payload too large\n");
+	return 6 + len + 2;
+    }
+
+    uint8_t payload[MAX_PAYLOAD];
+    memcpy(payload, buf + 6, len);
+
+    uint8_t ck_a = buf[6 + len];
+    uint8_t ck_b = buf[6 + len + 1];
+
+    uint8_t computed_ck_a = 0;
+    uint8_t computed_ck_b = 0;
+    for (int i = 2; i < 6 + len; i++) {
+	computed_ck_a += buf[i];
+	computed_ck_b += computed_ck_a;
+    }
+
+    if (ck_a != computed_ck_a || ck_b != computed_ck_b) {
+	printf("Bad checksum %02x %02x %02x %02x\n", ck_a, ck_b, computed_ck_a, computed_ck_b);
+	return 6 + len + 2;
+    }
+
+    handle_payload(class, id, len, (union UBX_payload*) payload);
+
+    return 6 + len + 2;
+}
+
 int run(void)
 {
     char buf[255];
-    write_to_uart();
-	while (1) {
-		int r = uart_read((char*) buf, 255);
-        printf("received char %d\n", buf[0]);
-        write_to_uart();
+    int i, n;
+
+    for(;;) {
+        n = uart_read((char*) buf, 255);
+/*
+	printf("Read %d bytes\n", n);
+	for (i = 0; i < n; i++) {
+	    printf(" %02x", buf[i]);
+	    if (i % 10 == 9 && i + 1 < n) {
+		printf("\n");
+	    }
 	}
-	return 0;
+	printf("\n\n");
+*/
+	i = 0;
+	while (i < n) {
+	    i += handle_packet(buf + i, n - i);
+	}
+	printf("\n");
+    }
+    return 0;
 }
