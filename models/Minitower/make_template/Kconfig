@@ -1,6 +1,0 @@
-config APP_SMACCMPILOT
-    bool "AADL generic message for implementation smaccmpilot"
-    default n
-    select APP_CAMKES_EXECUTIVE
-    help
-        AADL generic message for implementation smaccmpilot. 

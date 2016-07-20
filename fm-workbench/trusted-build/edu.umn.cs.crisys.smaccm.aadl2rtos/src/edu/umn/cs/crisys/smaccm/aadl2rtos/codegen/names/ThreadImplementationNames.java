@@ -5,11 +5,13 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -274,6 +276,7 @@ public class ThreadImplementationNames {
     for (Type t : usedTypes) {
       tn.add(new TypeNames(t));
     }
+    tn.sort(Comparator.comparing(TypeNames::getName));
     return tn;
   }
   

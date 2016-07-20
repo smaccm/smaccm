@@ -80,5 +80,4 @@ public abstract class Type implements DependsOn<Type> {
 	public Type getRootType() throws Aadl2RtosFailure {
 		return this;
 	}
-
 }

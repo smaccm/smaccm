@@ -13,11 +13,11 @@ componentGlueCodeHeaderBody(threadImpl) ::= <<
 <componentGlueCodeHeaderBodyFunctions(threadImpl)>
 
 <if(threadImpl.sharedDataAccessorList)>
-	// declarations for shared data. 
-	<threadImpl.sharedDataAccessorList:sharedDataDecl()>
+    // declarations for shared data.
+    <threadImpl.sharedDataAccessorList:sharedDataDecl()>
 <endif>
 
-	<writeModelMutexes(threadImpl.model, "extern")>
+    <writeModelMutexes(threadImpl.model, "extern")>
 
 
 >>

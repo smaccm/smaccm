@@ -10,17 +10,17 @@ import "VxWorksAssemblyHeader.stg"
 ////////////////////////////////////////////////////////////////////////////
 //
 // Declarations related to component gluecode C files for CAmkES/eChronos
-// 
-// 
+//
+//
 ////////////////////////////////////////////////////////////////////////////
 
 mainGlueCodeCFilePurpose(name) ::= <<
-This C file contains the main function for model <name>.   
+This C file contains the main function for model <name>.
 
 >>
 
-filePrefix(name, date, path) ::= 
-	"<stdFilePrefix(date, path, mainGlueCodeCFilePurpose(name))>"
+filePrefix(name, date, path) ::=
+    "<stdFilePrefix(date, path, mainGlueCodeCFilePurpose(name))>"
 
 filePostfix(name, path) ::= <<
 
@@ -32,12 +32,12 @@ createSem() ::= "semMCreate(SEM_Q_PRIORITY | SEM_INVERSION_SAFE)"
 
 createActiveThreadMutexes(threadImpl) ::= <<
 <threadImpl.threadDispatcherMutex> = <createSem()>;
-assert(<threadImpl.threadDispatcherMutex> != NULL); 
+assert(<threadImpl.threadDispatcherMutex> != NULL);
 <threadImpl.inputPortList:{port | <port.mutex> = <createSem()>;
-assert(<port.mutex> != NULL); 
+assert(<port.mutex> != NULL);
 }>
 <threadImpl.externalMutexes:{ m | <m> = <createSem()>;
-assert(<m> != NULL); 
+assert(<m> != NULL);
 }>
 >>
 
@@ -90,19 +90,19 @@ deleteMutexes(model) ::= <<
 
 
 createTask(threadImpl) ::= <<
-<threadImpl.normalizedName> = taskCreate("<threadImpl.normalizedName>", 
-	<threadImpl.priority>,
-	VX_FP_TASK, 
-	<threadImpl.osSpecificStackSize>,
-	(FUNCPTR)<threadImpl.threadImplMainFnName>, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0); 
+<threadImpl.normalizedName> = taskCreate("<threadImpl.normalizedName>",
+    <threadImpl.priority>,
+    VX_FP_TASK,
+    <threadImpl.osSpecificStackSize>,
+    (FUNCPTR)<threadImpl.threadImplMainFnName>,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 assert(<threadImpl.normalizedName> != NULL);
 
 >>
 
 activateTask(threadImpl) ::= <<
 status = taskActivate(<threadImpl.normalizedName>);
-assert(status == OK); 
+assert(status == OK);
 
 >>
 
@@ -119,7 +119,7 @@ deleteTasks(model) ::= <<
 
 sharedDataDefinition(sharedData) ::= <<
 <sharedData.type.name> <sharedData.varName>;
-	
+
 >>
 
 /////////////////////////////////////////////////////////////////////
@@ -130,26 +130,26 @@ sharedDataDefinition(sharedData) ::= <<
 mainFunction(model) ::= <<
 int trusted_build_main(uint32_t runDurationInSeconds) {
 
-	STATUS status = sysClkRateSet(1000);
-	assert(status == OK);
-	
-	<createMutexes(model)>
+    STATUS status = sysClkRateSet(1000);
+    assert(status == OK);
 
-	<createTasks(model)>
-	
-	if (runDurationInSeconds == 0) {
-		taskSuspend(0);
-	} else {
-		sleep(runDurationInSeconds); 
-	}
-	
-	/* if bounded-time run, kill the tasks and delete the mutexes */
-	
-	<deleteTasks(model)>
-	
-	<deleteMutexes(model)>
-	
-	return 0; 
+    <createMutexes(model)>
+
+    <createTasks(model)>
+
+    if (runDurationInSeconds == 0) {
+        taskSuspend(0);
+    } else {
+        sleep(runDurationInSeconds);
+    }
+
+    /* if bounded-time run, kill the tasks and delete the mutexes */
+
+    <deleteTasks(model)>
+
+    <deleteMutexes(model)>
+
+    return 0;
 }
 >>
 
@@ -179,4 +179,3 @@ body(model) ::= <<
 <mainFunction(model)>
 
 >>
-
