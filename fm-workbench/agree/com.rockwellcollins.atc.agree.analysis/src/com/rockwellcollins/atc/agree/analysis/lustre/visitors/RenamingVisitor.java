@@ -62,7 +62,7 @@ public class RenamingVisitor extends AstIterVisitor{
             String category = getCategory(var);
             String refStr = getReferenceStr(var);
 
-            if (isMainNode) {
+            if (isMainNode && var.reference != null) {
                 if (var.reference instanceof AssumeStatement && category.equals("")) {
                     renaming.addSupportRename(var.id, var.id);
                     renaming.addSupportRefString(var.id, refStr);

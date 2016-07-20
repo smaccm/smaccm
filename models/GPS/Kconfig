@@ -1,0 +1,6 @@
+config APP_GPS
+    bool "A test app for the GPS"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        A test app for the GPS. 

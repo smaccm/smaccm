@@ -22,11 +22,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos.handlers;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 //import java.util.Map;
-
-
 
 import javax.xml.parsers.ParserConfigurationException;
 

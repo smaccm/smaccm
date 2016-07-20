@@ -41,13 +41,13 @@ import <std_connector.camkes>;
 import "components/dispatch_periodic/dispatch_periodic.camkes";
 import <TimeServerOdroid/TimeServer.camkes>;
 
-import "components/UART_Driver/UART_Driver.camkes";
-import "components/Decrypt/Decrypt.camkes";
-import "components/Server/Server.camkes";
-import "components/Virtual_Machine/Virtual_Machine.camkes";
-import "components/Encrypt/Encrypt.camkes";
 import "components/CAN_Driver/CAN_Driver.camkes";
 import "components/CAN_Framing/CAN_Framing.camkes";
+import "components/Decrypt/Decrypt.camkes";
+import "components/Encrypt/Encrypt.camkes";
+import "components/Server/Server.camkes";
+import "components/UART_Driver/UART_Driver.camkes";
+import "components/Virtual_Machine/Virtual_Machine.camkes";
 
 connector seL4RPCCallDataport {
     from Procedure client template "seL4RPCCallDataport-from.template.c";
@@ -61,33 +61,33 @@ assembly {
         component TimeServerOdroid time_server;
 
         // Component instances for all AADL-defined threads
-        component UART_Driver UART_Driver_inst;
-        component Decrypt Decrypt_inst;
-        component Server Server_inst;
-        component Virtual_Machine Virtual_Machine_inst;
-        component Encrypt Encrypt_inst;
         component CAN_Driver CAN_Driver_inst;
         component CAN_Framing CAN_Framing_inst;
+        component Decrypt Decrypt_inst;
+        component Encrypt Encrypt_inst;
+        component Server Server_inst;
+        component UART_Driver UART_Driver_inst;
+        component Virtual_Machine Virtual_Machine_inst;
 
         // Connections from active dispatcher send/receive to other active dispatcher send/receive
-        connection seL4RPCCall conn1 (from UART_Driver_inst.UART_Driver_self2encrypt, to Encrypt_inst.uart2self);
-        connection seL4RPCCall conn2 (from UART_Driver_inst.UART_Driver_self2decrypt, to Decrypt_inst.uart2self);
-        connection seL4RPCCall conn3 (from Decrypt_inst.Decrypt_self2server, to Server_inst.decrypt2self);
-        connection seL4RPCCall conn4 (from Server_inst.Server_self2encrypt, to Encrypt_inst.server2self);
-        connection seL4RPCCall conn5 (from Server_inst.Server_self2framing, to CAN_Framing_inst.server2self);
-        connection seL4RPCCall conn6 (from Server_inst.Server_self2vm_reboot, to Virtual_Machine_inst.server2self_reboot);
+        connection seL4RPCCall conn1 (from CAN_Driver_inst.CAN_Driver_self2framing_status, to CAN_Framing_inst.can2self_status);
+        connection seL4RPCCall conn2 (from CAN_Driver_inst.CAN_Driver_self2framing_frame, to CAN_Framing_inst.can2self_frame);
+        connection seL4RPCCall conn3 (from CAN_Framing_inst.CAN_Framing_self2server, to Server_inst.framing2self);
+        connection seL4RPCCall conn4 (from CAN_Framing_inst.CAN_Framing_self2can_request, to CAN_Driver_inst.framing2self);
+        connection seL4RPCCall conn5 (from CAN_Framing_inst.CAN_Framing_self2can_complete, to CAN_Driver_inst.framing2self);
+        connection seL4RPCCall conn6 (from Decrypt_inst.Decrypt_self2server, to Server_inst.decrypt2self);
         connection seL4RPCCall conn7 (from Encrypt_inst.Encrypt_self2uart, to UART_Driver_inst.encrypt2self);
-        connection seL4RPCCall conn8 (from CAN_Driver_inst.CAN_Driver_self2framing_frame, to CAN_Framing_inst.can2self_frame);
-        connection seL4RPCCall conn9 (from CAN_Driver_inst.CAN_Driver_self2framing_status, to CAN_Framing_inst.can2self_status);
-        connection seL4RPCCall conn10 (from CAN_Framing_inst.CAN_Framing_self2server, to Server_inst.framing2self);
-        connection seL4RPCCall conn11 (from CAN_Framing_inst.CAN_Framing_self2can_complete, to CAN_Driver_inst.framing2self);
-        connection seL4RPCCall conn12 (from CAN_Framing_inst.CAN_Framing_self2can_request, to CAN_Driver_inst.framing2self);
+        connection seL4RPCCall conn8 (from Server_inst.Server_self2encrypt, to Encrypt_inst.server2self);
+        connection seL4RPCCall conn9 (from Server_inst.Server_self2framing, to CAN_Framing_inst.server2self);
+        connection seL4RPCCall conn10 (from Server_inst.Server_self2vm_reboot, to Virtual_Machine_inst.server2self_reboot);
+        connection seL4RPCCall conn11 (from UART_Driver_inst.UART_Driver_self2decrypt, to Decrypt_inst.uart2self);
+        connection seL4RPCCall conn12 (from UART_Driver_inst.UART_Driver_self2encrypt, to Encrypt_inst.uart2self);
 
         // Periodic dispatcher connections
-        connection seL4RPCCall conn13 (from dispatch_periodic_inst.Decrypt_periodic_dispatcher, to Decrypt_inst.Decrypt_periodic_dispatcher);
-        connection seL4RPCCall conn14 (from dispatch_periodic_inst.Server_periodic_dispatcher, to Server_inst.Server_periodic_dispatcher);
+        connection seL4RPCCall conn13 (from dispatch_periodic_inst.CAN_Framing_periodic_dispatcher, to CAN_Framing_inst.CAN_Framing_periodic_dispatcher);
+        connection seL4RPCCall conn14 (from dispatch_periodic_inst.Decrypt_periodic_dispatcher, to Decrypt_inst.Decrypt_periodic_dispatcher);
         connection seL4RPCCall conn15 (from dispatch_periodic_inst.Encrypt_periodic_dispatcher, to Encrypt_inst.Encrypt_periodic_dispatcher);
-        connection seL4RPCCall conn16 (from dispatch_periodic_inst.CAN_Framing_periodic_dispatcher, to CAN_Framing_inst.CAN_Framing_periodic_dispatcher);
+        connection seL4RPCCall conn16 (from dispatch_periodic_inst.Server_periodic_dispatcher, to Server_inst.Server_periodic_dispatcher);
 
         connection seL4TimeServer periodic_dispatch_timer(from dispatch_periodic_inst.timer, to time_server.the_timer);
         connection seL4GlobalAsynchCallback echo_int(from time_server.timer_notification, to dispatch_periodic_inst.timer_complete);
@@ -103,38 +103,38 @@ assembly {
         dispatch_periodic_inst.timer_complete_global_endpoint = "periodic_dispatcher_timer";
         dispatch_periodic_inst.priority = 201;
 
-        Decrypt_inst.priority = 150;
-        Server_inst.priority = 150;
-        Encrypt_inst.priority = 150;
         CAN_Framing_inst.priority = 150;
+        Decrypt_inst.priority = 150;
+        Encrypt_inst.priority = 150;
+        Server_inst.priority = 150;
 
-        Decrypt_inst._control_stack_size = 1024;
-        Server_inst._control_stack_size = 1024;
-        Encrypt_inst._control_stack_size = 1024;
         CAN_Framing_inst._control_stack_size = 1024;
+        Decrypt_inst._control_stack_size = 1024;
+        Encrypt_inst._control_stack_size = 1024;
+        Server_inst._control_stack_size = 1024;
 
-        // MWW: todo: set scheduling contexts for interfaces for thread UART_Driver_inst.
-        // MWW: todo: set scheduling contexts for interfaces for thread Decrypt_inst.
-        // MWW: todo: set scheduling contexts for interfaces for thread Server_inst.
-        // MWW: todo: set scheduling contexts for interfaces for thread Virtual_Machine_inst.
-        // MWW: todo: set scheduling contexts for interfaces for thread Encrypt_inst.
         // MWW: todo: set scheduling contexts for interfaces for thread CAN_Driver_inst.
         // MWW: todo: set scheduling contexts for interfaces for thread CAN_Framing_inst.
+        // MWW: todo: set scheduling contexts for interfaces for thread Decrypt_inst.
+        // MWW: todo: set scheduling contexts for interfaces for thread Encrypt_inst.
+        // MWW: todo: set scheduling contexts for interfaces for thread Server_inst.
+        // MWW: todo: set scheduling contexts for interfaces for thread UART_Driver_inst.
+        // MWW: todo: set scheduling contexts for interfaces for thread Virtual_Machine_inst.
 
-        UART_Driver_inst._period = -1;
-        UART_Driver_inst._budget = 100;
-        Decrypt_inst._period = 5000;
-        Decrypt_inst._budget = 100;
-        Server_inst._period = 5000;
-        Server_inst._budget = 100;
-        Virtual_Machine_inst._period = -1;
-        Virtual_Machine_inst._budget = 100;
-        Encrypt_inst._period = 5000;
-        Encrypt_inst._budget = 100;
         CAN_Driver_inst._period = -1;
         CAN_Driver_inst._budget = 100;
         CAN_Framing_inst._period = 5000;
         CAN_Framing_inst._budget = 100;
+        Decrypt_inst._period = 5000;
+        Decrypt_inst._budget = 100;
+        Encrypt_inst._period = 5000;
+        Encrypt_inst._budget = 100;
+        Server_inst._period = 5000;
+        Server_inst._budget = 100;
+        UART_Driver_inst._period = -1;
+        UART_Driver_inst._budget = 100;
+        Virtual_Machine_inst._period = -1;
+        Virtual_Machine_inst._budget = 100;
 
     }
 }

@@ -98,12 +98,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		// Short circuit ops first
 		ResoluteValue leftValue = doSwitch(object.getLeft());
 		switch (op) {
+
+			
 		case "and":
 			if (leftValue.getBool()) {
 				return doSwitch(object.getRight());
 			} else {
 				return FALSE;
-			}
+			}			
 
 		case "or":
 			if (leftValue.getBool()) {
