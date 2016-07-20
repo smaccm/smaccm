@@ -23,4 +23,8 @@ public class MATLABBusType extends MATLABType {
 		return null;
 	}
 	
+	public String toString() {
+		return name;
+	}
+	
 }

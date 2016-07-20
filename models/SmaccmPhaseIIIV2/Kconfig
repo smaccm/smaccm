@@ -1,0 +1,44 @@
+config APP_SMACCMPHASEIIIV2
+    bool "Generated code for SmaccmPhaseIII ."
+    depends on LIB_SEL4 && LIB_MUSL_C && LIB_SEL4_VKA && LIB_SEL4_ALLOCMAN && LIB_SEL4_PLAT_SUPPORT && \
+            LIB_PLATSUPPORT && LIB_SEL4_VSPACE && LIB_ELF && LIB_SEL4_UTILS && LIB_SEL4_SIMPLE && \
+            LIB_UTILS && LIB_SEL4_SIMPLE_DEFAULT && LIB_CPIO && LIB_SEL4_ARM_VMM && LIB_SEL4_SYNC && LIB_SEL4_DEBUG && \
+            LIB_SEL4_DMA && LIB_USB
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        Generated AADL from smaccmpilot
+
+config VIRTUAL_MACHINE_EMMC2_NODMA
+    bool "SD access control to prevent DMA"
+    depends on APP_SMACCMPHASEIIIV2
+    default n
+    help
+        Installs SD card into the VM with read only access. Write access is
+        trapped and emulated to ensure that DMA is not used.
+
+config VIRTUAL_MACHINE_VUSB
+    bool "Para-virtual USB driver"
+    depends on APP_SMACCMPHASEIIIV2
+    help
+        Selects the device tree which enables the para virtual USB driver and
+        installs the device into the VM.
+
+choice
+    bool "root file system selection"
+    depends on APP_SMACCMPHASEIIIV2
+    default VIRTUAL_MACHINE_ROOTFS_MMCBLK1P2
+    help
+        Selects the root device and partition which should be used for the
+        root filesystem.
+
+    config SMACCMPHASEIIIV2_ROOTFS_MMCBLK0P2
+        bool "mmcblk0p2"
+        help
+            Selects partition 2 of the on board eMMC as the root filesystem.
+
+    config SMACCMPHASEIIIV2_ROOTFS_MMCBLK1P2
+        bool "mmcblk1p2"
+        help
+
+endchoice

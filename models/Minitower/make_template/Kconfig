@@ -1,0 +1,6 @@
+config APP_SMACCMPILOT
+    bool "smaccmpilot (from AADL)"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        smaccmpilot (from AADL).

@@ -29,28 +29,28 @@ prxBody(model) ::= <<
       <api_asserts>true</api_asserts>
       <internal_asserts>true</internal_asserts>
       <fatal_error>fatal</fatal_error>
-      
+
       <signal_labels>
         <signal_label>
           <name>$model.eChronosDispatchSignal$</name>
         </signal_label>
-      	$writeSignalLabels(model)$
+          $writeSignalLabels(model)$
       </signal_labels>
-      
+
       <tasks>
-      	$writeTasks(model)$
+          $writeTasks(model)$
       </tasks>
-      
+
       <mutexes>
-      	$writeMutexes(model)$
+          $writeMutexes(model)$
       </mutexes>
-      
+
       <semaphores>
-      	$writeSemaphores(model)$
+          $writeSemaphores(model)$
       </semaphores>
-      
+
       <interrupt_events>
-      	$writeInterruptEvents(model)$
+          $writeInterruptEvents(model)$
       </interrupt_events>
 
       <!-- MWW: What is this for?!? -->
@@ -60,8 +60,8 @@ prxBody(model) ::= <<
 
     </module>
 $if(model.eChronosGenerateCModules)$
-	$writeCodeModules(model)$
-$endif$    
+    $writeCodeModules(model)$
+$endif$
   </modules>
 </system>
 

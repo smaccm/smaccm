@@ -17,21 +17,6 @@ system implementation top.i
 end top.i;
 	
 process MissionSoftware
-	
-
-	annex agree {**
-		eq time : real;
-		
-		eq input_clock : bool;
-		eq server_clock : bool;
-		eq output_clock : bool;
-		
-		--an outgoing message is sent after every incoming message
-		--in some bounded amount fo time
-		
-		--the model is free of deadlocks
-	**};
-	
 end MissionSoftware;	
 
 process implementation MissionSoftware.i
@@ -65,12 +50,6 @@ process implementation MissionSoftware.i
 		server_proxy_access : data access  pixhawk_data -> server.pixhawk_data;
 		server_output_access : data access output_data -> server.output_data;
 		output_output_access : data access output_data -> output.input_data;
-		
-	annex agree {**
-		assign input_clock = input._CLK;
-		assign output_clock = output._CLK;
-		assign server_clock = server._CLK;
-	**};
 		
 end MissionSoftware.i;
 

@@ -5,6 +5,8 @@ package com.rockwellcollins.atc.agree.analysis.preferences;
  */
 public class PreferenceConstants {
     public static final String PREF_INDUCT_CEX = "inductiveCounterexamples";
+    //Anitha: added this for set of support
+    public static final String PREF_SUPPORT = "setOfSupport"; 
 
     public static final String PREF_SMOOTH_CEX = "smoothCounterexamples";
 
@@ -20,6 +22,7 @@ public class PreferenceConstants {
 
     public static final String PREF_SOLVER = "solver";
 
+    public static final String SOLVER_SMTINTERPOL = "SMTInterpol";
     public static final String SOLVER_YICES = "Yices";
     public static final String SOLVER_Z3 = "Z3";
     public static final String SOLVER_CVC4 = "CVC4";

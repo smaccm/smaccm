@@ -13,7 +13,10 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
  */
 public class InputPeriodicPort extends DispatchableInputPort {
 
-  private int period = 0;
+  // Note: this is currently specified in millseconds; 
+  // It probably should be in microseconds.
+	
+  private int periodInMilliseconds = 0;
 
   /**
    * @param portName : name of the port
@@ -29,18 +32,18 @@ public class InputPeriodicPort extends DispatchableInputPort {
   static public Type getPortType() { return new IntType(64, true); }
   
   public int getPeriod() {
-    return period;
+    return periodInMilliseconds;
   }
 
   public void setPeriod(int period) {
-    this.period = period;
+    this.periodInMilliseconds = period;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + period;
+    result = prime * result + periodInMilliseconds;
     return result;
   }
 

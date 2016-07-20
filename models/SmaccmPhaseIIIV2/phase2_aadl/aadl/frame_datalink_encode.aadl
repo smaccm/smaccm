@@ -1,0 +1,40 @@
+-- File generated from Tower-AADL compiler
+
+package frame_datalink_encode
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread frame_datalink_encode
+  features
+    Input_encoder_ct_in: in event data port Data_Types::array_96_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_encoder_ct_in");
+        Source_Text => ("user_code/frame_datalink_encode_monitor.c");
+        Queue_Size => 1000;
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_encoder_ct_in_0}}";
+      };
+    Input_complete: in event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_complete");
+        Source_Text => ("user_code/frame_datalink_encode_monitor.c");
+        Queue_Size => 1000;
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+      };
+    Output_encoder_ct_in_0: out event data port Data_Types::ivory_string_HXCyphertext
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_encoder_ct_in_chan_123";
+      };
+  properties
+    Compute_Execution_Time => 10 us .. 100 us;
+    SMACCM_SYS::Sends_Events_To => "{{1 Output_encoder_ct_in_0}}";
+    Source_Text => ();
+    SMACCM_SYS::Thread_Type => Active;
+    Dispatch_Protocol => Sporadic;
+    Stack_Size => 1000 bytes;
+    Priority => 140;
+end frame_datalink_encode;
+
+end frame_datalink_encode;

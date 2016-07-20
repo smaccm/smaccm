@@ -1,0 +1,87 @@
+package SMACCM_DATA
+public
+	with Data_Model;
+	with Base_Types;
+	
+data Array
+end Array;
+
+data implementation Array.packet
+	properties
+		  Data_Model::Data_Representation => Array;
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (255);
+end Array.packet;
+
+data implementation Array.can
+  properties
+      Data_Model::Data_Representation => Array;
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (8);
+end Array.can;
+
+data implementation Array.cypher
+  properties
+      Data_Model::Data_Representation => Array;
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (195);
+end Array.cypher;
+	
+data implementation Array.U8_80
+  properties
+      Data_Model::Data_Representation => Array;
+      Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+      Data_Model::Dimension => (80);
+end Array.U8_80;
+	
+data UartPacket
+end UartPacket; 
+     
+data implementation UartPacket.i
+  subcomponents
+    buff: data Array.packet;
+    len : data Base_Types::Integer_32;
+end ivory_string_UartPacket.i;
+    
+data camera_data
+end camera_data;
+
+data implementation camera_data.i
+	subcomponents
+		bbox_l : data Base_Types::Unsigned_16;
+    bbox_r : data Base_Types::Unsigned_16;
+    bbox_t : data Base_Types::Unsigned_16;
+    bbox_b : data Base_Types::Unsigned_16;
+end camera_data.i;
+
+data ivory_string_HXCyphertext
+end ivory_string_HXCyphertext;
+    
+data implementation ivory_string_HXCyphertext.i
+  subcomponents
+    ivory_string_HXCyphertext_data: data Array.cypher;
+    ivory_string_HXCyphertext_len : data Base_Types::Integer_32;
+end ivory_string_HXCyphertext.i;
+
+data can_message
+end can_message;
+
+data implementation can_message.i
+  subcomponents
+    id: data Base_Types::Unsigned_32; -- CAN id (11 bits for standard frame, 29 bits if extended frame)
+    dlc: data Base_Types::Unsigned_8; -- Data Length Code (0 ~ 8)
+    payload: data can_payload.i;      -- Frame payload (8 bytes maximum)
+end can_message.i;
+
+data can_payload
+end can_payload;
+
+data implementation can_payload.i
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (8);
+end can_payload.i;
+
+    
+end SMACCM_DATA;

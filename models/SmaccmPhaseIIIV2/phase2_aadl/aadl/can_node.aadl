@@ -1,0 +1,40 @@
+-- File generated from Tower-AADL compiler
+
+package can_node
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread can_node
+  features
+    Input_sender: in event data port Data_Types::can_message
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_sender");
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_sender_0}}";
+      };
+    Input_abortHandler: in event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_abortHandler");
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_abortHandler_0}}";
+      };
+    Output_statusHandler_0: out event data port Base_Types::Boolean
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_statusHandler_chan_7";
+      };
+    Output_recvHandler_0: out event data port Data_Types::can_message
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_recvHandler_chan_3";
+      };
+  properties
+    SMACCM_SYS::Is_External => true;
+    Dispatch_Protocol => Sporadic;
+    SMACCM_SYS::Thread_Type => Active;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end can_node;
+
+end can_node;

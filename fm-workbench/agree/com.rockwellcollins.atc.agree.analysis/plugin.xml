@@ -199,6 +199,49 @@
             </command>
          </menu>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:#TextEditorContext?after=additions">
+         <menu
+               id="com.rockwellcollins.atc.agree.analysis.popups.texteditor"
+               label="AGREE"
+               mnemonic="g">          
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifySingle"
+                  icon="icons/layer.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifySingle"
+                  mnemonic="s"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyAll"
+                  mnemonic="a"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyRealize"
+                  mnemonic="a"
+                  style="push">
+			</command>
+			<command
+                  commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic"
+                  icon="icons/layers.png"
+                  id="com.rockwellcollins.atc.agree.analysis.menus.verifyMonolithic"
+                  mnemonic="a"
+                  style="push">
+            </command>
+   <visibleWhen
+         checkEnabled="false">
+      <reference
+            definitionId="org.osate.xtext.aadl2.Aadl2.Editor.opened">
+      </reference>
+   </visibleWhen>
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -207,7 +250,7 @@
             commandId="com.rockwellcollins.atc.agree.analysis.commands.verifySingle">
          <enabledWhen>
             <reference
-                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.eObjectSelected">
             </reference>
          </enabledWhen>
       </handler>
@@ -216,7 +259,7 @@
             commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyAll">
          <enabledWhen>
             <reference
-                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.eObjectSelected">
             </reference>
          </enabledWhen>
       </handler>
@@ -225,7 +268,7 @@
             commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyRealize">
             <enabledWhen>
             <reference
-                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.eObjectSelected">
             </reference>
          </enabledWhen>
       </handler>
@@ -234,7 +277,7 @@
             commandId="com.rockwellcollins.atc.agree.analysis.commands.verifyMonolithic">
          <enabledWhen>
             <reference
-                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
+                  definitionId="com.rockwellcollins.atc.agree.analysis.expressions.eObjectSelected">
             </reference>
          </enabledWhen>
       </handler>
@@ -242,22 +285,26 @@
    <extension
          point="org.eclipse.core.expressions.definitions">
       <definition
-            id="com.rockwellcollins.atc.agree.analysis.expressions.isSingleOutlineSelection">
-         <with
-               variable="selection">
-            <and>
-               <count
-                     value="1">
-               </count>
-               <iterate
-                     ifEmpty="false"
-                     operator="or">
-                  <instanceof
-                        value="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode">
-                  </instanceof>
-               </iterate>
-            </and>
-         </with>
+            id="com.rockwellcollins.atc.agree.analysis.expressions.eObjectSelected">
+         <or>
+	         <with
+	               variable="selection">
+	            <and>
+	               <count
+	                     value="1">
+	               </count>
+	               <iterate
+	                     ifEmpty="false"
+	                     operator="or">
+	                  <instanceof
+	                        value="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode">
+	                  </instanceof>
+	               </iterate>
+	            </and>
+	         </with>
+          <reference definitionId="org.osate.xtext.aadl2.Aadl2.Editor.opened">
+          </reference>
+         </or>
       </definition>
    </extension>
    <extension

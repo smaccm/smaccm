@@ -1,0 +1,131 @@
+
+package Agree_Nodes
+public
+annex agree{**
+	
+  ---------------------------------------------------------------------------------------------------
+  -- Returns the braking pressure in milligrams
+  ---------------------------------------------------------------------------------------------------
+  node Brake_Cmd(mode: int, pedal: int) returns(r: int);
+  let
+    r = if (mode = Agree_Constants.LO)  then 170 else
+        if (mode = Agree_Constants.MED) then 340 else
+        if (mode = Agree_Constants.MAX) then 510 else pedal;
+  tel;
+  
+  node Brake_Mode(mode: int, lo: bool, med: bool, max: bool) returns(r: int);
+  let
+    r = Agree_Constants.MANUAL -> 
+        if (pre(mode) = Agree_Constants.LO     and Rise(lo))  then Agree_Constants.MANUAL else
+        if (pre(mode) = Agree_Constants.MED    and Rise(med)) then Agree_Constants.MANUAL else 
+        if (pre(mode) = Agree_Constants.MAX    and Rise(max)) then Agree_Constants.MANUAL else 
+        if (pre(mode) != Agree_Constants.LO    and Rise(lo))  then Agree_Constants.LO     else 
+        if (pre(mode) != Agree_Constants.MED   and Rise(med)) then Agree_Constants.MED    else 
+        if (pre(mode) != Agree_Constants.MAX   and Rise(max)) then Agree_Constants.MAX    else pre(mode);
+  tel;
+
+  ---------------------------------------------------------------------------------------------------
+  -- Step returns current step of execution
+  ---------------------------------------------------------------------------------------------------
+  node Step() returns (n: int);
+    let
+      n = 0 -> pre(n) + 1;
+      
+      lemma "Step Positive" : n >= 0;
+    tel;
+    
+    ---------------------------------------------------------------------------------------------------
+  -- Latches p
+  ---------------------------------------------------------------------------------------------------
+  node Latch(p: bool) returns (r: bool);
+    let
+      r = p -> p or pre(r);
+    tel;
+    
+  ---------------------------------------------------------------------------------------------------
+  -- Converts a Boolean to an integer
+  ---------------------------------------------------------------------------------------------------
+  node b2i(b: bool) returns (i: int);
+    let i = if b then 1 else 0; tel;
+    
+
+  ---------------------------------------------------------------------------------------------------
+  -- Returns number of steps p has been true
+  ---------------------------------------------------------------------------------------------------
+  node Duration(p: bool) returns (c: int);
+    let
+      -- Counts the number of instants since p was last false
+      c = b2i(p) -> if p then pre(c) + 1 else 0;
+      
+      lemma "value_posnat" : c >= 0;
+ 
+    tel;
+    
+  ---------------------------------------------------------------------------------------------------
+  -- Returns true if p is true for at least min and at most max Ssteps
+  ---------------------------------------------------------------------------------------------------
+  node Bounded(p: bool, min: int, max: int) returns (r: bool);
+    let
+      r = true -> (True_At_Least(p, min) and True_At_Most(p, max));
+    tel;
+    
+    
+  ---------------------------------------------------------------------------------------------------
+  -- Returns true if p is always true for at least n steps 
+  ---------------------------------------------------------------------------------------------------
+  node True_At_Least(p: bool, n: int) returns (r: bool);
+    var
+      c: int;
+    let
+      -- Counts the number of steps p has been true
+      c = b2i(p) -> if p then pre(c) + 1 else 0;
+                           
+      r = true -> ((pre(c) > 0 and pre(c) < n) => p);
+      
+      lemma "value_posnat" : c >= 0;
+ 
+    tel;
+    
+  ---------------------------------------------------------------------------------------------------
+  -- Returns true if p is true for at most n steps 
+  ---------------------------------------------------------------------------------------------------
+  node True_At_Most(p: bool, n: int) returns (r: bool);
+    var
+      c: int;
+    let
+      -- Counts the number of steps p has been true
+      c = b2i(p) -> if p then pre(c) + 1 else 0;
+                           
+      r = true -> ((pre(c) = n) => not p);
+      
+      lemma "value_posnat" : c >= 0;
+ 
+    tel;
+      
+  ---------------------------------------------------------------------------------------------------
+  -- Returns true on rising edge of p
+  ---------------------------------------------------------------------------------------------------
+  node Rise(p: bool) returns (r: bool);
+    let
+      r = false -> not pre(p) and p;
+    tel;
+    
+  ---------------------------------------------------------------------------------------------------
+  -- Returns true on falling edge of p
+  ---------------------------------------------------------------------------------------------------
+  node Fall(p: bool) returns (r: bool);
+    let
+      r = false -> pre(p) and not p;
+    tel;
+    
+  ---------------------------------------------------------------------------------------------------
+  -- Returns true when p changes
+  ---------------------------------------------------------------------------------------------------
+  node Changed(p: bool) returns (r: bool);
+    let
+      r = false -> p != pre(p);
+    tel;
+      
+**};
+	
+end Agree_Nodes;

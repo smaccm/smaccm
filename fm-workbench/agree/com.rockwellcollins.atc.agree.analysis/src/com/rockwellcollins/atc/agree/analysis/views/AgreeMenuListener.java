@@ -3,21 +3,28 @@ package com.rockwellcollins.atc.agree.analysis.views;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
+import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
+import jkind.api.results.MapRenaming;
 import jkind.api.results.PropertyResult;
+import jkind.api.results.Renaming;
 import jkind.api.ui.results.AnalysisResultTree;
 import jkind.interval.NumericInterval;
+import jkind.lustre.Node;
 import jkind.lustre.Program;
+import jkind.lustre.VarDecl;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
 import jkind.results.InvalidProperty;
 import jkind.results.Property;
 import jkind.results.Signal;
 import jkind.results.UnknownProperty;
+import jkind.results.ValidProperty;
 import jkind.results.layout.Layout;
 
 import org.eclipse.emf.ecore.EObject;
@@ -27,6 +34,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -40,6 +48,7 @@ import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.ui.dialogs.Dialog;
 
@@ -48,13 +57,21 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.analysis.Util;
+import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
+import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 
 public class AgreeMenuListener implements IMenuListener {
-    private static final GlobalURIEditorOpener globalURIEditorOpener = Util.getGlobalURIEditorOpener();
+    private static final GlobalURIEditorOpener globalURIEditorOpener = AgreeUtils.getGlobalURIEditorOpener();
     private final IWorkbenchWindow window;
     private final AnalysisResultTree tree;
     private AgreeResultsLinker linker;
@@ -84,6 +101,143 @@ public class AgreeMenuListener implements IMenuListener {
         addViewCounterexampleMenu(manager, result);
         addViewLustreMenu(manager, result);
         addResultsLinkingMenu(manager, result);
+        addViewSupportMenu(manager, result);
+        addTraceabilityDocMenu(manager, result);
+    }
+
+    private void addTraceabilityDocMenu(IMenuManager manager, AnalysisResult result) {
+
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER)
+                .equals(PreferenceConstants.MODEL_CHECKER_JKIND)
+                && prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
+            if (result.getName().equals("Contract Guarantees")) {
+                if (result.toString().contains("- Valid")) {
+                    manager.add(addViewTraceabilityConsole("View Traceability Document", manager, result));
+                }
+            }
+        }
+    }
+
+    private IAction addViewTraceabilityConsole(String text, IMenuManager manager, AnalysisResult result) {
+        return new Action(text) {
+            public void run() {
+                Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
+                if (tempRefMap == null) {
+                    tempRefMap = linker.getReferenceMap(result);
+                }
+                final Map<String, EObject> refMap = tempRefMap;
+                final MessageConsole console = findConsole("Traceability");
+                final AgreeRenaming renaming = linker.getRenaming(result);
+                showConsole(console);
+                console.clearConsole();
+                console.addPatternMatchListener(new AgreePatternListener(refMap));
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            MessageConsoleStream out = console.newMessageStream();
+                            printHLine(out, 2);
+                            out.println("Traceability for Valid Contract Guarantees");
+                            printHLine(out, 2);
+                            out.println("");
+                            List<PropertyResult> allProperties = new ArrayList<PropertyResult>(
+                                    ((JKindResult) result).getPropertyResults());
+                            if (!allProperties.isEmpty()) {
+                                for (PropertyResult prop : allProperties) {
+                                    if (prop.getStatus().equals(jkind.api.results.Status.VALID)) {
+                                        writeIvcResult(prop, console, renaming);
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        };
+    }
+
+    // Anitha added this displaying view support menu
+    private void addViewSupportMenu(IMenuManager manager, AnalysisResult result) {
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER)
+                .equals(PreferenceConstants.MODEL_CHECKER_JKIND)
+                && prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
+            if (!(result instanceof ConsistencyResult || result instanceof JRealizabilityResult)) {
+                if (result instanceof PropertyResult) {
+                    if (((PropertyResult) result).getStatus().equals(jkind.api.results.Status.VALID)) {
+                        if (!((PropertyResult) result).getParent().getName().contains("consistent")) {
+                            manager.add(addViewSupportConsole("Set of Support", manager, result));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Anitha added this displaying support in console
+    private IAction addViewSupportConsole(String text, IMenuManager manager, AnalysisResult result) {
+        return new Action(text) {
+            public void run() {
+                Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
+                if (tempRefMap == null) {
+                    tempRefMap = linker.getReferenceMap(result);
+                }
+                final Map<String, EObject> refMap = tempRefMap;
+                final MessageConsole console = findConsole("Support");
+                AgreeRenaming tempRenaming = linker.getRenaming(result);
+                while(tempRenaming == null){
+                    AnalysisResult parent = result.getParent();
+                    if(parent == null){
+                        throw new AgreeException("Problem finding renaming");
+                    }
+                    tempRenaming = linker.getRenaming(parent);
+                }
+                final AgreeRenaming renaming = tempRenaming;
+                showConsole(console);
+                console.clearConsole();
+                console.addPatternMatchListener(new AgreePatternListener(refMap));
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        writeIvcResult(result, console, renaming);
+                    }
+                }).start();
+            }
+        };
+    }
+
+    public static void writeIvcResult(AnalysisResult result, final MessageConsole console,
+            final AgreeRenaming renaming) {
+        try (MessageConsoleStream out = console.newMessageStream()) {
+            ValidProperty vp = (ValidProperty) (((PropertyResult) result).getProperty());
+            printHLine(out, 2);
+            out.println("Set of Support for Guarantee: " + "{" + vp.getName() + "}");
+            printHLine(out, 2);
+            if (!vp.getIvc().isEmpty()) {
+                printHLine(out, 2);
+                out.println(String.format("%-25s%-25s", "Component name", "Property name"));
+                printHLine(out, 2);
+                for (String supportString : vp.getIvc()) {
+                    String componentName = "";
+                    String refStr = renaming.getSupportRefString(supportString);
+                    if (supportString.contains(".")) {
+                        componentName = supportString.substring(0, supportString.indexOf('.'));
+                    } else {
+                        componentName = "Top Level System";
+                    }
+                    out.println(String.format("%-25s%-25s", componentName, "{" + refStr + "}"));
+                }
+                printHLine(out, 2);
+            } else {
+                out.println("There are no support elements to display.");
+            }
+            out.println("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addOpenComponentMenu(IMenuManager manager, AnalysisResult result) {
@@ -289,7 +443,12 @@ public class AgreeMenuListener implements IMenuListener {
                         }
 
                         printHLine(out, cex.getLength());
-                        out.println("Variables for " + category);
+                        if (category == "") {
+                            out.println("Variables for the selected component implementation");
+
+                        } else {
+                            out.println("Variables for " + category);
+                        }
                         printHLine(out, cex.getLength());
 
                         out.print(String.format("%-60s", "Variable Name"));
@@ -358,7 +517,7 @@ public class AgreeMenuListener implements IMenuListener {
         return cex.getCategorySignals(layout, category).isEmpty();
     }
 
-    private void printHLine(MessageConsoleStream out, int nVars) {
+    public static void printHLine(MessageConsoleStream out, int nVars) {
         out.print("--------------------------------------------------");
         for (int k = 0; k < nVars; k++) {
             out.print("---------------------");

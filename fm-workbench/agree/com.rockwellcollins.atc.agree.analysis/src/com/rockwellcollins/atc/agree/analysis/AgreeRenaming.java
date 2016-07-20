@@ -7,6 +7,9 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
+
 import jkind.JKindException;
 import jkind.api.results.Renaming;
 import jkind.results.InvalidProperty;
@@ -17,19 +20,51 @@ import jkind.results.ValidProperty;
 public class AgreeRenaming extends Renaming {
 
     private Map<String, String> explicitRenames = new HashMap<>();
+    private Map<String, String> supportRenames = new HashMap<>();
+    private Map<String, String> supportRefStrings = new HashMap<>();
     private Map<String, EObject> refMap;
 
-    public AgreeRenaming(Map<String, EObject> refMap) {
-        this.refMap = refMap;
+    public AgreeRenaming() {
+        this.refMap = new HashMap<String, EObject>();
     }
 
     public void addRenamings(AgreeRenaming renaming) {
         this.explicitRenames.putAll(renaming.explicitRenames);
         this.refMap.putAll(renaming.refMap);
     }
+    
+    public void addSupportRename(String from, String to){
+        this.supportRenames.put(from, to);
+    }
+    
+    public void addSupportRefString(String from, String refStr){
+        this.supportRefStrings.put(renameIVC(from), refStr);
+    }
+    
+    @Override
+    public String renameIVC(String ivc){
+        return this.supportRenames.get(ivc);
+    }
+    
+    public String getSupportRefString(String ivc){
+        return this.supportRefStrings.get(ivc);
+    }
 
     public void addExplicitRename(String oldName, String newName) {
         this.explicitRenames.put(oldName, newName);
+    }
+    
+    public void addToRefMap(String str, EObject ref) {
+        if (str != null) {
+            str = rename(str);
+            if (str != null) {
+                refMap.put(str, ref);
+            }
+        }
+    }
+    
+    public Map<String, EObject> getRefMap(){
+        return refMap;
     }
 
     public String forceRename(String original) {
@@ -85,9 +120,10 @@ public class AgreeRenaming extends Renaming {
         if (newName != null) {
             return newName;
         }
+        
         newName = forceRename(original);
 
-        if (findBestReference(original) == null) {
+        if (findBestReference(newName) == null) {
             if (original.equals("%REALIZABLE")) {
                 return "Realizability Result";
             } else if (original.contains("__nodeLemma")) {
@@ -99,6 +135,10 @@ public class AgreeRenaming extends Renaming {
 //                   return original;
 //               }
                return newName;
+            } else if(newName.matches("time")){
+                return "time";
+            } else if (original.endsWith(AgreeASTBuilder.clockIDSuffix)){
+                return newName;
             }
             return null;
         }
@@ -110,10 +150,9 @@ public class AgreeRenaming extends Renaming {
     private EObject findBestReference(String refStr) {
 
         EObject ref = null;
-        refStr = refStr.replace(".", "__");
         while (ref == null && refStr != null && !refStr.equals("")) {
             ref = refMap.get(refStr);
-            int index = refStr.lastIndexOf("__");
+            int index = refStr.lastIndexOf(".");
             if (index == -1) {
                 break;
             }

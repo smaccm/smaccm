@@ -80,6 +80,7 @@ process implementation proc.Impl
 		r2: thread receiver2; 
 	connections
 		s_to_r1 : port s.Output1 -> r1.Input1;
+		s_to_r2 : port s.Output1 -> r2.Input1;
 		r1_to_r2 : port r1.Output1 -> r2.Input1;
 end proc.Impl;
 

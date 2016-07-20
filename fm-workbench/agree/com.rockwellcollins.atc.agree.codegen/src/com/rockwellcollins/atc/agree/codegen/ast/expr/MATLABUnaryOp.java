@@ -1,7 +1,7 @@
 package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
 public enum MATLABUnaryOp {
-	NEGATIVE ("-"),
+	NEGATIVE ("~"),
 	NOT ("not");
 	
 	private String str;

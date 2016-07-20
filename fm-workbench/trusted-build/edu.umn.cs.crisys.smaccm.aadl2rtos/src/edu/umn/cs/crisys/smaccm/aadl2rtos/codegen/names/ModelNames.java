@@ -198,6 +198,11 @@ public class ModelNames {
     return m.getHWTarget();
   }
   
+  public boolean getUseOSRealTimeExtensions() {
+	  return m.isUseOSRealTimeExtensions();
+  }
+  
+  
   public List<String> getExternalMutexList() {
 	return m.getExternalMutexList();
   }

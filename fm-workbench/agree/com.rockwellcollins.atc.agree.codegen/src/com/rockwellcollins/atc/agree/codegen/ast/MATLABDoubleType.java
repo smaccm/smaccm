@@ -22,4 +22,8 @@ public class MATLABDoubleType extends MATLABType {
 		return Double.toString(defaultValue);
 	}
 	
+	public String toString() {
+		return name;
+	}
+	
 }

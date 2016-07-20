@@ -2,7 +2,7 @@ grammar com.rockwellcollins.atc.resolute.Resolute with org.osate.xtext.aadl2.pro
 
 generate resolute "http://www.rockwellcollins.com/atc/resolute/Resolute"
 
-import "platform:/resource/org.osate.aadl2/model/aadl2.ecore" as aadl2
+import "http://aadl.info/AADL/2.0" as aadl2
 
 AnnexLibrary returns aadl2::AnnexLibrary:
 	ResoluteLibrary

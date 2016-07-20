@@ -2,18 +2,19 @@ import "CommonComponentC.stg"
 
 /*
  * Overrides for OS-specific names/behavior for generated C code.
- * 
+ *
  */
 // Import does not override earlier definitions!  Why?
 // import "CamkesCNames.stg"
 
 incomingPortWriterName(port) ::= "<port.name>_<port.type.writerFn>"
 
-outgoingPortWriterName(destPort, srcPort) ::= <<
-<srcPort.qualifiedName>_<srcPort.type.writerFn>
+outgoingPortWriterName(connection) ::= <<
+<connection.name>_<connection.sourcePort.type.writerFn>
 >>
 
-osSpecificThreadEntrypoint(threadImpl) ::= "run"
+osSpecificThreadEntrypoint(threadImpl) ::= "int run(void)"
+osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
 
 incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
 outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
@@ -32,7 +33,7 @@ portDispatcherUnlock(dispatcher) ::= " "
 
 dispatcherMainInitializeLockStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"
 
-dispatcherMainLockWaitStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"	
+dispatcherMainLockWaitStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"
 
 dispatcherMainLockReleaseStmt(dispatcher) ::= "<dispatcher.threadImplementation.camkesDispatcherUnlockStmt>"
 
@@ -41,30 +42,36 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u003C><threadImpl.componentCamkesHFileName><\u003E>
 >>
 
-osSpecificIrqDispatcher(dispatcher) ::= << 
+osSpecificIrqDispatcher(dispatcher) ::= <<
 void <incomingActiveThreadDispatchName(dispatcher)>() {
-	<dispatcher.firstLevelInterruptHandler>();
-	<dispatcher.dispatchOccurredVar> = true;
-	<dispatcherMainLockReleaseStmt(dispatcher)>
-	<dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL); 
+    <dispatcher.firstLevelInterruptHandler>();
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcherMainLockReleaseStmt(dispatcher)>
+    <dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL);
 }
 >>
 
 osSpecificRegisterIrqs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL);
 <endif> >>
 
+osSpecificThreadPostInitializer(threadImpl) ::= <<
+<threadImpl.dispatchers:osSpecificRegisterIrqs()>
+>>
+
 osSpecificComponentLocalCallerFunction(connection) ::= <<
 /************************************************************************
- * <outgoingPortWriterName(connection.destPort,connection.sourcePort)>: 
+ * <outgoingPortWriterName(connection)>:
  * Invoked from user code in the local thread.
- * 
+ *
  * This function is necessary to mimic a remote call by a passive
- * thread to a remote active thread, but redirects to the local 
+ * thread to a remote active thread, but redirects to the local
  * active thread.
- * 
+ *
  ************************************************************************/
 
-bool <outgoingPortWriterName(connection.destPort,connection.sourcePort)>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
-	return <incomingPortWriterName(connection.destPort)>(<connection.sourcePort.name>);
+bool <outgoingPortWriterName(connection)>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
+    return <incomingPortWriterName(connection.destPort)>(<connection.sourcePort.name>);
 }
 >>
+
+osSpecificAssert(predicate) ::= "assert(<predicate>) "

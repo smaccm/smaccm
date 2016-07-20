@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos.parse;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -129,13 +130,18 @@ public class AadlModelParser {
 	    model.setOsTarget(Model.OSTarget.eChronos);
 	  } else if ("camkes".equalsIgnoreCase(OS)) {
 	    model.setOsTarget(Model.OSTarget.CAmkES);
+	  } else if ("vxworks".equalsIgnoreCase(OS)) {
+		model.setOsTarget(Model.OSTarget.VxWorks);  
 	  } else {
 	    this.logger.error("OS target: [" + OS + "] not recognized by aadl2rtos");
 	    throw new Aadl2RtosException("Parse failure on OS target property ");
 	  }
-
+	  
 	  String HW = PropertyUtil.getHW(sysimpl); 
 	  model.setHWTarget(HW);
+	  
+	  // Determine whether to use real-time extensions
+	  model.setUseOSRealTimeExtensions(PropertyUtil.getUseOsRealTimeExtensions(sysimpl));
 	  
 	  // note: may be null, and that's o.k.
 	  model.setOutputDirectory(Util.getStringValueOpt(sysimpl, PropertyUtil.SMACCM_SYS_OUTPUT_DIRECTORY));
@@ -209,12 +215,19 @@ public class AadlModelParser {
 		// grab all files referenced in the model.
 		initializeFiles();
 		initializeLegacyIRQs();
+
+		// grab system implementation level external mutexes
+	    List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(systemImplementation);
+	    List<String> externalSemList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(systemImplementation);
+	    this.model.legacyMutexList.addAll(externalMutexList);
+	    this.model.legacySemaphoreList.addAll(externalSemList);
 		
 		// Harvest model type data
 		harvestModelTypeData();
 		
 		// initialize the model thread and shared data lists.
 		this.model.threadImplementationList = new ArrayList<ThreadImplementation>(this.threadImplementationMap.values());
+		this.model.threadImplementationList.sort(Comparator.comparing(ThreadImplementation::getNormalizedName));
 		this.model.sharedDataList = new ArrayList<SharedData>(this.sharedDataMap.values());
 	}
 
@@ -355,7 +368,7 @@ public class AadlModelParser {
       if (port.getDirection() == DirectionType.IN) {
         // handle IRQs specially
         if (PropertyUtil.getIsIsr(port)) {
-          dp = addIrqHandler(port, ti); 
+            throw new Aadl2RtosException("ISR ports must be event-data ports with type Base_Types::Integer_64.");
         } else {
           dp = addInputEventPort(port, new UnitType(), ti);
         }
@@ -365,7 +378,11 @@ public class AadlModelParser {
     } else if (port.getCategory() == PortCategory.EVENT_DATA) {
       if (port.getDirection() == DirectionType.IN) {
         if (PropertyUtil.getIsIsr(port)) {
-          throw new Aadl2RtosException("ISR ports can only be event ports.");
+        	if (datatype.equals(new IntType(64, true))) { 
+        		dp = addIrqHandler(port, ti); 
+        	} else {
+        		throw new Aadl2RtosException("ISR ports must be event-data ports with type Base_Types::Integer_64.");
+        	}
         } else {
           dp = addInputEventPort(port, datatype, ti);
         }
@@ -414,6 +431,22 @@ public class AadlModelParser {
             "Hybrid".equalsIgnoreCase(dpName))) {
         throw new Aadl2RtosException(
             "For active thread " + tti.getFullName() + ", dispatch protocol must be one of {Sporadic, Periodic, Hybrid}.");
+      } else {
+    	  try {
+    		  double periodInUs = PropertyUtil.getPeriodInMicroseconds(tti);
+    		  ti.setPeriodInMicroseconds((int) periodInUs);
+    	  } catch (Exception e) {
+    		  if ("Periodic".equalsIgnoreCase(dpName)) {
+    	        throw new Aadl2RtosException(
+    	                "For thread " + tti.getFullName()
+    	                    + " with dispatch protocol " + dpName
+    	                    + " property 'Period' is required.");
+    		  } else {
+    			  this.logger.warn("For thread " + tti.getFullName()
+                  + " with dispatch protocol " + dpName
+                  + " property 'Period' is not specified; this is necessary for schedulability analysis.");
+    		  }
+    	  }
       }
     }
     ti.setDispatchProtocol(dispatchProtocol.getName());
@@ -517,11 +550,7 @@ public class AadlModelParser {
       if (sendsEventsTo != null) {
         threadSurrogate = constructDispatchLimit(sendsEventsTo, outputs); 
       }
-      
-      // ti.setDispatchLimits(surrogate.getContracts());
-      // the dispatch limits really should be defined per dispatcher.  For now,
-      // we are setting them per-thread.
-      
+            
       List<DispatchableInputPort> dispList = ti.getDispatcherList();
       for (DispatchableInputPort d : dispList) {
         if (d.getOptSendsEventsToString() != null) {
@@ -531,7 +560,11 @@ public class AadlModelParser {
         } else if (threadSurrogate != null){
           d.setDispatchLimits(threadSurrogate.getContracts());
         } else {
-          throw new Aadl2RtosException("No dispatch limit (Sends_Events_To) specified for dispatcher " + d.getName());
+          if (ti.getIsExternal()) {
+        	  this.logger.warn("Port: " + d.getName() + " of external thread: " + ti.getName() + " does not have dispatch limits");
+        	  d.setDispatchLimits(new ArrayList<OutgoingDispatchContract>());
+          } else 
+        	  throw new Aadl2RtosException("No dispatch limit (Sends_Events_To) specified for dispatcher " + d.getName());
         }
       }
     }
@@ -563,20 +596,26 @@ public class AadlModelParser {
     
     if (!(isPassive || isExternal)) {
       priority = PropertyUtil.getPriority(tti);
-      
-      // MWW TODO: temporary until after May 15 code drop
-      stackSize = java.lang.Math.max(PropertyUtil.getStackSizeInBytes(tti), 4096);
+      stackSize = PropertyUtil.getStackSizeInBytes(tti);
     } else {
       // TODO: Compute priorities for passive threads.
       priority = 200; 
+      // TODO: deprecate use of 'default' stack size
+      stackSize = 16384;
       try {
         PropertyUtil.getPriority(tti);
         logger.warn("Warning: priority ignored for passive/external thread: " + name);
       } catch (Aadl2RtosException e) {}
       try {
-        PropertyUtil.getStackSizeInBytes(tti); 
-        logger.warn("Warning: stack size ignored for passive/external thread: " + name);
-      } catch (Aadl2RtosException e) {}
+        stackSize = PropertyUtil.getStackSizeInBytes(tti); 
+        if (model.getOsTarget() == Model.OSTarget.eChronos) {
+          logger.warn("Warning: stack size ignored for passive/external thread: " + name);
+        }
+      } catch (Aadl2RtosException e) {
+    	if (model.getOsTarget() == Model.OSTarget.CAmkES) {
+          logger.warn("Deprecation warning: default stack size (16384) used for passive thread: " + name);
+    	}
+      }
     }
     
     String generatedEntrypoint = tti.getFullName();
@@ -589,8 +628,8 @@ public class AadlModelParser {
     List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(tti);
     List<String> externalSemaphoreList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(tti);
             
-    ti.setMinExecutionTime(minComputeTime);
-    ti.setMaxExecutionTime(maxComputeTime);
+    ti.setMinExecutionTimeInMicroseconds((int) minComputeTime);
+    ti.setMaxExecutionTimeInMicroseconds((int) maxComputeTime);
     ti.setIsExternal(isExternal);
     ti.setRequiresTimeServices(requiresTimeServices);
     ti.setExternalMutexList(externalMutexList);

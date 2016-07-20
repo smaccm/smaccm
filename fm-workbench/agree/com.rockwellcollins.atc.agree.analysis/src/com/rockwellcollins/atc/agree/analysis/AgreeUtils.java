@@ -26,7 +26,10 @@ import jkind.lustre.Type;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
+import org.osate.aadl2.Aadl2Factory;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.BusType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -34,14 +37,21 @@ import org.osate.aadl2.ContainedNamedElement;
 import org.osate.aadl2.ContainmentPathElement;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataType;
+import org.osate.aadl2.DeviceType;
 import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
+import org.osate.aadl2.ProcessType;
+import org.osate.aadl2.ProcessorType;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.SubprogramType;
+import org.osate.aadl2.SystemType;
+import org.osate.aadl2.ThreadGroupType;
+import org.osate.aadl2.ThreadType;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
@@ -49,6 +59,7 @@ import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
@@ -56,8 +67,11 @@ import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
 public class AgreeUtils {
+    
+    private static GlobalURIEditorOpener globalURIEditorOpener;
 
     static public boolean usingKind2() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
@@ -80,97 +94,6 @@ public class AgreeUtils {
         } catch (PropertyNotPresentException propNotPresentException) {
             return null;
         }
-    }
-
-    // TODO: i'm not sure that this function will work in more complicated cases
-    // of property inheritance
-    public static PropertyExpression getSimplePropertyValue(final Subcomponent context,
-            final NamedElement target, final Property pd) {
-        if (context == null)
-            return target.getNonModalPropertyValue(pd);
-        EList<PropertyAssociation> props = context.getOwnedPropertyAssociations();
-        for (PropertyAssociation propertyAssociation : props) {
-            if (propertyAssociation.getProperty().equals(pd)) {
-                // we found a property with the correct type
-                // now we need to check whether the applies to points to the
-                // holder
-                EList<ContainedNamedElement> appliestos = propertyAssociation.getAppliesTos();
-                for (ContainedNamedElement containedNamedElement : appliestos) {
-                    EList<ContainmentPathElement> cpes = containedNamedElement.getContainmentPathElements();
-                    NamedElement pathcxt = cpes.get(cpes.size() - 1).getNamedElement();
-                    if (target.equals(pathcxt)) {
-                        EList<ModalPropertyValue> vallist = propertyAssociation.getOwnedValues();
-                        if (!vallist.isEmpty()) {
-                            ModalPropertyValue elem = vallist.get(0);
-                            PropertyExpression res = elem.getOwnedValue();
-                            if (res instanceof NamedValue) {
-                                AbstractNamedValue nv = ((NamedValue) res).getNamedValue();
-                                if (nv instanceof Property) {
-                                    res = target.getNonModalPropertyValue((Property) nv);
-                                } else if (nv instanceof PropertyConstant) {
-                                    res = ((PropertyConstant) nv).getConstantValue();
-                                }
-                            }
-
-                            return res;
-                        }
-
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    static public AgreeVarDecl dataTypeToVarType(DataSubcomponent sub) {
-
-        DataType type = (DataType) sub.getAllClassifier();
-        String varName = sub.getName();
-
-        do {
-            String name = type.getQualifiedName();
-            switch (name) {
-            case "Base_Types::Boolean":
-                return new AgreeVarDecl(varName, new NamedType("bool"));
-            case "Base_Types::Integer":
-            case "Base_Types::Unsigned":
-            case "Base_Types::Unsigned_32":
-            case "Base_Types::Unsigned_16":
-            case "Base_Types::Unsigned_8":
-            case "Base_Types::Integer_32":
-            case "Base_Types::Integer_16":
-            case "Base_Types::Integer_8":
-                return new AgreeVarDecl(varName, new NamedType("int"));
-            case "Base_Types::Float":
-                return new AgreeVarDecl(varName, new NamedType("real"));
-            }
-            type = (DataType) type.getExtended();
-
-        } while (type != null);
-
-        return null;
-
-    }
-
-    static public String dataTypeToVarType(DataType sub) {
-        String name = sub.getQualifiedName();
-
-        switch (name) {
-        case "Base_Types::Boolean":
-            return "bool";
-        case "Base_Types::Integer":
-            return "int";
-        case "Base_Types::Float":
-            return "real";
-        }
-
-        return null;
-    }
-
-    public String getFnCallExprName(FnCallExpr expr) {
-        NestedDotID dotId = expr.getFn();
-        NamedElement namedEl = getFinalNestId(dotId);
-        return namedEl.getName();
     }
 
     public static NamedElement getFinalNestId(NestedDotID dotId) {
@@ -335,13 +258,13 @@ public class AgreeUtils {
     }
     
     private static Expr getInitValueFromType(NamedType type){
-        if(type.equals(NamedType.BOOL)){
+        if(typeMatchesBool(type)){
             return new BoolExpr(false);
         }
-        if(type.equals(NamedType.INT)){
+        if(typeMatchesInteger(type)){
             return new IntExpr(BigInteger.ZERO);
         }
-        if(type.equals(NamedType.REAL)){
+        if(typeMatchesReal(type)){
             return new RealExpr(BigDecimal.ZERO);
         }
         throw new AgreeException("Unhandled initial type for type '"+type+"'");
@@ -360,6 +283,60 @@ public class AgreeUtils {
             return true;
         }
         return false;
+    }
+    
+    public static GlobalURIEditorOpener getGlobalURIEditorOpener() {
+        if (globalURIEditorOpener == null) {
+            AgreeActivator activator = AgreeActivator.getInstance();
+            String language = AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE;
+            Injector injector = activator.getInjector(language);
+            globalURIEditorOpener = injector.getInstance(GlobalURIEditorOpener.class);
+        }
+        return globalURIEditorOpener;
+    }
+    
+    public static ComponentImplementation compImplFromType(ComponentType ct) {
+        ComponentImplementation ci;
+        if (ct instanceof ThreadType) {
+            ci = Aadl2Factory.eINSTANCE.createThreadImplementation();
+        } else if (ct instanceof ThreadGroupType) {
+            ci = Aadl2Factory.eINSTANCE.createThreadGroupImplementation();
+        } else if (ct instanceof ProcessType) {
+            ci = Aadl2Factory.eINSTANCE.createProcessImplementation();
+        } else if (ct instanceof SubprogramType) {
+            ci = Aadl2Factory.eINSTANCE.createSubprogramImplementation();
+        } else if (ct instanceof ProcessorType) {
+            ci = Aadl2Factory.eINSTANCE.createProcessorImplementation();
+        } else if (ct instanceof BusType) {
+            ci = Aadl2Factory.eINSTANCE.createBusImplementation();
+        } else if (ct instanceof DeviceType) {
+            ci = Aadl2Factory.eINSTANCE.createDeviceImplementation();
+        } else if (ct instanceof SystemType){
+            ci = Aadl2Factory.eINSTANCE.createSystemImplementation();
+        } else {
+            throw new AgreeException("Unhandled component type: "+ct.getClass().toString());
+        }
+        ci.setName(ct.getName() + ".wrapper");
+        ci.setType(ct);
+        ct.eResource().getContents().add(ci);
+
+        return ci;
+    }
+    
+    public static boolean typeMatchesBool(NamedType type){
+        return type.equals(NamedType.BOOL) ||
+                type.toString().startsWith("Base_Types__Boolean");
+    }
+    
+    public static boolean typeMatchesInteger(NamedType type){
+        return type.equals(NamedType.INT) ||
+                type.toString().startsWith("Base_Types__Unsigned") ||
+                type.toString().startsWith("Base_Types__Integer");
+    }
+    
+    public static boolean typeMatchesReal(NamedType type){
+        return type.equals(NamedType.REAL) ||
+                type.toString().startsWith("Base_Types__Float");
     }
 
 }

@@ -30,6 +30,7 @@ import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierType;
+import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -41,15 +42,21 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.annexsupport.AnnexUtil;
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
+import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -539,8 +546,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		NestedDotID recId = recType.getRecord();
 		NamedElement finalId = getFinalNestId(recId);
 
-		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
-			error(recType, "types must be record definition or data implementation");
+		if (!(finalId instanceof DataImplementation) && 
+		        !(finalId instanceof RecordDefExpr) &&
+		        !(finalId instanceof DataType)) {
+			error(recType, "types must be record definition, data implementation, or datatype");
 		}
 
 		if (finalId instanceof DataImplementation) {
@@ -559,6 +568,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 
 			dataImplCycleCheck(recId);
+			return;
+		}
+		
+		if(finalId instanceof DataType){
+		    AgreeType agreeType = getAgreeType((ComponentClassifier) finalId);
+            if (agreeType.equals(AgreeType.ERROR)) {
+                error(recType, "AADL Datatypes must extend"
+                        + " a Base_Type that AGREE can reason about.");
+                return;
+            }
 		}
 	}
 
@@ -700,14 +719,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				NestedDotID subRec = ((RecordType) type).getRecord();
 				NamedElement finalId = getFinalNestId(subRec);
 
-				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
-					error(type, "types must be record definition or data implementation");
-					return;
-				}
+//				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
+//					error(type, "types must be record definition or data implementation");
+//					return;
+//				}
 
 				if (finalId instanceof RecordDefExpr) {
 					recordClosure.add((RecordDefExpr) finalId);
-				} else {
+				} else if(finalId instanceof DataImplementation){
 					dataImplCycleCheck(subRec);
 				}
 			}
@@ -825,6 +844,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				return nativeType;
 			}
 			typeName = recEl.getName();
+		} else if (recEl instanceof DataType) {
+		    return getAgreeType((ComponentClassifier)recEl);
 		}
 		typeName = packName + "::" + typeName;
 
@@ -1642,11 +1663,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			DataType dataType = (DataType) dataClass;
 			dataClass = dataType.getExtended();
 		}
-
-		return AgreeType.ERROR;
+		
+		return ERROR;
 	}
 
-	private AgreeType getAgreeType(ComponentType compType) {
+
+    private AgreeType getAgreeType(ComponentType compType) {
 
 		while (compType.getExtended() != null) {
 			compType = compType.getExtended();
@@ -1829,8 +1851,29 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public static boolean matches(AgreeType expected, AgreeType actual) {
 		if (expected.equals(ERROR) || actual.equals(ERROR)) {
 			return false;
+		}else if (integerMatch(expected, actual)){
+		    return true;
+		}else if(floatingPointMatch(expected,actual)){
+		    return true;
 		}
-
 		return expected.equals(actual);
 	}
+
+    private static boolean floatingPointMatch(AgreeType expected, AgreeType actual) {
+        if(expected.toString().equals("real") && actual.toString().startsWith("Base_Types::Float")){
+            return true;
+        }if(actual.toString().equals("real") && expected.toString().startsWith("Base_Types::Float")){
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean integerMatch(AgreeType expected, AgreeType actual) {
+        if(expected.toString().equals("int") && actual.toString().startsWith("Base_Types::Integer")){
+            return true;
+        }if(actual.toString().equals("int") && expected.toString().startsWith("Base_Types::Integer")){
+            return true;
+        }
+        return false;
+    }
 }

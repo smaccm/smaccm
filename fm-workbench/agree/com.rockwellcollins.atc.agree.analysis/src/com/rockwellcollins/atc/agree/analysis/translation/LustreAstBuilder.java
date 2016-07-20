@@ -2,6 +2,7 @@ package com.rockwellcollins.atc.agree.analysis.translation;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -70,11 +71,7 @@ public class LustreAstBuilder {
 
     public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram) {
 
-        List<TypeDef> types = new ArrayList<>();
-        for (Type type : agreeProgram.globalTypes) {
-            RecordType recType = (RecordType) type;
-            types.add(new TypeDef(recType.id, type));
-        }
+        List<TypeDef> types = getTypes(agreeProgram);
 
         List<Expr> assertions = new ArrayList<>();
         List<VarDecl> locals = new ArrayList<>();
@@ -163,11 +160,7 @@ public class LustreAstBuilder {
     public static Program getAssumeGuaranteeLustreProgram(AgreeProgram agreeProgram, boolean monolithic) {
 
         nodes = new ArrayList<>();
-        List<TypeDef> types = new ArrayList<>();
-        for (Type type : agreeProgram.globalTypes) {
-            RecordType recType = (RecordType) type;
-            types.add(new TypeDef(recType.id, type));
-        }
+        List<TypeDef> types = getTypes(agreeProgram);
 
         AgreeNode flatNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__", monolithic);
         List<Expr> assertions = new ArrayList<>();
@@ -175,9 +168,16 @@ public class LustreAstBuilder {
         List<VarDecl> inputs = new ArrayList<>();
         List<Equation> equations = new ArrayList<>();
         List<String> properties = new ArrayList<>();
+        List<String> ivcs = new ArrayList<>();
 
+        int j = 0;
         for (AgreeStatement assumption : flatNode.assumptions) {
-            assertions.add(assumption.expr);
+            String assumName = assumeSuffix + j++;
+            locals.add(new AgreeVar(assumName, NamedType.BOOL, assumption.reference, flatNode.compInst));
+            IdExpr assumId = new IdExpr(assumName);
+            equations.add(new Equation(assumId, assumption.expr));
+            assertions.add(assumId);
+            ivcs.add(assumId.id);
         }
 
         for (AgreeStatement assertion : flatNode.assertions) {
@@ -216,6 +216,7 @@ public class LustreAstBuilder {
         builder.addEquations(equations);
         builder.addProperties(properties);
         builder.addAssertions(assertions);
+        builder.addIvcs(ivcs);
         
         Node main = builder.build();
         nodes.add(main);
@@ -230,11 +231,7 @@ public class LustreAstBuilder {
             boolean monolithic) {
 
         List<Pair<String, Program>> programs = new ArrayList<>();
-        List<TypeDef> types = new ArrayList<>();
-        for (Type type : agreeProgram.globalTypes) {
-            RecordType recType = (RecordType) type;
-            types.add(new TypeDef(recType.id, type));
-        }
+        List<TypeDef> types = getTypes(agreeProgram);
 
         nodes = new ArrayList<>();
         Node topConsist = getConsistencyLustreNode(agreeProgram.topNode, false);
@@ -441,10 +438,12 @@ public class LustreAstBuilder {
 
     protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix, boolean monolithic) {
 
+        List<VarDecl> outputs = new ArrayList<>();
         List<VarDecl> inputs = new ArrayList<>();
         List<VarDecl> locals = new ArrayList<>();
         List<Equation> equations = new ArrayList<>();
         List<Expr> assertions = new ArrayList<>();
+        List<String> ivcs = new ArrayList<>();
 
         Expr assumeConjExpr = new BoolExpr(true);
         int i = 0;
@@ -478,8 +477,14 @@ public class LustreAstBuilder {
         equations.add(getHist(assumeHistId, assumeConjId));
 
         Expr guarConjExpr = new BoolExpr(true);
+        int k = 0;
         for (AgreeStatement statement : agreeNode.guarantees) {
-            guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
+            String inputName = guarSuffix + k++;
+            locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+            IdExpr guarId = new IdExpr(inputName);
+            equations.add(new Equation(guarId, statement.expr));
+            ivcs.add(guarId.id);
+            guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
         }
         if (monolithic) {
             for (AgreeStatement statement : agreeNode.lemmas) {
@@ -503,7 +508,6 @@ public class LustreAstBuilder {
         }
 
         String outputName = "__ASSERT";
-        List<VarDecl> outputs = new ArrayList<>();
         outputs.add(new VarDecl(outputName, NamedType.BOOL));
         equations.add(new Equation(new IdExpr(outputName), assertExpr));
 
@@ -520,6 +524,7 @@ public class LustreAstBuilder {
         builder.addOutputs(outputs);
         builder.addLocals(locals);
         builder.addEquations(equations);
+        builder.addIvcs(ivcs);
         
         return builder.build();
     }
@@ -856,6 +861,39 @@ public class LustreAstBuilder {
             }
         }
         nodes.add(node);
+    }
+    
+    protected static List<TypeDef> getTypes(AgreeProgram agreeProgram) {
+        List<TypeDef> types = new ArrayList<>();
+        for (Type type : agreeProgram.globalTypes) {
+            RecordType recType = (RecordType) type;
+            types.add(new TypeDef(recType.id, type));
+        }
+        
+        //add synonym types
+        types.addAll(getTypeSynonmyms());
+        return types;
+    }
+    
+    private static Collection<? extends TypeDef> getTypeSynonmyms() {
+        List<TypeDef> types = new ArrayList<>();
+        
+        types.add(new TypeDef("Base_Types__Boolean", NamedType.BOOL));
+        types.add(new TypeDef("Base_Types__Unsigned", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_64", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_32", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_16", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_8", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_64", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_32", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_16", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_8", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Float", NamedType.REAL));
+        types.add(new TypeDef("Base_Types__Float_32", NamedType.REAL));
+        types.add(new TypeDef("Base_Types__Float_64", NamedType.REAL));
+        
+        return types;
     }
 
 }

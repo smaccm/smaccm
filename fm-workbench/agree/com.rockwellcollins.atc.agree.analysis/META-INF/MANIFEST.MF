@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AGREE Analysis
 Bundle-SymbolicName: com.rockwellcollins.atc.agree.analysis; singleton:=true
-Bundle-Version: 2.0.0.qualifier
+Bundle-Version: 2.1.3.qualifier
 Bundle-Activator: com.rockwellcollins.atc.agree.analysis.Activator
 Bundle-Vendor: Rockwell Collins, Inc.
 Require-Bundle: org.eclipse.ui,
@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.osate.ui;bundle-version="1.0.0",
  org.osate.xtext.aadl2.properties;bundle-version="1.0.0",
  com.rockwellcollins.atc.agree;bundle-version="1.0.0",
- com.rockwellcollins.atc.agree.ui;bundle-version="1.0.0"
+ com.rockwellcollins.atc.agree.ui;bundle-version="1.0.0",
+ com.rockwellcollins.atc.z3;resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

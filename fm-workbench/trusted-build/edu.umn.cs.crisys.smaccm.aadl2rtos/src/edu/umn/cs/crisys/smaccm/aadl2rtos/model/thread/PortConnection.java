@@ -67,7 +67,7 @@ public class PortConnection {
 	public int getConnectionID() {
 		return connectionID;
 	}
-	
+
 	// public String getSemaphoreName() {
 	//	return this.semaphore;
 	// }

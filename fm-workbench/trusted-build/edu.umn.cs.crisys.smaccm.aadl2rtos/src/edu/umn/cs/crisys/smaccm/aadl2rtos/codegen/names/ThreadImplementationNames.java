@@ -5,14 +5,19 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.EndpointConnection;
@@ -21,6 +26,7 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 /**
  * @author Whalen
@@ -72,6 +78,13 @@ public class ThreadImplementationNames {
     return threadNames;
   }
   
+  public String getPeriodInMicroseconds() {
+	  return Integer.toString(ti.getPeriodInMicroseconds());
+  }
+  
+  public String getMaxExecutionTimeInMicroseconds() {
+	  return Integer.toString(ti.getMaxExecutionTimeInMicroseconds());
+  }
   
   public List<PortConnectionNames> getNonlocalActiveThreadConnectionFrontier() {
     ArrayList<PortConnectionNames> dnList = new ArrayList<>();
@@ -80,6 +93,14 @@ public class ThreadImplementationNames {
     }
     return dnList;
   }
+
+  public List<PortConnectionNames> getActiveThreadConnectionList() {
+	    ArrayList<PortConnectionNames> dnList = new ArrayList<>();
+	    for (PortConnection d : ti.getActiveThreadConnectionList()) {
+	      dnList.add(new PortConnectionNames(d));
+	    }
+	    return dnList;
+	  }
   
   public List<PortConnectionNames> getLocalActiveThreadConnectionFrontier() {
     ArrayList<PortConnectionNames> dnList = new ArrayList<>();
@@ -139,6 +160,14 @@ public class ThreadImplementationNames {
   
   public List<PortNames> getDispatchers() {
     return constructPortNames(ti.getDispatcherList());
+  }
+  
+  public List<PortNames> getDispatchersWithEntrypoints() {
+	  List<DispatchableInputPort> l = ti.getDispatcherList();
+	  l = l.stream().
+			filter(e -> !e.getExternalHandlerList().isEmpty()).
+			collect(Collectors.toList());
+	  return constructPortNames(l);
   }
   
   public List<PortNames> getAllOutputEventPorts() {
@@ -247,15 +276,16 @@ public class ThreadImplementationNames {
     for (Type t : usedTypes) {
       tn.add(new TypeNames(t));
     }
+    tn.sort(Comparator.comparing(TypeNames::getName));
     return tn;
   }
   
-  public String getEChronosThreadDispatcherMutex() {
+  public String getThreadDispatcherMutex() {
 	  return "smaccm_" + ti.getNormalizedName() + "_dispatcher_mtx";
   }
   
   public String getEChronosThreadDispatcherMutexConst() {
-	  return (ModelNames.getEChronosPrefix() + "_MUTEX_ID_" + this.getEChronosThreadDispatcherMutex()).toUpperCase();
+	  return (ModelNames.getEChronosPrefix() + "_MUTEX_ID_" + this.getThreadDispatcherMutex()).toUpperCase();
   }
 
   public String getEChronosTaskIdConst() {
@@ -317,7 +347,11 @@ public class ThreadImplementationNames {
     return ti.getNormalizedName();
   }
   
-  public String getStackSize() {
+  public String getOsSpecificStackSize() {
+	  if (ti.getModel().getOsTarget() == Model.OSTarget.eChronos) {
+		  // TODO: MWW temporary (2/17/2016): eChronos apparently measures stack size in 32 bit words. 
+		    return Integer.toString(ti.getStackSize() / 4 + ((ti.getStackSize() % 4 == 0) ? 0 : 1)); 
+	  }
 	  return Integer.toString(ti.getStackSize());
   }
   

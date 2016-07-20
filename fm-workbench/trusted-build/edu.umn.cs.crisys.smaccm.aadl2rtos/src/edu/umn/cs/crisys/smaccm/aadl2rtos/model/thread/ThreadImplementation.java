@@ -8,13 +8,23 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread;
  */
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.PortNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.*;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatcherTraverser;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InitializerPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutgoingDispatchContract;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputDataPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
@@ -25,10 +35,12 @@ public class ThreadImplementation {
 	private InitializerPort initEntrypointHandler = null;
 	private int priority = -1;
   private int stackSize = 0; 
-  private double minExecutionTime = -1.0; 
-  private double maxExecutionTime = -1.0; 
+  private int minExecutionTimeInMicroseconds = -1; 
+  private int maxExecutionTimeInMicroseconds = -1; 
+  private int periodInMicroseconds = -1; 
   
-  private String name;
+
+private String name;
   private String generatedEntrypoint = null;
   private  Model model;
   
@@ -42,7 +54,6 @@ public class ThreadImplementation {
 	private int eChronosThreadLocation; 
 	
 	
-  // Data port lists.  This is stupid.  
 	private List<DataPort> ports = new ArrayList<DataPort>();
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
   
@@ -125,29 +136,29 @@ public class ThreadImplementation {
   /**
    * @return the minExecutionTime
    */
-  public double getMinExecutionTime() {
-    return minExecutionTime;
+  public int getMinExecutionTimeInMicroseconds() {
+    return minExecutionTimeInMicroseconds;
   }
 
   /**
    * @param minExecutionTime the minExecutionTime to set
    */
-  public void setMinExecutionTime(double minExecutionTime) {
-    this.minExecutionTime = minExecutionTime;
+  public void setMinExecutionTimeInMicroseconds(int minExecutionTime) {
+    this.minExecutionTimeInMicroseconds = minExecutionTime;
   }
 
   /**
    * @return the maxExecutionTime
    */
-  public double getMaxExecutionTime() {
-    return maxExecutionTime;
+  public int getMaxExecutionTimeInMicroseconds() {
+    return maxExecutionTimeInMicroseconds;
   }
-
+  
   /**
    * @param maxExecutionTime the maxExecutionTime to set
    */
-  public void setMaxExecutionTime(double maxExecutionTime) {
-    this.maxExecutionTime = maxExecutionTime;
+  public void setMaxExecutionTimeInMicroseconds(int maxExecutionTime) {
+    this.maxExecutionTimeInMicroseconds = maxExecutionTime;
   }
 
   public List<SharedDataAccessor> getSharedDataAccessors() {
@@ -246,6 +257,18 @@ public class ThreadImplementation {
       dt.passiveDispatchersFromActiveThread(dispatchers, d);
     }
     return dispatchers;
+  }
+  
+  public List<PortConnection> getActiveThreadConnectionList() {
+    Set<PortConnection> frontier = new HashSet<>();
+    for (DispatchableInputPort d : getDispatcherList()) {
+      DispatcherTraverser dt = new DispatcherTraverser();
+      dt.dispatcherActiveThreadConnections(d, frontier);
+    }
+    
+    List<PortConnection> result = new ArrayList<>(frontier);
+    result.sort(Comparator.comparing(PortConnection::getConnectionID));
+    return result;
   }
   
   public Set<PortConnection> getNonlocalActiveThreadConnectionFrontier() {
@@ -574,6 +597,19 @@ public class ThreadImplementation {
   }
 
   
+  /**
+ * @return the periodInMilliseconds
+ */
+	public int getPeriodInMicroseconds() {
+		return periodInMicroseconds;
+	}
+	
+	/**
+	 * @param periodInMilliseconds the periodInMilliseconds to set
+	 */
+	public void setPeriodInMicroseconds(int periodInMicroseconds) {
+		this.periodInMicroseconds = periodInMicroseconds;
+	}
   
 }
 
