@@ -90,3 +90,5 @@ COMPONENTS := ${SOURCE_DIR}/linux/linux $(STAGE_DIR)/linux/linux-dtb
 ${BUILD_DIR}/src/vm/static/archive.o: ${COMPONENTS}
 	$(Q)mkdir -p $(dir $@)
 	${COMMON_PATH}/files_to_obj.sh $@ _cpio_archive $^
+
+$(vm_CFILES:%.c=%.o) $(COMPONENTS): $(srctree)/.config
