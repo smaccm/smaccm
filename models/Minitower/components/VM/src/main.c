@@ -233,26 +233,28 @@ map_unity_ram(vm_t* vm)
 {
     /* Dimensions of physical memory that we'll use. Note that we do not map the entirety of RAM.
      */
-    static const uintptr_t paddr_start = RAM_BASE;
-    static const uintptr_t paddr_end = 0x60000000;
+    static const uintptr_t paddr_start = LINUX_RAM_PADDR_BASE;
+    static const uintptr_t paddr_end = paddr_start + LINUX_RAM_SIZE;
 
     int err;
 
     uintptr_t start;
     reservation_t res;
     unsigned int bits = 21;
-    res = vspace_reserve_range_at(&vm->vm_vspace, (void*)paddr_start, paddr_end - paddr_start, seL4_AllRights, 1);
+    res = vspace_reserve_range_at(&vm->vm_vspace, (void*)(paddr_start - LINUX_RAM_OFFSET), paddr_end - paddr_start, seL4_AllRights, 1);
     assert(res.res);
-    for (start = paddr_start;; start += BIT(bits)) {
+    for (start = paddr_start; start < paddr_end; start += BIT(bits)) {
         cspacepath_t frame;
         err = vka_cspace_alloc_path(vm->vka, &frame);
         assert(!err);
-        err = simple_get_frame_cap(vm->simple, (void*)start, bits, &frame);
+        err = simple_get_frame_cap(vm->simple, start, bits, &frame);
         if (err) {
+            printf("Failed to map ram page 0x%x\n", start);
             vka_cspace_free(vm->vka, frame.capPtr);
             break;
         }
-        err = vspace_map_pages_at_vaddr(&vm->vm_vspace, &frame.capPtr, &bits, (void*)start, 1, bits, res);
+        uintptr_t addr = start - LINUX_RAM_OFFSET;
+        err = vspace_map_pages_at_vaddr(&vm->vm_vspace, &frame.capPtr, &bits, addr, 1, bits, res);
         assert(!err);
     }
 }
@@ -261,8 +263,6 @@ void restart_component(void) {
     longjmp(restart_jmp_buf, 1);
 }
 
-extern char __data_start[];
-extern char __data_end[];
 extern char __bss_start[];
 extern char __bss_end[];
 extern char __sysinfo[];
@@ -286,7 +286,7 @@ void reset_resources(void) {
     }
     /* delete anything from any slots that should be empty */
     for (i = simple_last_valid_cap(&simple) + 1; i < BIT(simple_get_cnode_size_bits(&simple)); i++) {
-        error = seL4_CNode_Delete(root, i, 32);
+        seL4_CNode_Delete(root, i, 32);
     }
     /* save some pieces of the bss that we actually don't want to zero */
     char save_sysinfo[4];
@@ -309,12 +309,15 @@ void reset_resources(void) {
 
 static seL4_CPtr restart_tcb;
 
+#ifdef CONFIG_PLAT_EXYNOS5410
 static void restart_event(void *arg) {
-    restart_event_reg_callback(&restart_event, NULL);
-    seL4_UserContext context;
-    context.pc = restart_component;
+    restart_event_reg_callback(restart_event, NULL);
+    seL4_UserContext context = {
+        .pc = (seL4_Word)restart_component,
+    };
     seL4_TCB_WriteRegisters(restart_tcb, true, 0, 1, &context);
 }
+#endif
 
 int
 main_continued(void)
@@ -327,7 +330,9 @@ main_continued(void)
         reset_resources();
     }
     restart_tcb = camkes_get_tls()->tcb_cap;
+#ifdef CONFIG_PLAT_EXYNOS5410
     restart_event_reg_callback(restart_event, NULL);
+#endif
 
     err = vmm_init();
     assert(!err);

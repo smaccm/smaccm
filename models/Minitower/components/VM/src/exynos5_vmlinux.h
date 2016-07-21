@@ -8,8 +8,8 @@
  * @TAG(NICTA_BSD)
  */
 
-#ifndef VMLINUX_H
-#define VMLINUX_H
+#ifndef VMLINUX_EXYNOS5_H
+#define VMLINUX_EXYNOS5_H
 
 #include <sel4arm-vmm/vm.h>
 
@@ -18,9 +18,15 @@
 #define VUSB_NINDEX          5
 #define VUSB_NBADGE          0x123
 
+#define LINUX_RAM_BASE    0x40000000
+#define LINUX_RAM_PADDR_BASE LINUX_RAM_BASE
+#define LINUX_RAM_SIZE    0x40000000
+#define PLAT_RAM_END      0xc0000000
+#define LINUX_RAM_OFFSET  0
+
 int load_linux(vm_t* vm, const char* kernel_name, const char* dtb_name);
 
 void vusb_notify(void);
 
-#endif /* VMLINUX_H */
+#endif /* VMLINUX_EXYNOS5_H */
 

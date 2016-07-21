@@ -8,13 +8,16 @@
  * @TAG(NICTA_GPL)
  */
 
+#include <autoconf.h>
 import <VchanInterface.idl4>;
 
 component VM {
     control;
     include "cmks_vchan_vm.h";
 
+#ifdef CONFIG_PLAT_EXYNOS5410
     consumes restart restart_event;
+#endif
 
     has mutex reinitializable_vm_lock;
     uses VchanInterface vchan_con;

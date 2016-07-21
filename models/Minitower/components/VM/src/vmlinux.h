@@ -11,16 +11,16 @@
 #ifndef VMLINUX_H
 #define VMLINUX_H
 
-#include <sel4arm-vmm/vm.h>
+#include <autoconf.h>
 
-#define VUSB_ADDRESS         0x33330000
-#define VUSB_IRQ             198
-#define VUSB_NINDEX          5
-#define VUSB_NBADGE          0x123
+#if defined(CONFIG_PLAT_TK1)
+#include "tk1_vmlinux.h"
 
-int load_linux(vm_t* vm, const char* kernel_name, const char* dtb_name);
+#elif defined(CONFIG_PLAT_EXYNOS54XX)
+#include "exynos5_vmlinux.h"
 
-void vusb_notify(void);
+#else
+#error "Unknown SoC"
+#endif
 
 #endif /* VMLINUX_H */
-
