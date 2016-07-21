@@ -1,8 +1,8 @@
 import <std_connector.camkes>;
 
 import "../VM/VM.camkes";
-import <Vchan/Vchan.camkes>;
-import <VchanInterface.idl4>;
+import "../Vchan/Vchan.camkes";
+import "../../interfaces/VchanInterface.idl4";
 import "../../interfaces/Virtual_Machine_interface.idl4";
 import "../../interfaces/SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4";
 

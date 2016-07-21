@@ -15,7 +15,7 @@
 
 #include <sel4arm-vmm/vm.h>
 #include <sel4arm-vmm/images.h>
-#include <sel4arm-vmm/exynos/devices.h>
+#include <sel4arm-vmm/plat/devices.h>
 #include <sel4arm-vmm/devices/vgic.h>
 #include <sel4arm-vmm/devices/vram.h>
 #include <sel4arm-vmm/devices/vusb.h>
