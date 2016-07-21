@@ -13,12 +13,6 @@ VM_OFILES := archive.o
 VM_HFILES := $(patsubst ${SOURCE_DIR}/%,%,$(wildcard $(SOURCE_DIR)/components/VM/src/*.h))
 VM_LIBS += sel4allocman elf sel4simple sel4simple-default cpio sel4arm-vmm sel4dma usbdrivers sel4vchan
 
-#AJG: Remove after compiling
-#VM_LIBS := sel4 sel4camkes sel4muslccamkes sel4vka sel4allocman \
-#           platsupport sel4platsupport sel4vspace elf \
-#           sel4utils sel4simple utils sel4simple-default cpio \
-#           sel4arm-vmm sel4sync sel4debug sel4dma usbdrivers sel4vchan
-
 ###### End VM files
 
 
