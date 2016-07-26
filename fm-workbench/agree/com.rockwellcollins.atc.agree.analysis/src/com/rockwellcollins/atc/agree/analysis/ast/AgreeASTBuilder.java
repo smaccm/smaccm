@@ -75,6 +75,7 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -118,7 +119,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRecordUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeVarDecl;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
@@ -188,6 +189,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<AgreeVar> inputs = new ArrayList<>();
         List<AgreeVar> outputs = new ArrayList<>();
         List<AgreeVar> locals = new ArrayList<>();
+        List<AgreeAADLConnection> aadlConnections = new ArrayList<>();
+        List<AgreeOverriddenConnection> userDefinedConections = new ArrayList<>();
         List<AgreeConnection> connections = new ArrayList<>();
         List<AgreeNode> subNodes = new ArrayList<>();
         List<AgreeStatement> assertions = new ArrayList<>();
@@ -228,6 +231,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 assertions.addAll(getEquationStatements(contract.getSpecs()));
                 assertions.addAll(getPropertyStatements(contract.getSpecs()));
                 assertions.addAll(getAssignmentStatements(contract.getSpecs()));
+                userDefinedConections.addAll(getConnectionStatements(contract.getSpecs()));
 
                 lemmas.addAll(getLemmaStatements(contract.getSpecs()));
                 addLustreNodes(contract.getSpecs());
@@ -245,11 +249,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                     }
                 }
 
-            }
-            connections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(),
-                    compInst, subNodes, latched));
+			}
+			aadlConnections.addAll(getConnections(((ComponentImplementation) compClass).getAllConnections(), compInst,
+					subNodes, latched));
 
-            // make compClass the type so we can get it's other contract
+			connections.addAll(filterConnections(aadlConnections, userDefinedConections));
+
+			// make compClass the type so we can get it's other contract
             // elements
             compClass = ((ComponentImplementation) compClass).getType();
         }else if (compClass instanceof ComponentImplementation)  {
@@ -293,7 +299,26 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 timing, null, compInst);
     }
 
-    private List<AgreeVar> getAgreeInputVars(EList<SpecStatement> specs,
+    private List<AgreeConnection> filterConnections(List<AgreeAADLConnection> aadlConnections,
+			List<AgreeOverriddenConnection> userDefinedConections) {
+		List<AgreeConnection> conns = new ArrayList<>();
+		//TODO right now for event ports this will copy an overridden connection twice
+		for(AgreeAADLConnection aadlConn : aadlConnections){
+			EObject aadlRef = aadlConn.reference;
+			AgreeConnection replacementConn = aadlConn;
+			for(AgreeOverriddenConnection agreeConn : userDefinedConections){
+				EObject agreeRef = agreeConn.aadlConn;
+				if(aadlRef == agreeRef){
+					replacementConn = agreeConn;
+					break;
+				}
+			}
+			conns.add(replacementConn);
+		}
+		return conns;
+	}
+
+	private List<AgreeVar> getAgreeInputVars(EList<SpecStatement> specs,
             ComponentInstance compInst) {
         List<AgreeVar> agreeVars = new ArrayList<>();
         for (SpecStatement spec : specs) {
@@ -527,14 +552,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
     }
 
-    private List<AgreeConnection> getConnections(EList<Connection> connections, ComponentInstance compInst,
+    private List<AgreeAADLConnection> getConnections(EList<Connection> connections, ComponentInstance compInst,
             List<AgreeNode> subNodes, boolean latched) {
 
         Set<String> destinationSet = new HashSet<>();
         
         Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
                 OsateResourceUtil.getResourceSet(), "Communication_Properties::Timing");
-        List<AgreeConnection> agreeConns = new ArrayList<>();
+        List<AgreeAADLConnection> agreeConns = new ArrayList<>();
         for (Connection conn : connections) {
 
             ConnectedElement absConnDest = conn.getDestination();
@@ -562,32 +587,31 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 }
             }
 
-            // agreeConns.add(makeConnectionExpressions(absConnSour,
-            // absConnDest, latched, delayed))
             AgreeNode sourceNode = agreeNodeFromNamedEl(subNodes, sourContext);
             AgreeNode destNode = agreeNodeFromNamedEl(subNodes, destContext);
+            
 
-            ConnectionEnd destPort = absConnDest.getConnectionEnd();
-            ConnectionEnd sourPort = absConnSour.getConnectionEnd();
+			ConnectionEnd destPort = absConnDest.getConnectionEnd();
+			ConnectionEnd sourPort = absConnSour.getConnectionEnd();
 
-            AgreeConnection.ConnectionType connType;
-            if (destPort instanceof EventDataPort) {
-                if (!(sourPort instanceof EventDataPort)) {
-                    AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '"
-                            + destPort.getName() + "' and '" + sourPort.getName() + "' of differing type");
-                    continue;
-                }
-                connType = ConnectionType.EVENT;
-                
-                AgreeVar sourceVar = new AgreeVar(sourPort.getName() + eventSuffix, NamedType.BOOL, sourPort);
-                AgreeVar destVar = new AgreeVar(destPort.getName() + eventSuffix, NamedType.BOOL, destPort);
+			AgreeAADLConnection.ConnectionType connType;
+			if (destPort instanceof EventDataPort) {
+				if (!(sourPort instanceof EventDataPort)) {
+					AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '" + destPort.getName()
+							+ "' and '" + sourPort.getName() + "' of differing type");
+					continue;
+				}
+				connType = ConnectionType.EVENT;
 
-                AgreeConnection agreeConnection = new AgreeConnection(sourceNode.id, destNode.id, sourceVar,
-                        destVar, connType, latched, delayed, conn);
-                
-                if(!destinationSet.add(agreeConnection.destVar.id)){
-                    AgreeLogger.logWarning("Multiple connections to feature '"+agreeConnection.destVar+"'");
-                }
+				AgreeVar sourceVar = new AgreeVar(sourPort.getName() + eventSuffix, NamedType.BOOL, sourPort);
+				AgreeVar destVar = new AgreeVar(destPort.getName() + eventSuffix, NamedType.BOOL, destPort);
+
+				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode.id, destNode.id, sourceVar, destVar,
+						connType, latched, delayed, conn);
+
+				if (!destinationSet.add(agreeConnection.destVar.id)) {
+					AgreeLogger.logWarning("Multiple connections to feature '" + agreeConnection.destVar + "'");
+				}
                 
                 agreeConns.add(agreeConnection);
 
@@ -621,16 +645,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             AgreeVar sourVar = new AgreeVar(sourPort.getName(), type, sourPort);
             AgreeVar destVar = new AgreeVar(destPort.getName(), type, destPort);
             
-            String sourNodeName = sourceNode == null ? null : sourceNode.id;
-            String destNodeName = destNode == null ? null : destNode.id;
+			String sourNodeName = sourceNode == null ? null : sourceNode.id;
+			String destNodeName = destNode == null ? null : destNode.id;
 
-            AgreeConnection agreeConnection = new AgreeConnection(sourNodeName, destNodeName, sourVar,
-                    destVar, connType, latched, delayed, conn);
+			AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourNodeName, destNodeName, sourVar, destVar,
+					connType, latched, delayed, conn);
 
-            if (!destinationSet.add(agreeConnection.destVar.id)) {
-                AgreeLogger.logWarning("Multiple connections to feature '"+agreeConnection.destVar+"'");
-            }
-            
+			if (!destinationSet.add(agreeConnection.destVar.id)) {
+				AgreeLogger.logWarning("Multiple connections to feature '" + agreeConnection.destVar + "'");
+			}
+
             agreeConns.add(agreeConnection);
         }
         return agreeConns;
@@ -795,7 +819,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private List<VarDecl> agreeVarsFromArgs(EList<Arg> args, ComponentInstance compInst) {
         List<VarDecl> agreeVars = new ArrayList<>();
         for (Arg arg : args) {
-            // TODO: decide whether or not to make these VarDecls or AgreeVars
             NamedType type =
                     getNamedType(AgreeRecordUtils.getRecordTypeName(arg.getType(), typeMap, globalTypes));
             agreeVars.add(new AgreeVar(arg.getName(), type, arg, compInst));
@@ -821,6 +844,19 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return asserts;
     }
 
+    private List<AgreeOverriddenConnection> getConnectionStatements(EList<SpecStatement> specs) {
+    	List<AgreeOverriddenConnection> conns = new ArrayList<>();
+    	for(SpecStatement spec : specs){
+			if (spec instanceof ConnectionStatement) {
+				Expr expr = doSwitch(((ConnectionStatement) spec).getExpr());
+				Connection conn = (Connection) ((ConnectionStatement) spec).getConn();
+				AgreeOverriddenConnection agreeConn = new AgreeOverriddenConnection(new AgreeStatement("", expr, spec), conn);
+				conns.add(agreeConn);
+    		}
+    	}
+    	return conns;
+    }
+    
     private List<AgreeStatement> getAssignmentStatements(EList<SpecStatement> specs) {
         List<AgreeStatement> assigns = new ArrayList<>();
         for (SpecStatement spec : specs) {
@@ -1147,27 +1183,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         for (com.rockwellcollins.atc.agree.agree.Expr argExpr : expr.getArgs()) {
             argResults.add(doSwitch(argExpr));
         }
-
-        // TODO are node lemmas depreicated?
-        // keep track of node lemmas for node calls
-        // if(namedEl instanceof NodeDefExpr){
-        // Integer count = nodeCallCount.get(fnName);
-        // if(count == null){
-        // count = Integer.valueOf(0);
-        // }else{
-        // count = count + 1;
-        // }
-        // nodeCallCount.put(fnName, count);
-        //
-        // Map<String, String> lemmaNames = nodeLemmaNames.get(fnName);
-        // for(Entry<String, String> lemmaRenames : lemmaNames.entrySet()){
-        // String lemmaName = fnName+"~"+count+"."+lemmaRenames.getKey();
-        // refMap.put(lemmaName, expr);
-        // this.renaming.addExplicitRename(lemmaName, "("+fnName+"["+count+"]) :
-        // "+"\""+lemmaRenames.getValue()+"\"");
-        // nodeLemmaProps.add(lemmaName);
-        // }
-        // }
 
         NodeCallExpr nodeCall = new NodeCallExpr(fnName, argResults);
         return nodeCall;

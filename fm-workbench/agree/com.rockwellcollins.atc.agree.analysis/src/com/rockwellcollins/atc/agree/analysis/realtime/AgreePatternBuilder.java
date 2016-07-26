@@ -6,11 +6,9 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.agree.AlwaysStatement;
 import com.rockwellcollins.atc.agree.agree.ClosedTimeInterval;
-import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.OpenLeftTimeInterval;
 import com.rockwellcollins.atc.agree.agree.OpenRightTimeInterval;
 import com.rockwellcollins.atc.agree.agree.OpenTimeInterval;
-import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
@@ -31,8 +29,6 @@ import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.Expr;
 import jkind.lustre.IntExpr;
-import jkind.lustre.UnaryExpr;
-import jkind.lustre.UnaryOp;
 
 public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 

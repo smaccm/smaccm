@@ -17,12 +17,15 @@ import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeOverriddenConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
@@ -54,6 +57,10 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
+
+import static jkind.lustre.parsing.LustreParseUtil.expr;
+import static jkind.lustre.parsing.LustreParseUtil.to;
+
 
 public class LustreAstBuilder {
 
@@ -650,28 +657,33 @@ public class LustreAstBuilder {
 
 	protected static void addConnectionConstraints(AgreeNode agreeNode, List<AgreeStatement> assertions) {
 		for (AgreeConnection conn : agreeNode.connections) {
-			String destName = conn.destinationNode == null ? "" : conn.destinationNode + AgreeASTBuilder.dotChar;
-			destName = destName + conn.destVar.id;
+			if (conn instanceof AgreeAADLConnection) {
+				AgreeAADLConnection aadlConn = (AgreeAADLConnection)conn;
+				String destName = aadlConn.destinationNode == null ? "" : aadlConn.destinationNode + AgreeASTBuilder.dotChar;
+				destName = destName + aadlConn.destVar.id;
 
-			String sourName = conn.sourceNode == null ? "" : conn.sourceNode + AgreeASTBuilder.dotChar;
-			sourName = sourName + conn.sourVar.id;
+				String sourName = aadlConn.sourceNode == null ? "" : aadlConn.sourceNode + AgreeASTBuilder.dotChar;
+				sourName = sourName + aadlConn.sourVar.id;
 
-			Expr connExpr;
+				Expr aadlConnExpr;
 
-			if (!conn.delayed) {
-				connExpr = new BinaryExpr(new IdExpr(sourName), BinaryOp.EQUAL, new IdExpr(destName));
-			} else {
-				// we need to get the correct type for the connection
-				// we can assume that the source and destination types are
-				// the same at this point
-				Expr initExpr = AgreeUtils.getInitValueFromType(conn.sourVar.type);
-				Expr preSource = new UnaryExpr(UnaryOp.PRE, new IdExpr(sourName));
-				Expr sourExpr = new BinaryExpr(initExpr, BinaryOp.ARROW, preSource);
-				connExpr = new BinaryExpr(sourExpr, BinaryOp.EQUAL, new IdExpr(destName));
+				if (!aadlConn.delayed) {
+					aadlConnExpr = new BinaryExpr(new IdExpr(sourName), BinaryOp.EQUAL, new IdExpr(destName));
+				} else {
+					// we need to get the correct type for the aadlConnection
+					// we can assume that the source and destination types are
+					// the same at this point
+					Expr initExpr = AgreeUtils.getInitValueFromType(aadlConn.sourVar.type);
+					Expr preSource = new UnaryExpr(UnaryOp.PRE, new IdExpr(sourName));
+					Expr sourExpr = new BinaryExpr(initExpr, BinaryOp.ARROW, preSource);
+					aadlConnExpr = new BinaryExpr(sourExpr, BinaryOp.EQUAL, new IdExpr(destName));
+				}
+
+				assertions.add(new AgreeStatement("", aadlConnExpr, aadlConn.reference));
+			}else{
+				AgreeOverriddenConnection agreeConn = (AgreeOverriddenConnection)conn;
+				assertions.add(agreeConn.statement);
 			}
-
-			assertions.add(new AgreeStatement("", connExpr, conn.reference));
-
 		}
 	}
 
