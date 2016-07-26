@@ -66,7 +66,7 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
             String sourceVarName = subNode.id + "__" + var.id;
 
             Equation latchEq = equation("latchVar = " + sourceVarName
-                    + " -> if pre clockVar or not clockVar then pre latchVar else " + sourceVarName + ";",
+                    + " -> if pre clockVar or not clockVar then " + sourceVarName + " else pre latchVar;",
                     to("latchVar", latchVar), to("clockVar", clockExpr));
 
             builder.addLocalEquation(new AgreeEquation(latchEq, null));

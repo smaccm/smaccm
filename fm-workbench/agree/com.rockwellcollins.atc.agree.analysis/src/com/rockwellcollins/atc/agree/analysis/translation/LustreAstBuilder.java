@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.util.Tuples;
 import org.osate.aadl2.impl.DataPortImpl;
+import org.osate.aadl2.impl.EventDataPortImpl;
 import org.eclipse.xtext.util.Pair;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -467,44 +468,6 @@ public class LustreAstBuilder {
 		return new Equation(histId, new BinaryExpr(expr, BinaryOp.ARROW, preAndNow));
 	}
 
-	protected static Node getInputLatchingNode(IdExpr clockExpr, List<VarDecl> inputs, String nodeName) {
-		List<VarDecl> outputs = new ArrayList<>();
-		List<VarDecl> locals = new ArrayList<>();
-		List<Equation> equations = new ArrayList<>();
-
-		String clockRiseName = "__RISE";
-		locals.add(new VarDecl(clockRiseName, NamedType.BOOL));
-		IdExpr clockRiseId = new IdExpr(clockRiseName);
-
-		Expr preClock = new UnaryExpr(UnaryOp.PRE, clockExpr);
-		Expr notPreClock = new UnaryExpr(UnaryOp.NOT, preClock);
-		Expr clockRise = new BinaryExpr(notPreClock, BinaryOp.AND, clockExpr);
-		clockRise = new BinaryExpr(clockExpr, BinaryOp.ARROW, clockRise);
-
-		equations.add(new Equation(clockRiseId, clockRise));
-
-		for (VarDecl var : inputs) {
-			String latchName = "latched__" + var.id;
-			IdExpr input = new IdExpr(var.id);
-			IdExpr latchId = new IdExpr(latchName);
-			outputs.add(new VarDecl(latchName, var.type));
-
-			Expr preLatch = new UnaryExpr(UnaryOp.PRE, latchId);
-			equations.add(new Equation(latchId,
-					new BinaryExpr(input, BinaryOp.ARROW, new IfThenElseExpr(clockRiseId, input, preLatch))));
-		}
-
-		inputs.add(new VarDecl(clockExpr.id, NamedType.BOOL));
-
-		NodeBuilder builder = new NodeBuilder(nodeName);
-		builder.addInputs(inputs);
-		builder.addOutputs(outputs);
-		builder.addLocals(locals);
-		builder.addEquations(equations);
-
-		return builder.build();
-	}
-
 	protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix) {
 
 		List<VarDecl> inputs = new ArrayList<>();
@@ -792,6 +755,9 @@ public class LustreAstBuilder {
 			if (agreeNode.timing == TimingModel.LATCHED) {
 				EObject ref = ((AgreeVar) var).reference;
 				if (ref instanceof DataPortImpl && ((DataPortImpl) ref).isIn()) {
+					suffix = AgreeInlineLatchedConnections.LATCHED_SUFFIX;
+				}
+				if (ref instanceof EventDataPortImpl && ((EventDataPortImpl) ref).isIn()) {
 					suffix = AgreeInlineLatchedConnections.LATCHED_SUFFIX;
 				}
 			}
