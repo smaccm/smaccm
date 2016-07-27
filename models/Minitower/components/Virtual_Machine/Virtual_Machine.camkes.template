@@ -40,7 +40,7 @@ import "../../interfaces/Virtual_Machine_interface.idl4";
 
 // Idl files for ports
 import "../../interfaces/SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4";
-import "../../interfaces/void_writer.idl4";
+import "../../interfaces/bool_writer.idl4";
 
 
 component Virtual_Machine {
@@ -49,8 +49,8 @@ component Virtual_Machine {
 
     has semaphore smaccm_dispatch_sem;
 
-    // Provided interfaces for input event ports
-    provides void_writer server2self_reboot;
+    // Provided interfaces for input event data ports
+    provides bool_writer server2self_reboot;
     has mutex smaccm_virtual_machine_server2self_reboot_mut;
 
 

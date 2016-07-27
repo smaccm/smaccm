@@ -39,6 +39,7 @@
 procedure Virtual_Machine_interface {
     include <smaccm_top_i_types.h>;
 
-    void dispatch_server2self_reboot(out smaccm_Virtual_Machine_server2self_reboot_struct smaccm_out);
+    void dispatch_server2self_reboot(refin bool smaccm_in,
+        out smaccm_Virtual_Machine_server2self_reboot_struct smaccm_out);
 }
 

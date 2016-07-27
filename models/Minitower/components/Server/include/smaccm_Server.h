@@ -50,7 +50,7 @@ void component_init(const int64_t * Server_initializer);
 // communication with other threads
 bool Server_write_self2encrypt(const SMACCM_DATA__GIDL self2encrypt);
 bool Server_write_self2framing(const SMACCM_DATA__GIDL self2framing);
-bool Server_write_self2vm_reboot(void);
+bool Server_write_self2vm_reboot(const bool * self2vm_reboot);
 
 bool Server_read_periodic_dispatcher(int64_t * periodic_dispatcher);
 bool Server_read_Server_initializer(int64_t * Server_initializer);

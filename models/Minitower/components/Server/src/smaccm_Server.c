@@ -388,9 +388,9 @@ bool Server_write_self2framing(const SMACCM_DATA__GIDL self2framing) {
  *
  ************************************************************************/
 
-bool Server_write_self2vm_reboot() {
+bool Server_write_self2vm_reboot(const bool * self2vm_reboot) {
     bool result = true;
-    result &= Server_self2vm_reboot_write_void();
+    result &= Server_self2vm_reboot_write_bool(self2vm_reboot);
 
 
     return result;
