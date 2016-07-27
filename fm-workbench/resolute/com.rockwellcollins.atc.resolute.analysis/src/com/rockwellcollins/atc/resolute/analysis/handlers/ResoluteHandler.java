@@ -32,16 +32,15 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.InstanceObject;
-import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.EndToEndFlowInstance;
 import org.osate.aadl2.instance.FlowSpecificationInstance;
+import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.aadl2.util.Aadl2Util;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval; 
+import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionsMap;
@@ -301,7 +300,7 @@ public class ResoluteHandler extends AadlHandler {
 	}
 
 	private IHandlerService getHandlerService() {
-		return (IHandlerService) getWindow().getService(IHandlerService.class);
+		return getWindow().getService(IHandlerService.class);
 	}
 
 	private void initializeSets(ComponentInstance ci, Map<String, SortedSet<NamedElement>> sets) {
@@ -313,11 +312,11 @@ public class ResoluteHandler extends AadlHandler {
 		for (InstanceObject io : EcoreUtil2.getAllContentsOfType(ci, InstanceObject.class)) {
 			addToSet(sets, io);
 		}
-		
+
 		for (FlowSpecificationInstance flowSpec : ci.getFlowSpecifications()) {
 			addToSet(sets, "flow_specification", flowSpec);
 		}
-		
+
 		for (EndToEndFlowInstance etef : ci.getEndToEndFlows()) {
 			addToSet(sets, "end_to_end_flow", etef);
 		}
@@ -328,7 +327,7 @@ public class ResoluteHandler extends AadlHandler {
 		for (BaseType superType : type.getAllSuperTypes()) {
 			addToSet(sets, superType.name, io);
 		}
-		
+
 	}
 
 	private void addToSet(Map<String, SortedSet<NamedElement>> sets, String name, NamedElement ne) {
@@ -362,6 +361,6 @@ public class ResoluteHandler extends AadlHandler {
 	}
 
 	protected void clearProofs() {
-		drawProofs(Collections.<ResoluteResult>emptyList());
+		drawProofs(Collections.<ResoluteResult> emptyList());
 	}
 }

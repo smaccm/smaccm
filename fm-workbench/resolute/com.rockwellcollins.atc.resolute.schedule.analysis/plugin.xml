@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="com.rockwellcollins.atc.resolute.analysis.external.resoluteExternalAnalysis">
+      <externalAnalysis
+      		name="schedule"
+            typeClass="com.rockwellcollins.atc.resolute.schedule.analysis.ResoluteScheduleAnalysisType"
+            analysisClass="com.rockwellcollins.atc.resolute.schedule.analysis.ResoluteScheduleAnalysis">
+      </externalAnalysis>
+   </extension>
+</plugin>
