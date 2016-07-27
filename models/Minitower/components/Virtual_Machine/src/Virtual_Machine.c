@@ -95,7 +95,7 @@ int run(void) {
     }
 }
 
-bool server2self_reboot_write_void(void) {
+bool server2self_reboot_write_bool(const bool *arg) {
     printf("Reboot requested\n");
     restart_vm_emit();
     return true;

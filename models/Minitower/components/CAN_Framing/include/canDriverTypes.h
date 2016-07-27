@@ -7,10 +7,6 @@
 extern "C" {
 #endif
 #include "ivory.h"
-typedef struct can_message { uint32_t can_message_id;
-                             int32_t can_message_len;
-                             uint8_t can_message_buf[8U];
-} can_message;
 
 #ifdef __cplusplus
 }

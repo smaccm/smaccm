@@ -39,8 +39,7 @@ public
 			server2framing: port server.self2framing -> can_framing.server2self;
 			framing2server: port can_framing.self2server -> server.framing2self;
 
-			framing2can_request: port can_framing.self2can_request -> can_driver.framing2self;
-			framing2can_complete: port can_framing.self2can_complete -> can_driver.framing2self;
+			framing2can_request: port can_framing.self2can -> can_driver.framing2self;
 			can2framing_status: port can_driver.self2framing_status -> can_framing.can2self_status;
 			can2framing_frame: port can_driver.self2framing_frame -> can_framing.can2self_frame;
 
@@ -127,8 +126,7 @@ public
 						Queue_Size => 10;
 					};
 			can2self_status: in event data port Base_Types::Boolean;
-			self2can_request: out event data port SMACCM_DATA::CAN_Frame.i;
-			self2can_complete: out event data port SMACCM_DATA::CAN_Frame.i;
+			self2can: out event data port SMACCM_DATA::CAN_Frame.i;
 
 		properties
 			Dispatch_Protocol => Periodic;

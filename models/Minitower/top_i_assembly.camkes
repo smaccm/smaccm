@@ -73,27 +73,26 @@ assembly {
         connection seL4RPCCall conn1 (from CAN_Driver_inst.CAN_Driver_self2framing_status, to CAN_Framing_inst.can2self_status);
         connection seL4RPCCall conn2 (from CAN_Driver_inst.CAN_Driver_self2framing_frame, to CAN_Framing_inst.can2self_frame);
         connection seL4RPCCall conn3 (from CAN_Framing_inst.CAN_Framing_self2server, to Server_inst.framing2self);
-        connection seL4RPCCall conn4 (from CAN_Framing_inst.CAN_Framing_self2can_request, to CAN_Driver_inst.framing2self);
-        connection seL4RPCCall conn5 (from CAN_Framing_inst.CAN_Framing_self2can_complete, to CAN_Driver_inst.framing2self);
-        connection seL4RPCCall conn6 (from Decrypt_inst.Decrypt_self2server, to Server_inst.decrypt2self);
-        connection seL4RPCCall conn7 (from Encrypt_inst.Encrypt_self2uart, to UART_Driver_inst.encrypt2self);
-        connection seL4RPCCall conn8 (from Server_inst.Server_self2encrypt, to Encrypt_inst.server2self);
-        connection seL4RPCCall conn9 (from Server_inst.Server_self2framing, to CAN_Framing_inst.server2self);
-        connection seL4RPCCall conn10 (from Server_inst.Server_self2vm_reboot, to Virtual_Machine_inst.server2self_reboot);
-        connection seL4RPCCall conn11 (from UART_Driver_inst.UART_Driver_self2decrypt, to Decrypt_inst.uart2self);
-        connection seL4RPCCall conn12 (from UART_Driver_inst.UART_Driver_self2encrypt, to Encrypt_inst.uart2self);
+        connection seL4RPCCall conn4 (from CAN_Framing_inst.CAN_Framing_self2can, to CAN_Driver_inst.framing2self);
+        connection seL4RPCCall conn5 (from Decrypt_inst.Decrypt_self2server, to Server_inst.decrypt2self);
+        connection seL4RPCCall conn6 (from Encrypt_inst.Encrypt_self2uart, to UART_Driver_inst.encrypt2self);
+        connection seL4RPCCall conn7 (from Server_inst.Server_self2encrypt, to Encrypt_inst.server2self);
+        connection seL4RPCCall conn8 (from Server_inst.Server_self2framing, to CAN_Framing_inst.server2self);
+        connection seL4RPCCall conn9 (from Server_inst.Server_self2vm_reboot, to Virtual_Machine_inst.server2self_reboot);
+        connection seL4RPCCall conn10 (from UART_Driver_inst.UART_Driver_self2decrypt, to Decrypt_inst.uart2self);
+        connection seL4RPCCall conn11 (from UART_Driver_inst.UART_Driver_self2encrypt, to Encrypt_inst.uart2self);
 
         // Periodic dispatcher connections
-        connection seL4RPCCall conn13 (from dispatch_periodic_inst.CAN_Framing_periodic_dispatcher, to CAN_Framing_inst.CAN_Framing_periodic_dispatcher);
-        connection seL4RPCCall conn14 (from dispatch_periodic_inst.Decrypt_periodic_dispatcher, to Decrypt_inst.Decrypt_periodic_dispatcher);
-        connection seL4RPCCall conn15 (from dispatch_periodic_inst.Encrypt_periodic_dispatcher, to Encrypt_inst.Encrypt_periodic_dispatcher);
-        connection seL4RPCCall conn16 (from dispatch_periodic_inst.Server_periodic_dispatcher, to Server_inst.Server_periodic_dispatcher);
+        connection seL4RPCCall conn12 (from dispatch_periodic_inst.CAN_Framing_periodic_dispatcher, to CAN_Framing_inst.CAN_Framing_periodic_dispatcher);
+        connection seL4RPCCall conn13 (from dispatch_periodic_inst.Decrypt_periodic_dispatcher, to Decrypt_inst.Decrypt_periodic_dispatcher);
+        connection seL4RPCCall conn14 (from dispatch_periodic_inst.Encrypt_periodic_dispatcher, to Encrypt_inst.Encrypt_periodic_dispatcher);
+        connection seL4RPCCall conn15 (from dispatch_periodic_inst.Server_periodic_dispatcher, to Server_inst.Server_periodic_dispatcher);
 
         connection seL4TimeServer periodic_dispatch_timer(from dispatch_periodic_inst.timer, to time_server.the_timer);
         connection seL4GlobalAsynchCallback echo_int(from time_server.timer_notification, to dispatch_periodic_inst.timer_complete);
 
         // Component read/write connections
-        connection seL4RPCCall conn17 (from Virtual_Machine_inst.Virtual_Machine_self2server, to Server_inst.vm2self);
+        connection seL4RPCCall conn16 (from Virtual_Machine_inst.Virtual_Machine_self2server, to Server_inst.vm2self);
 
     }
 

@@ -47,6 +47,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                 
                 *n_ref1 = (uint32_t) ((uint32_t) 8U + n_deref16);
                 callback_rebootReqSetReqConsumer(n_ref15);
+                callback_reboot_vm(n_ref15);
                 *n_ref13 = true;
             }
             

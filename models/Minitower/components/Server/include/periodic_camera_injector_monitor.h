@@ -13,7 +13,6 @@ extern "C" {
 #include "att_control_debug_types.h"
 #include "barometer_sample_types.h"
 #include "camera_target_types.h"
-#include "canDriverTypes.h"
 #include "control_law_types.h"
 #include "control_modes_types.h"
 #include "control_output_types.h"
@@ -23,9 +22,7 @@ extern "C" {
 #include "gps_fix_types.h"
 #include "gyroscope_sample_types.h"
 #include "heartbeat_types.h"
-#include "hx_cyphertext.h"
 #include "ivory.h"
-#include "ivory_serialize.h"
 #include "magnetometer_sample_types.h"
 #include "packed_status_types.h"
 #include "pid_config_types.h"
@@ -73,19 +70,19 @@ extern "C" {
 #include "throttle_mode_types.h"
 #include "throttle_ui_types.h"
 #include "time_micros_types.h"
-#include "towerCameraVMDeps.h"
-#include "towerUartDeps.h"
 #include "tristate_types.h"
 #include "user_input_result_types.h"
 #include "user_input_types.h"
 #include "xyz_calibration_types.h"
 #include "xyz_types.h"
 #include "yaw_mode_types.h"
-extern struct camera_data camera_data_st;
-extern struct camera_data camera_data_prev;
+#include "smaccm_Server.h"
+// AJG: Why are these declared extern if they are only used locally within the file?
+extern struct SMACCM_DATA__Camera_Bounding_Box_i camera_data_st;
+extern struct SMACCM_DATA__Camera_Bounding_Box_i camera_data_prev;
 extern uint32_t camera_data_watch;
 void callback_camera_req(const uint32_t *n_var0);
-void callback_cameraDataRx(const struct camera_data *n_var0);
+void callback_cameraDataRx(const struct SMACCM_DATA__Camera_Bounding_Box_i *n_var0);
 
 #ifdef __cplusplus
 }

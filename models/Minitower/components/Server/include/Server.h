@@ -6,14 +6,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "input_CAN_Server_get_pt_data_monitor.h"
-#include "input_Camera_VM_Server_get_camera_data_monitor.h"
-#include "input_UART_in_Server_get_pt_data_monitor.h"
-#include "ivory.h"
 #include <smaccm_Server.h>
-#include <smaccm_top_i_types.h>
-void component_entry(void);
-void component_init(void);
+#include "input_Server_read_camera_data_monitor.h"
+#include "input_Server_read_get_can_monitor.h"
+#include "input_Server_read_get_input_monitor.h"
+#include "ivory.h"
+void component_entry(const int64_t *n_var0);
+void component_init(const int64_t *n_var0);
 
 #ifdef __cplusplus
 }

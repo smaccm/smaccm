@@ -318,8 +318,7 @@ bool CAN_Framing_read_can2self_status(bool * arg) {
 
 
 // NOT writing dispatch variables for port self2server
-// NOT writing dispatch variables for port self2can_request
-// NOT writing dispatch variables for port self2can_complete
+// NOT writing dispatch variables for port self2can
 
 
 /************************************************************************
@@ -458,7 +457,7 @@ bool CAN_Framing_write_self2server(const SMACCM_DATA__GIDL self2server) {
     return result;
 }
 /************************************************************************
- * CAN_Framing_write_self2can_request
+ * CAN_Framing_write_self2can
  * Invoked from local active or passive thread.
  *
  * This is the comm function invoked by a user-level thread to send a message
@@ -469,28 +468,9 @@ bool CAN_Framing_write_self2server(const SMACCM_DATA__GIDL self2server) {
  *
  ************************************************************************/
 
-bool CAN_Framing_write_self2can_request(const SMACCM_DATA__CAN_Frame_i * self2can_request) {
+bool CAN_Framing_write_self2can(const SMACCM_DATA__CAN_Frame_i * self2can) {
     bool result = true;
-    result &= CAN_Framing_self2can_request_write_SMACCM_DATA__CAN_Frame_i(self2can_request);
-
-
-    return result;
-}
-/************************************************************************
- * CAN_Framing_write_self2can_complete
- * Invoked from local active or passive thread.
- *
- * This is the comm function invoked by a user-level thread to send a message
- * to another thread.  If the target is an active thread, it calls an
- * RPC on the target thread to queue the data.  If it is a passive thread,
- * it locally enqueues the request to be sent when the user thread
- * completes execution.
- *
- ************************************************************************/
-
-bool CAN_Framing_write_self2can_complete(const SMACCM_DATA__CAN_Frame_i * self2can_complete) {
-    bool result = true;
-    result &= CAN_Framing_self2can_complete_write_SMACCM_DATA__CAN_Frame_i(self2can_complete);
+    result &= CAN_Framing_self2can_write_SMACCM_DATA__CAN_Frame_i(self2can);
 
 
     return result;

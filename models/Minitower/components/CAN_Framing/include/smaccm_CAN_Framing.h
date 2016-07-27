@@ -49,8 +49,7 @@ void component_init(const int64_t * CAN_Framing_initializer);
 // These are functions that are provided by the AADL middleware for
 // communication with other threads
 bool CAN_Framing_write_self2server(const SMACCM_DATA__GIDL self2server);
-bool CAN_Framing_write_self2can_request(const SMACCM_DATA__CAN_Frame_i * self2can_request);
-bool CAN_Framing_write_self2can_complete(const SMACCM_DATA__CAN_Frame_i * self2can_complete);
+bool CAN_Framing_write_self2can(const SMACCM_DATA__CAN_Frame_i * self2can);
 
 bool CAN_Framing_read_periodic_dispatcher(int64_t * periodic_dispatcher);
 bool CAN_Framing_read_CAN_Framing_initializer(int64_t * CAN_Framing_initializer);
