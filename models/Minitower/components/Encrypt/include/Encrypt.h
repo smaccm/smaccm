@@ -8,8 +8,8 @@ extern "C" {
 #endif
 #include <smaccm_Encrypt.h>
 #include "commsecEncodeStaticKey_monitor.h"
-#include "input_Encrypt_read_get_gidl_monitor.h"
-#include "input_Encrypt_read_recv_response_monitor.h"
+#include "input_Encrypt_read_server2self_monitor.h"
+#include "input_Encrypt_read_uart2self_monitor.h"
 #include "ivory.h"
 void component_entry(const int64_t *n_var0);
 void component_init(const int64_t *n_var0);

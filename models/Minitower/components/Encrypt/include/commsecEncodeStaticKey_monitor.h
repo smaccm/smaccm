@@ -9,6 +9,8 @@ extern "C" {
 #include "commsecEncodeState_monitor.h"
 #include "hx_cyphertext.h"
 #include "ivory.h"
+#include "smaccm_UART_module.h"
+#include "towerUartDeps.h"
 void callback_configureStaticKey(const int64_t *n_var0);
 
 #ifdef __cplusplus

@@ -30,7 +30,7 @@ void callback_rebootReqSetReqConsumer(const struct sequence_numbered_reboot_req 
         *n_ref3 = (uint32_t) ((uint32_t) 12U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -61,7 +61,7 @@ void callback_altitudeRatePidSetReqConsumer(const struct sequence_numbered_pid_c
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -92,7 +92,7 @@ void callback_altitudeRatePidGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -123,7 +123,7 @@ void callback_altitudePositionPidSetReqConsumer(const struct sequence_numbered_p
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -154,7 +154,7 @@ void callback_altitudePositionPidGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -185,7 +185,7 @@ void callback_throttleUiSetReqConsumer(const struct sequence_numbered_throttle_u
         *n_ref3 = (uint32_t) ((uint32_t) 16U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -216,7 +216,7 @@ void callback_throttleUiGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -247,7 +247,7 @@ void callback_attitudeRollStabSetReqConsumer(const struct sequence_numbered_stab
         *n_ref3 = (uint32_t) ((uint32_t) 48U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -278,7 +278,7 @@ void callback_attitudeRollStabGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -309,7 +309,7 @@ void callback_attitudePitchStabSetReqConsumer(const struct sequence_numbered_sta
         *n_ref3 = (uint32_t) ((uint32_t) 48U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -340,7 +340,7 @@ void callback_attitudePitchStabGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -371,7 +371,7 @@ void callback_yawRatePidSetReqConsumer(const struct sequence_numbered_pid_config
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -402,7 +402,7 @@ void callback_yawRatePidGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -433,7 +433,7 @@ void callback_yawPositionPidSetReqConsumer(const struct sequence_numbered_pid_co
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -464,7 +464,7 @@ void callback_yawPositionPidGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -495,7 +495,7 @@ void callback_armingRequestSetReqConsumer(const struct sequence_numbered_tristat
         *n_ref3 = (uint32_t) ((uint32_t) 9U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -526,7 +526,7 @@ void callback_armingRequestGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -557,7 +557,7 @@ void callback_controlModesRequestSetReqConsumer(const struct sequence_numbered_c
         *n_ref3 = (uint32_t) ((uint32_t) 11U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -588,7 +588,7 @@ void callback_controlModesRequestGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -619,7 +619,7 @@ void callback_userInputRequestSetReqConsumer(const struct sequence_numbered_user
         *n_ref3 = (uint32_t) ((uint32_t) 24U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -650,7 +650,7 @@ void callback_userInputRequestGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -681,7 +681,7 @@ void callback_rgbLedSetReqConsumer(const struct sequence_numbered_rgb_led_settin
         *n_ref3 = (uint32_t) ((uint32_t) 11U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -712,7 +712,7 @@ void callback_rgbLedGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -743,7 +743,7 @@ void callback_cameraTargetInputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -774,7 +774,7 @@ void callback_packedStatusGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -805,7 +805,7 @@ void callback_controlLawGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -836,7 +836,7 @@ void callback_rcInputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -867,7 +867,7 @@ void callback_userInputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -898,7 +898,7 @@ void callback_sensorsOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -929,7 +929,7 @@ void callback_gyroRawOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -960,7 +960,7 @@ void callback_gyroCalibrationGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -991,7 +991,7 @@ void callback_gyroOutputCalibrationGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1022,7 +1022,7 @@ void callback_gyroOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1053,7 +1053,7 @@ void callback_accelRawOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1084,7 +1084,7 @@ void callback_accelCalibrationGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1115,7 +1115,7 @@ void callback_accelOutputCalibrationGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1146,7 +1146,7 @@ void callback_accelOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1177,7 +1177,7 @@ void callback_baroOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1208,7 +1208,7 @@ void callback_magRawOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1239,7 +1239,7 @@ void callback_magCalibrationGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1270,7 +1270,7 @@ void callback_magOutputCalibrationGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1301,7 +1301,7 @@ void callback_magOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1332,7 +1332,7 @@ void callback_gpsOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1363,7 +1363,7 @@ void callback_controlSetpointGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1394,7 +1394,7 @@ void callback_controlOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1425,7 +1425,7 @@ void callback_motorOutputGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1456,7 +1456,7 @@ void callback_attControlDebugGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1487,7 +1487,7 @@ void callback_altControlDebugGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1518,7 +1518,7 @@ void callback_px4ioStateGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1549,7 +1549,7 @@ void callback_armingStatusGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }
 
@@ -1580,6 +1580,6 @@ void callback_batteryVoltageGetReqConsumer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_can_2(n_ref1);
+        callback_output_Server_write_self2framing_2(n_ref1);
     }
 }

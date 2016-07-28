@@ -3,13 +3,13 @@
  */
 #include "to_hx_monitor.h"
 
-void callback_unpack(const struct SMACCM_DATA__UART_Packet_i *n_var0)
+void callback_unpack(const struct ivory_string_UartPacket *n_var0)
 {
-    int32_t n_deref0 = n_var0->buf_len;
+    int32_t n_deref0 = n_var0->ivory_string_UartPacket_len;
     
     for (int32_t n_ix1 = (int32_t) 0; n_ix1 <= (int32_t) 254; n_ix1++) {
         if ((bool) (n_ix1 < n_deref0)) {
-            callback_decoder_serial_in(&n_var0->buf[n_ix1]);
+            callback_decoder_serial_in(&n_var0->ivory_string_UartPacket_data[n_ix1]);
         }
     }
 }

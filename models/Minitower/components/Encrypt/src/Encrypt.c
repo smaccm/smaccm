@@ -26,7 +26,7 @@ void component_entry_aux(void)
     bool n_r2 = Encrypt_read_server2self(n_ref1);
     
     if (n_r2) {
-        callback_input_Encrypt_read_get_gidl_handler(n_ref1);
+        callback_input_Encrypt_read_server2self_handler(n_ref1);
     }
     return;
 }
@@ -38,7 +38,7 @@ void component_entry_aux_2(void)
     bool n_r2 = Encrypt_read_uart2self(n_ref1);
     
     if (n_r2) {
-        callback_input_Encrypt_read_recv_response_handler(n_ref1);
+        callback_input_Encrypt_read_uart2self_handler(n_ref1);
     }
     return;
 }

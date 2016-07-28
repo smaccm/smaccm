@@ -2,24 +2,23 @@
  * Compiler version  0.1.0.3
  */
 #include "periodic_camera_injector_monitor.h"
-#include "smaccm_Server.h"
 
-struct SMACCM_DATA__Camera_Bounding_Box_i camera_data_st;
+struct camera_data camera_data_st;
 
-struct SMACCM_DATA__Camera_Bounding_Box_i camera_data_prev;
+struct camera_data camera_data_prev;
 
 uint32_t camera_data_watch = (uint32_t) 0U;
 
 void callback_camera_req(const uint32_t *n_var0)
 {
-    uint16_t n_deref0 = camera_data_st.left;
-    uint16_t n_deref1 = camera_data_st.right;
-    uint16_t n_deref2 = camera_data_st.top;
-    uint16_t n_deref3 = camera_data_st.bottom;
-    uint16_t n_deref4 = camera_data_prev.left;
-    uint16_t n_deref5 = camera_data_prev.right;
-    uint16_t n_deref6 = camera_data_prev.top;
-    uint16_t n_deref7 = camera_data_prev.bottom;
+    uint16_t n_deref0 = camera_data_st.bbox_l;
+    uint16_t n_deref1 = camera_data_st.bbox_r;
+    uint16_t n_deref2 = camera_data_st.bbox_t;
+    uint16_t n_deref3 = camera_data_st.bbox_b;
+    uint16_t n_deref4 = camera_data_prev.bbox_l;
+    uint16_t n_deref5 = camera_data_prev.bbox_r;
+    uint16_t n_deref6 = camera_data_prev.bbox_t;
+    uint16_t n_deref7 = camera_data_prev.bbox_b;
     
     /* bbox inside bounds and invariants hold on l,r & t,b */
     /* at least one element is nonzero */
@@ -57,7 +56,7 @@ void callback_camera_req(const uint32_t *n_var0)
     callback_cameraTargetInputGetRespProducer(n_ref12);
 }
 
-void callback_cameraDataRx(const struct SMACCM_DATA__Camera_Bounding_Box_i *n_var0)
+void callback_cameraDataRx(const struct camera_data *n_var0)
 {
     camera_data_st = *n_var0;
 }

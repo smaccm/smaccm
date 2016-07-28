@@ -30,7 +30,7 @@ void callback_rebootReqSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -61,7 +61,7 @@ void callback_altitudeRatePidSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -92,7 +92,7 @@ void callback_altitudeRatePidGetRespProducer(const struct sequence_numbered_pid_
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -123,7 +123,7 @@ void callback_altitudePositionPidSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -154,7 +154,7 @@ void callback_altitudePositionPidGetRespProducer(const struct sequence_numbered_
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -185,7 +185,7 @@ void callback_throttleUiSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -216,7 +216,7 @@ void callback_throttleUiGetRespProducer(const struct sequence_numbered_throttle_
         *n_ref3 = (uint32_t) ((uint32_t) 16U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -247,7 +247,7 @@ void callback_attitudeRollStabSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -278,7 +278,7 @@ void callback_attitudeRollStabGetRespProducer(const struct sequence_numbered_sta
         *n_ref3 = (uint32_t) ((uint32_t) 48U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -309,7 +309,7 @@ void callback_attitudePitchStabSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -340,7 +340,7 @@ void callback_attitudePitchStabGetRespProducer(const struct sequence_numbered_st
         *n_ref3 = (uint32_t) ((uint32_t) 48U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -371,7 +371,7 @@ void callback_yawRatePidSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -402,7 +402,7 @@ void callback_yawRatePidGetRespProducer(const struct sequence_numbered_pid_confi
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -433,7 +433,7 @@ void callback_yawPositionPidSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -464,7 +464,7 @@ void callback_yawPositionPidGetRespProducer(const struct sequence_numbered_pid_c
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -495,7 +495,7 @@ void callback_armingRequestSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -526,7 +526,7 @@ void callback_armingRequestGetRespProducer(const struct sequence_numbered_trista
         *n_ref3 = (uint32_t) ((uint32_t) 9U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -557,7 +557,7 @@ void callback_controlModesRequestSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -588,7 +588,7 @@ void callback_controlModesRequestGetRespProducer(const struct sequence_numbered_
         *n_ref3 = (uint32_t) ((uint32_t) 11U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -619,7 +619,7 @@ void callback_userInputRequestSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -650,7 +650,7 @@ void callback_userInputRequestGetRespProducer(const struct sequence_numbered_use
         *n_ref3 = (uint32_t) ((uint32_t) 24U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -681,7 +681,7 @@ void callback_rgbLedSetRespProducer(const uint32_t *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 8U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -712,7 +712,7 @@ void callback_rgbLedGetRespProducer(const struct sequence_numbered_rgb_led_setti
         *n_ref3 = (uint32_t) ((uint32_t) 11U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -743,7 +743,7 @@ void callback_cameraTargetInputGetRespProducer(const struct sequence_numbered_ca
         *n_ref3 = (uint32_t) ((uint32_t) 17U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -774,7 +774,7 @@ void callback_heartbeatProducer(const struct heartbeat *n_var0)
         *n_ref3 = (uint32_t) ((uint32_t) 13U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -805,7 +805,7 @@ void callback_packedStatusGetRespProducer(const struct sequence_numbered_packed_
         *n_ref3 = (uint32_t) ((uint32_t) 71U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -836,7 +836,7 @@ void callback_controlLawGetRespProducer(const struct sequence_numbered_control_l
         *n_ref3 = (uint32_t) ((uint32_t) 12U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -867,7 +867,7 @@ void callback_rcInputGetRespProducer(const struct sequence_numbered_rc_input *n_
         *n_ref3 = (uint32_t) ((uint32_t) 29U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -898,7 +898,7 @@ void callback_userInputGetRespProducer(const struct sequence_numbered_user_input
         *n_ref3 = (uint32_t) ((uint32_t) 33U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -929,7 +929,7 @@ void callback_sensorsOutputGetRespProducer(const struct sequence_numbered_sensor
         *n_ref3 = (uint32_t) ((uint32_t) 65U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -960,7 +960,7 @@ void callback_gyroRawOutputGetRespProducer(const struct sequence_numbered_gyrosc
         *n_ref3 = (uint32_t) ((uint32_t) 35U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -991,7 +991,7 @@ void callback_gyroCalibrationGetRespProducer(const struct sequence_numbered_xyz_
         *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1022,7 +1022,7 @@ void callback_gyroOutputCalibrationGetRespProducer(const struct sequence_numbere
         *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1053,7 +1053,7 @@ void callback_gyroOutputGetRespProducer(const struct sequence_numbered_gyroscope
         *n_ref3 = (uint32_t) ((uint32_t) 35U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1084,7 +1084,7 @@ void callback_accelRawOutputGetRespProducer(const struct sequence_numbered_accel
         *n_ref3 = (uint32_t) ((uint32_t) 35U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1115,7 +1115,7 @@ void callback_accelCalibrationGetRespProducer(const struct sequence_numbered_xyz
         *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1146,7 +1146,7 @@ void callback_accelOutputCalibrationGetRespProducer(const struct sequence_number
         *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1177,7 +1177,7 @@ void callback_accelOutputGetRespProducer(const struct sequence_numbered_accelero
         *n_ref3 = (uint32_t) ((uint32_t) 35U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1208,7 +1208,7 @@ void callback_baroOutputGetRespProducer(const struct sequence_numbered_barometer
         *n_ref3 = (uint32_t) ((uint32_t) 26U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1239,7 +1239,7 @@ void callback_magRawOutputGetRespProducer(const struct sequence_numbered_magneto
         *n_ref3 = (uint32_t) ((uint32_t) 31U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1270,7 +1270,7 @@ void callback_magCalibrationGetRespProducer(const struct sequence_numbered_xyz_c
         *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1301,7 +1301,7 @@ void callback_magOutputCalibrationGetRespProducer(const struct sequence_numbered
         *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1332,7 +1332,7 @@ void callback_magOutputGetRespProducer(const struct sequence_numbered_magnetomet
         *n_ref3 = (uint32_t) ((uint32_t) 31U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1363,7 +1363,7 @@ void callback_gpsOutputGetRespProducer(const struct sequence_numbered_position_s
         *n_ref3 = (uint32_t) ((uint32_t) 54U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1394,7 +1394,7 @@ void callback_controlSetpointGetRespProducer(const struct sequence_numbered_cont
         *n_ref3 = (uint32_t) ((uint32_t) 28U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1425,7 +1425,7 @@ void callback_controlOutputGetRespProducer(const struct sequence_numbered_contro
         *n_ref3 = (uint32_t) ((uint32_t) 25U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1456,7 +1456,7 @@ void callback_motorOutputGetRespProducer(const struct sequence_numbered_quadcopt
         *n_ref3 = (uint32_t) ((uint32_t) 24U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1487,7 +1487,7 @@ void callback_attControlDebugGetRespProducer(const struct sequence_numbered_att_
         *n_ref3 = (uint32_t) ((uint32_t) 40U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1518,7 +1518,7 @@ void callback_altControlDebugGetRespProducer(const struct sequence_numbered_alt_
         *n_ref3 = (uint32_t) ((uint32_t) 66U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1549,7 +1549,7 @@ void callback_px4ioStateGetRespProducer(const struct sequence_numbered_px4io_sta
         *n_ref3 = (uint32_t) ((uint32_t) 59U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1580,7 +1580,7 @@ void callback_armingStatusGetRespProducer(const struct sequence_numbered_arming_
         *n_ref3 = (uint32_t) ((uint32_t) 15U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }
 
@@ -1611,6 +1611,6 @@ void callback_batteryVoltageGetRespProducer(const struct sequence_numbered_float
         *n_ref3 = (uint32_t) ((uint32_t) 12U + n_deref7);
     }
     if (n_cse1) {
-        callback_output_Server_write_send_output_2(n_ref1);
+        callback_output_Server_write_self2encrypt_2(n_ref1);
     }
 }

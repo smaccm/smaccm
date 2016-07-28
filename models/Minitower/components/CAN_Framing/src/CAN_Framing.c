@@ -2,7 +2,6 @@
  * Compiler version  0.1.0.3
  */
 #include "CAN_Framing.h"
-#include "smaccm_CAN_Framing.h"
 
 static void component_entry_aux(void);
 
@@ -28,7 +27,7 @@ void component_entry_aux(void)
     bool n_r2 = CAN_Framing_read_server2self(n_ref1);
     
     if (n_r2) {
-        callback_input_CAN_framing_read_from_server_handler(n_ref1);
+        callback_input_CAN_Framing_read_server2self_handler(n_ref1);
     }
     return;
 }
@@ -40,7 +39,7 @@ void component_entry_aux_2(void)
     bool n_r2 = CAN_Framing_read_can2self_frame(n_ref1);
     
     if (n_r2) {
-        callback_input_CAN_framing_read_fragment_reasembly_handler(n_ref1);
+        callback_input_CAN_Framing_read_can2self_frame_handler(n_ref1);
     }
     return;
 }
@@ -52,7 +51,7 @@ void component_entry_aux_3(void)
     bool n_r2 = CAN_Framing_read_can2self_status(n_ref1);
     
     if (n_r2) {
-        callback_input_CAN_framing_read_get_status_handler(n_ref1);
+        callback_input_CAN_Framing_read_can2self_status_handler(n_ref1);
     }
     return;
 }

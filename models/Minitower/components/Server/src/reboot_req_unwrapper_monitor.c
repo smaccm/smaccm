@@ -8,5 +8,5 @@ void callback_reboot_vm(const struct sequence_numbered_reboot_req *n_var0)
     bool n_local0 = true;
     bool *n_ref1 = &n_local0;
     
-    callback_output_Server_self2vm_reboot_2(n_ref1);
+    callback_output_Server_write_self2vm_reboot_2(n_ref1);
 }

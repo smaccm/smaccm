@@ -10,6 +10,8 @@ extern "C" {
 #include "frame_datalink_encode_monitor.h"
 #include "hx_cyphertext.h"
 #include "ivory.h"
+#include "smaccm_UART_module.h"
+#include "towerUartDeps.h"
 extern bool validkey;
 extern struct gec_sym_key ctx_dl_global_gec_sym_key_enc;
 void callback_gec_encode_init(const uint8_t n_var0[24U]);

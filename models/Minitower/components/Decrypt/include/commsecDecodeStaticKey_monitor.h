@@ -7,7 +7,11 @@
 extern "C" {
 #endif
 #include "commsecDecodeState_monitor.h"
+#include "hxstream_state_module.h"
 #include "ivory.h"
+#include "ivory_serialize.h"
+#include "smaccm_UART_module.h"
+#include "towerUartDeps.h"
 void callback_configureStaticKey(const int64_t *n_var0);
 
 #ifdef __cplusplus

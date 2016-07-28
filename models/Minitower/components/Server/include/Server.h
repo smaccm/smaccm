@@ -7,9 +7,9 @@
 extern "C" {
 #endif
 #include <smaccm_Server.h>
-#include "input_Server_read_camera_data_monitor.h"
-#include "input_Server_read_get_can_monitor.h"
-#include "input_Server_read_get_input_monitor.h"
+#include "input_Server_read_decrypt2self_monitor.h"
+#include "input_Server_read_framing2self_monitor.h"
+#include "input_Server_read_vm2self_monitor.h"
 #include "ivory.h"
 void component_entry(const int64_t *n_var0);
 void component_init(const int64_t *n_var0);

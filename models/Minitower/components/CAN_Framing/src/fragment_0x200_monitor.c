@@ -18,14 +18,14 @@ void callback_fragment_req_0x200(const uint8_t n_var0[80U])
         ivory_serialize_pack_uint8_be((uint8_t *) fragment_buf_0x200, (uint32_t) n_ix1, &n_var0[n_ix1]);
     }
     
-    struct SMACCM_DATA__CAN_Frame_i n_local2 = {.id =(uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) 512U << (uint32_t) 18U) & (uint32_t) 536870911U) << (uint32_t) 2U) & (uint32_t) ~(uint32_t) ((uint32_t) 1U << 0)) | (uint32_t) ((uint32_t) 0 << 0)), .buf_len =(uint8_t) 8U};
-    struct SMACCM_DATA__CAN_Frame_i *n_ref3 = &n_local2;
+    struct can_message n_local2 = {.can_message_id =(uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) 512U << (uint32_t) 18U) & (uint32_t) 536870911U) << (uint32_t) 2U) & (uint32_t) ~(uint32_t) ((uint32_t) 1U << 0)) | (uint32_t) ((uint32_t) 0 << 0)), .can_message_len =(int32_t) 8};
+    struct can_message *n_ref3 = &n_local2;
     
     for (int32_t n_ix4 = (int32_t) 0; n_ix4 <= (int32_t) 7; n_ix4++) {
-        n_ref3->buf[n_ix4] = fragment_buf_0x200[n_ix4 % 80];
+        n_ref3->can_message_buf[n_ix4] = fragment_buf_0x200[n_ix4 % 80];
     }
     fragment_sent_0x200 = (uint8_t) 1U;
-    callback_output_CAN_framing_write_fragment_request_2(n_ref3);
+    callback_to_smaccm_can_2(n_ref3);
 }
 
 void callback_fragment_complete_0x200(const bool *n_var0)
@@ -66,16 +66,16 @@ void callback_fragment_complete_0x200(const bool *n_var0)
             } else {
                 uint8_t n_cse26 = (uint8_t) ((uint8_t) 80U - (uint8_t) (n_deref3 * (uint8_t) 8U));
                 uint8_t n_cse28 = (uint8_t) ((bool) (n_cse26 > (uint8_t) 8U) ? (uint8_t) 8U : n_cse26);
-                struct SMACCM_DATA__CAN_Frame_i n_local9 = {.id =(uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) (uint16_t) ((uint16_t) (n_cse2 + (uint16_t) 512U) & (uint16_t) 2047U) << (uint32_t) 18U) & (uint32_t) 536870911U) << (uint32_t) 2U) & (uint32_t) ~(uint32_t) ((uint32_t) 1U << 0)) | (uint32_t) ((uint32_t) 0 << 0)), .buf_len =n_cse28};
-                struct SMACCM_DATA__CAN_Frame_i *n_ref10 = &n_local9;
-                int32_t n_cse35 = (int32_t) (uint8_t) (n_cse28 - (uint8_t) 1U) % 8;
+                struct can_message n_local9 = {.can_message_id =(uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) ((uint32_t) (uint16_t) ((uint16_t) (n_cse2 + (uint16_t) 512U) & (uint16_t) 2047U) << (uint32_t) 18U) & (uint32_t) 536870911U) << (uint32_t) 2U) & (uint32_t) ~(uint32_t) ((uint32_t) 1U << 0)) | (uint32_t) ((uint32_t) 0 << 0)), .can_message_len =(int32_t) n_cse28 % 9};
+                struct can_message *n_ref10 = &n_local9;
+                int32_t n_cse37 = (int32_t) (uint8_t) (n_cse28 - (uint8_t) 1U) % 8;
                 
-                COMPILER_ASSERTS((bool) ((bool) (n_cse35 < (int32_t) 8) && (bool) ((int32_t) 0 <= n_cse35)));
-                for (int32_t n_ix11 = (int32_t) 0; n_ix11 <= n_cse35; n_ix11++) {
-                    n_ref10->buf[n_ix11] = fragment_buf_0x200[(int32_t) ((int32_t) ((int32_t) 8 * (int32_t) n_deref3) + n_ix11) % 80];
+                COMPILER_ASSERTS((bool) ((bool) (n_cse37 < (int32_t) 8) && (bool) ((int32_t) 0 <= n_cse37)));
+                for (int32_t n_ix11 = (int32_t) 0; n_ix11 <= n_cse37; n_ix11++) {
+                    n_ref10->can_message_buf[n_ix11] = fragment_buf_0x200[(int32_t) ((int32_t) ((int32_t) 8 * (int32_t) n_deref3) + n_ix11) % 80];
                 }
                 fragment_sent_0x200 = (uint8_t) (n_deref3 + (uint8_t) 1U);
-                callback_output_CAN_framing_write_fragment_request_2(n_ref10);
+                callback_to_smaccm_can_2(n_ref10);
             }
         }
     }

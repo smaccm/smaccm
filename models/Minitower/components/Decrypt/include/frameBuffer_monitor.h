@@ -7,7 +7,11 @@
 extern "C" {
 #endif
 #include "commsecDecodeState_monitor.h"
+#include "hxstream_state_module.h"
 #include "ivory.h"
+#include "ivory_serialize.h"
+#include "smaccm_UART_module.h"
+#include "towerUartDeps.h"
 extern int32_t frameBuffer_2_ringbuffer_insert;
 extern int32_t frameBuffer_2_ringbuffer_remove;
 extern uint8_t frameBuffer_2_ringbuffer_buf[4U][96U];

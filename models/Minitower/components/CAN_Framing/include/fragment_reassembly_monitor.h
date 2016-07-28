@@ -9,11 +9,11 @@ extern "C" {
 #include "canDriverTypes.h"
 #include "ivory.h"
 #include "ivory_serialize.h"
-#include "output_CAN_framing_write_to_server_monitor.h"
+#include "output_CAN_Framing_write_self2server_monitor.h"
+#include "smaccm_can_module.h"
 extern uint8_t reassembly_next_idx_0x100;
 extern uint8_t reassembly_buf_0x100[80U];
-#include "smaccm_CAN_Framing.h"
-void callback_receive_msg(const struct SMACCM_DATA__CAN_Frame_i *n_var0);
+void callback_receive_msg(const struct can_message *n_var0);
 
 #ifdef __cplusplus
 }

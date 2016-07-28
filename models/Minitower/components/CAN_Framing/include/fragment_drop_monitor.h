@@ -10,6 +10,7 @@ extern "C" {
 #include "fragment_0x200_monitor.h"
 #include "ivory.h"
 #include "ivory_serialize.h"
+#include "smaccm_can_module.h"
 extern uint8_t can_msg[80U];
 extern bool in_progress;
 void callback_new_msg(const uint8_t n_var0[80U]);

@@ -7,8 +7,12 @@
 extern "C" {
 #endif
 #include <gec.h>
+#include "hxstream_state_module.h"
 #include "ivory.h"
-#include "output_Decrypt_write_send_gidl_monitor.h"
+#include "ivory_serialize.h"
+#include "output_Decrypt_write_self2server_monitor.h"
+#include "smaccm_UART_module.h"
+#include "towerUartDeps.h"
 extern bool validkey;
 extern struct gec_sym_key ctx_dl_global_gec_sym_key_dec;
 void callback_gec_decode_init(const uint8_t n_var0[24U]);

@@ -2,7 +2,6 @@
  * Compiler version  0.1.0.3
  */
 #include "Server.h"
-#include "smaccm_Server.h"
 
 static void component_entry_aux(void);
 
@@ -28,7 +27,7 @@ void component_entry_aux(void)
     bool n_r2 = Server_read_decrypt2self(n_ref1);
     
     if (n_r2) {
-        callback_input_Server_read_get_input_handler(n_ref1);
+        callback_input_Server_read_decrypt2self_handler(n_ref1);
     }
     return;
 }
@@ -40,7 +39,7 @@ void component_entry_aux_2(void)
     bool n_r2 = Server_read_framing2self(n_ref1);
     
     if (n_r2) {
-        callback_input_Server_read_get_can_handler(n_ref1);
+        callback_input_Server_read_framing2self_handler(n_ref1);
     }
     return;
 }
@@ -52,7 +51,7 @@ void component_entry_aux_3(void)
     bool n_r2 = Server_read_vm2self(n_ref1);
     
     if (n_r2) {
-        callback_input_Server_read_camera_data_handler(n_ref1);
+        callback_input_Server_read_vm2self_handler(n_ref1);
     }
     return;
 }

@@ -24,7 +24,7 @@ void component_entry_aux(void)
     bool n_r2 = Decrypt_read_uart2self(n_ref1);
     
     if (n_r2) {
-        callback_input_Decrypt_read_get_packet_handler(n_ref1);
+        callback_input_Decrypt_read_uart2self_handler(n_ref1);
     }
     return;
 }

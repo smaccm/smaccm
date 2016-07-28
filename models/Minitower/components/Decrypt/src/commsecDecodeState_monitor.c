@@ -23,7 +23,7 @@ void callback_cyphertext_decode(const uint8_t n_var0[96U])
         uint32_t n_r3 = ctx_dl_decode_run(n_var0, n_ref2);
         
         if ((bool) (0 == n_r3)) {
-            callback_output_Decrypt_write_send_gidl_2(n_ref2);
+            callback_output_Decrypt_write_self2server_2(n_ref2);
         }
     }
 }

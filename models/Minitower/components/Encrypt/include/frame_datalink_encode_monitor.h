@@ -11,6 +11,8 @@ extern "C" {
 #include "ivory.h"
 #include "ivory_serialize.h"
 #include "send_transdata_monitor.h"
+#include "smaccm_UART_module.h"
+#include "towerUartDeps.h"
 extern bool pending;
 void callback_encoder_ct_in(const uint8_t n_var0[96U]);
 void callback_complete(const bool *n_var0);

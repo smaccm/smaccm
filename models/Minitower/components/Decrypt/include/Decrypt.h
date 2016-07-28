@@ -9,7 +9,7 @@ extern "C" {
 #include <smaccm_Decrypt.h>
 #include "commsecDecodeStaticKey_monitor.h"
 #include "frameBuffer_monitor.h"
-#include "input_Decrypt_read_get_packet_monitor.h"
+#include "input_Decrypt_read_uart2self_monitor.h"
 #include "ivory.h"
 void component_entry(const int64_t *n_var0);
 void component_init(const int64_t *n_var0);

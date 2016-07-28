@@ -10,7 +10,8 @@ extern "C" {
 #include "fragment_drop_monitor.h"
 #include "ivory.h"
 #include "ivory_serialize.h"
-#include "output_CAN_framing_write_fragment_request_monitor.h"
+#include "smaccm_can_module.h"
+#include "to_smaccm_can_monitor.h"
 extern uint8_t fragment_sent_0x200;
 extern uint8_t fragment_buf_0x200[80U];
 extern bool fragment_aborting_0x200;

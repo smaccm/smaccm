@@ -7,9 +7,9 @@
 extern "C" {
 #endif
 #include <smaccm_CAN_Framing.h>
-#include "input_CAN_framing_read_fragment_reasembly_monitor.h"
-#include "input_CAN_framing_read_from_server_monitor.h"
-#include "input_CAN_framing_read_get_status_monitor.h"
+#include "input_CAN_Framing_read_can2self_frame_monitor.h"
+#include "input_CAN_Framing_read_can2self_status_monitor.h"
+#include "input_CAN_Framing_read_server2self_monitor.h"
 #include "ivory.h"
 void component_entry(const int64_t *n_var0);
 void component_init(const int64_t *n_var0);

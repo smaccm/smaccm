@@ -5,8 +5,8 @@
 
 void callback_send_translate(const struct ivory_string_HXCyphertext *n_var0)
 {
-    struct SMACCM_DATA__UART_Packet_i n_local0 = {};
-    struct SMACCM_DATA__UART_Packet_i *n_ref1 = &n_local0;
+    struct ivory_string_UartPacket n_local0 = {};
+    struct ivory_string_UartPacket *n_ref1 = &n_local0;
     int32_t n_deref2 = n_var0->ivory_string_HXCyphertext_len;
     bool n_cse3 = (bool) ((bool) (n_deref2 >= (int32_t) 0) && (bool) (n_deref2 <= (int32_t) 195));
     
@@ -17,10 +17,10 @@ void callback_send_translate(const struct ivory_string_HXCyphertext *n_var0)
             if ((bool) (n_ix3 < (int32_t) 255)) {
                 uint8_t n_deref4 = n_var0->ivory_string_HXCyphertext_data[n_ix3];
                 
-                n_ref1->buf[n_ix3 % 255] = n_deref4;
+                n_ref1->ivory_string_UartPacket_data[n_ix3 % 255] = n_deref4;
             }
         }
     }
-    n_ref1->buf_len = n_deref2;
-    callback_output_Encrypt_write_send_packet_2(n_ref1);
+    n_ref1->ivory_string_UartPacket_len = n_deref2;
+    callback_to_smaccm_uart_2(n_ref1);
 }

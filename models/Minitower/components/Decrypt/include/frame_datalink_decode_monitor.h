@@ -9,7 +9,9 @@ extern "C" {
 #include "frameBuffer_monitor.h"
 #include "hxstream_state_module.h"
 #include "ivory.h"
-#include "ivory_serialize_prim.h"
+#include "ivory_serialize.h"
+#include "smaccm_UART_module.h"
+#include "towerUartDeps.h"
 extern struct hxstream_state hx_decoder;
 extern uint8_t buf[195U];
 extern bool overrun;

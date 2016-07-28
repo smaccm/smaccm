@@ -7,9 +7,12 @@
 extern "C" {
 #endif
 #include "frame_datalink_decode_monitor.h"
+#include "hxstream_state_module.h"
 #include "ivory.h"
-#include "smaccm_Decrypt.h"    
-void callback_unpack(const struct SMACCM_DATA__UART_Packet_i *n_var0);
+#include "ivory_serialize.h"
+#include "smaccm_UART_module.h"
+#include "towerUartDeps.h"
+void callback_unpack(const struct ivory_string_UartPacket *n_var0);
 
 #ifdef __cplusplus
 }
