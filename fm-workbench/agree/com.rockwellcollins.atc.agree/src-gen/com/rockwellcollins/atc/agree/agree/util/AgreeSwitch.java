@@ -191,6 +191,23 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.LINEARIZATION_DEF_EXPR:
+      {
+        LinearizationDefExpr linearizationDefExpr = (LinearizationDefExpr)theEObject;
+        T result = caseLinearizationDefExpr(linearizationDefExpr);
+        if (result == null) result = caseCallDef(linearizationDefExpr);
+        if (result == null) result = caseNamedElement(linearizationDefExpr);
+        if (result == null) result = caseElement(linearizationDefExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.LINEARIZATION_INTERVAL:
+      {
+        LinearizationInterval linearizationInterval = (LinearizationInterval)theEObject;
+        T result = caseLinearizationInterval(linearizationInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.NODE_DEF_EXPR:
       {
         NodeDefExpr nodeDefExpr = (NodeDefExpr)theEObject;
@@ -790,6 +807,38 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseFnDefExpr(FnDefExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Linearization Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Linearization Def Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLinearizationDefExpr(LinearizationDefExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Linearization Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Linearization Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLinearizationInterval(LinearizationInterval object)
   {
     return null;
   }

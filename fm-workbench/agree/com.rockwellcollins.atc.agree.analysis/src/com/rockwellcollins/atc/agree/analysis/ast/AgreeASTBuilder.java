@@ -3,18 +3,15 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.action.Action;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
@@ -28,7 +25,6 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
-import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
@@ -39,7 +35,6 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.instance.AnnexInstance;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -123,9 +118,8 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
-import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
-import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
+import com.rockwellcollins.atc.agree.analysis.linearization.LinearizationRewriter;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr> {
@@ -138,6 +132,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private static Set<RecordType> globalTypes;
     private static Map<NamedElement, String> typeMap;
     private ComponentInstance curInst; // used for Get_Property Expressions
+
+    private LinearizationRewriter linearizationRewriter = new LinearizationRewriter();
 
     public AgreeProgram getAgreeProgram(ComponentInstance compInst) {
 
@@ -277,9 +273,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         // in a component containing an annex
         assertReferencedSubcomponentHasAnnex(compInst, inputs, outputs, subNodes, assertions, lemmas);
 
-        return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
-                guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing,
-                compInst);
+		AgreeNode result = new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
+				guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing, compInst);
+
+		return linearizationRewriter.visit(result);
     }
 
     private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,

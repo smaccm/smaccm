@@ -76,6 +76,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.EQ_STATEMENT: return createEqStatement();
       case AgreePackage.ASSIGN_STATEMENT: return createAssignStatement();
       case AgreePackage.FN_DEF_EXPR: return createFnDefExpr();
+      case AgreePackage.LINEARIZATION_DEF_EXPR: return createLinearizationDefExpr();
+      case AgreePackage.LINEARIZATION_INTERVAL: return createLinearizationInterval();
       case AgreePackage.NODE_DEF_EXPR: return createNodeDefExpr();
       case AgreePackage.NODE_BODY_EXPR: return createNodeBodyExpr();
       case AgreePackage.NODE_STMT: return createNodeStmt();
@@ -255,6 +257,28 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     FnDefExprImpl fnDefExpr = new FnDefExprImpl();
     return fnDefExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LinearizationDefExpr createLinearizationDefExpr()
+  {
+    LinearizationDefExprImpl linearizationDefExpr = new LinearizationDefExprImpl();
+    return linearizationDefExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LinearizationInterval createLinearizationInterval()
+  {
+    LinearizationIntervalImpl linearizationInterval = new LinearizationIntervalImpl();
+    return linearizationInterval;
   }
 
   /**

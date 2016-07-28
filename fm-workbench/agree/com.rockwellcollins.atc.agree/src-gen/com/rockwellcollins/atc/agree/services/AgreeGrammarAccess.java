@@ -277,8 +277,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	";" | {AssertStatement} "assert" (str=STRING ":")? expr=Expr ";" | {InitialStatement} "initially" ":" expr=Expr ";" |
 		//	{ParamStatement} "parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" |
 		//	{LiftStatement} "lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":"
-		//	expr=Expr ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement |
-		//	FnDefExpr | NodeDefExpr | RecordDefExpr;
+		//	expr=Expr ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement
+		//	| FnDefExpr | NodeDefExpr | RecordDefExpr;
 		@Override public ParserRule getRule() { return rule; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr ";"
@@ -589,8 +589,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//SynchStatement:
 		//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";" |
-		//	{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT
-		//	"," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
+		//	{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":"
+		//	max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
 		//	els+=[aadl2::NamedElement])* ";" | {AsynchStatement} "synchrony" ":" "asynchronous" ";" | {LatchedStatement}
 		//	"synchrony" ":" "latched" ";";
 		@Override public ParserRule getRule() { return rule; }
@@ -854,12 +854,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cFnDefExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cNodeDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cLinearizationDefExprParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//CallDef:
-		//	FnDefExpr | NodeDefExpr;
+		//	FnDefExpr | NodeDefExpr | LinearizationDefExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//FnDefExpr | NodeDefExpr
+		//FnDefExpr | NodeDefExpr | LinearizationDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//FnDefExpr
@@ -867,6 +868,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//NodeDefExpr
 		public RuleCall getNodeDefExprParserRuleCall_1() { return cNodeDefExprParserRuleCall_1; }
+
+		//LinearizationDefExpr
+		public RuleCall getLinearizationDefExprParserRuleCall_2() { return cLinearizationDefExprParserRuleCall_2; }
 	}
 
 	public class PropertyStatementElements extends AbstractParserRuleElementFinder {
@@ -1148,6 +1152,164 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//";"
 		public Keyword getSemicolonKeyword_10() { return cSemicolonKeyword_10; }
+	}
+
+	public class LinearizationDefExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "LinearizationDefExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cLinearizationKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cArgsAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cArgsArgParserRuleCall_3_0 = (RuleCall)cArgsAssignment_3.eContents().get(0);
+		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
+		private final Keyword cCommaKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final Assignment cArgsAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
+		private final RuleCall cArgsArgParserRuleCall_4_1_0 = (RuleCall)cArgsAssignment_4_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Keyword cOverKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Keyword cLeftSquareBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
+		private final Assignment cIntervalsAssignment_8 = (Assignment)cGroup.eContents().get(8);
+		private final RuleCall cIntervalsLinearizationIntervalParserRuleCall_8_0 = (RuleCall)cIntervalsAssignment_8.eContents().get(0);
+		private final Group cGroup_9 = (Group)cGroup.eContents().get(9);
+		private final Keyword cCommaKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
+		private final Assignment cIntervalsAssignment_9_1 = (Assignment)cGroup_9.eContents().get(1);
+		private final RuleCall cIntervalsLinearizationIntervalParserRuleCall_9_1_0 = (RuleCall)cIntervalsAssignment_9_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_10 = (Keyword)cGroup.eContents().get(10);
+		private final Group cGroup_11 = (Group)cGroup.eContents().get(11);
+		private final Keyword cWithinKeyword_11_0 = (Keyword)cGroup_11.eContents().get(0);
+		private final Assignment cPrecisionAssignment_11_1 = (Assignment)cGroup_11.eContents().get(1);
+		private final RuleCall cPrecisionExprParserRuleCall_11_1_0 = (RuleCall)cPrecisionAssignment_11_1.eContents().get(0);
+		private final Keyword cColonKeyword_12 = (Keyword)cGroup.eContents().get(12);
+		private final Assignment cExprBodyAssignment_13 = (Assignment)cGroup.eContents().get(13);
+		private final RuleCall cExprBodyExprParserRuleCall_13_0 = (RuleCall)cExprBodyAssignment_13.eContents().get(0);
+		private final Keyword cSemicolonKeyword_14 = (Keyword)cGroup.eContents().get(14);
+		
+		//LinearizationDefExpr:
+		//	"linearization" name=ID "(" args+=Arg ("," args+=Arg)* ")" "over" "[" intervals+=LinearizationInterval (","
+		//	intervals+=LinearizationInterval)* "]" ("within" precision=Expr)? ":" exprBody=Expr ";";
+		@Override public ParserRule getRule() { return rule; }
+
+		//"linearization" name=ID "(" args+=Arg ("," args+=Arg)* ")" "over" "[" intervals+=LinearizationInterval (","
+		//intervals+=LinearizationInterval)* "]" ("within" precision=Expr)? ":" exprBody=Expr ";"
+		public Group getGroup() { return cGroup; }
+
+		//"linearization"
+		public Keyword getLinearizationKeyword_0() { return cLinearizationKeyword_0; }
+
+		//name=ID
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_2() { return cLeftParenthesisKeyword_2; }
+
+		//args+=Arg
+		public Assignment getArgsAssignment_3() { return cArgsAssignment_3; }
+
+		//Arg
+		public RuleCall getArgsArgParserRuleCall_3_0() { return cArgsArgParserRuleCall_3_0; }
+
+		//("," args+=Arg)*
+		public Group getGroup_4() { return cGroup_4; }
+
+		//","
+		public Keyword getCommaKeyword_4_0() { return cCommaKeyword_4_0; }
+
+		//args+=Arg
+		public Assignment getArgsAssignment_4_1() { return cArgsAssignment_4_1; }
+
+		//Arg
+		public RuleCall getArgsArgParserRuleCall_4_1_0() { return cArgsArgParserRuleCall_4_1_0; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_5() { return cRightParenthesisKeyword_5; }
+
+		//"over"
+		public Keyword getOverKeyword_6() { return cOverKeyword_6; }
+
+		//"["
+		public Keyword getLeftSquareBracketKeyword_7() { return cLeftSquareBracketKeyword_7; }
+
+		//intervals+=LinearizationInterval
+		public Assignment getIntervalsAssignment_8() { return cIntervalsAssignment_8; }
+
+		//LinearizationInterval
+		public RuleCall getIntervalsLinearizationIntervalParserRuleCall_8_0() { return cIntervalsLinearizationIntervalParserRuleCall_8_0; }
+
+		//("," intervals+=LinearizationInterval)*
+		public Group getGroup_9() { return cGroup_9; }
+
+		//","
+		public Keyword getCommaKeyword_9_0() { return cCommaKeyword_9_0; }
+
+		//intervals+=LinearizationInterval
+		public Assignment getIntervalsAssignment_9_1() { return cIntervalsAssignment_9_1; }
+
+		//LinearizationInterval
+		public RuleCall getIntervalsLinearizationIntervalParserRuleCall_9_1_0() { return cIntervalsLinearizationIntervalParserRuleCall_9_1_0; }
+
+		//"]"
+		public Keyword getRightSquareBracketKeyword_10() { return cRightSquareBracketKeyword_10; }
+
+		//("within" precision=Expr)?
+		public Group getGroup_11() { return cGroup_11; }
+
+		//"within"
+		public Keyword getWithinKeyword_11_0() { return cWithinKeyword_11_0; }
+
+		//precision=Expr
+		public Assignment getPrecisionAssignment_11_1() { return cPrecisionAssignment_11_1; }
+
+		//Expr
+		public RuleCall getPrecisionExprParserRuleCall_11_1_0() { return cPrecisionExprParserRuleCall_11_1_0; }
+
+		//":"
+		public Keyword getColonKeyword_12() { return cColonKeyword_12; }
+
+		//exprBody=Expr
+		public Assignment getExprBodyAssignment_13() { return cExprBodyAssignment_13; }
+
+		//Expr
+		public RuleCall getExprBodyExprParserRuleCall_13_0() { return cExprBodyExprParserRuleCall_13_0; }
+
+		//";"
+		public Keyword getSemicolonKeyword_14() { return cSemicolonKeyword_14; }
+	}
+
+	public class LinearizationIntervalElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "LinearizationInterval");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cStartAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cStartExprParserRuleCall_0_0 = (RuleCall)cStartAssignment_0.eContents().get(0);
+		private final Keyword cFullStopFullStopKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cEndAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cEndExprParserRuleCall_2_0 = (RuleCall)cEndAssignment_2.eContents().get(0);
+		
+		//LinearizationInterval:
+		//	start=Expr ".." end=Expr;
+		@Override public ParserRule getRule() { return rule; }
+
+		//start=Expr ".." end=Expr
+		public Group getGroup() { return cGroup; }
+
+		//start=Expr
+		public Assignment getStartAssignment_0() { return cStartAssignment_0; }
+
+		//Expr
+		public RuleCall getStartExprParserRuleCall_0_0() { return cStartExprParserRuleCall_0_0; }
+
+		//".."
+		public Keyword getFullStopFullStopKeyword_1() { return cFullStopFullStopKeyword_1; }
+
+		//end=Expr
+		public Assignment getEndAssignment_2() { return cEndAssignment_2; }
+
+		//Expr
+		public RuleCall getEndExprParserRuleCall_2_0() { return cEndExprParserRuleCall_2_0; }
 	}
 
 	public class NodeDefExprElements extends AbstractParserRuleElementFinder {
@@ -1485,8 +1647,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRecordNestedDotIDParserRuleCall_1_1_0 = (RuleCall)cRecordAssignment_1_1.eContents().get(0);
 		
 		//Type:
-		//	{PrimType} string=primTypes ("[" lowNeg="-"? rangeLow=(INTEGER_LIT | REAL_LIT) "," highNeg="-"? rangeHigh=(INTEGER_LIT
-		//	| REAL_LIT) "]")? | {RecordType} record=NestedDotID;
+		//	{PrimType} string=primTypes ("[" lowNeg="-"? rangeLow=(INTEGER_LIT | REAL_LIT) "," highNeg="-"?
+		//	rangeHigh=(INTEGER_LIT | REAL_LIT) "]")? | {RecordType} record=NestedDotID;
 		@Override public ParserRule getRule() { return rule; }
 
 		//{PrimType} string=primTypes ("[" lowNeg="-"? rangeLow=(INTEGER_LIT | REAL_LIT) "," highNeg="-"? rangeHigh=(INTEGER_LIT |
@@ -2063,7 +2225,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	public class MultDivExprElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "MultDivExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cUnaryExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cPowerExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -2079,14 +2241,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		////todo remove div
 		//MultDivExpr returns Expr:
-		//	UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*;
+		//	PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*;
 		@Override public ParserRule getRule() { return rule; }
 
-		//UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*
+		//PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*
 		public Group getGroup() { return cGroup; }
 
-		//UnaryExpr
-		public RuleCall getUnaryExprParserRuleCall_0() { return cUnaryExprParserRuleCall_0; }
+		//PowerExpr
+		public RuleCall getPowerExprParserRuleCall_0() { return cPowerExprParserRuleCall_0; }
 
 		//(=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*
 		public Group getGroup_1() { return cGroup_1; }
@@ -2117,6 +2279,54 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//"mod"
 		public Keyword getOpModKeyword_1_0_0_1_0_3() { return cOpModKeyword_1_0_0_1_0_3; }
+
+		//right=UnaryExpr
+		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
+
+		//UnaryExpr
+		public RuleCall getRightUnaryExprParserRuleCall_1_1_0() { return cRightUnaryExprParserRuleCall_1_1_0; }
+	}
+
+	public class PowerExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "PowerExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cUnaryExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
+		private final Action cBinaryExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
+		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
+		private final Keyword cOpCircumflexAccentKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
+		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cRightUnaryExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		
+		//PowerExpr returns Expr:
+		//	UnaryExpr (=> ({BinaryExpr.left=current} op="^") right=UnaryExpr)*;
+		@Override public ParserRule getRule() { return rule; }
+
+		//UnaryExpr (=> ({BinaryExpr.left=current} op="^") right=UnaryExpr)*
+		public Group getGroup() { return cGroup; }
+
+		//UnaryExpr
+		public RuleCall getUnaryExprParserRuleCall_0() { return cUnaryExprParserRuleCall_0; }
+
+		//(=> ({BinaryExpr.left=current} op="^") right=UnaryExpr)*
+		public Group getGroup_1() { return cGroup_1; }
+
+		//=> ({BinaryExpr.left=current} op="^")
+		public Group getGroup_1_0() { return cGroup_1_0; }
+
+		//{BinaryExpr.left=current} op="^"
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+
+		//{BinaryExpr.left=current}
+		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
+
+		//op="^"
+		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
+
+		//"^"
+		public Keyword getOpCircumflexAccentKeyword_1_0_0_1_0() { return cOpCircumflexAccentKeyword_1_0_0_1_0; }
 
 		//right=UnaryExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
@@ -2937,6 +3147,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final EqStatementElements pEqStatement;
 	private final AssignStatementElements pAssignStatement;
 	private final FnDefExprElements pFnDefExpr;
+	private final LinearizationDefExprElements pLinearizationDefExpr;
+	private final LinearizationIntervalElements pLinearizationInterval;
 	private final NodeDefExprElements pNodeDefExpr;
 	private final NodeBodyExprElements pNodeBodyExpr;
 	private final NodeStmtElements pNodeStmt;
@@ -2954,6 +3166,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final RelateExprElements pRelateExpr;
 	private final AddSubExprElements pAddSubExpr;
 	private final MultDivExprElements pMultDivExpr;
+	private final PowerExprElements pPowerExpr;
 	private final UnaryExprElements pUnaryExpr;
 	private final IfThenElseExprElements pIfThenElseExpr;
 	private final PreDefFnExprElements pPreDefFnExpr;
@@ -2990,6 +3203,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pEqStatement = new EqStatementElements();
 		this.pAssignStatement = new AssignStatementElements();
 		this.pFnDefExpr = new FnDefExprElements();
+		this.pLinearizationDefExpr = new LinearizationDefExprElements();
+		this.pLinearizationInterval = new LinearizationIntervalElements();
 		this.pNodeDefExpr = new NodeDefExprElements();
 		this.pNodeBodyExpr = new NodeBodyExprElements();
 		this.pNodeStmt = new NodeStmtElements();
@@ -3007,6 +3222,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pRelateExpr = new RelateExprElements();
 		this.pAddSubExpr = new AddSubExprElements();
 		this.pMultDivExpr = new MultDivExprElements();
+		this.pPowerExpr = new PowerExprElements();
 		this.pUnaryExpr = new UnaryExprElements();
 		this.pIfThenElseExpr = new IfThenElseExprElements();
 		this.pPreDefFnExpr = new PreDefFnExprElements();
@@ -3120,8 +3336,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	";" | {AssertStatement} "assert" (str=STRING ":")? expr=Expr ";" | {InitialStatement} "initially" ":" expr=Expr ";" |
 	//	{ParamStatement} "parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" |
 	//	{LiftStatement} "lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":"
-	//	expr=Expr ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement |
-	//	FnDefExpr | NodeDefExpr | RecordDefExpr;
+	//	expr=Expr ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement
+	//	| FnDefExpr | NodeDefExpr | RecordDefExpr;
 	public SpecStatementElements getSpecStatementAccess() {
 		return pSpecStatement;
 	}
@@ -3132,8 +3348,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//SynchStatement:
 	//	{SynchStatement} "synchrony" ":" val=INTEGER_LIT ("," val2=INTEGER_LIT)? sim=("simult" | "no_simult")? ";" |
-	//	{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":" max+=INTEGER_LIT
-	//	"," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
+	//	{MNSynchStatement} "synchrony" ":" (comp1+=[aadl2::NamedElement] "," comp2+=[aadl2::NamedElement] ":"
+	//	max+=INTEGER_LIT "," min+=INTEGER_LIT)+ ";" | {CalenStatement} "calendar" ":" els+=[aadl2::NamedElement] (","
 	//	els+=[aadl2::NamedElement])* ";" | {AsynchStatement} "synchrony" ":" "asynchronous" ";" | {LatchedStatement}
 	//	"synchrony" ":" "latched" ";";
 	public SynchStatementElements getSynchStatementAccess() {
@@ -3165,7 +3381,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//CallDef:
-	//	FnDefExpr | NodeDefExpr;
+	//	FnDefExpr | NodeDefExpr | LinearizationDefExpr;
 	public CallDefElements getCallDefAccess() {
 		return pCallDef;
 	}
@@ -3225,6 +3441,27 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getFnDefExprAccess().getRule();
 	}
 
+	//LinearizationDefExpr:
+	//	"linearization" name=ID "(" args+=Arg ("," args+=Arg)* ")" "over" "[" intervals+=LinearizationInterval (","
+	//	intervals+=LinearizationInterval)* "]" ("within" precision=Expr)? ":" exprBody=Expr ";";
+	public LinearizationDefExprElements getLinearizationDefExprAccess() {
+		return pLinearizationDefExpr;
+	}
+	
+	public ParserRule getLinearizationDefExprRule() {
+		return getLinearizationDefExprAccess().getRule();
+	}
+
+	//LinearizationInterval:
+	//	start=Expr ".." end=Expr;
+	public LinearizationIntervalElements getLinearizationIntervalAccess() {
+		return pLinearizationInterval;
+	}
+	
+	public ParserRule getLinearizationIntervalRule() {
+		return getLinearizationIntervalAccess().getRule();
+	}
+
 	//NodeDefExpr:
 	//	"node" name=ID "(" (args+=Arg ("," args+=Arg)*)? ")" "returns" "(" (rets+=Arg ("," rets+=Arg)*)? ")" ";"
 	//	nodeBody=NodeBodyExpr;
@@ -3267,8 +3504,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Type:
-	//	{PrimType} string=primTypes ("[" lowNeg="-"? rangeLow=(INTEGER_LIT | REAL_LIT) "," highNeg="-"? rangeHigh=(INTEGER_LIT
-	//	| REAL_LIT) "]")? | {RecordType} record=NestedDotID;
+	//	{PrimType} string=primTypes ("[" lowNeg="-"? rangeLow=(INTEGER_LIT | REAL_LIT) "," highNeg="-"?
+	//	rangeHigh=(INTEGER_LIT | REAL_LIT) "]")? | {RecordType} record=NestedDotID;
 	public TypeElements getTypeAccess() {
 		return pType;
 	}
@@ -3390,13 +3627,23 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	////todo remove div
 	//MultDivExpr returns Expr:
-	//	UnaryExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*;
+	//	PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*;
 	public MultDivExprElements getMultDivExprAccess() {
 		return pMultDivExpr;
 	}
 	
 	public ParserRule getMultDivExprRule() {
 		return getMultDivExprAccess().getRule();
+	}
+
+	//PowerExpr returns Expr:
+	//	UnaryExpr (=> ({BinaryExpr.left=current} op="^") right=UnaryExpr)*;
+	public PowerExprElements getPowerExprAccess() {
+		return pPowerExpr;
+	}
+	
+	public ParserRule getPowerExprRule() {
+		return getPowerExprAccess().getRule();
 	}
 
 	//UnaryExpr returns Expr:
@@ -3701,7 +3948,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//// need to add annex path element
 	////	 | 	 'annex' namedElement=[aadl2::NamedElement|ID]
 	//ContainmentPathElement returns aadl2::ContainmentPathElement:
-	//	(namedElement=[aadl2::NamedElement] arrayRange+=ArrayRange*) ("." path=ContainmentPathElement)?;
+	//	(namedElement=[aadl2::NamedElement] arrayRange+=ArrayRange?) ("." path=ContainmentPathElement)?;
 	public PropertiesGrammarAccess.ContainmentPathElementElements getContainmentPathElementAccess() {
 		return gaProperties.getContainmentPathElementAccess();
 	}

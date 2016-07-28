@@ -4,8 +4,10 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 
 import java.util.Collection;
@@ -36,6 +38,7 @@ import org.osate.aadl2.impl.NamedElementImpl;
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl#getType <em>Type</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl#getArgs <em>Args</em>}</li>
  * </ul>
  *
  * @generated
@@ -71,6 +74,16 @@ public class FnDefExprImpl extends NamedElementImpl implements FnDefExpr
    * @ordered
    */
   protected Expr expr;
+
+  /**
+   * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getArgs()
+   * @generated
+   * @ordered
+   */
+  protected EList<Arg> args;
 
   /**
    * <!-- begin-user-doc -->
@@ -208,6 +221,20 @@ public class FnDefExprImpl extends NamedElementImpl implements FnDefExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<Arg> getArgs()
+  {
+    if (args == null)
+    {
+      args = new EObjectContainmentEList<Arg>(Arg.class, this, AgreePackage.FN_DEF_EXPR__ARGS);
+    }
+    return args;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -219,6 +246,8 @@ public class FnDefExprImpl extends NamedElementImpl implements FnDefExpr
         return basicSetType(null, msgs);
       case AgreePackage.FN_DEF_EXPR__EXPR:
         return basicSetExpr(null, msgs);
+      case AgreePackage.FN_DEF_EXPR__ARGS:
+        return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -239,6 +268,8 @@ public class FnDefExprImpl extends NamedElementImpl implements FnDefExpr
         return getType();
       case AgreePackage.FN_DEF_EXPR__EXPR:
         return getExpr();
+      case AgreePackage.FN_DEF_EXPR__ARGS:
+        return getArgs();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -264,6 +295,10 @@ public class FnDefExprImpl extends NamedElementImpl implements FnDefExpr
       case AgreePackage.FN_DEF_EXPR__EXPR:
         setExpr((Expr)newValue);
         return;
+      case AgreePackage.FN_DEF_EXPR__ARGS:
+        getArgs().clear();
+        getArgs().addAll((Collection<? extends Arg>)newValue);
+        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -287,6 +322,9 @@ public class FnDefExprImpl extends NamedElementImpl implements FnDefExpr
       case AgreePackage.FN_DEF_EXPR__EXPR:
         setExpr((Expr)null);
         return;
+      case AgreePackage.FN_DEF_EXPR__ARGS:
+        getArgs().clear();
+        return;
     }
     super.eUnset(featureID);
   }
@@ -307,8 +345,62 @@ public class FnDefExprImpl extends NamedElementImpl implements FnDefExpr
         return type != null;
       case AgreePackage.FN_DEF_EXPR__EXPR:
         return expr != null;
+      case AgreePackage.FN_DEF_EXPR__ARGS:
+        return args != null && !args.isEmpty();
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == SpecStatement.class)
+    {
+      switch (derivedFeatureID)
+      {
+        default: return -1;
+      }
+    }
+    if (baseClass == CallDef.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case AgreePackage.FN_DEF_EXPR__ARGS: return AgreePackage.CALL_DEF__ARGS;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == SpecStatement.class)
+    {
+      switch (baseFeatureID)
+      {
+        default: return -1;
+      }
+    }
+    if (baseClass == CallDef.class)
+    {
+      switch (baseFeatureID)
+      {
+        case AgreePackage.CALL_DEF__ARGS: return AgreePackage.FN_DEF_EXPR__ARGS;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
   }
 
 } //FnDefExprImpl

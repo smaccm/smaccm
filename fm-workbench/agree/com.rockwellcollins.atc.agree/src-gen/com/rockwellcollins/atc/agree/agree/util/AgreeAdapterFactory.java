@@ -141,6 +141,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createFnDefExprAdapter();
       }
       @Override
+      public Adapter caseLinearizationDefExpr(LinearizationDefExpr object)
+      {
+        return createLinearizationDefExprAdapter();
+      }
+      @Override
+      public Adapter caseLinearizationInterval(LinearizationInterval object)
+      {
+        return createLinearizationIntervalAdapter();
+      }
+      @Override
       public Adapter caseNodeDefExpr(NodeDefExpr object)
       {
         return createNodeDefExprAdapter();
@@ -583,6 +593,36 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createFnDefExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr <em>Linearization Def Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationDefExpr
+   * @generated
+   */
+  public Adapter createLinearizationDefExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LinearizationInterval <em>Linearization Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationInterval
+   * @generated
+   */
+  public Adapter createLinearizationIntervalAdapter()
   {
     return null;
   }

@@ -73,7 +73,8 @@ NamedCallDef returns aadl2::NamedElement:
 
 CallDef returns CallDef:
 	FnDefExpr
-	| NodeDefExpr;
+	| NodeDefExpr
+	| LinearizationDefExpr;
 
 PropertyStatement:
 	'property' name=ID '=' expr=Expr ';';
@@ -89,6 +90,15 @@ AssignStatement:
 
 FnDefExpr:
 	'fun' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type '=' expr=Expr ';';
+
+LinearizationDefExpr:
+	'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')'
+	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']'
+	('within' precision=Expr)? ':' exprBody=Expr ';'
+	;
+
+LinearizationInterval:
+	start=Expr '..' end=Expr;
 
 NodeDefExpr:
 	'node' name=ID '(' (args+=Arg (',' args+=Arg)*)? ')' 'returns'
@@ -148,7 +158,10 @@ AddSubExpr returns Expr:
 	MultDivExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=MultDivExpr)*;
 
 MultDivExpr returns Expr:
-	UnaryExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | 'div' | 'mod')) right=UnaryExpr)*;//todo remove div
+	PowerExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | 'div' | 'mod')) right=UnaryExpr)*;//todo remove div
+
+PowerExpr returns Expr:
+	UnaryExpr (=> ({BinaryExpr.left=current} op=('^')) right=UnaryExpr)*;
 
 UnaryExpr returns Expr:
 	{UnaryExpr} op=('-' | 'not') expr=UnaryExpr

@@ -1229,6 +1229,16 @@ ruleCallDef returns [EObject current=null]
         $current = $this_NodeDefExpr_1.current;
         afterParserOrEnumRuleCall();
     }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getCallDefAccess().getLinearizationDefExprParserRuleCall_2()); 
+    }
+    this_LinearizationDefExpr_2=ruleLinearizationDefExpr
+    {
+        $current = $this_LinearizationDefExpr_2.current;
+        afterParserOrEnumRuleCall();
+    }
 )
 ;
 
@@ -1710,6 +1720,270 @@ ruleFnDefExpr returns [EObject current=null]
     	newLeafNode(otherlv_11, grammarAccess.getFnDefExprAccess().getSemicolonKeyword_10());
     }
 )
+;
+
+
+
+
+
+// Entry rule entryRuleLinearizationDefExpr
+entryRuleLinearizationDefExpr returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getLinearizationDefExprRule()); }
+	 iv_ruleLinearizationDefExpr=ruleLinearizationDefExpr 
+	 { $current=$iv_ruleLinearizationDefExpr.current; } 
+	 EOF 
+;
+
+// Rule LinearizationDefExpr
+ruleLinearizationDefExpr returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+	otherlv_0=Linearization
+    {
+    	newLeafNode(otherlv_0, grammarAccess.getLinearizationDefExprAccess().getLinearizationKeyword_0());
+    }
+(
+(
+		lv_name_1_0=RULE_ID
+		{
+			newLeafNode(lv_name_1_0, grammarAccess.getLinearizationDefExprAccess().getNameIDTerminalRuleCall_1_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getLinearizationDefExprRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_1_0, 
+        		"ID");
+	    }
+
+)
+)
+	otherlv_2=LeftParenthesis
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getLinearizationDefExprAccess().getLeftParenthesisKeyword_2());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLinearizationDefExprAccess().getArgsArgParserRuleCall_3_0()); 
+	    }
+		lv_args_3_0=ruleArg		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLinearizationDefExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_3_0, 
+        		"Arg");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(
+	otherlv_4=Comma
+    {
+    	newLeafNode(otherlv_4, grammarAccess.getLinearizationDefExprAccess().getCommaKeyword_4_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLinearizationDefExprAccess().getArgsArgParserRuleCall_4_1_0()); 
+	    }
+		lv_args_5_0=ruleArg		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLinearizationDefExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_5_0, 
+        		"Arg");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*
+	otherlv_6=RightParenthesis
+    {
+    	newLeafNode(otherlv_6, grammarAccess.getLinearizationDefExprAccess().getRightParenthesisKeyword_5());
+    }
+
+	otherlv_7=Over
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getLinearizationDefExprAccess().getOverKeyword_6());
+    }
+
+	otherlv_8=LeftSquareBracket
+    {
+    	newLeafNode(otherlv_8, grammarAccess.getLinearizationDefExprAccess().getLeftSquareBracketKeyword_7());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLinearizationDefExprAccess().getIntervalsLinearizationIntervalParserRuleCall_8_0()); 
+	    }
+		lv_intervals_9_0=ruleLinearizationInterval		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLinearizationDefExprRule());
+	        }
+       		add(
+       			$current, 
+       			"intervals",
+        		lv_intervals_9_0, 
+        		"LinearizationInterval");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(
+	otherlv_10=Comma
+    {
+    	newLeafNode(otherlv_10, grammarAccess.getLinearizationDefExprAccess().getCommaKeyword_9_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLinearizationDefExprAccess().getIntervalsLinearizationIntervalParserRuleCall_9_1_0()); 
+	    }
+		lv_intervals_11_0=ruleLinearizationInterval		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLinearizationDefExprRule());
+	        }
+       		add(
+       			$current, 
+       			"intervals",
+        		lv_intervals_11_0, 
+        		"LinearizationInterval");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*
+	otherlv_12=RightSquareBracket
+    {
+    	newLeafNode(otherlv_12, grammarAccess.getLinearizationDefExprAccess().getRightSquareBracketKeyword_10());
+    }
+(
+	otherlv_13=Within
+    {
+    	newLeafNode(otherlv_13, grammarAccess.getLinearizationDefExprAccess().getWithinKeyword_11_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLinearizationDefExprAccess().getPrecisionExprParserRuleCall_11_1_0()); 
+	    }
+		lv_precision_14_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLinearizationDefExprRule());
+	        }
+       		set(
+       			$current, 
+       			"precision",
+        		lv_precision_14_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))?
+	otherlv_15=Colon
+    {
+    	newLeafNode(otherlv_15, grammarAccess.getLinearizationDefExprAccess().getColonKeyword_12());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLinearizationDefExprAccess().getExprBodyExprParserRuleCall_13_0()); 
+	    }
+		lv_exprBody_16_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLinearizationDefExprRule());
+	        }
+       		set(
+       			$current, 
+       			"exprBody",
+        		lv_exprBody_16_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_17=Semicolon
+    {
+    	newLeafNode(otherlv_17, grammarAccess.getLinearizationDefExprAccess().getSemicolonKeyword_14());
+    }
+)
+;
+
+
+
+
+
+// Entry rule entryRuleLinearizationInterval
+entryRuleLinearizationInterval returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getLinearizationIntervalRule()); }
+	 iv_ruleLinearizationInterval=ruleLinearizationInterval 
+	 { $current=$iv_ruleLinearizationInterval.current; } 
+	 EOF 
+;
+
+// Rule LinearizationInterval
+ruleLinearizationInterval returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+((
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLinearizationIntervalAccess().getStartExprParserRuleCall_0_0()); 
+	    }
+		lv_start_0_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLinearizationIntervalRule());
+	        }
+       		set(
+       			$current, 
+       			"start",
+        		lv_start_0_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_1=FullStopFullStop
+    {
+    	newLeafNode(otherlv_1, grammarAccess.getLinearizationIntervalAccess().getFullStopFullStopKeyword_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLinearizationIntervalAccess().getEndExprParserRuleCall_2_0()); 
+	    }
+		lv_end_2_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLinearizationIntervalRule());
+	        }
+       		set(
+       			$current, 
+       			"end",
+        		lv_end_2_0, 
+        		"Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))
 ;
 
 
@@ -3203,11 +3477,11 @@ ruleMultDivExpr returns [EObject current=null]
     @after { leaveRule(); }:
 (
     { 
-        newCompositeNode(grammarAccess.getMultDivExprAccess().getUnaryExprParserRuleCall_0()); 
+        newCompositeNode(grammarAccess.getMultDivExprAccess().getPowerExprParserRuleCall_0()); 
     }
-    this_UnaryExpr_0=ruleUnaryExpr
+    this_PowerExpr_0=rulePowerExpr
     {
-        $current = $this_UnaryExpr_0.current;
+        $current = $this_PowerExpr_0.current;
         afterParserOrEnumRuleCall();
     }
 (((((
@@ -3305,6 +3579,84 @@ Mod
 		lv_right_3_0=ruleUnaryExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getMultDivExprRule());
+	        }
+       		set(
+       			$current, 
+       			"right",
+        		lv_right_3_0, 
+        		"UnaryExpr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*)
+;
+
+
+
+
+
+// Entry rule entryRulePowerExpr
+entryRulePowerExpr returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getPowerExprRule()); }
+	 iv_rulePowerExpr=rulePowerExpr 
+	 { $current=$iv_rulePowerExpr.current; } 
+	 EOF 
+;
+
+// Rule PowerExpr
+rulePowerExpr returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+    { 
+        newCompositeNode(grammarAccess.getPowerExprAccess().getUnaryExprParserRuleCall_0()); 
+    }
+    this_UnaryExpr_0=ruleUnaryExpr
+    {
+        $current = $this_UnaryExpr_0.current;
+        afterParserOrEnumRuleCall();
+    }
+(((((
+)(
+(
+
+CircumflexAccent
+
+
+)
+)))=>((
+    {
+        $current = forceCreateModelElementAndSet(
+            grammarAccess.getPowerExprAccess().getBinaryExprLeftAction_1_0_0_0(),
+            $current);
+    }
+)(
+(
+		lv_op_2_0=
+	CircumflexAccent
+    {
+        newLeafNode(lv_op_2_0, grammarAccess.getPowerExprAccess().getOpCircumflexAccentKeyword_1_0_0_1_0());
+    }
+
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getPowerExprRule());
+	        }
+       		setWithLastConsumed($current, "op", lv_op_2_0, "^");
+	    }
+
+)
+)))(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getPowerExprAccess().getRightUnaryExprParserRuleCall_1_1_0()); 
+	    }
+		lv_right_3_0=ruleUnaryExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getPowerExprRule());
 	        }
        		set(
        			$current, 
@@ -5513,7 +5865,7 @@ ruleContainmentPathElement returns [EObject current=null]
 	    }
 
 )
-)*)(
+)?)(
 	otherlv_2=FullStop
     {
     	newLeafNode(otherlv_2, grammarAccess.getContainmentPathElementAccess().getFullStopKeyword_1_0());

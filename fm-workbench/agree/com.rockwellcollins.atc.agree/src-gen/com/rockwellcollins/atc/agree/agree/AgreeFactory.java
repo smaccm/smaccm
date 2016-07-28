@@ -131,6 +131,24 @@ public interface AgreeFactory extends EFactory
   FnDefExpr createFnDefExpr();
 
   /**
+   * Returns a new object of class '<em>Linearization Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Linearization Def Expr</em>'.
+   * @generated
+   */
+  LinearizationDefExpr createLinearizationDefExpr();
+
+  /**
+   * Returns a new object of class '<em>Linearization Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Linearization Interval</em>'.
+   * @generated
+   */
+  LinearizationInterval createLinearizationInterval();
+
+  /**
    * Returns a new object of class '<em>Node Def Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

@@ -36,6 +36,8 @@ import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
@@ -162,6 +164,20 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass fnDefExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass linearizationDefExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass linearizationIntervalEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -652,6 +668,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getCallDef_Args()
+  {
+    return (EReference)callDefEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getPropertyStatement()
   {
     return propertyStatementEClass;
@@ -772,7 +798,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFnDefExpr_Args()
+  public EReference getFnDefExpr_Type()
   {
     return (EReference)fnDefExprEClass.getEStructuralFeatures().get(0);
   }
@@ -782,7 +808,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFnDefExpr_Type()
+  public EReference getFnDefExpr_Expr()
   {
     return (EReference)fnDefExprEClass.getEStructuralFeatures().get(1);
   }
@@ -792,9 +818,79 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFnDefExpr_Expr()
+  public EReference getFnDefExpr_Args()
   {
-    return (EReference)fnDefExprEClass.getEStructuralFeatures().get(2);
+    return (EReference)fnDefExprEClass.getEStructuralFeatures().get(-1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLinearizationDefExpr()
+  {
+    return linearizationDefExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLinearizationDefExpr_Intervals()
+  {
+    return (EReference)linearizationDefExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLinearizationDefExpr_Precision()
+  {
+    return (EReference)linearizationDefExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLinearizationDefExpr_ExprBody()
+  {
+    return (EReference)linearizationDefExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLinearizationInterval()
+  {
+    return linearizationIntervalEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLinearizationInterval_Start()
+  {
+    return (EReference)linearizationIntervalEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLinearizationInterval_End()
+  {
+    return (EReference)linearizationIntervalEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -812,7 +908,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNodeDefExpr_Args()
+  public EReference getNodeDefExpr_Rets()
   {
     return (EReference)nodeDefExprEClass.getEStructuralFeatures().get(0);
   }
@@ -822,7 +918,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNodeDefExpr_Rets()
+  public EReference getNodeDefExpr_NodeBody()
   {
     return (EReference)nodeDefExprEClass.getEStructuralFeatures().get(1);
   }
@@ -832,9 +928,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNodeDefExpr_NodeBody()
+  public EReference getNodeDefExpr_Args()
   {
-    return (EReference)nodeDefExprEClass.getEStructuralFeatures().get(2);
+    return (EReference)nodeDefExprEClass.getEStructuralFeatures().get(-1);
   }
 
   /**
@@ -1974,6 +2070,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(orderStatementEClass, ORDER_STATEMENT__COMPS);
 
     callDefEClass = createEClass(CALL_DEF);
+    createEReference(callDefEClass, CALL_DEF__ARGS);
 
     propertyStatementEClass = createEClass(PROPERTY_STATEMENT);
     createEReference(propertyStatementEClass, PROPERTY_STATEMENT__EXPR);
@@ -1991,14 +2088,23 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(assignStatementEClass, ASSIGN_STATEMENT__EXPR);
 
     fnDefExprEClass = createEClass(FN_DEF_EXPR);
-    createEReference(fnDefExprEClass, FN_DEF_EXPR__ARGS);
     createEReference(fnDefExprEClass, FN_DEF_EXPR__TYPE);
     createEReference(fnDefExprEClass, FN_DEF_EXPR__EXPR);
+    createEReference(fnDefExprEClass, FN_DEF_EXPR__ARGS);
+
+    linearizationDefExprEClass = createEClass(LINEARIZATION_DEF_EXPR);
+    createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__INTERVALS);
+    createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__PRECISION);
+    createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__EXPR_BODY);
+
+    linearizationIntervalEClass = createEClass(LINEARIZATION_INTERVAL);
+    createEReference(linearizationIntervalEClass, LINEARIZATION_INTERVAL__START);
+    createEReference(linearizationIntervalEClass, LINEARIZATION_INTERVAL__END);
 
     nodeDefExprEClass = createEClass(NODE_DEF_EXPR);
-    createEReference(nodeDefExprEClass, NODE_DEF_EXPR__ARGS);
     createEReference(nodeDefExprEClass, NODE_DEF_EXPR__RETS);
     createEReference(nodeDefExprEClass, NODE_DEF_EXPR__NODE_BODY);
+    createEReference(nodeDefExprEClass, NODE_DEF_EXPR__ARGS);
 
     nodeBodyExprEClass = createEClass(NODE_BODY_EXPR);
     createEReference(nodeBodyExprEClass, NODE_BODY_EXPR__LOCS);
@@ -2203,6 +2309,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     fnDefExprEClass.getESuperTypes().add(this.getCallDef());
+    linearizationDefExprEClass.getESuperTypes().add(this.getCallDef());
     nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     nodeDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
@@ -2269,6 +2376,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getOrderStatement_Comps(), theAadl2Package.getNamedElement(), null, "comps", null, 0, -1, OrderStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(callDefEClass, CallDef.class, "CallDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getCallDef_Args(), this.getArg(), null, "args", null, 0, -1, CallDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(propertyStatementEClass, PropertyStatement.class, "PropertyStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPropertyStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, PropertyStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2286,14 +2394,23 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getAssignStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, AssignStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fnDefExprEClass, FnDefExpr.class, "FnDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getFnDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFnDefExpr_Type(), this.getType(), null, "type", null, 0, 1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFnDefExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFnDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(linearizationDefExprEClass, LinearizationDefExpr.class, "LinearizationDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLinearizationDefExpr_Intervals(), this.getLinearizationInterval(), null, "intervals", null, 0, -1, LinearizationDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLinearizationDefExpr_Precision(), this.getExpr(), null, "precision", null, 0, 1, LinearizationDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLinearizationDefExpr_ExprBody(), this.getExpr(), null, "exprBody", null, 0, 1, LinearizationDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(linearizationIntervalEClass, LinearizationInterval.class, "LinearizationInterval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLinearizationInterval_Start(), this.getExpr(), null, "start", null, 0, 1, LinearizationInterval.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLinearizationInterval_End(), this.getExpr(), null, "end", null, 0, 1, LinearizationInterval.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(nodeDefExprEClass, NodeDefExpr.class, "NodeDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getNodeDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, NodeDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getNodeDefExpr_Rets(), this.getArg(), null, "rets", null, 0, -1, NodeDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getNodeDefExpr_NodeBody(), this.getNodeBodyExpr(), null, "nodeBody", null, 0, 1, NodeDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNodeDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, NodeDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(nodeBodyExprEClass, NodeBodyExpr.class, "NodeBodyExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNodeBodyExpr_Locs(), this.getArg(), null, "locs", null, 0, -1, NodeBodyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
