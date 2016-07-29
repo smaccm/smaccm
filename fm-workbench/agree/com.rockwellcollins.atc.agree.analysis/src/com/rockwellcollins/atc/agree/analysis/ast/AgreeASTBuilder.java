@@ -88,6 +88,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
@@ -1111,6 +1112,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         
         Node node = builder.build();
         addToNodeList(node);
+        return null;
+    }
+
+    @Override
+    public Expr caseLinearizationDefExpr(LinearizationDefExpr expr) {
+        NodeDefExpr linearization = linearizationRewriter.addLinearization(expr);
+        caseNodeDefExpr(linearization);
         return null;
     }
 
