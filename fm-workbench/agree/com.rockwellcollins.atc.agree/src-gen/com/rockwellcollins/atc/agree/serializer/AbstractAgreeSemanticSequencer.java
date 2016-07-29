@@ -58,14 +58,11 @@ import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.serializer.acceptor.ISemanticSequenceAcceptor;
-import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
 import org.eclipse.xtext.serializer.diagnostic.ISemanticSequencerDiagnosticProvider;
 import org.eclipse.xtext.serializer.diagnostic.ISerializationDiagnostic.Acceptor;
 import org.eclipse.xtext.serializer.sequencer.GenericSequencer;
-import org.eclipse.xtext.serializer.sequencer.ISemanticNodeProvider.INodesForEObjectProvider;
 import org.eclipse.xtext.serializer.sequencer.ISemanticSequencer;
 import org.eclipse.xtext.serializer.sequencer.ITransientValueService;
-import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.ArrayRange;
 import org.osate.aadl2.BasicPropertyAssociation;
@@ -346,7 +343,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	/**
 	 * Constraint:
 	 *     (
-	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=PowerExpr) | 
 	 *         (left=PowerExpr_BinaryExpr_1_0_0_0 op='^' right=UnaryExpr) | 
 	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
 	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
@@ -483,17 +480,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (start=Expr end=Expr)
 	 */
 	protected void sequence_LinearizationInterval(EObject context, LinearizationInterval semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.LINEARIZATION_INTERVAL__START) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.LINEARIZATION_INTERVAL__START));
-			if(transientValues.isValueTransient(semanticObject, AgreePackage.Literals.LINEARIZATION_INTERVAL__END) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.LINEARIZATION_INTERVAL__END));
-		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getLinearizationIntervalAccess().getStartExprParserRuleCall_0_0(), semanticObject.getStart());
-		feeder.accept(grammarAccess.getLinearizationIntervalAccess().getEndExprParserRuleCall_2_0(), semanticObject.getEnd());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

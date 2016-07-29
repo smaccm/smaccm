@@ -435,22 +435,13 @@ public interface AgreePackage extends EPackage
   int CALL_DEF__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
 
   /**
-   * The feature id for the '<em><b>Args</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CALL_DEF__ARGS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
-
-  /**
    * The number of structural features of the '<em>Call Def</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CALL_DEF_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 1;
+  int CALL_DEF_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.PropertyStatementImpl <em>Property Statement</em>}' class.
@@ -800,22 +791,13 @@ public interface AgreePackage extends EPackage
   int FN_DEF_EXPR__EXPR = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 2;
 
   /**
-   * The feature id for the '<em><b>Args</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FN_DEF_EXPR__ARGS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
-
-  /**
    * The number of structural features of the '<em>Fn Def Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FN_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 4;
+  int FN_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl <em>Linearization Def Expr</em>}' class.
@@ -834,7 +816,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__OWNED_ELEMENT = CALL_DEF__OWNED_ELEMENT;
+  int LINEARIZATION_DEF_EXPR__OWNED_ELEMENT = Aadl2Package.NAMED_ELEMENT__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -843,7 +825,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__OWNED_COMMENT = CALL_DEF__OWNED_COMMENT;
+  int LINEARIZATION_DEF_EXPR__OWNED_COMMENT = Aadl2Package.NAMED_ELEMENT__OWNED_COMMENT;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -852,7 +834,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__NAME = CALL_DEF__NAME;
+  int LINEARIZATION_DEF_EXPR__NAME = Aadl2Package.NAMED_ELEMENT__NAME;
 
   /**
    * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
@@ -861,7 +843,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__QUALIFIED_NAME = CALL_DEF__QUALIFIED_NAME;
+  int LINEARIZATION_DEF_EXPR__QUALIFIED_NAME = Aadl2Package.NAMED_ELEMENT__QUALIFIED_NAME;
 
   /**
    * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
@@ -870,7 +852,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__OWNED_PROPERTY_ASSOCIATION = CALL_DEF__OWNED_PROPERTY_ASSOCIATION;
+  int LINEARIZATION_DEF_EXPR__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
 
   /**
    * The feature id for the '<em><b>Args</b></em>' containment reference list.
@@ -879,7 +861,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__ARGS = CALL_DEF__ARGS;
+  int LINEARIZATION_DEF_EXPR__ARGS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Intervals</b></em>' containment reference list.
@@ -888,7 +870,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__INTERVALS = CALL_DEF_FEATURE_COUNT + 0;
+  int LINEARIZATION_DEF_EXPR__INTERVALS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Precision</b></em>' containment reference.
@@ -897,7 +879,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__PRECISION = CALL_DEF_FEATURE_COUNT + 1;
+  int LINEARIZATION_DEF_EXPR__PRECISION = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 2;
 
   /**
    * The feature id for the '<em><b>Expr Body</b></em>' containment reference.
@@ -906,7 +888,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR__EXPR_BODY = CALL_DEF_FEATURE_COUNT + 2;
+  int LINEARIZATION_DEF_EXPR__EXPR_BODY = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
 
   /**
    * The number of structural features of the '<em>Linearization Def Expr</em>' class.
@@ -915,7 +897,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_DEF_EXPR_FEATURE_COUNT = CALL_DEF_FEATURE_COUNT + 3;
+  int LINEARIZATION_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 4;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationIntervalImpl <em>Linearization Interval</em>}' class.
@@ -928,13 +910,31 @@ public interface AgreePackage extends EPackage
   int LINEARIZATION_INTERVAL = 13;
 
   /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_INTERVAL__OWNED_ELEMENT = Aadl2Package.ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_INTERVAL__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
+
+  /**
    * The feature id for the '<em><b>Start</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int LINEARIZATION_INTERVAL__START = 0;
+  int LINEARIZATION_INTERVAL__START = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>End</b></em>' containment reference.
@@ -943,7 +943,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_INTERVAL__END = 1;
+  int LINEARIZATION_INTERVAL__END = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Linearization Interval</em>' class.
@@ -952,7 +952,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int LINEARIZATION_INTERVAL_FEATURE_COUNT = 2;
+  int LINEARIZATION_INTERVAL_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl <em>Node Def Expr</em>}' class.
@@ -1037,22 +1037,13 @@ public interface AgreePackage extends EPackage
   int NODE_DEF_EXPR__NODE_BODY = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 2;
 
   /**
-   * The feature id for the '<em><b>Args</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int NODE_DEF_EXPR__ARGS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
-
-  /**
    * The number of structural features of the '<em>Node Def Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int NODE_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 4;
+  int NODE_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeBodyExprImpl <em>Node Body Expr</em>}' class.
@@ -3598,17 +3589,6 @@ public interface AgreePackage extends EPackage
   EClass getCallDef();
 
   /**
-   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.CallDef#getArgs <em>Args</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Args</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.CallDef#getArgs()
-   * @see #getCallDef()
-   * @generated
-   */
-  EReference getCallDef_Args();
-
-  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.PropertyStatement <em>Property Statement</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3736,6 +3716,17 @@ public interface AgreePackage extends EPackage
   EClass getFnDefExpr();
 
   /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.FnDefExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.FnDefExpr#getArgs()
+   * @see #getFnDefExpr()
+   * @generated
+   */
+  EReference getFnDefExpr_Args();
+
+  /**
    * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.FnDefExpr#getType <em>Type</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3758,17 +3749,6 @@ public interface AgreePackage extends EPackage
   EReference getFnDefExpr_Expr();
 
   /**
-   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.FnDefExpr#getArgs <em>Args</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Args</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.FnDefExpr#getArgs()
-   * @see #getFnDefExpr()
-   * @generated
-   */
-  EReference getFnDefExpr_Args();
-
-  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr <em>Linearization Def Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3777,6 +3757,17 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EClass getLinearizationDefExpr();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getArgs()
+   * @see #getLinearizationDefExpr()
+   * @generated
+   */
+  EReference getLinearizationDefExpr_Args();
 
   /**
    * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getIntervals <em>Intervals</em>}'.
@@ -3854,6 +3845,17 @@ public interface AgreePackage extends EPackage
   EClass getNodeDefExpr();
 
   /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NodeDefExpr#getArgs()
+   * @see #getNodeDefExpr()
+   * @generated
+   */
+  EReference getNodeDefExpr_Args();
+
+  /**
    * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getRets <em>Rets</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3874,17 +3876,6 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getNodeDefExpr_NodeBody();
-
-  /**
-   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getArgs <em>Args</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Args</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.NodeDefExpr#getArgs()
-   * @see #getNodeDefExpr()
-   * @generated
-   */
-  EReference getNodeDefExpr_Args();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NodeBodyExpr <em>Node Body Expr</em>}'.
@@ -5168,14 +5159,6 @@ public interface AgreePackage extends EPackage
     EClass CALL_DEF = eINSTANCE.getCallDef();
 
     /**
-     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CALL_DEF__ARGS = eINSTANCE.getCallDef_Args();
-
-    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.PropertyStatementImpl <em>Property Statement</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5282,6 +5265,14 @@ public interface AgreePackage extends EPackage
     EClass FN_DEF_EXPR = eINSTANCE.getFnDefExpr();
 
     /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference FN_DEF_EXPR__ARGS = eINSTANCE.getFnDefExpr_Args();
+
+    /**
      * The meta object literal for the '<em><b>Type</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5298,14 +5289,6 @@ public interface AgreePackage extends EPackage
     EReference FN_DEF_EXPR__EXPR = eINSTANCE.getFnDefExpr_Expr();
 
     /**
-     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference FN_DEF_EXPR__ARGS = eINSTANCE.getFnDefExpr_Args();
-
-    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl <em>Linearization Def Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5314,6 +5297,14 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EClass LINEARIZATION_DEF_EXPR = eINSTANCE.getLinearizationDefExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LINEARIZATION_DEF_EXPR__ARGS = eINSTANCE.getLinearizationDefExpr_Args();
 
     /**
      * The meta object literal for the '<em><b>Intervals</b></em>' containment reference list feature.
@@ -5376,6 +5367,14 @@ public interface AgreePackage extends EPackage
     EClass NODE_DEF_EXPR = eINSTANCE.getNodeDefExpr();
 
     /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NODE_DEF_EXPR__ARGS = eINSTANCE.getNodeDefExpr_Args();
+
+    /**
      * The meta object literal for the '<em><b>Rets</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5390,14 +5389,6 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference NODE_DEF_EXPR__NODE_BODY = eINSTANCE.getNodeDefExpr_NodeBody();
-
-    /**
-     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference NODE_DEF_EXPR__ARGS = eINSTANCE.getNodeDefExpr_Args();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeBodyExprImpl <em>Node Body Expr</em>}' class.

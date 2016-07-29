@@ -15,9 +15,9 @@ import org.osate.aadl2.NamedElement;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getRets <em>Rets</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getNodeBody <em>Node Body</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr#getArgs <em>Args</em>}</li>
  * </ul>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNodeDefExpr()
@@ -26,6 +26,22 @@ import org.osate.aadl2.NamedElement;
  */
 public interface NodeDefExpr extends NamedElement, SpecStatement, CallDef
 {
+  /**
+   * Returns the value of the '<em><b>Args</b></em>' containment reference list.
+   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Arg}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Args</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Args</em>' containment reference list.
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNodeDefExpr_Args()
+   * @model containment="true"
+   * @generated
+   */
+  EList<Arg> getArgs();
+
   /**
    * Returns the value of the '<em><b>Rets</b></em>' containment reference list.
    * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Arg}.
@@ -67,21 +83,5 @@ public interface NodeDefExpr extends NamedElement, SpecStatement, CallDef
    * @generated
    */
   void setNodeBody(NodeBodyExpr value);
-
-  /**
-   * Returns the value of the '<em><b>Args</b></em>' containment reference list.
-   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Arg}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Args</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Args</em>' containment reference list.
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNodeDefExpr_Args()
-   * @model containment="true"
-   * @generated
-   */
-  EList<Arg> getArgs();
 
 } // NodeDefExpr

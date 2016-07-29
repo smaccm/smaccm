@@ -4,6 +4,8 @@ package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.osate.aadl2.Element;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Linearization Interval</b></em>'.
@@ -21,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface LinearizationInterval extends EObject
+public interface LinearizationInterval extends EObject, Element
 {
   /**
    * Returns the value of the '<em><b>Start</b></em>' containment reference.

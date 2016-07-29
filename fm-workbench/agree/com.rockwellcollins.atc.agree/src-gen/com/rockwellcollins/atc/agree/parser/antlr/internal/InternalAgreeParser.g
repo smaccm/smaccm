@@ -123,11 +123,21 @@ ruleNamedElement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_5()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getLinearizationDefExprParserRuleCall_5()); 
     }
-    this_RecordDefExpr_5=ruleRecordDefExpr
+    this_LinearizationDefExpr_5=ruleLinearizationDefExpr
     {
-        $current = $this_RecordDefExpr_5.current;
+        $current = $this_LinearizationDefExpr_5.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_6()); 
+    }
+    this_RecordDefExpr_6=ruleRecordDefExpr
+    {
+        $current = $this_RecordDefExpr_6.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -772,31 +782,41 @@ ruleSpecStatement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getFnDefExprParserRuleCall_14()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getLinearizationDefExprParserRuleCall_14()); 
     }
-    this_FnDefExpr_51=ruleFnDefExpr
+    this_LinearizationDefExpr_51=ruleLinearizationDefExpr
     {
-        $current = $this_FnDefExpr_51.current;
+        $current = $this_LinearizationDefExpr_51.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_15()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getFnDefExprParserRuleCall_15()); 
     }
-    this_NodeDefExpr_52=ruleNodeDefExpr
+    this_FnDefExpr_52=ruleFnDefExpr
     {
-        $current = $this_NodeDefExpr_52.current;
+        $current = $this_FnDefExpr_52.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_16()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_16()); 
     }
-    this_RecordDefExpr_53=ruleRecordDefExpr
+    this_NodeDefExpr_53=ruleNodeDefExpr
     {
-        $current = $this_RecordDefExpr_53.current;
+        $current = $this_NodeDefExpr_53.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_17()); 
+    }
+    this_RecordDefExpr_54=ruleRecordDefExpr
+    {
+        $current = $this_RecordDefExpr_54.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -1212,31 +1232,31 @@ ruleCallDef returns [EObject current=null]
     @after { leaveRule(); }:
 (
     { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_0()); 
+        newCompositeNode(grammarAccess.getCallDefAccess().getLinearizationDefExprParserRuleCall_0()); 
     }
-    this_FnDefExpr_0=ruleFnDefExpr
+    this_LinearizationDefExpr_0=ruleLinearizationDefExpr
     {
-        $current = $this_FnDefExpr_0.current;
+        $current = $this_LinearizationDefExpr_0.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_1()); 
+        newCompositeNode(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_1()); 
     }
-    this_NodeDefExpr_1=ruleNodeDefExpr
+    this_FnDefExpr_1=ruleFnDefExpr
     {
-        $current = $this_NodeDefExpr_1.current;
+        $current = $this_FnDefExpr_1.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getLinearizationDefExprParserRuleCall_2()); 
+        newCompositeNode(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_2()); 
     }
-    this_LinearizationDefExpr_2=ruleLinearizationDefExpr
+    this_NodeDefExpr_2=ruleNodeDefExpr
     {
-        $current = $this_LinearizationDefExpr_2.current;
+        $current = $this_NodeDefExpr_2.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -3574,9 +3594,9 @@ Mod
 )))(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getMultDivExprAccess().getRightUnaryExprParserRuleCall_1_1_0()); 
+	        newCompositeNode(grammarAccess.getMultDivExprAccess().getRightPowerExprParserRuleCall_1_1_0()); 
 	    }
-		lv_right_3_0=ruleUnaryExpr		{
+		lv_right_3_0=rulePowerExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getMultDivExprRule());
 	        }
@@ -3584,7 +3604,7 @@ Mod
        			$current, 
        			"right",
         		lv_right_3_0, 
-        		"UnaryExpr");
+        		"PowerExpr");
 	        afterParserOrEnumRuleCall();
 	    }
 

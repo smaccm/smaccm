@@ -11,10 +11,12 @@ NamedElement returns aadl2::NamedElement:
 	| PropertyStatement
 	| ConstStatement
 	| NodeDefExpr
+	| LinearizationDefExpr
 	| RecordDefExpr;
 
 Element returns aadl2::Element:
 	Expr
+	| LinearizationInterval
 	| Type
 	| AgreeContract
 	| SpecStatement
@@ -52,6 +54,7 @@ SpecStatement:
 	| ConstStatement
 	| EqStatement
 	| AssignStatement
+	| LinearizationDefExpr
 	| FnDefExpr
 	| NodeDefExpr
 	| RecordDefExpr;
@@ -72,9 +75,9 @@ NamedCallDef returns aadl2::NamedElement:
 	CallDef;
 
 CallDef returns CallDef:
-	FnDefExpr
-	| NodeDefExpr
-	| LinearizationDefExpr;
+	LinearizationDefExpr
+	| FnDefExpr
+	| NodeDefExpr;
 
 PropertyStatement:
 	'property' name=ID '=' expr=Expr ';';
@@ -158,7 +161,7 @@ AddSubExpr returns Expr:
 	MultDivExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=MultDivExpr)*;
 
 MultDivExpr returns Expr:
-	PowerExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | 'div' | 'mod')) right=UnaryExpr)*;//todo remove div
+	PowerExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | 'div' | 'mod')) right=PowerExpr)*;//todo remove div
 
 PowerExpr returns Expr:
 	UnaryExpr (=> ({BinaryExpr.left=current} op=('^')) right=UnaryExpr)*;

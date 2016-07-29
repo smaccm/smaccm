@@ -13,7 +13,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+import org.osate.aadl2.impl.ElementImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,7 +30,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *
  * @generated
  */
-public class LinearizationIntervalImpl extends MinimalEObjectImpl.Container implements LinearizationInterval
+public class LinearizationIntervalImpl extends ElementImpl implements LinearizationInterval
 {
   /**
    * The cached value of the '{@link #getStart() <em>Start</em>}' containment reference.

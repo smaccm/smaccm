@@ -3,6 +3,7 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
@@ -22,6 +23,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.osate.aadl2.impl.NamedElementImpl;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Linearization Def Expr</b></em>'.
@@ -30,6 +33,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl#getIntervals <em>Intervals</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl#getPrecision <em>Precision</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl#getExprBody <em>Expr Body</em>}</li>
@@ -37,8 +41,18 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class LinearizationDefExprImpl extends CallDefImpl implements LinearizationDefExpr
+public class LinearizationDefExprImpl extends NamedElementImpl implements LinearizationDefExpr
 {
+  /**
+   * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getArgs()
+   * @generated
+   * @ordered
+   */
+  protected EList<Arg> args;
+
   /**
    * The cached value of the '{@link #getIntervals() <em>Intervals</em>}' containment reference list.
    * <!-- begin-user-doc -->
@@ -88,6 +102,20 @@ public class LinearizationDefExprImpl extends CallDefImpl implements Linearizati
   protected EClass eStaticClass()
   {
     return AgreePackage.Literals.LINEARIZATION_DEF_EXPR;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Arg> getArgs()
+  {
+    if (args == null)
+    {
+      args = new EObjectContainmentEList<Arg>(Arg.class, this, AgreePackage.LINEARIZATION_DEF_EXPR__ARGS);
+    }
+    return args;
   }
 
   /**
@@ -210,6 +238,8 @@ public class LinearizationDefExprImpl extends CallDefImpl implements Linearizati
   {
     switch (featureID)
     {
+      case AgreePackage.LINEARIZATION_DEF_EXPR__ARGS:
+        return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
       case AgreePackage.LINEARIZATION_DEF_EXPR__INTERVALS:
         return ((InternalEList<?>)getIntervals()).basicRemove(otherEnd, msgs);
       case AgreePackage.LINEARIZATION_DEF_EXPR__PRECISION:
@@ -230,6 +260,8 @@ public class LinearizationDefExprImpl extends CallDefImpl implements Linearizati
   {
     switch (featureID)
     {
+      case AgreePackage.LINEARIZATION_DEF_EXPR__ARGS:
+        return getArgs();
       case AgreePackage.LINEARIZATION_DEF_EXPR__INTERVALS:
         return getIntervals();
       case AgreePackage.LINEARIZATION_DEF_EXPR__PRECISION:
@@ -251,6 +283,10 @@ public class LinearizationDefExprImpl extends CallDefImpl implements Linearizati
   {
     switch (featureID)
     {
+      case AgreePackage.LINEARIZATION_DEF_EXPR__ARGS:
+        getArgs().clear();
+        getArgs().addAll((Collection<? extends Arg>)newValue);
+        return;
       case AgreePackage.LINEARIZATION_DEF_EXPR__INTERVALS:
         getIntervals().clear();
         getIntervals().addAll((Collection<? extends LinearizationInterval>)newValue);
@@ -275,6 +311,9 @@ public class LinearizationDefExprImpl extends CallDefImpl implements Linearizati
   {
     switch (featureID)
     {
+      case AgreePackage.LINEARIZATION_DEF_EXPR__ARGS:
+        getArgs().clear();
+        return;
       case AgreePackage.LINEARIZATION_DEF_EXPR__INTERVALS:
         getIntervals().clear();
         return;
@@ -298,6 +337,8 @@ public class LinearizationDefExprImpl extends CallDefImpl implements Linearizati
   {
     switch (featureID)
     {
+      case AgreePackage.LINEARIZATION_DEF_EXPR__ARGS:
+        return args != null && !args.isEmpty();
       case AgreePackage.LINEARIZATION_DEF_EXPR__INTERVALS:
         return intervals != null && !intervals.isEmpty();
       case AgreePackage.LINEARIZATION_DEF_EXPR__PRECISION:

@@ -15,9 +15,9 @@ import org.osate.aadl2.NamedElement;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.FnDefExpr#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.FnDefExpr#getType <em>Type</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.FnDefExpr#getExpr <em>Expr</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.FnDefExpr#getArgs <em>Args</em>}</li>
  * </ul>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getFnDefExpr()
@@ -26,6 +26,22 @@ import org.osate.aadl2.NamedElement;
  */
 public interface FnDefExpr extends NamedElement, SpecStatement, CallDef
 {
+  /**
+   * Returns the value of the '<em><b>Args</b></em>' containment reference list.
+   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Arg}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Args</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Args</em>' containment reference list.
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getFnDefExpr_Args()
+   * @model containment="true"
+   * @generated
+   */
+  EList<Arg> getArgs();
+
   /**
    * Returns the value of the '<em><b>Type</b></em>' containment reference.
    * <!-- begin-user-doc -->
@@ -77,21 +93,5 @@ public interface FnDefExpr extends NamedElement, SpecStatement, CallDef
    * @generated
    */
   void setExpr(Expr value);
-
-  /**
-   * Returns the value of the '<em><b>Args</b></em>' containment reference list.
-   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.Arg}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Args</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Args</em>' containment reference list.
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getFnDefExpr_Args()
-   * @model containment="true"
-   * @generated
-   */
-  EList<Arg> getArgs();
 
 } // FnDefExpr

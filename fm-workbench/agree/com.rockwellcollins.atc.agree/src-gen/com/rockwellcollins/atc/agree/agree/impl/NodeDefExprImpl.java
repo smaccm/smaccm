@@ -4,10 +4,8 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
-import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 import java.util.Collection;
 
@@ -37,7 +35,6 @@ import org.osate.aadl2.impl.NamedElementImpl;
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl#getArgs <em>Args</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl#getRets <em>Rets</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl#getNodeBody <em>Node Body</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl#getArgs <em>Args</em>}</li>
  * </ul>
  *
  * @generated
@@ -73,16 +70,6 @@ public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
    * @ordered
    */
   protected NodeBodyExpr nodeBody;
-
-  /**
-   * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getArgs()
-   * @generated
-   * @ordered
-   */
-  protected EList<Arg> args;
 
   /**
    * <!-- begin-user-doc -->
@@ -186,20 +173,6 @@ public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Arg> getArgs()
-  {
-    if (args == null)
-    {
-      args = new EObjectContainmentEList<Arg>(Arg.class, this, AgreePackage.NODE_DEF_EXPR__ARGS);
-    }
-    return args;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -211,8 +184,6 @@ public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
         return ((InternalEList<?>)getRets()).basicRemove(otherEnd, msgs);
       case AgreePackage.NODE_DEF_EXPR__NODE_BODY:
         return basicSetNodeBody(null, msgs);
-      case AgreePackage.NODE_DEF_EXPR__ARGS:
-        return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -233,8 +204,6 @@ public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
         return getRets();
       case AgreePackage.NODE_DEF_EXPR__NODE_BODY:
         return getNodeBody();
-      case AgreePackage.NODE_DEF_EXPR__ARGS:
-        return getArgs();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -261,10 +230,6 @@ public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
       case AgreePackage.NODE_DEF_EXPR__NODE_BODY:
         setNodeBody((NodeBodyExpr)newValue);
         return;
-      case AgreePackage.NODE_DEF_EXPR__ARGS:
-        getArgs().clear();
-        getArgs().addAll((Collection<? extends Arg>)newValue);
-        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -288,9 +253,6 @@ public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
       case AgreePackage.NODE_DEF_EXPR__NODE_BODY:
         setNodeBody((NodeBodyExpr)null);
         return;
-      case AgreePackage.NODE_DEF_EXPR__ARGS:
-        getArgs().clear();
-        return;
     }
     super.eUnset(featureID);
   }
@@ -311,62 +273,8 @@ public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
         return rets != null && !rets.isEmpty();
       case AgreePackage.NODE_DEF_EXPR__NODE_BODY:
         return nodeBody != null;
-      case AgreePackage.NODE_DEF_EXPR__ARGS:
-        return args != null && !args.isEmpty();
     }
     return super.eIsSet(featureID);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
-  {
-    if (baseClass == SpecStatement.class)
-    {
-      switch (derivedFeatureID)
-      {
-        default: return -1;
-      }
-    }
-    if (baseClass == CallDef.class)
-    {
-      switch (derivedFeatureID)
-      {
-        case AgreePackage.NODE_DEF_EXPR__ARGS: return AgreePackage.CALL_DEF__ARGS;
-        default: return -1;
-      }
-    }
-    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
-  {
-    if (baseClass == SpecStatement.class)
-    {
-      switch (baseFeatureID)
-      {
-        default: return -1;
-      }
-    }
-    if (baseClass == CallDef.class)
-    {
-      switch (baseFeatureID)
-      {
-        case AgreePackage.CALL_DEF__ARGS: return AgreePackage.NODE_DEF_EXPR__ARGS;
-        default: return -1;
-      }
-    }
-    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
   }
 
 } //NodeDefExprImpl

@@ -195,6 +195,7 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         LinearizationDefExpr linearizationDefExpr = (LinearizationDefExpr)theEObject;
         T result = caseLinearizationDefExpr(linearizationDefExpr);
+        if (result == null) result = caseSpecStatement(linearizationDefExpr);
         if (result == null) result = caseCallDef(linearizationDefExpr);
         if (result == null) result = caseNamedElement(linearizationDefExpr);
         if (result == null) result = caseElement(linearizationDefExpr);
@@ -205,6 +206,7 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         LinearizationInterval linearizationInterval = (LinearizationInterval)theEObject;
         T result = caseLinearizationInterval(linearizationInterval);
+        if (result == null) result = caseElement(linearizationInterval);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }

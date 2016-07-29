@@ -26,13 +26,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cPropertyStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cConstStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cNodeDefExprParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cRecordDefExprParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cLinearizationDefExprParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cRecordDefExprParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
 		
 		//NamedElement returns aadl2::NamedElement:
-		//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr;
+		//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | LinearizationDefExpr | RecordDefExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr
+		//Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | LinearizationDefExpr | RecordDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Arg
@@ -50,48 +51,55 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//NodeDefExpr
 		public RuleCall getNodeDefExprParserRuleCall_4() { return cNodeDefExprParserRuleCall_4; }
 
+		//LinearizationDefExpr
+		public RuleCall getLinearizationDefExprParserRuleCall_5() { return cLinearizationDefExprParserRuleCall_5; }
+
 		//RecordDefExpr
-		public RuleCall getRecordDefExprParserRuleCall_5() { return cRecordDefExprParserRuleCall_5; }
+		public RuleCall getRecordDefExprParserRuleCall_6() { return cRecordDefExprParserRuleCall_6; }
 	}
 
 	public class ElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Element");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cTypeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cAgreeContractParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cSpecStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cNodeStmtParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cNodeBodyExprParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cEqStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cLinearizationIntervalParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cTypeParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cAgreeContractParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cSpecStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cNodeStmtParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cNodeBodyExprParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cEqStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		
 		//Element returns aadl2::Element:
-		//	Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement;
+		//	Expr | LinearizationInterval | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement;
 		@Override public ParserRule getRule() { return rule; }
 
-		//Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement
+		//Expr | LinearizationInterval | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Expr
 		public RuleCall getExprParserRuleCall_0() { return cExprParserRuleCall_0; }
 
+		//LinearizationInterval
+		public RuleCall getLinearizationIntervalParserRuleCall_1() { return cLinearizationIntervalParserRuleCall_1; }
+
 		//Type
-		public RuleCall getTypeParserRuleCall_1() { return cTypeParserRuleCall_1; }
+		public RuleCall getTypeParserRuleCall_2() { return cTypeParserRuleCall_2; }
 
 		//AgreeContract
-		public RuleCall getAgreeContractParserRuleCall_2() { return cAgreeContractParserRuleCall_2; }
+		public RuleCall getAgreeContractParserRuleCall_3() { return cAgreeContractParserRuleCall_3; }
 
 		//SpecStatement
-		public RuleCall getSpecStatementParserRuleCall_3() { return cSpecStatementParserRuleCall_3; }
+		public RuleCall getSpecStatementParserRuleCall_4() { return cSpecStatementParserRuleCall_4; }
 
 		//NodeStmt
-		public RuleCall getNodeStmtParserRuleCall_4() { return cNodeStmtParserRuleCall_4; }
+		public RuleCall getNodeStmtParserRuleCall_5() { return cNodeStmtParserRuleCall_5; }
 
 		//NodeBodyExpr
-		public RuleCall getNodeBodyExprParserRuleCall_5() { return cNodeBodyExprParserRuleCall_5; }
+		public RuleCall getNodeBodyExprParserRuleCall_6() { return cNodeBodyExprParserRuleCall_6; }
 
 		//EqStatement
-		public RuleCall getEqStatementParserRuleCall_6() { return cEqStatementParserRuleCall_6; }
+		public RuleCall getEqStatementParserRuleCall_7() { return cEqStatementParserRuleCall_7; }
 	}
 
 	public class AnnexLibraryElements extends AbstractParserRuleElementFinder {
@@ -268,9 +276,10 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cConstStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
 		private final RuleCall cEqStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
 		private final RuleCall cAssignStatementParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
-		private final RuleCall cFnDefExprParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
-		private final RuleCall cNodeDefExprParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
-		private final RuleCall cRecordDefExprParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
+		private final RuleCall cLinearizationDefExprParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final RuleCall cFnDefExprParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
+		private final RuleCall cNodeDefExprParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
+		private final RuleCall cRecordDefExprParserRuleCall_17 = (RuleCall)cAlternatives.eContents().get(17);
 		
 		//SpecStatement:
 		//	{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr
@@ -278,7 +287,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	{ParamStatement} "parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" |
 		//	{LiftStatement} "lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":"
 		//	expr=Expr ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement
-		//	| FnDefExpr | NodeDefExpr | RecordDefExpr;
+		//	| LinearizationDefExpr | FnDefExpr | NodeDefExpr | RecordDefExpr;
 		@Override public ParserRule getRule() { return rule; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";" | {GuaranteeStatement} "guarantee" str=STRING ":" expr=Expr ";"
@@ -286,7 +295,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//{ParamStatement} "parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" |
 		//{LiftStatement} "lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":"
 		//expr=Expr ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement |
-		//FnDefExpr | NodeDefExpr | RecordDefExpr
+		//LinearizationDefExpr | FnDefExpr | NodeDefExpr | RecordDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{AssumeStatement} "assume" str=STRING ":" expr=Expr ";"
@@ -514,14 +523,17 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//AssignStatement
 		public RuleCall getAssignStatementParserRuleCall_13() { return cAssignStatementParserRuleCall_13; }
 
+		//LinearizationDefExpr
+		public RuleCall getLinearizationDefExprParserRuleCall_14() { return cLinearizationDefExprParserRuleCall_14; }
+
 		//FnDefExpr
-		public RuleCall getFnDefExprParserRuleCall_14() { return cFnDefExprParserRuleCall_14; }
+		public RuleCall getFnDefExprParserRuleCall_15() { return cFnDefExprParserRuleCall_15; }
 
 		//NodeDefExpr
-		public RuleCall getNodeDefExprParserRuleCall_15() { return cNodeDefExprParserRuleCall_15; }
+		public RuleCall getNodeDefExprParserRuleCall_16() { return cNodeDefExprParserRuleCall_16; }
 
 		//RecordDefExpr
-		public RuleCall getRecordDefExprParserRuleCall_16() { return cRecordDefExprParserRuleCall_16; }
+		public RuleCall getRecordDefExprParserRuleCall_17() { return cRecordDefExprParserRuleCall_17; }
 	}
 
 	public class SynchStatementElements extends AbstractParserRuleElementFinder {
@@ -852,25 +864,25 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	public class CallDefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "CallDef");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cFnDefExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cNodeDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cLinearizationDefExprParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cLinearizationDefExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cFnDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cNodeDefExprParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//CallDef:
-		//	FnDefExpr | NodeDefExpr | LinearizationDefExpr;
+		//	LinearizationDefExpr | FnDefExpr | NodeDefExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//FnDefExpr | NodeDefExpr | LinearizationDefExpr
+		//LinearizationDefExpr | FnDefExpr | NodeDefExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
+		//LinearizationDefExpr
+		public RuleCall getLinearizationDefExprParserRuleCall_0() { return cLinearizationDefExprParserRuleCall_0; }
+
 		//FnDefExpr
-		public RuleCall getFnDefExprParserRuleCall_0() { return cFnDefExprParserRuleCall_0; }
+		public RuleCall getFnDefExprParserRuleCall_1() { return cFnDefExprParserRuleCall_1; }
 
 		//NodeDefExpr
-		public RuleCall getNodeDefExprParserRuleCall_1() { return cNodeDefExprParserRuleCall_1; }
-
-		//LinearizationDefExpr
-		public RuleCall getLinearizationDefExprParserRuleCall_2() { return cLinearizationDefExprParserRuleCall_2; }
+		public RuleCall getNodeDefExprParserRuleCall_2() { return cNodeDefExprParserRuleCall_2; }
 	}
 
 	public class PropertyStatementElements extends AbstractParserRuleElementFinder {
@@ -2237,20 +2249,20 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cOpDivKeyword_1_0_0_1_0_2 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(2);
 		private final Keyword cOpModKeyword_1_0_0_1_0_3 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(3);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cRightUnaryExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		private final RuleCall cRightPowerExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		////todo remove div
 		//MultDivExpr returns Expr:
-		//	PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*;
+		//	PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=PowerExpr)*;
 		@Override public ParserRule getRule() { return rule; }
 
-		//PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*
+		//PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=PowerExpr)*
 		public Group getGroup() { return cGroup; }
 
 		//PowerExpr
 		public RuleCall getPowerExprParserRuleCall_0() { return cPowerExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*
+		//(=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=PowerExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
 		//=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod"))
@@ -2280,11 +2292,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"mod"
 		public Keyword getOpModKeyword_1_0_0_1_0_3() { return cOpModKeyword_1_0_0_1_0_3; }
 
-		//right=UnaryExpr
+		//right=PowerExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
 
-		//UnaryExpr
-		public RuleCall getRightUnaryExprParserRuleCall_1_1_0() { return cRightUnaryExprParserRuleCall_1_1_0; }
+		//PowerExpr
+		public RuleCall getRightPowerExprParserRuleCall_1_1_0() { return cRightPowerExprParserRuleCall_1_1_0; }
 	}
 
 	public class PowerExprElements extends AbstractParserRuleElementFinder {
@@ -3262,7 +3274,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//NamedElement returns aadl2::NamedElement:
-	//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | RecordDefExpr;
+	//	Arg | FnDefExpr | PropertyStatement | ConstStatement | NodeDefExpr | LinearizationDefExpr | RecordDefExpr;
 	public NamedElementElements getNamedElementAccess() {
 		return pNamedElement;
 	}
@@ -3272,7 +3284,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Element returns aadl2::Element:
-	//	Expr | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement;
+	//	Expr | LinearizationInterval | Type | AgreeContract | SpecStatement | NodeStmt | NodeBodyExpr | EqStatement;
 	public ElementElements getElementAccess() {
 		return pElement;
 	}
@@ -3337,7 +3349,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	{ParamStatement} "parameter" expr=Expr ":" type=Type ";" | {LemmaStatement} "lemma" str=STRING ":" expr=Expr ";" |
 	//	{LiftStatement} "lift" subcomp=NestedDotID ";" | {ConnectionStatement} "connection" conn=[aadl2::NamedElement] ":"
 	//	expr=Expr ";" | SynchStatement | OrderStatement | PropertyStatement | ConstStatement | EqStatement | AssignStatement
-	//	| FnDefExpr | NodeDefExpr | RecordDefExpr;
+	//	| LinearizationDefExpr | FnDefExpr | NodeDefExpr | RecordDefExpr;
 	public SpecStatementElements getSpecStatementAccess() {
 		return pSpecStatement;
 	}
@@ -3381,7 +3393,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//CallDef:
-	//	FnDefExpr | NodeDefExpr | LinearizationDefExpr;
+	//	LinearizationDefExpr | FnDefExpr | NodeDefExpr;
 	public CallDefElements getCallDefAccess() {
 		return pCallDef;
 	}
@@ -3627,7 +3639,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	////todo remove div
 	//MultDivExpr returns Expr:
-	//	PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=UnaryExpr)*;
+	//	PowerExpr (=> ({BinaryExpr.left=current} op=("*" | "/" | "div" | "mod")) right=PowerExpr)*;
 	public MultDivExprElements getMultDivExprAccess() {
 		return pMultDivExpr;
 	}
