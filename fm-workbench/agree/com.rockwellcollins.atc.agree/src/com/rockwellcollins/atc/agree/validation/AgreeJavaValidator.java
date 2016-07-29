@@ -1389,8 +1389,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			NodeDefExpr nodeDef = (NodeDefExpr) callDef;
 			inDefTypes = typesFromArgs(nodeDef.getArgs());
 			callName = nodeDef.getName();
+		} else if (callDef instanceof LinearizationDefExpr) {
+			LinearizationDefExpr linDef = (LinearizationDefExpr) callDef;
+			inDefTypes = typesFromArgs(linDef.getArgs());
+			callName = linDef.getName();
 		} else {
-			error(fnCall, "Node or Function definition name expected.");
+			error(fnCall, "Node, function or linearization definition name expected.");
 			return;
 		}
 
@@ -1931,24 +1935,40 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		NestedDotID dotId = fnCall.getFn();
 		NamedElement namedEl = getFinalNestId(dotId);
 
-		// extract in/out arguments
-		if (namedEl instanceof FnDefExpr) {
-			FnDefExpr fnDef = (FnDefExpr) namedEl;
-			return getAgreeType(fnDef.getType());
-		} else if (namedEl instanceof NodeDefExpr) {
-			NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
-			List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
-			if (outDefTypes.size() == 1) {
-				return outDefTypes.get(0);
+		if (isInLinearizationBody(fnCall)) {
+			// extract in/out arguments
+			if (namedEl instanceof FnDefExpr || namedEl instanceof NodeDefExpr) {
+				error(fnCall, "Calls to AGREE nodes and functions not allowed in linearization bodies");
+				return ERROR;
+			} else if (namedEl instanceof LinearizationDefExpr) {
+				return REAL;
 			} else {
-				error(fnCall,
-						"Nodes embedded in expressions must have exactly one return value." + "  Node "
-								+ nodeDef.getName() + " contains " + outDefTypes.size() + " return values");
+				error(fnCall, "Node, function or linearization definition name expected.");
 				return ERROR;
 			}
+
 		} else {
-			error(fnCall, "Node or Function definition name expected.");
-			return ERROR;
+			// extract in/out arguments
+			if (namedEl instanceof FnDefExpr) {
+				FnDefExpr fnDef = (FnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
+			} else if (namedEl instanceof NodeDefExpr) {
+				NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
+				List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
+				if (outDefTypes.size() == 1) {
+					return outDefTypes.get(0);
+				} else {
+					error(fnCall,
+							"Nodes embedded in expressions must have exactly one return value." + "  Node "
+									+ nodeDef.getName() + " contains " + outDefTypes.size() + " return values");
+					return ERROR;
+				}
+			} else if (namedEl instanceof LinearizationDefExpr) {
+				return REAL;
+			} else {
+				error(fnCall, "Node, function or linearization definition name expected.");
+				return ERROR;
+			}
 		}
 	}
 
@@ -1979,6 +1999,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		case "/":
 		case "mod":
 		case "div":
+		case "^":
 			return typeLeft;
 		}
 
