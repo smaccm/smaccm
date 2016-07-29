@@ -89,14 +89,8 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 	@Override
 	public AgreeConnection visit(AgreeConnection e) {
 		AgreeNode sourceNode = visitedNodes.get(e.sourceNode);
-		if (sourceNode == null) {
-			throw new AgreeException("Encountered unexpected connection path");
-		}
 
 		AgreeNode destinationNode = visitedNodes.get(e.destinationNode);
-		if (destinationNode == null) {
-			throw new AgreeException("Encountered unexpected connection path");
-		}
 
 		String sourceVarName = e.sourceVarName;
 		String destinationVarName = e.destinationVarName;
