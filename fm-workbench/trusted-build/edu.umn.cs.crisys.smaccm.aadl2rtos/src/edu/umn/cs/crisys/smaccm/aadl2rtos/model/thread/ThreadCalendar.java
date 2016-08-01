@@ -8,6 +8,7 @@ import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 /**
  * @author Whalen
@@ -15,10 +16,11 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
  */
 public class ThreadCalendar {
 
+  Model m; 
   List<InputPeriodicPort> periodicDispatchers = new ArrayList<InputPeriodicPort>();
   
-  public ThreadCalendar() {
-    
+  public ThreadCalendar(Model m) {
+    this.m = m;
   }
   
   public void addPeriodicPort(InputPeriodicPort d) {
@@ -27,6 +29,10 @@ public class ThreadCalendar {
   
   public List<InputPeriodicPort> getPeriodicDispatchers() {
     return periodicDispatchers;
+  }
+  
+  public Model getModel() {
+	  return m;
   }
   
   public boolean hasDispatchers() {return !periodicDispatchers.isEmpty(); }

@@ -95,6 +95,24 @@ public class ThreadCalendarNames {
     return Integer.toString(c.getGreatestCommonDivisorInMilliseconds());
   }
   
+  public String getHzTickRate() { 
+	  // HACK for QEMU (simulator) target for VxWorks
+	  if (c.getModel().getHWTarget().equalsIgnoreCase("QEMU")) {
+		  return Integer.toString(100);
+	  } else {
+		  return Integer.toString(1000);
+	  }
+  }
+  
+  public String getMsPerTick() {
+	  // HACK for QEMU (simulator) target for VxWorks
+	  if (c.getModel().getHWTarget().equalsIgnoreCase("QEMU")) {
+		 return Integer.toString(10);  
+	  } else {
+		  return Integer.toString(1); 
+	  }
+  }
+  
   public String getPriority() {
     return "150";
   }

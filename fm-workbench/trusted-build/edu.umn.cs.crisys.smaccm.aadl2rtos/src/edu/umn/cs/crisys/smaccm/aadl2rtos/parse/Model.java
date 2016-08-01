@@ -64,7 +64,7 @@ public class Model {
 	// Implementation objects: external.
 	List<ThreadImplementation> threadImplementationList = new ArrayList<ThreadImplementation>();
 	List<SharedData> sharedDataList = new ArrayList<SharedData>();
-	ThreadCalendar threadCalendar = new ThreadCalendar();
+	ThreadCalendar threadCalendar = new ThreadCalendar(this);
 	Set<String> sourceFiles = new HashSet<String>();
 	List<String> libraryFiles = new ArrayList<String>(); 	
 
