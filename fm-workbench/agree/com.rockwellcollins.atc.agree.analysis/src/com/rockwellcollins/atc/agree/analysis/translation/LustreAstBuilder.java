@@ -116,9 +116,19 @@ public class LustreAstBuilder {
                 // expressions with an
                 // equals operator. We will need to removing their corresponding
                 // variable
-                // from the inputs and add them to the local variables
-                BinaryExpr binExpr = (BinaryExpr) statement.expr;
-                IdExpr varId = (IdExpr) binExpr.left;
+				// from the inputs and add them to the local variables
+            	BinaryExpr binExpr;
+            	IdExpr varId;
+				try {
+					binExpr = (BinaryExpr) statement.expr;
+					varId = (IdExpr) binExpr.left;
+				} catch (ClassCastException e) {
+					//some equation variables are assertions for
+					//subrange types. do not translate these to
+					//local equations. Just add them to assertions
+					assertions.add(statement.expr);
+					continue;
+				}
 
                 boolean found = false;
                 int index;
