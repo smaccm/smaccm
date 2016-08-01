@@ -1,7 +1,8 @@
 package MissionSoftware
 public
 	with SMACCM_SYS;
-	with MissionSubprograms;
+	with SMACCM_DATA;
+  with Base_Types;
 
 system top
 end top;
@@ -11,7 +12,7 @@ system implementation top.i
 		proc : process MissionSoftware.i;
 	properties
 		SMACCM_SYS::OS => CAmkES;
-		SMACCM_SYS::HW => QEMU;
+		SMACCM_SYS::HW => ODROID;
 end top.i;
 	
 process MissionSoftware
@@ -19,228 +20,894 @@ end MissionSoftware;
 
 process implementation MissionSoftware.i
 	subcomponents
-		uart : thread UART;
-		uart_rec_mon : thread UART_Receive_Monitor;
-    uart_send_mon : thread UART_Send_Monitor;
-		input : thread Input;
-		input_mon : thread Input_Monitor;
+		uart_driver : thread UART_driver;
+		decrypt : thread Decrypt; 
+        encrypt : thread Encrypt;
 		server : thread Server;
-		output : thread Output;
-		output_mon : thread Output_Monitor;
-		pproxy : thread PixhawkProxy;
-		pproxy_mon : thread PixhawkProxy_Monitor;
-		can : thread CAN;
-		can_mon : thread CAN_Monitor;
-		vm : thread VM;
-		vm_mon : thread VM_Monitor;
-
+		can_framing : thread CAN_framing;
+		can_driver : thread CAN_driver;
+		virtual_machine : thread virtual_machine;
+		
 	connections
-		uart_to_rec_mon : subprogram group access uart.receive_interface <-> uart_rec_mon.interface;
-		uart_mon_to_input : subprogram group access input.uart <-> uart_rec_mon.interface;
-		input_to_mon : subprogram group access input.to_svr <-> input_mon.interface;
+		recv_rx : port uart_driver.send_packet -> decrypt.get_packet;
+		recv_resp : port uart_driver.recv_resp -> encrypt.recv_response;
+		send_translate : port encrypt.send_packet -> uart_driver.get_packet;
+		decrypt_conn : port decrypt.send_gidl -> server.get_input;
+		send_can : port server.send_can -> can_framing.from_server;
+		get_can : port can_framing.to_server -> server.get_can;
+		encrypt_conn : port server.send_output -> encrypt.get_gidl;
 		
-		input_mon_to_svr : subprogram group access server.from_input <-> input_mon.interface;
-		vm_mon_to_svr : subprogram group access server.camera_data <-> vm_mon.interface;
-		proxy_to_svr : subprogram group access server.pixhawk_data <-> pproxy_mon.interface;
-		svr_to_output_mon : subprogram group access server.output_data <-> output_mon.interface;
+		-- can framing to can driver
+		frag_req : port can_framing.fragment_request -> can_driver.send;
+		frag_com : port can_framing.fragment_complete -> can_driver.send;
+		status : port can_driver.status -> can_framing.get_status;
+		reasm : port can_driver.receive -> can_framing.fragement_reasembly;
 		
-		vm_mon_to_vm : subprogram group access vm.camera_data <-> vm_mon.interface;
-		
-		proxy_to_proxy_mon : subprogram group access pproxy.to_server <-> pproxy_mon.interface;
-		proxy_to_can_mon : subprogram group access pproxy.to_and_from_can <-> can_mon.interface;
-		
-		can_to_can_proxy : subprogram group access can.to_and_from <-> can_mon.interface;
-		
-		output_mon_to_output: subprogram group access output.pixhawk_state <-> output_mon.interface;
-		output_to_uart_mon : subprogram group access output.uart <-> uart_send_mon.interface;
-		uart_send_mon_to_uart : subprogram group access uart.send_interface <-> uart_send_mon.interface;
-		
+    cam : port virtual_machine.camera_data -> server.camera_data;
+	
 end MissionSoftware.i;
 
-thread UART
+thread UART_driver
 	features
-		receive_interface : requires subprogram group access MissionSubprograms::UART_group;
-    send_interface : requires subprogram group access MissionSubprograms::UART_group;
+		recv_resp : out event data port Base_Types::Boolean;
+		get_packet : in event data port SMACCM_DATA::UartPacket.i;
+        send_packet : out event data port SMACCM_DATA::UartPacket.i; 
 	properties
 	    SMACCM_SYS::Is_External => true;
 	    Dispatch_Protocol => Sporadic;
 	    SMACCM_SYS::Thread_Type => Active;
 	    Compute_Execution_Time => 10 us .. 100 us;
-	    Source_Text => ();
+      SMACCM_SYS::Sends_Events_To => "{{}}";
+	    Source_Text => ("usercode/UART_driver.c");
 	    Period => 100ms;
-end UART;
-
-thread UART_Send_Monitor
-  features
-    interface : provides subprogram group access MissionSubprograms::UART_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-      Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/uart_send_monitor.c");
-end UART_Send_Monitor;
-
-thread UART_Receive_Monitor
-  features
-    interface : provides subprogram group access MissionSubprograms::UART_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-      Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/uart_receive_monitor.c");
-end UART_Receive_Monitor;
+end UART_driver;
 	
-thread Input
+thread Decrypt
 	features
 		--not sure what the dimension of this array should be
-		uart : requires subprogram group access MissionSubprograms::UART_group;
-		to_svr : requires subprogram group access MissionSubprograms::Server_Inputs;
-	properties
-		Dispatch_Protocol => Periodic;
-		SMACCM_SYS::Thread_Type => Active;
-		Priority => 1;
-		Stack_Size => 1024 Bytes;
-	    Compute_Execution_Time => 10 us .. 100 us;
-	    Period => 100ms;
-	    Source_Text => ("usercode/input.c");
-	    Compute_Entrypoint_Source_Text => "entry";
-end Input;
-
-thread Input_Monitor
-  features
-    interface : provides subprogram group access MissionSubprograms::Server_Inputs;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-      Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/input_monitor.c");
-end Input_Monitor;
-	
-thread Server
-	features
-		from_input : requires subprogram group access MissionSubprograms::Server_Inputs;
-		camera_data : requires subprogram group access MissionSubprograms::Camera_group;
-		pixhawk_data : requires subprogram group access MissionSubprograms::Pixhawk_group;
-		output_data : requires subprogram group access MissionSubprograms::Server_Outputs;
+		get_packet : in event data port SMACCM_DATA::UartPacket.i;
+		send_gidl: out event data port SMACCM_DATA::Array.U8_80;
 	properties
 		Dispatch_Protocol => Periodic;
 		SMACCM_SYS::Thread_Type => Active;
 		Priority => 1;
 		Stack_Size => 1024 Bytes;
 	  Compute_Execution_Time => 10 us .. 100 us;
-	  Source_Text => ("usercode/server.c");
 	  Period => 100ms;
-	    --we should not need the output_state_sem anyway since the output
-	    --thread should just run with the RPC from the server
-	    --SMACCM_SYS::External_Semaphore_List => ("pixhawk_state_sem", "output_state_sem");
-	    
+	  Source_Text => ( "usercode/accelerometer_sample_types.c",
+ "usercode/accelerometer_sample_types.h",
+ "usercode/alt_control_debug_types.c",
+ "usercode/alt_control_debug_types.h",
+ "usercode/arming_mode_types.c",
+ "usercode/arming_mode_types.h",
+ "usercode/arming_status_types.c",
+ "usercode/arming_status_types.h",
+ "usercode/att_control_debug_types.c",
+ "usercode/att_control_debug_types.h",
+ "usercode/barometer_sample_types.c",
+ "usercode/barometer_sample_types.h",
+ "usercode/camera_target_types.c",
+ "usercode/camera_target_types.h",
+ "usercode/canDriverTypes.c",
+ "usercode/canDriverTypes.h",
+ "usercode/commsecDecodeState_monitor.c",
+ "usercode/commsecDecodeState_monitor.h",
+ "usercode/commsecDecodeStaticKey_monitor.c",
+ "usercode/commsecDecodeStaticKey_monitor.h",
+ "usercode/control_law_types.c",
+ "usercode/control_law_types.h",
+ "usercode/control_modes_types.c",
+ "usercode/control_modes_types.h",
+ "usercode/control_output_types.c",
+ "usercode/control_output_types.h",
+ "usercode/control_setpoint_types.c",
+ "usercode/control_setpoint_types.h",
+ "usercode/control_source_types.c",
+ "usercode/control_source_types.h",
+ "usercode/frame_datalink_decode_monitor.c",
+ "usercode/frame_datalink_decode_monitor.h",
+ "usercode/frameBuffer_monitor.c",
+ "usercode/frameBuffer_monitor.h",
+ "usercode/gps_fix_types.c",
+ "usercode/gps_fix_types.h",
+ "usercode/gyroscope_sample_types.c",
+ "usercode/gyroscope_sample_types.h",
+ "usercode/heartbeat_types.c",
+ "usercode/heartbeat_types.h",
+ "usercode/hx_cyphertext.c",
+ "usercode/hx_cyphertext.h",
+ "usercode/hxstream_state_module.c",
+ "usercode/hxstream_state_module.h",
+ "usercode/input_UART_hw_UART_in_get_packet_monitor.c",
+ "usercode/input_UART_hw_UART_in_get_packet_monitor.h",
+ "usercode/ivory.c",
+ "usercode/ivory.h",
+ "usercode/ivory_asserts.c",
+ "usercode/ivory_asserts.h",
+ "usercode/ivory_serialize.c",
+ "usercode/ivory_serialize.h",
+ "usercode/ivory_templates.c",
+ "usercode/ivory_templates.h",
+ "usercode/libminitower/include/aes.h",
+ "usercode/libminitower/include/brg_types.h",
+ "usercode/libminitower/include/curve25519-donna.h",
+ "usercode/libminitower/include/ed25519-hash.h",
+ "usercode/libminitower/include/ed25519.h",
+ "usercode/libminitower/include/gcm.h",
+ "usercode/libminitower/include/gec.h",
+ "usercode/libminitower/include/gf128mul.h",
+ "usercode/libminitower/include/ivory_serialize_prim.h",
+ "usercode/magnetometer_sample_types.c",
+ "usercode/magnetometer_sample_types.h",
+ "usercode/output_UART_in_Server_put_pt_data_monitor.c",
+ "usercode/output_UART_in_Server_put_pt_data_monitor.h",
+ "usercode/packed_status_types.c",
+ "usercode/packed_status_types.h",
+ "usercode/pid_config_types.c",
+ "usercode/pid_config_types.h",
+ "usercode/pid_state_types.c",
+ "usercode/pid_state_types.h",
+ "usercode/position_sample_types.c",
+ "usercode/position_sample_types.h",
+ "usercode/px4io_alarms_types.c",
+ "usercode/px4io_alarms_types.h",
+ "usercode/px4io_state_types.c",
+ "usercode/px4io_state_types.h",
+ "usercode/px4io_status_types.c",
+ "usercode/px4io_status_types.h",
+ "usercode/quadcopter_motors_types.c",
+ "usercode/quadcopter_motors_types.h",
+ "usercode/rc_input_types.c",
+ "usercode/rc_input_types.h",
+ "usercode/reboot_magic_types.c",
+ "usercode/reboot_magic_types.h",
+ "usercode/reboot_req_types.c",
+ "usercode/reboot_req_types.h",
+ "usercode/rgb_led_setting_types.c",
+ "usercode/rgb_led_setting_types.h",
+ "usercode/sensors_result_types.c",
+ "usercode/sensors_result_types.h",
+ "usercode/sequence_num_types.c",
+ "usercode/sequence_num_types.h",
+ "usercode/sequence_numbered_accelerometer_sample_types.c",
+ "usercode/sequence_numbered_accelerometer_sample_types.h",
+ "usercode/sequence_numbered_alt_control_debug_types.c",
+ "usercode/sequence_numbered_alt_control_debug_types.h",
+ "usercode/sequence_numbered_arming_status_types.c",
+ "usercode/sequence_numbered_arming_status_types.h",
+ "usercode/sequence_numbered_att_control_debug_types.c",
+ "usercode/sequence_numbered_att_control_debug_types.h",
+ "usercode/sequence_numbered_barometer_sample_types.c",
+ "usercode/sequence_numbered_barometer_sample_types.h",
+ "usercode/sequence_numbered_camera_target_types.c",
+ "usercode/sequence_numbered_camera_target_types.h",
+ "usercode/sequence_numbered_control_law_types.c",
+ "usercode/sequence_numbered_control_law_types.h",
+ "usercode/sequence_numbered_control_modes_types.c",
+ "usercode/sequence_numbered_control_modes_types.h",
+ "usercode/sequence_numbered_control_output_types.c",
+ "usercode/sequence_numbered_control_output_types.h",
+ "usercode/sequence_numbered_control_setpoint_types.c",
+ "usercode/sequence_numbered_control_setpoint_types.h",
+ "usercode/sequence_numbered_float_types.c",
+ "usercode/sequence_numbered_float_types.h",
+ "usercode/sequence_numbered_gyroscope_sample_types.c",
+ "usercode/sequence_numbered_gyroscope_sample_types.h",
+ "usercode/sequence_numbered_magnetometer_sample_types.c",
+ "usercode/sequence_numbered_magnetometer_sample_types.h",
+ "usercode/sequence_numbered_packed_status_types.c",
+ "usercode/sequence_numbered_packed_status_types.h",
+ "usercode/sequence_numbered_pid_config_types.c",
+ "usercode/sequence_numbered_pid_config_types.h",
+ "usercode/sequence_numbered_position_sample_types.c",
+ "usercode/sequence_numbered_position_sample_types.h",
+ "usercode/sequence_numbered_px4io_state_types.c",
+ "usercode/sequence_numbered_px4io_state_types.h",
+ "usercode/sequence_numbered_quadcopter_motors_types.c",
+ "usercode/sequence_numbered_quadcopter_motors_types.h",
+ "usercode/sequence_numbered_rc_input_types.c",
+ "usercode/sequence_numbered_rc_input_types.h",
+ "usercode/sequence_numbered_reboot_req_types.c",
+ "usercode/sequence_numbered_reboot_req_types.h",
+ "usercode/sequence_numbered_rgb_led_setting_types.c",
+ "usercode/sequence_numbered_rgb_led_setting_types.h",
+ "usercode/sequence_numbered_sensors_result_types.c",
+ "usercode/sequence_numbered_sensors_result_types.h",
+ "usercode/sequence_numbered_stab_config_types.c",
+ "usercode/sequence_numbered_stab_config_types.h",
+ "usercode/sequence_numbered_throttle_ui_types.c",
+ "usercode/sequence_numbered_throttle_ui_types.h",
+ "usercode/sequence_numbered_tristate_types.c",
+ "usercode/sequence_numbered_tristate_types.h",
+ "usercode/sequence_numbered_user_input_result_types.c",
+ "usercode/sequence_numbered_user_input_result_types.h",
+ "usercode/sequence_numbered_user_input_types.c",
+ "usercode/sequence_numbered_user_input_types.h",
+ "usercode/sequence_numbered_xyz_calibration_types.c",
+ "usercode/sequence_numbered_xyz_calibration_types.h",
+ "usercode/stab_config_types.c",
+ "usercode/stab_config_types.h",
+ "usercode/throttle_mode_types.c",
+ "usercode/throttle_mode_types.h",
+ "usercode/throttle_ui_types.c",
+ "usercode/throttle_ui_types.h",
+ "usercode/time_micros_types.c",
+ "usercode/time_micros_types.h",
+ "usercode/to_hx_monitor.c",
+ "usercode/to_hx_monitor.h",
+ "usercode/towerCameraVMDeps.c",
+ "usercode/towerCameraVMDeps.h",
+ "usercode/towerUartDeps.c",
+ "usercode/towerUartDeps.h",
+ "usercode/tristate_types.c",
+ "usercode/tristate_types.h",
+ "usercode/UART_hw_UART_in_intermon.c",
+ "usercode/UART_hw_UART_in_intermon.h",
+ "usercode/UART_in.c",
+ "usercode/UART_in.h",
+ "usercode/UART_in.c",
+ "usercode/UART_in.h",
+ "usercode/UART_in_Server_intermon.c",
+ "usercode/UART_in_Server_intermon.h",
+ "usercode/user_input_result_types.c",
+ "usercode/user_input_result_types.h",
+ "usercode/user_input_types.c",
+ "usercode/user_input_types.h",
+ "usercode/xyz_calibration_types.c",
+ "usercode/xyz_calibration_types.h",
+ "usercode/xyz_types.c",
+ "usercode/xyz_types.h",
+ "usercode/yaw_mode_types.c",
+ "usercode/yaw_mode_types.h"
+ );
+ SMACCM_SYS::Sends_Events_To => "{{}}";
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+    Initialize_Entrypoint_Source_Text => "component_init";
+	  
+    --SMACCM_SYS::Sends_Events_To => "{{send_gidl 1}}";
+end Decrypt;
+
+thread Encrypt
+  features
+    --not sure what the dimension of this array should be
+    get_gidl: in event data port SMACCM_DATA::Array.U8_80;
+    recv_response: in event data port Base_Types::Boolean;
+    send_packet : out event data port SMACCM_DATA::UartPacket.i;
+  properties
+    Dispatch_Protocol => Periodic;
+    SMACCM_SYS::Thread_Type => Active;
+    Priority => 1;
+    Stack_Size => 1024 Bytes;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Period => 100ms;
+    Source_Text => (
+ "usercode/accelerometer_sample_types.c",
+ "usercode/accelerometer_sample_types.h",
+ "usercode/alt_control_debug_types.c",
+ "usercode/alt_control_debug_types.h",
+ "usercode/arming_mode_types.c",
+ "usercode/arming_mode_types.h",
+ "usercode/arming_status_types.c",
+ "usercode/arming_status_types.h",
+ "usercode/att_control_debug_types.c",
+ "usercode/att_control_debug_types.h",
+ "usercode/barometer_sample_types.c",
+ "usercode/barometer_sample_types.h",
+ "usercode/camera_target_types.c",
+ "usercode/camera_target_types.h",
+ "usercode/canDriverTypes.c",
+ "usercode/canDriverTypes.h",
+ "usercode/commsecEncodeState_monitor.c",
+ "usercode/commsecEncodeState_monitor.h",
+ "usercode/commsecEncodeStaticKey_monitor.c",
+ "usercode/commsecEncodeStaticKey_monitor.h",
+ "usercode/control_law_types.c",
+ "usercode/control_law_types.h",
+ "usercode/control_modes_types.c",
+ "usercode/control_modes_types.h",
+ "usercode/control_output_types.c",
+ "usercode/control_output_types.h",
+ "usercode/control_setpoint_types.c",
+ "usercode/control_setpoint_types.h",
+ "usercode/control_source_types.c",
+ "usercode/control_source_types.h",
+ "usercode/frame_datalink_encode_monitor.c",
+ "usercode/frame_datalink_encode_monitor.h",
+ "usercode/gps_fix_types.c",
+ "usercode/gps_fix_types.h",
+ "usercode/gyroscope_sample_types.c",
+ "usercode/gyroscope_sample_types.h",
+ "usercode/heartbeat_types.c",
+ "usercode/heartbeat_types.h",
+ "usercode/hx_cyphertext.c",
+ "usercode/hx_cyphertext.h",
+ "usercode/hxstream_state_module.c",
+ "usercode/hxstream_state_module.h",
+ "usercode/input_Server_UART_out_get_pt_data_monitor.c",
+ "usercode/input_Server_UART_out_get_pt_data_monitor.h",
+ "usercode/input_UART_hw_UART_out_get_bool_monitor.c",
+ "usercode/input_UART_hw_UART_out_get_bool_monitor.h",
+ "usercode/ivory.c",
+ "usercode/ivory.h",
+ "usercode/ivory_asserts.c",
+ "usercode/ivory_asserts.h",
+ "usercode/ivory_serialize.c",
+ "usercode/ivory_serialize.h",
+ "usercode/ivory_templates.c",
+ "usercode/ivory_templates.h",
+ "usercode/libminitower/include/aes.h",
+ "usercode/libminitower/include/brg_types.h",
+ "usercode/libminitower/include/curve25519-donna.h",
+ "usercode/libminitower/include/ed25519-hash.h",
+ "usercode/libminitower/include/ed25519.h",
+ "usercode/libminitower/include/gcm.h",
+ "usercode/libminitower/include/gec.h",
+ "usercode/libminitower/include/gf128mul.h",
+ "usercode/libminitower/include/ivory_serialize_prim.h",
+ "usercode/magnetometer_sample_types.c",
+ "usercode/magnetometer_sample_types.h",
+ "usercode/output_UART_out_UART_hw_put_packet_monitor.c",
+ "usercode/output_UART_out_UART_hw_put_packet_monitor.h",
+ "usercode/packed_status_types.c",
+ "usercode/packed_status_types.h",
+ "usercode/pid_config_types.c",
+ "usercode/pid_config_types.h",
+ "usercode/pid_state_types.c",
+ "usercode/pid_state_types.h",
+ "usercode/position_sample_types.c",
+ "usercode/position_sample_types.h",
+ "usercode/px4io_alarms_types.c",
+ "usercode/px4io_alarms_types.h",
+ "usercode/px4io_state_types.c",
+ "usercode/px4io_state_types.h",
+ "usercode/px4io_status_types.c",
+ "usercode/px4io_status_types.h",
+ "usercode/quadcopter_motors_types.c",
+ "usercode/quadcopter_motors_types.h",
+ "usercode/rc_input_types.c",
+ "usercode/rc_input_types.h",
+ "usercode/reboot_magic_types.c",
+ "usercode/reboot_magic_types.h",
+ "usercode/reboot_req_types.c",
+ "usercode/reboot_req_types.h",
+ "usercode/rgb_led_setting_types.c",
+ "usercode/rgb_led_setting_types.h",
+ "usercode/sensors_result_types.c",
+ "usercode/sensors_result_types.h",
+ "usercode/sequence_num_types.c",
+ "usercode/sequence_num_types.h",
+ "usercode/sequence_numbered_accelerometer_sample_types.c",
+ "usercode/sequence_numbered_accelerometer_sample_types.h",
+ "usercode/sequence_numbered_alt_control_debug_types.c",
+ "usercode/sequence_numbered_alt_control_debug_types.h",
+ "usercode/sequence_numbered_arming_status_types.c",
+ "usercode/sequence_numbered_arming_status_types.h",
+ "usercode/sequence_numbered_att_control_debug_types.c",
+ "usercode/sequence_numbered_att_control_debug_types.h",
+ "usercode/sequence_numbered_barometer_sample_types.c",
+ "usercode/sequence_numbered_barometer_sample_types.h",
+ "usercode/sequence_numbered_camera_target_types.c",
+ "usercode/sequence_numbered_camera_target_types.h",
+ "usercode/sequence_numbered_control_law_types.c",
+ "usercode/sequence_numbered_control_law_types.h",
+ "usercode/sequence_numbered_control_modes_types.c",
+ "usercode/sequence_numbered_control_modes_types.h",
+ "usercode/sequence_numbered_control_output_types.c",
+ "usercode/sequence_numbered_control_output_types.h",
+ "usercode/sequence_numbered_control_setpoint_types.c",
+ "usercode/sequence_numbered_control_setpoint_types.h",
+ "usercode/sequence_numbered_float_types.c",
+ "usercode/sequence_numbered_float_types.h",
+ "usercode/sequence_numbered_gyroscope_sample_types.c",
+ "usercode/sequence_numbered_gyroscope_sample_types.h",
+ "usercode/sequence_numbered_magnetometer_sample_types.c",
+ "usercode/sequence_numbered_magnetometer_sample_types.h",
+ "usercode/sequence_numbered_packed_status_types.c",
+ "usercode/sequence_numbered_packed_status_types.h",
+ "usercode/sequence_numbered_pid_config_types.c",
+ "usercode/sequence_numbered_pid_config_types.h",
+ "usercode/sequence_numbered_position_sample_types.c",
+ "usercode/sequence_numbered_position_sample_types.h",
+ "usercode/sequence_numbered_px4io_state_types.c",
+ "usercode/sequence_numbered_px4io_state_types.h",
+ "usercode/sequence_numbered_quadcopter_motors_types.c",
+ "usercode/sequence_numbered_quadcopter_motors_types.h",
+ "usercode/sequence_numbered_rc_input_types.c",
+ "usercode/sequence_numbered_rc_input_types.h",
+ "usercode/sequence_numbered_reboot_req_types.c",
+ "usercode/sequence_numbered_reboot_req_types.h",
+ "usercode/sequence_numbered_rgb_led_setting_types.c",
+ "usercode/sequence_numbered_rgb_led_setting_types.h",
+ "usercode/sequence_numbered_sensors_result_types.c",
+ "usercode/sequence_numbered_sensors_result_types.h",
+ "usercode/sequence_numbered_stab_config_types.c",
+ "usercode/sequence_numbered_stab_config_types.h",
+ "usercode/sequence_numbered_throttle_ui_types.c",
+ "usercode/sequence_numbered_throttle_ui_types.h",
+ "usercode/sequence_numbered_tristate_types.c",
+ "usercode/sequence_numbered_tristate_types.h",
+ "usercode/sequence_numbered_user_input_result_types.c",
+ "usercode/sequence_numbered_user_input_result_types.h",
+ "usercode/sequence_numbered_user_input_types.c",
+ "usercode/sequence_numbered_user_input_types.h",
+ "usercode/sequence_numbered_xyz_calibration_types.c",
+ "usercode/sequence_numbered_xyz_calibration_types.h",
+ "usercode/Server_UART_out_intermon.c",
+ "usercode/Server_UART_out_intermon.h",
+ "usercode/stab_config_types.c",
+ "usercode/stab_config_types.h",
+ "usercode/throttle_mode_types.c",
+ "usercode/throttle_mode_types.h",
+ "usercode/throttle_ui_types.c",
+ "usercode/throttle_ui_types.h",
+ "usercode/time_micros_types.c",
+ "usercode/time_micros_types.h",
+ "usercode/towerCameraVMDeps.c",
+ "usercode/towerCameraVMDeps.h",
+ "usercode/towerUartDeps.c",
+ "usercode/towerUartDeps.h",
+ "usercode/tristate_types.c",
+ "usercode/tristate_types.h",
+ "usercode/UART_hw_UART_out_intermon.c",
+ "usercode/UART_hw_UART_out_intermon.h",
+ "usercode/UART_out.c",
+ "usercode/UART_out.h",
+ "usercode/UART_out.c",
+ "usercode/UART_out.h",
+ "usercode/UART_out_UART_hw_intermon.c",
+ "usercode/UART_out_UART_hw_intermon.h",
+ "usercode/user_input_result_types.c",
+ "usercode/user_input_result_types.h",
+ "usercode/user_input_types.c",
+ "usercode/user_input_types.h",
+ "usercode/xyz_calibration_types.c",
+ "usercode/xyz_calibration_types.h",
+ "usercode/xyz_types.c",
+ "usercode/xyz_types.h",
+ "usercode/yaw_mode_types.c",
+ "usercode/yaw_mode_types.h"
+ );
+ 
+	SMACCM_SYS::Sends_Events_To => "{{}}";
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+    Initialize_Entrypoint_Source_Text => "component_init";
+    --SMACCM_SYS::Sends_Events_To => "{{send_packet 1}, {}}";
+end Encrypt;
+
+thread Server
+	features  
+    send_output : out event data port SMACCM_DATA::Array.U8_80;
+    send_can : out event data port SMACCM_DATA::Array.U8_80;
+    get_input : in event data port SMACCM_DATA::Array.U8_80;
+    get_can : in event data port SMACCM_DATA::Array.U8_80;  
+    camera_data : in data port SMACCM_DATA::camera_data.i;
+	properties
+		Dispatch_Protocol => Periodic;
+		SMACCM_SYS::Thread_Type => Active;
+		Priority => 1;
+		Stack_Size => 1024 Bytes;
+	  Compute_Execution_Time => 10 us .. 100 us;
+	  Source_Text => ( "usercode/accelerometer_sample_types.c",
+ "usercode/accelerometer_sample_types.h",
+ "usercode/alt_control_debug_types.c",
+ "usercode/alt_control_debug_types.h",
+ "usercode/arming_mode_types.c",
+ "usercode/arming_mode_types.h",
+ "usercode/arming_status_types.c",
+ "usercode/arming_status_types.h",
+ "usercode/att_control_debug_types.c",
+ "usercode/att_control_debug_types.h",
+ "usercode/barometer_sample_types.c",
+ "usercode/barometer_sample_types.h",
+ "usercode/camera_target_types.c",
+ "usercode/camera_target_types.h",
+ "usercode/Camera_VM_Server_intermon.c",
+ "usercode/Camera_VM_Server_intermon.h",
+ "usercode/CAN_Server_intermon.c",
+ "usercode/CAN_Server_intermon.h",
+ "usercode/canDriverTypes.c",
+ "usercode/canDriverTypes.h",
+ "usercode/control_law_types.c",
+ "usercode/control_law_types.h",
+ "usercode/control_modes_types.c",
+ "usercode/control_modes_types.h",
+ "usercode/control_output_types.c",
+ "usercode/control_output_types.h",
+ "usercode/control_setpoint_types.c",
+ "usercode/control_setpoint_types.h",
+ "usercode/control_source_types.c",
+ "usercode/control_source_types.h",
+ "usercode/controllableVehicleConsumerInput_monitor.c",
+ "usercode/controllableVehicleConsumerInput_monitor.h",
+ "usercode/controllableVehicleConsumerOutput_monitor.c",
+ "usercode/controllableVehicleConsumerOutput_monitor.h",
+ "usercode/controllableVehicleProducerInput_monitor.c",
+ "usercode/controllableVehicleProducerInput_monitor.h",
+ "usercode/controllableVehicleProducerOutput_monitor.c",
+ "usercode/controllableVehicleProducerOutput_monitor.h",
+ "usercode/gps_fix_types.c",
+ "usercode/gps_fix_types.h",
+ "usercode/gyroscope_sample_types.c",
+ "usercode/gyroscope_sample_types.h",
+ "usercode/heartbeat_types.c",
+ "usercode/heartbeat_types.h",
+ "usercode/hx_cyphertext.c",
+ "usercode/hx_cyphertext.h",
+ "usercode/input_Camera_VM_Server_get_camera_data_monitor.c",
+ "usercode/input_Camera_VM_Server_get_camera_data_monitor.h",
+ "usercode/input_CAN_Server_get_pt_data_monitor.c",
+ "usercode/input_CAN_Server_get_pt_data_monitor.h",
+ "usercode/input_UART_in_Server_get_pt_data_monitor.c",
+ "usercode/input_UART_in_Server_get_pt_data_monitor.h",
+ "usercode/ivory.c",
+ "usercode/ivory.h",
+ "usercode/ivory_asserts.c",
+ "usercode/ivory_asserts.h",
+ "usercode/ivory_serialize.c",
+ "usercode/ivory_serialize.h",
+ "usercode/ivory_templates.c",
+ "usercode/ivory_templates.h",
+ "usercode/libminitower/include/ivory_serialize_prim.h",
+ "usercode/magnetometer_sample_types.c",
+ "usercode/magnetometer_sample_types.h",
+ "usercode/output_Server_CAN_put_pt_data_monitor.c",
+ "usercode/output_Server_CAN_put_pt_data_monitor.h",
+ "usercode/output_Server_UART_out_put_pt_data_monitor.c",
+ "usercode/output_Server_UART_out_put_pt_data_monitor.h",
+ "usercode/packed_status_types.c",
+ "usercode/packed_status_types.h",
+ "usercode/periodic_camera_injector_monitor.c",
+ "usercode/periodic_camera_injector_monitor.h",
+ "usercode/pid_config_types.c",
+ "usercode/pid_config_types.h",
+ "usercode/pid_state_types.c",
+ "usercode/pid_state_types.h",
+ "usercode/position_sample_types.c",
+ "usercode/position_sample_types.h",
+ "usercode/px4io_alarms_types.c",
+ "usercode/px4io_alarms_types.h",
+ "usercode/px4io_state_types.c",
+ "usercode/px4io_state_types.h",
+ "usercode/px4io_status_types.c",
+ "usercode/px4io_status_types.h",
+ "usercode/quadcopter_motors_types.c",
+ "usercode/quadcopter_motors_types.h",
+ "usercode/rc_input_types.c",
+ "usercode/rc_input_types.h",
+ "usercode/reboot_magic_types.c",
+ "usercode/reboot_magic_types.h",
+ "usercode/reboot_req_types.c",
+ "usercode/reboot_req_types.h",
+ "usercode/rgb_led_setting_types.c",
+ "usercode/rgb_led_setting_types.h",
+ "usercode/sensors_result_types.c",
+ "usercode/sensors_result_types.h",
+ "usercode/sequence_num_types.c",
+ "usercode/sequence_num_types.h",
+ "usercode/sequence_numbered_accelerometer_sample_types.c",
+ "usercode/sequence_numbered_accelerometer_sample_types.h",
+ "usercode/sequence_numbered_alt_control_debug_types.c",
+ "usercode/sequence_numbered_alt_control_debug_types.h",
+ "usercode/sequence_numbered_arming_status_types.c",
+ "usercode/sequence_numbered_arming_status_types.h",
+ "usercode/sequence_numbered_att_control_debug_types.c",
+ "usercode/sequence_numbered_att_control_debug_types.h",
+ "usercode/sequence_numbered_barometer_sample_types.c",
+ "usercode/sequence_numbered_barometer_sample_types.h",
+ "usercode/sequence_numbered_camera_target_types.c",
+ "usercode/sequence_numbered_camera_target_types.h",
+ "usercode/sequence_numbered_control_law_types.c",
+ "usercode/sequence_numbered_control_law_types.h",
+ "usercode/sequence_numbered_control_modes_types.c",
+ "usercode/sequence_numbered_control_modes_types.h",
+ "usercode/sequence_numbered_control_output_types.c",
+ "usercode/sequence_numbered_control_output_types.h",
+ "usercode/sequence_numbered_control_setpoint_types.c",
+ "usercode/sequence_numbered_control_setpoint_types.h",
+ "usercode/sequence_numbered_float_types.c",
+ "usercode/sequence_numbered_float_types.h",
+ "usercode/sequence_numbered_gyroscope_sample_types.c",
+ "usercode/sequence_numbered_gyroscope_sample_types.h",
+ "usercode/sequence_numbered_magnetometer_sample_types.c",
+ "usercode/sequence_numbered_magnetometer_sample_types.h",
+ "usercode/sequence_numbered_packed_status_types.c",
+ "usercode/sequence_numbered_packed_status_types.h",
+ "usercode/sequence_numbered_pid_config_types.c",
+ "usercode/sequence_numbered_pid_config_types.h",
+ "usercode/sequence_numbered_position_sample_types.c",
+ "usercode/sequence_numbered_position_sample_types.h",
+ "usercode/sequence_numbered_px4io_state_types.c",
+ "usercode/sequence_numbered_px4io_state_types.h",
+ "usercode/sequence_numbered_quadcopter_motors_types.c",
+ "usercode/sequence_numbered_quadcopter_motors_types.h",
+ "usercode/sequence_numbered_rc_input_types.c",
+ "usercode/sequence_numbered_rc_input_types.h",
+ "usercode/sequence_numbered_reboot_req_types.c",
+ "usercode/sequence_numbered_reboot_req_types.h",
+ "usercode/sequence_numbered_rgb_led_setting_types.c",
+ "usercode/sequence_numbered_rgb_led_setting_types.h",
+ "usercode/sequence_numbered_sensors_result_types.c",
+ "usercode/sequence_numbered_sensors_result_types.h",
+ "usercode/sequence_numbered_stab_config_types.c",
+ "usercode/sequence_numbered_stab_config_types.h",
+ "usercode/sequence_numbered_throttle_ui_types.c",
+ "usercode/sequence_numbered_throttle_ui_types.h",
+ "usercode/sequence_numbered_tristate_types.c",
+ "usercode/sequence_numbered_tristate_types.h",
+ "usercode/sequence_numbered_user_input_result_types.c",
+ "usercode/sequence_numbered_user_input_result_types.h",
+ "usercode/sequence_numbered_user_input_types.c",
+ "usercode/sequence_numbered_user_input_types.h",
+ "usercode/sequence_numbered_xyz_calibration_types.c",
+ "usercode/sequence_numbered_xyz_calibration_types.h",
+ "usercode/Server.c",
+ "usercode/Server.h",
+ "usercode/Server.c",
+ "usercode/Server.h",
+ "usercode/Server_CAN_intermon.c",
+ "usercode/Server_CAN_intermon.h",
+ "usercode/Server_UART_out_intermon.c",
+ "usercode/Server_UART_out_intermon.h",
+ "usercode/stab_config_types.c",
+ "usercode/stab_config_types.h",
+ "usercode/throttle_mode_types.c",
+ "usercode/throttle_mode_types.h",
+ "usercode/throttle_ui_types.c",
+ "usercode/throttle_ui_types.h",
+ "usercode/time_micros_types.c",
+ "usercode/time_micros_types.h",
+ "usercode/towerCameraVMDeps.c",
+ "usercode/towerCameraVMDeps.h",
+ "usercode/towerUartDeps.c",
+ "usercode/towerUartDeps.h",
+ "usercode/tristate_types.c",
+ "usercode/tristate_types.h",
+ "usercode/UART_in_Server_intermon.c",
+ "usercode/UART_in_Server_intermon.h",
+ "usercode/user_input_result_types.c",
+ "usercode/user_input_result_types.h",
+ "usercode/user_input_types.c",
+ "usercode/user_input_types.h",
+ "usercode/xyz_calibration_types.c",
+ "usercode/xyz_calibration_types.h",
+ "usercode/xyz_types.c",
+ "usercode/xyz_types.h",
+ "usercode/yaw_mode_types.c",
+ "usercode/yaw_mode_types.h");
+    SMACCM_SYS::Sends_Events_To => "{{}}";
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+    Initialize_Entrypoint_Source_Text => "component_init";
+	  Period => 100ms;
 end Server;
 
-thread Output_Monitor
+thread CAN_framing
 	features
-		interface : provides subprogram group access MissionSubprograms::Server_Outputs;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
+    to_server : out data port SMACCM_DATA::Array.U8_80;
+--    send_abort : out event data port Base_Types::Boolean;
+    fragment_request : out event data port SMACCM_DATA::can_message.i;
+    fragment_complete : out event data port SMACCM_DATA::can_message.i;
+    from_server : in event data port SMACCM_DATA::Array.U8_80;
+    get_status : in event data port Base_Types::Boolean;
+    fragement_reasembly : in event data port SMACCM_DATA::can_message.i;
+	properties
+    Dispatch_Protocol => Periodic;
+    SMACCM_SYS::Thread_Type => Active;
     Priority => 1;
     Stack_Size => 1024 Bytes;
-      Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/output_monitor.c");
-end Output_Monitor;
-	
-thread Output
-	features
-		uart : requires subprogram group access MissionSubprograms::UART_group;
-		pixhawk_state : requires subprogram group access MissionSubprograms::Server_Outputs;
-	properties
-		Dispatch_Protocol => Periodic;
-		SMACCM_SYS::Thread_Type => Active;
-		Priority => 1;
-		Stack_Size => 1024 Bytes;
-	  Compute_Execution_Time => 10 us .. 100 us;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ("usercode/accelerometer_sample_types.c",
+ "usercode/accelerometer_sample_types.h",
+ "usercode/alt_control_debug_types.c",
+ "usercode/alt_control_debug_types.h",
+ "usercode/arming_mode_types.c",
+ "usercode/arming_mode_types.h",
+ "usercode/arming_status_types.c",
+ "usercode/arming_status_types.h",
+ "usercode/att_control_debug_types.c",
+ "usercode/att_control_debug_types.h",
+ "usercode/barometer_sample_types.c",
+ "usercode/barometer_sample_types.h",
+ "usercode/camera_target_types.c",
+ "usercode/camera_target_types.h",
+ "usercode/CAN.c",
+ "usercode/CAN.h",
+ "usercode/CAN.c",
+ "usercode/CAN.h",
+ "usercode/CAN_CAN_hw_intermon.c",
+ "usercode/CAN_CAN_hw_intermon.h",
+ "usercode/CAN_hw_CAN_intermon.c",
+ "usercode/CAN_hw_CAN_intermon.h",
+ "usercode/CAN_Server_intermon.c",
+ "usercode/CAN_Server_intermon.h",
+ "usercode/canDriverTypes.c",
+ "usercode/canDriverTypes.h",
+ "usercode/control_law_types.c",
+ "usercode/control_law_types.h",
+ "usercode/control_modes_types.c",
+ "usercode/control_modes_types.h",
+ "usercode/control_output_types.c",
+ "usercode/control_output_types.h",
+ "usercode/control_setpoint_types.c",
+ "usercode/control_setpoint_types.h",
+ "usercode/control_source_types.c",
+ "usercode/control_source_types.h",
+ "usercode/fragment_0x200_monitor.c",
+ "usercode/fragment_0x200_monitor.h",
+ "usercode/fragment_drop_monitor.c",
+ "usercode/fragment_drop_monitor.h",
+ "usercode/fragment_reassembly_monitor.c",
+ "usercode/fragment_reassembly_monitor.h",
+ "usercode/gps_fix_types.c",
+ "usercode/gps_fix_types.h",
+ "usercode/gyroscope_sample_types.c",
+ "usercode/gyroscope_sample_types.h",
+ "usercode/heartbeat_types.c",
+ "usercode/heartbeat_types.h",
+ "usercode/hx_cyphertext.c",
+ "usercode/hx_cyphertext.h",
+ "usercode/input_CAN_hw_CAN_get_can_message_monitor.c",
+ "usercode/input_CAN_hw_CAN_get_can_message_monitor.h",
+ "usercode/input_CAN_hw_CAN_get_status_monitor.c",
+ "usercode/input_CAN_hw_CAN_get_status_monitor.h",
+ "usercode/input_Server_CAN_get_pt_data_monitor.c",
+ "usercode/input_Server_CAN_get_pt_data_monitor.h",
+ "usercode/ivory.c",
+ "usercode/ivory.h",
+ "usercode/ivory_asserts.c",
+ "usercode/ivory_asserts.h",
+ "usercode/ivory_serialize.c",
+ "usercode/ivory_serialize.h",
+ "usercode/ivory_templates.c",
+ "usercode/ivory_templates.h",
+ "usercode/libminitower/include/ivory_serialize_prim.h",
+ "usercode/magnetometer_sample_types.c",
+ "usercode/magnetometer_sample_types.h",
+ "usercode/output_CAN_CAN_hw_put_abort_monitor.c",
+ "usercode/output_CAN_CAN_hw_put_abort_monitor.h",
+ "usercode/output_CAN_CAN_hw_put_can_message_monitor.c",
+ "usercode/output_CAN_CAN_hw_put_can_message_monitor.h",
+ "usercode/output_CAN_Server_put_pt_data_monitor.c",
+ "usercode/output_CAN_Server_put_pt_data_monitor.h",
+ "usercode/packed_status_types.c",
+ "usercode/packed_status_types.h",
+ "usercode/pid_config_types.c",
+ "usercode/pid_config_types.h",
+ "usercode/pid_state_types.c",
+ "usercode/pid_state_types.h",
+ "usercode/position_sample_types.c",
+ "usercode/position_sample_types.h",
+ "usercode/px4io_alarms_types.c",
+ "usercode/px4io_alarms_types.h",
+ "usercode/px4io_state_types.c",
+ "usercode/px4io_state_types.h",
+ "usercode/px4io_status_types.c",
+ "usercode/px4io_status_types.h",
+ "usercode/quadcopter_motors_types.c",
+ "usercode/quadcopter_motors_types.h",
+ "usercode/rc_input_types.c",
+ "usercode/rc_input_types.h",
+ "usercode/reboot_magic_types.c",
+ "usercode/reboot_magic_types.h",
+ "usercode/reboot_req_types.c",
+ "usercode/reboot_req_types.h",
+ "usercode/rgb_led_setting_types.c",
+ "usercode/rgb_led_setting_types.h",
+ "usercode/sensors_result_types.c",
+ "usercode/sensors_result_types.h",
+ "usercode/sequence_num_types.c",
+ "usercode/sequence_num_types.h",
+ "usercode/sequence_numbered_accelerometer_sample_types.c",
+ "usercode/sequence_numbered_accelerometer_sample_types.h",
+ "usercode/sequence_numbered_alt_control_debug_types.c",
+ "usercode/sequence_numbered_alt_control_debug_types.h",
+ "usercode/sequence_numbered_arming_status_types.c",
+ "usercode/sequence_numbered_arming_status_types.h",
+ "usercode/sequence_numbered_att_control_debug_types.c",
+ "usercode/sequence_numbered_att_control_debug_types.h",
+ "usercode/sequence_numbered_barometer_sample_types.c",
+ "usercode/sequence_numbered_barometer_sample_types.h",
+ "usercode/sequence_numbered_camera_target_types.c",
+ "usercode/sequence_numbered_camera_target_types.h",
+ "usercode/sequence_numbered_control_law_types.c",
+ "usercode/sequence_numbered_control_law_types.h",
+ "usercode/sequence_numbered_control_modes_types.c",
+ "usercode/sequence_numbered_control_modes_types.h",
+ "usercode/sequence_numbered_control_output_types.c",
+ "usercode/sequence_numbered_control_output_types.h",
+ "usercode/sequence_numbered_control_setpoint_types.c",
+ "usercode/sequence_numbered_control_setpoint_types.h",
+ "usercode/sequence_numbered_float_types.c",
+ "usercode/sequence_numbered_float_types.h",
+ "usercode/sequence_numbered_gyroscope_sample_types.c",
+ "usercode/sequence_numbered_gyroscope_sample_types.h",
+ "usercode/sequence_numbered_magnetometer_sample_types.c",
+ "usercode/sequence_numbered_magnetometer_sample_types.h",
+ "usercode/sequence_numbered_packed_status_types.c",
+ "usercode/sequence_numbered_packed_status_types.h",
+ "usercode/sequence_numbered_pid_config_types.c",
+ "usercode/sequence_numbered_pid_config_types.h",
+ "usercode/sequence_numbered_position_sample_types.c",
+ "usercode/sequence_numbered_position_sample_types.h",
+ "usercode/sequence_numbered_px4io_state_types.c",
+ "usercode/sequence_numbered_px4io_state_types.h",
+ "usercode/sequence_numbered_quadcopter_motors_types.c",
+ "usercode/sequence_numbered_quadcopter_motors_types.h",
+ "usercode/sequence_numbered_rc_input_types.c",
+ "usercode/sequence_numbered_rc_input_types.h",
+ "usercode/sequence_numbered_reboot_req_types.c",
+ "usercode/sequence_numbered_reboot_req_types.h",
+ "usercode/sequence_numbered_rgb_led_setting_types.c",
+ "usercode/sequence_numbered_rgb_led_setting_types.h",
+ "usercode/sequence_numbered_sensors_result_types.c",
+ "usercode/sequence_numbered_sensors_result_types.h",
+ "usercode/sequence_numbered_stab_config_types.c",
+ "usercode/sequence_numbered_stab_config_types.h",
+ "usercode/sequence_numbered_throttle_ui_types.c",
+ "usercode/sequence_numbered_throttle_ui_types.h",
+ "usercode/sequence_numbered_tristate_types.c",
+ "usercode/sequence_numbered_tristate_types.h",
+ "usercode/sequence_numbered_user_input_result_types.c",
+ "usercode/sequence_numbered_user_input_result_types.h",
+ "usercode/sequence_numbered_user_input_types.c",
+ "usercode/sequence_numbered_user_input_types.h",
+ "usercode/sequence_numbered_xyz_calibration_types.c",
+ "usercode/sequence_numbered_xyz_calibration_types.h",
+ "usercode/Server_CAN_intermon.c",
+ "usercode/Server_CAN_intermon.h",
+ "usercode/stab_config_types.c",
+ "usercode/stab_config_types.h",
+ "usercode/throttle_mode_types.c",
+ "usercode/throttle_mode_types.h",
+ "usercode/throttle_ui_types.c",
+ "usercode/throttle_ui_types.h",
+ "usercode/time_micros_types.c",
+ "usercode/time_micros_types.h",
+ "usercode/towerCameraVMDeps.c",
+ "usercode/towerCameraVMDeps.h",
+ "usercode/towerUartDeps.c",
+ "usercode/towerUartDeps.h",
+ "usercode/tristate_types.c",
+ "usercode/tristate_types.h",
+ "usercode/user_input_result_types.c",
+ "usercode/user_input_result_types.h",
+ "usercode/user_input_types.c",
+ "usercode/user_input_types.h",
+ "usercode/xyz_calibration_types.c",
+ "usercode/xyz_calibration_types.h",
+ "usercode/xyz_types.c",
+ "usercode/xyz_types.h",
+ "usercode/yaw_mode_types.c",
+ "usercode/yaw_mode_types.h"
+    	);
+    SMACCM_SYS::Sends_Events_To => "{{}}";
+    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+    Initialize_Entrypoint_Source_Text => "component_init";
     Period => 100ms;
-	  Source_Text => ("usercode/output.c");
-	  --SMACCM_SYS::External_Semaphore_List => ("output_state_sem");
-end Output;
+end CAN_framing;
 
-thread PixhawkProxy_Monitor
-	features
-		interface : provides subprogram group access MissionSubprograms::Pixhawk_group;
+thread CAN_driver
+  features
+    receive : out event data port SMACCM_DATA::can_message.i;
+    status : out event data port Base_Types::Boolean;
+    send : in event data port SMACCM_DATA::can_message.i;
   properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-    Compute_Execution_Time => 10 us .. 100 us;
-    Source_Text => ("usercode/pixhawk_monitor.c");
-end PixhawkProxy_Monitor;
-	
-thread PixhawkProxy
-	features
-		to_server : requires subprogram group access MissionSubprograms::Pixhawk_group;
-		to_and_from_can : requires subprogram group access MissionSubprograms::CAN_group;		
-	properties
-		Dispatch_Protocol => Periodic;
-		SMACCM_SYS::Thread_Type => Active;
-		Priority => 1;
-		Stack_Size => 1024 Bytes;
-	  Compute_Execution_Time => 10 us .. 100 us;
-	  Period => 100ms;
-	  Source_Text => ("usercode/pixhawk_proxy.c");
-	  Compute_Entrypoint_Source_Text => "entry";
-	  --SMACCM_SYS::External_Semaphore_List => ("pixhawk_state_sem");
-end PixhawkProxy;
-	
-thread CAN_Monitor
-	features
-		interface : provides subprogram group access MissionSubprograms::CAN_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
-    Compute_Execution_Time => 10 us .. 100 us;
-    Source_Text => ("usercode/can_monitor.c");
-end CAN_Monitor;
-	
-thread CAN
-	features
-		to_and_from : requires subprogram group access MissionSubprograms::CAN_group;
-	properties
-	    SMACCM_SYS::Is_External => true;
-	    Dispatch_Protocol => Sporadic;
-	    SMACCM_SYS::Thread_Type => Active;
-	    Compute_Execution_Time => 10 us .. 100 us;
-	    Source_Text => ();
-end CAN;
-
-thread VM_Monitor
-	features
-		interface : provides subprogram group access MissionSubprograms::Camera_group;
-  properties
-    Dispatch_Protocol => Aperiodic;
-    SMACCM_SYS::Thread_Type => Passive;
-    Priority => 1;
-    Stack_Size => 1024 Bytes;
+      SMACCM_SYS::Is_External => true;
+      Dispatch_Protocol => Sporadic;
+      SMACCM_SYS::Thread_Type => Active;
       Compute_Execution_Time => 10 us .. 100 us;
-      Source_Text => ("usercode/vm_monitor.c");
-end VM_Monitor;
+      SMACCM_SYS::Sends_Events_To => "{{}}";
+      Source_Text => ("CAN_driver.c");
+      end CAN_driver;
 
-thread VM
+thread Virtual_Machine
 	features
-		camera_data : requires subprogram group access MissionSubprograms::Camera_group;
+		camera_data : out data port SMACCM_DATA::camera_data.i;
 	properties
 		SMACCM_SYS::Is_External => true;
 	  Dispatch_Protocol => Sporadic;
 	  SMACCM_SYS::Thread_Type => Active;
 	  Compute_Execution_Time => 10 us .. 100 us;
-	  Source_Text => ();
-end VM;
+	  Source_Text => ("usercode/Virtual_Machine.c", "usercode/towerCameraVMDeps.h");
+end Virtual_machine;
 	
 end MissionSoftware;

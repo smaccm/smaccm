@@ -33,9 +33,23 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 
 	@Override
 	public MATLABType visit(NamedType e) {
-		if(e.name.equals("bool"))
+		if(e.name.equals("bool") || e.name.equals("Base_Types__Boolean"))
 			return new MATLABBoolType();
-		else if(e.name.equals("int")){
+		else if(e.name.equals("Base_Types__Unsigned")){
+			switch (LustreToMATLABTranslator.intTypeStr) {
+			case PreferenceConstants.INT_UINT8:
+				return new MATLABUInt8Type();
+			case PreferenceConstants.INT_UINT16:
+				return new MATLABUInt16Type();
+			case PreferenceConstants.INT_UINT32:
+				return new MATLABUInt32Type();   	
+			case PreferenceConstants.INT_UINT64:
+				return new MATLABUInt64Type();  	
+			default:
+				throw new IllegalArgumentException("Base_Types__Unsigned mismatch with "+LustreToMATLABTranslator.intTypeStr);
+			}
+		}
+		else if(e.name.equals("int") || e.name.equals("Base_Types__Integer")){
 			switch (LustreToMATLABTranslator.intTypeStr) {
 			case PreferenceConstants.INT_INT8:
 				return new MATLABInt8Type();
@@ -48,16 +62,16 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 			case PreferenceConstants.INT_INT32:
 				return new MATLABInt32Type();
 			case PreferenceConstants.INT_UINT32:
-				return new MATLABUInt32Type();
+				return new MATLABUInt32Type();  
 			case PreferenceConstants.INT_INT64:
 				return new MATLABInt64Type();
 			case PreferenceConstants.INT_UINT64:
-				return new MATLABUInt64Type();       		
+				return new MATLABUInt64Type();  				
 			default:
 				throw new IllegalArgumentException("Unknown int type: "+LustreToMATLABTranslator.intTypeStr);
 			}
 		}
-		else if(e.name.equals("real")){
+		else if(e.name.equals("real") || e.name.equals("Base_Types__Float")){
 			switch (LustreToMATLABTranslator.realTypeStr) {
 			case PreferenceConstants.REAL_SINGLE:
 				return new MATLABSingleType();
@@ -66,7 +80,37 @@ public class LustreToMATLABTypeVisitor implements TypeVisitor<MATLABType> {
 			default:
 				throw new IllegalArgumentException("Unknown real type: "+LustreToMATLABTranslator.realTypeStr);
 			}
-		}	
+		}
+		else if(e.name.equals("Base_Types__Unsigned_64")){
+			return new MATLABUInt64Type(); 
+		}
+		else if(e.name.equals("Base_Types__Unsigned_32")){
+			return new MATLABUInt32Type(); 
+		}
+		else if(e.name.equals("Base_Types__Unsigned_16")){
+			return new MATLABUInt16Type(); 
+		}
+		else if(e.name.equals("Base_Types__Unsigned_8")){
+			return new MATLABUInt8Type(); 
+		}
+		else if(e.name.equals("Base_Types__Integer_64")){
+			return new MATLABInt64Type(); 
+		}
+		else if(e.name.equals("Base_Types__Integer_32")){
+			return new MATLABInt32Type(); 
+		}
+		else if(e.name.equals("Base_Types__Integer_16")){
+			return new MATLABInt16Type(); 
+		}
+		else if(e.name.equals("Base_Types__Integer_8")){
+			return new MATLABInt8Type(); 
+		}
+		else if(e.name.equals("Base_Types__Float_32")){
+			return new MATLABSingleType(); 
+		}
+		else if(e.name.equals("Base_Types__Float_64")){
+			return new MATLABDoubleType(); 
+		}
 		else
 			return new MATLABBusType(e.name);
 	}

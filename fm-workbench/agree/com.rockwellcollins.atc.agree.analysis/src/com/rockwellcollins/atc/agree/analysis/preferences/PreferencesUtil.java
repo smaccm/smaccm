@@ -17,6 +17,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.framework.Bundle;
 
 import com.rockwellcollins.atc.agree.analysis.Activator;
+//import com.rockwellcollins.atc.z3.Z3Plugin;
 import com.rockwellcollins.atc.z3.Z3Plugin;
 
 public class PreferencesUtil {
@@ -84,6 +85,9 @@ public class PreferencesUtil {
         if (prefs.getBoolean(PreferenceConstants.PREF_SMOOTH_CEX) && solver == SolverOption.YICES) {
             api.setSmoothCounterexamples();
         }
+        if (prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
+        	api.setIvcReduction();
+        }
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
         api.setPdrMax(prefs.getInt(PreferenceConstants.PREF_PDR_MAX));
@@ -97,12 +101,12 @@ public class PreferencesUtil {
         IPreferenceStore prefs = getPreferenceStore();
         JRealizabilityApi api = new JRealizabilityApi();
         api.setJKindJar(getJKindJar());
-		try {
-			api.setEnvironment("Z3_HOME", Z3Plugin.getZ3Directory());
-		} catch (NoClassDefFoundError e) {
-			e.printStackTrace();
-			// Z3Plugin not present
-		}
+//		try {
+//			api.setEnvironment("Z3_HOME", Z3Plugin.getZ3Directory());
+//		} catch (NoClassDefFoundError e) {
+//			e.printStackTrace();
+//			// Z3Plugin not present
+//		}
 
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));

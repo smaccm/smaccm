@@ -28,12 +28,13 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.AnnexSubclause;
-import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.EndToEndFlowInstance;
+import org.osate.aadl2.instance.FlowSpecificationInstance;
+import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.aadl2.util.Aadl2Util;
@@ -67,7 +68,8 @@ public class ResoluteHandler extends AadlHandler {
 	private static FunctionDefinition resolveResoluteFunction(EObject context, String resoluteFunctionName) {
 
 		// psNode.setText(resoluteFunctionName);
-		// val List<EObject> boundList = resoluteLinkingService.getLinkedObjects(context,
+		// val List<EObject> boundList =
+		// resoluteLinkingService.getLinkedObjects(context,
 		// ResolutePackage.eINSTANCE.getFnCallExpr_Fn(), psNode);
 		// if (boundList.size() > 0) {
 		// return boundList.get(0) as FunctionDefinition;
@@ -80,7 +82,8 @@ public class ResoluteHandler extends AadlHandler {
 
 	private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
 
-		// This code will only link to objects in the projects visible from the current project
+		// This code will only link to objects in the projects visible from the
+		// current project
 		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
 				eclass);
 		String contextProject = context.eResource().getURI().segment(1);
@@ -171,13 +174,14 @@ public class ResoluteHandler extends AadlHandler {
 			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
 			fnCallExpr.setFn(functionDefinition);
 
-//					Arg a = ResoluteFactory.eINSTANCE.createArg();
-//					com.rockwellcollins.atc.resolute.resolute.BaseType t = ResoluteFactory.eINSTANCE.createBaseType();
-//					a.setName("s");
-//					t.setType("system");
-//					a.setType(t);
-//					fnCallExpr.getFn().getArgs().clear();
-//					fnCallExpr.getFn().getArgs().add(a);
+			// Arg a = ResoluteFactory.eINSTANCE.createArg();
+			// com.rockwellcollins.atc.resolute.resolute.BaseType t =
+			// ResoluteFactory.eINSTANCE.createBaseType();
+			// a.setName("s");
+			// t.setType("system");
+			// a.setType(t);
+			// fnCallExpr.getFn().getArgs().clear();
+			// fnCallExpr.getFn().getArgs().add(a);
 			proveStatement.setExpr(fnCallExpr);
 			resoluteSubclause.getProves().add(proveStatement);
 			si.getComponentClassifier().getOwnedAnnexSubclauses().add(resoluteSubclause);
@@ -209,53 +213,58 @@ public class ResoluteHandler extends AadlHandler {
 			}
 		}
 
-//		else {
-//			ResoluteSubclause subclause;
-//			ProveStatement proveStatement;
-//			FnCallExpr fnCallExpr;
-//
-//			subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
-//			proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
-//			fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
-//			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
-//subclause.s
-//			for (IEObjectDescription tmp : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(ResolutePackage.eINSTANCE
-//					.getFunctionDefinition())) {
-//
-//				if (tmp.getName().getLastSegment().equalsIgnoreCase(theorem)) {
-//					EObject eobj = tmp.getEObjectOrProxy();
-//
-//					EObject resolved = EcoreUtil.resolve(eobj, root.eResource().getResourceSet());
-////					System.out.println("resolved=" + resolved);
-//
-//					FunctionDefinition functionDefinition = (FunctionDefinition) resolved;
-//
-//					fnCallExpr.setFn(functionDefinition);
-//
-//				}
-//			}
-//			Arg a = ResoluteFactory.eINSTANCE.createArg();
-//			com.rockwellcollins.atc.resolute.resolute.BaseType t = ResoluteFactory.eINSTANCE.createBaseType();
-//			a.setName("s");
-//			t.setType("system");
-//			a.setType(t);
-//			fnCallExpr.getFn().getArgs().clear();
-//			fnCallExpr.getFn().getArgs().add(a);
-//			proveStatement.setExpr(fnCallExpr);
-//			subclause.getProves().add(proveStatement);
-//
-//			EvaluationContext context = new EvaluationContext((ComponentInstance) si.getComponentInstance(), sets,
-//					featToConnsMap);
-//			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
-//			for (ProveStatement ps : subclause.getProves()) {
-//				try {
-//					proofTrees.add(interpreter.evaluateProveStatement(ps));
-//					drawProofs(proofTrees);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		// else {
+		// ResoluteSubclause subclause;
+		// ProveStatement proveStatement;
+		// FnCallExpr fnCallExpr;
+		//
+		// subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+		// proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
+		// fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
+		// fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
+		// subclause.s
+		// for (IEObjectDescription tmp :
+		// EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(ResolutePackage.eINSTANCE
+		// .getFunctionDefinition())) {
+		//
+		// if (tmp.getName().getLastSegment().equalsIgnoreCase(theorem)) {
+		// EObject eobj = tmp.getEObjectOrProxy();
+		//
+		// EObject resolved = EcoreUtil.resolve(eobj,
+		// root.eResource().getResourceSet());
+		//// System.out.println("resolved=" + resolved);
+		//
+		// FunctionDefinition functionDefinition = (FunctionDefinition)
+		// resolved;
+		//
+		// fnCallExpr.setFn(functionDefinition);
+		//
+		// }
+		// }
+		// Arg a = ResoluteFactory.eINSTANCE.createArg();
+		// com.rockwellcollins.atc.resolute.resolute.BaseType t =
+		// ResoluteFactory.eINSTANCE.createBaseType();
+		// a.setName("s");
+		// t.setType("system");
+		// a.setType(t);
+		// fnCallExpr.getFn().getArgs().clear();
+		// fnCallExpr.getFn().getArgs().add(a);
+		// proveStatement.setExpr(fnCallExpr);
+		// subclause.getProves().add(proveStatement);
+		//
+		// EvaluationContext context = new EvaluationContext((ComponentInstance)
+		// si.getComponentInstance(), sets,
+		// featToConnsMap);
+		// ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+		// for (ProveStatement ps : subclause.getProves()) {
+		// try {
+		// proofTrees.add(interpreter.evaluateProveStatement(ps));
+		// drawProofs(proofTrees);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// }
 
 		stop = System.currentTimeMillis();
 		System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
@@ -271,8 +280,8 @@ public class ResoluteHandler extends AadlHandler {
 			@Override
 			public void run() {
 				IHandlerService handlerService = getHandlerService();
-				rerunActivation = handlerService
-						.activateHandler(RERUN_ID, new RerunHandler(root, ResoluteHandler.this));
+				rerunActivation = handlerService.activateHandler(RERUN_ID,
+						new RerunHandler(root, ResoluteHandler.this));
 			}
 		});
 	}
@@ -291,7 +300,7 @@ public class ResoluteHandler extends AadlHandler {
 	}
 
 	private IHandlerService getHandlerService() {
-		return (IHandlerService) getWindow().getService(IHandlerService.class);
+		return getWindow().getService(IHandlerService.class);
 	}
 
 	private void initializeSets(ComponentInstance ci, Map<String, SortedSet<NamedElement>> sets) {
@@ -299,20 +308,26 @@ public class ResoluteHandler extends AadlHandler {
 			return;
 		}
 
-		addToSet(sets, getCategoryName(ci.getCategory()), ci);
-		addToSet(sets, "component", ci);
-
-		for (ComponentInstance sub : ci.getComponentInstances()) {
-			initializeSets(sub, sets);
+		addToSet(sets, ci);
+		for (InstanceObject io : EcoreUtil2.getAllContentsOfType(ci, InstanceObject.class)) {
+			addToSet(sets, io);
 		}
 
-		for (ConnectionInstance conn : ci.getConnectionInstances()) {
-			addToSet(sets, "connection", conn);
+		for (FlowSpecificationInstance flowSpec : ci.getFlowSpecifications()) {
+			addToSet(sets, "flow_specification", flowSpec);
+		}
+
+		for (EndToEndFlowInstance etef : ci.getEndToEndFlows()) {
+			addToSet(sets, "end_to_end_flow", etef);
 		}
 	}
 
-	private String getCategoryName(ComponentCategory category) {
-		return new BaseType(category).toString();
+	private void addToSet(Map<String, SortedSet<NamedElement>> sets, InstanceObject io) {
+		BaseType type = new BaseType(io);
+		for (BaseType superType : type.getAllSuperTypes()) {
+			addToSet(sets, superType.name, io);
+		}
+
 	}
 
 	private void addToSet(Map<String, SortedSet<NamedElement>> sets, String name, NamedElement ne) {

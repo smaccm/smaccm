@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos.parse;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +48,7 @@ public class Model {
 	private String systemImplementationName;
 	private String systemInstanceName;
 	
-	public enum OSTarget {CAmkES, eChronos}; 
+	public enum OSTarget {CAmkES, eChronos, VxWorks}; 
 	private OSTarget osTarget = OSTarget.eChronos;
 		
 	// Currently supported targets: QEMU, ODROID, PX4, X86
@@ -91,7 +92,23 @@ public class Model {
 	int camkesInternalTimerTimersPerClient; 
 	int camkesTimeServerAadlThreadMinIndex; 
 	int camkesDataportRpcMinIndex;
+	boolean useOSRealTimeExtensions; 
 	
+	/**
+	 * @return the useOSRealTimeExtensions
+	 */
+	public boolean isUseOSRealTimeExtensions() {
+		return useOSRealTimeExtensions;
+	}
+
+	/**
+	 * @param useOSRealTimeExtensions the useOSRealTimeExtensions to set
+	 */
+	public void setUseOSRealTimeExtensions(boolean useOSRealTimeExtensions) {
+		this.useOSRealTimeExtensions = useOSRealTimeExtensions;
+	}
+
+
 	// eChronos-specific properties
 	boolean eChronosGenerateCModules;
 	String eChronosCModulePath;
@@ -235,7 +252,7 @@ public class Model {
 	}
 	*/
 	public List<ThreadImplementation> getAllThreadImplementations() {
-    return this.threadImplementationList;
+		return threadImplementationList;
 	}
 	
 	public List<ThreadImplementation> getActiveThreadImplementations() {
@@ -450,5 +467,4 @@ public class Model {
     connNumber++; 
     return connNumber;
   }
-
 }

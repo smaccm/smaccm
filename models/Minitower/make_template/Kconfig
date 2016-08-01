@@ -1,0 +1,6 @@
+config APP_MINITOWER
+    bool "Minitower (from AADL)"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        Minitower (from AADL).

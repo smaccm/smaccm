@@ -74,6 +74,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
     public HashMap<String, MATLABFunction> functionMap = new HashMap<String, MATLABFunction>();
     public HashMap<String, MATLABExpr> persistentVarMap = new HashMap<String, MATLABExpr>();
     public HashMap<String, MATLABType> localVarTypeMap = new HashMap<String, MATLABType>();
+    public HashMap<String, SortedMap<String, MATLABType>> recordTypeMap = new HashMap<String, SortedMap<String, MATLABType>>();
     public List<MATLABPersistentVarInit> persistentVarInits = new ArrayList<>();
     public List<MATLABLocalBusVarInit> localBusVarInits = new ArrayList<>();
     public HashMap<UniqueID, UniqueID> idMap = new HashMap<UniqueID, UniqueID>();
@@ -132,7 +133,10 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 					break;
 				case PreferenceConstants.INT_UINT64:
 					type = new MATLABUInt64Type();
-					break;
+					break;	
+				default:
+					throw new IllegalArgumentException("Unknown int type: "
+							+ LustreToMATLABTranslator.intTypeStr);	
 				}
 				MATLABTypeCastExpr castLeftExpr = new MATLABTypeCastExpr(type,
 						leftExpr);
@@ -237,8 +241,10 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 		Iterator<Entry<String, Expr>> iterator = e.fields.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Expr> entry = iterator.next();
+			//get the type for the field
+			MATLABType type = recordTypeMap.get(e.id).get(updateName(entry.getKey(),e.id));
 			//conduct explicit type cast if a field value is a constant of double type or int type 
-			MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
+			MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor(type);
 			MATLABExpr fieldExpr = typeCastVisitor.visit(entry.getValue().accept(this));
 			fields.put(updateName(entry.getKey(),e.id), fieldExpr);
 		}
@@ -250,15 +256,34 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 
 	@Override
 	public MATLABExpr visit(RecordUpdateExpr e) {
-		MATLABIdExpr recordIdExpr = (MATLABIdExpr) e.record.accept(this);
-		
+		MATLABIdExpr recordIdExpr = (MATLABIdExpr) e.record.accept(this);	
 		//Assign the specific field of the variable created from the recordExpr associated with it
 		//to the value specified in the RecordUpdateExpr
 		SortedMap<String, MATLABExpr> fields = new TreeMap<>(new StringNaturalOrdering());
+		//get the type for the field
+		Expr curExpr = e;
+		while (curExpr instanceof RecordUpdateExpr){
+			curExpr = ((RecordUpdateExpr)curExpr).record;
+		}
+		
+		MATLABType type = null;		
+		String recordName = "";
+		if (curExpr instanceof RecordExpr){
+			recordName = ((RecordExpr)curExpr).id;
+			if(recordTypeMap.get(recordName) != null){
+				String fieldName = e.field;
+				fieldName = updateName(fieldName, recordName);
+				type = recordTypeMap.get(recordName).get(fieldName);
+			}
+		}
+		else{
+			recordName = recordIdExpr.id;
+		}
+		
 		//conduct explicit type cast if a field value is a constant of double type or int type 
-		MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor();
+		MATLABTypeCastExprVisitor typeCastVisitor = new MATLABTypeCastExprVisitor(type);
 		MATLABExpr fieldExpr = typeCastVisitor.visit(e.value.accept(this));
-		fields.put(updateName(e.field,recordIdExpr.id), fieldExpr);
+		fields.put(updateName(e.field,recordName), fieldExpr);
 		
 		String originalVar = null;
 		if(e.record instanceof IdExpr){
@@ -354,13 +379,38 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 			//check if the name is an input or a local
 			//if local, replace . with _
 			if(!inputSet.contains(name)){
-				updatedName = updatedName.replaceAll("\\.","_");
+				//reverse the sequence of the words separated by .
+				//to put the last part after . first
+				//so that after truncation the name still makes sense
+				if(updatedName.contains(".")){
+					String[] nameWords = updatedName.split("\\.");
+					StringBuilder builder = new StringBuilder("");
+					for(int i=nameWords.length - 1; i>=0; i--){
+						builder.append(nameWords[i]);
+						if(i>0){
+							builder.append("_");
+						}
+					}
+					//remove preceding "_" after the update
+					updatedName = builder.toString().replaceAll("^_+", "");
+				}
+			}
+			//check if the name is longer than 63 characters
+			//(the maximum variable length supported by MATLAB)
+			//if yes, truncate it to 63 characters
+			if(updatedName.length() > 63){
+				updatedName = updatedName.substring(0,63);
 			}
 			nameToCheck = updatedName;
 			//check if the updated name and recordId tuple is in the map values
 			//if yes, update the name further so it's unique from existing values
 			while(idMap.containsValue(new UniqueID(nameToCheck, recordId))){
 				varIndex++;
+				//make sure the updated name is not longer than 63 characters
+				int indexLength = String.valueOf(varIndex).length();
+				if((updatedName.length()+indexLength) > 63){
+					updatedName = updatedName.substring(0,(63-indexLength));
+				}
 				nameToCheck = updatedName + "_"+varIndex;
 			}
 			updatedName = nameToCheck;

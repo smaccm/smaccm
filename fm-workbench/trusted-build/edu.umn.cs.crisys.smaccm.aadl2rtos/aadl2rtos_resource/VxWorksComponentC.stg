@@ -1,0 +1,182 @@
+import "CommonComponentC.stg"
+
+/*
+ * Overrides for OS-specific names/behavior for generated C code.
+ *
+ */
+
+osSpecificThreadEntrypoint(threadImpl) ::= "void <threadImpl.threadImplMainFnName>()"
+osSpecificThreadReturnStmt(threadImpl) ::= " "
+
+incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerFn>"
+
+outgoingPortWriterName(connection) ::= "<incomingPortWriterName(connection.destPort)>"
+
+incomingActiveThreadDispatchName(dispatcher) ::= "<incomingPortWriterName(dispatcher)>"
+outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
+
+incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.qualifiedName>"
+
+outgoingUserEntrypointCallerName(dispatcher) ::= "<incomingUserEntrypointCallerName(dispatcher)>"
+
+portLockStmt(port) ::= <<
+semTake(<port.mutex>, WAIT_FOREVER);
+
+>>
+
+portUnlockStmt(port) ::= <<
+semGive(<port.mutex>);
+
+>>
+
+portDispatcherLock(dispatcher) ::= <<
+semTake(<dispatcher.threadImplementation.threadDispatcherMutex>, WAIT_FOREVER);
+>>
+
+portDispatcherUnlock(dispatcher) ::= <<
+semGive(<dispatcher.threadImplementation.threadDispatcherMutex>);
+>>
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= <<
+semTake(<threadImpl.threadDispatcherMutex>, WAIT_FOREVER);
+>>
+
+createWatchdog(dispatcher) ::= <<
+<if(dispatcher.isPeriodic)> <periodicClock(dispatcher)> = wdCreate();
+assert(<periodicClock(dispatcher)> != NULL);
+<endif> >>
+
+createWatchdogs(threadImpl) ::= <<
+<threadImpl.dispatchers:{dispatcher |<createWatchdog(dispatcher)> }>
+>>
+
+invokeWatchdog(dispatcher) ::= <<
+<if(dispatcher.isPeriodic)> <periodicClock(dispatcher)> = wdCreate();
+<periodicClockFn(dispatcher)>();
+<endif> >>
+
+
+invokeWatchdogs(threadImpl) ::= <<
+<threadImpl.dispatchers:invokeWatchdog()>
+>>
+
+osSpecificThreadPostInitializer(threadImpl) ::= <<
+
+<createWatchdogs(threadImpl)>
+<invokeWatchdogs(threadImpl)>
+>>
+
+
+dispatcherMainLockWaitStmt(threadImpl) ::= <<
+semTake(<threadImpl.threadDispatcherMutex>, WAIT_FOREVER);
+>>
+
+dispatcherMainLockReleaseStmt(dispatcher) ::= <<
+semGive(<dispatcher.threadImplementation.threadDispatcherMutex>);
+>>
+
+
+activeThreadDecls(threadImpl) ::= <<
+// task id for the thread
+int <threadImpl.normalizedName>;
+>>
+
+passiveThreadDecls(threadImpl) ::= << >>
+
+sharedDataDecl(sharedDataAccessor) ::= <<
+extern <sharedDataAccessor.type.name> <sharedDataAccessor.sharedData.varName>;
+<sharedDataAccessor.type.name> *<sharedDataAccessor.name> = &<sharedDataAccessor.sharedData.varName>;
+>>
+
+writeActiveThreadMutexes(threadImpl) ::= <<
+/* dispatcher, input port, and external mutexes for active thread <threadImpl.normalizedName> */
+SEM_ID <threadImpl.threadDispatcherMutex>;
+<threadImpl.inputPortList:{port |SEM_ID <port.mutex>;
+}>
+<threadImpl.externalMutexes:{ m |SEM_ID <m>;
+}>
+>>
+
+writePassiveThreadMutexes(threadImpl) ::= <<
+/* dispatcher and external mutex for passive thread (monitor) <threadImpl.normalizedName> */
+SEM_ID <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m |SEM_ID <m>;
+}>
+>>
+
+writeDecls(threadImpl) ::= <<
+<if(threadImpl.isActive)>
+<activeThreadDecls(threadImpl)>
+<writeActiveThreadMutexes(threadImpl)>
+<else>
+<passiveThreadDecls(threadImpl)>
+<writePassiveThreadMutexes(threadImpl)>
+<endif>
+<if(threadImpl.sharedDataAccessorList)>
+
+// shared data declarations
+<threadImpl.sharedDataAccessorList:sharedDataDecl()>
+<endif>
+>>
+
+periodicClockFn(dispatcher) ::= "<dispatcher.name>_callback"
+
+periodicClock(dispatcher) ::= "<dispatcher.name>_clock"
+
+
+osSpecificCreateWatchdog(dispatcher) ::= <<
+<if(dispatcher.isPeriodic)>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Local clock creation for periodic dispatcher
+//
+///////////////////////////////////////////////////////////////////////////
+
+WDOG_ID <periodicClock(dispatcher)>;
+
+static void <periodicClockFn(dispatcher)>(void)
+{
+    bool dispatcherOk;
+    dispatcherOk = wdStart(<periodicClock(dispatcher)>,
+                           <dispatcher.periodicDispatcherPeriod>, (FUNCPTR)<periodicClockFn(dispatcher)>, 0 );
+    assert(dispatcherOk == OK);
+    dispatcherOk = <dispatcherMainLockReleaseStmt(dispatcher)>
+    assert(dispatcherOk == OK);
+}
+<endif>
+>>
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u0022>smaccm_decls.h<\u0022>
+#include <\u003C>string.h<\u003E>
+#include <\u003C>wdLib.h<\u003E>
+#include <\u003C>unistd.h<\u003E>
+#include <\u003C>assert.h<\u003E>
+
+
+<writeDecls(threadImpl)>
+
+
+<threadImpl.dispatchers:osSpecificCreateWatchdog()>
+
+>>
+
+// <osSpecificCreateWatchdog(threadImpl.dispatchers)>;
+
+
+osSpecificIrqDispatcher(dispatcher) ::= <<
+bool <incomingActiveThreadDispatchName(dispatcher)>() {
+    <dispatcher.firstLevelInterruptHandler>();
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcherMainLockReleaseStmt(dispatcher)>
+    return true;
+}
+>>
+
+osSpecificRegisterIrqs(dispatcher) ::= ""
+
+osSpecificComponentLocalCallerFunction(connection) ::= ""
+
+// TODO: add an eChronos assert function.
+osSpecificAssert(predicate) ::= ""

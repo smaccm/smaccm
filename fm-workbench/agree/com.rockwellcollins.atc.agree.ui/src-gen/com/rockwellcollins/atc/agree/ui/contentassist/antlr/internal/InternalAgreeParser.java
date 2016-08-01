@@ -10174,6 +10174,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             case HyphenMinus:
                 {
                 switch ( input.LA(2) ) {
+                case RULE_REAL_LIT:
+                    {
+                    alt29=1;
+                    }
+                    break;
                 case RULE_ID:
                     {
                     alt29=3;
@@ -10182,11 +10187,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                 case RULE_INTEGER_LIT:
                     {
                     alt29=2;
-                    }
-                    break;
-                case RULE_REAL_LIT:
-                    {
-                    alt29=1;
                     }
                     break;
                 default:
@@ -47037,42 +47037,49 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ContainmentPathElement__Group_0__1__Impl"
-    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16963:1: rule__ContainmentPathElement__Group_0__1__Impl : ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? ) ;
+    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16963:1: rule__ContainmentPathElement__Group_0__1__Impl : ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* ) ;
     public final void rule__ContainmentPathElement__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16967:1: ( ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? ) )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16968:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16967:1: ( ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* ) )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16968:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* )
             {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16968:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )? )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16969:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )?
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16968:1: ( ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )* )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16969:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1()); 
             }
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16970:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )?
-            int alt80=2;
-            int LA80_0 = input.LA(1);
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16970:1: ( rule__ContainmentPathElement__ArrayRangeAssignment_0_1 )*
+            loop80:
+            do {
+                int alt80=2;
+                int LA80_0 = input.LA(1);
 
-            if ( (LA80_0==LeftSquareBracket) ) {
-                alt80=1;
-            }
-            switch (alt80) {
-                case 1 :
-                    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16970:2: rule__ContainmentPathElement__ArrayRangeAssignment_0_1
-                    {
-                    pushFollow(FollowSets001.FOLLOW_rule__ContainmentPathElement__ArrayRangeAssignment_0_1_in_rule__ContainmentPathElement__Group_0__1__Impl34060);
-                    rule__ContainmentPathElement__ArrayRangeAssignment_0_1();
+                if ( (LA80_0==LeftSquareBracket) ) {
+                    alt80=1;
+                }
 
-                    state._fsp--;
-                    if (state.failed) return ;
 
-                    }
-                    break;
+                switch (alt80) {
+            	case 1 :
+            	    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:16970:2: rule__ContainmentPathElement__ArrayRangeAssignment_0_1
+            	    {
+            	    pushFollow(FollowSets001.FOLLOW_rule__ContainmentPathElement__ArrayRangeAssignment_0_1_in_rule__ContainmentPathElement__Group_0__1__Impl34060);
+            	    rule__ContainmentPathElement__ArrayRangeAssignment_0_1();
 
-            }
+            	    state._fsp--;
+            	    if (state.failed) return ;
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop80;
+                }
+            } while (true);
 
             if ( state.backtracking==0 ) {
                after(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1()); 
@@ -57694,20 +57701,15 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     static final String DFA24_eofS =
         "\10\uffff\1\17\1\21\1\23\3\uffff\1\17\1\uffff\1\21\3\uffff\1\23";
     static final String DFA24_minS =
-        "\1\6\5\uffff\2\140\3\24\3\uffff\1\24\1\uffff\1\24\1\uffff\1\145"+
-        "\1\uffff\1\24";
+        "\1\6\5\uffff\2\140\3\24\3\uffff\1\24\1\uffff\1\24\1\uffff\1\145\1\uffff\1\24";
     static final String DFA24_maxS =
-        "\1\145\5\uffff\4\145\1\124\3\uffff\1\124\1\uffff\1\124\1\uffff"+
-        "\1\145\1\uffff\1\124";
+        "\1\145\5\uffff\4\145\1\124\3\uffff\1\124\1\uffff\1\124\1\uffff\1\145\1\uffff\1\124";
     static final String DFA24_acceptS =
-        "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7"+
-        "\1\uffff\1\10\1\uffff\1\13\1\uffff";
+        "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7\1\uffff\1\10\1\uffff\1\13\1\uffff";
     static final String DFA24_specialS =
         "\25\uffff}>";
     static final String[] DFA24_transitionS = {
-            "\1\3\5\uffff\1\2\11\uffff\1\4\13\uffff\1\14\14\uffff\1\14\33"+
-            "\uffff\1\13\2\uffff\1\6\1\uffff\1\7\7\uffff\1\1\7\uffff\1\10"+
-            "\1\uffff\1\11\1\uffff\1\5\1\12",
+            "\1\3\5\uffff\1\2\11\uffff\1\4\13\uffff\1\14\14\uffff\1\14\33\uffff\1\13\2\uffff\1\6\1\uffff\1\7\7\uffff\1\1\7\uffff\1\10\1\uffff\1\11\1\uffff\1\5\1\12",
             "",
             "",
             "",
@@ -57715,25 +57717,19 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             "",
             "\1\10\1\uffff\1\11\2\uffff\1\15",
             "\1\10\1\uffff\1\11\2\uffff\1\15",
-            "\1\17\52\uffff\1\15\10\uffff\1\17\3\uffff\1\17\2\uffff\1\17"+
-            "\4\uffff\1\17\20\uffff\1\16",
-            "\1\21\52\uffff\1\15\10\uffff\1\21\3\uffff\1\21\2\uffff\1\21"+
-            "\4\uffff\1\21\20\uffff\1\20",
-            "\1\23\52\uffff\1\15\1\22\7\uffff\1\23\3\uffff\1\23\2\uffff"+
-            "\1\23\4\uffff\1\23",
+            "\1\17\52\uffff\1\15\10\uffff\1\17\3\uffff\1\17\2\uffff\1\17\4\uffff\1\17\20\uffff\1\16",
+            "\1\21\52\uffff\1\15\10\uffff\1\21\3\uffff\1\21\2\uffff\1\21\4\uffff\1\21\20\uffff\1\20",
+            "\1\23\52\uffff\1\15\1\22\7\uffff\1\23\3\uffff\1\23\2\uffff\1\23\4\uffff\1\23",
             "",
             "",
             "",
-            "\1\17\52\uffff\1\15\10\uffff\1\17\3\uffff\1\17\2\uffff\1\17"+
-            "\4\uffff\1\17",
+            "\1\17\52\uffff\1\15\10\uffff\1\17\3\uffff\1\17\2\uffff\1\17\4\uffff\1\17",
             "",
-            "\1\21\52\uffff\1\15\10\uffff\1\21\3\uffff\1\21\2\uffff\1\21"+
-            "\4\uffff\1\21",
+            "\1\21\52\uffff\1\15\10\uffff\1\21\3\uffff\1\21\2\uffff\1\21\4\uffff\1\21",
             "",
             "\1\24",
             "",
-            "\1\23\52\uffff\1\15\10\uffff\1\23\3\uffff\1\23\2\uffff\1\23"+
-            "\4\uffff\1\23"
+            "\1\23\52\uffff\1\15\10\uffff\1\23\3\uffff\1\23\2\uffff\1\23\4\uffff\1\23"
     };
 
     static final short[] DFA24_eot = DFA.unpackEncodedString(DFA24_eotS);
@@ -57782,9 +57778,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     static final String DFA57_specialS =
         "\1\uffff\1\0\1\3\1\5\1\6\1\1\1\4\1\2\2\uffff}>";
     static final String[] DFA57_transitionS = {
-            "\1\10\4\uffff\1\10\4\uffff\3\10\3\uffff\1\10\4\uffff\1\7\1"+
-            "\10\3\uffff\1\2\1\6\1\10\1\4\3\uffff\1\10\2\uffff\5\10\1\uffff"+
-            "\3\10\1\1\1\5\1\3\3\uffff\1\10",
+            "\1\10\4\uffff\1\10\4\uffff\3\10\3\uffff\1\10\4\uffff\1\7\1\10\3\uffff\1\2\1\6\1\10\1\4\3\uffff\1\10\2\uffff\5\10\1\uffff\3\10\1\1\1\5\1\3\3\uffff\1\10",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
@@ -59400,7 +59394,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         public static final BitSet FOLLOW_rule__ContainmentPathElement__Group_0__1_in_rule__ContainmentPathElement__Group_0__033976 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_rule__ContainmentPathElement__NamedElementAssignment_0_0_in_rule__ContainmentPathElement__Group_0__0__Impl34003 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_rule__ContainmentPathElement__Group_0__1__Impl_in_rule__ContainmentPathElement__Group_0__134033 = new BitSet(new long[]{0x0000000000000002L});
-        public static final BitSet FOLLOW_rule__ContainmentPathElement__ArrayRangeAssignment_0_1_in_rule__ContainmentPathElement__Group_0__1__Impl34060 = new BitSet(new long[]{0x0000000000000002L});
+        public static final BitSet FOLLOW_rule__ContainmentPathElement__ArrayRangeAssignment_0_1_in_rule__ContainmentPathElement__Group_0__1__Impl34060 = new BitSet(new long[]{0x0000000000000002L,0x0000000001000000L});
         public static final BitSet FOLLOW_rule__ContainmentPathElement__Group_1__0__Impl_in_rule__ContainmentPathElement__Group_1__034095 = new BitSet(new long[]{0x0000000000000000L,0x0000002000000000L});
         public static final BitSet FOLLOW_rule__ContainmentPathElement__Group_1__1_in_rule__ContainmentPathElement__Group_1__034098 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_FullStop_in_rule__ContainmentPathElement__Group_1__0__Impl34126 = new BitSet(new long[]{0x0000000000000002L});

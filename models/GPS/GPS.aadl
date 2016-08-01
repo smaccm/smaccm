@@ -1,0 +1,32 @@
+package GPS
+public
+	with SMACCM_SYS;
+	
+	system top
+	end top;
+	
+	system implementation top.i
+		subcomponents
+			proc: process proc.i;
+		properties
+			SMACCM_SYS::OS => CAmkES;
+			SMACCM_SYS::HW => ODROID;
+	end top.i;
+	
+	process proc
+	end proc;
+	
+	process implementation proc.i
+		subcomponents
+			gps_driver : thread GPS_Driver;
+	end proc.i;
+	
+	thread GPS_Driver
+		properties
+			SMACCM_SYS::Is_External => true;
+			Dispatch_Protocol => Sporadic;
+			SMACCM_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+			SMACCM_SYS::Sends_Events_To => "{{}}";
+	end GPS_Driver;
+end GPS;

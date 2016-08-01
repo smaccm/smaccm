@@ -65,6 +65,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	private ModelInfo updatedInfo;
 
 	private Text outputText;
+	private ControlDecoration outputTextError;
 
 	private Text originalText;
 	private ControlDecoration originalTextError;
@@ -73,6 +74,23 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	private ControlDecoration updatedTextError;
 
 	private Text subsystemText;
+	
+	private StringBuffer buffer = new StringBuffer();
+
+	@Override
+	public String toString() {
+		return buffer.toString();
+	}
+
+	protected void write(Object o) {
+		buffer.append(o);
+	}
+
+	private static final String seperator = System.getProperty("line.separator");
+
+	private void newline() {
+		write(seperator);
+	}
 
 	protected ModelInfoDialog(Shell parentShell, ModelInfo savedInfo) {
 		super(parentShell);
@@ -87,8 +105,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Model Info for Inserting Simulink Observer");
-		// setMessage("This is a TitleAreaDialog", IMessageProvider.INFORMATION);
+		setTitle("Model Info for Inserting Simulink Observer (Script Generator)");
 	}
 
 	@Override
@@ -129,6 +146,10 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		gridData.horizontalIndent = 10;
 		outputText.setLayoutData(gridData);
 		outputText.addModifyListener(e -> validate());
+		
+		outputTextError = new ControlDecoration(outputText, SWT.TOP | SWT.LEFT);
+		outputTextError.setImage(errorImage);
+		outputTextError.hide();
 
 		Button browseOutputButton = new Button(container, SWT.PUSH);
 		browseOutputButton.setText("Browse");
@@ -138,7 +159,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		browseOutputButton.addListener(SWT.Selection, new DirChooserListner());
 
 		Label originalLabel = new Label(container, SWT.NONE);
-		originalLabel.setText("Original Model Name:");
+		originalLabel.setText("Original Model Path:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 150;
 		originalLabel.setLayoutData(gridData);
@@ -163,9 +184,9 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		browseOriginalButton.addListener(SWT.Selection, new OriginalMdlChooserListner());
 
 		Label updatedLabel = new Label(container, SWT.NONE);
-		updatedLabel.setText("Updated Model Name:");
+		updatedLabel.setText("Model to Insert Observer:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gridData.widthHint = 150;
+		gridData.widthHint = 180;
 		updatedLabel.setLayoutData(gridData);
 
 		updatedText = new Text(container, SWT.BORDER);
@@ -181,7 +202,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		updatedTextError.hide();
 
 		Label subsystemLabel = new Label(container, SWT.NONE);
-		subsystemLabel.setText("Subsystem Name:");
+		subsystemLabel.setText("Subsystem to Verify:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 150;
 		subsystemLabel.setLayoutData(gridData);
@@ -203,7 +224,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		createButton(parent, ModelInfoDialogConstants.UPDATE_MODEL_ID,
 				ModelInfoDialogConstants.UPDATE_LABEL, true);
 		createButton(parent, ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID,
-				ModelInfoDialogConstants.VERIFY_LABEL, true);
+				ModelInfoDialogConstants.VERIFY_LABEL, true);		
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
 	}
@@ -217,78 +238,79 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	}
 
 	protected void validate() {
-		boolean exportError = false;
-		boolean updateError = false;
-		boolean verifyError = false;
-		
+		boolean exportButtonEnabled = false;
+		boolean updateButtonEnabled = false;
+		boolean verifyButtonEnabled = false;		
+		boolean outputDirError = false;
+		boolean originalMdlError = false;
+		boolean updatedMdlError = false;
+		buffer.setLength(0);
+
 		if (outputText.getText().equals("")) {
-			setErrorMessage("Must fill out the output directory");
-			exportError = true;
-		}else if(!new File(outputText.getText()).exists()){
-			setErrorMessage("The output directory does not exist");
-			exportError = true;
-		}else{
-			setErrorMessage(null);
-		}
-		
-		if (originalText.getText().equals("")) {
-			updateError = true;
-			verifyError = true;
+			write("Must fill out the output directory");
+			newline();
+			outputDirError = true;
+		} else if (!new File(outputText.getText()).exists()) {
+			write("The output directory does not exist");
+			newline();
+			outputDirError = true;
 		} else {
-			if (!new File(originalText.getText()).exists()) {
-				originalTextError.setDescriptionText("Original model file does not exist");
-				updateError = true;
-				verifyError = true;
-				originalTextError.show();
-			} else if (!originalText.getText().endsWith(".slx")) {
-				setErrorMessage("Original model must have .slx extension");
-				updateError = true;
-				verifyError = true;
-				originalTextError.show();
-			} else {
-				originalTextError.hide();
-			}
-		}
-		
-		if (updatedText.getText().equals("")) {
-			updateError = true;
-			verifyError = true;
-		} else {
-			if (!updatedText.getText().endsWith(".slx")) {
-				setErrorMessage("Updated model name must have .slx extension");
-				updateError = true;
-				verifyError = true;
-				updatedTextError.show();
-			} else {
-				updatedTextError.hide();
-			}
-		}
-		
-		if (subsystemText.getText().equals("")) {
-			verifyError = true;
-		}
-		
-		if (!exportError) {
-			setExportEnabled(true);
-		} else{
-			setExportEnabled(false);
-		}
-		
-		if (!updateError) {
-			setUpdateEnabled(true);
-		} else{
-			setUpdateEnabled(false);
+			exportButtonEnabled = true;
 		}
 
-		if (!verifyError) {
-			setVerifyEnabled(true);
-		} else{
-			setVerifyEnabled(false);
+		//not flagging an error if the originalText is empty
+		if(!originalText.getText().equals("")){
+			if (!new File(originalText.getText()).exists()) {
+				write("Original model file does not exist");
+				newline();
+				originalMdlError = true;
+			} else if (!originalText.getText().endsWith(".slx")) {
+				write("Original model must have .slx extension");
+				newline();
+				originalMdlError = true;
+			}	
 		}
 		
-		if(!exportError && !updateError && !verifyError){
+		//not flagging an error if the updatedText is empty
+		if(!updatedText.getText().equals("")){
+			if (!updatedText.getText().endsWith(".slx")) {
+				write("Updated model name must have .slx extension");
+				newline();
+				updatedMdlError = true;
+			}
+		}
+
+		//not flagging an error if the subsystemText is empty
+		if (!subsystemText.getText().equals("")) {
+			if(exportButtonEnabled && !originalMdlError && !updatedMdlError){
+				updateButtonEnabled = true;
+				verifyButtonEnabled = true;
+			}	
+		}
+
+		setExportEnabled(exportButtonEnabled);
+		setUpdateEnabled(updateButtonEnabled);
+		setVerifyEnabled(verifyButtonEnabled);
+		
+		if(!outputDirError && !originalMdlError && !updatedMdlError){
 			setErrorMessage(null);
 		}
+		else{
+			setErrorMessage(buffer.toString());
+		}
+		
+		if(outputDirError)
+			outputTextError.show();
+		else
+			outputTextError.hide();
+		if(originalMdlError)
+			originalTextError.show();
+		else
+			originalTextError.hide();
+		if(updatedMdlError)
+			updatedTextError.show();
+		else
+			updatedTextError.hide();
 	}
 
 	protected void buttonPressed(int buttonId) {
@@ -297,7 +319,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		} else if (ModelInfoDialogConstants.UPDATE_MODEL_ID == buttonId) {
 			updatePressed();
 		} else if (ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID == buttonId) {
-			verifyPressed();
+			verifyPressed();	
 		} else if (IDialogConstants.CANCEL_ID == buttonId) {
 			cancelPressed();
 		}
@@ -344,4 +366,5 @@ public class ModelInfoDialog extends TitleAreaDialog{
 				subsystemText.getText(), false, false, true);
 		super.okPressed();
 	}
+
 }

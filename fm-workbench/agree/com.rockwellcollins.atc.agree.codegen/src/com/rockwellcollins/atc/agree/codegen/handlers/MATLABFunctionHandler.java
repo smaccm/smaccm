@@ -147,20 +147,6 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 					
 					writeToFile(modelUpdateScriptPath,
 							modelUpdateScript.toString());
-
-					// create batch file into the output folder
-					MATLABInvocationScriptCreator matlabInvokeScript = new MATLABInvocationScriptCreator(
-							dirStr, modelUpdateScriptName);
-					
-					String batchFileName = matlabFunction.name
-							+ "_cmd_line.bat";
-
-					Path batchPath = Paths.get(dirStr, batchFileName);
-					String batchPathStr = dirStr + "\\" + batchFileName;
-					writeToFile(batchPath, matlabInvokeScript.toString());
-
-					// invoke the batch file
-					Runtime.getRuntime().exec(batchPathStr);
 				}
 			}
 			return Status.OK_STATUS;
@@ -250,7 +236,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 	}
 
 	protected String getJobName() {
-		return "AGREE - Generate Matlab Function Single Layer";
+		return "AGREE - Generate Simulink Observer";
 	}
 
 	public void writeToFile(Path filePath, String contentStr) {
@@ -267,7 +253,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 	}
 	
 	private String readPathFromAADLProperty(String inputStr) {
-		String updatedStr = inputStr.replaceAll("(\\\\+|/+)", Matcher.quoteReplacement(System.getProperty("file.separator")));
+		String updatedStr = inputStr.replaceAll("(\\\\+)", Matcher.quoteReplacement(System.getProperty("file.separator")));
 		return updatedStr;
 	}
 

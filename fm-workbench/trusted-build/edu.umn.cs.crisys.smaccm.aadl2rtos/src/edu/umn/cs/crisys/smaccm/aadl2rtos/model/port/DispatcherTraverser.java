@@ -13,41 +13,29 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;
  *
  * Need to traverse the thread / interface relationships.
  * What do we need to record? 
- *  - really, we *do not care* about destinations; we care about *sources*
- *  - in fact, we only care about *dispatchers*.
+ *  - in fact, we care about *dispatchers*.
+ *  
+ *  In the new schema, we need active thread dispatchers
+ *  to all passive targets.
+ *  
+ *  We want {active, passive} -> active to be a direct connection to
+ *  the target.
+ *  
  */
 
 
 public class DispatcherTraverser {
 
-  /* 
-  public class VisitedDispatcher {
-    public ;
-    public InputEventPort targetPort;
-    
-    public VisitedElement(ThreadImplementation source, 
-                          ThreadImplementation target,
-                          InputEventPort targetPort) {
-      this.source = source;
-      this.target = target;
-      this.targetPort = targetPort;
-    }
-    
-    public boolean equals(Object other) {
-      if (other instanceof VisitedElement) {
-        VisitedElement vo = (VisitedElement)other;
-        return (target == vo.target && targetPort == vo.targetPort);
-      }
-      else 
-        return false;
-    }
-  }
-  */
   
   public DispatcherTraverser() {}
   
   private boolean allowRecursion = false;
   
+  /*
+   * This function returns the set of passive dispatch input ports traverseable 
+   * from an initial input port.
+   * 
+   */
   private void traversePassiveDispatchersInternal(Set<DispatchableInputPort> visited, Deque<DispatchableInputPort> path, DispatchableInputPort d, String indent) {
     
     // System.out.println(indent + "Visiting dispatcher: " + d.getOwner().getName() + "." + d.getName()); 
@@ -75,23 +63,23 @@ public class DispatcherTraverser {
   // dispatcherActiveThreadConnectionFrontier
   // 
   // This method finds the connections from all passive dispatch paths referenced from  
-  // the 'init' dispatcher that lead to active threads.
+  // a provided 'initial' dispatcher paramter that lead to active threads.
   //
   ////////////////////////////////////////////////////////////////////////////////////////
   
   /**
    * finds the connections from all passive dispatch paths referenced from  
-   * the 'init' dispatcher that lead to active threads.  The init argument 
+   * the 'initial' dispatcher that lead to active threads.  The 'initial' argument 
    * specifies the dispatcher from which to start the search, and the 'frontier'
    * is the set in which to place the frontier nodes. 
    * 
-   * @param  init  the initial dispatcher for traversal
+   * @param  initial  the initial dispatcher for traversal
    * @param  frontier the set containing the result of the traversal.
    */
-  private void dispatcherActiveThreadConnectionFrontier(DispatchableInputPort init, Set<PortConnection> frontier) {
+  private void dispatcherActiveThreadConnectionFrontier(DispatchableInputPort initial, Set<PortConnection> frontier) {
     Set<DispatchableInputPort> visited = new HashSet<DispatchableInputPort>(); 
-    visited.add(init);
-    passiveDispatchersFromActiveThread(visited, init);
+    visited.add(initial);
+    passiveDispatchersFromActiveThread(visited, initial);
     for (DispatchableInputPort d : visited) {
       for (OutgoingDispatchContract limit : d.getDispatchLimits()) {
         for (Map.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
@@ -106,6 +94,8 @@ public class DispatcherTraverser {
     }
   }
   
+  /* this method removes 'self dispatches' from the list of dispatchers. */
+  
   public void dispatcherNonlocalActiveThreadConnectionFrontier(DispatchableInputPort init, Set<PortConnection> frontier) {
     dispatcherActiveThreadConnectionFrontier(init, frontier); 
     Iterator<PortConnection> setIt = frontier.iterator();
@@ -117,6 +107,7 @@ public class DispatcherTraverser {
     }  
   }
   
+  /* This method contains only 'self dispatches' from the active thread */
   public void dispatcherLocalActiveThreadConnectionFrontier(DispatchableInputPort init, Set<PortConnection> frontier) {
     dispatcherActiveThreadConnectionFrontier(init, frontier); 
     Iterator<PortConnection> setIt = frontier.iterator();
@@ -165,5 +156,18 @@ public class DispatcherTraverser {
         }
       }
     }
+  }
+  
+  public void dispatcherActiveThreadConnections(DispatchableInputPort initial, Set<PortConnection> frontier) {
+     for (OutgoingDispatchContract limit : initial.getDispatchLimits()) {
+        for (Map.Entry<OutputEventPort, Integer> elem : limit.getContract().entrySet()) {
+          for (PortConnection pc : elem.getKey().getConnections()) {
+            InputEventPort iep = (InputEventPort)pc.getDestPort();
+            if (!iep.getOwner().getIsPassive()) {
+            	frontier.add(pc);
+            }
+          }
+        }
+     }
   }
 }

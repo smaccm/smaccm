@@ -5,11 +5,11 @@ import "CommonOSSpecificNames.stg"
 /////////////////////////////////////////////////////////////////////
 //
 // UserEntrypointCaller functions
-// 
-// These functions provide the "scaffolding" functions necessary to 
+//
+// These functions provide the "scaffolding" functions necessary to
 // set up the output event ports prior to making a call to the user
 // code.
-// 
+//
 /////////////////////////////////////////////////////////////////////
 
 
@@ -22,7 +22,7 @@ userEntrypointCallerFnArgs(dispatcher) ::= <<
   <dispatcher.dispatchStructTypeName> *out_arg
 >>
 
-userEntrypointCallerPrototype(dispatcher) ::= << 
+userEntrypointCallerPrototype(dispatcher) ::= <<
 void <incomingUserEntrypointCallerName(dispatcher)>(<userEntrypointCallerFnArgs(dispatcher)>)
 >>
 

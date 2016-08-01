@@ -1,0 +1,23 @@
+import "CommonComponentHeader.stg"
+import "VxWorksAssemblyHeader.stg"
+
+sharedDataDecl(sharedDataAccessor) ::= <<
+extern <sharedDataAccessor.type.name> *<sharedDataAccessor.name>;
+>>
+
+
+componentGlueCodeHeaderBody(threadImpl) ::= <<
+#include <\u003C>semLib.h<\u003E>
+
+
+<componentGlueCodeHeaderBodyFunctions(threadImpl)>
+
+<if(threadImpl.sharedDataAccessorList)>
+    // declarations for shared data.
+    <threadImpl.sharedDataAccessorList:sharedDataDecl()>
+<endif>
+
+    <writeModelMutexes(threadImpl.model, "extern")>
+
+
+>>
