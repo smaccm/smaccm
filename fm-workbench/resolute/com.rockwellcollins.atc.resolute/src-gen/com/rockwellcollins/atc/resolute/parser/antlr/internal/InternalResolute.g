@@ -770,6 +770,30 @@ ruleBaseType returns [EObject current=null]
        		setWithLastConsumed($current, "type", lv_type_0_42, null);
 	    }
 
+    |		lv_type_0_43=	'flow_specification' 
+    {
+        newLeafNode(lv_type_0_43, grammarAccess.getBaseTypeAccess().getTypeFlow_specificationKeyword_0_42());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getBaseTypeRule());
+	        }
+       		setWithLastConsumed($current, "type", lv_type_0_43, null);
+	    }
+
+    |		lv_type_0_44=	'end_to_end_flow' 
+    {
+        newLeafNode(lv_type_0_44, grammarAccess.getBaseTypeAccess().getTypeEnd_to_end_flowKeyword_0_43());
+    }
+ 
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getBaseTypeRule());
+	        }
+       		setWithLastConsumed($current, "type", lv_type_0_44, null);
+	    }
+
 )
 
 )
@@ -2952,213 +2976,381 @@ ruleBuiltInFn returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
     }
 
     |
+	kw='property_member' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getProperty_memberKeyword_2()); 
+    }
+
+    |
 	kw='has_parent' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_parentKeyword_2()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_parentKeyword_3()); 
     }
 
     |
 	kw='parent' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getParentKeyword_3()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getParentKeyword_4()); 
     }
 
     |
 	kw='name' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getNameKeyword_4()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getNameKeyword_5()); 
     }
 
     |
 	kw='type' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getTypeKeyword_5()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getTypeKeyword_6()); 
     }
 
     |
 	kw='has_type' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_typeKeyword_6()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_typeKeyword_7()); 
+    }
+
+    |
+	kw='is_in_array' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_in_arrayKeyword_8()); 
+    }
+
+    |
+	kw='has_prototypes' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_prototypesKeyword_9()); 
+    }
+
+    |
+	kw='has_modes' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_modesKeyword_10()); 
+    }
+
+    |
+	kw='is_processor' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_processorKeyword_11()); 
+    }
+
+    |
+	kw='is_virtual_processor' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_virtual_processorKeyword_12()); 
+    }
+
+    |
+	kw='is_system' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_systemKeyword_13()); 
+    }
+
+    |
+	kw='is_bus' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_busKeyword_14()); 
+    }
+
+    |
+	kw='is_virtual_bus' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_virtual_busKeyword_15()); 
+    }
+
+    |
+	kw='is_device' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_deviceKeyword_16()); 
+    }
+
+    |
+	kw='is_memory' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_memoryKeyword_17()); 
+    }
+
+    |
+	kw='is_thread' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_threadKeyword_18()); 
+    }
+
+    |
+	kw='is_process' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_processKeyword_19()); 
+    }
+
+    |
+	kw='is_subprogram' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_subprogramKeyword_20()); 
     }
 
     |
 	kw='is_of_type' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_of_typeKeyword_7()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_of_typeKeyword_21()); 
     }
 
     |
 	kw='is_bound_to' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_bound_toKeyword_8()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_bound_toKeyword_22()); 
     }
 
     |
 	kw='has_member' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_memberKeyword_9()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_memberKeyword_23()); 
     }
 
     |
 	kw='features' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFeaturesKeyword_10()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFeaturesKeyword_24()); 
     }
 
     |
 	kw='connections' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getConnectionsKeyword_11()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getConnectionsKeyword_25()); 
     }
 
     |
 	kw='subcomponents' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getSubcomponentsKeyword_12()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getSubcomponentsKeyword_26()); 
     }
 
     |
 	kw='source' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getSourceKeyword_13()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getSourceKeyword_27()); 
     }
 
     |
 	kw='destination' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getDestinationKeyword_14()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getDestinationKeyword_28()); 
     }
 
     |
 	kw='direction' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getDirectionKeyword_15()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getDirectionKeyword_29()); 
     }
 
     |
 	kw='is_event_port' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_event_portKeyword_16()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_event_portKeyword_30()); 
+    }
+
+    |
+	kw='is_abstract_feature' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_abstract_featureKeyword_31()); 
+    }
+
+    |
+	kw='is_data_port' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_data_portKeyword_32()); 
+    }
+
+    |
+	kw='is_port' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_portKeyword_33()); 
+    }
+
+    |
+	kw='is_data_access' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_data_accessKeyword_34()); 
     }
 
     |
 	kw='lower_bound' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getLower_boundKeyword_17()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getLower_boundKeyword_35()); 
     }
 
     |
 	kw='upper_bound' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getUpper_boundKeyword_18()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getUpper_boundKeyword_36()); 
     }
 
     |
 	kw='member' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getMemberKeyword_19()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getMemberKeyword_37()); 
     }
 
     |
 	kw='sum' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getSumKeyword_20()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getSumKeyword_38()); 
     }
 
     |
 	kw='union' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getUnionKeyword_21()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getUnionKeyword_39()); 
     }
 
     |
 	kw='length' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getLengthKeyword_22()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getLengthKeyword_40()); 
     }
 
     |
 	kw='size' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getSizeKeyword_23()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getSizeKeyword_41()); 
     }
 
     |
 	kw='intersect' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIntersectKeyword_24()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIntersectKeyword_42()); 
     }
 
     |
 	kw='instance' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getInstanceKeyword_25()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getInstanceKeyword_43()); 
     }
 
     |
 	kw='instances' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getInstancesKeyword_26()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getInstancesKeyword_44()); 
+    }
+
+    |
+	kw='debug' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getDebugKeyword_45()); 
     }
 
     |
 	kw='analysis' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAnalysisKeyword_27()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAnalysisKeyword_46()); 
     }
 
     |
 	kw='receive_error' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getReceive_errorKeyword_28()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getReceive_errorKeyword_47()); 
     }
 
     |
 	kw='contain_error' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getContain_errorKeyword_29()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getContain_errorKeyword_48()); 
     }
 
     |
 	kw='propagate_error' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getPropagate_errorKeyword_30()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getPropagate_errorKeyword_49()); 
     }
 
     |
 	kw='error_state_reachable' 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getError_state_reachableKeyword_31()); 
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getError_state_reachableKeyword_50()); 
+    }
+
+    |
+	kw='flow_source' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFlow_sourceKeyword_51()); 
+    }
+
+    |
+	kw='flow_destination' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_52()); 
+    }
+
+    |
+	kw='flow_elements' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_53()); 
+    }
+
+    |
+	kw='flow_specifications' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getFlow_specificationsKeyword_54()); 
+    }
+
+    |
+	kw='end_to_end_flows' 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_55()); 
     }
 )
     ;
@@ -4464,7 +4656,7 @@ ruleContainmentPathElement returns [EObject current=null]
 	    }
 
 )
-)?)(	otherlv_2='.' 
+)*)(	otherlv_2='.' 
     {
     	newLeafNode(otherlv_2, grammarAccess.getContainmentPathElementAccess().getFullStopKeyword_1_0());
     }

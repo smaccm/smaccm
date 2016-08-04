@@ -36,8 +36,8 @@ public interface MATLABTypeVisitor<T> {
 
 	public T visit(MATLABSingleType matlabSingleType);
 
-	public T visit(MATLABInt64Type matlabInt64Type);
-
 	public T visit(MATLABUInt64Type matlabuInt64Type);
+
+	public T visit(MATLABInt64Type matlabInt64Type);
 
 }

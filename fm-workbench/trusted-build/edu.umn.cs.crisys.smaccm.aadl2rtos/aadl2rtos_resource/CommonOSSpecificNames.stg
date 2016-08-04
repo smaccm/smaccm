@@ -1,38 +1,40 @@
 /*********************************************************************
- * OS-specific naming functions required by C files: 
+ * OS-specific naming functions required by C files:
  *   incomingPortWriterName
  *   outgoingPortWriterName
  *   incomingActiveThreadDispatchName
  *   outgoingActiveThreadDispatchName
  *   incomingUserEntrypointCallerName
  *   outgoingUserEntrypointCallerName
- * 	 portDispatcherLock
+ *      portLockStmt
+ *   portUnlockStmt
+ *   portDispatcherLock
  *   portDispatcherUnlock
  *   dispatcherMainInitializeLockStmt
  *   dispatcherMainLockWaitStmt
  *   dispatcherMainLockReleaseStmt
  *   osSpecificIncludeFiles
  *   osSpecificIrqDispatcher
- *   osSpecificRegisterIrqs
+ *   osSpecificThreadInitializer
  *   osSpecificThreadEntrypoint
  *   osSpecificComponentLocalCallerFunction
  *   osSpecificAssert
  * This file just 'fails' for each of these calls.
 >>
- 
+
  */
 
-genericFailure(template) ::= 
-<< INTERNAL ERROR: template: <template> not overridden for host OS. >>  
+genericFailure(template) ::=
+<< INTERNAL ERROR: template: <template> not overridden for host OS. >>
 
-incomingPortWriterName(port) ::= << 
+incomingPortWriterName(port) ::= <<
 <genericFailure("incomingPortWriterName")>
 <port.incomingPortWriterNameDoesntExist>
 >>
 
-outgoingPortWriterName(destPort, srcPort) ::= << 
+outgoingPortWriterName(connection) ::= <<
 <genericFailure("outgoingPortWriterName")>
-<destPort.outgoingPortWriterNameDoesntExist>
+<connection.outgoingPortWriterNameDoesntExist>
 >>
 
 incomingActiveThreadDispatchName(dispatcher) ::= <<
@@ -90,8 +92,8 @@ dispatcherMainLockReleaseStmt(dispatcher, threadImpl) ::= <<
 <threadImpl.dispatcherMainLockReleaseStmtDoesntExist>
 >>
 
-osSpecificIrqDispatcher(dispatcher) ::= <<
-<genericFailure("osSpecificIrqDispatcher")>
+osSpecificThreadPostInitializer(threadImpl) ::= <<
+<genericFailure("osSpecificThreadInitializer")>
 <dispatcher.osSpecificIrqDispatcherDoesntExist>
 >>
 

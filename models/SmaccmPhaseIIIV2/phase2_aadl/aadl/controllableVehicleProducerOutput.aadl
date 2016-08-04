@@ -1,0 +1,233 @@
+-- File generated from Tower-AADL compiler
+
+package controllableVehicleProducerOutput
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread controllableVehicleProducerOutput
+  features
+    Input_parse_frame: in event data port Data_Types::array_80_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_parse_frame");
+        Source_Text => ("user_code/controllableVehicleProducerOutput_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_parse_frame_0, 1 Output_parse_frame_1, 1 Output_parse_frame_2, 1 Output_parse_frame_3, 1 Output_parse_frame_4, 1 Output_parse_frame_5, 1 Output_parse_frame_6, 1 Output_parse_frame_7, 1 Output_parse_frame_8, 1 Output_parse_frame_9, 1 Output_parse_frame_10, 1 Output_parse_frame_11, 1 Output_parse_frame_12, 1 Output_parse_frame_13, 1 Output_parse_frame_14, 1 Output_parse_frame_15, 1 Output_parse_frame_16, 1 Output_parse_frame_17, 1 Output_parse_frame_18, 1 Output_parse_frame_19, 1 Output_parse_frame_20, 1 Output_parse_frame_21, 1 Output_parse_frame_22, 1 Output_parse_frame_23, 1 Output_parse_frame_24, 1 Output_parse_frame_25, 1 Output_parse_frame_26, 1 Output_parse_frame_27, 1 Output_parse_frame_28, 1 Output_parse_frame_29, 1 Output_parse_frame_30, 1 Output_parse_frame_31, 1 Output_parse_frame_32, 1 Output_parse_frame_33, 1 Output_parse_frame_34, 1 Output_parse_frame_35, 1 Output_parse_frame_36, 1 Output_parse_frame_37, 1 Output_parse_frame_38, 1 Output_parse_frame_39, 1 Output_parse_frame_40, 1 Output_parse_frame_41, 1 Output_parse_frame_42, 1 Output_parse_frame_43, 1 Output_parse_frame_44, 1 Output_parse_frame_45, 1 Output_parse_frame_46, 1 Output_parse_frame_47, 1 Output_parse_frame_48, 1 Output_parse_frame_49, 1 Output_parse_frame_50, 1 Output_parse_frame_51}}";
+      };
+    Output_parse_frame_0: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_15";
+      };
+    Output_parse_frame_1: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_16";
+      };
+    Output_parse_frame_2: out event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_17";
+      };
+    Output_parse_frame_3: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_18";
+      };
+    Output_parse_frame_4: out event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_19";
+      };
+    Output_parse_frame_5: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_20";
+      };
+    Output_parse_frame_6: out event data port Data_Types::sequence_numbered_throttle_ui
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_21";
+      };
+    Output_parse_frame_7: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_22";
+      };
+    Output_parse_frame_8: out event data port Data_Types::sequence_numbered_stab_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_23";
+      };
+    Output_parse_frame_9: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_24";
+      };
+    Output_parse_frame_10: out event data port Data_Types::sequence_numbered_stab_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_25";
+      };
+    Output_parse_frame_11: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_26";
+      };
+    Output_parse_frame_12: out event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_27";
+      };
+    Output_parse_frame_13: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_28";
+      };
+    Output_parse_frame_14: out event data port Data_Types::sequence_numbered_pid_config
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_29";
+      };
+    Output_parse_frame_15: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_30";
+      };
+    Output_parse_frame_16: out event data port Data_Types::sequence_numbered_tristate
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_31";
+      };
+    Output_parse_frame_17: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_32";
+      };
+    Output_parse_frame_18: out event data port Data_Types::sequence_numbered_control_modes
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_33";
+      };
+    Output_parse_frame_19: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_34";
+      };
+    Output_parse_frame_20: out event data port Data_Types::sequence_numbered_user_input
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_35";
+      };
+    Output_parse_frame_21: out event data port Base_Types::Unsigned_32
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_36";
+      };
+    Output_parse_frame_22: out event data port Data_Types::sequence_numbered_rgb_led_setting
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_37";
+      };
+    Output_parse_frame_23: out event data port Data_Types::sequence_numbered_camera_target
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_38";
+      };
+    Output_parse_frame_24: out event data port Data_Types::heartbeat
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_39";
+      };
+    Output_parse_frame_25: out event data port Data_Types::sequence_numbered_packed_status
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_40";
+      };
+    Output_parse_frame_26: out event data port Data_Types::sequence_numbered_control_law
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_41";
+      };
+    Output_parse_frame_27: out event data port Data_Types::sequence_numbered_rc_input
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_42";
+      };
+    Output_parse_frame_28: out event data port Data_Types::sequence_numbered_user_input_result
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_43";
+      };
+    Output_parse_frame_29: out event data port Data_Types::sequence_numbered_sensors_result
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_44";
+      };
+    Output_parse_frame_30: out event data port Data_Types::sequence_numbered_gyroscope_sample
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_45";
+      };
+    Output_parse_frame_31: out event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_46";
+      };
+    Output_parse_frame_32: out event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_47";
+      };
+    Output_parse_frame_33: out event data port Data_Types::sequence_numbered_gyroscope_sample
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_48";
+      };
+    Output_parse_frame_34: out event data port Data_Types::sequence_numbered_accelerometer_sample
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_49";
+      };
+    Output_parse_frame_35: out event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_50";
+      };
+    Output_parse_frame_36: out event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_51";
+      };
+    Output_parse_frame_37: out event data port Data_Types::sequence_numbered_accelerometer_sample
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_52";
+      };
+    Output_parse_frame_38: out event data port Data_Types::sequence_numbered_barometer_sample
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_53";
+      };
+    Output_parse_frame_39: out event data port Data_Types::sequence_numbered_magnetometer_sample
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_54";
+      };
+    Output_parse_frame_40: out event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_55";
+      };
+    Output_parse_frame_41: out event data port Data_Types::sequence_numbered_xyz_calibration
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_56";
+      };
+    Output_parse_frame_42: out event data port Data_Types::sequence_numbered_magnetometer_sample
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_57";
+      };
+    Output_parse_frame_43: out event data port Data_Types::sequence_numbered_position_sample
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_58";
+      };
+    Output_parse_frame_44: out event data port Data_Types::sequence_numbered_control_setpoint
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_59";
+      };
+    Output_parse_frame_45: out event data port Data_Types::sequence_numbered_control_output
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_60";
+      };
+    Output_parse_frame_46: out event data port Data_Types::sequence_numbered_quadcopter_motors
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_61";
+      };
+    Output_parse_frame_47: out event data port Data_Types::sequence_numbered_att_control_debug
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_62";
+      };
+    Output_parse_frame_48: out event data port Data_Types::sequence_numbered_alt_control_debug
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_63";
+      };
+    Output_parse_frame_49: out event data port Data_Types::sequence_numbered_px4io_state
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_64";
+      };
+    Output_parse_frame_50: out event data port Data_Types::sequence_numbered_arming_status
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_65";
+      };
+    Output_parse_frame_51: out event data port Data_Types::sequence_numbered_float
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_parse_frame_chan_66";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end controllableVehicleProducerOutput;
+
+end controllableVehicleProducerOutput;

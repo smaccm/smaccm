@@ -1,0 +1,35 @@
+-- File generated from Tower-AADL compiler
+
+package frameBuffer
+public
+  with Base_Types;
+  with Data_Model;
+  with Data_Types;
+  with SMACCM_SYS;
+
+thread frameBuffer
+  features
+    Input_push: in event data port Data_Types::array_96_Unsigned_8.impl
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_push");
+        Source_Text => ("user_code/frameBuffer_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{}}";
+      };
+    Input_5ms: in event data port Base_Types::Integer_64
+      {
+        SMACCM_SYS::Compute_Entrypoint_Source_Text => ("callback_periodic_pop");
+        Source_Text => ("user_code/frameBuffer_monitor.c");
+        SMACCM_SYS::Sends_Events_To => "{{1 Output_periodic_pop_0}}";
+      };
+    Output_periodic_pop_0: out event data port Data_Types::array_96_Unsigned_8.impl
+      {
+        SMACCM_SYS::CommPrim_Source_Text => "emitter_periodic_pop_chan_12";
+      };
+  properties
+    SMACCM_SYS::Thread_Type => Passive;
+    Dispatch_Protocol => Aperiodic;
+    Compute_Execution_Time => 10 us .. 100 us;
+    Source_Text => ();
+end frameBuffer;
+
+end frameBuffer;

@@ -1,0 +1,21 @@
+import "CommonTypesHeader.stg"
+
+
+filePrefix(name, date, path) ::= <<
+#ifndef <datatypesHeaderIfdef(name)>
+#define <datatypesHeaderIfdef(name)>
+
+<DARPALicenseComment()>
+
+<filenameBlockComment(date, path, datatypesblockPurpose(name))>
+
+#include \<../usr/h/stdbool.h>
+#include \<stddef.h>
+#include \<../usr/h/stdint.h>
+
+>>
+
+writeExternal(string) ::= <<
+#include "<string>"
+
+>>

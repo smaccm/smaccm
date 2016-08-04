@@ -117,7 +117,6 @@ import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRecordUtils;
-import com.rockwellcollins.atc.agree.analysis.AgreeVarDecl;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
@@ -1365,13 +1364,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
             switch (tag) {
             case "_CLK":
-                // a variable of the same name as this should be created by
-                // setEventPortQueues()
-                // in the AgreeAnnexEmitter which created "this"
-                // AgreeAnnexEmitter
-                AgreeVarDecl clockVar = new AgreeVarDecl(namedEl.getName() + clockIDSuffix, NamedType.BOOL);
-
-                IdExpr clockId = new IdExpr(clockVar.id);
+                IdExpr clockId = new IdExpr(namedEl.getName() + clockIDSuffix);
                 return clockId;
             default:
                 throw new AgreeException(

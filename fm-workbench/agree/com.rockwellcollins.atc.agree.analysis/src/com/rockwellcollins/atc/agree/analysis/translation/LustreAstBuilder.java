@@ -2,6 +2,7 @@ package com.rockwellcollins.atc.agree.analysis.translation;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -80,110 +81,106 @@ public class LustreAstBuilder {
 
 	public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram) {
 
-		// agreeProgram = translate(agreeProgram);
-		List<TypeDef> types = new ArrayList<>();
-		for (Type type : agreeProgram.globalTypes) {
-			RecordType recType = (RecordType) type;
-			types.add(new TypeDef(recType.id, type));
-		}
+        List<TypeDef> types = getTypes(agreeProgram);
 
-		List<Expr> assertions = new ArrayList<>();
-		List<VarDecl> locals = new ArrayList<>();
-		List<VarDecl> inputs = new ArrayList<>();
-		List<Equation> equations = new ArrayList<>();
-		List<String> properties = new ArrayList<>();
+        List<Expr> assertions = new ArrayList<>();
+        List<VarDecl> locals = new ArrayList<>();
+        List<VarDecl> inputs = new ArrayList<>();
+        List<Equation> equations = new ArrayList<>();
+        List<String> properties = new ArrayList<>();
 
-		AgreeNode topNode = agreeProgram.topNode;
+        AgreeNode topNode = agreeProgram.topNode;
 
-		for (AgreeStatement assumption : topNode.assumptions) {
-			assertions.add(assumption.expr);
-		}
+        for (AgreeStatement assumption : topNode.assumptions) {
+            assertions.add(assumption.expr);
+        }
 
-		int i = 0;
+        int i = 0;
 
-		for (AgreeStatement guarantee : topNode.guarantees) {
-			String guarName = guarSuffix + i++;
-			locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, topNode.compInst));
-			equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
-			properties.add(guarName);
-		}
+        for (AgreeStatement guarantee : topNode.guarantees) {
+            String guarName = guarSuffix + i++;
+            locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, topNode.compInst));
+            equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
+            properties.add(guarName);
+        }
 
-		List<String> inputStrs = new ArrayList<>();
-		for (AgreeVar var : topNode.inputs) {
-			inputs.add(var);
-			inputStrs.add(var.id);
-		}
+        List<String> inputStrs = new ArrayList<>();
+        for (AgreeVar var : topNode.inputs) {
+            inputs.add(var);
+            inputStrs.add(var.id);
+        }
 
-		for (AgreeVar var : topNode.outputs) {
-			inputs.add(var);
-		}
+        for (AgreeVar var : topNode.outputs) {
+            inputs.add(var);
+        }
 
-		// perhaps we should break out eq statements into implementation
-		// equations
-		// and type equations. This would clear this up
-		for (AgreeStatement statement : topNode.assertions) {
-			if (AgreeUtils.referenceIsInContract(statement.reference)) {
+        // perhaps we should break out eq statements into implementation
+        // equations
+        // and type equations. This would clear this up
+        for (AgreeStatement statement : topNode.assertions) {
+            if (AgreeUtils.referenceIsInContract(statement)){
 
-				// this is a strange hack we have to do. we have to make
-				// equation and property
-				// statements not assertions. They should all be binary
-				// expressions with an
-				// equals operator. We will need to removing their corresponding
-				// variable
+                // this is a strange hack we have to do. we have to make
+                // equation and property
+                // statements not assertions. They should all be binary
+                // expressions with an
+                // equals operator. We will need to removing their corresponding
+                // variable
 				// from the inputs and add them to the local variables
-				BinaryExpr binExpr = (BinaryExpr) statement.expr;
-				IdExpr varId = (IdExpr) binExpr.left;
-
-				boolean found = false;
-				int index;
-				for (index = 0; index < inputs.size(); index++) {
-					VarDecl var = inputs.get(index);
-					if (var.id.equals(varId.id)) {
-						found = true;
-						break;
-					}
-
+            	BinaryExpr binExpr;
+            	IdExpr varId;
+				try {
+					binExpr = (BinaryExpr) statement.expr;
+					varId = (IdExpr) binExpr.left;
+				} catch (ClassCastException e) {
+					//some equation variables are assertions for
+					//subrange types. do not translate these to
+					//local equations. Just add them to assertions
+					assertions.add(statement.expr);
+					continue;
 				}
-				if (!found || binExpr.op != BinaryOp.EQUAL) {
-					throw new AgreeException(
-							"Something went very wrong with the lustre generation in the realizability analysis");
-				}
-				locals.add(inputs.remove(index));
-				equations.add(new Equation(varId, binExpr.right));
-			}
-		}
 
-		equations.addAll(topNode.localEquations);
+                boolean found = false;
+                int index;
+                for (index = 0; index < inputs.size(); index++) {
+                    VarDecl var = inputs.get(index);
+                    if (var.id.equals(varId.id)) {
+                        found = true;
+                        break;
+                    }
 
-		NodeBuilder builder = new NodeBuilder("main");
-		builder.addInputs(inputs);
-		builder.addLocals(locals);
-		builder.addEquations(equations);
-		builder.addProperties(properties);
-		builder.addAssertions(assertions);
-		builder.setRealizabilityInputs(inputStrs);
+                }
+                if (!found || binExpr.op != BinaryOp.EQUAL) {
+                    throw new AgreeException(
+                            "Something went very wrong with the lustre generation in the realizability analysis");
+                }
+                locals.add(inputs.remove(index));
+                equations.add(new Equation(varId, binExpr.right));
+            }
+        }
 
-		Node main = builder.build();
-		List<Node> nodes = new ArrayList<>();
-		nodes.add(main);
-		nodes.addAll(agreeProgram.globalLustreNodes);
-		nodes.add(getHistNode());
+        NodeBuilder builder = new NodeBuilder("main");
+        builder.addInputs(inputs);
+        builder.addLocals(locals);
+        builder.addEquations(equations);
+        builder.addProperties(properties);
+        builder.addAssertions(assertions);
+        builder.setRealizabilityInputs(inputStrs);
+        
+        Node main = builder.build();
+        List<Node> nodes = new ArrayList<>();
+        nodes.add(main);
+        nodes.addAll(agreeProgram.globalLustreNodes);
+        Program program = new Program(types, null, nodes, main.id);
 
-		Program program = new Program(types, null, nodes, main.id);
+        return program;
 
-		return program;
-
-	}
+    }
 
 	public static Program getAssumeGuaranteeLustreProgram(AgreeProgram agreeProgram) {
 
-		// agreeProgram = translate(agreeProgram);
 		nodes = new ArrayList<>();
-		List<TypeDef> types = new ArrayList<>();
-		for (Type type : agreeProgram.globalTypes) {
-			RecordType recType = (RecordType) type;
-			types.add(new TypeDef(recType.id, type));
-		}
+        List<TypeDef> types = getTypes(agreeProgram);
 
 		AgreeNode flatNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__");
 		List<Expr> assertions = new ArrayList<>();
@@ -266,11 +263,7 @@ public class LustreAstBuilder {
 	public static List<Pair<String, Program>> getConsistencyChecks(AgreeProgram agreeProgram) {
 
 		List<Pair<String, Program>> programs = new ArrayList<>();
-		List<TypeDef> types = new ArrayList<>();
-		for (Type type : agreeProgram.globalTypes) {
-			RecordType recType = (RecordType) type;
-			types.add(new TypeDef(recType.id, type));
-		}
+		List<TypeDef> types = getTypes(agreeProgram);
 
 		nodes = new ArrayList<>();
 
@@ -888,5 +881,38 @@ public class LustreAstBuilder {
 		builder.addEquation(new Equation(histId, histExpr));
 		return builder.build();
 	}
+
+    protected static List<TypeDef> getTypes(AgreeProgram agreeProgram) {
+        List<TypeDef> types = new ArrayList<>();
+        for (Type type : agreeProgram.globalTypes) {
+            RecordType recType = (RecordType) type;
+            types.add(new TypeDef(recType.id, type));
+        }
+        
+        //add synonym types
+        types.addAll(getTypeSynonmyms());
+        return types;
+    }
+    
+    private static Collection<? extends TypeDef> getTypeSynonmyms() {
+        List<TypeDef> types = new ArrayList<>();
+        
+        types.add(new TypeDef("Base_Types__Boolean", NamedType.BOOL));
+        types.add(new TypeDef("Base_Types__Unsigned", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_64", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_32", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_16", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_8", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_64", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_32", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_16", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_8", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Float", NamedType.REAL));
+        types.add(new TypeDef("Base_Types__Float_32", NamedType.REAL));
+        types.add(new TypeDef("Base_Types__Float_64", NamedType.REAL));
+        
+        return types;
+    }
 
 }

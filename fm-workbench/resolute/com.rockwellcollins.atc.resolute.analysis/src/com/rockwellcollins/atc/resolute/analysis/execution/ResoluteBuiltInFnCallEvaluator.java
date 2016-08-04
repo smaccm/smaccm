@@ -2,36 +2,45 @@ package com.rockwellcollins.atc.resolute.analysis.execution;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.BasicPropertyAssociation;
 import org.osate.aadl2.BooleanLiteral;
-import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
-import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
+import org.osate.aadl2.RecordValue;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionReference;
+import org.osate.aadl2.instance.EndToEndFlowInstance;
+import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
+import org.osate.aadl2.instance.FlowSpecificationInstance;
 import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.aadl2.util.OsateDebug;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
@@ -45,6 +54,7 @@ import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RangeValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
+import com.rockwellcollins.atc.resolute.analysis.values.ResoluteRecordValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 import com.rockwellcollins.atc.resolute.analysis.values.SetValue;
 import com.rockwellcollins.atc.resolute.analysis.values.StringValue;
@@ -81,11 +91,22 @@ public class ResoluteBuiltInFnCallEvaluator {
 					return args.get(2);
 
 				}
-				throw new ResoluteFailException("Property " + prop.getName() + " not defined on "
-						+ element.getName(), fnCallExpr);
+				throw new ResoluteFailException("Property " + prop.getName() + " not defined on " + element.getName(),
+						fnCallExpr);
 			}
 
 			return exprToValue(expr);
+		}
+
+		case "property_member": {
+			ResoluteRecordValue record = (ResoluteRecordValue) args.get(0);
+			String fieldName = args.get(1).getString().toLowerCase();
+
+			ResoluteValue fieldValue = record.getField(fieldName);
+			if (fieldValue == null) {
+				throw new ResoluteFailException("Record Field " + fieldName + " not found", fnCallExpr);
+			}
+			return fieldValue;
 		}
 
 		case "has_parent": {
@@ -122,24 +143,24 @@ public class ResoluteBuiltInFnCallEvaluator {
 			NamedElement type = builtinType(element);
 			return bool(type != null);
 		}
-		
+
 		case "is_bound_to": {
-			NamedElement component = args.get(0).getNamedElement();
+			NamedElement ne = args.get(0).getNamedElement();
 			NamedElement resource = args.get(1).getNamedElement();
-			if ((component instanceof ComponentInstance) && (resource instanceof ComponentInstance)) {
-				ComponentInstance componentInstance = (ComponentInstance) component;
+			if ((ne instanceof ComponentInstance) && (resource instanceof ComponentInstance)) {
+				ComponentInstance componentInstance = (ComponentInstance) ne;
 				ComponentInstance resourceInstance = (ComponentInstance) resource;
-				
+
 				/**
 				 * Check the processor binding
 				 */
-				
+
 				for (ComponentInstance binding : GetProperties.getActualProcessorBinding(componentInstance)) {
 					if (binding == resourceInstance) {
 						return bool(true);
 					}
 				}
-				
+
 				/**
 				 * Check the memory binding
 				 */
@@ -148,28 +169,38 @@ public class ResoluteBuiltInFnCallEvaluator {
 						return bool(true);
 					}
 				}
-				
+
+			}
+
+			if ((ne instanceof ConnectionInstance) && (resource instanceof ComponentInstance)) {
+				ConnectionInstance ci = (ConnectionInstance) ne;
+				ComponentInstance resourceInstance = (ComponentInstance) resource;
+
+				for (ComponentInstance binding : GetProperties.getActualConnectionBinding(ci)) {
+					if (binding == resourceInstance) {
+						return bool(true);
+					}
+				}
 			}
 			return bool(false);
-				
+
 		}
-		
+
 		case "is_of_type": {
 			NamedElement element = args.get(0).getNamedElement();
 			NamedElement type = args.get(1).getNamedElement();
 			if (element instanceof ComponentInstance) {
 				ComponentInstance ci;
 				ComponentType ct;
-				Classifier cl;
 				ci = (ComponentInstance) element;
-				
+
 				if ((ci == null) || (ci.getSubcomponent() == null)) {
-					return bool (false);
+					return bool(false);
 				}
-				
+
 				ct = ci.getSubcomponent().getComponentType();
-//				cl = (Classifier) type;
-//				return bool ((ct == cl ) || (ct.isDescendentOf(cl)));
+				// cl = (Classifier) type;
+				// return bool ((ct == cl ) || (ct.isDescendentOf(cl)));
 
 				while (ct != null) {
 					if (ct == type) {
@@ -177,28 +208,24 @@ public class ResoluteBuiltInFnCallEvaluator {
 					}
 					ct = ct.getExtended();
 				}
-				 
+
 			}
-				return bool (false);
-	
-//			}
-//			
-//			return bool(false);
+			return bool(false);
 		}
-		
+
 		case "has_member": {
 			boolean hasMember;
-			String       memberName;
+			String memberName;
 			NamedElement element;
-			
-			hasMember 	= false; 
-			element 	= args.get(0).getNamedElement();
-			memberName 	= args.get(1).getString();
-			
+
+			hasMember = false;
+			element = args.get(0).getNamedElement();
+			memberName = args.get(1).getString();
+
 			if (element instanceof ComponentInstance) {
 				element = ((ComponentInstance) element).getComponentClassifier();
 			}
-			
+
 			if (element instanceof ComponentClassifier) {
 				ComponentClassifier cc = (ComponentClassifier) element;
 				for (Feature f : cc.getAllFeatures()) {
@@ -207,7 +234,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 					}
 				}
 			}
-			
+
 			if (element instanceof ComponentImplementation) {
 				ComponentImplementation ci = (ComponentImplementation) element;
 				for (Subcomponent s : ci.getAllSubcomponents()) {
@@ -216,7 +243,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 					}
 				}
 			}
-			
+
 			return bool(hasMember);
 		}
 
@@ -246,7 +273,8 @@ public class ResoluteBuiltInFnCallEvaluator {
 				for (FeatureInstance feat : ci.getFeatureInstances()) {
 					result.addAll(context.getConnectionsForFeature(feat));
 				}
-				// Include connections originating or terminating with the component
+				// Include connections originating or terminating with the
+				// component
 				result.addAll(createSetValue(ci.getSrcConnectionInstances()).getSet());
 				result.addAll(createSetValue(ci.getDstConnectionInstances()).getSet());
 				return new SetValue(result);
@@ -263,6 +291,52 @@ public class ResoluteBuiltInFnCallEvaluator {
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			SetValue sv = createSetValue(ci.getComponentInstances());
 			return sv;
+		}
+
+		case "is_in_array": {
+			boolean result = false;
+
+			if (args.get(0).getNamedElement() instanceof ComponentInstance) {
+				ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+
+				if ((ci.getIndices() != null) && (ci.getIndices().size() > 0) && (ci.getIndices().get(0) > 0)) {
+					result = true;
+				}
+			}
+			if (args.get(0).getNamedElement() instanceof FeatureInstance) {
+				FeatureInstance fi = (FeatureInstance) args.get(0).getNamedElement();
+				if (fi.getIndex() > 0) {
+					result = true;
+				}
+			}
+			return new BoolValue(result);
+		}
+
+		case "has_prototypes": {
+			boolean result = false;
+
+			if (args.get(0).getNamedElement() instanceof ComponentInstance) {
+				ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+
+				if ((ci.getComponentClassifier().getAllPrototypes() != null)
+						&& (ci.getComponentClassifier().getAllPrototypes().size() > 0)) {
+					result = true;
+				}
+
+			}
+			return new BoolValue(result);
+		}
+
+		case "has_modes": {
+			boolean result = false;
+
+			if (args.get(0).getNamedElement() instanceof ComponentInstance) {
+				ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+				if ((ci.getModeInstances() != null) && (ci.getModeInstances().size() > 0)) {
+					result = true;
+				}
+			}
+			return new BoolValue(result);
 		}
 
 		/*
@@ -286,11 +360,115 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new StringValue(feat.getDirection().toString());
 		}
 
-		case "is_event_port": {
-			NamedElement feat = (FeatureInstance) args.get(0).getNamedElement();
-			return new BoolValue(feat instanceof EventPort);
+		case "is_processor": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESSOR);
 		}
 
+		case "is_virtual_processor": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.VIRTUAL_PROCESSOR);
+		}
+
+		case "is_system": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.SYSTEM);
+		}
+
+		case "is_bus": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.BUS);
+		}
+
+		case "is_virtual_bus": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.VIRTUAL_BUS);
+		}
+
+		case "is_device": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.DEVICE);
+		}
+
+		case "is_memory": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.MEMORY);
+		}
+
+		case "is_thread": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.THREAD);
+		}
+
+		case "is_process": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESS);
+		}
+
+		case "is_event_port": {
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof FeatureInstance) {
+
+				FeatureInstance fi = (FeatureInstance) feat;
+
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_PORT) {
+					return new BoolValue(true);
+				}
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_DATA_PORT) {
+					return new BoolValue(true);
+				}
+			}
+			return new BoolValue(false);
+		}
+
+		case "is_abstract_feature": {
+			boolean result = false;
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof FeatureInstance) {
+				FeatureInstance fi = (FeatureInstance) feat;
+				if (fi.getCategory() == FeatureCategory.ABSTRACT_FEATURE) {
+					result = true;
+				}
+			}
+			return new BoolValue(result);
+		}
+
+		case "is_port": {
+			boolean ret;
+			ret = false;
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof FeatureInstance) {
+				FeatureInstance fi = (FeatureInstance) feat;
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.DATA_PORT) {
+					ret = true;
+				}
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_DATA_PORT) {
+					ret = true;
+				}
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_PORT) {
+					ret = true;
+				}
+
+			}
+			return new BoolValue(ret);
+
+		}
+
+		case "is_data_port": {
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof FeatureInstance) {
+
+				FeatureInstance fi = (FeatureInstance) feat;
+
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.DATA_PORT) {
+					return new BoolValue(true);
+				}
+				if (fi.getCategory() == org.osate.aadl2.instance.FeatureCategory.EVENT_DATA_PORT) {
+					return new BoolValue(true);
+				}
+			}
+			return new BoolValue(false);
+		}
 		/*
 		 * Primary type: range
 		 */
@@ -317,7 +495,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 			int setsize = set.size();
 			return new IntValue(setsize);
 		}
-		
+
 		case "sum": {
 			List<ResoluteValue> set = args.get(0).getSet();
 			if (set.isEmpty()) {
@@ -375,6 +553,30 @@ public class ResoluteBuiltInFnCallEvaluator {
 			}
 		}
 
+		case "is_data_access": {
+			NamedElement feat = args.get(0).getNamedElement();
+			if (feat instanceof ConnectionInstance) {
+				ComponentInstance accessedComponent = null;
+				ConnectionInstance ci = (ConnectionInstance) feat;
+
+//				OsateDebug.osateDebug("source=" + ci.getSource());
+//				OsateDebug.osateDebug("destination=" + ci.getDestination());
+				if (ci.getSource() instanceof ComponentInstance) {
+					accessedComponent = (ComponentInstance) ci.getSource();
+				}
+
+				if (ci.getDestination() instanceof ComponentInstance) {
+					accessedComponent = (ComponentInstance) ci.getDestination();
+				}
+
+				return new BoolValue((ci.getKind() == org.osate.aadl2.instance.ConnectionKind.ACCESS_CONNECTION)
+						&& (accessedComponent.getCategory() == ComponentCategory.DATA));
+
+			}
+
+			return new BoolValue(feat instanceof DataAccess);
+		}
+
 		case "instance": {
 			NamedElement decl = args.get(0).getNamedElement();
 			SystemInstance top = context.getThisInstance().getSystemInstance();
@@ -393,6 +595,21 @@ public class ResoluteBuiltInFnCallEvaluator {
 			} else {
 				throw new ResoluteFailException("Failed to find instance of declarative element", fnCallExpr);
 			}
+		}
+
+		case "debug": {
+			int i = 0;
+			String s = "";
+			for (ResoluteValue arg : args) {
+				if (i > 0) {
+					s += ",";
+				}
+				s += "#" + i + ": " + arg.toString();
+				i++;
+			}
+			OsateDebug.osateDebug(s);
+
+			return TRUE;
 		}
 
 		case "instances": {
@@ -440,6 +657,31 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return FALSE;
 		}
 
+		case "flow_source": {
+			FlowSpecificationInstance flowSpec = (FlowSpecificationInstance) args.get(0).getNamedElement();
+			return new NamedElementValue(flowSpec.getSource());
+		}
+
+		case "flow_destination": {
+			FlowSpecificationInstance flowSpec = (FlowSpecificationInstance) args.get(0).getNamedElement();
+			return new NamedElementValue(flowSpec.getDestination());
+		}
+
+		case "flow_elements": {
+			EndToEndFlowInstance etef = (EndToEndFlowInstance) args.get(0).getNamedElement();
+			return createSetValue(etef.getFlowElements());
+		}
+
+		case "flow_specifications": {
+			ComponentInstance comp = (ComponentInstance) args.get(0).getNamedElement();
+			return createSetValue(comp.getFlowSpecifications());
+		}
+
+		case "end_to_end_flows": {
+			ComponentInstance comp = (ComponentInstance) args.get(0).getNamedElement();
+			return createSetValue(comp.getEndToEndFlows());
+		}
+
 		default:
 			throw new IllegalArgumentException("Unknown function: " + fnCallExpr.getFn());
 		}
@@ -477,9 +719,20 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new StringValue(value.getValue());
 		} else if (expr instanceof NamedValue) {
 			NamedValue namedVal = (NamedValue) expr;
+			if (namedVal.getNamedValue() instanceof PropertyConstant) {
+				PropertyConstant pc = (PropertyConstant) namedVal.getNamedValue();
+				return exprToValue(pc.getConstantValue());
+			}
 			AbstractNamedValue absVal = namedVal.getNamedValue();
-			EnumerationLiteral enVal = (EnumerationLiteral) absVal;
-			return new StringValue(enVal.getName());
+			if (absVal instanceof EnumerationLiteral) {
+				EnumerationLiteral enVal = (EnumerationLiteral) absVal;
+				return new StringValue(enVal.getName());
+			} else if (absVal instanceof PropertyConstant) {
+				PropertyConstant pc = (PropertyConstant) absVal;
+				return exprToValue(pc.getConstantValue());
+			} else {
+				throw new IllegalArgumentException("Unhandled NamedValue type: " + expr.getClass().getName());
+			}
 		} else if (expr instanceof BooleanLiteral) {
 			BooleanLiteral value = (BooleanLiteral) expr;
 			return bool(value.getValue());
@@ -502,6 +755,14 @@ public class ResoluteBuiltInFnCallEvaluator {
 				result.add(exprToValue(element));
 			}
 			return new SetValue(result);
+		} else if (expr instanceof RecordValue) {
+			Stream<BasicPropertyAssociation> fieldsStream = ((RecordValue) expr).getOwnedFieldValues().stream();
+			Map<String, ResoluteValue> fieldsMap = fieldsStream.collect(Collectors.toMap(field -> {
+				return field.getProperty().getName().toLowerCase();
+			}, field -> {
+				return exprToValue(field.getOwnedValue());
+			}));
+			return new ResoluteRecordValue(fieldsMap);
 		} else {
 			throw new IllegalArgumentException("Unknown property expression type: " + expr.getClass().getName());
 		}
@@ -522,6 +783,10 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return dp.getDataFeatureClassifier();
 		} else if (ne instanceof FeatureInstance) {
 			FeatureInstance fi = (FeatureInstance) ne;
+			if (fi.getFeature() instanceof DataPort) {
+				DataPort dp = (DataPort) fi.getFeature();
+				return dp.getDataFeatureClassifier();
+			}
 			return (NamedElement) fi.getFeature().getFeatureClassifier();
 		} else if (ne instanceof ComponentInstance) {
 			ComponentInstance ci = (ComponentInstance) ne;
@@ -532,25 +797,29 @@ public class ResoluteBuiltInFnCallEvaluator {
 	}
 
 	private static PropertyExpression getPropertyExpression(NamedElement comp, Property prop) {
+		PropertyExpression result;
+
 		if (comp instanceof ConnectionInstance) {
+			PropertyExpression expr;
 			ConnectionInstance conn = (ConnectionInstance) comp;
+
 			for (ConnectionReference ref : conn.getConnectionReferences()) {
-				PropertyExpression expr = getPropertyExpression(ref, prop);
+				expr = getPropertyExpression(ref, prop);
 				if (expr != null) {
-					return expr;
+					result = expr;
 				}
 			}
-			return null;
 		}
 
 		try {
 			comp.getPropertyValue(prop); // this just checks to see if the
 											// property is associated
-			return PropertyUtils.getSimplePropertyValue(comp, prop);
+			result = PropertyUtils.getSimplePropertyValue(comp, prop);
 		} catch (PropertyDoesNotApplyToHolderException propException) {
 			return null;
 		} catch (PropertyNotPresentException propNotPresentException) {
 			return null;
 		}
+		return result;
 	}
 }

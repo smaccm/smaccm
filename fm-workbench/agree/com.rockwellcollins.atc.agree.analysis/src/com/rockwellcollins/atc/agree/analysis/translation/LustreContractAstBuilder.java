@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 
+import jkind.api.xml.XmlParseThread;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
@@ -46,11 +47,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
     public static Program getContractLustreProgram(AgreeProgram agreeProgram) {
 
         nodes = new ArrayList<>();
-        List<TypeDef> types = new ArrayList<>();
-        for (Type type : agreeProgram.globalTypes) {
-            RecordType recType = (RecordType) type;
-            types.add(new TypeDef(recType.id, type));
-        }
+        List<TypeDef> types = getTypes(agreeProgram);
 
         AgreeNode flatNode = flattenAgreeNodeKindContract(agreeProgram.topNode, "_TOP__");
         List<Expr> assertions = new ArrayList<>();
@@ -65,7 +62,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         for (AgreeStatement assertion : flatNode.assertions) {
             assertions.add(assertion.expr);
         }
-
+        
         for (AgreeStatement assumption : flatNode.assumptions) {
             requires.add(assumption.expr);
         }

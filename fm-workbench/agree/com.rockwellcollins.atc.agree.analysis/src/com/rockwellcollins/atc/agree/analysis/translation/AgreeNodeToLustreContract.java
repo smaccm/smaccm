@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis.translation;
+package com.rockwellcollins.atc.agree.analysis.translation; 
 
 import java.util.ArrayList;
 import java.util.Collections;

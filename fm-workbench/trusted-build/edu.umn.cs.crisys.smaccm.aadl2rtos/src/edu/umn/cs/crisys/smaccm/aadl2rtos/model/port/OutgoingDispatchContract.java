@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.PortConnection;
+
 /**
  * @author Whalen
  *
@@ -34,6 +36,22 @@ public class OutgoingDispatchContract {
    */
   public HashMap<OutputEventPort, Integer> getContract() {
     return contract;
+  }
+  
+  /* Note: this function is 'brittle' in the face of fan-out, 
+   * which is of course not allowed by seL4 
+   * This might break the ground team's use of AADL */
+  
+  public HashMap<OutputEventPort, Integer> getPassiveContract() {
+	  HashMap<OutputEventPort, Integer> passiveContract = new HashMap<>();
+	  for (Map.Entry<OutputEventPort, Integer> entry : this.getContract().entrySet()) {
+		  for (PortConnection pc: entry.getKey().getConnections()) {
+			  if (pc.getDestPort().getOwner().getIsPassive()) {
+				  passiveContract.put(entry.getKey(), entry.getValue());
+			  }
+		  }
+	  }
+	  return passiveContract;
   }
   
   public void add(OutputEventPort oep, int value) {

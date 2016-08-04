@@ -32,4 +32,11 @@ public class PortConnectionNames {
   public ThreadImplementationNames getSourcePortThreadImplementation() {
     return new ThreadImplementationNames(c.getSourceThreadInstance().getThreadImplementation());
   }
+  
+  public String getName() {
+	  if (getSourcePort().getConnections().size() > 1)
+		  return getSourcePort().getQualifiedName() + "_" + getDestPort().getQualifiedName();
+	  else
+		  return getSourcePort().getQualifiedName();
+  }
 }

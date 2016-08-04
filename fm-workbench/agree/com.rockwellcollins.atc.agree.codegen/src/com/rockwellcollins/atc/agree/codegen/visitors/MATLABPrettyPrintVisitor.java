@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 
 
+
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
@@ -387,12 +388,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		newline();
 		return null;
 	}
-	
-	@Override
-	public Void visit(MATLABUInt32Type type) {
-		write(type.name);
-		return null;
-	}
 
 	@Override
 	public Void visit(MATLABInt8Type type) {
@@ -419,11 +414,17 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 	}
 
 	@Override
-	public Void visit(MATLABInt64Type type) {
+	public Void visit(MATLABInt32Type type) {
 		write(type.name);
 		return null;
 	}
-
+	
+	@Override
+	public Void visit(MATLABUInt32Type type) {
+		write(type.name);
+		return null;
+	}
+	
 	@Override
 	public Void visit(MATLABUInt64Type type) {
 		write(type.name);
@@ -431,10 +432,11 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 	}
 
 	@Override
-	public Void visit(MATLABInt32Type type) {
+	public Void visit(MATLABInt64Type type) {
 		write(type.name);
 		return null;
 	}
+	
 	
 	@Override
 	public Void visit(MATLABSingleType type) {
@@ -519,5 +521,4 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		}
 		return null;
 	}
-	
 }

@@ -78,11 +78,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
 	@Override
 	public ResoluteValue caseFailExpr(FailExpr object) {
-		if (object.getVal() != null || object.getFailmsg() != null) {
-			return FALSE;
-		} else {
-			throw new ResoluteFailException("Fail Statement Reached", object);
-		}
+		throw new ResoluteFailException("Failure: ", object);
 	}
 
 	@Override
@@ -102,12 +98,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		// Short circuit ops first
 		ResoluteValue leftValue = doSwitch(object.getLeft());
 		switch (op) {
+
+			
 		case "and":
 			if (leftValue.getBool()) {
 				return doSwitch(object.getRight());
 			} else {
 				return FALSE;
-			}
+			}			
 
 		case "or":
 			if (leftValue.getBool()) {

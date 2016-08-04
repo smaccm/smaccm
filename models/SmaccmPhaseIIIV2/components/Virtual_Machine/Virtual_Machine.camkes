@@ -1,0 +1,118 @@
+import <std_connector.camkes>;
+
+import "../VM/VM.camkes";
+import <Vchan/Vchan.camkes>;
+import <VchanInterface.idl4>;
+//import "../Vchan/Vchan.camkes";
+//import "../../interfaces/VchanInterface.idl4";
+// Mikeisms
+import "../../interfaces/Virtual_Machine_interface.idl4";
+import "../../interfaces/SMACCM_DATA__camera_data_i_writer.idl4";
+
+component Virtual_Machine {
+include "smaccm_top_i_types.h";
+	control;
+    // AADL interface
+    has semaphore smaccm_dispatch_sem;
+	uses SMACCM_DATA__camera_data_i_writer Virtual_Machine_camera_data;
+
+    // Interface to internal vchan wrapper world
+    include "sel4vchan/vchan_sharemem.h";
+    dataport vchan_headers_t share_mem;
+    uses VchanInterface vchan_con;
+    consumes VchanEvent vevent;
+
+}
+
+assembly {
+    composition {
+        component VM vm;
+        component Vchan vchan_0;
+        // Trusted build tool will create a Virtual_Machine component as follows
+        // component Virtual_Machine Virtual_Machine_inst;
+
+        connection seL4RPCCall vchan(from vm.vchan_con, to vchan_0.vchan_com);
+        connection seL4Asynch vchan_event_init(from vchan_0.vevent_cl, to vm.vevent);
+        connection seL4SharedData vchan_sharemem_0(from vm.share_mem, to vchan_0.share_mem);
+
+        connection seL4Asynch vchan_event(from vchan_0.vevent_sv, to Virtual_Machine_inst.vevent);
+        connection seL4SharedData hvchan_sharemem_0(from Virtual_Machine_inst.share_mem, to vchan_0.share_mem);
+        connection seL4RPCCall hvchan(from Virtual_Machine_inst.vchan_con, to vchan_0.vchan_com);
+    }
+
+    configuration {
+        /* MMIO regions are
+            0x10000000 CHIP_ID
+            0x10486000 VCPU
+            0x12c20000 UART2
+            0x13400000 GPIO_RIGHT
+            0x10040000 POWER0
+            0x10041000 POWER1
+            0x10042000 POWER2
+            0x10043000 POWER3
+            0x10044000 POWER4
+            0x10050000 SYSREG
+            0x10020000 CMU_TOP
+            0x10014000 CMU_CORE
+            0x10010000 CMU_CPU
+            0x10030000 CMU_COREX
+            0x10038000 CMU_MEM
+            0x1001c000 CMU_ISP
+            0x10018000 CMU_ACP
+            0x12110000 USB EHCI
+            0x12130000 USB CTRL
+            0x12200000 MSH0
+            0x12220000 MSH2
+            0x40000000 RAM
+        */
+        vm.mmios = "0x10000000:0x1000:12,
+                    0x10486000:0x1000:12,
+                    0x12c20000:0x1000:12,
+                    0x13400000:0x1000:12,
+                    0x10040000:0x1000:12,
+                    0x10041000:0x1000:12,
+                    0x10042000:0x1000:12,
+                    0x10043000:0x1000:12,
+                    0x10044000:0x1000:12,
+                    0x10050000:0x1000:12,
+                    0x10020000:0x1000:12,
+                    0x10014000:0x1000:12,
+                    0x10010000:0x1000:12,
+                    0x10030000:0x1000:12,
+                    0x10038000:0x1000:12,
+                    0x1001c000:0x1000:12,
+                    0x10018000:0x1000:12,
+                    0x12110000:0x1000:12,
+                    0x12130000:0x1000:12,
+                    0x12200000:0x1000:12,
+                    0x12220000:0x1000:12,
+                    0x40000000:0x20000000:21";
+
+        /* IRQs are
+            27  VTCNT (arch timer)
+            85  UART2
+            107 SDMMC0
+            109 SDMMC2
+            103 USB
+        */
+        vm.irqs =  "27,
+                    85,
+                    107,
+                    109,
+                    103";
+
+        vm.asid_pool = true;
+
+        vm.simple = true;
+        vm.cnode_size_bits = 18;
+        vm.simple_untyped24_pool = 10;
+
+        vm.priority = 101;
+        vchan_0.priority = 102;
+	    Virtual_Machine_inst.priority = 103;
+
+        vm.sem_value = 0;
+        vm.num_extra_frame_caps = 0;
+        vm.extra_frame_map_address = 0;
+    }
+}

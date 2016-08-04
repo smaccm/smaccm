@@ -52,10 +52,19 @@ public class PortNames {
     return tyn;
   }
   
+  // we should never enqueue more than 32k messages!
+  public String getIndexMax() {
+	  return "32767";
+  }
+  
   public ThreadImplementationNames getThreadImplementation() {
     return new ThreadImplementationNames(dp.getOwner());
   }
 
+  public boolean getHasFanout() {
+	  return dp.getConnections().size() > 1;
+  }
+  
   public boolean getHasInitializeEntrypoint() {
     boolean result = dp.getInitializeEntrypointSourceText() != null;
     return result;
@@ -154,6 +163,15 @@ public class PortNames {
   // Destination function (for input ports)
   // 
   //////////////////////////////////////////////////////////
+  public boolean getHasPassiveConnectionDestination() {
+	  for (PortConnection i: dp.getConnections()) {
+		  if (i.getDestPort().getOwner().getIsPassive()) {
+			  return true;
+		  }
+	  }
+	  return false;
+  }
+  
   public List<PortConnectionNames> getConnections() {
 	  
 	  List<PortConnectionNames> connections = new ArrayList<>();
@@ -162,16 +180,7 @@ public class PortNames {
 	  }
 	  return connections;
   }
-  
-  public PortConnectionNames getSingletonConnection() {
-	  if (dp.getConnections().size() != 1) {
-		  throw new Aadl2RtosException("Error: getSingletonConnection: cardinality of connection != 1");
-	  }
-	  else {
-		  return new PortConnectionNames(dp.getConnections().get(0));
-	  }
-  }
-  
+    
   //////////////////////////////////////////////////////////////
   //
   // Names for mutex function calls
@@ -307,7 +316,7 @@ public class PortNames {
     OutgoingDispatchContract odc = 
         OutgoingDispatchContract.maxDispatcherUse(dip.getDispatchLimits());
     List<DispatchContractNames> pdl = new ArrayList<>(); 
-    for (Map.Entry<OutputEventPort, Integer> elem : odc.getContract().entrySet()) {
+    for (Map.Entry<OutputEventPort, Integer> elem : odc.getPassiveContract().entrySet()) {
       DispatchContractNames names = new DispatchContractNames(dip, elem);
       if (names.getCanDispatch()) {
         pdl.add(new DispatchContractNames(dip, elem));

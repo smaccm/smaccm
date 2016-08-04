@@ -5,9 +5,7 @@ import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -20,58 +18,49 @@ import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
-import jkind.lustre.VarDecl;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Pair;
+import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.EventDataPort;
-import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
-import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.AssertStatement;
-import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
-import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
-import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
-import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
-import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.RenamingVisitor;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
-import com.rockwellcollins.atc.agree.analysis.translation.AgreeNodeToLustreContract;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
@@ -98,27 +87,66 @@ public abstract class VerifyHandler extends AadlHandler {
 
     protected abstract boolean isRealizability();
 
+	protected SystemInstance getSysInstance(Element root) {
+		ComponentImplementation ci = getComponentImplementation(root);
+		try {
+			return InstantiateModel.buildInstanceModelFile(ci);
+		} catch (Exception e) {
+			Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
+			throw new AgreeException("Error Instantiating model");
+		}
+	}
+
+	private ComponentImplementation getComponentImplementation(Element root) {
+		Classifier classifier = getOutermostClassifier(root);
+		if (isRealizability()) {
+			if (!(classifier instanceof ComponentType)) {
+				throw new AgreeException("Must select an AADL Component Type");
+			}
+			return AgreeUtils.compImplFromType((ComponentType) classifier);
+		} else {
+			if (classifier instanceof ComponentImplementation) {
+				return (ComponentImplementation) classifier;
+			}
+			if (!(classifier instanceof ComponentType)) {
+				throw new AgreeException("Must select an AADL Component Type or Implementation");
+			}
+			ComponentType ct = (ComponentType) classifier;
+			List<ComponentImplementation> cis = getComponentImplementations(ct);
+			if (cis.size() == 0) {
+				throw new AgreeException("AADL Component Type has no implementation to verify");
+			} else if (cis.size() == 1) {
+				ComponentImplementation ci = cis.get(0);
+				Shell shell = getWindow().getShell();
+				String message = "User selected " + ct.getFullName() + ".\nRunning analysis on " + ci.getFullName()	+ " instead.";
+				shell.getDisplay().asyncExec(
+						() -> MessageDialog.openInformation(shell, "Analysis information", message));
+				return ci;
+			} else {
+				throw new AgreeException(
+						"AADL Component Type has multiple implementation to verify: please select just one");
+			}
+		}
+	}
+
+	private List<ComponentImplementation> getComponentImplementations(ComponentType ct) {
+		List<ComponentImplementation> result = new ArrayList<>();
+		AadlPackage pkg = AadlUtil.getContainingPackage(ct);
+		for (ComponentImplementation ci : EcoreUtil2.getAllContentsOfType(pkg, ComponentImplementation.class)) {
+			if (ci.getType().equals(ct)) {
+				result.add(ci);
+			}
+		}
+		return result;
+	}
+
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
         disableRerunHandler();
         handlerService = (IHandlerService) getWindow().getService(IHandlerService.class);
 
-        if (!(root instanceof ComponentImplementation)) {
-            return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-                    "Must select an AADL Component Implementation");
-        }
-
         try {
-            ComponentImplementation ci = (ComponentImplementation) root;
-
-            SystemInstance si = null;
-            try {
-                si = InstantiateModel.buildInstanceModelFile(ci);
-            } catch (Exception e) {
-                Dialog.showError("Model Instantiate",
-                        "Error while re-instantiating the model: " + e.getMessage());
-                return Status.CANCEL_STATUS;
-            }
+            SystemInstance si = getSysInstance(root);
 
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
@@ -137,7 +165,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 if(AgreeUtils.usingKind2()){
                     throw new AgreeException("Kind2 only supports monolithic verification");
                 }
-                result = buildAnalysisResult(ci.getName(), si);
+                result = buildAnalysisResult(((NamedElement)root).getName(), si);
                 wrapper.addChild(result);
                 result = wrapper;
             } else if (isRealizability()) {
@@ -251,7 +279,9 @@ public abstract class VerifyHandler extends AadlHandler {
         }
 
         List<String> properties = new ArrayList<>();
-        addRenamings(renaming, properties, layout, mainNode, agreeProgram);
+        
+        RenamingVisitor.addRenamings(lustreProgram, renaming, layout);
+        addProperties(renaming, properties, mainNode, agreeProgram);
 
         JKindResult result;
         switch (analysisType) {
@@ -277,39 +307,24 @@ public abstract class VerifyHandler extends AadlHandler {
         linker.setLayout(result, layout);
         linker.setReferenceMap(result, renaming.getRefMap());
         linker.setLog(result, AgreeLogger.getLog());
+        linker.setRenaming(result, renaming);
 
         // System.out.println(program);
         return result;
 
     }
 
-    private void addRenamings(AgreeRenaming renaming, List<String> properties, AgreeLayout layout,
-            Node mainNode, AgreeProgram agreeProgram) {
-        for (VarDecl var : mainNode.inputs) {
-            if (var instanceof AgreeVar) {
-                addReference(renaming, layout, var);
-            }
-        }
-        
-        for (VarDecl var : mainNode.locals) {
-            if (var instanceof AgreeVar) {
-                addReference(renaming, layout, var);
-            }
-        }
-        
-        for (VarDecl var : mainNode.outputs) {
-            if (var instanceof AgreeVar) {
-                addReference(renaming, layout, var);
-            }
-        }
-        
-        //there is a special case in the AgreeRenaming which handles this translation
-        if(AgreeUtils.usingKind2()){
+    private void addProperties(AgreeRenaming renaming, List<String> properties, Node mainNode,
+            AgreeProgram agreeProgram) {
+
+        // there is a special case in the AgreeRenaming which handles this
+        // translation
+        if (AgreeUtils.usingKind2()) {
             addKind2Properties(agreeProgram.topNode, properties, renaming, "_TOP", "");
-        }else{
+        } else {
             properties.addAll(mainNode.properties);
         }
-        
+
     }
     
     void addKind2Properties(AgreeNode agreeNode, List<String> properties, AgreeRenaming renaming, String prefix, String userPropPrefix){
@@ -329,68 +344,6 @@ public abstract class VerifyHandler extends AadlHandler {
         for(AgreeNode subNode : agreeNode.subNodes){
             addKind2Properties(subNode, properties, renaming, prefix+"."+subNode.id, userPropPrefix + subNode.id);
         }
-    }
-
-    private void addReference(AgreeRenaming renaming, AgreeLayout layout,
-            VarDecl var) {
-        String refStr = getReferenceStr((AgreeVar) var);
-        renaming.addExplicitRename(var.id, refStr);
-        renaming.addToRefMap(var.id, ((AgreeVar) var).reference);
-        String category = getCategory((AgreeVar) var);
-        if (category != null && !layout.getCategories().contains(category)) {
-            layout.addCategory(category);
-        }
-        layout.addElement(category, refStr, SigType.INPUT);
-    }
-
-    private String getCategory(AgreeVar var) {
-        if (var.compInst == null || var.reference == null) {
-            return null;
-        }
-        return LustreAstBuilder.getRelativeLocation(var.compInst.getInstanceObjectPath());
-    }
-
-    private String getReferenceStr(AgreeVar var) {
-
-        String prefix = getCategory(var);
-        if (prefix == null) {
-            return null;
-        }
-        if (var.id.endsWith(AgreeASTBuilder.clockIDSuffix)) {
-            return null;
-        }
-
-        String seperator = (prefix == "" ? "" : ".");
-        EObject reference = var.reference;
-        if (reference instanceof GuaranteeStatement) {
-            return ((GuaranteeStatement) reference).getStr();
-            
-        } else if (reference instanceof AssumeStatement) {
-            return prefix + " assume: " + ((AssumeStatement) reference).getStr();
-        } else if (reference instanceof LemmaStatement) {
-            return prefix + " lemma: " + ((LemmaStatement) reference).getStr();
-        } else if (reference instanceof AssertStatement) {
-            throw new AgreeException("We really didn't expect to see an assert statement here");
-        } else if (reference instanceof Arg) {
-            return prefix + seperator + ((Arg) reference).getName();
-        } else if (reference instanceof DataPort) {
-            return prefix + seperator + ((DataPort) reference).getName();
-        } else if (reference instanceof EventDataPort) {
-            if (var.id.endsWith(AgreeASTBuilder.eventSuffix)) {
-                return prefix + seperator + ((EventDataPort) reference).getName() + "._EVENT_";
-            } else {
-                return prefix + seperator + ((EventDataPort) reference).getName();
-            }
-        } else if (reference instanceof FeatureGroup) {
-            return prefix + seperator + ((FeatureGroup) reference).getName();
-        } else if (reference instanceof PropertyStatement) {
-            return prefix + seperator + ((PropertyStatement) reference).getName();
-        } else if (reference instanceof ComponentType || reference instanceof ComponentImplementation) {
-            return "Result";
-        } else if(reference instanceof AgreeStatement){
-            return prefix + reference.toString();
-        }
-        throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
     }
 
     private AgreeSubclause getContract(ComponentImplementation ci) {
