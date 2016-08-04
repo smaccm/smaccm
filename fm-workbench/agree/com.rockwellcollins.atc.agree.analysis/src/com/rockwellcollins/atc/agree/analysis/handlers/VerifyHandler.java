@@ -364,6 +364,7 @@ public abstract class VerifyHandler extends AadlHandler {
         EObject reference = var.reference;
         if (reference instanceof GuaranteeStatement) {
             return ((GuaranteeStatement) reference).getStr();
+            
         } else if (reference instanceof AssumeStatement) {
             return prefix + " assume: " + ((AssumeStatement) reference).getStr();
         } else if (reference instanceof LemmaStatement) {

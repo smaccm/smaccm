@@ -569,6 +569,7 @@ public class LustreAstBuilder {
 		List<AgreeVar> inputs = new ArrayList<>();
 		List<AgreeVar> outputs = new ArrayList<>();
 		List<AgreeVar> locals = new ArrayList<>();
+		List<AgreeStatement> patternProps = new ArrayList<>();
 		List<AgreeEquation> equations = new ArrayList<>();
 		List<AgreeStatement> assertions = new ArrayList<>();
 		Set<AgreeVar> timeEvents = new HashSet<>(agreeNode.eventTimes);
@@ -588,7 +589,7 @@ public class LustreAstBuilder {
 
 			Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode);
 
-			addInputsAndOutputs(inputs, outputs, flatNode, lustreNode, prefix);
+			addInputsAndOutputs(inputs, outputs, patternProps, flatNode, lustreNode, prefix);
 
 			addTimeEvents(timeEvents, flatNode, prefix, assertions);
 
@@ -620,9 +621,10 @@ public class LustreAstBuilder {
 		outputs.addAll(agreeNode.outputs);
 		locals.addAll(agreeNode.locals);
 		equations.addAll(agreeNode.localEquations);
+		patternProps.addAll(agreeNode.patternProps);
 
 		return new AgreeNode(agreeNode.id, inputs, outputs, locals, equations, null, agreeNode.subNodes, assertions,
-				agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, agreeNode.patternProps,
+				agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, patternProps,
 				new BoolExpr(true), agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
 				timeEvents, agreeNode.compInst);
 	}
@@ -783,7 +785,7 @@ public class LustreAstBuilder {
 		assertions.add(condactCall);
 	}
 
-	protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs, AgreeNode subAgreeNode,
+	protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeStatement> patternProps, AgreeNode subAgreeNode,
 			Node lustreNode, String prefix) {
 		int varCount = 0;
 		for (AgreeVar var : subAgreeNode.inputs) {
@@ -811,6 +813,8 @@ public class LustreAstBuilder {
 			varCount++;
 			AgreeVar output = new AgreeVar(prefix + patternPropSuffix + k++, NamedType.BOOL, statement,
 					subAgreeNode.compInst);
+			patternProps.add(new AgreeStatement(prefix.replace("__", "") + ": " + statement.string,
+					new IdExpr(output.id), statement.reference));
 			outputs.add(output);
 		}
 
