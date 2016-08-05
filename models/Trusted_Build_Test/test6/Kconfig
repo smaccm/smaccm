@@ -1,6 +1,0 @@
-config APP_TEST6
-    bool "AADL Test 6: active -> active threads using array send"
-    default n
-    select APP_CAMKES_EXECUTIVE
-    help
-        AADL Test 6: active -> active threads using array send. 

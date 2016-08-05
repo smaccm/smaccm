@@ -9,8 +9,9 @@
 #include <string.h>
 #include <stdio.h>
 
+char buff[255];
 
-void periodic_ping(const int64_t *the_time) {
+void sender_periodic_ping(const int64_t * the_time) {
 
 	#ifdef __TB_OS_VXWORKS__
 		// VxWorks doesn't support long longs for printing.
@@ -22,10 +23,7 @@ void periodic_ping(const int64_t *the_time) {
 	#else
 		printf("sender: periodic dispatch received at time: %lld.  Writing to receiver. \n", *the_time);
 	#endif	
-	
-   uint32_t to_send = ((uint32_t)*the_time) + 1;
-   ping_Output1(&to_send);
-   // This will kill it
-   ping_Output1(&to_send);
-	
+
+   sprintf(buff, "hello world from sender: %lld", *the_time);
+   strcpy((void*)buff1, buff);
 }

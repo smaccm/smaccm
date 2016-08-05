@@ -34,7 +34,7 @@ end sender ;
 thread receiver
 	features
 		Input1: in event data port Base_Types::Unsigned_32 {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received1");
 		  Source_Text => ("user_code/user_receiver1.c");
 	      SMACCM_SYS::Sends_Events_To => "{{2 Output1}}";
 		}; 
@@ -57,7 +57,7 @@ end receiver ;
 thread receiver2
 	features
 		Input1: in event data port Base_Types::Unsigned_32 {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received2");
 		  Source_Text => ("user_code/user_receiver2.c");
 		}; 
 				
@@ -84,16 +84,32 @@ process implementation proc.Impl
 		r1_to_r2 : port r1.Output1 -> r2.Input1;
 end proc.Impl;
 
-system test1
-end test1;
+system test
+end test;
 
-system implementation test1.impl
+system implementation test.camkes
 	subcomponents
 		tl: process proc.Impl;
 	properties
-		SMACCM_SYS::OS => CAmkES; 
+		SMACCM_SYS::OS => CAmkES;
 		SMACCM_SYS::HW => QEMU;
-		
-end test1.impl;
+end test.camkes;
+
+system implementation test.echronos
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => echronos;
+		SMACCM_SYS::HW => QEMU;
+end test.echronos;
+
+system implementation test.vxworks
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => VxWorks;
+		SMACCM_SYS::HW => QEMU;
+end test.vxworks;
+
 
 end test1;

@@ -85,16 +85,31 @@ process implementation proc.Impl
 		conn2: data access shared -> r.buff2;
 end proc.Impl;
 
-system test16_shared_data
-end test16_shared_data;
+system test
+end test;
 
-system implementation test16_shared_data.impl
+system implementation test.camkes
 	subcomponents
 		tl: process proc.Impl;
 	properties
 		SMACCM_SYS::OS => CAmkES;
 		SMACCM_SYS::HW => QEMU;
+end test.camkes;
 
-end test16_shared_data.impl;
+system implementation test.echronos
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => echronos;
+		SMACCM_SYS::HW => QEMU;
+end test.echronos;
+
+system implementation test.vxworks
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => VxWorks;
+		SMACCM_SYS::HW => QEMU;
+end test.vxworks;
 
 end test16;

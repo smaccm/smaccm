@@ -1,0 +1,46 @@
+
+ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
+  paddr=[82000000..8212001f]
+ELF-loading image 'kernel'
+  paddr=[80000000..80033fff]
+  vaddr=[f0000000..f0033fff]
+  virt_entry=f0000000
+ELF-loading image 'capdl-loader-experimental'
+  paddr=[80034000..80326fff]
+  vaddr=[8000..2fafff]
+  virt_entry=e204
+Enabling MMU and paging
+Jumping to kernel-image entry point...
+
+Bootstrapping kernel
+sender: periodic dispatch received at time: 2006000.  Writing to receiver. 
+receiver: periodic dispatch received at time: 2006001
+receiver1 dispatching to receiver2...
+receiver2 ping received (2006002)
+receiver2 ping received (2006001)
+sender: periodic dispatch received at time: 4006000.  Writing to receiver. 
+receiver: periodic dispatch received at time: 4006001
+receiver1 dispatching to receiver2...
+receiver2 ping received (4006002)
+receiver2 ping received (4006001)
+sender: periodic dispatch received at time: 6006000.  Writing to receiver. 
+receiver: periodic dispatch received at time: 6006001
+receiver1 dispatching to receiver2...
+receiver2 ping received (6006002)
+receiver2 ping received (6006001)
+sender: periodic dispatch received at time: 8006000.  Writing to receiver. 
+receiver: periodic dispatch received at time: 8006001
+receiver1 dispatching to receiver2...
+receiver2 ping received (8006002)
+receiver2 ping received (8006001)
+sender: periodic dispatch received at time: 10006000.  Writing to receiver. 
+receiver: periodic dispatch received at time: 10006001
+receiver1 dispatching to receiver2...
+receiver2 ping received (10006002)
+receiver2 ping received (10006001)
+sender: periodic dispatch received at time: 12006000.  Writing to receiver. 
+receiver: periodic dispatch received at time: 12006001
+receiver1 dispatching to receiver2...
+receiver2 ping received (12006002)
+receiver2 ping received (12006001)
+qemu: terminating on signal 15 from pid 9390
