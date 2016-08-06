@@ -409,7 +409,7 @@ userSendOptAadlOutputArg(port) ::= "<if(port.hasData)><port.type.aadlOutputType.
 connectionActiveSendDefinition(connection, port) ::= <<
 <if(connection.destPort.threadImplementation.isActive)>
 <if(port.hasData)>
-result &= <outgoingPortWriterName(connection)>(<port.name>);
+result &= <outgoingPortWriterName(connection)>(<port.type.valToCamkesInput> <port.name>);
 <else>
 result &= <outgoingPortWriterName(connection)>();
 <endif>

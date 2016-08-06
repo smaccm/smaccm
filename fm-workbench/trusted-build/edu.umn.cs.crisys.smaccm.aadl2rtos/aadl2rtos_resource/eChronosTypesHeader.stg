@@ -1,1 +1,3 @@
 import "CommonTypesHeader.stg"
+
+osSpecificDefine() ::= "#define __TB_OS_ECHRONOS__"
