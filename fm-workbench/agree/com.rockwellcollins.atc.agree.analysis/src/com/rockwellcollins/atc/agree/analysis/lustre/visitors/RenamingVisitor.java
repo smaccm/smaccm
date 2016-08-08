@@ -80,7 +80,7 @@ public class RenamingVisitor extends AstIterVisitor{
                 return null;
             }
 
-            if (!layout.getCategories().contains(category)) {
+            if (category != null && !layout.getCategories().contains(category)) {
                 layout.addCategory(category);
             }
             layout.addElement(category, refStr, SigType.INPUT);
