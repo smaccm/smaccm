@@ -202,6 +202,7 @@ passing_tests = 0
 def run_all_tests():
     os.mkdir(OUTPUT_DIR)
     passing_tests = 0;
+    print("Trusted build test script.  To see more information about results, see log files in {}".format(OUTPUT_DIR));
     for i, aadl_file in enumerate(aadl_files):
         sys.stdout.write("({} of {}) {} [".format(i+1, total_tests, aadl_file))
         sys.stdout.flush()
