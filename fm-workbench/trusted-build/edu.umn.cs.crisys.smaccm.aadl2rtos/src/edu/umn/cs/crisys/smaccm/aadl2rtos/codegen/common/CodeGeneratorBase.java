@@ -201,14 +201,14 @@ public abstract class CodeGeneratorBase {
         //}
         for (Map.Entry<OutputEventPort, Integer> entry : maxCalls.getPassiveContract().entrySet()) {
           OutputEventPort outp = entry.getKey();
+          PortNames outpn = new PortNames(outp);
           
           if (outp.hasData()) {
             ArrayType dispatchArrayType = new ArrayType(outp.getType(), entry.getValue());
-            PortNames outpn = new PortNames(outp);
             
             dispatchRecordType.addField(outpn.getData(), dispatchArrayType);
-            dispatchRecordType.addField(outpn.getIndex(), new IntType(32, false));
           }
+          dispatchRecordType.addField(outpn.getIndex(), new IntType(32, false));
         }
         if (dispatchRecordType.isEmpty()) {
           dispatchRecordType.addField("unused", new IntType(32, false));
