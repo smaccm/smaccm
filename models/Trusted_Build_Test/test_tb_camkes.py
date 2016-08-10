@@ -22,14 +22,15 @@ if sys.version_info[:2] == (2, 6):
 #
 # Configuration
 #
-DEFAULT_SIMILARITY = 75
-DEFAULT_ALGORITHM = 'token_set_ratio'
+DEFAULT_SIMILARITY = 50
+DEFAULT_ALGORITHM = 'ratio'
 DEFAULT_TIMEOUT = 10
 OUTPUT_DIR = '/home/mike/smaccmcopter-ph2-build/camkes/test_output'
 CAMKES_DIR = '/home/mike/smaccmcopter-ph2-build/camkes'
 RAMSES_DIR = '/home/mike/smaccmcopter-ph2-build/ramses-demo'
 RAMSES_JAR = RAMSES_DIR + '/ramses.jar'
 EXPERIMENT_DIR = CAMKES_DIR + '/apps'
+CONSTRUCT_OUTPUT_IF_MISSING = True
 
 # 
 # set up environment for RAMSES
@@ -165,11 +166,9 @@ def run_qemu_and_compare_output(file_path):
     debug_file_name = os.path.join(OUTPUT_DIR, file_base + ".test_log.txt")
     output_file_name = os.path.join(OUTPUT_DIR, file_base + "_output.txt")
     baseline_file_name = os.path.join(file_dir, "testing", "camkes", "baseline_output.txt")
-    if (not checkPathWarn(baseline_file_name)):
-       return False
     args = ['qemu-system-arm', '-M', 'kzm', '-nographic', '-kernel',
             'images/capdl-loader-experimental-image-arm-imx31']
-    sys.stdout.write("C ")
+    sys.stdout.write("R ")
     sys.stdout.flush()
     with open(debug_file_name, "a") as debug:
       with open(output_file_name, "w") as output:
@@ -180,21 +179,31 @@ def run_qemu_and_compare_output(file_path):
         time.sleep(DEFAULT_TIMEOUT)
         child_pid = proc.pid
         os.kill(child_pid, signal.SIGTERM)
-        with open(baseline_file_name, 'r') as myfile:
-            baseline_data=myfile.read().replace('\n', '')
-        with open(output_file_name, 'r') as myfile:
-            output_data=myfile.read().replace('\n', '')
-#        debug.write("baseline_data: {}".format(baseline_data));
-#        debug.write("output_data: {}".format(output_data));
-        similarity = compare_output(baseline_data, output_data)
-        #print str(similarity)
-        #print str(DEFAULT_SIMILARITY)
-        if (similarity >= DEFAULT_SIMILARITY):
-            debug.write("Test passes!  Similarity is: {}\n".format(similarity))
-            return True
-        else:
-            debug.write("Test fails!  Similarity is: {}\n".format(similarity))
-            return False
+        if (not checkPathWarn(baseline_file_name)): 
+            if (CONSTRUCT_OUTPUT_IF_MISSING):
+                sys.stdout.write("<Create Baseline>")
+                sys.stdout.flush()
+                shutil.copyfile(output_file_name, baseline_file_name);
+                return True
+            else: 
+                return False
+        else: 
+            sys.stdout.write("C")
+            sys.stdout.flush()
+            with open(baseline_file_name, 'r') as myfile:
+                baseline_data=myfile.read().replace('\n', '')
+            with open(output_file_name, 'r') as myfile:
+                output_data=myfile.read().replace('\n', '')
+            similarity = compare_output(baseline_data, output_data)
+            if (similarity >= DEFAULT_SIMILARITY):
+                debug.write("Test passes!  Similarity is: {}\n".format(similarity))
+                return True
+            else:
+                debug.write("Test fails!  Similarity is: {}\n".format(similarity))
+                debug.write("******************************baseline data******************\n.{}".format(baseline_data))
+                debug.write("\n")
+                debug.write("******************************current output data******************\n.{}".format(output_data))
+                return False
 
 total_tests = len(aadl_files)
 passing_tests = 0
