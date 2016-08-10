@@ -1,0 +1,72 @@
+
+ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
+  paddr=[82000000..8211401f]
+ELF-loading image 'kernel'
+  paddr=[80000000..80033fff]
+  vaddr=[f0000000..f0033fff]
+  virt_entry=f0000000
+ELF-loading image 'capdl-loader-experimental'
+  paddr=[80034000..80318fff]
+  vaddr=[8000..2ecfff]
+  virt_entry=e204
+Enabling MMU and paging
+Jumping to kernel-image entry point...
+
+Bootstrapping kernel
+receiver: periodic dispatch received at time: 1002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (0)
+sender: periodic dispatch received (1010000).  Writing to receiver 
+sender: sending test data: (2020001) to receiver 
+receiver: periodic dispatch received at time: 2002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (2020001)
+sender: periodic dispatch received (2002000).  Writing to receiver 
+sender: sending test data: (4004001) to receiver 
+receiver: periodic dispatch received at time: 3002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (4004001)
+sender: periodic dispatch received (3004000).  Writing to receiver 
+sender: sending test data: (6008001) to receiver 
+receiver: periodic dispatch received at time: 4002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (6008001)
+sender: periodic dispatch received (4004000).  Writing to receiver 
+sender: sending test data: (8008001) to receiver 
+receiver: periodic dispatch received at time: 5002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (8008001)
+sender: periodic dispatch received (5006000).  Writing to receiver 
+sender: sending test data: (10012001) to receiver 
+receiver: periodic dispatch received at time: 6002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (10012001)
+sender: periodic dispatch received (6004000).  Writing to receiver 
+sender: sending test data: (12008001) to receiver 
+receiver: periodic dispatch received at time: 7002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (12008001)
+sender: periodic dispatch received (7004000).  Writing to receiver 
+sender: sending test data: (14008001) to receiver 
+receiver: periodic dispatch received at time: 8002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (14008001)
+sender: periodic dispatch received (8004000).  Writing to receiver 
+sender: sending test data: (16008001) to receiver 
+receiver: periodic dispatch received at time: 9002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (16008001)
+sender: periodic dispatch received (9002000).  Writing to receiver 
+sender: sending test data: (18004001) to receiver 
+receiver: periodic dispatch received at time: 10002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (18004001)
+sender: periodic dispatch received (10004000).  Writing to receiver 
+sender: sending test data: (20008001) to receiver 
+receiver: periodic dispatch received at time: 11002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (20008001)
+sender: periodic dispatch received (11002000).  Writing to receiver 
+sender: sending test data: (22004001) to receiver 
+receiver: periodic dispatch received at time: 12002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (22004001)
+sender: periodic dispatch received (12004000).  Writing to receiver 
+sender: sending test data: (24008001) to receiver 
+receiver: periodic dispatch received at time: 13002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (24008001)
+sender: periodic dispatch received (13004000).  Writing to receiver 
+sender: sending test data: (26008001) to receiver 
+receiver: periodic dispatch received at time: 14002000receiver: checking value of test_data on Input1 
+receiver: test_data value: (26008001)
+sender: periodic dispatch received (14002000).  Writing to receiver 
+sender: sending test data: (28004001) to receiver 
+

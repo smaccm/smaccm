@@ -1,99 +1,0 @@
-
-ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
-  paddr=[82000000..820e001f]
-ELF-loading image 'kernel'
-  paddr=[80000000..80033fff]
-  vaddr=[f0000000..f0033fff]
-  virt_entry=f0000000
-ELF-loading image 'capdl-loader-experimental'
-  paddr=[80034000..802e5fff]
-  vaddr=[8000..2b9fff]
-  virt_entry=e204
-Enabling MMU and paging
-Jumping to kernel-image entry point...
-
-Bootstrapping kernel
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 1006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 2006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 3006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 4006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 5006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 6006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 7006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 8006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 9006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 10006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 11006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 12006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-receiver: periodic dispatch received at time: 2178560
-data stored in shared buffer: hello world from sender: 13006000
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-sender ping received (2178560).  Writing to receiver 
-
