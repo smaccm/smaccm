@@ -6,6 +6,7 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.SystemImplementation;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
@@ -123,7 +124,12 @@ public class RenamingVisitor extends AstIterVisitor{
             return prefix + seperator + ((FeatureGroup) reference).getName();
         } else if (reference instanceof PropertyStatement) {
             return prefix + seperator + ((PropertyStatement) reference).getName();
-        } else if (reference instanceof ComponentType || reference instanceof ComponentImplementation) {
+        } else if (reference instanceof ComponentType || 
+        		reference instanceof ComponentImplementation ||
+        		reference instanceof SystemImplementation) {
+        	if(var.id.equals(LustreAstBuilder.assumeHistSufix)){
+        		return "Subcomponent Assumptions";
+        	}
             return "Result";
         } else if(reference instanceof AgreeStatement){
             return prefix + reference.toString();

@@ -204,6 +204,17 @@ public class LustreAstBuilder {
 			}
 			inputs.add(var);
 		}
+		
+		// add property that all assumption history is true
+		Expr assumeConj = new BoolExpr(true);
+		for (AgreeNode subNode : agreeProgram.topNode.subNodes) {
+			assumeConj = new BinaryExpr(new IdExpr(subNode.id + "__" + assumeHistSufix), BinaryOp.AND, assumeConj);
+		}
+		AgreeVar assumeHistVar = new AgreeVar(assumeHistSufix, NamedType.BOOL,
+				agreeProgram.topNode.compInst.getComponentClassifier(), agreeProgram.topNode.compInst);
+		locals.add(assumeHistVar);
+		equations.add(new Equation(new IdExpr(assumeHistVar.id), assumeConj));
+		properties.add(assumeHistVar.id);
 
 		int k = 0;
 		for (AgreeStatement patternPropState : flatNode.patternProps) {
@@ -238,7 +249,7 @@ public class LustreAstBuilder {
 
 		equations.addAll(flatNode.localEquations);
 	    assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
-
+	    
 		NodeBuilder builder = new NodeBuilder("main");
 		builder.addInputs(inputs);
 		builder.addLocals(locals);
@@ -487,8 +498,6 @@ public class LustreAstBuilder {
 			inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
 			IdExpr assumeId = new IdExpr(inputName);
 			assertions.add(new BinaryExpr(assumeId, BinaryOp.EQUAL, statement.expr));
-			// assumeConjExpr = new BinaryExpr(assumeId, BinaryOp.AND,
-			// assumeConjExpr);
 		}
 
 		int j = 0;
