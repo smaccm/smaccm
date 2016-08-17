@@ -21,7 +21,7 @@
 
 #include "cmks_vchan_vm.h"
 
-#define VM_VCHAN_OUTPUT_LVL 100
+#define VM_VCHAN_OUTPUT_LVL 1
 
 #define DVMVCHAN(lvl, ...) \
     do{ if(lvl >= 1 && lvl <= VM_VCHAN_OUTPUT_LVL){ \
