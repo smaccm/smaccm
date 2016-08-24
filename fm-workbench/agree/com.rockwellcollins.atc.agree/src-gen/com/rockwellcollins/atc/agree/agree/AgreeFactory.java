@@ -653,6 +653,15 @@ public interface AgreeFactory extends EFactory
   LatchedExpr createLatchedExpr();
 
   /**
+   * Returns a new object of class '<em>Time Of Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Of Expr</em>'.
+   * @generated
+   */
+  TimeOfExpr createTimeOfExpr();
+
+  /**
    * Returns a new object of class '<em>Real Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -111,6 +112,7 @@ import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
+import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
@@ -139,6 +141,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private static List<Node> globalNodes;
     private static Set<RecordType> globalTypes;
     private static Map<NamedElement, String> typeMap;
+    private static Map<String, AgreeVar> timeOfVarMap;
+
     private ComponentInstance curInst; // used for Get_Property Expressions
     private boolean isMonolithic = false;
 
@@ -198,6 +202,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<AgreeStatement> lemmas = new ArrayList<>();
         List<AgreeEquation> localEquations = new ArrayList<>();
         List<AgreeStatement> patternProps = Collections.emptyList();
+        timeOfVarMap = new HashMap<>();
+        
         Expr clockConstraint = new BoolExpr(true);
         Expr initialConstraint = new BoolExpr(true);
         String id = compInst.getName();
@@ -293,9 +299,27 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         // in a component containing an annex
         assertReferencedSubcomponentHasAnnex(compInst, inputs, outputs, subNodes, assertions, lemmas);
 
-        return new AgreeNode(id, inputs, outputs, locals, localEquations, connections, subNodes, assertions,
-                assumptions, guarantees, lemmas, patternProps, clockConstraint, initialConstraint, clockVar, reference,
-                timing, null, compInst);
+        AgreeNodeBuilder builder = new AgreeNodeBuilder(id);
+        builder.addInput(inputs);
+        builder.addOutput(outputs);
+        builder.addLocal(locals);
+        builder.addLocalEquation(localEquations);
+        builder.addConnection(connections);
+        builder.addSubNode(subNodes);
+        builder.addAssertion(assertions);
+        builder.addAssumption(assumptions);
+        builder.addGuarantee(guarantees);
+        builder.addLemma(lemmas);
+        builder.addPatternProp(patternProps);
+        builder.setClockConstraint(clockConstraint);
+        builder.setInitialConstraint(initialConstraint);
+        builder.setClockVar(clockVar);
+        builder.setReference(reference);
+        builder.setTiming(timing);
+        builder.setCompInst(compInst);
+        builder.addTimeOf(timeOfVarMap);
+        
+        return builder.build();
     }
 
     private List<AgreeConnection> filterConnections(List<AgreeAADLConnection> aadlConnections,
@@ -1040,6 +1064,22 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return lustreExpr;
     }
 
+    @Override
+    public Expr caseTimeOfExpr(TimeOfExpr timeExpr){
+    	NestedDotID nestId = (NestedDotID)timeExpr.getId();
+    	NamedElement namedEl = nestId.getBase();
+    	String idStr = namedEl.getName();
+    	
+		AgreeVar var = timeOfVarMap.get(idStr);
+		if (var == null) {
+			String varStr = idStr + AgreePatternTranslator.TIME_SUFFIX;
+			var = new AgreeVar(varStr, NamedType.REAL, namedEl);
+			timeOfVarMap.put(idStr, var);
+		}
+    	
+    	return new IdExpr(var.id);
+    }
+    
     @Override
     public Expr caseRecordExpr(RecordExpr recExpr) {
 

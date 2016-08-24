@@ -3403,50 +3403,57 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cIdNestedDotIDParserRuleCall_5_3_0 = (RuleCall)cIdAssignment_5_3.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_5_4 = (Keyword)cGroup_5.eContents().get(4);
 		private final Group cGroup_6 = (Group)cAlternatives.eContents().get(6);
-		private final Action cRealLitExprAction_6_0 = (Action)cGroup_6.eContents().get(0);
-		private final Assignment cValAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
-		private final RuleCall cValREAL_LITTerminalRuleCall_6_1_0 = (RuleCall)cValAssignment_6_1.eContents().get(0);
+		private final Action cTimeOfExprAction_6_0 = (Action)cGroup_6.eContents().get(0);
+		private final Keyword cTimeofKeyword_6_1 = (Keyword)cGroup_6.eContents().get(1);
+		private final Keyword cLeftParenthesisKeyword_6_2 = (Keyword)cGroup_6.eContents().get(2);
+		private final Assignment cIdAssignment_6_3 = (Assignment)cGroup_6.eContents().get(3);
+		private final RuleCall cIdNestedDotIDParserRuleCall_6_3_0 = (RuleCall)cIdAssignment_6_3.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_6_4 = (Keyword)cGroup_6.eContents().get(4);
 		private final Group cGroup_7 = (Group)cAlternatives.eContents().get(7);
-		private final Action cBoolLitExprAction_7_0 = (Action)cGroup_7.eContents().get(0);
+		private final Action cRealLitExprAction_7_0 = (Action)cGroup_7.eContents().get(0);
 		private final Assignment cValAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final RuleCall cValBooleanLiteralParserRuleCall_7_1_0 = (RuleCall)cValAssignment_7_1.eContents().get(0);
+		private final RuleCall cValREAL_LITTerminalRuleCall_7_1_0 = (RuleCall)cValAssignment_7_1.eContents().get(0);
 		private final Group cGroup_8 = (Group)cAlternatives.eContents().get(8);
-		private final Action cThisExprAction_8_0 = (Action)cGroup_8.eContents().get(0);
-		private final Keyword cThisKeyword_8_1 = (Keyword)cGroup_8.eContents().get(1);
-		private final Group cGroup_8_2 = (Group)cGroup_8.eContents().get(2);
-		private final Keyword cFullStopKeyword_8_2_0 = (Keyword)cGroup_8_2.eContents().get(0);
-		private final Assignment cSubThisAssignment_8_2_1 = (Assignment)cGroup_8_2.eContents().get(1);
-		private final RuleCall cSubThisNestedDotIDParserRuleCall_8_2_1_0 = (RuleCall)cSubThisAssignment_8_2_1.eContents().get(0);
+		private final Action cBoolLitExprAction_8_0 = (Action)cGroup_8.eContents().get(0);
+		private final Assignment cValAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
+		private final RuleCall cValBooleanLiteralParserRuleCall_8_1_0 = (RuleCall)cValAssignment_8_1.eContents().get(0);
 		private final Group cGroup_9 = (Group)cAlternatives.eContents().get(9);
-		private final Action cFloorCastAction_9_0 = (Action)cGroup_9.eContents().get(0);
-		private final Keyword cFloorKeyword_9_1 = (Keyword)cGroup_9.eContents().get(1);
-		private final Keyword cLeftParenthesisKeyword_9_2 = (Keyword)cGroup_9.eContents().get(2);
-		private final Assignment cExprAssignment_9_3 = (Assignment)cGroup_9.eContents().get(3);
-		private final RuleCall cExprExprParserRuleCall_9_3_0 = (RuleCall)cExprAssignment_9_3.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_9_4 = (Keyword)cGroup_9.eContents().get(4);
+		private final Action cThisExprAction_9_0 = (Action)cGroup_9.eContents().get(0);
+		private final Keyword cThisKeyword_9_1 = (Keyword)cGroup_9.eContents().get(1);
+		private final Group cGroup_9_2 = (Group)cGroup_9.eContents().get(2);
+		private final Keyword cFullStopKeyword_9_2_0 = (Keyword)cGroup_9_2.eContents().get(0);
+		private final Assignment cSubThisAssignment_9_2_1 = (Assignment)cGroup_9_2.eContents().get(1);
+		private final RuleCall cSubThisNestedDotIDParserRuleCall_9_2_1_0 = (RuleCall)cSubThisAssignment_9_2_1.eContents().get(0);
 		private final Group cGroup_10 = (Group)cAlternatives.eContents().get(10);
-		private final Action cRealCastAction_10_0 = (Action)cGroup_10.eContents().get(0);
-		private final Keyword cRealKeyword_10_1 = (Keyword)cGroup_10.eContents().get(1);
+		private final Action cFloorCastAction_10_0 = (Action)cGroup_10.eContents().get(0);
+		private final Keyword cFloorKeyword_10_1 = (Keyword)cGroup_10.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_10_2 = (Keyword)cGroup_10.eContents().get(2);
 		private final Assignment cExprAssignment_10_3 = (Assignment)cGroup_10.eContents().get(3);
 		private final RuleCall cExprExprParserRuleCall_10_3_0 = (RuleCall)cExprAssignment_10_3.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_10_4 = (Keyword)cGroup_10.eContents().get(4);
 		private final Group cGroup_11 = (Group)cAlternatives.eContents().get(11);
-		private final Keyword cLeftParenthesisKeyword_11_0 = (Keyword)cGroup_11.eContents().get(0);
-		private final RuleCall cExprParserRuleCall_11_1 = (RuleCall)cGroup_11.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_11_2 = (Keyword)cGroup_11.eContents().get(2);
+		private final Action cRealCastAction_11_0 = (Action)cGroup_11.eContents().get(0);
+		private final Keyword cRealKeyword_11_1 = (Keyword)cGroup_11.eContents().get(1);
+		private final Keyword cLeftParenthesisKeyword_11_2 = (Keyword)cGroup_11.eContents().get(2);
+		private final Assignment cExprAssignment_11_3 = (Assignment)cGroup_11.eContents().get(3);
+		private final RuleCall cExprExprParserRuleCall_11_3_0 = (RuleCall)cExprAssignment_11_3.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_11_4 = (Keyword)cGroup_11.eContents().get(4);
+		private final Group cGroup_12 = (Group)cAlternatives.eContents().get(12);
+		private final Keyword cLeftParenthesisKeyword_12_0 = (Keyword)cGroup_12.eContents().get(0);
+		private final RuleCall cExprParserRuleCall_12_1 = (RuleCall)cGroup_12.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_12_2 = (Keyword)cGroup_12.eContents().get(2);
 		
 		//TermExpr returns Expr:
 		//	{TimeExpr} "time" | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {EventExpr}
-		//	"event" "(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {RealLitExpr} val=REAL_LIT |
-		//	{BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | {FloorCast} "floor" "(" expr=Expr
-		//	")" | {RealCast} "real" "(" expr=Expr ")" | "(" Expr ")";
+		//	"event" "(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {TimeOfExpr} "timeof" "("
+		//	id=NestedDotID ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("."
+		//	subThis=NestedDotID)? | {FloorCast} "floor" "(" expr=Expr ")" | {RealCast} "real" "(" expr=Expr ")" | "(" Expr ")";
 		@Override public ParserRule getRule() { return rule; }
 
 		//{TimeExpr} "time" | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {EventExpr} "event"
-		//"(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
-		//val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | {FloorCast} "floor" "(" expr=Expr ")" | {RealCast}
-		//"real" "(" expr=Expr ")" | "(" Expr ")"
+		//"(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {TimeOfExpr} "timeof" "(" id=NestedDotID ")"
+		//| {RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? |
+		//{FloorCast} "floor" "(" expr=Expr ")" | {RealCast} "real" "(" expr=Expr ")" | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{TimeExpr} "time"
@@ -3536,80 +3543,80 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//")"
 		public Keyword getRightParenthesisKeyword_5_4() { return cRightParenthesisKeyword_5_4; }
 
-		//{RealLitExpr} val=REAL_LIT
+		//{TimeOfExpr} "timeof" "(" id=NestedDotID ")"
 		public Group getGroup_6() { return cGroup_6; }
 
-		//{RealLitExpr}
-		public Action getRealLitExprAction_6_0() { return cRealLitExprAction_6_0; }
+		//{TimeOfExpr}
+		public Action getTimeOfExprAction_6_0() { return cTimeOfExprAction_6_0; }
 
-		//val=REAL_LIT
-		public Assignment getValAssignment_6_1() { return cValAssignment_6_1; }
-
-		//REAL_LIT
-		public RuleCall getValREAL_LITTerminalRuleCall_6_1_0() { return cValREAL_LITTerminalRuleCall_6_1_0; }
-
-		//{BoolLitExpr} val=BooleanLiteral
-		public Group getGroup_7() { return cGroup_7; }
-
-		//{BoolLitExpr}
-		public Action getBoolLitExprAction_7_0() { return cBoolLitExprAction_7_0; }
-
-		//val=BooleanLiteral
-		public Assignment getValAssignment_7_1() { return cValAssignment_7_1; }
-
-		//BooleanLiteral
-		public RuleCall getValBooleanLiteralParserRuleCall_7_1_0() { return cValBooleanLiteralParserRuleCall_7_1_0; }
-
-		//{ThisExpr} "this" ("." subThis=NestedDotID)?
-		public Group getGroup_8() { return cGroup_8; }
-
-		//{ThisExpr}
-		public Action getThisExprAction_8_0() { return cThisExprAction_8_0; }
-
-		//"this"
-		public Keyword getThisKeyword_8_1() { return cThisKeyword_8_1; }
-
-		//("." subThis=NestedDotID)?
-		public Group getGroup_8_2() { return cGroup_8_2; }
-
-		//"."
-		public Keyword getFullStopKeyword_8_2_0() { return cFullStopKeyword_8_2_0; }
-
-		//subThis=NestedDotID
-		public Assignment getSubThisAssignment_8_2_1() { return cSubThisAssignment_8_2_1; }
-
-		//NestedDotID
-		public RuleCall getSubThisNestedDotIDParserRuleCall_8_2_1_0() { return cSubThisNestedDotIDParserRuleCall_8_2_1_0; }
-
-		//{FloorCast} "floor" "(" expr=Expr ")"
-		public Group getGroup_9() { return cGroup_9; }
-
-		//{FloorCast}
-		public Action getFloorCastAction_9_0() { return cFloorCastAction_9_0; }
-
-		//"floor"
-		public Keyword getFloorKeyword_9_1() { return cFloorKeyword_9_1; }
+		//"timeof"
+		public Keyword getTimeofKeyword_6_1() { return cTimeofKeyword_6_1; }
 
 		//"("
-		public Keyword getLeftParenthesisKeyword_9_2() { return cLeftParenthesisKeyword_9_2; }
+		public Keyword getLeftParenthesisKeyword_6_2() { return cLeftParenthesisKeyword_6_2; }
 
-		//expr=Expr
-		public Assignment getExprAssignment_9_3() { return cExprAssignment_9_3; }
+		//id=NestedDotID
+		public Assignment getIdAssignment_6_3() { return cIdAssignment_6_3; }
 
-		//Expr
-		public RuleCall getExprExprParserRuleCall_9_3_0() { return cExprExprParserRuleCall_9_3_0; }
+		//NestedDotID
+		public RuleCall getIdNestedDotIDParserRuleCall_6_3_0() { return cIdNestedDotIDParserRuleCall_6_3_0; }
 
 		//")"
-		public Keyword getRightParenthesisKeyword_9_4() { return cRightParenthesisKeyword_9_4; }
+		public Keyword getRightParenthesisKeyword_6_4() { return cRightParenthesisKeyword_6_4; }
 
-		//{RealCast} "real" "(" expr=Expr ")"
+		//{RealLitExpr} val=REAL_LIT
+		public Group getGroup_7() { return cGroup_7; }
+
+		//{RealLitExpr}
+		public Action getRealLitExprAction_7_0() { return cRealLitExprAction_7_0; }
+
+		//val=REAL_LIT
+		public Assignment getValAssignment_7_1() { return cValAssignment_7_1; }
+
+		//REAL_LIT
+		public RuleCall getValREAL_LITTerminalRuleCall_7_1_0() { return cValREAL_LITTerminalRuleCall_7_1_0; }
+
+		//{BoolLitExpr} val=BooleanLiteral
+		public Group getGroup_8() { return cGroup_8; }
+
+		//{BoolLitExpr}
+		public Action getBoolLitExprAction_8_0() { return cBoolLitExprAction_8_0; }
+
+		//val=BooleanLiteral
+		public Assignment getValAssignment_8_1() { return cValAssignment_8_1; }
+
+		//BooleanLiteral
+		public RuleCall getValBooleanLiteralParserRuleCall_8_1_0() { return cValBooleanLiteralParserRuleCall_8_1_0; }
+
+		//{ThisExpr} "this" ("." subThis=NestedDotID)?
+		public Group getGroup_9() { return cGroup_9; }
+
+		//{ThisExpr}
+		public Action getThisExprAction_9_0() { return cThisExprAction_9_0; }
+
+		//"this"
+		public Keyword getThisKeyword_9_1() { return cThisKeyword_9_1; }
+
+		//("." subThis=NestedDotID)?
+		public Group getGroup_9_2() { return cGroup_9_2; }
+
+		//"."
+		public Keyword getFullStopKeyword_9_2_0() { return cFullStopKeyword_9_2_0; }
+
+		//subThis=NestedDotID
+		public Assignment getSubThisAssignment_9_2_1() { return cSubThisAssignment_9_2_1; }
+
+		//NestedDotID
+		public RuleCall getSubThisNestedDotIDParserRuleCall_9_2_1_0() { return cSubThisNestedDotIDParserRuleCall_9_2_1_0; }
+
+		//{FloorCast} "floor" "(" expr=Expr ")"
 		public Group getGroup_10() { return cGroup_10; }
 
-		//{RealCast}
-		public Action getRealCastAction_10_0() { return cRealCastAction_10_0; }
+		//{FloorCast}
+		public Action getFloorCastAction_10_0() { return cFloorCastAction_10_0; }
 
-		//"real"
-		public Keyword getRealKeyword_10_1() { return cRealKeyword_10_1; }
+		//"floor"
+		public Keyword getFloorKeyword_10_1() { return cFloorKeyword_10_1; }
 
 		//"("
 		public Keyword getLeftParenthesisKeyword_10_2() { return cLeftParenthesisKeyword_10_2; }
@@ -3623,17 +3630,38 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//")"
 		public Keyword getRightParenthesisKeyword_10_4() { return cRightParenthesisKeyword_10_4; }
 
-		//"(" Expr ")"
+		//{RealCast} "real" "(" expr=Expr ")"
 		public Group getGroup_11() { return cGroup_11; }
 
+		//{RealCast}
+		public Action getRealCastAction_11_0() { return cRealCastAction_11_0; }
+
+		//"real"
+		public Keyword getRealKeyword_11_1() { return cRealKeyword_11_1; }
+
 		//"("
-		public Keyword getLeftParenthesisKeyword_11_0() { return cLeftParenthesisKeyword_11_0; }
+		public Keyword getLeftParenthesisKeyword_11_2() { return cLeftParenthesisKeyword_11_2; }
+
+		//expr=Expr
+		public Assignment getExprAssignment_11_3() { return cExprAssignment_11_3; }
 
 		//Expr
-		public RuleCall getExprParserRuleCall_11_1() { return cExprParserRuleCall_11_1; }
+		public RuleCall getExprExprParserRuleCall_11_3_0() { return cExprExprParserRuleCall_11_3_0; }
 
 		//")"
-		public Keyword getRightParenthesisKeyword_11_2() { return cRightParenthesisKeyword_11_2; }
+		public Keyword getRightParenthesisKeyword_11_4() { return cRightParenthesisKeyword_11_4; }
+
+		//"(" Expr ")"
+		public Group getGroup_12() { return cGroup_12; }
+
+		//"("
+		public Keyword getLeftParenthesisKeyword_12_0() { return cLeftParenthesisKeyword_12_0; }
+
+		//Expr
+		public RuleCall getExprParserRuleCall_12_1() { return cExprParserRuleCall_12_1; }
+
+		//")"
+		public Keyword getRightParenthesisKeyword_12_2() { return cRightParenthesisKeyword_12_2; }
 	}
 
 	public class ComplexExprElements extends AbstractParserRuleElementFinder {
@@ -4540,9 +4568,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//TermExpr returns Expr:
 	//	{TimeExpr} "time" | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {EventExpr}
-	//	"event" "(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {RealLitExpr} val=REAL_LIT |
-	//	{BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | {FloorCast} "floor" "(" expr=Expr
-	//	")" | {RealCast} "real" "(" expr=Expr ")" | "(" Expr ")";
+	//	"event" "(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {TimeOfExpr} "timeof" "("
+	//	id=NestedDotID ")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("."
+	//	subThis=NestedDotID)? | {FloorCast} "floor" "(" expr=Expr ")" | {RealCast} "real" "(" expr=Expr ")" | "(" Expr ")";
 	public TermExprElements getTermExprAccess() {
 		return pTermExpr;
 	}

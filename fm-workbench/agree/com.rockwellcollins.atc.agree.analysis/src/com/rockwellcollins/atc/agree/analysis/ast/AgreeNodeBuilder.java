@@ -1,8 +1,10 @@
 package com.rockwellcollins.atc.agree.analysis.ast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
@@ -36,6 +38,7 @@ public class AgreeNodeBuilder {
     private TimingModel timing;
     private ComponentInstance compInst;
     private Set<AgreeVar> eventTimes = new HashSet<>();
+    private Map<String, AgreeVar> timeOfMap = new HashMap<>();
     
     public AgreeNodeBuilder(String id){
         this.id = id;
@@ -56,12 +59,14 @@ public class AgreeNodeBuilder {
         this.localEquations = new ArrayList<>(node.localEquations);
         this.patternProps = new ArrayList<>(node.patternProps);
         this.eventTimes = new HashSet<>(node.eventTimes);
+        this.timeOfMap = new HashMap<>(node.timeOfMap);
         this.clockConstraint = node.clockConstraint;
         this.initialConstraint = node.initialConstraint;
         this.clockVar = node.clockVar;
         this.reference = node.reference;
         this.timing = node.timing;
         this.compInst = node.compInst;
+        
     }
     
     public void setId(String id){
@@ -76,6 +81,10 @@ public class AgreeNodeBuilder {
         this.patternProps.add(statement);
     }
     
+    public void addPatternProp(List<AgreeStatement> statements){
+        this.patternProps.addAll(statements);
+    }
+    
     public void clearPatternProps(){
         this.patternProps.clear();
     }
@@ -84,12 +93,20 @@ public class AgreeNodeBuilder {
         this.eventTimes.add(event);
     }
     
+    public void addEventTime(Set<AgreeVar> events){
+        this.eventTimes.addAll(events);
+    }
+    
     public void clearEventTimes(){
         this.eventTimes.clear();
     }
     
     public void addInput(AgreeVar var){
         this.inputs.add(var);
+    }
+    
+    public void addInput(List<AgreeVar> vars){
+        this.inputs.addAll(vars);
     }
 
     public void clearInputs() {
@@ -100,12 +117,20 @@ public class AgreeNodeBuilder {
         this.outputs.add(var);
     }
     
+    public void addOutput(List<AgreeVar> vars){
+        this.outputs.addAll(vars);
+    }
+    
     public void clearOutputs(){
         this.outputs.clear();
     }
     
     public void addLocal(AgreeVar var){
         this.locals.add(var);
+    }
+    
+    public void addLocal(List<AgreeVar> var){
+        this.locals.addAll(var);
     }
     
     public void clearLocals(){
@@ -116,12 +141,20 @@ public class AgreeNodeBuilder {
         this.equations.add(eq);
     }
     
+    public void addLocalEquation(List<AgreeEquation> eq){
+        this.equations.addAll(eq);
+    }
+    
     public void clearLocalEquations(){
         this.equations.clear();
     }
     
     public void addConnection(AgreeConnection conn){
         this.connections.add(conn);
+    }
+    
+    public void addConnection(List<AgreeConnection> conn){
+        this.connections.addAll(conn);
     }
     
     public void clearConnections(){
@@ -132,12 +165,20 @@ public class AgreeNodeBuilder {
         this.subNodes.add(node);
     }
     
+    public void addSubNode(List<AgreeNode> node){
+        this.subNodes.addAll(node);
+    }
+    
     public void clearSubNodes(){
         this.subNodes.clear();
     }
     
     public void addAssertion(AgreeStatement statement){
         this.assertions.add(statement);
+    }
+    
+    public void addAssertion(List<AgreeStatement> statement){
+        this.assertions.addAll(statement);
     }
     
     public void clearAssertions(){
@@ -148,6 +189,10 @@ public class AgreeNodeBuilder {
         this.assumptions.add(statement);
     }
     
+    public void addAssumption(List<AgreeStatement> statement){
+        this.assumptions.addAll(statement);
+    }
+    
     public void clearAssumptions(){
         this.assumptions.clear();
     }
@@ -156,12 +201,32 @@ public class AgreeNodeBuilder {
         this.guarantees.add(statement);
     }
     
+    public void addGuarantee(List<AgreeStatement> statement){
+        this.guarantees.addAll(statement);
+    }
+    
     public void clearGuarantees(){
         this.guarantees.clear();
     }
     
     public void addLemma(AgreeStatement statement){
         this.lemmas.add(statement);
+    }
+    
+    public void addLemma(List<AgreeStatement> statement){
+        this.lemmas.addAll(statement);
+    }
+    
+    public void addTimeOf(String name, AgreeVar var){
+    	timeOfMap.put(name, var);
+    }
+    
+    public void addTimeOf(Map<String, AgreeVar> map){
+    	timeOfMap.putAll(map);
+    }
+    
+    public void clearTimeOfs(){
+    	timeOfMap.clear();
     }
     
     public void clearLemmas(){
@@ -191,11 +256,11 @@ public class AgreeNodeBuilder {
     public void setCompInst(ComponentInstance compInst) {
         this.compInst = compInst;
     }
-
+    
     public AgreeNode build() {
         return new AgreeNode(id, inputs, outputs, locals, equations, connections, subNodes, assertions,
                 assumptions, guarantees, lemmas, patternProps, clockConstraint, initialConstraint, clockVar, reference,
-                timing, eventTimes, compInst);
+                timing, eventTimes, timeOfMap, compInst);
     }
 
 }

@@ -431,6 +431,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createLatchedExprAdapter();
       }
       @Override
+      public Adapter caseTimeOfExpr(TimeOfExpr object)
+      {
+        return createTimeOfExprAdapter();
+      }
+      @Override
       public Adapter caseRealLitExpr(RealLitExpr object)
       {
         return createRealLitExprAdapter();
@@ -1558,6 +1563,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createLatchedExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TimeOfExpr <em>Time Of Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.TimeOfExpr
+   * @generated
+   */
+  public Adapter createTimeOfExprAdapter()
   {
     return null;
   }

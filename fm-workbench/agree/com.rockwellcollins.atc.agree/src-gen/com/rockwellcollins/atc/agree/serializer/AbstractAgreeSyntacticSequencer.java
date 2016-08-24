@@ -21,16 +21,16 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected AgreeGrammarAccess grammarAccess;
-	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_11_0_a;
-	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_11_0_p;
+	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_12_0_a;
+	protected AbstractElementAlias match_TermExpr_LeftParenthesisKeyword_12_0_p;
 	protected AbstractElementAlias match_WheneverStatement_OccurKeyword_0_0_0_6_0_or_OccursKeyword_0_0_0_6_1;
 	protected AbstractElementAlias match_WheneverStatement_OccurKeyword_1_0_0_7_0_or_OccursKeyword_1_0_0_7_1;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (AgreeGrammarAccess) access;
-		match_TermExpr_LeftParenthesisKeyword_11_0_a = new TokenAlias(true, true, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_11_0());
-		match_TermExpr_LeftParenthesisKeyword_11_0_p = new TokenAlias(true, false, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_11_0());
+		match_TermExpr_LeftParenthesisKeyword_12_0_a = new TokenAlias(true, true, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_12_0());
+		match_TermExpr_LeftParenthesisKeyword_12_0_p = new TokenAlias(true, false, grammarAccess.getTermExprAccess().getLeftParenthesisKeyword_12_0());
 		match_WheneverStatement_OccurKeyword_0_0_0_6_0_or_OccursKeyword_0_0_0_6_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccurKeyword_0_0_0_6_0()), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccursKeyword_0_0_0_6_1()));
 		match_WheneverStatement_OccurKeyword_1_0_0_7_0_or_OccursKeyword_1_0_0_7_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccurKeyword_1_0_0_7_0()), new TokenAlias(false, false, grammarAccess.getWheneverStatementAccess().getOccursKeyword_1_0_0_7_1()));
 	}
@@ -47,10 +47,10 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if(match_TermExpr_LeftParenthesisKeyword_11_0_a.equals(syntax))
-				emit_TermExpr_LeftParenthesisKeyword_11_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_TermExpr_LeftParenthesisKeyword_11_0_p.equals(syntax))
-				emit_TermExpr_LeftParenthesisKeyword_11_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			if(match_TermExpr_LeftParenthesisKeyword_12_0_a.equals(syntax))
+				emit_TermExpr_LeftParenthesisKeyword_12_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_TermExpr_LeftParenthesisKeyword_12_0_p.equals(syntax))
+				emit_TermExpr_LeftParenthesisKeyword_12_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_WheneverStatement_OccurKeyword_0_0_0_6_0_or_OccursKeyword_0_0_0_6_1.equals(syntax))
 				emit_WheneverStatement_OccurKeyword_0_0_0_6_0_or_OccursKeyword_0_0_0_6_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_WheneverStatement_OccurKeyword_1_0_0_7_0_or_OccursKeyword_1_0_0_7_1.equals(syntax))
@@ -75,6 +75,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) 'this' '.' subThis=NestedDotID
 	 *     (rule start) (ambiguity) 'this' (rule start)
 	 *     (rule start) (ambiguity) 'time' (rule start)
+	 *     (rule start) (ambiguity) 'timeof' '(' id=NestedDotID
 	 *     (rule start) (ambiguity) base=[NamedElement|QCPREF]
 	 *     (rule start) (ambiguity) op='-'
 	 *     (rule start) (ambiguity) op='not'
@@ -86,7 +87,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) {RecordExpr.record=}
 	 *     (rule start) (ambiguity) {RecordUpdateExpr.record=}
 	 */
-	protected void emit_TermExpr_LeftParenthesisKeyword_11_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_TermExpr_LeftParenthesisKeyword_12_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -103,7 +104,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) {BinaryExpr.left=}
 	 *     (rule start) (ambiguity) {RecordUpdateExpr.record=}
 	 */
-	protected void emit_TermExpr_LeftParenthesisKeyword_11_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_TermExpr_LeftParenthesisKeyword_12_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

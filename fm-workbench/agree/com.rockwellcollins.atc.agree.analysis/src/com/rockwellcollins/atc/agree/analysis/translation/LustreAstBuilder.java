@@ -1,5 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis.translation;
 
+import java.lang.ref.Reference;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
@@ -624,11 +626,33 @@ public class LustreAstBuilder {
 		locals.addAll(agreeNode.locals);
 		equations.addAll(agreeNode.localEquations);
 		patternProps.addAll(agreeNode.patternProps);
+		
+		AgreeNodeBuilder builder = new AgreeNodeBuilder(agreeNode.id);
+		
+		builder.addInput(inputs);
+		builder.addOutput(outputs);
+		builder.addLocal(locals);
+		builder.addLocalEquation(equations);
+		builder.addSubNode(agreeNode.subNodes);
+		builder.addAssertion(assertions);
+		builder.addAssumption(agreeNode.assumptions);
+		builder.addGuarantee(agreeNode.guarantees);
+		builder.addLemma(agreeNode.lemmas);
+		builder.addPatternProp(patternProps);
+		builder.setClockConstraint(new BoolExpr(true));
+		builder.setInitialConstraint(agreeNode.initialConstraint);
+		builder.setClockVar(agreeNode.clockVar);
+		builder.setReference(agreeNode.reference);
+		builder.setTiming(null);
+		builder.addEventTime(timeEvents);
+		builder.setCompInst(agreeNode.compInst);
 
-		return new AgreeNode(agreeNode.id, inputs, outputs, locals, equations, null, agreeNode.subNodes, assertions,
-				agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, patternProps,
-				new BoolExpr(true), agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
-				timeEvents, agreeNode.compInst);
+		return builder.build();
+
+//		return new AgreeNode(agreeNode.id, inputs, outputs, locals, equations, null, agreeNode.subNodes, assertions,
+//				agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, patternProps,
+//				new BoolExpr(true), agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
+//				timeEvents, agreeNode.compInst);
 	}
 
 	private static void addHistoricalAssumptionConstraint(AgreeNode agreeNode, String prefix, Expr clockExpr,

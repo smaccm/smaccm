@@ -71,6 +71,7 @@ import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
+import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
@@ -589,6 +590,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass latchedExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass timeOfExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2410,6 +2418,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getTimeOfExpr()
+  {
+    return timeOfExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTimeOfExpr_Id()
+  {
+    return (EReference)timeOfExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getRealLitExpr()
   {
     return realLitExprEClass;
@@ -2845,6 +2873,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     latchedExprEClass = createEClass(LATCHED_EXPR);
     createEReference(latchedExprEClass, LATCHED_EXPR__ID);
 
+    timeOfExprEClass = createEClass(TIME_OF_EXPR);
+    createEReference(timeOfExprEClass, TIME_OF_EXPR__ID);
+
     realLitExprEClass = createEClass(REAL_LIT_EXPR);
     createEAttribute(realLitExprEClass, REAL_LIT_EXPR__VAL);
 
@@ -2980,6 +3011,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     preExprEClass.getESuperTypes().add(this.getExpr());
     eventExprEClass.getESuperTypes().add(this.getExpr());
     latchedExprEClass.getESuperTypes().add(this.getExpr());
+    timeOfExprEClass.getESuperTypes().add(this.getExpr());
     realLitExprEClass.getESuperTypes().add(this.getExpr());
     boolLitExprEClass.getESuperTypes().add(this.getExpr());
     thisExprEClass.getESuperTypes().add(this.getExpr());
@@ -3228,6 +3260,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(latchedExprEClass, LatchedExpr.class, "LatchedExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getLatchedExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, LatchedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(timeOfExprEClass, TimeOfExpr.class, "TimeOfExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getTimeOfExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, TimeOfExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(realLitExprEClass, RealLitExpr.class, "RealLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRealLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, RealLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

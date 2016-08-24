@@ -28,6 +28,7 @@ import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternInterval.Inte
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.Expr;
+import jkind.lustre.IdExpr;
 import jkind.lustre.IntExpr;
 
 public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
@@ -49,7 +50,7 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 
     @Override
     public AgreeStatement casePeriodicStatement(PeriodicStatement object){
-        Expr event = builder.doSwitch(object.getEvent());
+        IdExpr event = (IdExpr) builder.doSwitch(object.getEvent());
         
         com.rockwellcollins.atc.agree.agree.Expr jitter = object.getJitter();
         Expr jitterExpr = null;
@@ -63,7 +64,7 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
     
     @Override
     public AgreeStatement caseSporadicStatement(SporadicStatement object){
-        Expr event = builder.doSwitch(object.getEvent());
+        IdExpr event = (IdExpr) builder.doSwitch(object.getEvent());
         com.rockwellcollins.atc.agree.agree.Expr jitter = object.getJitter();
         Expr jitterExpr = null;
         if (jitter != null) {
@@ -76,8 +77,8 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
     
     @Override
     public AgreeStatement caseWheneverHoldsStatement(WheneverHoldsStatement object) {
-        Expr cause = builder.doSwitch(object.getCause());
-        Expr effect = builder.doSwitch(object.getEffect());
+        IdExpr cause = (IdExpr) builder.doSwitch(object.getCause());
+        IdExpr effect = (IdExpr) builder.doSwitch(object.getEffect());
         boolean exclusive = object.getExcl() != null;
         
         AgreePatternInterval interval = getIntervalType(object.getInterval());
@@ -88,21 +89,22 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 
     @Override
     public AgreeStatement caseWheneverImpliesStatement(WheneverImpliesStatement object) {
-        Expr cause = builder.doSwitch(object.getCause());
-        Expr lhs = builder.doSwitch(object.getLhs());
-        Expr rhs = builder.doSwitch(object.getRhs());
+        IdExpr cause = (IdExpr) builder.doSwitch(object.getCause());
+        IdExpr lhs = (IdExpr) builder.doSwitch(object.getLhs());
+        IdExpr rhs = (IdExpr) builder.doSwitch(object.getRhs());
         boolean exclusive = object.getExcl() != null;
         AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
         Expr effect = new BinaryExpr(lhs, BinaryOp.IMPLIES, rhs);
-        return new AgreeCauseEffectPattern(str, ref, exclusive, cause, effect, null, effectInterval, TriggerType.EVENT,
-                TriggerType.CONDITION);
+        throw new AgreeException("We do not support this pattern currently");
+//        return new AgreeCauseEffectPattern(str, ref, exclusive, cause, effect, null, effectInterval, TriggerType.EVENT,
+//                TriggerType.CONDITION);
     }
 
     @Override
     public AgreeStatement caseWheneverOccursStatement(WheneverOccursStatement object) {
-        Expr cause = builder.doSwitch(object.getCause());
-        Expr effect = builder.doSwitch(object.getEffect());
+        IdExpr cause = (IdExpr) builder.doSwitch(object.getCause());
+        IdExpr effect = (IdExpr) builder.doSwitch(object.getEffect());
         boolean exclusive = object.getExcl() != null;
         AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
@@ -112,8 +114,8 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 
     @Override
     public AgreeStatement caseWheneverBecomesTrueStatement(WheneverBecomesTrueStatement object) {
-        Expr cause = builder.doSwitch(object.getCause());
-        Expr effect = builder.doSwitch(object.getEffect());
+        IdExpr cause = (IdExpr) builder.doSwitch(object.getCause());
+        IdExpr effect = (IdExpr) builder.doSwitch(object.getEffect());
         boolean exclusive = object.getExcl() != null;
         AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
 
@@ -128,8 +130,8 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 
     @Override
     public AgreeStatement caseWhenHoldsStatement(WhenHoldsStatement object) {
-        Expr condition = builder.doSwitch(object.getCondition());
-        Expr effect = builder.doSwitch(object.getEvent());
+        IdExpr condition = (IdExpr) builder.doSwitch(object.getCondition());
+        IdExpr effect = (IdExpr) builder.doSwitch(object.getEvent());
         boolean exclusive = object.getExcl() != null;
         AgreePatternInterval conditionInterval = getIntervalType(object.getConditionInterval());
         AgreePatternInterval effectInterval = getIntervalType(object.getEventInterval());
@@ -140,8 +142,8 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 
     @Override
     public AgreeStatement caseWhenOccursStatment(WhenOccursStatment object) {
-        Expr condition = builder.doSwitch(object.getCondition());
-        Expr effect = builder.doSwitch(object.getEvent());
+        IdExpr condition = (IdExpr) builder.doSwitch(object.getCondition());
+        IdExpr effect = (IdExpr) builder.doSwitch(object.getEvent());
         Expr timesExpr = builder.doSwitch(object.getTimes());
         boolean exclusive = object.getExcl() != null;
         if (!(timesExpr instanceof IntExpr)) {

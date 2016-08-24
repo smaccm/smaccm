@@ -8,6 +8,7 @@ import static com.rockwellcollins.atc.agree.validation.AgreeType.ERROR;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.INT;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.REAL;
 
+import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -113,6 +114,7 @@ import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
+import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
@@ -531,13 +533,25 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
 	}
 	
+	public void checkExprIsIdentifier(Expr expr) {
+		if (!(expr instanceof NestedDotID)) {
+			error(expr, "Patterns can only contain identifiers (not general expressions)");
+		} else {
+			if (((NestedDotID) expr).getSub() != null) {
+				error(expr, "Patterns can only contain identifiers (not general expressions)");
+			}
+		}
+	}
+	
 	@Check(CheckType.FAST)
 	public void checkPeriodicStatement(PeriodicStatement statement){
 	    Expr event = statement.getEvent();
 	    Expr jitter = statement.getJitter();
 	    Expr period = statement.getPeriod();
-	    
-	    AgreeType eventType = getAgreeType(event);
+
+	    checkExprIsIdentifier(event);
+		
+		AgreeType eventType = getAgreeType(event);
 	    if(!matches(BOOL, eventType)){
 	        error(event, "Expression is of type '"+eventType+"' but must be of type 'bool'");
 	    }
@@ -584,6 +598,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         Expr jitter = statement.getJitter();
         Expr iat = statement.getIat();
         
+        checkExprIsIdentifier(event);
+        
         AgreeType eventType = getAgreeType(event);
         if(!matches(BOOL, eventType)){
             error(event, "Expression is of type '"+eventType+"' but must be of type 'bool'");
@@ -616,6 +632,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	    Expr event = when.getEvent();
 	    TimeInterval condInterval = when.getConditionInterval();
 	    	    
+	    checkExprIsIdentifier(condition);
+	    checkExprIsIdentifier(event);
+	    
 	    if(condInterval != null){
 	        Expr lowExpr = condInterval.getLow();
 	        if (lowExpr instanceof RealLitExpr) {
@@ -645,6 +664,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         Expr condition = when.getCondition();
         Expr event = when.getEvent();
         Expr times = when.getTimes();
+        
+        checkExprIsIdentifier(condition);
+        checkExprIsIdentifier(event);
                 
         AgreeType type = getAgreeType(condition);
         if(!matches(BOOL, type)){
@@ -669,6 +691,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkWheneverOccursStatement(WheneverOccursStatement whenever){
 	    Expr cause = whenever.getCause();
 	    Expr effect = whenever.getEffect();
+	    
+	    checkExprIsIdentifier(cause);
+	    checkExprIsIdentifier(effect);
 	    	    
 	    AgreeType type = getAgreeType(cause);
 	    if(!matches(BOOL, type)){
@@ -686,6 +711,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     public void checkWheneverBecomesTrueStatement(WheneverBecomesTrueStatement whenever){
         Expr cause = whenever.getCause();
         Expr effect = whenever.getEffect();
+        
+        checkExprIsIdentifier(cause);
+        checkExprIsIdentifier(effect);
                 
         AgreeType type = getAgreeType(cause);
         if(!matches(BOOL, type)){
@@ -703,6 +731,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
     public void checkWheneverHoldsStatement(WheneverHoldsStatement whenever) {
         Expr cause = whenever.getCause();
         Expr effect = whenever.getEffect();
+        
+        checkExprIsIdentifier(cause);
+        checkExprIsIdentifier(effect);
 
         AgreeType type = getAgreeType(cause);
         if (!matches(BOOL, type)) {
@@ -721,6 +752,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         Expr cause = whenever.getCause();
         Expr lhs = whenever.getLhs();
         Expr rhs = whenever.getRhs();
+        
+        checkExprIsIdentifier(cause);
+        checkExprIsIdentifier(lhs);
+        checkExprIsIdentifier(rhs);
         
         AgreeType type = getAgreeType(cause);
         if (!matches(BOOL, type)) {
@@ -768,6 +803,21 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	    return false;
 	}
 
+	
+	@Check(CheckType.FAST)
+	public void checkTimeOf(TimeOfExpr timeOf){
+		NestedDotID id = timeOf.getId();
+		AgreeType type = getAgreeType(id);
+		
+		if(!matches(type, BOOL)){
+			error(timeOf, "\"Time of\" expressions can only be applied Boolean identifiers");
+		}
+		
+		if(id.getSub() != null){
+			error(timeOf, "\"Time of\" expressions can only be applied to identifiers used in paterns");
+		}
+	}
+	
 	@Check(CheckType.FAST)
 	public void checkLemma(LemmaStatement lemma) {
 		Classifier comp = lemma.getContainingClassifier();
@@ -1290,6 +1340,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		    String name = lhsArgs.get(0).getName();
             ExprCycleVisitor cycleVisitor = new ExprCycleVisitor(name);
 		    Set<EObject> cycleObjects = cycleVisitor.doSwitch(rhsExpr);
+		    if(cycleObjects == null){
+		    	throw new IllegalArgumentException("something went wrong with the cycle checker");
+		    }
 		    for(EObject obj : cycleObjects){
 		        error(obj, "Cyclic reference to variable '"+name+"'");
 		    }
@@ -2146,6 +2199,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		    return REAL;
 		} else if (expr instanceof LatchedExpr){
 		    return getAgreeType(((LatchedExpr) expr).getId());
+		} else if(expr instanceof TimeOfExpr){
+			return REAL;
 		}
 
 		return ERROR;

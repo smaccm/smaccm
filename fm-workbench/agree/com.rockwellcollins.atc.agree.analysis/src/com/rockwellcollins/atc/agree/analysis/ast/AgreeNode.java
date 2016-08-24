@@ -2,6 +2,7 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
@@ -38,6 +39,7 @@ public class AgreeNode implements AgreeAst{
     public final EObject reference;
     public final TimingModel timing;
     public final ComponentInstance compInst;
+    public final Map<String, AgreeVar> timeOfMap;
     
     public final Set<AgreeVar> eventTimes;
 
@@ -45,7 +47,7 @@ public class AgreeNode implements AgreeAst{
             List<AgreeEquation> localEquations, List<AgreeConnection> connections, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
             List<AgreeStatement> assumptions, List<AgreeStatement> guarantees, List<AgreeStatement> lemmas, List<AgreeStatement> patternProps,
             Expr clockConstraint, Expr initialConstraint, AgreeVar clockVar, EObject reference,
-            TimingModel timing, Set<AgreeVar> eventTimes, ComponentInstance compinst) {
+            TimingModel timing, Set<AgreeVar> eventTimes, Map<String, AgreeVar> timeOfMap, ComponentInstance compinst) {
         this.id = id;
         this.inputs = jkind.util.Util.safeList(inputs);
         this.outputs = jkind.util.Util.safeList(outputs);
@@ -69,6 +71,7 @@ public class AgreeNode implements AgreeAst{
         } else {
             this.eventTimes = Collections.unmodifiableSet(eventTimes);
         }
+        this.timeOfMap = timeOfMap;
     }
 
     @Override
