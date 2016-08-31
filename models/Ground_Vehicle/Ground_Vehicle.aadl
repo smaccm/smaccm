@@ -1,0 +1,103 @@
+package Ground_Vehicle
+public
+	with Base_Types;
+	
+	annex agree {**
+		const ACCEL_BOUND : Base_Types::Float = 500.0;
+		const SPEED_BOUND : Base_Types::Float = 200.0;
+		const STEER_BOUND : Base_Types::Float = 45.0;
+		const BRAKE_BOUND : Base_Types::Float = 50.0;
+	**};
+	
+	system Ground_Vehicle
+		features
+			target_speed : in data port Base_Types::Float;
+			target_steer : in data port Base_Types::Float;
+			brake_pressure : in data port Base_Types::Float;
+			measured_speed : out data port Base_Types::Float;
+			actual_steer : out data port Base_Types::Float;
+			
+	    annex agree {**	    	
+	    	assume "The target speed is bounded" :
+	    	  -1.0 * Ground_Vehicle.SPEED_BOUND <= target_speed and 
+	    	  target_speed <= Ground_Vehicle.SPEED_BOUND;
+	    	  
+	    	assume "The target steering is bounded" :
+	    	  -1.0 * Ground_Vehicle.STEER_BOUND <= target_steer and 
+	    	  target_steer <= Ground_Vehicle.STEER_BOUND;
+	    	  
+	    	assume "The brake pressure is bounded" :
+	    	  0.0 <= brake_pressure and
+	    	  brake_pressure <= Ground_Vehicle.BRAKE_BOUND;
+	    	
+	    	eq accel : Base_Types::Float = 0.0 -> measured_speed - pre(measured_speed);
+	    	guarantee "The acceleration is bounded" :
+	          -1.0 * Ground_Vehicle.ACCEL_BOUND <= accel and
+	    	  accel <= Ground_Vehicle.ACCEL_BOUND;
+	    	    
+	    	eq speed_error : Base_Types::Float = Lib.abs(target_speed - measured_speed);
+	    	guarantee "actual speed approaches target speed" : true ->
+	    	  target_speed = pre(target_speed) => 
+	    	    speed_error - 10.0 <= pre(speed_error);
+	    	
+	    **};
+			
+	end Ground_Vehicle;
+	
+	
+	system implementation Ground_Vehicle.i
+		subcomponents
+			speedometer : system Speedometer;
+			speed_controller : system Speed_Controller;
+			motor : system Motor;
+			
+		connections
+			conn0 : port target_speed -> speed_controller.target_speed;
+			conn1 : port speedometer.speed -> speed_controller.measured_speed;
+			conn2 : port speed_controller.to_intake -> motor.intake;
+			conn3 : port motor.rpms -> speedometer.rpms {Communication_Properties::Timing => delayed;};
+			conn4 : port speedometer.speed -> measured_speed;
+			 
+	end Ground_Vehicle.i;
+	
+	
+	system Speedometer
+		features
+			rpms : in data port Base_Types::Float;
+			speed : out data port Base_Types::Float;
+		annex agree {**
+			guarantee "speed calculation" :
+			  speed = 1.0 * rpms; --constant can be determined analytically
+		**};
+	end Speedometer;
+	
+	system Motor
+		features
+			intake : in data port Base_Types::Float;
+			rpms : out data port Base_Types::Float;
+	    annex agree {**
+	    	guarantee "rpm calculation" :
+	    	  rpms = 1.0 * intake; --constant can be determined analytically
+	    **};
+	end Motor;
+	
+	system speed_controller
+		features
+			target_speed : in data port Base_Types::Float;
+			measured_speed : in data port Base_Types::Float;
+			to_intake : out data port Base_Types::Float;
+	    annex agree {**
+	    	const p : real = 1.0;
+	    	const i : real = 0.01;
+	    	const d : real = 0.0;
+	    	eq error : real = target_speed - measured_speed;
+	    	eq i_error : real = 0.0 -> pre(i_error) + error;
+	    	eq d_error : real = 0.0 -> error - pre(error);
+	    	
+	    	guarantee "pid calculation" :
+	    	  to_intake = p * error + i * i_error + d * d_error + (0.0 -> pre(to_intake));
+	    **};
+	end speed_controller;
+	
+	
+end Ground_Vehicle;
