@@ -3,9 +3,8 @@ public
 	with Base_Types;
 	
 	annex agree {**
-		const ACCEL_BOUND : Base_Types::Float = 60.0;
+		const ACCEL_BOUND : Base_Types::Float = 90.0;
 		const SPEED_BOUND : Base_Types::Float = 200.0;
-		const STEER_BOUND : Base_Types::Float = 45.0;
 		const BRAKE_BOUND : Base_Types::Float = 50.0;
 		const SPEED_SETTLE_BOUND : Base_Types::Float = 10.0;
 		const SPEEDOMETER_ERROR_BOUND : Base_Types::Float = 1.0;
@@ -38,15 +37,11 @@ public
 	    	  Lib.abs(accel) <= Ground_Vehicle.ACCEL_BOUND;
 	    	    
 	    	guarantee "Measured speed is bounded" :
-	    	  measured_speed < 180.0;  	    
-	    	
-	    	eq desired_speed : Base_Types::Float = if forward then target_speed else -1.0 * target_speed;
-	    	eq speed_error : Base_Types::Float = Lib.abs(target_speed - measured_speed);
-	    	guarantee "Measured speed approaches target speed" : true ->
-	    	  desired_speed = pre(desired_speed) => 
-	    	    speed_error - Ground_Vehicle.SPEED_SETTLE_BOUND <= pre(speed_error);
-	    	    
-	    	--do not rev the engine if we are still moving foward while attempting to go in reverse
+	    	  measured_speed < Ground_Vehicle.SPEED_BOUND;
+	    	  
+	    	eq const_target_speed : bool = true -> target_speed = pre(target_speed) and forward = pre(forward) and pre(const_target_speed);
+	    	guarantee "no unintended acceleration" :
+	    	  const_target_speed => measured_speed <= target_speed;
 	    	
 	    **};
 			
@@ -63,8 +58,8 @@ public
 			
 		connections
 			conn0 : port target_speed -> speed_controller.target_speed;
-			conn1 : port wheels.actual_rpms -> speed_controller.measured_speed {Communication_Properties::Timing => delayed;};
-			conn11 : port wheels.actual_rpms -> brake_controller.measured_speed {Communication_Properties::Timing => delayed;};
+			conn1 : port speedometer.speed -> speed_controller.measured_speed;
+			conn11 : port speedometer.speed -> brake_controller.measured_speed;
 			conn2 : port speed_controller.to_acts -> brake_controller.from_speed_controller;
 			conn12 : port brake_controller.to_intake -> motor.intake;
 			conn13 : port brake_pressure -> brake_controller.brake_pressure;
@@ -155,7 +150,9 @@ public
 			    pre(actual_rpms) - 5.0 - brake_pressure;
 			    
 			assume "do not shift directions if wheel is spinning too fast":
-			  true -> (pre(actual_rpms) > 60.0 => forward) and (pre(actual_rpms) < -60.0 => not forward);
+			  true -> 
+			    (pre(actual_rpms) > Ground_Vehicle.MAX_SPEED_DIRECTION_SHIFT => forward) and 
+			    (pre(actual_rpms) < -1.0 * Ground_Vehicle.MAX_SPEED_DIRECTION_SHIFT => not forward);
 			    
 			guarantee "actual rpms depends on direction" :
 			  actual_rpms = if forward then (rpms_after_friction + motor_rpms) else -1.0 * (rpms_after_friction + motor_rpms);  
@@ -171,7 +168,7 @@ public
 			brake_pressure : in data port Base_Types::Float;
 			to_acts : out data port Base_Types::Float;
 	    annex agree {**
-	    	const p : real = 0.1;
+	    	const p : real = 0.4;
 	    	const i : real = 0.01;
 	    	const d : real = 0.0;
 	    	
