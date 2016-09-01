@@ -7,38 +7,45 @@ public
 		const SPEED_BOUND : Base_Types::Float = 200.0;
 		const STEER_BOUND : Base_Types::Float = 45.0;
 		const BRAKE_BOUND : Base_Types::Float = 50.0;
-		const SPEED_SETTLE_BOUND : Base_Types::Float = 10.0;
+		const SPEED_SETTLE_BOUND : Base_Types::Float = 100.0;
 		const SPEEDOMETER_ERROR_BOUND : Base_Types::Float = 1.0;
+		const MAX_SPEED_DIRECTION_SHIFT : Base_Types::Float = 60.0;
 	**};
 	
 	system Ground_Vehicle
 		features
 			target_speed : in data port Base_Types::Float;
 			brake_pressure : in data port Base_Types::Float;
-			target_forward : in data port Base_Types::Boolean;
+			forward : in data port Base_Types::Boolean;
 			measured_speed : out data port Base_Types::Float;
+			measured_rpms : out data port Base_Types::Float;
 			
 	    annex agree {**	    	
+	    		
 	    	assume "The target speed is bounded" :
 	    	  0.0 <= target_speed and (target_speed) <= Ground_Vehicle.SPEED_BOUND;
 	    	  
 	    	assume "The brake pressure is bounded" :
 	    	  0.0 <= brake_pressure and
 	    	  brake_pressure <= Ground_Vehicle.BRAKE_BOUND;
+	    	  
+	    	assume "Do not change wheel direction if moving too fast" : true -> 
+	    	  pre(measured_rpms > Ground_Vehicle.MAX_SPEED_DIRECTION_SHIFT) => forward = pre(forward);
 	    	
 	    	eq accel : Base_Types::Float = 0.0 -> measured_speed - pre(measured_speed);
 	    	guarantee "The acceleration is bounded" :
 	    	  Lib.abs(accel) <= Ground_Vehicle.ACCEL_BOUND;
 	    	    
 	    	guarantee "Measured speed is bounded" :
-	    	  Lib.abs(measured_speed) < (Ground_Vehicle.SPEED_BOUND + Ground_Vehicle.SPEED_SETTLE_BOUND);
-	    	    
+	    	  measured_speed < Ground_Vehicle.SPEED_BOUND + Ground_Vehicle.SPEED_SETTLE_BOUND;  	    
 	    	
-	    	eq desired_speed : Base_Types::Float = if target_forward then target_speed else -1.0 * target_speed;
+	    	eq desired_speed : Base_Types::Float = if forward then target_speed else -1.0 * target_speed;
 	    	eq speed_error : Base_Types::Float = Lib.abs(desired_speed - measured_speed);
 	    	guarantee "Measured speed approaches target speed" : true ->
 	    	  desired_speed = pre(desired_speed) => 
 	    	    speed_error - Ground_Vehicle.SPEED_SETTLE_BOUND <= pre(speed_error);
+	    	    
+	    	--do not rev the engine if we are still moving foward while attempting to go in reverse
 	    	
 	    **};
 			
@@ -49,41 +56,70 @@ public
 		subcomponents
 			speedometer : system Speedometer;
 			speed_controller : system Speed_Controller;
-			mode_controller : system Mode_controller;
+			brake_controller : system Brake_controller;
 			motor : system Motor;
 			wheels : system Wheels;
 			
 		connections
 			conn0 : port target_speed -> speed_controller.target_speed;
 			conn1 : port speedometer.speed -> speed_controller.measured_speed;
-			conn2 : port speed_controller.to_intake -> motor.intake;
+			conn11 : port speedometer.speed -> brake_controller.measured_speed;
+			conn2 : port speed_controller.to_acts -> brake_controller.from_speed_controller;
+			conn12 : port brake_controller.to_intake -> motor.intake;
+			conn13 : port brake_pressure -> brake_controller.brake_pressure;
+			conn14 : port brake_controller.to_brakes -> wheels.brake_pressure;
 			conn3 : port motor.rpms -> wheels.motor_rpms;
 			conn4 : port wheels.actual_rpms -> speedometer.rpms {Communication_Properties::Timing => delayed;};
 			conn5 : port speedometer.speed -> measured_speed;
-			conn7 : port speed_controller.forward -> wheels.forward;
-			conn8 : port target_speed -> mode_controller.target_speed;
-			conn9 : port target_forward -> speed_controller.target_forward;
+			conn7 : port forward -> wheels.forward;
+			conn15 : port forward -> speed_controller.forward;
+			conn10 : port speedometer.speed -> measured_rpms;
+			conn16 : port brake_pressure -> speed_controller.brake_pressure;
+			 
+	    annex agree {**
+	    	lemma "speed controller integration error is bounded" :
+	    	  -600.0 < speed_controller.i_error and speed_controller.i_error < 600.0;
+	    **};
 			 
 	end Ground_Vehicle.i;
 	
-	system mode_controller
+	system Brake_Controller
 		features
-			target_speed : in data port Base_Types::Float;
-			forward : out data port Base_Types::Boolean;
+			from_speed_controller : in data port Base_Types::Float;
+			brake_pressure : in data port Base_Types::Float;
+			measured_speed : in data port Base_Types::Float;
+			to_intake : out data port Base_Types::Float;
+			to_brakes : out data port Base_Types::Float;
 		annex agree {**
-			guarantee "direction behavior" :
-			  forward = (target_speed >= 0.0);
+			guarantee "to_brake behavior" :
+			  to_brakes = if measured_speed < 0.0 and from_speed_controller > 0.0 then
+			               from_speed_controller
+			             else if measured_speed > 0.0 and from_speed_controller < 0.0 then
+			               -1.0 * from_speed_controller
+			             else
+			               brake_pressure;
+			               
+			guarantee "to_intake behavior" :
+			  to_intake = if to_brakes > 0.0 then
+			                0.0
+			              else if from_speed_controller < 0.0 then
+			                -1.0 * from_speed_controller
+			              else
+			                from_speed_controller;
 		**};
-	end mode_controller;
+	end Brake_Controller;
 	
 	system Speedometer
 		features
 			rpms : in data port Base_Types::Float;
 			speed : out data port Base_Types::Float;
 		annex agree {**
+--			guarantee "speed calculation" :
+--			  rpms - Ground_Vehicle.SPEEDOMETER_ERROR_BOUND <= speed and 
+--			  speed <= rpms + Ground_Vehicle.SPEEDOMETER_ERROR_BOUND;
+			
 			guarantee "speed calculation" :
-			  rpms - Ground_Vehicle.SPEEDOMETER_ERROR_BOUND <= speed and 
-			  speed <= rpms + Ground_Vehicle.SPEEDOMETER_ERROR_BOUND;
+			  rpms = speed;
 		**};
 	end Speedometer;
 	
@@ -94,9 +130,11 @@ public
 	    annex agree {**
 	    	assume "intake is always positive" :
 	    	  0.0 <= intake;
-	    		
+
+--	    	eq rpms_after_friction : real = 0.0 -> if(pre(rpms) <= 5.0) then 0.0 else pre(rpms) - 5.0;
+	    	
 	    	guarantee "rpm calculation" :
-	    	  rpms = 1.0 * intake; --constant can be determined analytically
+	    	  rpms = intake;-- + rpms_after_friction;
 	    **};
 	end Motor;
 	
@@ -108,8 +146,17 @@ public
 			actual_rpms : out data port Base_Types::Float;
 		annex agree {**
 			
+			eq rpms_after_friction : real = 0.0 ->
+			  if pre(actual_rpms) - brake_pressure < 5.0 then 
+			    0.0 
+			  else 
+			    pre(actual_rpms) - 5.0 - brake_pressure;
+			    
+			assume "do not shift directions if wheel is spinning too fast":
+			  true -> (pre(actual_rpms) > 60.0 => forward) and (pre(actual_rpms) < -60.0 => not forward);
+			    
 			guarantee "actual rpms depends on direction" :
-			  actual_rpms = if forward then motor_rpms else -1.0 * motor_rpms;  
+			  actual_rpms = if forward then (rpms_after_friction + motor_rpms) else -1.0 * (rpms_after_friction + motor_rpms);  
 			
 		**};
 	end Wheels;
@@ -117,28 +164,25 @@ public
 	system speed_controller
 		features
 			target_speed : in data port Base_Types::Float;
-			target_forward : in data port Base_Types::Boolean;
 			measured_speed : in data port Base_Types::Float;
-			to_intake : out data port Base_Types::Float;
-			forward : out data port Base_Types::Boolean;
+			forward : in data port Base_Types::Boolean;
+			brake_pressure : in data port Base_Types::Float;
+			to_acts : out data port Base_Types::Float;
 	    annex agree {**
-	    	const p : real = 1.0;
-	    	const i : real = 0.01;
-	    	const d : real = 0.0;
+	    	const p : real = 0.1;
+	    	const i : real = 0.5;
+	    	const d : real = 0.5;
 	    	
-	    	eq desired_speed : real = if target_forward then target_speed else -1.0 * target_speed;
+	    	eq desired_speed : real = if forward then target_speed else -1.0 * target_speed;
 	    	
-	    	eq error : real = desired_speed - measured_speed;
-	    	eq i_error : real = 0.0 -> pre(i_error) + error;
-	    	eq d_error : real = 0.0 -> error - pre(error);
+	    	eq error : real =  if brake_pressure > 0.0 then 0.0 else desired_speed - measured_speed;
+	    	eq i_error : real = if brake_pressure > 0.0 then 0.0 else (0.0 -> pre(i_error)) + error;
+	    	eq d_error : real = if brake_pressure > 0.0 then 0.0 else error - (0.0 -> pre(error));
 	    	
-	    	eq intake_val : real = p * error + i * i_error + d * d_error + (0.0 -> pre(intake_val));
+	    	eq act_val : real = p * error + i * i_error + d * d_error;
 	    	
 	    	guarantee "pid calculation" :
-	    	  to_intake = Lib.abs(intake_val);
-	    	  
-	    	guarantee "forward calculation" :
-	    	  forward = (intake_val >= 0.0);
+	    	  to_acts = act_val;
 	    **};
 	end speed_controller;
 	
