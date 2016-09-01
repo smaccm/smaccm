@@ -6,7 +6,7 @@ public
 		const ACCEL_BOUND : Base_Types::Float = 90.0;
 		const SPEED_BOUND : Base_Types::Float = 200.0;
 		const BRAKE_BOUND : Base_Types::Float = 50.0;
-		const SPEED_SETTLE_BOUND : Base_Types::Float = 00.0;
+		const SPEED_SETTLE_BOUND : Base_Types::Float = 0.0;
 		const SPEEDOMETER_ERROR_BOUND : Base_Types::Float = 1.0;
 		const MAX_SPEED_DIRECTION_SHIFT : Base_Types::Float = 60.0;
 		const I_ERROR_BOUND : Base_Types::Float = 500.0;
@@ -55,18 +55,14 @@ public
 		subcomponents
 			speedometer : system Speedometer;
 			speed_controller : system Speed_Controller;
-			brake_controller : system Brake_controller;
 			motor : system Motor;
 			wheels : system Wheels;
 			
 		connections
 			conn0 : port target_speed -> speed_controller.target_speed;
 			conn1 : port speedometer.speed -> speed_controller.measured_speed;
-			conn2 : port speedometer.speed -> brake_controller.measured_speed;
-			conn3 : port speed_controller.to_acts -> brake_controller.from_speed_controller;
-			conn4 : port brake_controller.to_intake -> motor.intake;
-			conn5 : port brake_pressure -> brake_controller.brake_pressure;
-			conn6 : port brake_controller.to_brakes -> wheels.brake_pressure;
+			conn4 : port speed_controller.to_intake -> motor.intake;
+			conn6 : port speed_controller.to_brakes -> wheels.brake_pressure;
 			conn7 : port motor.rpms -> wheels.motor_rpms;
 			conn8 : port wheels.actual_rpms -> speedometer.rpms {Communication_Properties::Timing => delayed;};
 			conn9 : port speedometer.speed -> measured_speed;
@@ -86,16 +82,12 @@ public
 			to_brakes : out data port Base_Types::Float;
 		annex agree {**
 			guarantee "to_brake behavior" :
-			  to_brakes = if measured_speed < 0.0 and from_speed_controller > 0.0 then
-			               if(brake_pressure < from_speed_controller) then
+			  to_brakes = if(Lib.abs(from_speed_controller) < brake_pressure) then
+			                brake_pressure
+			              else if measured_speed < 0.0 and from_speed_controller > 0.0 then
 			                 from_speed_controller
-			               else
-			                 brake_pressure
 			             else if measured_speed > 0.0 and from_speed_controller < 0.0 then
-			               if(brake_pressure < -1.0 * from_speed_controller) then
 			                 -1.0 * from_speed_controller
-			               else
-			                 brake_pressure
 			             else
 			               brake_pressure;
 			               
@@ -168,14 +160,16 @@ public
 		**};
 	end Wheels;
 	
-	system speed_controller
+	system Speed_Controller
 		features
 			target_speed : in data port Base_Types::Float;
 			measured_speed : in data port Base_Types::Float;
 			forward : in data port Base_Types::Boolean;
 			brake_pressure : in data port Base_Types::Float;
-			to_acts : out data port Base_Types::Float;
-	    annex agree {**
+			to_intake : out data port Base_Types::Float;
+			to_brakes : out data port Base_Types::Float;
+		annex agree {**
+		
 	    	const p : real = 0.4;
 	    	const i : real = 0.01;
 	    	const d : real = 0.0;
@@ -210,8 +204,25 @@ public
 	    	
 	    	eq act_val : real = p * error + i * i_error + d * d_error;
 	    	
-	    	guarantee "pid calculation" :
-	    	  to_acts = act_val;
+	    	
+	    	guarantee "to_brake behavior" :
+			  to_brakes = if(Lib.abs(act_val) < brake_pressure) then
+			                brake_pressure
+			              else if measured_speed < 0.0 and act_val > 0.0 then
+			                 act_val
+			             else if measured_speed > 0.0 and act_val < 0.0 then
+			                 -1.0 * act_val
+			             else
+			               brake_pressure;
+			               
+			guarantee "to_intake behavior" :
+			  to_intake = if to_brakes > 0.0 then
+			                0.0
+			              else if act_val < 0.0 then
+			                -1.0 * act_val
+			              else
+			                act_val;
+	    	
 	    **};
 	end speed_controller;
 	
