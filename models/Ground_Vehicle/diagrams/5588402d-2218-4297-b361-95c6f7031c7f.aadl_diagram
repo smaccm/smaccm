@@ -15,7 +15,7 @@
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn1_midpoint"/>
       <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-      <location x="457" y="534"/>
+      <location x="452" y="534"/>
     </anchors>
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn4_midpoint"/>
@@ -25,22 +25,22 @@
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn6_midpoint"/>
       <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-      <location x="823" y="344"/>
+      <location x="809" y="358"/>
     </anchors>
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn7_midpoint"/>
       <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-      <location x="1044" y="290"/>
+      <location x="1039" y="287"/>
     </anchors>
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn8_midpoint"/>
       <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-      <location x="1411" y="479"/>
+      <location x="1403" y="479"/>
     </anchors>
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn9_midpoint"/>
       <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-      <location x="1121" y="694"/>
+      <location x="1169" y="694"/>
     </anchors>
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn10_midpoint"/>
@@ -50,12 +50,12 @@
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn11_midpoint"/>
       <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-      <location x="95" y="333"/>
+      <location x="137" y="375"/>
     </anchors>
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn12_midpoint"/>
       <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
-      <location x="1318" y="160"/>
+      <location x="1385" y="224"/>
     </anchors>
     <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
       <properties key="name" value="connection Ground_Vehicle::Ground_Vehicle.i.conn13_midpoint"/>
@@ -1297,32 +1297,6 @@
         </graphicsAlgorithm>
       </children>
     </children>
-    <children xsi:type="pi:ContainerShape" visible="true" active="true">
-      <properties key="independentObject" value="annex_subclause Ground_Vehicle::Ground_Vehicle.i agree 0"/>
-      <properties key="is_ghost" value="false"/>
-      <properties key="is_layed_out" value="true"/>
-      <graphicsAlgorithm xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="150" height="50" x="25" y="25" style="//@styles.5">
-        <points y="50"/>
-        <points y="9"/>
-        <points x="6"/>
-        <points x="45"/>
-        <points x="51" y="9"/>
-        <points x="150" y="9"/>
-        <points x="150" y="50"/>
-      </graphicsAlgorithm>
-      <anchors xsi:type="pi:ChopboxAnchor">
-        <properties key="name" value="chopbox"/>
-      </anchors>
-      <children visible="true" active="true">
-        <properties key="name" value="annex_label"/>
-        <properties key="is_manually_positioned" value="true"/>
-        <properties key="is_transient" value="true"/>
-        <properties key="independentObject" value="annex_subclause Ground_Vehicle::Ground_Vehicle.i agree 0"/>
-        <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="86" height="19" x="32" y="17" style="//@styles.2">
-          <graphicsAlgorithmChildren xsi:type="al:Text" lineStyle="UNSPECIFIED" width="86" height="19" style="//@styles.3" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="{**agree**}"/>
-        </graphicsAlgorithm>
-      </children>
-    </children>
   </children>
   <styles background="//@colors.1" foreground="//@colors.2" lineWidth="1" lineVisible="true" transparency="0.0" id="classifier" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED">
     <styles lineWidth="2" lineStyle="UNSPECIFIED" id="system" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED">
@@ -1364,6 +1338,8 @@
       <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn1"/>
       <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" y="10" style="//@styles.3" font="//@fonts.1" value=""/>
     </connectionDecorators>
+    <bendpoints x="180" y="554"/>
+    <bendpoints x="180" y="324"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.6/@children.4/@anchors.2" end="//@children.0/@children.7/@children.0/@anchors.2">
     <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn4"/>
@@ -1394,6 +1370,8 @@
       <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn6"/>
       <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" y="10" style="//@styles.3" font="//@fonts.1" value=""/>
     </connectionDecorators>
+    <bendpoints x="829" y="286"/>
+    <bendpoints x="829" y="405"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.7/@children.1/@anchors.2" end="//@children.0/@children.8/@children.1/@anchors.2">
     <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn7"/>
@@ -1409,6 +1387,10 @@
       <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn7"/>
       <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" y="10" style="//@styles.3" font="//@fonts.1" value=""/>
     </connectionDecorators>
+    <bendpoints x="1203" y="244"/>
+    <bendpoints x="1203" y="307"/>
+    <bendpoints x="907" y="307"/>
+    <bendpoints x="907" y="364"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.8/@children.3/@anchors.2" end="//@children.0/@children.5/@children.0/@anchors.2">
     <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn8"/>
@@ -1424,6 +1406,8 @@
       <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn8"/>
       <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" y="10" style="//@styles.3" font="//@fonts.1" value=""/>
     </connectionDecorators>
+    <bendpoints x="1423" y="433"/>
+    <bendpoints x="1423" y="564"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.5/@children.1/@anchors.2" end="//@children.0/@children.3/@anchors.1">
     <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn9"/>
@@ -1439,6 +1423,8 @@
       <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn9"/>
       <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" y="10" style="//@styles.3" font="//@fonts.1" value=""/>
     </connectionDecorators>
+    <bendpoints x="995" y="554"/>
+    <bendpoints x="995" y="714"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.2/@anchors.1" end="//@children.0/@children.8/@children.0/@anchors.2">
     <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn10"/>
@@ -1469,6 +1455,8 @@
       <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn11"/>
       <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" y="10" style="//@styles.3" font="//@fonts.1" value=""/>
     </connectionDecorators>
+    <bendpoints x="157" y="445"/>
+    <bendpoints x="157" y="286"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.7/@children.1/@anchors.2" end="//@children.0/@children.4/@anchors.1">
     <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn12"/>
@@ -1484,6 +1472,8 @@
       <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn12"/>
       <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" y="10" style="//@styles.3" font="//@fonts.1" value=""/>
     </connectionDecorators>
+    <bendpoints x="1419" y="244"/>
+    <bendpoints x="1419" y="183"/>
   </connections>
   <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.1/@anchors.1" end="//@children.0/@children.6/@children.3/@anchors.2">
     <properties key="independentObject" value="connection Ground_Vehicle::Ground_Vehicle.i.conn13"/>

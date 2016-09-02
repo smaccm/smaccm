@@ -30,7 +30,7 @@ public
 	    	  brake_pressure <= Ground_Vehicle2.BRAKE_BOUND;
 	    	  
 	    	assume "Do not change wheel direction if moving too fast" : true -> 
-	    	  measured_speed > Ground_Vehicle2.MAX_SPEED_DIRECTION_SHIFT => forward = pre(forward);
+	    	  pre(measured_speed) > Ground_Vehicle2.MAX_SPEED_DIRECTION_SHIFT => forward = pre(forward);
 	    	  
 --	    	assume "Do not change wheel direction if moving too fast" : true -> 
 --	    	  measured_speed > Ground_Vehicle2.MAX_SPEED_DIRECTION_SHIFT - 10.0 => forward = pre(forward);
@@ -60,11 +60,11 @@ public
 			
 		connections
 			conn0 : port target_speed -> speed_controller.target_speed;
-			conn1 : port speedometer.speed -> speed_controller.measured_speed;
+			conn1 : port speedometer.speed -> speed_controller.measured_speed {Communication_Properties::Timing => delayed;};
 			conn4 : port speed_controller.to_intake -> motor.intake;
 			conn6 : port speed_controller.to_brakes -> wheels.brake_pressure;
 			conn7 : port motor.rpms -> wheels.motor_rpms;
-			conn8 : port wheels.actual_rpms -> speedometer.rpms {Communication_Properties::Timing => delayed;};
+			conn8 : port wheels.actual_rpms -> speedometer.rpms;
 			conn9 : port speedometer.speed -> measured_speed;
 			conn10 : port forward -> wheels.forward;
 			conn11 : port forward -> speed_controller.forward;
