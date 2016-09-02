@@ -1,0 +1,35 @@
+
+28-Jun-2016 13:04:18
+Preprocessing model...done
+Starting property proving for model 'MON_sl'
+Compiling model...done
+Translating model...done
+'MON_sl_replacement' is compatible with Simulink Design Verifier.
+
+Proving properties...
+
+PROVEN VALID
+check_MON_wrapper_Instance
+
+sldv.prove(nodeLemma0_Agree_Nodes__Duration_0)
+Analysis Time = 00:00:00
+
+PROVEN VALID
+check_MON_wrapper_Instance
+
+sldv.prove(GUARANTEE0)
+Analysis Time = 00:00:00
+
+
+28-Jun-2016 13:04:58
+
+Property proving was stopped.
+
+Generating output files:
+
+    Data file:
+    C:\Users\jdbackes\git\smaccm\models\Simulink_models\BSCU\sldv_output\MON_sl\MON_sl_sldvdata.mat
+
+28-Jun-2016 13:05:13
+Results generation completed.
+
