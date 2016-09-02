@@ -3,12 +3,12 @@ public
 	with Base_Types;
 	
 	annex agree {**
-		const ACCEL_BOUND : Base_Types::Float = 90.0;
-		const SPEED_BOUND : Base_Types::Float = 200.0;
-		const BRAKE_BOUND : Base_Types::Float = 50.0;
-		const SPEEDOMETER_ERROR_BOUND : Base_Types::Float = 1.0;
-		const MAX_SPEED_DIRECTION_SHIFT : Base_Types::Float = 60.0;
-		const I_ERROR_BOUND : Base_Types::Float = 500.0;
+		const ACCEL_BOUND : real = 90.0;
+		const SPEED_BOUND : real = 200.0;
+		const BRAKE_BOUND : real = 50.0;
+		const SPEEDOMETER_ERROR_BOUND : real = 1.0;
+		const MAX_SPEED_DIRECTION_SHIFT : real = 60.0;
+		const I_ERROR_BOUND : real = 500.0;
 	**};
 	
 	system Ground_Vehicle
