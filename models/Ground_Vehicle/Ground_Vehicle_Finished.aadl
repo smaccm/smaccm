@@ -35,7 +35,7 @@ public
 --	    	assume "Do not change wheel direction if moving too fast" : true -> 
 --	    	  measured_speed > Ground_Vehicle2.MAX_SPEED_DIRECTION_SHIFT - 10.0 => forward = pre(forward);
 	    	
-	    	eq accel : Base_Types::Float = 0.0 -> measured_speed - pre(measured_speed);
+	    	eq accel : real = 0.0 -> measured_speed - pre(measured_speed);
 	    	guarantee "The acceleration is bounded" :
 	    	  Lib.abs(accel) <= Ground_Vehicle2.ACCEL_BOUND;
 	    	    
