@@ -1,13 +1,14 @@
-package Ground_Vehicle
+package Ground_Vehicle_C
 public
 	with Base_Types;
 	
 	annex agree {**
 		const ACCEL_BOUND : real = 60.0;
 		const TARGET_SPEED_BOUND : real = 200.0;
-		const MEASURED_SPEED_BOUND : real = 150.0;
+		const MEASURED_SPEED_BOUND : real = 250.0;
+		const BRAKE_BOUND : real = 50.0;
 	**};
-	
+	 
 	system Car
 		features
 			target_speed : in data port Base_Types::Float;
@@ -15,18 +16,26 @@ public
 			measured_speed : out data port Base_Types::Float;			
 	    annex agree {**	    	
 	    		
+	        assume "The brake pressure is bounded" :
+	    	  0.0 <= brake_pressure and
+	    	  brake_pressure <= Ground_Vehicle_C.BRAKE_BOUND;
+	    		
 	    	assume "bounded target speed" :
-	    	  0.0 <= target_speed and target_speed <= Ground_Vehicle.TARGET_SPEED_BOUND;
+	    	  0.0 <= target_speed and target_speed <= Ground_Vehicle_C.TARGET_SPEED_BOUND;
 	    		    	  
 	    	guarantee "Measured speed is always positive" :
 	    	  0.0 <= measured_speed;
 	    	  
 	    	guarantee "Measured speed is bounded" :
-	    	  measured_speed <= Ground_Vehicle.MEASURED_SPEED_BOUND;  
+	    	  measured_speed <= Ground_Vehicle_C.MEASURED_SPEED_BOUND;  
 	    		
 	    	eq accel : real = 0.0 -> measured_speed - pre(measured_speed);
 	    	guarantee "The acceleration is bounded" :
-	    	  Lib.abs(accel) <= Ground_Vehicle.ACCEL_BOUND;
+	    	  Lib.abs(accel) <= Ground_Vehicle_C.ACCEL_BOUND;
+	    	  
+	    	eq const_target_speed : bool = true -> target_speed = pre(target_speed) and pre(const_target_speed);
+	    	guarantee "constant target speed less than measured speed" :
+	    	  const_target_speed => measured_speed <= target_speed + 20.0;
 	    	   	  
 	    **};
 			
@@ -150,4 +159,4 @@ public
 	end speed_controller;
 	
 	
-end Ground_Vehicle;
+end Ground_Vehicle_C;
