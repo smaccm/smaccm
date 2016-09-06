@@ -203,7 +203,13 @@ public class AadlModelParser {
       this.logger.error("If eChronosGenerateCModules is 'true', then eChronosCModulePath must be defined.");
       throw new Aadl2RtosException("Parse failure on eChronosCModulePath target property ");
     }
-		// Initialize thread implementations
+	
+	// default value is null.
+	this.model.eChronosFlashLoadAddress = 
+			PropertyUtils.getStringValue(systemImplementation, 
+					PropertyUtil.ECHRONOS_FLASH_LOAD_ADDRESS, null);
+
+	// Initialize thread implementations
 		constructThreadImplMap();
 
 		// Initialize connections

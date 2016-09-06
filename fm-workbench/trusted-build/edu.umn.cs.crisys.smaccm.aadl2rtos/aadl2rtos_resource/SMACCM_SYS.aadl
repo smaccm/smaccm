@@ -64,5 +64,6 @@ property set SMACCM_SYS is
     -- path for the generated code from the place where prj is invoked
     eChronos_Generate_C_Modules : aadlboolean => false applies to (system implementation);
     eChronos_C_Module_Path : aadlstring => "gen" applies to (system implementation);
+    eChronos_Flash_Load_Address : aadlstring applies to (system implementation);
 
 end SMACCM_SYS;

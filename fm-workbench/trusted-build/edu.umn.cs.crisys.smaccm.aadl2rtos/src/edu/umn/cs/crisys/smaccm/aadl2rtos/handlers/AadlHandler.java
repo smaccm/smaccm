@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.handlers.IHandlerActivation;
-import org.eclipse.ui.handlers.IHandlerService;
+//import org.eclipse.ui.handlers.IHandlerActivation;
+//import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
@@ -67,10 +67,10 @@ public abstract class AadlHandler extends AbstractHandler {
             return null;
         }
 
-        final IHandlerService handlerService = (IHandlerService) window
-                .getService(IHandlerService.class);
+//        final IHandlerService handlerService = (IHandlerService) window
+//                .getService(IHandlerService.class);
         WorkspaceJob job = new WorkspaceJob(getJobName()) {
-            private IHandlerActivation terminateActivation;
+//            private IHandlerActivation terminateActivation;
 
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {

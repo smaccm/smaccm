@@ -4,7 +4,7 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;

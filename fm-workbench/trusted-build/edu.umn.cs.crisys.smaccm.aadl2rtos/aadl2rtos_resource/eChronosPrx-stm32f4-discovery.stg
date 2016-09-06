@@ -15,7 +15,7 @@ prxBody(model) ::= <<
       </trampolines>
     </module>
     <module name="armv7m.vectable">
-      <flash_load_addr>0x8000000</flash_load_addr>
+      <flash_load_addr>$if(model.eChronosFlashLoadAddress)$ $model.eChronosFlashLoadAddress$ $else$ 0x8000000 $endif$ </flash_load_addr>
       <preemption>true</preemption>
        $writeInterruptHandlers(model)$
     </module>
