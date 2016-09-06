@@ -15,8 +15,18 @@ public
 			measured_speed : out data port Base_Types::Float;			
 	    annex agree {**	    	
 	    		
-	    	assume "bounded target speed" :
-	    	  0.0 <= target_speed and target_speed <= Ground_Vehicle.TARGET_SPEED_BOUND;
+	    	--problems to solve:
+	    	--1. Make sure subcomponent assumptions prove
+	    	--2. Find proper bound for measured speed
+	    	--3. Figure out why the acceleration is not bounded
+	    	--4. Prove that measured speed approaches constant target speed
+	    	--5. Introduce error in speedometer and prove all guarantees
+	    		
+	    	assume "target speed is always positive" :
+	    	  0.0 <= target_speed;
+	    	  
+	    	assume "target speed is bounded" :
+	    	 target_speed <= Ground_Vehicle.TARGET_SPEED_BOUND;
 	    		    	  
 	    	guarantee "Measured speed is always positive" :
 	    	  0.0 <= measured_speed;
@@ -56,9 +66,8 @@ public
 			speed : out data port Base_Types::Float;
 		annex agree {**
 			
---			guarantee "speed error range" :
---			  Lib.abs(rpms) - 1.0 <= speed and 
---			  speed <= Lib.abs(rpms) + 1.0;
+--            guarantee "speed error range" :
+--              Lib.abs(1.0*rpms - speed) <= 1.0;
 			  
 			guarantee "speed with no error" :
 			  speed = 1.0*rpms;
@@ -132,11 +141,11 @@ public
 			  to_brakes = if(Lib.abs(act_val) < brake_pressure) then
 			                brake_pressure
 			              else if measured_speed < 0.0 and act_val > 0.0 then
-			                 act_val
-			             else if measured_speed > 0.0 and act_val < 0.0 then
-			                 -1.0 * act_val
-			             else
-			               brake_pressure;
+			                act_val
+			              else if measured_speed > 0.0 and act_val < 0.0 then
+			                -1.0 * act_val
+			              else
+			                brake_pressure;
 			               
 			guarantee "to_intake behavior" :
 			  to_intake = if to_brakes > 0.0 then
