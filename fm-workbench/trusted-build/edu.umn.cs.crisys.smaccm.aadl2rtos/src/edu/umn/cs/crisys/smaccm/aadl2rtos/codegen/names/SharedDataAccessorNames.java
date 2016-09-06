@@ -3,7 +3,7 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
+//import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.SharedDataAccessor;
 
 /**

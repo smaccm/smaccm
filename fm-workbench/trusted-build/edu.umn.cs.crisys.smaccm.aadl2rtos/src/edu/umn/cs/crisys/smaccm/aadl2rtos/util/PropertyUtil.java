@@ -77,6 +77,7 @@ public abstract class PropertyUtil {
   final public static String CAMKES_DATAPORT_RPC_MIN_INDEX_NAME = "SMACCM_SYS::CAmkES_Dataport_RPC_Min_Index";
   final public static String ECHRONOS_GENERATE_C_MODULES_NAME = "SMACCM_SYS::eChronos_Generate_C_Modules";
   final public static String ECHRONOS_C_MODULE_PATH_NAME = "SMACCM_SYS::eChronos_C_Module_Path";
+  final public static String ECHRONOS_FLASH_LOAD_ADDRESS_NAME = "SMACCM_SYS::eChronos_Flash_Load_Address";
   
 	final public static Property INITIALIZE_ENTRYPOINT_SOURCE_TEXT = Util
 			.getPropertyDefinitionInWorkspace(INITIALIZE_ENTRYPOINT_SOURCE_TEXT_NAME);
@@ -158,6 +159,9 @@ public abstract class PropertyUtil {
       .getPropertyDefinitionInWorkspace(ECHRONOS_GENERATE_C_MODULES_NAME);
   final public static Property ECHRONOS_C_MODULE_PATH = Util
       .getPropertyDefinitionInWorkspace(ECHRONOS_C_MODULE_PATH_NAME);
+  final public static Property ECHRONOS_FLASH_LOAD_ADDRESS = Util
+	      .getPropertyDefinitionInWorkspace(ECHRONOS_FLASH_LOAD_ADDRESS_NAME);
+
   
 	public static int getPriority(ThreadTypeImpl tti) {
 		int priority = 0;

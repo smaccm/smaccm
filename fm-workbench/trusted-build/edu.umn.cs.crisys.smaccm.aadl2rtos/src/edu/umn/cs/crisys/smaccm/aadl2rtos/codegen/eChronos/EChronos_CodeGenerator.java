@@ -1,21 +1,15 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.common.CodeGeneratorBase;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ModelNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ThreadCalendarNames;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.TypeNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputDataPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;

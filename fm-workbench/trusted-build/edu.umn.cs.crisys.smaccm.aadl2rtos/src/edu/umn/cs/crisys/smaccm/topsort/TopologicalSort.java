@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
+//import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 
 // TODO: currently only sorts the elements in the initial list, 
 // even if the dependencies contain other elements; this matches
