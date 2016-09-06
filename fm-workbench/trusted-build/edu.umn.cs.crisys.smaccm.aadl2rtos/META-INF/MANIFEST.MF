@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Aadl2rtos
 Bundle-Vendor: University of Minnesota
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: edu.umn.cs.crisys.smaccm.aadl2rtos;singleton:=true
 Bundle-Activator: edu.umn.cs.crisys.smaccm.aadl2rtos.PluginActivator
 Require-Bundle: org.eclipse.ui,
