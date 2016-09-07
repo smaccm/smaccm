@@ -3,12 +3,11 @@ public
 	with Base_Types;
 	
 	annex agree {**
-		const ACCEL_BOUND : real = 60.0;
+		const ACCEL_BOUND : real = 80.0;
 		const TARGET_SPEED_BOUND : real = 200.0;
-		const MEASURED_SPEED_BOUND : real = 250.0;
-		const BRAKE_BOUND : real = 50.0;
+		const MEASURED_SPEED_BOUND : real = 260.0;
 	**};
-	 
+	
 	system Car
 		features
 			target_speed : in data port Base_Types::Float;
@@ -16,12 +15,24 @@ public
 			measured_speed : out data port Base_Types::Float;			
 	    annex agree {**	    	
 	    		
-	        assume "The brake pressure is bounded" :
-	    	  0.0 <= brake_pressure and
-	    	  brake_pressure <= Ground_Vehicle_C.BRAKE_BOUND;
+	    	--problems to solve:
+	    	--1. Make sure subcomponent assumptions prove
+	    	--2. Find proper bound for measured speed
+	    	--3. Figure out why the acceleration is not bounded
+	    	--4. Prove that measured speed approaches constant target speed
+	    	--5. Introduce error in speedometer and prove all guarantees
 	    		
-	    	assume "bounded target speed" :
-	    	  0.0 <= target_speed and target_speed <= Ground_Vehicle_C.TARGET_SPEED_BOUND;
+	    	assume "input brake pressure is positve" :
+	    	  0.0 <= brake_pressure;
+	    	  
+	    	assume "brake pressure is bounded" :
+	    	  brake_pressure <= 50.0;
+	    	  
+	    	assume "target speed is always positive" :
+	    	  0.0 <= target_speed;
+	    	  
+	    	assume "target speed is bounded" :
+	    	 target_speed <= Ground_Vehicle_C.TARGET_SPEED_BOUND;
 	    		    	  
 	    	guarantee "Measured speed is always positive" :
 	    	  0.0 <= measured_speed;
@@ -34,8 +45,8 @@ public
 	    	  Lib.abs(accel) <= Ground_Vehicle_C.ACCEL_BOUND;
 	    	  
 	    	eq const_target_speed : bool = true -> target_speed = pre(target_speed) and pre(const_target_speed);
-	    	guarantee "constant target speed less than measured speed" :
-	    	  const_target_speed => measured_speed <= target_speed + 20.0;
+	    	guarantee "measured speed approaches target speed" :
+	    	  const_target_speed => measured_speed <= target_speed + 51.0;
 	    	   	  
 	    **};
 			
@@ -57,6 +68,14 @@ public
 			conn5 : port speedometer.speed -> measured_speed;
 			conn6 : port brake_pressure -> speed_controller.brake_pressure;
 			
+	    annex agree {**
+	    	lemma "motor rpms are bounded" :
+	    	  maws.rpms <= 250.0;
+	    	  
+	    	lemma "motor rpms are less than target speed" :
+	    	  const_target_speed => maws.rpms <= target_speed + 50.0;
+	    **};
+			
 	end Car.i;
 	
 	system Speedometer
@@ -65,12 +84,14 @@ public
 			speed : out data port Base_Types::Float;
 		annex agree {**
 			
---			guarantee "speed error range" :
---			  Lib.abs(rpms) - 1.0 <= speed and 
---			  speed <= Lib.abs(rpms) + 1.0;
+            guarantee "speed error range" :
+              Lib.abs(1.0*rpms - speed) <= 1.0;
+              
+            guarantee "speed is positve" :
+              0.0 <= speed;
 			  
-			guarantee "speed with no error" :
-			  speed = 1.0*rpms;
+--			guarantee "speed with no error" :
+--			  speed = 1.0*rpms;
 		**};
 	end Speedometer;
 	
@@ -141,11 +162,11 @@ public
 			  to_brakes = if(Lib.abs(act_val) < brake_pressure) then
 			                brake_pressure
 			              else if measured_speed < 0.0 and act_val > 0.0 then
-			                 act_val
-			             else if measured_speed > 0.0 and act_val < 0.0 then
-			                 -1.0 * act_val
-			             else
-			               brake_pressure;
+			                act_val
+			              else if measured_speed > 0.0 and act_val < 0.0 then
+			                -1.0 * act_val
+			              else
+			                brake_pressure;
 			               
 			guarantee "to_intake behavior" :
 			  to_intake = if to_brakes > 0.0 then
