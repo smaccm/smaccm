@@ -206,8 +206,8 @@ public class AadlModelParser {
 	
 	// default value is null.
 	this.model.eChronosFlashLoadAddress = 
-			PropertyUtils.getStringValue(systemImplementation, 
-					PropertyUtil.ECHRONOS_FLASH_LOAD_ADDRESS, null);
+			Util.getStringValueOpt(systemImplementation, 
+					PropertyUtil.ECHRONOS_FLASH_LOAD_ADDRESS);
 
 	// Initialize thread implementations
 		constructThreadImplMap();

@@ -473,4 +473,19 @@ public class PortNames {
     return dp.getType().getCType().varString(getReaderWriterImplVar());
   }
    
+  /////////////////////////////////////////////////////////////////
+  //
+  // Mailbox id for the port.
+  // 
+  // Right now, trusted build iterates through each connection and 
+  // builds the necessary shared memory or CAmkES RPC for each.
+  // The wrinkle for mailboxes is that we want write access for 
+  // some buffers but not others.
+  //
+  /////////////////////////////////////////////////////////////////
+  
+  public int calculateWriterBufferSize() {
+	  return 12 * (dp.getConnections().size() + 2);
+  }
+  
 };
