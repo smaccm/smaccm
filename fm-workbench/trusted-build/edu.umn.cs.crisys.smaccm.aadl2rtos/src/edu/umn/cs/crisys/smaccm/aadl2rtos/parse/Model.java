@@ -92,6 +92,7 @@ public class Model {
 	int camkesInternalTimerTimersPerClient; 
 	int camkesTimeServerAadlThreadMinIndex; 
 	int camkesDataportRpcMinIndex;
+	boolean camkesUseMailboxDataports = false;
 	boolean useOSRealTimeExtensions; 
 	
 	/**
@@ -445,7 +446,14 @@ public class Model {
     return camkesTimeServerAadlThreadMinIndex++; 
   }
 
-  
+  public boolean getCamkesUseMailboxDataports() {
+	    return this.camkesUseMailboxDataports;
+  }
+
+  public void setCamkesUseMailboxDataports(boolean camkesUseMailboxDataports) {
+	this.camkesUseMailboxDataports = camkesUseMailboxDataports;
+  }
+
   public boolean isEChronosGenerateCModules() {
     return eChronosGenerateCModules;
   }

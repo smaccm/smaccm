@@ -187,7 +187,7 @@ public abstract class CodeGeneratorBase {
 	
 	/* MWW TODO: Perhaps this method should be refactored to go in the C_Type_Writer class */
 	
-	private void createComponentDispatchTypes(BufferedWriter writer) throws IOException {
+	private void createComponentDispatchTypes() throws IOException {
     // write dispatcher types
 	  // Note: for new-style "struct" return blocks
 	  
@@ -216,9 +216,22 @@ public abstract class CodeGeneratorBase {
         model.getAstTypes().put((new PortNames(d)).getDispatchStructTypeName(), dispatchRecordType);
       }
     }
-    C_Type_Writer.writeTypes(writer, model, 6);
 	}
-	
+
+	private void createMailboxTypes() {
+		if (model.getCamkesUseMailboxDataports()) {
+		    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
+		        for (OutputDataPort d : ti.getOutputDataPortList()) {
+		        	int fanOut = d.getConnections().size();
+		        	int mailboxSize = fanOut + 2;
+		            RecordType mailboxRecordType = new RecordType();
+		            ArrayType mailboxArrayType = new ArrayType(d.getType(), mailboxSize);
+		        	mailboxRecordType.addField("data", mailboxArrayType);
+		            model.getAstTypes().put((new PortNames(d)).getMailboxStructTypeName(), mailboxRecordType);
+		        }
+		    }
+		}
+	}
 	
 	protected Set<Type> getSharedVariableTypes() {
     // write dispatcher types
@@ -438,8 +451,10 @@ public abstract class CodeGeneratorBase {
       st.add("model", mn);
       hwriter.append(st.render()); 
       
-      createComponentDispatchTypes(hwriter);
-      
+      createComponentDispatchTypes();
+      createMailboxTypes();
+      C_Type_Writer.writeTypes(hwriter, model, 6);
+
       writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("filePostfix"));
 
     } catch (IOException e) {

@@ -209,6 +209,12 @@ public class AadlModelParser {
 			Util.getStringValueOpt(systemImplementation, 
 					PropertyUtil.ECHRONOS_FLASH_LOAD_ADDRESS);
 
+    try {
+    	model.setCamkesUseMailboxDataports(
+    			(boolean)PropertyUtils.getBooleanValue(systemImplementation, 
+    					PropertyUtil.MAILBOX));
+	} catch(Exception e) {}
+	
 	// Initialize thread implementations
 		constructThreadImplMap();
 
@@ -801,7 +807,7 @@ public class AadlModelParser {
     
     
     // create connection object and connect to ports and thread instances.
-    PortConnection conn = new PortConnection(ci.getName(), srcThreadInstance, dstThreadInstance, sourcePort, destPort);
+    PortConnection conn = new PortConnection(Util.normalizeAadlName(ci.getName()), srcThreadInstance, dstThreadInstance, sourcePort, destPort);
     srcThreadInstance.addIsSrcOfConnection(conn);
     dstThreadInstance.addIsDstOfConnection(conn);
     sourcePort.addConnection(conn);

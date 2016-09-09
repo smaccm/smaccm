@@ -58,7 +58,7 @@ property set SMACCM_SYS is
     Use_OS_Real_Time_Extensions : aadlboolean => true applies to (system implementation);
 
 	-- For CAmkES and ground team, specifically.
-	Mailbox : aadlboolean => false applies to (connection);
+	Mailbox : aadlboolean => false applies to (system implementation, connection);
 
     -- For eChronos, specifically.  These properties are used to set the relative module
     -- path for the generated code from the place where prj is invoked
