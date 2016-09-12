@@ -1,7 +1,7 @@
 package udp
 public
   with Base_Types;
-  with SMACCM_SYS;
+  with TB_SYS;
   with Data_Model;
   
   data udp_buffer
@@ -31,8 +31,8 @@ public
       client_output: out event data port packet.i;
 
     properties
-      SMACCM_SYS::Is_External => true;
-      SMACCM_SYS::Thread_Type => Active;
+      TB_SYS::Is_External => true;
+      TB_SYS::Thread_Type => Active;
       Priority => 11;
       Stack_Size => 1 KByte;
       Compute_Execution_Time => 0ms .. 50ms;
@@ -50,14 +50,14 @@ public
       output: out event data port packet.i;
       
     properties
-      SMACCM_SYS::Thread_Type => Active;
+      TB_SYS::Thread_Type => Active;
       Priority => 11;
       Stack_Size => 1 KByte;
       Compute_Execution_Time => 0ms .. 50ms;
       Dispatch_Protocol => Sporadic;
       Source_Text => ("user_code/echo.c");
 
-      SMACCM_SYS::Sends_Events_To => "{{1 output}}";
+      TB_SYS::Sends_Events_To => "{{1 output}}";
       Compute_Entrypoint_Source_Text => "receive" applies to input;
   end echo;
 
@@ -82,8 +82,8 @@ public
       proc: process proc.i;
       
     properties
-      SMACCM_SYS::OS => CAmkES;
-      SMACCM_SYS::HW => QEMU;
+      TB_SYS::OS => CAmkES;
+      TB_SYS::HW => QEMU;
   end wrapper.i;
   
 end udp;
