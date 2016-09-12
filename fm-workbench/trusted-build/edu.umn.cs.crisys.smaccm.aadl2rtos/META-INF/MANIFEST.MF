@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Aadl2rtos
 Bundle-Vendor: University of Minnesota
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: edu.umn.cs.crisys.smaccm.aadl2rtos;singleton:=true
-Bundle-Activator: edu.umn.cs.crisys.smaccm.aadl2rtos.PluginActivator
+Bundle-SymbolicName: edu.umn.cs.crisys.trusted_build;singleton:=true
+Bundle-Activator: edu.umn.cs.crisys.tb.PluginActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.osate.aadl2;bundle-version="1.0.0",
@@ -18,9 +18,9 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,lib/ST-4.0.8.jar,lib/antlr-4.1-complete.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: 
- edu.umn.cs.crisys.smaccm.aadl2rtos,
- edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES,
- edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos,
- edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread,
- edu.umn.cs.crisys.smaccm.aadl2rtos.model.type,
- edu.umn.cs.crisys.smaccm.aadl2rtos.util
+ edu.umn.cs.crisys.tb,
+ edu.umn.cs.crisys.tb.codegen.CAmkES,
+ edu.umn.cs.crisys.tb.codegen.eChronos,
+ edu.umn.cs.crisys.tb.model.thread,
+ edu.umn.cs.crisys.tb.model.type,
+ edu.umn.cs.crisys.tb.util

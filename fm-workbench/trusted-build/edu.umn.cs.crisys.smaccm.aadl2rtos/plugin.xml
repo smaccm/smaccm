@@ -17,7 +17,7 @@
          point="org.eclipse.ui.handlers">
       <handler
             commandId="edu.umn.cs.crisys.smaccm.aadl2rtos.commands.translateModelCommand"
-            class="edu.umn.cs.crisys.smaccm.aadl2rtos.handlers.Aadl2RtosHandler">
+            class="edu.umn.cs.crisys.tb.handlers.TbHandler">
       </handler>
    </extension>
    <extension

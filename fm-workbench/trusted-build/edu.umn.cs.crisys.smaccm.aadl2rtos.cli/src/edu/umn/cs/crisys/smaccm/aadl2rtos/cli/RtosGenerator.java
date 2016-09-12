@@ -11,10 +11,9 @@ import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.modelsupport.errorreporting.AnalysisErrorReporterManager;
 
-
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosAction;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.ConsoleLogger;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
+import edu.umn.cs.crisys.tb.ConsoleLogger;
+import edu.umn.cs.crisys.tb.Logger;
+import edu.umn.cs.crisys.tb.TbAction;
 import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
 import fr.tpt.aadl.ramses.control.support.config.RamsesConfiguration;
 import fr.tpt.aadl.ramses.control.support.generator.GenerationException;
@@ -53,7 +52,7 @@ public class RtosGenerator implements Generator {
 	  File rootDir = new File(System.getProperty("user.dir"));
 	  String str = config.getTargetId();
 	  
-	  IStatus execStatus = (new Aadl2RtosAction()).execute(systemInstance, 
+	  IStatus execStatus = (new TbAction()).execute(systemInstance, 
 				systemInstance.getSystemImplementation(), monitor, 
 				rootDir, config.getRamsesOutputDir(), new ConsoleLogger(Logger.INFO));
 	  if (execStatus != Status.OK_STATUS)
