@@ -74,14 +74,14 @@ filePostfix(name, path) ::= <<
 
 
 copyToQueueDataStmt(port) ::= <<
-<if(port.type.isBaseType)><port.queueDataName>[<port.queueFrontName>] = *<port.name> ;
-<else><aadlInputToValMemcpy(port.type, {<port.queueDataName>[<port.queueFrontName>]}, port.name )>
+<if(port.type.isBaseType)><port.queueDataName>[<port.queueBackName>] = *<port.name> ;
+<else><aadlInputToValMemcpy(port.type, {<port.queueDataName>[<port.queueBackName>]}, port.name )>
 <endif>
 >>
 
 copyFromQueueDataStmt(port) ::= <<
-<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.queueDataName>[<port.queueBackName>] ;
-<else><valToAadlOutputMemcpy(port.type, port.name, {<port.queueDataName>[<port.queueBackName>]})>
+<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.queueDataName>[<port.queueFrontName>] ;
+<else><valToAadlOutputMemcpy(port.type, port.name, {<port.queueDataName>[<port.queueFrontName>]})>
 <endif>
 >>
 
@@ -112,7 +112,7 @@ bool <port.queueReadName>(<port.type.aadlOutputType.name> <port.name>) {
         return false;
     } else {
         <copyFromQueueDataStmt(port)>
-        <port.queueBackName> = (<port.queueBackName> + 1) % <port.queueSize>;
+        <port.queueFrontName> = (<port.queueFrontName> + 1) % <port.queueSize>;
         <port.queueFullName> = false ;
         return true;
     }
@@ -123,7 +123,7 @@ bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
         return false;
     } else {
         <copyToQueueDataStmt(port)>
-        <port.queueFrontName> = (<port.queueFrontName> + 1) % <port.queueSize>;
+        <port.queueBackName> = (<port.queueBackName> + 1) % <port.queueSize>;
         if (<port.queueBackName> == <port.queueFrontName>) {
             <port.queueFullName> = true ;
         }
