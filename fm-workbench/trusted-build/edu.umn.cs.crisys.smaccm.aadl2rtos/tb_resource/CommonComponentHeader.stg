@@ -14,7 +14,7 @@ This header section contains the AADL gluecode interfaces used by the
 client for the thread implementations.
 >>
 
-componentGlueCodeHeaderIfdef(sysInstanceName) ::= "__SMACCM_<sysInstanceName>_types__H"
+componentGlueCodeHeaderIfdef(sysInstanceName) ::= "__TB_AADL_<sysInstanceName>_types__H"
 
 
 filePrefix(name, date, path, datatypesHeader) ::= <<

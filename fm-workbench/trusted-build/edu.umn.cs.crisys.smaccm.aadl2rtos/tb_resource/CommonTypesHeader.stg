@@ -13,7 +13,7 @@ AADL components as defined in the system implementation <sysInstanceName>.
 >>
 
 
-datatypesHeaderIfdef(sysInstanceName) ::= "__SMACCM_<sysInstanceName>_types__H"
+datatypesHeaderIfdef(sysInstanceName) ::= "__TB_AADL_<sysInstanceName>_types__H"
 
 osSpecificDefine() ::= ""
 

@@ -474,12 +474,12 @@ aadlDispatcherPassiveCallOutPortArg(port) ::= <<
 aadlDispatcherPassiveCallOutArg(dispatchContract) ::= "<aadlDispatcherPassiveCallOutPortArg(dispatchContract.port)>"
 
 aadlDispatcherWritePassiveArg(structName,port) ::= <<
-<if(port.hasData)><port.type.valToAadlInput>(<structName>.<port.data>[smaccm_it])<endif>
+<if(port.hasData)><port.type.valToAadlInput>(<structName>.<port.data>[aadl_it])<endif>
 >>
 
 aadlDispatcherWriteActiveArg(structName,port) ::= <<
 <if(port.hasData)>
-(<port.type.valToCamkesInput>(<structName>.<port.data>[smaccm_it]))
+(<port.type.valToCamkesInput>(<structName>.<port.data>[aadl_it]))
 <endif>
 >>
 
@@ -493,7 +493,7 @@ aadlDispatcherCallPassiveTarget(portDest,structName,portSrc) ::= <<
 >>
 
 aadlDispatcherSendLoop(dispatchContract, structName) ::= <<
-for (smaccm_it = 0; smaccm_it \< <structName>.<dispatchContract.port.index> && smaccm_it \< <dispatchContract.maxDispatchSize>; smaccm_it++) {
+for (aadl_it = 0; aadl_it \< <structName>.<dispatchContract.port.index> && aadl_it \< <dispatchContract.maxDispatchSize>; aadl_it++) {
    <dispatchContract.passiveDispatchTargetList:aadlDispatcherCallPassiveTarget(structName, dispatchContract.port)>
 }
 
@@ -543,7 +543,7 @@ static void <activeThreadInternalDispatcherName(dispatcher)>(<if(dispatcher.hasD
     // to prevent misuse by malicious clients, we ensure that the number
     // of dispatches is less than the maximum allowed dispatch count.
     {
-        uint32_t smaccm_it;
+        uint32_t aadl_it;
         <dispatcher.dispatchableContracts:aadlDispatcherSendLoop(dispatcher.dispatchStructArgName)>
     }
 <endif>

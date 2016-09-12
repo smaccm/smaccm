@@ -39,7 +39,7 @@ uint64_t clock_get_time()
 }
 
 void timer_complete_callback() {
-    smaccm_thread_calendar();
+    <threadCalendar.calendarFnName>();
 }
 
 int run(void)

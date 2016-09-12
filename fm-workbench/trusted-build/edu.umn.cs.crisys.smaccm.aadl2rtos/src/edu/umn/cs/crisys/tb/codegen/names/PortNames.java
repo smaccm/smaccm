@@ -336,7 +336,14 @@ public class PortNames {
       return getPrefix() + "_" + this.getFirstLevelInterruptHandler();
   }
 
-  
+  public String getEChronosIncomingPortWriterName() {
+	  return getPrefix() + "_" + getQualifiedName() + "_" + getType().getWriterFn();
+  }
+
+  public String getVxWorksIncomingPortWriterName() {
+	  return getEChronosIncomingPortWriterName();
+  }
+
   public OutgoingDispatchContractNames getMaxDispatchContracts() {
     DispatchableInputPort dip = (DispatchableInputPort )dp; 
     OutgoingDispatchContract odc = 
@@ -431,6 +438,7 @@ public class PortNames {
     ThreadImplementationNames tin = new ThreadImplementationNames(dp.getOwner());
     return getThreadImplWriterFnName(dp.getCommprimFnNameOpt(), tin.getNormalizedName(), getName());
   }
+  
   
   //////////////////////////////////////////////////////////////
   //

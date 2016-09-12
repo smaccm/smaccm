@@ -1,7 +1,7 @@
 grammar SendsTo;
 
 @header {
-    package edu.umn.cs.crisys.smaccm.aadl2rtos.parse.antlr;
+    package edu.umn.cs.crisys.tb.parse.antlr;
 }
 
 program: '{' '}' EOF 

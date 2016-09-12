@@ -165,7 +165,7 @@ int trusted_build_main(uint32_t runDurationInSeconds) {
 
 body(model) ::= <<
 
-#include <\u0022>smaccm_decls.h<\u0022>
+#include <\u0022><model.prefix>_decls.h<\u0022>
 #include <\u003C>unistd.h<\u003E>
 #include <\u003C>sysLib.h<\u003E>
 #include <\u003C>assert.h<\u003E>

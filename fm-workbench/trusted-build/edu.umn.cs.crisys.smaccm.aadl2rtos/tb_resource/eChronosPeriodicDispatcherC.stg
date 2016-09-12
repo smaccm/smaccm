@@ -1,7 +1,7 @@
 import "CommonPeriodicDispatcherC.stg"
 
 // Copied from "eChronosComponentC.stg"
-incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerFn>"
+incomingPortWriterName(port) ::= "<port.eChronosIncomingPortWriterName>"
 outgoingPortWriterName(connection) ::= "<incomingPortWriterName(connection.destPort)>"
 incomingActiveThreadDispatchName(dispatcher) ::= "<incomingPortWriterName(dispatcher)>"
 outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
@@ -10,7 +10,7 @@ periodicComponentCBody(model, threadCalendar) ::= <<
 
 //#include <\u003C>string.h<\u003E>
 #include <\u003C><model.systemTypeHeaderName><\u003E>
-#include <\u003C>smaccm_decls.h<\u003E>
+#include <\u003C><model.prefix>_decls.h<\u003E>
 // #include <\u003C><threadCalendar.periodicDispatcherHFileName><\u003E>
 
 
@@ -41,14 +41,14 @@ bool initialize_periodic_dispatcher() {
  *
  */
 bool
-smaccm_tick_irq(void)
+<model.prefix>_tick_irq(void)
 {
     static uint32_t count = 0;
 
     clock_irq_callback();
     rtos_timer_tick();
     if (count == 0) {
-        smaccm_thread_calendar();
+        <model.prefix>_thread_calendar();
     }
 
     count = (count + 1) % <threadCalendar.greatestCommonDivisorInMilliseconds>;
