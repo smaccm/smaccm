@@ -662,6 +662,24 @@ public interface AgreeFactory extends EFactory
   TimeOfExpr createTimeOfExpr();
 
   /**
+   * Returns a new object of class '<em>Time Rise Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Rise Expr</em>'.
+   * @generated
+   */
+  TimeRiseExpr createTimeRiseExpr();
+
+  /**
+   * Returns a new object of class '<em>Time Fall Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Fall Expr</em>'.
+   * @generated
+   */
+  TimeFallExpr createTimeFallExpr();
+
+  /**
    * Returns a new object of class '<em>Real Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

@@ -70,8 +70,10 @@ import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
+import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
+import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
@@ -597,6 +599,20 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass timeOfExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass timeRiseExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass timeFallExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2438,6 +2454,46 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getTimeRiseExpr()
+  {
+    return timeRiseExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTimeRiseExpr_Id()
+  {
+    return (EReference)timeRiseExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTimeFallExpr()
+  {
+    return timeFallExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTimeFallExpr_Id()
+  {
+    return (EReference)timeFallExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getRealLitExpr()
   {
     return realLitExprEClass;
@@ -2876,6 +2932,12 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     timeOfExprEClass = createEClass(TIME_OF_EXPR);
     createEReference(timeOfExprEClass, TIME_OF_EXPR__ID);
 
+    timeRiseExprEClass = createEClass(TIME_RISE_EXPR);
+    createEReference(timeRiseExprEClass, TIME_RISE_EXPR__ID);
+
+    timeFallExprEClass = createEClass(TIME_FALL_EXPR);
+    createEReference(timeFallExprEClass, TIME_FALL_EXPR__ID);
+
     realLitExprEClass = createEClass(REAL_LIT_EXPR);
     createEAttribute(realLitExprEClass, REAL_LIT_EXPR__VAL);
 
@@ -3012,6 +3074,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     eventExprEClass.getESuperTypes().add(this.getExpr());
     latchedExprEClass.getESuperTypes().add(this.getExpr());
     timeOfExprEClass.getESuperTypes().add(this.getExpr());
+    timeRiseExprEClass.getESuperTypes().add(this.getExpr());
+    timeFallExprEClass.getESuperTypes().add(this.getExpr());
     realLitExprEClass.getESuperTypes().add(this.getExpr());
     boolLitExprEClass.getESuperTypes().add(this.getExpr());
     thisExprEClass.getESuperTypes().add(this.getExpr());
@@ -3263,6 +3327,12 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(timeOfExprEClass, TimeOfExpr.class, "TimeOfExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getTimeOfExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, TimeOfExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(timeRiseExprEClass, TimeRiseExpr.class, "TimeRiseExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getTimeRiseExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, TimeRiseExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(timeFallExprEClass, TimeFallExpr.class, "TimeFallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getTimeFallExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, TimeFallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(realLitExprEClass, RealLitExpr.class, "RealLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRealLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, RealLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

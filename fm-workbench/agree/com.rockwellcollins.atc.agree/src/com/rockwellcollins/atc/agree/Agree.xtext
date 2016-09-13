@@ -218,6 +218,8 @@ TermExpr returns Expr:
 	| {EventExpr} 'event' '(' id = NestedDotID ')'
 	| {LatchedExpr} 'latched' '(' id = NestedDotID ')'
 	| {TimeOfExpr} 'timeof' '(' id = NestedDotID ')'
+	| {TimeRiseExpr} 'timerise' '(' id = NestedDotID ')'
+	| {TimeFallExpr} 'timefall' '(' id = NestedDotID ')'
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?

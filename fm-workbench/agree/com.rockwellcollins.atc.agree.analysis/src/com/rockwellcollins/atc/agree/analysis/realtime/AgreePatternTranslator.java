@@ -39,11 +39,11 @@ import jkind.lustre.UnaryOp;
 public class AgreePatternTranslator {
 
     public static final String TIME_SUFFIX = "__TIME__";
+    public static final String RISE_SUFFIX = "__RISE__";
+    public static final String FALL_SUFFIX = "__FALL__";
     private static final String TIME_WILL_PREFIX = "__TIME_WILL__";
     private static final String EFFECT_TIME_RANGE_PREFIX = "__EFFECT_TIME_RANGE__";
     private static final String TIMEOUT_PREFIX = "__TIMEOUT__";
-    private static final String CAUSE_CONDITION_RISE_PREFIX = "__CAUSE_CONDITION_RISE__";
-    private static final String CAUSE_CONDITION_FALL_PREFIX = "__CAUSE_CONDITION_FALL__";
     private static final String CAUSE_CONDITION_HELD_PREFIX = "__CAUSE_CONDITION_HELD__";
     private static final String CAUSE_CONDITION_TIMEOUT_PREFIX = "__CAUSE_CONDITION_TIMEOUT__";
     private static final String JITTER_PREFIX = "__JITTER__";
@@ -73,16 +73,11 @@ public class AgreePatternTranslator {
     private AgreeNode translateNode(AgreeNode node, boolean isTopNode) {
 
         AgreeNodeBuilder builder = new AgreeNodeBuilder(node);
-        builder.clearTimeOfs();
-
         // this has to be done first because the pattern translation
         // for guarantees/lemmas/assumptions add additional assertions
         builder.clearAssertions();
         
-        //create all of the timeof references
-        for(Entry<String, AgreeVar> entry : node.timeOfMap.entrySet()){
-        	getTimeOf(entry.getKey(), builder, entry.getValue().reference);
-        }
+        createTimeFunctions(node, builder);
         
         for (AgreeStatement statement : node.assertions) {
             if (statement instanceof AgreePattern) {
@@ -127,6 +122,26 @@ public class AgreePatternTranslator {
         builder.addInput(new AgreeVar(timeExpr.id, NamedType.REAL, null, node.compInst));
         return builder.build();
     }
+
+    //this code adds all of the logic for the timeOf, timeRise, and timeFall expressions
+	private void createTimeFunctions(AgreeNode oldNode, AgreeNodeBuilder newBuilder) {
+		newBuilder.clearTimeOfs();
+        newBuilder.clearTimeRises();
+        newBuilder.clearTimeFalls();
+        
+        //create all of the timeOf, timeRise, and timeFall references
+        for(Entry<String, AgreeVar> entry : oldNode.timeOfMap.entrySet()){
+        	getTimeOf(entry.getKey(), newBuilder, entry.getValue().reference);
+        }
+        
+        for(Entry<String, AgreeVar> entry : oldNode.timeRiseMap.entrySet()){
+        	getTimeRise(entry.getKey(), newBuilder, entry.getValue().reference);
+        }
+        
+        for(Entry<String, AgreeVar> entry : oldNode.timeFallMap.entrySet()){
+        	getTimeFall(entry.getKey(), newBuilder, entry.getValue().reference);
+        }
+	}
 
     private static List<AgreeNode> gatherNodes(AgreeNode node) {
         List<AgreeNode> nodes = new ArrayList<>();
@@ -356,6 +371,60 @@ public class AgreePatternTranslator {
         builder.addTimeOf(varName, timeCause);
         
         return timeCause;
+    }
+    
+    private AgreeVar getTimeRise(String varName, AgreeNodeBuilder builder, EObject reference){
+    	Map<String, AgreeVar> timeRiseMap = builder.build().timeRiseMap;
+        if(timeRiseMap.containsKey(varName)){
+            return timeRiseMap.get(varName);
+        }
+        
+        AgreeVar timeRise = new AgreeVar(varName + RISE_SUFFIX, NamedType.REAL, reference);
+        builder.addOutput(timeRise);
+        
+        Expr rise = new NodeCallExpr(AgreeRealtimeCalendarBuilder.RISE_NODE_NAME, new IdExpr(varName));
+        Expr timeVarExpr = expr("timeRise = (if rise then time else (-1.0 -> pre timeRise))",
+                to("timeRise", timeRise),
+                to("rise", rise),
+                to("time", timeExpr));
+        builder.addAssertion(new AgreeStatement(null, timeVarExpr, reference));
+        
+        Expr lemmaExpr = expr("timeRise <= time and timeRise >= -1.0",
+                to("timeRise", timeRise),
+                to("time", timeExpr));
+        
+        //add this assertion to help with proofs (it should always be true)
+        builder.addAssertion(new AgreeStatement("", lemmaExpr, reference));
+        builder.addTimeRise(varName, timeRise);
+        
+        return timeRise;
+    }
+    
+    private AgreeVar getTimeFall(String varName, AgreeNodeBuilder builder, EObject reference){
+    	Map<String, AgreeVar> timeFallMap = builder.build().timeFallMap;
+        if(timeFallMap.containsKey(varName)){
+            return timeFallMap.get(varName);
+        }
+        
+        AgreeVar timeFall = new AgreeVar(varName + FALL_SUFFIX, NamedType.REAL, reference);
+        builder.addOutput(timeFall);
+        
+        Expr Fall = new NodeCallExpr(AgreeRealtimeCalendarBuilder.FALL_NODE_NAME, new IdExpr(varName));
+        Expr timeVarExpr = expr("timeFall = (if Fall then time else (-1.0 -> pre timeFall))",
+                to("timeFall", timeFall),
+                to("Fall", Fall),
+                to("time", timeExpr));
+        builder.addAssertion(new AgreeStatement(null, timeVarExpr, reference));
+        
+        Expr lemmaExpr = expr("timeFall <= time and timeFall >= -1.0",
+                to("timeFall", timeFall),
+                to("time", timeExpr));
+        
+        //add this assertion to help with proofs (it should always be true)
+        builder.addAssertion(new AgreeStatement("", lemmaExpr, reference));
+        builder.addTimeFall(varName, timeFall);
+        
+        return timeFall;
     }
 
     private Expr translatePatternProperty(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
@@ -623,16 +692,14 @@ public class AgreePatternTranslator {
     // holds during the given interval. This is meant to essentially translate a condition
     // pattern to a purely event based pattern. it returns an IdExpr corresponding to the
     // event that triggers when the condition is held for the interval
-    private static IdExpr translateCauseCondtionPattern(AgreeCauseEffectPattern pattern, IdExpr causeId,
+    private IdExpr translateCauseCondtionPattern(AgreeCauseEffectPattern pattern, IdExpr causeId,
             AgreeNodeBuilder builder) {
         
-        AgreeVar causeRiseTimeVar = new AgreeVar(CAUSE_CONDITION_RISE_PREFIX + causeId.id, NamedType.REAL, pattern);
-        AgreeVar causeFallTimeVar = new AgreeVar(CAUSE_CONDITION_FALL_PREFIX + causeId.id, NamedType.REAL, pattern);
+        AgreeVar causeRiseTimeVar = getTimeRise(causeId.id, builder, pattern);
+        AgreeVar causeFallTimeVar = getTimeFall(causeId.id, builder, pattern);
         AgreeVar causeHeldVar = new AgreeVar(CAUSE_CONDITION_HELD_PREFIX + causeId.id, NamedType.BOOL, pattern);
         AgreeVar causeHeldTimeoutVar = new AgreeVar(CAUSE_CONDITION_TIMEOUT_PREFIX + causeId.id, NamedType.REAL, pattern);
         
-        builder.addLocal(causeRiseTimeVar);
-        builder.addLocal(causeFallTimeVar);
         builder.addLocal(causeHeldVar);
         builder.addInput(causeHeldTimeoutVar);
         
@@ -640,24 +707,6 @@ public class AgreePatternTranslator {
         IdExpr causeHeldId = new IdExpr(causeHeldVar.id);
         IdExpr causeRiseTimeId = new IdExpr(causeRiseTimeVar.id);
         IdExpr causeHeldTimeoutId = new IdExpr(causeHeldTimeoutVar.id);
-        
-        {
-        //causeRiseTime = if rise(cause) then t else -1 -> pre(causeRiseTime)
-        Expr elseRise = new UnaryExpr(UnaryOp.PRE, causeRiseTimeId);
-        elseRise = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, elseRise);
-        Expr rise = new NodeCallExpr(AgreeRealtimeCalendarBuilder.RISE_NODE_NAME, causeId);
-        Expr ifRise = new IfThenElseExpr(rise, timeExpr, elseRise);
-        builder.addLocalEquation(new AgreeEquation(causeRiseTimeId, ifRise, pattern));
-        }
-        
-        {
-        //causeFallTime = if fall(cause) then t else -1 -> pre(causeFallTime)
-        Expr elseFall = new UnaryExpr(UnaryOp.PRE, causeFallTimeId);
-        elseFall = new BinaryExpr(NEG_ONE, BinaryOp.ARROW, elseFall);
-        Expr fall = new NodeCallExpr(AgreeRealtimeCalendarBuilder.FALL_NODE_NAME, causeId);
-        Expr ifFall = new IfThenElseExpr(fall, timeExpr, elseFall);
-        builder.addLocalEquation(new AgreeEquation(causeFallTimeId, ifFall, pattern));
-        }
         
         {
         //timeout = if causeRiseTime > -1 and causeRiseTime > causeFallTime then 

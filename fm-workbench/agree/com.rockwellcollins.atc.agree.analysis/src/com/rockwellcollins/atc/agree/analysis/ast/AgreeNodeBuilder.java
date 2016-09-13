@@ -39,7 +39,9 @@ public class AgreeNodeBuilder {
     private ComponentInstance compInst;
     private Set<AgreeVar> eventTimes = new HashSet<>();
     private Map<String, AgreeVar> timeOfMap = new HashMap<>();
-    
+    private Map<String, AgreeVar> timeRiseMap = new HashMap<>();
+    private Map<String, AgreeVar> timeFallMap = new HashMap<>();
+  
     public AgreeNodeBuilder(String id){
         this.id = id;
     }
@@ -60,6 +62,8 @@ public class AgreeNodeBuilder {
         this.patternProps = new ArrayList<>(node.patternProps);
         this.eventTimes = new HashSet<>(node.eventTimes);
         this.timeOfMap = new HashMap<>(node.timeOfMap);
+        this.timeRiseMap = new HashMap<>(node.timeRiseMap);
+        this.timeFallMap = new HashMap<>(node.timeFallMap);
         this.clockConstraint = node.clockConstraint;
         this.initialConstraint = node.initialConstraint;
         this.clockVar = node.clockVar;
@@ -225,8 +229,32 @@ public class AgreeNodeBuilder {
     	timeOfMap.putAll(map);
     }
     
+    public void addTimeRise(String name, AgreeVar var){
+    	timeRiseMap.put(name, var);
+    }
+    
+    public void addTimeRise(Map<String, AgreeVar> map){
+    	timeRiseMap.putAll(map);
+    }
+    
+    public void addTimeFall(String name, AgreeVar var){
+    	timeFallMap.put(name, var);
+    }
+    
+    public void addTimeFall(Map<String, AgreeVar> map){
+    	timeFallMap.putAll(map);
+    }
+    
     public void clearTimeOfs(){
     	timeOfMap.clear();
+    }
+    
+    public void clearTimeRises(){
+    	timeRiseMap.clear();
+    }
+    
+    public void clearTimeFalls(){
+    	timeFallMap.clear();
     }
     
     public void clearLemmas(){
@@ -260,7 +288,7 @@ public class AgreeNodeBuilder {
     public AgreeNode build() {
         return new AgreeNode(id, inputs, outputs, locals, equations, connections, subNodes, assertions,
                 assumptions, guarantees, lemmas, patternProps, clockConstraint, initialConstraint, clockVar, reference,
-                timing, eventTimes, timeOfMap, compInst);
+                timing, eventTimes, timeOfMap, timeRiseMap, timeFallMap, compInst);
     }
 
 }

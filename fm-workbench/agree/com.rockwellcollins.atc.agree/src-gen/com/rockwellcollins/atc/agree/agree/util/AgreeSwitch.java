@@ -719,6 +719,24 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.TIME_RISE_EXPR:
+      {
+        TimeRiseExpr timeRiseExpr = (TimeRiseExpr)theEObject;
+        T result = caseTimeRiseExpr(timeRiseExpr);
+        if (result == null) result = caseExpr(timeRiseExpr);
+        if (result == null) result = caseElement(timeRiseExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.TIME_FALL_EXPR:
+      {
+        TimeFallExpr timeFallExpr = (TimeFallExpr)theEObject;
+        T result = caseTimeFallExpr(timeFallExpr);
+        if (result == null) result = caseExpr(timeFallExpr);
+        if (result == null) result = caseElement(timeFallExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.REAL_LIT_EXPR:
       {
         RealLitExpr realLitExpr = (RealLitExpr)theEObject;
@@ -1920,6 +1938,38 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseTimeOfExpr(TimeOfExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Rise Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Rise Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeRiseExpr(TimeRiseExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Fall Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Fall Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeFallExpr(TimeFallExpr object)
   {
     return null;
   }

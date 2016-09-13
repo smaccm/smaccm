@@ -112,7 +112,9 @@ import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
+import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
+import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
@@ -142,6 +144,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private static Set<RecordType> globalTypes;
     private static Map<NamedElement, String> typeMap;
     private static Map<String, AgreeVar> timeOfVarMap;
+    private static Map<String, AgreeVar> timeRiseVarMap;
+    private static Map<String, AgreeVar> timeFallVarMap;
 
     private ComponentInstance curInst; // used for Get_Property Expressions
     private boolean isMonolithic = false;
@@ -203,6 +207,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         List<AgreeEquation> localEquations = new ArrayList<>();
         List<AgreeStatement> patternProps = Collections.emptyList();
         timeOfVarMap = new HashMap<>();
+        timeRiseVarMap = new HashMap<>();
+        timeFallVarMap = new HashMap<>();
         
         Expr clockConstraint = new BoolExpr(true);
         Expr initialConstraint = new BoolExpr(true);
@@ -318,6 +324,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         builder.setTiming(timing);
         builder.setCompInst(compInst);
         builder.addTimeOf(timeOfVarMap);
+        builder.addTimeRise(timeRiseVarMap);
+        builder.addTimeFall(timeFallVarMap);
+        
         
         return builder.build();
     }
@@ -1079,6 +1088,39 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     	
     	return new IdExpr(var.id);
     }
+    
+    @Override
+    public Expr caseTimeRiseExpr(TimeRiseExpr timeExpr){
+    	NestedDotID nestId = (NestedDotID)timeExpr.getId();
+    	NamedElement namedEl = nestId.getBase();
+    	String idStr = namedEl.getName();
+    	
+		AgreeVar var = timeRiseVarMap.get(idStr);
+		if (var == null) {
+			String varStr = idStr + AgreePatternTranslator.RISE_SUFFIX;
+			var = new AgreeVar(varStr, NamedType.REAL, namedEl);
+			timeRiseVarMap.put(idStr, var);
+		}
+    	
+    	return new IdExpr(var.id);
+    }
+    
+    @Override
+    public Expr caseTimeFallExpr(TimeFallExpr timeExpr){
+    	NestedDotID nestId = (NestedDotID)timeExpr.getId();
+    	NamedElement namedEl = nestId.getBase();
+    	String idStr = namedEl.getName();
+    	
+		AgreeVar var = timeFallVarMap.get(idStr);
+		if (var == null) {
+			String varStr = idStr + AgreePatternTranslator.FALL_SUFFIX;
+			var = new AgreeVar(varStr, NamedType.REAL, namedEl);
+			timeFallVarMap.put(idStr, var);
+		}
+    	
+    	return new IdExpr(var.id);
+    }
+    
     
     @Override
     public Expr caseRecordExpr(RecordExpr recExpr) {

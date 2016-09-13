@@ -234,6 +234,12 @@
     <genClasses ecoreClass="Agree.ecore#//TimeOfExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeOfExpr/id"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeRiseExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeRiseExpr/id"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeFallExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeFallExpr/id"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RealLitExpr">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//RealLitExpr/val"/>
     </genClasses>
@@ -257,6 +263,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/argExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LinSqrExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinSqrExpr/id"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

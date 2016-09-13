@@ -436,6 +436,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createTimeOfExprAdapter();
       }
       @Override
+      public Adapter caseTimeRiseExpr(TimeRiseExpr object)
+      {
+        return createTimeRiseExprAdapter();
+      }
+      @Override
+      public Adapter caseTimeFallExpr(TimeFallExpr object)
+      {
+        return createTimeFallExprAdapter();
+      }
+      @Override
       public Adapter caseRealLitExpr(RealLitExpr object)
       {
         return createRealLitExprAdapter();
@@ -1578,6 +1588,36 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createTimeOfExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TimeRiseExpr <em>Time Rise Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.TimeRiseExpr
+   * @generated
+   */
+  public Adapter createTimeRiseExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TimeFallExpr <em>Time Fall Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.TimeFallExpr
+   * @generated
+   */
+  public Adapter createTimeFallExprAdapter()
   {
     return null;
   }

@@ -62,7 +62,9 @@ import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
+import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
+import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
@@ -375,8 +377,14 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.TIME_EXPR:
 				sequence_TermExpr(context, (TimeExpr) semanticObject); 
 				return; 
+			case AgreePackage.TIME_FALL_EXPR:
+				sequence_TermExpr(context, (TimeFallExpr) semanticObject); 
+				return; 
 			case AgreePackage.TIME_OF_EXPR:
 				sequence_TermExpr(context, (TimeOfExpr) semanticObject); 
+				return; 
+			case AgreePackage.TIME_RISE_EXPR:
+				sequence_TermExpr(context, (TimeRiseExpr) semanticObject); 
 				return; 
 			case AgreePackage.UNARY_EXPR:
 				sequence_UnaryExpr(context, (UnaryExpr) semanticObject); 
@@ -873,7 +881,25 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 * Constraint:
 	 *     id=NestedDotID
 	 */
+	protected void sequence_TermExpr(EObject context, TimeFallExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     id=NestedDotID
+	 */
 	protected void sequence_TermExpr(EObject context, TimeOfExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     id=NestedDotID
+	 */
+	protected void sequence_TermExpr(EObject context, TimeRiseExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

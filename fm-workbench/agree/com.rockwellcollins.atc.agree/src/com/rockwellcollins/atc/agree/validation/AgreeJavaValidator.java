@@ -113,8 +113,10 @@ import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
+import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
+import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
@@ -803,18 +805,33 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	    return false;
 	}
 
+	@Check(CheckType.FAST)
+	public void checkTimeRise(TimeRiseExpr timeRise){
+		NestedDotID id = timeRise.getId();
+		checkTimeExpr(timeRise, id);
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkTimeFall(TimeFallExpr timeFall){
+		NestedDotID id = timeFall.getId();
+		checkTimeExpr(timeFall, id);
+	}
 	
 	@Check(CheckType.FAST)
 	public void checkTimeOf(TimeOfExpr timeOf){
 		NestedDotID id = timeOf.getId();
-		AgreeType type = getAgreeType(id);
+		checkTimeExpr(timeOf, id);
+	}
+	
+	public void checkTimeExpr(EObject expr, NestedDotID id){
+        AgreeType type = getAgreeType(id);
 		
 		if(!matches(type, BOOL)){
-			error(timeOf, "\"Time of\" expressions can only be applied Boolean identifiers");
+			error(expr, "Time functions can only be applied Boolean identifiers");
 		}
 		
 		if(id.getSub() != null){
-			error(timeOf, "\"Time of\" expressions can only be applied to identifiers used in paterns");
+			error(expr, "Time functions can only be applied to identifiers");
 		}
 	}
 	
@@ -2199,7 +2216,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		    return REAL;
 		} else if (expr instanceof LatchedExpr){
 		    return getAgreeType(((LatchedExpr) expr).getId());
-		} else if(expr instanceof TimeOfExpr){
+		} else if(expr instanceof TimeOfExpr ||
+				  expr instanceof TimeRiseExpr ||
+				  expr instanceof TimeFallExpr){
 			return REAL;
 		}
 

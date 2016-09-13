@@ -135,6 +135,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.EVENT_EXPR: return createEventExpr();
       case AgreePackage.LATCHED_EXPR: return createLatchedExpr();
       case AgreePackage.TIME_OF_EXPR: return createTimeOfExpr();
+      case AgreePackage.TIME_RISE_EXPR: return createTimeRiseExpr();
+      case AgreePackage.TIME_FALL_EXPR: return createTimeFallExpr();
       case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
       case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
       case AgreePackage.THIS_EXPR: return createThisExpr();
@@ -926,6 +928,28 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     TimeOfExprImpl timeOfExpr = new TimeOfExprImpl();
     return timeOfExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TimeRiseExpr createTimeRiseExpr()
+  {
+    TimeRiseExprImpl timeRiseExpr = new TimeRiseExprImpl();
+    return timeRiseExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TimeFallExpr createTimeFallExpr()
+  {
+    TimeFallExprImpl timeFallExpr = new TimeFallExprImpl();
+    return timeFallExpr;
   }
 
   /**
