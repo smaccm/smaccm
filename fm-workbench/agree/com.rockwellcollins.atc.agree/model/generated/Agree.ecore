@@ -39,6 +39,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LibraryFnDefExpr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LinearizationDefExpr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
         containment="true"/>

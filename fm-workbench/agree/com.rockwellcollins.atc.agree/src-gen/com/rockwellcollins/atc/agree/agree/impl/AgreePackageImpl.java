@@ -35,6 +35,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
@@ -70,6 +71,8 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
+import org.eclipse.xtext.common.types.TypesPackage;
 
 import org.osate.aadl2.Aadl2Package;
 
@@ -164,6 +167,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass fnDefExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass libraryFnDefExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -537,6 +547,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     // Initialize simple dependencies
     Aadl2Package.eINSTANCE.eClass();
+    TypesPackage.eINSTANCE.eClass();
 
     // Create package meta-data objects
     theAgreePackage.createPackageContents();
@@ -811,6 +822,36 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getFnDefExpr_Expr()
   {
     return (EReference)fnDefExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLibraryFnDefExpr()
+  {
+    return libraryFnDefExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLibraryFnDefExpr_Args()
+  {
+    return (EReference)libraryFnDefExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLibraryFnDefExpr_Type()
+  {
+    return (EReference)libraryFnDefExprEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2091,6 +2132,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(fnDefExprEClass, FN_DEF_EXPR__TYPE);
     createEReference(fnDefExprEClass, FN_DEF_EXPR__EXPR);
 
+    libraryFnDefExprEClass = createEClass(LIBRARY_FN_DEF_EXPR);
+    createEReference(libraryFnDefExprEClass, LIBRARY_FN_DEF_EXPR__ARGS);
+    createEReference(libraryFnDefExprEClass, LIBRARY_FN_DEF_EXPR__TYPE);
+
     linearizationDefExprEClass = createEClass(LINEARIZATION_DEF_EXPR);
     createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__ARGS);
     createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__INTERVALS);
@@ -2309,6 +2354,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     fnDefExprEClass.getESuperTypes().add(this.getCallDef());
+    libraryFnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    libraryFnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
+    libraryFnDefExprEClass.getESuperTypes().add(this.getCallDef());
     linearizationDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     linearizationDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     linearizationDefExprEClass.getESuperTypes().add(this.getCallDef());
@@ -2399,6 +2447,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getFnDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFnDefExpr_Type(), this.getType(), null, "type", null, 0, 1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFnDefExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(libraryFnDefExprEClass, LibraryFnDefExpr.class, "LibraryFnDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLibraryFnDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, LibraryFnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLibraryFnDefExpr_Type(), this.getType(), null, "type", null, 0, 1, LibraryFnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(linearizationDefExprEClass, LinearizationDefExpr.class, "LinearizationDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getLinearizationDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, LinearizationDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

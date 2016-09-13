@@ -49,6 +49,7 @@ import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -77,6 +78,10 @@ public class AgreeScopeProvider extends
     }
 
     IScope scope_NamedElement(LinearizationDefExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+
+    IScope scope_NamedElement(LibraryFnDefExpr ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
 

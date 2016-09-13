@@ -12,6 +12,7 @@ NamedElement returns aadl2::NamedElement:
 	| ConstStatement
 	| NodeDefExpr
 	| LinearizationDefExpr
+	| LibraryFnDefExpr
 	| RecordDefExpr;
 
 Element returns aadl2::Element:
@@ -56,6 +57,7 @@ SpecStatement:
 	| AssignStatement
 	| LinearizationDefExpr
 	| FnDefExpr
+	| LibraryFnDefExpr
 	| NodeDefExpr
 	| RecordDefExpr;
 
@@ -76,6 +78,7 @@ NamedCallDef returns aadl2::NamedElement:
 
 CallDef returns CallDef:
 	LinearizationDefExpr
+	| LibraryFnDefExpr
 	| FnDefExpr
 	| NodeDefExpr;
 
@@ -93,6 +96,9 @@ AssignStatement:
 
 FnDefExpr:
 	'fun' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type '=' expr=Expr ';';
+
+LibraryFnDefExpr:
+	'external' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type ';';
 
 LinearizationDefExpr:
 	'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')'
@@ -216,4 +222,5 @@ ReservedVarTag:
 |	'_COUNT'
 |   '_CLK';
 
-	
+JavaQualifiedName:
+	ID ('.' ID)*;

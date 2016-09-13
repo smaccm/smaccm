@@ -133,11 +133,21 @@ ruleNamedElement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_6()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getLibraryFnDefExprParserRuleCall_6()); 
     }
-    this_RecordDefExpr_6=ruleRecordDefExpr
+    this_LibraryFnDefExpr_6=ruleLibraryFnDefExpr
     {
-        $current = $this_RecordDefExpr_6.current;
+        $current = $this_LibraryFnDefExpr_6.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_7()); 
+    }
+    this_RecordDefExpr_7=ruleRecordDefExpr
+    {
+        $current = $this_RecordDefExpr_7.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -802,21 +812,31 @@ ruleSpecStatement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_16()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getLibraryFnDefExprParserRuleCall_16()); 
     }
-    this_NodeDefExpr_53=ruleNodeDefExpr
+    this_LibraryFnDefExpr_53=ruleLibraryFnDefExpr
     {
-        $current = $this_NodeDefExpr_53.current;
+        $current = $this_LibraryFnDefExpr_53.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_17()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_17()); 
     }
-    this_RecordDefExpr_54=ruleRecordDefExpr
+    this_NodeDefExpr_54=ruleNodeDefExpr
     {
-        $current = $this_RecordDefExpr_54.current;
+        $current = $this_NodeDefExpr_54.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_18()); 
+    }
+    this_RecordDefExpr_55=ruleRecordDefExpr
+    {
+        $current = $this_RecordDefExpr_55.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -1242,21 +1262,31 @@ ruleCallDef returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_1()); 
+        newCompositeNode(grammarAccess.getCallDefAccess().getLibraryFnDefExprParserRuleCall_1()); 
     }
-    this_FnDefExpr_1=ruleFnDefExpr
+    this_LibraryFnDefExpr_1=ruleLibraryFnDefExpr
     {
-        $current = $this_FnDefExpr_1.current;
+        $current = $this_LibraryFnDefExpr_1.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_2()); 
+        newCompositeNode(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_2()); 
     }
-    this_NodeDefExpr_2=ruleNodeDefExpr
+    this_FnDefExpr_2=ruleFnDefExpr
     {
-        $current = $this_NodeDefExpr_2.current;
+        $current = $this_FnDefExpr_2.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_3()); 
+    }
+    this_NodeDefExpr_3=ruleNodeDefExpr
+    {
+        $current = $this_NodeDefExpr_3.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -1738,6 +1768,129 @@ ruleFnDefExpr returns [EObject current=null]
 	otherlv_11=Semicolon
     {
     	newLeafNode(otherlv_11, grammarAccess.getFnDefExprAccess().getSemicolonKeyword_10());
+    }
+)
+;
+
+
+
+
+
+// Entry rule entryRuleLibraryFnDefExpr
+entryRuleLibraryFnDefExpr returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getLibraryFnDefExprRule()); }
+	 iv_ruleLibraryFnDefExpr=ruleLibraryFnDefExpr 
+	 { $current=$iv_ruleLibraryFnDefExpr.current; } 
+	 EOF 
+;
+
+// Rule LibraryFnDefExpr
+ruleLibraryFnDefExpr returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+	otherlv_0=External
+    {
+    	newLeafNode(otherlv_0, grammarAccess.getLibraryFnDefExprAccess().getExternalKeyword_0());
+    }
+(
+(
+		lv_name_1_0=RULE_ID
+		{
+			newLeafNode(lv_name_1_0, grammarAccess.getLibraryFnDefExprAccess().getNameIDTerminalRuleCall_1_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getLibraryFnDefExprRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_1_0, 
+        		"ID");
+	    }
+
+)
+)
+	otherlv_2=LeftParenthesis
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getLibraryFnDefExprAccess().getLeftParenthesisKeyword_2());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLibraryFnDefExprAccess().getArgsArgParserRuleCall_3_0()); 
+	    }
+		lv_args_3_0=ruleArg		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLibraryFnDefExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_3_0, 
+        		"Arg");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(
+	otherlv_4=Comma
+    {
+    	newLeafNode(otherlv_4, grammarAccess.getLibraryFnDefExprAccess().getCommaKeyword_4_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLibraryFnDefExprAccess().getArgsArgParserRuleCall_4_1_0()); 
+	    }
+		lv_args_5_0=ruleArg		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLibraryFnDefExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_5_0, 
+        		"Arg");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*
+	otherlv_6=RightParenthesis
+    {
+    	newLeafNode(otherlv_6, grammarAccess.getLibraryFnDefExprAccess().getRightParenthesisKeyword_5());
+    }
+
+	otherlv_7=Colon
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getLibraryFnDefExprAccess().getColonKeyword_6());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getLibraryFnDefExprAccess().getTypeTypeParserRuleCall_7_0()); 
+	    }
+		lv_type_8_0=ruleType		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getLibraryFnDefExprRule());
+	        }
+       		set(
+       			$current, 
+       			"type",
+        		lv_type_8_0, 
+        		"Type");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_9=Semicolon
+    {
+    	newLeafNode(otherlv_9, grammarAccess.getLibraryFnDefExprAccess().getSemicolonKeyword_8());
     }
 )
 ;
@@ -4852,6 +5005,8 @@ ruleReservedVarTag returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRule
     }
 )
     ;
+
+
 
 
 

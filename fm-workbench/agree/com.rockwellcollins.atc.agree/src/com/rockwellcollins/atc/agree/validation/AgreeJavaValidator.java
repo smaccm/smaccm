@@ -85,6 +85,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
@@ -1393,6 +1394,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			LinearizationDefExpr linDef = (LinearizationDefExpr) callDef;
 			inDefTypes = typesFromArgs(linDef.getArgs());
 			callName = linDef.getName();
+		} else if (callDef instanceof LibraryFnDefExpr) {
+			LibraryFnDefExpr nativeDef = (LibraryFnDefExpr) callDef;
+			inDefTypes = typesFromArgs(nativeDef.getArgs());
+			callName = nativeDef.getName();
 		} else {
 			error(fnCall, "Node, function or linearization definition name expected.");
 			return;
@@ -1420,39 +1425,43 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkFnCallExpr(FnCallExpr fnCall) {
+		NamedElement fn = getFinalNestId(fnCall.getFn());
 		if (isInLinearizationBody(fnCall)) {
-			String fnName = getFinalNestId(fnCall.getFn()).getName();
-			List<Expr> argExprs = fnCall.getArgs();
-
-			// Check name is in library and check args match actuals for library
-			// function
-			switch (fnName) {
-			case "sin":
-			case "cos":
-			case "tan":
-			case "asin":
-			case "acos":
-			case "atan":
-			case "sqrt":
-			case "abs":
-			case "log":
-				if (argExprs.size() == 1) {
-					AgreeType argType = getAgreeType(argExprs.get(0));
-					if (!matches(argType, REAL)) {
-						error("Nonlinear library function '" + fnName + "' expects argument of type real"
-								+ ", found type " + argType);
-					}
-				} else {
-					error("Incorrect number of arguments to nonlinear library function '" + fnName + "'");
-				}
-				break;
-			default:
-				error(fnCall, "Unrecognized nonlinear library function.");
-			}
+//			String fnName = fn.getName();
+//			List<Expr> argExprs = fnCall.getArgs();
+//
+//			// Check name is in library and check args match actuals for library
+//			// function
+//			switch (fnName) {
+//			case "sin":
+//			case "cos":
+//			case "tan":
+//			case "asin":
+//			case "acos":
+//			case "atan":
+//			case "sqrt":
+//			case "abs":
+//			case "log":
+//				if (argExprs.size() == 1) {
+//					AgreeType argType = getAgreeType(argExprs.get(0));
+//					if (!matches(argType, REAL)) {
+//						error("Nonlinear library function '" + fnName + "' expects argument of type real"
+//								+ ", found type " + argType);
+//					}
+//				} else {
+//					error("Incorrect number of arguments to nonlinear library function '" + fnName + "'");
+//				}
+//				break;
+//			default:
+//				error(fnCall, "Unrecognized nonlinear library function.");
+//			}
 
 		} else {
-			checkInputsVsActuals(fnCall);
+			if (fn instanceof LibraryFnDefExpr) {
+				error(fnCall, "Library functions cannot be called from the logic");
+			}
 		}
+		checkInputsVsActuals(fnCall);
 	}
 
 	@Check(CheckType.FAST)
@@ -1942,6 +1951,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				return ERROR;
 			} else if (namedEl instanceof LinearizationDefExpr) {
 				return REAL;
+			} else if (namedEl instanceof LibraryFnDefExpr) {
+				LibraryFnDefExpr fnDef = (LibraryFnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
 			} else {
 				error(fnCall, "Node, function or linearization definition name expected.");
 				return ERROR;
@@ -1965,6 +1977,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				}
 			} else if (namedEl instanceof LinearizationDefExpr) {
 				return REAL;
+			} else if (namedEl instanceof LibraryFnDefExpr) {
+				LibraryFnDefExpr fnDef = (LibraryFnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
 			} else {
 				error(fnCall, "Node, function or linearization definition name expected.");
 				return ERROR;

@@ -191,6 +191,17 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.LIBRARY_FN_DEF_EXPR:
+      {
+        LibraryFnDefExpr libraryFnDefExpr = (LibraryFnDefExpr)theEObject;
+        T result = caseLibraryFnDefExpr(libraryFnDefExpr);
+        if (result == null) result = caseSpecStatement(libraryFnDefExpr);
+        if (result == null) result = caseCallDef(libraryFnDefExpr);
+        if (result == null) result = caseNamedElement(libraryFnDefExpr);
+        if (result == null) result = caseElement(libraryFnDefExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.LINEARIZATION_DEF_EXPR:
       {
         LinearizationDefExpr linearizationDefExpr = (LinearizationDefExpr)theEObject;
@@ -809,6 +820,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseFnDefExpr(FnDefExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Library Fn Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Library Fn Def Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLibraryFnDefExpr(LibraryFnDefExpr object)
   {
     return null;
   }

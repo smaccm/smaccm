@@ -99,6 +99,8 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getAssignStatementAccess().getGroup(), "rule__AssignStatement__Group__0");
 					put(grammarAccess.getFnDefExprAccess().getGroup(), "rule__FnDefExpr__Group__0");
 					put(grammarAccess.getFnDefExprAccess().getGroup_4(), "rule__FnDefExpr__Group_4__0");
+					put(grammarAccess.getLibraryFnDefExprAccess().getGroup(), "rule__LibraryFnDefExpr__Group__0");
+					put(grammarAccess.getLibraryFnDefExprAccess().getGroup_4(), "rule__LibraryFnDefExpr__Group_4__0");
 					put(grammarAccess.getLinearizationDefExprAccess().getGroup(), "rule__LinearizationDefExpr__Group__0");
 					put(grammarAccess.getLinearizationDefExprAccess().getGroup_4(), "rule__LinearizationDefExpr__Group_4__0");
 					put(grammarAccess.getLinearizationDefExprAccess().getGroup_9(), "rule__LinearizationDefExpr__Group_9__0");
@@ -194,6 +196,8 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getQCPREFAccess().getGroup_0_0_0(), "rule__QCPREF__Group_0_0_0__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_0_2(), "rule__QCPREF__Group_0_2__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_0_2_0(), "rule__QCPREF__Group_0_2_0__0");
+					put(grammarAccess.getJavaQualifiedNameAccess().getGroup(), "rule__JavaQualifiedName__Group__0");
+					put(grammarAccess.getJavaQualifiedNameAccess().getGroup_1(), "rule__JavaQualifiedName__Group_1__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup(), "rule__ContainedPropertyAssociation__Group__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3(), "rule__ContainedPropertyAssociation__Group_3__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3_1(), "rule__ContainedPropertyAssociation__Group_3_1__0");
@@ -282,6 +286,10 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getFnDefExprAccess().getArgsAssignment_4_1(), "rule__FnDefExpr__ArgsAssignment_4_1");
 					put(grammarAccess.getFnDefExprAccess().getTypeAssignment_7(), "rule__FnDefExpr__TypeAssignment_7");
 					put(grammarAccess.getFnDefExprAccess().getExprAssignment_9(), "rule__FnDefExpr__ExprAssignment_9");
+					put(grammarAccess.getLibraryFnDefExprAccess().getNameAssignment_1(), "rule__LibraryFnDefExpr__NameAssignment_1");
+					put(grammarAccess.getLibraryFnDefExprAccess().getArgsAssignment_3(), "rule__LibraryFnDefExpr__ArgsAssignment_3");
+					put(grammarAccess.getLibraryFnDefExprAccess().getArgsAssignment_4_1(), "rule__LibraryFnDefExpr__ArgsAssignment_4_1");
+					put(grammarAccess.getLibraryFnDefExprAccess().getTypeAssignment_7(), "rule__LibraryFnDefExpr__TypeAssignment_7");
 					put(grammarAccess.getLinearizationDefExprAccess().getNameAssignment_1(), "rule__LinearizationDefExpr__NameAssignment_1");
 					put(grammarAccess.getLinearizationDefExprAccess().getArgsAssignment_3(), "rule__LinearizationDefExpr__ArgsAssignment_3");
 					put(grammarAccess.getLinearizationDefExprAccess().getArgsAssignment_4_1(), "rule__LinearizationDefExpr__ArgsAssignment_4_1");

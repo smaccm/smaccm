@@ -26,7 +26,10 @@
 
 package com.rockwellcollins.atc.agree.analysis.linearization;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -39,6 +42,7 @@ import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.validation.AgreeJavaValidator;
 
 public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Double>> {
@@ -96,41 +100,65 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 		return map -> map.get(id);
 	}
 
+	private static double invokeStaticMethod(java.lang.reflect.Method method, Object... args) {
+		try {
+			return (double) method.invoke(null, args);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+			throw new AgreeException(
+					"Cannot invoke method '" + method.getName() + "': " + e.getMessage());
+		}
+	}
+
+	private Map<com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr, java.lang.reflect.Method> nativeCallMap = new HashMap<>();
+
+	private java.lang.reflect.Method lookupMethod(com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr nativeDef) {
+		java.lang.reflect.Method result = nativeCallMap.get(nativeDef);
+		final String containingClassName = "java.lang.Math";
+		final String dotChar = ".";
+
+		if (result == null) {
+			String methodName = nativeDef.getName();
+
+			try {
+				Class<?> containingClass = java.lang.Class.forName(containingClassName);
+				// Class<?> returnClass = double.class;
+				Class<?>[] parameterTypes = new Class<?>[]{ double.class };
+				result = containingClass.getMethod(methodName, parameterTypes);
+				if (Modifier.isStatic(result.getModifiers())) {
+					nativeCallMap.put(nativeDef, result);
+				} else {
+					throw new AgreeException("Method '" + methodName + "' is not static");
+				}
+			} catch (SecurityException e) {
+				e.printStackTrace();
+				throw new AgreeException(
+						"Cannot resolve method '" + methodName + "' due to security violation: "
+								+ e.getMessage());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				throw new AgreeException(
+						"Cannot resolve class '" + containingClassName + "': " + e.getMessage());
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+				throw new AgreeException(
+						"Cannot resolve method '" + methodName + "': " + e.getMessage());
+			}
+		}
+
+		return result;
+	}
+
 	@Override
 	public Function<Map<String, Double>, Double> caseFnCallExpr(FnCallExpr ctx) {
-		String fn = AgreeJavaValidator.getFinalNestId(ctx.getFn()).getName();
+		org.osate.aadl2.NamedElement fn = AgreeJavaValidator.getFinalNestId(ctx.getFn());
 		Function<Map<String, Double>, Double> body = doSwitch(ctx.getArgs().get(0));
 
-		switch (fn) {
-		case "sin":
-			return x -> Math.sin(body.apply(x));
-
-		case "cos":
-			return x -> Math.cos(body.apply(x));
-
-		case "tan":
-			return x -> Math.tan(body.apply(x));
-
-		case "asin":
-			return x -> Math.asin(body.apply(x));
-
-		case "acos":
-			return x -> Math.acos(body.apply(x));
-
-		case "atan":
-			return x -> Math.atan(body.apply(x));
-
-		case "sqrt":
-			return x -> Math.sqrt(body.apply(x));
-
-		case "abs":
-			return x -> Math.abs(body.apply(x));
-
-		case "log":
-			return x -> Math.log(body.apply(x));
-
-		default:
-			throw new IllegalArgumentException("Unknown function: " + fn);
+		if (fn instanceof com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr) {
+			java.lang.reflect.Method method = lookupMethod((com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr) fn);
+			return x -> invokeStaticMethod(method, body.apply(x));
+		} else {
+			throw new AgreeException("Call to '" + fn.getName() + "' in linearization body is not a native method");
 		}
 	}
 

@@ -31,6 +31,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
@@ -264,6 +265,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.LEMMA_STATEMENT:
 				sequence_SpecStatement(context, (LemmaStatement) semanticObject); 
 				return; 
+			case AgreePackage.LIBRARY_FN_DEF_EXPR:
+				sequence_LibraryFnDefExpr(context, (LibraryFnDefExpr) semanticObject); 
+				return; 
 			case AgreePackage.LIFT_STATEMENT:
 				sequence_SpecStatement(context, (LiftStatement) semanticObject); 
 				return; 
@@ -454,6 +458,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (a=Expr b=Expr c=Expr)
 	 */
 	protected void sequence_IfThenElseExpr(EObject context, IfThenElseExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (name=ID args+=Arg args+=Arg* type=Type)
+	 */
+	protected void sequence_LibraryFnDefExpr(EObject context, LibraryFnDefExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -53,6 +53,7 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.analysis.AgreeRecordUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.linearization.Linearize.BoundingSegments;
 import com.rockwellcollins.atc.agree.analysis.linearization.Linearize.Segment;
@@ -103,8 +104,8 @@ public class LinearizationRewriter {
 	}
 
 	@SuppressWarnings("unused")
-	private static jkind.lustre.Node generateLustreConstraintForm(String name, BoundingSegments segs) {
-		String nodeName = getConstraintFormName(name);
+	private static jkind.lustre.Node generateLustreConstraintForm(LinearizationDefExpr linDef, BoundingSegments segs) {
+		String nodeName = getConstraintFormName(AgreeRecordUtils.getNodeName(linDef));
 
 		List<VarDecl> inputs = new ArrayList<>();
 		inputs.add(new jkind.lustre.VarDecl(inputId, jkind.lustre.NamedType.REAL));
@@ -220,9 +221,9 @@ public class LinearizationRewriter {
 		return result;
 	}
 
-	private static NodeDefExpr generateAgreeConstraintForm(String name, BoundingSegments segs) {
+	private static NodeDefExpr generateAgreeConstraintForm(LinearizationDefExpr linDef, BoundingSegments segs) {
 		NodeDefExpr result = af.createNodeDefExpr();
-		result.setName(getConstraintFormName(name));
+		result.setName(getConstraintFormName(AgreeRecordUtils.getNodeName(linDef)));
 
 		Arg inputArg = af.createArg();
 		PrimType inputArgType = af.createPrimType();
@@ -336,7 +337,7 @@ public class LinearizationRewriter {
 
 	public NodeDefExpr addLinearization(LinearizationDefExpr linDef) {
 		Linearize linearization = new Linearize(linDef);
-		NodeDefExpr nodeDef = generateAgreeConstraintForm(linDef.getName(), linearization.segments);
+		NodeDefExpr nodeDef = generateAgreeConstraintForm(linDef, linearization.segments);
 		linearizationDefToConstraintNodeDefMap.put(linDef, nodeDef);
 		return nodeDef;
 	}
@@ -344,7 +345,7 @@ public class LinearizationRewriter {
 	public AgreeNode visit(AgreeNode agreeNode) {
 		Map<String, String> linearizationMap = new HashMap<>();
 		for (Map.Entry<LinearizationDefExpr, NodeDefExpr> entry : linearizationDefToConstraintNodeDefMap.entrySet()) {
-			linearizationMap.put(entry.getKey().getName(), entry.getValue().getName());
+			linearizationMap.put(AgreeRecordUtils.getNodeName(entry.getKey()), entry.getValue().getName());
 		}
 		LinearizationAgreeASTVisitor visitor = new LinearizationAgreeASTVisitor(linearizationMap);
 		return visitor.visit(agreeNode);

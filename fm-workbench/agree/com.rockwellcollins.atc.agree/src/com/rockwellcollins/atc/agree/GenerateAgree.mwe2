@@ -66,6 +66,7 @@ Workflow {
 		registerGenModelFile = "platform:/resource/org.eclipse.uml2.codegen.ecore/model/GenModel.genmodel"
 		registerGeneratedEPackage = "org.osate.aadl2.Aadl2Package"
 		registerGenModelFile = "platform:/resource/org.osate.aadl2/model/aadl2.genmodel"
+		//registerGenModelFile = "platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel"
 	}
 
 	component = DirectoryCleaner {
