@@ -1427,35 +1427,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkFnCallExpr(FnCallExpr fnCall) {
 		NamedElement fn = getFinalNestId(fnCall.getFn());
 		if (isInLinearizationBody(fnCall)) {
-//			String fnName = fn.getName();
-//			List<Expr> argExprs = fnCall.getArgs();
-//
-//			// Check name is in library and check args match actuals for library
-//			// function
-//			switch (fnName) {
-//			case "sin":
-//			case "cos":
-//			case "tan":
-//			case "asin":
-//			case "acos":
-//			case "atan":
-//			case "sqrt":
-//			case "abs":
-//			case "log":
-//				if (argExprs.size() == 1) {
-//					AgreeType argType = getAgreeType(argExprs.get(0));
-//					if (!matches(argType, REAL)) {
-//						error("Nonlinear library function '" + fnName + "' expects argument of type real"
-//								+ ", found type " + argType);
-//					}
-//				} else {
-//					error("Incorrect number of arguments to nonlinear library function '" + fnName + "'");
-//				}
-//				break;
-//			default:
-//				error(fnCall, "Unrecognized nonlinear library function.");
-//			}
-
+			if (fn instanceof NodeDefExpr) {
+				error(fnCall, "Node definitions cannot be applied in a linearization definition");
+			}
 		} else {
 			if (fn instanceof LibraryFnDefExpr) {
 				error(fnCall, "Library functions cannot be called from the logic");
