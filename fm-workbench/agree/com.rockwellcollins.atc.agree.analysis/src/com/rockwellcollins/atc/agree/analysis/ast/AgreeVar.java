@@ -2,9 +2,8 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 
-import jkind.lustre.NamedType;
-import jkind.lustre.RecordType;
 import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
 
@@ -12,11 +11,13 @@ public class AgreeVar extends VarDecl {
 
     public final EObject reference;
     public final ComponentInstance compInst;
+    public final FeatureInstance featInst;
 
-    public AgreeVar(String name, Type type, EObject reference, ComponentInstance compInst) {
+	public AgreeVar(String name, Type type, EObject reference, ComponentInstance compInst, FeatureInstance featInst) {
         super(name, type);
         this.reference = reference;
         this.compInst = compInst;
+        this.featInst = featInst;
     }
 
     @Override

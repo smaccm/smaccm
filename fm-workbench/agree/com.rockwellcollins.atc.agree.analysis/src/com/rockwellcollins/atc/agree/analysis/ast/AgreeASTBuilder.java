@@ -3,18 +3,15 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.action.Action;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
@@ -28,7 +25,6 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
-import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
@@ -39,7 +35,6 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.instance.AnnexInstance;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -123,8 +118,6 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
-import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
-import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 
@@ -192,7 +185,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         Expr initialConstraint = new BoolExpr(true);
         String id = compInst.getName();
         AgreeVar clockVar =
-                new AgreeVar(id + clockIDSuffix, NamedType.BOOL, compInst.getSubcomponent(), compInst);
+                new AgreeVar(id + clockIDSuffix, NamedType.BOOL, compInst.getSubcomponent(), compInst, null);
         EObject reference = compInst.getSubcomponent();
         TimingModel timing = null;
 
@@ -371,7 +364,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 }
             } else if (spec instanceof PropertyStatement) {
                 agreeVars.add(
-                        new AgreeVar(((PropertyStatement) spec).getName(), NamedType.BOOL, spec, compInst));
+                        new AgreeVar(((PropertyStatement) spec).getName(), NamedType.BOOL, spec, compInst, null));
             }
         }
         return agreeVars;
@@ -398,12 +391,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             for (AgreeVar agreeVar : newInputs) {
                 String newName = feature.getName() + dotChar + agreeVar.id;
                 inputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature(),
-                        feature.getComponentInstance()));
+                        feature.getComponentInstance(), feature));
             }
             for (AgreeVar agreeVar : newOutputs) {
                 String newName = feature.getName() + dotChar + agreeVar.id;
                 outputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature(),
-                        feature.getComponentInstance()));
+                        feature.getComponentInstance(), feature));
             }
             return;
         case DATA_PORT:
@@ -436,7 +429,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         boolean isEvent = feature.getCategory() == FeatureCategory.EVENT_DATA_PORT;
         if (isEvent) {
             AgreeVar var = new AgreeVar(name + eventSuffix, NamedType.BOOL, feature.getFeature(),
-                    feature.getComponentInstance());
+                    feature.getComponentInstance(), feature);
             switch (feature.getDirection()) {
             case IN:
                 inputs.add(var);
@@ -471,7 +464,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             throw new AgreeException("The type name should have been created");
         }
        
-        AgreeVar agreeVar = new AgreeVar(name, type, feature.getFeature(), feature.getComponentInstance());
+        AgreeVar agreeVar = new AgreeVar(name, type, feature.getFeature(), feature.getComponentInstance(), feature);
 
         switch (feature.getDirection()) {
         case IN:
@@ -730,7 +723,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             // TODO: decide whether or not to make these VarDecls or AgreeVars
             NamedType type =
                     getNamedType(AgreeRecordUtils.getRecordTypeName(arg.getType(), typeMap, globalTypes));
-            agreeVars.add(new AgreeVar(arg.getName(), type, arg, compInst));
+            agreeVars.add(new AgreeVar(arg.getName(), type, arg, compInst, null));
         }
         return agreeVars;
     }
