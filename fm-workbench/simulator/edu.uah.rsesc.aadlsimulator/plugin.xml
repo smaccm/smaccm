@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="exceptionHandlers" name="Simulator Exception Handlers" schema="schema/exceptionHandlers.exsd"/>
+   <extension-point id="engineTypes" name="Simulation Engine Types" schema="schema/engineTypes.exsd"/>
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+	    <launchConfigurationType
+	        name="AADL Simulation"
+	        delegate="edu.uah.rsesc.aadlsimulator.launch.SimulationLaunchConfigurationDelegate"
+	        modes="run"               
+	        id="edu.uah.rsesc.aadlsimulator.launch.simulation">
+	    </launchConfigurationType>
+	</extension>
+</plugin>

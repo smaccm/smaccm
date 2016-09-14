@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="lib/jogamp-fat.jar" sourcepath="C:/Users/ryan.mcilnay/Downloads/jogamp-fat-all/jogamp-fat/jogamp-fat-java-src.zip"/>
+	<classpathentry kind="lib" path="lib/jzy3d-api-1.0.0-20160507.130542-19.jar"/>
+	<classpathentry kind="lib" path="lib/jzy3d-swt-1.0.0-20160507.130631-14.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
