@@ -1,0 +1,44 @@
+
+ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
+  paddr=[82000000..8211401f]
+ELF-loading image 'kernel'
+  paddr=[80000000..80033fff]
+  vaddr=[f0000000..f0033fff]
+  virt_entry=f0000000
+ELF-loading image 'capdl-loader-experimental'
+  paddr=[80034000..80318fff]
+  vaddr=[8000..2ecfff]
+  virt_entry=e204
+Enabling MMU and paging
+Jumping to kernel-image entry point...
+
+Bootstrapping kernel
+sender ping received (1008000).  Writing to receiver 
+receiver: periodic dispatch received at time: 1004000receiver ping received. 
+sender ping received (2004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 2004000receiver ping received. 
+sender ping received (3004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 3004000receiver ping received. 
+sender ping received (4004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 4004000receiver ping received. 
+sender ping received (5004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 5004000receiver ping received. 
+sender ping received (6004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 6004000receiver ping received. 
+sender ping received (7004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 7004000receiver ping received. 
+sender ping received (8004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 8004000receiver ping received. 
+sender ping received (9004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 9004000receiver ping received. 
+sender ping received (10004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 10004000receiver ping received. 
+sender ping received (11004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 11004000receiver ping received. 
+sender ping received (12004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 12004000receiver ping received. 
+sender ping received (13004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 13004000receiver ping received. 
+sender ping received (14004000).  Writing to receiver 
+receiver: periodic dispatch received at time: 14004000receiver ping received. 
+

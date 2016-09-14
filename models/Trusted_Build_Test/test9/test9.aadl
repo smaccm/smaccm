@@ -81,15 +81,31 @@ process implementation proc.Impl
 		s_to_r : port s.Output1 -> r.Input1;
 end proc.Impl;
 
-system test9
-end test9;
+system test
+end test;
 
-system implementation test9.impl
+system implementation test.camkes
 	subcomponents
 		tl: process proc.Impl;
 	properties
 		SMACCM_SYS::OS => CAmkES;
 		SMACCM_SYS::HW => QEMU;
-end test9.impl;
+end test.camkes;
+
+system implementation test.echronos
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => eChronos;
+		SMACCM_SYS::HW => QEMU;
+end test.echronos;
+
+system implementation test.vxworks
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => VxWorks;
+		SMACCM_SYS::HW => QEMU;
+end test.vxworks;
 
 end test9;

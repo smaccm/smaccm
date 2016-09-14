@@ -48,14 +48,14 @@ void clock_irq_callback(void);
 uint64_t clock_get_time();
 
 // Declarations for managing periodic thread dispatch
-const uint32_t smaccm_tick_interval = 5;
-const uint32_t smaccm_hyperperiod_subdivisions = 1;
+const uint32_t smaccm_tick_interval = 1;
+const uint32_t smaccm_hyperperiod_subdivisions = 5;
 uint32_t smaccm_calendar_counter = 0;
 uint32_t smaccm_calendar_ticks = 0;
 
 
 void smaccm_thread_calendar() {
-    if ((smaccm_calendar_counter % (5 / smaccm_tick_interval)) == 0) {
+    if ((smaccm_calendar_counter % (1 / smaccm_tick_interval)) == 0) {
         // MWW: modification of time type to match Ivory/Tower (our stuff uses uint64_t in milliseconds and Tower expects int64_t * in microseconds)
         int64_t the_time = ((int64_t)clock_get_time())*1000;
         CAN_Framing_periodic_dispatcher_write_int64_t(&the_time);
@@ -103,7 +103,7 @@ void timer_complete_callback() {
 int run(void)
 {
     clock_init();
-    clock_set_interval_in_ms(5);
+    clock_set_interval_in_ms(1);
 
     clock_start_timer();
 

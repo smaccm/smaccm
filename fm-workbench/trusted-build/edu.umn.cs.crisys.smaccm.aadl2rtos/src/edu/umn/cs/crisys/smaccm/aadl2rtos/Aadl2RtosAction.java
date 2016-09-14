@@ -24,7 +24,6 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos;
 import java.io.File;
 import java.util.List;
 
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -43,6 +42,7 @@ import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.CAmkES.CAmkES_CodeGenerator;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.VxWorks.VxWorks_CodeGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.eChronos.EChronos_CodeGenerator;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.AadlModelParser;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
@@ -135,6 +135,9 @@ public class Aadl2RtosAction extends AadlAction {
 			} else if (model.getOsTarget() == Model.OSTarget.CAmkES ){
 			  CAmkES_CodeGenerator gen = new CAmkES_CodeGenerator(log, model, aadlDir, outputDir);
 			  gen.write();
+			} else if (model.getOsTarget() == Model.OSTarget.VxWorks ){
+				  VxWorks_CodeGenerator gen = new VxWorks_CodeGenerator(log, model, aadlDir, outputDir);
+				  gen.write();
 			} else {
 			  logger.error("aadl2rtos OS target: [" + model.getOsTarget() + "] not recognized.");
 			}

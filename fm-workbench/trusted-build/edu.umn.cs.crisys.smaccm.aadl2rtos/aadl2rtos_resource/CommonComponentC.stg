@@ -23,6 +23,7 @@ import "CommonCPrototypes.stg"
  *   osSpecificThreadEntrypoint
  *   osSpecificComponentLocalCallerFunction
  *   osSpecificAssert
+ *   aadlInputToExternalInput  <== currently aadlInputToCamkesInput
  *
  * Dummy declarations are provided by CommonOSSpecificNames.
  * These must be overridden by redefinition (see CamkesComponentC.stg
@@ -406,10 +407,11 @@ userSendCopyAadlInputToGlobalStmt(port) ::= <<
 userSendOptConstAadlInputArg(port) ::= "<if(port.hasData)>const <port.type.aadlInputType.name> <port.name><endif>"
 userSendOptAadlOutputArg(port) ::= "<if(port.hasData)><port.type.aadlOutputType.name> <port.name><endif>"
 
+// Had valToCamkesInput - now aadlInputToCamkesInput.
 connectionActiveSendDefinition(connection, port) ::= <<
 <if(connection.destPort.threadImplementation.isActive)>
 <if(port.hasData)>
-result &= <outgoingPortWriterName(connection)>(<port.type.valToCamkesInput> <port.name>);
+result &= <outgoingPortWriterName(connection)>(<port.type.aadlInputToCamkesInput> <port.name>);
 <else>
 result &= <outgoingPortWriterName(connection)>();
 <endif>

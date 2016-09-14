@@ -7,5 +7,5 @@ void ping_received() {
 }
 
 void periodic_ping(const int64_t *periodic_1000_ms) {
-	printf("receiver: periodic dispatch received at time: %" PRI64 "", *periodic_1000_ms);
+	printf("receiver: periodic dispatch received at time: %lld", *periodic_1000_ms);
 }

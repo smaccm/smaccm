@@ -137,7 +137,7 @@ public
 			SMACCM_SYS::Sends_Events_To => "{{}}";
 			SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
-			Period => 5 ms;
+			Period => 1 ms;
 	end CAN_Framing;
 
 	thread CAN_Driver
