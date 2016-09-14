@@ -5,11 +5,11 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
 
-import jkind.lustre.Expr;
-import jkind.lustre.Node;
-import jkind.lustre.Type;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
 
-public class AgreeNode {
+import jkind.lustre.Expr;
+
+public class AgreeNode implements AgreeASTElement {
     public enum TimingModel {
         SYNC, ASYNC, LATCHED
     };
@@ -52,6 +52,11 @@ public class AgreeNode {
         this.reference = reference;
         this.timing = timing;
         this.compInst = compinst;
+    }
+
+    @Override
+    public <T> T accept(AgreeASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

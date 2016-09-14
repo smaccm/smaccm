@@ -2,7 +2,9 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 
 import org.eclipse.emf.ecore.EObject;
 
-public class AgreeConnection {
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
+
+public class AgreeConnection implements AgreeASTElement {
     public enum ConnectionType {
         EVENT, DATA
     }
@@ -27,6 +29,11 @@ public class AgreeConnection {
         this.latched = latched;
         this.delayed = delayed;
         this.reference = reference;
+    }
+
+    @Override
+    public <T> T accept(AgreeASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

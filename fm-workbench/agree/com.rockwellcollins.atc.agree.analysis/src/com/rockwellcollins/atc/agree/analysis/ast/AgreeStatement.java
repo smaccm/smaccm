@@ -3,10 +3,11 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
 
 import jkind.lustre.Expr;
 
-public class AgreeStatement {
+public class AgreeStatement implements AgreeASTElement {
     public final String string;
     public final Expr expr;
     public final EObject reference;
@@ -18,6 +19,11 @@ public class AgreeStatement {
         if (expr == null) {
             throw new AgreeException("AgreeStatement created with null expression");
         }
+    }
+
+    @Override
+    public <T> T accept(AgreeASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

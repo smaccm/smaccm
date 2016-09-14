@@ -4,10 +4,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
+
 import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
 
-public class AgreeVar extends VarDecl {
+public class AgreeVar extends VarDecl implements AgreeASTElement {
 
     public final EObject reference;
     public final ComponentInstance compInst;
@@ -36,4 +38,10 @@ public class AgreeVar extends VarDecl {
         }
         return ((AgreeVar) obj).id.equals(id);
     }
+
+    @Override
+    public <T> T accept(AgreeASTVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
 }
