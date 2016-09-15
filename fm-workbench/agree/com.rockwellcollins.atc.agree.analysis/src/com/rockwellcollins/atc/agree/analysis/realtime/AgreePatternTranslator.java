@@ -548,7 +548,7 @@ public class AgreePatternTranslator {
     
     private void addPatternConstraintProperty(AgreeCauseEffectPattern pattern, AgreeNodeBuilder builder,
             IdExpr causeId, IdExpr effectId) {
-        AgreeVar newCause = new AgreeVar(NEW_CAUSE_PREFIX + causeId.id, NamedType.BOOL, pattern);
+        AgreeVar newCause = new AgreeVar(NEW_CAUSE_PREFIX + causeId.id + patternIndex, NamedType.BOOL, pattern);
         builder.addLocal(newCause);
         
         AgreeVar timeCauseVar = getTimeOf(causeId.id, builder, pattern);
