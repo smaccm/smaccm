@@ -279,12 +279,16 @@ public class AgreePatternTranslator {
         builder.addAssertion(new AgreeStatement(null, lemma, pattern.reference));
         AgreeVar timeofEvent = getTimeOf(pattern.event.id, builder, pattern.reference);
         
-        lemma = expr("timeOfEvent >= 0.0 and timeOfEvent <> time => timeout - timeOfEvent >= p - j",
+        lemma = expr("(timeOfEvent >= 0.0 and timeOfEvent <> time => timeout - timeOfEvent >= p - j) and "
+        		+ "(true -> (period <> pre(period) => period - pre(period) <= p + j)) and "
+        		+ "(true -> (period <> pre(period) => timeOfEvent = pre(period))) and "
+        		+ "(timeOfEvent >= 0.0 => timeout - timeOfEvent <= p + j)",
         		to("timeOfEvent", timeofEvent),
         		to("time", timeExpr),
         		to("timeout", timeoutId),
         		to("p", pattern.period),
-        		to("j", pattern.jitter));
+        		to("j", pattern.jitter),
+        		to("period", periodVar));
         
         builder.addPatternProp(new AgreeStatement("periodic lemma 1 for pattern "+patternIndex, lemma, pattern.reference));
         

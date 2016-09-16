@@ -36,7 +36,7 @@ AgreeSubclause:
 	{AgreeContractSubclause} contract=AgreeContract;
 
 AgreeContract returns Contract:
-	{AgreeContract} (specs+=SpecStatement)+;
+	{AgreeContract} (specs+=SpecStatement)*;
 
 SpecStatement:
 	{AssumeStatement} 'assume' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'

@@ -742,7 +742,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAgreeContract"
-    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:246:1: ruleAgreeContract returns [EObject current=null] : ( () ( (lv_specs_1_0= ruleSpecStatement ) )+ ) ;
+    // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:246:1: ruleAgreeContract returns [EObject current=null] : ( () ( (lv_specs_1_0= ruleSpecStatement ) )* ) ;
     public final EObject ruleAgreeContract() throws RecognitionException {
         EObject current = null;
 
@@ -752,11 +752,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:249:28: ( ( () ( (lv_specs_1_0= ruleSpecStatement ) )+ ) )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:250:1: ( () ( (lv_specs_1_0= ruleSpecStatement ) )+ )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:249:28: ( ( () ( (lv_specs_1_0= ruleSpecStatement ) )* ) )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:250:1: ( () ( (lv_specs_1_0= ruleSpecStatement ) )* )
             {
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:250:1: ( () ( (lv_specs_1_0= ruleSpecStatement ) )+ )
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:250:2: () ( (lv_specs_1_0= ruleSpecStatement ) )+
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:250:1: ( () ( (lv_specs_1_0= ruleSpecStatement ) )* )
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:250:2: () ( (lv_specs_1_0= ruleSpecStatement ) )*
             {
             // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:250:2: ()
             // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:251:5: 
@@ -771,8 +771,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:256:2: ( (lv_specs_1_0= ruleSpecStatement ) )+
-            int cnt2=0;
+            // ../com.rockwellcollins.atc.agree/src-gen/com/rockwellcollins/atc/agree/parser/antlr/internal/InternalAgreeParser.g:256:2: ( (lv_specs_1_0= ruleSpecStatement ) )*
             loop2:
             do {
                 int alt2=2;
@@ -821,13 +820,8 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             	    break;
 
             	default :
-            	    if ( cnt2 >= 1 ) break loop2;
-            	    if (state.backtracking>0) {state.failed=true; return current;}
-                        EarlyExitException eee =
-                            new EarlyExitException(2, input);
-                        throw eee;
+            	    break loop2;
                 }
-                cnt2++;
             } while (true);
 
 
@@ -20071,6 +20065,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             case PlusSign:
                 {
                 switch ( input.LA(2) ) {
+                case RULE_ID:
+                    {
+                    alt107=3;
+                    }
+                    break;
                 case RULE_REAL_LIT:
                     {
                     alt107=1;
@@ -20079,11 +20078,6 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                 case RULE_INTEGER_LIT:
                     {
                     alt107=2;
-                    }
-                    break;
-                case RULE_ID:
-                    {
-                    alt107=3;
                     }
                     break;
                 default:

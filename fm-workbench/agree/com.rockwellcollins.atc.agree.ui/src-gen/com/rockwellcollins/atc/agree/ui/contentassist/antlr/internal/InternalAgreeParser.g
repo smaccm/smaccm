@@ -3814,16 +3814,9 @@ rule__AgreeContract__Group__1__Impl
     }
 :
 (
-(
-{ before(grammarAccess.getAgreeContractAccess().getSpecsAssignment_1()); }
-(rule__AgreeContract__SpecsAssignment_1)
-{ after(grammarAccess.getAgreeContractAccess().getSpecsAssignment_1()); }
-)
-(
 { before(grammarAccess.getAgreeContractAccess().getSpecsAssignment_1()); }
 (rule__AgreeContract__SpecsAssignment_1)*
 { after(grammarAccess.getAgreeContractAccess().getSpecsAssignment_1()); }
-)
 )
 
 ;

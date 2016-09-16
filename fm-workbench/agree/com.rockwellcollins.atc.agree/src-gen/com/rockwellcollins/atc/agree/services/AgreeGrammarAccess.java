@@ -178,16 +178,16 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cSpecsSpecStatementParserRuleCall_1_0 = (RuleCall)cSpecsAssignment_1.eContents().get(0);
 		
 		//AgreeContract returns Contract:
-		//	{AgreeContract} specs+=SpecStatement+;
+		//	{AgreeContract} specs+=SpecStatement*;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{AgreeContract} specs+=SpecStatement+
+		//{AgreeContract} specs+=SpecStatement*
 		public Group getGroup() { return cGroup; }
 
 		//{AgreeContract}
 		public Action getAgreeContractAction_0() { return cAgreeContractAction_0; }
 
-		//specs+=SpecStatement+
+		//specs+=SpecStatement*
 		public Assignment getSpecsAssignment_1() { return cSpecsAssignment_1; }
 
 		//SpecStatement
@@ -4217,7 +4217,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AgreeContract returns Contract:
-	//	{AgreeContract} specs+=SpecStatement+;
+	//	{AgreeContract} specs+=SpecStatement*;
 	public AgreeContractElements getAgreeContractAccess() {
 		return pAgreeContract;
 	}

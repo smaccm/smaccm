@@ -271,7 +271,7 @@ ruleAgreeContract returns [EObject current=null]
 	    }
 
 )
-)+)
+)*)
 ;
 
 
