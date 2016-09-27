@@ -51,6 +51,7 @@ component CAN_Framing {
 
     // Connection to active thread 'send' interfaces
     uses SMACCM_DATA__GIDL_writer CAN_Framing_self2server;
+    uses SMACCM_DATA__GIDL_writer CAN_Framing_self2vm;
     uses SMACCM_DATA__CAN_Frame_i_writer CAN_Framing_self2can;
 
     has semaphore smaccm_dispatch_sem;

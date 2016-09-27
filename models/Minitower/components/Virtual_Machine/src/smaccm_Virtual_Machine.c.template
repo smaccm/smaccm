@@ -62,6 +62,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 static void smaccm_Virtual_Machine_server2self_reboot_dispatcher(bool * server2self_reboot);
+static void smaccm_Virtual_Machine_framing2self_dispatcher(SMACCM_DATA__GIDL framing2self);
 
 
 
@@ -148,8 +149,91 @@ bool Virtual_Machine_read_server2self_reboot(bool * arg) {
 }
 
 
+/************************************************************************
+ *
+ * Static variables and queue management functions for port:
+ *     framing2self
+ *
+ ************************************************************************/
+
+static SMACCM_DATA__GIDL smaccm_queue_framing2self [1];
+static bool smaccm_queue_full_framing2self  = false;
+static uint32_t smaccm_queue_front_framing2self  = 0;
+static uint32_t smaccm_queue_back_framing2self  = 0;
+
+bool smaccm_queue_is_full_framing2self() {
+    return (smaccm_queue_front_framing2self == smaccm_queue_back_framing2self) && (smaccm_queue_full_framing2self);
+}
+
+bool smaccm_queue_is_empty_framing2self() {
+    return (smaccm_queue_front_framing2self == smaccm_queue_back_framing2self) && (!smaccm_queue_full_framing2self);
+}
+
+bool smaccm_queue_read_framing2self(SMACCM_DATA__GIDL framing2self) {
+    if (smaccm_queue_is_empty_framing2self()) {
+        return false;
+    } else {
+        memcpy(framing2self, smaccm_queue_framing2self[smaccm_queue_back_framing2self], sizeof(SMACCM_DATA__GIDL));
+
+        smaccm_queue_back_framing2self = (smaccm_queue_back_framing2self + 1) % 1;
+        smaccm_queue_full_framing2self = false ;
+        return true;
+    }
+}
+
+bool smaccm_queue_write_framing2self(const SMACCM_DATA__GIDL framing2self) {
+    if (smaccm_queue_is_full_framing2self()) {
+        return false;
+    } else {
+        memcpy(smaccm_queue_framing2self[smaccm_queue_front_framing2self], framing2self, sizeof(SMACCM_DATA__GIDL));
+
+        smaccm_queue_front_framing2self = (smaccm_queue_front_framing2self + 1) % 1;
+        if (smaccm_queue_back_framing2self == smaccm_queue_front_framing2self) {
+            smaccm_queue_full_framing2self = true ;
+        }
+        return true;
+    }
+}
+
+/************************************************************************
+ *  framing2self_write_SMACCM_DATA__GIDL:
+ * Invoked by: remote interface.
+ *
+ * This is the function invoked by a remote RPC to write to an active-thread
+ * input event data port.  It queues the input message into a circular buffer.
+ *
+ ************************************************************************/
+
+bool framing2self_write_SMACCM_DATA__GIDL(const smaccm_SMACCM_DATA__GIDL_container * arg) {
+    bool result;
+    smaccm_virtual_machine_framing2self_mut_lock();
+    result = smaccm_queue_write_framing2self((uint8_t *) arg);
+    smaccm_virtual_machine_framing2self_mut_unlock(); 
+    return result;
+}
 
 
+/************************************************************************
+ *  Virtual_Machine_read_framing2self:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked by the active thread to read from the
+ * input event data queue circular buffer.
+ *
+ ************************************************************************/
+
+bool Virtual_Machine_read_framing2self(SMACCM_DATA__GIDL arg) {
+    bool result;
+    smaccm_virtual_machine_framing2self_mut_lock();
+    result = smaccm_queue_read_framing2self(arg);
+    smaccm_virtual_machine_framing2self_mut_unlock(); 
+    return result;
+}
+
+
+
+
+ 
  
 /************************************************************************
  *  dispatch_dispatch_server2self_reboot:
@@ -163,6 +247,22 @@ bool Virtual_Machine_read_server2self_reboot(bool * arg) {
 void dispatch_dispatch_server2self_reboot(
   const bool * in_arg ,
   smaccm_Virtual_Machine_server2self_reboot_struct *out_arg) {
+     
+     
+}
+
+/************************************************************************
+ *  dispatch_dispatch_framing2self:
+ * Invoked by remote RPC (or, for active thread, local dispatcher).
+ *
+ * This is the function invoked by an active thread dispatcher to
+ * call to a user-defined entrypoint function.  It sets up the dispatch
+ * context for the user-defined entrypoint, then calls it.
+ *
+ ************************************************************************/
+void dispatch_dispatch_framing2self(
+  const smaccm_SMACCM_DATA__GIDL_container * in_arg ,
+  smaccm_Virtual_Machine_framing2self_struct *out_arg) {
      
      
 }
@@ -197,6 +297,24 @@ static void smaccm_Virtual_Machine_server2self_reboot_dispatcher(bool * server2s
     dispatch_dispatch_server2self_reboot(
         server2self_reboot,
         &smaccm_Virtual_Machine_server2self_reboot_arg
+    );
+}
+
+/************************************************************************
+ * smaccm_Virtual_Machine_framing2self_dispatcher
+ * Invoked from local active thread.
+ *
+ * This is the dispatcher function invoked to respond to an incoming thread
+ * stimulus: an ISR, a periodic dispatch, or a queued event.
+ *
+ ******************************************************************************/
+static smaccm_Virtual_Machine_framing2self_struct smaccm_Virtual_Machine_framing2self_arg;
+
+static void smaccm_Virtual_Machine_framing2self_dispatcher(SMACCM_DATA__GIDL framing2self) {
+    // make the call:
+    dispatch_dispatch_framing2self(
+        (smaccm_SMACCM_DATA__GIDL_container *) framing2self,
+        &smaccm_Virtual_Machine_framing2self_arg
     );
 }
 

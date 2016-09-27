@@ -139,6 +139,11 @@ typedef
          uint32_t unused  ; 
       } smaccm_CAN_Framing_can2self_frame_struct ; 
 
+typedef 
+      struct smaccm_Virtual_Machine_framing2self_struct { 
+         uint32_t unused  ; 
+      } smaccm_Virtual_Machine_framing2self_struct ; 
+
 typedef uint8_t SMACCM_DATA__UART_Buffer [255]; 
 
 typedef 

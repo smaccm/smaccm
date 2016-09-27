@@ -48,6 +48,7 @@
 bool Virtual_Machine_write_self2server(const SMACCM_DATA__Camera_Bounding_Box_i * self2server);
 
 bool Virtual_Machine_read_server2self_reboot(bool * server2self_reboot);
+bool Virtual_Machine_read_framing2self(SMACCM_DATA__GIDL framing2self);
 
 //////////////////////////////////////////////////////////////////////////
 //

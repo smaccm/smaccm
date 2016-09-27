@@ -41,5 +41,8 @@ procedure Virtual_Machine_interface {
 
     void dispatch_server2self_reboot(refin bool smaccm_in,
         out smaccm_Virtual_Machine_server2self_reboot_struct smaccm_out);
+
+    void dispatch_framing2self(refin smaccm_SMACCM_DATA__GIDL_container smaccm_in,
+        out smaccm_Virtual_Machine_framing2self_struct smaccm_out);
 }
 

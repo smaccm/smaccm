@@ -318,6 +318,7 @@ bool CAN_Framing_read_can2self_status(bool * arg) {
 
 
 // NOT writing dispatch variables for port self2server
+// NOT writing dispatch variables for port self2vm
 // NOT writing dispatch variables for port self2can
 
 
@@ -452,6 +453,25 @@ void dispatch_dispatch_can2self_status(
 bool CAN_Framing_write_self2server(const SMACCM_DATA__GIDL self2server) {
     bool result = true;
     result &= CAN_Framing_self2server_write_SMACCM_DATA__GIDL(self2server);
+
+
+    return result;
+}
+/************************************************************************
+ * CAN_Framing_write_self2vm
+ * Invoked from local active or passive thread.
+ *
+ * This is the comm function invoked by a user-level thread to send a message
+ * to another thread.  If the target is an active thread, it calls an
+ * RPC on the target thread to queue the data.  If it is a passive thread,
+ * it locally enqueues the request to be sent when the user thread
+ * completes execution.
+ *
+ ************************************************************************/
+
+bool CAN_Framing_write_self2vm(const SMACCM_DATA__GIDL self2vm) {
+    bool result = true;
+    result &= CAN_Framing_self2vm_write_SMACCM_DATA__GIDL(self2vm);
 
 
     return result;
