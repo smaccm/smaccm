@@ -14,6 +14,7 @@ include "smaccm_top_i_types.h";
     has semaphore smaccm_dispatch_sem;
     uses SMACCM_DATA__Camera_Bounding_Box_i_writer Virtual_Machine_self2server;
     provides bool_writer server2self_reboot;
+    provides SMACCM_DATA__GIDL_writer framing2self;
 
     // Interface to internal vchan wrapper world
     include "sel4vchan/vchan_sharemem.h";

@@ -100,3 +100,18 @@ bool server2self_reboot_write_bool(const bool *arg) {
     restart_vm_emit();
     return true;
 }
+
+bool framing2self_write_SMACCM_DATA__GIDL(const smaccm_SMACCM_DATA__GIDL_container *gidlc) {
+    printf("TODO: Send CAN Frame into VM via vchan\n");
+
+    /*
+      typedef 
+      struct smaccm_SMACCM_DATA__GIDL_container { 
+         SMACCM_DATA__GIDL f;
+      } smaccm_SMACCM_DATA__GIDL_container;
+
+      typedef uint8_t SMACCM_DATA__GIDL [80]; 
+    */
+
+    return true;
+}
