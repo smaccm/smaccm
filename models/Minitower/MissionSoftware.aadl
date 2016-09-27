@@ -38,6 +38,7 @@ public
 
 			server2framing: port server.self2framing -> can_framing.server2self;
 			framing2server: port can_framing.self2server -> server.framing2self;
+			framing2vm: 		port can_framing.self2vm -> virtual_machine.framing2self;
 
 			framing2can_request: port can_framing.self2can -> can_driver.framing2self;
 			can2framing_status: port can_driver.self2framing_status -> can_framing.can2self_status;
@@ -121,6 +122,7 @@ public
 		features
 			server2self: in event data port SMACCM_DATA::GIDL;
 			self2server: out event data port SMACCM_DATA::GIDL;
+			self2vm:     out event data port SMACCM_DATA::GIDL;
 
 			can2self_frame: in event data port SMACCM_DATA::CAN_Frame.i {
 						Queue_Size => 10;
@@ -157,6 +159,7 @@ public
 		features
 			self2server: out data port SMACCM_DATA::Camera_Bounding_Box.i;
 			server2self_reboot: in event data port Base_Types::Boolean;
+			framing2self:			  in event data port SMACCM_DATA::GIDL;
 		properties
 			SMACCM_SYS::Is_External => true;
 			Dispatch_Protocol => Sporadic;
