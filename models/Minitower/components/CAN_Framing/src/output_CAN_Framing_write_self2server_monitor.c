@@ -6,4 +6,5 @@
 void callback_output_CAN_Framing_write_self2server_2(const uint8_t n_var0[80U])
 {
     CAN_Framing_write_self2server(n_var0);
+    CAN_Framing_write_self2vm(n_var0);
 }

@@ -40,22 +40,42 @@ static camkes_vchan_con_t con = {
     .source_dom_number = 50,
 };
 
-// #define DEBUG_CAMERA_VM
+static libvchan_t *connection;
 
-#ifdef DEBUG_CAMERA_VM
-#define DVM(...) do{ printf("CAMERA VM DEBUG: "); printf(__VA_ARGS__); }while(0)
+// #define DEBUG_SMACCM_VM
+
+#ifdef DEBUG_SMACCM_VM
+#define DVM(...) do{ printf("SMACCM VM DEBUG: "); printf(__VA_ARGS__); }while(0)
 #else
 #define DVM(...) do{}while(0)
 #endif
 
+/* Currently only one vchan per component is supported, so we have to
+   pick between camera data from the VM or logging CAN data to the VM.
+   Defining this flag enables the logging of CAN data to the VM. */
+#define VM_LOGGING
 
-static void rec_packet(libvchan_t * con) {
+
+void pre_init(void) {
+    DVM("virtual machine wrapper pre_init\n");
+
+    con.data_buf = (void *)share_mem;
+    connection = libvchan_server_init(0, 25, 0, 0);
+    if (connection != NULL) {
+        connection = link_vchan_comp(connection, &con);
+    }
+    assert(connection != NULL);
+
+    DVM("virtual machine connection active\n");
+}    
+
+static void rec_packet() {
     char done = 1;
     int data[4];
     SMACCM_DATA__Camera_Bounding_Box_i bbox;
 
-    libvchan_wait(con);
-    int readSize = libvchan_recv(con, data, 4*sizeof(int));
+    libvchan_wait(connection);
+    int readSize = libvchan_recv(connection, data, 4*sizeof(int));
     assert(readSize == 4*sizeof(int));
     DVM("received bounding box packet\n");
 
@@ -71,47 +91,68 @@ static void rec_packet(libvchan_t * con) {
     }
 
     DVM("Virtual_Machine: sending ack\n");
-    libvchan_send(con, &done, sizeof(char));
+    libvchan_send(connection, &done, sizeof(char));
 }
 
+#ifdef VM_LOGGING
+static bool fresh_pending_gidl;
+uint8_t pending_gidl[sizeof(SMACCM_DATA__GIDL)];
+#endif
 
 int run(void) {
-    libvchan_t *connection;
-
-    DVM("virtual machine wrapper init\n");
-
-    con.data_buf = (void *)share_mem;
-    connection = libvchan_server_init(0, 25, 0, 0);
-    if (connection != NULL) {
-        connection = link_vchan_comp(connection, &con);
-    }
-    assert(connection != NULL);
-
-    DVM("virtual machine connection active\n");
-
+#ifndef VM_LOGGING
     while(1) {
         DVM("virtual machine packet\n");
-        rec_packet(connection);
+        rec_packet();
     }
+#else
+    while (1) {
+	framing2self_sem_wait();
+
+	bool local_fresh_pending_gidl = false;
+	uint8_t local_pending_gidl[sizeof(SMACCM_DATA__GIDL)];
+	framing2self_mut_lock();
+	if (fresh_pending_gidl) {
+	    local_fresh_pending_gidl = fresh_pending_gidl;
+	    fresh_pending_gidl = false;
+	    memcpy(local_pending_gidl, pending_gidl, sizeof(SMACCM_DATA__GIDL));
+	}
+	framing2self_mut_unlock();
+
+	if (local_fresh_pending_gidl) {
+	    DVM("Sending GIDL over vchan\n");
+	    int res = libvchan_send(connection, &local_pending_gidl, sizeof(SMACCM_DATA__GIDL));
+	    if (res < 0) {
+		printf("Error: failed send on vchan\n");
+	    } else if (res < sizeof(SMACCM_DATA__GIDL)) {
+		printf("Error: partial send on vchan (%d bytes)", res);
+	    } else {
+		DVM("GIDL send successful\n");
+	    }
+	}
+    }
+	    
+#endif
 }
+
+#ifdef VM_LOGGING
+bool framing2self_write_SMACCM_DATA__GIDL(const smaccm_SMACCM_DATA__GIDL_container *gidlc) {
+    framing2self_mut_lock();
+    memcpy(pending_gidl, gidlc, sizeof(SMACCM_DATA__GIDL));
+    fresh_pending_gidl = true;
+    framing2self_mut_unlock();
+    framing2self_sem_post();
+    return true;
+}
+#else
+bool framing2self_write_SMACCM_DATA__GIDL(const smaccm_SMACCM_DATA__GIDL_container *gidlc) {
+    DVM("VM_LOGGING disabled\n");
+    return true;
+}
+#endif
 
 bool server2self_reboot_write_bool(const bool *arg) {
     printf("Reboot requested\n");
     restart_vm_emit();
-    return true;
-}
-
-bool framing2self_write_SMACCM_DATA__GIDL(const smaccm_SMACCM_DATA__GIDL_container *gidlc) {
-    printf("TODO: Send CAN Frame into VM via vchan\n");
-
-    /*
-      typedef 
-      struct smaccm_SMACCM_DATA__GIDL_container { 
-         SMACCM_DATA__GIDL f;
-      } smaccm_SMACCM_DATA__GIDL_container;
-
-      typedef uint8_t SMACCM_DATA__GIDL [80]; 
-    */
-
     return true;
 }
