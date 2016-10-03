@@ -673,7 +673,21 @@ public class AgreePatternTranslator {
                 to("time", timeExpr),
                 to("intHigh", pattern.effectInterval.high));
         
-        builder.addAssertion(new AgreeStatement(null, lemma, pattern));
+        builder.addAssertion(new AgreeStatement(null, lemma, pattern)); 
+        
+        lemma = expr("timeWill <= causeTime + high and (causeTime >= 0.0 => causeTime + low <= timeWill)",
+        		to("timeWill",timeEffectVar),
+        		to("causeTime", getTimeOf(causeId.id, builder, pattern)),
+        		to("high", pattern.effectInterval.high),
+        		to("low", pattern.effectInterval.low));
+
+        builder.addAssertion(new AgreeStatement(null, lemma, pattern)); 
+        
+        lemma = expr("timeWill <= time => timeWill <= timeEffect",
+        		to("timeWill",timeEffectVar),
+        		to("timeEffect", getTimeOf(effectId.id, builder, pattern)));
+        
+        builder.addAssertion((new AgreeStatement(null, lemma, pattern)));
         
 //        Expr lemmaExpr = expr("timeEffect <= effectTimeRangeId and timeEffect >= -1.0",
 //                to("timeEffect", timeEffectId),
