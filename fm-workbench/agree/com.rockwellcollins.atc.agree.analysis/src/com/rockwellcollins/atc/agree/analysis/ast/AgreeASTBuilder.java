@@ -25,6 +25,7 @@ import org.osate.aadl2.Connection;
 import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.Context;
 import org.osate.aadl2.DataPort;
+import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
@@ -525,37 +526,24 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
             ConnectionEnd destPort = absConnDest.getConnectionEnd();
             ConnectionEnd sourPort = absConnSour.getConnectionEnd();
+            
+            String sourPortName = getAgreePortName(sourPort);
 
             AgreeConnection.ConnectionType connType;
-            if (destPort instanceof EventDataPort) {
-                if (!(sourPort instanceof EventDataPort)) {
-                    AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '"
-                            + destPort.getName() + "' and '" + sourPort.getName() + "' of differing type");
-                    continue;
-                }
+            if (destPort instanceof EventDataPort && sourPort instanceof EventDataPort) {
                 connType = ConnectionType.EVENT;
-
                 agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPort.getName() + eventSuffix,
                         destPort.getName() + eventSuffix, connType, latched, delayed, conn));
-
             }
 
-            if (!(((destPort instanceof DataPort) && (sourPort instanceof DataPort))
-                    || ((destPort instanceof EventDataPort) && (sourPort instanceof EventDataPort)))) {
+            if (!matches(sourPort, destPort)) {
                 AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '" + destPort.getName()
                         + "' and '" + sourPort.getName() + "' of differing type");
                 continue;
             }
             connType = ConnectionType.DATA;
 
-            DataSubcomponentType dataClass;
-            if (destPort instanceof DataPort) {
-                DataPort dataPort = (DataPort) destPort;
-                dataClass = dataPort.getDataFeatureClassifier();
-            } else {
-                EventDataPort eventDataPort = (EventDataPort) destPort;
-                dataClass = eventDataPort.getDataFeatureClassifier();
-            }
+            DataSubcomponentType dataClass = getConnectionEndDataClass(destPort);
 
             if (dataClass == null || getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes)) == null) {
                 // we don't reason about this type
@@ -568,6 +556,39 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return agreeConns;
     }
 
+	private String getAgreePortName(ConnectionEnd port) {
+		if(port instanceof DataPort || port instanceof EventDataPort){
+			return port.getName();
+		}else if(port instanceof DataSubcomponent){
+			
+		}
+		return null;
+	}
+
+	private DataSubcomponentType getConnectionEndDataClass(ConnectionEnd port) {
+		DataSubcomponentType dataClass = null;
+		if (port instanceof DataPort) {
+		    DataPort dataPort = (DataPort) port;
+		    dataClass = dataPort.getDataFeatureClassifier();
+		} else if (port instanceof EventDataPort){
+		    EventDataPort eventDataPort = (EventDataPort) port;
+		    dataClass = eventDataPort.getDataFeatureClassifier();
+		} else if (port instanceof DataSubcomponent){
+			dataClass = ((DataSubcomponent) port).getDataSubcomponentType();
+		}
+		if(dataClass == null){
+			throw new AgreeException("unable to determine type of port: "+port.getFullName());
+		}
+		return dataClass;
+	}
+
+    private boolean matches(ConnectionEnd a, ConnectionEnd b){
+    	if(a instanceof EventDataPort ^ b instanceof EventDataPort){
+    		return false;
+    	}
+    	return true;
+    }
+    
     private AgreeNode agreeNodeFromNamedEl(List<AgreeNode> nodes, NamedElement comp) {
         if (comp == null) {
             return null;
