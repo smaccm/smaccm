@@ -66,12 +66,47 @@ has mutex <port.mutex>;
 
 >>
 
-inputDataPortDecl(port) ::= "<inputPortDecl(port)>"
+///////////////////////////////////////////////////////////////////////////
+//
+// Updates for Mailboxes for Ground Vehicle.
+//
+///////////////////////////////////////////////////////////////////////////
+
+createReaderDataport(connection) ::= <<
+dataport int <connection.name>;
+>>
+
+createWriterDataport(port) ::= <<
+dataport <port.mailboxStructTypeName> <port.qualifiedName>;
+>>
+
+inputDataPortDecl(port) ::= <<
+<if(port.threadImplementation.model.camkesUseMailboxDataports)>
+// Check one writer to this port.  We can do that by checking
+// the size of the connection list.  It should be size 1.
+// If so, we will access the port writer (which will be the only element
+// in the list).  Then we will also add a dataport for ourselves.
+<createReaderDataport(port.singletonConnection)>
+<createWriterDataport(port.singletonConnection.sourcePort)>
+<else>
+<inputPortDecl(port)>
+<endif>
+>>
 
 outputDataPortDecl(port) ::= <<
+<if(port.threadImplementation.model.camkesUseMailboxDataports)>
+<createWriterDataport(port)>
+<port.connections:createReaderDataport()>
+<else>
 uses <port.type.readerWriterInterfaceName> <port.qualifiedName>;
-
+<endif>
 >>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// End of Updates for Mailboxes for Ground Vehicle.
+//
+///////////////////////////////////////////////////////////////////////////
 
 sharedDataAccessorDecl(sharedDataAccessor) ::= <<
 dataport <sharedDataAccessor.type.name> <sharedDataAccessor.name>;

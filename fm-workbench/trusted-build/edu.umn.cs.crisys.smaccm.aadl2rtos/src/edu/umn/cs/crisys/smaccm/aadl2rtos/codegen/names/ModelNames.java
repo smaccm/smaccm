@@ -229,6 +229,10 @@ public class ModelNames {
   public String getCamkesExternalTimerCompletePath() {
     return m.getCamkesExternalTimerCompletePath();
   }
+
+  public boolean getCamkesUseMailboxDataports() {
+	return m.getCamkesUseMailboxDataports();
+  }
   
   public String getCamkesInternalTimerTimersPerClient() {
     return Integer.toString(m.getCamkesInternalTimerTimersPerClient());

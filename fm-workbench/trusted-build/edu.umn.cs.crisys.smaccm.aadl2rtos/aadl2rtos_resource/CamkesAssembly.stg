@@ -144,18 +144,74 @@ assemblyConnectPeriodic(threadImpl, model) ::= <<
 <threadImpl.dispatchers:connectActivePeriodic(threadImpl, model)>
 >>
 
+///////////////////////////////////////////////////////////////////////////
+//
+// Updates for Mailboxes for Ground Vehicle.
+//
+// At issue: to set port connection rights for the mailboxes, we need to modify 
+// the assembly configuration.  So, we could do this as a model transformation;     
+// this would substantially simplify the emitters.  
+//
+// In this case, we would transform the dataports into shared memory ports.
+// But this is o.k., we just need to synchronize the numbers.  
+//
+///////////////////////////////////////////////////////////////////////////
+sdaConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4SharedData <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+mailboxWriterToReader(connection) ::= <<
+<sdaConnection(connection.name, 
+	connection.sourcePort.threadImplementation.componentInstanceName,
+	connection.name,
+	connection.destPort.threadImplementation.componentInstanceName,
+	connection.name)>
+>>
+
+mailboxWriterBufferConnection(connection) ::= <<
+<sdaConnection(connection.fullyQualifiedName, 
+	connection.sourcePort.threadImplementation.componentInstanceName,
+	connection.sourcePort.qualifiedName,
+	connection.destPort.threadImplementation.componentInstanceName,
+	connection.name)>
+>>
+
 connectReaderWriter(connection, srcThreadImpl, model) ::= <<
 <if(connection.sourcePort.isOutputData)><\\>
+<if(model.camkesUseMailboxDataports)>
+// Connect all of the defined reader dataports for mailboxes + the writer buffer.
+<mailboxWriterToReader(connection)>
+<mailboxWriterBufferConnection(connection)>
+<else>
 <rpcConnection(model.generateConnectionName,
     srcThreadImpl.componentInstanceName,
     connection.sourcePort.qualifiedName,
     connection.destPortThreadImplementation.componentInstanceName,
     connection.destPort.name)>
 <endif>
+<endif>
 >>
+
+configureReaderWriter(connection) ::= <<
+<if(connection.sourcePort.isOutputData)><\\>
+<if(model.camkesUseMailboxDataports)>
+<connection.fullyQualifiedName>.to_access = "R";
+<endif>
+<endif>
+
+>>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// End of Updates for Mailboxes for Ground Vehicle.
+//
+///////////////////////////////////////////////////////////////////////////
 
 assemblyConnectReadersWriters(threadImpl, model) ::= <<
 <threadImpl.isSrcOfConnectionList:connectReaderWriter(threadImpl, model)>
+>>
+
+assemblyConfigureReadersWriters(threadImpl) ::= <<
+<threadImpl.isSrcOfConnectionList:configureReaderWriter()>
 >>
 
 connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
@@ -169,10 +225,6 @@ connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
 assemblyConnectRpgs(threadImpl, model) ::= <<
 <threadImpl.isRequiresOfConnectionList:connectRpg(threadImpl, model)>
 >>
-
-sdaConnection(cid, from1, from2, to1, to2) ::=
-   "connection seL4SharedData <cid> (from <from1>.<from2>, to <to1>.<to2>);"
-
 
 assemblyConnectAccessor(sharedDataAccessor, otherSda, model) ::= <<
 <sdaConnection(model.generateConnectionName,
@@ -328,6 +380,9 @@ assembly {
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";
         <model.threadCalendar.periodicDispatcherInstanceName>.priority = 201;
         <endif>
+        
+        <commentIf("Component read/write connections (mailbox Configurations)",
+                   (model.threadImplementations:assemblyConfigureReadersWriters()))><\\>
         
         <model.irqDispatchers:constructIRQConfig()>
         <model.threadImplementations:assemblySetPriorities()>

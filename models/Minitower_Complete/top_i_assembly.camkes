@@ -122,7 +122,7 @@ assembly {
 
         CAN_Driver_inst._period = -1;
         CAN_Driver_inst._budget = 100;
-        CAN_Framing_inst._period = 5000;
+        CAN_Framing_inst._period = 1000;
         CAN_Framing_inst._budget = 100;
         Decrypt_inst._period = 5000;
         Decrypt_inst._budget = 100;
