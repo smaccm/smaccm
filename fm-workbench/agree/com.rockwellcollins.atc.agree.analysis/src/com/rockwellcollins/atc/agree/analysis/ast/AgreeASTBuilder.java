@@ -527,13 +527,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             ConnectionEnd destPort = absConnDest.getConnectionEnd();
             ConnectionEnd sourPort = absConnSour.getConnectionEnd();
             
-            String sourPortName = getAgreePortName(sourPort);
+            String sourPortName = getAgreePortName(absConnSour);
+            String destPortName = getAgreePortName(absConnDest);
 
             AgreeConnection.ConnectionType connType;
             if (destPort instanceof EventDataPort && sourPort instanceof EventDataPort) {
                 connType = ConnectionType.EVENT;
-                agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPort.getName() + eventSuffix,
-                        destPort.getName() + eventSuffix, connType, latched, delayed, conn));
+                agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPortName + eventSuffix,
+                        destPortName + eventSuffix, connType, latched, delayed, conn));
             }
 
             if (!matches(sourPort, destPort)) {
@@ -550,17 +551,18 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 continue;
             }
 
-            agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPort.getName(), destPort.getName(),
+            agreeConns.add(new AgreeConnection(sourceNode, destNode, sourPortName, destPortName,
                     connType, latched, delayed, conn));
         }
         return agreeConns;
     }
 
-	private String getAgreePortName(ConnectionEnd port) {
+	private String getAgreePortName(ConnectedElement absConn) {
+		ConnectionEnd port = absConn.getConnectionEnd();
 		if(port instanceof DataPort || port instanceof EventDataPort){
 			return port.getName();
 		}else if(port instanceof DataSubcomponent){
-			
+			return absConn.getContext().getName() + "." + port.getName();
 		}
 		return null;
 	}
