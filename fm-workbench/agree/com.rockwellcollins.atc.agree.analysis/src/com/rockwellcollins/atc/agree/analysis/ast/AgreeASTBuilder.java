@@ -626,6 +626,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			ConnectionEnd destPort = absConnDest.getConnectionEnd();
 			ConnectionEnd sourPort = absConnSour.getConnectionEnd();
 
+			String sourNodeName = sourceNode == null ? null : sourceNode.id;
+			String destNodeName = destNode == null ? null : destNode.id;
+			
 			AgreeAADLConnection.ConnectionType connType;
 			if (destPort instanceof EventDataPort) {
 				if (!(sourPort instanceof EventDataPort)) {
@@ -638,7 +641,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				AgreeVar sourceVar = new AgreeVar(sourPort.getName() + eventSuffix, NamedType.BOOL, sourPort);
 				AgreeVar destVar = new AgreeVar(destPort.getName() + eventSuffix, NamedType.BOOL, destPort);
 
-				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode.id, destNode.id, sourceVar, destVar,
+				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourNodeName, destNodeName, sourceVar, destVar,
 						connType, latched, delayed, conn);
 
 				if (!destinationSet.add(agreeConnection.destVar.id)) {
@@ -676,9 +679,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             
             AgreeVar sourVar = new AgreeVar(sourPort.getName(), type, sourPort);
             AgreeVar destVar = new AgreeVar(destPort.getName(), type, destPort);
-            
-			String sourNodeName = sourceNode == null ? null : sourceNode.id;
-			String destNodeName = destNode == null ? null : destNode.id;
 
 			AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourNodeName, destNodeName, sourVar, destVar,
 					connType, latched, delayed, conn);

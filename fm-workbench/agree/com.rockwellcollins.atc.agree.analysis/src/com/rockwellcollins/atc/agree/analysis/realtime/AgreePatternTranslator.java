@@ -515,6 +515,20 @@ public class AgreePatternTranslator {
         AgreeStatement statement = new AgreeStatement(null, recordExpr, varReference);
         builder.addAssertion(statement);
         }
+        
+        //lemma to help induction
+        AgreeVar timeOfCause = getTimeOf(causeId.id, builder, pattern);
+        Expr expr = expr("(timer > 0.0 => timeOfCause > 0.0) and "
+        		        + "(timer <= time - timeOfCause) and "
+        		        + "(cause => timeOfCause = time)", 
+        		           to("timer", timerVar),
+        		           to("timeOfCause", timeOfCause),
+        		           to("time", timeExpr),
+        		           to("cause", causeId));
+        builder.addPatternProp(new AgreeStatement("Timer Lemma for Pattern "+patternIndex, expr, pattern));
+        
+        
+        
         //timer <= h
         BinaryOp right = getIntervalRightOp(pattern.effectInterval);
         return new BinaryExpr(timerId, right, pattern.effectInterval.high);
