@@ -3,18 +3,14 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.action.Action;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
@@ -29,7 +25,6 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
-import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
@@ -40,7 +35,6 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.instance.AnnexInstance;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
@@ -124,8 +118,6 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
-import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
-import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 
@@ -296,7 +288,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
         for (String idStr : allExprIds) {
             if (idStr.contains(dotChar)) {
-                String prefix = idStr.substring(0, idStr.indexOf(dotChar));
+                String prefix = idStr.substring(0, idStr.indexOf(dotChar)) + dotChar;
                 boolean found = false;
                 for (AgreeVar var : inputs) {
                     if (var.id.startsWith(prefix)) {
@@ -319,7 +311,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 if (!found) {
                     throw new AgreeException("Variable '" + idStr.replace(dotChar, ".")
                             + "' appears in an assertion, lemma " + "or equation statement in component '"
-                            + compInst.getInstanceObjectPath() + "' but subcomponent '" + prefix + "' does "
+                            + compInst.getInstanceObjectPath() + "' but subcomponent '" + prefix.replace(dotChar, "") + "' does "
                             + "not contain an AGREE annex");
                 }
             }
