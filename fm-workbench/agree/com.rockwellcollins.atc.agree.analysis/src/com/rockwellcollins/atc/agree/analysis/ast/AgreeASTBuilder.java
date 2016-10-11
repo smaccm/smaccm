@@ -288,16 +288,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         }
         for (String idStr : allExprIds) {
             if (idStr.contains(dotChar)) {
-                String prefix = idStr.substring(0, idStr.indexOf(dotChar)) + dotChar;
+                String prefix = idStr.substring(0, idStr.indexOf(dotChar));
                 boolean found = false;
                 for (AgreeVar var : inputs) {
-                    if (var.id.startsWith(prefix)) {
+                    if (var.id.startsWith(prefix + dotChar)) {
                         found = true;
                         break;
                     }
                 }
                 for (AgreeVar var : outputs) {
-                    if (var.id.startsWith(prefix)) {
+                    if (var.id.startsWith(prefix + dotChar)) {
                         found = true;
                         break;
                     }
@@ -311,7 +311,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 if (!found) {
                     throw new AgreeException("Variable '" + idStr.replace(dotChar, ".")
                             + "' appears in an assertion, lemma " + "or equation statement in component '"
-                            + compInst.getInstanceObjectPath() + "' but subcomponent '" + prefix.replace(dotChar, "") + "' does "
+                            + compInst.getInstanceObjectPath() + "' but subcomponent '" + prefix + "' does "
                             + "not contain an AGREE annex");
                 }
             }
