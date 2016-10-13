@@ -6,6 +6,7 @@ package edu.umn.cs.crisys.tb.model.port;
 import java.util.*;
 
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.thread.*;
 
 /**

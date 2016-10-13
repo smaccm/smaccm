@@ -1,6 +1,7 @@
-package edu.umn.cs.crisys.tb.model.thread;
+package edu.umn.cs.crisys.tb.model.connection;
 
 import edu.umn.cs.crisys.tb.model.port.*;
+import edu.umn.cs.crisys.tb.model.thread.ThreadInstance;
 
 
 public class PortConnection {

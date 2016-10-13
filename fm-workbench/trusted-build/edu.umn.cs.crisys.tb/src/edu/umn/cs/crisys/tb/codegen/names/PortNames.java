@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.DataPort;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
@@ -19,12 +21,10 @@ import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.OutgoingDispatchContract;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
-import edu.umn.cs.crisys.tb.model.thread.PortConnection;
 import edu.umn.cs.crisys.tb.model.type.BoolType;
 import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
-import edu.umn.cs.crisys.tb.parse.Model;
 
 /**
  * @author Whalen

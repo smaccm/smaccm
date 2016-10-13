@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.model.Model;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
-import edu.umn.cs.crisys.tb.parse.Model;
 
 /**
  * @author Whalen

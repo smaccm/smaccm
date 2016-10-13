@@ -1,11 +1,12 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.model.thread;
+package edu.umn.cs.crisys.tb.model.connection;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 
 /**

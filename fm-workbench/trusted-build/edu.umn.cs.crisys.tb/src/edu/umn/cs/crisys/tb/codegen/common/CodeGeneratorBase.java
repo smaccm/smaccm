@@ -27,11 +27,11 @@ import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.names.PortNames;
 import edu.umn.cs.crisys.tb.codegen.names.ThreadImplementationNames;
+import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.port.*;
-import edu.umn.cs.crisys.tb.model.thread.SharedData;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.*;
-import edu.umn.cs.crisys.tb.parse.Model;
 import edu.umn.cs.crisys.tb.util.Util;
 
 // TODO: need to discuss where to place .c / .h files for User-provided thread functions

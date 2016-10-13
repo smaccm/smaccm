@@ -19,7 +19,7 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
  */
 
-package edu.umn.cs.crisys.tb.parse;
+package edu.umn.cs.crisys.tb.model;
 
 import java.util.ArrayList;
 //import java.util.Comparator;
@@ -29,15 +29,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
+import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalISR;
+import edu.umn.cs.crisys.tb.model.port.ExternalIRQ;
 import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
-import edu.umn.cs.crisys.tb.model.thread.ExternalIRQ;
-import edu.umn.cs.crisys.tb.model.thread.PortConnection;
-import edu.umn.cs.crisys.tb.model.thread.SharedData;
 import edu.umn.cs.crisys.tb.model.thread.ThreadCalendar;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.thread.ThreadInstance;
@@ -64,36 +64,36 @@ public class Model {
 
 
 	// Implementation objects: external.
-	List<ThreadImplementation> threadImplementationList = new ArrayList<ThreadImplementation>();
-	List<SharedData> sharedDataList = new ArrayList<SharedData>();
-	ThreadCalendar threadCalendar = new ThreadCalendar(this);
-	Set<String> sourceFiles = new HashSet<String>();
-	List<String> libraryFiles = new ArrayList<String>(); 	
+	public List<ThreadImplementation> threadImplementationList = new ArrayList<ThreadImplementation>();
+	public List<SharedData> sharedDataList = new ArrayList<SharedData>();
+	public ThreadCalendar threadCalendar = new ThreadCalendar(this);
+	public Set<String> sourceFiles = new HashSet<String>();
+	public List<String> libraryFiles = new ArrayList<String>(); 	
 
-	List<String> legacyMutexList = new ArrayList<String>();
-	List<String> legacySemaphoreList = new ArrayList<String>();
-	List<ExternalISR> externalISRList = new ArrayList<ExternalISR>();
-	List<ExternalIRQEvent> externalIRQEventList = new ArrayList<ExternalIRQEvent>();
-	List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
-	List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
+	public List<String> legacyMutexList = new ArrayList<String>();
+	public List<String> legacySemaphoreList = new ArrayList<String>();
+	public List<ExternalISR> externalISRList = new ArrayList<ExternalISR>();
+	public List<ExternalIRQEvent> externalIRQEventList = new ArrayList<ExternalIRQEvent>();
+	public List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
+	public List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
 	
 	// type stuff
-	Set<String> externalTypeHeaders = new HashSet<String>(); 
+	public Set<String> externalTypeHeaders = new HashSet<String>(); 
 	
-	Map<String, Type> astTypes = new HashMap<String, Type>();
-	Map<String, RemoteProcedureGroup> remoteProcedureGroupMap = new HashMap<>(); 
-	Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
+	public Map<String, Type> astTypes = new HashMap<String, Type>();
+	public Map<String, RemoteProcedureGroup> remoteProcedureGroupMap = new HashMap<>(); 
+	public Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
 	
 	// properties related to timers and dispatch
-	boolean generateSystickIRQ;
-	boolean externalTimerComponent; 
+	public boolean generateSystickIRQ;
+	public boolean externalTimerComponent; 
 	
 	// CAMKES specific properties
-	String camkesExternalTimerInterfacePath;
-	String camkesExternalTimerCompletePath;
-	int camkesInternalTimerTimersPerClient; 
-	int camkesTimeServerAadlThreadMinIndex; 
-	int camkesDataportRpcMinIndex;
+	public String camkesExternalTimerInterfacePath;
+	public String camkesExternalTimerCompletePath;
+	public int camkesInternalTimerTimersPerClient; 
+	public int camkesTimeServerAadlThreadMinIndex; 
+	public int camkesDataportRpcMinIndex;
 	boolean camkesUseMailboxDataports = false;
 	boolean useOSRealTimeExtensions; 
 	
@@ -113,15 +113,15 @@ public class Model {
 
 
 	// eChronos-specific properties
-	boolean eChronosGenerateCModules;
-	String eChronosCModulePath;
-	String eChronosFlashLoadAddress;
+	public boolean eChronosGenerateCModules;
+	public String eChronosCModulePath;
+	public String eChronosFlashLoadAddress;
 	
 	public enum CommMutualExclusionPrimitive {MUTEX, SUSPEND_INTERRUPT} ; 
-	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.MUTEX; 
+	public CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.MUTEX; 
 	
 	public enum ISRType {InThreadContextISR, SignalingISR} ; 
-	ISRType isrType = ISRType.InThreadContextISR; 
+	public ISRType isrType = ISRType.InThreadContextISR; 
 	
 	// Model constructor
 	public Model(String systemImplementationName, 

@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.model.thread.SharedData;
-import edu.umn.cs.crisys.tb.model.thread.SharedDataAccessor;
+import edu.umn.cs.crisys.tb.model.connection.SharedData;
+import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
 
 /**
  * @author Whalen

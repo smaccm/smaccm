@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.model.thread;
+package edu.umn.cs.crisys.tb.model.port;
 
 /**
  * @author Whalen

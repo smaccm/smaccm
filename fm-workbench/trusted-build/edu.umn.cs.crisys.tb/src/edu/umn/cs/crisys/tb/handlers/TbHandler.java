@@ -48,8 +48,8 @@ import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.CAmkES.CAmkES_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.VxWorks.VxWorks_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.eChronos.EChronos_CodeGenerator;
+import edu.umn.cs.crisys.tb.model.Model;
 import edu.umn.cs.crisys.tb.parse.AadlModelParser;
-import edu.umn.cs.crisys.tb.parse.Model;
 import edu.umn.cs.crisys.tb.util.Util;
 
 public class TbHandler extends AadlHandler {

@@ -8,16 +8,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.tb.model.port.DataPort;
+import edu.umn.cs.crisys.tb.model.port.ExternalIRQ;
 import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
-import edu.umn.cs.crisys.tb.model.thread.ExternalIRQ;
-import edu.umn.cs.crisys.tb.model.thread.SharedData;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
-import edu.umn.cs.crisys.tb.parse.Model;
 import edu.umn.cs.crisys.tb.util.Util;
 
 /**

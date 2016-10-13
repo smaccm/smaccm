@@ -3,7 +3,7 @@
  */
 package edu.umn.cs.crisys.tb.codegen.names;
 
-import edu.umn.cs.crisys.tb.model.thread.PortConnection;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 
 /**
  * @author Whalen

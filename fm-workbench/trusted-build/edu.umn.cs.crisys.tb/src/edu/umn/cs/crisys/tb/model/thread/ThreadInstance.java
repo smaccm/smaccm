@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.osate.aadl2.instance.ComponentInstance;
 
+import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 
 public class ThreadInstance {

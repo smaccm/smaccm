@@ -9,16 +9,16 @@ import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
 import edu.umn.cs.crisys.tb.codegen.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.names.ThreadCalendarNames;
+import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
 import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
-import edu.umn.cs.crisys.tb.model.thread.SharedData;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
-import edu.umn.cs.crisys.tb.parse.Model;
 
 public class EChronos_CodeGenerator extends CodeGeneratorBase {
 

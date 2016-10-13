@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
+import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
 import edu.umn.cs.crisys.tb.model.port.DataPort;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.DispatcherTraverser;
@@ -27,7 +30,6 @@ import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
-import edu.umn.cs.crisys.tb.parse.Model;
 import edu.umn.cs.crisys.tb.util.Util;
 
 public class ThreadImplementation {

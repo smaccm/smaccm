@@ -10,11 +10,11 @@ import java.util.Set;
 
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.names.TypeNames;
+import edu.umn.cs.crisys.tb.model.Model;
 import edu.umn.cs.crisys.tb.model.type.ArrayType;
 import edu.umn.cs.crisys.tb.model.type.ExternalType;
 import edu.umn.cs.crisys.tb.model.type.IdType;
 import edu.umn.cs.crisys.tb.model.type.Type;
-import edu.umn.cs.crisys.tb.parse.Model;
 import edu.umn.cs.crisys.topsort.CyclicException;
 import edu.umn.cs.crisys.topsort.TopologicalSort;
 

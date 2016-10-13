@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import edu.umn.cs.crisys.tb.model.thread.PortConnection;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 
 /**
  * @author Whalen

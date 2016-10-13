@@ -34,14 +34,51 @@ properties
   Actual_Memory_Binding => (reference(Stand_Memory))
     applies to speed_control;
 	
+
+First order of business: 
+	getting access to bindings.  And done.  It comes (of course) from the process instance, not the implementation, which is not bound to anything.  It is immediately available in getOwnedPropertyAssociations()
 	
+	So, the process of determining the OS starts from the process instance: 
+		1. getProperty() given the property Allowed_Processor_Binding.  This property defines a set of possible processor bindings (which we will support only one)
+		2. From the (singleton) processor, we determine its 
+			Deployment::Execution_Platform, which will either be linux or seL4.
+
+	So, each process instance has to know its execution platform.  
+	Each thread instance has to determine this by querying its parent process.
+	That way, each connection can be correctly constructed. 	
+	
+	What about VxWorks and eChronos?  These operate in a semi-vacuum, which is nice. 
+	
+	So, we say that process / process instances are ignored in CAmkES, eChronos, and VxWorks.
+	
+	For SEI's tool, the processor gets bound to a "platform" attribute, which is our HW attribute.
+	
+Second order of business:
+	get the AST figured out.  The AST should be more like the names portion of the current AST.
+
+	Main order of business here: where does the OS fit? 
+		Easiest place is in the Factory.  However, unlike a reasonable factory which changes based on platform, 
+			We will have *multiple* factories.  Systems are aggregations that have no information hiding power; 
+			they can only "flow down" properties to their subcomponents; even this I'm not sure how it works.
+	
+	We need to gather together all processes that operate on a single processor.  
+	This will allow us to build the VMs, bindings, etc. 
+	
+	When we have connections in/out of an OS, we will need to have a special factory for this (it is no longer
+	guaranteed to be OS-specific)
+	
+	So, each set of processes bound to a processor will have an associated factory type.
+	
+Third order of business: figuring out VMs.
+	They act as "virtual processors" in straight up AADL
+	So, a different binding.
 
 Currently, for the C code generation, the template files are split by OS.
 
 For C code generation for (say) CAmkES, the following files are involved:
 
 CommonComponentC.stg 
-CAmkESComponentC.stg
+CAmkESComponentC.stg 
 
 All of the <ComponentType>Name.java files for threads, ports, connections, etc.
 

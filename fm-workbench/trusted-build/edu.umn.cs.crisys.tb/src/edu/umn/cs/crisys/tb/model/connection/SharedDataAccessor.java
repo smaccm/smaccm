@@ -1,8 +1,9 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.model.thread;
+package edu.umn.cs.crisys.tb.model.connection;
 
+import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 
 /**
  * @author Whalen

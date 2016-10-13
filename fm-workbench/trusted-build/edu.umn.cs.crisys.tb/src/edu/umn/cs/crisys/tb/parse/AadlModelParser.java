@@ -72,6 +72,12 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.Model.OSTarget;
+import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
+import edu.umn.cs.crisys.tb.model.connection.SharedData;
+import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
 import edu.umn.cs.crisys.tb.model.legacy.*;
 import edu.umn.cs.crisys.tb.model.port.*;
 import edu.umn.cs.crisys.tb.model.rpc.Direction;
@@ -82,7 +88,6 @@ import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureParameter;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint.AccessType;
 import edu.umn.cs.crisys.tb.model.thread.*;
 import edu.umn.cs.crisys.tb.model.type.*;
-import edu.umn.cs.crisys.tb.parse.Model.OSTarget;
 import edu.umn.cs.crisys.tb.parse.antlr.*;
 import edu.umn.cs.crisys.tb.util.*;
 
@@ -254,6 +259,14 @@ public class AadlModelParser {
     for (ComponentInstance ci : top.getAllComponentInstances()) {
       if (ci.getCategory() == ComponentCategory.THREAD) {
         threadInstanceList.add(ci);
+      } else if (ci.getCategory() == ComponentCategory.PROCESS) {
+    	  ci.getName();
+    	  ci.getOwnedPropertyAssociations();
+    	  ci.getFullName();
+//    	  ci.getChildren();
+//    	  ci.getComponentClassifier();
+      } else if (ci.getCategory() == ComponentCategory.PROCESSOR) {
+    	 
       }
     }
   }

@@ -5,13 +5,13 @@ package edu.umn.cs.crisys.tb.codegen.names;
 
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.TbFailure;
+import edu.umn.cs.crisys.tb.model.Model;
 import edu.umn.cs.crisys.tb.model.type.ArrayType;
 import edu.umn.cs.crisys.tb.model.type.IdType;
 import edu.umn.cs.crisys.tb.model.type.PointerType;
 import edu.umn.cs.crisys.tb.model.type.RecordType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
-import edu.umn.cs.crisys.tb.parse.Model;
 
 /**
  * @author Whalen
