@@ -221,7 +221,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
         for (AgreeStatement statement : agreeNode.assertions) {
             assertions.add(statement.expr);
-            if(AgreeUtils.referenceIsInContract(statement.reference)){
+            if(AgreeUtils.referenceIsInContract(statement.reference, agreeNode.compInst)){
                 ensures.add(statement.expr);
             }
         }

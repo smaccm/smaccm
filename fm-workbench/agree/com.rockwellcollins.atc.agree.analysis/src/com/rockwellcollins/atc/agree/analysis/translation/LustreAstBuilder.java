@@ -14,7 +14,10 @@ import org.eclipse.xtext.util.Tuples;
 import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.EventDataPortImpl;
 import org.eclipse.xtext.util.Pair;
+
+import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
@@ -74,8 +77,6 @@ public class LustreAstBuilder {
 	protected static final String historyNodeName = "__HIST";
 	public static final String assumeHistSufix = assumeSuffix + historyNodeName;
 	protected static final String patternPropSuffix = "__PATTERN";
-	public static final String LATCHED_INPUTS_PREFIX = "__LATCHED_INPUTS";
-	public static final String LATCHED_VAR_PREFIX = "__LATCHED__";
 
 	// private static AgreeProgram translate(AgreeProgram program){
 	// return AgreeInlineLatchedConnections.translate(program);
@@ -120,7 +121,7 @@ public class LustreAstBuilder {
         // equations
         // and type equations. This would clear this up
         for (AgreeStatement statement : topNode.assertions) {
-            if (AgreeUtils.referenceIsInContract(statement)){
+            if (AgreeUtils.referenceIsInContract(statement, topNode.compInst)){
 
                 // this is a strange hack we have to do. we have to make
                 // equation and property
@@ -361,7 +362,7 @@ public class LustreAstBuilder {
 			equations.addAll(agreeNode.localEquations);
 		} else {
 			for (AgreeEquation eq : agreeNode.localEquations) {
-				if (AgreeUtils.referenceIsInContract(eq.reference)) {
+				if (AgreeUtils.referenceIsInContract(eq.reference, agreeNode.compInst)) {
 					equations.add(eq);
 				}
 			}
@@ -380,7 +381,7 @@ public class LustreAstBuilder {
 			// equations
 			// and type equations. This would clear this up
 			for (AgreeStatement assertion : agreeNode.assertions) {
-				if (AgreeUtils.referenceIsInContract(assertion.reference)) {
+				if (AgreeUtils.referenceIsInContract(assertion.reference, agreeNode.compInst)) {
 					stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
 				}
 			}
@@ -392,7 +393,7 @@ public class LustreAstBuilder {
 			eventTimes.addAll(agreeNode.eventTimes);
 		} else {
 			for (AgreeVar eventVar : agreeNode.eventTimes) {
-				if (AgreeUtils.referenceIsInContract(eventVar.reference)) {
+				if (AgreeUtils.referenceIsInContract(eventVar.reference, agreeNode.compInst)) {
 					eventTimes.add(eventVar);
 				}
 			}
@@ -411,7 +412,7 @@ public class LustreAstBuilder {
 			if (withAssertions) {
 				locals.add(var);
 			} else {
-				if (AgreeUtils.referenceIsInContract(var.reference)) {
+				if (AgreeUtils.referenceIsInContract(var.reference, agreeNode.compInst)) {
 					locals.add(var);
 				}
 			}
@@ -794,10 +795,9 @@ public class LustreAstBuilder {
 			String suffix = "";
 			if (agreeNode.timing == TimingModel.LATCHED) {
 				EObject ref = ((AgreeVar) var).reference;
-				if (ref instanceof DataPortImpl && ((DataPortImpl) ref).isIn()) {
-					suffix = AgreeInlineLatchedConnections.LATCHED_SUFFIX;
-				}
-				if (ref instanceof EventDataPortImpl && ((EventDataPortImpl) ref).isIn()) {
+				if (ref instanceof DataPortImpl && ((DataPortImpl) ref).isIn()
+						|| (ref instanceof EventDataPortImpl && ((EventDataPortImpl) ref).isIn()
+								|| (ref instanceof Arg && ref.eContainer() instanceof InputStatement))) {
 					suffix = AgreeInlineLatchedConnections.LATCHED_SUFFIX;
 				}
 			}

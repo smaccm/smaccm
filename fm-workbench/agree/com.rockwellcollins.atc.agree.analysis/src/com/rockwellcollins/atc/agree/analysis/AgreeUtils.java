@@ -292,7 +292,11 @@ public class AgreeUtils {
 //        return false;
 //    }
 
-    public static boolean referenceIsInContract(EObject reference) {
+    public static boolean referenceIsInContract(EObject reference, ComponentInstance compInst) {
+    	ComponentClassifier compClass = compInst.getComponentClassifier();
+    	if(compClass instanceof ComponentImplementation){
+    		compClass = ((ComponentImplementation)compClass).getType();
+    	}
         if(reference == null){
             return false;
         }
@@ -303,7 +307,7 @@ public class AgreeUtils {
         if (container instanceof ComponentImplementation) {
             return false;
         }
-        return true;
+        return container == compClass;
     }
     
     public static GlobalURIEditorOpener getGlobalURIEditorOpener() {

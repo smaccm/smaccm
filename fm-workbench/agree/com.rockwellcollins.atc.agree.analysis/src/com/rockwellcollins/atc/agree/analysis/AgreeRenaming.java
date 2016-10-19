@@ -74,10 +74,6 @@ public class AgreeRenaming extends Renaming {
 
         // magic to remove the prefix
         String newName;
-        if(original.startsWith(LustreAstBuilder.LATCHED_VAR_PREFIX)){
-            original = original.replaceAll(LustreAstBuilder.LATCHED_VAR_PREFIX, "");
-            original += "__LATCHED";
-        }
         newName = original.replaceAll("___Nod([^_]_?)*_", "");
         newName = newName.replace("~condact", "");
         newName = newName.replaceAll("~[0-9]*", "");

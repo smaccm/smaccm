@@ -114,7 +114,7 @@ public class AgreeNodeToLustreContract {
         
         List<Equation> eqs = new ArrayList<>();
         for(AgreeStatement statement : agreeNode.assertions){
-            if(AgreeUtils.referenceIsInContract(statement.reference)){
+            if(AgreeUtils.referenceIsInContract(statement.reference, agreeNode.compInst)){
                 BinaryExpr expr = (BinaryExpr) statement.expr;
                 
                 if((expr.op != BinaryOp.EQUAL)){
