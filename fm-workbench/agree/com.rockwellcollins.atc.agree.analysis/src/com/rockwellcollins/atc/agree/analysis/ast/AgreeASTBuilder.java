@@ -571,7 +571,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			dataClass = ((DataSubcomponent) port).getDataSubcomponentType();
 		}
 		if(dataClass == null){
-			throw new AgreeException("unable to determine type of port: "+port.getFullName());
+			AgreeLogger.logWarning("Unable to determine the type of port '"+port+"'");
 		}
 		return dataClass;
 	}
