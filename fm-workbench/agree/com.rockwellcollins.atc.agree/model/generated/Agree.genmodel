@@ -4,7 +4,7 @@
     editorDirectory="/com.rockwellcollins.atc.agree.editor/src" modelPluginID="com.rockwellcollins.atc.agree"
     forceOverwrite="true" modelName="Agree" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="5.0" copyrightFields="false" editPluginID="com.rockwellcollins.atc.agree.edit"
-    editorPluginID="com.rockwellcollins.atc.agree.editor" runtimeVersion="2.9" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/resource/org.osate.aadl2/model/aadl2.genmodel#//aadl2">
+    editorPluginID="com.rockwellcollins.atc.agree.editor" runtimeVersion="2.9" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/resource/org.osate.aadl2/model/aadl2.genmodel#//aadl2 platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel#//types">
   <genPackages prefix="Agree" basePackage="com.rockwellcollins.atc.agree" resource="XML"
       disposableProviderFactory="true" ecorePackage="Agree.ecore#/">
     <genClasses ecoreClass="Agree.ecore#//AgreeLibrary"/>
@@ -19,7 +19,9 @@
     <genClasses ecoreClass="Agree.ecore#//OrderStatement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//OrderStatement/comps"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//CallDef"/>
+    <genClasses ecoreClass="Agree.ecore#//CallDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//CallDef/args"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//PropertyStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PropertyStatement/expr"/>
     </genClasses>
@@ -39,6 +41,20 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnDefExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnDefExpr/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnDefExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LibraryFnDefExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LibraryFnDefExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LibraryFnDefExpr/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LinearizationDefExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationDefExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationDefExpr/intervals"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationDefExpr/precision"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationDefExpr/exprBody"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LinearizationInterval">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationInterval/start"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationInterval/end"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//NodeDefExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeDefExpr/args"/>
@@ -198,6 +214,20 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/argExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NativeFnDefExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NativeFnDefExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NativeFnDefExpr/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute Agree.ecore#//NativeFnDefExpr/nativeFn"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference Agree.ecore#//NativeFnDefExpr/native"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NonlinearLibraryFnDefExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NonlinearLibraryFnDefExpr/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NonlinearLibraryFnDefExpr/nativeDecls"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NonlinearNativeDecl">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NonlinearNativeDecl/lang"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NonlinearNativeDecl/fn"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//IdExpr">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//IdExpr/id"/>

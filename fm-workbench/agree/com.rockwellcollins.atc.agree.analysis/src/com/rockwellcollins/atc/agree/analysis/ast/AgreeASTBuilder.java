@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlPackage;
@@ -88,6 +89,7 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
@@ -119,6 +121,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
+import com.rockwellcollins.atc.agree.analysis.linearization.LinearizationRewriter;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr> {
@@ -131,6 +134,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     private static Set<RecordType> globalTypes;
     private static Map<NamedElement, String> typeMap;
     private ComponentInstance curInst; // used for Get_Property Expressions
+
+    private LinearizationRewriter linearizationRewriter = new LinearizationRewriter();
 
     public AgreeProgram getAgreeProgram(ComponentInstance compInst) {
 
@@ -270,9 +275,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         // in a component containing an annex
         assertReferencedSubcomponentHasAnnex(compInst, inputs, outputs, subNodes, assertions, lemmas);
 
-        return new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
-                guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing,
-                compInst);
+		AgreeNode result = new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
+				guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing, compInst);
+
+		return linearizationRewriter.visit(result);
     }
 
     private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,
@@ -1129,6 +1135,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         
         Node node = builder.build();
         addToNodeList(node);
+        return null;
+    }
+
+    @Override
+    public Expr caseLinearizationDefExpr(LinearizationDefExpr expr) {
+        NodeDefExpr linearization = linearizationRewriter.addLinearization(expr);
+        caseNodeDefExpr(linearization);
         return null;
     }
 

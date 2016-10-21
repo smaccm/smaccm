@@ -800,6 +800,243 @@ public interface AgreePackage extends EPackage
   int FN_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LibraryFnDefExprImpl <em>Library Fn Def Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.LibraryFnDefExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLibraryFnDefExpr()
+   * @generated
+   */
+  int LIBRARY_FN_DEF_EXPR = 12;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_DEF_EXPR__OWNED_ELEMENT = Aadl2Package.NAMED_ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_DEF_EXPR__OWNED_COMMENT = Aadl2Package.NAMED_ELEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_DEF_EXPR__NAME = Aadl2Package.NAMED_ELEMENT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_DEF_EXPR__QUALIFIED_NAME = Aadl2Package.NAMED_ELEMENT__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_DEF_EXPR__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_DEF_EXPR__ARGS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Type</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_DEF_EXPR__TYPE = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Library Fn Def Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl <em>Linearization Def Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLinearizationDefExpr()
+   * @generated
+   */
+  int LINEARIZATION_DEF_EXPR = 13;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__OWNED_ELEMENT = Aadl2Package.NAMED_ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__OWNED_COMMENT = Aadl2Package.NAMED_ELEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__NAME = Aadl2Package.NAMED_ELEMENT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__QUALIFIED_NAME = Aadl2Package.NAMED_ELEMENT__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__ARGS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Intervals</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__INTERVALS = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Precision</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__PRECISION = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 2;
+
+  /**
+   * The feature id for the '<em><b>Expr Body</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR__EXPR_BODY = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
+
+  /**
+   * The number of structural features of the '<em>Linearization Def Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_DEF_EXPR_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 4;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationIntervalImpl <em>Linearization Interval</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.LinearizationIntervalImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLinearizationInterval()
+   * @generated
+   */
+  int LINEARIZATION_INTERVAL = 14;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_INTERVAL__OWNED_ELEMENT = Aadl2Package.ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_INTERVAL__OWNED_COMMENT = Aadl2Package.ELEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Start</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_INTERVAL__START = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>End</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_INTERVAL__END = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Linearization Interval</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LINEARIZATION_INTERVAL_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 2;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl <em>Node Def Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -807,7 +1044,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeDefExpr()
    * @generated
    */
-  int NODE_DEF_EXPR = 12;
+  int NODE_DEF_EXPR = 15;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -898,7 +1135,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeBodyExpr()
    * @generated
    */
-  int NODE_BODY_EXPR = 13;
+  int NODE_BODY_EXPR = 16;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -953,7 +1190,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeStmt()
    * @generated
    */
-  int NODE_STMT = 14;
+  int NODE_STMT = 17;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -999,7 +1236,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getArg()
    * @generated
    */
-  int ARG = 15;
+  int ARG = 18;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1072,7 +1309,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getType()
    * @generated
    */
-  int TYPE = 16;
+  int TYPE = 19;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1109,7 +1346,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordDefExpr()
    * @generated
    */
-  int RECORD_DEF_EXPR = 17;
+  int RECORD_DEF_EXPR = 20;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1182,7 +1419,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getExpr()
    * @generated
    */
-  int EXPR = 18;
+  int EXPR = 21;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1219,7 +1456,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getComplexExpr()
    * @generated
    */
-  int COMPLEX_EXPR = 19;
+  int COMPLEX_EXPR = 22;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1256,7 +1493,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNestedDotID()
    * @generated
    */
-  int NESTED_DOT_ID = 20;
+  int NESTED_DOT_ID = 23;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1320,7 +1557,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractLibrary()
    * @generated
    */
-  int AGREE_CONTRACT_LIBRARY = 21;
+  int AGREE_CONTRACT_LIBRARY = 24;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1393,7 +1630,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractSubclause()
    * @generated
    */
-  int AGREE_CONTRACT_SUBCLAUSE = 22;
+  int AGREE_CONTRACT_SUBCLAUSE = 25;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1475,7 +1712,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContract()
    * @generated
    */
-  int AGREE_CONTRACT = 23;
+  int AGREE_CONTRACT = 26;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1521,7 +1758,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssumeStatement()
    * @generated
    */
-  int ASSUME_STATEMENT = 24;
+  int ASSUME_STATEMENT = 27;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1576,7 +1813,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGuaranteeStatement()
    * @generated
    */
-  int GUARANTEE_STATEMENT = 25;
+  int GUARANTEE_STATEMENT = 28;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1631,7 +1868,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssertStatement()
    * @generated
    */
-  int ASSERT_STATEMENT = 26;
+  int ASSERT_STATEMENT = 29;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1686,7 +1923,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getInitialStatement()
    * @generated
    */
-  int INITIAL_STATEMENT = 27;
+  int INITIAL_STATEMENT = 30;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1732,7 +1969,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getParamStatement()
    * @generated
    */
-  int PARAM_STATEMENT = 28;
+  int PARAM_STATEMENT = 31;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1787,7 +2024,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLemmaStatement()
    * @generated
    */
-  int LEMMA_STATEMENT = 29;
+  int LEMMA_STATEMENT = 32;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1842,7 +2079,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLiftStatement()
    * @generated
    */
-  int LIFT_STATEMENT = 30;
+  int LIFT_STATEMENT = 33;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1888,7 +2125,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getConnectionStatement()
    * @generated
    */
-  int CONNECTION_STATEMENT = 31;
+  int CONNECTION_STATEMENT = 34;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1943,7 +2180,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getMNSynchStatement()
    * @generated
    */
-  int MN_SYNCH_STATEMENT = 32;
+  int MN_SYNCH_STATEMENT = 35;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2043,7 +2280,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getCalenStatement()
    * @generated
    */
-  int CALEN_STATEMENT = 33;
+  int CALEN_STATEMENT = 36;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2116,7 +2353,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAsynchStatement()
    * @generated
    */
-  int ASYNCH_STATEMENT = 34;
+  int ASYNCH_STATEMENT = 37;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2180,7 +2417,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLatchedStatement()
    * @generated
    */
-  int LATCHED_STATEMENT = 35;
+  int LATCHED_STATEMENT = 38;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2244,7 +2481,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
    * @generated
    */
-  int NODE_EQ = 36;
+  int NODE_EQ = 39;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2299,7 +2536,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeLemma()
    * @generated
    */
-  int NODE_LEMMA = 37;
+  int NODE_LEMMA = 40;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2354,7 +2591,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrimType()
    * @generated
    */
-  int PRIM_TYPE = 38;
+  int PRIM_TYPE = 41;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2436,7 +2673,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordType()
    * @generated
    */
-  int RECORD_TYPE = 39;
+  int RECORD_TYPE = 42;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2482,7 +2719,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBinaryExpr()
    * @generated
    */
-  int BINARY_EXPR = 40;
+  int BINARY_EXPR = 43;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2546,7 +2783,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getUnaryExpr()
    * @generated
    */
-  int UNARY_EXPR = 41;
+  int UNARY_EXPR = 44;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2601,7 +2838,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIfThenElseExpr()
    * @generated
    */
-  int IF_THEN_ELSE_EXPR = 42;
+  int IF_THEN_ELSE_EXPR = 45;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2665,7 +2902,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrevExpr()
    * @generated
    */
-  int PREV_EXPR = 43;
+  int PREV_EXPR = 46;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2720,7 +2957,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGetPropertyExpr()
    * @generated
    */
-  int GET_PROPERTY_EXPR = 44;
+  int GET_PROPERTY_EXPR = 47;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2775,7 +3012,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordUpdateExpr()
    * @generated
    */
-  int RECORD_UPDATE_EXPR = 45;
+  int RECORD_UPDATE_EXPR = 48;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2839,7 +3076,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIntLitExpr()
    * @generated
    */
-  int INT_LIT_EXPR = 46;
+  int INT_LIT_EXPR = 49;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2885,7 +3122,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPreExpr()
    * @generated
    */
-  int PRE_EXPR = 47;
+  int PRE_EXPR = 50;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2931,7 +3168,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getEventExpr()
    * @generated
    */
-  int EVENT_EXPR = 48;
+  int EVENT_EXPR = 51;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2977,7 +3214,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealLitExpr()
    * @generated
    */
-  int REAL_LIT_EXPR = 49;
+  int REAL_LIT_EXPR = 52;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3023,7 +3260,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBoolLitExpr()
    * @generated
    */
-  int BOOL_LIT_EXPR = 50;
+  int BOOL_LIT_EXPR = 53;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3069,7 +3306,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 51;
+  int THIS_EXPR = 54;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3115,7 +3352,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFloorCast()
    * @generated
    */
-  int FLOOR_CAST = 52;
+  int FLOOR_CAST = 55;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3161,7 +3398,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealCast()
    * @generated
    */
-  int REAL_CAST = 53;
+  int REAL_CAST = 56;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3207,7 +3444,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 54;
+  int FN_CALL_EXPR = 57;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3262,7 +3499,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordExpr()
    * @generated
    */
-  int RECORD_EXPR = 55;
+  int RECORD_EXPR = 58;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3592,6 +3829,124 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getFnDefExpr_Expr();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr <em>Library Fn Def Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Library Fn Def Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr
+   * @generated
+   */
+  EClass getLibraryFnDefExpr();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr#getArgs()
+   * @see #getLibraryFnDefExpr()
+   * @generated
+   */
+  EReference getLibraryFnDefExpr_Args();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr#getType <em>Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Type</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr#getType()
+   * @see #getLibraryFnDefExpr()
+   * @generated
+   */
+  EReference getLibraryFnDefExpr_Type();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr <em>Linearization Def Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Linearization Def Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationDefExpr
+   * @generated
+   */
+  EClass getLinearizationDefExpr();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getArgs()
+   * @see #getLinearizationDefExpr()
+   * @generated
+   */
+  EReference getLinearizationDefExpr_Args();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getIntervals <em>Intervals</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Intervals</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getIntervals()
+   * @see #getLinearizationDefExpr()
+   * @generated
+   */
+  EReference getLinearizationDefExpr_Intervals();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getPrecision <em>Precision</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Precision</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getPrecision()
+   * @see #getLinearizationDefExpr()
+   * @generated
+   */
+  EReference getLinearizationDefExpr_Precision();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getExprBody <em>Expr Body</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expr Body</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationDefExpr#getExprBody()
+   * @see #getLinearizationDefExpr()
+   * @generated
+   */
+  EReference getLinearizationDefExpr_ExprBody();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.LinearizationInterval <em>Linearization Interval</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Linearization Interval</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationInterval
+   * @generated
+   */
+  EClass getLinearizationInterval();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LinearizationInterval#getStart <em>Start</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Start</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationInterval#getStart()
+   * @see #getLinearizationInterval()
+   * @generated
+   */
+  EReference getLinearizationInterval_Start();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LinearizationInterval#getEnd <em>End</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>End</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LinearizationInterval#getEnd()
+   * @see #getLinearizationInterval()
+   * @generated
+   */
+  EReference getLinearizationInterval_End();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NodeDefExpr <em>Node Def Expr</em>}'.
@@ -5046,6 +5401,100 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference FN_DEF_EXPR__EXPR = eINSTANCE.getFnDefExpr_Expr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.LibraryFnDefExprImpl <em>Library Fn Def Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.LibraryFnDefExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLibraryFnDefExpr()
+     * @generated
+     */
+    EClass LIBRARY_FN_DEF_EXPR = eINSTANCE.getLibraryFnDefExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LIBRARY_FN_DEF_EXPR__ARGS = eINSTANCE.getLibraryFnDefExpr_Args();
+
+    /**
+     * The meta object literal for the '<em><b>Type</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LIBRARY_FN_DEF_EXPR__TYPE = eINSTANCE.getLibraryFnDefExpr_Type();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl <em>Linearization Def Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.LinearizationDefExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLinearizationDefExpr()
+     * @generated
+     */
+    EClass LINEARIZATION_DEF_EXPR = eINSTANCE.getLinearizationDefExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LINEARIZATION_DEF_EXPR__ARGS = eINSTANCE.getLinearizationDefExpr_Args();
+
+    /**
+     * The meta object literal for the '<em><b>Intervals</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LINEARIZATION_DEF_EXPR__INTERVALS = eINSTANCE.getLinearizationDefExpr_Intervals();
+
+    /**
+     * The meta object literal for the '<em><b>Precision</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LINEARIZATION_DEF_EXPR__PRECISION = eINSTANCE.getLinearizationDefExpr_Precision();
+
+    /**
+     * The meta object literal for the '<em><b>Expr Body</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LINEARIZATION_DEF_EXPR__EXPR_BODY = eINSTANCE.getLinearizationDefExpr_ExprBody();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.LinearizationIntervalImpl <em>Linearization Interval</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.LinearizationIntervalImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLinearizationInterval()
+     * @generated
+     */
+    EClass LINEARIZATION_INTERVAL = eINSTANCE.getLinearizationInterval();
+
+    /**
+     * The meta object literal for the '<em><b>Start</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LINEARIZATION_INTERVAL__START = eINSTANCE.getLinearizationInterval_Start();
+
+    /**
+     * The meta object literal for the '<em><b>End</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LINEARIZATION_INTERVAL__END = eINSTANCE.getLinearizationInterval_End();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NodeDefExprImpl <em>Node Def Expr</em>}' class.

@@ -31,7 +31,10 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
@@ -212,7 +215,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				sequence_SynchStatement(context, (AsynchStatement) semanticObject); 
 				return; 
 			case AgreePackage.BINARY_EXPR:
-				sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
+				sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_PowerExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
 				return; 
 			case AgreePackage.BOOL_LIT_EXPR:
 				sequence_TermExpr(context, (BoolLitExpr) semanticObject); 
@@ -262,8 +265,17 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.LEMMA_STATEMENT:
 				sequence_SpecStatement(context, (LemmaStatement) semanticObject); 
 				return; 
+			case AgreePackage.LIBRARY_FN_DEF_EXPR:
+				sequence_LibraryFnDefExpr(context, (LibraryFnDefExpr) semanticObject); 
+				return; 
 			case AgreePackage.LIFT_STATEMENT:
 				sequence_SpecStatement(context, (LiftStatement) semanticObject); 
+				return; 
+			case AgreePackage.LINEARIZATION_DEF_EXPR:
+				sequence_LinearizationDefExpr(context, (LinearizationDefExpr) semanticObject); 
+				return; 
+			case AgreePackage.LINEARIZATION_INTERVAL:
+				sequence_LinearizationInterval(context, (LinearizationInterval) semanticObject); 
 				return; 
 			case AgreePackage.MN_SYNCH_STATEMENT:
 				sequence_SynchStatement(context, (MNSynchStatement) semanticObject); 
@@ -335,8 +347,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	/**
 	 * Constraint:
 	 *     (
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=PowerExpr) | 
+	 *         (left=PowerExpr_BinaryExpr_1_0_0_0 op='^' right=UnaryExpr) | 
 	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
-	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=UnaryExpr) | 
 	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
 	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
 	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) | 
@@ -345,7 +358,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *         (left=ArrowExpr_BinaryExpr_1_0_0_0 op='->' right=ArrowExpr)
 	 *     )
 	 */
-	protected void sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
+	protected void sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_PowerExpr_RelateExpr(EObject context, BinaryExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -445,6 +458,41 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (a=Expr b=Expr c=Expr)
 	 */
 	protected void sequence_IfThenElseExpr(EObject context, IfThenElseExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (name=ID args+=Arg args+=Arg* type=Type)
+	 */
+	protected void sequence_LibraryFnDefExpr(EObject context, LibraryFnDefExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         name=ID 
+	 *         args+=Arg 
+	 *         args+=Arg* 
+	 *         intervals+=LinearizationInterval 
+	 *         intervals+=LinearizationInterval* 
+	 *         precision=Expr? 
+	 *         exprBody=Expr
+	 *     )
+	 */
+	protected void sequence_LinearizationDefExpr(EObject context, LinearizationDefExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (start=Expr end=Expr)
+	 */
+	protected void sequence_LinearizationInterval(EObject context, LinearizationInterval semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

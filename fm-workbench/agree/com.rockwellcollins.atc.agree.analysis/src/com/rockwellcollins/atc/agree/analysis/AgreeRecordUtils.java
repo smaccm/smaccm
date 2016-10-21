@@ -237,20 +237,18 @@ public class AgreeRecordUtils {
     }
 
     public static String getNodeName(NamedElement nodeDef) {
-        String nodeName = "";
         EObject container = nodeDef.eContainer();
+        List<String> segments = new ArrayList<>();
 
-        while (!(container instanceof AadlPackage)) {
-            if (container instanceof ComponentClassifier) {
-                nodeName = ((ComponentClassifier) container).getName();
-                nodeName = dotChar + nodeName;
-                nodeName = nodeName.replace(".", dotChar);
+        segments.add(nodeDef.getName());
+        while (container != null) {
+            if (container instanceof ComponentClassifier || container instanceof AadlPackage) {
+                segments.add(0, ((NamedElement) container).getName().replace(".", AgreeASTBuilder.dotChar));
             }
             container = container.eContainer();
         }
-        nodeName = ((AadlPackage) container).getName() + nodeName + dotChar + nodeDef.getName();
 
-        return nodeName;
+        return String.join(AgreeASTBuilder.dotChar, segments);
     }
 
     public static String getObjectLocationPrefix(EObject obj) {

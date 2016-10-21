@@ -85,7 +85,10 @@ import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -288,6 +291,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkFloorCast(FloorCast floor) {
+		if (isInLinearizationBody(floor)) {
+			error(floor, "'event' expressions not allowed in linearization body expressions");
+			return;
+		}
+
 		AgreeType exprType = getAgreeType(floor.getExpr());
 
 		if (!matches(REAL, exprType)) {
@@ -296,16 +304,26 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	@Check(CheckType.FAST)
-	public void checkRealCast(RealCast floor) {
-		AgreeType exprType = getAgreeType(floor.getExpr());
+	public void checkRealCast(RealCast real) {
+		if (isInLinearizationBody(real)) {
+			error(real, "'event' expressions not allowed in linearization body expressions");
+			return;
+		}
+
+		AgreeType exprType = getAgreeType(real.getExpr());
 
 		if (!matches(INT, exprType)) {
-			error(floor, "Argument of floor cast is of type '" + exprType.toString() + "' but must be of type 'int'");
+			error(real, "Argument of real cast is of type '" + exprType.toString() + "' but must be of type 'int'");
 		}
 	}
 
 	@Check(CheckType.FAST)
 	public void checkEventExpr(EventExpr event) {
+		if (isInLinearizationBody(event)) {
+			error(event, "'event' expressions not allowed in linearization body expressions");
+			return;
+		}
+
 		NestedDotID nestId = event.getId();
 		NamedElement namedEl = getFinalNestId(nestId);
 		if (!(namedEl instanceof EventDataPort)) {
@@ -519,6 +537,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkRecordUpdateExpr(RecordUpdateExpr upExpr) {
+
+		if (isInLinearizationBody(upExpr)) {
+			error(upExpr, "Record update expressions not allowed in linearization body expression");
+			return;
+		}
 
 		EList<NamedElement> args = upExpr.getArgs();
 		EList<Expr> argExprs = upExpr.getArgExpr();
@@ -1221,6 +1244,81 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
+	public static boolean isInLinearizationBody(Expr expr) {
+		boolean result = false;
+		EObject current = expr.eContainer();
+		while (current != null && current instanceof Expr) {
+			EObject container = current.eContainer(); 
+			if (container instanceof LinearizationDefExpr) {
+				result = ((LinearizationDefExpr) container).getExprBody().equals(current);
+			}
+			current = container;
+		}
+		return result;
+	}
+
+	@Check(CheckType.FAST)
+	public void checkLinearizationDefExpr(LinearizationDefExpr linDefExpr) {
+		// Check that allowable number of formal args are defined
+		if (linDefExpr.getArgs().size() != 1) {
+			error(linDefExpr, "Linearization definitions are limited to functions of one variable.");
+		}
+
+		// Check that the formal args are all of real type
+		for (Arg arg : linDefExpr.getArgs()) {
+			AgreeType argType = getAgreeType(arg.getType());
+			if (!matches(argType, REAL)) {
+				error(arg, "Linearizations formal arguments must be of real type, but found type " + argType);
+			}
+		}
+
+		// Check that the number of domain intervals matches the number of
+		// formal arguments
+		if (linDefExpr.getIntervals().size() != linDefExpr.getArgs().size()) {
+			error(linDefExpr, "Number of formal variables and intervals does not match.");
+		}
+
+		// If a precision clause is present, it must be a constant expression
+		// of real type
+		Expr precisionExpr = linDefExpr.getPrecision();
+		if (precisionExpr != null) {
+			AgreeType precisionExprType = getAgreeType(precisionExpr);
+			if (!matches(precisionExprType, REAL)) {
+				error(precisionExpr,
+						"Linearization precision must be of real type, but found type " + precisionExprType);
+			}
+			if (!exprIsConst(precisionExpr)) {
+				error(precisionExpr, "Linearization precision must be constant expression of real type"
+						+ ", found non-constant expression.");
+			}
+		}
+	}
+
+	@Check(CheckType.FAST)
+	public void checkLinearizationInterval(LinearizationInterval linInterval) {
+		final String message = "Linearization interval endpoints must be constant expressions of real type";
+		Expr startExpr = linInterval.getStart();
+		Expr endExpr = linInterval.getEnd();
+		AgreeType startExprType = getAgreeType(startExpr);
+		AgreeType endExprType = getAgreeType(endExpr);
+
+		// The type of the interval start and end must be of real type
+		if (!matches(startExprType, REAL)) {
+			error(startExpr, message + ", found type " + startExprType + ".");
+		}
+		if (!matches(endExprType, REAL)) {
+			error(endExpr, message + ", found type " + endExprType + ".");
+		}
+
+		// The interval start and end expressions must be constant
+		if (!exprIsConst(startExpr)) {
+			error(endExpr, message + ", found non-constant expression.");
+		}
+		if (!exprIsConst(startExpr)) {
+			error(endExpr, message + ", found non-constant expression.");
+		}
+	}
+
 	@Check(CheckType.FAST)
 	public void checkThisExpr(ThisExpr thisExpr) {
 		// these should only appear in Get_Property expressions
@@ -1255,6 +1353,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(prevExpr, "The first and second arguments of the 'prev' function are of non-matching types '"
 					+ delayType + "' and '" + initType + "'");
 		}
+
+		if (isInLinearizationBody(prevExpr)) {
+			error(prevExpr, "'prev' expressions are not allowed in linearization body expressions.");
+		}
 	}
 
 	public void checkInputsVsActuals(FnCallExpr fnCall) {
@@ -1288,8 +1390,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			NodeDefExpr nodeDef = (NodeDefExpr) callDef;
 			inDefTypes = typesFromArgs(nodeDef.getArgs());
 			callName = nodeDef.getName();
+		} else if (callDef instanceof LinearizationDefExpr) {
+			LinearizationDefExpr linDef = (LinearizationDefExpr) callDef;
+			inDefTypes = typesFromArgs(linDef.getArgs());
+			callName = linDef.getName();
+		} else if (callDef instanceof LibraryFnDefExpr) {
+			LibraryFnDefExpr nativeDef = (LibraryFnDefExpr) callDef;
+			inDefTypes = typesFromArgs(nativeDef.getArgs());
+			callName = nativeDef.getName();
 		} else {
-			error(fnCall, "Node or Function definition name expected.");
+			error(fnCall, "Node, function or linearization definition name expected.");
 			return;
 		}
 
@@ -1315,6 +1425,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkFnCallExpr(FnCallExpr fnCall) {
+		NamedElement fn = getFinalNestId(fnCall.getFn());
+		if (isInLinearizationBody(fnCall)) {
+			if (fn instanceof NodeDefExpr) {
+				error(fnCall, "Node definitions cannot be applied in a linearization definition");
+			}
+		} else {
+			if (fn instanceof LibraryFnDefExpr) {
+				error(fnCall, "Library functions cannot be called from the logic");
+			}
+		}
 		checkInputsVsActuals(fnCall);
 	}
 
@@ -1365,6 +1485,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkIfThenElseExpr(IfThenElseExpr expr) {
+		if (isInLinearizationBody(expr)) {
+			error(expr, "If-then-else expressions not allowed in linearization body expressions");
+			return;
+		}
+
 		AgreeType condType = getAgreeType(expr.getA());
 		AgreeType thenType = getAgreeType(expr.getB());
 		AgreeType elseType = getAgreeType(expr.getC());
@@ -1379,6 +1504,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
+	@Check(CheckType.FAST)
+	public void checkPreExpr(PreExpr expr) {
+		if (isInLinearizationBody(expr)) {
+			error(expr, "'pre' expressions not allowed in linearization body expressions");
+		}
+	}
+
 	private AgreeType getAgreeType(IfThenElseExpr expr) {
 		return getAgreeType(expr.getB());
 	}
@@ -1390,15 +1522,20 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		String op = binExpr.getOp();
 		Expr rightSide = binExpr.getRight();
 		Expr leftSide = binExpr.getLeft();
+		boolean isInLinearizationBodyExpr = isInLinearizationBody(binExpr);
 
 		boolean rightSideConst = exprIsConst(rightSide);
 		boolean leftSideConst = exprIsConst(leftSide);
 
 		switch (op) {
 		case "->":
-			if (!matches(typeRight, typeLeft)) {
-				error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
-						+ "' and '" + typeRight + "', but must be of the same type");
+			if (isInLinearizationBodyExpr) {
+				error(binExpr, "Arrow '->' expressions are not allowed in linearization body expressions.");
+			} else {
+				if (!matches(typeRight, typeLeft)) {
+					error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
+							+ "' and '" + typeRight + "', but must be of the same type");
+				}
 			}
 			return;
 
@@ -1406,22 +1543,32 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		case "<=>":
 		case "and":
 		case "or":
-			if (!matches(BOOL, typeLeft)) {
-				error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft.toString()
-						+ "' but must be of " + "type 'bool'");
-			}
-			if (!matches(BOOL, typeRight)) {
-				error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight.toString()
-						+ "' but must be of" + " type 'bool'");
+			if (isInLinearizationBodyExpr) {
+				error(binExpr,
+						"Logical expressions (like '" + op + "') are not allowed in linearization body expressions.");
+			} else {
+				if (!matches(BOOL, typeLeft)) {
+					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft.toString()
+							+ "' but must be of " + "type 'bool'");
+				}
+				if (!matches(BOOL, typeRight)) {
+					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight.toString()
+							+ "' but must be of" + " type 'bool'");
+				}
 			}
 			return;
 
 		case "=":
 		case "<>":
 		case "!=":
-			if (!matches(typeRight, typeLeft)) {
-				error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
-						+ "' and '" + typeRight + "', but must be of the same type");
+			if (isInLinearizationBodyExpr) {
+				error(binExpr, "Logical comparison expressions (like '" + op
+						+ "') are not allowed in linearization body expressions.");
+			} else {
+				if (!matches(typeRight, typeLeft)) {
+					error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
+							+ "' and '" + typeRight + "', but must be of the same type");
+				}
 			}
 			return;
 
@@ -1429,6 +1576,25 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		case "<=":
 		case ">":
 		case ">=":
+			if (isInLinearizationBodyExpr) {
+				error(binExpr, "Comparison expressions (like '" + op
+						+ "') are not allowed in linearization body expressions.");
+			} else {
+				if (!matches(typeRight, typeLeft)) {
+					error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
+							+ "' and '" + typeRight + "', but must be of the same type");
+				}
+				if (!matches(INT, typeLeft) && !matches(REAL, typeLeft)) {
+					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft
+							+ "' but must be of type" + "'int' or 'real'");
+				}
+				if (!matches(INT, typeRight) && !matches(REAL, typeRight)) {
+					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight
+							+ "' but must be of type" + "'int' or 'real'");
+				}
+			}
+			return;
+
 		case "+":
 		case "-":
 		case "*":
@@ -1445,32 +1611,37 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 						+ "' but must be of type" + "'int' or 'real'");
 			}
 
-			if (op.equals("*")) {
+			if (op.equals("*") && !isInLinearizationBodyExpr) {
 				if (!rightSideConst && !leftSideConst) {
 					warning(binExpr, "neither the right nor the left side of binary expression '" + op
 							+ "' is constant'.  Non-linear expressions are only allowed with z3."
 							+ " Even with z3 they are not recomended...");
 				}
 			}
-
 			return;
+
 		case "mod":
 		case "div":
-			if (!matches(INT, typeLeft)) {
-				error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft
-						+ "' but must be of type 'int'");
+			if (isInLinearizationBodyExpr) {
+				error(binExpr, "Integer operation expressions (like '" + op
+						+ "') are not allowed in linearization body expressions.");
+			} else {
+				if (!matches(INT, typeLeft)) {
+					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft
+							+ "' but must be of type 'int'");
+				}
+				if (!matches(INT, typeRight)) {
+					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight
+							+ "' but must be of type 'int'");
+				}
+				if (!rightSideConst) {
+					warning(binExpr, "right side of binary expression '" + op + "' is not constant."
+							+ " Non-linear expressions are only allowed with z3."
+							+ " Even with z3 they are not recomended...");
+				}
 			}
-			if (!matches(INT, typeRight)) {
-				error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight
-						+ "' but must be of type 'int'");
-			}
-			if (!rightSideConst) {
-				warning(binExpr, "right side of binary expression '" + op + "' is not constant."
-						+ " Non-linear expressions are only allowed with z3."
-						+ " Even with z3 they are not recomended...");
-			}
-
 			return;
+
 		case "/":
 			if (!matches(REAL, typeLeft)) {
 				error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft
@@ -1481,19 +1652,20 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 						+ "' but must be of type 'real'");
 			}
 
-			if (!rightSideConst) {
+			if (!rightSideConst && !isInLinearizationBodyExpr) {
 				warning(binExpr, "right side of binary expression '" + op + "' is not constant."
 						+ " Non-linear expressions are only allowed with z3."
 						+ " Even with z3 they are not recomended...");
 			}
 
 			return;
+
 		default:
 			assert (false);
 		}
 	}
 
-	private boolean exprIsConst(Expr expr) {
+	public static boolean exprIsConst(Expr expr) {
 		if (expr instanceof NestedDotID) {
 			NamedElement finalId = getFinalNestId((NestedDotID) expr);
 			if (finalId instanceof ConstStatement) {
@@ -1533,7 +1705,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	public NamedElement getFinalNestId(NestedDotID dotId) {
+	public static NamedElement getFinalNestId(NestedDotID dotId) {
 		while (dotId.getSub() != null) {
 			dotId = dotId.getSub();
 		}
@@ -1746,24 +1918,46 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		NestedDotID dotId = fnCall.getFn();
 		NamedElement namedEl = getFinalNestId(dotId);
 
-		// extract in/out arguments
-		if (namedEl instanceof FnDefExpr) {
-			FnDefExpr fnDef = (FnDefExpr) namedEl;
-			return getAgreeType(fnDef.getType());
-		} else if (namedEl instanceof NodeDefExpr) {
-			NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
-			List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
-			if (outDefTypes.size() == 1) {
-				return outDefTypes.get(0);
+		if (isInLinearizationBody(fnCall)) {
+			// extract in/out arguments
+			if (namedEl instanceof FnDefExpr || namedEl instanceof NodeDefExpr) {
+				error(fnCall, "Calls to AGREE nodes and functions not allowed in linearization bodies");
+				return ERROR;
+			} else if (namedEl instanceof LinearizationDefExpr) {
+				return REAL;
+			} else if (namedEl instanceof LibraryFnDefExpr) {
+				LibraryFnDefExpr fnDef = (LibraryFnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
 			} else {
-				error(fnCall,
-						"Nodes embedded in expressions must have exactly one return value." + "  Node "
-								+ nodeDef.getName() + " contains " + outDefTypes.size() + " return values");
+				error(fnCall, "Node, function or linearization definition name expected.");
 				return ERROR;
 			}
+
 		} else {
-			error(fnCall, "Node or Function definition name expected.");
-			return ERROR;
+			// extract in/out arguments
+			if (namedEl instanceof FnDefExpr) {
+				FnDefExpr fnDef = (FnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
+			} else if (namedEl instanceof NodeDefExpr) {
+				NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
+				List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
+				if (outDefTypes.size() == 1) {
+					return outDefTypes.get(0);
+				} else {
+					error(fnCall,
+							"Nodes embedded in expressions must have exactly one return value." + "  Node "
+									+ nodeDef.getName() + " contains " + outDefTypes.size() + " return values");
+					return ERROR;
+				}
+			} else if (namedEl instanceof LinearizationDefExpr) {
+				return REAL;
+			} else if (namedEl instanceof LibraryFnDefExpr) {
+				LibraryFnDefExpr fnDef = (LibraryFnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
+			} else {
+				error(fnCall, "Node, function or linearization definition name expected.");
+				return ERROR;
+			}
 		}
 	}
 
@@ -1794,6 +1988,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		case "/":
 		case "mod":
 		case "div":
+		case "^":
 			return typeLeft;
 		}
 
