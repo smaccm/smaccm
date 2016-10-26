@@ -1,11 +1,12 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.TbFailure;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.type.ArrayType;
 import edu.umn.cs.crisys.tb.model.type.IdType;
 import edu.umn.cs.crisys.tb.model.type.PointerType;
@@ -17,7 +18,7 @@ import edu.umn.cs.crisys.tb.model.type.UnitType;
  * @author Whalen
  *
  */
-public class TypeNames {
+public class TypeNames implements NameEmitter {
   Type t;
   Type t_structural;
 
@@ -41,11 +42,7 @@ public class TypeNames {
   }
   
   public String getWriterFn() {
-    if (getIsUnit()) {
-      return "write_void";
-    } else {
-      return "write_" + t.getCType().typeString();
-    }
+     return "write_" + t.getCType().typeString();
   }
   
   public boolean getIsUnit() {
@@ -240,7 +237,7 @@ public class TypeNames {
   }    
 
   /* MWW: small hack */
-  public static String getPrefix() { return Model.getPrefix(); }
+  public static String getPrefix() { return OSModel.getPrefix(); }
   
   public String getSharedDataInterfaceName() {
     return getPrefix() + "_" + getName() + "_shared_var";

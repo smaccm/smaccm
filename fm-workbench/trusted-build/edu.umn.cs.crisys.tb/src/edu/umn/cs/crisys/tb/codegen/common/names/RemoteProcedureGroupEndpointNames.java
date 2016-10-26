@@ -1,8 +1,10 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint.AccessType;
 
@@ -10,7 +12,7 @@ import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint.AccessType;
  * @author Whalen
  *
  */
-public class RemoteProcedureGroupEndpointNames {
+public class RemoteProcedureGroupEndpointNames implements NameEmitter {
 
   RemoteProcedureGroupEndpoint rpge;
   
@@ -26,8 +28,8 @@ public class RemoteProcedureGroupEndpointNames {
     return "aadl_" + rpge.getName(); 
   }
   
-  public RemoteProcedureGroupNames getRemoteProcedureGroup() {
-    return new RemoteProcedureGroupNames(rpge.getRemoteProcedureGroup());
+  public NameEmitter getRemoteProcedureGroup() {
+    return EmitterFactory.remoteProcedureGroup(rpge.getRemoteProcedureGroup());
   }
   
   public String getProvidesOrRequires() {

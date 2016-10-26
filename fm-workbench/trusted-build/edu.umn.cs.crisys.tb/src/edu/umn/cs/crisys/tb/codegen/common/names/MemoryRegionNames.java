@@ -1,18 +1,20 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
+
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 
 /**
  * @author Whalen
  *
  */
-public class MemoryRegionName {
+public class MemoryRegionNames implements NameEmitter {
   
   private String name; 
   private String region;
   
-  public MemoryRegionName(String name, String region) {
+  public MemoryRegionNames(String name, String region) {
     this.name = name;
     this.region = region;
   }

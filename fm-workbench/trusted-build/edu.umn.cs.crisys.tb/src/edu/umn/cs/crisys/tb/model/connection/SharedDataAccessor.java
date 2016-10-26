@@ -3,6 +3,8 @@
  */
 package edu.umn.cs.crisys.tb.model.connection;
 
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 
 /**
@@ -10,7 +12,7 @@ import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
  *
  * This class represents a shared data object in AADL.
  */
-public class SharedDataAccessor {
+public class SharedDataAccessor extends ModelElementBase {
 
   private ThreadImplementation owner;
   private String accessorName;
@@ -56,4 +58,10 @@ public class SharedDataAccessor {
   public String getCommPrimHeaderNameOpt() {
     return this.commprimHeaderNameOpt;
   }
+
+@Override
+public ModelElement getParent() {
+   // TODO Auto-generated method stub
+   return getOwner();
+}
 }

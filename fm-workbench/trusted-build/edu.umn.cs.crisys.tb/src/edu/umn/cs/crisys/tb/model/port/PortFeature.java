@@ -3,12 +3,14 @@ package edu.umn.cs.crisys.tb.model.port;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 
-public abstract class DataPort {
+public abstract class PortFeature extends ModelElementBase {
 
 
   private String name;
@@ -21,7 +23,7 @@ public abstract class DataPort {
   private List<PortConnection> connections = new ArrayList<PortConnection>(); 
   private List<String> implementationFileList = new ArrayList<String>();
 
-	public DataPort(String portName, 
+	public PortFeature(String portName, 
 	                Type dataType,
 	                ThreadImplementation owner) {
 		this.name = portName;
@@ -29,7 +31,7 @@ public abstract class DataPort {
 		this.owner = owner;
 	}
 
-	
+	public ModelElement getParent() { return owner; }
 	
   /**
    * @return the name
@@ -45,7 +47,10 @@ public abstract class DataPort {
     this.name = portName;
   }
 
-  
+  public String getQualifiedName() {
+     return getOwner().getName() + "_" + getName();
+   }
+
   /**
    * @return the initializeEntrypointSourceText
    */
@@ -159,8 +164,8 @@ public abstract class DataPort {
 
   @Override
   public boolean equals(Object other) {
-    if (other instanceof DataPort) {
-      DataPort newPort = (DataPort) other; 
+    if (other instanceof PortFeature) {
+      PortFeature newPort = (PortFeature) other; 
       return (newPort.getName().equalsIgnoreCase(this.getName())
           && (newPort.getOwner() == this.getOwner())); 
     }

@@ -7,9 +7,11 @@ import java.util.Set;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
-import edu.umn.cs.crisys.tb.codegen.names.ModelNames;
-import edu.umn.cs.crisys.tb.codegen.names.ThreadCalendarNames;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.CAmkESThreadCalendarEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.ThreadCalendarEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.ThreadCalendarNames;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
 import edu.umn.cs.crisys.tb.model.port.InputEventPort;
@@ -24,7 +26,7 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
 
 	// so write threadName_write_portName for each port.
 
-	public EChronos_CodeGenerator(Logger log, Model model, File aadlDirectory, File outputDir) {
+	public EChronos_CodeGenerator(Logger log, OSModel model, File aadlDirectory, File outputDir) {
 		super(log, model, aadlDirectory, outputDir, "eChronos");
 	}
 
@@ -97,8 +99,9 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
   @Override
   public void createPeriodicDispatcherComponent() throws TbFailure {
     ModelNames mn = new ModelNames(model); 
-    
-    File componentDirectory = getComponentDirectory(componentsDirectory, mn.getThreadCalendar().getPeriodicDispatcherComponentName());
+    ThreadCalendarEmitter cn = (ThreadCalendarEmitter)mn.getThreadCalendar(); 
+
+    File componentDirectory = getComponentDirectory(componentsDirectory, cn.getPeriodicDispatcherComponentName());
     componentDirectory.mkdirs();
   
     File srcDirectory = getComponentSourceDirectory(componentDirectory);

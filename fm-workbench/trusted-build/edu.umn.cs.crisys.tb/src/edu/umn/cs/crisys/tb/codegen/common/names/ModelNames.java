@@ -1,18 +1,21 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.PortEmitter;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalISR;
-import edu.umn.cs.crisys.tb.model.port.DataPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.port.ExternalIRQ;
 import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
@@ -24,10 +27,10 @@ import edu.umn.cs.crisys.tb.util.Util;
  * @author Whalen
  *
  */
-public class ModelNames {
-  Model m;
+public class ModelNames implements NameEmitter {
+  OSModel m;
   
-  public ModelNames(Model m) {
+  public ModelNames(OSModel m) {
     this.m = m; 
   }
   
@@ -36,7 +39,7 @@ public class ModelNames {
   }
   
   public static String getPrefix() {
-	  return Model.getPrefix();
+	  return OSModel.getPrefix();
   }
   
   ////////////////////////////////////////////////////////////
@@ -49,82 +52,82 @@ public class ModelNames {
     Set<Type> srTypes = new HashSet<Type>(); 
     srTypes.add(new UnitType());
     for (ThreadImplementation ti: m.getActiveThreadImplementations()) {
-      for (DataPort dp : ti.getOutputEventDataPortList()) {
+      for (PortFeature dp : ti.getOutputEventDataPortList()) {
         srTypes.add(dp.getType());
       }
-      for (DataPort dp : ti.getInputEventDataPortList()) {
+      for (PortFeature dp : ti.getInputEventDataPortList()) {
         srTypes.add(dp.getType());
       }
     }
     return srTypes;
   }
   
-  public List<TypeNames> getActiveThreadSendReceiveTypeList() {
-    List<TypeNames> tl = new ArrayList<TypeNames>();
+  public List<NameEmitter> getActiveThreadSendReceiveTypeList() {
+    List<NameEmitter> tl = new ArrayList<NameEmitter>();
     for (Type t: getActiveThreadSRTypes()) {
-      tl.add(new TypeNames(t));
+      tl.add(EmitterFactory.type(t));
     }
     return tl;
   }
 
-  List<ThreadImplementationNames> constructThreadImplList(List<ThreadImplementation> threadList) {
-    List<ThreadImplementationNames> tl = new ArrayList<>();
+  List<NameEmitter> constructThreadImplList(List<ThreadImplementation> threadList) {
+    List<NameEmitter> tl = new ArrayList<>();
     for (ThreadImplementation t: threadList) {
-      tl.add(new ThreadImplementationNames(t));
+      tl.add(EmitterFactory.threadImplementation(t));
     }
     return tl;    
   }
   
-  public List<ThreadImplementationNames> getActiveThreadImplementations() {
+  public List<NameEmitter> getActiveThreadImplementations() {
     return constructThreadImplList(m.getActiveThreadImplementations());
   }
   
-  public List<ThreadImplementationNames> getPassiveThreadImplementations() {
+  public List<NameEmitter> getPassiveThreadImplementations() {
     return constructThreadImplList(m.getPassiveThreadImplementations());
   }
 
-  public List<ThreadImplementationNames> getThreadImplementations() {
+  public List<NameEmitter> getThreadImplementations() {
     return constructThreadImplList(m.getAllThreadImplementations());
   }
 
-  public ThreadCalendarNames getThreadCalendar() {
-    return new ThreadCalendarNames(m.getThreadCalendar());
+  public NameEmitter getThreadCalendar() {
+    return EmitterFactory.threadCalendar(m.getThreadCalendar());
   }
 
-  public List<PortNames> getIrqDispatchers() {
-    List<PortNames> irqs = new ArrayList<>(); 
+  public List<PortEmitter> getIrqDispatchers() {
+    List<PortEmitter> irqs = new ArrayList<>(); 
     for (InputIrqPort disp : m.getIRQDispatcherList()) {
-      irqs.add(new PortNames(disp));
+      irqs.add(EmitterFactory.port(disp));
     }
     return irqs;
   }
   
   /* For internal vs. external IRQs (from eChronos' perspective) */
-  public List<PortNames> getExternalIrqDispatchers() {
-    List<PortNames> irqs = new ArrayList<>(); 
+  public List<PortEmitter> getExternalIrqDispatchers() {
+    List<PortEmitter> irqs = new ArrayList<>(); 
     for (InputIrqPort disp : m.getIRQDispatcherList()) {
       if (disp.getNumber() != InputIrqPort.NO_SIGNAL_NUMBER) {  
-        irqs.add(new PortNames(disp));
+        irqs.add(EmitterFactory.port(disp));
       }
     }
     return irqs;
   }
 
   /* For internal vs. external IRQs (from eChronos' perspective) */
-  public List<PortNames> getInternalIrqDispatchers() {
-    List<PortNames> irqs = new ArrayList<>(); 
+  public List<PortEmitter> getInternalIrqDispatchers() {
+    List<PortEmitter> irqs = new ArrayList<>(); 
     for (InputIrqPort disp : m.getIRQDispatcherList()) {
       if (disp.getNumber() == InputIrqPort.NO_SIGNAL_NUMBER) {  
-        irqs.add(new PortNames(disp));
+        irqs.add(EmitterFactory.port(disp));
       }
     }
     return irqs;
   }
   
-  public List<SharedDataNames> getSharedData() {
-    List<SharedDataNames> sdal = new ArrayList<>(); 
+  public List<NameEmitter> getSharedData() {
+    List<NameEmitter> sdal = new ArrayList<>(); 
     for (SharedData sd : m.getSharedDataList()) {
-      sdal.add(new SharedDataNames(sd));
+      sdal.add(EmitterFactory.sharedData(sd));
     }
     return sdal;
   }
@@ -178,11 +181,11 @@ public class ModelNames {
     return Integer.toString(m.getGenerateCamkesDataportRpcMinIndex());
   }
   public boolean getIsCamkesTarget() {
-    return m.getOsTarget().equals(Model.OSTarget.CAmkES);
+    return m.getOsTarget().equals(OSModel.OSTarget.CAmkES);
   }
   
   public boolean getIsEChronosTarget() {
-    return m.getOsTarget().equals(Model.OSTarget.eChronos);
+    return m.getOsTarget().equals(OSModel.OSTarget.eChronos);
   }
   
   public boolean getIsOdroidTarget() {

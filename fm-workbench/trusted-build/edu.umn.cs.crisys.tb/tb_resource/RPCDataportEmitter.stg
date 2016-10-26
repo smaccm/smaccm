@@ -1,0 +1,128 @@
+import "Common.stg"
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Templates for managing data port interfaces between active threads.
+//
+// RPC / LPC implementation
+// 
+// 10/26/2016 MWW
+// 
+///////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Header templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+writePortWriterPrototype(port) ::= <<
+bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+>>
+
+writePortReaderPrototype(port) ::= <<
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// C File templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+componentRemoteWriteFunction(port) ::= <<
+
+/************************************************************************
+ *  <port.incomingWriterName>:
+ * Invoked by remote RPC.
+ *
+ * This is the function that is invoked by an RPC to write to a data port.
+ *
+ ************************************************************************/
+
+bool <port.incomingWriterName>(<port.type.aadlOutputType.name> <port.name>) {
+    <port.lockStmt>
+    <if(port.type.isBaseType)><port.readerWriterImplVar> = *<port.name>;
+    <else><camkesInputToValMemcpy(port.type, port.readerWriterImplVar, port.name)>
+    <endif>
+    <port.unlockStmt>
+    return true;
+}
+
+>>
+
+componentLocalReadFunction(port) ::= <<
+/************************************************************************
+ *  <port.localReaderName>:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked by the active thread to read from a data port.
+ *
+ ************************************************************************/
+
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>) {
+    <port.lockStmt>
+    <if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.readerWriterImplVar>;
+    <else><valToAadlOutputMemcpy(port.type, port.name, port.readerWriterImplVar)>
+    <endif>
+    <port.unlockStmt>
+    return true;
+}
+
+>>
+
+
+componentLocalReaderDecl(port) ::= <<
+<port.readerWriterImplVarDecl>;
+
+<componentLocalReadFunction(port)>
+<componentRemoteWriteFunction(port)>
+>>
+
+
+callRemoteWriterStmt(connection) ::= << 
+tb_result |= <connection.outgoingPortWriterName>(<connection.sourcePort.name>);
+
+>>
+
+remoteCallerFunction(srcPort) ::= <<
+/************************************************************************
+ *  <srcPort.localWriterName>:
+ * Invoked from user code in the local thread.
+ *
+ * This is the function invoked by the local thread to make a
+ * call to write to a remote data port.
+ *
+ ************************************************************************/
+
+bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
+   <srcPort.connections:componentRemoteCallerFunction()>
+    bool tb_result = true ; 
+    <srcPort.connections:callRemoteWriterStmt()>
+    return tb_result;
+}
+>>
+
+componentRemoteWriterDecl(srcPort) ::= <<
+<remoteCallerFunction(srcPort)>
+>>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// CAmkES OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// VxWorks OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////

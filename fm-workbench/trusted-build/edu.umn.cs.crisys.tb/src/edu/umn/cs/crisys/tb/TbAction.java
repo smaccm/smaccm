@@ -44,7 +44,7 @@ import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import edu.umn.cs.crisys.tb.codegen.CAmkES.CAmkES_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.VxWorks.VxWorks_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.eChronos.EChronos_CodeGenerator;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.parse.AadlModelParser;
 import edu.umn.cs.crisys.tb.util.Util;
 //import fr.tpt.aadl.ramses.control.support.analysis.AnalysisException;
@@ -100,7 +100,7 @@ public class TbAction extends AadlAction {
 
 			// Now harvest the stuff we need from the OSATE AST.
 		  
-			Model model = new Model(sysimpl.getName(), si.getName());
+			OSModel model = new OSModel(sysimpl, si);
 			
 			// AadlModelParser initializes the Model class from the OSATE hierarchy
 			// (it is a factory).
@@ -129,13 +129,13 @@ public class TbAction extends AadlAction {
 			}
       outputDir.mkdirs(); 
       
-			if (model.getOsTarget() == Model.OSTarget.eChronos) {
+			if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
   			EChronos_CodeGenerator gen = new EChronos_CodeGenerator(log, model, aadlDir, outputDir);
   			gen.write();
-			} else if (model.getOsTarget() == Model.OSTarget.CAmkES ){
+			} else if (model.getOsTarget() == OSModel.OSTarget.CAmkES ){
 			  CAmkES_CodeGenerator gen = new CAmkES_CodeGenerator(log, model, aadlDir, outputDir);
 			  gen.write();
-			} else if (model.getOsTarget() == Model.OSTarget.VxWorks ){
+			} else if (model.getOsTarget() == OSModel.OSTarget.VxWorks ){
 				  VxWorks_CodeGenerator gen = new VxWorks_CodeGenerator(log, model, aadlDir, outputDir);
 				  gen.write();
 			} else {

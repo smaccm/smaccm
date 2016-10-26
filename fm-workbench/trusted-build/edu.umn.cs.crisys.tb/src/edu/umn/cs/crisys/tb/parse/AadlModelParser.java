@@ -72,8 +72,8 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.model.Model;
-import edu.umn.cs.crisys.tb.model.Model.OSTarget;
+import edu.umn.cs.crisys.tb.model.OSModel;
+import edu.umn.cs.crisys.tb.model.OSModel.OSTarget;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
@@ -109,16 +109,16 @@ public class AadlModelParser {
 	private Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap;
 	private Map<DataSubcomponentImpl, SharedData> sharedDataMap = 
 	    new HashMap<DataSubcomponentImpl, SharedData>();	
-	private HashMap<PortImpl, DataPort> portMap = new HashMap<PortImpl, DataPort>();
+	private HashMap<PortImpl, PortFeature> portMap = new HashMap<PortImpl, PortFeature>();
 	private Map<ComponentInstance, ThreadInstance> threadInstanceMap;
 	private Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
 	
-	private Model model;
+	private OSModel model;
 	
 	private Logger logger;
 	
 	// Model constructor
-	public AadlModelParser(SystemImplementation sysimpl, SystemInstance si, Model model, Logger logger) {
+	public AadlModelParser(SystemImplementation sysimpl, SystemInstance si, OSModel model, Logger logger) {
 		this.systemImplementation = sysimpl;
 		this.systemInstance = si;
 		this.logger = logger;
@@ -131,11 +131,11 @@ public class AadlModelParser {
 		// find the OS and target hardware
 		String OS = PropertyUtil.getOS(sysimpl);
 	  if ("echronos".equalsIgnoreCase(OS)) {
-	    model.setOsTarget(Model.OSTarget.eChronos);
+	    model.setOsTarget(OSModel.OSTarget.eChronos);
 	  } else if ("camkes".equalsIgnoreCase(OS)) {
-	    model.setOsTarget(Model.OSTarget.CAmkES);
+	    model.setOsTarget(OSModel.OSTarget.CAmkES);
 	  } else if ("vxworks".equalsIgnoreCase(OS)) {
-		model.setOsTarget(Model.OSTarget.VxWorks);  
+		model.setOsTarget(OSModel.OSTarget.VxWorks);  
 	  } else {
 	    this.logger.error("[Trusted Build]: OS target: [" + OS + "] not recognized by trusted build");
 	    throw new TbException("Parse failure on OS target property ");
@@ -323,7 +323,7 @@ public class AadlModelParser {
         signal_number = InputIrqPort.NO_SIGNAL_NUMBER;
         
         // signal number is necessary for CAmkES, but not eChronos
-        if (model.getOsTarget() == Model.OSTarget.CAmkES) {
+        if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
           throw pnpe;
         }
       }
@@ -376,7 +376,7 @@ public class AadlModelParser {
 	}
 	
 	void addPort(PortImpl port, ThreadImplementation ti) {
-	  DataPort dp = null;
+	  PortFeature dp = null;
 	  if (port.getDirection() == DirectionType.IN_OUT) {
 	    this.constructWarning(ti.getName(), "IN_OUT ports", port.getName(), null);
 	    throw new TbException("Gentlemen do not process IN_OUT ports");
@@ -632,11 +632,11 @@ public class AadlModelParser {
       } catch (TbException e) {}
       try {
         stackSize = PropertyUtil.getStackSizeInBytes(tti); 
-        if (model.getOsTarget() == Model.OSTarget.eChronos) {
+        if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
           logger.warn("Warning: stack size ignored for passive/external thread: " + name);
         }
       } catch (TbException e) {
-    	if (model.getOsTarget() == Model.OSTarget.CAmkES) {
+    	if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
           logger.warn("Deprecation warning: default stack size (16384) used for passive thread: " + name);
     	}
       }
@@ -795,8 +795,8 @@ public class AadlModelParser {
           " one of source/destination port implementations was not defined ('null').");
     }
     
-    DataPort sPort = portMap.get(sourcePortImpl);
-    DataPort dPort = portMap.get(destPortImpl);
+    PortFeature sPort = portMap.get(sourcePortImpl);
+    PortFeature dPort = portMap.get(destPortImpl);
     if (sPort == null || dPort == null || 
         !(sPort instanceof OutputPort) || 
         !(dPort instanceof InputPort)) {
@@ -1213,7 +1213,7 @@ public class AadlModelParser {
     
     // Get dispatcher file names.
     for (ThreadImplementation i: this.getThreadImplementationMap().values()) {
-      for (DataPort p : i.getPortList()) {
+      for (PortFeature p : i.getPortList()) {
         if (p.getImplementationFileList() != null) {
           this.model.sourceFiles.addAll(p.getImplementationFileList());
         }
@@ -1292,7 +1292,7 @@ public class AadlModelParser {
   private void initializeThreadCalendar() {
     
     for (ThreadImplementation ti: this.threadImplementationMap.values()) {
-      for (DataPort p: ti.getPortList()) {
+      for (PortFeature p: ti.getPortList()) {
         if (p instanceof InputPeriodicPort) {
           InputPeriodicPort pd = (InputPeriodicPort)p;
           this.model.threadCalendar.addPeriodicPort(pd);

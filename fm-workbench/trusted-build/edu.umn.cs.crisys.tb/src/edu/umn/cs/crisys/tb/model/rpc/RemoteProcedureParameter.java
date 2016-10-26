@@ -3,13 +3,15 @@
  */
 package edu.umn.cs.crisys.tb.model.rpc;
 
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.type.Type;
 
 /**
  * @author Whalen
  *
  */
-public class RemoteProcedureParameter {
+public class RemoteProcedureParameter extends ModelElementBase {
 
   private Type paramType;
   private Direction paramDirection;
@@ -75,4 +77,9 @@ public class RemoteProcedureParameter {
   public void setByReference(boolean byReference) {
     this.byReference = byReference;
   }
+
+@Override
+public ModelElement getParent() {
+   return null;
+}
 }

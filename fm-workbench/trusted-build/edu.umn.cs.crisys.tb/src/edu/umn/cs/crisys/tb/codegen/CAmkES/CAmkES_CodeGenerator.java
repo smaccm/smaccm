@@ -25,12 +25,13 @@ import org.stringtemplate.v4.STGroupFile;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.*;
-import edu.umn.cs.crisys.tb.codegen.names.ModelNames;
-import edu.umn.cs.crisys.tb.codegen.names.RemoteProcedureGroupNames;
-import edu.umn.cs.crisys.tb.codegen.names.ThreadCalendarNames;
-import edu.umn.cs.crisys.tb.codegen.names.ThreadImplementationNames;
-import edu.umn.cs.crisys.tb.codegen.names.TypeNames;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.CAmkESThreadCalendarEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.RemoteProcedureGroupNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.ThreadCalendarNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
 import edu.umn.cs.crisys.tb.model.port.InputEventPort;
@@ -69,7 +70,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     return new File(componentDirectory, "src");
   }
 
-	public CAmkES_CodeGenerator(Logger log, Model model, File aadlDirectory, File outputDir) {
+	public CAmkES_CodeGenerator(Logger log, OSModel model, File aadlDirectory, File outputDir) {
 	  super(log, model, aadlDirectory, outputDir, "Camkes");
 
     makeTemplateDirectory = 
@@ -236,9 +237,12 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
 	
 	public void createPeriodicDispatcherComponent() throws TbFailure {
 	  ModelNames mn = new ModelNames(model); 
-    TypeNames tn = new TypeNames(InputPeriodicPort.getPortType());
+     TypeNames tn = new TypeNames(InputPeriodicPort.getPortType());
     
-    File componentDirectory = new File(componentsDirectory, mn.getThreadCalendar().getPeriodicDispatcherComponentName());
+     CAmkESThreadCalendarEmitter cn = (CAmkESThreadCalendarEmitter)mn.getThreadCalendar(); 
+    
+    
+    File componentDirectory = new File(componentsDirectory, cn.getPeriodicDispatcherComponentName());
     componentDirectory.mkdirs();
   
     File srcDirectory = new File(componentDirectory, "src");
@@ -254,7 +258,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     writeGeneric(componentDirectory, "PeriodicDispatcherCamkes.stg", "periodicDispatcherCamkesBody", 
         new String[] {"model", "type"}, 
         new Object[] {mn, tn}, 
-        mn.getThreadCalendar().getPeriodicDispatcherComponentName(), false, mn.getThreadCalendar().getPeriodicDispatcherCamkesFileName());
+        cn.getPeriodicDispatcherComponentName(), false, cn.getPeriodicDispatcherCamkesFileName());
 	}
 	
 

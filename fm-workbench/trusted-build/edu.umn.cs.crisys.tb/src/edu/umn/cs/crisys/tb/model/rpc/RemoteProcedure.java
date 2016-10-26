@@ -5,13 +5,15 @@ package edu.umn.cs.crisys.tb.model.rpc;
 
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.type.Type;
 
 /**
  * @author Whalen
  *
  */
-public class RemoteProcedure {
+public class RemoteProcedure extends ModelElementBase {
   private List<RemoteProcedureParameter> arguments;
   private Type returnType;
   private String id; 
@@ -60,6 +62,11 @@ public class RemoteProcedure {
   public void setId(String id) {
     this.id = id;
   }
+
+@Override
+public ModelElement getParent() {
+   return null;
+}
 
   
 }

@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
-import edu.umn.cs.crisys.tb.model.port.DataPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.DispatcherTraverser;
 import edu.umn.cs.crisys.tb.model.port.InitializerPort;
@@ -32,9 +34,9 @@ import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class ProcessImplementation {
+public class ProcessImplementation extends ModelElementBase {
     private String name;
-    private  Model model;
+    private  OSModel model;
   
 	private List<ProcessInstance> processInstanceList = new ArrayList<ProcessInstance>();
 	private Boolean isExternal = false;
@@ -49,12 +51,12 @@ public class ProcessImplementation {
 	 */
 		
 	// Constructor
-	public ProcessImplementation(Model model, String name) {
+	public ProcessImplementation(OSModel model, String name) {
       this.name = name;
       this.model = model;
     }
 	
-    public Model getModel() {
+    public OSModel getModel() {
       return model;
     }
   
@@ -113,6 +115,11 @@ public class ProcessImplementation {
       return false;
     return true;
   }
+
+@Override
+public ModelElement getParent() {
+   return this.getModel();
+}
 
 }
 

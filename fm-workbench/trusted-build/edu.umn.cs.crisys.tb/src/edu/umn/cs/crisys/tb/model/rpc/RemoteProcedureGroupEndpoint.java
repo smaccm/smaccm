@@ -3,6 +3,8 @@
  */
 package edu.umn.cs.crisys.tb.model.rpc;
 
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 
 
@@ -11,7 +13,7 @@ import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
  *
  * This class represents a shared data object in AADL.
  */
-public class RemoteProcedureGroupEndpoint {
+public class RemoteProcedureGroupEndpoint extends ModelElementBase {
 
   private ThreadImplementation owner;
   private RemoteProcedureGroup rpg;
@@ -81,6 +83,12 @@ public class RemoteProcedureGroupEndpoint {
       return false;
     return true;
   }
+
+@Override
+public ModelElement getParent() {
+   // TODO Auto-generated method stub
+   return this.getOwner();
+}
 
 
   

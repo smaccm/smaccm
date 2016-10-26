@@ -1,11 +1,13 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureParameter;
 
@@ -13,7 +15,7 @@ import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureParameter;
  * @author Whalen
  *
  */
-public class RemoteProcedureNames {
+public class RemoteProcedureNames implements NameEmitter {
 
   RemoteProcedure rp;
   
@@ -26,13 +28,13 @@ public class RemoteProcedureNames {
   }
   
   public TypeNames getReturnType() {
-    return new TypeNames(rp.getReturnType());
+    return EmitterFactory.type(rp.getReturnType());
   }
   
-  public List<RemoteProcedureParameterNames> getParameters() {
-    ArrayList<RemoteProcedureParameterNames> names = new ArrayList<>(); 
+  public List<NameEmitter> getParameters() {
+    ArrayList<NameEmitter> names = new ArrayList<>(); 
     for (RemoteProcedureParameter rpp : rp.getArguments()) {
-      names.add(new RemoteProcedureParameterNames(rpp));
+      names.add(EmitterFactory.remoteProcedureParameter(rpp));
     }
     return names;
   }

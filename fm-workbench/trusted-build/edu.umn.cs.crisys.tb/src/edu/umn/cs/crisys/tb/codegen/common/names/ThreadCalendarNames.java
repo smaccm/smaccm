@@ -1,12 +1,16 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.codegen.common.emitters.CAmkESThreadCalendarEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.PortEmitter;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.thread.ThreadCalendar;
 
@@ -14,7 +18,7 @@ import edu.umn.cs.crisys.tb.model.thread.ThreadCalendar;
  * @author Whalen
  *
  */
-public class ThreadCalendarNames {
+public class ThreadCalendarNames implements NameEmitter, CAmkESThreadCalendarEmitter {
 
   ThreadCalendar c;
   
@@ -41,12 +45,12 @@ public class ThreadCalendarNames {
   //
   ////////////////////////////////////////////////////////////
 
-  public List<PortNames> getPeriodicDispatchers() {
-    List<PortNames> dl = new ArrayList<>();
+  public List<PortEmitter> getPeriodicDispatchers() {
+    List<PortEmitter> dl = new ArrayList<>();
     for (InputPeriodicPort d: c.getPeriodicDispatchers()) {
-      dl.add(new PortNames(d));
+      dl.add(EmitterFactory.port(d));
     }
-    dl.sort(Comparator.comparing(PortNames::getQualifiedName));
+    dl.sort(Comparator.comparing(PortEmitter::getQualifiedName));
     return dl;
   }
 

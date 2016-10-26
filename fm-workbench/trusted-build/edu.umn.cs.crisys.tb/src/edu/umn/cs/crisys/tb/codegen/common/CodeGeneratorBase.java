@@ -24,10 +24,10 @@ import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
-import edu.umn.cs.crisys.tb.codegen.names.ModelNames;
-import edu.umn.cs.crisys.tb.codegen.names.PortNames;
-import edu.umn.cs.crisys.tb.codegen.names.ThreadImplementationNames;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.PortNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.port.*;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
@@ -65,7 +65,7 @@ import edu.umn.cs.crisys.tb.util.Util;
 
 
 public abstract class CodeGeneratorBase {
-	protected Model model;
+	protected OSModel model;
 	protected Logger log;
 	protected File outputDirectory;
 	protected File aadlDirectory;
@@ -74,7 +74,6 @@ public abstract class CodeGeneratorBase {
 	protected File makeTemplateDirectory; 
 	protected String date;
 	protected TbSTErrorListener listener; 
-	protected File pluginDirectory;
 	protected String osPrefix;
 	protected String hwPrefix; 
 	protected String commonPrefix;
@@ -90,7 +89,7 @@ public abstract class CodeGeneratorBase {
   protected abstract File getComponentHeaderDirectory(File ComponentDirectory);
   protected abstract File getComponentSourceDirectory(File ComponentDirectory); 
 
-  public CodeGeneratorBase(Logger log, Model model, File aadlDirectory, File outputDir, 
+  public CodeGeneratorBase(Logger log, OSModel model, File aadlDirectory, File outputDir, 
 	    String osPrefix) {
 		this.log = log;
 		this.model = model;
@@ -99,7 +98,8 @@ public abstract class CodeGeneratorBase {
 		this.commonPrefix = "Common";
 		this.osPrefix = osPrefix;
 		this.hwPrefix = model.getHWTarget(); 
-		
+
+		/*
 		try {
 		  this.pluginDirectory = Util.getFileFromURL(Util.createURLFromClass(getClass()));
 		  // System.out.println("CAmkES_CodeGenerator class directory: " + this.pluginDirectory.getPath());
@@ -108,9 +108,12 @@ public abstract class CodeGeneratorBase {
 		  System.out.println("Unable to find plugin directory.  Error: " + e.toString());
 		  this.pluginDirectory = null;
 		}
+		*/
 		
 		// throw exception at first error.
 		listener = new TbSTErrorListener(log);
+		
+		Util.setListener(listener);
 		//this.templates.verbose = true;
 		
 

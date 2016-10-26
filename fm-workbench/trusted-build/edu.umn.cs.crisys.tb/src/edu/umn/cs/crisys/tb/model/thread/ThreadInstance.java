@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.osate.aadl2.instance.ComponentInstance;
 
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 
-public class ThreadInstance {
+public class ThreadInstance extends ModelElementBase {
   private static int threadIdCounter = 0;
   private int threadId = 0;
   
@@ -119,6 +121,12 @@ public class ThreadInstance {
       ArrayList<EndpointConnection> isDstOfEndpointConnectionList) {
     this.isProvidesOfEndpointConnectionList = isDstOfEndpointConnectionList;
   }
+
+@Override
+public ModelElement getParent() {
+   // TODO map to process instance once we get that far.
+   return null;
+}
 	
 	
 }

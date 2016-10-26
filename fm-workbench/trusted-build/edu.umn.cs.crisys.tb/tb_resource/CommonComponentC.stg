@@ -254,83 +254,6 @@ optInputEventPortDecls(port) ::= <<
 >>
 
 
-///////////////////////////////////////////////////////////////////////////
-//
-// Functions for managing Read/Write interfaces between active threads.
-//
-///////////////////////////////////////////////////////////////////////////
-
-optConstCamkesInputArg(port) ::= "<if(port.hasData)>const <port.type.camkesInputType.name> <port.name><endif>"
-
-componentRemoteWriteFunction(port) ::= <<
-
-/************************************************************************
- *  <incomingPortWriterName(port)>:
- * Invoked by remote RPC.
- *
- * This is the function that is invoked by an RPC to write to a data port.
- *
- ************************************************************************/
-
-bool <incomingPortWriterName(port)>(<optConstCamkesInputArg(port)>) {
-    <portLockStmt(port)>
-    <if(port.type.isBaseType)><port.readerWriterImplVar> = *<port.name>;
-    <else><camkesInputToValMemcpy(port.type, port.readerWriterImplVar, port.name)>
-    <endif>
-    <portUnlockStmt(port)>
-    return true;
-}
-
->>
-
-componentLocalReadFunction(port) ::= <<
-/************************************************************************
- *  <port.aadlReaderFnName>:
- * Invoked from local active thread.
- *
- * This is the function invoked by the active thread to read from a data port.
- *
- ************************************************************************/
-
-bool <port.aadlReaderFnName>(<userSendOptAadlOutputArg(port)>) {
-    <portLockStmt(port)>
-    <if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.readerWriterImplVar>;
-    <else><valToAadlOutputMemcpy(port.type, port.name, port.readerWriterImplVar)>
-    <endif>
-    <portUnlockStmt(port)>
-    return true;
-}
-
->>
-
-
-componentLocalReaderDecl(port) ::= <<
-<port.readerWriterImplVarDecl>;
-
-<componentLocalReadFunction(port)>
-<componentRemoteWriteFunction(port)>
->>
-
-
-componentRemoteCallerFunction(connection) ::= <<
-/************************************************************************
- *  <connection.sourcePort.aadlWriterFnName>:
- * Invoked from user code in the local thread.
- *
- * This is the function invoked by the local thread to make a
- * call to write to a remote data port.
- *
- ************************************************************************/
-
-bool <connection.sourcePort.aadlWriterFnName>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
-    return <outgoingPortWriterName(connection)>(<connection.sourcePort.name>);
-}
-
->>
-
-componentRemoteWriterDecl(srcPort) ::= <<
-<srcPort.connections:componentRemoteCallerFunction()>
->>
 
 
 /////////////////////////////////////////////////////////////////////
@@ -779,8 +702,6 @@ componentCFileDecls(threadImpl) ::= <<
 <threadImpl.dispatchers:dispatcherComponentEventDecls()>
 <threadImpl.dispatchers:userEntrypointCallerFn()>
 <threadImpl.allOutputEventPorts:userSendDefinition()>
-<threadImpl.inputDataPortList:componentLocalReaderDecl()>
-<threadImpl.outputDataPortList:componentRemoteWriterDecl()>
 
 <if(threadImpl.isActive)><\\>
 <threadImpl.localActiveThreadConnectionFrontier:osSpecificComponentLocalCallerFunction()>

@@ -7,19 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 
 /**
  * @author Whalen
  *
  */
-public class ThreadCalendar {
+public class ThreadCalendar extends ModelElementBase {
 
-  Model m; 
+  OSModel m; 
   List<InputPeriodicPort> periodicDispatchers = new ArrayList<InputPeriodicPort>();
   
-  public ThreadCalendar(Model m) {
+  public ThreadCalendar(OSModel m) {
     this.m = m;
   }
   
@@ -31,7 +33,7 @@ public class ThreadCalendar {
     return periodicDispatchers;
   }
   
-  public Model getModel() {
+  public OSModel getModel() {
 	  return m;
   }
   
@@ -115,6 +117,12 @@ public class ThreadCalendar {
       return false;
     return true;
   }
+
+@Override
+public ModelElement getParent() {
+   // TODO Auto-generated method stub
+   return this.getModel();
+}
   
   
   

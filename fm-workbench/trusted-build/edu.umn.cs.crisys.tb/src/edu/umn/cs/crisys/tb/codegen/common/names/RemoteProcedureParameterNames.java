@@ -1,8 +1,9 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.model.rpc.Direction;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureParameter;
 
@@ -10,7 +11,7 @@ import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureParameter;
  * @author Whalen
  *
  */
-public class RemoteProcedureParameterNames {
+public class RemoteProcedureParameterNames implements NameEmitter {
   RemoteProcedureParameter rpp; 
   
   public RemoteProcedureParameterNames(RemoteProcedureParameter rpp) {

@@ -1,13 +1,15 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
 import java.util.ArrayList;
 //import java.util.Iterator;
 import java.util.List;
 
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
 
@@ -15,7 +17,7 @@ import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
  * @author Whalen
  *
  */
-public class SharedDataNames {
+public class SharedDataNames implements NameEmitter {
   
   SharedData sd ; 
   
@@ -28,23 +30,23 @@ public class SharedDataNames {
   }
   
   public TypeNames getType() {
-    return new TypeNames(sd.getType());
+    return EmitterFactory.type(sd.getType());
   }
   
-  public List<SharedDataAccessorNames> getNonChosenAccessList() {
-    List<SharedDataAccessorNames> sdal = new ArrayList<>(); 
+  public List<NameEmitter> getNonChosenAccessList() {
+    List<NameEmitter> sdal = new ArrayList<>(); 
     for (SharedDataAccessor elem : sd.getAccessors()) {
       if (elem.getOwner() != sd.getCamkesOwner()) {
-        sdal.add(new SharedDataAccessorNames(elem));
+        sdal.add(EmitterFactory.sharedDataAccessor(elem));
       }
     }
     return sdal;
   }
   
-  public SharedDataAccessorNames getChosenAccess() {
+  public NameEmitter getChosenAccess() {
     for (SharedDataAccessor sda : sd.getAccessors()) {
       if (sda.getOwner() == sd.getCamkesOwner()) {
-        return new SharedDataAccessorNames(sda);
+        return EmitterFactory.sharedDataAccessor(sda);
       }
     }
     throw new TbException("Shared data element [" + sd.getVarName() + "] is not accessed by CAmkES owner thread [" + sd.getCamkesOwner().getName() + "]"); 

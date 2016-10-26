@@ -9,8 +9,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.codegen.names.TypeNames;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.type.ArrayType;
 import edu.umn.cs.crisys.tb.model.type.ExternalType;
 import edu.umn.cs.crisys.tb.model.type.IdType;
@@ -65,7 +65,7 @@ public class C_Type_Writer {
 	}
 	
 	
-	public static void writeTypes(BufferedWriter out, Model m, int indent) throws IOException {
+	public static void writeTypes(BufferedWriter out, OSModel m, int indent) throws IOException {
 	  writeTypes(out, m.getAstTypes(), indent);
 	}
 	

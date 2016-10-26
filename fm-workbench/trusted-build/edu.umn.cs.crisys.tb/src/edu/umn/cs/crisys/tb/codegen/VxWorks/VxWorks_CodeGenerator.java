@@ -7,8 +7,8 @@ import java.util.Set;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
-import edu.umn.cs.crisys.tb.codegen.names.ModelNames;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
 import edu.umn.cs.crisys.tb.model.port.InputEventPort;
@@ -23,7 +23,7 @@ public class VxWorks_CodeGenerator extends CodeGeneratorBase {
 
 	// so write threadName_write_portName for each port.
 
-  public VxWorks_CodeGenerator(Logger log, Model model, File aadlDirectory, File outputDir) {
+  public VxWorks_CodeGenerator(Logger log, OSModel model, File aadlDirectory, File outputDir) {
 		super(log, model, aadlDirectory, outputDir, "VxWorks");
 	}
 

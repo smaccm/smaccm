@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
-import edu.umn.cs.crisys.tb.model.port.DataPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.DispatcherTraverser;
 import edu.umn.cs.crisys.tb.model.port.InitializerPort;
@@ -32,7 +34,7 @@ import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class ThreadImplementation {
+public class ThreadImplementation extends ModelElementBase {
 
 	private InitializerPort initEntrypointHandler = null;
 	private int priority = -1;
@@ -44,7 +46,7 @@ public class ThreadImplementation {
 
 private String name;
   private String generatedEntrypoint = null;
-  private  Model model;
+  private  OSModel model;
   
 	private List<ThreadInstance> threadInstanceList = new ArrayList<ThreadInstance>();
 	private String dispatchProtocol; 
@@ -56,7 +58,7 @@ private String name;
 	private int eChronosThreadLocation; 
 	
 	
-	private List<DataPort> ports = new ArrayList<DataPort>();
+	private List<PortFeature> ports = new ArrayList<PortFeature>();
 	private ArrayList<SharedDataAccessor> accessorList = new ArrayList<SharedDataAccessor>();
   
   private List<String> externalMutexList = new ArrayList<String>();
@@ -72,7 +74,7 @@ private String name;
 	private Set<RemoteProcedureGroupEndpoint> requiresRPGSet = new HashSet<>();
 	
 	// Constructor
-	public ThreadImplementation(Model model, String name, int priority, int stackSize, 
+	public ThreadImplementation(OSModel model, String name, int priority, int stackSize, 
 	    String generatedEntrypoint, boolean isPassive) {
     this.name = name;
     this.priority = priority;
@@ -82,7 +84,7 @@ private String name;
 	  this.isPassive = isPassive; 
   }
 	
-  public Model getModel() {
+  public OSModel getModel() {
     return model;
   }
   
@@ -281,7 +283,7 @@ private String name;
     // active threads.
     
     if (this.getIsExternal()) {
-      for (DataPort p : this.getOutputPorts()) {
+      for (PortFeature p : this.getOutputPorts()) {
         for (PortConnection pc : p.getConnections()) {
           if (pc.getDestPort().getOwner().getIsPassive()) {
             throw new TbException("Error: Unsupported connection for thread " + this.getName() + ": Output ports of external threads can only be connected to active threads");
@@ -390,7 +392,7 @@ private String name;
 
   public List<DispatchableInputPort> getDispatcherList() {
     List<DispatchableInputPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof DispatchableInputPort) {
         l.add((DispatchableInputPort)p);
       }
@@ -403,7 +405,7 @@ private String name;
    */
   public List<InputDataPort> getInputDataPortList() {
     List<InputDataPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof InputDataPort) {
         l.add((InputDataPort)p);
       }
@@ -412,7 +414,7 @@ private String name;
   }
 
 
-  public void addPort(DataPort idp) {
+  public void addPort(PortFeature idp) {
     this.ports.add(idp);
   }
 
@@ -421,7 +423,7 @@ private String name;
    */
   public List<OutputDataPort> getOutputDataPortList() {
     List<OutputDataPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof OutputDataPort) {
         l.add((OutputDataPort)p);
       }
@@ -434,7 +436,7 @@ private String name;
    */
   public List<InputEventPort> getInputEventPortList() {
     List<InputEventPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof InputEventPort) {
         if (p.getType() instanceof UnitType) {
           l.add((InputEventPort)p);
@@ -446,7 +448,7 @@ private String name;
 
   public List<InputEventPort> getInputEventDataPortList() {
     List<InputEventPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof InputEventPort) {
         if (!(p.getType() instanceof UnitType)) {
           l.add((InputEventPort)p);
@@ -461,7 +463,7 @@ private String name;
    */
   public List<OutputEventPort> getOutputEventPortList() {
     List<OutputEventPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof OutputEventPort) {
         if (p.getType() instanceof UnitType) {
           l.add((OutputEventPort)p);
@@ -473,7 +475,7 @@ private String name;
 
   public List<OutputEventPort> getOutputEventDataPortList() {
     List<OutputEventPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof OutputEventPort) {
         if (!(p.getType() instanceof UnitType)) {
           l.add((OutputEventPort)p);
@@ -485,7 +487,7 @@ private String name;
   
   public List<InputPort> getInputPorts() {
     List<InputPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof InputPort) {
         l.add((InputPort)p);
       }
@@ -495,7 +497,7 @@ private String name;
   
   public List<OutputPort> getOutputPorts() {
     List<OutputPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof OutputPort) {
         l.add((OutputPort)p);
       }
@@ -506,7 +508,7 @@ private String name;
   
   public List<OutputEventPort> getAllOutputEventPorts() {
     List<OutputEventPort> l = new ArrayList<>(); 
-    for (DataPort p: this.ports) {
+    for (PortFeature p: this.ports) {
       if (p instanceof OutputEventPort) {
         l.add((OutputEventPort)p);
       }
@@ -517,7 +519,7 @@ private String name;
   /**
    * @return
    */
-  public List<DataPort> getPortList() {
+  public List<PortFeature> getPortList() {
     return ports;
   }
 
@@ -592,6 +594,12 @@ private String name;
 	public void setGeneratedEntrypoint(String generatedEntrypoint) {
 		this.generatedEntrypoint = generatedEntrypoint;
 	}
+
+   @Override
+   public ModelElement getParent() {
+      // TODO Make parent the process once we get to that.
+      return this.getModel();
+   }
   
 }
 

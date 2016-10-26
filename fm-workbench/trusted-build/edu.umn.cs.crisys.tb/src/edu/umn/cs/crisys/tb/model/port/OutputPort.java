@@ -10,7 +10,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
  * @author Whalen
  *
  */
-public abstract class OutputPort extends DataPort {
+public abstract class OutputPort extends PortFeature {
  
   public OutputPort(String portName, 
       Type dataType,

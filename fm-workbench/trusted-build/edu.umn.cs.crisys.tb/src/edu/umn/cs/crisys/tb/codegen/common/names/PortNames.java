@@ -1,16 +1,20 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.PortEmitter;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
-import edu.umn.cs.crisys.tb.model.port.DataPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
 import edu.umn.cs.crisys.tb.model.port.InitializerPort;
@@ -29,50 +33,72 @@ import edu.umn.cs.crisys.tb.model.type.UnitType;
 /**
  * @author Whalen
  *
+ * This class is going away, once we get emitters sorted out.
  */
-public class PortNames {
-  DataPort dp; 
+public class PortNames implements PortEmitter {
+  PortFeature dp; 
   Type indexType = new IntType(32, false); 
   
-  public PortNames(DataPort dp) {
+  public PortNames(PortFeature dp) {
     this.dp = dp;
   }
+  
+  //////////////////////////////////////////////////////////
+  //
+  // implementations of the CWriter interface elements
+  // 
+  //////////////////////////////////////////////////////////
+
+  /*
+   * How are we going to transition?
+   * 
+   * So, we are planning on having a separate file per OS.
+   * 
+   */
   
   //////////////////////////////////////////////////////////
   //
   // Constructors for type names related to port
   // 
   //////////////////////////////////////////////////////////
+  
+  // relevant to all ports
   public TypeNames getType() {
-    TypeNames tyn = new TypeNames(dp.getType());
+    TypeNames tyn = EmitterFactory.type(dp.getType());
     return tyn;
   }
   
-  public TypeNames getIndexType() {
-    TypeNames tyn = new TypeNames(indexType);
+  // relevant to event data ports
+  public NameEmitter getIndexType() {
+    NameEmitter tyn = EmitterFactory.type(indexType);
     return tyn;
   }
   
+  // relevant (kinda) to event ports
   // we should never enqueue more than 32k messages!
   public String getIndexMax() {
 	  return "32767";
   }
   
-  public ThreadImplementationNames getThreadImplementation() {
-    return new ThreadImplementationNames(dp.getOwner());
+  // relevant to all ports
+  public NameEmitter getThreadImplementation() {
+    return EmitterFactory.threadImplementation(dp.getOwner());
   }
 
+  // relevant to all ports
   public boolean getHasFanout() {
 	  return dp.getConnections().size() > 1;
   }
   
+  // relevant to all ports
   public boolean getHasInitializeEntrypoint() {
     boolean result = dp.getInitializeEntrypointSourceText() != null;
     return result;
   }
   
-  public ExternalHandlerNames getInitializeEntrypointOpt() {
-    return new ExternalHandlerNames(dp.getInitializeEntrypointSourceText());
+  // relevant to all ports
+  public NameEmitter getInitializeEntrypointOpt() {
+    return EmitterFactory.externalHandler(dp.getInitializeEntrypointSourceText());
   }
   
   //////////////////////////////////////////////////////////
@@ -86,9 +112,10 @@ public class PortNames {
   }
   
   public String getQualifiedName() {
-    return dp.getOwner().getName() + "_" + getName();
+    return dp.getQualifiedName();
   }
   
+  // relevant to only event data ports
   public String getQueueSize() {
     if (!(dp instanceof InputEventPort)) {
       throw new TbException("Error: getQueueSize: port " + dp.getName() + " is not an input event port so has no queue.");
@@ -103,7 +130,7 @@ public class PortNames {
   // 
   //////////////////////////////////////////////////////////
   
-
+  // relevant to any port
   public String getVarDecl() {
     return dp.getType().getCType().varString(getName());
   }
@@ -114,10 +141,12 @@ public class PortNames {
   // 
   //////////////////////////////////////////////////////////
 
+  // relevant to distinguish event from event-data ports.
   public boolean getHasData() {
     return dp.hasData(); 
   }
   
+  // relevant only for event-data ports
   public boolean getHasDispatcher() {
     if (dp instanceof DispatchableInputPort) {
       return  ((DispatchableInputPort)dp).getExternalHandlerList().size() != 0;
@@ -125,6 +154,8 @@ public class PortNames {
     else return false;
   }
   
+  
+  // type tests - should no longer be necessary at all
   public boolean getIsInputEvent() {
     return (dp instanceof InputEventPort) &&
           (dp.getType() instanceof UnitType); 
@@ -164,6 +195,8 @@ public class PortNames {
   // Destination function (for input ports)
   // 
   //////////////////////////////////////////////////////////
+  
+  // relevant only for event-data ports
   public boolean getHasPassiveConnectionDestination() {
 	  for (PortConnection i: dp.getConnections()) {
 		  if (i.getDestPort().getOwner().getIsPassive()) {
@@ -173,30 +206,35 @@ public class PortNames {
 	  return false;
   }
   
-  public List<PortConnectionNames> getConnections() {
-	  List<PortConnectionNames> connections = new ArrayList<>();
+  // for all ports
+  public List<NameEmitter> getConnections() {
+	  List<NameEmitter> connections = new ArrayList<>();
 	  for (PortConnection i: dp.getConnections()) {
-		  connections.add(new PortConnectionNames(i));
+		  connections.add(EmitterFactory.portConnection(i));
 	  }
 	  return connections;
   }
   
-  public PortConnectionNames getSingletonConnection() {
+  // for all ports, kind of.
+  public NameEmitter getSingletonConnection() {
 	  if (dp.getConnections().size() != 1) {
 		  throw new TbException(
 				  "PortNames::getSingletonConnection: The port " + dp.getName() + 
 				  " has multiple connections, violating the invariant.");
 	  }
 	  else {
-		  return new PortConnectionNames(dp.getConnections().get(0));
+		  return EmitterFactory.portConnection(dp.getConnections().get(0));
 	  }
   }
+  
+  
   //////////////////////////////////////////////////////////////
   //
   // Names for mutex function calls
   // 
   //////////////////////////////////////////////////////////////
 
+  
   
   public String getCamkesMutexLockFnCall() {
     return getMutex() + "_lock()";
@@ -215,7 +253,7 @@ public class PortNames {
   //////////////////////////////////////////////////////////////
   
   public String getPrefix() {
-	  return Model.getPrefix();
+	  return OSModel.getPrefix();
   }
   
   public String getGlobalMaxDispatchSize() {
@@ -262,20 +300,20 @@ public class PortNames {
   // 
   //////////////////////////////////////////////////////////////
 
-  public List<ExternalHandlerNames> getExternalHandlers() {
+  public List<NameEmitter> getExternalHandlers() {
     DispatchableInputPort dip = ((DispatchableInputPort) dp);
-    List<ExternalHandlerNames> ehl = new ArrayList<>(); 
+    List<NameEmitter> ehl = new ArrayList<>(); 
     for (ExternalHandler eh : dip.getExternalHandlerList()) {
-      ehl.add(new ExternalHandlerNames(eh)); 
+      ehl.add(EmitterFactory.externalHandler(eh)); 
     }
     return ehl;
   }
 
-  public List<MemoryRegionName> getMemoryRegions() {
+  public List<NameEmitter> getMemoryRegions() {
     InputIrqPort iip = (InputIrqPort)dp; 
-    List<MemoryRegionName> regions = new ArrayList<>();
+    List<NameEmitter> regions = new ArrayList<>();
     for (Map.Entry<String, String> entry : iip.getMemoryRegions().entrySet()) {
-        MemoryRegionName region = new MemoryRegionName(entry.getKey(), entry.getValue());
+        NameEmitter region = EmitterFactory.memoryRegion(entry.getKey(), entry.getValue());
         regions.add(region);
     }
     return regions; 
@@ -344,23 +382,25 @@ public class PortNames {
 	  return getEChronosIncomingPortWriterName();
   }
 
-  public OutgoingDispatchContractNames getMaxDispatchContracts() {
+  public NameEmitter getMaxDispatchContracts() {
     DispatchableInputPort dip = (DispatchableInputPort )dp; 
     OutgoingDispatchContract odc = 
         OutgoingDispatchContract.maxDispatcherUse(dip.getDispatchLimits());
-    OutgoingDispatchContractNames odcNames = new OutgoingDispatchContractNames(dip, odc); 
+    NameEmitter odcNames = 
+          EmitterFactory.outgoingDispatchContract(dip, odc); 
     return odcNames;
   }
   
   
-  public List<DispatchContractNames> getDispatchableContracts() {
+  public List<NameEmitter> getDispatchableContracts() {
     DispatchableInputPort dip = (DispatchableInputPort )dp; 
     OutgoingDispatchContract odc = 
         OutgoingDispatchContract.maxDispatcherUse(dip.getDispatchLimits());
-    List<DispatchContractNames> pdl = new ArrayList<>(); 
+    List<NameEmitter> pdl = new ArrayList<>(); 
     for (Map.Entry<OutputEventPort, Integer> elem : odc.getPassiveContract().entrySet()) {
-      DispatchContractNames names = new DispatchContractNames(dip, elem);
-      if (names.getCanDispatch()) {
+      NameEmitter names = 
+            EmitterFactory.dispatchContract(dip, elem);
+      if (elem.getValue() > 0) {
         pdl.add(new DispatchContractNames(dip, elem));
       }
     }
@@ -393,7 +433,9 @@ public class PortNames {
   }
   
   public String getPassiveComponentDispatcherPathName() {
-    return this.getThreadImplementation().getInterfaceInstanceName() + "_" + 
+     // TODO: remove this...
+     
+    return ((ThreadImplementationNames)this.getThreadImplementation()).getInterfaceInstanceName() + "_" + 
         this.getIdlDispatcherName(); 
   }
   
@@ -530,5 +572,102 @@ public class PortNames {
   public int getCalculateWriterBufferSize() {
 	  return 12 * (dp.getConnections().size() + 2);
   }
+
+@Override
+public void writeCommonCFiles(File directory) {
+   // TODO Auto-generated method stub
+   
+}
+
+@Override
+public void writeCommonHFiles(File directory) {
+   // TODO Auto-generated method stub
+   
+}
+
+@Override
+public void writeProcessCFiles(File directory) {
+   // TODO Auto-generated method stub
+   
+}
+
+@Override
+public void writeProcessHFiles(File directory) {
+   // TODO Auto-generated method stub
+   
+}
+
+@Override
+public void writeThreadCFiles(File directory, List<PortFeature> pl) {
+   // TODO Auto-generated method stub
+   
+}
+
+@Override
+public void writeThreadHFiles(File directory, List<PortFeature> pl) {
+   // TODO Auto-generated method stub
+   
+}
+
+@Override
+public void writePortCFiles(File directory) {
+   // TODO Auto-generated method stub
+   
+}
+
+@Override
+public void writePortHFiles(File directory) {
+   // TODO Auto-generated method stub
+   
+}
+
+@Override
+public String writePortHPrototypes() {
+   // TODO Auto-generated method stub
+   return null;
+}
+
+@Override
+public String writeThreadCIncludes(File commonHFileDir, File processHFileDir, File threadHFileDir,
+      List<PortFeature> pl) {
+   // TODO Auto-generated method stub
+   return null;
+}
+
+@Override
+public String writeThreadDeclarations(List<PortFeature> pl) {
+   // TODO Auto-generated method stub
+   return null;
+}
+
+@Override
+public String writePortDeclarations() {
+   // TODO Auto-generated method stub
+   return null;
+}
+
+@Override
+public String writePortPreEntrypoint(int indent) {
+   // TODO Auto-generated method stub
+   return null;
+}
+
+@Override
+public String writePortPostEntrypoint(int indent) {
+   // TODO Auto-generated method stub
+   return null;
+}
+
+@Override
+public String writePortEventResponder(int indent) {
+   // TODO Auto-generated method stub
+   return null;
+}
+
+@Override
+public String writePortThreadInitializer(int indent) {
+   // TODO Auto-generated method stub
+   return null;
+}
   
 };

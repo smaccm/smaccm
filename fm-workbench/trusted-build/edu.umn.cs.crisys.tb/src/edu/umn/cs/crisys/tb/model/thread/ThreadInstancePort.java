@@ -3,23 +3,25 @@
  */
 package edu.umn.cs.crisys.tb.model.thread;
 
-import edu.umn.cs.crisys.tb.model.port.DataPort;
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.type.Type;
 
 /**
  * @author Whalen
  *
  */
-public class ThreadInstancePort {
-  DataPort port;
+public class ThreadInstancePort extends ModelElementBase {
+  PortFeature port;
   ThreadInstance inst; 
 
-  public ThreadInstancePort(ThreadInstance inst, DataPort port) {
+  public ThreadInstancePort(ThreadInstance inst, PortFeature port) {
     this.port = port;
     this.inst = inst;
   }
   
-  public DataPort getPort() {
+  public PortFeature getPort() {
     return this.port;
   }
   
@@ -66,6 +68,12 @@ public class ThreadInstancePort {
     Type ty = this.getPort().getType();
     return ty;
   }
+
+@Override
+public ModelElement getParent() {
+   // TODO Auto-generated method stub
+   return this.getThreadInstance();
+}
 
   /* 
   public int getArraySize() {

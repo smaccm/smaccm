@@ -1,12 +1,14 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
@@ -18,7 +20,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
  * @author Whalen
  *
  */
-public class DispatchContractNames {
+public class DispatchContractNames implements NameEmitter {
   DispatchableInputPort owner;
   Map.Entry<OutputEventPort, Integer> odc;
   OutputEventPort oep;
@@ -31,7 +33,7 @@ public class DispatchContractNames {
     this.size = odc.getValue();
   }
   
-  public PortNames getPort() {
+  public NameEmitter getPort() {
     return new PortNames(oep); 
   }
   
@@ -44,33 +46,29 @@ public class DispatchContractNames {
   }
     
   
-  public List<PortNames> getPassiveDispatchTargetList() {
-    List<PortNames> targets = new ArrayList<>(); 
+  public List<NameEmitter> getPassiveDispatchTargetList() {
+    List<NameEmitter> targets = new ArrayList<>(); 
     for (PortConnection c: this.oep.getConnections()) {
       if (c.getDestPort().getOwner().getIsPassive()) {
-        targets.add(new PortNames(c.getDestPort()));
+        targets.add(EmitterFactory.port(c.getDestPort()));
       }
     }
     return targets;
   }
 
-  public List<PortNames> getActiveDispatchTargetList() {
-    List<PortNames> targets = new ArrayList<>(); 
+  public List<NameEmitter> getActiveDispatchTargetList() {
+    List<NameEmitter> targets = new ArrayList<>(); 
     for (PortConnection c: this.oep.getConnections()) {
       if (!c.getDestPort().getOwner().getIsPassive()) {
-        targets.add(new PortNames(c.getDestPort()));
+        targets.add(EmitterFactory.port(c.getDestPort()));
       }
     }
     return targets;
     
   }
   
-  public PortNames getOwner() {
-    return new PortNames(owner);
+  public NameEmitter getOwner() {
+    return EmitterFactory.port(owner);
   }
   
-  public String getDispatchStructTypeName() {
-    return getOwner().getDispatchStructTypeName();
-  }
-
 }

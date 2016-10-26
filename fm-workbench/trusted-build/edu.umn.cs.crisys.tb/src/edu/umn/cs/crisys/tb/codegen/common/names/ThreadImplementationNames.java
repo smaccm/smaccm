@@ -1,7 +1,7 @@
 /**
  * 
  */
-package edu.umn.cs.crisys.tb.codegen.names;
+package edu.umn.cs.crisys.tb.codegen.common.names;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,11 +16,14 @@ import java.util.stream.Collectors;
 //import java.util.stream.Stream;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.model.Model;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.PortEmitter;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
-import edu.umn.cs.crisys.tb.model.port.DataPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
@@ -32,7 +35,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
  * @author Whalen
  *
  */
-public class ThreadImplementationNames {
+public class ThreadImplementationNames implements NameEmitter {
   ThreadImplementation ti;
   
   public ThreadImplementationNames(ThreadImplementation ti) {
@@ -61,19 +64,19 @@ public class ThreadImplementationNames {
   */
   
   // includes passive thread dispatchers invoked by this component.
-  public List<PortNames> getPassiveDispatcherRegion() {
-    ArrayList<PortNames> dnList = new ArrayList<>();
+  public List<NameEmitter> getPassiveDispatcherRegion() {
+    ArrayList<NameEmitter> dnList = new ArrayList<>();
     for (InputPort d : ti.getPassiveDispatcherRegion()) {
-      dnList.add(new PortNames(d));
+      dnList.add(EmitterFactory.port(d));
     }
     return dnList;
   }
   
-  public List<ThreadImplementationNames> getPassiveThreadRegion() {
+  public List<NameEmitter> getPassiveThreadRegion() {
     Set<ThreadImplementation> threads = ti.getPassiveThreadRegion();
-    List<ThreadImplementationNames> threadNames = new ArrayList<>();
+    List<NameEmitter> threadNames = new ArrayList<>();
     for (ThreadImplementation ti: threads) {
-      threadNames.add(new ThreadImplementationNames(ti));
+      threadNames.add(EmitterFactory.threadImplementation(ti));
     }
     return threadNames;
   }
@@ -86,83 +89,83 @@ public class ThreadImplementationNames {
 	  return Integer.toString(ti.getMaxExecutionTimeInMicroseconds());
   }
   
-  public List<PortConnectionNames> getNonlocalActiveThreadConnectionFrontier() {
-    ArrayList<PortConnectionNames> dnList = new ArrayList<>();
+  public List<NameEmitter> getNonlocalActiveThreadConnectionFrontier() {
+    ArrayList<NameEmitter> dnList = new ArrayList<>();
     for (PortConnection d : ti.getNonlocalActiveThreadConnectionFrontier()) {
-      dnList.add(new PortConnectionNames(d));
+      dnList.add(EmitterFactory.portConnection(d));
     }
     return dnList;
   }
 
-  public List<PortConnectionNames> getActiveThreadConnectionList() {
-	    ArrayList<PortConnectionNames> dnList = new ArrayList<>();
+  public List<NameEmitter> getActiveThreadConnectionList() {
+	    ArrayList<NameEmitter> dnList = new ArrayList<>();
 	    for (PortConnection d : ti.getActiveThreadConnectionList()) {
-	      dnList.add(new PortConnectionNames(d));
+	      dnList.add(EmitterFactory.portConnection(d));
 	    }
 	    return dnList;
 	  }
   
-  public List<PortConnectionNames> getLocalActiveThreadConnectionFrontier() {
-    ArrayList<PortConnectionNames> dnList = new ArrayList<>();
+  public List<NameEmitter> getLocalActiveThreadConnectionFrontier() {
+    ArrayList<NameEmitter> dnList = new ArrayList<>();
     for (PortConnection d : ti.getLocalActiveThreadConnectionFrontier()) {
-      dnList.add(new PortConnectionNames(d));
+      dnList.add(EmitterFactory.portConnection(d));
     }
     return dnList;
   }
 
-  public List<RemoteProcedureGroupEndpointNames> getEndpoints() {
-    ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
+  public List<NameEmitter> getEndpoints() {
+    ArrayList<NameEmitter> endpoints = new ArrayList<>();
     for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGSet()) {
-      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+      endpoints.add(EmitterFactory.remoteProcedureGroupEndpoint(rpge));
     }
     for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGSet()) {
-      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+      endpoints.add(EmitterFactory.remoteProcedureGroupEndpoint(rpge));
     }
     return endpoints;
   }
   
-  public List<RemoteProcedureGroupEndpointNames> getProvidedEndpoints() {
-    ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
+  public List<NameEmitter> getProvidedEndpoints() {
+    ArrayList<NameEmitter> endpoints = new ArrayList<>();
     for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGSet()) {
-      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+      endpoints.add(EmitterFactory.remoteProcedureGroupEndpoint(rpge));
     }
     return endpoints;
   }
 
-  public List<RemoteProcedureGroupEndpointNames> getRequiredEndpoints() {
-    ArrayList<RemoteProcedureGroupEndpointNames> endpoints = new ArrayList<>();
+  public List<NameEmitter> getRequiredEndpoints() {
+    ArrayList<NameEmitter> endpoints = new ArrayList<>();
     for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGSet()) {
-      endpoints.add(new RemoteProcedureGroupEndpointNames(rpge));
+      endpoints.add(EmitterFactory.remoteProcedureGroupEndpoint(rpge));
     }
     return endpoints;
   }
   
-  public Collection<RemoteProcedureGroupNames> getUsedRpgs() {
-    Map<String, RemoteProcedureGroupNames> rpgMap = new HashMap<>();
+  public Collection<NameEmitter> getUsedRpgs() {
+    Map<String, NameEmitter> rpgMap = new HashMap<>();
     for (RemoteProcedureGroupEndpoint rpge : ti.getRequiresRPGSet()) {
       rpgMap.put(rpge.getRemoteProcedureGroup().getId(), 
-          new RemoteProcedureGroupNames(rpge.getRemoteProcedureGroup()));
+          EmitterFactory.remoteProcedureGroup(rpge.getRemoteProcedureGroup()));
     }
     for (RemoteProcedureGroupEndpoint rpge : ti.getProvidesRPGSet()) {
       rpgMap.put(rpge.getRemoteProcedureGroup().getId(), 
-          new RemoteProcedureGroupNames(rpge.getRemoteProcedureGroup()));
+          EmitterFactory.remoteProcedureGroup(rpge.getRemoteProcedureGroup()));
     }
     return rpgMap.values();
   }
 
-  public <U extends DataPort> List<PortNames> constructPortNames(List<U> ports) {
-    ArrayList<PortNames> pnList = new ArrayList<>(); 
-    for (DataPort d : ports) {
-      pnList.add(new PortNames(d)); 
+  public <U extends PortFeature> List<PortEmitter> constructPortNames(List<U> ports) {
+    ArrayList<PortEmitter> pnList = new ArrayList<>(); 
+    for (PortFeature d : ports) {
+      pnList.add(EmitterFactory.port(d)); 
     }
     return pnList;
   }
   
-  public List<PortNames> getDispatchers() {
+  public List<PortEmitter> getDispatchers() {
     return constructPortNames(ti.getDispatcherList());
   }
   
-  public List<PortNames> getDispatchersWithEntrypoints() {
+  public List<PortEmitter> getDispatchersWithEntrypoints() {
 	  List<DispatchableInputPort> l = ti.getDispatcherList();
 	  l = l.stream().
 			filter(e -> !e.getExternalHandlerList().isEmpty()).
@@ -170,41 +173,41 @@ public class ThreadImplementationNames {
 	  return constructPortNames(l);
   }
   
-  public List<PortNames> getAllOutputEventPorts() {
+  public List<PortEmitter> getAllOutputEventPorts() {
     return constructPortNames(ti.getAllOutputEventPorts());
   }
   
-  public List<PortNames> getInputDataPortList() {
+  public List<PortEmitter> getInputDataPortList() {
     return constructPortNames(ti.getInputDataPortList());
   }
 
-  public List<PortNames> getInputEventPortList() {
+  public List<PortEmitter> getInputEventPortList() {
     return constructPortNames(ti.getInputEventPortList());
   }
 
-  public List<PortNames> getInputEventDataPortList() {
+  public List<PortEmitter> getInputEventDataPortList() {
     return constructPortNames(ti.getInputEventDataPortList());
   }
 
   
-  public List<PortNames> getOutputDataPortList() {
+  public List<PortEmitter> getOutputDataPortList() {
     return constructPortNames(ti.getOutputDataPortList());
   }
   
-  public List<PortNames> getInputPortList() {
+  public List<PortEmitter> getInputPortList() {
     return constructPortNames(ti.getInputPorts());
   }
   
-  public List<PortNames> getOutputPortList() {
+  public List<PortEmitter> getOutputPortList() {
     return constructPortNames(ti.getOutputPorts());
   }
   
-  public List<PortNames> getPortList() {
+  public List<PortEmitter> getPortList() {
     return constructPortNames(ti.getPortList());
   }
 
-  public ModelNames getModel() {
-    return new ModelNames(ti.getModel());
+  public NameEmitter getModel() {
+    return EmitterFactory.model(ti.getModel());
   }
   
   public boolean getContainsDispatchers() {
@@ -213,29 +216,29 @@ public class ThreadImplementationNames {
   }
 
   
-  public List<SharedDataAccessorNames> getSharedDataAccessorList() {
-    List<SharedDataAccessorNames> sn = new ArrayList<>();
+  public List<NameEmitter> getSharedDataAccessorList() {
+    List<NameEmitter> sn = new ArrayList<>();
     for (SharedDataAccessor i : ti.getSharedDataAccessors()) {
-      sn.add(new SharedDataAccessorNames(i));
+      sn.add(EmitterFactory.sharedDataAccessor(i));
     }
     return sn;
   }
   
-  public List<ThreadImplementationNames> getOtherThreadImplementations() {
-    List<ThreadImplementationNames> others = new ArrayList<>(); 
+  public List<NameEmitter> getOtherThreadImplementations() {
+    List<NameEmitter> others = new ArrayList<>(); 
     for (ThreadImplementation t: ti.getModel().getAllThreadImplementations()) {
       if (t != ti) {
-        others.add(new ThreadImplementationNames(t));
+        others.add(EmitterFactory.threadImplementation(t));
       }
     }
     return others;
   }
 
-  public List<ThreadImplementationNames> getOtherActiveThreadImplementations() {
-    List<ThreadImplementationNames> others = new ArrayList<>(); 
+  public List<NameEmitter> getOtherActiveThreadImplementations() {
+    List<NameEmitter> others = new ArrayList<>(); 
     for (ThreadImplementation t: ti.getModel().getActiveThreadImplementations()) {
       if (t != ti) {
-        others.add(new ThreadImplementationNames(t));
+        others.add(EmitterFactory.threadImplementation(t));
       }
     }
     return others;
@@ -249,27 +252,27 @@ public class ThreadImplementationNames {
     return tii.get(0);
   }
   
-  public List<PortConnectionNames> getIsSrcOfConnectionList() {
-    List<PortConnectionNames> cl = new ArrayList<>(); 
+  public List<NameEmitter> getIsSrcOfConnectionList() {
+    List<NameEmitter> cl = new ArrayList<>(); 
     ThreadInstance tii = getThreadInstance(); 
     for (PortConnection t: tii.getIsSrcOfConnectionList()) {
-      cl.add(new PortConnectionNames(t));
+      cl.add(EmitterFactory.portConnection(t));
     }
     return cl;
   }
 
-  public List<EndpointConnectionNames> getIsRequiresOfConnectionList() {
-    List<EndpointConnectionNames> cl = new ArrayList<>(); 
+  public List<NameEmitter> getIsRequiresOfConnectionList() {
+    List<NameEmitter> cl = new ArrayList<>(); 
     ThreadInstance tii = getThreadInstance(); 
     for (EndpointConnection t: tii.getIsRequiresOfEndpointConnectionList()) {
-      cl.add(new EndpointConnectionNames(t));
+      cl.add(EmitterFactory.endpointConnection(t));
     }
     return cl;
   }
   
   public List<TypeNames> getThreadPortTypes() {
     Set<Type> usedTypes = new HashSet<>(); 
-    for (DataPort p : ti.getPortList()) {
+    for (PortFeature p : ti.getPortList()) {
       usedTypes.add(p.getType());
     }
     List<TypeNames> tn = new ArrayList<>(); 
@@ -281,7 +284,7 @@ public class ThreadImplementationNames {
   }
   
   public String getPrefix() {
-	  return Model.getPrefix(); 
+	  return OSModel.getPrefix(); 
   }
   
   public String getThreadDispatcherMutex() {
@@ -357,7 +360,7 @@ public class ThreadImplementationNames {
   }
   
   public String getOsSpecificStackSize() {
-	  if (ti.getModel().getOsTarget() == Model.OSTarget.eChronos) {
+	  if (ti.getModel().getOsTarget() == OSModel.OSTarget.eChronos) {
 		  // TODO: MWW temporary (2/17/2016): eChronos apparently measures stack size in 32 bit words. 
 		    return Integer.toString(ti.getStackSize() / 4 + ((ti.getStackSize() % 4 == 0) ? 0 : 1)); 
 	  }
@@ -412,8 +415,8 @@ public class ThreadImplementationNames {
     return ti.getInitializeEntrypointOpt() != null;
   }
   
-  public PortNames getInitializeEntrypointOpt() {
-    return new PortNames(ti.getInitializeEntrypointOpt()); 
+  public PortEmitter getInitializeEntrypointOpt() {
+    return EmitterFactory.port(ti.getInitializeEntrypointOpt()); 
   }
   
   public String getComponentName() {

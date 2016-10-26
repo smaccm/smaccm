@@ -3,11 +3,14 @@
  */
 package edu.umn.cs.crisys.tb.model.legacy;
 
+import edu.umn.cs.crisys.tb.model.ModelElement;
+import edu.umn.cs.crisys.tb.model.ModelElementBase;
+
 /**
  * @author Whalen
  *
  */
-public class ExternalIRQEvent {
+public class ExternalIRQEvent extends ModelElementBase {
   String name; 
   String task_name;
   int sig_set; 
@@ -29,5 +32,10 @@ public class ExternalIRQEvent {
   public int getSigSet() {
     return sig_set;
   }
+
+@Override
+public ModelElement getParent() {
+   return null;
+}
   
 } ; 
