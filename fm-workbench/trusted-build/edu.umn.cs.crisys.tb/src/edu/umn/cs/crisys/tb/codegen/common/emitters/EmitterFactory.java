@@ -4,7 +4,6 @@ package edu.umn.cs.crisys.tb.codegen.common.emitters;
 import java.util.Map;
 
 import edu.umn.cs.crisys.tb.codegen.common.emitters.PortConnection.RPCDataPortEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.PortConnection.RPCInputDataPortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.names.*;
 import edu.umn.cs.crisys.tb.model.port.*;
 import edu.umn.cs.crisys.tb.model.rpc.*;
