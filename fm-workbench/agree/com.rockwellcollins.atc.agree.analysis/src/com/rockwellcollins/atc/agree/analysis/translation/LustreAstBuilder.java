@@ -490,9 +490,7 @@ public class LustreAstBuilder {
 		List<Expr> assertions = new ArrayList<>();
 
 		// add assumption history variable
-		IdExpr assumHist = new IdExpr(assumeHistSufix);// new
-														// NodeCallExpr(historyNodeName,
-														// assumeConjExpr);
+		IdExpr assumHist = new IdExpr(assumeHistSufix);
 		inputs.add(new AgreeVar(assumHist.id, NamedType.BOOL, null, agreeNode.compInst));
 
 		int i = 0;
@@ -519,7 +517,7 @@ public class LustreAstBuilder {
 			guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
 		}
 
-		// assert that of the assumptions have held historically, then the
+		// assert that if the assumptions have held historically, then the
 		// gurantees hold
 		assertions.add(new BinaryExpr(assumHist, BinaryOp.IMPLIES, guarConjExpr));
 
@@ -592,7 +590,7 @@ public class LustreAstBuilder {
 
 			AgreeNode flatNode = flattenAgreeNode(subAgreeNode, nodePrefix + subAgreeNode.id + AgreeASTBuilder.dotChar);
 
-			Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode);
+			Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode, clockExpr);
 
 			addInputsAndOutputs(inputs, outputs, patternProps, flatNode, lustreNode, prefix);
 
@@ -649,11 +647,6 @@ public class LustreAstBuilder {
 		builder.setCompInst(agreeNode.compInst);
 
 		return builder.build();
-
-//		return new AgreeNode(agreeNode.id, inputs, outputs, locals, equations, null, agreeNode.subNodes, assertions,
-//				agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, patternProps,
-//				new BoolExpr(true), agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
-//				timeEvents, agreeNode.compInst);
 	}
 
 	private static void addHistoricalAssumptionConstraint(AgreeNode agreeNode, String prefix, Expr clockExpr,
@@ -863,11 +856,19 @@ public class LustreAstBuilder {
 		}
 	}
 
-	protected static Node addSubNodeLustre(AgreeNode agreeNode, String nodePrefix, AgreeNode flatNode) {
+	protected static Node addSubNodeLustre(AgreeNode agreeNode, String nodePrefix, AgreeNode flatNode, Expr clockExpr) {
 
 		Node lustreNode = getLustreNode(flatNode, nodePrefix);
+//		if (agreeNode.timing == TimingModel.ASYNC || agreeNode.timing == TimingModel.LATCHED) {
+//			lustreNode = makeClockedNode(lustreNode, flatNode, clockExpr);
+//		}
 		addToNodes(lustreNode);
 		return lustreNode;
+	}
+
+	private static Node makeClockedNode(Node lustreNode, AgreeNode flatNode, Expr clockExpr) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	protected static Expr getClockExpr(AgreeNode agreeNode, AgreeNode subNode) {
