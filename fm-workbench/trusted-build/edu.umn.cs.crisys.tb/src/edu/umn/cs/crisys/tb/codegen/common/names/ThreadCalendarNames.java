@@ -10,7 +10,7 @@ import java.util.List;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.CAmkESThreadCalendarEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.thread.ThreadCalendar;
 

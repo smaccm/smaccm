@@ -57,7 +57,7 @@ public class Util {
    public static void setListener(STErrorListener listener) { Util.listener = listener ; }
    public static STErrorListener getListener() { return listener; }
 
-   private static String prefix;
+   private static String prefix = "aadl";
    public static String getPrefix() {
       return prefix;
    }

@@ -10,7 +10,7 @@ import java.util.Set;
 
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalIRQEvent;

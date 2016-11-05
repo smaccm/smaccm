@@ -3,10 +3,12 @@
  */
 package edu.umn.cs.crisys.tb.codegen.common.names;
 
+import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.ThreadEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 
 /**
@@ -46,5 +48,19 @@ public class PortConnectionNames implements NameEmitter {
 		  return c.getSourcePort().getQualifiedName() + "_" + c.getDestPort().getQualifiedName();
 	  else
 		  return this.c.getSourcePort().getQualifiedName();
+  }
+  
+  // TODO: fix this once we get a better handle on OS-specific 
+  // connections.
+  public String getOutgoingPortWriterName() {
+     OSModel os = c.getSourcePort().getOwner().getModel();
+     if (os.getOsTarget() == OSModel.OSTarget.CAmkES) {
+        return this.getName() + "_" + this.getSourcePort().getType().getWriterFn();
+     } else if (os.getOsTarget() == OSModel.OSTarget.eChronos || 
+                os.getOsTarget() == OSModel.OSTarget.VxWorks) {
+        return this.getDestPort().getIncomingWriterName(); 
+     } else {
+        throw new TbException("PortConnection::getOutgoingPortWriterName: unknown OS: " + os.getOsTarget());
+     }
   }
 }

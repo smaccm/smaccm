@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
@@ -498,4 +498,28 @@ public class ThreadImplementationNames implements NameEmitter {
     return getPrefix() + "_dispatch_" + ti.getNormalizedName() + ".c";
   }    
 
+  /*****************************************************
+   * 
+   * Added to remove an OS-dependency in ports
+   * 
+   *****************************************************/
+  
+  public String getDispatcherMainLockReleaseStmt() {
+     OSModel model = this.ti.getModel();
+     if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
+        return this.getCamkesDispatcherUnlockStmt();
+     } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
+        return "rtos_signal_send(" + 
+              this.getEChronosTaskIdConst() + ", " + 
+              this.getEChronosDispatchSignalConst() + ");";
+     } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
+        return "semGive(" + 
+              this.getThreadDispatcherMutex() + "); ";
+     } else {
+        throw new TbException(
+           "ThreadImplementation::getDispatcherMainLockReleaseStmt: OS [" + 
+            model.getOsTarget() + "] not recognized"); 
+     }
+  }
+  
 }

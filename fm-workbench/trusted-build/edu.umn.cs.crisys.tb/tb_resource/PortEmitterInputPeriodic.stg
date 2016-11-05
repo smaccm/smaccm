@@ -1,0 +1,167 @@
+import "Common.stg"
+import "CommonCPrototypes.stg"
+
+/*********************************************************************
+ * 
+ * This file contains the declarations for Periodic Input Ports.
+ *
+ *********************************************************************/
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations related to IRQ Input Port gluecode header prototypes.
+//
+////////////////////////////////////////////////////////////////////////////
+
+writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
+void <externalHandler.handlerName>(const <dispatcher.type.aadlInputType.name> <dispatcher.name>);
+>>
+
+writeUdePrototype(dispatcher) ::= <<
+<dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)>
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Periodic and IRQ dispatcher functions
+//
+///////////////////////////////////////////////////////////////////////////
+
+incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.incomingActiveThreadDispatchName>"
+
+dispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
+
+/************************************************************************
+ * <dispatcher.name> Declarations
+ *
+ ************************************************************************/
+
+static bool <dispatcher.dispatchOccurredVar>;
+static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
+
+/************************************************************************
+ * <incomingWriterName(dispatcher)>
+ * Invoked from remote periodic dispatch thread.
+ *
+ * This function records the current time and triggers the active thread
+ * dispatch from a periodic event.  Note that the periodic dispatch
+ * thread is the *only* thread that triggers a dispatch, so we do not
+ * mutex lock the function.
+ *
+ ************************************************************************/
+
+bool <incomingWriterName(dispatcher)><\\>
+(const <dispatcher.type.camkesInputType.name> arg) {
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcher.periodicTimeVar> = <dispatcher.type.camkesInputToVal>arg;
+    <dispatcherMainLockReleaseStmt(dispatcher)>
+    return true;
+}
+
+>>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// declarations related to main function
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+periodicDispatcher(dispatcher) ::= <<
+if (<dispatcher.dispatchOccurredVar>) {
+    <dispatcher.dispatchOccurredVar> = false;
+    <activeThreadInternalDispatcherName(dispatcher)>(&<dispatcher.periodicTimeVar>);
+}
+
+>>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// VxWorks-specific declarations
+//
+///////////////////////////////////////////////////////////////////////////
+
+periodicClockFn(dispatcher) ::= "<dispatcher.qualifiedName>_callback"
+resetWatchdogFn(dispatcher) ::= "<dispatcher.qualifiedName>_reset_watchdog"
+periodicClock(dispatcher) ::= "<dispatcher.name>_clock"
+
+
+dispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Local clock creation for periodic dispatcher
+//
+///////////////////////////////////////////////////////////////////////////
+
+static WDOG_ID <periodicClock(dispatcher)>;
+static bool <dispatcher.dispatchOccurredVar>;
+static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
+
+/************************************************************************
+ * <resetWatchdogFn(dispatcher)>
+ * This function resets the watchdog timer for the thread.
+ *
+ ************************************************************************/
+
+void <periodicClockFn(dispatcher)>(void); 
+
+
+static void <resetWatchdogFn(dispatcher)>(void)
+{
+    bool dispatcherOk;
+    dispatcherOk = wdStart(<periodicClock(dispatcher)>,
+                           <dispatcher.periodicDispatcherPeriod> / <\\>
+                           <dispatcher.threadImplementation.model.threadCalendar.msPerTick>, (FUNCPTR)<periodicClockFn(dispatcher)>, 0 );
+    assert(dispatcherOk == OK);
+}
+
+void <periodicClockFn(dispatcher)>(void)
+{
+    bool dispatcherOk;
+   <resetWatchdogFn(dispatcher)>();
+    
+    <dispatcher.dispatchOccurredVar> = true;
+       
+    // FIXME NB: This WILL roll over given a fast enough clock rate.  We need an alternate scheme
+    // over the long term.
+    <dispatcher.periodicTimeVar> = (long long)tickGet() * (long long)<dispatcher.threadImplementation.model.threadCalendar.msPerTick>;
+    
+    dispatcherOk = <dispatcher.mainLockReleaseStmt>
+    
+    // NB: the count overflow is a harmless error; it is possible that multiple dispatchers 
+    // could post before the thread actually dispatches.
+    assert(dispatcherOk == OK || errno == S_semLib_COUNT_OVERFLOW);
+}
+
+>>
+
+
+createWatchdog(dispatcher) ::= <<
+<periodicClock(dispatcher)> = wdCreate();
+assert(<periodicClock(dispatcher)> != NULL);
+<resetWatchdogFn(dispatcher)>();
+>>
+
+//////////////////////////////////////////////////////
+//
+// CAmkES
+//
+//////////////////////////////////////////////////////
+
+rpcConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
+<rpcConnection(model.generateConnectionName,
+    model.threadCalendar.periodicDispatcherInstanceName,
+    dispatcher.qualifiedName,
+    threadImpl.componentInstanceName,
+    dispatcher.qualifiedName)>
+>>
+
