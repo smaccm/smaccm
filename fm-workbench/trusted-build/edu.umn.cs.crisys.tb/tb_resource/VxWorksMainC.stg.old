@@ -35,6 +35,9 @@ createActiveThreadMutexes(threadImpl) ::= <<
 // This code is getting called!
 <threadImpl.threadDispatcherMutex> = <createBSem()>;
 assert(<threadImpl.threadDispatcherMutex> != NULL);
+<threadImpl.inputPortList:{port | <port.mutex> = <createMtx()>;
+assert(<port.mutex> != NULL);
+}>
 <threadImpl.externalMutexes:{ m | <m> = <createMtx()>;
 assert(<m> != NULL);
 }>
@@ -63,6 +66,8 @@ assert(<m> != NULL);
 
 deleteActiveThreadMutexes(threadImpl) ::= <<
 semDelete(<threadImpl.threadDispatcherMutex>);
+<threadImpl.inputPortList:{port | semDelete(<port.mutex>);
+}>
 <threadImpl.externalMutexes:{ m | semDelete(<m>);
 }>
 >>
@@ -85,21 +90,6 @@ deleteMutexes(model) ::= <<
 <model.passiveThreadImplementations:deletePassiveThreadMutexes()>
 >>
 
-threadInitializePorts(threadImpl) ::= <<
-    threadImpl.portList{ port | port.vxWorksAddMainCFileInitializers }
->>
-
-initializePorts(model) ::= <<
-<model.activeThreadImplementations:threadInitializePorts()>
->>
-
-threadDeletePorts(threadImpl) ::= <<
-    threadImpl.portList{ port | port.vxWorksAddMainCFileDestructors }
->>
-
-deletePorts(model) ::= <<
-<model.activeThreadImplementations:threadDestroyPorts()>
->>
 
 createTask(threadImpl) ::= <<
 <threadImpl.normalizedName> = taskCreate("<threadImpl.normalizedName>",
@@ -147,8 +137,6 @@ int trusted_build_main(uint32_t runDurationInSeconds) {
 
     <createMutexes(model)>
 
-    <initializePorts(model)>
-
     <createTasks(model)>
 
     if (runDurationInSeconds == 0) {
@@ -161,21 +149,12 @@ int trusted_build_main(uint32_t runDurationInSeconds) {
 
     <deleteTasks(model)>
 
-    <deletePorts(model)>
-
     <deleteMutexes(model)>
 
     return 0;
 }
 >>
 
-writeThreadPortIncludes(threadImpl) ::= <<
-<threadImpl.portList:{port|port.vxWorksAddMainCFileIncludes}>
->>
-
-writeThreadPortDeclarations(threadImpl) ::= <<
-<threadImpl.portList:{port|port.vxWorksAddMainCFileDeclarations}>
->>
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -191,8 +170,6 @@ body(model) ::= <<
 #include <\u003C>sysLib.h<\u003E>
 #include <\u003C>assert.h<\u003E>
 
-<model.threadImplementations:writeThreadPortIncludes()>
-
 <if(model.sharedData)>
 // shared data definitions for tasks
 <model.sharedData:sharedDataDefinition()>
@@ -200,7 +177,6 @@ body(model) ::= <<
 
 <writeModelMutexes(model, "")>
 
-<model.threadImplementations:writeThreadPortDeclarations()>
 
 <mainFunction(model)>
 

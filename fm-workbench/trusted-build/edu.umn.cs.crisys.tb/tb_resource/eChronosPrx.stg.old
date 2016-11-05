@@ -40,12 +40,16 @@ writeTrampoline(name, flihName) ::= <<
 
 >>
 
+writeDispatcherTrampoline(dispatcher) ::= <<
+$writeTrampoline(dispatcher.signalName, incomingActiveThreadDispatchName(dispatcher))$
+>>
+
 writeExternalIsrTrampoline(externalIsr) ::= <<
 $writeTrampoline(externalIsr.name, externalIsr.handlerName)$
 >>
 
 writeTrampolines(model) ::= <<
-$model.irqDispatchers:{dispatcher | dispatcher.addTrampoline}$
+$model.irqDispatchers:writeDispatcherTrampoline()$
 $if(model.threadCalendar.hasDispatchers &&
     model.generateSystickIrq)$
 $writeTrampoline("systick", "$model.prefix$_tick_irq")$
@@ -77,9 +81,9 @@ $if(model.threadCalendar.hasDispatchers &&
     model.generateSystickIrq)$
 $writeInternalInterruptHandler("systick")$
 $endif$
-$model.irqDispatchers{ dispatcher | dispatcher.addInternalIrqs}$
+$model.internalIrqDispatchers:writeInternalDispatcherInterruptHandler()$
 <external_irqs>
-    $model.irqDispatchers{ dispatcher | dispatcher.addExternalIrqs}$
+    $model.externalIrqDispatchers:writeExternalDispatcherInterruptHandler()$
 </external_irqs>
 >>
 
@@ -125,13 +129,12 @@ $writeMutex(port.mutex)$
 
 writeActiveThreadMutexes(threadImpl) ::= <<
 $writeMutex(threadImpl.threadDispatcherMutex)$
-$threadImpl.portList:{port | port.eChronosAddPrxMutexes}$
+$threadImpl.inputPortList:writeInputPortMutex()$
 $threadImpl.externalMutexes:writeMutex()$
 >>
 
 writePassiveThreadMutexes(threadImpl) ::= <<
 $writeMutex(threadImpl.threadDispatcherMutex)$
-$threadImpl.portList:{port | port.eChronosAddPrxMutexes}$
 $threadImpl.externalMutexes:writeMutex()$
 >>
 
@@ -148,7 +151,6 @@ writeSemaphore(name) ::= <<
 >>
 
 writeThreadSemaphores(threadImpl) ::= <<
-$threadImpl.portList:{port | port.eChronosAddPrxSemaphores}$
 $threadImpl.externalSemaphores:writeSemaphore()$
 >>
 

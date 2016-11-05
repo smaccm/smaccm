@@ -34,46 +34,19 @@ filePostfix(name, path) ::= <<
 
 >>
 
-/*
-dataWriterDecl(port) ::= <<
-bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg);
->>
-*/
-
-writerDecl(port) ::= <<
-<if(port.isIRQ)>
-<else>
-bool <incomingPortWriterName(port)><if(port.hasData)>(const <port.type.camkesInputType.name> arg);<else>();<endif>
-<endif>
->>
-
-/*
- * In CAmkES, we write to the output port.
- * In eChronos and VxWorks, we should write to the input port.
- * So, we only want the input ports.  We don't
- * even want the dispatchers.  However, for event
- * and event data ports, we need to know whether
- * the thread is active or passive so that we know
- * what can subsequently dispatch.
- */
 
 activeThreadDecls(threadImpl) ::= <<
-// task id for the thread
-extern int <threadImpl.normalizedName>;
-<osSpecificThreadEntrypoint(threadImpl)>;
-<threadImpl.inputPortList:writerDecl()>
+<threadImpl.portList:{port|port.eChronosAddCommonHFileDeclarations}>
 >>
 
 passiveThreadDecls(threadImpl) ::= <<
-<threadImpl.dispatchers:userEntrypointCallerDecl()>
+<threadImpl.portList:{port|port.eChronosAddCommonHFileDeclarations}>
 >>
 
 
 writeActiveThreadMutexes(threadImpl, extern) ::= <<
 /* dispatcher, input port, and external mutexes for active thread <threadImpl.normalizedName> */
 <extern> SEM_ID <threadImpl.threadDispatcherMutex>;
-<threadImpl.inputPortList:{port | <extern> SEM_ID <port.mutex>;
-}>
 <threadImpl.externalMutexes:{ m | <extern> SEM_ID <m>;
 }>
 >>

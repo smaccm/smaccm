@@ -210,6 +210,9 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
       return "";
    }
    
+   @Override
+   public String addAssemblyFilePortDeclarations() { return ""; }
+
    /************************************************************
     * 
     * Names functions used by the .stg templates for input queues

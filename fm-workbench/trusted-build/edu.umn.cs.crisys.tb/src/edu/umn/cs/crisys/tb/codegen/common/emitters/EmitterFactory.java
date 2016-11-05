@@ -3,8 +3,13 @@ package edu.umn.cs.crisys.tb.codegen.common.emitters;
 
 import java.util.Map;
 
+import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCAllEvent;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCDataport;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInitializer;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInputIrq;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInputPeriodic;
 import edu.umn.cs.crisys.tb.codegen.common.names.*;
 import edu.umn.cs.crisys.tb.model.port.*;
 import edu.umn.cs.crisys.tb.model.rpc.*;
@@ -21,7 +26,23 @@ public class EmitterFactory {
 //         return new RPCDataPortEmitter((InputDataPort)dp);
       // other types here...
 //      else 
-          return new PortNames(dp);
+      
+      // Default port emitters.
+      if (PortEmitterRPCAllEvent.isApplicable(dp)) {
+         return new PortEmitterRPCAllEvent(dp); 
+      } else if (PortEmitterRPCDataport.isApplicable(dp)) {
+         return new PortEmitterRPCDataport(dp);
+      } else if (PortEmitterInitializer.isApplicable(dp)) {
+         return new PortEmitterInitializer(dp); 
+      } else if (PortEmitterInputIrq.isApplicable(dp)) {
+         return new PortEmitterInputIrq(dp);
+      } else if (PortEmitterInputPeriodic.isApplicable(dp)) {
+         return new PortEmitterInputPeriodic(dp); 
+      } else {
+         throw new TbException("EmitterFactory::port: No emitter found that is compatible with: " + dp.getName());
+      }
+      
+      //    return new PortNames(dp);
    }
    
    public static DispatchContractNames dispatchContract(DispatchableInputPort owner, Map.Entry<OutputEventPort, Integer> odc) {

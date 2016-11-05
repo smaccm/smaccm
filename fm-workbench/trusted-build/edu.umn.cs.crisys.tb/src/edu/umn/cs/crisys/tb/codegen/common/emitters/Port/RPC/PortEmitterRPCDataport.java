@@ -125,21 +125,27 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       return "";
    }
 
+   public String writeOptPortThreadInitializerPrototype(String v) {
+      String result = ""; 
+      ExternalHandler eh = this.getModelElement().getInitializeEntrypointSourceText(); 
+      if (eh != null) {
+         result += eh.getHandlerName() + "(" + v + ");\n";
+      }
+      return result;
+   }
+
    /* (non-Javadoc)
     * @see edu.umn.cs.crisys.tb.codegen.common.emitters.PortConnection.PortCWriter#writePortThreadInitializer(int)
     */
    @Override
    public String writePortThreadInitializer() {
-      String result = ""; 
-      ExternalHandler eh = this.getModelElement().getInitializeEntrypointSourceText(); 
-      if (eh != null) {
-         result += eh.getHandlerName() + "();\n";
-      }
-      return result;
+      return writeOptPortThreadInitializerPrototype("");
    }
    
    @Override
    public String writePortHPrototypes() {
+      String result = ""; 
+      
       ST st; 
       PortFeature p = getModelElement();
       if (p instanceof OutputDataPort) {
@@ -150,7 +156,11 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
          throw new TbException("Error: writePortHPrototypes: port " + this.getName() + " is not a data port.");
       }
       st.add("port", this);
-      return st.render();
+      result += st.render();
+      
+      result += writeOptPortThreadInitializerPrototype("void");
+      
+      return result;
    }
 
    @Override
@@ -331,6 +341,9 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       return "";
    }
    
+   @Override
+   public String addAssemblyFilePortDeclarations() { return ""; }
+
    /*******************************************************
     * 
     * Functions for StringTemplate callbacks for all OSes; 

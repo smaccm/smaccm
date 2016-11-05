@@ -34,18 +34,6 @@ filePostfix(name, path) ::= <<
 
 >>
 
-/*
-dataWriterDecl(port) ::= <<
-bool <incomingPortWriterName(port)>(<port.type.camkesInputType.name> arg);
->>
-*/
-
-writerDecl(port) ::= <<
-<if(port.isIRQ)>
-<else>
-bool <incomingPortWriterName(port)><if(port.hasData)>(const <port.type.camkesInputType.name> arg);<else>();<endif>
-<endif>
->>
 
 /*
  * In CAmkES, we write to the output port.
@@ -58,7 +46,7 @@ bool <incomingPortWriterName(port)><if(port.hasData)>(const <port.type.camkesInp
  */
 
 activeThreadDecls(threadImpl) ::= <<
-<threadImpl.inputPortList:writerDecl()>
+<threadImpl.portList:{port|port.eChronosAddCommonHFileDeclarations}>
 >>
 /*  <threadImpl.inputDataPortList:dataWriterDecl()>
 <threadImpl.inputEventDataPortList:dataWriterDecl()>
@@ -66,7 +54,7 @@ activeThreadDecls(threadImpl) ::= <<
 <threadImpl.periodicDispatchers:periodicDispatcherDecl()> */
 
 passiveThreadDecls(threadImpl) ::= <<
-<threadImpl.dispatchers:userEntrypointCallerDecl()>
+<threadImpl.portList:{port|port.eChronosAddCommonHFileDeclarations}>
 >>
 
 headerBody(model) ::= <<

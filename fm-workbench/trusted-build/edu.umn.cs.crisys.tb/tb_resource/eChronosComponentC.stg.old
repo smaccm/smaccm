@@ -1,0 +1,75 @@
+import "CommonComponentC.stg"
+
+/*
+ * Overrides for OS-specific names/behavior for generated C code.
+ *
+ */
+// import "eChronosCNames.stg"
+// import does not override declarations.  Why?
+osSpecificThreadEntrypoint(threadImpl) ::= "int <threadImpl.threadImplMainFnName>(void)"
+osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
+
+incomingPortWriterName(port) ::= "<port.eChronosIncomingPortWriterName>"
+outgoingPortWriterName(connection) ::= "<incomingPortWriterName(connection.destPort)>"
+
+incomingActiveThreadDispatchName(dispatcher) ::= "<incomingPortWriterName(dispatcher)>"
+outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
+
+incomingUserEntrypointCallerName(dispatcher) ::= "<dispatcher.prefix>_entrypoint_<dispatcher.qualifiedName>"
+
+outgoingUserEntrypointCallerName(dispatcher) ::= "<incomingUserEntrypointCallerName(dispatcher)>"
+
+portLockStmt(port) ::= <<
+rtos_mutex_lock(<port.eChronosMutexConst>);
+
+>>
+
+portUnlockStmt(port) ::= <<
+rtos_mutex_unlock(<port.eChronosMutexConst>);
+
+>>
+
+portDispatcherLock(dispatcher) ::= <<
+rtos_mutex_lock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
+
+>>
+
+portDispatcherUnlock(dispatcher) ::= <<
+rtos_mutex_unlock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutexConst>);
+
+>>
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= " "
+
+dispatcherMainLockWaitStmt(threadImpl) ::= <<
+    rtos_signal_wait(<threadImpl.eChronosDispatchSignalConst>);
+>>
+
+dispatcherMainLockReleaseStmt(dispatcher) ::= <<
+    <if(dispatcher.isIRQ || dispatcher.isPeriodic)>
+    rtos_interrupt_event_raise(<dispatcher.threadImplementation.eChronosInterruptSignalConst>);<else>
+    rtos_signal_send(<dispatcher.threadImplementation.eChronosTaskIdConst>, <dispatcher.threadImplementation.eChronosDispatchSignalConst>);
+    <endif>
+>>
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u003C><threadImpl.prefix>_decls.h<\u003E>
+#include <\u003C>string.h<\u003E>
+
+>>
+
+osSpecificIrqDispatcher(dispatcher) ::= <<
+bool <incomingActiveThreadDispatchName(dispatcher)>() {
+    <dispatcher.firstLevelInterruptHandler>();
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcherMainLockReleaseStmt(dispatcher)>
+    return true;
+}
+>>
+
+osSpecificThreadPostInitializer(threadImpl) ::= ""
+
+osSpecificComponentLocalCallerFunction(connection) ::= ""
+
+// TODO: add an eChronos assert function.
+osSpecificAssert(predicate) ::= ""

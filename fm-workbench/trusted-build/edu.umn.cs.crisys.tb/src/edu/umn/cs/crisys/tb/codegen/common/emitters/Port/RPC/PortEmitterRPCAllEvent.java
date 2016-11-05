@@ -83,6 +83,8 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
    @Override
    public String writePortHPrototypes() {
+      String result = ""; 
+      
       ST st; 
       PortFeature p = getModelElement();
       if (p instanceof OutputEventPort) {
@@ -93,7 +95,15 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
          throw new TbException("Error: writePortHPrototypes: port " + this.getName() + " is not an event data port.");
       }
       st.add("port", this);
-      return st.render();
+      result += st.render();
+      
+      st = getTemplateST("writeUdePrototype");
+      st.add("dispatcher", this);
+      result += st.render();
+      
+      result += writeOptPortThreadInitializerPrototype("void"); 
+      
+      return result;
    }
 
 
@@ -135,7 +145,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    public String writePortEventResponder() {
       ST st; 
       PortFeature p = getModelElement();
-      if (p instanceof InputEventPort) {
+      if (p instanceof InputEventPort && this.getHasDispatcher()) {
          if (p.hasData()) {
             st = getTemplateST("eventDataDispatcher");
          } else {
@@ -147,9 +157,19 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       }
    }
 
+   public String writeOptPortThreadInitializerPrototype(String v) {
+      String result = ""; 
+      ExternalHandler eh = this.getModelElement().getInitializeEntrypointSourceText(); 
+      if (eh != null) {
+         result += eh.getHandlerName() + "(" + v + ");\n";
+      }
+      return result;
+   }
+
+   
    @Override
    public String writePortThreadInitializer() {
-      return "";
+      return writeOptPortThreadInitializerPrototype(""); 
    }
 
    @Override
@@ -325,6 +345,9 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    public String addAssemblyFileConfigDeclarations() {
       return "";
    }
+   
+   @Override
+   public String addAssemblyFilePortDeclarations() { return ""; }
    
    /************************************************************
     * 

@@ -25,12 +25,12 @@ public interface PortEmitter extends NameEmitter {
    // These would be more efficient with StringBuffers or StringWriters, 
    // but I want the simplest possible interface.
    
-   String writePortHPrototypes();
-   String writePortDeclarations();
-   String writePortPreEntrypoint(); 
-   String writePortPostEntrypoint();
-   String writePortEventResponder(); 
-   String writePortThreadInitializer();
+   String writePortHPrototypes();     //
+   String writePortDeclarations();    // 
+   String writePortPreEntrypoint();   //  
+   String writePortPostEntrypoint();  // 
+   String writePortEventResponder();  //  
+   String writePortThreadInitializer(); // 
    
    
    //////////////////////////////////////////////////////////////////

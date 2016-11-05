@@ -1,15 +1,5 @@
 /*********************************************************************
  * OS-specific naming functions required by C files:
- *   incomingPortWriterName
- *   outgoingPortWriterName
- *   incomingActiveThreadDispatchName
- *   outgoingActiveThreadDispatchName
- *   incomingUserEntrypointCallerName
- *   outgoingUserEntrypointCallerName
- *      portLockStmt
- *   portUnlockStmt
- *   portDispatcherLock
- *   portDispatcherUnlock
  *   dispatcherMainInitializeLockStmt
  *   dispatcherMainLockWaitStmt
  *   dispatcherMainLockReleaseStmt
@@ -20,6 +10,7 @@
  *   osSpecificComponentLocalCallerFunction
  *   osSpecificAssert
  * This file just 'fails' for each of these calls.
+
 >>
 
  */
@@ -27,55 +18,6 @@
 genericFailure(template) ::=
 << INTERNAL ERROR: template: <template> not overridden for host OS. >>
 
-incomingPortWriterName(port) ::= <<
-<genericFailure("incomingPortWriterName")>
-<port.incomingPortWriterNameDoesntExist>
->>
-
-outgoingPortWriterName(connection) ::= <<
-<genericFailure("outgoingPortWriterName")>
-<connection.outgoingPortWriterNameDoesntExist>
->>
-
-incomingActiveThreadDispatchName(dispatcher) ::= <<
-<genericFailure("incomingActiveThreadDispatchName")>
-<dispatcher.incomingActiveThreadDispatchNameDoesntExist>
->>
-
-outgoingActiveThreadDispatchName(dispatcher) ::= <<
-<genericFailure("outgoingActiveThreadDispatchName")>
-<dispatcher.outgoingActiveThreadDispatchNameDoesntExist>
->>
-
-incomingUserEntrypointCallerName(dispatcher) ::= <<
-<genericFailure("incomingUserEntrypointCallerName")>
-<dispatcher.incomingUserEntrypointCallerNameDoesntExist>
->>
-
-outgoingUserEntrypointCallerName(dispatcher) ::= <<
-<genericFailure("outgoingUserEntrypointCallerName")>
-<dispatcher.outgoingUserEntrypointCallerNameDoesntExist>
->>
-
-portDispatcherLock(dispatcher) ::= <<
-<genericFailure("portDispatcherLock")>
-<dispatcher.portDispatcherLockDoesntExist>
->>
-
-portDispatcherUnlock(dispatcher) ::= <<
-<genericFailure("portDispatcherUnlock")>
-<dispatcher.portDispatcherUnlockDoesntExist>
->>
-
-portLockStmt(port) ::= <<
-<genericFailure("portLockStmt")>
-<port.portLockStmtDoesntExist>
->>
-
-portUnlockStmt(port) ::= <<
-<genericFailure("portUnlockStmt")>
-<port.portUnlockStmtDoesntExist>
->>
 
 dispatcherMainInitializeLockStmt(threadImpl) ::= <<
 <genericFailure("dispatcherMainInitializeLockStmt")>

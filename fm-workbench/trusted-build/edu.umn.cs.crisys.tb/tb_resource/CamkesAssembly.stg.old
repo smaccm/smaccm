@@ -19,8 +19,6 @@ filePostfix(name, path) ::= <<
 assemblyThreadImplementationImports(threadImpl) ::= <<
 import "<threadImpl.rootToCamkesComponentFilePath>";
 
-<threadImpl.portList: {port | port.addAssemblyFilePortDeclarations} >
-
 >>
 
 assemblyThreadComponent(threadImpl) ::= <<
@@ -28,11 +26,193 @@ component <threadImpl.componentName> <threadImpl.componentInstanceName>;
 
 >>
 
+assemblyIrqComponent(dispatcher) ::= <<
+component <dispatcher.irqComponent> <dispatcher.irqObject>;
+
+>>
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Assembly declarations for IRQ components
+//
+////////////////////////////////////////////////////////////////////////////
+
+
+irqComponentMemoryRegion(memoryRegion) ::= <<
+dataport Buf <memoryRegion.name>;
+
+>>
+
+constructIRQComponent(dispatcher) ::= <<
+component <dispatcher.irqComponent> {
+    hardware;
+    <dispatcher.memoryRegions:irqComponentMemoryRegion()>
+    emits DataAvailable irq;
+}
+
+>>
+
+instantiateIRQComponent(dispatcher) ::= <<
+component <dispatcher.irqComponent> <dispatcher.irqObject>;
+
+>>
+
+constructIRQConfig(dispatcher) ::= <<
+<dispatcher.memoryRegions:{memoryRegion | <dispatcher.irqObject>.<memoryRegion.name>_attributes = "<memoryRegion.region>"; }>
+<dispatcher.irqObject>.irq_attributes = <dispatcher.signalNumber> ;
+
+>>
+
+constructIRQMemoryConnection(memoryRegion, dispatcher) ::= <<
+connection seL4HardwareMMIO <dispatcher.name>_<memoryRegion.name>(from <dispatcher.threadImplementation.componentInstanceName>.<memoryRegion.name>, to <dispatcher.irqObject>.<memoryRegion.name>);
+
+>>
+
+constructIRQSignal(dispatcher) ::= <<
+connection seL4HardwareInterrupt <dispatcher.name>_irq(from <dispatcher.irqObject>.irq, to <dispatcher.threadImplementation.componentInstanceName>.<dispatcher.name>);
+
+>>
+
+constructIRQConnections(dispatcher) ::= <<
+<dispatcher.memoryRegions:constructIRQMemoryConnection(dispatcher)>
+<constructIRQSignal(dispatcher)>
+
+>>
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for periodic components
+//
+////////////////////////////////////////////////////////////////////////////
+
+constructPeriodicComponent(calendar) ::= <<
+<if(calendar.hasDispatchers)>
+component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatcherInstanceName>;
+<endif>
+>>
+
+rpcConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+rpcDataportConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4RPCCallDataport <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectPassiveToActive(passiveThreadImpl, activeThreadImpl, model) ::= <<
+<if(!activeThreadImpl.isExternal)>
+<if(passiveThreadImpl.containsDispatchers)><\\>
+<rpcDataportConnection(model.generateConnectionName,
+    activeThreadImpl.componentInstanceName,
+    passiveThreadImpl.interfaceInstanceName,
+    passiveThreadImpl.componentInstanceName,
+    passiveThreadImpl.componentDispatcherInterfaceVarIdName)>
+<endif>
+<endif>
+>>
 
 assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 <threadImpl.passiveThreadRegion:connectPassiveToActive(threadImpl, model)>
 >>
 
+connectActiveToDispatcher(connection, threadImpl, model) ::= <<
+<rpcConnection(model.generateConnectionName,
+    threadImpl.componentInstanceName,
+    connection.name,
+    connection.destPort.threadImplementation.componentInstanceName,
+    connection.destPort.name)>
+
+>>
+
+// assemblyConnectActiveChildToActiveThreads(threadImpl, model)
+
+assemblyConnectThreadToActiveThreads(threadImpl, model) ::= <<
+<threadImpl.activeThreadConnectionList:connectActiveToDispatcher(threadImpl, model)>
+>>
+
+connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
+<if(dispatcher.isPeriodic)><\\>
+<rpcConnection(model.generateConnectionName,
+    model.threadCalendar.periodicDispatcherInstanceName,
+    dispatcher.qualifiedName,
+    threadImpl.componentInstanceName,
+    dispatcher.qualifiedName)>
+<endif>
+>>
+
+assemblyConnectPeriodic(threadImpl, model) ::= <<
+<threadImpl.dispatchers:connectActivePeriodic(threadImpl, model)>
+>>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Updates for Mailboxes for Ground Vehicle.
+//
+// At issue: to set port connection rights for the mailboxes, we need to modify 
+// the assembly configuration.  So, we could do this as a model transformation;     
+// this would substantially simplify the emitters.  
+//
+// In this case, we would transform the dataports into shared memory ports.
+// But this is o.k., we just need to synchronize the numbers.  
+//
+///////////////////////////////////////////////////////////////////////////
+sdaConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4SharedData <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+mailboxWriterToReader(connection) ::= <<
+<sdaConnection(connection.name, 
+	connection.sourcePort.threadImplementation.componentInstanceName,
+	connection.name,
+	connection.destPort.threadImplementation.componentInstanceName,
+	connection.name)>
+>>
+
+mailboxWriterBufferConnection(connection) ::= <<
+<sdaConnection(connection.fullyQualifiedName, 
+	connection.sourcePort.threadImplementation.componentInstanceName,
+	connection.sourcePort.qualifiedName,
+	connection.destPort.threadImplementation.componentInstanceName,
+	connection.name)>
+>>
+
+connectReaderWriter(connection, srcThreadImpl, model) ::= <<
+<if(connection.sourcePort.isOutputData)><\\>
+<if(model.camkesUseMailboxDataports)>
+// Connect all of the defined reader dataports for mailboxes + the writer buffer.
+<mailboxWriterToReader(connection)>
+<mailboxWriterBufferConnection(connection)>
+<else>
+<rpcConnection(model.generateConnectionName,
+    srcThreadImpl.componentInstanceName,
+    connection.sourcePort.qualifiedName,
+    connection.destPortThreadImplementation.componentInstanceName,
+    connection.destPort.name)>
+<endif>
+<endif>
+>>
+
+configureReaderWriter(connection) ::= <<
+<if(connection.sourcePort.isOutputData)><\\>
+<if(model.camkesUseMailboxDataports)>
+<connection.fullyQualifiedName>.to_access = "R";
+<endif>
+<endif>
+
+>>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// End of Updates for Mailboxes for Ground Vehicle.
+//
+///////////////////////////////////////////////////////////////////////////
+
+assemblyConnectReadersWriters(threadImpl, model) ::= <<
+<threadImpl.isSrcOfConnectionList:connectReaderWriter(threadImpl, model)>
+>>
+
+assemblyConfigureReadersWriters(threadImpl) ::= <<
+<threadImpl.isSrcOfConnectionList:configureReaderWriter()>
+>>
 
 connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName,
@@ -110,14 +290,6 @@ configConnectTimeServices(threadImpl, model) ::= <<
 <endif>
 >>
 
-portDeclarations(threadImpl) ::= <<
-<threadImpl.ports:{port | port.addAssemblyFileCompositionPortDeclarations}> 
->>
-
-configurePorts(threadImpl) ::= <<
-<threadImpl.ports:{port | port.addAssemblyFileConfigDeclarations}>
->>
-
 camkesAssemblyBody(model) ::= <<
 
 import \<std_connector.camkes>;
@@ -160,6 +332,7 @@ assembly {
         <endif>
         <endif>
 
+
         <commentIf("IRQ-handling hardware components",
                    (model.irqDispatchers:assemblyIrqComponent()))><\\>
 
@@ -169,11 +342,12 @@ assembly {
         <commentIf("Connections from active dispatchers to passive threads",
                    (model.activeThreadImplementations:assemblyConnectActiveToPassiveThreads(model)))><\\>
 
-        <commentIf("Port declarations and connections for active threads",
-                   (<model.activeThreadImplementations:portDeclarations()>)><\\>
-        
+        <commentIf("Connections from active dispatcher send/receive to other active dispatcher send/receive",
+                   (model.threadImplementations:assemblyConnectThreadToActiveThreads(model)))><\\>
 
         <if(model.threadCalendar.hasDispatchers)>
+        // Periodic dispatcher connections
+        <model.activeThreadImplementations:assemblyConnectPeriodic(model)>
         <if(!model.externalTimerComponent)>
         connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to time_server.the_timer);
         connection seL4GlobalAsynchCallback echo_int(from time_server.timer_notification, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
@@ -185,6 +359,12 @@ assembly {
 
 
         <model.threadImplementations:assemblyConnectTimeServices(model)><\\>
+
+        <commentIf("IRQ connections",
+                   (model.irqDispatchers:constructIRQConnections()))><\\>
+
+        <commentIf("Component read/write connections",
+                   (model.threadImplementations:assemblyConnectReadersWriters(model)))><\\>
 
         <commentIf("Direct RPC connections",
                    (model.threadImplementations:assemblyConnectRpgs(model)))><\\>
@@ -201,10 +381,10 @@ assembly {
         <model.threadCalendar.periodicDispatcherInstanceName>.priority = 201;
         <endif>
         
+        <commentIf("Component read/write connections (mailbox Configurations)",
+                   (model.threadImplementations:assemblyConfigureReadersWriters()))><\\>
         
-        <commentIf("Component port configuration declarations",
-                   (model.threadImplementations:configurePorts()))><\\>
-        
+        <model.irqDispatchers:constructIRQConfig()>
         <model.threadImplementations:assemblySetPriorities()>
         <model.threadImplementations:assemblySetStackSize()>
         <if(model.useOSRealTimeExtensions)>
@@ -218,3 +398,10 @@ assembly {
 
 >>
 
+
+
+//
+// connections for IRQ dispatchers
+// <model.irqDispatchers:constructIRQConnections()>
+
+//     <model.irqDispatchers:constructIRQConfig()>
