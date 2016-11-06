@@ -22,13 +22,11 @@ filePostfix(name, path) ::= <<
 
 
 writePeriodicSender(dispatcher) ::= <<
-<if(dispatcher.isPeriodic)><\\>
 uses <dispatcher.type.readerWriterInterfaceName> <dispatcher.qualifiedName>;
-<endif>
 >>
 
 writePeriodicSenders(threadImpl) ::= <<
-<threadImpl.dispatchers:writePeriodicSender()>
+<threadImpl.periodicDispatchers:writePeriodicSender()>
 >>
 
 periodicDispatcherCamkesBody(model, type) ::= <<

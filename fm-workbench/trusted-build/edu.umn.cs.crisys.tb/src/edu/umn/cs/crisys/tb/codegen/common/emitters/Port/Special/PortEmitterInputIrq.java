@@ -76,17 +76,17 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
     *************************************************/
    
    @Override
-   public void writePortCFiles(File directory) {
+   public void getWritePortCFiles(File directory) {
       // no-op for InputIrqPorts
    }
 
    @Override
-   public void writePortHFiles(File directory) {
+   public void getWritePortHFiles(File directory) {
       // no-op for InputIrqPorts
    }
    
    @Override
-   public String writePortHPrototypes() {
+   public String getWritePortHPrototypes() {
       ST st = getTemplateST("writeUdePrototype");
       st.add("dispatcher", this);
       return st.render(); 
@@ -94,7 +94,7 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
 
 
    @Override
-   public String writePortDeclarations() {
+   public String getWritePortDeclarations() {
       // These are OS-dependent.
       String result = ""; 
       ST st = getTemplateST("dispatcherComponentIRQEventDecls");
@@ -114,19 +114,19 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
    }
 
    @Override
-   public String writePortPreEntrypoint() {
+   public String getWritePortPreEntrypoint() {
       // no-op for InputIrqPorts
       return "";
    }
 
    @Override
-   public String writePortPostEntrypoint() {
+   public String getWritePortPostEntrypoint() {
       // no-op for InputIrqPorts
       return "";
    }
 
    @Override
-   public String writePortEventResponder() {
+   public String getWritePortEventResponder() {
       String result = ""; 
       ST st = getTemplateST("irqDispatcher");
       st.add("dispatcher", this);
@@ -134,7 +134,7 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
    }
 
    @Override
-   public String writePortThreadInitializer() {
+   public String getWritePortThreadInitializer() {
       String result = "";
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
          result += this.getName() + "_reg_callback(" + 
@@ -176,26 +176,26 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
    }
 
    @Override
-   public String vxWorksAddMainCFileIncludes() {
+   public String getVxWorksAddMainCFileIncludes() {
       // no-op for InitializerPorts
       return "";
    }
 
    @Override
-   public String vxWorksAddMainCFileDeclarations() {
+   public String getVxWorksAddMainCFileDeclarations() {
       // This is where they would be registered in VxWorks, 
       // once we add support!
       throw new TbException("InputIrqPortEmitter::vxWorksAddMainCFileDeclarations: IRQs are currently unsupported on VxWorks");
    }
 
    @Override
-   public String vxWorksAddMainCFileInitializers() {
+   public String getVxWorksAddMainCFileInitializers() {
       // Need to add support for IRQs for VxWorks
       return ""; 
    }
 
    @Override
-   public String vxWorksAddMainCFileDestructors() {
+   public String getVxWorksAddMainCFileDestructors() {
       // Need to add support for IRQs for VxWorks
       return "";
    }
@@ -206,28 +206,28 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
     * 
     ************************************************************/
 
-   public String eChronosAddPrxMutexes() {
+   public String getEChronosAddPrxMutexes() {
       return "";
    }
    
-   public String eChronosAddPrxSemaphores() {
+   public String getEChronosAddPrxSemaphores() {
       return "";
    }
 
    @Override
-   public String eChronosAddCommonHFileDeclarations() {
+   public String getEChronosAddCommonHFileDeclarations() {
       return "";
    }
 
    @Override
-   public String addTrampolines() { 
+   public String getAddTrampolines() { 
       ST st = getTemplateST("writeDispatcherTrampoline");
       st.add("dispatcher", this);
       return st.render();
    }
    
    @Override
-   public String addInternalIrqs() { 
+   public String getAddInternalIrqs() { 
       String result = "";
       InputIrqPort iip = (InputIrqPort)this.getModelElement();
       if (iip.getNumber() == InputIrqPort.NO_SIGNAL_NUMBER) { 
@@ -239,7 +239,7 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
    }
    
    @Override
-   public String addExternalIrqs() { 
+   public String getAddExternalIrqs() { 
       String result = ""; 
       InputIrqPort iip = (InputIrqPort)this.getModelElement(); 
       if (iip.getNumber() != InputIrqPort.NO_SIGNAL_NUMBER) {
@@ -257,21 +257,21 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
     ************************************************************/
 
    @Override
-   public String addComponentPortLevelDeclarations() {
+   public String getAddComponentPortLevelDeclarations() {
       ST st = getTemplateST("camkesIrqComponentDecl");
       st.add("dispatcher", this);
       return st.render(); 
    }
 
    @Override
-   public String addAssemblyFilePortDeclarations() {
+   public String getAddAssemblyFilePortDeclarations() {
       ST st = getTemplateST("constructIRQComponent");
       st.add("dispatcher", this);
       return st.render(); 
    }
    
    @Override
-   public String addAssemblyFileCompositionPortDeclarations() {
+   public String getAddAssemblyFileCompositionPortDeclarations() {
       String result = "";
       ST st = getTemplateST("assemblyIrqComponent"); 
       st.add("dispatcher", this);
@@ -285,7 +285,7 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
    }
    
    @Override
-   public String addAssemblyFileConfigDeclarations() {
+   public String getAddAssemblyFileConfigDeclarations() {
       String result = ""; 
       ST st = getTemplateST("constructIRQConfig");
       st.add("dispatcher", this);
@@ -353,6 +353,10 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
       return Integer.toString(iip.getNumber()); 
    }
 
+   public boolean getHasData() { 
+      return false; 
+   }
+   
    public List<NameEmitter> getMemoryRegions() {
       InputIrqPort iip = (InputIrqPort)this.getModelElement(); 
       List<NameEmitter> regions = new ArrayList<>();

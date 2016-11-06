@@ -78,17 +78,17 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
     *************************************************/
    
    @Override
-   public void writePortCFiles(File directory) {
+   public void getWritePortCFiles(File directory) {
       // no-op for InputPeriodicPorts
    }
 
    @Override
-   public void writePortHFiles(File directory) {
+   public void getWritePortHFiles(File directory) {
       // no-op for InputPeriodicPorts
    }
    
    @Override
-   public String writePortHPrototypes() {
+   public String getWritePortHPrototypes() {
       ST st = getTemplateST("writeUdePrototype");
       st.add("dispatcher", this);
       return st.render(); 
@@ -96,7 +96,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
 
 
    @Override
-   public String writePortDeclarations() {
+   public String getWritePortDeclarations() {
       String result = ""; 
       ST st = getTemplateST("dispatcherComponentPeriodicEventDecls");
       st.add("dispatcher", this);
@@ -113,19 +113,19 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    }
 
    @Override
-   public String writePortPreEntrypoint() {
+   public String getWritePortPreEntrypoint() {
       // no-op for InputPeriodicPorts
       return "";
    }
 
    @Override
-   public String writePortPostEntrypoint() {
+   public String getWritePortPostEntrypoint() {
       // no-op for InputPeriodicPorts
       return "";
    }
 
    @Override
-   public String writePortEventResponder() {
+   public String getWritePortEventResponder() {
       String result = ""; 
       ST st = getTemplateST("periodicDispatcher");
       st.add("dispatcher", this);
@@ -133,7 +133,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    }
 
    @Override
-   public String writePortThreadInitializer() {
+   public String getWritePortThreadInitializer() {
       String result = ""; 
       ST st = getTemplateST("createWatchdog");
       st.add("dispatcher", this);
@@ -165,25 +165,25 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    }
 
    @Override
-   public String vxWorksAddMainCFileIncludes() {
+   public String getVxWorksAddMainCFileIncludes() {
       // no-op for InitializerPorts
       return "";
    }
 
    @Override
-   public String vxWorksAddMainCFileDeclarations() {
+   public String getVxWorksAddMainCFileDeclarations() {
       // no-op for InitializerPorts
       return ""; 
    }
 
    @Override
-   public String vxWorksAddMainCFileInitializers() {
+   public String getVxWorksAddMainCFileInitializers() {
       // Need to add support for IRQs for VxWorks
       return ""; 
    }
 
    @Override
-   public String vxWorksAddMainCFileDestructors() {
+   public String getVxWorksAddMainCFileDestructors() {
       // Need to add support for IRQs for VxWorks
       return "";
    }
@@ -194,28 +194,28 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
     * 
     ************************************************************/
 
-   public String eChronosAddPrxMutexes() {
+   public String getEChronosAddPrxMutexes() {
       return EChronosUtil.addPrxMutex(this.getMutex());
    }
    
-   public String eChronosAddPrxSemaphores() {
+   public String getEChronosAddPrxSemaphores() {
       return "";
    }
 
    @Override
-   public String eChronosAddCommonHFileDeclarations() {
+   public String getEChronosAddCommonHFileDeclarations() {
       return EChronosUtil.eChronosPortWriterPrototype(
             getIncomingWriterName(), this.getModelElement().getType()); 
    }
 
    @Override
-   public String addTrampolines() { return ""; }
+   public String getAddTrampolines() { return ""; }
    
    @Override
-   public String addInternalIrqs() { return ""; }
+   public String getAddInternalIrqs() { return ""; }
    
    @Override
-   public String addExternalIrqs() { return ""; }
+   public String getAddExternalIrqs() { return ""; }
    
    /************************************************************
     * 
@@ -224,7 +224,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
     ************************************************************/
 
    @Override
-   public String addComponentPortLevelDeclarations() {
+   public String getAddComponentPortLevelDeclarations() {
       String toReturn = ""; 
       toReturn += this.getType().getReaderWriterInterfaceName(); 
       toReturn += " " + this.getQualifiedName() + ";\n";
@@ -232,12 +232,12 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    }
 
    @Override
-   public String addAssemblyFilePortDeclarations() {
+   public String getAddAssemblyFilePortDeclarations() {
       return ""; 
    }
    
    @Override
-   public String addAssemblyFileCompositionPortDeclarations() {
+   public String getAddAssemblyFileCompositionPortDeclarations() {
       String result = ""; 
       ST st = getTemplateST("connectActivePeriodic");
       st.add("dispatcher", this);
@@ -249,7 +249,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    }
    
    @Override
-   public String addAssemblyFileConfigDeclarations() {
+   public String getAddAssemblyFileConfigDeclarations() {
       // no-op for Input Periodic Ports for Camkes
       String result = ""; 
       return result;
@@ -265,6 +265,8 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
     * externalHandlers
     * dispatchOccurredVar
     * periodicTimeVar
+    * periodicDispatcherPeriod
+    * hasData
     * dispatcherMainLockReleaseStmt <-- OS-specific, handled by thread.
     * incomingActiveThreadDispatchName <--> incomingWriterName <-- OS-specific.
     *
@@ -303,6 +305,12 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
       return getPrefix() + "_time_" + getName(); 
    }
 
+   public int getPeriodicDispatcherPeriod() {
+      InputPeriodicPort ipp = 
+            (InputPeriodicPort)this.getModelElement();
+      return ipp.getPeriod();
+   }
+   
    public String getMutex() {
       return (Util.getPrefix_() + getModelElement().getOwner().getNormalizedName() + "_" + getModelElement().getName() + "_mut").toLowerCase();
     }
@@ -316,6 +324,10 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
       return getUserEntrypointCallerName(); 
    }
 
+   public boolean getHasData() { 
+      return !(this.getModelElement().getType() instanceof UnitType); 
+   }
+   
    public TypeNames getType() { 
       return EmitterFactory.type(this.getModelElement().getType()); 
    }

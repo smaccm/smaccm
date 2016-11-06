@@ -581,26 +581,26 @@ public class PortNames implements PortEmitter {
    /////////////////////////////////////////////////////////////////////
    
    @Override
-   public void writePortCFiles(File directory) {
+   public void getWritePortCFiles(File directory) {
       // TODO Auto-generated method stub
 
    }
 
    @Override
-   public void writePortHFiles(File directory) {
+   public void getWritePortHFiles(File directory) {
       // TODO Auto-generated method stub
 
    }
 
    @Override
-   public String writePortHPrototypes() {
+   public String getWritePortHPrototypes() {
       // TODO Auto-generated method stub
       return null;
    }
 
 
    @Override
-   public String writePortDeclarations() {
+   public String getWritePortDeclarations() {
       // TODO Auto-generated method stub
       return null;
    }
@@ -618,25 +618,25 @@ public class PortNames implements PortEmitter {
    }
 
    @Override
-   public String writePortPreEntrypoint() {
+   public String getWritePortPreEntrypoint() {
       // TODO Auto-generated method stub
       return null;
    }
 
    @Override
-   public String writePortPostEntrypoint() {
+   public String getWritePortPostEntrypoint() {
       // TODO Auto-generated method stub
       return null;
    }
 
    @Override
-   public String writePortEventResponder() {
+   public String getWritePortEventResponder() {
       // TODO Auto-generated method stub
       return null;
    }
 
    @Override
-   public String writePortThreadInitializer() {
+   public String getWritePortThreadInitializer() {
       // TODO Auto-generated method stub
       return null;
    }

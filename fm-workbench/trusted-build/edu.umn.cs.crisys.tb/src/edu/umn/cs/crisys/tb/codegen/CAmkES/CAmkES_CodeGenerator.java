@@ -170,7 +170,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
   public void osSpecificComponentFiles(ThreadImplementation ti, 
       File componentDirectory, 
       File srcDirectory, File includeDirectory) throws TbFailure {
-	  createDispatchInterface(ti);
+	  //createDispatchInterface(ti);
     createComponentCamkesFile(componentDirectory, ti);
   }
 		

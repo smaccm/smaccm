@@ -68,12 +68,12 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public void writePortCFiles(File directory) {
+   public void getWritePortCFiles(File directory) {
       // no-op for RPCEventDataPorts
    }
 
    @Override
-   public void writePortHFiles(File directory) {
+   public void getWritePortHFiles(File directory) {
       // no-op for RPCEventDataPorts
    }
    
@@ -82,7 +82,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       return template.getInstanceOf(stName); 
    }
    @Override
-   public String writePortHPrototypes() {
+   public String getWritePortHPrototypes() {
       String result = ""; 
       
       ST st; 
@@ -108,7 +108,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
 
 
    @Override
-   public String writePortDeclarations() {
+   public String getWritePortDeclarations() {
       ST st; 
       PortFeature p = getModelElement();
       if (p instanceof OutputEventPort) {
@@ -127,14 +127,14 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String writePortPreEntrypoint() {
+   public String getWritePortPreEntrypoint() {
       // nothing to do for "active" threads; for the moment
       // I'm not going to support "passive" threads.
       return "";
    }
 
    @Override
-   public String writePortPostEntrypoint() {
+   public String getWritePortPostEntrypoint() {
       // nothing to do for "active" threads; for the moment
       // I'm not going to support "passive" threads.
       // However, this should make it easy!!
@@ -142,7 +142,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String writePortEventResponder() {
+   public String getWritePortEventResponder() {
       ST st; 
       PortFeature p = getModelElement();
       if (p instanceof InputEventPort && this.getHasDispatcher()) {
@@ -168,7 +168,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
 
    
    @Override
-   public String writePortThreadInitializer() {
+   public String getWritePortThreadInitializer() {
       return writeOptPortThreadInitializerPrototype(""); 
    }
 
@@ -202,18 +202,18 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += VxWorksUtil.writeExternMutexDecl(this.getMutex());
-         toReturn += eChronosAddCommonHFileDeclarations();
+         toReturn += getEChronosAddCommonHFileDeclarations();
       } 
       return toReturn;
    }
 
    @Override
-   public String vxWorksAddMainCFileIncludes() {
+   public String getVxWorksAddMainCFileIncludes() {
       return "";
    }
 
    @Override
-   public String vxWorksAddMainCFileDeclarations() {
+   public String getVxWorksAddMainCFileDeclarations() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += writeMutexDecl("");
@@ -222,7 +222,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String vxWorksAddMainCFileInitializers() {
+   public String getVxWorksAddMainCFileInitializers() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += this.getMutex() + " = " + createMutex() + ";\n";
@@ -238,7 +238,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String vxWorksAddMainCFileDestructors() {
+   public String getVxWorksAddMainCFileDestructors() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += "semDelete(" + this.getMutex() + ");\n";
@@ -252,7 +252,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
     * 
     ************************************************************/
 
-   public String eChronosAddPrxMutexes() {
+   public String getEChronosAddPrxMutexes() {
       String toReturn = "";
       if (this.getModelElement() instanceof InputPort) {
          toReturn += EChronosUtil.addPrxMutex(this.getMutex());
@@ -262,12 +262,12 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    
    
    
-   public String eChronosAddPrxSemaphores() {
+   public String getEChronosAddPrxSemaphores() {
       return "";
    }
 
    @Override
-   public String eChronosAddCommonHFileDeclarations() {
+   public String getEChronosAddCommonHFileDeclarations() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += EChronosUtil.eChronosPortWriterPrototype(
@@ -277,13 +277,13 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String addTrampolines() { return ""; }
+   public String getAddTrampolines() { return ""; }
    
    @Override
-   public String addInternalIrqs() { return ""; }
+   public String getAddInternalIrqs() { return ""; }
    
    @Override
-   public String addExternalIrqs() { return ""; }
+   public String getAddExternalIrqs() { return ""; }
 
    
    /************************************************************
@@ -308,7 +308,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
    
    @Override
-   public String addComponentPortLevelDeclarations() {
+   public String getAddComponentPortLevelDeclarations() {
       // TODO Auto-generated method stub
       PortFeature pf = this.getModelElement();
       if (pf instanceof InputPort) {
@@ -328,7 +328,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
   
    @Override
-   public String addAssemblyFileCompositionPortDeclarations() {
+   public String getAddAssemblyFileCompositionPortDeclarations() {
       PortFeature pf = this.getModelElement();
       if (pf instanceof OutputPort) {
          String result = ""; 
@@ -342,12 +342,12 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
    
    @Override
-   public String addAssemblyFileConfigDeclarations() {
+   public String getAddAssemblyFileConfigDeclarations() {
       return "";
    }
    
    @Override
-   public String addAssemblyFilePortDeclarations() { return ""; }
+   public String getAddAssemblyFilePortDeclarations() { return ""; }
    
    /************************************************************
     * 

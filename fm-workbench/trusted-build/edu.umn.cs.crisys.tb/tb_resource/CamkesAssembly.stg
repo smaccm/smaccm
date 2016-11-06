@@ -6,6 +6,12 @@ import "Common.stg"
 //
 ////////////////////////////////////////////////////////////////////////////
 
+constructPeriodicComponent(calendar) ::= <<
+<if(calendar.hasDispatchers)>
+component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatcherInstanceName>;
+<endif>
+>>
+
 camkesAssemblyPurpose(sysInstanceName) ::= <<
 This file contains the main CAmkES assembly for the
 AADL system instance rooted at <sysInstanceName>.
@@ -111,11 +117,11 @@ configConnectTimeServices(threadImpl, model) ::= <<
 >>
 
 portDeclarations(threadImpl) ::= <<
-<threadImpl.ports:{port | port.addAssemblyFileCompositionPortDeclarations}> 
+<threadImpl.portList:{port | port.addAssemblyFileCompositionPortDeclarations}>
 >>
 
 configurePorts(threadImpl) ::= <<
-<threadImpl.ports:{port | port.addAssemblyFileConfigDeclarations}>
+<threadImpl.portList:{port | port.addAssemblyFileConfigDeclarations}>
 >>
 
 camkesAssemblyBody(model) ::= <<
@@ -139,7 +145,7 @@ import \<TimeServerOdroid/TimeServer.camkes>;
 
 
 <model.threadImplementations:assemblyThreadImplementationImports()>
-<model.irqDispatchers:constructIRQComponent()>
+
 <\\>
 connector seL4RPCCallDataport {
     from Procedure client template "seL4RPCCallDataport-from.template.c";
@@ -160,17 +166,11 @@ assembly {
         <endif>
         <endif>
 
-        <commentIf("IRQ-handling hardware components",
-                   (model.irqDispatchers:assemblyIrqComponent()))><\\>
-
         <commentIf("Component instances for all AADL-defined threads",
                    (model.threadImplementations:assemblyThreadComponent()))><\\>
 
-        <commentIf("Connections from active dispatchers to passive threads",
-                   (model.activeThreadImplementations:assemblyConnectActiveToPassiveThreads(model)))><\\>
-
         <commentIf("Port declarations and connections for active threads",
-                   (<model.activeThreadImplementations:portDeclarations()>)><\\>
+                   (model.activeThreadImplementations:portDeclarations()))><\\>
         
 
         <if(model.threadCalendar.hasDispatchers)>

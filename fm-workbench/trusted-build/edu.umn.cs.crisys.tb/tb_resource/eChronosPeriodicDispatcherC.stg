@@ -1,7 +1,7 @@
 import "CommonPeriodicDispatcherC.stg"
 
 // Copied from "eChronosComponentC.stg"
-incomingPortWriterName(port) ::= "<port.eChronosIncomingPortWriterName>"
+incomingPortWriterName(port) ::= "<port.incomingWriterName>"
 outgoingPortWriterName(connection) ::= "<incomingPortWriterName(connection.destPort)>"
 incomingActiveThreadDispatchName(dispatcher) ::= "<incomingPortWriterName(dispatcher)>"
 outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"

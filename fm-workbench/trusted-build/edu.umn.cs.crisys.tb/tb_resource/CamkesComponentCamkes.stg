@@ -76,7 +76,7 @@ component <threadImpl.componentName> {
     control;
     <endif>
 
-    <threadImpl.portList:{port |<port.addComponentPortLevelDeclarations()>}>
+    <threadImpl.portList:{port |<port.addComponentPortLevelDeclarations>}>
 
     <threadImpl.externalSemaphores:{ sem | has semaphore <sem>; }; separator="\n">
     <threadImpl.externalMutexes:{mut | has mutex <mut>; }; separator="\n">

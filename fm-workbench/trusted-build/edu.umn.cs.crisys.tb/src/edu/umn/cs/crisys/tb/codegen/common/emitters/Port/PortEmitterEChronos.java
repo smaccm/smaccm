@@ -7,12 +7,12 @@ import edu.umn.cs.crisys.tb.model.port.PortFeature;
 
 public interface PortEmitterEChronos extends PortEmitter {
 
-   public String eChronosAddCommonHFileDeclarations(); // 
+   public String getEChronosAddCommonHFileDeclarations(); // 
    
-   public String eChronosAddPrxMutexes();  //
-   public String eChronosAddPrxSemaphores();  //
+   public String getEChronosAddPrxMutexes();  //
+   public String getEChronosAddPrxSemaphores();  //
 
-   public String addTrampolines();   // 
-   public String addInternalIrqs();  // 
-   public String addExternalIrqs();  // 
+   public String getAddTrampolines();   // 
+   public String getAddInternalIrqs();  // 
+   public String getAddExternalIrqs();  // 
 }

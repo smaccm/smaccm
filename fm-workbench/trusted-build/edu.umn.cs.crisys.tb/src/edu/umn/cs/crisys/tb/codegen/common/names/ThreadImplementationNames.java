@@ -25,6 +25,7 @@ import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedDataAccessor;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
+import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
@@ -52,16 +53,15 @@ public class ThreadImplementationNames implements NameEmitter {
   // MWW TODO: temporary; once we create a periodic port, this 
   // should go away.
   
-/*  public List<DispatcherNames> getPeriodicDispatchers() {
-    ArrayList<DispatcherNames> dnList = new ArrayList<>();
-    for (Dispatcher d : ti.getDispatcherList()) {
-      if (d instanceof PeriodicDispatcher) {
-          dnList.add(new DispatcherNames(d));
+  public List<PortEmitter> getPeriodicDispatchers() {
+    ArrayList<PortEmitter> dnList = new ArrayList<>();
+    for (PortFeature p : ti.getPortList()) {
+      if (p instanceof InputPeriodicPort) {
+          dnList.add(EmitterFactory.port(p));
       }
     }
     return dnList;
   }
-  */
   
   // includes passive thread dispatchers invoked by this component.
   public List<NameEmitter> getPassiveDispatcherRegion() {

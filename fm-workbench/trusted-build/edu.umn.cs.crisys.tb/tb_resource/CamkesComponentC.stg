@@ -24,14 +24,8 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 >>
 
 
-osSpecificRegisterIrqs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name>_reg_callback(<incomingActiveThreadDispatchName(dispatcher)>, NULL);
-<endif> >>
 
 osSpecificThreadPostInitializer(threadImpl) ::= <<
-<threadImpl.dispatchers:osSpecificRegisterIrqs()>
-
-// MWW to Pape: fill in the call to the initializer functions 
-// for the mailbox functions HERE.
 
 >>
 

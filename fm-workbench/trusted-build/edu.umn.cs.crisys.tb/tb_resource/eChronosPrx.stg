@@ -77,9 +77,9 @@ $if(model.threadCalendar.hasDispatchers &&
     model.generateSystickIrq)$
 $writeInternalInterruptHandler("systick")$
 $endif$
-$model.irqDispatchers{ dispatcher | dispatcher.addInternalIrqs}$
+$model.irqDispatchers:{ dispatcher | dispatcher.addInternalIrqs}$
 <external_irqs>
-    $model.irqDispatchers{ dispatcher | dispatcher.addExternalIrqs}$
+    $model.irqDispatchers:{ dispatcher | dispatcher.addExternalIrqs}$
 </external_irqs>
 >>
 

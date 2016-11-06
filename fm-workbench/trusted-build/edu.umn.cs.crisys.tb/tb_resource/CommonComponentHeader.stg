@@ -32,13 +32,8 @@ filePrefix(name, date, path, datatypesHeader) ::= <<
 
 componentGlueCodeHeaderBodyFunctions(threadImpl) ::= <<
 
-// These are functions that are expected to be provided by the user.
 <threadImpl.portList: {port | port.writePortHPrototypes} >
 
-// These are functions that are provided by the AADL middleware for
-// communication with other threads
-<threadImpl.outputPortList:writePortWriterPrototype()>
-<threadImpl.inputPortList:writePortReaderPrototype()>
 <if(threadImpl.isExternal)>
 //////////////////////////////////////////////////////////////////////////
 //

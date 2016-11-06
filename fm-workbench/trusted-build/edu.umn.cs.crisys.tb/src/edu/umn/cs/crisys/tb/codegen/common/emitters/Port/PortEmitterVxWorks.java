@@ -9,8 +9,8 @@ public interface PortEmitterVxWorks extends NameEmitter {
 
    public abstract String vxWorksAddCommonHFileDeclarations(); //
    
-   public abstract String vxWorksAddMainCFileIncludes();  //
-   public abstract String vxWorksAddMainCFileDeclarations(); //  
-   public abstract String vxWorksAddMainCFileInitializers(); //
-   public abstract String vxWorksAddMainCFileDestructors(); //
+   public abstract String getVxWorksAddMainCFileIncludes();  //
+   public abstract String getVxWorksAddMainCFileDeclarations(); //  
+   public abstract String getVxWorksAddMainCFileInitializers(); //
+   public abstract String getVxWorksAddMainCFileDestructors(); //
 }

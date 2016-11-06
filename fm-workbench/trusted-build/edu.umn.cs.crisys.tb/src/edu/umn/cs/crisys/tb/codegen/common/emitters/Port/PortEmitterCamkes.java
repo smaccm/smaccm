@@ -7,8 +7,8 @@ public interface PortEmitterCamkes extends PortEmitter {
    // Note: currently does not explicitly cover interrupts, though
    // they may be covered implicitly.
    
-   public String addComponentPortLevelDeclarations(); //
-   public String addAssemblyFileCompositionPortDeclarations(); //  
-   public String addAssemblyFileConfigDeclarations(); //
-   public String addAssemblyFilePortDeclarations();  //
+   public String getAddComponentPortLevelDeclarations(); //
+   public String getAddAssemblyFileCompositionPortDeclarations(); //  
+   public String getAddAssemblyFileConfigDeclarations(); //
+   public String getAddAssemblyFilePortDeclarations();  //
 }

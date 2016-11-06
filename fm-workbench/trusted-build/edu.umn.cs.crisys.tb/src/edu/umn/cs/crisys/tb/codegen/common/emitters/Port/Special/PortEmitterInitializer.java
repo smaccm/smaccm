@@ -62,48 +62,48 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public void writePortCFiles(File directory) {
+   public void getWritePortCFiles(File directory) {
       // no-op for InitializerPorts
    }
 
    @Override
-   public void writePortHFiles(File directory) {
+   public void getWritePortHFiles(File directory) {
       // no-op for InitializerPorts
    }
    
    @Override
-   public String writePortHPrototypes() {
+   public String getWritePortHPrototypes() {
       // no-op for InitializerPorts
       return ""; 
    }
 
 
    @Override
-   public String writePortDeclarations() {
+   public String getWritePortDeclarations() {
       // no-op for InitializerPorts
       return ""; 
    }
 
    @Override
-   public String writePortPreEntrypoint() {
+   public String getWritePortPreEntrypoint() {
       // no-op for InitializerPorts
       return "";
    }
 
    @Override
-   public String writePortPostEntrypoint() {
+   public String getWritePortPostEntrypoint() {
       // no-op for InitializerPorts
       return "";
    }
 
    @Override
-   public String writePortEventResponder() {
+   public String getWritePortEventResponder() {
       // no-op for InitializerPorts
       return "";
    }
 
    @Override
-   public String writePortThreadInitializer() {
+   public String getWritePortThreadInitializer() {
       // no-op for InitializerPorts
       return "";
    }
@@ -136,19 +136,19 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String vxWorksAddMainCFileIncludes() {
+   public String getVxWorksAddMainCFileIncludes() {
       // no-op for InitializerPorts
       return "";
    }
 
    @Override
-   public String vxWorksAddMainCFileDeclarations() {
+   public String getVxWorksAddMainCFileDeclarations() {
       // no-op for InitializerPorts
       return "";
    }
 
    @Override
-   public String vxWorksAddMainCFileInitializers() {
+   public String getVxWorksAddMainCFileInitializers() {
       // thread initialization routines (if any)...
       String result = ""; 
       result += "int64_t dummy_time = 0;\n";
@@ -157,7 +157,7 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String vxWorksAddMainCFileDestructors() {
+   public String getVxWorksAddMainCFileDestructors() {
       return "";
    }
 
@@ -167,27 +167,27 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
     * 
     ************************************************************/
 
-   public String eChronosAddPrxMutexes() {
+   public String getEChronosAddPrxMutexes() {
       return "";
    }
    
-   public String eChronosAddPrxSemaphores() {
-      return "";
-   }
-
-   @Override
-   public String eChronosAddCommonHFileDeclarations() {
+   public String getEChronosAddPrxSemaphores() {
       return "";
    }
 
    @Override
-   public String addTrampolines() { return ""; }
+   public String getEChronosAddCommonHFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getAddTrampolines() { return ""; }
    
    @Override
-   public String addInternalIrqs() { return ""; }
+   public String getAddInternalIrqs() { return ""; }
    
    @Override
-   public String addExternalIrqs() { return ""; }
+   public String getAddExternalIrqs() { return ""; }
    
    /************************************************************
     * 
@@ -196,22 +196,22 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
     ************************************************************/
 
    @Override
-   public String addComponentPortLevelDeclarations() {
+   public String getAddComponentPortLevelDeclarations() {
       return ""; 
    }
 
    @Override
-   public String addAssemblyFileCompositionPortDeclarations() {
+   public String getAddAssemblyFileCompositionPortDeclarations() {
       return ""; 
    }
    
    @Override
-   public String addAssemblyFileConfigDeclarations() {
+   public String getAddAssemblyFileConfigDeclarations() {
       return "";
    }
    
    @Override
-   public String addAssemblyFilePortDeclarations() { return ""; }
+   public String getAddAssemblyFilePortDeclarations() { return ""; }
 
    /************************************************************
     * 
@@ -257,6 +257,10 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
       } else {
          throw new TbException("Error: getIncomingPortWriterName: OS " + model.getOsTarget() + " is not a known OS target.");
       }
+   }
+
+   public boolean getHasData() { 
+      return !(this.getModelElement().getType() instanceof UnitType); 
    }
 
    public String getUserEntrypointName() {

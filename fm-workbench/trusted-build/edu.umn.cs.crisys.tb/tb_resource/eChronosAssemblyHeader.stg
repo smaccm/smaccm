@@ -35,23 +35,10 @@ filePostfix(name, path) ::= <<
 >>
 
 
-/*
- * In CAmkES, we write to the output port.
- * In eChronos, we should write to the input port.
- * So, we only want the input ports.  We don't
- * even want the dispatchers.  However, for event
- * and event data ports, we need to know whether
- * the thread is active or passive so that we know
- * what can subsequently dispatch.
- */
 
 activeThreadDecls(threadImpl) ::= <<
 <threadImpl.portList:{port|port.eChronosAddCommonHFileDeclarations}>
 >>
-/*  <threadImpl.inputDataPortList:dataWriterDecl()>
-<threadImpl.inputEventDataPortList:dataWriterDecl()>
-<threadImpl.inputEventPortList:eventWriterDecl()>
-<threadImpl.periodicDispatchers:periodicDispatcherDecl()> */
 
 passiveThreadDecls(threadImpl) ::= <<
 <threadImpl.portList:{port|port.eChronosAddCommonHFileDeclarations}>

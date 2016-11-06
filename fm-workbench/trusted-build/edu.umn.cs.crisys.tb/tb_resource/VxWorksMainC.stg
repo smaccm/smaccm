@@ -98,7 +98,7 @@ threadDeletePorts(threadImpl) ::= <<
 >>
 
 deletePorts(model) ::= <<
-<model.activeThreadImplementations:threadDestroyPorts()>
+<model.activeThreadImplementations:threadDeletePorts()>
 >>
 
 createTask(threadImpl) ::= <<
