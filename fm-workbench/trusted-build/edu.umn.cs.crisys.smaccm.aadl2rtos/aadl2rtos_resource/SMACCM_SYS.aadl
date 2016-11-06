@@ -40,7 +40,7 @@ property set SMACCM_SYS is
 
     -- for VxWorks timer interactions
     VxWorks_Set_Systick_Rate: aadlboolean => true applies to (system implementation); 
-    VxWorks_Systick_Rate: Time applies to (system implementation);
+    Base_Systick_Rate: Time applies to (system implementation);
 
     -- for eChronos timer interactions
     Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);

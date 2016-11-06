@@ -170,9 +170,14 @@ public class AadlModelParser {
 		   try {
 		     double timerVal = PropertyUtil.convertToMilliseconds(
 		           PropertyUtil.getIntegerLiteral(systemImplementation, 
-		                 PropertyUtil.VXWORKS_SYSTICK_RATE));
+		                 PropertyUtil.BASE_SYSTICK_RATE));
 		     this.model.threadCalendar.setFixedTickRateInMS((int)timerVal);
-		  } catch (Exception e) {}
+		  } catch (Exception e) {
+		     if (this.model.generateSystemTick) {
+		         this.logger.error("If system tick rate is set externally, the VxWorks_Systick_Rate property must be set to correctly build periodic threads.");
+		         throw new Aadl2RtosException("If system tick rate is set externally, the VxWorks_Systick_Rate property must be set to correctly build periodic threads.");
+		     }
+		  }
 		  this.model.externalTimerComponent = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.EXTERNAL_TIMER_COMPONENT);
 		} catch (Exception e) {
          this.logger.error("Unexpected internal exception: properties [generateSystickIRQ, externalTimerComponent] should have default value in SMACCM_SYS, but were not found.");

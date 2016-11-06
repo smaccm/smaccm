@@ -57,7 +57,7 @@ public abstract class PropertyUtil {
   final public static String EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_List";
   final public static String GENERATE_SCHEDULER_SYSTICK_IRQ_NAME = "SMACCM_SYS::Generate_Scheduler_Systick_IRQ";
   final public static String VXWORKS_SET_SYSTICK_RATE_NAME = "SMACCM_SYS::VxWorks_Set_Systick_Rate";
-  final public static String VXWORKS_SYSTICK_RATE_NAME = "SMACCM_SYS::VxWorks_Systick_Rate";
+  final public static String BASE_SYSTICK_RATE_NAME = "SMACCM_SYS::Base_Systick_Rate";
   final public static String ISR_HANDLER_NAME = "SMACCM_SYS::First_Level_Interrupt_Handler";
   final public static String THREAD_TYPE_NAME = "SMACCM_SYS::Thread_Type";
   final public static String SMACCM_SYS_SENDS_EVENTS_TO_NAME = "SMACCM_SYS::Sends_Events_To";
@@ -124,7 +124,7 @@ public abstract class PropertyUtil {
   final public static Property EXTERNAL_IRQ_LIST = Util.getPropertyDefinitionInWorkspace(EXTERNAL_IRQ_LIST_NAME);
   final public static Property GENERATE_SCHEDULER_SYSTICK_IRQ = Util.getPropertyDefinitionInWorkspace(GENERATE_SCHEDULER_SYSTICK_IRQ_NAME);
   final public static Property VXWORKS_SET_SYSTICK_RATE = Util.getPropertyDefinitionInWorkspace(VXWORKS_SET_SYSTICK_RATE_NAME);
-  final public static Property VXWORKS_SYSTICK_RATE = Util.getPropertyDefinitionInWorkspace(VXWORKS_SYSTICK_RATE_NAME);
+  final public static Property BASE_SYSTICK_RATE = Util.getPropertyDefinitionInWorkspace(BASE_SYSTICK_RATE_NAME);
   final public static Property ISR_HANDLER = Util.getPropertyDefinitionInWorkspace(ISR_HANDLER_NAME);
 
 	final public static Property DISPATCH_PROTOCOL = Util.getPropertyDefinitionInWorkspace(DISPATCH_PROTOCOL_NAME);
