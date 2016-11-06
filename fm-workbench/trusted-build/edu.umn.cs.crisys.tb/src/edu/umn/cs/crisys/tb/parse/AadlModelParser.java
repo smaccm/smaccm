@@ -618,6 +618,10 @@ public class AadlModelParser {
     int priority = -1; 
     int stackSize = 4096;
     
+    if (isPassive) {
+       throw new TbException("Trusted build: 'Rename' branch currently does not support passive threads.");
+    }
+    
     if (!(isPassive || isExternal)) {
       priority = PropertyUtil.getPriority(tti);
       stackSize = PropertyUtil.getStackSizeInBytes(tti);

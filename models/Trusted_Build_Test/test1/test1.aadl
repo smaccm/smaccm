@@ -100,7 +100,7 @@ system implementation test.echronos
 		tl: process proc.Impl;
 	properties
 		TB_SYS::OS => echronos;
-		TB_SYS::HW => QEMU;
+		TB_SYS::HW => pixhawk;
 end test.echronos;
 
 system implementation test.vxworks
