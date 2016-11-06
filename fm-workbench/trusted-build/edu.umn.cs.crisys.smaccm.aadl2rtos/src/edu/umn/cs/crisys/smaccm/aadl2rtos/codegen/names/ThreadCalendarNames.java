@@ -96,8 +96,12 @@ public class ThreadCalendarNames {
   }
   
   public String getHzTickRate() { 
-	  // HACK for QEMU (simulator) target for VxWorks
-	  if (c.getModel().getHWTarget().equalsIgnoreCase("QEMU")) {
+	  if (c.hasFixedTickRate()) {
+	     c.checkFixedTickRateForPeriods();
+	     return Integer.toString(c.fixedTickRateInHz()); 
+	  }
+     // HACK for QEMU (simulator) target for VxWorks
+	  else if (c.getModel().getHWTarget().equalsIgnoreCase("QEMU")) {
 		  return Integer.toString(100);
 	  } else {
 		  return Integer.toString(1000);
@@ -105,6 +109,10 @@ public class ThreadCalendarNames {
   }
   
   public String getMsPerTick() {
+     if (c.hasFixedTickRate()) {
+        c.checkFixedTickRateForPeriods();
+        return Integer.toString(c.getFixedTickRateInMS()); 
+     }
 	  // HACK for QEMU (simulator) target for VxWorks
 	  if (c.getModel().getHWTarget().equalsIgnoreCase("QEMU")) {
 		 return Integer.toString(10);  

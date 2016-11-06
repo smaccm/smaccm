@@ -56,6 +56,8 @@ public abstract class PropertyUtil {
   final public static String LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME = "SMACCM_SYS::External_IRQ_Event_List";
   final public static String EXTERNAL_IRQ_LIST_NAME = "SMACCM_SYS::External_IRQ_List";
   final public static String GENERATE_SCHEDULER_SYSTICK_IRQ_NAME = "SMACCM_SYS::Generate_Scheduler_Systick_IRQ";
+  final public static String VXWORKS_SET_SYSTICK_RATE_NAME = "SMACCM_SYS::VxWorks_Set_Systick_Rate";
+  final public static String VXWORKS_SYSTICK_RATE_NAME = "SMACCM_SYS::VxWorks_Systick_Rate";
   final public static String ISR_HANDLER_NAME = "SMACCM_SYS::First_Level_Interrupt_Handler";
   final public static String THREAD_TYPE_NAME = "SMACCM_SYS::Thread_Type";
   final public static String SMACCM_SYS_SENDS_EVENTS_TO_NAME = "SMACCM_SYS::Sends_Events_To";
@@ -121,6 +123,8 @@ public abstract class PropertyUtil {
   final public static Property LEGACY_EXTERNAL_IRQ_EVENT_LIST = Util.getPropertyDefinitionInWorkspace(LEGACY_EXTERNAL_IRQ_EVENT_LIST_NAME);
   final public static Property EXTERNAL_IRQ_LIST = Util.getPropertyDefinitionInWorkspace(EXTERNAL_IRQ_LIST_NAME);
   final public static Property GENERATE_SCHEDULER_SYSTICK_IRQ = Util.getPropertyDefinitionInWorkspace(GENERATE_SCHEDULER_SYSTICK_IRQ_NAME);
+  final public static Property VXWORKS_SET_SYSTICK_RATE = Util.getPropertyDefinitionInWorkspace(VXWORKS_SET_SYSTICK_RATE_NAME);
+  final public static Property VXWORKS_SYSTICK_RATE = Util.getPropertyDefinitionInWorkspace(VXWORKS_SYSTICK_RATE_NAME);
   final public static Property ISR_HANDLER = Util.getPropertyDefinitionInWorkspace(ISR_HANDLER_NAME);
 
 	final public static Property DISPATCH_PROTOCOL = Util.getPropertyDefinitionInWorkspace(DISPATCH_PROTOCOL_NAME);
@@ -395,6 +399,21 @@ public abstract class PropertyUtil {
     }
   }
   */
+
+  public static double convertToMicroseconds(IntegerLiteral intLit) {
+     double valInPicoseconds = intLit.getScaledValue();
+     return valInPicoseconds / 1000000.0; // microseconds per picosecond.
+  }
+  
+  public static double convertToMilliseconds(IntegerLiteral intLit) {
+     double valInPicoseconds = intLit.getScaledValue();
+     return valInPicoseconds / 1000000000.0; // milliseconds per picosecond.
+  }
+  
+  public static IntegerLiteral getIntegerLiteral(NamedElement t, Property p) {
+     return (IntegerLiteral) PropertyUtils.getSimplePropertyValue(t, p); 
+           
+  }
 
   public static double getPeriodInMicroseconds(NamedElement t) {
     try {

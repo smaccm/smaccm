@@ -160,11 +160,23 @@ public class AadlModelParser {
 		
 		// create properties related to timers.
 		try {
-		  this.model.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
+		   if (this.model.getOsTarget() == Model.OSTarget.eChronos) {
+		      this.model.generateSystemTick = 
+		        (PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.GENERATE_SCHEDULER_SYSTICK_IRQ));
+		   } else if (this.model.getOsTarget() == Model.OSTarget.VxWorks) {
+		      this.model.generateSystemTick = 
+		        (PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.VXWORKS_SET_SYSTICK_RATE));
+		   }
+		   try {
+		     double timerVal = PropertyUtil.convertToMilliseconds(
+		           PropertyUtil.getIntegerLiteral(systemImplementation, 
+		                 PropertyUtil.VXWORKS_SYSTICK_RATE));
+		     this.model.threadCalendar.setFixedTickRateInMS((int)timerVal);
+		  } catch (Exception e) {}
 		  this.model.externalTimerComponent = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.EXTERNAL_TIMER_COMPONENT);
 		} catch (Exception e) {
-      this.logger.error("Unexpected internal exception: properties [generateSystickIRQ, externalTimerComponent] should have default value in SMACCM_SYS, but were not found.");
-      throw new Aadl2RtosException("Parse failure on one of [generateSystickIRQ, externalTimerComponent] target property ");
+         this.logger.error("Unexpected internal exception: properties [generateSystickIRQ, externalTimerComponent] should have default value in SMACCM_SYS, but were not found.");
+         throw new Aadl2RtosException("Parse failure on one of [generateSystickIRQ, externalTimerComponent] target property ");
 		}
 		
 		try {

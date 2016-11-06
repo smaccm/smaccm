@@ -39,8 +39,8 @@ property set SMACCM_SYS is
     External_IRQ_List: list of aadlstring applies to (system implementation);
 
     -- for VxWorks timer interactions
-    VxWorks_Set_Sysclock_Rate: aadlboolean => true applies to (system implementation); 
-    VxWorks_Sysclock_Rate: Time applies to (system implementation);
+    VxWorks_Set_Systick_Rate: aadlboolean => true applies to (system implementation); 
+    VxWorks_Systick_Rate: Time applies to (system implementation);
 
     -- for eChronos timer interactions
     Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);

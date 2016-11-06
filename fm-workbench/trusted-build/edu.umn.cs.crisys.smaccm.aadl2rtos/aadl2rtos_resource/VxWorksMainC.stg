@@ -132,8 +132,10 @@ sharedDataDefinition(sharedData) ::= <<
 mainFunction(model) ::= <<
 int trusted_build_main(uint32_t runDurationInSeconds) {
 
+    <if(model.generateSystickIrq)>
     STATUS status = sysClkRateSet(<model.threadCalendar.hzTickRate>);
     assert(status == OK);
+    <endif>
 
     <createMutexes(model)>
 

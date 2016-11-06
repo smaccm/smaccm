@@ -155,7 +155,11 @@ public class ModelNames {
     return getSystemImplementationName() + ".prx";
   }
   public boolean getGenerateSystickIrq() {
-	  return m.getGenerateSystickIRQ();
+	  return m.getGenerateSystemTick();
+  }
+  
+  public int getTimerRateInMS() {
+     return m.getTimerRateInMS();
   }
   
   public List<ExternalIRQ> getExternalIRQs() {

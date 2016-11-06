@@ -83,10 +83,11 @@ public class Model {
 	Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
 	
 	// properties related to timers and dispatch
-	boolean generateSystickIRQ;
-	boolean externalTimerComponent; 
+	boolean generateSystemTick;
+	boolean externalTimerComponent;
 	
-	// CAMKES specific properties
+
+   // CAMKES specific properties
 	String camkesExternalTimerInterfacePath;
 	String camkesExternalTimerCompletePath;
 	int camkesInternalTimerTimersPerClient; 
@@ -364,8 +365,8 @@ public class Model {
     return this.legacySemaphoreList;
   }
 
-  public boolean getGenerateSystickIRQ() {
-	  return this.generateSystickIRQ;
+  public boolean getGenerateSystemTick() {
+	  return this.generateSystemTick;
 	}
 
   public Map<String, Type> getAstTypes() {
