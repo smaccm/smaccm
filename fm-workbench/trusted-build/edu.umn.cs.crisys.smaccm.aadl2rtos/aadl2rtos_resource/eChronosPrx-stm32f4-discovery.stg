@@ -19,7 +19,7 @@ prxBody(model) ::= <<
       <preemption>true</preemption>
        $writeInterruptHandlers(model)$
     </module>
-    <module name="armv7m.semihost-debug" />
+    <module name="stub.debug" />
     <module name="generic.debug" />
 
     <module name="armv7m.rtos-kochab">
