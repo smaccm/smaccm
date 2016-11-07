@@ -1,0 +1,115 @@
+	HACMS:
+	-> Interesting - StringTemplate can do map lookup ; uses dot notation for keys.  This provides mechanism
+		for extension with new AADL properties.
+	
+	-> Code Gen questions: 
+		For Dan's stuff in CAmkES, need to extend the interface to allow construction of additional components.
+	
+	-> There can be no sharing across mailbox / RPC dataports.  How do we want to enforce this?
+		The only use of connections thus far is at the outgoing port boundary; perhaps connections 
+		should be created and used to enforce comm boundaries, but this is a notion, not a real plan.
+		
+	-> Connections would also be handy for possibly enforcing the active/passive split for RPC connectors.
+
+	-> EventDataPort vs. EventPort split for passive threads lead to pretty substantial changes.  It would
+	   be nice to be able to separate these two types.
+	   
+	   If we had connections as a type with some "interesting" methods, then we could do it.
+	   We could have a "write to destination" method that would implement this.
+	
+	-> Implementing RPCEventDataPorts: this is tricky because of the active/passive thread split.
+	
+		Heck with it.  For the moment, only do active threads; it is all the ground team wants.
+		The only team that wants the passive threads is Galois, and they are happy with the previous
+		release.
+		
+	! Need to add user declarations to the "common" and/or "component" header file.	
+	
+	-> Need to better factor OS aspects.  It would be nice to know where the OS-specific aspects are.
+	
+	-> Have all ports but periodic port complete!  Not too bad.
+	
+	-> Some OS-specific functions are not port-specific, but thread-specific (mainThreadDispatcherMutex).  
+		They belong in the thread class.
+		
+	-> Right now I am not constructing dispatch interfaces; these are hard because they involve several 
+       ports; we need to spin up the support for PortLists.  I have disabled constructing the dispatch
+	   interfaces for the moment.
+	   
+	   
+To-dos: 
+	-> Switch from Kochab to <foo>, where <voo> has the different mutex ceiling protocol
+	-> Get rid of the centralized thread calendar for CAmkES
+	-> Normalize the AADL property-scraping regimen; this will require some thought, and perhaps a 
+		small reconfiguration of the Names and Emitters classes - probably not, though; we just 
+		need to be able to pass back to the original AADL classes to get a "handle" on these properties.
+	-> Change from fork() to more secure mechanism for shared memory between processes after Linux 
+	   client is up and running.
+Old version:
+	! Allow external configuration of timer on VxWorks.
+	! Stub debug support.
+
+Back burner	
+	-> Switch from Kochab to <foo>, where <voo> has the different mutex ceiling protocol
+	-> Get rid of the centralized thread calendar for CAmkES
+	-> Normalize the AADL property-scraping regimen; this will require some thought, and perhaps a 
+		small reconfiguration of the Names and Emitters classes - probably not, though; we just 
+		need to be able to pass back to the original AADL classes to get a "handle" on these properties.
+	-> Allow external configuration of timer on VxWorks.
+	-> 
+	-> 
+	
+	
+For linux: 
+	thread basics: http://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html
+	includes:
+		#include <pthread.h>
+		#include <semaphore.h>
+		
+	thread main function prototype: void *<func>(void *);	
+
+	thread creation:
+		pthread_create( &thread1, NULL, print_message_function, (void*) message1);	
+
+	
+	to set thread priority:	
+		pthread_setschedparam(pthread_t thread, SCHED_RR,
+                                 const struct sched_param *param);
+		where sched_param is defined as:
+		   struct sched_param {
+               int sched_priority;     /* Scheduling priority */
+           };
+		
+	mutexes:
+		int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *mutexattr);
+		int pthread_mutex_lock(pthread_mutex_t *mutex);
+		int pthread_mutex_trylock(pthread_mutex_t *mutex);
+		int pthread_mutex_unlock(pthread_mutex_t *mutex);
+
+	semaphores:
+		sem_t sem_name;
+	{
+		sem_t semid;
+		int sem_init(sem_t *sem, int pshared, unsigned  value);
+	}
+		pshared
+			semaphore is shared between the threads of a process. If pshared is non-zero, then the semaphore is shared between processes.
+		value
+			The value with which the semaphore is to be initialized.
+	
+		int  sem_wait(sem_t *sem);
+		int  sem_post(sem_t *sem);
+		int  sem_destroy(sem_t *sem);
+
+	How do I declare shared memory?
+	
+	How do I set access rights?
+	
+	for separate processes, I can use fork() to construct them, for now.
+	
+	I suspect the shared memory / file mapping is to piggy-back on the linux security model.
+	
+	follow same style as VxWorks - rather than an explicit join, we do a wait either with INFINITE or finite time.
+		- need the call for thread wait and INFINITE time.
+		 
+	When I fork(), child process has access to all global variables with the values that    

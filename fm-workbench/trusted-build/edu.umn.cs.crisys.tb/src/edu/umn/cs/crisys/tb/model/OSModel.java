@@ -67,7 +67,7 @@ public class OSModel extends ModelElementBase {
    // return the parent.
    public ModelElement getParent() { return null; }
 
-   public enum OSTarget {CAmkES, eChronos, VxWorks}; 
+   public enum OSTarget {CAmkES, eChronos, VxWorks, linux}; 
    private OSTarget osTarget = OSTarget.eChronos;
 
    // Currently supported targets: QEMU, ODROID, PX4, X86
