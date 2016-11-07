@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import jkind.lustre.RealExpr;
 import jkind.lustre.RecordExpr;
 import jkind.lustre.RecordType;
 import jkind.lustre.Type;
+import jkind.lustre.TypeDef;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -67,6 +69,7 @@ import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
@@ -362,6 +365,39 @@ public class AgreeUtils {
     public static boolean typeMatchesReal(NamedType type){
         return type.equals(NamedType.REAL) ||
                 type.toString().startsWith("Base_Types__Float");
+    }
+    
+    public static List<TypeDef> getLustreTypes(AgreeProgram agreeProgram) {
+        List<TypeDef> types = new ArrayList<>();
+        for (Type type : agreeProgram.globalTypes) {
+            RecordType recType = (RecordType) type;
+            types.add(new TypeDef(recType.id, type));
+        }
+        
+        //add synonym types
+        types.addAll(getTypeSynonmyms());
+        return types;
+    }
+    
+    private static Collection<? extends TypeDef> getTypeSynonmyms() {
+        List<TypeDef> types = new ArrayList<>();
+        
+        types.add(new TypeDef("Base_Types__Boolean", NamedType.BOOL));
+        types.add(new TypeDef("Base_Types__Unsigned", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_64", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_32", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_16", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_8", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_64", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_32", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_16", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_8", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Float", NamedType.REAL));
+        types.add(new TypeDef("Base_Types__Float_32", NamedType.REAL));
+        types.add(new TypeDef("Base_Types__Float_64", NamedType.REAL));
+        
+        return types;
     }
 
 }

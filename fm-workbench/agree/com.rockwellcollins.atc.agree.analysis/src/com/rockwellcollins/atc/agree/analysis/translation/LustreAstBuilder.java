@@ -1,10 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis.translation;
 
-import java.lang.ref.Reference;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +22,6 @@ import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
@@ -37,42 +33,34 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriter;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.LustreCondactNodeVisitor;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
-import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeRealtimeCalendarBuilder;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
-import jkind.lustre.CondactExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
-import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
 import jkind.lustre.NamedType;
 import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.Program;
-import jkind.lustre.RecordType;
-import jkind.lustre.TupleExpr;
-import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 
-import static jkind.lustre.parsing.LustreParseUtil.expr;
-import static jkind.lustre.parsing.LustreParseUtil.to;
-
 
 public class LustreAstBuilder {
 
 	protected static List<Node> nodes;
 	protected static final String guarSuffix = "__GUARANTEE";
-	protected static final String assumeSuffix = "__ASSUME";
+	public static final String assumeSuffix = "__ASSUME";
 	protected static final String lemmaSuffix = "__LEMMA";
 	protected static final String historyNodeName = "__HIST";
 	public static final String assumeHistSufix = assumeSuffix + historyNodeName;
@@ -84,7 +72,7 @@ public class LustreAstBuilder {
 
 	public static Program getRealizabilityLustreProgram(AgreeProgram agreeProgram) {
 
-        List<TypeDef> types = getTypes(agreeProgram);
+        List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
 
         List<Expr> assertions = new ArrayList<>();
         List<VarDecl> locals = new ArrayList<>();
@@ -183,9 +171,8 @@ public class LustreAstBuilder {
 	public static Program getAssumeGuaranteeLustreProgram(AgreeProgram agreeProgram) {
 
 		nodes = new ArrayList<>();
-        List<TypeDef> types = getTypes(agreeProgram);
 
-		AgreeNode flatNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__");
+		AgreeNode flatNode = flattenAgreeNode(agreeProgram, agreeProgram.topNode, "_TOP__");
 		List<Expr> assertions = new ArrayList<>();
 		List<VarDecl> locals = new ArrayList<>();
 		List<VarDecl> inputs = new ArrayList<>();
@@ -268,6 +255,7 @@ public class LustreAstBuilder {
 
 		// add realtime constraint nodes
 		nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
+        List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
 		Program program = new Program(types, null, nodes, main.id);
 
 		return program;
@@ -277,7 +265,7 @@ public class LustreAstBuilder {
 	public static List<Pair<String, Program>> getConsistencyChecks(AgreeProgram agreeProgram) {
 
 		List<Pair<String, Program>> programs = new ArrayList<>();
-		List<TypeDef> types = getTypes(agreeProgram);
+		List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
 
 		nodes = new ArrayList<>();
 
@@ -296,7 +284,7 @@ public class LustreAstBuilder {
 
 		for (AgreeNode subNode : agreeProgram.topNode.subNodes) {
 			nodes = new ArrayList<>();
-			subNode = flattenAgreeNode(subNode, "_TOP__");
+			subNode = flattenAgreeNode(agreeProgram, subNode, "_TOP__");
 			Node subConsistNode = getConsistencyLustreNode(subNode, true);
 			for (Node node : agreeProgram.globalLustreNodes) {
 				nodes.add(removeProperties(node));
@@ -312,7 +300,7 @@ public class LustreAstBuilder {
 
 		nodes = new ArrayList<>();
 		// agreeProgram = translate(agreeProgram);
-		AgreeNode compositionNode = flattenAgreeNode(agreeProgram.topNode, "_TOP__");
+		AgreeNode compositionNode = flattenAgreeNode(agreeProgram, agreeProgram.topNode, "_TOP__");
 
 		Node topCompositionConsist = getConsistencyLustreNode(compositionNode, true);
 		for (Node node : agreeProgram.globalLustreNodes) {
@@ -567,7 +555,7 @@ public class LustreAstBuilder {
 		return builder.build();
 	}
 
-	protected static AgreeNode flattenAgreeNode(AgreeNode agreeNode, String nodePrefix) {
+	protected static AgreeNode flattenAgreeNode(AgreeProgram agreeProgram, AgreeNode agreeNode, String nodePrefix) {
 
 		List<AgreeVar> inputs = new ArrayList<>();
 		List<AgreeVar> outputs = new ArrayList<>();
@@ -588,22 +576,18 @@ public class LustreAstBuilder {
 				someoneTicks = new BinaryExpr(someoneTicks, BinaryOp.OR, clockExpr);
 			}
 
-			AgreeNode flatNode = flattenAgreeNode(subAgreeNode, nodePrefix + subAgreeNode.id + AgreeASTBuilder.dotChar);
+			AgreeNode flatNode = flattenAgreeNode(agreeProgram, subAgreeNode, nodePrefix + subAgreeNode.id + AgreeASTBuilder.dotChar);
 
-			Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode, clockExpr);
+			Node lustreNode = addSubNodeLustre(agreeProgram, agreeNode, nodePrefix, flatNode);
 
-			addInputsAndOutputs(inputs, outputs, patternProps, flatNode, lustreNode, prefix);
+			addInputsAndOutputs(agreeNode, inputs, outputs, patternProps, flatNode, lustreNode, prefix);
 
 			addTimeEvents(timeEvents, flatNode, prefix, assertions);
 
-			addCondactCall(agreeNode, nodePrefix, inputs, assertions, equations, flatNode, prefix, clockExpr,
+			addNodeCall(agreeNode, assertions, prefix, clockExpr,
 					lustreNode);
 
 			addHistoricalAssumptionConstraint(agreeNode, prefix, clockExpr, assertions, lustreNode);
-
-			addClockHolds(agreeNode, assertions, flatNode, clockExpr, prefix, lustreNode);
-
-			addInitConstraint(agreeNode, outputs, assertions, flatNode, prefix, clockExpr, lustreNode);
 
 		}
 
@@ -709,83 +693,16 @@ public class LustreAstBuilder {
 		}
 	}
 
-	protected static void addInitConstraint(AgreeNode agreeNode, List<AgreeVar> outputs,
-			List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, Expr clockExpr, Node lustreNode) {
-		if (agreeNode.timing != TimingModel.SYNC) {
-			String tickedName = subAgreeNode.id + "___TICKED";
-			outputs.add(new AgreeVar(tickedName, NamedType.BOOL, null, agreeNode.compInst));
-			Expr tickedId = new IdExpr(tickedName);
-			Expr preTicked = new UnaryExpr(UnaryOp.PRE, tickedId);
-			Expr tickedOrPre = new BinaryExpr(clockExpr, BinaryOp.OR, preTicked);
-			Expr initOrTicked = new BinaryExpr(clockExpr, BinaryOp.ARROW, tickedOrPre);
-			Expr tickedEq = new BinaryExpr(tickedId, BinaryOp.EQUAL, initOrTicked);
 
-			assertions.add(new AgreeStatement("", tickedEq, null));
-
-			// we have two re-write the ids in the initial expressions
-			IdRewriter rewriter = new IdRewriter() {
-
-				@Override
-				public IdExpr rewrite(IdExpr id) {
-					// TODO Auto-generated method stub
-					return new IdExpr(prefix + id.id);
-				}
-			};
-			Expr newInit = subAgreeNode.initialConstraint.accept(new IdRewriteVisitor(rewriter));
-
-			Expr initConstr = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, tickedId), BinaryOp.IMPLIES, newInit);
-			assertions.add(new AgreeStatement("", initConstr, null));
-
-			// we also need to add hold expressions for the assumptions and
-			// lemmas
-			Expr assumeLemmaTrue = new BoolExpr(true);
-			for (VarDecl lustreVar : lustreNode.inputs) {
-				AgreeVar var = (AgreeVar) lustreVar;
-				if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
-					assumeLemmaTrue = new BinaryExpr(assumeLemmaTrue, BinaryOp.AND, new IdExpr(prefix + var.id));
-				}
-			}
-			assumeLemmaTrue = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, tickedId), BinaryOp.IMPLIES, assumeLemmaTrue);
-			assertions.add(new AgreeStatement("", assumeLemmaTrue, null));
-
-		}
-	}
-
-	protected static void addClockHolds(AgreeNode agreeNode, List<AgreeStatement> assertions, AgreeNode subAgreeNode,
-			Expr clockExpr, String prefix, Node lustreNode) {
-		if (agreeNode.timing != TimingModel.SYNC) {
-			Expr hold = new BoolExpr(true);
-			for (AgreeVar outVar : subAgreeNode.outputs) {
-				Expr varId = new IdExpr(prefix + outVar.id);
-				Expr pre = new UnaryExpr(UnaryOp.PRE, varId);
-				Expr eqPre = new BinaryExpr(varId, BinaryOp.EQUAL, pre);
-				hold = new BinaryExpr(hold, BinaryOp.AND, eqPre);
-			}
-
-			for (VarDecl lustreVar : lustreNode.inputs) {
-				AgreeVar var = (AgreeVar) lustreVar;
-				if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
-					Expr varId = new IdExpr(prefix + var.id);
-					Expr pre = new UnaryExpr(UnaryOp.PRE, varId);
-					Expr eqPre = new BinaryExpr(varId, BinaryOp.EQUAL, pre);
-					hold = new BinaryExpr(hold, BinaryOp.AND, eqPre);
-				}
-			}
-
-			Expr notClock = new UnaryExpr(UnaryOp.NOT, clockExpr);
-			Expr notClockHold = new BinaryExpr(notClock, BinaryOp.IMPLIES, hold);
-			notClockHold = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, notClockHold);
-			assertions.add(new AgreeStatement("", notClockHold, null));
-		}
-	}
-
-	protected static void addCondactCall(AgreeNode agreeNode, String nodePrefix, List<AgreeVar> inputs,
-			List<AgreeStatement> assertions, List<AgreeEquation> equations, AgreeNode subAgreeNode, String prefix,
+	protected static void addNodeCall(AgreeNode agreeNode, List<AgreeStatement> assertions, String prefix,
 			Expr clockExpr, Node lustreNode) {
 
 		List<Expr> inputIds = new ArrayList<>();
 		for (VarDecl var : lustreNode.inputs) {
 			String suffix = "";
+			// this is gross, we need to add the latched variables to the node
+			// call
+			// if this component implementation is using the latched semantics
 			if (agreeNode.timing == TimingModel.LATCHED) {
 				EObject ref = ((AgreeVar) var).reference;
 				if (ref instanceof DataPortImpl && ((DataPortImpl) ref).isIn()
@@ -796,15 +713,18 @@ public class LustreAstBuilder {
 			}
 			inputIds.add(new IdExpr(prefix + var.id + suffix));
 		}
+		if (agreeNode.timing == TimingModel.ASYNC || agreeNode.timing == TimingModel.LATCHED) {
+			// the clock expr should be the last input to the node
+			inputIds.set(inputIds.size()-1,clockExpr);
+		}
 
-		Expr condactExpr = new CondactExpr(clockExpr, new NodeCallExpr(lustreNode.id, inputIds),
-				Collections.singletonList(new BoolExpr(true)));
+		Expr condactExpr = new NodeCallExpr(lustreNode.id, inputIds);
 
 		AgreeStatement condactCall = new AgreeStatement("", condactExpr, null);
 		assertions.add(condactCall);
 	}
 
-	protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeStatement> patternProps, AgreeNode subAgreeNode,
+	protected static void addInputsAndOutputs(AgreeNode parentNode, List<AgreeVar> inputs, List<AgreeVar> outputs, List<AgreeStatement> patternProps, AgreeNode subAgreeNode,
 			Node lustreNode, String prefix) {
 		int varCount = 0;
 		for (AgreeVar var : subAgreeNode.inputs) {
@@ -849,26 +769,24 @@ public class LustreAstBuilder {
 			outputs.add(output);
 		}
 
-		inputs.add(subAgreeNode.clockVar);
+		if (parentNode.timing == TimingModel.ASYNC || parentNode.timing == TimingModel.LATCHED) {
+			inputs.add(subAgreeNode.clockVar);
+			varCount++;
+		}
 
 		if (lustreNode.inputs.size() != varCount) {
 			throw new AgreeException("Something went wrong during node flattening");
 		}
-	}
+	} 
 
-	protected static Node addSubNodeLustre(AgreeNode agreeNode, String nodePrefix, AgreeNode flatNode, Expr clockExpr) {
+	protected static Node addSubNodeLustre(AgreeProgram agreeProgram, AgreeNode agreeNode, String nodePrefix, AgreeNode flatNode) {
 
 		Node lustreNode = getLustreNode(flatNode, nodePrefix);
-//		if (agreeNode.timing == TimingModel.ASYNC || agreeNode.timing == TimingModel.LATCHED) {
-//			lustreNode = makeClockedNode(lustreNode, flatNode, clockExpr);
-//		}
+		if (agreeNode.timing == TimingModel.ASYNC || agreeNode.timing == TimingModel.LATCHED) {
+			lustreNode = LustreCondactNodeVisitor.translate(agreeProgram, flatNode, lustreNode);
+		}
 		addToNodes(lustreNode);
 		return lustreNode;
-	}
-
-	private static Node makeClockedNode(Node lustreNode, AgreeNode flatNode, Expr clockExpr) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	protected static Expr getClockExpr(AgreeNode agreeNode, AgreeNode subNode) {
@@ -915,38 +833,5 @@ public class LustreAstBuilder {
 		builder.addEquation(new Equation(histId, histExpr));
 		return builder.build();
 	}
-
-    protected static List<TypeDef> getTypes(AgreeProgram agreeProgram) {
-        List<TypeDef> types = new ArrayList<>();
-        for (Type type : agreeProgram.globalTypes) {
-            RecordType recType = (RecordType) type;
-            types.add(new TypeDef(recType.id, type));
-        }
-        
-        //add synonym types
-        types.addAll(getTypeSynonmyms());
-        return types;
-    }
-    
-    private static Collection<? extends TypeDef> getTypeSynonmyms() {
-        List<TypeDef> types = new ArrayList<>();
-        
-        types.add(new TypeDef("Base_Types__Boolean", NamedType.BOOL));
-        types.add(new TypeDef("Base_Types__Unsigned", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Unsigned_64", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Unsigned_32", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Unsigned_16", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Unsigned_8", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Integer", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Integer_64", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Integer_32", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Integer_16", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Integer_8", NamedType.INT));
-        types.add(new TypeDef("Base_Types__Float", NamedType.REAL));
-        types.add(new TypeDef("Base_Types__Float_32", NamedType.REAL));
-        types.add(new TypeDef("Base_Types__Float_64", NamedType.REAL));
-        
-        return types;
-    }
 
 }

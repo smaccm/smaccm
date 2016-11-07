@@ -125,6 +125,7 @@ import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeMakeClockedLustreNodes;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
@@ -169,6 +170,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         // if there are any patterns in the AgreeProgram we need to inline them
         program = AgreePatternTranslator.translate(program);
         program = AgreeInlineLatchedConnections.translate(program);
+        program = AgreeMakeClockedLustreNodes.translate(program);
 
         // go through the extension registries and transform the program
         AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
