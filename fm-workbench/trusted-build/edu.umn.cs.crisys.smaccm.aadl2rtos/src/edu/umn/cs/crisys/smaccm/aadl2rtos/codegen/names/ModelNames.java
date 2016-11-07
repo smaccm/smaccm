@@ -157,11 +157,7 @@ public class ModelNames {
   public boolean getGenerateSystickIrq() {
 	  return m.getGenerateSystemTick();
   }
-  
-  public int getTimerRateInMS() {
-     return m.getTimerRateInMS();
-  }
-  
+    
   public List<ExternalIRQ> getExternalIRQs() {
 		return m.getExternalIRQs();
   }
