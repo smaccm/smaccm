@@ -444,7 +444,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 outputs.add(var);
                 break;
             default:
-                throw new AgreeException("Unable to reason about bi-directional event port: "+name);
+                throw new AgreeException("Unable to reason about bi-directional event port: "+dataFeature.getQualifiedName());
             }
         }
 
@@ -480,7 +480,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             outputs.add(agreeVar);
             break;
         default:
-            break;
+            throw new AgreeException("Unable to reason about bi-directional event port: "+dataFeature.getQualifiedName());
         }
     }
 
@@ -525,8 +525,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             ConnectionEnd destPort = absConnDest.getConnectionEnd();
             ConnectionEnd sourPort = absConnSour.getConnectionEnd();
             
-            String sourPortName = getAgreePortName(absConnSour);
-            String destPortName = getAgreePortName(absConnDest);
+            String sourPortName = getAgreePortName(absConnSour, sourContext);
+            String destPortName = getAgreePortName(absConnDest, destContext);
 
             AgreeConnection.ConnectionType connType;
             if (destPort instanceof EventDataPort && sourPort instanceof EventDataPort) {
@@ -555,10 +555,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return agreeConns;
     }
 
-	private String getAgreePortName(ConnectedElement absConn) {
+	private String getAgreePortName(ConnectedElement absConn, Context context) {
 		ConnectionEnd port = absConn.getConnectionEnd();
 		if(port instanceof DataPort || port instanceof EventDataPort){
-			return port.getName();
+			String name = port.getName();
+			if(context instanceof FeatureGroup){
+				name = context.getName() + dotChar + name;
+			}
+			return name;
 		}else if(port instanceof DataSubcomponent){
 			return absConn.getContext().getName() + "." + port.getName();
 		}
