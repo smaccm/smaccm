@@ -39,6 +39,9 @@
 	-> For linux, two differences for data ports: 
 		We should construct new global types that contain the mutex and the shared memory structure.
 	-> For linux, shared memory is by pointer using mmap.  For now we will leave it unsupported.
+
+	Organization of the main C file: 
+		
 	
 	   
 To-dos: 
@@ -84,6 +87,7 @@ For linux:
 	    int pthread_mutex_lock(pthread_mutex_t *mutex);
 		int pthread_mutex_trylock(pthread_mutex_t *mutex);
 		int pthread_mutex_unlock(pthread_mutex_t *mutex);
+		int pthread_mutex_destroy(pthread_mutex_t *mutex);
 
 		Only one thread destroys the mutex.
 		
