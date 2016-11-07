@@ -7,10 +7,9 @@ import edu.umn.cs.crisys.tb.model.port.PortFeature;
 
 public interface PortEmitterVxWorks extends NameEmitter {
 
-   public abstract String vxWorksAddCommonHFileDeclarations(); //
-   
-   public abstract String getVxWorksAddMainCFileIncludes();  //
-   public abstract String getVxWorksAddMainCFileDeclarations(); //  
-   public abstract String getVxWorksAddMainCFileInitializers(); //
-   public abstract String getVxWorksAddMainCFileDestructors(); //
+   public abstract String getVxWorksAddCommonHFileDeclarations(); 
+   public abstract String getVxWorksAddMainCFileIncludes();  
+   public abstract String getVxWorksAddMainCFileDeclarations();   
+   public abstract String getVxWorksAddMainCFileInitializers(); 
+   public abstract String getVxWorksAddMainCFileDestructors(); 
 }

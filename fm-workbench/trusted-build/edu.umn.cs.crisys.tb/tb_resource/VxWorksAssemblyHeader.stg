@@ -36,11 +36,11 @@ filePostfix(name, path) ::= <<
 
 
 activeThreadDecls(threadImpl) ::= <<
-<threadImpl.portList:{port|port.eChronosAddCommonHFileDeclarations}>
+<threadImpl.portList:{port|port.vxWorksAddCommonHFileDeclarations}>
 >>
 
 passiveThreadDecls(threadImpl) ::= <<
-<threadImpl.portList:{port|port.eChronosAddCommonHFileDeclarations}>
+<threadImpl.portList:{port|port.vxWorksAddCommonHFileDeclarations}>
 >>
 
 

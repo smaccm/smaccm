@@ -36,6 +36,10 @@
        ports; we need to spin up the support for PortLists.  I have disabled constructing the dispatch
 	   interfaces for the moment.
 	   
+	-> For linux, two differences for data ports: 
+		We should construct new global types that contain the mutex and the shared memory structure.
+	-> For linux, shared memory is by pointer using mmap.  For now we will leave it unsupported.
+	
 	   
 To-dos: 
 	-> Switch from Kochab to <foo>, where <voo> has the different mutex ceiling protocol
@@ -45,19 +49,12 @@ To-dos:
 		need to be able to pass back to the original AADL classes to get a "handle" on these properties.
 	-> Change from fork() to more secure mechanism for shared memory between processes after Linux 
 	   client is up and running.
+	-> Normalize the OS-specific emitters to include the OS name!	
 Old version:
 	! Allow external configuration of timer on VxWorks.
 	! Stub debug support.
 
 Back burner	
-	-> Switch from Kochab to <foo>, where <voo> has the different mutex ceiling protocol
-	-> Get rid of the centralized thread calendar for CAmkES
-	-> Normalize the AADL property-scraping regimen; this will require some thought, and perhaps a 
-		small reconfiguration of the Names and Emitters classes - probably not, though; we just 
-		need to be able to pass back to the original AADL classes to get a "handle" on these properties.
-	-> Allow external configuration of timer on VxWorks.
-	-> 
-	-> 
 	
 	
 For linux: 
@@ -82,10 +79,14 @@ For linux:
 		
 	mutexes:
 		int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *mutexattr);
-		int pthread_mutex_lock(pthread_mutex_t *mutex);
+		int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int pshared); 
+			(pshared = PTHREAD_PROCESS_SHARED)
+	    int pthread_mutex_lock(pthread_mutex_t *mutex);
 		int pthread_mutex_trylock(pthread_mutex_t *mutex);
 		int pthread_mutex_unlock(pthread_mutex_t *mutex);
 
+		Only one thread destroys the mutex.
+		
 	semaphores:
 		sem_t sem_name;
 	{
