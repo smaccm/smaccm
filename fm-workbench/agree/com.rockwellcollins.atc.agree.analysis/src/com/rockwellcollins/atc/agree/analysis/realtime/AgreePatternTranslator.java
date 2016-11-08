@@ -519,17 +519,22 @@ public class AgreePatternTranslator {
         //lemma to help induction
         AgreeVar timeOfCause = getTimeOf(causeId.id, builder, pattern);
         AgreeVar timeOfEffect = getTimeOf(effectId.id, builder, pattern);
-        Expr expr = expr("(timer > 0.0 => timeOfCause > 0.0) and "
-        		        + "(timeOfEffect < timeOfCause => timer <= time - timeOfCause) and "
-        		        + "(cause => timeOfCause = time) and"
-        		        + "(true -> ((pre (timeOfEffect - low > timeOfCause)) => timer = 0.0))", 
-        		           to("timer", timerVar),
-        		           to("timeOfCause", timeOfCause),
-        		           to("time", timeExpr),
-        		           to("cause", causeId),
-        		           to("timeOfEffect", timeOfEffect),
-        		           to("low", pattern.effectInterval.low));
-        //builder.addPatternProp(new AgreeStatement("Timer Lemma for Pattern "+patternIndex, expr, pattern));
+//        Expr expr = expr("(timer > 0.0 => timeOfCause > 0.0) and "
+//        		        + "(timeOfEffect < timeOfCause => timer <= time - timeOfCause) and "
+//        		        + "(cause => timeOfCause = time) and"
+//        		        + "(true -> ((pre (timeOfEffect - low > timeOfCause)) => timer = 0.0))", 
+//        		           to("timer", timerVar),
+//        		           to("timeOfCause", timeOfCause),
+//        		           to("time", timeExpr),
+//        		           to("cause", causeId),
+//        		           to("timeOfEffect", timeOfEffect),
+//        		           to("low", pattern.effectInterval.low));
+        
+        Expr expr = expr("(timer > 0.0 => timeOfCause >= 0.0)", 
+		           to("timer", timerVar),
+		           to("timeOfCause", timeOfCause),
+		           to("time", timeExpr));
+        builder.addPatternProp(new AgreeStatement("Timer Lemma for Pattern "+patternIndex, expr, pattern));
         
         
         

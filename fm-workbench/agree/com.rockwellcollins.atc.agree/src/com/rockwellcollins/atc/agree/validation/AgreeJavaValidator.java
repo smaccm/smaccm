@@ -362,7 +362,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
         }
         
         if (!(namedEl instanceof DataPort) || !((DataPort)namedEl).isIn()) {
-            error(latched, "Latched expressions are only valid for input data ports");
+        	//check to see if it is an "agree_input"
+			EObject namedElContainer = namedEl.eContainer();
+			if (!(namedElContainer instanceof InputStatement)) {
+				error(latched, "Latched expressions are only valid for input data ports");
+			}
         }
     }
 
