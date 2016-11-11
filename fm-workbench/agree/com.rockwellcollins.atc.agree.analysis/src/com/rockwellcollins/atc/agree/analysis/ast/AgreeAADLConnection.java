@@ -2,15 +2,15 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 
 import org.eclipse.emf.ecore.EObject;
 
-import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeAstVisitor;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
 
 public class AgreeAADLConnection implements AgreeConnection{
 	
 	public enum ConnectionType {
         EVENT, DATA
     }
-	public final String sourceNode;
-	public final String destinationNode;
+	public final AgreeNode sourceNode;
+	public final AgreeNode destinationNode;
 	public final AgreeVar sourVar;
 	public final AgreeVar destVar;
 	public final ConnectionType type;
@@ -18,7 +18,7 @@ public class AgreeAADLConnection implements AgreeConnection{
 	public final boolean latched;
 	public final boolean delayed;
 
-	public AgreeAADLConnection(String sourceNode, String destinationNode, AgreeVar sourceVarName,
+	public AgreeAADLConnection(AgreeNode sourceNode, AgreeNode destinationNode, AgreeVar sourceVarName,
 			AgreeVar destinationVarName, ConnectionType type, boolean latched, boolean delayed, EObject reference) {
 		this.sourceNode = sourceNode;
 		this.destinationNode = destinationNode;
@@ -30,9 +30,10 @@ public class AgreeAADLConnection implements AgreeConnection{
         this.reference = reference;
     }
 
-    @Override
-    public <T> T accept(AgreeAstVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
+	@Override
+	public <T> T accept(AgreeASTVisitor<T> visitor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -391,7 +391,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return;
 
 		case "length":
-			checkLengthCall(funCall, actualTypes);
+		case "size":
+			checkLengthCall(funCall.getFn(), funCall, actualTypes);
 			return;
 
 		case "sum":
@@ -480,9 +481,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		}
 	}
 
-	private void checkLengthCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
+	private void checkLengthCall(String name, BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
 		if (actualTypes.size() != 1) {
-			error(funCall, "function 'length' expects two arguments");
+			error(funCall, "function '"+name+"' expects two arguments");
 			return;
 		}
 
@@ -1014,6 +1015,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "member":
 			return BaseType.BOOL;
 		case "length":
+		case "size":
 			return BaseType.INT;
 		case "sum":
 			return getSumType(funCall);

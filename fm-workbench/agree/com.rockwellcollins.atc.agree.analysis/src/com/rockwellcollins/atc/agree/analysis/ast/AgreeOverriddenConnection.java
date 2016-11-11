@@ -2,7 +2,7 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 
 import org.osate.aadl2.Connection;
 
-import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeAstVisitor;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
 
 import jkind.lustre.Expr;
 
@@ -18,7 +18,7 @@ public class AgreeOverriddenConnection implements AgreeConnection{
 	
 	
 	@Override
-	public <T> T accept(AgreeAstVisitor<T> visitor) {
+	public <T> T accept(AgreeASTVisitor<T> visitor) {
 		return visitor.visit(this);
 	}
 

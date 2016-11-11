@@ -1,0 +1,114 @@
+
+ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
+  paddr=[82000000..8211401f]
+ELF-loading image 'kernel'
+  paddr=[80000000..80033fff]
+  vaddr=[f0000000..f0033fff]
+  virt_entry=f0000000
+ELF-loading image 'capdl-loader-experimental'
+  paddr=[80034000..80318fff]
+  vaddr=[8000..2ecfff]
+  virt_entry=e204
+Enabling MMU and paging
+Jumping to kernel-image entry point...
+
+Bootstrapping kernel
+receiver: periodic dispatch received at time: 1004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 0, 0, 0)
+sender: periodic dispatch received (1016000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 2004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (2004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 3004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (3006000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 4004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (4008000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 5004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (5004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 6004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (6006000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 7004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (7004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 8004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (8006000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 9004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (9004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 10004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (10006000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 11004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (11006000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 12004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (12004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 13004000
+receiver: checking value of test_data on Input1 
+receiver: ping_received invoked (0, 1, 2, 3)
+sender: periodic dispatch received (13006000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 14004000
+receiver: checking value of test_data on Input1 
+sender: periodic dispatch received (14006000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: ping_received invoked (0, 1, 2, 3)
+

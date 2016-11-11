@@ -56,7 +56,21 @@ osSpecificRegisterIrqs(dispatcher) ::= << <if(dispatcher.isIRQ)><dispatcher.name
 
 osSpecificThreadPostInitializer(threadImpl) ::= <<
 <threadImpl.dispatchers:osSpecificRegisterIrqs()>
+
+// MWW to Pape: fill in the call to the initializer functions 
+// for the mailbox functions HERE.
+
 >>
+
+// MWW to Pape: uncomment and fill in the code here for the mailbox implementation.
+// componentRemoteWriterDecl(srcPort) ::= <<
+// Mike was here, writing something for <srcPort.name>
+// >>
+
+// MWW to Pape: uncomment and fill in the code here for the mailbox implementation
+// componentLocalReaderDecl(port) ::= <<
+// Mike was here, writing something for <port.name>
+//
 
 osSpecificComponentLocalCallerFunction(connection) ::= <<
 /************************************************************************

@@ -3,11 +3,7 @@
  */
 package com.rockwellcollins.atc.agree.scoping;
 
-import java.io.ObjectInputStream.GetField;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -15,7 +11,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
-import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
@@ -28,7 +23,6 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DefaultAnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
-import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PublicPackageSection;
 import org.osate.aadl2.Subcomponent;
@@ -42,7 +36,6 @@ import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
@@ -50,6 +43,8 @@ import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -75,11 +70,17 @@ public class AgreeScopeProvider extends
     IScope scope_NamedElement(FnDefExpr ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
-    
+
+    IScope scope_NamedElement(LinearizationDefExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+
+    IScope scope_NamedElement(LibraryFnDefExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+
     IScope scope_NamedElement(EventExpr ctx, EReference ref) {
-    	EObject container = ctx.eContainer();
         Set<Element> result = getCorrespondingAadlElement(ctx.getId());
-    	
 		return Scopes.scopeFor(result, getScope(ctx.eContainer(), ref));
     }
 

@@ -16,6 +16,8 @@ import org.eclipse.xtext.ui.editor.contentassist.antlr.internal.Lexer;
 
 
 
+Linearization : ('L'|'l')('I'|'i')('N'|'n')('E'|'e')('A'|'a')('R'|'r')('I'|'i')('Z'|'z')('A'|'a')('T'|'t')('I'|'i')('O'|'o')('N'|'n');
+
 Get_Property : ('G'|'g')('E'|'e')('T'|'t')'_'('P'|'p')('R'|'r')('O'|'o')('P'|'p')('E'|'e')('R'|'r')('T'|'t')('Y'|'y');
 
 Asynchronous : ('A'|'a')('S'|'s')('Y'|'y')('N'|'n')('C'|'c')('H'|'h')('R'|'r')('O'|'o')('N'|'n')('O'|'o')('U'|'u')('S'|'s');
@@ -45,6 +47,8 @@ Synchrony : ('S'|'s')('Y'|'y')('N'|'n')('C'|'c')('H'|'h')('R'|'r')('O'|'o')('N'|
 Calendar : ('C'|'c')('A'|'a')('L'|'l')('E'|'e')('N'|'n')('D'|'d')('A'|'a')('R'|'r');
 
 Constant : ('C'|'c')('O'|'o')('N'|'n')('S'|'s')('T'|'t')('A'|'a')('N'|'n')('T'|'t');
+
+External : ('E'|'e')('X'|'x')('T'|'t')('E'|'e')('R'|'r')('N'|'n')('A'|'a')('L'|'l');
 
 Ordering : ('O'|'o')('R'|'r')('D'|'d')('E'|'e')('R'|'r')('I'|'i')('N'|'n')('G'|'g');
 
@@ -100,6 +104,8 @@ Struct : ('S'|'s')('T'|'t')('R'|'r')('U'|'u')('C'|'c')('T'|'t');
 
 Timeof : ('T'|'t')('I'|'i')('M'|'m')('E'|'e')('O'|'o')('F'|'f');
 
+Within : ('W'|'w')('I'|'i')('T'|'t')('H'|'h')('I'|'i')('N'|'n');
+
 Const : ('C'|'c')('O'|'o')('N'|'n')('S'|'s')('T'|'t');
 
 Delta : ('D'|'d')('E'|'e')('L'|'l')('T'|'t')('A'|'a');
@@ -131,6 +137,8 @@ Else : ('E'|'e')('L'|'l')('S'|'s')('E'|'e');
 Lift : ('L'|'l')('I'|'i')('F'|'f')('T'|'t');
 
 Node : ('N'|'n')('O'|'o')('D'|'d')('E'|'e');
+
+Over : ('O'|'o')('V'|'v')('E'|'e')('R'|'r');
 
 Prev : ('P'|'p')('R'|'r')('E'|'e')('V'|'v');
 
@@ -233,6 +241,8 @@ GreaterThanSign : '>';
 LeftSquareBracket : '[';
 
 RightSquareBracket : ']';
+
+CircumflexAccent : '^';
 
 LeftCurlyBracket : '{';
 

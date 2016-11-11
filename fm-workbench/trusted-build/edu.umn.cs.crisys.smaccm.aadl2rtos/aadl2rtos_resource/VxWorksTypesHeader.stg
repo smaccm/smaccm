@@ -1,5 +1,6 @@
 import "CommonTypesHeader.stg"
 
+osSpecificDefine() ::= "#define __TB_OS_VXWORKS__"
 
 filePrefix(name, date, path) ::= <<
 #ifndef <datatypesHeaderIfdef(name)>
@@ -12,6 +13,8 @@ filePrefix(name, date, path) ::= <<
 #include \<../usr/h/stdbool.h>
 #include \<stddef.h>
 #include \<../usr/h/stdint.h>
+
+<osSpecificDefine()>
 
 >>
 

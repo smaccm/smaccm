@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="edu.umn.cs.crisys.smaccm.aadl2rtos.feature"
+      label="AADL2RTOS"
+      version="1.0.0.qualifier"
+      provider-name="University of Minnesota">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <plugin
+         id="edu.umn.cs.crisys.smaccm.aadl2rtos"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.qualifier"
+         unpack="false"/>
+
+</feature>

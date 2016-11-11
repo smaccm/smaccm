@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeAst;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTElement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 
 import jkind.lustre.Equation;
@@ -20,7 +21,7 @@ import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.visitors.ExprMapVisitor;
 
-public class AgreeInlineLatchedConnections extends ExprMapVisitor implements AgreeAstVisitor<AgreeAst> {
+public class AgreeInlineLatchedConnections extends ExprMapVisitor implements AgreeASTVisitor<AgreeASTElement> {
 
     private final List<AgreeNode> nodes = new ArrayList<>();
     public static final String LATCHED_SUFFIX = "__LATCHED_";
@@ -87,5 +88,10 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
     public AgreeConnection visit(AgreeConnection conn) {
         throw new AgreeException("Should not visit here");
     }
+
+	@Override
+	public AgreeASTElement visit(AgreeStatement e) {
+        throw new AgreeException("Should not visit here");
+	}
 
 }

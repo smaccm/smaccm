@@ -10,6 +10,13 @@
        genModel = "com/rockwellcollins/atc/agree/Agree.genmodel" /> 
 	
   </extension>
+  <extension
+        point="org.osate.pluginsupport.aadlcontribution">
+     <aadlcontribution
+           file="resources/Linearizer.aadl"
+           id="com.rockwellcollins.atc.agree.aadlcontribution2">
+     </aadlcontribution>
+  </extension>
 
 
 

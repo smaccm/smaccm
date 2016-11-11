@@ -1,6 +1,6 @@
 config APP_TEST13
-    bool "AADL Test 13: active -> passive threads using pure event"
+    bool "test13 (from AADL)"
     default n
     select APP_CAMKES_EXECUTIVE
     help
-        AADL Test 13: active -> passive threads using pure event. 
+        test13 (from AADL).

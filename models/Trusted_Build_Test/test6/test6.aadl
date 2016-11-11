@@ -44,7 +44,7 @@ end sender ;
 thread receiver
 	features
 		Input1: in event data port a_array.impl {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received1");
 		  Queue_Size => 8;
 		}; 
 		
@@ -53,7 +53,7 @@ thread receiver
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
 		Source_Text => ("user_code/user_receiver.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping1");
 	    Priority => 8;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
@@ -64,7 +64,7 @@ end receiver ;
 thread receiver2
 	features
 		Input1: in event data port a_array.impl {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received2");
 		  Queue_Size => 8;
 		}; 
 		
@@ -73,7 +73,7 @@ thread receiver2
 	    SMACCM_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
 		Source_Text => ("user_code/user_receiver2.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping2");
 	    Priority => 8;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
@@ -84,9 +84,8 @@ end receiver2 ;
 thread receiver3
 	features
 		Input1: in event data port a_array.impl {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received3");
 		  Source_Text => ("user_code/user_receiver3.c");
-		  Queue_Size => 8;
 	      SMACCM_SYS::Sends_Events_To => "{{}}";
 		}; 
 
@@ -113,16 +112,31 @@ process implementation proc.Impl
 		s_to_r3 : port s.Output1 -> r3.Input1;
 end proc.Impl;
 
-system test6
-end test6;
+system test
+end test;
 
-system implementation test6.impl
+system implementation test.camkes
 	subcomponents
 		tl: process proc.Impl;
 	properties
 		SMACCM_SYS::OS => CAmkES;
 		SMACCM_SYS::HW => QEMU;
+end test.camkes;
 
-end test6.impl;
+system implementation test.echronos
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => echronos;
+		SMACCM_SYS::HW => QEMU;
+end test.echronos;
+
+system implementation test.vxworks
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => VxWorks;
+		SMACCM_SYS::HW => QEMU;
+end test.vxworks;
 
 end test6;

@@ -12,28 +12,33 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
-import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
-
 import jkind.lustre.Expr;
 
 //An AgreeStatement is used as a wrapper for assumptions, guarantees, and other things
 //It implements EObject so it can be passed around as if it was part of the Ecore AST
 
-public class AgreeStatement implements EObject{
-    public final String string;
-    public final Expr expr;
-    public final EObject reference;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreePattern;
 
-    public AgreeStatement(String string, Expr expr, EObject reference) {
-        this.string = string;
-        this.expr = expr;
-        this.reference = reference;
-        if (expr == null && !(this instanceof AgreePattern)) {
-            throw new AgreeException("AgreeStatement created with null expression");
-        }
-    }
+public class AgreeStatement implements AgreeASTElement, EObject{
+	public final String string;
+	public final Expr expr;
+	public final EObject reference;
+
+	public AgreeStatement(String string, Expr expr, EObject reference) {
+		this.string = string;
+		this.expr = expr;
+		this.reference = reference;
+		if (expr == null && !(this instanceof AgreePattern)) {
+			throw new AgreeException("AgreeStatement created with null expression");
+		}
+	}
+
+	@Override
+	public <T> T accept(AgreeASTVisitor<T> visitor) {
+		return visitor.visit(this);
+	}
 
     @Override
     public EList<Adapter> eAdapters() {

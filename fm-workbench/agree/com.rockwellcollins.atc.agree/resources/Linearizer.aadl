@@ -1,0 +1,23 @@
+package Linearizer
+public
+annex agree {**
+  external abs (x : real) : real;
+  external acos (x : real) : real;
+  external asin (x : real) : real;
+  external atan (x : real) : real;
+  external cbrt (x : real) : real;
+  external cos (x : real) : real;
+  external cosh (x : real) : real;
+  external exp (x : real) : real;
+  external expml (x : real) : real;
+  external log (x : real) : real;
+  external log10 (x : real) : real;
+  external log1p (x : real) : real;
+  external signum (x : real) : real;
+  external sin (x : real) : real;
+  external sinh (x : real) : real;
+  external sqrt (x : real) : real;
+  external tan (x : real) : real;
+  external tanh (x : real) : real;
+**};
+end Linearizer;

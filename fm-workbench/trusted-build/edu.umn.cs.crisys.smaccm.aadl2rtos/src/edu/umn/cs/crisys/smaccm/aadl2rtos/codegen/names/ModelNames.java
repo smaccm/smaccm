@@ -3,7 +3,6 @@
  */
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -156,7 +155,11 @@ public class ModelNames {
     return getSystemImplementationName() + ".prx";
   }
   public boolean getGenerateSystickIrq() {
-	  return m.getGenerateSystickIRQ();
+	  return m.getGenerateSystemTick();
+  }
+  
+  public int getTimerRateInMS() {
+     return m.getTimerRateInMS();
   }
   
   public List<ExternalIRQ> getExternalIRQs() {
@@ -230,6 +233,10 @@ public class ModelNames {
   public String getCamkesExternalTimerCompletePath() {
     return m.getCamkesExternalTimerCompletePath();
   }
+
+  public boolean getCamkesUseMailboxDataports() {
+	return m.getCamkesUseMailboxDataports();
+  }
   
   public String getCamkesInternalTimerTimersPerClient() {
     return Integer.toString(m.getCamkesInternalTimerTimersPerClient());
@@ -249,6 +256,10 @@ public class ModelNames {
 
   public String getEChronosCModulePath() {
     return m.getEChronosCModulePath();
+  }
+  
+  public String getEChronosFlashLoadAddress() {
+	  return m.getEChronosFlashLoadAddress();
   }
 
   public List<String> getCFileModules() {

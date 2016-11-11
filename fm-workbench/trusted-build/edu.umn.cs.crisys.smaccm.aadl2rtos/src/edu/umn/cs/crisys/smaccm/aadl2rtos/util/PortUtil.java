@@ -6,7 +6,7 @@ import org.osate.aadl2.impl.DataSubcomponentImpl;
 import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
-import org.osate.xtext.aadl2.properties.util.PropertyUtils;
+//import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 

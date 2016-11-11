@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 
-import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeAstVisitor;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
 
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.Location;
 
-public class AgreeEquation extends Equation implements AgreeAst{
+public class AgreeEquation extends Equation implements AgreeASTElement{ 
     
     public final EObject reference;
 
@@ -30,7 +30,7 @@ public class AgreeEquation extends Equation implements AgreeAst{
     }
 
     @Override
-    public <T> T accept(AgreeAstVisitor<T> visitor) {
+    public <T> T accept(AgreeASTVisitor<T> visitor) {
         return visitor.visit(this);
     }
 

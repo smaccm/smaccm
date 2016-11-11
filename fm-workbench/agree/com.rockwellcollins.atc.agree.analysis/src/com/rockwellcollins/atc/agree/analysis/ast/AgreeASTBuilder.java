@@ -22,6 +22,7 @@ import org.osate.aadl2.Connection;
 import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.Context;
 import org.osate.aadl2.DataPort;
+import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
@@ -91,6 +92,7 @@ import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
@@ -129,6 +131,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeMakeClockedLustr
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
+import com.rockwellcollins.atc.agree.analysis.linearization.LinearizationRewriter;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
@@ -150,6 +153,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
     private ComponentInstance curInst; // used for Get_Property Expressions
     private boolean isMonolithic = false;
+    private LinearizationRewriter linearizationRewriter = new LinearizationRewriter();
 
     public AgreeProgram getAgreeProgram(ComponentInstance compInst, boolean isMonolithic) {
 
@@ -365,7 +369,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             }
         }
         return agreeVars;
-    }
+	}
 
     private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,
             List<AgreeVar> outputs, List<AgreeNode> subNodes, List<AgreeStatement> assertions,
@@ -378,17 +382,20 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             allExprIds.addAll(gatherStatementIds(statement));
         }
         for (String idStr : allExprIds) {
-            if (idStr.contains(dotChar)) {
+            if (idStr.contains(dotChar) &&
+            		!(idStr.endsWith(AgreePatternTranslator.FALL_SUFFIX) ||
+            				idStr.endsWith(AgreePatternTranslator.RISE_SUFFIX) ||
+            				idStr.endsWith(AgreePatternTranslator.TIME_SUFFIX))) {
                 String prefix = idStr.substring(0, idStr.indexOf(dotChar));
                 boolean found = false;
                 for (AgreeVar var : inputs) {
-                    if (var.id.startsWith(prefix)) {
+                    if (var.id.startsWith(prefix + dotChar)) {
                         found = true;
                         break;
                     }
                 }
                 for (AgreeVar var : outputs) {
-                    if (var.id.startsWith(prefix)) {
+                    if (var.id.startsWith(prefix + dotChar)) {
                         found = true;
                         break;
                     }
@@ -545,7 +552,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 outputs.add(var);
                 break;
             default:
-                throw new AgreeException("Unable to reason about bi-directional event port: " + name);
+                throw new AgreeException("Unable to reason about bi-directional event port: "+dataFeature.getQualifiedName());
             }
         }
 
@@ -582,7 +589,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             outputs.add(agreeVar);
             break;
         default:
-            break;
+            throw new AgreeException("Unable to reason about bi-directional event port: "+dataFeature.getQualifiedName());
         }
     }
 
@@ -623,27 +630,22 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
             AgreeNode sourceNode = agreeNodeFromNamedEl(subNodes, sourContext);
             AgreeNode destNode = agreeNodeFromNamedEl(subNodes, destContext);
+
+            ConnectionEnd destPort = absConnDest.getConnectionEnd();
+            ConnectionEnd sourPort = absConnSour.getConnectionEnd();
             
+            String sourPortName = getAgreePortName(absConnSour, sourContext);
+            String destPortName = getAgreePortName(absConnDest, destContext);
 
-			ConnectionEnd destPort = absConnDest.getConnectionEnd();
-			ConnectionEnd sourPort = absConnSour.getConnectionEnd();
-
-			String sourNodeName = sourceNode == null ? null : sourceNode.id;
-			String destNodeName = destNode == null ? null : destNode.id;
-			
-			AgreeAADLConnection.ConnectionType connType;
-			if (destPort instanceof EventDataPort) {
-				if (!(sourPort instanceof EventDataPort)) {
-					AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '" + destPort.getName()
-							+ "' and '" + sourPort.getName() + "' of differing type");
-					continue;
-				}
+            ConnectionType connType;
+            
+            if (destPort instanceof EventDataPort && sourPort instanceof EventDataPort){
 				connType = ConnectionType.EVENT;
 
-				AgreeVar sourceVar = new AgreeVar(sourPort.getName() + eventSuffix, NamedType.BOOL, sourPort);
-				AgreeVar destVar = new AgreeVar(destPort.getName() + eventSuffix, NamedType.BOOL, destPort);
+				AgreeVar sourceVar = new AgreeVar(sourPortName + eventSuffix, NamedType.BOOL, sourPort);
+				AgreeVar destVar = new AgreeVar(destPortName + eventSuffix, NamedType.BOOL, destPort);
 
-				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourNodeName, destNodeName, sourceVar, destVar,
+				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourceVar, destVar,
 						connType, latched, delayed, conn);
 
 				if (!destinationSet.add(agreeConnection.destVar.id)) {
@@ -654,22 +656,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
             }
 
-            if (!(((destPort instanceof DataPort) && (sourPort instanceof DataPort))
-                    || ((destPort instanceof EventDataPort) && (sourPort instanceof EventDataPort)))) {
+            if (!matches(sourPort, destPort)) {
                 AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '" + destPort.getName()
                         + "' and '" + sourPort.getName() + "' of differing type");
                 continue;
             }
             connType = ConnectionType.DATA;
 
-            DataSubcomponentType dataClass;
-            if (destPort instanceof DataPort) {
-                DataPort dataPort = (DataPort) destPort;
-                dataClass = dataPort.getDataFeatureClassifier();
-            } else {
-                EventDataPort eventDataPort = (EventDataPort) destPort;
-                dataClass = eventDataPort.getDataFeatureClassifier();
-            }
+            DataSubcomponentType dataClass = getConnectionEndDataClass(destPort);
 
             NamedType type =
                     getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes));
@@ -679,10 +673,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
                 continue;
             }
             
-            AgreeVar sourVar = new AgreeVar(sourPort.getName(), type, sourPort);
-            AgreeVar destVar = new AgreeVar(destPort.getName(), type, destPort);
+            AgreeVar sourVar = new AgreeVar(sourPortName, type, sourPort);
+            AgreeVar destVar = new AgreeVar(destPortName, type, destPort);
 
-			AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourNodeName, destNodeName, sourVar, destVar,
+			AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourVar, destVar,
 					connType, latched, delayed, conn);
 
 			if (!destinationSet.add(agreeConnection.destVar.id)) {
@@ -692,6 +686,48 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
             agreeConns.add(agreeConnection);
         }
         return agreeConns;
+    }
+
+	private String getAgreePortName(ConnectedElement absConn, Context context) {
+		ConnectionEnd port = absConn.getConnectionEnd();
+		String portName = port.getName();
+		if(context == null){
+			return portName;
+		}
+		String contextName = context.getName();
+		if(port instanceof DataPort || port instanceof EventDataPort){
+			if(context instanceof FeatureGroup){
+				portName = contextName + dotChar + portName;
+			}
+			return portName;
+		}else if(port instanceof DataSubcomponent){
+			return contextName + "." + port.getName();
+		}
+		return null;
+	}
+
+	private DataSubcomponentType getConnectionEndDataClass(ConnectionEnd port) {
+		DataSubcomponentType dataClass = null;
+		if (port instanceof DataPort) {
+		    DataPort dataPort = (DataPort) port;
+		    dataClass = dataPort.getDataFeatureClassifier();
+		} else if (port instanceof EventDataPort){
+		    EventDataPort eventDataPort = (EventDataPort) port;
+		    dataClass = eventDataPort.getDataFeatureClassifier();
+		} else if (port instanceof DataSubcomponent){
+			dataClass = ((DataSubcomponent) port).getDataSubcomponentType();
+		}
+		if(dataClass == null){
+			AgreeLogger.logWarning("Unable to determine the type of port '"+port+"'");
+		}
+		return dataClass;
+	}
+
+    private boolean matches(ConnectionEnd a, ConnectionEnd b){
+    	if(a instanceof EventDataPort ^ b instanceof EventDataPort){
+    		return false;
+    	}
+    	return true;
     }
     
     private AgreeNode agreeNodeFromNamedEl(List<AgreeNode> nodes, NamedElement comp) {
@@ -1295,6 +1331,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
         Node node = builder.build();
         addToNodeList(node);
+        return null;
+    }
+
+    @Override
+    public Expr caseLinearizationDefExpr(LinearizationDefExpr expr) {
+        NodeDefExpr linearization = linearizationRewriter.addLinearization(expr);
+        caseNodeDefExpr(linearization);
         return null;
     }
 

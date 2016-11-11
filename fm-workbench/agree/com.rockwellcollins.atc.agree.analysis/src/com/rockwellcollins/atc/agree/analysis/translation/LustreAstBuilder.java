@@ -665,10 +665,10 @@ public class LustreAstBuilder {
 		for (AgreeConnection conn : agreeNode.connections) {
 			if (conn instanceof AgreeAADLConnection) {
 				AgreeAADLConnection aadlConn = (AgreeAADLConnection)conn;
-				String destName = aadlConn.destinationNode == null ? "" : aadlConn.destinationNode + AgreeASTBuilder.dotChar;
+				String destName = aadlConn.destinationNode == null ? "" : aadlConn.destinationNode.id + AgreeASTBuilder.dotChar;
 				destName = destName + aadlConn.destVar.id;
 
-				String sourName = aadlConn.sourceNode == null ? "" : aadlConn.sourceNode + AgreeASTBuilder.dotChar;
+				String sourName = aadlConn.sourceNode == null ? "" : aadlConn.sourceNode.id + AgreeASTBuilder.dotChar;
 				sourName = sourName + aadlConn.sourVar.id;
 
 				Expr aadlConnExpr;

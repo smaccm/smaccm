@@ -40,9 +40,9 @@ annex agree {**
 	fun is_active(mode: int) : bool = (mode = 2 or mode = 3 or mode = 4);
 	
 	node Is_Infusion_above_tolerance(actual_flow_rate : int, desired_flow_rate : int, tol : int)
-		 returns (over: bool);
+		 returns (high: bool); 
 		 let 
-		 over = (actual_flow_rate > (desired_flow_rate + tol));
+		 high = (actual_flow_rate > (desired_flow_rate + tol));
 	tel;
 	
 	node Is_Infusion_below_tolerance(actual_flow_rate : int, desired_flow_rate : int, tol : int)
