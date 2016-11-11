@@ -40,6 +40,7 @@ import jkind.lustre.NodeCallExpr;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
@@ -175,13 +176,31 @@ public class LinearizationAgreeASTVisitor extends AgreeASTMapVisitor {
 		Expr clockConstraint = e.clockConstraint.accept(this);
 		Expr initialConstraint = e.initialConstraint.accept(this);
 		AgreeVar clockVar = this.visit(e.clockVar);
-		EObject reference = e.reference;
-		TimingModel timing = e.timing;
-		ComponentInstance compinst = e.compInst;
 
-		AgreeNode result = new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
-				guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing, compinst);
-
+		AgreeNodeBuilder builder = new AgreeNodeBuilder(e);
+		builder.clearInputs();
+		builder.addInput(inputs);
+		builder.clearOutputs();
+		builder.addOutput(outputs);
+		builder.clearLocals();
+		builder.addLocal(locals);
+		builder.clearConnections();
+		builder.addConnection(connections);
+		builder.clearSubNodes();
+		builder.addSubNode(subNodes);
+		builder.clearAssertions();
+		builder.addAssertion(assertions);
+		builder.clearAssumptions();
+		builder.addAssumption(assumptions);
+		builder.clearGuarantees();
+		builder.addGuarantee(guarantees);
+		builder.clearLemmas();
+		builder.addLemma(lemmas);
+		builder.setClockConstraint(clockConstraint);
+		builder.setInitialConstraint(initialConstraint);
+		builder.setClockVar(clockVar);
+		
+		AgreeNode result = builder.build();
 		visitedNodes.put(e, result);
 
 		return result;

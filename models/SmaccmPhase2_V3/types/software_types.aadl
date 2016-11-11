@@ -139,7 +139,7 @@ data implementation control_law.impl
     autothr_source : data Base_Types::Unsigned_32;
     stab_source : data Base_Types::Unsigned_32;
     head_source : data Base_Types::Unsigned_32;
-    time : data Base_Types::Unsigned_32;
+    tstamp : data Base_Types::Unsigned_32;
 end control_law.impl;
 
 
@@ -206,7 +206,7 @@ data implementation controloutput.impl
     roll : data Base_Types::Float;
     pitch : data Base_Types::Float;
     yaw : data Base_Types::Float;
-    time : data Base_Types::Unsigned_32;
+    tstamp : data Base_Types::Unsigned_32;
 end controloutput.impl;
 
 data control_law_request
@@ -232,7 +232,7 @@ data implementation control_law_request.impl
     set_stab_src_nav : data Base_Types::Boolean;
     set_head_src_ui : data Base_Types::Boolean;
     set_head_src_nav : data Base_Types::Boolean;
-    time : data Base_Types::Unsigned_32;
+    tstamp : data Base_Types::Unsigned_32; 
 end control_law_request.impl;
 
 data waypoint

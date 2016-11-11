@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BasicPropertyAssociation;
@@ -23,6 +24,7 @@ import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
@@ -251,6 +253,10 @@ public class ResoluteBuiltInFnCallEvaluator {
 			NamedElement e = args.get(0).getNamedElement();
 			if (e instanceof ComponentInstance) {
 				ComponentInstance ci = (ComponentInstance) e;
+				EList<FeatureInstance> features = ci.getFeatureInstances();
+				FeatureInstance feature = features.get(1);
+				EList<PropertyAssociation> props = feature.getOwnedPropertyAssociations();
+				EList<ConnectionInstance> conns = feature.getDstConnectionInstances();
 				return createSetValue(ci.getFeatureInstances());
 			} else if (e instanceof FeatureInstance) {
 				FeatureInstance fi = (FeatureInstance) e;

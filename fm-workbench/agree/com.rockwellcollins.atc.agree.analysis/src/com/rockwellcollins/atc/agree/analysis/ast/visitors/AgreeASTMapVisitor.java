@@ -26,6 +26,7 @@
 
 package com.rockwellcollins.atc.agree.analysis.ast.visitors;
 
+import java.beans.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,14 +40,18 @@ import jkind.lustre.Node;
 import jkind.lustre.Type;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTElement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeOverriddenConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
 
 public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		implements AgreeASTVisitor<AgreeASTElement> {
@@ -88,19 +93,27 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 
 	@Override
 	public AgreeConnection visit(AgreeConnection e) {
-		AgreeNode sourceNode = visitedNodes.get(e.sourceNode);
+		if (e instanceof AgreeAADLConnection) {
+			AgreeAADLConnection aadlConn = (AgreeAADLConnection)e;
+			AgreeNode sourceNode = visitedNodes.get(aadlConn.sourceNode);
 
-		AgreeNode destinationNode = visitedNodes.get(e.destinationNode);
+			AgreeNode destinationNode = visitedNodes.get(aadlConn.destinationNode);
 
-		String sourceVarName = e.sourceVarName;
-		String destinationVarName = e.destinationVarName;
-		ConnectionType type = e.type;
-		boolean latched = e.latched;
-		boolean delayed = e.delayed;
-		EObject reference = e.reference;
+			AgreeVar sourVar = visit(aadlConn.sourVar);
+			AgreeVar destVar = visit(aadlConn.destVar);
+			ConnectionType type = aadlConn.type;
+			boolean latched = aadlConn.latched;
+			boolean delayed = aadlConn.delayed;
+			EObject reference = aadlConn.reference;
 
-		return new AgreeConnection(sourceNode, destinationNode, sourceVarName, destinationVarName, type,
-				latched, delayed, reference);
+			return new AgreeAADLConnection(sourceNode, destinationNode, sourVar, destVar, type, latched,
+					delayed, reference);
+		}else if(e instanceof AgreeOverriddenConnection){
+			AgreeOverriddenConnection overriddenCon = (AgreeOverriddenConnection)e;
+			AgreeStatement statement = visit(overriddenCon.statement);
+			return new AgreeOverriddenConnection(statement, overriddenCon.aadlConn);
+		}
+		throw new AgreeException("Unhandled Agree connection type "+e.getClass());
 	}
 
 	@Override
@@ -157,6 +170,16 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		for (AgreeStatement stmt : e.lemmas) {
 			lemmas.add(this.visit(stmt));
 		}
+		
+		List<AgreeStatement> patternProps = new ArrayList<>();
+		for(AgreeStatement stmt : e.patternProps){
+			patternProps.add(this.visit(stmt));
+		}
+		
+		List<AgreeEquation> localEqs = new ArrayList<>();
+		for(AgreeEquation eq : e.localEquations){
+			localEqs.add(this.visit(eq));
+		}
 
 		Expr clockConstraint = e.clockConstraint.accept(this);
 		Expr initialConstraint = e.initialConstraint.accept(this);
@@ -164,10 +187,30 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		EObject reference = e.reference;
 		TimingModel timing = e.timing;
 		ComponentInstance compinst = e.compInst;
+		
+		AgreeNodeBuilder builder = new AgreeNodeBuilder(id);
+		builder.addInput(inputs);
+		builder.addOutput(outputs);
+		builder.addLocal(locals);
+		builder.addConnection(connections);
+		builder.addSubNode(subNodes);
+		builder.addAssertion(assertions);
+		builder.addAssumption(assumptions);
+		builder.addGuarantee(guarantees);
+		builder.addLemma(lemmas);
+		builder.addLocalEquation(localEqs);
+		builder.addPatternProp(patternProps);
+		builder.setClockConstraint(clockConstraint);
+		builder.setInitialConstraint(initialConstraint);
+		builder.setClockVar(clockVar);
+		builder.setReference(reference);
+		builder.setTiming(timing);
+		builder.setCompInst(e.compInst);
+		builder.addTimeFall(e.timeFallMap);
+		builder.addTimeRise(e.timeRiseMap);
+		builder.addTimeOf(e.timeOfMap);
 
-		AgreeNode result = new AgreeNode(id, inputs, outputs, locals, connections, subNodes, assertions, assumptions,
-				guarantees, lemmas, clockConstraint, initialConstraint, clockVar, reference, timing, compinst);
-
+		AgreeNode result = builder.build();
 		visitedNodes.put(e, result);
 
 		return result;
@@ -190,6 +233,12 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		ComponentInstance compInst = e.compInst;
 
 		return new AgreeVar(name, type, reference, compInst);
+	}
+
+	@Override
+	public AgreeEquation visit(AgreeEquation agreeEquation) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

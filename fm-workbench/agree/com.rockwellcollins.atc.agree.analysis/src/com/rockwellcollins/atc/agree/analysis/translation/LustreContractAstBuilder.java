@@ -26,6 +26,8 @@ import jkind.lustre.RecordType;
 import jkind.lustre.TupleExpr;
 import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
+import jkind.lustre.UnaryExpr;
+import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 
@@ -37,17 +39,20 @@ import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriter;
 
 public class LustreContractAstBuilder extends LustreAstBuilder {
 
     public static Program getContractLustreProgram(AgreeProgram agreeProgram) {
 
         nodes = new ArrayList<>();
-        List<TypeDef> types = getTypes(agreeProgram);
+        List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
 
         AgreeNode flatNode = flattenAgreeNodeKindContract(agreeProgram.topNode, "_TOP__");
         List<Expr> assertions = new ArrayList<>();
@@ -104,6 +109,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         
         nodes.addAll(agreeProgram.globalLustreNodes);
         nodes.add(main);
+        
         Program program = new Program(types, null, nodes, main.id);
 
         return program;
@@ -161,12 +167,72 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         outputs.addAll(agreeNode.outputs);
         locals.addAll(agreeNode.locals);
 
-        return new AgreeNode(agreeNode.id, inputs, outputs, locals, null, agreeNode.subNodes, assertions,
-                agreeNode.assumptions, agreeNode.guarantees, agreeNode.lemmas, new BoolExpr(true),
-                agreeNode.initialConstraint, agreeNode.clockVar, agreeNode.reference, null,
-                agreeNode.compInst);
+        AgreeNodeBuilder builder = new AgreeNodeBuilder(agreeNode.id);
+		builder.addInput(inputs);
+		builder.addOutput(outputs);
+		builder.addLocal(locals);
+		builder.addLocalEquation(agreeNode.localEquations);
+		builder.addSubNode(agreeNode.subNodes);
+		builder.addAssertion(assertions);
+		builder.addAssumption(agreeNode.assumptions);
+		builder.addGuarantee(agreeNode.guarantees);
+		builder.addLemma(agreeNode.lemmas);
+		builder.addPatternProp(agreeNode.patternProps);
+		builder.setClockConstraint(new BoolExpr(true));
+		builder.setInitialConstraint(agreeNode.initialConstraint);
+		builder.setClockVar(agreeNode.clockVar);
+		builder.setReference(agreeNode.reference);
+		builder.setTiming(null);
+		builder.addEventTime(agreeNode.eventTimes);
+		builder.setCompInst(agreeNode.compInst);
+
+		return builder.build();
+
     }
 
+    
+    protected static void addInitConstraint(AgreeNode agreeNode, List<AgreeVar> outputs,
+			List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, Expr clockExpr, Node lustreNode) {
+		if (agreeNode.timing != TimingModel.SYNC) {
+			String tickedName = subAgreeNode.id + "___TICKED";
+			outputs.add(new AgreeVar(tickedName, NamedType.BOOL, null, agreeNode.compInst));
+			Expr tickedId = new IdExpr(tickedName);
+			Expr preTicked = new UnaryExpr(UnaryOp.PRE, tickedId);
+			Expr tickedOrPre = new BinaryExpr(clockExpr, BinaryOp.OR, preTicked);
+			Expr initOrTicked = new BinaryExpr(clockExpr, BinaryOp.ARROW, tickedOrPre);
+			Expr tickedEq = new BinaryExpr(tickedId, BinaryOp.EQUAL, initOrTicked);
+
+			assertions.add(new AgreeStatement("", tickedEq, null));
+
+			// we have two re-write the ids in the initial expressions
+			IdRewriter rewriter = new IdRewriter() {
+
+				@Override
+				public IdExpr rewrite(IdExpr id) {
+					// TODO Auto-generated method stub
+					return new IdExpr(prefix + id.id);
+				}
+			};
+			Expr newInit = subAgreeNode.initialConstraint.accept(new IdRewriteVisitor(rewriter));
+
+			Expr initConstr = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, tickedId), BinaryOp.IMPLIES, newInit);
+			assertions.add(new AgreeStatement("", initConstr, null));
+
+			// we also need to add hold expressions for the assumptions and
+			// lemmas
+			Expr assumeLemmaTrue = new BoolExpr(true);
+			for (VarDecl lustreVar : lustreNode.inputs) {
+				AgreeVar var = (AgreeVar) lustreVar;
+				if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
+					assumeLemmaTrue = new BinaryExpr(assumeLemmaTrue, BinaryOp.AND, new IdExpr(prefix + var.id));
+				}
+			}
+			assumeLemmaTrue = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, tickedId), BinaryOp.IMPLIES, assumeLemmaTrue);
+			assertions.add(new AgreeStatement("", assumeLemmaTrue, null));
+
+		}
+	}
+    
     protected static Node addSubNodeLustre(AgreeNode agreeNode, String nodePrefix, AgreeNode flatNode) {
 
         Node lustreNode = getLustreNode(flatNode, nodePrefix);
@@ -198,7 +264,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
         for (AgreeStatement statement : agreeNode.assertions) {
             assertions.add(statement.expr);
-            if(AgreeUtils.statementIsContractEqOrProperty(statement)){
+            if(AgreeUtils.referenceIsInContract(statement.reference, agreeNode.compInst)){
                 ensures.add(statement.expr);
             }
         }
@@ -274,7 +340,8 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         }
 
         if (agreeNode.timing == TimingModel.LATCHED) {
-            addLatchedConstraints(nodePrefix, inputs, assertions, subAgreeNode, prefix, inputIds);
+            throw new AgreeException("check how we do this in the generic lustre translation now"
+            		+ " to make sure that it is correct");
         }
 
         Expr condactExpr =

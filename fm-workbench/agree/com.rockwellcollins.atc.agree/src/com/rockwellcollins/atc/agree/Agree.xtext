@@ -23,7 +23,8 @@ Element returns aadl2::Element:
 	| SpecStatement
 	| NodeStmt
 	| NodeBodyExpr
-	| EqStatement;
+	| EqStatement
+	| InputStatement;
 
 AnnexLibrary returns aadl2::AnnexLibrary:
 	AgreeLibrary;
@@ -38,13 +39,13 @@ AgreeSubclause:
 	{AgreeContractSubclause} contract=AgreeContract;
 
 AgreeContract returns Contract:
-	{AgreeContract} (specs+=SpecStatement)+;
+	{AgreeContract} (specs+=SpecStatement)*;
 
 SpecStatement:
-	{AssumeStatement} 'assume' str=STRING ':' expr=Expr ';'
-	| {GuaranteeStatement} 'guarantee' str=STRING ':' expr=Expr ';'
-	| {AssertStatement} 'assert' (str=STRING ':')? expr=Expr ';'
-	| {InitialStatement} 'initially' ':' expr = Expr ';'
+	{AssumeStatement} 'assume' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	| {GuaranteeStatement} 'guarantee' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	| {AssertStatement} 'assert' (str=STRING ':')? (expr=Expr | pattern=PatternStatement)';'
+	| {InitialStatement} 'initially' ':' expr=Expr  ';'
 	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
 	| {LemmaStatement} 'lemma' str=STRING ':' expr=Expr ';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
@@ -59,7 +60,46 @@ SpecStatement:
 	| FnDefExpr
 	| LibraryFnDefExpr
 	| NodeDefExpr
-	| RecordDefExpr;
+	| RecordDefExpr
+	| InputStatement;
+	
+//The following are patterns from the CESAR RSL
+PatternStatement returns PatternStatement:
+	WheneverStatement
+|	{AlwaysStatement} 'always' expr=Expr ';'
+|   WhenStatement
+|   RealTimeStatement
+;
+
+WhenStatement:
+	=> ({WhenHoldsStatement} 'when' condition=Expr 'holds') 'during' 
+        conditionInterval=TimeInterval event=Expr (excl='exclusively')? 'occurs' ('during' eventInterval=TimeInterval)? 
+|   => ({WhenOccursStatment} 'when' condition=Expr 'occurs')
+        times=Expr 'times' 'during' interval=TimeInterval (excl='exclusively')? 'raises' event=Expr 
+;
+
+WheneverStatement:
+	=> ({WheneverOccursStatement} 'whenever' cause=Expr 'occurs'
+	    effect=Expr (excl='exclusively')? ('occur' | 'occurs')) ('during' interval=TimeInterval)? 
+|   => ({WheneverBecomesTrueStatement} 'whenever' cause=Expr 'becomes' 'true'
+	    effect=Expr (excl='exclusively')? ('occur' | 'occurs')) ('during' interval=TimeInterval)? 
+|	=> ({WheneverHoldsStatement} 'whenever' cause=Expr 'occurs'
+	    effect=Expr (excl='exclusively')? ('holds')) ('during' interval=TimeInterval)? 
+|   => ({WheneverImpliesStatement} 'whenever' cause=Expr 'occurs'
+	    lhs=Expr 'implies') rhs=Expr (excl='exclusively')? ('during' interval=TimeInterval)? 	    
+;
+
+RealTimeStatement:
+	=> ({PeriodicStatement} 'condition' event=Expr 'occurs' 'each') period=Expr ('with' 'jitter' jitter=Expr)? 
+|	=> ({SporadicStatement} 'condition' event=Expr 'occurs' 'sporadic') 'with' 'IAT' iat=Expr ('with' 'jitter' jitter=Expr)?
+;
+ 
+TimeInterval returns TimeInterval:
+	=>({ClosedTimeInterval} '[' low=Expr ',' high=Expr ']')
+|   =>({OpenLeftTimeInterval} '(' low=Expr ',' high=Expr']')
+|   =>({OpenRightTimeInterval} '[' low=Expr ',' high=Expr ')')
+|   =>({OpenTimeInterval} '(' low=Expr ',' high=Expr ')') 
+;
 
 SynchStatement:
 	{SynchStatement} 'synchrony' ':' val = INTEGER_LIT (',' val2=INTEGER_LIT)? (sim=('simult'|'no_simult'))? ';'
@@ -91,6 +131,9 @@ ConstStatement:
 EqStatement:
 	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
 	
+InputStatement:
+	'agree_input' (lhs+=Arg (',' lhs+=Arg)*) ';';
+
 AssignStatement:
 	'assign' id=NestedDotID '=' expr=Expr ';';
 
@@ -190,10 +233,15 @@ RecordUpdateExpr returns Expr:
 ;
 
 TermExpr returns Expr:
-	  ComplexExpr
+	{TimeExpr} 'time'
+	| ComplexExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
 	| {EventExpr} 'event' '(' id = NestedDotID ')'
+	| {LatchedExpr} 'latched' '(' id = NestedDotID ')'
+	| {TimeOfExpr} 'timeof' '(' id = NestedDotID ')'
+	| {TimeRiseExpr} 'timerise' '(' id = NestedDotID ')'
+	| {TimeFallExpr} 'timefall' '(' id = NestedDotID ')'
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?

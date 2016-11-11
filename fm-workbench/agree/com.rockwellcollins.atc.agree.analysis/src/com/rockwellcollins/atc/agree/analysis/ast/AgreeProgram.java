@@ -1,7 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis.ast;
 
 import java.util.List;
-
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
 
 import jkind.lustre.Node;
@@ -25,5 +24,6 @@ public class AgreeProgram implements AgreeASTElement {
 	public <T> T accept(AgreeASTVisitor<T> visitor) {
 		return visitor.visit(this);
 	}
+
 
 }

@@ -2,7 +2,6 @@ package com.rockwellcollins.atc.agree.analysis.ast;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
-
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
 
 import jkind.lustre.Type;
@@ -17,6 +16,10 @@ public class AgreeVar extends VarDecl implements AgreeASTElement {
 		super(name, type);
 		this.reference = reference;
 		this.compInst = compInst;
+	}
+	
+	public AgreeVar(String name, Type type, EObject reference) {
+		this(name, type, reference, null);
 	}
 
 	@Override

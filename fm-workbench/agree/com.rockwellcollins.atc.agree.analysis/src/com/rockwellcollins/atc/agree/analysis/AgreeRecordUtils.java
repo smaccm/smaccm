@@ -74,6 +74,10 @@ public class AgreeRecordUtils {
     public static String getRecordTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
             Set<jkind.lustre.RecordType> typeExpressions) {
 
+    	if(finalId == null){
+    		return null;
+    	}
+    	
         if (typeMap.containsKey(finalId)) {
             return typeMap.get(finalId);
         }
