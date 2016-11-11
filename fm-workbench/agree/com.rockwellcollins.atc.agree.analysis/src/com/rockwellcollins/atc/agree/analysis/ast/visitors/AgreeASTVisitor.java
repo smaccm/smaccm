@@ -27,6 +27,7 @@
 package com.rockwellcollins.atc.agree.analysis.ast.visitors;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
@@ -42,4 +43,6 @@ public interface AgreeASTVisitor<T> {
 	public T visit(AgreeStatement e);
 
 	public T visit(AgreeVar e);
+
+	public T visit(AgreeEquation agreeEquation);
 }
