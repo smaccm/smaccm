@@ -39,6 +39,7 @@ import edu.umn.cs.crisys.tb.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.tb.model.port.ExternalIRQ;
 import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
+import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.thread.ThreadCalendar;
@@ -74,30 +75,26 @@ public class OSModel extends ModelElementBase {
    public String HWTarget ;
    public String outputDirectory;
 
-   // Connection instances - drives number of semaphores
-   // (one function per thread implementation, pass in thread instance id)
-   List<PortConnection> connectionInstances = new ArrayList<PortConnection>();
-   // private ArrayList<String> semaphoreList = new ArrayList<String>();
-
 
    // Implementation objects: external.
-   public List<ThreadImplementation> threadImplementationList = new ArrayList<ThreadImplementation>();
-   public List<SharedData> sharedDataList = new ArrayList<SharedData>();
+   public List<ProcessImplementation> processImplementationList = new ArrayList<>();
+   public List<ThreadImplementation> threadImplementationList = new ArrayList<>();
+   public List<SharedData> sharedDataList = new ArrayList<>();
    public ThreadCalendar threadCalendar = new ThreadCalendar(this);
-   public Set<String> sourceFiles = new HashSet<String>();
-   public List<String> libraryFiles = new ArrayList<String>(); 	
+   public Set<String> sourceFiles = new HashSet<>();
+   public List<String> libraryFiles = new ArrayList<>(); 	
 
-   public List<String> legacyMutexList = new ArrayList<String>();
-   public List<String> legacySemaphoreList = new ArrayList<String>();
-   public List<ExternalISR> externalISRList = new ArrayList<ExternalISR>();
-   public List<ExternalIRQEvent> externalIRQEventList = new ArrayList<ExternalIRQEvent>();
-   public List<ExternalIRQ> externalIRQList = new ArrayList<ExternalIRQ>();
-   public List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
+   public List<String> legacyMutexList = new ArrayList<>();
+   public List<String> legacySemaphoreList = new ArrayList<>();
+   public List<ExternalISR> externalISRList = new ArrayList<>();
+   public List<ExternalIRQEvent> externalIRQEventList = new ArrayList<>();
+   public List<ExternalIRQ> externalIRQList = new ArrayList<>();
+   //public List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
 
    // type stuff
-   public Set<String> externalTypeHeaders = new HashSet<String>(); 
+   public Set<String> externalTypeHeaders = new HashSet<>(); 
 
-   public Map<String, Type> astTypes = new HashMap<String, Type>();
+   public Map<String, Type> astTypes = new HashMap<>();
    public Map<String, RemoteProcedureGroup> remoteProcedureGroupMap = new HashMap<>(); 
    public Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
 
@@ -381,10 +378,6 @@ public class OSModel extends ModelElementBase {
    //		return threadList;
    //	}
 
-
-   public List<PortConnection> getConnections() {
-      return this.connectionInstances;
-   }
 
    public List<String> getExternalMutexList() {
       return this.legacyMutexList;

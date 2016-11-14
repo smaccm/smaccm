@@ -1,7 +1,7 @@
 import "Common.stg"
 import "CommonOSSpecificNames.stg"
 import "CommonCPrototypes.stg"
-import "VxWorksAssemblyHeader.stg"
+import "LinuxAssemblyHeader.stg"
 
 /*********************************************************************
  *
@@ -29,40 +29,34 @@ filePostfix(name, path) ::= <<
 >>
 
 constructThreadDispatcher(sem) ::= <<
-tb_result = sem_init(&<sem>,
-                     /* NOT-SHARED */ 0,
-                     /* initial count */ 1);
-assert(tb_result != -1);
+tb_sem_create(&<sem>);
 >>
 
-deleteSem(sem) ::= <<
-tb_result = sem_destroy(&sem);
-assert(tb_result != -1);
+destructSem(sem) ::= <<
+tb_sem_destroy(&<sem>);
 >>
 
-constructMutex(mutex) ::= <<
-tb_result = pthread_mutex_init(<mutex>, &tb_mutex_attributes);
-assert(tb_result == 0);
+createMutex(mutex) ::= <<
+tb_mutex_create(&<mutex>);
 >>
 
-deleteMutex(mutex) ::= <<
-tb_result = pthread_mutex_destroy(<mutex>);
-assert(tb_result == 0);
+destroyMutex(mutex) ::= <<
+tb_mutex_destroy(&<mutex>);
 >>
 
 createActiveThreadMutexes(threadImpl) ::= <<
 <constructThreadDispatcher(threadImpl.threadDispatcherMutex)>
-<threadImpl.externalMutexes:{ m |<constructMutex(m)>}>
+<threadImpl.externalMutexes:{ m |<createMutex(m)>}>
 >>
 
 createPassiveThreadMutexes(threadImpl) ::= <<
 <constructThreadDispatcher(threadImpl.threadDispatcherMutex)>
-<threadImpl.externalMutexes:{ m | <constructMutex(m)>}>
+<threadImpl.externalMutexes:{ m | <createMutex(m)>}>
 >>
 
 createMutexes(model) ::= <<
 /* create system-implementation level external mutexes */
-<model.externalMutexList:{ m | <constructMutex(m)>}>
+<model.externalMutexList:{ m | <createMutex(m)>}>
 
 /* create active thread mutexes */
 <model.activeThreadImplementations:createActiveThreadMutexes()>
@@ -71,25 +65,25 @@ createMutexes(model) ::= <<
 <model.passiveThreadImplementations:createPassiveThreadMutexes()>
 >>
 
-deleteActiveThreadMutexes(threadImpl) ::= <<
-semDelete(<threadImpl.threadDispatcherMutex>)
-<threadImpl.externalMutexes:{ m | mutexDelete(<m>) }>
+destructActiveThreadMutexes(threadImpl) ::= <<
+destructSem(<threadImpl.threadDispatcherMutex>)
+<threadImpl.externalMutexes:{ m | destructMutex(<m>) }>
 >>
 
-deletePassiveThreadMutexes(threadImpl) ::= <<
-semDelete(<threadImpl.threadDispatcherMutex>)
-<threadImpl.externalMutexes:{ m | mutexDelete(<m>) }>
+destructPassiveThreadMutexes(threadImpl) ::= <<
+destructSem(<threadImpl.threadDispatcherMutex>)
+<threadImpl.externalMutexes:{ m | destructMutex(<m>) }>
 >>
 
-deleteMutexes(model) ::= <<
-/* delete system-implementation level external mutexes */
-<model.externalMutexList:{ m | mutexDelete(<m>) }>
+destructMutexes(model) ::= <<
+/* destruct system-implementation level external mutexes */
+<model.externalMutexList:{ m | destructMutex(<m>) }>
 
-/* delete active thread mutexes */
-<model.activeThreadImplementations:deleteActiveThreadMutexes()>
+/* destruct active thread mutexes */
+<model.activeThreadImplementations:destructActiveThreadMutexes()>
 
-/* delete monitor mutexes */
-<model.passiveThreadImplementations:deletePassiveThreadMutexes()>
+/* destruct monitor mutexes */
+<model.passiveThreadImplementations:destructPassiveThreadMutexes()>
 >>
 
 threadInitializePorts(threadImpl) ::= <<
@@ -100,13 +94,15 @@ initializePorts(model) ::= <<
 <model.activeThreadImplementations:threadInitializePorts()>
 >>
 
-threadDeletePorts(threadImpl) ::= <<
+threadDestructPorts(threadImpl) ::= <<
     threadImpl.portList{ port | port.linuxAddMainCFileDestructors }
 >>
 
-deletePorts(model) ::= <<
-<model.activeThreadImplementations:threadDeletePorts()>
+destructPorts(model) ::= <<
+<model.activeThreadImplementations:threadDestructPorts()>
 >>
+
+// currently right here!
 
 createTask(threadImpl) ::= <<
 <threadImpl.normalizedName> = taskCreate("<threadImpl.normalizedName>",
@@ -131,8 +127,8 @@ createTasks(model) ::= <<
 <model.ActiveThreadImplementations:activateTask()>
 >>
 
-deleteTasks(model) ::= <<
-<model.ActiveThreadImplementations:{threadImpl | taskDelete(<threadImpl.normalizedName>);
+destructTasks(model) ::= <<
+<model.ActiveThreadImplementations:{threadImpl | taskDestruct(<threadImpl.normalizedName>);
 }>
 >>
 
@@ -149,43 +145,37 @@ sharedDataDefinition(sharedData) ::= <<
 mainFunction(model) ::= <<
 int trusted_build_main(uint32_t runDurationInSeconds) {
 
-    // MWW TODO: accruing a little bit of technical debt here; only the
-    // cross-process mutexes should really be shared.
-    pthread_mutexattr_setpshared(&tb_mutex_attributes, PTHREAD_PROCESS_SHARED);
-
-    STATUS status = sysClkRateSet(<model.threadCalendar.hzTickRate>);
-    assert(status == OK);
-
     <createMutexes(model)>
 
     <initializePorts(model)>
 
     <createTasks(model)>
 
+    // MWW: fix this with the appropriate linux alternative.
     if (runDurationInSeconds == 0) {
         taskSuspend(0);
     } else {
         sleep(runDurationInSeconds);
     }
 
-    /* if bounded-time run, kill the tasks and delete the mutexes */
+    /* if bounded-time run, kill the tasks and destruct the mutexes */
 
-    <deleteTasks(model)>
+    <destructTasks(model)>
 
-    <deletePorts(model)>
+    <destructPorts(model)>
 
-    <deleteMutexes(model)>
+    <destructMutexes(model)>
 
     return 0;
 }
 >>
 
 writeThreadPortIncludes(threadImpl) ::= <<
-<threadImpl.portList:{port|port.vxWorksAddMainCFileIncludes}>
+<threadImpl.portList:{port|port.linuxAddMainCFileIncludes}>
 >>
 
 writeThreadPortDeclarations(threadImpl) ::= <<
-<threadImpl.portList:{port|port.vxWorksAddMainCFileDeclarations}>
+<threadImpl.portList:{port|port.linuxAddMainCFileDeclarations}>
 >>
 
 
@@ -204,8 +194,6 @@ body(model) ::= <<
 
 <model.threadImplementations:writeThreadPortIncludes()>
 
-static pthread_mutexattr_t tb_mutex_attributes;
-int tb_result = 0;
 
 <if(model.sharedData)>
 // shared data definitions for tasks

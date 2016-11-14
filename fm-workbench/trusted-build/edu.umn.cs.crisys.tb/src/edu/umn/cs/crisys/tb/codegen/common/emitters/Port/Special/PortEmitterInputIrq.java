@@ -170,7 +170,7 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
 
    
    @Override
-   public String vxWorksAddCommonHFileDeclarations() {
+   public String getVxWorksAddCommonHFileDeclarations() {
       // no-op for InitializerPorts
       return "";
    }
@@ -220,14 +220,14 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
    }
 
    @Override
-   public String getAddTrampolines() { 
+   public String getEChronosAddTrampolines() { 
       ST st = getTemplateST("writeDispatcherTrampoline");
       st.add("dispatcher", this);
       return st.render();
    }
    
    @Override
-   public String getAddInternalIrqs() { 
+   public String getEChronosAddInternalIrqs() { 
       String result = "";
       InputIrqPort iip = (InputIrqPort)this.getModelElement();
       if (iip.getNumber() == InputIrqPort.NO_SIGNAL_NUMBER) { 
@@ -239,7 +239,7 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
    }
    
    @Override
-   public String getAddExternalIrqs() { 
+   public String getEChronosAddExternalIrqs() { 
       String result = ""; 
       InputIrqPort iip = (InputIrqPort)this.getModelElement(); 
       if (iip.getNumber() != InputIrqPort.NO_SIGNAL_NUMBER) {
@@ -257,21 +257,21 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
     ************************************************************/
 
    @Override
-   public String getAddComponentPortLevelDeclarations() {
+   public String getCamkesAddComponentPortLevelDeclarations() {
       ST st = getTemplateST("camkesIrqComponentDecl");
       st.add("dispatcher", this);
       return st.render(); 
    }
 
    @Override
-   public String getAddAssemblyFilePortDeclarations() {
+   public String getCamkesAddAssemblyFilePortDeclarations() {
       ST st = getTemplateST("constructIRQComponent");
       st.add("dispatcher", this);
       return st.render(); 
    }
    
    @Override
-   public String getAddAssemblyFileCompositionPortDeclarations() {
+   public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
       String result = "";
       ST st = getTemplateST("assemblyIrqComponent"); 
       st.add("dispatcher", this);
@@ -285,7 +285,7 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
    }
    
    @Override
-   public String getAddAssemblyFileConfigDeclarations() {
+   public String getCamkesAddAssemblyFileConfigDeclarations() {
       String result = ""; 
       ST st = getTemplateST("constructIRQConfig");
       st.add("dispatcher", this);
@@ -326,8 +326,6 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
       return EmitterFactory.type(this.getModelElement().getType()); 
    }
 
-   public String getIncomingWriterName() { return "!DUMMY!"; }
-   
    public String getPrefix() { return Util.getPrefix(); }
    
    public String getIdlDispatcherName() {

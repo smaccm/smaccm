@@ -91,7 +91,7 @@ resetWatchdogFn(dispatcher) ::= "<dispatcher.qualifiedName>_reset_watchdog"
 periodicClock(dispatcher) ::= "<dispatcher.name>_clock"
 
 
-dispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
+vxWorksDispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -165,3 +165,50 @@ connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
     dispatcher.qualifiedName)>
 >>
 
+
+///////////////////////////////////////////////////////////////////////////
+//
+// linux-specific declarations
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+linuxDispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Local clock creation for periodic dispatcher
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+static periodic_info <periodicClock(dispatcher)>;
+static bool <dispatcher.dispatchOccurredVar>;
+static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
+
+/************************************************************************
+ * <periodicClockFn(dispatcher)>
+ * This function is the callback function for the linux signal.
+ *
+ ************************************************************************/
+
+void <periodicClockFn(dispatcher)>(union sigval data) {
+    int result;
+    struct periodic_info *info = (struct_periodic_info *)data.sival_ptr;
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcher.periodicTimeVar> += ((long long)dispatcher.periodicDispatcherPeriod)*1000LL;
+    result = <dispatcher.mainLockReleaseStmt>
+    assert(result == 0);
+}
+
+>>
+
+dispatcherComponentInit(dispatcher) ::= <<
+{
+   int tb_result;
+   tb_result = make_periodic (<dispatcher.periodicDispatcherPeriod>*1000,
+                   <periodicClockFn>
+                   &<periodicClock(dispatcher)>);
+   assert(tb_result != -1);
+}
+>>

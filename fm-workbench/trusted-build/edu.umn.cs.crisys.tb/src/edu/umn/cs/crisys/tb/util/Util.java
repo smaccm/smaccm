@@ -46,6 +46,8 @@ import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.TbSTErrorListener;
 import edu.umn.cs.crisys.tb.model.ModelElement;
 import edu.umn.cs.crisys.tb.model.OSModel;
+import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
+import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 
 public class Util {
    // TODO: Clean up Util, PortUtil, and PropertyUtil!
@@ -82,6 +84,18 @@ public class Util {
       }
    }
 
+   public static ProcessImplementation getProcessImplementation(ModelElement element) {
+      if (element == null) {
+         return null; 
+      } else if (element instanceof ProcessImplementation) {
+         return (ProcessImplementation)element;
+      } else if (element instanceof ProcessInstance) {
+         return ((ProcessInstance)element).getProcessImplementation();
+      }
+      else {
+         return getProcessImplementation(element.getParent());
+      }
+   }
    /**********************************************************
     * 
     * Element typing functions

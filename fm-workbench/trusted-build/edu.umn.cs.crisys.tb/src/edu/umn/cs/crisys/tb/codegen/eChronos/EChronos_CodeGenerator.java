@@ -7,8 +7,6 @@ import java.util.Set;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.CAmkESThreadCalendarEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.ThreadCalendarEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadCalendarNames;
 import edu.umn.cs.crisys.tb.model.OSModel;
@@ -99,7 +97,7 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
   @Override
   public void createPeriodicDispatcherComponent() throws TbFailure {
     ModelNames mn = new ModelNames(model); 
-    ThreadCalendarEmitter cn = (ThreadCalendarEmitter)mn.getThreadCalendar(); 
+    ThreadCalendarNames cn = mn.getThreadCalendar(); 
 
     File componentDirectory = getComponentDirectory(componentsDirectory, cn.getPeriodicDispatcherComponentName());
     componentDirectory.mkdirs();

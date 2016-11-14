@@ -25,7 +25,7 @@ import org.stringtemplate.v4.STGroupFile;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.PortNames;
+//import edu.umn.cs.crisys.tb.codegen.common.names.PortNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
@@ -189,7 +189,7 @@ public abstract class CodeGeneratorBase {
 	}
 	
 	/* MWW TODO: Perhaps this method should be refactored to go in the C_Type_Writer class */
-	
+	/* 
 	private void createComponentDispatchTypes() throws IOException {
     // write dispatcher types
 	  // Note: for new-style "struct" return blocks
@@ -220,7 +220,9 @@ public abstract class CodeGeneratorBase {
       }
     }
 	}
-
+   */
+	
+	// TODO: needs to be refactored.
 	private void createMailboxTypes() {
 		if (model.getCamkesUseMailboxDataports()) {
 		    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
@@ -230,7 +232,7 @@ public abstract class CodeGeneratorBase {
 		            RecordType mailboxRecordType = new RecordType();
 		            ArrayType mailboxArrayType = new ArrayType(d.getType(), mailboxSize);
 		        	mailboxRecordType.addField("data", mailboxArrayType);
-		            model.getAstTypes().put((new PortNames(d)).getMailboxStructTypeName(), mailboxRecordType);
+//		            model.getAstTypes().put((new PortNames(d)).getMailboxStructTypeName(), mailboxRecordType);
 		        }
 		    }
 		}
@@ -454,7 +456,8 @@ public abstract class CodeGeneratorBase {
       st.add("model", mn);
       hwriter.append(st.render()); 
       
-      createComponentDispatchTypes();
+      // TODO: MWW: this needs to be refactored for new architecture.
+      // createComponentDispatchTypes();
       createMailboxTypes();
       C_Type_Writer.writeTypes(hwriter, model, 6);
 

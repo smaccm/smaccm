@@ -34,7 +34,7 @@ public class DispatchContractNames implements NameEmitter {
   }
   
   public NameEmitter getPort() {
-    return new PortNames(oep); 
+    return EmitterFactory.port(oep); 
   }
   
   public String getMaxDispatchSize() {

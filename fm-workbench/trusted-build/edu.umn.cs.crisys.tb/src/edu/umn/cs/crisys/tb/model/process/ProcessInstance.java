@@ -30,6 +30,10 @@ public class ProcessInstance extends ModelElementBase {
 	  this.processId = ProcessInstance.processIdCounter++; 
 	}
 	
+	public ProcessImplementation getProcessImplementation() {
+	   return this.impl;
+	}
+	
 	public int getProcessId() {
 		return processId;
 	}

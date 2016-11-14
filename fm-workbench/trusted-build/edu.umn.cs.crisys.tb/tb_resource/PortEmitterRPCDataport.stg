@@ -18,14 +18,6 @@ import "Common.stg"
 //
 ///////////////////////////////////////////////////////////////////////////
 
-writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
-void <externalHandler.handlerName>(const <dispatcher.type.aadlInputType.name> <dispatcher.name>);
->>
-
-writeUdePrototype(dispatcher) ::= <<
-<dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)>
->>
-
 writePortWriterPrototype(port) ::= <<
 bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
 >>

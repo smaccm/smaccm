@@ -25,7 +25,6 @@ import org.stringtemplate.v4.STGroupFile;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.*;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.CAmkESThreadCalendarEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.RemoteProcedureGroupNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadCalendarNames;
@@ -239,7 +238,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
 	  ModelNames mn = new ModelNames(model); 
      TypeNames tn = new TypeNames(InputPeriodicPort.getPortType());
     
-     CAmkESThreadCalendarEmitter cn = (CAmkESThreadCalendarEmitter)mn.getThreadCalendar(); 
+     ThreadCalendarNames cn = mn.getThreadCalendar(); 
     
     
     File componentDirectory = new File(componentsDirectory, cn.getPeriodicDispatcherComponentName());

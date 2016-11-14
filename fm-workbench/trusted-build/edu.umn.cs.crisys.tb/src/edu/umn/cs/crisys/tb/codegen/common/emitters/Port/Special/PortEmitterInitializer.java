@@ -42,7 +42,6 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
    
    private PortFeature port;
    private OSModel model; 
-   Type indexType = new IntType(32, false); 
    
    public PortEmitterInitializer(PortFeature pf) {
       this.port = pf;
@@ -71,10 +70,20 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
       // no-op for InitializerPorts
    }
    
+   public String writeExternalHandlerPrototype(ExternalHandler hdlr) {
+      String result = ""; 
+      result += "void " + hdlr.getHandlerName() + "(int64_t *);\n";
+      return result;
+   }
+   
    @Override
    public String getWritePortHPrototypes() {
-      // no-op for InitializerPorts
-      return ""; 
+      String result = ""; 
+      InitializerPort p = (InitializerPort)this.getModelElement(); 
+      for (ExternalHandler hdlr : p.getExternalHandlerList()) {
+         result += this.writeExternalHandlerPrototype(hdlr);
+      }
+      return result;
    }
 
 
@@ -130,7 +139,7 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
 
    
    @Override
-   public String vxWorksAddCommonHFileDeclarations() {
+   public String getVxWorksAddCommonHFileDeclarations() {
       // no-op for InitializerPorts
       return "";
    }
@@ -147,12 +156,21 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
       return "";
    }
 
+   private String callHandler(ExternalHandler hdlr) {
+      String result = ""; 
+      result += hdlr.getHandlerName() + "(&dummy_time);\n";
+      return result;
+   }
+
    @Override
    public String getVxWorksAddMainCFileInitializers() {
       // thread initialization routines (if any)...
       String result = ""; 
       result += "int64_t dummy_time = 0;\n";
-      result += this.getActiveThreadInternalDispatcherFnName() + "(&dummy);\n";
+      InitializerPort p = (InitializerPort)this.getModelElement(); 
+      for (ExternalHandler hdlr : p.getExternalHandlerList()) {
+         result += callHandler(hdlr); 
+      }
       return result; 
    }
 
@@ -181,13 +199,13 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String getAddTrampolines() { return ""; }
+   public String getEChronosAddTrampolines() { return ""; }
    
    @Override
-   public String getAddInternalIrqs() { return ""; }
+   public String getEChronosAddInternalIrqs() { return ""; }
    
    @Override
-   public String getAddExternalIrqs() { return ""; }
+   public String getEChronosAddExternalIrqs() { return ""; }
    
    /************************************************************
     * 
@@ -196,22 +214,22 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
     ************************************************************/
 
    @Override
-   public String getAddComponentPortLevelDeclarations() {
+   public String getCamkesAddComponentPortLevelDeclarations() {
       return ""; 
    }
 
    @Override
-   public String getAddAssemblyFileCompositionPortDeclarations() {
+   public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
       return ""; 
    }
    
    @Override
-   public String getAddAssemblyFileConfigDeclarations() {
+   public String getCamkesAddAssemblyFileConfigDeclarations() {
       return "";
    }
    
    @Override
-   public String getAddAssemblyFilePortDeclarations() { return ""; }
+   public String getCamkesAddAssemblyFilePortDeclarations() { return ""; }
 
    /************************************************************
     * 
@@ -276,7 +294,7 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
       } else if (this.model.getOsTarget() == OSModel.OSTarget.VxWorks) {
          return this.getIncomingWriterName();
       } else {
-         throw new TbException("in RPCEventDataPortEmitter::getUserEntrypointName: OS [" + 
+         throw new TbException("in PortEmitterInitializer::getUserEntrypointName: OS [" + 
                this.model.getOsTarget() + "] is not supported.");
       }
    }

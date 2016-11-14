@@ -31,6 +31,7 @@ import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
+import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
@@ -39,6 +40,7 @@ public class ProcessImplementation extends ModelElementBase {
     private  OSModel model;
   
 	private List<ProcessInstance> processInstanceList = new ArrayList<ProcessInstance>();
+	private List<ThreadImplementation> threadImplementationList = new ArrayList<ThreadImplementation>();
 	private Boolean isExternal = false;
   
 	/*
@@ -88,8 +90,13 @@ public class ProcessImplementation extends ModelElementBase {
 	processInstanceList.add(instance);
   }
 
-	
+  public List<ThreadImplementation> getThreadImplementationList() {
+     return this.threadImplementationList; 
+  }
  
+  public void addThreadImplementation(ThreadImplementation ti) {
+     threadImplementationList.add(ti); 
+  }
 
   @Override
   public int hashCode() {

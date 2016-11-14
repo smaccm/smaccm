@@ -4,9 +4,13 @@ package edu.umn.cs.crisys.tb.codegen.common.emitters;
 import java.util.Map;
 
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortConnectionEmitterRPCImpl;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCAllEvent;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCDataport;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem.PortConnectionEmitterSharedMemDataport;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem.PortEmitterSharedMemDataport;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInitializer;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInputIrq;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInputPeriodic;
@@ -21,14 +25,14 @@ import edu.umn.cs.crisys.tb.model.type.Type;
 public class EmitterFactory {
    
    public static PortEmitter port(PortFeature dp) {
-//      if (dp instanceof InputDataPort || 
-//          dp instanceof OutputDataPort)
-//         return new RPCDataPortEmitter((InputDataPort)dp);
-      // other types here...
-//      else 
+
+      // Shared memory only emitter (no RPCs) for linux 
+      if (PortEmitterSharedMemDataport.isApplicable(dp)) {
+         return new PortEmitterSharedMemDataport(dp);
+      }
       
-      // Default port emitters.
-      if (PortEmitterRPCAllEvent.isApplicable(dp)) {
+      // Default port emitters
+      else if (PortEmitterRPCAllEvent.isApplicable(dp)) {
          return new PortEmitterRPCAllEvent(dp); 
       } else if (PortEmitterRPCDataport.isApplicable(dp)) {
          return new PortEmitterRPCDataport(dp);
@@ -42,9 +46,19 @@ public class EmitterFactory {
          throw new TbException("EmitterFactory::port: No emitter found that is compatible with: " + dp.getName());
       }
       
-      //    return new PortNames(dp);
    }
    
+   public static PortConnectionEmitter portConnection(PortConnection pc) {
+      if (PortConnectionEmitterSharedMemDataport.isApplicable(pc)) {
+         return new PortConnectionEmitterSharedMemDataport(pc);
+      } else if (PortConnectionEmitterRPCImpl.isApplicable(pc)) {
+         return new PortConnectionEmitterRPCImpl(pc);
+      } else {
+         throw new TbException("EmitterFactory::port: No emitter found that is compatible with: " + pc.getName());
+      }
+   }
+   
+
    public static DispatchContractNames dispatchContract(DispatchableInputPort owner, Map.Entry<OutputEventPort, Integer> odc) {
       return new DispatchContractNames(owner, odc);
    }
@@ -67,10 +81,6 @@ public class EmitterFactory {
    
    public static OutgoingDispatchContractNames outgoingDispatchContract(DispatchableInputPort dip, OutgoingDispatchContract ctrct) {
       return new OutgoingDispatchContractNames(dip, ctrct); 
-   }
-   
-   public static PortConnectionNames portConnection(PortConnection pc) {
-      return new PortConnectionNames(pc); 
    }
    
    public static RemoteProcedureGroupEndpointNames remoteProcedureGroupEndpoint(RemoteProcedureGroupEndpoint endpoint) {

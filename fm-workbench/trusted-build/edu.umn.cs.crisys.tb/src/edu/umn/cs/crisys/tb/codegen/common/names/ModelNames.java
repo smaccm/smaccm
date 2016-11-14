@@ -90,7 +90,7 @@ public class ModelNames implements NameEmitter {
     return constructThreadImplList(m.getAllThreadImplementations());
   }
 
-  public NameEmitter getThreadCalendar() {
+  public ThreadCalendarNames getThreadCalendar() {
     return EmitterFactory.threadCalendar(m.getThreadCalendar());
   }
 

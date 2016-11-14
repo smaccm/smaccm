@@ -15,7 +15,7 @@ public class VxWorksUtil {
    }
    
    public static String writeExternMutexDecl(String name) {
-      return writeMutexDeclInternal("extern", name);
+      return writeMutexDeclInternal("extern ", name);
    }
    
    

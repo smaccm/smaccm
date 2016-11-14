@@ -1,6 +1,10 @@
 package edu.umn.cs.crisys.tb.codegen.linux;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +22,7 @@ import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
+import edu.umn.cs.crisys.tb.util.Util;
 
 public class Linux_CodeGenerator extends CodeGeneratorBase {
 
@@ -74,25 +79,49 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
   }
 
   public void createPeriodicDispatcherCFile(File srcDirectory) throws TbFailure {
-	  // MWW: TODO
-	  /*
-	ModelNames mn = new ModelNames(model);
-    ThreadCalendarNames tcn = new ThreadCalendarNames(model.getThreadCalendar());
-
-    writeGeneric(srcDirectory, "PeriodicDispatcherC.stg", "periodicComponentCBody", 
-        new String[] {"model", "threadCalendar"}, 
-        new Object[] {mn, tcn}, 
-        tcn.getPeriodicDispatcherComponentName(), false, tcn.getPeriodicDispatcherCFileName());
-    
-    model.getSourceFiles().add(tcn.getPeriodicDispatcherCFileName());
-*/
+     // No op 
   }
   
   // create this only if we have periodic threads.
  
   // this is a no-op for VxWorks.
   @Override
-  public void createPeriodicDispatcherComponent() throws TbFailure {   }
+  public void createPeriodicDispatcherComponent() throws TbFailure {   
+     InputStream cSrcFileStream = null;
+     InputStream hSrcFileStream = null;
+     OutputStream cDstFileStream = null;
+     OutputStream hDstFileStream = null;
+     String c_file_name = "tb_linux_support.c";
+     String h_file_name = "tb_linux_support.h";     
+     File cdest = new File(this.componentsDirectory, c_file_name);
+     File hdest = new File(this.componentsDirectory, h_file_name);
+     
+     
+     // write the .c / .h files to the destination component
+     try {
+       try {
+        cSrcFileStream = Util.findConfigFile(c_file_name);
+        cDstFileStream = new FileOutputStream(cdest);
+        copyFile(cSrcFileStream, cDstFileStream);
+        hSrcFileStream = Util.findConfigFile("clock_driver.h");
+        hDstFileStream = new FileOutputStream(hdest); 
+        copyFile(hSrcFileStream, hDstFileStream);
+         
+       } catch (IOException ioe) {
+         log.error("IOException occurred during write of linux_timer_support: " + ioe);
+         log.error("Continuing anyway...");
+         // throw new TbFailure();
+       } finally {
+         if (cSrcFileStream != null) { cSrcFileStream.close(); }
+         if (hSrcFileStream != null) { hSrcFileStream.close(); }
+         if (cDstFileStream != null) { cDstFileStream.close(); }
+         if (hDstFileStream != null) { hDstFileStream.close(); }
+       }
+     } catch (IOException ioe) {
+       log.error("IOException occurred during clock driver close: " + ioe);
+       throw new TbFailure();
+     }   
+  }
 
 
   @Override

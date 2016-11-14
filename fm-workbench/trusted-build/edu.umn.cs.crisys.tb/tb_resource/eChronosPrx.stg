@@ -45,7 +45,7 @@ $writeTrampoline(externalIsr.name, externalIsr.handlerName)$
 >>
 
 writeTrampolines(model) ::= <<
-$model.irqDispatchers:{dispatcher | dispatcher.addTrampoline}$
+$model.irqDispatchers:{dispatcher | dispatcher.eChronosAddTrampolines}$
 $if(model.threadCalendar.hasDispatchers &&
     model.generateSystickIrq)$
 $writeTrampoline("systick", "$model.prefix$_tick_irq")$
@@ -77,9 +77,9 @@ $if(model.threadCalendar.hasDispatchers &&
     model.generateSystickIrq)$
 $writeInternalInterruptHandler("systick")$
 $endif$
-$model.irqDispatchers:{ dispatcher | dispatcher.addInternalIrqs}$
+$model.irqDispatchers:{ dispatcher | dispatcher.eChronosAddInternalIrqs}$
 <external_irqs>
-    $model.irqDispatchers:{ dispatcher | dispatcher.addExternalIrqs}$
+    $model.irqDispatchers:{ dispatcher | dispatcher.eChronosAddExternalIrqs}$
 </external_irqs>
 >>
 

@@ -40,7 +40,10 @@
 		We should construct new global types that contain the mutex and the shared memory structure.
 	-> For linux, shared memory is by pointer using mmap.  For now we will leave it unsupported.
 
-	Organization of the main C file: 
+
+	-> For timers, use linux timer, I suppose.  Add it to the periodic port support for linux.
+	
+
 		
 	
 	   
@@ -52,7 +55,29 @@ To-dos:
 		need to be able to pass back to the original AADL classes to get a "handle" on these properties.
 	-> Change from fork() to more secure mechanism for shared memory between processes after Linux 
 	   client is up and running.
-	-> Normalize the OS-specific emitters to include the OS name!	
+	! Normalize the OS-specific emitters to include the OS name!
+	-> Move connection construction into the connection class!
+	-> Create connection class for dataports
+	-> For atomic datatypes it is likely that a mutex is unnecessary for shared memory dataports.  
+		This might be something to optimize later on.
+	-> Check declarations for data ports: readerWriterImplVarDecl
+	-> check on how we are wiring to periodic ports.
+	-> check whether SIGRTMIN is thread safe.
+	
+	
+	O.k., OSModel should have a mechanism to return the set of process implementations.
+		From there, we should be able to get the thread implementations.
+		getComponentClassifier() returns the process implementation
+		getComponentClassifier().getChildren() returns the thread implementations (and ports, etc.)
+		getChildren() returns the thread instances.
+	
+		So, given that I have a map from OSATE thread instances to TB thread instances: 
+			- I can connect the process instances to the thread instances.
+			- I can construct a map from OSATE process implementations to TB process implementations
+			- I can add the newly constructed process instance to the process implementation
+			- I can add the process implementation (if not already existing) to the list of process implementations.
+			- and done.
+	
 Old version:
 	! Allow external configuration of timer on VxWorks.
 	! Stub debug support.
@@ -108,6 +133,18 @@ For linux:
 
 	How do I declare shared memory?
 	
+	Two things yet to do: 
+		New dataport type for linux that uses fancy-shmancy shared memory approach.  Mutex must be built. 
+			Declare new datatypes containing shared mutexes
+			Initialize them in the main file.
+		
+		Add processes into the mix!  For now, we are still not properly dealing with instances, so we will focus on implementations.
+		
+		Add utility function to find parent process implementation for an element (or exception). 
+		
+		
+	
+	
 	How do I set access rights?
 	
 	for separate processes, I can use fork() to construct them, for now.
@@ -117,4 +154,45 @@ For linux:
 	follow same style as VxWorks - rather than an explicit join, we do a wait either with INFINITE or finite time.
 		- need the call for thread wait and INFINITE time.
 		 
-	When I fork(), child process has access to all global variables with the values that    
+	When I fork(), child process has access to all global variables
+	
+	
+	
+	=> For shared memory:
+		Need to construct the data + sem name: getReaderWriterImplVar.
+		This variable will always be a pointer to the buffer.  Depending on whether we need 
+			shared memory, we will assign it to the address of a locally constructed buffer or to the 
+			shared memory call.
+		
+		For get_mutex, it needs to be the implementation var + .mtx
+		
+
+VMs:
+====
+	How do we build the file system?
+	
+	How do we link the dataports into the file system?
+	
+	How do we set permissions for the shared memory?
+	
+	What is this RPC stuff across the VM boundary?
+	
+	
+	
+	
+
+
+		Dataport:
+        connection seL4SharedDataWithCaps cross_vm_conn(from string_reverse.src_dp,   
+                                                        to vm0.dp1);
+														
+		Event:
+        connection seL4Notification ev2_conn(from vm0.ready,
+                                             to string_reverse.ready);
+
+        connection seL4Notification ev1_conn(from string_reverse.done,
+                                             to vm0.done);
+
+		RPC Call?!?
+        connection seL4RPCCall cross_vm_putchar(from string_reverse.putchar,
+                                                to serial.vm_putchar);														

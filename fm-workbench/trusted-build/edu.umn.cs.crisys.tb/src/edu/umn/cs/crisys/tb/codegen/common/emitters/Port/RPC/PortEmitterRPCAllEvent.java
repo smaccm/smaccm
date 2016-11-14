@@ -33,12 +33,20 @@ import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks {
+public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterRPC {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
       boolean ok = (pf instanceof InputEventPort ||
                     pf instanceof OutputEventPort);
+      
+      OSModel model = Util.getElementOSModel(pf);
+      OSModel.OSTarget target = model.getOsTarget();
+
+      // linux is not yet supported until we get our act together.
+      ok &= (target == OSModel.OSTarget.CAmkES || 
+             target == OSModel.OSTarget.eChronos ||
+             target == OSModel.OSTarget.VxWorks);
       
       // has data
       // ok &= (! (pf.getType() instanceof UnitType)); 
@@ -198,7 +206,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
    
    @Override
-   public String vxWorksAddCommonHFileDeclarations() {
+   public String getVxWorksAddCommonHFileDeclarations() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += VxWorksUtil.writeExternMutexDecl(this.getMutex());
@@ -277,13 +285,13 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
 
    @Override
-   public String getAddTrampolines() { return ""; }
+   public String getEChronosAddTrampolines() { return ""; }
    
    @Override
-   public String getAddInternalIrqs() { return ""; }
+   public String getEChronosAddInternalIrqs() { return ""; }
    
    @Override
-   public String getAddExternalIrqs() { return ""; }
+   public String getEChronosAddExternalIrqs() { return ""; }
 
    
    /************************************************************
@@ -308,7 +316,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
    
    @Override
-   public String getAddComponentPortLevelDeclarations() {
+   public String getCamkesAddComponentPortLevelDeclarations() {
       // TODO Auto-generated method stub
       PortFeature pf = this.getModelElement();
       if (pf instanceof InputPort) {
@@ -328,7 +336,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
   
    @Override
-   public String getAddAssemblyFileCompositionPortDeclarations() {
+   public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
       PortFeature pf = this.getModelElement();
       if (pf instanceof OutputPort) {
          String result = ""; 
@@ -342,12 +350,12 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
    
    @Override
-   public String getAddAssemblyFileConfigDeclarations() {
+   public String getCamkesAddAssemblyFileConfigDeclarations() {
       return "";
    }
    
    @Override
-   public String getAddAssemblyFilePortDeclarations() { return ""; }
+   public String getCamkesAddAssemblyFilePortDeclarations() { return ""; }
    
    /************************************************************
     * 
@@ -452,6 +460,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
 
    // middleware functions; these must be compatible with the OS.
+   @Override
    public String getIncomingWriterName() {
       PortFeature dp = getModelElement();
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {

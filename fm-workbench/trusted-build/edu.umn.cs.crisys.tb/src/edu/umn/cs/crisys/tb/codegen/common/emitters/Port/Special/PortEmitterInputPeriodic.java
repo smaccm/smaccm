@@ -18,6 +18,7 @@ import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.codegen.eChronos.EChronosUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
+import edu.umn.cs.crisys.tb.model.OSModel.OSTarget;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
@@ -104,7 +105,11 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
 
       // For VxWorks, we define the OS trigger in-situ.
       if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
-         st = getTemplateST("dispatcherComponentPeriodicEventDecls");
+         st = getTemplateST("vxWorksDispatcherComponentPeriodicEventDecls");
+         st.add("dispatcher", this);
+         result += st.render(); 
+      } else if (model.getOsTarget() == OSTarget.linux) {
+         st = getTemplateST("linuxDispatcherComponentPeriodicEventDecls");
          st.add("dispatcher", this);
          result += st.render(); 
       }
@@ -159,7 +164,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
 
    
    @Override
-   public String vxWorksAddCommonHFileDeclarations() {
+   public String getVxWorksAddCommonHFileDeclarations() {
       // no-op for InputPeriodicPorts - no need for mutex
       return "";
    }
@@ -209,13 +214,13 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    }
 
    @Override
-   public String getAddTrampolines() { return ""; }
+   public String getEChronosAddTrampolines() { return ""; }
    
    @Override
-   public String getAddInternalIrqs() { return ""; }
+   public String getEChronosAddInternalIrqs() { return ""; }
    
    @Override
-   public String getAddExternalIrqs() { return ""; }
+   public String getEChronosAddExternalIrqs() { return ""; }
    
    /************************************************************
     * 
@@ -224,7 +229,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
     ************************************************************/
 
    @Override
-   public String getAddComponentPortLevelDeclarations() {
+   public String getCamkesAddComponentPortLevelDeclarations() {
       String toReturn = ""; 
       toReturn += this.getType().getReaderWriterInterfaceName(); 
       toReturn += " " + this.getQualifiedName() + ";\n";
@@ -232,12 +237,12 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    }
 
    @Override
-   public String getAddAssemblyFilePortDeclarations() {
+   public String getCamkesAddAssemblyFilePortDeclarations() {
       return ""; 
    }
    
    @Override
-   public String getAddAssemblyFileCompositionPortDeclarations() {
+   public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
       String result = ""; 
       ST st = getTemplateST("connectActivePeriodic");
       st.add("dispatcher", this);
@@ -249,7 +254,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    }
    
    @Override
-   public String getAddAssemblyFileConfigDeclarations() {
+   public String getCamkesAddAssemblyFileConfigDeclarations() {
       // no-op for Input Periodic Ports for Camkes
       String result = ""; 
       return result;

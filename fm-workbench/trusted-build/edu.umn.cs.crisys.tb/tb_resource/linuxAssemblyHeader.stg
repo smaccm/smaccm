@@ -1,4 +1,4 @@
-import "VxWorksComponentC.stg"
+import "LinuxComponentC.stg"
 import "Common.stg"
 import "CommonCPrototypes.stg"
 

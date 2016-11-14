@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import edu.umn.cs.crisys.tb.codegen.common.emitters.CAmkESThreadCalendarEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
@@ -18,7 +17,7 @@ import edu.umn.cs.crisys.tb.model.thread.ThreadCalendar;
  * @author Whalen
  *
  */
-public class ThreadCalendarNames implements NameEmitter, CAmkESThreadCalendarEmitter {
+public class ThreadCalendarNames implements NameEmitter {
 
   ThreadCalendar c;
   

@@ -12,7 +12,7 @@ public interface PortEmitterEChronos extends PortEmitter {
    public String getEChronosAddPrxMutexes();  //
    public String getEChronosAddPrxSemaphores();  //
 
-   public String getAddTrampolines();   // 
-   public String getAddInternalIrqs();  // 
-   public String getAddExternalIrqs();  // 
+   public String getEChronosAddTrampolines();   // 
+   public String getEChronosAddInternalIrqs();  // 
+   public String getEChronosAddExternalIrqs();  // 
 }

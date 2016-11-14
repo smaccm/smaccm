@@ -39,7 +39,6 @@ public interface PortEmitter extends NameEmitter {
    
    String getName();
    String getQualifiedName();
-   String getIncomingWriterName(); 
    TypeNames getType(); 
    
 }

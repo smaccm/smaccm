@@ -19,6 +19,7 @@ import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.linux.LinuxUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
@@ -515,6 +516,8 @@ public class ThreadImplementationNames implements NameEmitter {
      } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
         return "semGive(" + 
               this.getThreadDispatcherMutex() + "); ";
+     } else if (model.getOsTarget() == OSModel.OSTarget.linux) {
+        return LinuxUtil.postSem(this.getThreadDispatcherMutex()); 
      } else {
         throw new TbException(
            "ThreadImplementation::getDispatcherMainLockReleaseStmt: OS [" + 

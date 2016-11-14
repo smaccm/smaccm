@@ -10,7 +10,7 @@ osSpecificThreadReturnStmt(threadImpl) ::= " "
 
 
 dispatcherMainInitializeLockStmt(threadImpl) ::= <<
-sem_wait(<threadImpl.threadDispatcherMutex>);
+tb_sem_wait(&<threadImpl.threadDispatcherMutex>);
 >>
 
 
@@ -19,11 +19,11 @@ osSpecificThreadPostInitializer(threadImpl) ::= <<
 
 
 dispatcherMainLockWaitStmt(threadImpl) ::= <<
-sem_wait(<threadImpl.threadDispatcherMutex>);
+tb_sem_wait(&<threadImpl.threadDispatcherMutex>);
 >>
 
 dispatcherMainLockReleaseStmt(dispatcher) ::= <<
-sem_post(<dispatcher.threadImplementation.threadDispatcherMutex>);
+tb_sem_post(&<dispatcher.threadImplementation.threadDispatcherMutex>);
 >>
 
 
@@ -42,15 +42,15 @@ extern <sharedDataAccessor.type.name> *<sharedDataAccessor.sharedData.varName>;
 
 writeActiveThreadMutexes(threadImpl) ::= <<
 /* dispatcher, input port, and external mutexes for active thread <threadImpl.normalizedName> */
-sem_t <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m |sem_t <m>;
+TB_SEM_TYPE <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m |TB_SEM_TYPE <m>;
 }>
 >>
 
 writePassiveThreadMutexes(threadImpl) ::= <<
 /* dispatcher and external mutex for passive thread (monitor) <threadImpl.normalizedName> */
 sem_t <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m |sem_t <m>;
+<threadImpl.externalMutexes:{ m |TB_SEM_TYPE <m>;
 }>
 >>
 
@@ -73,11 +73,7 @@ writeDecls(threadImpl) ::= <<
 osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u0022><threadImpl.prefix>_decls.h<\u0022>
 #include <\u003C>string.h<\u003E>
-#include <\u003C>wdLib.h<\u003E>
-#include <\u003C>tickLib.h<\u003E>
-#include <\u003C>sysLib.h<\u003E>
-#include <\u003C>unistd.h<\u003E>
-#include <\u003C>assert.h<\u003E>
+#include "tb_linux_support.h"
 
 
 <writeDecls(threadImpl)>
