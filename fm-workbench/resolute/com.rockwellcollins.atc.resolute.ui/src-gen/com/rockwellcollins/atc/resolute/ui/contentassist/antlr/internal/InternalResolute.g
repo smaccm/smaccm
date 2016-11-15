@@ -2661,291 +2661,299 @@ rule__BuiltInFn__Alternatives
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIs_subprogramKeyword_20()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIs_dataKeyword_20()); }
+
+	'is_data' 
+
+{ after(grammarAccess.getBuiltInFnAccess().getIs_dataKeyword_20()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getIs_subprogramKeyword_21()); }
 
 	'is_subprogram' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIs_subprogramKeyword_20()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIs_subprogramKeyword_21()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIs_of_typeKeyword_21()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIs_of_typeKeyword_22()); }
 
 	'is_of_type' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIs_of_typeKeyword_21()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIs_of_typeKeyword_22()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIs_bound_toKeyword_22()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIs_bound_toKeyword_23()); }
 
 	'is_bound_to' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIs_bound_toKeyword_22()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIs_bound_toKeyword_23()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getHas_memberKeyword_23()); }
+{ before(grammarAccess.getBuiltInFnAccess().getHas_memberKeyword_24()); }
 
 	'has_member' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getHas_memberKeyword_23()); }
+{ after(grammarAccess.getBuiltInFnAccess().getHas_memberKeyword_24()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getFeaturesKeyword_24()); }
+{ before(grammarAccess.getBuiltInFnAccess().getFeaturesKeyword_25()); }
 
 	'features' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getFeaturesKeyword_24()); }
+{ after(grammarAccess.getBuiltInFnAccess().getFeaturesKeyword_25()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getConnectionsKeyword_25()); }
+{ before(grammarAccess.getBuiltInFnAccess().getConnectionsKeyword_26()); }
 
 	'connections' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getConnectionsKeyword_25()); }
+{ after(grammarAccess.getBuiltInFnAccess().getConnectionsKeyword_26()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getSubcomponentsKeyword_26()); }
+{ before(grammarAccess.getBuiltInFnAccess().getSubcomponentsKeyword_27()); }
 
 	'subcomponents' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getSubcomponentsKeyword_26()); }
+{ after(grammarAccess.getBuiltInFnAccess().getSubcomponentsKeyword_27()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getSourceKeyword_27()); }
+{ before(grammarAccess.getBuiltInFnAccess().getSourceKeyword_28()); }
 
 	'source' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getSourceKeyword_27()); }
+{ after(grammarAccess.getBuiltInFnAccess().getSourceKeyword_28()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getDestinationKeyword_28()); }
+{ before(grammarAccess.getBuiltInFnAccess().getDestinationKeyword_29()); }
 
 	'destination' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getDestinationKeyword_28()); }
+{ after(grammarAccess.getBuiltInFnAccess().getDestinationKeyword_29()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getDirectionKeyword_29()); }
+{ before(grammarAccess.getBuiltInFnAccess().getDirectionKeyword_30()); }
 
 	'direction' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getDirectionKeyword_29()); }
+{ after(grammarAccess.getBuiltInFnAccess().getDirectionKeyword_30()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIs_event_portKeyword_30()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIs_event_portKeyword_31()); }
 
 	'is_event_port' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIs_event_portKeyword_30()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIs_event_portKeyword_31()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIs_abstract_featureKeyword_31()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIs_abstract_featureKeyword_32()); }
 
 	'is_abstract_feature' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIs_abstract_featureKeyword_31()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIs_abstract_featureKeyword_32()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIs_data_portKeyword_32()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIs_data_portKeyword_33()); }
 
 	'is_data_port' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIs_data_portKeyword_32()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIs_data_portKeyword_33()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIs_portKeyword_33()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIs_portKeyword_34()); }
 
 	'is_port' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIs_portKeyword_33()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIs_portKeyword_34()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIs_data_accessKeyword_34()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIs_data_accessKeyword_35()); }
 
 	'is_data_access' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIs_data_accessKeyword_34()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIs_data_accessKeyword_35()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getLower_boundKeyword_35()); }
+{ before(grammarAccess.getBuiltInFnAccess().getLower_boundKeyword_36()); }
 
 	'lower_bound' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getLower_boundKeyword_35()); }
+{ after(grammarAccess.getBuiltInFnAccess().getLower_boundKeyword_36()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getUpper_boundKeyword_36()); }
+{ before(grammarAccess.getBuiltInFnAccess().getUpper_boundKeyword_37()); }
 
 	'upper_bound' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getUpper_boundKeyword_36()); }
+{ after(grammarAccess.getBuiltInFnAccess().getUpper_boundKeyword_37()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getMemberKeyword_37()); }
+{ before(grammarAccess.getBuiltInFnAccess().getMemberKeyword_38()); }
 
 	'member' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getMemberKeyword_37()); }
+{ after(grammarAccess.getBuiltInFnAccess().getMemberKeyword_38()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getSumKeyword_38()); }
+{ before(grammarAccess.getBuiltInFnAccess().getSumKeyword_39()); }
 
 	'sum' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getSumKeyword_38()); }
+{ after(grammarAccess.getBuiltInFnAccess().getSumKeyword_39()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getUnionKeyword_39()); }
+{ before(grammarAccess.getBuiltInFnAccess().getUnionKeyword_40()); }
 
 	'union' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getUnionKeyword_39()); }
+{ after(grammarAccess.getBuiltInFnAccess().getUnionKeyword_40()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getLengthKeyword_40()); }
+{ before(grammarAccess.getBuiltInFnAccess().getLengthKeyword_41()); }
 
 	'length' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getLengthKeyword_40()); }
+{ after(grammarAccess.getBuiltInFnAccess().getLengthKeyword_41()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getSizeKeyword_41()); }
+{ before(grammarAccess.getBuiltInFnAccess().getSizeKeyword_42()); }
 
 	'size' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getSizeKeyword_41()); }
+{ after(grammarAccess.getBuiltInFnAccess().getSizeKeyword_42()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getIntersectKeyword_42()); }
+{ before(grammarAccess.getBuiltInFnAccess().getIntersectKeyword_43()); }
 
 	'intersect' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getIntersectKeyword_42()); }
+{ after(grammarAccess.getBuiltInFnAccess().getIntersectKeyword_43()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getInstanceKeyword_43()); }
+{ before(grammarAccess.getBuiltInFnAccess().getInstanceKeyword_44()); }
 
 	'instance' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getInstanceKeyword_43()); }
+{ after(grammarAccess.getBuiltInFnAccess().getInstanceKeyword_44()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getInstancesKeyword_44()); }
+{ before(grammarAccess.getBuiltInFnAccess().getInstancesKeyword_45()); }
 
 	'instances' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getInstancesKeyword_44()); }
+{ after(grammarAccess.getBuiltInFnAccess().getInstancesKeyword_45()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getDebugKeyword_45()); }
+{ before(grammarAccess.getBuiltInFnAccess().getDebugKeyword_46()); }
 
 	'debug' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getDebugKeyword_45()); }
+{ after(grammarAccess.getBuiltInFnAccess().getDebugKeyword_46()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getAnalysisKeyword_46()); }
+{ before(grammarAccess.getBuiltInFnAccess().getAnalysisKeyword_47()); }
 
 	'analysis' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getAnalysisKeyword_46()); }
+{ after(grammarAccess.getBuiltInFnAccess().getAnalysisKeyword_47()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getReceive_errorKeyword_47()); }
+{ before(grammarAccess.getBuiltInFnAccess().getReceive_errorKeyword_48()); }
 
 	'receive_error' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getReceive_errorKeyword_47()); }
+{ after(grammarAccess.getBuiltInFnAccess().getReceive_errorKeyword_48()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getContain_errorKeyword_48()); }
+{ before(grammarAccess.getBuiltInFnAccess().getContain_errorKeyword_49()); }
 
 	'contain_error' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getContain_errorKeyword_48()); }
+{ after(grammarAccess.getBuiltInFnAccess().getContain_errorKeyword_49()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getPropagate_errorKeyword_49()); }
+{ before(grammarAccess.getBuiltInFnAccess().getPropagate_errorKeyword_50()); }
 
 	'propagate_error' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getPropagate_errorKeyword_49()); }
+{ after(grammarAccess.getBuiltInFnAccess().getPropagate_errorKeyword_50()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getError_state_reachableKeyword_50()); }
+{ before(grammarAccess.getBuiltInFnAccess().getError_state_reachableKeyword_51()); }
 
 	'error_state_reachable' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getError_state_reachableKeyword_50()); }
+{ after(grammarAccess.getBuiltInFnAccess().getError_state_reachableKeyword_51()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getFlow_sourceKeyword_51()); }
+{ before(grammarAccess.getBuiltInFnAccess().getFlow_sourceKeyword_52()); }
 
 	'flow_source' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getFlow_sourceKeyword_51()); }
+{ after(grammarAccess.getBuiltInFnAccess().getFlow_sourceKeyword_52()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_52()); }
+{ before(grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_53()); }
 
 	'flow_destination' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_52()); }
+{ after(grammarAccess.getBuiltInFnAccess().getFlow_destinationKeyword_53()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_53()); }
+{ before(grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_54()); }
 
 	'flow_elements' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_53()); }
+{ after(grammarAccess.getBuiltInFnAccess().getFlow_elementsKeyword_54()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getFlow_specificationsKeyword_54()); }
+{ before(grammarAccess.getBuiltInFnAccess().getFlow_specificationsKeyword_55()); }
 
 	'flow_specifications' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getFlow_specificationsKeyword_54()); }
+{ after(grammarAccess.getBuiltInFnAccess().getFlow_specificationsKeyword_55()); }
 )
 
     |(
-{ before(grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_55()); }
+{ before(grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_56()); }
 
 	'end_to_end_flows' 
 
-{ after(grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_55()); }
+{ after(grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_56()); }
 )
 
 ;
