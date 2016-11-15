@@ -416,9 +416,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return;
 		}
 
-		if (actualTypes.size() != expectedTypes.size() &&
-				// handle optional third parameter
-				(funCall.getFn().equalsIgnoreCase("property") && actualTypes.size() + 1 != expectedTypes.size())) {
+		if (actualTypes.size() != expectedTypes.size()
+				// special case for property statement
+				&& !(funCall.getFn().equalsIgnoreCase("property") && actualTypes.size() + 1 == expectedTypes.size())) {
+
 			error(funCall, "Function expects " + expectedTypes.size() + " arguments but found " + actualTypes.size()
 					+ " arguments");
 			return;
@@ -582,6 +583,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "is_memory":
 		case "is_thread":
 		case "is_process":
+		case "is_data":
 		case "is_event_port":
 		case "is_abstract_feature":
 		case "connections":
@@ -1000,6 +1002,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "is_memory":
 		case "is_thread":
 		case "is_process":
+		case "is_data":
 		case "is_of_type":
 		case "is_bound_to":
 		case "is_in_array":
