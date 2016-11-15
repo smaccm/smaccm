@@ -4155,13 +4155,13 @@ public interface AgreePackage extends EPackage
   int LATCHED_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Id</b></em>' containment reference.
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int LATCHED_EXPR__ID = EXPR_FEATURE_COUNT + 0;
+  int LATCHED_EXPR__EXPR = EXPR_FEATURE_COUNT + 0;
 
   /**
    * The number of structural features of the '<em>Latched Expr</em>' class.
@@ -6568,15 +6568,15 @@ public interface AgreePackage extends EPackage
   EClass getLatchedExpr();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LatchedExpr#getId <em>Id</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LatchedExpr#getExpr <em>Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Id</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.LatchedExpr#getId()
+   * @return the meta object for the containment reference '<em>Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LatchedExpr#getExpr()
    * @see #getLatchedExpr()
    * @generated
    */
-  EReference getLatchedExpr_Id();
+  EReference getLatchedExpr_Expr();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.TimeOfExpr <em>Time Of Expr</em>}'.
@@ -8431,12 +8431,12 @@ public interface AgreePackage extends EPackage
     EClass LATCHED_EXPR = eINSTANCE.getLatchedExpr();
 
     /**
-     * The meta object literal for the '<em><b>Id</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference LATCHED_EXPR__ID = eINSTANCE.getLatchedExpr_Id();
+    EReference LATCHED_EXPR__EXPR = eINSTANCE.getLatchedExpr_Expr();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.TimeOfExprImpl <em>Time Of Expr</em>}' class.

@@ -3709,8 +3709,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cLatchedExprAction_5_0 = (Action)cGroup_5.eContents().get(0);
 		private final Keyword cLatchedKeyword_5_1 = (Keyword)cGroup_5.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_5_2 = (Keyword)cGroup_5.eContents().get(2);
-		private final Assignment cIdAssignment_5_3 = (Assignment)cGroup_5.eContents().get(3);
-		private final RuleCall cIdNestedDotIDParserRuleCall_5_3_0 = (RuleCall)cIdAssignment_5_3.eContents().get(0);
+		private final Assignment cExprAssignment_5_3 = (Assignment)cGroup_5.eContents().get(3);
+		private final RuleCall cExprExprParserRuleCall_5_3_0 = (RuleCall)cExprAssignment_5_3.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_5_4 = (Keyword)cGroup_5.eContents().get(4);
 		private final Group cGroup_6 = (Group)cAlternatives.eContents().get(6);
 		private final Action cTimeOfExprAction_6_0 = (Action)cGroup_6.eContents().get(0);
@@ -3769,15 +3769,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//TermExpr returns Expr:
 		//	{TimeExpr} "time" | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {EventExpr}
-		//	"event" "(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {TimeOfExpr} "timeof" "("
-		//	id=NestedDotID ")" | {TimeRiseExpr} "timerise" "(" id=NestedDotID ")" | {TimeFallExpr} "timefall" "(" id=NestedDotID
-		//	")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? |
+		//	"event" "(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" expr=Expr ")" | {TimeOfExpr} "timeof" "(" id=NestedDotID
+		//	")" | {TimeRiseExpr} "timerise" "(" id=NestedDotID ")" | {TimeFallExpr} "timefall" "(" id=NestedDotID ")" |
+		//	{RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? |
 		//	{FloorCast} "floor" "(" expr=Expr ")" | {RealCast} "real" "(" expr=Expr ")" | "(" Expr ")";
 		@Override public ParserRule getRule() { return rule; }
 
 		//{TimeExpr} "time" | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {EventExpr} "event"
-		//"(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {TimeOfExpr} "timeof" "(" id=NestedDotID ")"
-		//| {TimeRiseExpr} "timerise" "(" id=NestedDotID ")" | {TimeFallExpr} "timefall" "(" id=NestedDotID ")" | {RealLitExpr}
+		//"(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" expr=Expr ")" | {TimeOfExpr} "timeof" "(" id=NestedDotID ")" |
+		//{TimeRiseExpr} "timerise" "(" id=NestedDotID ")" | {TimeFallExpr} "timefall" "(" id=NestedDotID ")" | {RealLitExpr}
 		//val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? | {FloorCast} "floor"
 		//"(" expr=Expr ")" | {RealCast} "real" "(" expr=Expr ")" | "(" Expr ")"
 		public Alternatives getAlternatives() { return cAlternatives; }
@@ -3848,7 +3848,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//")"
 		public Keyword getRightParenthesisKeyword_4_4() { return cRightParenthesisKeyword_4_4; }
 
-		//{LatchedExpr} "latched" "(" id=NestedDotID ")"
+		//{LatchedExpr} "latched" "(" expr=Expr ")"
 		public Group getGroup_5() { return cGroup_5; }
 
 		//{LatchedExpr}
@@ -3860,11 +3860,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//"("
 		public Keyword getLeftParenthesisKeyword_5_2() { return cLeftParenthesisKeyword_5_2; }
 
-		//id=NestedDotID
-		public Assignment getIdAssignment_5_3() { return cIdAssignment_5_3; }
+		//expr=Expr
+		public Assignment getExprAssignment_5_3() { return cExprAssignment_5_3; }
 
-		//NestedDotID
-		public RuleCall getIdNestedDotIDParserRuleCall_5_3_0() { return cIdNestedDotIDParserRuleCall_5_3_0; }
+		//Expr
+		public RuleCall getExprExprParserRuleCall_5_3_0() { return cExprExprParserRuleCall_5_3_0; }
 
 		//")"
 		public Keyword getRightParenthesisKeyword_5_4() { return cRightParenthesisKeyword_5_4; }
@@ -5017,9 +5017,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//TermExpr returns Expr:
 	//	{TimeExpr} "time" | ComplexExpr | {IntLitExpr} val=INTEGER_LIT | {PreExpr} "pre" "(" expr=Expr ")" | {EventExpr}
-	//	"event" "(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" id=NestedDotID ")" | {TimeOfExpr} "timeof" "("
-	//	id=NestedDotID ")" | {TimeRiseExpr} "timerise" "(" id=NestedDotID ")" | {TimeFallExpr} "timefall" "(" id=NestedDotID
-	//	")" | {RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? |
+	//	"event" "(" id=NestedDotID ")" | {LatchedExpr} "latched" "(" expr=Expr ")" | {TimeOfExpr} "timeof" "(" id=NestedDotID
+	//	")" | {TimeRiseExpr} "timerise" "(" id=NestedDotID ")" | {TimeFallExpr} "timefall" "(" id=NestedDotID ")" |
+	//	{RealLitExpr} val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} "this" ("." subThis=NestedDotID)? |
 	//	{FloorCast} "floor" "(" expr=Expr ")" | {RealCast} "real" "(" expr=Expr ")" | "(" Expr ")";
 	public TermExprElements getTermExprAccess() {
 		return pTermExpr;

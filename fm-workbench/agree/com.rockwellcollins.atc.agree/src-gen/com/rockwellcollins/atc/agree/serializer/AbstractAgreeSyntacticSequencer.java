@@ -68,7 +68,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) 'event' '(' id=NestedDotID
 	 *     (rule start) (ambiguity) 'floor' '(' expr=Expr
 	 *     (rule start) (ambiguity) 'if' a=Expr
-	 *     (rule start) (ambiguity) 'latched' '(' id=NestedDotID
+	 *     (rule start) (ambiguity) 'latched' '(' expr=Expr
 	 *     (rule start) (ambiguity) 'pre' '(' expr=Expr
 	 *     (rule start) (ambiguity) 'prev' '(' delay=Expr
 	 *     (rule start) (ambiguity) 'real' '(' expr=Expr

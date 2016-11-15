@@ -19622,9 +19622,9 @@ rule__TermExpr__Group_5__3__Impl
     }
 :
 (
-{ before(grammarAccess.getTermExprAccess().getIdAssignment_5_3()); }
-(rule__TermExpr__IdAssignment_5_3)
-{ after(grammarAccess.getTermExprAccess().getIdAssignment_5_3()); }
+{ before(grammarAccess.getTermExprAccess().getExprAssignment_5_3()); }
+(rule__TermExpr__ExprAssignment_5_3)
+{ after(grammarAccess.getTermExprAccess().getExprAssignment_5_3()); }
 )
 
 ;
@@ -27921,14 +27921,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__TermExpr__IdAssignment_5_3
+rule__TermExpr__ExprAssignment_5_3
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_5_3_0()); }
-	ruleNestedDotID{ after(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_5_3_0()); }
+{ before(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_5_3_0()); }
+	ruleExpr{ after(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_5_3_0()); }
 )
 
 ;

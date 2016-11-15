@@ -3,8 +3,8 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.LatchedExpr;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LatchedExprImpl#getId <em>Id</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LatchedExprImpl#getExpr <em>Expr</em>}</li>
  * </ul>
  *
  * @generated
@@ -30,14 +30,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 public class LatchedExprImpl extends ExprImpl implements LatchedExpr
 {
   /**
-   * The cached value of the '{@link #getId() <em>Id</em>}' containment reference.
+   * The cached value of the '{@link #getExpr() <em>Expr</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getId()
+   * @see #getExpr()
    * @generated
    * @ordered
    */
-  protected NestedDotID id;
+  protected Expr expr;
 
   /**
    * <!-- begin-user-doc -->
@@ -65,9 +65,9 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getId()
+  public Expr getExpr()
   {
-    return id;
+    return expr;
   }
 
   /**
@@ -75,13 +75,13 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetId(NestedDotID newId, NotificationChain msgs)
+  public NotificationChain basicSetExpr(Expr newExpr, NotificationChain msgs)
   {
-    NestedDotID oldId = id;
-    id = newId;
+    Expr oldExpr = expr;
+    expr = newExpr;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.LATCHED_EXPR__ID, oldId, newId);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.LATCHED_EXPR__EXPR, oldExpr, newExpr);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -92,20 +92,20 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setId(NestedDotID newId)
+  public void setExpr(Expr newExpr)
   {
-    if (newId != id)
+    if (newExpr != expr)
     {
       NotificationChain msgs = null;
-      if (id != null)
-        msgs = ((InternalEObject)id).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LATCHED_EXPR__ID, null, msgs);
-      if (newId != null)
-        msgs = ((InternalEObject)newId).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LATCHED_EXPR__ID, null, msgs);
-      msgs = basicSetId(newId, msgs);
+      if (expr != null)
+        msgs = ((InternalEObject)expr).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LATCHED_EXPR__EXPR, null, msgs);
+      if (newExpr != null)
+        msgs = ((InternalEObject)newExpr).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LATCHED_EXPR__EXPR, null, msgs);
+      msgs = basicSetExpr(newExpr, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.LATCHED_EXPR__ID, newId, newId));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.LATCHED_EXPR__EXPR, newExpr, newExpr));
   }
 
   /**
@@ -118,8 +118,8 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
   {
     switch (featureID)
     {
-      case AgreePackage.LATCHED_EXPR__ID:
-        return basicSetId(null, msgs);
+      case AgreePackage.LATCHED_EXPR__EXPR:
+        return basicSetExpr(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -134,8 +134,8 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
   {
     switch (featureID)
     {
-      case AgreePackage.LATCHED_EXPR__ID:
-        return getId();
+      case AgreePackage.LATCHED_EXPR__EXPR:
+        return getExpr();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -150,8 +150,8 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
   {
     switch (featureID)
     {
-      case AgreePackage.LATCHED_EXPR__ID:
-        setId((NestedDotID)newValue);
+      case AgreePackage.LATCHED_EXPR__EXPR:
+        setExpr((Expr)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -167,8 +167,8 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
   {
     switch (featureID)
     {
-      case AgreePackage.LATCHED_EXPR__ID:
-        setId((NestedDotID)null);
+      case AgreePackage.LATCHED_EXPR__EXPR:
+        setExpr((Expr)null);
         return;
     }
     super.eUnset(featureID);
@@ -184,8 +184,8 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
   {
     switch (featureID)
     {
-      case AgreePackage.LATCHED_EXPR__ID:
-        return id != null;
+      case AgreePackage.LATCHED_EXPR__EXPR:
+        return expr != null;
     }
     return super.eIsSet(featureID);
   }

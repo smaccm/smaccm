@@ -2558,7 +2558,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getLatchedExpr_Id()
+  public EReference getLatchedExpr_Expr()
   {
     return (EReference)latchedExprEClass.getEStructuralFeatures().get(0);
   }
@@ -3075,7 +3075,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(eventExprEClass, EVENT_EXPR__ID);
 
     latchedExprEClass = createEClass(LATCHED_EXPR);
-    createEReference(latchedExprEClass, LATCHED_EXPR__ID);
+    createEReference(latchedExprEClass, LATCHED_EXPR__EXPR);
 
     timeOfExprEClass = createEClass(TIME_OF_EXPR);
     createEReference(timeOfExprEClass, TIME_OF_EXPR__ID);
@@ -3492,7 +3492,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getEventExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, EventExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(latchedExprEClass, LatchedExpr.class, "LatchedExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getLatchedExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, LatchedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLatchedExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, LatchedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(timeOfExprEClass, TimeOfExpr.class, "TimeOfExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getTimeOfExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, TimeOfExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
