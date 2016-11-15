@@ -178,9 +178,16 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
+		List<String> ivcs = new ArrayList<>();
 
+		int j = 0;
 		for (AgreeStatement assumption : flatNode.assumptions) {
-			assertions.add(assumption.expr);
+			String assumName = assumeSuffix + j++;
+            locals.add(new AgreeVar(assumName, NamedType.BOOL, assumption.reference, flatNode.compInst));
+            IdExpr assumId = new IdExpr(assumName);
+            equations.add(new Equation(assumId, assumption.expr));
+			assertions.add(assumId);
+			ivcs.add(assumId.id);
 		}
 
 		for (AgreeStatement assertion : flatNode.assertions) {
@@ -246,6 +253,7 @@ public class LustreAstBuilder {
 		builder.addEquations(equations);
 		builder.addProperties(properties);
 		builder.addAssertions(assertions);
+		builder.addIvcs(ivcs);
 
 		Node main = builder.build();
 
@@ -476,6 +484,7 @@ public class LustreAstBuilder {
 		List<VarDecl> locals = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<Expr> assertions = new ArrayList<>();
+		List<String> ivcs = new ArrayList<>();
 
 		// add assumption history variable
 		IdExpr assumHist = new IdExpr(assumeHistSufix);
@@ -497,9 +506,15 @@ public class LustreAstBuilder {
 			assertions.add(new BinaryExpr(lemmaId, BinaryOp.EQUAL, statement.expr));
 		}
 
+		int k = 0;
 		Expr guarConjExpr = new BoolExpr(true);
 		for (AgreeStatement statement : agreeNode.guarantees) {
-			guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
+			String inputName = guarSuffix + k++;
+			locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+			IdExpr guarId = new IdExpr(inputName);
+			equations.add(new Equation(guarId, statement.expr));
+			ivcs.add(guarId.id);
+			guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
 		}
 		for (AgreeStatement statement : agreeNode.lemmas) {
 			guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
@@ -514,9 +529,9 @@ public class LustreAstBuilder {
 		}
 
 		// create properties for the patterns
-		int k = 0;
+		int l = 0;
 		for (AgreeStatement patternPropState : agreeNode.patternProps) {
-			String patternVarName = patternPropSuffix + k++;
+			String patternVarName = patternPropSuffix + l++;
 			inputs.add(new AgreeVar(patternVarName, NamedType.BOOL, patternPropState, agreeNode.compInst));
 			assertions.add(new BinaryExpr(new IdExpr(patternVarName), BinaryOp.EQUAL, patternPropState.expr));
 		}
@@ -551,6 +566,7 @@ public class LustreAstBuilder {
 		builder.addOutputs(outputs);
 		builder.addLocals(locals);
 		builder.addEquations(equations);
+		builder.addIvcs(ivcs);
 
 		return builder.build();
 	}
