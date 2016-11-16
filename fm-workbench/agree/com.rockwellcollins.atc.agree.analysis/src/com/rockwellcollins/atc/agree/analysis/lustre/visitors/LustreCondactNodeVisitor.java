@@ -53,8 +53,8 @@ public class LustreCondactNodeVisitor extends ExprMapVisitor {
 	private Map<String, IdExpr> stateVarMap = new HashMap<>();
 
 	public static Node translate(AgreeProgram agreeProgram, AgreeNode agreeNode, Node node) {
-		if (node.equations.size() != 1) {
-			throw new AgreeException("We expect that this node only has a single equation representing "
+		if (node.outputs.size() != 1) {
+			throw new AgreeException("We expect that this node only has a single output representing "
 					+ "all constraints for the contract");
 		}
 		
@@ -95,15 +95,34 @@ public class LustreCondactNodeVisitor extends ExprMapVisitor {
 				to("initExpr", agreeNode.initialConstraint));
 
 		// re-write the old expression using the visitor
-		Equation oldEq = node.equations.get(0);
-		Expr newExpr = oldEq.expr.accept(visitor);
-		newExpr = new BinaryExpr(new IdExpr(clockVarName), BinaryOp.IMPLIES, newExpr);
+		for(Equation eq : node.equations){
+			if(eq.lhs.size() != 1){
+				throw new AgreeException("we expect that all eqs have a single lhs now");
+			}
+			IdExpr var = eq.lhs.get(0);
+			boolean isLocal = false;
+			for(VarDecl local : node.locals){
+				if(local.id.equals(var.id)){
+					isLocal = true;
+					break;
+				}
+			}
+			if(isLocal){
+				Expr newExpr = eq.expr.accept(visitor);
+				newExpr = new IfThenElseExpr(new IdExpr(clockVarName), newExpr, new UnaryExpr(UnaryOp.PRE, var));
+				builder.addEquation(new Equation(eq.lhs, newExpr));
+			}else{
+				//this is the only output
+				Expr newExpr = eq.expr.accept(visitor);
+				newExpr = new BinaryExpr(new IdExpr(clockVarName), BinaryOp.IMPLIES, newExpr);
+				builder.addEquation(new Equation(eq.lhs,
+						new BinaryExpr(initConstr, BinaryOp.AND, new BinaryExpr(holdExpr, BinaryOp.AND, newExpr))));
+			}
+		}
 		//this var equations should be populated by the visitor call above
 		builder.addEquations(visitor.stateVarEqs);
 		builder.addLocals(visitor.stateVars);
-
-		builder.addEquation(new Equation(oldEq.lhs,
-				new BinaryExpr(initConstr, BinaryOp.AND, new BinaryExpr(holdExpr, BinaryOp.AND, newExpr))));
+		
 
 		return builder.build();
 	}
