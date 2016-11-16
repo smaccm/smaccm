@@ -460,7 +460,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getValAssignment_2_1(), "rule__TermExpr__ValAssignment_2_1");
 					put(grammarAccess.getTermExprAccess().getExprAssignment_3_3(), "rule__TermExpr__ExprAssignment_3_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_4_3(), "rule__TermExpr__IdAssignment_4_3");
-					put(grammarAccess.getTermExprAccess().getIdAssignment_5_3(), "rule__TermExpr__IdAssignment_5_3");
+					put(grammarAccess.getTermExprAccess().getExprAssignment_5_3(), "rule__TermExpr__ExprAssignment_5_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_6_3(), "rule__TermExpr__IdAssignment_6_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_7_3(), "rule__TermExpr__IdAssignment_7_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_8_3(), "rule__TermExpr__IdAssignment_8_3");

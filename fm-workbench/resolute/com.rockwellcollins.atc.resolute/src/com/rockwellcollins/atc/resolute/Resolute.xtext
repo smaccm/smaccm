@@ -206,6 +206,7 @@ BuiltInFn:
 |	'is_memory'
 |	'is_thread'
 |	'is_process'
+|	'is_data'
 
 |	'is_subprogram'
 |   'is_of_type'

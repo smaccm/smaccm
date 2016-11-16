@@ -54809,26 +54809,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TermExpr__Group_5__3__Impl"
-    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19619:1: rule__TermExpr__Group_5__3__Impl : ( ( rule__TermExpr__IdAssignment_5_3 ) ) ;
+    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19619:1: rule__TermExpr__Group_5__3__Impl : ( ( rule__TermExpr__ExprAssignment_5_3 ) ) ;
     public final void rule__TermExpr__Group_5__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19623:1: ( ( ( rule__TermExpr__IdAssignment_5_3 ) ) )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19624:1: ( ( rule__TermExpr__IdAssignment_5_3 ) )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19623:1: ( ( ( rule__TermExpr__ExprAssignment_5_3 ) ) )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19624:1: ( ( rule__TermExpr__ExprAssignment_5_3 ) )
             {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19624:1: ( ( rule__TermExpr__IdAssignment_5_3 ) )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19625:1: ( rule__TermExpr__IdAssignment_5_3 )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19624:1: ( ( rule__TermExpr__ExprAssignment_5_3 ) )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19625:1: ( rule__TermExpr__ExprAssignment_5_3 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getIdAssignment_5_3()); 
+               before(grammarAccess.getTermExprAccess().getExprAssignment_5_3()); 
             }
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19626:1: ( rule__TermExpr__IdAssignment_5_3 )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19626:2: rule__TermExpr__IdAssignment_5_3
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19626:1: ( rule__TermExpr__ExprAssignment_5_3 )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:19626:2: rule__TermExpr__ExprAssignment_5_3
             {
-            pushFollow(FollowSets001.FOLLOW_rule__TermExpr__IdAssignment_5_3_in_rule__TermExpr__Group_5__3__Impl39488);
-            rule__TermExpr__IdAssignment_5_3();
+            pushFollow(FollowSets001.FOLLOW_rule__TermExpr__ExprAssignment_5_3_in_rule__TermExpr__Group_5__3__Impl39488);
+            rule__TermExpr__ExprAssignment_5_3();
 
             state._fsp--;
             if (state.failed) return ;
@@ -54836,7 +54836,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getIdAssignment_5_3()); 
+               after(grammarAccess.getTermExprAccess().getExprAssignment_5_3()); 
             }
 
             }
@@ -77416,29 +77416,29 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__TermExpr__IdAssignment_4_3"
 
 
-    // $ANTLR start "rule__TermExpr__IdAssignment_5_3"
-    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27924:1: rule__TermExpr__IdAssignment_5_3 : ( ruleNestedDotID ) ;
-    public final void rule__TermExpr__IdAssignment_5_3() throws RecognitionException {
+    // $ANTLR start "rule__TermExpr__ExprAssignment_5_3"
+    // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27924:1: rule__TermExpr__ExprAssignment_5_3 : ( ruleExpr ) ;
+    public final void rule__TermExpr__ExprAssignment_5_3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27928:1: ( ( ruleNestedDotID ) )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27929:1: ( ruleNestedDotID )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27928:1: ( ( ruleExpr ) )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27929:1: ( ruleExpr )
             {
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27929:1: ( ruleNestedDotID )
-            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27930:1: ruleNestedDotID
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27929:1: ( ruleExpr )
+            // ../com.rockwellcollins.atc.agree.ui/src-gen/com/rockwellcollins/atc/agree/ui/contentassist/antlr/internal/InternalAgreeParser.g:27930:1: ruleExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_5_3_0()); 
+               before(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_5_3_0()); 
             }
-            pushFollow(FollowSets002.FOLLOW_ruleNestedDotID_in_rule__TermExpr__IdAssignment_5_355965);
-            ruleNestedDotID();
+            pushFollow(FollowSets002.FOLLOW_ruleExpr_in_rule__TermExpr__ExprAssignment_5_355965);
+            ruleExpr();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_5_3_0()); 
+               after(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_5_3_0()); 
             }
 
             }
@@ -77458,7 +77458,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__TermExpr__IdAssignment_5_3"
+    // $ANTLR end "rule__TermExpr__ExprAssignment_5_3"
 
 
     // $ANTLR start "rule__TermExpr__IdAssignment_6_3"
@@ -82729,12 +82729,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         public static final BitSet FOLLOW_rule__TermExpr__Group_5__1__Impl_in_rule__TermExpr__Group_5__139334 = new BitSet(new long[]{0x0000000000000000L,0x0000004000000000L});
         public static final BitSet FOLLOW_rule__TermExpr__Group_5__2_in_rule__TermExpr__Group_5__139337 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_Latched_in_rule__TermExpr__Group_5__1__Impl39365 = new BitSet(new long[]{0x0000000000000002L});
-        public static final BitSet FOLLOW_rule__TermExpr__Group_5__2__Impl_in_rule__TermExpr__Group_5__239396 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000002L});
+        public static final BitSet FOLLOW_rule__TermExpr__Group_5__2__Impl_in_rule__TermExpr__Group_5__239396 = new BitSet(new long[]{0x0038800403000020L,0x50000844003000ECL,0x0000000000000002L});
         public static final BitSet FOLLOW_rule__TermExpr__Group_5__3_in_rule__TermExpr__Group_5__239399 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_LeftParenthesis_in_rule__TermExpr__Group_5__2__Impl39427 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_rule__TermExpr__Group_5__3__Impl_in_rule__TermExpr__Group_5__339458 = new BitSet(new long[]{0x0000000000000000L,0x0000008000000000L});
         public static final BitSet FOLLOW_rule__TermExpr__Group_5__4_in_rule__TermExpr__Group_5__339461 = new BitSet(new long[]{0x0000000000000002L});
-        public static final BitSet FOLLOW_rule__TermExpr__IdAssignment_5_3_in_rule__TermExpr__Group_5__3__Impl39488 = new BitSet(new long[]{0x0000000000000002L});
+        public static final BitSet FOLLOW_rule__TermExpr__ExprAssignment_5_3_in_rule__TermExpr__Group_5__3__Impl39488 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_rule__TermExpr__Group_5__4__Impl_in_rule__TermExpr__Group_5__439518 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_RightParenthesis_in_rule__TermExpr__Group_5__4__Impl39546 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_rule__TermExpr__Group_6__0__Impl_in_rule__TermExpr__Group_6__039587 = new BitSet(new long[]{0x0000800000000000L});
@@ -83363,7 +83363,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         public static final BitSet FOLLOW_RULE_INTEGER_LIT_in_rule__TermExpr__ValAssignment_2_155872 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_ruleExpr_in_rule__TermExpr__ExprAssignment_3_355903 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_ruleNestedDotID_in_rule__TermExpr__IdAssignment_4_355934 = new BitSet(new long[]{0x0000000000000002L});
-        public static final BitSet FOLLOW_ruleNestedDotID_in_rule__TermExpr__IdAssignment_5_355965 = new BitSet(new long[]{0x0000000000000002L});
+        public static final BitSet FOLLOW_ruleExpr_in_rule__TermExpr__ExprAssignment_5_355965 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_ruleNestedDotID_in_rule__TermExpr__IdAssignment_6_355996 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_ruleNestedDotID_in_rule__TermExpr__IdAssignment_7_356027 = new BitSet(new long[]{0x0000000000000002L});
         public static final BitSet FOLLOW_ruleNestedDotID_in_rule__TermExpr__IdAssignment_8_356058 = new BitSet(new long[]{0x0000000000000002L});

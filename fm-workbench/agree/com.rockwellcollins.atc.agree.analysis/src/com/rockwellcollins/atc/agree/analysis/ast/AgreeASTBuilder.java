@@ -1536,7 +1536,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
     @Override
     public Expr caseLatchedExpr(LatchedExpr expr){
         
-        IdExpr nestIdExpr = (IdExpr) doSwitch(expr.getId());
+        IdExpr nestIdExpr = (IdExpr) doSwitch(expr.getExpr());
         String latchedStr = nestIdExpr.id + AgreeInlineLatchedConnections.LATCHED_SUFFIX;
         return new IdExpr(latchedStr);
     }

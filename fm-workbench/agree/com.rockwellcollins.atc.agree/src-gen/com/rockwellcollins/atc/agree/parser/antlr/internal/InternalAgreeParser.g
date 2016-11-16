@@ -6021,17 +6021,17 @@ ruleTermExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_5_3_0()); 
+	        newCompositeNode(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_5_3_0()); 
 	    }
-		lv_id_18_0=ruleNestedDotID		{
+		lv_expr_18_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getTermExprRule());
 	        }
        		set(
        			$current, 
-       			"id",
-        		lv_id_18_0, 
-        		"NestedDotID");
+       			"expr",
+        		lv_expr_18_0, 
+        		"Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 

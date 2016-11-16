@@ -195,15 +195,12 @@ public class ResoluteBuiltInFnCallEvaluator {
 				ComponentInstance ci;
 				ComponentType ct;
 				ci = (ComponentInstance) element;
-
-				if ((ci == null) || (ci.getSubcomponent() == null)) {
-					return bool(false);
+				ComponentClassifier classifier = ci.getComponentClassifier();
+				if(classifier instanceof ComponentImplementation){
+					ct = ((ComponentImplementation) classifier).getType();
+				}else{
+					ct = (ComponentType)classifier;
 				}
-
-				ct = ci.getSubcomponent().getComponentType();
-				// cl = (Classifier) type;
-				// return bool ((ct == cl ) || (ct.isDescendentOf(cl)));
-
 				while (ct != null) {
 					if (ct == type) {
 						return bool(true);
@@ -409,6 +406,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "is_process": {
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESS);
+		}
+		
+		case "is_data": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.DATA);
 		}
 
 		case "is_event_port": {

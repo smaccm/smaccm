@@ -873,7 +873,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     id=NestedDotID
+	 *     expr=Expr
 	 */
 	protected void sequence_TermExpr(EObject context, LatchedExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

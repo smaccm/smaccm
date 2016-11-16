@@ -238,7 +238,7 @@ TermExpr returns Expr:
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
 	| {EventExpr} 'event' '(' id = NestedDotID ')'
-	| {LatchedExpr} 'latched' '(' id = NestedDotID ')'
+	| {LatchedExpr} 'latched' '(' expr = Expr ')'
 	| {TimeOfExpr} 'timeof' '(' id = NestedDotID ')'
 	| {TimeRiseExpr} 'timerise' '(' id = NestedDotID ')'
 	| {TimeFallExpr} 'timefall' '(' id = NestedDotID ')'

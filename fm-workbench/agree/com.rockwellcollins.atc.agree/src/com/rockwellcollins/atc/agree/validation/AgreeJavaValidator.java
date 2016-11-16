@@ -350,8 +350,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	
 	@Check(CheckType.FAST)
     public void checkLatchedExpr(LatchedExpr latched) {
-        NestedDotID nestId = latched.getId();
-        NamedElement namedEl = getFinalNestId(nestId);
         
         //get container
         EObject container = latched.eContainer();
@@ -372,21 +370,40 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
                 }
             }
             if(!foundLatchedStatement){
-                error(latched, "Latched expressiosn can only appear in component implementations "
+                error(latched, "Latched expressions can only appear in component implementations "
                         + "that contain a latched synchrony statement");
             }
         }else{
             error(latched, "Latched expressions can only appear in component implementations");
         }
         
-        if (!(namedEl instanceof DataPort) || !((DataPort)namedEl).isIn()) {
-        	//check to see if it is an "agree_input"
-			EObject namedElContainer = namedEl.eContainer();
-			if (!(namedElContainer instanceof InputStatement)) {
-				error(latched, "Latched expressions are only valid for input data ports");
+		Expr expr = latched.getExpr();
+		NestedDotID nestId = null;
+		if (expr instanceof NestedDotID) {
+			nestId = (NestedDotID)expr;
+		} else if (expr instanceof EventExpr) {
+			EventExpr eventExpr = (EventExpr)expr;
+			nestId = eventExpr.getId();
+		}
+		
+		if (nestId != null) {
+			NamedElement namedEl = getFinalNestId(nestId);
+			if ((namedEl instanceof DataPort) && ((DataPort) namedEl).isIn()) {
+				return;
+			}else if ((namedEl instanceof EventDataPort) && ((EventDataPort) namedEl).isIn()) {
+				return;
+			} else {
+				// check to see if it is an "agree_input"
+				EObject namedElContainer = namedEl.eContainer();
+				if (namedElContainer instanceof InputStatement) {
+					return;
+				}
 			}
-        }
-    }
+		}
+	
+		
+		error(latched, "Latched expressions are only valid for input data ports or event expressions over input event data ports");
+	}
 
 	@Check(CheckType.FAST)
 	public void checkSynchStatement(SynchStatement sync) {
@@ -2414,7 +2431,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		} else if (expr instanceof TimeExpr) {
 		    return REAL;
 		} else if (expr instanceof LatchedExpr){
-		    return getAgreeType(((LatchedExpr) expr).getId());
+		    return getAgreeType(((LatchedExpr) expr).getExpr());
 		} else if(expr instanceof TimeOfExpr ||
 				  expr instanceof TimeRiseExpr ||
 				  expr instanceof TimeFallExpr){

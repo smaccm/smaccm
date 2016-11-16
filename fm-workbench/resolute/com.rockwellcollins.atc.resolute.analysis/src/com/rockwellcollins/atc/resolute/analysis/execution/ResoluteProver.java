@@ -97,6 +97,9 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			ResoluteResult leftResult = doSwitch(object.getLeft());
 			switch (op) {
 			case "and": {
+				if(!leftResult.isValid()){
+					return leftResult;
+				}
 				ResoluteResult rightResult = doSwitch(object.getRight());
 
 				ResoluteResult result = new ResoluteResult(leftResult, rightResult);
@@ -108,7 +111,13 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				if (leftResult.isValid()) {
 					return leftResult;
 				} else {
-					return doSwitch(object.getRight());
+					ResoluteResult rightResult = doSwitch(object.getRight());
+					if(rightResult.isValid()){
+						return rightResult;
+					}
+					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+					result.setValid(false);
+					return result;
 				}
 			case "andthen":
 				if (!leftResult.isValid()) {
