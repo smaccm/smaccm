@@ -24,7 +24,7 @@ property set TB_SYS is
     -- For build output.
     Output_Directory: aadlstring applies to (system implementation);
 
-    OS : enumeration (eChronos, CAmkES, VxWorks) applies to (system implementation);
+    OS : enumeration (eChronos, CAmkES, VxWorks, linux) applies to (system implementation);
     HW : enumeration (PIXHAWK, PPC, ODROID, x86, QEMU) applies to (system implementation);
 
     -- For integrating with other code

@@ -48,6 +48,7 @@ import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.CAmkES.CAmkES_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.VxWorks.VxWorks_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.eChronos.EChronos_CodeGenerator;
+import edu.umn.cs.crisys.tb.codegen.linux.Linux_CodeGenerator;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.parse.AadlModelParser;
 import edu.umn.cs.crisys.tb.util.Util;
@@ -152,7 +153,10 @@ public class TbHandler extends AadlHandler {
 			} else if (model.getOsTarget() == OSModel.OSTarget.VxWorks ){
 			  VxWorks_CodeGenerator gen = new VxWorks_CodeGenerator(log, model, aadlDir, outputDir);
 			  gen.write();
-			} else {
+         } else if (model.getOsTarget() == OSModel.OSTarget.linux) {
+            Linux_CodeGenerator gen = new Linux_CodeGenerator(log, model, aadlDir, outputDir);
+            gen.write();
+         } else {
 			  logger.error("trusted build OS target: [" + model.getOsTarget() + "] not recognized.");
 			}
 			logger.status("trusted build code generation complete.");

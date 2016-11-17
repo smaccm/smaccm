@@ -7,17 +7,12 @@ extern <sharedDataAccessor.type.name> *<sharedDataAccessor.name>;
 
 
 componentGlueCodeHeaderBody(threadImpl) ::= <<
-#include <\u003C>semaphore.h<\u003E>
-
 
 <componentGlueCodeHeaderBodyFunctions(threadImpl)>
-
 <if(threadImpl.sharedDataAccessorList)>
-    // declarations for shared data.
-    <threadImpl.sharedDataAccessorList:sharedDataDecl()>
+// declarations for shared data.
+<threadImpl.sharedDataAccessorList:sharedDataDecl()>
 <endif>
 
-    <writeModelMutexes(threadImpl.model, "extern")>
-
-
+<writeModelMutexes(threadImpl.model, "extern")>
 >>

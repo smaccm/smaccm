@@ -12,6 +12,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
@@ -38,7 +39,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks {
+public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
@@ -259,7 +260,39 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
       String result = ""; 
       return result;
    }
-   
+
+   /************************************************************
+    * 
+    * linux-specific functions 
+    * 
+    ************************************************************/
+
+   @Override
+   public String getLinuxAddCommonHFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileIncludes() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileInitializers() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileDestructors() {
+      return "";
+   }
+
+
    /************************************************************
     * 
     * Names functions used by the .stg templates for periodic dispatchers
@@ -296,7 +329,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
       return ehl;
    }
 
-   public String getDispatcherMainLockReleaseStmt() {
+   public String getMainLockReleaseStmt() {
       return (EmitterFactory.threadImplementation(
                this.getModelElement().getOwner())).
                   getDispatcherMainLockReleaseStmt();
@@ -346,14 +379,15 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
             writeType();
    }
 
+   
    // middleware functions; these must be compatible with the OS.
    public String getIncomingWriterName() {
       PortFeature dp = getModelElement();
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
          return dp.getName() + writeType() ;
-      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
-         return getLpcPortWriterName();
-      } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
+      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos || 
+                 model.getOsTarget() == OSModel.OSTarget.VxWorks ||
+                 model.getOsTarget() == OSModel.OSTarget.linux) {
          return getLpcPortWriterName();
       } else {
          throw new TbException("Error: getIncomingPortWriterName: OS " + model.getOsTarget() + " is not a known OS target.");

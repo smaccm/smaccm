@@ -43,9 +43,29 @@
 
 	-> For timers, use linux timer, I suppose.  Add it to the periodic port support for linux.
 	
-
-		
+	-> Holy crap: have I forgotten to set priorities for Little Bird threads?
 	
+	-> (Future work) make extensions event-based at "known" points in the emission process.
+
+	-> For linux processes:
+		FOR NOW: 
+			Need something up and running.  
+			Everything is global.
+			
+			
+		TO DO:
+		port construction & visibility:
+			Some ports span processes and others do not.
+			Note: we will only support data ports eventually.
+			
+			The way to support this is to have hooks for both global declarations and process-level declarations in
+			the linux emitter.  The port can choose whether to define itself at global scope, process scope, or 
+			thread scope.
+			
+			We still need a way of connecting processes to the global definitions, but this isn't too bad.
+			We also should have separate mechanisms for creating shared (cross proc) mutexes and in-proc mutexes.
+			
+			Then we should have a process-level header and C file.  
 	   
 To-dos: 
 	-> Switch from Kochab to <foo>, where <voo> has the different mutex ceiling protocol
@@ -63,6 +83,8 @@ To-dos:
 	-> Check declarations for data ports: readerWriterImplVarDecl
 	-> check on how we are wiring to periodic ports.
 	-> check whether SIGRTMIN is thread safe.
+	-> for Ast and Names classes, Lists sometimes have <typeName>s and sometimes <typeName>List.  Make it uniform.
+	
 	
 	
 	O.k., OSModel should have a mechanism to return the set of process implementations.
@@ -71,12 +93,36 @@ To-dos:
 		getComponentClassifier().getChildren() returns the thread implementations (and ports, etc.)
 		getChildren() returns the thread instances.
 	
-		So, given that I have a map from OSATE thread instances to TB thread instances: 
+		! So, given that I have a map from OSATE thread instances to TB thread instances: 
 			- I can connect the process instances to the thread instances.
 			- I can construct a map from OSATE process implementations to TB process implementations
 			- I can add the newly constructed process instance to the process implementation
 			- I can add the process implementation (if not already existing) to the list of process implementations.
 			- and done.
+	
+	O.k., from here: time to add the code for the main function to fork the code.
+	
+	- Done.  Now onto testing :).
+	
+	! Need to join threads for each proc.
+	! destruct the monitor mutexes!
+	! split the mutex creation into a shared / non-shared mutex
+	! Change the name of the semaphore for the thread release.
+	! Change the name of destructSem to the linux variant.
+	! put "tb_linux_support.h" in the aadl_decls file, and 
+		use the generic TB types. 
+	! comment and add headers for wait() command.	
+	! I have an "unnecessary" call to initialize_periodic_dispatcher() for linux.  Should I get rid of it or try to standardize?  I'm getting rid of it.
+	! fix template error in CommonComponentHeader.
+	
+	-> Do we care about memory/stack sizes for processes in linux?
+	
+	-> Somewhere I'm defining an external type and I do not know
+		whether I have properly specified its header.
+	
+	-> Consider moving to a condition variable; this seems to be
+		"preferred" for linux.
+		
 	
 Old version:
 	! Allow external configuration of timer on VxWorks.
@@ -195,4 +241,16 @@ VMs:
 
 		RPC Call?!?
         connection seL4RPCCall cross_vm_putchar(from string_reverse.putchar,
-                                                to serial.vm_putchar);														
+                                                to serial.vm_putchar);			
+
+
+Meeting with Pape:
+==================
+
+Get desktop proper size.
+
+To discuss:
+	- Meaning of interfaces
+	- Outstanding issues: bringing in per-interface-type .c/.h files: is this something you need?
+	- 
+	

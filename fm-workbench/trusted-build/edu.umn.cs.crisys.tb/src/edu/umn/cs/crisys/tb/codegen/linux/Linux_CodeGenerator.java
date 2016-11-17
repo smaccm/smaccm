@@ -29,7 +29,7 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
 	// so write threadName_write_portName for each port.
 
   public Linux_CodeGenerator(Logger log, OSModel model, File aadlDirectory, File outputDir) {
-		super(log, model, aadlDirectory, outputDir, "VxWorks");
+		super(log, model, aadlDirectory, outputDir, "linux");
 	}
 
   protected File getGlobalIncludeDirectory(File rootDirectory) {
@@ -84,7 +84,9 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
   
   // create this only if we have periodic threads.
  
-  // this is a no-op for VxWorks.
+  // this is a no-op for VxWorks.  For Linux, we need to copy the 
+  // platform support files.
+  
   @Override
   public void createPeriodicDispatcherComponent() throws TbFailure {   
      InputStream cSrcFileStream = null;
@@ -103,7 +105,7 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
         cSrcFileStream = Util.findConfigFile(c_file_name);
         cDstFileStream = new FileOutputStream(cdest);
         copyFile(cSrcFileStream, cDstFileStream);
-        hSrcFileStream = Util.findConfigFile("clock_driver.h");
+        hSrcFileStream = Util.findConfigFile(h_file_name);
         hDstFileStream = new FileOutputStream(hdest); 
         copyFile(hSrcFileStream, hDstFileStream);
          

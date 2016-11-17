@@ -112,10 +112,10 @@ userEntrypointCallerFn(dispatcher) ::= <<
  ************************************************************************/
 <userEntrypointCallerPrototype(dispatcher)> {
     <dispatcher.portDispatcherLock>
-    <dispatcher.threadImplementation.portList:{port | port.writePortPreEntrypoint}>
+    <dispatcher.threadImplementation.portList:{port | <port.writePortPreEntrypoint>}>
     <dispatcher.maxDispatchContracts.passiveContracts:userEntrypointCallerAssignGlobals(dispatcher)>
     <dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
-    <dispatcher.threadImplementation.portList:{port | port.writePortPostEntrypoint}>
+    <dispatcher.threadImplementation.portList:{port | <port.writePortPostEntrypoint>}>
     <dispatcher.portDispatcherUnlock>
 }
 
@@ -141,13 +141,6 @@ drainDispatcher(dispatcher) ::= <<
 >>
 
 
-dispatcherComponentEventDecls(dispatcher) ::=  <<
-
-<if(dispatcher.isPeriodic)><dispatcherComponentPeriodicEventDecls(dispatcher)>
-<elseif(dispatcher.isIRQ)><dispatcherComponentIRQEventDecls(dispatcher)>
-<else> <endif>
->>
-
 dispatcherComponentMainFunction(threadImpl) ::= <<
 /************************************************************************
  * <osSpecificThreadEntrypoint(threadImpl)>
@@ -157,7 +150,7 @@ dispatcherComponentMainFunction(threadImpl) ::= <<
 
 <osSpecificThreadEntrypoint(threadImpl)> {
     <commentIf("Port initialization routines",
-               (threadImpl.portList:{ port | port.writePortThreadInitializer}))><\\>
+               (threadImpl.portList:{ port | <port.writePortThreadInitializer>}))><\\>
 
     <if(threadImpl.hasInitializeEntrypoint)>
     // thread initialization routines (if any)...
@@ -174,7 +167,7 @@ dispatcherComponentMainFunction(threadImpl) ::= <<
         <dispatcherMainLockWaitStmt(threadImpl)>
 
         // Drain the queues
-        <threadImpl.portList:{ port | port.writePortEventResponder} >
+        <threadImpl.portList:{ port | <port.writePortEventResponder> } >
     }
 
     // Won't ever get here, but form must be followed
@@ -195,7 +188,7 @@ componentCFileDecls(threadImpl) ::= <<
 #include <\u0022><threadImpl.componentGlueCodeHFileName><\u0022>
 <osSpecificIncludeFiles(threadImpl)>
 
-<threadImpl.portList: {port | port.writePortDeclarations }>
+<threadImpl.portList: {port | <port.writePortDeclarations> }>
 
 <if(threadImpl.isActive)><\\>
 <threadImpl.localActiveThreadConnectionFrontier:osSpecificComponentLocalCallerFunction()>

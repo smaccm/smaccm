@@ -1,12 +1,23 @@
 #include "linux_timer_support.h"
+#include <assert.h>
 
 
-void tb_mutex_create(TB_MUTEX_TYPE *mtx) {
+void tb_intraproc_mutex_create(TB_MUTEX_TYPE *mtx) {
+	int tb_result;
+	tb_result = pthread_mutex_init(mtx, NULL);
+	assert(tb_result == 0);
+}
+
+void tb_interproc_mutex_create(TB_MUTEX_TYPE *mtx) {
 	pthread_mutexattr_t tb_attr;
 	int tb_result;
+	tb_result = pthread_mutexattr_init(&tb_attr);
+	assert(tb_result == 0);
 	tb_result = pthread_mutexattr_setpshared(&tb_mutex_attributes, PTHREAD_PROCESS_SHARED);
 	assert(tb_result == 0);
 	tb_result = pthread_mutex_init(mtx, &tb_attr);
+	assert(tb_result == 0);
+	tb_result = pthread_mutexattr_destroy(&tb_attr);
 	assert(tb_result == 0);
 }
 
@@ -43,17 +54,39 @@ void tb_sem_destroy(TB_SEM_TYPE *sem) {
 }
 
 void tb_sem_post(TB_SEM_TYPE *sem) {
-	int tb_result = 0; 
+	int tb_result; 
 	tb_result = sem_post(sem); 
 	assert(sem != -1); 
 }
 
 void tb_sem_wait(TB_SEM_TYPE *sem) {
-	int tb_result = 0; 
+	int tb_result; 
 	tb_result = sem_wait(sem);
 	assert(sem != -1); 
 }
 
+void tb_thread_create(TB_THREAD_TYPE *thread, 
+					  int priority, 
+					  (void *)(*entrypoint)(void *), 
+					  void *arg) {
+	int tb_result;
+	pthread_attr_t tattr; 
+	sched_param schedule_attributes; 
+	
+	tb_result = pthread_attr_init (&tattr);	
+	assert(tb_result == 0); 
+	tb_result = pthread_attr_getschedparam(&tattr, &schedule_attributes); 
+	assert(tb_result == 0);
+	schedule_attributes.priority = priority; 
+	tb_result = pthread_attr_setschedparam(&tattr, &schedule_attributes);
+	assert(tb_result == 0);
+	tb_result = pthread_attr_setschedpolicy(&tattr, SCHED_RR);
+	assert(tb_result == 0);
+	tb_result = pthread_attr_setinheritsched(&tattr, PTHREAD_EXPLICIT_SCHED);
+	assert(tb_result == 0);
+	tb_result = pthread_create(&thread, &tattr, entrypoint, arg);
+	assert(tb_result == 0);
+}
 
 
 /* NB: period is in MICROSECONDS */

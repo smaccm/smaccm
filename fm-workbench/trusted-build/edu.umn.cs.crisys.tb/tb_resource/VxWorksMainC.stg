@@ -50,7 +50,7 @@ assert(<m> != NULL);
 
 createMutexes(model) ::= <<
 /* create system-implementation level external mutexes */
-<model.externalMutexList:{ m | <m> = <createMtx()>;
+<model.externalMutexList:{ m |<m> = <createMtx()>;
 assert(<m> != NULL);
 }>
 
@@ -63,19 +63,19 @@ assert(<m> != NULL);
 
 deleteActiveThreadMutexes(threadImpl) ::= <<
 semDelete(<threadImpl.threadDispatcherMutex>);
-<threadImpl.externalMutexes:{ m | semDelete(<m>);
+<threadImpl.externalMutexes:{ m |semDelete(<m>);
 }>
 >>
 
 deletePassiveThreadMutexes(threadImpl) ::= <<
 semDelete(<threadImpl.threadDispatcherMutex>);
-<threadImpl.externalMutexes:{ m | semDelete(<m>);
+<threadImpl.externalMutexes:{ m |semDelete(<m>);
 }>
 >>
 
 deleteMutexes(model) ::= <<
 /* delete system-implementation level external mutexes */
-<model.externalMutexList:{ m | semDelete(<m>);
+<model.externalMutexList:{ m |semDelete(<m>);
 }>
 
 /* delete active thread mutexes */
@@ -86,7 +86,7 @@ deleteMutexes(model) ::= <<
 >>
 
 threadInitializePorts(threadImpl) ::= <<
-    threadImpl.portList{ port | port.vxWorksAddMainCFileInitializers }
+<threadImpl.portList:{ port |<port.vxWorksAddMainCFileInitializers> }>
 >>
 
 initializePorts(model) ::= <<
@@ -94,7 +94,7 @@ initializePorts(model) ::= <<
 >>
 
 threadDeletePorts(threadImpl) ::= <<
-    threadImpl.portList{ port | port.vxWorksAddMainCFileDestructors }
+<threadImpl.portList:{ port |<port.vxWorksAddMainCFileDestructors> }>
 >>
 
 deletePorts(model) ::= <<
@@ -170,11 +170,11 @@ int trusted_build_main(uint32_t runDurationInSeconds) {
 >>
 
 writeThreadPortIncludes(threadImpl) ::= <<
-<threadImpl.portList:{port|port.vxWorksAddMainCFileIncludes}>
+<threadImpl.portList:{port|<port.vxWorksAddMainCFileIncludes>}>
 >>
 
 writeThreadPortDeclarations(threadImpl) ::= <<
-<threadImpl.portList:{port|port.vxWorksAddMainCFileDeclarations}>
+<threadImpl.portList:{port|<port.vxWorksAddMainCFileDeclarations>}>
 >>
 
 

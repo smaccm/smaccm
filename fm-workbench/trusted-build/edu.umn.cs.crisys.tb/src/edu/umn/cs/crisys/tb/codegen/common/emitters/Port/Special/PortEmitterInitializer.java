@@ -10,6 +10,7 @@ import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
@@ -32,7 +33,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks {
+public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
@@ -231,6 +232,37 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
    @Override
    public String getCamkesAddAssemblyFilePortDeclarations() { return ""; }
 
+   /************************************************************
+    * 
+    * linux-specific functions 
+    * 
+    ************************************************************/
+
+   @Override
+   public String getLinuxAddCommonHFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileIncludes() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileInitializers() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileDestructors() {
+      return "";
+   }
+   
    /************************************************************
     * 
     * Names functions used by the .stg templates for input queues

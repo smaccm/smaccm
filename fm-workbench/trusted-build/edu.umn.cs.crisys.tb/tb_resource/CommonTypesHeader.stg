@@ -39,10 +39,9 @@ writeExternal(string) ::= <<
 
 externalTypeDecls(model) ::= <<
 
-// Headers for externally declared types.
-<model.externalTypeHeaders:writeExternal()>
+<commentIf("Headers for externally declared types",
+           (model.externalTypeHeaders:writeExternal()))>
 
-// AADL-defined types
 
 >>
 

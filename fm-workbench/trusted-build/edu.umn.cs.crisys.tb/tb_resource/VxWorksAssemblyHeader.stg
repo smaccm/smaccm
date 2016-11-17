@@ -36,32 +36,32 @@ filePostfix(name, path) ::= <<
 
 
 activeThreadDecls(threadImpl) ::= <<
-<threadImpl.portList:{port|port.vxWorksAddCommonHFileDeclarations}>
+<threadImpl.portList:{port|<port.vxWorksAddCommonHFileDeclarations>}>
 >>
 
 passiveThreadDecls(threadImpl) ::= <<
-<threadImpl.portList:{port|port.vxWorksAddCommonHFileDeclarations}>
+<threadImpl.portList:{port|<port.vxWorksAddCommonHFileDeclarations>}>
 >>
 
 
 writeActiveThreadMutexes(threadImpl, extern) ::= <<
-/* dispatcher, input port, and external mutexes for active thread <threadImpl.normalizedName> */
+/* declarations for active thread <threadImpl.normalizedName> */
 <extern> SEM_ID <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m | <extern> SEM_ID <m>;
+<threadImpl.externalMutexes:{ m |<extern> SEM_ID <m>;
 }>
 >>
 
 writePassiveThreadMutexes(threadImpl, extern) ::= <<
-/* dispatcher and external mutex for passive thread (monitor) <threadImpl.normalizedName> */
+/* declarations for passive thread (monitor) <threadImpl.normalizedName> */
 <extern> SEM_ID <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m | <extern> SEM_ID <m>;
+<threadImpl.externalMutexes:{ m |<extern> SEM_ID <m>;
 }>
 >>
 
 writeModelMutexes(model, extern) ::= <<
-/* model-level external mutexes */
-<model.externalMutexList:{ m | <extern> SEM_ID <m>;
-}>
+<commentIf("model-level external mutexes",
+    (model.externalMutexList:{ m |<extern> SEM_ID <m>;
+}))>
 >>
 
 writeMutexes(model, extern) ::= <<
@@ -80,13 +80,16 @@ headerBody(model) ::= <<
 #include \<taskLib.h>
 #include <\u0022><model.systemTypeHeaderName><\u0022>
 
-// to initialize periodic dispatcher.  Call from main() before
-// starting OS.
+// top-level user callable functions.
+// initialize_periodic_dispatcher: Call from main() before
+// starting OS, then call trusted_build_main(...).
 
 bool initialize_periodic_dispatcher();
 int trusted_build_main(uint32_t runDurationInSeconds);
-   <model.activeThreadImplementations:activeThreadDecls()>
-   <model.passiveThreadImplementations:passiveThreadDecls()>
 
-   <writeMutexes(model, "extern")>
+
+<model.activeThreadImplementations:activeThreadDecls()>
+<model.passiveThreadImplementations:passiveThreadDecls()>
+
+<writeMutexes(model, "extern")>
 >>

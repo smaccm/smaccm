@@ -36,32 +36,36 @@ filePostfix(name, path) ::= <<
 
 
 activeThreadDecls(threadImpl) ::= <<
-<threadImpl.portList:{port|port.linuxAddCommonHFileDeclarations}>
+<threadImpl.portList:{port|<port.linuxAddCommonHFileDeclarations>}>
 >>
 
 passiveThreadDecls(threadImpl) ::= <<
-<threadImpl.portList:{port|port.linuxAddCommonHFileDeclarations}>
+<threadImpl.portList:{port|<port.linuxAddCommonHFileDeclarations>}>
 >>
 
 
 writeActiveThreadMutexes(threadImpl, extern) ::= <<
-/* dispatcher semaphore, input port, and external mutexes for active thread <threadImpl.normalizedName> */
-<extern> sem_t <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m | <extern> pthread_mutex_t <m>;
+
+/* declarations for thread <threadImpl.normalizedName> */
+<extern> TB_SEM_TYPE <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m | <extern> TB_MUTEX_TYPE <m>;
 }>
+
 >>
 
 writePassiveThreadMutexes(threadImpl, extern) ::= <<
-/* dispatcher semaphore and external mutex for passive thread (monitor) <threadImpl.normalizedName> */
-<extern> sem_t <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m | <extern> pthread_mutex_t <m>;
+
+/* declarations for passive thread (monitor) <threadImpl.normalizedName> */
+<extern> TB_SEM_TYPE <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m | <extern> TB_MUTEX_TYPE <m>;
 }>
+
 >>
 
 writeModelMutexes(model, extern) ::= <<
-/* model-level external mutexes */
-<model.externalMutexList:{ m | <extern> pthread_mutex_t <m>;
-}>
+<commentIf("model-level external mutexes",
+        (model.externalMutexList:{ m | <extern> TB_MUTEX_TYPE <m>;
+}))>
 >>
 
 writeMutexes(model, extern) ::= <<
@@ -75,18 +79,15 @@ headerBody(model) ::= <<
 
 #include \<stddef.h>
 #include \<stdint.h>
-#include \<pthread.h>
-#include \<semaphore.h>
-#include \<sys/mman.h>
+#include "tb_linux_support.h"
 #include <\u0022><model.systemTypeHeaderName><\u0022>
 
-// to initialize periodic dispatcher.  Call from main() before
-// starting OS.
-
-bool initialize_periodic_dispatcher();
+// Call trusted_build_main to kick off the whole shebang...
 int trusted_build_main(uint32_t runDurationInSeconds);
-   <model.activeThreadImplementations:activeThreadDecls()>
-   <model.passiveThreadImplementations:passiveThreadDecls()>
 
-   <writeMutexes(model, "extern")>
+// common declarations across threads/processes.
+<model.activeThreadImplementations:activeThreadDecls()>
+<model.passiveThreadImplementations:passiveThreadDecls()>
+
+<writeMutexes(model, "extern")>
 >>

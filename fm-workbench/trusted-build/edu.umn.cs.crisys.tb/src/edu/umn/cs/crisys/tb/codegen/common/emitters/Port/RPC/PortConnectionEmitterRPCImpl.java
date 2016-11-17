@@ -32,7 +32,8 @@ public class PortConnectionEmitterRPCImpl implements PortConnectionEmitterCamkes
   static boolean isSupportedOS(OSTarget p) {
      return (p == OSTarget.CAmkES || 
              p == OSTarget.eChronos || 
-             p == OSTarget.VxWorks);
+             p == OSTarget.VxWorks ||
+             p == OSTarget.linux);
   }
   
   public static boolean isApplicable(PortConnection c) {
@@ -111,7 +112,8 @@ public String getOutgoingPortWriterName() {
      if (os.getOsTarget() == OSModel.OSTarget.CAmkES) {
         return this.getName() + "_" + this.getSourcePort().getType().getWriterFn();
      } else if (os.getOsTarget() == OSModel.OSTarget.eChronos || 
-                os.getOsTarget() == OSModel.OSTarget.VxWorks) {
+                os.getOsTarget() == OSModel.OSTarget.VxWorks ||
+                os.getOsTarget() == OSModel.OSTarget.linux) {
         
         // which RPC type are we supporting?
         PortEmitterRPC rpcPort = (PortEmitterRPC)this.getDestPort(); 

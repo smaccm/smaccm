@@ -46,6 +46,8 @@ import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.TbSTErrorListener;
 import edu.umn.cs.crisys.tb.model.ModelElement;
 import edu.umn.cs.crisys.tb.model.OSModel;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 
@@ -96,6 +98,18 @@ public class Util {
          return getProcessImplementation(element.getParent());
       }
    }
+   
+   
+   public static boolean allConnectionsInProcess(PortFeature pf) {
+      ProcessImplementation pi = Util.getProcessImplementation(pf);
+      for (PortConnection pc : pf.getConnections()) {
+         ProcessImplementation pj = Util.getProcessImplementation(pf);
+         if (pi != pj)
+            return false;
+      }
+      return true;
+   }
+   
    /**********************************************************
     * 
     * Element typing functions

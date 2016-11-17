@@ -289,7 +289,16 @@ public class ThreadImplementationNames implements NameEmitter {
   }
   
   public String getThreadDispatcherMutex() {
-	  return getPrefix() + "_" + ti.getNormalizedName() + "_dispatcher_mtx";
+     OSModel model = this.ti.getModel();
+     if (model.getOsTarget() == OSModel.OSTarget.CAmkES || 
+         model.getOsTarget() == OSModel.OSTarget.eChronos) {
+        return getPrefix() + "_" + ti.getNormalizedName() + "_dispatcher_mtx";
+     } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks || 
+                model.getOsTarget() == OSModel.OSTarget.linux) {
+        return getPrefix() + "_" + ti.getNormalizedName() + "_dispatcher_sem";
+     } else {
+        throw new TbException("getThreadDispatcherMutex: unknown OS");
+     }
   }
   
   public String getEChronosThreadDispatcherMutexConst() {

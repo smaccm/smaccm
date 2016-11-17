@@ -32,8 +32,7 @@ filePrefix(name, date, path, datatypesHeader) ::= <<
 
 componentGlueCodeHeaderBodyFunctions(threadImpl) ::= <<
 
-<threadImpl.portList: {port | port.writePortHPrototypes} >
-
+<threadImpl.portList: {port | <port.writePortHPrototypes> } >
 <if(threadImpl.isExternal)>
 //////////////////////////////////////////////////////////////////////////
 //
@@ -52,4 +51,3 @@ filePostfix(name, path) ::= <<
 
 >>
 
-cStmt(stmt) ::= "<stmt>;"

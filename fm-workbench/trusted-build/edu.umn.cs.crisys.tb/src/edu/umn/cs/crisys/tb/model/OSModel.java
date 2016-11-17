@@ -78,6 +78,7 @@ public class OSModel extends ModelElementBase {
 
    // Implementation objects: external.
    public List<ProcessImplementation> processImplementationList = new ArrayList<>();
+
    public List<ThreadImplementation> threadImplementationList = new ArrayList<>();
    public List<SharedData> sharedDataList = new ArrayList<>();
    public ThreadCalendar threadCalendar = new ThreadCalendar(this);
@@ -259,27 +260,6 @@ public class OSModel extends ModelElementBase {
       return this.sharedDataList;
    }
 
-   /*
-	public List<ThreadImplementation> getInternalThreadImplementations() {
-	  List<ThreadImplementation> internalThreads = new ArrayList<ThreadImplementation>();
-	  for (ThreadImplementation ti: this.threadImplementationList) {
-	    if (!ti.getIsExternal()) {
-	      internalThreads.add(ti);
-	    }
-	  }
-	  return internalThreads;
-	}
-
-	public List<ThreadImplementation> getExternalThreadImplementations() {
-    List<ThreadImplementation> externalThreads = new ArrayList<ThreadImplementation>();
-    for (ThreadImplementation ti: this.threadImplementationList) {
-      if (!ti.getIsExternal()) {
-        externalThreads.add(ti);
-      }
-    }
-    return externalThreads;
-	}
-    */
    public List<ThreadImplementation> getAllThreadImplementations() {
       return threadImplementationList;
    }

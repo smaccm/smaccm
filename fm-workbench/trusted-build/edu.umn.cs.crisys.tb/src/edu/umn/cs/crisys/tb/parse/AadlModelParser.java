@@ -54,7 +54,7 @@ import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.DataSubcomponentImpl;
 import org.osate.aadl2.impl.DataTypeImpl;
 import org.osate.aadl2.impl.PortImpl;
-import org.osate.aadl2.impl.ProcessTypeImpl;
+import org.osate.aadl2.impl.ProcessImplementationImpl;
 import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.aadl2.impl.SubprogramGroupAccessImpl;
 import org.osate.aadl2.impl.SubprogramGroupTypeImpl;
@@ -110,7 +110,7 @@ public class AadlModelParser {
    private ArrayList<ConnectionInstance> connectionInstances;
  
    private Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap = new HashMap<>();
-   private Map<ProcessTypeImpl, ProcessImplementation> processImplementationMap = new HashMap<>();
+   private Map<ProcessImplementationImpl, ProcessImplementation> processImplementationMap = new HashMap<>();
 
    private Map<DataSubcomponentImpl, SharedData> sharedDataMap = new HashMap<>();	
    private HashMap<PortImpl, PortFeature> portMap = new HashMap<PortImpl, PortFeature>();
@@ -142,7 +142,10 @@ public class AadlModelParser {
          model.setOsTarget(OSModel.OSTarget.CAmkES);
       } else if ("vxworks".equalsIgnoreCase(OS)) {
          model.setOsTarget(OSModel.OSTarget.VxWorks);  
-      } else {
+      } else if ("linux".equalsIgnoreCase(OS)) {
+         model.setOsTarget(OSModel.OSTarget.linux);
+      }
+      else {
          this.logger.error("[Trusted Build]: OS target: [" + OS + "] not recognized by trusted build");
          throw new TbException("Parse failure on OS target property ");
       }
@@ -231,6 +234,9 @@ public class AadlModelParser {
       // Initialize thread implementations
       constructThreadImplMap();
 
+      // Initialize process implementations
+      constructProcessImplMap();
+      
       // Initialize connections
       initializeConnections();
 
@@ -274,8 +280,9 @@ public class AadlModelParser {
             // ci.getOwnedPropertyAssociations();
             // ci.getFullName();
             //    	  ci.getChildren();
-            ci.getComponentClassifier();
-            ci.getOwner();
+            //
+            // ci.getComponentClassifier();
+            // ci.getOwner();
          } else if (ci.getCategory() == ComponentCategory.PROCESSOR) {
 
          }
@@ -711,6 +718,77 @@ public class AadlModelParser {
       return ti;
    }
 
+   /***************************************************************************
+    * 
+    * Process constructors - must be called after threads are constructed.
+    * 
+    ***************************************************************************/
+   public ThreadTypeImpl optFindThreadImplementation(Element elem) {
+      if (elem instanceof ThreadSubcomponentImpl) {
+         ThreadSubcomponentImpl tsub = (ThreadSubcomponentImpl) elem;
+         Element classifier = tsub.getClassifier();
+         if (classifier instanceof ThreadTypeImpl) {
+            ThreadTypeImpl tti = (ThreadTypeImpl) classifier;
+            return tti;
+         } else {
+            throw new TbException("optFindThreadImplementation: unexpected behavior.");
+         }
+      } else if (elem instanceof ThreadTypeImpl) {
+         return (ThreadTypeImpl)elem;
+      } 
+      return null;
+   }
+
+   public ProcessImplementation constructProcessImplementation(ProcessImplementationImpl pti) {
+      ProcessImplementation procImpl = 
+            new ProcessImplementation(this.model, pti.getName());
+      for (Element elem: pti.getChildren()) {
+         ThreadTypeImpl tti = optFindThreadImplementation(elem);
+         if (tti != null) {
+            if (this.threadImplementationMap.containsKey(tti)) {
+               ThreadImplementation ti = this.threadImplementationMap.get(tti);
+               procImpl.addThreadImplementation(ti);
+               ti.setParentProcess(procImpl);
+            } else {
+                  throw new TbException("Error: unable to find thread implementation " + elem.toString() + 
+                     " in the thread implementation map.");
+            }
+         }
+      }
+      return procImpl; 
+   }
+   
+   public ProcessInstance constructProcessInstance(ComponentInstance c, ProcessImplementation impl) {
+      ProcessInstance pi = new ProcessInstance(c.getName(), impl);
+      for (Element elem: c.getChildren()) {
+         // these should be thread instances.  They are not.
+         if (this.threadInstanceMap.containsKey(elem)) {
+            ThreadInstance ti = this.threadInstanceMap.get(elem);
+            pi.addThreadInstance(ti);
+         }
+      }
+      return pi; 
+   }
+
+   
+   public Map<ProcessImplementationImpl, ProcessImplementation> constructProcessImplMap() {
+      HashMap<ProcessImplementationImpl, ProcessImplementation> processMap = 
+         new HashMap<>();
+      for (ComponentInstance c: this.processInstanceList) {
+         ProcessImplementationImpl pti = (ProcessImplementationImpl) c.getComponentClassifier(); 
+         ProcessImplementation procImpl; 
+         if (processMap.containsKey(pti)) {
+            procImpl = processMap.get(pti); 
+         } else {
+            procImpl = constructProcessImplementation(pti);
+            this.model.processImplementationList.add(procImpl);
+         }
+         ProcessInstance pi = constructProcessInstance(c, procImpl);
+         procImpl.addProcessInstance(pi);
+      }
+      return processMap;
+   }
+   
    /***************************************************************************
     * 
     * Thread map constructors
@@ -1316,11 +1394,11 @@ public class AadlModelParser {
       }
    }
 
-   public Map<ProcessTypeImpl, ProcessImplementation> getProcessImplementationMap() {
+   public Map<ProcessImplementationImpl, ProcessImplementation> getProcessImplementationMap() {
       return processImplementationMap;
    }
 
-   public void setProcessImplementationMap(Map<ProcessTypeImpl, ProcessImplementation> processImplementationMap) {
+   public void setProcessImplementationMap(Map<ProcessImplementationImpl, ProcessImplementation> processImplementationMap) {
       this.processImplementationMap = processImplementationMap;
    }
 

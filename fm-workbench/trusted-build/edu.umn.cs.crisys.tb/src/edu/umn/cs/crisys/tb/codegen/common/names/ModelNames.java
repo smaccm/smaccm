@@ -16,6 +16,7 @@ import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
+import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.port.ExternalIRQ;
 import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
@@ -88,6 +89,14 @@ public class ModelNames implements NameEmitter {
 
   public List<NameEmitter> getThreadImplementations() {
     return constructThreadImplList(m.getAllThreadImplementations());
+  }
+  
+  public List<ProcessImplementationNames> getProcessImplementations() {
+     List<ProcessImplementationNames> names = new ArrayList<>(); 
+     for (ProcessImplementation pi: m.processImplementationList) {
+        names.add(EmitterFactory.processImplementation(pi));
+     }
+     return names;
   }
 
   public ThreadCalendarNames getThreadCalendar() {

@@ -18,16 +18,19 @@ import "Common.stg"
 //
 ///////////////////////////////////////////////////////////////////////////
 
-writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <%
+writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
 <if(dispatcher.hasData)>
 void <externalHandler.handlerName>(const <dispatcher.type.aadlInputType.name> <dispatcher.name>);
 <else>
 void <externalHandler.handlerName>(void);
 <endif>
-%>
+
+>>
 
 writeUdePrototype(dispatcher) ::= <<
-<dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)>
+<commentIf({user dispatch entrypoints for port <dispatcher.name>},
+           (dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)))>
+
 >>
 
 writePortWriterPrototype(port) ::= <<
@@ -36,14 +39,17 @@ bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
 <else>
 bool <port.localWriterName>(void);
 <endif>
+
 >>
 
 writePortReaderPrototype(port) ::= <<
+// reader prototype for <port.name>
 <if(port.hasData)>
 bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
 <else>
 bool <port.localReaderName>(void);
 <endif>
+
 >>
 
 
@@ -133,10 +139,10 @@ bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
 
 bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
     bool result;
-    <port.portLockStmt>
+    <port.lockStmt>
     result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
-    <port.portUnlockStmt>
-    <if(port.hasDispatcher)><port.dispatcherMainLockReleaseStmt(port)><endif>
+    <port.unlockStmt>
+    <if(port.hasDispatcher)><port.dispatcherMainLockReleaseStmt><endif>
     return result;
 }
 
@@ -152,9 +158,9 @@ bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
 
 bool <port.localReaderName>(<port.type.aadlOutputType.name> arg) {
     bool result;
-    <port.portLockStmt>
+    <port.lockStmt>
     result = <port.queueReadName>(arg);
-    <port.portUnlockStmt>
+    <port.unlockStmt>
     return result;
 }
 
@@ -190,7 +196,7 @@ bool <port.queueIsEmptyName>() {
 
 bool <port.incomingWriterName>() {
     bool result;
-    <port.portLockStmt>
+    <port.lockStmt>
     // Note: possibility for overflow here - I have set (arbitrary) maximum.
     if (<port.index> <\u003C> <port.indexMax>) {
       result = true;
@@ -198,8 +204,8 @@ bool <port.incomingWriterName>() {
     } else {
       result = false;
     }
-    <port.portUnlockStmt>
-    <if(port.hasDispatcher)><dispatcherMainLockReleaseStmt(port)><endif>
+    <port.unlockStmt>
+    <if(port.hasDispatcher)><port.dispatcherMainLockReleaseStmt><endif>
     return true;
 }
 
@@ -214,14 +220,14 @@ bool <port.incomingWriterName>() {
 
 bool <port.localReaderName>() {
     bool result;
-    <port.portLockStmt>
+    <port.lockStmt>
     if (<port.index> > 0) {
         <port.index>--;
         result = true;
     } else {
         result = false;
     }
-    <port.portUnlockStmt>
+    <port.unlockStmt>
     return result;
 }
 
@@ -260,8 +266,8 @@ bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.
 }
 >>
 
-componentRemoteWriterDecl(srcPort) ::= <<
-<remoteCallerFunction(srcPort)>
+componentRemoteWriterDecl(port) ::= <<
+<remoteCallerFunction(port)>
 >>
 
 ///////////////////////////////////////////////////////////////
@@ -281,7 +287,7 @@ while (!<dispatcher.queueIsEmptyName>()) {
 
 eventDispatcher(dispatcher) ::= <<
 while (<dispatcher.aadlReaderFnName>()) {
-    <activeThreadInternalDispatcherName(dispatcher)>();
+    <dispatcher.activeThreadInternalDispatcherName>();
 }
 
 >>
@@ -313,9 +319,11 @@ connectReaderWriter(connection, model) ::= <<
 
 writerDecl(port) ::= <<
 <if(port.hasData)>
-bool <port.incomingWriterName><(const <port.type.camkesInputType.name> arg);
+bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg);
+
 <else>
-bool <port.incomingWriterName><(void);
+
+bool <port.incomingWriterName>(void);
 <endif>
 >>
 

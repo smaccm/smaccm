@@ -16,6 +16,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInpu
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInputPeriodic;
 import edu.umn.cs.crisys.tb.codegen.common.names.*;
 import edu.umn.cs.crisys.tb.model.port.*;
+import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.rpc.*;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.*;
@@ -26,6 +27,9 @@ public class EmitterFactory {
    
    public static PortEmitter port(PortFeature dp) {
 
+      // Mailbox port emitter here!
+      
+      
       // Shared memory only emitter (no RPCs) for linux 
       if (PortEmitterSharedMemDataport.isApplicable(dp)) {
          return new PortEmitterSharedMemDataport(dp);
@@ -113,6 +117,10 @@ public class EmitterFactory {
    
    public static ThreadImplementationNames threadImplementation(ThreadImplementation arg) {
       return new ThreadImplementationNames(arg); 
+   }
+   
+   public static ProcessImplementationNames processImplementation(ProcessImplementation arg) {
+      return new ProcessImplementationNames(arg);
    }
    
    // we do not anticipate differences between these emitters.

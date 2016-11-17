@@ -9,8 +9,8 @@ public class LinuxUtil {
       return "#include \"tb_linux_support.h\" \n";
    }
    
-   public static final String mutexTypeName = "pthread_mutex_t";
-   public static final String semTypeName = "sem_t";
+   public static final String mutexTypeName = "TB_MUTEX_TYPE";
+   public static final String semTypeName = "TB_SEM_TYPE";
    
    public static final Type mutexType = 
          new ExternalType(mutexTypeName, "<pthread.h>");
@@ -19,7 +19,7 @@ public class LinuxUtil {
          new ExternalType(semTypeName, "<semaphore.h>");
    
    private static String writeMutexDeclInternal(String extern, String name) {
-      return extern + mutexTypeName + name + ";\n";
+      return extern + mutexTypeName + " " + name + ";\n";
    }
    
    
@@ -32,8 +32,12 @@ public class LinuxUtil {
    }
 
    
-   public static String createMutex(String name) {
-      return "tb_mutex_create(&" + name + "); \n";
+   public static String createInterprocMutex(String name) {
+      return "tb_interproc_mutex_create(&" + name + "); \n";
+   }
+   
+   public static String createIntraprocMutex(String name) {
+      return "tb_intraproc_mutex_create(&" + name + "); \n";
    }
    
    public static String deleteMutex(String name) {
