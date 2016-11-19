@@ -160,6 +160,7 @@ public class AadlModelParser {
 		
 		// create properties related to timers.
 		try {
+		   this.model.generateSystemTick = true;
 		   if (this.model.getOsTarget() == Model.OSTarget.eChronos) {
 		      this.model.generateSystemTick = 
 		        (PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.GENERATE_SCHEDULER_SYSTICK_IRQ));
@@ -173,7 +174,7 @@ public class AadlModelParser {
 		                 PropertyUtil.BASE_SYSTICK_RATE));
 		     this.model.threadCalendar.setFixedTickRateInMS((int)timerVal);
 		  } catch (Exception e) {
-		     if (this.model.generateSystemTick) {
+		     if (!this.model.generateSystemTick) {
 		         this.logger.error("If system tick rate is set externally, the VxWorks_Systick_Rate property must be set to correctly build periodic threads.");
 		         throw new Aadl2RtosException("If system tick rate is set externally, the VxWorks_Systick_Rate property must be set to correctly build periodic threads.");
 		     }
