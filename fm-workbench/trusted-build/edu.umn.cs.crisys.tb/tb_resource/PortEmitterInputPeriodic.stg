@@ -61,7 +61,7 @@ bool <dispatcher.incomingWriterName><\\>
 (const <dispatcher.type.camkesInputType.name> arg) {
     <dispatcher.dispatchOccurredVar> = true;
     <dispatcher.periodicTimeVar> = <dispatcher.type.camkesInputToVal>arg;
-    <dispatcher.mainLockReleaseStmt>
+    <dispatcher.threadImplementation.mainLockReleaseStmt>
     return true;
 }
 
@@ -135,7 +135,7 @@ void <periodicClockFn(dispatcher)>(void)
     // over the long term.
     <dispatcher.periodicTimeVar> = (long long)tickGet() * (long long)<dispatcher.threadImplementation.model.threadCalendar.msPerTick>;
     
-    dispatcherOk = <dispatcher.mainLockReleaseStmt>
+    dispatcherOk = <dispatcher.threadImplementation.mainLockReleaseStmt>
     
     // NB: the count overflow is a harmless error; it is possible that multiple dispatchers 
     // could post before the thread actually dispatches.
@@ -196,12 +196,10 @@ static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
  ************************************************************************/
 
 void <periodicClockFn(dispatcher)>(union sigval data) {
-    int result;
-    struct periodic_info *info = (struct_periodic_info *)data.sival_ptr;
+    periodic_info *info = (periodic_info *)data.sival_ptr;
     <dispatcher.dispatchOccurredVar> = true;
-    <dispatcher.periodicTimeVar> += ((long long)dispatcher.periodicDispatcherPeriod)*1000LL;
-    result = <dispatcher.mainLockReleaseStmt>
-    assert(result == 0);
+    <dispatcher.periodicTimeVar> += ((long long)<dispatcher.periodicDispatcherPeriod>)*1000LL;
+    <dispatcher.threadImplementation.mainLockReleaseStmt>
 }
 
 >>
@@ -209,8 +207,8 @@ void <periodicClockFn(dispatcher)>(union sigval data) {
 dispatcherComponentInit(dispatcher) ::= <<
 {
    int tb_result;
-   tb_result = make_periodic (<dispatcher.periodicDispatcherPeriod>*1000,
-                   <periodicClockFn>
+   tb_result = tb_make_periodic_timer(<dispatcher.periodicDispatcherPeriod>*1000,
+                   <periodicClockFn(dispatcher)>,
                    &<periodicClock(dispatcher)>);
    assert(tb_result != -1);
 }

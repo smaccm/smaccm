@@ -1,4 +1,4 @@
-#include "linux_timer_support.h"
+#include "tb_linux_support.h"
 #include <assert.h>
 
 
@@ -13,7 +13,7 @@ void tb_interproc_mutex_create(TB_MUTEX_TYPE *mtx) {
 	int tb_result;
 	tb_result = pthread_mutexattr_init(&tb_attr);
 	assert(tb_result == 0);
-	tb_result = pthread_mutexattr_setpshared(&tb_mutex_attributes, PTHREAD_PROCESS_SHARED);
+	tb_result = pthread_mutexattr_setpshared(&tb_attr, PTHREAD_PROCESS_SHARED);
 	assert(tb_result == 0);
 	tb_result = pthread_mutex_init(mtx, &tb_attr);
 	assert(tb_result == 0);
@@ -41,7 +41,7 @@ void tb_mutex_unlock(TB_MUTEX_TYPE *mtx) {
 
 void tb_sem_create(TB_SEM_TYPE *sem) {
 	int tb_result = 0;
-	tb_result = sem_init(&<sem>,
+	tb_result = sem_init(sem,
 						 /* NOT-SHARED */ 0,
 						 /* initial count */ 1);
 	assert(tb_result != -1);
@@ -56,43 +56,50 @@ void tb_sem_destroy(TB_SEM_TYPE *sem) {
 void tb_sem_post(TB_SEM_TYPE *sem) {
 	int tb_result; 
 	tb_result = sem_post(sem); 
-	assert(sem != -1); 
+	assert(tb_result != -1); 
 }
 
 void tb_sem_wait(TB_SEM_TYPE *sem) {
 	int tb_result; 
 	tb_result = sem_wait(sem);
-	assert(sem != -1); 
+	assert(tb_result != -1); 
 }
+
+////////////////////////////////////////////////////////////////////
+//
+// NB: currently we are not setting memory limits for the processes.
+// Is this something we want to support?
+//
+////////////////////////////////////////////////////////////////////
 
 void tb_thread_create(TB_THREAD_TYPE *thread, 
 					  int priority, 
-					  (void *)(*entrypoint)(void *), 
+					  void *(*entrypoint)(void *), 
 					  void *arg) {
 	int tb_result;
 	pthread_attr_t tattr; 
-	sched_param schedule_attributes; 
+	struct sched_param schedule_attributes; 
 	
 	tb_result = pthread_attr_init (&tattr);	
 	assert(tb_result == 0); 
 	tb_result = pthread_attr_getschedparam(&tattr, &schedule_attributes); 
 	assert(tb_result == 0);
-	schedule_attributes.priority = priority; 
+	schedule_attributes.sched_priority = priority; 
 	tb_result = pthread_attr_setschedparam(&tattr, &schedule_attributes);
 	assert(tb_result == 0);
 	tb_result = pthread_attr_setschedpolicy(&tattr, SCHED_RR);
 	assert(tb_result == 0);
 	tb_result = pthread_attr_setinheritsched(&tattr, PTHREAD_EXPLICIT_SCHED);
 	assert(tb_result == 0);
-	tb_result = pthread_create(&thread, &tattr, entrypoint, arg);
+	tb_result = pthread_create(thread, &tattr, entrypoint, arg);
 	assert(tb_result == 0);
 }
 
 
 /* NB: period is in MICROSECONDS */
 int tb_make_periodic_timer (int unsigned period_in_microseconds, 
-						  void       (*sigev_notify_function) (union sigval), 
-						  struct periodic_info *info)
+						    void (*the_function) (union sigval), 
+						    periodic_info *info)
 {
 	static int next_sig;
 	int ret;
@@ -122,15 +129,15 @@ int tb_make_periodic_timer (int unsigned period_in_microseconds,
 	sigev.sigev_notify = SIGEV_THREAD;
 	sigev.sigev_signo = info->sig;
 	sigev.sigev_value.sival_ptr = (void *) &timer_id;
-	sigev.sigev_notify_function = sigev_notify_function; 
+	sigev.sigev_notify_function = the_function; 
 	sigev.sigev_notify_attributes = NULL;
 	ret = timer_create (CLOCK_MONOTONIC, &sigev, &timer_id);
 	if (ret == -1)
 		return ret;
 
 	/* Make the timer periodic */
-	sec = period/1000000;
-	ns = (period - (sec * 1000000)) * 1000;
+	sec = period_in_microseconds/1000000;
+	ns = (period_in_microseconds - (sec * 1000000)) * 1000;
 	itval.it_interval.tv_sec = sec;
 	itval.it_interval.tv_nsec = ns;
 	itval.it_value.tv_sec = sec;

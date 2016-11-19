@@ -302,7 +302,6 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
     * threadImplementation
     * firstLevelInterruptHandler
     * dispatchOccurredVar
-    * mainLockReleaseStmt <-- OS-specific
     * activeThreadInternalDispatcherName
     * 
     * signalName

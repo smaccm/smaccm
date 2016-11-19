@@ -514,7 +514,7 @@ public class ThreadImplementationNames implements NameEmitter {
    * 
    *****************************************************/
   
-  public String getDispatcherMainLockReleaseStmt() {
+  public String getMainLockReleaseStmt() {
      OSModel model = this.ti.getModel();
      if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
         return this.getCamkesDispatcherUnlockStmt();

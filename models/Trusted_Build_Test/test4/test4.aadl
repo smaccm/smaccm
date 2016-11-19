@@ -96,4 +96,12 @@ system implementation test.vxworks
 		TB_SYS::HW => QEMU;
 end test.vxworks;
 
+system implementation test.linux
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		TB_SYS::OS => linux;
+		TB_SYS::HW => QEMU;
+end test.linux;
+
 end test4;

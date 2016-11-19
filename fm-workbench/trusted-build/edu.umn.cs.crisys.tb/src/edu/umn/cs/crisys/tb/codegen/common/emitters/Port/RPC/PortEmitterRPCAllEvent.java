@@ -16,7 +16,6 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.names.ExternalHandlerNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.codegen.eChronos.EChronosUtil;
@@ -35,10 +34,9 @@ import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.type.BoolType;
 import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.Type;
-import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux, PortEmitterRPC {
+public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux, PortEmitterRPC {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
@@ -63,13 +61,10 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       return ok;
    }
    
-   private PortFeature eventDataPort;
-   private OSModel model; 
    Type indexType = new IntType(32, false); 
    
    public PortEmitterRPCAllEvent(PortFeature pf) {
-      this.eventDataPort = pf;
-      this.model = Util.getElementOSModel(pf);
+      super(pf, Util.getElementOSModel(pf)); 
    }
    
    @Override
@@ -77,11 +72,6 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       // no-op for the moment; I could add support for 
       // auto-declaration of types, but right now this is already 
       // handled.
-   }
-
-   @Override
-   public PortFeature getModelElement() {
-      return this.eventDataPort;
    }
 
    @Override
@@ -191,17 +181,6 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       return writeOptPortThreadInitializerPrototype(""); 
    }
 
-   @Override
-   public String getName() {
-      return this.getModelElement().getName();
-   }
-
-   @Override
-   public String getQualifiedName() {
-      return this.getModelElement().getQualifiedName();
-   }
-
-
    /************************************************************
     * 
     * VxWorks-specific functions 
@@ -243,7 +222,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       ExternalHandler initializer = 
             this.getModelElement().getInitializeEntrypointSourceText();
       if (initializer != null) {
-         toReturn += initializer.getHandlerName() + "();\n ";
+         toReturn += initializer.getHandlerName() + "();\n";
       }
 
       return toReturn;
@@ -297,7 +276,7 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       ExternalHandler initializer = 
             this.getModelElement().getInitializeEntrypointSourceText();
       if (initializer != null) {
-         toReturn += initializer.getHandlerName() + "();\n ";
+         toReturn += initializer.getHandlerName() + "();\n";
       }
       return toReturn;
    }
@@ -418,28 +397,13 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
     * 
     * Names functions used by the .stg templates for input queues
     *
-    * queueDataDecl
-    * queueFullDecl
-    * queueFrontDecl
-    * queueBackDecl
-    * queueIsFullName
-    * queueFrontName
-    * queueBackName
-    * queueFullName
-    * queueIsEmptyName
-    * queueReadName
     * type
     * name
-    * index
-    * indexMax
-    * queueSize
-    * queueWriteName
     * incomingPortWriterName <--> incomingWriterName --> OS-specific
     * portLockStmt <--> lockStmt                     --> OS-specific
     * portUnlockStmt <--> unlockStmt                 --> OS-specific
     * aadlReaderFnName <--> getLocalReaderName       
     * hasDispatcher
-    * dispatcherMainLockReleaseStmt                  --> OS-specific 
     * 
     * ...and for output queues
     * outgoingWriterName
@@ -462,8 +426,6 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
     * 
     ************************************************************/
 
-   public String getPrefix() { return Util.getPrefix(); }
-   
    public String getQueueFrontName() { return getPrefix() + "_queue_front_" + this.getName(); }
    public String getQueueBackName()  { return getPrefix() + "_queue_back_" + this.getName(); }
    public String getQueueDataName()  { return getPrefix() + "_queue_" + this.getName(); }
@@ -481,10 +443,6 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       return iep.getQueueType().getCType().varString(getQueueDataName());
    }
 
-   public boolean getHasData() {
-      return (this.getModelElement().getType() instanceof UnitType); 
-   }
-   
    public String getQueueFrontDecl() {
       return indexType.getCType().varString(getQueueFrontName());
    }
@@ -495,10 +453,6 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
 
    public String getQueueFullDecl() {
       return (new BoolType()).getCType().varString(getQueueFullName()); 
-   }
-
-   public TypeNames getType() { 
-      return EmitterFactory.type(this.getModelElement().getType()); 
    }
 
    public TypeNames getIndexType() {
@@ -525,29 +479,6 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
       return Integer.toString(iep.getQueueSize());
    }
    
-   public String writeType() {
-      return "_write" + getModelElement().getType().getCType().typeString();
-   }
-
-   public String getLpcPortWriterName() {
-      return Util.getPrefix_() + getModelElement().getQualifiedName() + 
-            writeType();
-   }
-
-   // middleware functions; these must be compatible with the OS.
-   @Override
-   public String getIncomingWriterName() {
-      PortFeature dp = getModelElement();
-      if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return dp.getName() + writeType() ;
-      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos ||
-            model.getOsTarget() == OSModel.OSTarget.VxWorks ||
-            model.getOsTarget() == OSModel.OSTarget.linux) {
-         return getLpcPortWriterName();
-      } else {
-         throw new TbException("Error: getIncomingPortWriterName: OS " + model.getOsTarget() + " is not a known OS target.");
-      }
-   }
 
    // local reader/writer name does not have to be compatible with any CAmkES stuff.
    public String getLocalReaderWriterName(String readWrite) {
@@ -570,57 +501,6 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }   
 
    
-   public String getMutex() {
-      return (Util.getPrefix_() + getModelElement().getOwner().getNormalizedName() + "_" + getModelElement().getName() + "_mut").toLowerCase();
-    }
-    
-    public String getEChronosMutexConst() {
-       return (ModelNames.getEChronosPrefix() + "_MUTEX_ID_" + getMutex()).toUpperCase();
-    }
-   
-   // getOutgoingWriterName()
-   public String getLockStmt() {
-      if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return getMutex() + "_lock();" ;
-      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
-         return "rtos_mutex_lock(" + getEChronosMutexConst() + ");";
-      } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
-         return "semTake(" + getMutex() + ", WAIT_FOREVER);";
-      } else if (model.getOsTarget() == OSModel.OSTarget.linux) {
-         return LinuxUtil.waitSem(getMutex());
-      } else {
-         throw new TbException("Error: getLockStmt: OS " + model.getOsTarget() + " is not a known OS target.");
-      }
-   }
-
-   public String getUnlockStmt() {
-      if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return getMutex() + "_unlock();" ;
-      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
-         return "rtos_mutex_unlock(" + getEChronosMutexConst() + ");";
-      } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
-         return "semGive(" + getMutex() + ");";
-      } else if (model.getOsTarget() == OSModel.OSTarget.linux) {
-         return LinuxUtil.postSem(getMutex());
-      } else {
-         throw new TbException("Error: getunlockStmt: OS " + model.getOsTarget() + " is not a known OS target.");
-      }
-   }
-   
-   // relevant only for event-data ports
-   public boolean getHasDispatcher() {
-      if (this.getModelElement() instanceof DispatchableInputPort) {
-         return  ((DispatchableInputPort)this.getModelElement()).getExternalHandlerList().size() != 0;
-      }
-      else return false;
-   }
-
-   public String getDispatcherMainLockReleaseStmt() {
-      return (EmitterFactory.threadImplementation(
-               this.getModelElement().getOwner())).
-                  getDispatcherMainLockReleaseStmt();
-   }
-      
    public String getVarDecl() {
       return this.getModelElement().getType().getCType().varString(getName());
    }
@@ -631,41 +511,8 @@ public class PortEmitterRPCAllEvent implements PortEmitterCamkes, PortEmitterECh
    }
    */
 
-   public String getUserEntrypointCallerName() {
-      return this.getPrefix() + "_entrypoint_" + 
-            this.getQualifiedName(); 
-/*
-      if (this.model.getOsTarget() == OSModel.OSTarget.CAmkES){
-         ThreadImplementationNames tnames = 
-               EmitterFactory.threadImplementation(this.getModelElement().getOwner());
-         String name = tnames.getComponentDispatcherInterfaceVarIdName() + "_" + 
-                     this.getIdlDispatcherName() ; 
-         return name;
-      } else if (this.model.getOsTarget() == OSModel.OSTarget.eChronos) {
-         return this.getPrefix() + "_entrypoint_" + 
-                this.getQualifiedName(); 
-      } else if (this.model.getOsTarget() == OSModel.OSTarget.VxWorks) {
-         return this.getIncomingWriterName();
-      } else {
-         throw new TbException("in RPCEventDataPortEmitter::getUserEntrypointName: OS [" + 
-               this.model.getOsTarget() + "] is not supported.");
-      }
-  */
-   }
-   
-   public String getActiveThreadInternalDispatcherFnName() {
-      return getUserEntrypointCallerName(); 
-   }
-   
-   public String getUserEntrypointCallerPrototype() {
-      String result = ""; 
-      result += "void " + getUserEntrypointCallerName() + 
-            "(const " + getType().getCamkesInputType().getName() + " in_arg)";
-      return result;
-   }
-
    public List<ExternalHandlerNames> getExternalHandlers() {
-      DispatchableInputPort dip = ((DispatchableInputPort) this.eventDataPort);
+      DispatchableInputPort dip = ((DispatchableInputPort) this.port);
       List<ExternalHandlerNames> ehl = new ArrayList<>(); 
       for (ExternalHandler eh : dip.getExternalHandlerList()) {
          ehl.add(EmitterFactory.externalHandler(eh)); 

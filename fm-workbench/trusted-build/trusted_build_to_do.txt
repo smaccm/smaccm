@@ -115,6 +115,9 @@ To-dos:
 	! I have an "unnecessary" call to initialize_periodic_dispatcher() for linux.  Should I get rid of it or try to standardize?  I'm getting rid of it.
 	! fix template error in CommonComponentHeader.
 	
+	-> libraries: what do we need?
+		pthreadlib
+	
 	-> Do we care about memory/stack sizes for processes in linux?
 	
 	-> Somewhere I'm defining an external type and I do not know

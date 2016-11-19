@@ -13,4 +13,9 @@ public interface PortEmitterLinux extends NameEmitter {
    public abstract String getLinuxAddMainCFileInitializers(); //
    public abstract String getLinuxAddMainCFileDestructors(); //
 
+   public abstract String getLinuxAddProcessHFileDeclarations(); //
+   public abstract String getLinuxAddProcessCFileIncludes();     //
+   public abstract String getLinuxAddProcessCFileDeclarations(); //  
+   public abstract String getLinuxAddProcessCFileInitializers(); //
+   public abstract String getLinuxAddProcessCFileDestructors();  //
 }

@@ -32,7 +32,6 @@ createMtx() ::= "semMCreate(SEM_Q_PRIORITY | SEM_INVERSION_SAFE)"
 createBSem() ::= "semBCreate(SEM_Q_PRIORITY, SEM_FULL)"
 
 createActiveThreadMutexes(threadImpl) ::= <<
-// This code is getting called!
 <threadImpl.threadDispatcherMutex> = <createBSem()>;
 assert(<threadImpl.threadDispatcherMutex> != NULL);
 <threadImpl.externalMutexes:{ m | <m> = <createMtx()>;
@@ -57,8 +56,8 @@ assert(<m> != NULL);
 /* create active thread mutexes */
 <model.activeThreadImplementations:createActiveThreadMutexes()>
 
-/* create monitor mutexes */
-<model.passiveThreadImplementations:createPassiveThreadMutexes()>
+<commentIf("create monitor mutexes",
+    (model.passiveThreadImplementations:createPassiveThreadMutexes()))>
 >>
 
 deleteActiveThreadMutexes(threadImpl) ::= <<
@@ -125,7 +124,7 @@ createTasks(model) ::= <<
 >>
 
 deleteTasks(model) ::= <<
-<model.ActiveThreadImplementations:{threadImpl | taskDelete(<threadImpl.normalizedName>);
+<model.ActiveThreadImplementations:{threadImpl |taskDelete(<threadImpl.normalizedName>);
 }>
 >>
 

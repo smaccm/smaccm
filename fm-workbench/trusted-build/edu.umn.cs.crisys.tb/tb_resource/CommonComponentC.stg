@@ -102,7 +102,7 @@ userEntrypointCallerAssignGlobals(dispatchContract, dispatcher) ::= <<
 
 userEntrypointCallerFn(dispatcher) ::= <<
 /************************************************************************
- *  <incomingUserEntrypointCallerName(dispatcher)>:
+ *  <dispatcher.userEntrypointCallerName>:
  * Invoked by remote RPC (or, for active thread, local dispatcher).
  *
  * This is the function invoked by an active thread dispatcher to
@@ -110,13 +110,12 @@ userEntrypointCallerFn(dispatcher) ::= <<
  * context for the user-defined entrypoint, then calls it.
  *
  ************************************************************************/
-<userEntrypointCallerPrototype(dispatcher)> {
-    <dispatcher.portDispatcherLock>
+<dispatcher.userEntrypointCallerPrototype> {
+    <dispatcher.lockStmt>
     <dispatcher.threadImplementation.portList:{port | <port.writePortPreEntrypoint>}>
-    <dispatcher.maxDispatchContracts.passiveContracts:userEntrypointCallerAssignGlobals(dispatcher)>
     <dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
     <dispatcher.threadImplementation.portList:{port | <port.writePortPostEntrypoint>}>
-    <dispatcher.portDispatcherUnlock>
+    <dispatcher.unlockStmt>
 }
 
 
@@ -192,6 +191,7 @@ componentCFileDecls(threadImpl) ::= <<
 
 <if(threadImpl.isActive)><\\>
 <threadImpl.localActiveThreadConnectionFrontier:osSpecificComponentLocalCallerFunction()>
+<threadImpl.dispatchers:userEntrypointCallerFn()>
 <if(threadImpl.isExternal)><\\>
 ////////////////////////////////////////////////////////////////////////////
 //

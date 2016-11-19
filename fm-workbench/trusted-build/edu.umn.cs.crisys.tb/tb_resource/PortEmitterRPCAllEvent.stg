@@ -142,7 +142,7 @@ bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
     <port.lockStmt>
     result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
     <port.unlockStmt>
-    <if(port.hasDispatcher)><port.dispatcherMainLockReleaseStmt><endif>
+    <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
     return result;
 }
 
@@ -205,7 +205,7 @@ bool <port.incomingWriterName>() {
       result = false;
     }
     <port.unlockStmt>
-    <if(port.hasDispatcher)><port.dispatcherMainLockReleaseStmt><endif>
+    <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
     return true;
 }
 

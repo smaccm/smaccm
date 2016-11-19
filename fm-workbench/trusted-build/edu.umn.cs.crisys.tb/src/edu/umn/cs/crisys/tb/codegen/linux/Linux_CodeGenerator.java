@@ -6,12 +6,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.ProcessImplementationNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
@@ -19,6 +22,7 @@ import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
+import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
@@ -43,7 +47,22 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
     return new File(outputDirectory, "gen");
   }
   
-  protected File getComponentDirectory(File globalComponentDirectory, String name) {
+  protected File getGlobalProcessDiretory(File rootDirectory) {
+     return new File(outputDirectory, "gen");
+  }
+  
+  protected File getProcessDirectory(File globalComponentDirectory, String name) {
+     return globalComponentDirectory;
+   }
+
+  protected File getProcessHeaderDirectory(File componentDirectory) {
+     return componentDirectory;
+   }
+   protected File getProcessSourceDirectory(File componentDirectory) {
+     return componentDirectory;
+   }
+
+   protected File getComponentDirectory(File globalComponentDirectory, String name) {
     return globalComponentDirectory;
   }
   protected File getComponentHeaderDirectory(File componentDirectory) {
@@ -125,6 +144,45 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
      }   
   }
 
+  private void createProcessHeader(File componentDirectory, ProcessImplementation ti) throws TbFailure {
+     ProcessImplementationNames tin = new ProcessImplementationNames(ti);
+      writeGeneric(componentDirectory, "ProcessHeader.stg", "headerBody", 
+            "processImpl", tin, tin.getName(), true, tin.getHeaderName());
+    }
+
+    private void createProcessCFile(File componentDirectory, ProcessImplementation ti) throws TbFailure {
+     ProcessImplementationNames tin = new ProcessImplementationNames(ti);
+      String fname = tin.getComponentGlueCodeCFileName();
+      if (ti.getIsExternal()) {
+         fname += ".template";
+      }
+      writeGeneric(componentDirectory, "ComponentC.stg", "componentCFileDecls", 
+           "threadImpl", tin, tin.getNormalizedName(), false, fname);
+    }
+
+  public void createProcess(ProcessImplementation pi) throws TbFailure {
+     String name = pi.getNormalizedName();
+     
+     File componentDirectory = getProcessDirectory(componentsDirectory, name);
+     File srcDirectory = getProcessSourceDirectory(componentDirectory);
+     File includeDirectory = getProcessHeaderDirectory(componentDirectory);
+     srcDirectory.mkdirs();
+     includeDirectory.mkdirs();
+    
+     createProcessHeader(includeDirectory, pi);
+     createProcessCFile(srcDirectory, pi);
+     
+  }
+  
+  public void createProcesses() throws TbFailure {
+     List<ProcessImplementation> tis = model.processImplementationList;
+     for (ProcessImplementation ti: tis) {
+      createProcess(ti);
+     }
+     if (model.getThreadCalendar().hasDispatchers()) {
+       createPeriodicDispatcherComponent();
+     }
+   }
 
   @Override
   public void write() throws TbFailure {
@@ -132,7 +190,8 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
     createComponents();
     createAssemblyHeader();
     createMainFile();
-
+    createProcesses(); 
+    
     // final check for errors from string template.
     if (listener.isErrorOccurred()) {
       throw new TbFailure();

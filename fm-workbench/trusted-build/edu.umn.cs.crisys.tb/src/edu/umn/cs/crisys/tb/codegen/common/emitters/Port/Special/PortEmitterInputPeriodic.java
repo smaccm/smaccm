@@ -14,6 +14,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.DispatchableInputPortCommon;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
@@ -39,7 +40,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux {
+public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
@@ -47,15 +48,12 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
       return ok;
    }
    
-   private PortFeature port;
-   private OSModel model; 
    Type indexType = new IntType(32, false); 
    STGroupFile template; 
    
    public PortEmitterInputPeriodic(PortFeature pf) {
+      super(pf, Util.getElementOSModel(pf));
       template = Util.createTemplate("PortEmitterInputPeriodic.stg");
-      this.port = pf;
-      this.model = Util.getElementOSModel(pf);
    }
    
    @Override
@@ -141,9 +139,17 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
    @Override
    public String getWritePortThreadInitializer() {
       String result = ""; 
-      ST st = getTemplateST("createWatchdog");
-      st.add("dispatcher", this);
-      return st.render(); 
+      // For VxWorks, we define the OS trigger in-situ.
+      if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
+         ST st = getTemplateST("createWatchdog");
+         st.add("dispatcher", this);
+         result += st.render(); 
+      } else if (model.getOsTarget() == OSModel.OSTarget.linux) {
+         ST st = getTemplateST("dispatcherComponentInit");
+         st.add("dispatcher", this);
+         result += st.render();
+      }
+      return result;
    }
 
    @Override
@@ -305,7 +311,6 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
     * periodicTimeVar
     * periodicDispatcherPeriod
     * hasData
-    * dispatcherMainLockReleaseStmt <-- OS-specific, handled by thread.
     * incomingActiveThreadDispatchName <--> incomingWriterName <-- OS-specific.
     *
     * 
@@ -316,10 +321,6 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
     * 
     ************************************************************/
 
-   public ThreadImplementationNames getThreadImplementation() {
-      return EmitterFactory.threadImplementation(this.getModelElement().getOwner());
-   }
-
    public List<NameEmitter> getExternalHandlers() {
       DispatchableInputPort dip = ((DispatchableInputPort) this.getModelElement());
       List<NameEmitter> ehl = new ArrayList<>(); 
@@ -329,11 +330,6 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
       return ehl;
    }
 
-   public String getMainLockReleaseStmt() {
-      return (EmitterFactory.threadImplementation(
-               this.getModelElement().getOwner())).
-                  getDispatcherMainLockReleaseStmt();
-   }
 
    public String getDispatchOccurredVar() {
       return getPrefix() + "_occurred_" + getName(); 
@@ -349,53 +345,7 @@ public class PortEmitterInputPeriodic implements PortEmitterCamkes, PortEmitterE
       return ipp.getPeriod();
    }
    
-   public String getMutex() {
-      return (Util.getPrefix_() + getModelElement().getOwner().getNormalizedName() + "_" + getModelElement().getName() + "_mut").toLowerCase();
-    }
-
-   public String getUserEntrypointCallerName() {
-      return this.getPrefix() + "_entrypoint_" + 
-            this.getQualifiedName(); 
-   }
-   
-   public String getActiveThreadInternalDispatcherFnName() {
-      return getUserEntrypointCallerName(); 
-   }
-
-   public boolean getHasData() { 
-      return !(this.getModelElement().getType() instanceof UnitType); 
-   }
-   
-   public TypeNames getType() { 
-      return EmitterFactory.type(this.getModelElement().getType()); 
-   }
-
-   public String writeType() {
-      return "_write" + getModelElement().getType().getCType().typeString();
-   }
-
-   public String getLpcPortWriterName() {
-      return Util.getPrefix_() + getModelElement().getQualifiedName() + 
-            writeType();
-   }
-
-   
-   // middleware functions; these must be compatible with the OS.
-   public String getIncomingWriterName() {
-      PortFeature dp = getModelElement();
-      if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return dp.getName() + writeType() ;
-      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos || 
-                 model.getOsTarget() == OSModel.OSTarget.VxWorks ||
-                 model.getOsTarget() == OSModel.OSTarget.linux) {
-         return getLpcPortWriterName();
-      } else {
-         throw new TbException("Error: getIncomingPortWriterName: OS " + model.getOsTarget() + " is not a known OS target.");
-      }
-   }
-   
-   public String getPrefix() { return Util.getPrefix(); }
-   
+      
    public String getIdlDispatcherName() {
       return "dispatch_" + getName();
    }

@@ -49,7 +49,7 @@ public class LinuxUtil {
    }
    
    public static String unlockMutex(String name) {
-      return "tb_umtex_unlock(&" + name + "); \n";
+      return "tb_mutex_unlock(&" + name + "); \n";
    }
    
    public static String postSem(String name) {

@@ -5,8 +5,8 @@ import "CommonComponentC.stg"
  *
  */
 
-osSpecificThreadEntrypoint(threadImpl) ::= "void <threadImpl.threadImplMainFnName>()"
-osSpecificThreadReturnStmt(threadImpl) ::= " "
+osSpecificThreadEntrypoint(threadImpl) ::= "void *<threadImpl.threadImplMainFnName>(void *__unused)"
+osSpecificThreadReturnStmt(threadImpl) ::= "return NULL;"
 
 
 dispatcherMainInitializeLockStmt(threadImpl) ::= <<
@@ -73,6 +73,7 @@ writeDecls(threadImpl) ::= <<
 osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u0022><threadImpl.prefix>_decls.h<\u0022>
 #include <\u003C>string.h<\u003E>
+#include \<assert.h>
 #include "tb_linux_support.h"
 
 
