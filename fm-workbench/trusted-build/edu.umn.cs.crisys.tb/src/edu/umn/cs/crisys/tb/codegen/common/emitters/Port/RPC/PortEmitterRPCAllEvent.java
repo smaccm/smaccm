@@ -244,13 +244,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
     ************************************************************/
    @Override
    public String getLinuxAddCommonHFileDeclarations() {
-      // TODO Auto-generated method stub
-         String toReturn = "\n"; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += LinuxUtil.writeExternMutexDecl(this.getMutex());
-         toReturn += getEChronosAddCommonHFileDeclarations();
-      } 
-      return toReturn + "\n";
+      return "";
    }
 
    @Override
@@ -260,6 +254,38 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
 
    @Override
    public String getLinuxAddMainCFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileInitializers() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileDestructors() {
+      return ""; 
+   }
+
+   @Override
+   public String getLinuxAddProcessHFileDeclarations() {
+      // TODO Auto-generated method stub
+      String toReturn = "\n"; 
+   if (this.getModelElement() instanceof InputPort) {
+      toReturn += LinuxUtil.writeExternMutexDecl(this.getMutex());
+      toReturn += getEChronosAddCommonHFileDeclarations();
+   } 
+   return toReturn + "\n";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileIncludes() {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDeclarations() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += LinuxUtil.writeMutexDecl(this.getMutex());
@@ -268,7 +294,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    }
 
    @Override
-   public String getLinuxAddMainCFileInitializers() {
+   public String getLinuxAddProcessCFileInitializers() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += LinuxUtil.createInterprocMutex(this.getMutex());
@@ -282,7 +308,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    }
 
    @Override
-   public String getLinuxAddMainCFileDestructors() {
+   public String getLinuxAddProcessCFileDestructors() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += LinuxUtil.deleteMutex(this.getMutex());

@@ -43,7 +43,8 @@ import edu.umn.cs.crisys.tb.model.type.Type;
  * 
  * TODO: 
  *    - different implementation depending on in-proc vs. out-of-proc
- *       - implement shared memory for out-of-proc.
+ *    - implement shared memory for out-of-proc.
+ *    - implement proc mechanisms as well as top-level mechanism
  *
  */
 public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLinux, PortEmitterSharedMem {
@@ -284,6 +285,36 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
       return toReturn;
    }
 
+   @Override
+   public String getLinuxAddProcessHFileDeclarations() {
+      // TODO Auto-generated method stub
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileIncludes() {
+      // TODO Auto-generated method stub
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDeclarations() {
+      // TODO Auto-generated method stub
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileInitializers() {
+      // TODO Auto-generated method stub
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDestructors() {
+      // TODO Auto-generated method stub
+      return "";
+   }
+   
    /*******************************************************
     * 
     * Functions for StringTemplate callbacks for all OSes; 
@@ -395,5 +426,6 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
          throw new TbException("Error: getunlockStmt: OS " + model.getOsTarget() + " is not a known OS target.");
       }
    }
+
 
 }

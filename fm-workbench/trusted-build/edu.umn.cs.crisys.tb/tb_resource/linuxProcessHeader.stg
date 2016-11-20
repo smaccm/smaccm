@@ -36,30 +36,25 @@ filePostfix(name, path) ::= <<
 
 
 activeThreadDecls(threadImpl) ::= <<
-<commentIf({declarations for ports in thread <threadImpl.normalizedName>},
-            (threadImpl.portList:{port|<port.linuxAddProcessHFileDeclarations>}))>
 
+<commentIf({declarations for ports in thread <threadImpl.normalizedName>},
+            (threadImpl.portList:{port|<port.linuxAddProcessHFileDeclarations>
+}))>
+
+/* declarations for thread <threadImpl.normalizedName> */
+extern TB_SEM_TYPE <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m |extern TB_MUTEX_TYPE <m>;
+}>
 // "main" aadl framework function for thread <threadImpl.normalizedName>
 void *<threadImpl.threadImplMainFnName>(void *);
 >>
 
-writeActiveThreadMutexes(threadImpl, extern) ::= <<
 
-/* declarations for thread <threadImpl.normalizedName> */
-<extern> TB_SEM_TYPE <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m | <extern> TB_MUTEX_TYPE <m>;
-}>
-
->>
-
-
-writeProcessMutexes(process, extern) ::= <<
+writeProcessMutexes(process) ::= <<
+// Process-level mutexes for process <process.name>
 // TODO: not sure how to declare process-level mutexes yet.
->>
 
-writeMutexes(process, extern) ::= <<
-<writeProcessMutexes(process, extern)>
-<process.threadImplementationList:writeActiveThreadMutexes(extern)>
+
 >>
 
 
@@ -70,11 +65,11 @@ headerBody(process) ::= <<
 #include "tb_linux_support.h"
 #include <\u0022><process.model.systemTypeHeaderName><\u0022>
 
-// Call trusted_build_main to kick off the whole shebang...
-int trusted_build_main(uint32_t runDurationInSeconds);
+// Call this aadl main function to kick off the aadl event loop
+void <process.mainFunctionName>(void);
 
 // common declarations across threads/processes.
 <process.threadImplementationList:activeThreadDecls()>
 
-<writeMutexes(process, "extern")>
+<writeProcessMutexes(process)>
 >>

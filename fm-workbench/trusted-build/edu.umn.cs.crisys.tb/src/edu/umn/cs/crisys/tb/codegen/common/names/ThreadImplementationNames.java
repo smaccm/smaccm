@@ -211,6 +211,10 @@ public class ThreadImplementationNames implements NameEmitter {
     return EmitterFactory.model(ti.getModel());
   }
   
+  public ProcessImplementationNames getParentProcess() {
+     return EmitterFactory.processImplementation(ti.getParentProcess());
+  }
+  
   public boolean getContainsDispatchers() {
     
     return !(ti.getDispatcherList().isEmpty());

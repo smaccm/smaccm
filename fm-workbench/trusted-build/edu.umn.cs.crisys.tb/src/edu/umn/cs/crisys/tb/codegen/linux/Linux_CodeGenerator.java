@@ -147,17 +147,17 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
   private void createProcessHeader(File componentDirectory, ProcessImplementation ti) throws TbFailure {
      ProcessImplementationNames tin = new ProcessImplementationNames(ti);
       writeGeneric(componentDirectory, "ProcessHeader.stg", "headerBody", 
-            "processImpl", tin, tin.getName(), true, tin.getHeaderName());
+            "process", tin, tin.getName(), false, tin.getHeaderName());
     }
 
     private void createProcessCFile(File componentDirectory, ProcessImplementation ti) throws TbFailure {
      ProcessImplementationNames tin = new ProcessImplementationNames(ti);
-      String fname = tin.getComponentGlueCodeCFileName();
+      String fname = tin.getCFileName();
       if (ti.getIsExternal()) {
          fname += ".template";
       }
-      writeGeneric(componentDirectory, "ComponentC.stg", "componentCFileDecls", 
-           "threadImpl", tin, tin.getNormalizedName(), false, fname);
+      writeGeneric(componentDirectory, "ProcessC.stg", "body", 
+           "process", tin, tin.getName(), false, fname);
     }
 
   public void createProcess(ProcessImplementation pi) throws TbFailure {

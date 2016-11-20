@@ -1,11 +1,11 @@
 src = $(wildcard *.c)
 obj = $(src:.c=.o)
 
-LDFLAGS = -pthreads 
+LDFLAGS =  
 
 myprog: $(obj)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -pthread -Wall -Werror -o $@ $^ $(LDFLAGS)
 
 .PHONY: clean
 clean:
-	rm -f $(obj) myprog
+	rm -f $(obj) myprog		

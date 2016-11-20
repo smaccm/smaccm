@@ -10,7 +10,7 @@
 #include <stdio.h>
 #endif
 
-void periodic_ping(const int64_t *the_time) {
+void sender_periodic_ping(const int64_t *the_time) {
 
 	#ifdef __TB_OS_VXWORKS__
 		// VxWorks doesn't support long longs for printing.

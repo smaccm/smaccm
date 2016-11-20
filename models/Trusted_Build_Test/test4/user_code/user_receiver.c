@@ -9,7 +9,7 @@
 #endif
 #include <inttypes.h>
 
-void periodic_ping( const int64_t * periodic_1000_ms) {
+void receiver_periodic_ping( const int64_t * periodic_1000_ms) {
 #ifdef __TB_OS_LINUX__
 	printf("receiver: periodic dispatch received at time: %"  PRId64 ".", 
 	*periodic_1000_ms);

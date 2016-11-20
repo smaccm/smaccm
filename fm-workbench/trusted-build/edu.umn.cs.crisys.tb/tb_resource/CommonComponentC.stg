@@ -103,7 +103,6 @@ userEntrypointCallerAssignGlobals(dispatchContract, dispatcher) ::= <<
 userEntrypointCallerFn(dispatcher) ::= <<
 /************************************************************************
  *  <dispatcher.userEntrypointCallerName>:
- * Invoked by remote RPC (or, for active thread, local dispatcher).
  *
  * This is the function invoked by an active thread dispatcher to
  * call to a user-defined entrypoint function.  It sets up the dispatch
@@ -111,11 +110,9 @@ userEntrypointCallerFn(dispatcher) ::= <<
  *
  ************************************************************************/
 <dispatcher.userEntrypointCallerPrototype> {
-    <dispatcher.lockStmt>
     <dispatcher.threadImplementation.portList:{port | <port.writePortPreEntrypoint>}>
     <dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
     <dispatcher.threadImplementation.portList:{port | <port.writePortPostEntrypoint>}>
-    <dispatcher.unlockStmt>
 }
 
 

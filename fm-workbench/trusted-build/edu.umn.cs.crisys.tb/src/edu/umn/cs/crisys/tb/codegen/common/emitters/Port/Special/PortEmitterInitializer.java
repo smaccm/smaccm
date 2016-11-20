@@ -262,7 +262,32 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
    public String getLinuxAddMainCFileDestructors() {
       return "";
    }
-   
+
+   @Override
+   public String getLinuxAddProcessHFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileIncludes() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileInitializers() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDestructors() {
+      return "";
+   }
+
    /************************************************************
     * 
     * Names functions used by the .stg templates for input queues
@@ -334,4 +359,5 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
    public String getActiveThreadInternalDispatcherFnName() {
       return getUserEntrypointName(); 
    }
+
 }

@@ -34,50 +34,23 @@ filePostfix(name, path) ::= <<
 
 >>
 
+processMainFunctionDecl(process) ::= <<
+void <process.mainFunctionName>(void);
+
+>>
 
 activeThreadDecls(threadImpl) ::= <<
 <commentIf({declarations for ports in thread <threadImpl.normalizedName>},
             (threadImpl.portList:{port|<port.linuxAddCommonHFileDeclarations>}))>
-
-// "main" aadl framework function for thread <threadImpl.normalizedName>
-void *<threadImpl.threadImplMainFnName>(void *);
+<writeActiveThreadMutexes(threadImpl)>
 >>
 
-passiveThreadDecls(threadImpl) ::= <<
-<threadImpl.portList:{port|<port.linuxAddCommonHFileDeclarations>}>
->>
-
-
-writeActiveThreadMutexes(threadImpl, extern) ::= <<
-
-/* declarations for thread <threadImpl.normalizedName> */
-<extern> TB_SEM_TYPE <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m | <extern> TB_MUTEX_TYPE <m>;
-}>
-
->>
-
-writePassiveThreadMutexes(threadImpl, extern) ::= <<
-
-/* declarations for passive thread (monitor) <threadImpl.normalizedName> */
-<extern> TB_SEM_TYPE <threadImpl.threadDispatcherMutex>;
-<threadImpl.externalMutexes:{ m | <extern> TB_MUTEX_TYPE <m>;
-}>
-
->>
 
 writeModelMutexes(model, extern) ::= <<
 <commentIf("model-level external mutexes",
         (model.externalMutexList:{ m | <extern> TB_MUTEX_TYPE <m>;
 }))>
 >>
-
-writeMutexes(model, extern) ::= <<
-<writeModelMutexes(model, extern)>
-<model.activeThreadImplementations:writeActiveThreadMutexes(extern)>
-<model.passiveThreadImplementations:writePassiveThreadMutexes(extern)>
->>
-
 
 headerBody(model) ::= <<
 
@@ -89,9 +62,10 @@ headerBody(model) ::= <<
 // Call trusted_build_main to kick off the whole shebang...
 int trusted_build_main(uint32_t runDurationInSeconds);
 
+<model.processImplementations:processMainFunctionDecl()>
+
 // common declarations across threads/processes.
 <model.activeThreadImplementations:activeThreadDecls()>
-<model.passiveThreadImplementations:passiveThreadDecls()>
 
-<writeMutexes(model, "extern")>
+<writeModelMutexes(model, "extern")>
 >>

@@ -7,6 +7,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
+import edu.umn.cs.crisys.tb.util.Util;
 
 public class ProcessImplementationNames {
 
@@ -33,7 +34,10 @@ public class ProcessImplementationNames {
    }
 
    public String getName() {
-      // TODO Auto-generated method stub
+      return Util.normalizeAadlName(this.getRawName());  
+   }
+   
+   public String getRawName() {
       return this.pi.getName();
    }
    
@@ -43,5 +47,9 @@ public class ProcessImplementationNames {
    
    public String getCFileName() {
       return OSModel.getPrefix() + "_" + getName() + ".c";
+   }
+   
+   public String getMainFunctionName() {
+      return OSModel.getPrefix() + "_" + getName() + "_main";
    }
 }

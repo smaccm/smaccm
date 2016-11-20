@@ -1,5 +1,7 @@
 #include "tb_linux_support.h"
 #include <assert.h>
+#include <stdio.h>
+#include <errno.h>
 
 
 void tb_intraproc_mutex_create(TB_MUTEX_TYPE *mtx) {
@@ -80,19 +82,37 @@ void tb_thread_create(TB_THREAD_TYPE *thread,
 	pthread_attr_t tattr; 
 	struct sched_param schedule_attributes; 
 	
+	printf("EAGAIN == %d", EAGAIN);
+	printf("EINVAL == %d", EINVAL);
+	printf("EPERM == %d", EPERM);
+	printf("ENOTSUP == %d", ENOTSUP);
 	tb_result = pthread_attr_init (&tattr);	
 	assert(tb_result == 0); 
+	tb_result = pthread_attr_setinheritsched(&tattr, 	
+		PTHREAD_EXPLICIT_SCHED);
+	if (tb_result != 0) {
+		printf("result was: %d", tb_result);
+	}
+	assert(tb_result == 0);
+	tb_result = pthread_attr_setschedpolicy(&tattr, SCHED_RR);
+	assert(tb_result == 0);
 	tb_result = pthread_attr_getschedparam(&tattr, &schedule_attributes); 
 	assert(tb_result == 0);
 	schedule_attributes.sched_priority = priority; 
 	tb_result = pthread_attr_setschedparam(&tattr, &schedule_attributes);
 	assert(tb_result == 0);
-	tb_result = pthread_attr_setschedpolicy(&tattr, SCHED_RR);
-	assert(tb_result == 0);
-	tb_result = pthread_attr_setinheritsched(&tattr, PTHREAD_EXPLICIT_SCHED);
-	assert(tb_result == 0);
 	tb_result = pthread_create(thread, &tattr, entrypoint, arg);
+	if (tb_result == EAGAIN) {
+		printf("Error: EAGAIN was the result for creating a thread");
+	} else if (tb_result == EINVAL) {
+		printf("Error: EINVAL was the result for creating a thread");
+	} else if (tb_result == EPERM) {
+		printf("Error: EPERM was the result for creating a thread");
+	} else if (tb_result != 0) {
+		printf("Error: unknown error!  Code = %d", tb_result);
+	}
 	assert(tb_result == 0);
+	
 }
 
 

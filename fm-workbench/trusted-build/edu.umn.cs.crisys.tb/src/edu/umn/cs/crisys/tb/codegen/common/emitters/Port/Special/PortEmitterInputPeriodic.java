@@ -298,6 +298,30 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
       return "";
    }
 
+   @Override
+   public String getLinuxAddProcessHFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileIncludes() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileInitializers() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDestructors() {
+      return "";
+   }
 
    /************************************************************
     * 
@@ -382,5 +406,6 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
    public String getIrqComponent() {
       return getName() + "_hw"; 
    }
+
 
 }
