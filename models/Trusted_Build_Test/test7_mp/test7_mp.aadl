@@ -1,6 +1,6 @@
--- AADL Test 5: active -> active threads using struct send.
+-- AADL Test 7: active -> active threads using scalar read/write.
 
-package test5
+package test7_mp
 public 
    with Base_Types;
    with TB_SYS;   
@@ -21,7 +21,7 @@ end a_struct.impl;
 -- Example of a periodically dispatched "Active" thread.   
 thread sender
 	features
-		Output1: out event data port a_struct.impl {
+		Output1: out data port Base_Types::Unsigned_32 {
 	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
 		};
 	
@@ -29,8 +29,8 @@ thread sender
 	    Dispatch_Protocol => Periodic;
 	    TB_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
-		Source_Text => ("user_code/user_sender.c");
-	    TB_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+		Source_Text => ("user_code/user_sender.c", "user_code/linux_main.c");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
@@ -40,9 +40,10 @@ end sender ;
 -- Example of a periodically dispatched "Active" thread.   
 thread receiver
 	features
-		Input1: in event data port a_struct.impl {
-	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
-		  Queue_Size => 8;
+		Input1: in data port Base_Types::Unsigned_32 {
+	      TB_SYS::CommPrim_Source_Text => "ping_Input1";			
+	      -- TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		  --Queue_Size => 8;
 		}; 
 		
 	properties 
@@ -50,31 +51,57 @@ thread receiver
 	    TB_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
 		Source_Text => ("user_code/user_receiver.c");
-	    TB_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
 	    Priority => 8;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{}}";
 end receiver ; 
 
-process proc
+process proc_sender
+	features
+		Output1: out data port Base_Types::Unsigned_32;
 
-end proc;
+end proc_sender;
 
-process implementation proc.Impl
+process implementation proc_sender.Impl
 	subcomponents
 		s: thread sender;
+	connections
+		s_to_out : port s.Output1 -> Output1;
+end proc_sender.Impl;
+
+process proc_receiver
+	features
+		Input1: in data port Base_Types::Unsigned_32;
+
+end proc_receiver;
+
+process implementation proc_receiver.Impl
+	subcomponents
 		r: thread receiver;
 	connections
-		s_to_r : port s.Output1 -> r.Input1;
-end proc.Impl;
+		in_to_r : port Input1 -> r.Input1;
+end proc_receiver.Impl;
+
+system the_impl
+	
+end the_impl;
+
+system implementation the_impl.Impl
+	subcomponents
+		s: process proc_sender.Impl;
+		r: process proc_receiver.Impl;
+	connections
+		s_to_r: port s.Output1 -> r.Input1;
+end the_impl.Impl;
 
 system test
 end test;
 
 system implementation test.camkes
 	subcomponents
-		tl: process proc.Impl;
+		tl: system the_impl.Impl;
 	properties
 		TB_SYS::OS => CAmkES;
 		TB_SYS::HW => QEMU;
@@ -82,7 +109,7 @@ end test.camkes;
 
 system implementation test.echronos
 	subcomponents
-		tl: process proc.Impl;
+		tl: system the_impl.Impl;
 	properties
 		TB_SYS::OS => eChronos;
 		TB_SYS::HW => QEMU;
@@ -90,7 +117,7 @@ end test.echronos;
 
 system implementation test.vxworks
 	subcomponents
-		tl: process proc.Impl;
+		tl: system the_impl.Impl;
 	properties
 		TB_SYS::OS => VxWorks;
 		TB_SYS::HW => QEMU;
@@ -98,10 +125,11 @@ end test.vxworks;
 
 system implementation test.linux
 	subcomponents
-		tl: process proc.Impl;
+		tl: system the_impl.Impl;
 	properties
 		TB_SYS::OS => linux;
 		TB_SYS::HW => QEMU;
 end test.linux;
 
-end test5;
+
+end test7_mp;

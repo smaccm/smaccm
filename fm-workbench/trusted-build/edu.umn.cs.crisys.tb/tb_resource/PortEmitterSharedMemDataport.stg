@@ -86,10 +86,10 @@ componentRemoteWriteFunction(port, name) ::= <<
  *
  ************************************************************************/
 
-bool <name>(<port.type.aadlOutputType.name> <port.name>) {
+bool <name>(const <port.type.aadlOutputType.name> <port.name>) {
     <port.lockStmt>
-    <if(port.type.isBaseType)><port.readerWriterImplVar> = *<port.name>;
-    <else><camkesInputToValMemcpy(port.type, port.readerWriterImplVar, port.name)>
+    <if(port.type.isBaseType)><port.dataExpr> = *<port.name>;
+    <else><camkesInputToValMemcpy(port.type, port.dataExpr, port.name)>
     <endif>
     <port.unlockStmt>
     return true;
@@ -102,18 +102,19 @@ writeConnectionDecl(connection) ::= <<
 >>
 
 componentLocalReaderDecl(port) ::= <<
+
 <if(port.isInProc)>
-<port.backingStoreVarDecl>
-<port.sharedMemoryDataType> <port.readerWriterImplVar> = &<port.backingStoreVarDecl>;
+<port.sharedMemoryDataType> <port.backingStoreVar>;
+<port.sharedMemoryDataType> *<port.readerWriterImplVar> = &<port.backingStoreVar>;
 <else>
-<port.sharedMemoryDataType> <port.readerWriterImplVar>;
+<port.sharedMemoryDataType> *<port.readerWriterImplVar>;
 <endif>
 <componentLocalReadFunction(port)>
 
 >>
 
 writeToRemote(connection) ::= <<
-<connection.destPort.qualifiedLocalWriterName>(<connection.srcPort.name>);
+<connection.fullyQualifiedName>(<connection.sourcePort.name>);
 
 >>
 
@@ -134,10 +135,10 @@ bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.
 }
 >>
 
-componentLocalWriterDecl(srcPort) ::= <<
+componentLocalWriterDecl(port) ::= <<
 
-<srcPort.connections:writeConnectionDecl()>
-<localCallerFunction(srcPort)>
+<port.connections:writeConnectionDecl()>
+<localCallerFunction(port)>
 >>
 
 
@@ -155,28 +156,24 @@ componentLocalWriterDecl(srcPort) ::= <<
 portInitializer(port) ::= <<
 {
     int tb_result;
-    pthread_mutexattr_t tb_mutex_attributes;
-    tb_mutex_attributes;
     <if(!port.isInProc)>
-    <port.readerWriterImplVar> = (<port.sharedDataTypeName> *)mmap(
-        NULL, sizeof(<port.sharedDataTypeName>), PROT_READ | PROT_WRITE,
+    <port.readerWriterImplVar> = (<port.sharedMemoryDataType> *)mmap(
+        NULL, sizeof(<port.sharedMemoryDataType>), PROT_READ | PROT_WRITE,
         MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    assert(<port.readerWriterImplVar> != -1);
+    assert((void *)<port.readerWriterImplVar> != MAP_FAILED);
+    tb_interproc_mutex_create(&<port.mutex>);
+    <else>
+    tb_intraproc_mutex_create(&<port.mutex>);
     <endif>
-    pthread_mutexattr_setpshared(&tb_mutex_attributes, PTHREAD_PROCESS_SHARED);
-    tb_result = pthread_mutex_init(<port.mutex>, &tb_mutex_attributes);
-    assert(tb_result == 0);
 }
 >>
 
 portDestructor(port) ::= <<
 {
     int tb_result;
-    tb_result = pthread_mutex_destroy(<port.mutex>);
-    assert(tb_result == 0);
+    tb_mutex_destroy(&<port.mutex>);
     <if(!port.isInProc)>
-    munmap(<port.readerWriterImplVar>, sizeof(<port.sharedDataTypeName>));
-    tb_result = assert(<port.readerWriterImplVar> != -1);
+    tb_result = munmap(<port.readerWriterImplVar>, sizeof(<port.sharedMemoryDataType>));
     assert(tb_result == 0);
     <endif>
 }

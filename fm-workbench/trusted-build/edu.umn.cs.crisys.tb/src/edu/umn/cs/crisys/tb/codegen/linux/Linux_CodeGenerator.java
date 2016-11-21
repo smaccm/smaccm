@@ -160,6 +160,12 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
            "process", tin, tin.getName(), false, fname);
     }
 
+    public void createTemplateMakefile() throws TbFailure {
+       ModelNames mn = new ModelNames(model); 
+       writeGeneric(makeTemplateDirectory, "Makefile.stg", "MakefileBody", "model", mn,  
+           model.getSystemInstanceName(), false, "Makefile");
+      }
+    
   public void createProcess(ProcessImplementation pi) throws TbFailure {
      String name = pi.getNormalizedName();
      
@@ -191,6 +197,7 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
     createAssemblyHeader();
     createMainFile();
     createProcesses(); 
+    createTemplateMakefile();
     
     // final check for errors from string template.
     if (listener.isErrorOccurred()) {

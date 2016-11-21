@@ -24,6 +24,8 @@ import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 //import edu.umn.cs.crisys.tb.codegen.common.names.PortNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
@@ -222,20 +224,13 @@ public abstract class CodeGeneratorBase {
 	}
    */
 	
-	// TODO: needs to be refactored.
-	private void createMailboxTypes() {
-		if (model.getCamkesUseMailboxDataports()) {
-		    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
-		        for (OutputDataPort d : ti.getOutputDataPortList()) {
-		        	int fanOut = d.getConnections().size();
-		        	int mailboxSize = fanOut + 2;
-		            RecordType mailboxRecordType = new RecordType();
-		            ArrayType mailboxArrayType = new ArrayType(d.getType(), mailboxSize);
-		        	mailboxRecordType.addField("data", mailboxArrayType);
-//		            model.getAstTypes().put((new PortNames(d)).getMailboxStructTypeName(), mailboxRecordType);
-		        }
-		    }
-		}
+	private void createPortTypes() {
+	   for (ThreadImplementation ti : model.getAllThreadImplementations()) {
+	      for (PortFeature d : ti.getPortList()) {
+	         PortEmitter pe = EmitterFactory.port(d);
+	         pe.addPortPublicTypeDeclarations(model.getAstTypes());
+	      }
+	   }
 	}
 	
 	protected Set<Type> getSharedVariableTypes() {
@@ -458,7 +453,7 @@ public abstract class CodeGeneratorBase {
       
       // TODO: MWW: this needs to be refactored for new architecture.
       // createComponentDispatchTypes();
-      createMailboxTypes();
+      createPortTypes();
       C_Type_Writer.writeTypes(hwriter, model, 6);
 
       writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("filePostfix"));

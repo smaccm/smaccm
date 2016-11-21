@@ -91,9 +91,13 @@ thread receiver3
 
 				
 	properties 
-	    Dispatch_Protocol => Aperiodic;
-	    TB_SYS::Thread_Type => Passive ;
+	    Dispatch_Protocol => Sporadic;
+	    Period => 1000 ms;
+		Source_Text => ("user_code/user_receiver3.c");
+	    Priority => 11;
+	    Stack_Size => 16384 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
+	    TB_SYS::Sends_Events_To => "{{}}";
 end receiver3 ; 
 
 process proc
@@ -138,5 +142,14 @@ system implementation test.vxworks
 		TB_SYS::OS => VxWorks;
 		TB_SYS::HW => QEMU;
 end test.vxworks;
+
+system implementation test.linux
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		TB_SYS::OS => linux;
+		TB_SYS::HW => QEMU;
+end test.linux;
+
 
 end test6;

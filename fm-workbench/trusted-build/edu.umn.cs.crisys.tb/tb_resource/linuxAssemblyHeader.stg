@@ -34,9 +34,14 @@ filePostfix(name, path) ::= <<
 
 >>
 
-processMainFunctionDecl(process) ::= <<
-void <process.mainFunctionName>(void);
+writePortDecls(threadImpl) ::= <<
+<threadImpl.portList:{port |<port.linuxAddCommonHFileDeclarations>}>
+>>
 
+processDecls(process) ::= <<
+
+void <process.mainFunctionName>(void);
+<process.threadImplementationList:writePortDecls()>
 >>
 
 activeThreadDecls(threadImpl) ::= <<
@@ -62,10 +67,8 @@ headerBody(model) ::= <<
 // Call trusted_build_main to kick off the whole shebang...
 int trusted_build_main(uint32_t runDurationInSeconds);
 
-<model.processImplementations:processMainFunctionDecl()>
+<model.processImplementations:processDecls()>
 
-// common declarations across threads/processes.
-<model.activeThreadImplementations:activeThreadDecls()>
 
 <writeModelMutexes(model, "extern")>
 >>

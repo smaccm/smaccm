@@ -13,6 +13,7 @@ filePrefix(name, date, path) ::= <<
 #include \<stdbool.h>
 #include \<stddef.h>
 #include \<stdint.h>
+#include "tb_linux_support.h"
 
 <osSpecificDefine()>
 

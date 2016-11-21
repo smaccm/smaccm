@@ -4,6 +4,7 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import edu.umn.cs.crisys.tb.util.*;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
@@ -89,7 +91,12 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
    public boolean getIsInProc() {
       ProcessImplementation srcProc = Util.getProcessImplementation(this.dataPort);
       for (PortConnection c: this.dataPort.getConnections()) {
-         ProcessImplementation destProc = Util.getProcessImplementation(this.dataPort);
+         ProcessImplementation destProc ; 
+         if (this.dataPort instanceof OutputDataPort) {
+            destProc = Util.getProcessImplementation(c.getDestPort());
+         } else {
+            destProc = Util.getProcessImplementation(c.getSourcePort());
+         }
          if (srcProc != destProc) {
             return false;
          }
@@ -100,7 +107,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
    @Override
    public PortFeature getModelElement() { return dataPort; }
    
-   public String getSharedDataTypeName() {
+   public String getSharedMemoryDataType() {
       return "tb_shmem_" + this.getType().getName(); 
    }
 
@@ -111,7 +118,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
    // uniform.
 
    public void addPortPublicTypeDeclarations(Map<String, Type> typeList) {
-      String typeName = getSharedDataTypeName();
+      String typeName = getSharedMemoryDataType();
       RecordType shmemType = new RecordType();
       shmemType.addField("mtx", LinuxUtil.mutexType);
       shmemType.addField("data", this.getModelElement().getType());
@@ -205,7 +212,6 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
       st.add("port", this);
       result += st.render();
       result += writeOptPortThreadInitializerPrototype("void");
-      result += this.getReaderWriterImplVarExternDecl(); 
       
       return result;
    }
@@ -232,18 +238,21 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
     ************************************************************/
 
    public String addCommonHFileDeclarations() {
-      String toReturn = ""; 
-      return toReturn;
+      String result = ""; 
+      return result;
    }
    
    @Override
    public String getLinuxAddCommonHFileDeclarations() {
-      String toReturn = ""; 
+      String result = ""; 
       if (this.getModelElement() instanceof InputPort) {
-         toReturn += LinuxUtil.writeExternMutexDecl(this.getMutex()); 
-         toReturn += addCommonHFileDeclarations();
+         // Out-of-proc shared memory is delared at the OS-level.
+         if (!getIsInProc()) {
+            result += this.getReaderWriterImplVarExternDecl(); 
+         }
+         result += addCommonHFileDeclarations();
       } 
-      return toReturn;
+      return result;
    }
 
    @Override
@@ -256,9 +265,8 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
       String toReturn = ""; 
       return toReturn;
    }
-
-   @Override
-   public String getLinuxAddMainCFileInitializers() {
+   
+   public String getInitializers() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          ST st = this.getTemplateST("portInitializer");
@@ -269,13 +277,20 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
             this.getModelElement().getInitializeEntrypointSourceText();
       if (initializer != null) {
          toReturn += initializer.getHandlerName() + "();\n ";
-      }
-
+      }      
       return toReturn;
    }
 
    @Override
-   public String getLinuxAddMainCFileDestructors() {
+   public String getLinuxAddMainCFileInitializers() {
+      String toReturn = ""; 
+      if (!this.getIsInProc()) {
+         toReturn = getInitializers();
+      }
+      return toReturn;
+   }
+
+   public String getDestructors() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          ST st = this.getTemplateST("portDestructor");
@@ -284,11 +299,23 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
       }
       return toReturn;
    }
+   
+   @Override
+   public String getLinuxAddMainCFileDestructors() {
+      String toReturn = ""; 
+      if (!this.getIsInProc()) {
+         toReturn += getDestructors(); 
+      }
+      return toReturn;
+   }
 
    @Override
    public String getLinuxAddProcessHFileDeclarations() {
-      // TODO Auto-generated method stub
-      return "";
+      String result = "";
+      if (getIsInProc()) {
+         result += this.getReaderWriterImplVarExternDecl() + "\n"; 
+      }
+      return result;
    }
 
    @Override
@@ -305,14 +332,20 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
 
    @Override
    public String getLinuxAddProcessCFileInitializers() {
-      // TODO Auto-generated method stub
-      return "";
+      String result = "";
+      if (this.getIsInProc()) {
+         result += this.getInitializers();
+      }
+      return result;
    }
 
    @Override
    public String getLinuxAddProcessCFileDestructors() {
-      // TODO Auto-generated method stub
-      return "";
+      String result = "";
+      if (this.getIsInProc()) {
+         result += this.getDestructors();
+      }
+      return result;
    }
    
    /*******************************************************
@@ -340,7 +373,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
     * 
     * For outgoing dataports, this is:
     *    getOutgoingWriterName() <-- OS-specific, tied to incomingWriterName for eChronos and VxWorks
-    *    
+    *    getConnections
     */
 
    public String getBackingStoreVar() {
@@ -349,11 +382,11 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
    
    @Override
    public String getReaderWriterImplVar() {
-      return Util.getPrefix() + "_" + getName() + "_var";
+      return Util.getPrefix() + "_" + getQualifiedName() + "_var";
    }
 
    public String getReaderWriterImplVarDeclInternal(String isExtern) {
-      return isExtern + this.getSharedDataTypeName() + " *" + this.getReaderWriterImplVar() + ";\n";
+      return isExtern + this.getSharedMemoryDataType() + " *" + this.getReaderWriterImplVar() + ";\n";
    }
    
    public String getReaderWriterImplVarDecl() {
@@ -413,7 +446,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
        
    public String getLockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.linux) {
-         return "pthread_mutex_lock(" + getMutex() + ");\n";
+         return "tb_mutex_lock(&" + getMutex() + ");\n";
       } else {
          throw new TbException("Error: getLockStmt: OS " + model.getOsTarget() + " is not a known OS target.");
       }
@@ -421,11 +454,26 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
 
    public String getUnlockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.linux) {
-         return "pthread_mutex_unlock(" + getMutex() + ");\n";
+         return "tb_mutex_unlock(&" + getMutex() + ");\n";
       } else {
          throw new TbException("Error: getunlockStmt: OS " + model.getOsTarget() + " is not a known OS target.");
       }
    }
 
+   public String getDataExpr() {
+      return "(" + this.getReaderWriterImplVar() + "->data)";
+   }
 
+   public String getMutexExpr() {
+      return this.getReaderWriterImplVar() + "->mtx";
+   }
+   
+   public List<PortConnectionEmitter> getConnections() {
+      List<PortConnectionEmitter> connections = new ArrayList<>();
+      for (PortConnection pc: this.getModelElement().getConnections()) {
+         connections.add(EmitterFactory.portConnection(pc));
+      }
+      return connections;
+   }
+   
 }

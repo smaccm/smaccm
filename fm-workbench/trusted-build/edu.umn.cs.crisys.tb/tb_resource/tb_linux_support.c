@@ -82,11 +82,11 @@ void tb_thread_create(TB_THREAD_TYPE *thread,
 	pthread_attr_t tattr; 
 	struct sched_param schedule_attributes; 
 	
-	printf("EAGAIN == %d", EAGAIN);
+/*	printf("EAGAIN == %d", EAGAIN);
 	printf("EINVAL == %d", EINVAL);
 	printf("EPERM == %d", EPERM);
 	printf("ENOTSUP == %d", ENOTSUP);
-	tb_result = pthread_attr_init (&tattr);	
+*/	tb_result = pthread_attr_init (&tattr);	
 	assert(tb_result == 0); 
 	tb_result = pthread_attr_setinheritsched(&tattr, 	
 		PTHREAD_EXPLICIT_SCHED);
@@ -107,7 +107,8 @@ void tb_thread_create(TB_THREAD_TYPE *thread,
 	} else if (tb_result == EINVAL) {
 		printf("Error: EINVAL was the result for creating a thread");
 	} else if (tb_result == EPERM) {
-		printf("Error: EPERM was the result for creating a thread");
+		printf("Error: EPERM was the result for creating a thread.\n");
+		printf("Chances are you are not running with high enough privilege.  Try running as root using 'sudo' \n");
 	} else if (tb_result != 0) {
 		printf("Error: unknown error!  Code = %d", tb_result);
 	}

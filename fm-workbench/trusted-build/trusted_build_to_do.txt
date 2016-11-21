@@ -115,17 +115,28 @@ To-dos:
 	! I have an "unnecessary" call to initialize_periodic_dispatcher() for linux.  Should I get rid of it or try to standardize?  I'm getting rid of it.
 	! fix template error in CommonComponentHeader.
 	
-	-> libraries: what do we need?
-		pthreadlib
+	! libraries: what do we need?
+		pthreadlib: compile with -pthread
+	
+	! For each shared memory thing, we need to have local writers for
+		each outgoing port.  First thing to check.
+	! Second thing to check is: do names match up?  When we have a
+		local writer, it must write to a variable that is "owned" by
+		the reading thread.  How do we ensure that such variables are unique?
+	! Where are we writing th shared data *?
 	
 	-> Do we care about memory/stack sizes for processes in linux?
-	
+		-> No, but we should emit a warning.
+		
 	-> Somewhere I'm defining an external type and I do not know
 		whether I have properly specified its header.
 	
 	-> Consider moving to a condition variable; this seems to be
 		"preferred" for linux.
 		
+	-> hardware
+	-> software - cmake
+	-> refactoring - 
 	
 Old version:
 	! Allow external configuration of timer on VxWorks.

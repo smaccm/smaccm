@@ -47,8 +47,8 @@ typedef pthread_mutex_t		TB_MUTEX_TYPE;
 typedef pthread_t			TB_THREAD_TYPE;
 
 
-
-void tb_mutex_create(TB_MUTEX_TYPE *mtx);
+void tb_interproc_mutex_create(TB_MUTEX_TYPE *mtx);
+void tb_intraproc_mutex_create(TB_MUTEX_TYPE *mtx);
 void tb_mutex_destroy(TB_MUTEX_TYPE *mtx);
 void tb_mutex_lock(TB_MUTEX_TYPE *mtx); 
 void tb_mutex_unlock(TB_MUTEX_TYPE *mtx);
