@@ -1,4 +1,4 @@
-#include "aadl_receiver.h"
+#include "tb_receiver.h"
 #ifdef __TB_OS_CAMKES__
 	#include <receiver.h>
 #elif __TB_OS_ECHRONOS__

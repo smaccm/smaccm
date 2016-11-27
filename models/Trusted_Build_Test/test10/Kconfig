@@ -1,6 +1,0 @@
-config APP_TEST10
-    bool "test10 (from AADL)"
-    default n
-    select APP_CAMKES_EXECUTIVE
-    help
-        test10 (from AADL).

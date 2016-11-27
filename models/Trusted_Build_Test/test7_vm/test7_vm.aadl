@@ -1,11 +1,11 @@
 -- AADL Test 7: active -> active threads using scalar read/write.
 
-package test7_mp
+package test7_vm
 public 
    with Base_Types;
    with TB_SYS;   
    with Data_Model;
-
+   with Deployment;
 
 data a_struct
   properties
@@ -77,6 +77,8 @@ process proc_receiver
 
 end proc_receiver;
 
+-- define new attributes for VM?
+
 process implementation proc_receiver.Impl
 	subcomponents
 		r: thread receiver;
@@ -84,80 +86,73 @@ process implementation proc_receiver.Impl
 		in_to_r : port Input1 -> r.Input1;
 end proc_receiver.Impl;
 
-system the_impl
-	
-end the_impl;
 
+virtual processor linux_vm
+end linux_vm;
 
-processor main     
-end main;
-
-processor implementation main.camkes
-   properties
-      TB_SYS::OS => camkes;
-      TB_SYS::HW => QEMU;
-end main.camkes;
-
-processor implementation main.linux
+virtual processor implementation linux_vm.impl
    properties
       TB_SYS::OS => linux;
-      TB_SYS::HW => X86;
-end main.linux;
+      TB_SYS::HW => QEMU;
+      Frame_Period => 500 ms;
+      Slot_Time => 100 us; 
+      -- Need to add priority to SMACCM_SYS.  SMACCM_SYS::Priority => 7;
+      Deployment::Execution_Platform => linux32;
+end linux_vm.impl;
 
-processor implementation main.vxworks
-   properties
-      TB_SYS::OS => vxworks;
-      TB_SYS::HW => x86;
-end main.vxworks;
+processor x86		
+end x86;
 
-processor implementation main.echronos
-   properties
-      TB_SYS::OS => echronos;
-      TB_SYS::HW => pixhawk;
-end main.echronos;
+processor implementation x86.test
+	subcomponents
+		linux_vm: virtual processor linux_vm.impl;
+	properties
+      TB_SYS::OS => camkes;
+      TB_SYS::HW => QEMU;
+		Deployment::Execution_Platform => sel4;		
+end x86.test;
+
+-------------------------------------------------------
+--
+-- Overkill for this example: allows a straightforward
+-- hierarchical binding of processes and threads to 
+-- a virtual processor.
+--  
+-------------------------------------------------------
+
+system linux_vm_procs
+   features
+      Input1: in data port Base_Types::Unsigned_32;
+end linux_vm_tasks;
+
+system implementation linux_vm_procs.Impl
+   subcomponents
+      r    : process proc_receiver.Impl;
+	connections
+		in_to_r : port Input1 -> r.Input1;
+end linux_vm_procs.Impl;
+
+system the_impl	
+end the_impl;
+
+-- Here is where things fit together.
+-- We have a processor binding for sel4 and a 
+-- virtual processor for the VM.
+-- We bind our seL4 processes to the sel4 processor,
+-- and our linux processes to the vm.
 
 system implementation the_impl.Impl
 	subcomponents
-		s: process proc_sender.Impl;
-		r: process proc_receiver.Impl;
+      sel4_cpu  : processor x86.test;
+      s         : process proc_sender.Impl;
+		r         : system linux_vm_procs.Impl;
 	connections
 		s_to_r: port s.Output1 -> r.Input1;
+	properties
+	   actual_processor_binding => (reference (sel4_cpu.linux_vm)) applies to r;
+      actual_processor_binding => (reference (sel4_cpu)) applies to s;	   
 end the_impl.Impl;
 
-system test
-end test;
-
-system implementation test.camkes
-	subcomponents
-		tl: system the_impl.Impl;
-		toplevel: processor main.camkes;
-	properties
-      actual_processor_binding => (reference (toplevel)) applies to tl;     
-end test.camkes;
-
-system implementation test.echronos
-	subcomponents
-		tl: system the_impl.Impl;
-		toplevel: processor main.echronos;
-   properties
-      actual_processor_binding => (reference (toplevel)) applies to tl;     
-end test.echronos;
-
-system implementation test.vxworks
-	subcomponents
-		tl: system the_impl.Impl;
-		toplevel: processor main.vxworks;
-   properties
-      actual_processor_binding => (reference (toplevel)) applies to tl;     
-end test.vxworks;
-
-system implementation test.linux
-	subcomponents
-		tl: system the_impl.Impl;
-		toplevel: processor main.linux;
-   properties
-      actual_processor_binding => (reference (toplevel)) applies to tl;     
-end test.linux;
 
 
-end test7_mp;
+end test7_vm;

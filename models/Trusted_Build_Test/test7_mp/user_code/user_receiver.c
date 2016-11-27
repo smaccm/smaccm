@@ -3,7 +3,7 @@
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>
 #endif
-#include "aadl_receiver.h"
+#include "tb_receiver.h"
 #include <inttypes.h>
 #ifndef __TB_OS_ECHRONOS
 #include <stdio.h>

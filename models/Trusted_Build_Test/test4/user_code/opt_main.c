@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "aadl_decls.h"
+#include "tb_decls.h"
 
 #ifdef __TB_OS_LINUX__
 

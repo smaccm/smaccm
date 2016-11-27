@@ -1,22 +1,23 @@
-#include <smaccm_sender.h>
+#include "tb_sender.h"
+#include <inttypes.h>
 #ifdef __TB_OS_CAMKES__
 	#include <sender.h>
-	#include <inttypes.h>
-#elif __TB_OS_ECHRONOS__
+#endif
+#ifdef __TB_OS_ECHRONOS__
 	#include <debug.h>
+#else
+	#include <stdio.h>
 #endif
 
 void periodic_ping(const int64_t * the_time) {
 
-	#ifdef __TB_OS_VXWORKS__
-		// VxWorks doesn't support long longs for printing.
-		printf("sender: periodic dispatch received at time: %d.  Writing to receiver. \n", (int32_t)(*the_time));
-	#elif __TB_OS_ECHRONOS__
+	#ifdef __TB_OS_ECHRONOS__
 		debug_print("sender: periodic dispatch received at time ");
 		debug_printhex32((uint32_t)*the_time);
 		debug_println(".  Writing to receiver.");
 	#else
-		printf("sender: periodic dispatch received at time: %lld.  Writing to receiver. \n", *the_time);
+		// VxWorks doesn't support long longs for printing.
+		printf("sender: periodic dispatch received at time: %d.  Writing to receiver. \n", (int32_t)(*the_time));
 	#endif	
 	   
    test6__a_array_impl test_data;
