@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalIRQEvent;
@@ -88,12 +91,12 @@ public class ModelNames implements NameEmitter {
   }
 
   public List<NameEmitter> getThreadImplementations() {
-    return constructThreadImplList(m.getAllThreadImplementations());
+    return constructThreadImplList(m.getThreadImplementationList());
   }
   
   public List<ProcessImplementationNames> getProcessImplementations() {
      List<ProcessImplementationNames> names = new ArrayList<>(); 
-     for (ProcessImplementation pi: m.processImplementationList) {
+     for (ProcessImplementation pi: m.getProcessImplementationList()) {
         names.add(EmitterFactory.processImplementation(pi));
      }
      return names;
@@ -147,8 +150,8 @@ public class ModelNames implements NameEmitter {
   //
   ////////////////////////////////////////////////////////////
 
-  public String getSystemImplementationName() {
-    return Util.normalizeAadlName(m.getSystemImplementationName());
+  public String getPathName() {
+    return Util.normalizeAadlName(m.getPathName());
   }
   
   public List<String> getExternalTypeHeaders() {
@@ -160,15 +163,15 @@ public class ModelNames implements NameEmitter {
   }
   
   public String getSystemTypeHeaderName() {
-    return getPrefix() + "_" + getSystemImplementationName() + "_types.h";
+    return getPrefix() + "_" + getPathName() + "_types.h";
   }
 
   public String getCamkesSystemAssemblyFileName() {
-    return getSystemImplementationName() + "_assembly.camkes";
+    return getPathName() + "_assembly.camkes";
   }
   
   public String getEChronosPrxFileName() {
-    return getSystemImplementationName() + ".prx";
+    return getPathName() + ".prx";
   }
   public boolean getGenerateSystickIrq() {
 	  return m.getGenerateSystickIRQ();
@@ -238,6 +241,12 @@ public class ModelNames implements NameEmitter {
     return m.isExternalTimerComponent();
   }
   
+  /***************************************************************
+   * 
+   * Camkes-specific functions
+   * 
+   ***************************************************************/
+
   public String getCamkesExternalTimerInterfacePath() {
     return m.getCamkesExternalTimerInterfacePath();
   }
@@ -258,6 +267,23 @@ public class ModelNames implements NameEmitter {
     return Integer.toString(m.getCamkesTimeServerAadlThreadMinIndex());
   }
   
+  public String getPortListEmitterAssemblyIdlImports() {
+     String s = ""; 
+     List<PortFeature> ports = this.m.getPortFeatureList(); 
+     List<PortListEmitter> emitters = EmitterListRegistry.getPortListEmitters(); 
+     for (PortListEmitter e: emitters) {
+        if (e instanceof PortListEmitterCamkes) {
+           PortListEmitterCamkes camkesEmitter = (PortListEmitterCamkes)e;
+           s += camkesEmitter.camkesAddAssemblyIdlImports(m, ports);
+        }
+     }
+     return s;
+  }
+  /***************************************************************
+   * 
+   * EChronos-specific functions
+   * 
+   ***************************************************************/
   public static String getEChronosDispatchSignal() {
     return getPrefix() + "_" + "dispatcher";
   }

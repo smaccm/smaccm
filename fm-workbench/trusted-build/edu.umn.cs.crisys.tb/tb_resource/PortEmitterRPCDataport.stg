@@ -101,15 +101,14 @@ remoteCallerFunction(srcPort) ::= <<
  ************************************************************************/
 
 bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
-   <srcPort.connections:componentRemoteCallerFunction()>
     bool tb_result = true ; 
     <srcPort.connections:callRemoteWriterStmt()>
     return tb_result;
 }
 >>
 
-componentRemoteWriterDecl(srcPort) ::= <<
-<remoteCallerFunction(srcPort)>
+componentRemoteWriterDecl(port) ::= <<
+<remoteCallerFunction(port)>
 >>
 
 

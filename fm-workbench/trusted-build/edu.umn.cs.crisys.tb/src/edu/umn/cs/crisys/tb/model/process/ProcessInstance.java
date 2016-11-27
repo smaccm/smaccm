@@ -7,6 +7,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 
 import edu.umn.cs.crisys.tb.model.ModelElement;
 import edu.umn.cs.crisys.tb.model.ModelElementBase;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
@@ -17,7 +18,8 @@ public class ProcessInstance extends ModelElementBase {
    private int processId = 0;
 
    private ProcessImplementation impl;
-
+   private OSModel model;
+   
    private String name; 
    private ArrayList<ThreadInstance> threadInstanceList = new ArrayList<ThreadInstance>();
 
@@ -62,5 +64,13 @@ public class ProcessInstance extends ModelElementBase {
    
    public void addThreadInstance(ThreadInstance ti) {
       this.threadInstanceList.add(ti);
+   }
+
+   public OSModel getModel() {
+      return model;
+   }
+
+   public void setModel(OSModel model) {
+      this.model = model;
    }
 }

@@ -42,6 +42,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Parameter;
 import org.osate.aadl2.PortCategory;
 import org.osate.aadl2.SubprogramAccess;
@@ -55,18 +56,21 @@ import org.osate.aadl2.impl.DataSubcomponentImpl;
 import org.osate.aadl2.impl.DataTypeImpl;
 import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.ProcessImplementationImpl;
+import org.osate.aadl2.impl.ProcessorImplementationImpl;
 import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.aadl2.impl.SubprogramGroupAccessImpl;
 import org.osate.aadl2.impl.SubprogramGroupTypeImpl;
 import org.osate.aadl2.impl.SubprogramTypeImpl;
 import org.osate.aadl2.impl.ThreadSubcomponentImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
+import org.osate.aadl2.impl.VirtualProcessorImplementationImpl;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.instance.ConnectionKind;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.SystemInstance;
+import org.osate.aadl2.instance.impl.ComponentInstanceImpl;
 import org.osate.aadl2.instance.impl.FeatureInstanceImpl;
 import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
@@ -75,6 +79,7 @@ import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.OSModel.OSTarget;
+import edu.umn.cs.crisys.tb.model.TopLevelModel;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
@@ -102,38 +107,85 @@ public class AadlModelParser {
    private SystemInstance systemInstance;
 
    // containers for AADL AST objects
-   private ArrayList<ThreadTypeImpl> threadTypeImplList;
+   private ArrayList<ThreadTypeImpl> threadTypeImplList = new ArrayList<>();
 
    // Instance objects
-   private ArrayList<ComponentInstance> threadInstanceList;
-   private ArrayList<ComponentInstance> processInstanceList;
-   private ArrayList<ConnectionInstance> connectionInstances;
- 
+   private ArrayList<ComponentInstance> threadInstanceList = new ArrayList<>();
+   private ArrayList<ComponentInstance> processInstanceList = new ArrayList<>();
+   private ArrayList<ComponentInstance> processorInstanceList = new ArrayList<>();
+   private ArrayList<ComponentInstance> virtualProcessorInstanceList = new ArrayList<>(); 
+   private ArrayList<ConnectionInstance> connectionInstances = new ArrayList<>();
+
    private Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap = new HashMap<>();
    private Map<ProcessImplementationImpl, ProcessImplementation> processImplementationMap = new HashMap<>();
 
    private Map<DataSubcomponentImpl, SharedData> sharedDataMap = new HashMap<>();	
    private HashMap<PortImpl, PortFeature> portMap = new HashMap<PortImpl, PortFeature>();
    private Map<ComponentInstance, ThreadInstance> threadInstanceMap = new HashMap<>();
-   private Map<ComponentInstance, ProcessInstance> processInstanceMap = new HashMap<>();  
-   
+   //private Map<ComponentInstance, ProcessInstance> processInstanceMap = new HashMap<>();  
+   private Map<ComponentInstance, OSModel> osModelMap = new HashMap<>(); 
+
    private Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
 
-   private OSModel model;
+   private TopLevelModel tlm;
 
    private Logger logger;
 
    // Model constructor
-   public AadlModelParser(SystemImplementation sysimpl, SystemInstance si, OSModel model, Logger logger) {
+   public AadlModelParser(SystemImplementation sysimpl, SystemInstance si, TopLevelModel model, Logger logger) {
       this.systemImplementation = sysimpl;
       this.systemInstance = si;
       this.logger = logger;
-      this.model = model;
+      this.tlm = model;
 
       // re-init the counters.
       PortConnection.init();
       ThreadInstance.init();
 
+      // setModelProperties(sysimpl, this.model);
+
+      // Parse existing AADL model
+      findThreadTypeImpls(systemImplementation);
+      findTopLevelComponentInstances(systemInstance);
+
+
+      // construct the OSModel implementations (using the processor list)
+      constructOSModelMap();
+      constructVmModelMap();
+
+      // Initialize thread implementations
+      constructThreadImplMap();
+
+      // Initialize process implementations
+      constructProcessImplMap();
+
+      // Initialize connections
+      initializeConnections();
+
+      // Initialize Periodic Dispatcher
+      initializeThreadCalendar(); 
+
+
+      // Harvest model type data
+      harvestModelTypeData();
+
+      // initialize the model thread and shared data lists.
+//      this.model.threadImplementationList = new ArrayList<ThreadImplementation>(this.threadImplementationMap.values());
+      //this.model.threadImplementationList.sort(Comparator.comparing(ThreadImplementation::getNormalizedName));
+//      this.model.sharedDataList = new ArrayList<SharedData>(this.sharedDataMap.values());
+      this.tlm.getModels().addAll(this.osModelMap.values());
+      this.tlm.getModels().sort(Comparator.comparing(OSModel::getPathName));
+   }
+
+   /***************************************************************************
+    * 
+    * Functions for building properties related to model 
+    * 
+    ***************************************************************************/
+   void setModelProperties(NamedElement sysimpl, OSModel model) {
+
+      // Construct the properties found directly in the 
+      // model
       // find the OS and target hardware
       String OS = PropertyUtil.getOS(sysimpl);
       if ("echronos".equalsIgnoreCase(OS)) {
@@ -159,51 +211,36 @@ public class AadlModelParser {
       // note: may be null, and that's o.k.
       model.setOutputDirectory(Util.getStringValueOpt(sysimpl, PropertyUtil.TB_SYS_OUTPUT_DIRECTORY));
 
-      threadTypeImplList = new ArrayList<ThreadTypeImpl>();
-      threadInstanceList = new ArrayList<ComponentInstance>();
-      threadInstanceMap = new HashMap<ComponentInstance, ThreadInstance>();
-      processInstanceList = new ArrayList<>();
-      processImplementationMap = new HashMap<>();
-      
-
-      // Connection instances
-      connectionInstances = new ArrayList<ConnectionInstance>();
-
-      // Parse existing AADL model
-      findThreadTypeImpls(systemImplementation);
-      findTopLevelComponentInstances(systemInstance);
-
-
       // create properties related to timers.
       try {
-         this.model.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
-         this.model.externalTimerComponent = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.EXTERNAL_TIMER_COMPONENT);
+         model.setGenerateSystickIRQ(PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.GENERATE_SCHEDULER_SYSTICK_IRQ));
+         model.setExternalTimerComponent(PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.EXTERNAL_TIMER_COMPONENT));
       } catch (Exception e) {
          this.logger.error("Unexpected internal exception: properties [generateSystickIRQ, externalTimerComponent] should have default value in TB_SYS, but were not found.");
          throw new TbException("Parse failure on one of [generateSystickIRQ, externalTimerComponent] target property ");
       }
 
       try {
-         if (this.model.getOsTarget() == OSTarget.CAmkES) {
-            this.model.camkesTimeServerAadlThreadMinIndex = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX);
-            this.model.camkesDataportRpcMinIndex = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_DATAPORT_RPC_MIN_INDEX);
+         if (model.getOsTarget() == OSTarget.CAmkES) {
+            model.setCamkesTimeServerAadlThreadMinIndex((int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX));
+            model.setCamkesDataportRpcMinIndex((int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_DATAPORT_RPC_MIN_INDEX));
          }
       } catch (Exception e) {
          this.logger.error("Properties camkesTimeServerAadlThreadMinIndex and camkesDataportRpcMinIndex must be assigned for CAmkES target.");
          throw new TbException("Parse failure on one of [camkesTimeServerAadlThreadMinIndex, camkesDataportRpcMinIndex] target property ");
       }
 
-      if (this.model.externalTimerComponent) {
+      if (model.isExternalTimerComponent()) {
          try {
-            this.model.camkesExternalTimerCompletePath = PropertyUtils.getStringValue(systemImplementation, PropertyUtil.CAMKES_EXTERNAL_TIMER_COMPLETE_PATH);
-            this.model.camkesExternalTimerInterfacePath = PropertyUtils.getStringValue(systemImplementation, PropertyUtil.CAMKES_EXTERNAL_TIMER_INTERFACE_PATH);
+            model.setCamkesExternalTimerCompletePath(PropertyUtils.getStringValue(systemImplementation, PropertyUtil.CAMKES_EXTERNAL_TIMER_COMPLETE_PATH));
+            model.setCamkesExternalTimerInterfacePath(PropertyUtils.getStringValue(systemImplementation, PropertyUtil.CAMKES_EXTERNAL_TIMER_INTERFACE_PATH));
          } catch (Exception e) {
             this.logger.error("Error in system implementation: if property External_Timer_Component is true, then properties: {TB_SYS::CAmkES_External_Timer_Interface_Path, TB_SYS::CAmkES_External_Timer_Complete_Path} must also be defined.");
             throw new TbException("Parse failure on external timer component properties.");
          }
       } else {
          try {
-            this.model.camkesInternalTimerTimersPerClient = (int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT);
+            model.setCamkesInternalTimerTimersPerClient((int)PropertyUtils.getIntegerValue(systemImplementation, PropertyUtil.CAMKES_INTERNAL_TIMER_TIMERS_PER_CLIENT));
          } catch (Exception e) {
             this.logger.error("Unexpected internal exception: property [camkesInternalTimerTimersPerClient] should have default value but were not found.");
             throw new TbException("Parse failure on [camkesInternalTimerTimersPerClient] target property ");
@@ -211,9 +248,9 @@ public class AadlModelParser {
       }
 
       try {
-         this.model.eChronosGenerateCModules = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.ECHRONOS_GENERATE_C_MODULES);
-         if (this.model.eChronosGenerateCModules) {
-            this.model.eChronosCModulePath = PropertyUtils.getStringValue(systemImplementation, PropertyUtil.ECHRONOS_C_MODULE_PATH);
+         model.eChronosGenerateCModules = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.ECHRONOS_GENERATE_C_MODULES);
+         if (model.eChronosGenerateCModules) {
+            model.eChronosCModulePath = PropertyUtils.getStringValue(systemImplementation, PropertyUtil.ECHRONOS_C_MODULE_PATH);
          }
       } catch (Exception e) {
          this.logger.error("If eChronosGenerateCModules is 'true', then eChronosCModulePath must be defined.");
@@ -221,7 +258,7 @@ public class AadlModelParser {
       }
 
       // default value is null.
-      this.model.eChronosFlashLoadAddress = 
+      model.eChronosFlashLoadAddress = 
             Util.getStringValueOpt(systemImplementation, 
                   PropertyUtil.ECHRONOS_FLASH_LOAD_ADDRESS);
 
@@ -231,36 +268,32 @@ public class AadlModelParser {
                      PropertyUtil.MAILBOX));
       } catch(Exception e) {}
 
-      // Initialize thread implementations
-      constructThreadImplMap();
-
-      // Initialize process implementations
-      constructProcessImplMap();
-      
-      // Initialize connections
-      initializeConnections();
-
-      // Initialize Periodic Dispatcher
-      initializeThreadCalendar(); 
-
-      // grab all files referenced in the model.
-      initializeFiles();
-      initializeLegacyIRQs();
-
       // grab system implementation level external mutexes
       List<String> externalMutexList = (ArrayList<String>) PropertyUtil.getExternalMutexList(systemImplementation);
       List<String> externalSemList = (ArrayList<String>) PropertyUtil.getExternalSemaphoreList(systemImplementation);
-      this.model.legacyMutexList.addAll(externalMutexList);
-      this.model.legacySemaphoreList.addAll(externalSemList);
+      model.getLegacyMutexList().addAll(externalMutexList);
+      model.getLegacySemaphoreList().addAll(externalSemList);
 
-      // Harvest model type data
-      harvestModelTypeData();
+      // add "extra" files to the model, if necessary.
+      
+      List<String> topLevelFileNames = 
+            Util.getSourceTextListOpt(this.systemImplementation, PropertyUtil.SOURCE_TEXT);
 
-      // initialize the model thread and shared data lists.
-      this.model.threadImplementationList = new ArrayList<ThreadImplementation>(this.threadImplementationMap.values());
-      this.model.threadImplementationList.sort(Comparator.comparing(ThreadImplementation::getNormalizedName));
-      this.model.sharedDataList = new ArrayList<SharedData>(this.sharedDataMap.values());
+      if (topLevelFileNames != null) {
+         for (String s : topLevelFileNames) {
+            logger.status("Referenced File: " + s);
+            if (s.endsWith(".a")) {
+               model.getLibraryFiles().add(s);
+            } else {
+               model.getSourceFiles().add(s);
+            }
+         }
+      }
+      // grab all files referenced in the model.
+      initializeLegacyIRQs(sysimpl, model);
+
    }
+
 
    /***************************************************************************
     * 
@@ -272,19 +305,19 @@ public class AadlModelParser {
       connectionInstances.addAll(top.getAllConnectionInstances());
 
       for (ComponentInstance ci : top.getAllComponentInstances()) {
+         System.out.println("name: " + ci.getName());
+         System.out.println("full name: " + ci.getFullName());
+         System.out.println("name path: " + ci.getComponentInstancePath());
          if (ci.getCategory() == ComponentCategory.THREAD) {
             threadInstanceList.add(ci);
          } else if (ci.getCategory() == ComponentCategory.PROCESS) {
             processInstanceList.add(ci);
-            // ci.getName();
-            // ci.getOwnedPropertyAssociations();
-            // ci.getFullName();
-            //    	  ci.getChildren();
-            //
-            // ci.getComponentClassifier();
-            // ci.getOwner();
          } else if (ci.getCategory() == ComponentCategory.PROCESSOR) {
-
+            this.processorInstanceList.add(ci);
+            ci.getChildren();
+         } else if (ci.getCategory() == ComponentCategory.VIRTUAL_PROCESSOR) {
+            this.virtualProcessorInstanceList.add(ci); 
+            ci.getComponentClassifier(); 
          }
       }
    }
@@ -341,7 +374,8 @@ public class AadlModelParser {
             signal_number = InputIrqPort.NO_SIGNAL_NUMBER;
 
             // signal number is necessary for CAmkES, but not eChronos
-            if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
+            
+            if (ti.getModel().getOsTarget() == OSModel.OSTarget.CAmkES) {
                throw pnpe;
             }
          }
@@ -629,7 +663,7 @@ public class AadlModelParser {
       }
    }
 
-   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti) {
+   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti, OSModel model) {
       String name = tti.getName();
       boolean isPassive = PropertyUtil.getThreadType(tti);
       boolean isExternal = PropertyUtil.getIsExternal(tti);
@@ -639,7 +673,10 @@ public class AadlModelParser {
       if (isPassive) {
          throw new TbException("Trusted build: 'Rename' branch currently does not support passive threads.");
       }
-
+      // Ordering: we have constructed the OSModels specifically to make this 
+      // connection easy, but...nothing is simple.  We still need to 
+      // map from threads back to processes.
+      
       if (!(isPassive || isExternal)) {
          priority = PropertyUtil.getPriority(tti);
          stackSize = PropertyUtil.getStackSizeInBytes(tti);
@@ -654,16 +691,12 @@ public class AadlModelParser {
          } catch (TbException e) {}
          try {
             stackSize = PropertyUtil.getStackSizeInBytes(tti); 
-            if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
-               logger.warn("Warning: stack size ignored for passive/external thread: " + name);
-            }
          } catch (TbException e) {
             if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
                logger.warn("Deprecation warning: default stack size (16384) used for passive thread: " + name);
             }
          }
       }
-
       String generatedEntrypoint = tti.getFullName();
       ThreadImplementation ti = 
             new ThreadImplementation(model, name, priority, stackSize, generatedEntrypoint, isPassive);
@@ -690,6 +723,10 @@ public class AadlModelParser {
       List<String> fileNames = Util.getSourceTextListOpt(tti, PropertyUtil.SOURCE_TEXT);
       ti.setSourceFileList(fileNames);
 
+      /* This is WRONG, but it is how I'm going to leave it until 
+       * we add better support for instances */
+      
+      
       for (Feature f: tti.getAllFeatures()) {
          if (f instanceof PortImpl) {
             addPort((PortImpl)f, ti); 
@@ -718,6 +755,57 @@ public class AadlModelParser {
       return ti;
    }
 
+   /* Move tests to thread instances:
+    *    if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
+               logger.warn("Warning: stack size ignored for passive/external thread: " + name);
+         }
+
+    */
+   
+   /***************************************************************************
+    * 
+    * OSModel constructors - must be called prior to constructing threads or 
+    * processes.
+    * 
+    ***************************************************************************/
+   public void constructOSModel(ComponentInstance c) {
+      ProcessorImplementationImpl pti = (ProcessorImplementationImpl) c.getComponentClassifier(); 
+      OSModel osModel = new OSModel(pti, c);
+      osModel.setTopLevelModel(this.tlm);
+      this.setModelProperties(pti, osModel);
+      this.osModelMap.put(c, osModel);
+   }
+
+   public void constructOSModelMap() {
+      for (ComponentInstance c: this.processorInstanceList) {
+         constructOSModel(c);
+      }
+   }
+
+   public void constructVmModel(ComponentInstance c) {
+      VirtualProcessorImplementationImpl pti = 
+            (VirtualProcessorImplementationImpl)c.getComponentClassifier();
+      Element parent = c.getOwner();
+      if (parent == null || 
+         ((ComponentInstance)parent).getCategory() != ComponentCategory.PROCESSOR) {
+         this.logger.error("Error: Trusted build virtual processor: " + c.getName() +  " must have a processor parent");
+         throw new TbException("Error: Trusted build virtual processor " + c.getName() +  " must have a defined processor parent in AADL"); 
+      }
+      ComponentInstance parentProc = (ComponentInstance)parent;
+      OSModel parentModel = this.osModelMap.get(parentProc);      
+      OSModel osModel = new OSModel(pti, c); 
+      osModel.setTopLevelModel(this.tlm);
+      this.setModelProperties(pti, osModel);
+      parentModel.addVirtualMachine(osModel);
+      osModel.setParent(parentModel);
+      this.osModelMap.put(c, osModel);
+   }
+   
+   public void constructVmModelMap() {
+      for (ComponentInstance c: this.virtualProcessorInstanceList) {
+         constructVmModel(c);
+      }
+   }
    /***************************************************************************
     * 
     * Process constructors - must be called after threads are constructed.
@@ -741,7 +829,7 @@ public class AadlModelParser {
 
    public ProcessImplementation constructProcessImplementation(ProcessImplementationImpl pti) {
       ProcessImplementation procImpl = 
-            new ProcessImplementation(this.model, pti.getName());
+            new ProcessImplementation(pti.getName());
       for (Element elem: pti.getChildren()) {
          ThreadTypeImpl tti = optFindThreadImplementation(elem);
          if (tti != null) {
@@ -750,18 +838,17 @@ public class AadlModelParser {
                procImpl.addThreadImplementation(ti);
                ti.setParentProcess(procImpl);
             } else {
-                  throw new TbException("Error: unable to find thread implementation " + elem.toString() + 
+               throw new TbException("Error: unable to find thread implementation " + elem.toString() + 
                      " in the thread implementation map.");
             }
          }
       }
       return procImpl; 
    }
-   
+
    public ProcessInstance constructProcessInstance(ComponentInstance c, ProcessImplementation impl) {
       ProcessInstance pi = new ProcessInstance(c.getName(), impl);
       for (Element elem: c.getChildren()) {
-         // these should be thread instances.  They are not.
          if (this.threadInstanceMap.containsKey(elem)) {
             ThreadInstance ti = this.threadInstanceMap.get(elem);
             pi.addThreadInstance(ti);
@@ -770,25 +857,37 @@ public class AadlModelParser {
       return pi; 
    }
 
-   
-   public Map<ProcessImplementationImpl, ProcessImplementation> constructProcessImplMap() {
-      HashMap<ProcessImplementationImpl, ProcessImplementation> processMap = 
-         new HashMap<>();
+
+   public OSModel findOsModel(NamedElement ne) {
+      try {
+         ComponentInstance procBinding = PropertyUtil.getProcessorBinding(ne);
+         return osModelMap.get(procBinding);
+      } catch (Exception e) {
+         throw new TbException("Trusted build: object " + ne.getName() + " is not bound to a processor or virtual processor.");
+      }
+   }
+
+   public void constructProcessImplMap() {
+      Map<ProcessImplementationImpl, ProcessImplementation> processMap = 
+            this.processImplementationMap;
       for (ComponentInstance c: this.processInstanceList) {
          ProcessImplementationImpl pti = (ProcessImplementationImpl) c.getComponentClassifier(); 
          ProcessImplementation procImpl; 
+         OSModel model = findOsModel(c);
+
          if (processMap.containsKey(pti)) {
             procImpl = processMap.get(pti); 
          } else {
             procImpl = constructProcessImplementation(pti);
-            this.model.processImplementationList.add(procImpl);
+            model.getProcessImplementationList().add(procImpl);
+            procImpl.setModel(model);
          }
          ProcessInstance pi = constructProcessInstance(c, procImpl);
          procImpl.addProcessInstance(pi);
+         pi.setModel(model);
       }
-      return processMap;
    }
-   
+
    /***************************************************************************
     * 
     * Thread map constructors
@@ -819,22 +918,33 @@ public class AadlModelParser {
       Map<ThreadTypeImpl, List<ComponentInstance>> threadImplToInstanceMap = 
             constructThreadImplToInstanceMap();
 
+      OSModel model; 
+
+      
       for (ThreadTypeImpl tti : threadTypeImplList) {
-         ThreadImplementation threadImplementation = constructThreadImplementation(tti); 
-         if (threadImplToInstanceMap.containsKey(tti )) {
-            for (ComponentInstance co: threadImplToInstanceMap.get(tti)) {
-               ThreadInstance instance = new ThreadInstance(threadImplementation);
-               threadImplementation.addThreadInstance(instance);
-               // TODO: why do I need the thread instance map?
-               this.threadInstanceMap.put(co, instance);
-            }
-         }
-         else {
-            throw new TbException("Unable to find any thread instances for implementation: " + tti.getName()) ; 
+         
+         // TODO: in reality, a thread implementation is *not* associated
+         // with a given OS model (processor).  We are calling the binding 
+         // of the first thread instance the thread implementation binding.
+         // This is of course, very sketchy.  Once we support multiple 
+         // instances, we will need to fix this, but this will break all
+         // kinds of stuff, so I'm holding off until we can make this 
+         // larger change.
+         
+         List<ComponentInstance> instances = threadImplToInstanceMap.get(tti);
+         model = findOsModel(instances.get(0));
+         assert(model != null); 
+
+         ThreadImplementation threadImplementation = constructThreadImplementation(tti, model); 
+         for (ComponentInstance co: instances) {
+            ThreadInstance instance = new ThreadInstance(threadImplementation);
+            threadImplementation.addThreadInstance(instance);
+            // TODO: why do I need the thread instance map?
+            this.threadInstanceMap.put(co, instance);
          }
          threadImplementationMap.put(tti, threadImplementation);
-         this.model.legacyMutexList.addAll(threadImplementation.getExternalMutexList());
-         this.model.legacySemaphoreList.addAll(threadImplementation.getExternalSemaphoreList());
+         model.getLegacyMutexList().addAll(threadImplementation.getExternalMutexList());
+         model.getLegacySemaphoreList().addAll(threadImplementation.getExternalSemaphoreList());
       }
    }
 
@@ -941,6 +1051,7 @@ public class AadlModelParser {
    }
 
    private SharedDataAccessor constructAccess(ConnectionInstance ci) {
+      ConnectionInstanceEnd source = ci.getSource();
       ConnectionInstanceEnd destination = ci.getDestination();
       DataAccessImpl destAccessImpl = 
             PortUtil.getDataAccessImplFromConnectionInstanceEnd(destination);
@@ -951,13 +1062,18 @@ public class AadlModelParser {
       SharedDataAccessor.AccessType accessType = getDataAccessRights(destAccessImpl); 
 
       SharedData sharedData;
+      OSModel sourceOS = findOsModel(source);
+      OSModel destinationOS = findOsModel(destination);
+      
       if (this.sharedDataMap.containsKey(srcDataComponent)) {
          sharedData = this.sharedDataMap.get(srcDataComponent);
       } else {
          String ttiName = null;
          sharedData = new SharedData(srcDataComponent.getName(), getDataType(srcDataComponent));
          this.sharedDataMap.put(srcDataComponent, sharedData);
-         if (model.getOsTarget() == OSTarget.CAmkES) {
+         
+         if (sourceOS.getOsTarget() == OSTarget.CAmkES || 
+             destinationOS.getOsTarget() == OSTarget.CAmkES) {
             try {
                ttiName = Util.getStringValue(srcDataComponent, PropertyUtil.CAMKES_OWNER_THREAD);
             } catch (Exception e) {
@@ -994,8 +1110,8 @@ public class AadlModelParser {
 
    private RemoteProcedureGroup lookupRemoteProcedureGroup(SubprogramGroupTypeImpl subGroup) {
       RemoteProcedureGroup rpg;
-      if (model.getRemoteProcedureGroupMap().containsKey(subGroup.getName())) {
-         rpg = model.getRemoteProcedureGroupMap().get(subGroup.getName());
+      if (tlm.getRemoteProcedureGroupMap().containsKey(subGroup.getName())) {
+         rpg = tlm.getRemoteProcedureGroupMap().get(subGroup.getName());
       } else {
          // construct remote procedure group!
          ArrayList<RemoteProcedure> remoteProcedures = new ArrayList<>(); 
@@ -1030,7 +1146,7 @@ public class AadlModelParser {
             remoteProcedures.add(new RemoteProcedure(sa.getName(), args, returnType));
          }
          rpg = new RemoteProcedureGroup(remoteProcedures, subGroup.getName());
-         model.getRemoteProcedureGroupMap().put(subGroup.getName(), rpg);
+         tlm.getRemoteProcedureGroupMap().put(subGroup.getName(), rpg);
       }
       return rpg;
    }
@@ -1074,8 +1190,7 @@ public class AadlModelParser {
       try {
          for (ConnectionInstance ci : connectionInstances) {
             if (ci.getKind() == ConnectionKind.PORT_CONNECTION) {
-               PortConnection conn = constructPortConnection(ci);
-               //this.model.connectionList.add(conn);
+               constructPortConnection(ci);
             } else if (ci.getKind() == ConnectionKind.ACCESS_CONNECTION && 
                   ci.getDestination() instanceof FeatureInstanceImpl &&
                   ci.getSource() instanceof FeatureInstanceImpl) {
@@ -1103,17 +1218,12 @@ public class AadlModelParser {
     ***************************************************************************/
 
    public Map<String, Type> getAstTypes() {
-      return this.model.astTypes;
+      return this.tlm.getAstTypes();
    }
 
    private Type getDataType(PortImpl portImpl) {
       Type dataType = null;
       DataClassifier classifier = (DataClassifier) portImpl.getClassifier();
-      // String dcName = Util.normalizeAadlName(classifier);
-
-      //    if (!this.model.astTypes.containsKey(dcName)) {
-      //      System.out.println("Type not found: " + dcName + "\n");
-      //    } 
       dataType = lookupType(classifier);
 
       return dataType;
@@ -1139,8 +1249,8 @@ public class AadlModelParser {
       for (DataClassifier dc : this.dataTypes) {
          createAstType(dc);
       }
-      for (Type t : this.model.astTypes.values()) {
-         t.init(this.model.getAstTypes());
+      for (Type t : this.tlm.getAstTypes().values()) {
+         t.init(this.tlm.getAstTypes());
       }
    }
 
@@ -1167,8 +1277,8 @@ public class AadlModelParser {
       String dcName = getDataClassifierName(dc);
 
       Type ty = createAstType(dc);
-      if (this.model.getAstTypes().containsKey(dcName)) {
-         return new IdType(dcName, this.model.getAstTypes().get(dcName));
+      if (this.tlm.getAstTypes().containsKey(dcName)) {
+         return new IdType(dcName, this.tlm.getAstTypes().get(dcName));
       } else {
          return ty;
       }
@@ -1190,9 +1300,9 @@ public class AadlModelParser {
       String qualifiedName = dc.getQualifiedName();
       String normalizedName = getDataClassifierName(dc);
 
-      if (this.model.getAstTypes().containsKey(normalizedName)) {
+      if (this.tlm.getAstTypes().containsKey(normalizedName)) {
          // return this.model.getAstTypes().get(normalizedName);
-         Type t = this.model.getAstTypes().get(normalizedName);
+         Type t = this.tlm.getAstTypes().get(normalizedName);
          return new IdType(normalizedName, t);
       }
 
@@ -1230,8 +1340,8 @@ public class AadlModelParser {
             String name = dc.getName();
             String header = Util.getStringValue(dc, PropertyUtil.TB_SYS_COMMPRIM_SOURCE_HEADER);
             Type et = new ExternalType(name, header);
-            this.model.astTypes.put(name, et);
-            this.model.externalTypeHeaders.add(header);
+            this.tlm.getAstTypes().put(name, et);
+            this.tlm.getExternalTypeHeaders().add(header);
             logger.info("Creating external type: " + name);
             return et;
          } catch (Exception e) {
@@ -1240,13 +1350,13 @@ public class AadlModelParser {
          }
       } else if (dc instanceof DataTypeImpl) {
          DataTypeImpl dti = (DataTypeImpl)dc;
-         EnumerationLiteral el = Util.getDataRepresentationName(dti);
-         DataClassifier childDc = Util.getBaseType(dti);
-         int size = Util.getDimension(dti);
+         EnumerationLiteral el = PropertyUtil.getDataRepresentationName(dti);
+         DataClassifier childDc = PropertyUtil.getBaseType(dti);
+         int size = PropertyUtil.getDimension(dti);
          Type childElem = createAstType(childDc); 
          if ((el.getName()).equalsIgnoreCase("Array")) {
             Type at = new ArrayType(childElem, size);
-            this.model.astTypes.put(normalizedName, at);
+            this.tlm.getAstTypes().put(normalizedName, at);
             // return new ArrayType(childElem, size);
             return new IdType(normalizedName, at);
          } else {
@@ -1259,13 +1369,13 @@ public class AadlModelParser {
          if (subcomponents.isEmpty()) {
 
             // check if array type.
-            EnumerationLiteral el = Util.getDataRepresentationName(dii);
-            DataClassifier childDc = Util.getBaseType(dii);
-            int size = Util.getDimension(dii);
+            EnumerationLiteral el = PropertyUtil.getDataRepresentationName(dii);
+            DataClassifier childDc = PropertyUtil.getBaseType(dii);
+            int size = PropertyUtil.getDimension(dii);
             Type childElem = createAstType(childDc); 
             if ((el.getName()).equalsIgnoreCase("Array")) {
                ArrayType at = new ArrayType(childElem, size); 
-               this.model.astTypes.put(normalizedName, at);
+               this.tlm.getAstTypes().put(normalizedName, at);
                // return at;
                return new IdType(normalizedName, at);
             } else {
@@ -1286,7 +1396,7 @@ public class AadlModelParser {
                         "In createAstType: Subcomponent is not a data classifier");
                }
             }
-            this.model.astTypes.put(normalizedName, rt);
+            this.tlm.getAstTypes().put(normalizedName, rt);
             // return rt;
             return new IdType(normalizedName, rt);
          }
@@ -1302,36 +1412,9 @@ public class AadlModelParser {
     * 
     ***************************************************************************/
 
-   private void initializeFiles() {
 
-      // Get dispatcher file names.
-      for (ThreadImplementation i: this.getThreadImplementationMap().values()) {
-         for (PortFeature p : i.getPortList()) {
-            if (p.getImplementationFileList() != null) {
-               this.model.sourceFiles.addAll(p.getImplementationFileList());
-            }
-         }
-      }
-
-      // create initializer handler, if it exists.
-      List<String> topLevelFileNames = 
-            Util.getSourceTextListOpt(this.systemImplementation, PropertyUtil.SOURCE_TEXT);
-
-      if (topLevelFileNames != null) {
-         for (String s : topLevelFileNames) {
-            logger.status("Referenced File: " + s);
-
-            if (s.endsWith(".a")) {
-               this.model.libraryFiles.add(s);
-            } else {
-               this.model.sourceFiles.add(s);
-            }
-         }
-      }
-   }
-
-   private void initializeLegacyIRQs() {
-      List<String> irqStrings = PropertyUtil.getLegacyIRQList(this.systemImplementation);
+   private void initializeLegacyIRQs(NamedElement proc, OSModel osModel) {
+      List<String> irqStrings = PropertyUtil.getLegacyIRQList(proc);
 
       if (irqStrings.size() % 2 != 0) {
          throw new TbException("Error: legacy IRQ property should be list of size 2*n, where each element of n is a signal_name, handler_name pair");
@@ -1341,10 +1424,10 @@ public class AadlModelParser {
          String name = it1.next();
          String handlerName = it1.next();
          ExternalISR irq = new ExternalISR(name, handlerName);
-         this.model.externalISRList.add(irq);
+         osModel.getExternalISRList().add(irq);
       }
 
-      List<String> irqEventStrings = PropertyUtil.getLegacyIRQEventList(this.systemImplementation);
+      List<String> irqEventStrings = PropertyUtil.getLegacyIRQEventList(proc);
       if (irqEventStrings.size() % 3 != 0) {
          throw new TbException("Error: legacy IRQ Event property should be a list of size 3*n, where each element of n is a IRQ_event_name, task_name, sig_set triple");
       }
@@ -1360,7 +1443,7 @@ public class AadlModelParser {
             throw new TbException("Error: legacy IRQ event property: third argument of triple not a number.");
          }
          ExternalIRQEvent evt = new ExternalIRQEvent(eventName, taskName, signal);
-         this.model.externalIRQEventList.add(evt);
+         osModel.getExternalIRQEventList().add(evt);
       }
 
       List<String> externalIrqStrings = PropertyUtil.getExternalIRQList(this.systemImplementation);
@@ -1378,7 +1461,7 @@ public class AadlModelParser {
             throw new TbException("Error: External IRQ property: second argument of pair is not a number");
          }
          ExternalIRQ irq = new ExternalIRQ(externIrqName, externIrqNumber);
-         this.model.externalIRQList.add(irq);
+         osModel.getExternalIRQList().add(irq);
       }
    }
 
@@ -1388,7 +1471,7 @@ public class AadlModelParser {
          for (PortFeature p: ti.getPortList()) {
             if (p instanceof InputPeriodicPort) {
                InputPeriodicPort pd = (InputPeriodicPort)p;
-               this.model.threadCalendar.addPeriodicPort(pd);
+               ti.getModel().getThreadCalendar().addPeriodicPort(pd);
             }
          }
       }

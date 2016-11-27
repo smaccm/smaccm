@@ -143,6 +143,7 @@ import \<TimeServerOdroid/TimeServer.camkes>;
 <endif>
 <endif>
 
+<model.portListEmitterAssemblyIdlImports>
 
 <model.threadImplementations:assemblyThreadImplementationImports()>
 

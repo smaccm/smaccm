@@ -70,6 +70,8 @@ import \<Timer.idl4>;
 <commentIf("Idl files for RPCs",
            (threadImpl.usedRpgs:importRpgIdl()))><\\>
 
+<threadImpl.portListEmitterCamkesComponentDeclarations>
+
 component <threadImpl.componentName> {
     include "<threadImpl.model.systemTypeHeaderName>";
     <if(threadImpl.isActive)>

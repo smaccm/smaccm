@@ -49,136 +49,105 @@ import edu.umn.cs.crisys.tb.codegen.CAmkES.CAmkES_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.VxWorks.VxWorks_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.eChronos.EChronos_CodeGenerator;
 import edu.umn.cs.crisys.tb.codegen.linux.Linux_CodeGenerator;
+import edu.umn.cs.crisys.tb.codegen.toplevel.TopLevelCodeGenerator;
 import edu.umn.cs.crisys.tb.model.OSModel;
+import edu.umn.cs.crisys.tb.model.TopLevelModel;
 import edu.umn.cs.crisys.tb.parse.AadlModelParser;
 import edu.umn.cs.crisys.tb.util.Util;
 
 public class TbHandler extends AadlHandler {
-	//private Logger log;
+   //private Logger log;
 
-	// Model object contains information from the AST nicely collated.
-	// TODO: Figure out a principled way to deal with file locations.
-	// Allow overriding file names as properties?
+   // Model object contains information from the AST nicely collated.
+   // TODO: Figure out a principled way to deal with file locations.
+   // Allow overriding file names as properties?
 
-	@Override
-	public IStatus runJob(Element sel, IProgressMonitor monitor) {
-		// log = new ConsoleLogger(Logger.INFO, "AADL Validation", getWindow());
+   @Override
+   public IStatus runJob(Element sel, IProgressMonitor monitor) {
+      // log = new ConsoleLogger(Logger.INFO, "AADL Validation", getWindow());
 
-    // OsateResourceUtil.refreshResourceSet();
-		if (!(sel instanceof SystemImplementation)) {
-			log.error("[Trusted Build]: TbAction.runJob: Must select a system implementation");
-			return Status.CANCEL_STATUS;
-		}
+      // OsateResourceUtil.refreshResourceSet();
+      if (!(sel instanceof SystemImplementation)) {
+         log.error("[Trusted Build]: TbAction.runJob: Must select a system implementation");
+         return Status.CANCEL_STATUS;
+      }
 
-		IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, null, log); 
-				
-		if (execStatus == Status.OK_STATUS) 
-			try {
-				ResourcesPlugin.getWorkspace().getRoot().refreshLocal(0, new NullProgressMonitor());
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
+      IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, null, log); 
 
-		return execStatus;
-		
-	}
-	
-    protected String getJobName() {
-        return "trusted build - translate model";
-    }
+      if (execStatus == Status.OK_STATUS) 
+         try {
+            ResourcesPlugin.getWorkspace().getRoot().refreshLocal(0, new NullProgressMonitor());
+         } catch (CoreException e) {
+            e.printStackTrace();
+         }
 
-	protected AnalysisErrorReporterManager getErrorManager() {
-		return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
-	}
+      return execStatus;
 
-    public IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File aadlDir, File outputDir, Logger logger) {
-		log = logger;
-		log.info("This is the sysimpl name: "+ sysimpl.getName());
-		
-		monitor.beginTask("Generating Configuration for AADL Model", IProgressMonitor.UNKNOWN);
+   }
 
-		log.status("*****Trusted Build AADL Translator******");
-		try {
-			// Create instance model
+   protected String getJobName() {
+      return "trusted build - translate model";
+   }
 
-		  if (si == null) {
-				InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
-				URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
-				Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
-			
-				// Aha!  The big time sink is here!
-			 	si = im.createSystemInstance(sysimpl, resource);
-			}
+   protected AnalysisErrorReporterManager getErrorManager() {
+      return AnalysisErrorReporterManager.NULL_ERROR_MANANGER;
+   }
 
-			// Now harvest the stuff we need from the OSATE AST.
-		  
-			OSModel model = new OSModel(sysimpl, si); 
-						
-			// AadlModelParser initializes the Model class from the OSATE hierarchy
-			// (it is a factory).
-			logger.status("Generating and typechecking domain model for code generation...");
-			new AadlModelParser(sysimpl, si, model, logger);
+   public IStatus execute(SystemInstance si, SystemImplementation sysimpl, IProgressMonitor monitor, File aadlDir, File outputDir, Logger logger) {
+      log = logger;
+      log.info("This is the sysimpl name: "+ sysimpl.getName());
 
-			logger.status("Generating code...");
+      monitor.beginTask("Generating Configuration for AADL Model", IProgressMonitor.UNKNOWN);
 
-			if (aadlDir == null) {
-			  aadlDir = Util.getDirectory(sysimpl);
-			}
+      log.status("*****Trusted Build AADL Translator******");
+      try {
+         // Create instance model
 
-			// for output directory: choose command line outputDir first, then 
-			// AADL property outputDir, then directory containing AADL file.
-			
-			if (outputDir != null) {
-			  model.setOutputDirectory(outputDir.getPath());
-			}
-			else if (model.getOutputDirectory() != null) {
-			  File temp = new File(model.getOutputDirectory());
-			  if (temp.isAbsolute()) {
-			    outputDir = temp;
-			  } else {
-			    outputDir = new File(aadlDir, model.getOutputDirectory());
-			  }
-			} else {
-			  outputDir = aadlDir;
-			  model.setOutputDirectory(aadlDir.getPath());
-			}
-      outputDir.mkdirs(); 
-      
-			if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
-	  			EChronos_CodeGenerator gen = new EChronos_CodeGenerator(log, model, aadlDir, outputDir);
-	  			gen.write();
-			} else if (model.getOsTarget() == OSModel.OSTarget.CAmkES ){
-				  CAmkES_CodeGenerator gen = new CAmkES_CodeGenerator(log, model, aadlDir, outputDir);
-				  gen.write();
-			} else if (model.getOsTarget() == OSModel.OSTarget.VxWorks ){
-			  VxWorks_CodeGenerator gen = new VxWorks_CodeGenerator(log, model, aadlDir, outputDir);
-			  gen.write();
-         } else if (model.getOsTarget() == OSModel.OSTarget.linux) {
-            Linux_CodeGenerator gen = new Linux_CodeGenerator(log, model, aadlDir, outputDir);
-            gen.write();
-         } else {
-			  logger.error("trusted build OS target: [" + model.getOsTarget() + "] not recognized.");
-			}
-			logger.status("trusted build code generation complete.");
-		} catch (TbFailure f) {
-			log.error("Analysis Exception");
-			List<String> msgs = f.getMessages();
-			for (String msg : msgs) {
-				log.error(msg);
-			}
-      log.error("Context: " + Util.stackTraceString(f));
-			return Status.CANCEL_STATUS;
-		} catch (ParserConfigurationException pce) {
-      log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
-      log.error("Context: " + Util.stackTraceString(pce));
-    } catch (Exception e) {
-			log.error(e);
-      log.error("Context: " + Util.stackTraceString(e));
-			return Status.CANCEL_STATUS;
-		}
+         if (si == null) {
+            InstantiateModel im = new InstantiateModel(new NullProgressMonitor(), getErrorManager());
+            URI uri = OsateResourceUtil.getInstanceModelURI(sysimpl);
+            Resource resource = OsateResourceUtil.getEmptyAaxl2Resource(uri);
 
+            // Aha!  The big time sink is here!
+            si = im.createSystemInstance(sysimpl, resource);
+         }
 
-		return Status.OK_STATUS;
-	}
+         // Now harvest the stuff we need from the OSATE AST.
+         TopLevelModel model = new TopLevelModel(sysimpl, si); 
+
+         // AadlModelParser initializes the Model class from the OSATE hierarchy
+         // (it is a factory).
+         logger.status("Generating and typechecking domain model for code generation...");
+         new AadlModelParser(sysimpl, si, model, logger);
+
+         logger.status("Generating code...");
+         if (aadlDir == null) {
+            aadlDir = Util.getDirectory(sysimpl);
+         }
+
+         TopLevelCodeGenerator codegen;
+         codegen = new TopLevelCodeGenerator(model, aadlDir, outputDir, logger);
+         codegen.generate(); 
+
+         logger.status("[Trusted Build]: code generation complete.");
+      } catch (TbFailure f) {
+         log.error("Analysis Exception");
+         List<String> msgs = f.getMessages();
+         for (String msg : msgs) {
+            log.error(msg);
+         }
+         log.error("Context: " + Util.stackTraceString(f));
+         return Status.CANCEL_STATUS;
+      } catch (ParserConfigurationException pce) {
+         log.error("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+         log.error("Context: " + Util.stackTraceString(pce));
+      } catch (Exception e) {
+         log.error(e);
+         log.error("Context: " + Util.stackTraceString(e));
+         return Status.CANCEL_STATUS;
+      }
+
+      return Status.OK_STATUS;
+   }
 
 }

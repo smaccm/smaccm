@@ -40,3 +40,11 @@ idlProc(type, model) ::= <<
 <if(type.hasData)><rwProc(type,model)><else><rwUnitProc(type)><endif>
 
 >>
+
+idlBody(name, date, path, type, model) ::= <<
+<filePrefix(name, date, path)>
+
+<idlProc(type, model)>
+
+<filePostfix(name, path)>
+>>

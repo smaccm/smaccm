@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
+import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
+import edu.umn.cs.crisys.tb.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.tb.model.type.Type;
 
 public interface PortListEmitter extends NameEmitter {
-
-   
    
    // Any functions with port lists are essentially "static" methods; 
    // they write something for all ports of a particular kind at a 
@@ -20,21 +21,19 @@ public interface PortListEmitter extends NameEmitter {
    
    // File emitters
    // Called once per OS target
-   void writeCommonCFiles(File directory, List<PortFeature> pl);
-   void writeCommonHFiles(File directory, List<PortFeature> pl);
+   // NB: THE OS TARGET CALLBACKS ARE CURRENTLY UNIMPLEMENTED!
+   void writeCommonCFiles(OSModel model, File directory, List<PortFeature> pl);
+   void writeCommonHFiles(OSModel model, File directory, List<PortFeature> pl);
    
    // Called once per process
-   void writeProcessCFiles(File directory, List<PortFeature> pl); 
-   void writeProcessHFiles(File directory, List<PortFeature> pl);
+   void writeProcessCFiles(ProcessInstance pi, File directory, List<PortFeature> pl); 
+   void writeProcessHFiles(ProcessInstance pi, File directory, List<PortFeature> pl);
    
    // Called once per thread
-   void writeThreadCFiles(File directory, List<PortFeature> pl); 
-   void writeThreadHFiles(File directory, List<PortFeature> pl);
+   void writeThreadCFiles(ThreadInstance ti, File directory, List<PortFeature> pl); 
+   void writeThreadHFiles(ThreadInstance ti, File directory, List<PortFeature> pl);
    
    
-   String writeThreadCIncludes(File commonHFileDir, 
-                              File processHFileDir,
-                              File threadHFileDir, 
-                              List<PortFeature> pl); 
+   String writeThreadCIncludes(ThreadInstance ti, List<PortFeature> pl); 
    
 }

@@ -53,15 +53,18 @@ public class ProcessImplementation extends ModelElementBase {
 	 */
 		
 	// Constructor
-	public ProcessImplementation(OSModel model, String name) {
+	public ProcessImplementation(String name) {
       this.name = name;
-      this.model = model;
     }
 	
     public OSModel getModel() {
       return model;
     }
   
+    public void setModel(OSModel model) {
+       this.model= model ;
+    }
+    
   public String getName() {
     return name;
   }
@@ -89,6 +92,10 @@ public class ProcessImplementation extends ModelElementBase {
   public void addProcessInstance(ProcessInstance instance) {
 	processInstanceList.add(instance);
   }
+  
+  public List<ProcessInstance> getProcessInstanceList() {
+     return processInstanceList; 
+  }
 
   public List<ThreadImplementation> getThreadImplementationList() {
      return this.threadImplementationList; 
@@ -96,6 +103,14 @@ public class ProcessImplementation extends ModelElementBase {
  
   public void addThreadImplementation(ThreadImplementation ti) {
      threadImplementationList.add(ti); 
+  }
+  
+  public List<PortFeature> getPortList() {
+     List<PortFeature> features = new ArrayList<>(); 
+     for (ThreadImplementation ti: threadImplementationList) {
+        features.addAll(ti.getPortList());
+     }
+     return features;
   }
 
   @Override

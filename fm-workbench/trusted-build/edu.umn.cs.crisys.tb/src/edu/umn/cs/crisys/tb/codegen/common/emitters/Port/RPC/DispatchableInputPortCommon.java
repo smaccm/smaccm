@@ -171,7 +171,7 @@ public class DispatchableInputPortCommon {
       String result = ""; 
       result += "void " + getUserEntrypointCallerName();
       if (this.getHasData()) {
-         result += "(const " + getType().getCamkesInputType().getName() + " in_arg)";
+         result += "(const " + getType().getAadlInputType().getName() + " in_arg)";
       }
       else {
          result += "(void)";

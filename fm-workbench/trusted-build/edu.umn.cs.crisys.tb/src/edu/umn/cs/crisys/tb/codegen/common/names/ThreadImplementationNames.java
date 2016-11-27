@@ -3,6 +3,7 @@
  */
 package edu.umn.cs.crisys.tb.codegen.common.names;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -17,8 +18,11 @@ import java.util.stream.Collectors;
 
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.linux.LinuxUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
@@ -231,7 +235,7 @@ public class ThreadImplementationNames implements NameEmitter {
   
   public List<NameEmitter> getOtherThreadImplementations() {
     List<NameEmitter> others = new ArrayList<>(); 
-    for (ThreadImplementation t: ti.getModel().getAllThreadImplementations()) {
+    for (ThreadImplementation t: ti.getModel().getThreadImplementationList()) {
       if (t != ti) {
         others.add(EmitterFactory.threadImplementation(t));
       }
@@ -536,6 +540,39 @@ public class ThreadImplementationNames implements NameEmitter {
            "ThreadImplementation::getDispatcherMainLockReleaseStmt: OS [" + 
             model.getOsTarget() + "] not recognized"); 
      }
+  }
+
+  /**********************************************************
+   * 
+   * Emitter-related
+   * 
+   **********************************************************/
+  public String getPortListEmitterCamkesComponentDeclarations() {
+     String s = ""; 
+     List<PortFeature> ports = this.ti.getPortList();
+     List<PortListEmitter> emitters = EmitterListRegistry.getPortListEmitters(); 
+     for (PortListEmitter e: emitters) {
+        if (e instanceof PortListEmitterCamkes) {
+           PortListEmitterCamkes camkesEmitter = (PortListEmitterCamkes)e;
+           s += camkesEmitter.camkesAddComponentLevelDeclarations(ti, ports);
+        }
+     }
+     return s;
+  }
+
+  public String getPortListEmitterCIncludes() {
+     String s = ""; 
+     List<PortFeature> ports = this.ti.getPortList();
+     List<PortListEmitter> emitters = EmitterListRegistry.getPortListEmitters(); 
+     for (PortListEmitter e: emitters) {
+        for (ThreadInstance tinst: this.ti.getThreadInstanceList()) {
+           s += e.writeThreadCIncludes(tinst, ports);
+        }
+        if (this.ti.getThreadInstanceList().size() > 1) {
+           throw new TbException("Error: TB currently does not support more than one instance per thread implementation.");
+        }
+     }
+     return s;
   }
   
 }

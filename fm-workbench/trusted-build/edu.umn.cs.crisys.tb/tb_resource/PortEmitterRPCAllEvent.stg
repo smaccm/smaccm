@@ -96,15 +96,15 @@ static <port.queueFullDecl> = false;
 static <port.queueFrontDecl> = 0;
 static <port.queueBackDecl> = 0;
 
-bool <port.queueIsFullName>() {
+static bool <port.queueIsFullName>() {
     return (<port.queueFrontName> == <port.queueBackName>) && (<port.queueFullName>);
 }
 
-bool <port.queueIsEmptyName>() {
+static bool <port.queueIsEmptyName>() {
     return (<port.queueFrontName> == <port.queueBackName>) && (!<port.queueFullName>);
 }
 
-bool <port.queueReadName>(<port.type.aadlOutputType.name> <port.name>) {
+static bool <port.queueReadName>(<port.type.aadlOutputType.name> <port.name>) {
     if (<port.queueIsEmptyName>()) {
         return false;
     } else {
@@ -115,7 +115,7 @@ bool <port.queueReadName>(<port.type.aadlOutputType.name> <port.name>) {
     }
 }
 
-bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
+static bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
     if (<port.queueIsFullName>()) {
         return false;
     } else {
@@ -177,11 +177,11 @@ InputEventPortDecls(port) ::= <<
 
 static <port.indexType.name> <port.index> = 0;
 
-bool <port.queueIsFullName>() {
+static bool <port.queueIsFullName>() {
     return false;
 }
 
-bool <port.queueIsEmptyName>() {
+static bool <port.queueIsEmptyName>() {
     return <port.index> == 0;
 }
 
@@ -243,7 +243,7 @@ bool <port.localReaderName>() {
 
 callRemoteWriterStmt(connection) ::= << 
 <if(port.hasData)>
-tb_result &= <connection.outgoingPortWriterName>(<connection.sourcePort.name>);
+tb_result &= <connection.outgoingPortWriterName>(<port.type.aadlInputToCamkesInput><connection.sourcePort.name>);
 <else>
 tb_result &= <connection.outgoingPortWriterName>();
 <endif>

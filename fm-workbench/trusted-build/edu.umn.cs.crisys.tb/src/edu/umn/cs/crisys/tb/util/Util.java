@@ -1,9 +1,11 @@
 package edu.umn.cs.crisys.tb.util;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -11,7 +13,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -21,15 +26,11 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.Classifier;
-import org.osate.aadl2.DataClassifier;
-import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.StringLiteral;
-import org.osate.aadl2.impl.ClassifierValueImpl;
 import org.osate.aadl2.impl.ListValueImpl;
 import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
@@ -37,13 +38,16 @@ import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
+import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.PluginActivator;
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.TbSTErrorListener;
+import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.model.ModelElement;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
@@ -61,7 +65,7 @@ public class Util {
    public static void setListener(STErrorListener listener) { Util.listener = listener ; }
    public static STErrorListener getListener() { return listener; }
 
-   private static String prefix = "aadl";
+   private static String prefix = "tb";
    public static String getPrefix() {
       return prefix;
    }
@@ -110,79 +114,6 @@ public class Util {
       return true;
    }
    
-   /**********************************************************
-    * 
-    * Element typing functions
-    * 
-    */
-   
-   final public static String DATA_MODEL_DATA_REPRESENTATION_NAME = "Data_Model::Data_Representation";
-   final public static String DATA_MODEL_BASE_TYPE_NAME = "Data_Model::Base_Type";
-   final public static String DATA_MODEL_DIMENSION_NAME = "Data_Model::Dimension";
-
-   final public static Property DATA_MODEL_DATA_REPRESENTATION = Util
-         .getPropertyDefinitionInWorkspace(DATA_MODEL_DATA_REPRESENTATION_NAME);
-   final public static Property DATA_MODEL_BASE_TYPE = Util
-         .getPropertyDefinitionInWorkspace(DATA_MODEL_BASE_TYPE_NAME);
-   final public static Property DATA_MODEL_DIMENSION = Util
-         .getPropertyDefinitionInWorkspace(DATA_MODEL_DIMENSION_NAME);
-   
-   
-   public static EnumerationLiteral getDataRepresentationName(NamedElement tti) {
-      try {
-         return PropertyUtils.getEnumLiteral(tti, Util.DATA_MODEL_DATA_REPRESENTATION);
-      } catch (Exception e) {
-         throw new TbException("Required property 'Data_Representation' not found for type: " + tti.getName());
-      }
-   }
-
-   public static DataClassifier getBaseType(NamedElement tti) {
-      PropertyExpression value ;
-      try {
-         value = PropertyUtils
-               .getSimplePropertyListValue(tti, Util.DATA_MODEL_BASE_TYPE);
-      } catch (Exception e) {
-         throw new TbException("Required property 'Base_Type' not found for type: " + tti.getName());      
-      }
-      if (value instanceof ListValueImpl) {
-         ListValueImpl listValue = (ListValueImpl) value;
-         if (listValue.getOwnedListElements().size() != 1) {
-            throw new TbException("For array type: " + tti.getName() + " base type list has more than one element.");
-         }
-         PropertyExpression sizeExpr = listValue.getOwnedListElements().get(0);
-         if (sizeExpr instanceof ClassifierValueImpl && 
-               ((ClassifierValueImpl)sizeExpr).getClassifier() instanceof DataClassifier) {
-            ClassifierValueImpl castedSize =(ClassifierValueImpl) sizeExpr;  
-            Classifier c = castedSize.getClassifier();
-            return (DataClassifier)c;
-         } else {
-            throw new TbException("Classifier returned by Base_Type property does not correspond to list for array type: " + tti.getName());
-         }
-      } else {
-         throw new TbException("Base_Type property is not a list value for array type: " + tti.getName());
-      }
-   }
-
-   public static int getDimension(NamedElement tti) {
-      try {
-         PropertyExpression value = PropertyUtils.getSimplePropertyValue(tti, Util.DATA_MODEL_DIMENSION);
-         if (value instanceof ListValueImpl) {
-            ListValueImpl listValue = (ListValueImpl) value;
-            if (listValue.getOwnedListElements().size() != 1) {
-               throw new TbException("For array type: " + tti.getName() + " only single dimensional arrays are currently supported.");
-            }
-            PropertyExpression sizeExpr = listValue.getOwnedListElements().get(0);
-            IntegerLiteral intLit = (IntegerLiteral) sizeExpr;
-            double scaledDim = intLit.getScaledValue();
-            return (int)(new Integer((int)scaledDim)); // bits per byte.
-         } else {
-            throw new TbException("Classifier returned by Dimension property does not correspond to list for array type: " + tti.getName());
-         }
-      } catch (Exception e) {
-         throw new TbException("Required property 'Dimension' not found for type: " + tti.getName());
-      }
-   }
-
    public static String stackTraceString(Exception e) {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);
@@ -464,5 +395,16 @@ public class Util {
          + "FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \n"
          + "ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA. \n";
 
-
+   
+   /******************************************************************
+    * 
+    * File writing helper functions
+    * 
+    ******************************************************************/
+   public static String getDate() {
+      DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+      Date d = new Date();
+      return dateFormat.format(d);  
+   }
+   
 }

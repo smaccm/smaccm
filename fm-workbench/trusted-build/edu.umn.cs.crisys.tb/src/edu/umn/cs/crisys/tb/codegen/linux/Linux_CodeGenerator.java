@@ -12,6 +12,8 @@ import java.util.Set;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ProcessImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
@@ -22,7 +24,9 @@ import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
+import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
@@ -76,7 +80,7 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
 	 public void createAssemblyHeader() throws TbFailure {
 	   ModelNames mn = new ModelNames(model);
 	   String fileName = model.getPrefix() + "_decls.h";
-	   writeGeneric(includeDirectory, "AssemblyHeader.stg", "headerBody", "model", mn, model.getSystemInstanceName(), false, fileName);
+	   writeGeneric(includeDirectory, "AssemblyHeader.stg", "headerBody", "model", mn, model.getInstanceName(), false, fileName);
    }
 
 	 
@@ -163,7 +167,7 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
     public void createTemplateMakefile() throws TbFailure {
        ModelNames mn = new ModelNames(model); 
        writeGeneric(makeTemplateDirectory, "Makefile.stg", "MakefileBody", "model", mn,  
-           model.getSystemInstanceName(), false, "Makefile");
+           model.getInstanceName(), false, "Makefile");
       }
     
   public void createProcess(ProcessImplementation pi) throws TbFailure {
@@ -178,10 +182,18 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
      createProcessHeader(includeDirectory, pi);
      createProcessCFile(srcDirectory, pi);
      
+     // Emitter-specific code.
+     List<PortFeature> ports = pi.getPortList();
+     for (PortListEmitter emitter: EmitterListRegistry.getPortListEmitters()) {
+        for (ProcessInstance pinst: pi.getProcessInstanceList()) {
+           emitter.writeProcessCFiles(pinst, srcDirectory, ports);
+           emitter.writeProcessHFiles(pinst, includeDirectory, ports);
+        }
+     }
   }
   
   public void createProcesses() throws TbFailure {
-     List<ProcessImplementation> tis = model.processImplementationList;
+     List<ProcessImplementation> tis = model.getProcessImplementationList();
      for (ProcessImplementation ti: tis) {
       createProcess(ti);
      }
@@ -219,7 +231,7 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
     //rwTypeSet.add(new IntType(32, false));  
     rwTypeSet.add(InputPeriodicPort.getPortType());  
     
-    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
+    for (ThreadImplementation ti : model.getThreadImplementationList()) {
       for (OutputDataPort d : ti.getOutputDataPortList()) {
         rwTypeSet.add(d.getType());
       }

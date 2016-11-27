@@ -123,20 +123,123 @@ To-dos:
 	! Second thing to check is: do names match up?  When we have a
 		local writer, it must write to a variable that is "owned" by
 		the reading thread.  How do we ensure that such variables are unique?
-	! Where are we writing th shared data *?
+	! Where are we writing the shared data?
+	
+	-> Implement PortList functionality for Pape.
+		! currently read/write .idl4 interfaces are prebuilt for 
+			CAmkES.  We could emit them only from RPC ports, for 
+			those types that are used by ports.
+			Code lines 	86-100.
+		
+		-> File construction stuff needs to be refactored.  Yuck.
+			Very simple, really; bring in header and footer into 
+			body, then pass in all arguments; if you want to make 
+			something generic, make argument names generic and 
+			fill them in with a generic function.
+	
+	-> Should this really be in terms of threadInstances?  
+		Wait until next refactoring.
+	
+	-> Better document all PortEmitter interfaces
+
+	-> Make "tb" prefix uniform rather than "aadl" prefix.
 	
 	-> Do we care about memory/stack sizes for processes in linux?
 		-> No, but we should emit a warning.
+	
+	-> We should emit errors for multiple instances of 
+		threads in systems that do not support memory separation.
 		
 	-> Somewhere I'm defining an external type and I do not know
 		whether I have properly specified its header.
 	
 	-> Consider moving to a condition variable; this seems to be
 		"preferred" for linux.
+
+	For modeling: 
+		1. We have a processor that has virtual processors that are bound to it, one for each VM.
+		2. Under ARINC, I do not think that there are any "raw" processes, so we can't model our CAmkES environment.
+		3. Instead, I think we need to bind our virtual processor
+			to a process/thread using a new property.
+		4. A process can't contain another process, so there is
+			no good way to describe the routing through a VM boundary
+			that is visible to the user.
+		5. However, you can choose to have a system that describes 
+			the VM boundary and has the processor binding - it is 
+			just not enforced.
+	
+	I want two things: 
+		1. The ability to easily set the component attributes for a VM: memory, priority, processor budget.
+		2. The ability to easily see which signals are routed into and out of it.
+	
+	Virtual processor properties: { MIPS budget, platform, 
+		security level, safety criticality}
+	Timing_Properties => {Execution_Time, Period, Frame_Period, Slot_Time};
+	
+	=> So, thread implementations don't really belong to process 
+		implementations, and process implementations do not belong to OSModels.  These chains only occur on instances.
 		
-	-> hardware
-	-> software - cmake
-	-> refactoring - 
+		Instances are always ok for CAmkES, always tricky for VxWorks and eChronos, and straightforward in Linux if they are not in the same process.
+		
+		
+	
+	To build it: 
+	Start from process instances
+		1. For each process instance, find the processor instance
+		   binding; if none, throw an error.  For now, a process 
+		   implementation can only be bound to one processor.
+		
+			We get back a ComponentInstanceImpl from the property,
+			which is the same thing when we spin through the list
+			of processors in the model.
+			
+			We can get the component classifier, which is a 
+			VirtualProcessorImplementationImpl or a 
+			ProcessorImplementationImpl
+		
+			From the ProcessorImplementationImpl, we can get access to properties: OS, HW, timing, period, priority
+		
+			So, from here: 
+			Create a list of processor bindings.
+			
+			Construct OS models from processor bindings.
+				use the standard map approach used for threads/processes.
+
+			Do hierarchy check for virtual processors.
+				If OS != linux, then error out.
+				If parent OS != CAmkES, then error out.
+			
+			Probably no way to ensure checks are in hierarchical order; perform them afterwards?
+			
+			Move all of the properties that were at the system 
+				level to the processor level.  Note that this is 
+				not quite what we really want, but it will do.
+		
+			Get rid of these property checks from the top-level.
+			
+			Also, really error checks are based on instances rather than implementations - checking at the implementation level is wrong because an instance may be embedded in multiple contexts.
+		
+		2. From the processor implementation, set the OS, the 
+			hardware, etc.  If it is a virtual processor, set the 
+			priority, execution time, and period.
+			
+			Make processor instance, rather than 
+			system instance / system implementation the root of the 
+			hierarchy.
+			
+		3. Emit each target as a separate bundle of files under a 
+			directory describing the virtual processor relationship: 
+				root
+				root_inst_a
+				root_inst_b
+		
+		4. Children of processors are virtual processors.
+		   
+	Testing:
+		-> Linux port: 
+			tested dataports
+			tested RPCs
+	
 	
 Old version:
 	! Allow external configuration of timer on VxWorks.

@@ -3,10 +3,10 @@ property set TB_SYS is
     CommPrim_Source_Header: aadlstring applies to (port, access, data);
     CommPrim_Source_Text: aadlstring applies to (port, access);
     C_Type_Name : aadlstring applies to (data, data implementation);
-    Compute_Entrypoint_Source_Text : list of aadlstring applies to (system, system implementation, port, thread);
+    Compute_Entrypoint_Source_Text : list of aadlstring applies to (processor, virtual processor, system, system implementation, port, thread);
 
     -- For including additional libraries into the build process
-    Link_Libraries : list of aadlstring applies to (system, system implementation);
+    Link_Libraries : list of aadlstring applies to (processor, virtual processor, system, system implementation);
 
     Connection_Impl: enumeration (mutex, lock_free) => mutex applies to (connection);
 
@@ -22,32 +22,32 @@ property set TB_SYS is
     Sends_Events_To: aadlstring applies to (thread, port);
 
     -- For build output.
-    Output_Directory: aadlstring applies to (system implementation);
+    Output_Directory: aadlstring applies to (processor, virtual processor, system implementation);
 
-    OS : enumeration (eChronos, CAmkES, VxWorks, linux) applies to (system implementation);
-    HW : enumeration (PIXHAWK, PPC, ODROID, x86, QEMU) applies to (system implementation);
+    OS : enumeration (eChronos, CAmkES, VxWorks, linux) applies to (processor, virtual processor, system implementation);
+    HW : enumeration (PIXHAWK, PPC, ODROID, x86, QEMU) applies to (processor, virtual processor, system implementation);
 
     -- For integrating with other code
     Is_External: aadlboolean => false applies to (thread, subprogram group access, data);
-    External_Mutex_List: list of aadlstring applies to (thread, system implementation);
-    External_Semaphore_List: list of aadlstring applies to (thread, system implementation);
+    External_Mutex_List: list of aadlstring applies to (processor, virtual processor, thread, system implementation);
+    External_Semaphore_List: list of aadlstring applies to (processor, virtual processor, thread, system implementation);
     External_Entrypoint: aadlstring applies to (thread);
 
 
-    External_IRQ_Event_List: list of aadlstring applies to (system implementation);
-    External_IRQ_Handler_List: list of aadlstring applies to (system implementation);
-    External_IRQ_List: list of aadlstring applies to (system implementation);
+    External_IRQ_Event_List: list of aadlstring applies to (processor, virtual processor, system implementation);
+    External_IRQ_Handler_List: list of aadlstring applies to (processor, virtual processor, system implementation);
+    External_IRQ_List: list of aadlstring applies to (processor, virtual processor, system implementation);
 
     -- for eChronos timer interactions
-    Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
+    Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (processor, virtual processor, system implementation);
 
     -- for CAmkES timer interactions
-    External_Timer_Component : aadlboolean => false applies to (system implementation);
-    CAmkES_External_Timer_Interface_Path: aadlstring applies to (system implementation);
-    CAmkES_External_Timer_Complete_Path : aadlstring applies to (system implementation);
-    CAmkES_Internal_Timer_Timers_Per_Client : aadlinteger => 8 applies to (system implementation);
-    CAmkES_Time_Server_AADL_Thread_Min_Index : aadlinteger => 10 applies to (system implementation);
-    CAmkES_Dataport_RPC_Min_Index : aadlinteger => 10 applies to (system implementation);
+    External_Timer_Component : aadlboolean => false applies to (processor, virtual processor, system implementation);
+    CAmkES_External_Timer_Interface_Path: aadlstring applies to (processor, virtual processor, system implementation);
+    CAmkES_External_Timer_Complete_Path : aadlstring applies to (processor, virtual processor, system implementation);
+    CAmkES_Internal_Timer_Timers_Per_Client : aadlinteger => 8 applies to (processor, virtual processor, system implementation);
+    CAmkES_Time_Server_AADL_Thread_Min_Index : aadlinteger => 10 applies to (processor, virtual processor, system implementation);
+    CAmkES_Dataport_RPC_Min_Index : aadlinteger => 10 applies to (processor, virtual processor, system implementation);
     Requires_Time_Services : aadlboolean => false applies to (thread);
 
     -- For different parameter passing styles
@@ -55,15 +55,15 @@ property set TB_SYS is
 
     -- For CAmkES, specifically
     CAmkES_Owner_Thread : aadlstring applies to ( data );
-    Use_OS_Real_Time_Extensions : aadlboolean => true applies to (system implementation);
+    Use_OS_Real_Time_Extensions : aadlboolean => true applies to (processor, virtual processor, system implementation);
 
 	-- For CAmkES and ground team, specifically.
-	Mailbox : aadlboolean => false applies to (system implementation, connection);
+	Mailbox : aadlboolean => false applies to (processor, virtual processor, system implementation, connection);
 
     -- For eChronos, specifically.  These properties are used to set the relative module
     -- path for the generated code from the place where prj is invoked
-    eChronos_Generate_C_Modules : aadlboolean => false applies to (system implementation);
-    eChronos_C_Module_Path : aadlstring => "gen" applies to (system implementation);
+    eChronos_Generate_C_Modules : aadlboolean => false applies to (processor, virtual processor, system implementation);
+    eChronos_C_Module_Path : aadlstring => "gen" applies to (processor, virtual processor, system implementation);
     eChronos_Flash_Load_Address : aadlstring applies to (system implementation);
 
 end TB_SYS;

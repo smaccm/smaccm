@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 import edu.umn.cs.crisys.tb.TbException;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
 import edu.umn.cs.crisys.tb.model.ModelElement;
 import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.OSModel;
@@ -611,7 +614,7 @@ public class ThreadImplementation extends ModelElementBase {
       this.parentProcess = parentProcess;
    }
 
-
+     
 }
 
 

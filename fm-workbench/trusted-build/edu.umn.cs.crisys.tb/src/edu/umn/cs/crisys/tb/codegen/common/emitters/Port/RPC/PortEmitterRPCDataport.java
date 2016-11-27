@@ -4,6 +4,7 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import edu.umn.cs.crisys.tb.util.*;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
@@ -382,7 +384,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
     * 
     * For outgoing dataports, this is:
     *    getOutgoingWriterName() <-- OS-specific, tied to incomingWriterName for eChronos and VxWorks
-    *    
+    *    getConnections()   
     */
    
    public String getName() {
@@ -484,4 +486,11 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       }
    }
 
+   public List<PortConnectionEmitter> getConnections() {
+      List<PortConnectionEmitter> portConnections = new ArrayList<>(); 
+      for (PortConnection pc: this.dataPort.getConnections()) {
+         portConnections.add(EmitterFactory.portConnection(pc));
+      }
+      return portConnections;
+   }
 }

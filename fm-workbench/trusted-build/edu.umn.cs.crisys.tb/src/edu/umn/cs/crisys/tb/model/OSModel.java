@@ -29,7 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.ProcessorImplementation;
 import org.osate.aadl2.SystemImplementation;
+import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
@@ -39,6 +42,7 @@ import edu.umn.cs.crisys.tb.model.legacy.ExternalISR;
 import edu.umn.cs.crisys.tb.model.port.ExternalIRQ;
 import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
@@ -58,59 +62,58 @@ import edu.umn.cs.crisys.tb.util.Util;
  * 
  */
 public class OSModel extends ModelElementBase {
-   private String systemImplementationName;
-   private String systemInstanceName;
+   private String instanceName;
 
-   private SystemImplementation systemImplementation;
-   private SystemInstance systemInstance;
+   //private SystemImplementation systemImplementation;
+   //private SystemInstance systemInstance;
+   private ComponentImplementation processorImpl;
+   private ComponentInstance processorInstance;
+      
 
-   // TODO: once we support multiple model elements, this should
-   // return the parent.
-   public ModelElement getParent() { return null; }
+   TopLevelModel tlm = null; 
+   public TopLevelModel getTopLevelModel() { return tlm; }
+   public void setTopLevelModel(TopLevelModel tlm) { this.tlm = tlm; } 
+   
+   OSModel parent = null; 
+   public ModelElement getParent() { return parent; }
+   public void setParent(OSModel parent) { this.parent = parent; }
+   
 
    public enum OSTarget {CAmkES, eChronos, VxWorks, linux}; 
    private OSTarget osTarget = OSTarget.eChronos;
 
    // Currently supported targets: QEMU, ODROID, PX4, X86
-   public String HWTarget ;
-   public String outputDirectory;
+   private String HWTarget ;
+   private String outputDirectory;
 
 
    // Implementation objects: external.
-   public List<ProcessImplementation> processImplementationList = new ArrayList<>();
+   private List<ProcessImplementation> processImplementationList = new ArrayList<>();
+   private List<SharedData> sharedDataList = new ArrayList<>();
+   private ThreadCalendar threadCalendar = new ThreadCalendar(this);
+   private Set<String> sourceFiles = new HashSet<>();
+   private List<String> libraryFiles = new ArrayList<>(); 	
 
-   public List<ThreadImplementation> threadImplementationList = new ArrayList<>();
-   public List<SharedData> sharedDataList = new ArrayList<>();
-   public ThreadCalendar threadCalendar = new ThreadCalendar(this);
-   public Set<String> sourceFiles = new HashSet<>();
-   public List<String> libraryFiles = new ArrayList<>(); 	
+   private List<String> legacyMutexList = new ArrayList<>();
+   private List<String> legacySemaphoreList = new ArrayList<>();
+   private List<ExternalISR> externalISRList = new ArrayList<>();
+   private List<ExternalIRQEvent> externalIRQEventList = new ArrayList<>();
+   private List<ExternalIRQ> externalIRQList = new ArrayList<>();
 
-   public List<String> legacyMutexList = new ArrayList<>();
-   public List<String> legacySemaphoreList = new ArrayList<>();
-   public List<ExternalISR> externalISRList = new ArrayList<>();
-   public List<ExternalIRQEvent> externalIRQEventList = new ArrayList<>();
-   public List<ExternalIRQ> externalIRQList = new ArrayList<>();
-   //public List<PortConnection> connectionList = new ArrayList<PortConnection>(); 
 
-   // type stuff
-   public Set<String> externalTypeHeaders = new HashSet<>(); 
-
-   public Map<String, Type> astTypes = new HashMap<>();
-   public Map<String, RemoteProcedureGroup> remoteProcedureGroupMap = new HashMap<>(); 
-   public Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
 
    // properties related to timers and dispatch
-   public boolean generateSystickIRQ;
-   public boolean externalTimerComponent; 
+   private boolean generateSystickIRQ;
+   private boolean externalTimerComponent; 
 
    // CAMKES specific properties
-   public String camkesExternalTimerInterfacePath;
-   public String camkesExternalTimerCompletePath;
-   public int camkesInternalTimerTimersPerClient; 
-   public int camkesTimeServerAadlThreadMinIndex; 
-   public int camkesDataportRpcMinIndex;
-   boolean camkesUseMailboxDataports = false;
-   boolean useOSRealTimeExtensions; 
+   private String camkesExternalTimerInterfacePath;
+   private String camkesExternalTimerCompletePath;
+   private int camkesInternalTimerTimersPerClient; 
+   private int camkesTimeServerAadlThreadMinIndex; 
+   private int camkesDataportRpcMinIndex;
+   private boolean camkesUseMailboxDataports = false;
+   private boolean useOSRealTimeExtensions = false; 
 
    /**
     * @return the useOSRealTimeExtensions
@@ -138,23 +141,24 @@ public class OSModel extends ModelElementBase {
    public enum ISRType {InThreadContextISR, SignalingISR} ; 
    public ISRType isrType = ISRType.InThreadContextISR; 
 
-   // Model constructor
-   public OSModel(SystemImplementation systemImplementation, 
-         SystemInstance systemInstance) {
-      this.systemImplementation = systemImplementation;
-      this.systemInstance = systemInstance; 
+   public List<OSModel> virtualMachineList = new ArrayList<>(); 
+   
+   // Figure this out by examining binding.
+   // public ProcessorInstance binding
+   
 
-      this.systemImplementationName = systemImplementation.getName();
-      this.systemInstanceName = systemInstance.getName();
+   // how do we want to represent hierarchy?
+   public OSModel(ComponentImplementation processorImpl,
+         ComponentInstance processorInstance) {
+      this.instanceName = processorInstance.getName();
    }
+//   public SystemImplementation getSystemImplementation() {
+//      return this.systemImplementation;
+//   }
 
-   public SystemImplementation getSystemImplementation() {
-      return this.systemImplementation;
-   }
-
-   public SystemInstance getSystemInstance() {
-      return this.systemInstance;
-   }
+//   public SystemInstance getSystemInstance() {
+//      return this.systemInstance;
+//   }
 
    /**
     * @return the osTarget
@@ -193,14 +197,6 @@ public class OSModel extends ModelElementBase {
       return outputDirectory;
    }
 
-   public Set<String> getExternalTypeHeaders() {
-      return externalTypeHeaders;
-   }
-
-   public void setExternalTypeHeaders(Set<String> externalTypeHeaders) {
-      this.externalTypeHeaders = externalTypeHeaders;
-   }
-
    /**
     * @param outputDirectory the outputDirectory to set
     */
@@ -234,7 +230,7 @@ public class OSModel extends ModelElementBase {
 
    public List<InputIrqPort> getIRQDispatcherList() {
       List<InputIrqPort> idList = new ArrayList<>(); 
-      for (ThreadImplementation ti: this.getAllThreadImplementations()) {
+      for (ThreadImplementation ti: this.getThreadImplementationList()) {
          for (InputPort d: ti.getInputPorts()) {
             if (d instanceof InputIrqPort) {
                idList.add((InputIrqPort)d);
@@ -244,12 +240,16 @@ public class OSModel extends ModelElementBase {
       return idList;
    }
 
-   public String getSystemImplementationName() {
-      return systemImplementationName;
+   public String getInstanceName() {
+      return this.instanceName;
    }
-
-   public String getSystemInstanceName() {
-      return this.systemInstanceName;
+   
+   public String getPathName() {
+      String prefix = ""; 
+      if (this.parent != null) {
+         prefix = parent.getPathName() + "_"; 
+      }
+      return prefix + getInstanceName() ; 
    }
 
    public ThreadCalendar getThreadCalendar() {
@@ -260,13 +260,17 @@ public class OSModel extends ModelElementBase {
       return this.sharedDataList;
    }
 
-   public List<ThreadImplementation> getAllThreadImplementations() {
-      return threadImplementationList;
+   public List<ThreadImplementation> getThreadImplementationList() {
+      List<ThreadImplementation> threadImpls = new ArrayList<>(); 
+      for (ProcessImplementation pi: this.getProcessImplementationList()) {
+         threadImpls.addAll(pi.getThreadImplementationList());
+      }
+      return threadImpls;
    }
 
    public List<ThreadImplementation> getActiveThreadImplementations() {
       List<ThreadImplementation> activeThreads = new ArrayList<ThreadImplementation>(); 
-      for (ThreadImplementation ti: getAllThreadImplementations()) {
+      for (ThreadImplementation ti: getThreadImplementationList()) {
          if (!ti.getIsPassive()) {
             activeThreads.add(ti);
          }
@@ -276,7 +280,7 @@ public class OSModel extends ModelElementBase {
 
    public List<ThreadImplementation> getPassiveThreadImplementations() {
       List<ThreadImplementation> t = new ArrayList<ThreadImplementation>(); 
-      for (ThreadImplementation ti: getAllThreadImplementations()) {
+      for (ThreadImplementation ti: getThreadImplementationList()) {
          if (ti.getIsPassive()) {
             t.add(ti);
          }
@@ -288,31 +292,16 @@ public class OSModel extends ModelElementBase {
     * @return the rpcInterfaces
     */
    public Map<String, RemoteProcedureGroup> getRemoteProcedureGroupMap() {
-      return remoteProcedureGroupMap;
+      return tlm.getRemoteProcedureGroupMap();
    }
 
    /**
     * @param rpcInterfaces the rpcInterfaces to set
     */
    public void setRemoteProcedureGroupMap(Map<String, RemoteProcedureGroup> rpcInterfaces) {
-      this.remoteProcedureGroupMap = rpcInterfaces;
+      tlm.setRemoteProcedureGroupMap(rpcInterfaces);
    }
 
-
-   /**
-    * @return the remoteProcedureMap
-    */
-   public Map<String, RemoteProcedure> getRemoteProcedureMap() {
-      return remoteProcedureMap;
-   }
-
-   /**
-    * @param remoteProcedureMap the remoteProcedureMap to set
-    */
-   public void setRemoteProcedureMap(
-         Map<String, RemoteProcedure> remoteProcedureMap) {
-      this.remoteProcedureMap = remoteProcedureMap;
-   }
 
    public List<ExternalISR> getExternalISRs() {
       return this.externalISRList;
@@ -328,35 +317,20 @@ public class OSModel extends ModelElementBase {
 
    public List<ThreadInstance> getAllThreadInstances() {
       List<ThreadInstance> list = new ArrayList<ThreadInstance>(); 
-      for (ThreadImplementation t: getAllThreadImplementations()) {
+      for (ThreadImplementation t: getThreadImplementationList()) {
          list.addAll(t.getThreadInstanceList()); 
       }
       return list;
    }
 
-   public List<ThreadInstancePort> getAllThreadInstanceInputPorts() {
-      ArrayList<ThreadInstancePort> instances = 
-            new ArrayList<ThreadInstancePort>();
-      for (ThreadInstance ti: getAllThreadInstances()) {
-         instances.addAll(ti.getThreadInstanceInputPorts());
+   public List<PortFeature> getPortFeatureList() {
+      List<PortFeature> features = new ArrayList<>(); 
+      for (ThreadImplementation ti: this.getThreadImplementationList()) {
+         features.addAll(ti.getPortList());
       }
-      return instances;
+      return features;
    }
 
-
-   /*
-	public Map<ThreadImplementation, Set<Pair<MyPort, MyPort>>> getThreadSourcePorts() {
-		return threadSourcePorts;
-	}
-    */	
-
-   //	public List<ThreadImplementation> getThreads(List<String> threadNameList) {
-   //		List<ThreadImplementation> threadList = new ArrayList<ThreadImplementation>();
-   //		for (String threadName : threadNameList) { 
-   //			threadList.add(threadImplementationMap.get(threadName));
-   //		}
-   //		return threadList;
-   //	}
 
 
    public List<String> getExternalMutexList() {
@@ -372,7 +346,7 @@ public class OSModel extends ModelElementBase {
    }
 
    public Map<String, Type> getAstTypes() {
-      return this.astTypes;
+      return this.tlm.getAstTypes();
    }
 
    @Override
@@ -395,6 +369,12 @@ public class OSModel extends ModelElementBase {
    public void setExternalTimerComponent(boolean externalTimerComponent) {
       this.externalTimerComponent = externalTimerComponent;
    }
+
+   /***************************************************************
+    * 
+    * Camkes-specific functions
+    * 
+    ***************************************************************/
 
    public String getCamkesExternalTimerInterfacePath() {
       return camkesExternalTimerInterfacePath;
@@ -436,7 +416,6 @@ public class OSModel extends ModelElementBase {
       return camkesTimeServerAadlThreadMinIndex++; 
    }
 
-
    public int getCamkesDataportRpcMinIndex() {
       return camkesDataportRpcMinIndex;
    }
@@ -456,6 +435,12 @@ public class OSModel extends ModelElementBase {
    public void setCamkesUseMailboxDataports(boolean camkesUseMailboxDataports) {
       this.camkesUseMailboxDataports = camkesUseMailboxDataports;
    }
+
+   /***************************************************************
+    * 
+    * EChronos-specific functions
+    * 
+    ***************************************************************/
 
    public boolean isEChronosGenerateCModules() {
       return eChronosGenerateCModules;
@@ -491,4 +476,112 @@ public class OSModel extends ModelElementBase {
       return Util.getPrefix();
    }
 
+   public List<OSModel> getVirtualMachineList() {
+      return virtualMachineList;
+   }
+
+   public void setVirtualMachineList(List<OSModel> virtualMachineList) {
+      this.virtualMachineList = virtualMachineList;
+   }
+   
+   public void addVirtualMachine(OSModel model) {
+      this.virtualMachineList.add(model);
+   }
+   
+   public Set<String> getExternalTypeHeaders() {
+      return tlm.getExternalTypeHeaders();
+   }
+
+   public ComponentImplementation getProcessorImpl() {
+      return processorImpl;
+   }
+
+   public void setProcessorImpl(ComponentImplementation processorImpl) {
+      this.processorImpl = processorImpl;
+   }
+
+   public ComponentInstance getProcessorInstance() {
+      return processorInstance;
+   }
+
+   public void setProcessorInstance(ComponentInstance processorInstance) {
+      this.processorInstance = processorInstance;
+   }
+   public List<ProcessImplementation> getProcessImplementationList() {
+      return processImplementationList;
+   }
+   public void setProcessImplementationList(List<ProcessImplementation> processImplementationList) {
+      this.processImplementationList = processImplementationList;
+   }
+   public List<String> getLegacyMutexList() {
+      return legacyMutexList;
+   }
+   public void setLegacyMutexList(List<String> legacyMutexList) {
+      this.legacyMutexList = legacyMutexList;
+   }
+   public List<String> getLegacySemaphoreList() {
+      return legacySemaphoreList;
+   }
+   public void setLegacySemaphoreList(List<String> legacySemaphoreList) {
+      this.legacySemaphoreList = legacySemaphoreList;
+   }
+   public List<ExternalISR> getExternalISRList() {
+      return externalISRList;
+   }
+   public void setExternalISRList(List<ExternalISR> externalISRList) {
+      this.externalISRList = externalISRList;
+   }
+   public List<ExternalIRQEvent> getExternalIRQEventList() {
+      return externalIRQEventList;
+   }
+   public void setExternalIRQEventList(List<ExternalIRQEvent> externalIRQEventList) {
+      this.externalIRQEventList = externalIRQEventList;
+   }
+   public List<ExternalIRQ> getExternalIRQList() {
+      return externalIRQList;
+   }
+   public void setExternalIRQList(List<ExternalIRQ> externalIRQList) {
+      this.externalIRQList = externalIRQList;
+   }
+   public boolean iseChronosGenerateCModules() {
+      return eChronosGenerateCModules;
+   }
+   public void seteChronosGenerateCModules(boolean eChronosGenerateCModules) {
+      this.eChronosGenerateCModules = eChronosGenerateCModules;
+   }
+   public String geteChronosCModulePath() {
+      return eChronosCModulePath;
+   }
+   public void seteChronosCModulePath(String eChronosCModulePath) {
+      this.eChronosCModulePath = eChronosCModulePath;
+   }
+   public String geteChronosFlashLoadAddress() {
+      return eChronosFlashLoadAddress;
+   }
+   public void seteChronosFlashLoadAddress(String eChronosFlashLoadAddress) {
+      this.eChronosFlashLoadAddress = eChronosFlashLoadAddress;
+   }
+   public ISRType getIsrType() {
+      return isrType;
+   }
+   public void setIsrType(ISRType isrType) {
+      this.isrType = isrType;
+   }
+   public void setSharedDataList(List<SharedData> sharedDataList) {
+      this.sharedDataList = sharedDataList;
+   }
+   public void setThreadCalendar(ThreadCalendar threadCalendar) {
+      this.threadCalendar = threadCalendar;
+   }
+   public void setSourceFiles(Set<String> sourceFiles) {
+      this.sourceFiles = sourceFiles;
+   }
+   public void setLibraryFiles(List<String> libraryFiles) {
+      this.libraryFiles = libraryFiles;
+   }
+   public void setGenerateSystickIRQ(boolean generateSystickIRQ) {
+      this.generateSystickIRQ = generateSystickIRQ;
+   }
+   
+   
 }

@@ -52,7 +52,7 @@ public class VxWorks_CodeGenerator extends CodeGeneratorBase {
 	 public void createAssemblyHeader() throws TbFailure {
 	   ModelNames mn = new ModelNames(model);
 	   String fileName = model.getPrefix() + "_decls.h";
-	   writeGeneric(includeDirectory, "AssemblyHeader.stg", "headerBody", "model", mn, model.getSystemInstanceName(), false, fileName);
+	   writeGeneric(includeDirectory, "AssemblyHeader.stg", "headerBody", "model", mn, model.getInstanceName(), false, fileName);
    }
 
 	 
@@ -122,7 +122,7 @@ public class VxWorks_CodeGenerator extends CodeGeneratorBase {
     //rwTypeSet.add(new IntType(32, false));  
     rwTypeSet.add(InputPeriodicPort.getPortType());  
     
-    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
+    for (ThreadImplementation ti : model.getThreadImplementationList()) {
       for (OutputDataPort d : ti.getOutputDataPortList()) {
         rwTypeSet.add(d.getType());
       }

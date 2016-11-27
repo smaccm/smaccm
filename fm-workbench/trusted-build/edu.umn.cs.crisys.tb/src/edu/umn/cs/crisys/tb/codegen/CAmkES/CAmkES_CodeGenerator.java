@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.stringtemplate.v4.ST;
@@ -25,6 +26,9 @@ import org.stringtemplate.v4.STGroupFile;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.*;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.RemoteProcedureGroupNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadCalendarNames;
@@ -37,6 +41,7 @@ import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
@@ -82,7 +87,20 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
 		System.out.println(interfacesDirectory.getAbsolutePath());
 
 	}
+
+	void createPortIdlInterfaces() {
+	   List<PortFeature> features = model.getPortFeatureList();
+	   List<PortListEmitter> emitters = EmitterListRegistry.getPortListEmitters(); 
+	   for (PortListEmitter emitter: emitters) {
+	      if (emitter instanceof PortListEmitterCamkes) {
+	         PortListEmitterCamkes camkesEmitter = (PortListEmitterCamkes)emitter;
+	         camkesEmitter.camkesGenerateModelIdl(interfacesDirectory, model, features);
+	      }
+	   }
+	}
 	
+	/* Now handled by the RPC interface ports directly...see createPortIdlInterfaces
+	 
   public void createReadWriteIdlInterface(Type t) throws TbFailure {
     TypeNames type = new TypeNames(t); 
     ModelNames m = new ModelNames(model); 
@@ -98,9 +116,8 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
       createReadWriteIdlInterface(t); 
     }
   }
-/*  protected void writeGeneric(File directory, String templateFileName, String templateName, String tlTemplateArg[], Object tlNamesClass[], 
-      String headerFooterName, boolean headerUsesDT, String fileName) throws TbFailure {
-*/  
+*/
+	
   public void createRpcIdlInterface(RemoteProcedureGroup rpg) throws TbFailure {
     RemoteProcedureGroupNames rpgn = new RemoteProcedureGroupNames(rpg); 
     ModelNames m = new ModelNames(model); 
@@ -264,13 +281,13 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
 	void createAssembly() throws TbFailure {
 	  ModelNames mn = new ModelNames(model); 
     writeGeneric(outputDirectory, "Assembly.stg", "camkesAssemblyBody", "model", mn,  
-        model.getSystemInstanceName(), false, mn.getCamkesSystemAssemblyFileName());
+        model.getInstanceName(), false, mn.getCamkesSystemAssemblyFileName());
   }
 	
 	public void createTemplateMakefile() throws TbFailure {
     ModelNames mn = new ModelNames(model); 
     writeGeneric(makeTemplateDirectory, "Makefile.stg", "camkesMakefileBody", "model", mn,  
-        model.getSystemInstanceName(), false, "Makefile");
+        model.getInstanceName(), false, "Makefile");
 	}
 	
   public void createTemplateFile(String fileName, String templateName) throws TbFailure {
@@ -298,9 +315,9 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
   }
   
 	public void write() throws TbFailure {
-	  createTypesHeader();
-    createReadWriteIdlInterfaces();
+	 createTypesHeader();
     createRpcIdlInterfaces();
+    createPortIdlInterfaces(); 
     createSharedVariableIdlInterfaces();
     createComponents();
     createAssembly(); 
@@ -328,7 +345,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     //rwTypeSet.add(new IntType(32, false));  
     rwTypeSet.add(InputPeriodicPort.getPortType());  
     
-    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
+    for (ThreadImplementation ti : model.getThreadImplementationList()) {
       for (OutputDataPort d : ti.getOutputDataPortList()) {
         rwTypeSet.add(d.getType());
       }
