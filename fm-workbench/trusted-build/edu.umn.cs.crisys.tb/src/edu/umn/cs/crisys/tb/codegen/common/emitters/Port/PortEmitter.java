@@ -14,23 +14,36 @@ public interface PortEmitter extends NameEmitter {
    // typing - used to add types to the "public" types file.
    void addPortPublicTypeDeclarations(Map<String, Type> typeList);
 
-   // used to construct lists of port features for different calls
    PortFeature getModelElement();
    
-   // Called once per port
+   // Called once per port/thread combination to write additional .c/.h files associated with this 
+   // port.
    void getWritePortCFiles(File directory);
    void getWritePortHFiles(File directory);
    
-   // String emitters
-   // These would be more efficient with StringBuffers or StringWriters, 
-   // but I want the simplest possible interface.
+   ///////////////////////////////////////////////////////////////////////////
+   // various integration points with the .C file for a thread implementation.
+   ///////////////////////////////////////////////////////////////////////////
+
+   // to write additional prototypes for the thread header file
+   String getWritePortHPrototypes();     
    
-   String getWritePortHPrototypes();     //
-   String getWritePortDeclarations();    // 
-   String getWritePortPreEntrypoint();   //  
-   String getWritePortPostEntrypoint();  // 
-   String getWritePortEventResponder();  //  
-   String getWritePortThreadInitializer(); // 
+   // to write additional declarations for the port in the thread .c file
+   String getWritePortDeclarations();    
+   
+   // to write initialization code prior to the call of the user entrypoint for
+   // a dispatch.
+   String getWritePortPreEntrypoint();   
+   
+   // to write post-processing code after a call to the user entrypoint.
+   String getWritePortPostEntrypoint();  
+   
+   // to write dispatch code for the port (if it is dispatchable)
+   String getWritePortEventResponder();  
+   
+   // to write initialization code for the port prior to the main thread
+   // dispatch loop.
+   String getWritePortThreadInitializer(); 
    
    
    //////////////////////////////////////////////////////////////////
