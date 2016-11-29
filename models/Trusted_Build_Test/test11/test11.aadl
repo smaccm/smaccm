@@ -29,10 +29,10 @@ thread sender
 	    Dispatch_Protocol => Periodic;
 	    TB_SYS::Thread_Type => Active ;
 	    Period => 500 ms;
-		Source_Text => ("user_code/user_sender.c");
-	    TB_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+		 Source_Text => ("user_code/opt_main.c", "user_code/user_sender.c");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
 	    Priority => 10;
-	    Stack_Size => 256 bytes;
+	    Stack_Size => 16384 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
 end sender ; 
@@ -50,9 +50,9 @@ thread receiver
 	    TB_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
 		Source_Text => ("user_code/user_receiver.c");
-	    TB_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
 	    Priority => 8;
-	    Stack_Size => 256 bytes;
+	    Stack_Size => 16384 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{}}";
 end receiver ; 
@@ -69,31 +69,66 @@ process implementation proc.Impl
 		s_to_r : port s.Output1 -> r.Input1;
 end proc.Impl;
 
+processor main     
+end main;
+
+processor implementation main.camkes
+   properties
+      TB_SYS::OS => camkes;
+      TB_SYS::HW => QEMU;
+end main.camkes;
+
+processor implementation main.linux
+   properties
+      TB_SYS::OS => linux;
+      TB_SYS::HW => X86;
+end main.linux;
+
+processor implementation main.vxworks
+   properties
+      TB_SYS::OS => vxworks;
+      TB_SYS::HW => x86;
+end main.vxworks;
+
+processor implementation main.echronos
+   properties
+      TB_SYS::OS => echronos;
+      TB_SYS::HW => pixhawk;
+end main.echronos;
+
 system test
 end test;
 
 system implementation test.camkes
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		TB_SYS::OS => CAmkES;
-		TB_SYS::HW => QEMU;
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.camkes;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.camkes;
 
 system implementation test.echronos
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		TB_SYS::OS => eChronos;
-		TB_SYS::HW => QEMU;
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.echronos;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.echronos;
 
 system implementation test.vxworks
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		TB_SYS::OS => VxWorks;
-		TB_SYS::HW => QEMU;
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.vxworks;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.vxworks;
+
+system implementation test.linux
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.linux;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
+end test.linux;
 
 end test11;
