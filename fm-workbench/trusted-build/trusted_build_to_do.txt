@@ -239,7 +239,8 @@ To-dos:
 		-> Linux port: 
 			tested dataports
 			tested RPCs
-	
+		-> CAmkES port
+			
 	
 Old version:
 	! Allow external configuration of timer on VxWorks.
