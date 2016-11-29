@@ -332,9 +332,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         builder.addTimeOf(timeOfVarMap);
         builder.addTimeRise(timeRiseVarMap);
         builder.addTimeFall(timeFallVarMap);
-        
-        
-        return builder.build();
+
+        AgreeNode result = builder.build();
+
+        return linearizationRewriter.visit(result);
     }
 
     private List<AgreeConnection> filterConnections(List<AgreeAADLConnection> aadlConnections,
