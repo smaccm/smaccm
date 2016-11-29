@@ -20,6 +20,7 @@ public class RerunHandler extends AbstractHandler {
         // Manually clear the view in case the uri is stale and executeURI does
         // nothing
         verifyHandler.clearView();
+        verifyHandler.setCalledFromRerun();
         return verifyHandler.executeURI(uri);
     }
 }

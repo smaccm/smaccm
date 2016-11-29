@@ -530,10 +530,16 @@ public class AgreePatternTranslator {
 //        		           to("timeOfEffect", timeOfEffect),
 //        		           to("low", pattern.effectInterval.low));
         
-        Expr expr = expr("(timer > 0.0 => timeOfCause >= 0.0)", 
+        Expr expr = expr("(timer > 0.0 => timeOfCause >= 0.0) and "
+        		       + "(timer <= time) and"
+        		       + "(timeOfEffect >= timeOfCause and timer <= high and timeOfEffect >= time - timer + low => not run)", 
 		           to("timer", timerVar),
 		           to("timeOfCause", timeOfCause),
-		           to("time", timeExpr));
+		           to("timeOfEffect", timeOfEffect),
+		           to("time", timeExpr),
+		           to("low", pattern.effectInterval.low),
+		           to("high", pattern.effectInterval.high),
+		           to("run", runVar));
         builder.addPatternProp(new AgreeStatement("Timer Lemma for Pattern "+patternIndex, expr, pattern));
         
         
