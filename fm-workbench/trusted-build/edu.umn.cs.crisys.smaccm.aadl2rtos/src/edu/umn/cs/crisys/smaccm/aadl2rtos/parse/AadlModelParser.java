@@ -314,7 +314,10 @@ public class AadlModelParser {
     try {
       List<String> entrypoints = PropertyUtil.getComputeEntrypointList(port);
       if (entrypoints == null) { 
-         throw new Aadl2RtosException("missing entrypoints");
+         throw new Aadl2RtosException("IRQ port: " + port.getName() + " is missing entrypoints");
+      }
+      if (ti.getIsPassive()) {
+         throw new Aadl2RtosException("Passive thread implementations do not support IRQ ports for port: " + port.getName() + ".");
       }
       List<String> files = Util.getSourceTextListOpt(port,PropertyUtil.SOURCE_TEXT);
       String signal_name = Util.getStringValue(port, PropertyUtil.SMACCM_SYS_SIGNAL_NAME);
