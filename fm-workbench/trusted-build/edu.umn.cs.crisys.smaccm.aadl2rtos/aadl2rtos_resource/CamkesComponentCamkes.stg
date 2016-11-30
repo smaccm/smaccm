@@ -114,7 +114,7 @@ dataport <sharedDataAccessor.type.name> <sharedDataAccessor.name>;
 >>
 
 constructMemoryInterface(memoryRegion, dispatcher) ::= <<
-dataport Buf <memoryRegion.name>;
+dataport <memoryRegion.regionTypeName> <memoryRegion.name>;
 
 >>
 

@@ -270,7 +270,7 @@ public class PortNames {
     InputIrqPort iip = (InputIrqPort)dp; 
     List<MemoryRegionName> regions = new ArrayList<>();
     for (Map.Entry<String, String> entry : iip.getMemoryRegions().entrySet()) {
-        MemoryRegionName region = new MemoryRegionName(entry.getKey(), entry.getValue());
+        MemoryRegionName region = new MemoryRegionName(this, entry.getKey(), entry.getValue());
         regions.add(region);
     }
     return regions; 
@@ -304,6 +304,7 @@ public class PortNames {
      return "smaccm_" + getQualifiedName() + "_struct"; 
   }
 
+  
   public String getMailboxStructTypeName() {
 	  return "smaccm_" + getQualifiedName() + "_mbox";
   }
