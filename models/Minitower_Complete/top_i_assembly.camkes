@@ -50,8 +50,8 @@ import "components/UART_Driver/UART_Driver.camkes";
 import "components/Virtual_Machine/Virtual_Machine.camkes";
 
 connector seL4RPCCallDataport {
-    from Procedure client template "seL4RPCCallDataport-from.template.c";
-    to Procedure server template "seL4RPCCallDataport-to.template.c";
+    from Procedure; 
+    to Procedure;
 }
 
 assembly {

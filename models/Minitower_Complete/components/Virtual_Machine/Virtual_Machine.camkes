@@ -1,44 +1,34 @@
 import <std_connector.camkes>;
 
-import "../VM/VM.camkes";
-import "../Vchan/Vchan.camkes";
+import "VM/VM.camkes";
+import "Vchan/Vchan.camkes";
+import "VM_shim/VM_shim.camkes";
+
 import "../../interfaces/VchanInterface.idl4";
 import "../../interfaces/Virtual_Machine_interface.idl4";
 import "../../interfaces/SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4";
 
 component Virtual_Machine {
-include "smaccm_top_i_types.h";
-    control;
-
-    // AADL interface
-    has semaphore smaccm_dispatch_sem;
+    include "smaccm_top_i_types.h";
     uses SMACCM_DATA__Camera_Bounding_Box_i_writer Virtual_Machine_self2server;
     provides bool_writer server2self_reboot;
 
-    // Interface to internal vchan wrapper world
-    include "sel4vchan/vchan_sharemem.h";
-    dataport vchan_headers_t share_mem;
-    uses VchanInterface vchan_con;
-    consumes VchanEvent vevent;
-
-    emits restart restart_vm;
-}
-
-assembly {
     composition {
-        component VM vm;
-        component Vchan vchan_0;
-        // Trusted build tool will create a Virtual_Machine component as follows
-        // component Virtual_Machine Virtual_Machine_inst;
+        component VM vm_obj;
+        component Vchan vchan_obj;
+        component VM_shim vm_shim_obj;
 
-        connection seL4RPCCall vchan(from vm.vchan_con, to vchan_0.vchan_com);
-        connection seL4Asynch vchan_event_init(from vchan_0.vevent_cl, to vm.vevent);
-        connection seL4SharedData vchan_sharemem_0(from vm.share_mem, to vchan_0.share_mem);
+        export vm_shim_obj.Virtual_Machine_self2server -> Virtual_Machine_self2server;
+        export vm_shim_obj.server2self_reboot -> server2self_reboot;
 
-        connection seL4Asynch vchan_event(from vchan_0.vevent_sv, to Virtual_Machine_inst.vevent);
-        connection seL4SharedData hvchan_sharemem_0(from Virtual_Machine_inst.share_mem, to vchan_0.share_mem);
-        connection seL4RPCCall hvchan(from Virtual_Machine_inst.vchan_con, to vchan_0.vchan_com);
-        connection seL4Asynch restart_conn(from Virtual_Machine_inst.restart_vm, to vm.restart_event);
+        connection seL4RPCCall vchan(from vm_obj.vchan_con, to vchan_obj.vchan_com);
+        connection seL4Notification vchan_event_init(from vchan_obj.vevent_cl, to vm_obj.vevent);
+        connection seL4SharedData vchan_sharemem_0(from vm_obj.share_mem, to vchan_obj.share_mem);
+
+        connection seL4Notification vchan_event(from vchan_obj.vevent_sv, to vm_shim_obj.vevent);
+        connection seL4SharedData hvchan_sharemem_0(from vm_shim_obj.share_mem, to vchan_obj.share_mem);
+        connection seL4RPCCall hvchan(from vm_shim_obj.vchan_con, to vchan_obj.vchan_com);
+        connection seL4Notification restart_conn(from vm_shim_obj.restart_vm, to vm_obj.restart_event);
     }
 
     configuration {
@@ -66,7 +56,7 @@ assembly {
             0x12220000 MSH2
             0x40000000 RAM
         */
-        vm.mmios = "0x10000000:0x1000:12,
+        vm_obj.mmios = "0x10000000:0x1000:12,
                     0x10486000:0x1000:12,
                     0x12c20000:0x1000:12,
                     0x13400000:0x1000:12,
@@ -96,24 +86,24 @@ assembly {
             109 SDMMC2
             103 USB
         */
-        vm.irqs =  "27,
+        vm_obj.irqs =  "27,
                     85,
                     107,
                     109,
                     103";
 
-        vm.asid_pool = true;
+        vm_obj.asid_pool = true;
 
-        vm.simple = true;
-        vm.cnode_size_bits = 18;
-        vm.simple_untyped24_pool = 10;
+        vm_obj.simple = true;
+        vm_obj.cnode_size_bits = 18;
+        vm_obj.simple_untyped24_pool = 10;
 
-        vm.priority = 101;
-        vchan_0.priority = 102;
-        Virtual_Machine_inst.priority = 103;
+        vm_obj.priority = 101;
+        vchan_obj.priority = 102;
+        vm_shim_obj.priority = 103;
 
-        vm.sem_value = 0;
-        vm.num_extra_frame_caps = 0;
-        vm.extra_frame_map_address = 0;
+        vm_obj.sem_value = 0;
+        vm_obj.num_extra_frame_caps = 0;
+        vm_obj.extra_frame_map_address = 0;
     }
 }

@@ -9,7 +9,7 @@
  */
 
 #include <autoconf.h>
-import "../../interfaces/VchanInterface.idl4";
+import "../../../interfaces/VchanInterface.idl4";
 
 component VM {
     control;

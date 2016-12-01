@@ -8,9 +8,9 @@
  * @TAG(NICTA_BSD)
  */
 
-import "../../interfaces/spi.idl4"; 
-import "../../interfaces/can_tx.idl4"; 
-import "../../interfaces/can_rx.idl4"; 
+import "../../../interfaces/spi.idl4"; 
+import "../../../interfaces/can_tx.idl4"; 
+import "../../../interfaces/can_rx.idl4"; 
 
 component can {
        	provides can_tx_inf can_tx;

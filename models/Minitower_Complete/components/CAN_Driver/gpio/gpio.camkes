@@ -8,7 +8,7 @@
  * @TAG(NICTA_BSD)
  */
 
-import "../../interfaces/gpio.idl4"; 
+import "../../../interfaces/gpio.idl4"; 
 
 component gpio {
 //	control;
@@ -18,7 +18,7 @@ component gpio {
         dataport Buf gpio2base;
         dataport Buf irqcbase;
         
-        consumes DataAvailable 	EINT14;
+//        consumes DataAvailable 	EINT14;
         emits	 IntEvent	CANInt;
         consumes IntEventAck	CANIntAck;
 

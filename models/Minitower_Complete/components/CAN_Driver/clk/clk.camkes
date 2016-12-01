@@ -8,8 +8,7 @@
  * @TAG(NICTA_BSD)
  */
 
-import "../../interfaces/clk.idl4"; 
-
+import "../../../interfaces/clk.idl4"; 
 
 component clk {
         provides clk_inf       clktree;

@@ -1,53 +1,50 @@
+import "uart/uart.camkes";
 import "../../interfaces/UART_Driver_interface.idl4";
 import "../../interfaces/bool_writer.idl4";
 
-component UART_Driver {
-  control;
-
-  // AADL interface
-  include "smaccm_top_i_types.h";
-  uses SMACCM_DATA__UART_Packet_i_writer UART_Driver_self2decrypt;
-
-  provides SMACCM_DATA__UART_Packet_i_writer encrypt2self;
-  uses bool_writer UART_Driver_self2encrypt;
-
-  // Internal (driver) interface
-  dataport Buf            vaddr;
-  consumes DataAvailable  interrupt;
-  has semaphore           read_sem;
-}
-
 component uartbase {
-  hardware;
-  dataport Buf mem;
-  emits DataAvailable irq;
+    hardware;
+    dataport Buf mem;
+    emits DataAvailable irq;
 }
 
-assembly {
-  composition {
-    // "component uart UART_Driver_inst" will be defined by the outer camkes file
-    component uartbase uartbase_obj;
+component UART_Driver {
+    include "smaccm_top_i_types.h";
+    uses SMACCM_DATA__UART_Packet_i_writer UART_Driver_self2decrypt;
+    provides SMACCM_DATA__UART_Packet_i_writer encrypt2self;
+    uses bool_writer UART_Driver_self2encrypt;
+  
+    composition {
+        component uart uart_obj;
+        component uartbase uartbase_obj;
 
-    // UART hardware connection
-    connection seL4HardwareMMIO uartbase_mem(from UART_Driver_inst.vaddr, to uartbase_obj.mem);
-    connection seL4HardwareInterrupt uartbase_irq(from uartbase_obj.irq, to UART_Driver_inst.interrupt);
-  }
+        export uart_obj.UART_Driver_self2decrypt -> UART_Driver_self2decrypt;
+        export uart_obj.encrypt2self -> encrypt2self;
+        export uart_obj.UART_Driver_self2encrypt -> UART_Driver_self2encrypt;
 
-  configuration {
-    // UART #0 - LIDAR on daughterboard (unconfirmed)
-    // uartbase_obj.mem_attributes = "0x12C00000:0x1000";
-    // uartbase_obj.irq_attributes = 83;
+        connection seL4HardwareMMIO uartbase_mem(from uart_obj.vaddr, to uartbase_obj.mem);
+        connection seL4HardwareInterrupt uartbase_irq(from uartbase_obj.irq, to uart_obj.interrupt);
+    }
 
-    // UART #1 - Telem on daughterboard
-    uartbase_obj.mem_attributes = "0x12C10000:0x1000";
-    uartbase_obj.irq_attributes = 84;
+    configuration {
+        // UART #0 - LIDAR on daughterboard (unconfirmed)
+        // uartbase_obj.mem_paddr = 0x12C00000;
+        // uartbase_obj.mem_size = 0x1000;
+        // uartbase_obj.irq_irq_number = 83;
 
-    // UART #2 - Serial console on ODROID-XU
-    // uartbase_obj.mem_attributes = "0x12C20000:0x1000";
-    // uartbase_obj.irq_attributes = 85;
+        // UART #1 - Telem on daughterboard
+        uartbase_obj.mem_paddr = 0x12C10000;
+        uartbase_obj.mem_size = 0x1000;
+        uartbase_obj.irq_irq_number = 84;
 
-    // UART #3 - GPS on daughterboard (unconfirmed)
-    // uartbase_obj.mem_attributes = "0x12C30000:0x1000";
-    // uartbase_obj.irq_attributes = 86;
-  }
+        // UART #2 - Serial console on ODROID-XU
+        // uartbase_obj.mem_paddr = 0x12C20000;
+        // uartbase_obj.mem_size = 0x1000;
+        // uartbase_obj.irq_irq_number = 85;
+
+        // UART #3 - GPS on daughterboard (unconfirmed)
+        // uartbase_obj.mem_paddr = 0x12C30000;
+        // uartbase_obj.mem_size = 0x1000;
+        // uartbase_obj.irq_irq_number = 86;
+    }
 }

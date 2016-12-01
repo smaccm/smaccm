@@ -8,9 +8,9 @@
  * @TAG(NICTA_BSD)
  */
 
-import "../../interfaces/spi.idl4"; 
-import "../../interfaces/gpio.idl4"; 
-import "../../interfaces/clk.idl4"; 
+import "../../../interfaces/spi.idl4"; 
+import "../../../interfaces/gpio.idl4"; 
+import "../../../interfaces/clk.idl4"; 
 
 component spi {
         uses     gpio_inf       gpio;
