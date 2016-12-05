@@ -13,7 +13,7 @@
 #include <mcp2515.h>
 #include <queue.h>
 
-#include <can.h>
+#include <camkes.h>
 
 #define MSG_QUEUE_SIZE  128
 

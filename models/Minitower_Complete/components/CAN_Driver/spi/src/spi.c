@@ -13,7 +13,7 @@
 #include <platsupport/gpio.h>
 #include <utils.h>
 #include <string.h>
-#include <spi.h>
+#include <camkes.h>
 #include <errno.h>
 
 #include <common.h>
@@ -105,11 +105,10 @@ spi_complete_callback(spi_bus_t* bus, int status, void* token)
  * Called on every SPI IRQ. Redirect control to the driver
  */
 void
-spi_irq_event(void *arg)
+spi1_int_handle(void)
 {
-    (void)arg;
     spi_handle_irq(spi_bus);
-    spi1_int_reg_callback(&spi_irq_event, NULL);
+    spi1_int_acknowledge();
 }
 
 /* Camkes entry point */
@@ -130,7 +129,7 @@ spi__init(void)
     /* Prime the semaphore such that the first call to 'wait' will block */
     bus_sem_wait();
     /* Register an IRQ callback for the driver */
-    spi1_int_reg_callback(&spi_irq_event, spi_bus);
+    spi1_int_acknowledge();
 }
 
 /**

@@ -47,7 +47,7 @@
 #include "can_inf.h"
 #include "mcp2515.h"
 
-#include "can.h"
+#include <camkes.h>
 
 /* Macros for juggling TXB/RXB registers. */
 #define SIDH_SHF      3   //SIDH = SID<10:3>

@@ -1,6 +1,6 @@
 #include <string.h>
 #include <smaccm_top_i_types.h>
-#include <canbus.h>
+#include <camkes.h>
 #include <stdio.h>
 
 static bool STATIC_TRUE = true;

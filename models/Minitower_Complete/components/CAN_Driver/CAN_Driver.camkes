@@ -34,7 +34,7 @@ component spibase {
 }
 
 component CAN_Driver {
-    include "smaccm_top_i_types.h";
+    include <smaccm_top_i_types.h>;
     provides SMACCM_DATA__CAN_Frame_i_writer framing2self;
     uses bool_writer CAN_Driver_self2framing_status;
     uses SMACCM_DATA__CAN_Frame_i_writer CAN_Driver_self2framing_frame;

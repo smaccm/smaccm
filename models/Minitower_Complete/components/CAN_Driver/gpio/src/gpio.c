@@ -14,7 +14,7 @@
 
 #include "utils.h"
 
-#include "gpio.h"
+#include <camkes.h>
 
 #define UART0_CTSN  GPIOID(GPA0, 2)
 #define UART0_RTSN  GPIOID(GPA0, 3)
@@ -95,37 +95,37 @@ gpio_t o_can_resetn;
 /* PPM Input */
 gpio_t i_ppm;
 
-static void
-irq_grp26_event(void* arg){
+void
+irq_grp26_int_handle(){
     if(gpio_is_pending(&i_ppm)){
         gpio_pending_clear(&i_ppm);
         printf("               <<PPM INT>>\n");
         /* TODO: Call handler */
     }
-    irq_grp26_int_reg_callback(&irq_grp26_event, NULL);
+    irq_grp26_int_acknowledge();
 }
 
-static void
-irq_grp28_event(void * arg){
+void
+irq_grp28_int_handle(){
     if(gpio_is_pending(&i_spi_mpu_int)){
         gpio_pending_clear(&i_spi_mpu_int);
         printf("               <<MPU INT>>\n");
         /* TODO: Call handler */
     }
-    irq_grp28_int_reg_callback(&irq_grp28_event, NULL);
+    irq_grp28_int_acknowledge();
 }
 
-static void
-irq_grp31_event(void *arg){
+void
+irq_grp31_int_handle(){
     if(gpio_is_pending(&i_spi_can_int)){
         gpio_pending_clear(&i_spi_can_int);
 	CANInt_emit();
     }
-    irq_grp31_int_reg_callback(&irq_grp31_event, NULL);
+    irq_grp31_int_acknowledge();
 }
 
-static void
-irq_xint16_31_event(void *arg){
+void
+xint16_31_int_handle(){
 #if 0
     if(gpio_is_pending(&i_spi_acc_int)){
         gpio_pending_clear(&i_spi_acc_int);
@@ -148,7 +148,7 @@ irq_xint16_31_event(void *arg){
         printf("               <<SPI EXT INT>>\n");
         /* TODO: Call handler */
     }
-    xint16_31_int_reg_callback(&irq_xint16_31_event, NULL);
+    xint16_31_int_acknowledge();
 }
 
 
@@ -198,10 +198,10 @@ void gpio__init(void) {
     irq_combiner_enable_irq(&irq_combiner, CAN_EINT_CIRQ);
     irq_combiner_enable_irq(&irq_combiner, MPU_EINT_CIRQ);
     irq_combiner_enable_irq(&irq_combiner, PPM_CIRQ);
-    xint16_31_int_reg_callback(&irq_xint16_31_event, NULL);
-    irq_grp28_int_reg_callback(&irq_grp28_event, NULL);
-    irq_grp31_int_reg_callback(&irq_grp31_event, NULL);
-    irq_grp26_int_reg_callback(&irq_grp26_event, NULL);
+    xint16_31_int_acknowledge();
+    irq_grp28_int_acknowledge();
+    irq_grp31_int_acknowledge();
+    irq_grp26_int_acknowledge();
 }
 
 int gpio_mmc_config(int peripheral, int flags)

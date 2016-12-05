@@ -13,7 +13,7 @@
 #include <platsupport/chardev.h>
 #include <platsupport/serial.h>
 #include <utils/util.h>
-#include <UART_Driver.h>
+#include <camkes.h>
 
 //#define BAUD_RATE 115200
 #define BAUD_RATE 57600
@@ -34,18 +34,16 @@ struct uart_token {
 
 static ps_chardevice_t serial_device;
 
-static void
-interrupt_event(void* token)
+void
+interrupt_handle()
 {
-    ps_chardevice_t* device;
-    device = (ps_chardevice_t*)token;
-    ps_cdev_handle_irq(device, 0);
-    interrupt_reg_callback(&interrupt_event, token);
+    ps_cdev_handle_irq(&serial_device, 0);
+    interrupt_acknowledge();
 }
 
 void pre_init(void)
 {
-    /* Iniitialise the UART */
+    /* Initialise the UART */
     printf("Initialising UART driver\n");
     if(exynos_serial_init(DEV_ID, (void *) vaddr, NULL, NULL, &serial_device)){
         printf("Failed to initialise UART\n");
@@ -58,7 +56,7 @@ void pre_init(void)
     read_sem_wait();
 
     /* Register for IRQs */
-    interrupt_reg_callback(&interrupt_event, &serial_device);
+    interrupt_acknowledge();
 }
 
 static void

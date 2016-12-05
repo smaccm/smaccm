@@ -16,7 +16,7 @@
 #include "mcp2515.h"
 #include <queue.h>
 
-#include "can.h"
+#include <camkes.h>
 
 /* Debug information level
  *	0: no output

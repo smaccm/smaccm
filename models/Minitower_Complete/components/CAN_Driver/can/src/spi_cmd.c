@@ -17,7 +17,7 @@
 
 #include <sync/spinlock.h>
 
-#include "can.h"
+#include <camkes.h>
 #include "mcp2515.h"
 #include "spi_inf.h"
 #include "common.h"

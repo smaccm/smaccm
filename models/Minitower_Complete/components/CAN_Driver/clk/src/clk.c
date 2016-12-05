@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <platsupport/clock.h>
 
-#include <clk.h>
+#include <camkes.h>
 
 clock_sys_t clock_sys;
 
