@@ -37,7 +37,7 @@
  **************************************************************************/
 #include <string.h>
 #include <smaccm_top_i_types.h>
-#include <dispatch_periodic.h>
+#include <camkes.h>
 
 
 // prototypes for clock functions
