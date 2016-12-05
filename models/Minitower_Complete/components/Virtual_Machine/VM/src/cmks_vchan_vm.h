@@ -11,6 +11,7 @@
 #ifndef CMK_VM_VCHAN_COMP_H
 #define CMK_VM_VCHAN_COMP_H
 
+#include <autoconf.h>
 #include "vmlinux.h"
 
 #include <sel4arm-vmm/vm.h>
@@ -22,7 +23,9 @@
 #include <sel4utils/irq_server.h>
 #include <cpio/cpio.h>
 
+#ifdef CONFIG_VM_VCHAN
 void vchan_entry_point(vm_t *vm, uint32_t data);
 void vm_vchan_setup(vm_t *vm);
+#endif //CONFIG_VM_VCHAN
 
 #endif

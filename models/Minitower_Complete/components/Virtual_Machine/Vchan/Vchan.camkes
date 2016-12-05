@@ -8,7 +8,7 @@
  * @TAG(NICTA_GPL)
  */
 
-import "../../../interfaces/VchanInterface.idl4";
+import <VchanInterface.idl4>;
 
 component Vchan {
     include "sel4vchan/vchan_sharemem.h";

@@ -23,7 +23,7 @@
 #include <sel4vchan/libvchan.h>
 #include <sel4vchan/vchan_component.h>
 
-#include <Vchan.h>
+#include <camkes.h>
 
 #define USR_DCONNCT -2
 #define USR_NOT_SET -1

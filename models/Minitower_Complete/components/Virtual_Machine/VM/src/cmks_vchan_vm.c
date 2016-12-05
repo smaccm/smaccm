@@ -8,7 +8,9 @@
  * @TAG(NICTA_GPL)
  */
 
+#include <autoconf.h>
 
+#ifdef CONFIG_VM_VCHAN
 #include <sel4vchan/vmm_manager.h>
 #include <sel4vchan/vchan_copy.h>
 #include <sel4vchan/vchan_sharemem.h>
@@ -17,7 +19,7 @@
 
 #include <sel4arm-vmm/vchan_vm_component.h>
 
-#include <VM.h>
+#include <camkes.h>
 
 #include "cmks_vchan_vm.h"
 
@@ -79,8 +81,8 @@ static camkes_vchan_con_t vchan_camkes_component = {
 
 /* Set up relevent runtime systems for vchan */
 void vm_vchan_setup(vm_t *vm) {
-    vm->lock = &reinitializable_vm_lock_lock;
-    vm->unlock = &reinitializable_vm_lock_unlock;
+    vm->lock = &vm_lock_lock;
+    vm->unlock = &vm_lock_unlock;
 
     vchan_irq_handle = vm_virq_new(vm, VCHAN_EVENT_IRQ, &vchan_ack, NULL);
     reg_new_vchan_con(vm, &vchan_camkes_component);
@@ -381,3 +383,4 @@ void vchan_entry_point(vm_t *vm, uint32_t data) {
     vm_copyout(vm, &args_buffer, data, sizeof(vmcall_args_t));
     DVMVCHAN(4, "entry: returning from call with |%d|\n", cmd);
 }
+#endif //CONFIG_VM_VCHAN

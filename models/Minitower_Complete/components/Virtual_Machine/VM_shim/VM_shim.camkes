@@ -11,7 +11,7 @@ component VM_shim {
     control;
 
     // AADL interface
-    include "smaccm_top_i_types.h";
+    include <smaccm_top_i_types.h>;
     uses SMACCM_DATA__Camera_Bounding_Box_i_writer Virtual_Machine_self2server;
     provides bool_writer server2self_reboot;
 

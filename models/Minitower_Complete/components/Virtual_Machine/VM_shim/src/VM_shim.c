@@ -23,8 +23,7 @@
 
 #include <camkes/dataport.h>
 
-#include "smaccm_Virtual_Machine.h"
-#include "Virtual_Machine.h"
+#include <camkes.h>
 
 static camkes_vchan_con_t con = {
     .connect = &vchan_con_new_connection,

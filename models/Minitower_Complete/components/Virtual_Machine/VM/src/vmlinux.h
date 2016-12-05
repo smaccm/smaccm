@@ -11,8 +11,6 @@
 #ifndef VMLINUX_H
 #define VMLINUX_H
 
-#include <autoconf.h>
-
 #if defined(CONFIG_PLAT_TK1)
 #include "tk1_vmlinux.h"
 
@@ -24,3 +22,4 @@
 #endif
 
 #endif /* VMLINUX_H */
+

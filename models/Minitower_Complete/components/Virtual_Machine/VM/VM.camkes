@@ -9,20 +9,27 @@
  */
 
 #include <autoconf.h>
-import "../../../interfaces/VchanInterface.idl4";
+
+#ifdef CONFIG_VM_VCHAN
+import <VchanInterface.idl4>;
+#endif //CONFIG_VM_VCHAN
 
 component VM {
     control;
-    include "cmks_vchan_vm.h";
 
 #ifdef CONFIG_PLAT_EXYNOS5410
     consumes restart restart_event;
 #endif
+    has semaphore vm_sem;
 
-    has mutex reinitializable_vm_lock;
+
+#ifdef CONFIG_VM_VCHAN
+    include "vchan_sharemem.h";
+    has mutex vm_lock;
     uses VchanInterface vchan_con;
     consumes VchanEvent vevent;
     dataport vchan_headers_t share_mem;
+#endif //CONFIG_VM_VCHAN
  
     attribute int base_prio;
     attribute int num_extra_frame_caps;
