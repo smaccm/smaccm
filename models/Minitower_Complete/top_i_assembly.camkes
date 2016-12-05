@@ -97,7 +97,7 @@ assembly {
     }
 
     configuration {
-        dispatch_periodic_inst.timer_attributes = "10";
+        dispatch_periodic_inst.timer_attributes = 10;
         dispatch_periodic_inst.timer_global_endpoint = "periodic_dispatcher_timer";
         dispatch_periodic_inst.timer_complete_global_endpoint = "periodic_dispatcher_timer";
         dispatch_periodic_inst._priority = 201;
