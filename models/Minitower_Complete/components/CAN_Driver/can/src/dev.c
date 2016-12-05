@@ -27,6 +27,7 @@ void can_tx__init(void)
 
 int can_tx_setup(int baudrate)
 {
+        spi__init();
 	mcp2515_reset();
 
 	/* Wait until reset finishes. */

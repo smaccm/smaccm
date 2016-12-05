@@ -25,6 +25,9 @@
 #define DEV_ID CAN_APP_ID
 static spi_dev_port *spi_dev = NULL;
 
+// TODO: This no longer gets called automatically in CAmkES Next. So
+//       we call it from can_tx_setup. What's the proper place to call
+//       it from?
 void spi__init(void)
 {
 	spi_dev = (spi_dev_port*)spi_can;
