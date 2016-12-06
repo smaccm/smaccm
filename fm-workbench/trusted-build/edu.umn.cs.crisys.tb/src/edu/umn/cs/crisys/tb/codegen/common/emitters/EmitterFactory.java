@@ -75,8 +75,8 @@ public class EmitterFactory {
       return new ExternalHandlerNames(handler);
    }
 
-   public static MemoryRegionNames memoryRegion(String name, String region) {
-      return new MemoryRegionNames(name, region);
+   public static MemoryRegionNames memoryRegion(PortFeature pf, String name, String region) {
+      return new MemoryRegionNames(port(pf), name, region);
    }
    
    public static ModelNames model(OSModel model) {

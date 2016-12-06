@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
@@ -13,6 +14,9 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.DispatchableInputPortCommon;
+import edu.umn.cs.crisys.tb.codegen.common.names.ExternalHandlerNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.MemoryRegionNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
@@ -29,13 +33,15 @@ import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
+import edu.umn.cs.crisys.tb.model.type.ArrayType;
 import edu.umn.cs.crisys.tb.model.type.BoolType;
 import edu.umn.cs.crisys.tb.model.type.IntType;
+import edu.umn.cs.crisys.tb.model.type.RecordType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks {
+public class PortEmitterInputIrq extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
@@ -43,20 +49,40 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
       return ok;
    }
    
-   private PortFeature port;
-   private OSModel model; 
    Type indexType = new IntType(32, false); 
    STGroupFile template; 
    
    public PortEmitterInputIrq(PortFeature pf) {
-      template = Util.createTemplate("InputIrqPortEmitter.stg");
-      this.port = pf;
-      this.model = Util.getElementOSModel(pf);
+      super(pf, Util.getElementOSModel(pf));
+      template = Util.createTemplate("PortEmitterInputIrq.stg");
    }
+   
+
    
    @Override
    public void addPortPublicTypeDeclarations(Map<String, Type> typeList) {
-      // no-op for the moment; 
+      for (MemoryRegionNames memRegion: this.getMemoryRegions()) {
+         StringTokenizer tok = 
+               new StringTokenizer(memRegion.getRegion(), ":"); 
+         String base = tok.nextToken();
+         String size = tok.nextToken(); 
+         System.out.println("Tokenizing memory regions: base = " + base + 
+               "; size = " + size + ".");
+         if (base == null || size == null) {
+            throw new TbException("In IRQ port " + port.getName() + ", memory region is mis-specified");
+         }
+         int sizeVal;
+         try {
+            sizeVal = Integer.decode(size);
+         } catch (NumberFormatException ne) {
+            throw new TbException("In IRQ port " + port.getName() + ", memory region is mis-specified");
+         }
+         RecordType sizeRecordType = new RecordType();
+         ArrayType byteArrayType = new ArrayType(new IntType(8, false), sizeVal);
+         sizeRecordType.addField("memRegion", byteArrayType);
+         model.getAstTypes().put(
+               memRegion.getRegionTypeName(), sizeRecordType);
+      }
    }
 
    @Override
@@ -303,6 +329,7 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
     * firstLevelInterruptHandler
     * dispatchOccurredVar
     * activeThreadInternalDispatcherName
+    * externalHandlers
     * 
     * signalName
     * signalNumber
@@ -317,15 +344,6 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
     * 
     ************************************************************/
 
-   public ThreadImplementationNames getThreadImplementation() {
-      return EmitterFactory.threadImplementation(this.getModelElement().getOwner());
-   }
-   
-   public TypeNames getType() { 
-      return EmitterFactory.type(this.getModelElement().getType()); 
-   }
-
-   public String getPrefix() { return Util.getPrefix(); }
    
    public String getIdlDispatcherName() {
       return "dispatch_" + getName();
@@ -336,9 +354,6 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
       return iip.getFirstLevelInterruptHandler(); 
    }
    
-   public String getActiveThreadInternalDispatcherFnName() {
-      return this.getPrefix() + "_process_irq_" + this.getName(); 
-   }
    
    public String getSignalName() {
       InputIrqPort iip = (InputIrqPort)this.getModelElement(); 
@@ -350,15 +365,11 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
       return Integer.toString(iip.getNumber()); 
    }
 
-   public boolean getHasData() { 
-      return false; 
-   }
-   
-   public List<NameEmitter> getMemoryRegions() {
+   public List<MemoryRegionNames> getMemoryRegions() {
       InputIrqPort iip = (InputIrqPort)this.getModelElement(); 
-      List<NameEmitter> regions = new ArrayList<>();
+      List<MemoryRegionNames> regions = new ArrayList<>();
       for (Map.Entry<String, String> entry : iip.getMemoryRegions().entrySet()) {
-         NameEmitter region = EmitterFactory.memoryRegion(entry.getKey(), entry.getValue());
+         MemoryRegionNames region = EmitterFactory.memoryRegion(this.port, entry.getKey(), entry.getValue());
          regions.add(region);
       }
       return regions; 
@@ -370,6 +381,11 @@ public class PortEmitterInputIrq implements PortEmitterCamkes, PortEmitterEChron
 
    public String getIrqComponent() {
       return getName() + "_hw"; 
+   }
+
+
+   public String getDispatchOccurredVar() {
+      return getPrefix() + "_occurred_" + getName(); 
    }
 
 }

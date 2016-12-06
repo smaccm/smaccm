@@ -151,7 +151,7 @@ dispatcherComponentMainFunction(threadImpl) ::= <<
     <if(threadImpl.hasInitializeEntrypoint)>
     // thread initialization routines (if any)...
     int64_t dummy_time = 0;
-    <activeThreadInternalDispatcherName(threadImpl.initializeEntrypointOpt)>(&dummy_time);
+    <threadImpl.initializeEntrypointOpt.userEntrypointCallerName>(&dummy_time);
     <endif>
 
     <commentIf("Register interrupt handlers",

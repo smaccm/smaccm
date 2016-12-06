@@ -1,7 +1,11 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
@@ -12,6 +16,7 @@ import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.codegen.linux.LinuxUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
+import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
@@ -192,5 +197,13 @@ public class DispatchableInputPortCommon {
       }
    }
    
+   public final List<NameEmitter> getExternalHandlers() {
+      DispatchableInputPort dip = ((DispatchableInputPort) this.getModelElement());
+      List<NameEmitter> ehl = new ArrayList<>(); 
+      for (ExternalHandler eh : dip.getExternalHandlerList()) {
+         ehl.add(EmitterFactory.externalHandler(eh)); 
+      }
+      return ehl;
+   }
 
 }

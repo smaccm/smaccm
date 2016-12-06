@@ -12,6 +12,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.DispatchableInputPortCommon;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
@@ -33,7 +34,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux {
+public class PortEmitterInitializer extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
@@ -41,12 +42,8 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
       return ok;
    }
    
-   private PortFeature port;
-   private OSModel model; 
-   
    public PortEmitterInitializer(PortFeature pf) {
-      this.port = pf;
-      this.model = Util.getElementOSModel(pf);
+      super(pf, Util.getElementOSModel(pf));
    }
    
    @Override
@@ -128,9 +125,6 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
       return this.getModelElement().getQualifiedName();
    }
 
-   public TypeNames getType() { 
-      return EmitterFactory.type(this.getModelElement().getType()); 
-   }
    
    /************************************************************
     * 
@@ -304,60 +298,9 @@ public class PortEmitterInitializer implements PortEmitterCamkes, PortEmitterECh
     * 
     * 
     ************************************************************/
-
-   public String getPrefix() { return Util.getPrefix(); }
    
    public String getIdlDispatcherName() {
       return "dispatch_" + getName();
-   }
-
-   public String writeType() {
-      return "_write" + getModelElement().getType().getCType().typeString();
-   }
-
-   public String getLpcPortWriterName() {
-      return Util.getPrefix_() + getModelElement().getQualifiedName() + 
-            writeType();
-   }
-
-   // middleware functions; these must be compatible with the OS.
-   public String getIncomingWriterName() {
-      PortFeature dp = getModelElement();
-      if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return dp.getName() + writeType() ;
-      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
-         return getLpcPortWriterName();
-      } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
-         return getLpcPortWriterName();
-      } else {
-         throw new TbException("Error: getIncomingPortWriterName: OS " + model.getOsTarget() + " is not a known OS target.");
-      }
-   }
-
-   public boolean getHasData() { 
-      return !(this.getModelElement().getType() instanceof UnitType); 
-   }
-
-   public String getUserEntrypointName() {
-      if (this.model.getOsTarget() == OSModel.OSTarget.CAmkES){
-         ThreadImplementationNames tnames = 
-               EmitterFactory.threadImplementation(this.getModelElement().getOwner());
-         String name = tnames.getComponentDispatcherInterfaceVarIdName() + "_" + 
-                     this.getIdlDispatcherName() ; 
-         return name;
-      } else if (this.model.getOsTarget() == OSModel.OSTarget.eChronos) {
-         return this.getPrefix() + "_entrypoint_" + 
-                this.getQualifiedName(); 
-      } else if (this.model.getOsTarget() == OSModel.OSTarget.VxWorks) {
-         return this.getIncomingWriterName();
-      } else {
-         throw new TbException("in PortEmitterInitializer::getUserEntrypointName: OS [" + 
-               this.model.getOsTarget() + "] is not supported.");
-      }
-   }
-   
-   public String getActiveThreadInternalDispatcherFnName() {
-      return getUserEntrypointName(); 
    }
 
 }

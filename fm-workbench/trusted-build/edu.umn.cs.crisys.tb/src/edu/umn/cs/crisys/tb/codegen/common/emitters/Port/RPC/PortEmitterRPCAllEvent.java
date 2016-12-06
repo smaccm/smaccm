@@ -537,15 +537,6 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    }
    */
 
-   public List<ExternalHandlerNames> getExternalHandlers() {
-      DispatchableInputPort dip = ((DispatchableInputPort) this.port);
-      List<ExternalHandlerNames> ehl = new ArrayList<>(); 
-      for (ExternalHandler eh : dip.getExternalHandlerList()) {
-         ehl.add(EmitterFactory.externalHandler(eh)); 
-      }
-      return ehl;
-   }
-
    public List<PortConnectionEmitter> getConnections() {
       List<PortConnectionEmitter> pcl = new ArrayList<>(); 
       for (PortConnection pc: this.getModelElement().getConnections()) {

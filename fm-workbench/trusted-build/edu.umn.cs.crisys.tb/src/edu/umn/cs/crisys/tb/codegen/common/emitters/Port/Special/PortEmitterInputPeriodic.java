@@ -345,16 +345,6 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
     * 
     ************************************************************/
 
-   public List<NameEmitter> getExternalHandlers() {
-      DispatchableInputPort dip = ((DispatchableInputPort) this.getModelElement());
-      List<NameEmitter> ehl = new ArrayList<>(); 
-      for (ExternalHandler eh : dip.getExternalHandlerList()) {
-         ehl.add(EmitterFactory.externalHandler(eh)); 
-      }
-      return ehl;
-   }
-
-
    public String getDispatchOccurredVar() {
       return getPrefix() + "_occurred_" + getName(); 
    }
@@ -393,7 +383,7 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
       InputIrqPort iip = (InputIrqPort)this.getModelElement(); 
       List<NameEmitter> regions = new ArrayList<>();
       for (Map.Entry<String, String> entry : iip.getMemoryRegions().entrySet()) {
-         NameEmitter region = EmitterFactory.memoryRegion(entry.getKey(), entry.getValue());
+         NameEmitter region = EmitterFactory.memoryRegion(this.port, entry.getKey(), entry.getValue());
          regions.add(region);
       }
       return regions; 

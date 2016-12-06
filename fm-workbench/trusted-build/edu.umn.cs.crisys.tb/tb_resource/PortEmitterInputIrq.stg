@@ -29,7 +29,7 @@ if (<dispatcher.dispatchOccurredVar>) {
     <dispatcher.dispatchOccurredVar> = false;
     // dummy input to match the expectations of Tower.
     int64_t _dummy;
-    <activeThreadInternalDispatcherName(dispatcher)>(&_dummy);
+    <dispatcher.incomingWriterName>(&_dummy);
 }
 
 >>
@@ -40,7 +40,7 @@ dispatcherComponentIRQEventDecls(dispatcher) ::= <<
 static bool <dispatcher.dispatchOccurredVar>;
 
 /************************************************************************
- * <dispatcher.incomingActiveThreadDispatchName>
+ * <dispatcher.incomingWriterName>
  * Invoked from IRQ: either 'managed' from CAmkES or 'raw' from 
  * eChronos or VxWorks.  Note: currently IRQ dispatchers are 
  * unsupported in Linux; we will have to examine this more closely
@@ -110,9 +110,10 @@ writeExternalDispatcherInterruptHandler(dispatcher) ::= <<
 //
 
 constructMemoryInterface(memoryRegion, dispatcher) ::= <<
-dataport Buf <memoryRegion.name>;
+dataport <memoryRegion.regionTypeName> <memoryRegion.name>;
 
 >>
+
 
 camkesIrqComponentDecl(dispatcher) ::= << 
    consumes DataAvailable <dispatcher.name>;
@@ -120,19 +121,19 @@ camkesIrqComponentDecl(dispatcher) ::= <<
 >>
 
 camkesIrqDispatcher(dispatcher) ::= <<
-void <dispatcher.activeThreadInternalDispatcherName>() {
+void <dispatcher.incomingWriterName>() {
     <dispatcher.firstLevelInterruptHandler>();
     <dispatcher.dispatchOccurredVar> = true;
-    <dispatcher.mainLockReleaseStmt>
-    <dispatcher.name>_reg_callback(<dispatcher.activeThreadInternalDispatcherName>, NULL);
+    <dispatcher.threadImplementation.mainLockReleaseStmt>
+    <dispatcher.name>_reg_callback(<dispatcher.incomingWriterName>, NULL);
 }
 >>
 
 eChronosVxWorksIrqDispatcher(dispatcher) ::= <<
-bool <dispatcher.activeThreadInternalDispatcherName>() {
+bool <dispatcher.incomingWriterName>() {
     <dispatcher.firstLevelInterruptHandler>();
     <dispatcher.dispatchOccurredVar> = true;
-    <dispatcher.mainLockReleaseStmt>
+    <dispatcher.threadImplementation.mainLockReleaseStmt>
     return true;
 }
 >>
@@ -145,7 +146,7 @@ bool <dispatcher.activeThreadInternalDispatcherName>() {
 
 
 irqComponentMemoryRegion(memoryRegion) ::= <<
-dataport Buf <memoryRegion.name>;
+dataport <memoryRegion.regionTypeName> <memoryRegion.name>;
 
 >>
 
