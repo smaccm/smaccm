@@ -123,9 +123,9 @@ rpcConnection(cid, from1, from2, to1, to2) ::=
 
 connectReaderWriter(connection, model) ::= <<
 <rpcConnection(model.generateConnectionName,
-    connetion.sourcePort.owner.componentInstanceName,
+    connection.sourcePort.threadImplementation.componentInstanceName,
     connection.sourcePort.qualifiedName,
-    connection.destPort.owner.componentInstanceName,
+    connection.destPort.threadImplementation.componentInstanceName,
     connection.destPort.name)>
 >>
 

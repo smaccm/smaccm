@@ -165,7 +165,7 @@ connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
     model.threadCalendar.periodicDispatcherInstanceName,
     dispatcher.qualifiedName,
     threadImpl.componentInstanceName,
-    dispatcher.qualifiedName)>
+    dispatcher.name)>
 >>
 
 

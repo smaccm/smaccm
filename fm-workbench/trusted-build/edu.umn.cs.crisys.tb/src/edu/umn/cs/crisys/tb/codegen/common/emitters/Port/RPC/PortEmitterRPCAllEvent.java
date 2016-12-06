@@ -371,9 +371,11 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    }
    
    private String addComponentOutputDataDeclarations() {
-      String element = 
-         "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
-               this.getQualifiedName() + ";\n"; 
+      String element = "";
+      for (PortConnectionEmitter connection: getConnections()) {
+         element += "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
+               connection.getName() + ";\n";
+      }
       return element; 
    }
    

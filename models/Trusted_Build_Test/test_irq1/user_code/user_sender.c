@@ -1,6 +1,15 @@
-#include <smaccm_sender.h>
-#include <sender.h>
+#ifdef __TB_OS_CAMKES__
+	#include <sender.h>
+	#include <inttypes.h>
+#elif __TB_OS_ECHRONOS__
+	#include <debug.h>
+#endif
+#include "tb_sender.h"
 #include <inttypes.h>
+#ifndef __TB_OS_ECHRONOS
+#include <stdio.h>
+#endif
+
 #include "clock_driver.h"
 
 void periodic_ping(const int64_t * periodic_100_ms);
@@ -18,7 +27,8 @@ uint32_t smaccm_get_time_in_ms() {
 
 void smaccm_thread_calendar() {
 	if ((smaccm_calendar_counter % (1000 / smaccm_tick_interval)) == 0) {
-		periodic_ping(smaccm_get_time_in_ms()); 
+		int64_t theTime = (int64_t)smaccm_get_time_in_ms();
+		periodic_ping(&theTime); 
 	}
 
 	smaccm_calendar_counter = (smaccm_calendar_counter + 1) % smaccm_hyperperiod_subdivisions; 
@@ -29,17 +39,17 @@ void timer_flih() {
 	epit_irq_callback(); 
 }
 
-void timer_slih() {
+void timer_slih(void) {
 	smaccm_thread_calendar(); 
 }
 
 void periodic_ping(const int64_t * periodic_100_ms) {
-   printf("sender ping received (%" PRI64 ").  Writing to receiver \n", *periodic_100_ms);
-   uint32_t newValue = periodic_100_ms + 1;
+   printf("sender ping received (%d).  Writing to receiver \n", (int32_t)*periodic_100_ms);
+   int64_t newValue = (int64_t)*periodic_100_ms + 1;
    ping_Output1(&newValue);
 }
 
-void initialize_timer() {
+void initialize_timer(void) {
 	epit_init();
 	epit_set_interval(1000);
 	epit_start_timer();

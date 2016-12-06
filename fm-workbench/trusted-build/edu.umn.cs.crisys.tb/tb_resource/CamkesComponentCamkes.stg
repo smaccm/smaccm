@@ -55,7 +55,7 @@ writeRpgInterface(endpoint) ::= <<
 
 componentCamkesBody(threadImpl) ::= <<
 
-import "../../interfaces/<threadImpl.idlFileName>";
+<! import "../../interfaces/<threadImpl.idlFileName>"; !>
 <if(threadImpl.requiresTimeServices)>
 import \<Timer.idl4>;
 <endif>
@@ -76,6 +76,7 @@ component <threadImpl.componentName> {
     include "<threadImpl.model.systemTypeHeaderName>";
     <if(threadImpl.isActive)>
     control;
+    has semaphore <threadImpl.dispatcherComponentSemaphoreName>;
     <endif>
 
     <threadImpl.portList:{port |<port.camkesAddComponentPortLevelDeclarations>}>

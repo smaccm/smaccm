@@ -18,18 +18,18 @@ writeUdePrototype(dispatcher) ::= <<
 void <dispatcher.firstLevelInterruptHandler>(void);
 >>
 
+
+
 ////////////////////////////////////////////////////////////////////////////
 //
 // Declarations related to IRQ Input Port gluecode C functions.
 //
 ////////////////////////////////////////////////////////////////////////////
 
-irqDispatcher(dispatcher) ::= <<
+slihIrqDispatcher(dispatcher) ::= <<
 if (<dispatcher.dispatchOccurredVar>) {
     <dispatcher.dispatchOccurredVar> = false;
-    // dummy input to match the expectations of Tower.
-    int64_t _dummy;
-    <dispatcher.incomingWriterName>(&_dummy);
+    <dispatcher.userEntrypointCallerName>();
 }
 
 >>
@@ -60,6 +60,8 @@ static bool <dispatcher.dispatchOccurredVar>;
 // eChronos-specific port code
 //
 //////////////////////////////////////////////////////////////
+
+// void <dispatcher.firstLevelInterruptHandler>(void);
 
 
 eChronosDispatcherMainLockReleaseStmt(dispatcher) ::= <<
@@ -98,12 +100,22 @@ writeExternalDispatcherInterruptHandler(dispatcher) ::= <<
 <writeExternalInterruptHandler(dispatcher.signalName, dispatcher.signalNumber)>
 >>
 
+eChronosVxWorksIrqDispatcher(dispatcher) ::= <<
+bool <dispatcher.incomingWriterName>() {
+    <dispatcher.firstLevelInterruptHandler>();
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcher.threadImplementation.mainLockReleaseStmt>
+    return true;
+}
+>>
+
 
 //////////////////////////////////////////////////////////////
 //
 // CAmkES-specific port code
 //
 //////////////////////////////////////////////////////////////
+
 
 //
 // For component CAmkES files.
@@ -121,21 +133,13 @@ camkesIrqComponentDecl(dispatcher) ::= <<
 >>
 
 camkesIrqDispatcher(dispatcher) ::= <<
-void <dispatcher.incomingWriterName>() {
+void <dispatcher.incomingWriterName>(void *_unused) {
     <dispatcher.firstLevelInterruptHandler>();
     <dispatcher.dispatchOccurredVar> = true;
     <dispatcher.threadImplementation.mainLockReleaseStmt>
     <dispatcher.name>_reg_callback(<dispatcher.incomingWriterName>, NULL);
 }
->>
 
-eChronosVxWorksIrqDispatcher(dispatcher) ::= <<
-bool <dispatcher.incomingWriterName>() {
-    <dispatcher.firstLevelInterruptHandler>();
-    <dispatcher.dispatchOccurredVar> = true;
-    <dispatcher.threadImplementation.mainLockReleaseStmt>
-    return true;
-}
 >>
 
 ////////////////////////////////////////////////////////////////////////////

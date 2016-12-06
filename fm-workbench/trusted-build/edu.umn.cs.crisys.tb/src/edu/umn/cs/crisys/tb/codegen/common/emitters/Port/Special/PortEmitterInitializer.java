@@ -70,7 +70,7 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
    
    public String writeExternalHandlerPrototype(ExternalHandler hdlr) {
       String result = ""; 
-      result += "void " + hdlr.getHandlerName() + "(int64_t *);\n";
+      result += "void " + hdlr.getHandlerName() + "(void);\n";
       return result;
    }
    
@@ -153,7 +153,7 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
 
    private String callHandler(ExternalHandler hdlr) {
       String result = ""; 
-      result += hdlr.getHandlerName() + "(&dummy_time);\n";
+      result += hdlr.getHandlerName() + "();\n";
       return result;
    }
 
@@ -161,7 +161,6 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
    public String getVxWorksAddMainCFileInitializers() {
       // thread initialization routines (if any)...
       String result = ""; 
-      result += "int64_t dummy_time = 0;\n";
       InitializerPort p = (InitializerPort)this.getModelElement(); 
       for (ExternalHandler hdlr : p.getExternalHandlerList()) {
          result += callHandler(hdlr); 

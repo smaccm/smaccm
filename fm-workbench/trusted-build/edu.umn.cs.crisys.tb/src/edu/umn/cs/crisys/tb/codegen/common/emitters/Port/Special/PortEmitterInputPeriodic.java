@@ -238,8 +238,9 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
    @Override
    public String getCamkesAddComponentPortLevelDeclarations() {
       String toReturn = ""; 
+      toReturn += "provides ";
       toReturn += this.getType().getReaderWriterInterfaceName(); 
-      toReturn += " " + this.getQualifiedName() + ";\n";
+      toReturn += " " + this.getName() + ";\n";
       return toReturn;
    }
 

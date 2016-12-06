@@ -25,7 +25,7 @@ thread sender
 		  TB_SYS::Signal_Number => 27;			
 	      TB_SYS::Sends_Events_To => "{{2 Output1}}";
 		};
-		Output1: out event data port Base_Types::Unsigned_32 {
+		Output1: out event data port Base_Types::Integer_64 {
 	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
 		};
 	
@@ -43,7 +43,7 @@ end sender ;
 -- Example of an aperiodically dispatched "passive" thread.   
 thread receiver
 	features
-		Input1: in event data port Base_Types::Unsigned_32 {
+		Input1: in event data port Base_Types::Integer_64 {
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  Source_Text => ("user_code/user_receiver.c");
 		}; 

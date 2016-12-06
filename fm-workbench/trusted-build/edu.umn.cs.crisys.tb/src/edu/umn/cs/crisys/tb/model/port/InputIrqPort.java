@@ -7,6 +7,7 @@ import java.util.Map;
 
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.IntType;
+import edu.umn.cs.crisys.tb.model.type.UnitType;
 
 /**
  * @author Whalen
@@ -18,6 +19,7 @@ public class InputIrqPort extends DispatchableInputPort {
     private String signalName;
     private String firstLevelInterruptHandler;
     private Map<String, String> memoryRegions;
+    private static boolean useTowerProtocol = false;
 
     public static final int NO_SIGNAL_NUMBER = -1;
 
@@ -30,7 +32,7 @@ public class InputIrqPort extends DispatchableInputPort {
             String firstLevelInterruptHandler, Map<String, String> memoryRegions) {
         // super(portName, new UnitType(), owner);
 
-        super(portName, new IntType(64, true), owner);
+        super(portName, useTowerProtocol ? new IntType(64, true) : new UnitType(), owner);
         this.signalName = signalName;
 
         this.signalNumber = signalNumber;

@@ -154,7 +154,7 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
    @Override
    public String getWritePortEventResponder() {
       String result = ""; 
-      ST st = getTemplateST("irqDispatcher");
+      ST st = getTemplateST("slihIrqDispatcher");
       st.add("dispatcher", this);
       return st.render(); 
    }
@@ -164,7 +164,7 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
       String result = "";
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
          result += this.getName() + "_reg_callback(" + 
-               this.getActiveThreadInternalDispatcherFnName() + ", NULL); \n";
+               this.getIncomingWriterName() + ", NULL); \n";
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          // no-op.  I know that this is indeed a no-op; it is handled
          // in the prx file.
@@ -340,6 +340,8 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
     * the entrypointCallerName is only dispatched remotely for 
     *    passive threads.  For active threads it will always be 
     *    dispatched from the main thread dispatch loop.
+    *
+    * firstLevelInterruptHandlerPrototype() <-- OS-specific
     * 
     * 
     ************************************************************/
@@ -353,7 +355,22 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
       InputIrqPort iip = (InputIrqPort)this.getModelElement();
       return iip.getFirstLevelInterruptHandler(); 
    }
-   
+/*   
+   public String getFirstLevelInterruptHandlerPrototype() {
+      String result = ""; 
+      ST st; 
+      if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
+         st = getTemplateST("camkesFirstLevelHandlerPrototype");
+      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
+         st = getTemplateST("eChronosFirstLevelHandlerPrototype");
+      } else {
+         throw new TbException("InputIrqPort::getFirstLevelInterruptHandlerPrototype: OS " + model.getOsTarget() + " is not yet supported.");         
+      }
+      st.add("dispatcher", this);
+      result += st.render();
+      return result;
+   }
+*/
    
    public String getSignalName() {
       InputIrqPort iip = (InputIrqPort)this.getModelElement(); 
@@ -375,6 +392,11 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
       return regions; 
    }
 
+   // add support for Tower's *$&% stuff later if necessary.
+   public boolean getUseTowerPrototypes() {
+      return false;
+   }
+   
    public String getIrqObject() {
       return getName() + "_obj";
    }

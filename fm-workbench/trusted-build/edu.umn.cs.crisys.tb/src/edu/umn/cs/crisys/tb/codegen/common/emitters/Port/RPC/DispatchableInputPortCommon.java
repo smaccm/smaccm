@@ -91,7 +91,7 @@ public class DispatchableInputPortCommon {
    }
 
    public final String writeType() {
-      return "_write" + getModelElement().getType().getCType().typeString();
+      return "_write_" + getModelElement().getType().getCType().typeString();
    }
 
 

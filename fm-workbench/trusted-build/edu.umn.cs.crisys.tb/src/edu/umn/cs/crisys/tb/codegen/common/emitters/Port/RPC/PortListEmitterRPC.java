@@ -24,6 +24,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.model.OSModel;
+import edu.umn.cs.crisys.tb.model.port.InitializerPort;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
@@ -105,6 +106,7 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
       // add a type for the periodic dispatcher, which is an RPC port, but 
       // also a "special" port.
       types.add(InputPeriodicPort.getPortType());  
+      types.add(InitializerPort.initializerPortType());
 
       // Finally, create the reader/writer interfaces for these types.
       for (Type t: types) {
