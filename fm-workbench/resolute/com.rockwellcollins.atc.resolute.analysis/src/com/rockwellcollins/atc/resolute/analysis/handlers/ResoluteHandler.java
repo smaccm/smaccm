@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.resolute.analysis.handlers;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.swing.SwingUtilities;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -20,6 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -50,10 +55,13 @@ import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
+import com.rockwellcollins.atc.resolute.resolute.IdExpr;
+import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteFactory;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
+import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
 import com.rockwellcollins.atc.resolute.validation.BaseType;
 
 public class ResoluteHandler extends AadlHandler {
@@ -189,7 +197,11 @@ public class ResoluteHandler extends AadlHandler {
 			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
 
 			for (ProveStatement ps : resoluteSubclause.getProves()) {
-				proofTrees.add(interpreter.evaluateProveStatement(ps));
+				try {
+					proofTrees.add(interpreter.evaluateProveStatement(ps));
+				} catch (Exception e) {
+					handleProveStatementException(ps, e);
+				}
 				drawProofs(proofTrees);
 			}
 
@@ -205,7 +217,11 @@ public class ResoluteHandler extends AadlHandler {
 						EvaluationContext context = new EvaluationContext(compInst, sets, featToConnsMap);
 						ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
 						for (ProveStatement ps : resoluteSubclause.getProves()) {
-							proofTrees.add(interpreter.evaluateProveStatement(ps));
+							try {
+								proofTrees.add(interpreter.evaluateProveStatement(ps));
+							} catch (Exception e) {
+								handleProveStatementException(ps, e);
+							}
 							drawProofs(proofTrees);
 						}
 					}
@@ -273,6 +289,29 @@ public class ResoluteHandler extends AadlHandler {
 		System.out.println(EcoreUtil2.getURI(root));
 
 		return Status.OK_STATUS;
+	}
+
+	private void handleProveStatementException(ProveStatement ps, Exception e) {
+		String bodyText = simpleSerializer(ps.getExpr());
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			MessageDialog.openError(getWindow().getShell(), "Error in prove statement: " + bodyText, e.getMessage());
+		});
+		e.printStackTrace();
+	}
+
+	private String simpleSerializer(EObject e) {
+		if (e instanceof FnCallExpr) {
+			FnCallExpr fce = (FnCallExpr) e;
+			String args = fce.getArgs().stream().map(this::simpleSerializer).collect(joining(", "));
+			return fce.getFn().getName() + "(" + args + ")";
+		} else if (e instanceof ThisExpr) {
+			return "this";
+		} else if (e instanceof IdExpr) {
+			IdExpr ide = (IdExpr) e;
+			return ide.getId().getFullName();
+		} else {
+			return e.toString();
+		}
 	}
 
 	private void enableRerunHandler(final Element root) {
@@ -361,6 +400,6 @@ public class ResoluteHandler extends AadlHandler {
 	}
 
 	protected void clearProofs() {
-		drawProofs(Collections.<ResoluteResult> emptyList());
+		drawProofs(Collections.<ResoluteResult>emptyList());
 	}
 }
