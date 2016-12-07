@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include "tb_decls.h"
 
-
 int main(int argc, char **argv) {
 
 	trusted_build_main(10);
