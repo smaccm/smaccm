@@ -41,7 +41,7 @@ thread sender
 end sender ; 
 
 -- Example of a periodically dispatched "Active" thread.   
-thread receiver
+thread receiver1
 	features
 		Input1: in event data port a_array.impl {
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received1");
@@ -107,11 +107,11 @@ end proc;
 process implementation proc.Impl
 	subcomponents
 		s:  thread sender;
-		r:  thread receiver;
+		r:  thread receiver1;
 		r2: thread receiver2;
 		r3: thread receiver3;
 	connections
-		s_to_r : port s.Output1 -> r.Input1;
+		s_to_r1 : port s.Output1 -> r.Input1;
 		s_to_r2 : port s.Output1 -> r2.Input1;
 		s_to_r3 : port s.Output1 -> r3.Input1;
 end proc.Impl;

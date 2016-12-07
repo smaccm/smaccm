@@ -21,6 +21,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
+import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
@@ -311,9 +312,11 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    }
    
    private String addComponentOutputDataPortDeclarations() {
-      String element = 
-         "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
-               this.getQualifiedName() + ";\n"; 
+      String element = "";
+      for (PortConnectionEmitter connection: getConnections()) {
+         element += "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
+               connection.getName() + ";\n";
+      }
       return element; 
    }
    
@@ -401,7 +404,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    }
 
    public String writeType() {
-      return "_write" + getModelElement().getType().getCType().typeString();
+      return "_write_" + getModelElement().getType().getCType().typeString();
    }
 
    public String getLpcPortWriterName() {
@@ -493,4 +496,9 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       }
       return portConnections;
    }
+
+   public final ThreadImplementationNames getThreadImplementation() {
+      return EmitterFactory.threadImplementation(this.dataPort.getOwner());
+   }
+
 }

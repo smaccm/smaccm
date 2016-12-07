@@ -1,10 +1,10 @@
 #ifdef __TB_OS_CAMKES__
-	#include <sender.h>
+	#include <receiver.h>
 	#include <inttypes.h>
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>
 #endif
-#include "tb_sender.h"
+#include "tb_receiver.h"
 #include <inttypes.h>
 #ifndef __TB_OS_ECHRONOS
 #include <stdio.h>

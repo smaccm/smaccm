@@ -185,6 +185,8 @@ componentCFileDecls(threadImpl) ::= <<
 
 <threadImpl.portList: {port | <port.writePortDeclarations> }>
 
+<threadImpl.portListEmitterCIncludes>
+
 <if(threadImpl.isActive)><\\>
 <threadImpl.localActiveThreadConnectionFrontier:osSpecificComponentLocalCallerFunction()>
 <threadImpl.dispatchers:userEntrypointCallerFn()>

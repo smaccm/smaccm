@@ -166,13 +166,16 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
 
    @Override
    public void writeThreadHFiles(ThreadInstance ti, File directory, List<PortFeature> pl) {
-      // TODO Auto-generated method stub
 
    }
 
    @Override
    public String writeThreadCIncludes(ThreadInstance ti, List<PortFeature> pl) {
-      // TODO Auto-generated method stub
+      return "";
+   }
+
+   @Override
+   public String writeThreadHPrototypes(ThreadInstance ti, List<PortFeature> pl) {
       return "";
    }
 

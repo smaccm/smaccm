@@ -34,6 +34,8 @@ public interface PortListEmitter extends NameEmitter {
    void writeThreadHFiles(ThreadInstance ti, File directory, List<PortFeature> pl);
    
    
+   // The header prototypes can be additional include files or other declarations.
+   String writeThreadHPrototypes(ThreadInstance ti, List<PortFeature> pl);
    String writeThreadCIncludes(ThreadInstance ti, List<PortFeature> pl); 
    
 }

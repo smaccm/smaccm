@@ -33,6 +33,9 @@ filePrefix(name, date, path, datatypesHeader) ::= <<
 componentGlueCodeHeaderBodyFunctions(threadImpl) ::= <<
 
 <threadImpl.portList: {port | <port.writePortHPrototypes> } >
+
+<threadImpl.portListEmitterHPrototypes>
+
 <if(threadImpl.isExternal)>
 //////////////////////////////////////////////////////////////////////////
 //

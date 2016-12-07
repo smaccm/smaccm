@@ -1,7 +1,7 @@
-#include "tb_receiver.h"
+#include "tb_receiver2.h"
 #include <stdio.h>
 #ifdef __TB_OS_CAMKES__
-	#include <receiver.h>
+	#include <receiver2.h>
 	#include <inttypes.h>
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>
@@ -20,7 +20,7 @@ void ping_received2(const test6__a_array_impl test_data) {
       debug_printf(", ");   
       debug_println(")");
    #else
-      pintf("receiver2: ping received (%d, %d, %d, %d)\n", test_data[0], test_data[1], test_data[2], test_data[3]);
+      printf("receiver2: ping received (%d, %d, %d, %d)\n", test_data[0], test_data[1], test_data[2], test_data[3]);
    #endif
 }
 

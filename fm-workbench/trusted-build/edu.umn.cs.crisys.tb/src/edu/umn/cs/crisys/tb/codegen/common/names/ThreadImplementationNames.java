@@ -560,6 +560,21 @@ public class ThreadImplementationNames implements NameEmitter {
      return s;
   }
 
+  public String getPortListEmitterHPrototypes() {
+     String s = ""; 
+     List<PortFeature> ports = this.ti.getPortList();
+     List<PortListEmitter> emitters = EmitterListRegistry.getPortListEmitters(); 
+     for (PortListEmitter e: emitters) {
+        for (ThreadInstance tinst: this.ti.getThreadInstanceList()) {
+           s += e.writeThreadHPrototypes(tinst, ports);
+        }
+        if (this.ti.getThreadInstanceList().size() > 1) {
+           throw new TbException("Error: TB currently does not support more than one instance per thread implementation.");
+        }
+     }
+     return s;
+  }
+  
   public String getPortListEmitterCIncludes() {
      String s = ""; 
      List<PortFeature> ports = this.ti.getPortList();

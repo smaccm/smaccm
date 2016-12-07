@@ -1,7 +1,8 @@
+#ifdef __TB_OS_LINUX__
+
 #include <stdio.h>
 #include "tb_decls.h"
 
-#ifdef __TB_OS_LINUX__
 
 int main(int argc, char **argv) {
 
