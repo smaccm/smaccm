@@ -1,6 +1,6 @@
 package MissionSoftware
 public
-	with SMACCM_SYS;
+	with TB_SYS;
 	with SMACCM_DATA;
 	with Base_Types;
 
@@ -9,11 +9,20 @@ public
 
 	system implementation top.i
 		subcomponents
-			proc: process Mission_Software.i;
+			software: process Mission_Software.i;
+			odroid: processor exynos5.camkes;
 		properties
-			SMACCM_SYS::OS => CAmkES;
-			SMACCM_SYS::HW => ODROID;
+			actual_processor_binding => (reference (odroid)) applies to software;   
 	end top.i;
+
+	processor exynos5
+	end exynos5;
+
+	processor implementation exynos5.camkes
+	   properties
+	      TB_SYS::OS => CAmkES;
+	      TB_SYS::HW => ODROID;
+	end exynos5.camkes;
 
 	process Mission_Software
 	end Mission_Software;
@@ -54,11 +63,11 @@ public
 			encrypt2self: in event data port SMACCM_DATA::UART_Packet.i;
 			self2encrypt: out event data port Base_Types::Boolean;
 		properties
-			SMACCM_SYS::Is_External => true;
+			TB_SYS::Is_External => true;
 			Dispatch_Protocol => Sporadic;
-			SMACCM_SYS::Thread_Type => Active;
+			TB_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
-			SMACCM_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Sends_Events_To => "{{}}";
 	end UART_Driver;
 
 	thread Decrypt
@@ -67,13 +76,13 @@ public
 			self2server: out event data port SMACCM_DATA::GIDL;
 		properties
 			Dispatch_Protocol => Periodic;
-			SMACCM_SYS::Thread_Type => Active;
+			TB_SYS::Thread_Type => Active;
 			Priority => 150;
 			Stack_Size => 1024 Bytes;
 			Compute_Execution_Time => 10 us .. 100 us;
 			Period => 5 ms;
-			SMACCM_SYS::Sends_Events_To => "{{}}";
-			SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
 	end Decrypt;
 
@@ -85,13 +94,13 @@ public
 			uart2self: in event data port Base_Types::Boolean;
 		properties
 			Dispatch_Protocol => Periodic;
-			SMACCM_SYS::Thread_Type => Active;
+			TB_SYS::Thread_Type => Active;
 			Priority => 150;
 			Stack_Size => 1024 Bytes;
 			Compute_Execution_Time => 10 us .. 100 us;
 			Period => 5 ms;
-			SMACCM_SYS::Sends_Events_To => "{{}}";
-			SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
 	end Encrypt;
 
@@ -107,12 +116,12 @@ public
 			self2vm_reboot: out event data port Base_Types::Boolean;
 		properties
 			Dispatch_Protocol => Periodic;
-			SMACCM_SYS::Thread_Type => Active;
+			TB_SYS::Thread_Type => Active;
 			Priority => 150;
 			Stack_Size => 1024 Bytes;
 			Compute_Execution_Time => 10 us .. 100 us;
-			SMACCM_SYS::Sends_Events_To => "{{}}";
-			SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
 			Period => 5 ms;
 	end Server;
@@ -130,12 +139,12 @@ public
 
 		properties
 			Dispatch_Protocol => Periodic;
-			SMACCM_SYS::Thread_Type => Active;
+			TB_SYS::Thread_Type => Active;
 			Priority => 150;
 			Stack_Size => 1024 Bytes;
 			Compute_Execution_Time => 10 us .. 100 us;
-			SMACCM_SYS::Sends_Events_To => "{{}}";
-			SMACCM_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
 			Period => 1 ms;
 	end CAN_Framing;
@@ -146,11 +155,11 @@ public
 			self2framing_status: out event data port Base_Types::Boolean;
 			self2framing_frame: out event data port SMACCM_DATA::CAN_Frame.i;
 		properties
-			SMACCM_SYS::Is_External => true;
+			TB_SYS::Is_External => true;
 			Dispatch_Protocol => Sporadic;
-			SMACCM_SYS::Thread_Type => Active;
+			TB_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
-			SMACCM_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Sends_Events_To => "{{}}";
 	end CAN_Driver;
 
 	thread Virtual_Machine
@@ -158,9 +167,9 @@ public
 			self2server: out data port SMACCM_DATA::Camera_Bounding_Box.i;
 			server2self_reboot: in event data port Base_Types::Boolean;
 		properties
-			SMACCM_SYS::Is_External => true;
+			TB_SYS::Is_External => true;
 			Dispatch_Protocol => Sporadic;
-			SMACCM_SYS::Thread_Type => Active;
+			TB_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
 	end Virtual_machine;
 

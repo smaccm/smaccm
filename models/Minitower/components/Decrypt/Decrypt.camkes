@@ -36,30 +36,23 @@
 
  **************************************************************************/
 
-import "../../interfaces/Decrypt_interface.idl4";
 
 // Idl files for ports
 import "../../interfaces/SMACCM_DATA__GIDL_writer.idl4";
 import "../../interfaces/SMACCM_DATA__UART_Packet_i_writer.idl4";
 import "../../interfaces/int64_t_writer.idl4";
+import "../../interfaces/void_writer.idl4";
 
 
 component Decrypt {
-    include "smaccm_top_i_types.h";
+    include "tb_smaccmcopter_types.h";
     control;
+    has semaphore tb_dispatch_sem;
 
-    // Connection to active thread 'send' interfaces
-    uses SMACCM_DATA__GIDL_writer Decrypt_self2server;
-
-    has semaphore smaccm_dispatch_sem;
-
-    // Provided interfaces for input event data ports
+    provides int64_t_writer periodic_dispatcher;
     provides SMACCM_DATA__UART_Packet_i_writer uart2self;
-    has mutex smaccm_decrypt_uart2self_mut;
+    has mutex tb_decrypt_uart2self_mut;uses SMACCM_DATA__GIDL_writer self2server;
 
-
-    // Interfaces for Periodic and IRQ port dispatchers
-    provides int64_t_writer Decrypt_periodic_dispatcher;
 
 
 }

@@ -9,7 +9,7 @@
  */
 
 procedure can_rx_inf {
-	include "include/can_inf.h";
+	include <can_inf.h>;
 	void recv(out can_frame_t frame);
 	int set_filter(in can_id_t ident, in unsigned int mask);
 	void clear_filter(in int filter_id);

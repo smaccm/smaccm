@@ -36,9 +36,13 @@
 
  **************************************************************************/
 
+
+
 procedure int64_t_writer {
-    include <smaccm_top_i_types.h>;
+    include <tb_smaccmcopter_types.h>;
 
     bool write_int64_t(refin int64_t arg);
 }
+
+
 

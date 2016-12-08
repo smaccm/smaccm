@@ -6,6 +6,7 @@ config APP_SMACCMPILOT
             LIB_SEL4_DMA && LIB_USB
     default n
     select APP_CAMKES_EXECUTIVE
+    select VM_VCHAN
     help
         Generated AADL from smaccmpilot
 
@@ -23,6 +24,12 @@ config VIRTUAL_MACHINE_VUSB
     help
         Selects the device tree which enables the para virtual USB driver and
         installs the device into the VM.
+
+config VM_VCHAN
+    bool "Enable vchan connection"
+    depends on APP_SMACCMPILOT
+    help
+        Enable vchan connection.
 
 choice
     bool "root file system selection"
