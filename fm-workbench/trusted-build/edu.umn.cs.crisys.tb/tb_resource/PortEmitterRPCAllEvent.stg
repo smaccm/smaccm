@@ -314,6 +314,7 @@ connectReaderWriter(connection, model) ::= <<
     connection.name,
     connection.destPort.threadImplementation.componentInstanceName,
     connection.destPort.name)>
+
 >>
 
 
