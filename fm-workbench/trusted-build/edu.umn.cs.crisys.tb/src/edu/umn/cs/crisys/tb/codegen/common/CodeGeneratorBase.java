@@ -199,7 +199,7 @@ public abstract class CodeGeneratorBase {
          for (int i = 0; i < tlTemplateArg.length; i++) {
             st.add(tlTemplateArg[i], tlNamesClass[i]);
          }
-         writer.append(st.render() + "\n");
+         writer.append(st.render() + System.lineSeparator());
 
          writeBoilerplateFooter(headerFooterName, path, writer, stg.getInstanceOf("filePostfix")); 
       } catch (IOException e) {
@@ -497,7 +497,7 @@ try (BufferedWriter writer = new BufferedWriter(new FileWriter(interfaceFile))) 
 
   ST st = stg.getInstanceOf("componentGlueCodeHeaderBody");
   st.add("threadImpl", tin);
-  writer.append(st.render() + "\n");
+  writer.append(st.render() + System.lineSeparator());
 
   writeBoilerplateFooter(name, path, writer, stg.getInstanceOf("componentGlueCodeHeaderPostfix")); 
 } catch (IOException e) {

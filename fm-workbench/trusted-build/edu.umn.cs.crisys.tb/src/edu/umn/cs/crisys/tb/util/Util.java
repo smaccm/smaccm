@@ -376,24 +376,24 @@ public class Util {
       return templates;
    }
 
-   public static final String DARPA_License = "Copyright (c) 2013, Rockwell Collins and the University of Minnesota.\n"
-         + "Developed with the sponsorship of the Defense Advanced Research Projects Agency (DARPA).\n"
-         + "\n"
-         + "Permission is hereby granted, free of charge, to any person obtaining a copy of this data,\n"
-         + "including any software or models in source or binary form, as well as any drawings, specifications, \n"
-         + "and documentation (collectively \"the Data\"), to deal in the Data without restriction, including \n"
-         + "without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, \n"
-         + "and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, \n"
-         + "subject to the following conditions: \n"
-         + "\n"
-         + "The above copyright notice and this permission notice shall be included in all copies or \n"
-         + "substantial portions of the Data.\n"
-         + "\n"
-         + "THE DATA IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT \n"
-         + "LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. \n"
-         + "IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE \n"
-         + "FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \n"
-         + "ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA. \n";
+   public static final String DARPA_License = "Copyright (c) 2013, Rockwell Collins and the University of Minnesota." + System.lineSeparator()
+         + "Developed with the sponsorship of the Defense Advanced Research Projects Agency (DARPA)." + System.lineSeparator()
+         + System.lineSeparator()
+         + "Permission is hereby granted, free of charge, to any person obtaining a copy of this data," + System.lineSeparator()
+         + "including any software or models in source or binary form, as well as any drawings, specifications, " + System.lineSeparator()
+         + "and documentation (collectively \"the Data\"), to deal in the Data without restriction, including " + System.lineSeparator()
+         + "without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, " + System.lineSeparator()
+         + "and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, " + System.lineSeparator()
+         + "subject to the following conditions: " + System.lineSeparator()
+         + System.lineSeparator()
+         + "The above copyright notice and this permission notice shall be included in all copies or " + System.lineSeparator()
+         + "substantial portions of the Data." + System.lineSeparator()
+         + System.lineSeparator()
+         + "THE DATA IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT " + System.lineSeparator()
+         + "LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. " + System.lineSeparator()
+         + "IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE " + System.lineSeparator()
+         + "FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, " + System.lineSeparator()
+         + "ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA. " + System.lineSeparator();
 
    
    /******************************************************************

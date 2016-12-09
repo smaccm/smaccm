@@ -25,7 +25,8 @@ filePostfix(name, path) ::= <<
 assemblyThreadImplementationImports(threadImpl) ::= <<
 import "<threadImpl.rootToCamkesComponentFilePath>";
 
-<threadImpl.portList: {port | <port.camkesAddAssemblyFilePortDeclarations>} >
+<threadImpl.portList: {port | <port.camkesAddAssemblyFilePortDeclarations>
+} >
 
 >>
 
@@ -117,11 +118,13 @@ configConnectTimeServices(threadImpl, model) ::= <<
 >>
 
 portDeclarations(threadImpl) ::= <<
-<threadImpl.portList:{port | <port.camkesAddAssemblyFileCompositionPortDeclarations>}>
+<threadImpl.portList:{port | <port.camkesAddAssemblyFileCompositionPortDeclarations>
+}>
 >>
 
 configurePorts(threadImpl) ::= <<
-<threadImpl.portList:{port | <port.camkesAddAssemblyFileConfigDeclarations>}>
+<threadImpl.portList:{port | <port.camkesAddAssemblyFileConfigDeclarations>
+}>
 >>
 
 camkesAssemblyBody(model) ::= <<

@@ -23,10 +23,11 @@ public class C_Type_Writer {
 	public static void writeType(BufferedWriter out, IdType ty, int indent) throws IOException {
 		StringBuffer typeName = new StringBuffer();
 		typeName.append("typedef ");
-		typeName.append(ty.getTypeRef().CTypeDecl(indent, ty.getTypeId()) + "; \n");
+		typeName.append(ty.getTypeRef().CTypeDecl(indent, ty.getTypeId()) + "; " + System.lineSeparator());
 		out.append(typeName.toString());
 	}
 
+	
 	public static void writeTypes(BufferedWriter out, Map<String, Type> entryMap, int indent) throws IOException {
     Set<Entry<String, Type>> entrySet = entryMap.entrySet();
     
@@ -41,7 +42,12 @@ public class C_Type_Writer {
       }
       List<Type> sortedTypes = TopologicalSort.performElementsOnlyTopologicalSort(idTypes);
       if (sortedTypes.isEmpty()) {
-        out.append("\n\n\n // No user defined types.  This space for rent :)\n\n\n"); 
+        out.append(System.lineSeparator() + 
+                   System.lineSeparator() + 
+                   System.lineSeparator() + " // No user defined types.  This space for rent :)" + 
+                   System.lineSeparator() + 
+                   System.lineSeparator() + 
+                   System.lineSeparator()); 
       }
       
       // TODO: MWW HACK!  Create structured type for each array type to support CAmkES
@@ -56,7 +62,7 @@ public class C_Type_Writer {
       
       for (Type t : sortedTypes) {
          writeType(out, (IdType) t, indent);
-         out.append("\n");
+         out.append(System.lineSeparator());
       }
     } catch (CyclicException e) {
       throw new TbException(

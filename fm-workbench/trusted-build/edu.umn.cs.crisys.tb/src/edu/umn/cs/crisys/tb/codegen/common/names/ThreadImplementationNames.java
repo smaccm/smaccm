@@ -396,11 +396,11 @@ public class ThreadImplementationNames implements NameEmitter {
   //////////////////////////////////////////////////////////
   
   public String getCamkesDispatcherLockStmt() {
-    return getDispatcherComponentSemaphoreName() + "_wait();\n";
+    return getDispatcherComponentSemaphoreName() + "_wait();" + System.lineSeparator();
   }
   
   public String getCamkesDispatcherUnlockStmt() {
-    return getDispatcherComponentSemaphoreName() + "_post();\n";
+    return getDispatcherComponentSemaphoreName() + "_post();" + System.lineSeparator();
   }
 
   //////////////////////////////////////////////////////////

@@ -164,7 +164,7 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
       String result = "";
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
          result += this.getName() + "_reg_callback(" + 
-               this.getIncomingWriterName() + ", NULL); \n";
+               this.getIncomingWriterName() + ", NULL); " + System.lineSeparator();
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          // no-op.  I know that this is indeed a no-op; it is handled
          // in the prx file.

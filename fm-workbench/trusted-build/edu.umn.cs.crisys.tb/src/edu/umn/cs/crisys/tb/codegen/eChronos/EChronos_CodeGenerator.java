@@ -65,7 +65,7 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
      if (model.getHWTarget().equalsIgnoreCase("pixhawk")) {
        platform = "Prx-stm32f4-discovery.stg";
      } else {
-       log.error("eChronos code generator: currently only pixhawk hardware platform is supported.\n");
+       log.error("eChronos code generator: currently only pixhawk hardware platform is supported." + System.lineSeparator());
        throw new TbFailure();
      }
      writeGeneric(outputDirectory, platform, "prxBody", "model", mn, name, false, name);

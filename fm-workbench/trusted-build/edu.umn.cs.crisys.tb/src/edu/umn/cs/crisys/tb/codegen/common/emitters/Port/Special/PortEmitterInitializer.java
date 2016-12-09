@@ -70,7 +70,7 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
    
    public String writeExternalHandlerPrototype(ExternalHandler hdlr) {
       String result = ""; 
-      result += "void " + hdlr.getHandlerName() + "(void);\n";
+      result += "void " + hdlr.getHandlerName() + "(void);" + System.lineSeparator();
       return result;
    }
    
@@ -153,7 +153,7 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
 
    private String callHandler(ExternalHandler hdlr) {
       String result = ""; 
-      result += hdlr.getHandlerName() + "();\n";
+      result += hdlr.getHandlerName() + "();" + System.lineSeparator();
       return result;
    }
 

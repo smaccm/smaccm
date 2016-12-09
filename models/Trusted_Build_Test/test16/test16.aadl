@@ -85,32 +85,66 @@ process implementation proc.Impl
 		conn2: data access shared -> r.buff2;
 end proc.Impl;
 
+processor main     
+end main;
+
+processor implementation main.camkes
+   properties
+      TB_SYS::OS => camkes;
+      TB_SYS::HW => QEMU;
+end main.camkes;
+
+processor implementation main.linux
+   properties
+      TB_SYS::OS => linux;
+      TB_SYS::HW => X86;
+end main.linux;
+
+processor implementation main.vxworks
+   properties
+      TB_SYS::OS => vxworks;
+      TB_SYS::HW => x86;
+end main.vxworks;
+
+processor implementation main.echronos
+   properties
+      TB_SYS::OS => echronos;
+      TB_SYS::HW => pixhawk;
+end main.echronos;
+
 system test
 end test;
 
 system implementation test.camkes
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		TB_SYS::OS => CAmkES;
-		TB_SYS::HW => QEMU;
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.camkes;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.camkes;
 
 system implementation test.echronos
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		TB_SYS::OS => echronos;
-		TB_SYS::HW => Pixhawk;
-		TB_SYS::eChronos_Flash_Load_Address => "0x80004000";
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.echronos;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.echronos;
 
 system implementation test.vxworks
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		TB_SYS::OS => VxWorks;
-		TB_SYS::HW => QEMU;
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.vxworks;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.vxworks;
+
+system implementation test.linux
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.linux;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
+end test.linux;
 
 end test16;

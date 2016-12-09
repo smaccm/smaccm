@@ -6,7 +6,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
 public class LinuxUtil {
 
    private static String systemHeaders() {
-      return "#include \"tb_linux_support.h\" \n";
+      return "#include \"tb_linux_support.h\" " + System.lineSeparator();
    }
    
    public static final String mutexTypeName = "TB_MUTEX_TYPE";
@@ -19,7 +19,7 @@ public class LinuxUtil {
          new ExternalType(semTypeName, "<semaphore.h>");
    
    private static String writeMutexDeclInternal(String extern, String name) {
-      return extern + mutexTypeName + " " + name + ";\n";
+      return extern + mutexTypeName + " " + name + ";" + System.lineSeparator();
    }
    
    
@@ -33,23 +33,23 @@ public class LinuxUtil {
 
    
    public static String createInterprocMutex(String name) {
-      return "tb_interproc_mutex_create(&" + name + "); \n";
+      return "tb_interproc_mutex_create(&" + name + "); " + System.lineSeparator();
    }
    
    public static String createIntraprocMutex(String name) {
-      return "tb_intraproc_mutex_create(&" + name + "); \n";
+      return "tb_intraproc_mutex_create(&" + name + "); " + System.lineSeparator();
    }
    
    public static String deleteMutex(String name) {
-      return "tb_mutex_destroy(&" + name + "); \n";
+      return "tb_mutex_destroy(&" + name + "); " + System.lineSeparator();
    }
    
    public static String lockMutex(String name) {
-      return "tb_mutex_lock(&" + name + "); \n";
+      return "tb_mutex_lock(&" + name + "); " + System.lineSeparator();
    }
    
    public static String unlockMutex(String name) {
-      return "tb_mutex_unlock(&" + name + "); \n";
+      return "tb_mutex_unlock(&" + name + "); " + System.lineSeparator();
    }
    
    public static String postSem(String name) {
@@ -61,7 +61,7 @@ public class LinuxUtil {
    }
    
    public static String writeSemDeclInternal(String extern, String name) {
-      return extern + "sem_t " + name + ";\n";
+      return extern + "sem_t " + name + ";" + System.lineSeparator();
    }
    
 }

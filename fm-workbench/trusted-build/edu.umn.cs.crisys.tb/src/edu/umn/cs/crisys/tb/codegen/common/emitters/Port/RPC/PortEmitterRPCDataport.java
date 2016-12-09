@@ -16,6 +16,7 @@ import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
@@ -145,7 +146,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       String result = ""; 
       ExternalHandler eh = this.getModelElement().getInitializeEntrypointSourceText(); 
       if (eh != null) {
-         result += eh.getHandlerName() + "(" + v + ");\n";
+         result += eh.getHandlerName() + "(" + v + ");" + System.lineSeparator();
       }
       return result;
    }
@@ -205,7 +206,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    }
    
    public String writeMutexDecl(String extern) {
-      return extern + "SEM_ID " + this.getMutex() + ";\n";
+      return extern + "SEM_ID " + this.getMutex() + ";" + System.lineSeparator();
    }
    
    @Override
@@ -236,13 +237,13 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    public String getVxWorksAddMainCFileInitializers() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
-         toReturn += this.getMutex() + " = " + createMutex() + ";\n";
-         toReturn += "assert(" + this.getMutex() + " != NULL );\n";
+         toReturn += this.getMutex() + " = " + createMutex() + ";" + System.lineSeparator();
+         toReturn += "assert(" + this.getMutex() + " != NULL );" + System.lineSeparator();
       }
       ExternalHandler initializer = 
             this.getModelElement().getInitializeEntrypointSourceText();
       if (initializer != null) {
-         toReturn += initializer.getHandlerName() + "();\n ";
+         toReturn += initializer.getHandlerName() + "();" + System.lineSeparator();
       }
 
       return toReturn;
@@ -252,7 +253,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    public String getVxWorksAddMainCFileDestructors() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
-         toReturn += "semDelete(" + this.getMutex() + ");\n";
+         toReturn += "semDelete(" + this.getMutex() + ");" + System.lineSeparator();
       }
       return toReturn;
    }
@@ -267,9 +268,9 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       String toReturn = "";
       if (this.getModelElement() instanceof InputPort) {
          toReturn += 
-            "<mutex>\n" + 
-            "  <name>" + this.getMutex() + "</name>\n" + 
-            "</mutex>\n"; 
+            "<mutex>" + System.lineSeparator() +  
+            "  <name>" + this.getMutex() + "</name>" + System.lineSeparator()+  
+            "</mutex>" + System.lineSeparator(); 
       }
       return toReturn;
    }
@@ -283,7 +284,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += "bool " + getIncomingWriterName() + 
-               "(const " + this.getType().getCamkesInputType().getName() + " arg); \n";
+               "(const " + this.getType().getCamkesInputType().getName() + " arg); " + System.lineSeparator();
       }
       return toReturn;
    }
@@ -306,8 +307,8 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    private String addComponentInputDataPortDeclarations() {
       String element = 
          "provides " + this.getType().getReaderWriterInterfaceName() + " " + 
-               this.getName() + ";\n" + 
-         "has mutex " + this.getMutex() + ";\n";
+               this.getName() + ";" + System.lineSeparator() +  
+         "has mutex " + this.getMutex() + ";" + System.lineSeparator();
       return element;
    }
    
@@ -315,7 +316,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       String element = "";
       for (PortConnectionEmitter connection: getConnections()) {
          element += "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
-               connection.getName() + ";\n";
+               ((PortConnectionEmitterCamkes)connection).getOutgoingPortWriterName() + ";" + System.lineSeparator();
       }
       return element; 
    }
@@ -346,7 +347,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       if (pf instanceof OutputPort) {
          String result = ""; 
          for (PortConnection conn : pf.getConnections()) {
-            result += addAssemblyConnection(conn, this.model); 
+            result += addAssemblyConnection(conn, this.model);
          }
          return result;         
       } else {

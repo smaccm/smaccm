@@ -110,8 +110,13 @@ public String getFullyQualifiedName() {
 public String getOutgoingPortWriterName() {
      OSModel os = c.getSourcePort().getOwner().getModel();
      if (os.getOsTarget() == OSModel.OSTarget.CAmkES) {
-        // this is done for fan-out, I guess.
-        return this.getName() + "_" + this.getSourcePort().getType().getWriterFn();
+        if (this.c.getSourcePort().getConnections().size() > 1) {
+           // unique name for port with fan-out
+           return this.getName() + "_" + this.getSourcePort().getType().getWriterFn();
+        } else {
+           // simple naming for port with no fan out
+           return this.getSourcePort().getName(); 
+        }
      } else if (os.getOsTarget() == OSModel.OSTarget.eChronos || 
                 os.getOsTarget() == OSModel.OSTarget.VxWorks ||
                 os.getOsTarget() == OSModel.OSTarget.linux) {

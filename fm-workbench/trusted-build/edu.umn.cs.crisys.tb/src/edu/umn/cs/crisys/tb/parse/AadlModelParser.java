@@ -589,7 +589,7 @@ public class AadlModelParser {
                return oep;
             }
          }
-         throw new TbException("For dispatch contract, unable to match id: " + id + " to an output port.\n");
+         throw new TbException("For dispatch contract, unable to match id: " + id + " to an output port.");
       }
 
       @Override

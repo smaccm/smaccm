@@ -7,7 +7,7 @@ public class VxWorksUtil {
    }
 
    private static String writeMutexDeclInternal(String extern, String name) {
-      return extern + "SEM_ID " + name + ";\n";
+      return extern + "SEM_ID " + name + ";" + System.lineSeparator();
    }
    
    public static String writeMutexDecl(String name) {

@@ -1,4 +1,4 @@
-#include <smaccm_receiver.h>
+#include <tb_receiver.h>
 #include <stdio.h>
 #ifdef __TB_OS_CAMKES__
 	#include <receiver.h>
@@ -16,7 +16,7 @@ void receiver_periodic_ping(const int64_t * the_time) {
 		debug_printhex32((uint32_t)*the_time);
 		debug_println("  ");
 	#else
-		printf("receiver: periodic dispatch received at time: %lld \n", *the_time);
+		printf("receiver: periodic dispatch received at time: %d \n", (int32_t)*the_time);
 	#endif	
 	
 	printf("data stored in shared buffer: %s\n", (char *)buff2);

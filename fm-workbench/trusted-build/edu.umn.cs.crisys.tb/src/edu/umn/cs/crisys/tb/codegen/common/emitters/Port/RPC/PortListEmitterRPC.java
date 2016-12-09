@@ -84,7 +84,7 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
       st.add("path", path);
 
       try (BufferedWriter writer = new BufferedWriter(new FileWriter(genericFile))) {
-         writer.append(st.render() + "\n");
+         writer.append(st.render() + System.lineSeparator());
       } catch (IOException e) {
          throw new TbException("IO Exception occurred when creating file: " + path);
       }
@@ -156,7 +156,7 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
          File genericFile = new File(directory, ti.getName() + "_dummy.txt"); 
          String path = genericFile.getAbsolutePath(); 
          try (BufferedWriter writer = new BufferedWriter(new FileWriter(genericFile))) {
-            writer.append("This space for rent!  This is an example of how you might generate code specific to a thread for a set of ports.\n");
+            writer.append("This space for rent!  This is an example of how you might generate code specific to a thread for a set of ports." + System.lineSeparator());
          } catch (IOException e) {
             throw new TbException("IO Exception occurred when creating file: " + path);
          }

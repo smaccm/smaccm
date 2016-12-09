@@ -9,18 +9,18 @@ public class EChronosUtil {
 
    public static String addPrxMutex(String name) {
       return 
-            "<mutex>\n" + 
-            "  <name>" + name + "</name>\n" + 
-            "</mutex>\n"; 
+            "<mutex>" + System.lineSeparator() +  
+            "  <name>" + name + "</name>" + System.lineSeparator() + 
+            "</mutex>" + System.lineSeparator(); 
    }
    
    public static String eChronosPortWriterPrototype(String writerName, Type ty) {
       String toReturn = ""; 
       toReturn += "bool " + writerName;
       if (ty instanceof UnitType) {
-         toReturn += "(void); \n";
+         toReturn += "(void); " + System.lineSeparator();
       } else {
-         toReturn += "(const " + (EmitterFactory.type(ty)).getCamkesInputType().getName() + " arg); \n";
+         toReturn += "(const " + (EmitterFactory.type(ty)).getCamkesInputType().getName() + " arg); " + System.lineSeparator();
       }
       return toReturn;
       

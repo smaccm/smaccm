@@ -89,14 +89,14 @@ public class RecordType extends Type {
 	
 	public String makeString(int indent, String tyName) {
     StringBuilder buf = new StringBuilder();
-    buf.append("\n");
+    buf.append(System.lineSeparator());
     buf.append(indent(indent)); 
-    buf.append("struct " + tyName + " { \n");
+    buf.append("struct " + tyName + " { " + System.lineSeparator());
     //Iterator<String> iterator = this.fields.iterator();
     for (RecordField rf: fields) {
       buf.append(indent(indent+3));
       buf.append(rf.type.getCType(indent+3).varString(rf.name));
-      buf.append(" ; \n");
+      buf.append(" ; " + System.lineSeparator());
     }
     
     buf.append(indent(indent));

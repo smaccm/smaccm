@@ -118,15 +118,19 @@ componentRemoteWriterDecl(port) ::= <<
 //
 ///////////////////////////////////////////////////////////////////////////
 
-rpcConnection(cid, from1, from2, to1, to2) ::=
-   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+rpcConnection(cid, from1, from2, to1, to2) ::= <<
+connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);
+
+>>
 
 connectReaderWriter(connection, model) ::= <<
+
 <rpcConnection(model.generateConnectionName,
     connection.sourcePort.threadImplementation.componentInstanceName,
-    connection.name,
+    connection.outgoingPortWriterName,
     connection.destPort.threadImplementation.componentInstanceName,
     connection.destPort.name)>
+
 >>
 
 

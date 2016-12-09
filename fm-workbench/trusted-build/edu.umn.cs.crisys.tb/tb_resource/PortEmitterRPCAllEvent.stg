@@ -177,6 +177,7 @@ InputEventPortDecls(port) ::= <<
 
 static <port.indexType.name> <port.index> = 0;
 
+<!
 static bool <port.queueIsFullName>() {
     return false;
 }
@@ -184,6 +185,7 @@ static bool <port.queueIsFullName>() {
 static bool <port.queueIsEmptyName>() {
     return <port.index> == 0;
 }
+!>
 
 /************************************************************************
  *  <port.incomingWriterName>:
@@ -259,7 +261,11 @@ remoteCallerFunction(srcPort) ::= <<
  *
  ************************************************************************/
 
+<if(srcPort.hasData)>
 bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
+<else>
+bool <srcPort.localWriterName>(void) {
+<endif>
     bool tb_result = true ; 
     <srcPort.connections:callRemoteWriterStmt()>
     return tb_result;
@@ -286,8 +292,8 @@ while (!<dispatcher.queueIsEmptyName>()) {
 >>
 
 eventDispatcher(dispatcher) ::= <<
-while (<dispatcher.aadlReaderFnName>()) {
-    <dispatcher.activeThreadInternalDispatcherName>();
+while (<dispatcher.localReaderName>()) {
+    <dispatcher.activeThreadInternalDispatcherFnName>();
 }
 
 >>

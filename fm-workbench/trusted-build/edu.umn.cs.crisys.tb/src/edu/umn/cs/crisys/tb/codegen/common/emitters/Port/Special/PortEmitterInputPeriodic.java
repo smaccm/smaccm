@@ -240,7 +240,7 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
       String toReturn = ""; 
       toReturn += "provides ";
       toReturn += this.getType().getReaderWriterInterfaceName(); 
-      toReturn += " " + this.getName() + ";\n";
+      toReturn += " " + this.getName() + ";" + System.lineSeparator();
       return toReturn;
    }
 

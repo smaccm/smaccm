@@ -183,7 +183,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
       String result = ""; 
       ExternalHandler eh = this.getModelElement().getInitializeEntrypointSourceText(); 
       if (eh != null) {
-         result += eh.getHandlerName() + "(" + v + ");\n";
+         result += eh.getHandlerName() + "(" + v + ");" + System.lineSeparator();
       }
       return result;
    }
@@ -276,7 +276,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
       ExternalHandler initializer = 
             this.getModelElement().getInitializeEntrypointSourceText();
       if (initializer != null) {
-         toReturn += initializer.getHandlerName() + "();\n ";
+         toReturn += initializer.getHandlerName() + "(); " + System.lineSeparator();
       }      
       return toReturn;
    }
@@ -313,7 +313,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
    public String getLinuxAddProcessHFileDeclarations() {
       String result = "";
       if (getIsInProc()) {
-         result += this.getReaderWriterImplVarExternDecl() + "\n"; 
+         result += this.getReaderWriterImplVarExternDecl() + System.lineSeparator(); 
       }
       return result;
    }
@@ -386,7 +386,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
    }
 
    public String getReaderWriterImplVarDeclInternal(String isExtern) {
-      return isExtern + this.getSharedMemoryDataType() + " *" + this.getReaderWriterImplVar() + ";\n";
+      return isExtern + this.getSharedMemoryDataType() + " *" + this.getReaderWriterImplVar() + ";" + System.lineSeparator();
    }
    
    public String getReaderWriterImplVarDecl() {
@@ -446,7 +446,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
        
    public String getLockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.linux) {
-         return "tb_mutex_lock(&" + getMutex() + ");\n";
+         return "tb_mutex_lock(&" + getMutex() + ");" + System.lineSeparator();
       } else {
          throw new TbException("Error: getLockStmt: OS " + model.getOsTarget() + " is not a known OS target.");
       }
@@ -454,7 +454,7 @@ public class PortEmitterSharedMemDataport implements PortEmitter, PortEmitterLin
 
    public String getUnlockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.linux) {
-         return "tb_mutex_unlock(&" + getMutex() + ");\n";
+         return "tb_mutex_unlock(&" + getMutex() + ")" + System.lineSeparator();
       } else {
          throw new TbException("Error: getunlockStmt: OS " + model.getOsTarget() + " is not a known OS target.");
       }

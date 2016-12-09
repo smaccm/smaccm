@@ -170,7 +170,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       String result = ""; 
       ExternalHandler eh = this.getModelElement().getInitializeEntrypointSourceText(); 
       if (eh != null) {
-         result += eh.getHandlerName() + "(" + v + ");\n";
+         result += eh.getHandlerName() + "(" + v + ");" + System.lineSeparator();
       }
       return result;
    }
@@ -216,13 +216,13 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    public String getVxWorksAddMainCFileInitializers() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
-         toReturn += this.getMutex() + " = " + VxWorksUtil.createMutex() + ";\n";
-         toReturn += "assert(" + this.getMutex() + " != NULL );\n";
+         toReturn += this.getMutex() + " = " + VxWorksUtil.createMutex() + ";" + System.lineSeparator();
+         toReturn += "assert(" + this.getMutex() + " != NULL );" + System.lineSeparator();
       }
       ExternalHandler initializer = 
             this.getModelElement().getInitializeEntrypointSourceText();
       if (initializer != null) {
-         toReturn += initializer.getHandlerName() + "();\n";
+         toReturn += initializer.getHandlerName() + "();"+ System.lineSeparator();
       }
 
       return toReturn;
@@ -232,7 +232,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    public String getVxWorksAddMainCFileDestructors() {
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
-         toReturn += "semDelete(" + this.getMutex() + ");\n";
+         toReturn += "semDelete(" + this.getMutex() + ");" + System.lineSeparator();
       }
       return toReturn;
    }
@@ -270,12 +270,12 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    @Override
    public String getLinuxAddProcessHFileDeclarations() {
       // TODO Auto-generated method stub
-      String toReturn = "\n"; 
+      String toReturn = "" + System.lineSeparator(); 
    if (this.getModelElement() instanceof InputPort) {
       toReturn += LinuxUtil.writeExternMutexDecl(this.getMutex());
       toReturn += getEChronosAddCommonHFileDeclarations();
    } 
-   return toReturn + "\n";
+   return toReturn + System.lineSeparator();
    }
 
    @Override
@@ -302,7 +302,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       ExternalHandler initializer = 
             this.getModelElement().getInitializeEntrypointSourceText();
       if (initializer != null) {
-         toReturn += initializer.getHandlerName() + "();\n";
+         toReturn += initializer.getHandlerName() + "();" + System.lineSeparator();
       }
       return toReturn;
    }
@@ -365,8 +365,8 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    private String addComponentInputPortDeclarations() {
       String element = 
          "provides " + this.getType().getReaderWriterInterfaceName() + " " + 
-               this.getName() + ";\n" + 
-         "has mutex " + this.getMutex() + ";\n";
+               this.getName() + ";" + System.lineSeparator() +  
+         "has mutex " + this.getMutex() + ";" + System.lineSeparator();
       return element;
    }
    
@@ -374,7 +374,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       String element = "";
       for (PortConnectionEmitter connection: getConnections()) {
          element += "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
-               connection.getName() + ";\n";
+               connection.getName() + ";" + System.lineSeparator();
       }
       return element; 
    }
