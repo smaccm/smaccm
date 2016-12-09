@@ -501,7 +501,7 @@ public class ThreadImplementationNames implements NameEmitter {
   }    
 
   public String getComponentCamkesHFileName() {
-    return getNormalizedName() + ".h";
+    return "camkes.h";
   }    
 
   public String getDispatcherComponentCamkesHFileName() {
