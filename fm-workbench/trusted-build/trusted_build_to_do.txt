@@ -458,6 +458,21 @@ However, now is the time when we need to figure out who is in charge of the over
 		assert(dest_data != MAP_FAILED);
 		
 	Document exactly what should be added: 
-		A new "external" Camkes component for the VM.  This must be an AADL thread.
 	
-		
+		A new "external" Camkes component for the VM.  This must be an AADL thread
+			Do we need a process for it? Probably, to make some of the utility functions work.  This should be 
+			straightforward, but requires an implementation, instance, etc.
+			Should be external so we do not generate standard C file associated with thread
+			It will have declarations from all ports that straddle the boundary.
+			
+		A set of declarations within the Camkes component
+			
+		For the linux side, we initialize the driver buffers with camkes_init.  The order of buffers on the command line 
+			matches the id order of buffers in the camkes config section.  The buffer size on the linux side must match the 
+			buffer size declared on the Camkes side (what about page boundaries?)
+			
+		So, when emitting linux, we need to generate a camkes_init file.  Assuming we have a specialized port with a number,
+			this will just generate the buffers in this order.  The aadl types file will contain the pointer type necessary 
+			for access.
+			
+			

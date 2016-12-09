@@ -305,13 +305,23 @@ while (<dispatcher.localReaderName>()) {
 //
 ///////////////////////////////////////////////////////////////////////////
 
+inputPortDeclarations(port) ::= <<
+provides <port.type.readerWriterInterfaceName> <port.name>;
+has mutex <port.mutex>;
+>>
+
+outputPortDeclarations(port) ::= <<
+<port.connections:{c | uses <port.type.readerWriterInterfaceName> <c.outgoingPortWriterName>;
+}>
+>>
+
 rpcConnection(cid, from1, from2, to1, to2) ::=
    "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
 connectReaderWriter(connection, model) ::= <<
 <rpcConnection(model.generateConnectionName,
     connection.sourcePort.threadImplementation.componentInstanceName,
-    connection.name,
+    connection.outgoingPortWriterName,
     connection.destPort.threadImplementation.componentInstanceName,
     connection.destPort.name)>
 

@@ -11,6 +11,7 @@ import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.VxWorks.VxWorksUtil;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
@@ -363,20 +364,21 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
     ************************************************************/
 
    private String addComponentInputPortDeclarations() {
-      String element = 
-         "provides " + this.getType().getReaderWriterInterfaceName() + " " + 
-               this.getName() + ";" + System.lineSeparator() +  
-         "has mutex " + this.getMutex() + ";" + System.lineSeparator();
-      return element;
+      ST st = getTemplateST("inputPortDeclarations"); 
+      st.add("port", this);
+      return st.render();
    }
-   
+
    private String addComponentOutputDataDeclarations() {
-      String element = "";
+      ST st = getTemplateST("outputPortDeclarations"); 
+      st.add("port", this);
+      return st.render();
+/*      String element = "";
       for (PortConnectionEmitter connection: getConnections()) {
          element += "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
-               connection.getName() + ";" + System.lineSeparator();
+               ((PortConnectionEmitterCamkes)connection).getOutgoingPortWriterName() + ";" + System.lineSeparator();
       }
-      return element; 
+      return element; */
    }
    
    @Override
