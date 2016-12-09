@@ -373,12 +373,6 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       ST st = getTemplateST("outputPortDeclarations"); 
       st.add("port", this);
       return st.render();
-/*      String element = "";
-      for (PortConnectionEmitter connection: getConnections()) {
-         element += "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
-               ((PortConnectionEmitterCamkes)connection).getOutgoingPortWriterName() + ";" + System.lineSeparator();
-      }
-      return element; */
    }
    
    @Override

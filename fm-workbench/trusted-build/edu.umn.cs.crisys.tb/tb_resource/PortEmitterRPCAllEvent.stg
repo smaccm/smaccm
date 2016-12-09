@@ -311,7 +311,7 @@ has mutex <port.mutex>;
 >>
 
 outputPortDeclarations(port) ::= <<
-<port.connections:{c | uses <port.type.readerWriterInterfaceName> <c.outgoingPortWriterName>;
+<port.connections:{c | uses <port.type.readerWriterInterfaceName> <c.outgoingPortName>;
 }>
 >>
 
@@ -321,7 +321,7 @@ rpcConnection(cid, from1, from2, to1, to2) ::=
 connectReaderWriter(connection, model) ::= <<
 <rpcConnection(model.generateConnectionName,
     connection.sourcePort.threadImplementation.componentInstanceName,
-    connection.outgoingPortWriterName,
+    connection.outgoingPortName,
     connection.destPort.threadImplementation.componentInstanceName,
     connection.destPort.name)>
 

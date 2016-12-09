@@ -316,7 +316,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       String element = "";
       for (PortConnectionEmitter connection: getConnections()) {
          element += "uses " + this.getType().getReaderWriterInterfaceName() + " " + 
-               ((PortConnectionEmitterCamkes)connection).getOutgoingPortWriterName() + ";" + System.lineSeparator();
+               ((PortConnectionEmitterCamkes)connection).getOutgoingPortName() + ";" + System.lineSeparator();
       }
       return element; 
    }

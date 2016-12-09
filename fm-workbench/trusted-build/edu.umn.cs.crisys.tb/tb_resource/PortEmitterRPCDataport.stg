@@ -125,7 +125,7 @@ connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);
 connectReaderWriter(connection, model) ::= <<
 <rpcConnection(model.generateConnectionName,
     connection.sourcePort.threadImplementation.componentInstanceName,
-    connection.outgoingPortWriterName,
+    connection.outgoingPortName,
     connection.destPort.threadImplementation.componentInstanceName,
     connection.destPort.name)>
 

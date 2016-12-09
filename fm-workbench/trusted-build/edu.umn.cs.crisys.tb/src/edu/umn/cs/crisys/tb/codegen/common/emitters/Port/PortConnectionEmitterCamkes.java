@@ -9,5 +9,6 @@ public interface PortConnectionEmitterCamkes extends PortConnectionEmitter {
    // connections are constructed from the ports.
    String writeAssemblyPortConnection();
    String getOutgoingPortWriterName();
+   String getOutgoingPortName();
 
 }

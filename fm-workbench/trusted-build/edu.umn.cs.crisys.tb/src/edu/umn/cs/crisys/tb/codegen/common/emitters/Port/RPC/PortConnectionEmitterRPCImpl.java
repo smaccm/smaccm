@@ -102,6 +102,15 @@ public String getFullyQualifiedName() {
 		  return this.c.getSourcePort().getQualifiedName();
   }
   
+   public String getOutgoingPortName() {
+      OSModel os = c.getSourcePort().getOwner().getModel();
+      if (os.getOsTarget() == OSModel.OSTarget.CAmkES &&
+            this.c.getSourcePort().getConnections().size() > 1) {
+         return this.getName();
+      } else {
+         return this.getSourcePort().getName(); 
+      }
+   }
   // connections.
   /* (non-Javadoc)
  * @see edu.umn.cs.crisys.tb.codegen.common.names.PortConnectionEmitter#getOutgoingPortWriterName()
@@ -110,13 +119,7 @@ public String getFullyQualifiedName() {
 public String getOutgoingPortWriterName() {
      OSModel os = c.getSourcePort().getOwner().getModel();
      if (os.getOsTarget() == OSModel.OSTarget.CAmkES) {
-        if (this.c.getSourcePort().getConnections().size() > 1) {
-           // unique name for port with fan-out
-           return this.getName() + "_" + this.getSourcePort().getType().getWriterFn();
-        } else {
-           // simple naming for port with no fan out
-           return this.getSourcePort().getName(); 
-        }
+        return getOutgoingPortName() + "_" + this.getSourcePort().getType().getWriterFn();
      } else if (os.getOsTarget() == OSModel.OSTarget.eChronos || 
                 os.getOsTarget() == OSModel.OSTarget.VxWorks ||
                 os.getOsTarget() == OSModel.OSTarget.linux) {
