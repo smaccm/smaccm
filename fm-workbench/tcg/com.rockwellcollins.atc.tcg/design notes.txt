@@ -1,0 +1,66 @@
+Dependencies: 
+  - AGREE has a mechanism for mapping from Lustre results back to AGREE information.
+  - The information that we care about is just the mapping from guarantees in AGREE
+    to variables/equations in Lustre that represent the guarantee.
+  - Probably the spot to examine this is to look at an AGREE menu:
+  	This is handled by the AgreeMenuListener in agree.analysis.views
+  	For an example of what we want, examine: addResultsLinkingMenu
+  	It uses the following: 
+  		It casts the AnalysisResult to a PropertyResult, which has a string "name"
+  		   which presumably matches the name of the property.  
+  		Then it is able to map the property name using a "refMap" which is stored in 
+  		   the linker, which uses an analysisResult to return the map: 
+  			Map<String, EObject> refMap = linker.getReferenceMap(pr.getParent());
+    It then returns a createHyperlinkAction:
+        private IAction createHyperlinkAction(String text, final EObject eObject) {
+        return new Action(text) {
+            @Override
+            public void run() {
+                globalURIEditorOpener.open(EcoreUtil.getURI(eObject), true);
+            }
+        };
+    	}
+        where the text is the "Go to <X>"  where X can be property or lemma.
+   
+    
+Steps:
+	Create a JKindApi renaming: 
+		Use the AGREE-created JKindApi renaming to find: 
+			1. the names of the guarantees in the Lustre code
+			2. the names of the AGREE property names
+			This is derived from the explicitRenaming map.
+		
+		Extend the renaming with the TCG obligations: specifically:
+			addExplicitRenaming(lustreName, agreeName),
+			where we set the agreeName to be whatever we look up in the 
+				explicitRenaming map. 
+	
+	Extend the property information to include the examined condition.
+	
+	Double check that the test obligations for a decision are listed 
+	in left-to-right order for the conditions within the decision.
+	
+Design flow: 
+	John is creating an AgreeProgram.  We are piggybacking on top of this.	
+	
+			
+	What should be the archival format for tests?
+		-> Use counterexample format
+		-> Add additional file to explain obligations
+		
+				
+		The AGREE renaming (of class AgreeRenaming) is created on line 102 in AgreeGenerator.java.  
+		It is stored in the AgreeEmitterState.
+		
+		The AGREE renaming contains both the map from AGREE name to Lustre name, but also a mechanism for 
+		returning an EObject that matches the Lustre name (findBestReference).
+		
+		We want to extend the AGREE renaming with the TCG properties, and we want 
+		
+		For each test case: 
+			1. start from the guarantee that it is derived from
+	
+			      
+    We then require a means to get from the Lustre TCG property to the guarantee name.  This is done via a 
+    renaming. 
+        
