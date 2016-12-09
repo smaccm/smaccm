@@ -82,7 +82,7 @@ public class ThreadCalendarNames implements NameEmitter {
   }
   
   public String getPeriodicDispatcherHFileName() {
-    return getPeriodicDispatcherComponentName() + ".h";
+    return "camkes.h";
   }
 
   public String getPeriodicDispatcherComponentName() {
