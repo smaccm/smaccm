@@ -30,7 +30,16 @@ public class DispatcherTraverser {
   public DispatcherTraverser() {}
   
   private boolean allowRecursion = false;
-  
+
+  private String circularityString(Deque<DispatchableInputPort> path, DispatchableInputPort d) {
+     String result = "AADL2RTOS Error: circular references between dispatchers.  Path: [" + System.lineSeparator(); 
+     for (DispatchableInputPort dip: path) {
+        result += "   " + dip.getName() + " --> " + System.lineSeparator();
+     }
+     result += "   " + d.getName() + System.lineSeparator();
+     result += "]; "; 
+     return result;
+  }
   /*
    * This function returns the set of passive dispatch input ports traverseable 
    * from an initial input port.
@@ -40,7 +49,8 @@ public class DispatcherTraverser {
     
     // System.out.println(indent + "Visiting dispatcher: " + d.getOwner().getName() + "." + d.getName()); 
     if (path.contains(d) && !allowRecursion) {
-      throw new Aadl2RtosException("AADL2RTOS: Error: circular reference between dispatchers");
+       String result = circularityString(path, d);
+      throw new Aadl2RtosException(result);
     } 
     if (!visited.contains(d) && d.getOwner().getIsPassive()) {
       visited.add(d);
