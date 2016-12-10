@@ -474,6 +474,17 @@ However, now is the time when we need to figure out who is in charge of the over
 		So, when emitting linux, we need to generate a camkes_init file.  Assuming we have a specialized port with a number,
 			this will just generate the buffers in this order.  The aadl types file generated for linux will contain the pointer type necessary for access; we can cast it after grabbing it from the file (see above).
 			
-		Suppose I added (to just the Camkes interface) a "write VM" declaration?  it would reference the thread ports on 
+		Suppose I added (to just the Camkes interface) a "write VM" declaration?  It would reference the thread ports on 
 			the other side of the connection boundary.
+		
+		O.k., how do I want to demo this?  I need a special AADL data port that is just a region of shared memory.
+			It will not be thread safe, but that's o.k.
+		
+		So - take a look at dataports here...what is the minimal effort we can do?
+		
+		create PortConnectionVM
+			1. It creates a Camkes dataport "owned by" the sender.  
+			2. It does not support fan-in.
+			3. It works for any OS
 			
+		Q: where is file access declared?
