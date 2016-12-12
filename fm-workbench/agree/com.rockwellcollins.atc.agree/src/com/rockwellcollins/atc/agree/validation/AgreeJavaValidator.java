@@ -881,10 +881,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(lemma, "Lemma statements are only allowed in component implementations and nodes");
 		}
 
-		AgreeType exprType = getAgreeType(lemma.getExpr());
-		if (!matches(BOOL, exprType)) {
-			error(lemma, "Expression for lemma statement is of type '" + exprType.toString()
-					+ "' but must be of type 'bool'");
+		Expr expr = lemma.getExpr();
+		if (expr != null) {
+			AgreeType exprType = getAgreeType(expr);
+			if (!matches(BOOL, exprType)) {
+				error(lemma, "Expression for lemma statement is of type '" + exprType.toString()
+						+ "' but must be of type 'bool'");
+			}
 		}
 	}
 

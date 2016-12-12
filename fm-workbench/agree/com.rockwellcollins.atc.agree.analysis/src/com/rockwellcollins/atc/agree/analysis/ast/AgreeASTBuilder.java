@@ -433,16 +433,21 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
         return ids;
     }
 
-    private List<AgreeStatement> getLemmaStatements(EList<SpecStatement> specs) {
-        List<AgreeStatement> lemmas = new ArrayList<>();
-        for (SpecStatement spec : specs) {
-            if (spec instanceof LemmaStatement) {
-                LemmaStatement lemma = (LemmaStatement) spec;
-                lemmas.add(new AgreeStatement(lemma.getStr(), doSwitch(lemma.getExpr()), spec));
-            }
-        }
-        return lemmas;
-    }
+	private List<AgreeStatement> getLemmaStatements(EList<SpecStatement> specs) {
+		List<AgreeStatement> lemmas = new ArrayList<>();
+		for (SpecStatement spec : specs) {
+			if (spec instanceof LemmaStatement) {
+				LemmaStatement lemma = (LemmaStatement) spec;
+				if (lemma.getExpr() != null) {
+					lemmas.add(new AgreeStatement(lemma.getStr(), doSwitch(lemma.getExpr()), spec));
+				} else {
+					PatternStatement pattern = lemma.getPattern();
+					lemmas.add(new AgreePatternBuilder(lemma.getStr(), lemma, this).doSwitch(pattern));
+				}
+			}
+		}
+		return lemmas;
+	}
 
     private TimingModel getTimingModel(EList<SpecStatement> specs) {
         for (SpecStatement spec : specs) {

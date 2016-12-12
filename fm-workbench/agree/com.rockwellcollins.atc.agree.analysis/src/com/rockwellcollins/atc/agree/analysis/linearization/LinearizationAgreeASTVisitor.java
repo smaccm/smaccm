@@ -108,8 +108,6 @@ public class LinearizationAgreeASTVisitor extends AgreeASTMapVisitor {
 
 	@Override
 	public AgreeNode visit(AgreeNode e) {
-		String id = e.id;
-
 		List<AgreeVar> inputs = new ArrayList<>();
 		for (AgreeVar input : e.inputs) {
 			inputs.add(this.visit(input));
@@ -143,34 +141,50 @@ public class LinearizationAgreeASTVisitor extends AgreeASTMapVisitor {
 
 		List<AgreeStatement> assertions = new ArrayList<>();
 		for (AgreeStatement stmt : e.assertions) {
-			LinearizationResult linResult = linearizeStatement(e, stmt, jkind.lustre.BinaryOp.AND);
-			outputs.addAll(linResult.addedLocals);
-			assertions.addAll(linResult.liftedConstraints);
-			assertions.add(linResult.linearizedStatement);
+			if (stmt.expr != null) {
+				LinearizationResult linResult = linearizeStatement(e, stmt, jkind.lustre.BinaryOp.AND);
+				outputs.addAll(linResult.addedLocals);
+				assertions.addAll(linResult.liftedConstraints);
+				assertions.add(linResult.linearizedStatement);
+			} else {
+				assertions.add(stmt);
+			}
 		}
 
 		List<AgreeStatement> assumptions = new ArrayList<>();
 		for (AgreeStatement stmt : e.assumptions) {
-			LinearizationResult linResult = linearizeStatement(e, stmt, jkind.lustre.BinaryOp.AND);
-			outputs.addAll(linResult.addedLocals);
-			assertions.addAll(linResult.liftedConstraints);
-			assumptions.add(linResult.linearizedStatement);
+			if (stmt.expr != null) {
+				LinearizationResult linResult = linearizeStatement(e, stmt, jkind.lustre.BinaryOp.AND);
+				outputs.addAll(linResult.addedLocals);
+				assertions.addAll(linResult.liftedConstraints);
+				assumptions.add(linResult.linearizedStatement);
+			} else {
+				assumptions.add(stmt);
+			}
 		}
 
 		List<AgreeStatement> guarantees = new ArrayList<>();
 		for (AgreeStatement stmt : e.guarantees) {
-			LinearizationResult linResult = linearizeStatement(e, stmt, jkind.lustre.BinaryOp.IMPLIES);
-			outputs.addAll(linResult.addedLocals);
-			guarantees.addAll(linResult.liftedConstraints);
-			guarantees.add(linResult.linearizedStatement);
+			if (stmt.expr != null) {
+				LinearizationResult linResult = linearizeStatement(e, stmt, jkind.lustre.BinaryOp.IMPLIES);
+				outputs.addAll(linResult.addedLocals);
+				guarantees.addAll(linResult.liftedConstraints);
+				guarantees.add(linResult.linearizedStatement);
+			} else {
+				guarantees.add(stmt);
+			}
 		}
 
 		List<AgreeStatement> lemmas = new ArrayList<>();
 		for (AgreeStatement stmt : e.lemmas) {
-			LinearizationResult linResult = linearizeStatement(e, stmt, jkind.lustre.BinaryOp.IMPLIES);
-			outputs.addAll(linResult.addedLocals);
-			assertions.addAll(linResult.liftedConstraints);
-			lemmas.add(linResult.linearizedStatement);
+			if (stmt.expr != null) {
+				LinearizationResult linResult = linearizeStatement(e, stmt, jkind.lustre.BinaryOp.IMPLIES);
+				outputs.addAll(linResult.addedLocals);
+				assertions.addAll(linResult.liftedConstraints);
+				lemmas.add(linResult.linearizedStatement);
+			} else {
+				lemmas.add(stmt);
+			}
 		}
 
 		Expr clockConstraint = e.clockConstraint.accept(this);
