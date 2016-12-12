@@ -18,13 +18,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.swing.text.NumberFormatter;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
+import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.util.Util;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.MemoryRegionName;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ModelNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.PortNames;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names.ThreadImplementationNames;
@@ -218,6 +223,34 @@ public abstract class CodeGeneratorBase {
     }
 	}
 
+	private void createMemoryRegionTypes() {
+	   for (InputIrqPort port: model.getIRQDispatcherList()) {
+	      PortNames pn = new PortNames(port); 
+	      for (MemoryRegionName memRegion: pn.getMemoryRegions()) {
+	         StringTokenizer tok = 
+	               new StringTokenizer(memRegion.getRegion(), ":"); 
+	         String base = tok.nextToken();
+	         String size = tok.nextToken(); 
+	         System.out.println("Tokenizing memory regions: base = " + base + 
+	               "; size = " + size + ".");
+	         if (base == null || size == null) {
+	            throw new Aadl2RtosException("In IRQ port " + port.getName() + ", memory region is mis-specified");
+	         }
+	         int sizeVal;
+	         try {
+	            sizeVal = Integer.decode(size);
+	         } catch (NumberFormatException ne) {
+               throw new Aadl2RtosException("In IRQ port " + port.getName() + ", memory region is mis-specified");
+	         }
+	         RecordType sizeRecordType = new RecordType();
+	         ArrayType byteArrayType = new ArrayType(new IntType(8, false), sizeVal);
+	         sizeRecordType.addField("memRegion", byteArrayType);
+	         model.getAstTypes().put(
+	               memRegion.getRegionTypeName(), sizeRecordType);
+	      }
+	   }
+	}
+	
 	private void createMailboxTypes() {
 		if (model.getCamkesUseMailboxDataports()) {
 		    for (ThreadImplementation ti : model.getAllThreadImplementations()) {
@@ -453,6 +486,7 @@ public abstract class CodeGeneratorBase {
       
       createComponentDispatchTypes();
       createMailboxTypes();
+      createMemoryRegionTypes();
       C_Type_Writer.writeTypes(hwriter, model, 6);
 
       writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("filePostfix"));

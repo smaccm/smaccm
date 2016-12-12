@@ -2,8 +2,8 @@
 #include <receiver.h>
 #include <inttypes.h>
 
-void ping_received(const int64_t * periodic_100_ms) {
+void ping_received(const uint32_t * periodic_100_ms) {
 
-   printf("receiver ping received (%" PRI64 ")\n", *periodic_100_ms);
+   printf("receiver ping received (%d)\n", (int32_t)*periodic_100_ms);
 
 }

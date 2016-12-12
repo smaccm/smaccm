@@ -1,0 +1,26 @@
+import <bool_writer.idl4>;
+import <SMACCM_DATA__CAN_Frame_i_writer.idl4>;
+import <can_tx.idl4>;
+import <can_rx.idl4>;
+
+component can_shim {
+    control;
+
+    // AADL interface
+    include <tb_smaccmcopter_types.h>;
+    provides SMACCM_DATA__CAN_Frame_i_writer framing2self;
+    uses bool_writer self2framing_status;
+    uses SMACCM_DATA__CAN_Frame_i_writer self2framing_frame;
+
+    // Internal interface
+    has semaphore status_0_semaphore;
+    has semaphore status_1_semaphore;
+    has semaphore status_2_semaphore;
+
+    uses can_tx_inf can_tx;
+    uses can_rx_inf can_rx;
+
+    consumes txb0_ack txb0_ack;
+    consumes txb1_ack txb1_ack;
+    consumes txb2_ack txb2_ack;
+}

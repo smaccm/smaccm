@@ -9,10 +9,12 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
  */
 public class MemoryRegionName {
   
+  private PortNames pn; 
   private String name; 
   private String region;
   
-  public MemoryRegionName(String name, String region) {
+  public MemoryRegionName(PortNames pn, String name, String region) {
+    this.pn = pn;
     this.name = name;
     this.region = region;
   }
@@ -20,5 +22,8 @@ public class MemoryRegionName {
   public String getName() { return name; }
   
   public String getRegion() { return region; }
-    
+  
+  public String getRegionTypeName() {
+     return pn.getQualifiedName() + "_" + getName() + "_type";
+  }
 }

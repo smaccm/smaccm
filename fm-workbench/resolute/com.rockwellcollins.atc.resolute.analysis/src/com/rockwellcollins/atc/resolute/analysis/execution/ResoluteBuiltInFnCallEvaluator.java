@@ -18,6 +18,7 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
+import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.ListValue;
@@ -286,7 +287,25 @@ public class ResoluteBuiltInFnCallEvaluator {
 						fnCallExpr);
 			}
 		}
-
+		
+		/*
+		 * Primary type: component
+		 */
+		case "enumerated_values": {
+			Property prop = (Property) args.get(0).getNamedElement();
+			if (prop.getType() instanceof EnumerationType) {
+				EnumerationType et = (EnumerationType) prop.getType();
+				List<ResoluteValue> result = new ArrayList<>();
+				for (EnumerationLiteral literal : et.getOwnedLiterals()) {
+					result.add(new StringValue(literal.getName()));
+				}
+				return new SetValue(result);
+			} else {
+				throw new IllegalArgumentException("enumerated_values called on property " + prop.getFullName()
+						+ " which does not have an enumeration type");
+			}
+		}
+		
 		/*
 		 * Primary type: component
 		 */

@@ -610,6 +610,11 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.AADL);
 			expectedTypes.add(BaseType.STRING);
 			break;
+		
+		// Primary type: property
+		case "enumerated_values":
+			expectedTypes.add(BaseType.PROPERTY);
+			break;
 
 		// Primary type: component
 		case "subcomponents":
@@ -975,6 +980,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return BaseType.AADL;
 		case "features":
 			return new SetType(BaseType.FEATURE);
+			
+		// Primary type: property
+		case "enumerated_values":
+			return new SetType(BaseType.STRING);
 
 		// Primary type: component
 		case "subcomponents":

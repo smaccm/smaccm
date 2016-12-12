@@ -40,7 +40,7 @@ component <dispatcher.irqComponent> <dispatcher.irqObject>;
 
 
 irqComponentMemoryRegion(memoryRegion) ::= <<
-dataport Buf <memoryRegion.name>;
+dataport <memoryRegion.regionTypeName> <memoryRegion.name>;
 
 >>
 

@@ -215,6 +215,9 @@ BuiltInFn:
 |   'features'
 |	'connections'
 
+// Primary type: property
+|   'enumerated_values'
+
 // Primary type: component
 |	'subcomponents'
 
