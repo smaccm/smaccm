@@ -44,7 +44,7 @@
 // user entrypoints for periodic dispatch
 void component_entry(const int64_t * periodic_dispatcher);
 
- void component_init(void);
+ void component_init(const int64_t * periodic_dispatcher);
  // reader prototype for uart2self
 bool tb_Decrypt_read_uart2self(SMACCM_DATA__UART_Packet_i * uart2self);
  bool tb_Decrypt_write_self2server(const SMACCM_DATA__GIDL self2server);

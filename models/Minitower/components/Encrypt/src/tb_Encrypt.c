@@ -282,7 +282,7 @@ void tb_entrypoint_Encrypt_periodic_dispatcher(const int64_t * in_arg) {
  *
  ************************************************************************/
 void tb_entrypoint_Encrypt_Encrypt_initializer(void) {
-    component_init();
+    component_init(NULL);
 
 }
 

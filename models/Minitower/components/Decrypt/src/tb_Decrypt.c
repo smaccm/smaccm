@@ -202,7 +202,7 @@ void tb_entrypoint_Decrypt_periodic_dispatcher(const int64_t * in_arg) {
  *
  ************************************************************************/
 void tb_entrypoint_Decrypt_Decrypt_initializer(void) {
-    component_init();
+    component_init(NULL);
 
 }
 

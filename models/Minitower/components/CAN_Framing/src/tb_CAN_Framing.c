@@ -377,7 +377,7 @@ void tb_entrypoint_CAN_Framing_periodic_dispatcher(const int64_t * in_arg) {
  *
  ************************************************************************/
 void tb_entrypoint_CAN_Framing_CAN_Framing_initializer(void) {
-    component_init();
+    component_init(NULL);
 
 }
 

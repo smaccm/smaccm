@@ -44,7 +44,7 @@
 // user entrypoints for periodic dispatch
 void component_entry(const int64_t * periodic_dispatcher);
 
- void component_init(void);
+ void component_init(const int64_t * periodic_dispatcher);
  // reader prototype for server2self
 bool tb_CAN_Framing_read_server2self(SMACCM_DATA__GIDL server2self);
  bool tb_CAN_Framing_write_self2server(const SMACCM_DATA__GIDL self2server);
