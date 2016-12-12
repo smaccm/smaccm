@@ -251,10 +251,6 @@ public class ResoluteBuiltInFnCallEvaluator {
 			NamedElement e = args.get(0).getNamedElement();
 			if (e instanceof ComponentInstance) {
 				ComponentInstance ci = (ComponentInstance) e;
-				EList<FeatureInstance> features = ci.getFeatureInstances();
-				FeatureInstance feature = features.get(1);
-				EList<PropertyAssociation> props = feature.getOwnedPropertyAssociations();
-				EList<ConnectionInstance> conns = feature.getDstConnectionInstances();
 				return createSetValue(ci.getFeatureInstances());
 			} else if (e instanceof FeatureInstance) {
 				FeatureInstance fi = (FeatureInstance) e;
