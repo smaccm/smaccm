@@ -36,34 +36,25 @@
 
  **************************************************************************/
 
-import "../../interfaces/Encrypt_interface.idl4";
 
 // Idl files for ports
 import "../../interfaces/SMACCM_DATA__GIDL_writer.idl4";
 import "../../interfaces/SMACCM_DATA__UART_Packet_i_writer.idl4";
 import "../../interfaces/bool_writer.idl4";
 import "../../interfaces/int64_t_writer.idl4";
+import "../../interfaces/void_writer.idl4";
 
 
 component Encrypt {
-    include "smaccm_top_i_types.h";
+    include "tb_smaccmcopter_types.h";
     control;
+    has semaphore tb_dispatch_sem;
 
-    // Connection to active thread 'send' interfaces
-    uses SMACCM_DATA__UART_Packet_i_writer Encrypt_self2uart;
-
-    has semaphore smaccm_dispatch_sem;
-
-    // Provided interfaces for input event data ports
+    provides int64_t_writer periodic_dispatcher;
     provides SMACCM_DATA__GIDL_writer server2self;
-    has mutex smaccm_encrypt_server2self_mut;
-
+    has mutex tb_encrypt_server2self_mut;uses SMACCM_DATA__UART_Packet_i_writer self2uart;
     provides bool_writer uart2self;
-    has mutex smaccm_encrypt_uart2self_mut;
-
-
-    // Interfaces for Periodic and IRQ port dispatchers
-    provides int64_t_writer Encrypt_periodic_dispatcher;
+    has mutex tb_encrypt_uart2self_mut;
 
 
 }
