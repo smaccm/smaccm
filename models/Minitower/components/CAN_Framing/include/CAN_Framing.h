@@ -12,7 +12,7 @@ extern "C" {
 #include "input_tb_CAN_Framing_read_can2self_status_monitor.h"
 #include <tb_CAN_Framing.h>
 void component_entry(const int64_t *n_var0);
-void component_init(void);
+void component_init(const int64_t *n_var0);
 
 #ifdef __cplusplus
 }

@@ -12,9 +12,7 @@ void component_entry(const int64_t *n_var0)
     return;
 }
 
-void hack_init(const int64_t *n_var0);
-void component_init(void) { hack_init(NULL); }
-void hack_init(const int64_t *n_var0)
+void component_init(const int64_t *n_var0)
 {
     callback_configureStaticKey(n_var0);
 }

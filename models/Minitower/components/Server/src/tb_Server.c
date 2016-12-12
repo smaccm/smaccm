@@ -343,7 +343,7 @@ void tb_entrypoint_Server_periodic_dispatcher(const int64_t * in_arg) {
  *
  ************************************************************************/
 void tb_entrypoint_Server_Server_initializer(void) {
-    component_init();
+    component_init(NULL);
 
 }
 

@@ -12,7 +12,7 @@ extern "C" {
 #include "input_tb_Decrypt_read_uart2self_monitor.h"
 #include <tb_Decrypt.h>
 void component_entry(const int64_t *n_var0);
-void component_init(void);
+void component_init(const int64_t *n_var0);
 
 #ifdef __cplusplus
 }
