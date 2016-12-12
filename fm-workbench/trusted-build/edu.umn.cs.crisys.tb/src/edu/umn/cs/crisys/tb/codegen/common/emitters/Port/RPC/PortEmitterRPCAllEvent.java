@@ -416,7 +416,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    
    @Override
    public String getCamkesAddAssemblyFilePortDeclarations() { return ""; }
-   
+
    /************************************************************
     * 
     * Names functions used by the .stg templates for input queues
@@ -542,5 +542,5 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       }
       return pcl;
    }
-   
+
 }

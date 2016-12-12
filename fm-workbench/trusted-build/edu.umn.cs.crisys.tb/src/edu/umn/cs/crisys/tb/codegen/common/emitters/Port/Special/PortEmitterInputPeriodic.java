@@ -268,6 +268,7 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
       return result;
    }
 
+
    /************************************************************
     * 
     * linux-specific functions 

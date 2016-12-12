@@ -22,9 +22,17 @@ filePrefix(name, date, path) ::= "<stdFilePrefix(date, path, camkesAssemblyPurpo
 filePostfix(name, path) ::= <<
 >>
 
+createVMInit(vm) ::= <<
+component Init<vm.vmNumber> {
+    <vm.vmCrossingConnections: {conn | <conn.camkesAddAssemblyFileVMPortDeclarations> }>
+    VM_INIT_DEF()
+}
+
+>>
+
+
 assemblyThreadImplementationImports(threadImpl) ::= <<
 import "<threadImpl.rootToCamkesComponentFilePath>";
-
 <threadImpl.portList: {port | <port.camkesAddAssemblyFilePortDeclarations>
 } >
 
@@ -127,10 +135,32 @@ configurePorts(threadImpl) ::= <<
 }>
 >>
 
+composeVms(model) ::= <<
+<model.virtualMachineList: {vm |
+// Need to make sure this correctly ties a number to the model <vm.pathName>
+VM_PER_VM_COMP_DEF(<vm.vmNumber>)
+<vm.vmCrossingConnections:{conn | <conn.camkesAddAssemblyFileVMCompositionPortDeclarations>} >
+}>
+
+>>
+
+configVms(model) ::= <<
+<model.virtualMachineList: {vm |
+// Need something here tying the second number to the first model <model>
+// Temporarily here I will just use the iteration number
+<vm.perVmConfigDefs>
+
+}>
+
+>>
+
 camkesAssemblyBody(model) ::= <<
 
 import \<std_connector.camkes>;
 
+<if(model.containsVM)>
+#include \<configurations/vm.h>
+<endif>
 <if(model.threadCalendar.hasDispatchers)>
 import "<model.threadCalendar.periodicDispatcherPathName>";
 <if(!model.externalTimerComponent)>
@@ -156,8 +186,16 @@ connector seL4RPCCallDataport {
     to Procedure server template "seL4RPCCallDataport-to.template.c";
 }
 
+<if(model.containsVM)>
+<model.virtualMachineList:createVMInit()>
+<endif>
+
 assembly {
     composition {
+        <if(model.containsVM)>
+        VM_COMPOSITION_DEF()
+        <composeVms(model)>
+        <endif>
         <constructPeriodicComponent(model.threadCalendar)><\\>
 
         <if(model.threadCalendar.hasDispatchers && !model.externalTimerComponent)>
@@ -198,6 +236,10 @@ assembly {
     }
 
     configuration {
+        <if(model.containsVM)>
+        VM_CONFIGURATION_DEF()
+        <configVms(model)>
+        <endif>
         <if(model.threadCalendar.hasDispatchers)>
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = "<model.generateCamkesTimeServerThreadIndex>";
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";

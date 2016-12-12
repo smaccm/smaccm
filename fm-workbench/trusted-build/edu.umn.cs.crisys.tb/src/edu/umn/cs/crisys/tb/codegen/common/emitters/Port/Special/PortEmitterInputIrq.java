@@ -318,7 +318,7 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
       result += st.render();
       return result;
    }
-   
+
    /************************************************************
     * 
     * Names functions used by the .stg templates for IRQ dispatchers

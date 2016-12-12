@@ -8,13 +8,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroupFile;
+
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
 import edu.umn.cs.crisys.tb.model.OSModel;
+import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalIRQEvent;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalISR;
@@ -220,6 +225,17 @@ public class ModelNames implements NameEmitter {
 	  return m.isUseOSRealTimeExtensions();
   }
   
+  public List<ModelNames> getVirtualMachineList() {
+     List<ModelNames> childList = new ArrayList<>(); 
+     for (OSModel vm: m.getVirtualMachineList()) {
+        childList.add(new ModelNames(vm));
+     }
+     return childList;
+  }
+  
+  public boolean getContainsVM() {
+     return !m.getVirtualMachineList().isEmpty();
+  }
   
   public List<String> getExternalMutexList() {
 	return m.getExternalMutexList();
@@ -246,7 +262,7 @@ public class ModelNames implements NameEmitter {
    * Camkes-specific functions
    * 
    ***************************************************************/
-
+  
   public String getCamkesExternalTimerInterfacePath() {
     return m.getCamkesExternalTimerInterfacePath();
   }
@@ -279,6 +295,52 @@ public class ModelNames implements NameEmitter {
      }
      return s;
   }
+  
+  public int getVmNumber() {
+     return ((OSModel)this.m.getParent()).virtualMachineList.indexOf(m);
+  }
+  
+  public String getVmInstanceName() {
+     return "vm" + getVmNumber(); 
+  }
+  
+  public ST getTemplateST(String stName) {
+     STGroupFile template = Util.createTemplate("PortEmitterRPCAllEvent.stg");
+     return template.getInstanceOf(stName); 
+  }
+
+  public String getPerVmConfigDefs() {
+     ST st = Util.createTemplate("CamkesVmConfig.stg").getInstanceOf("VmConfig");
+     st.add("model", this);
+     return st.render();
+  }
+
+  /*
+  public List<PortConnectionEmitter> getHostSourceToVMDestConnections() {
+     List<PortConnectionEmitter> elemList = new ArrayList<>(); 
+     for (PortConnection pc: m.getHostSourceToVMDestConnections()) {
+        elemList.add(EmitterFactory.portConnection(pc));
+     }
+     return elemList;
+  }
+  
+  public List<PortConnectionEmitter> getHostDestToVMSourceConnections() {
+     List<PortConnectionEmitter> elemList = new ArrayList<>(); 
+     for (PortConnection pc: m.getHostDestToVMSourceConnections()) {
+        elemList.add(EmitterFactory.portConnection(pc));
+     }
+     return elemList;
+  }
+*/
+  
+  public List<PortConnectionEmitter> getVmCrossingConnections() {
+     List<PortConnectionEmitter> elemList = new ArrayList<>(); 
+     for (PortConnection pc: m.getVmCrossingConnections()) {
+        elemList.add(EmitterFactory.portConnection(pc));
+     }
+     return elemList;
+  }
+  
   /***************************************************************
    * 
    * EChronos-specific functions

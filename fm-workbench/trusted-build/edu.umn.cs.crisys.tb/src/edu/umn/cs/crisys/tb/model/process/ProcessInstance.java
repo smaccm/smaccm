@@ -56,10 +56,8 @@ public class ProcessInstance extends ModelElementBase {
 
    @Override
    public ModelElement getParent() {
-      // map over to implementation models.
-      // Do we want to have model instances and implementations?
-      // I don't think so.
-      return this.impl.getParent();
+      // map up to model.
+      return this.getModel();
    }
    
    public void addThreadInstance(ThreadInstance ti) {

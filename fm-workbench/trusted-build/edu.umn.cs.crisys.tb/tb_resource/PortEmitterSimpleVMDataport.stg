@@ -1,0 +1,191 @@
+import "Common.stg"
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Templates for managing data port interfaces between active threads.
+//
+// Shared memory / mutex implementation
+// 
+// 10/26/2016 MWW
+// 
+///////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Header templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+writePortWriterPrototype(port) ::= <<
+bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+>>
+
+writePortReaderPrototype(port) ::= <<
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// C File templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+componentLocalWriteFunction(port) ::= <<
+
+/************************************************************************
+ *  <port.localWriterName>:
+ * Invoked by local thread.
+ *
+ * This is the function that is invoked to write to a data port.
+ *
+ ************************************************************************/
+
+bool <port.localWriterName>(<port.type.aadlOutputType.name> <port.name>) {
+    <if(port.type.isBaseType)><port.dataExpr> = *<port.name>;
+    <else><camkesInputToValMemcpy(port.type, port.dataExpr, port.name)>
+    <endif>
+    return true;
+}
+
+>>
+
+componentLocalReadFunction(port) ::= <<
+/************************************************************************
+ *  <port.localReaderName>:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked to read from a data port.
+ *
+ ************************************************************************/
+
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>) {
+    <if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.dataExpr>;
+    <else><valToAadlOutputMemcpy(port.type, port.name, port.dataExpr)>
+    <endif>
+    return true;
+}
+
+>>
+
+
+componentRemoteWriteFunction(port, name) ::= <<
+
+/************************************************************************
+ *  <name>:
+ * Invoked by local thread to write to remote data port.
+ *
+ ************************************************************************/
+
+bool <name>(const <port.type.aadlOutputType.name> <port.name>) {
+    <if(port.type.isBaseType)><port.dataExpr> = *<port.name>;
+    <else><camkesInputToValMemcpy(port.type, port.dataExpr, port.name)>
+    <endif>
+    return true;
+}
+
+>>
+
+writeConnectionDecl(connection) ::= <<
+<componentRemoteWriteFunction(connection.destPort, connection.fullyQualifiedName)>
+>>
+
+componentLocalReaderDecl(port) ::= <<
+
+// For linux, this is where we place the file declarations.
+// For Camkes, this is where we just reference the pointer for the dataport.
+<componentLocalReadFunction(port)>
+
+>>
+
+writeToRemote(connection) ::= <<
+<connection.fullyQualifiedName>(<connection.sourcePort.name>);
+
+>>
+
+localCallerFunction(srcPort) ::= <<
+/************************************************************************
+ *  <srcPort.localWriterName>:
+ * Invoked from user code in the local thread.
+ *
+ * This is the function invoked by the local thread to make a
+ * call to write to a remote data port.
+ *
+ ************************************************************************/
+
+bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
+   <srcPort.connections:writeToRemote()>
+    bool tb_result = true ; 
+    return tb_result;
+}
+>>
+
+componentLocalWriterDecl(port) ::= <<
+
+<port.connections:writeConnectionDecl()>
+<localCallerFunction(port)>
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// linux OS configuration templates
+//
+// to do (for each port):
+//    declare shared memory (if necessary)
+//    initialize the mutex
+//
+///////////////////////////////////////////////////////////////////////////
+
+portInitializer(port) ::= <<
+{
+    // here is where in linux we map the pointer to the file system for port <port.name>.
+    // here is where, for Camkes, we map the pointer for shared memory from Camkes
+}
+>>
+
+portDestructor(port) ::= <<
+{
+    // I do not think we have anything too much to do with destructors for port <port.name>.>
+}
+>>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Camkes OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+dpConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4SharedDataWithCaps <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectCamkesSourceToVm(connection, vm) ::= <<
+<dpConnection(vm.generateConnectionName,
+    connection.sourcePort.threadImplementation.componentInstanceName,
+    connection.sourcePort.name,
+    vm.vmInstanceName,
+    connection.name)>
+
+>>
+
+connectVmToCamkesDest(connection, vm) ::= <<
+<dpConnection(vm.generateConnectionName,
+    connection.destPort.threadImplementation.componentInstanceName,
+    connection.destPort.name,
+    vm.vmInstanceName,
+    connection.name)>
+>>
+
+assemblyConfigConnection(vm, connection) ::= <<
+    <vm.instanceName>.<connection.name>_id = <connection.connectionNumber>;
+
+    // Q for Ihor: is sizeof allowed in assembly files?
+    <vm.instanceName>.<connection.name>_size = sizeof(<connection.srcPort.type>)
+>>

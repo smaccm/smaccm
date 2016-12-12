@@ -43,11 +43,13 @@ public class PortConnectionEmitterSharedMemDataport implements PortConnectionEmi
       // applicable if both source and destination ports are RPC dataports
       result &= isSharedMemDataport(source) && isSharedMemDataport(dest);  
 
-      // applicable if OS is one of {eChronos, VxWorks, Camkes}
-      OSTarget srcOS = (Util.getElementOSModel(c.getSourcePort())).getOsTarget();
-      OSTarget dstOS = (Util.getElementOSModel(c.getDestPort())).getOsTarget();
+      // applicable if OS is linux.
+      // Also, not applicable across OSes (VM boundary).
+      
+      OSModel srcModel = (Util.getElementOSModel(c.getSourcePort()));
+      OSModel dstModel = (Util.getElementOSModel(c.getDestPort()));
 
-      result &= isSupportedOS(srcOS) && isSupportedOS(dstOS); 
+      result &= isSupportedOS(srcModel.getOsTarget()) && srcModel == dstModel; 
 
       return result;
    }

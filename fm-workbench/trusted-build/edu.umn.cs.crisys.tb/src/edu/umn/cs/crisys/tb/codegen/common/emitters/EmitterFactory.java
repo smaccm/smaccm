@@ -14,6 +14,8 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem.PortEmitterSh
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInitializer;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInputIrq;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInputPeriodic;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.VMSharedMem.PortConnectionEmitterVMDataport;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.VMSharedMem.PortEmitterSimpleVMDataport;
 import edu.umn.cs.crisys.tb.codegen.common.names.*;
 import edu.umn.cs.crisys.tb.model.port.*;
 import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
@@ -30,11 +32,14 @@ public class EmitterFactory {
       // Mailbox port emitter here!
       
       
+      // Cross VM dataport emitter (placeholder for mailboxes)
+      if (PortEmitterSimpleVMDataport.isApplicable(dp)) {
+         return new PortEmitterSimpleVMDataport(dp);
+      }
       // Shared memory only emitter (no RPCs) for linux 
-      if (PortEmitterSharedMemDataport.isApplicable(dp)) {
+      else if (PortEmitterSharedMemDataport.isApplicable(dp)) {
          return new PortEmitterSharedMemDataport(dp);
       }
-      
       // Default port emitters
       else if (PortEmitterRPCAllEvent.isApplicable(dp)) {
          return new PortEmitterRPCAllEvent(dp); 
@@ -53,7 +58,14 @@ public class EmitterFactory {
    }
    
    public static PortConnectionEmitter portConnection(PortConnection pc) {
-      if (PortConnectionEmitterSharedMemDataport.isApplicable(pc)) {
+      
+      // Specialized VM connection emitter
+      if (PortConnectionEmitterVMDataport.isApplicable(pc)) {
+         return new PortConnectionEmitterVMDataport(pc);
+      }
+      
+      // 'standard' emitters
+      else if (PortConnectionEmitterSharedMemDataport.isApplicable(pc)) {
          return new PortConnectionEmitterSharedMemDataport(pc);
       } else if (PortConnectionEmitterRPCImpl.isApplicable(pc)) {
          return new PortConnectionEmitterRPCImpl(pc);

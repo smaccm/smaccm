@@ -488,3 +488,22 @@ However, now is the time when we need to figure out who is in charge of the over
 			3. It works for any OS
 			
 		Q: where is file access declared?
+		
+		For access to dataport, do we want it at the top-level or per-process?  Per process, I think.
+		
+		
+		
+		O.k., 
+			Need to have ability to configure declarations per VM, but also must maintain id number.  So, I want a file
+			override of the file containing the declarations: this should be associated with the processor as a property.
+		
+		We need to find the VM-crossing *connections*
+		Once we have these connections, how do we name ports in the OS?
+			For now, use the connection name as the port name.
+			This is suckier than I thought.  Port names for components have assumed that they are unique by port name.
+			...but this is o.k., because this is the VM interface stuff I just added.
+			...How do I thread this needle?
+				It needs to be defined per connection, rather than per port; done.
+					
+			
+			

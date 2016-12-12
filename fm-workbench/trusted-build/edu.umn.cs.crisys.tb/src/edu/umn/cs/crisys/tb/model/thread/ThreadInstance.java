@@ -10,13 +10,15 @@ import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.connection.EndpointConnection;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
+import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 
 public class ThreadInstance extends ModelElementBase {
   private static int threadIdCounter = 0;
   private int threadId = 0;
   
-  private ThreadImplementation impl;
-	
+   private ThreadImplementation impl;
+	private ProcessInstance processInstance;
+   
 	private ComponentInstance aadlInstance;
 	private ArrayList<PortConnection> isSrcOfPortConnectionList = new ArrayList<PortConnection>();
 	private ArrayList<PortConnection> isDstOfPortConnectionList = new ArrayList<PortConnection>(); 
@@ -121,12 +123,20 @@ public class ThreadInstance extends ModelElementBase {
       ArrayList<EndpointConnection> isDstOfEndpointConnectionList) {
     this.isProvidesOfEndpointConnectionList = isDstOfEndpointConnectionList;
   }
-
-@Override
-public ModelElement getParent() {
-   // TODO map to process instance once we get that far.
-   return null;
-}
+  
+   public ProcessInstance getProcessInstance() {
+      return processInstance;
+   }
+   
+   public void setProcessInstance(ProcessInstance processInstance) {
+      this.processInstance = processInstance;
+   }
+   
+   @Override
+   public ModelElement getParent() {
+      // TODO map to process instance once we get that far.
+      return this.getProcessInstance();
+   }
 	
 	
 }

@@ -852,6 +852,7 @@ public class AadlModelParser {
          if (this.threadInstanceMap.containsKey(elem)) {
             ThreadInstance ti = this.threadInstanceMap.get(elem);
             pi.addThreadInstance(ti);
+            ti.setProcessInstance(pi);
          }
       }
       return pi; 
@@ -885,6 +886,7 @@ public class AadlModelParser {
          ProcessInstance pi = constructProcessInstance(c, procImpl);
          procImpl.addProcessInstance(pi);
          pi.setModel(model);
+         model.getProcessInstanceList().add(pi);
       }
    }
 

@@ -35,6 +35,7 @@ import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
 import edu.umn.cs.crisys.tb.model.legacy.ExternalIRQEvent;
@@ -44,6 +45,7 @@ import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
+import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.thread.ThreadCalendar;
@@ -88,6 +90,7 @@ public class OSModel extends ModelElementBase {
 
 
    // Implementation objects: external.
+   private List<ProcessInstance> processInstanceList = new ArrayList<>();
    private List<ProcessImplementation> processImplementationList = new ArrayList<>();
    private List<SharedData> sharedDataList = new ArrayList<>();
    private ThreadCalendar threadCalendar = new ThreadCalendar(this);
@@ -317,7 +320,7 @@ public class OSModel extends ModelElementBase {
 
    public List<ThreadInstance> getAllThreadInstances() {
       List<ThreadInstance> list = new ArrayList<ThreadInstance>(); 
-      for (ThreadImplementation t: getThreadImplementationList()) {
+      for (ProcessInstance t: getProcessInstanceList()) {
          list.addAll(t.getThreadInstanceList()); 
       }
       return list;
@@ -436,6 +439,7 @@ public class OSModel extends ModelElementBase {
       this.camkesUseMailboxDataports = camkesUseMailboxDataports;
    }
 
+   
    /***************************************************************
     * 
     * EChronos-specific functions
@@ -510,6 +514,11 @@ public class OSModel extends ModelElementBase {
    public List<ProcessImplementation> getProcessImplementationList() {
       return processImplementationList;
    }
+   
+   public List<ProcessInstance> getProcessInstanceList() {
+      return processInstanceList;
+   }
+   
    public void setProcessImplementationList(List<ProcessImplementation> processImplementationList) {
       this.processImplementationList = processImplementationList;
    }
@@ -584,4 +593,49 @@ public class OSModel extends ModelElementBase {
    }
    
    
+   // What is the right way to do this?
+   // To get all thread instances for the platform, find all thread 
+   // port instances, and see which ones connect across platforms.
+   // 
+   // Note: there aren't thread port instances, only thread connection
+   // instances.
+   // This is what we really want...we want to know for a group of
+   // connections all those that cross boundaries; further, we would
+   // like it separated by whether the connection source or destination
+   // originates within the VM.
+   
+   
+   public List<PortConnection> getHostSourceToVMDestConnections() {
+      List<PortConnection> vmCrossing = new ArrayList<>(); 
+      for (ThreadInstance ti: this.getAllThreadInstances()) {
+         for (PortConnection pi: ti.getIsSrcOfConnectionList()) {
+            ThreadInstance dst = pi.getDestThreadInstance(); 
+            OSModel dstModel = Util.getElementOSModel(dst);
+            if (dstModel != this) {
+               vmCrossing.add(pi);
+            }
+         }
+      }
+      return vmCrossing;
+   }
+   
+   public List<PortConnection> getHostDestToVMSourceConnections() {
+      List<PortConnection> vmCrossing = new ArrayList<>(); 
+      for (ThreadInstance ti: this.getAllThreadInstances()) {
+         for (PortConnection pi: ti.getIsDstOfConnectionList()) {
+            ThreadInstance src = pi.getSourceThreadInstance(); 
+            OSModel srcModel = Util.getElementOSModel(src);
+            if (srcModel != this) {
+               vmCrossing.add(pi);
+            }
+         }
+      }
+      return vmCrossing;
+   }
+
+   public List<PortConnection> getVmCrossingConnections() {
+      List<PortConnection> elemList = getHostSourceToVMDestConnections();
+      elemList.addAll(getHostDestToVMSourceConnections());  
+      return elemList;
+   }
 }

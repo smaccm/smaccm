@@ -12,12 +12,4 @@ public interface PortEmitterCamkes extends PortEmitter {
    public String getCamkesAddAssemblyFileConfigDeclarations(); //
    public String getCamkesAddAssemblyFilePortDeclarations();  //
    
-   // For VM support: these functions get called on the 'destination'
-   // ports on the VM side of the boundary to contribute 
-   // to the Camkes VM component and the appropriate places in the 
-   // Camkes assembly.
-   
-   // public String getCamkesAddVMPortLevelDeclarations(); //
-   
-   
 }
