@@ -758,11 +758,11 @@ public class LustreAstBuilder {
 			outputs.add(output);
 		}
 
-		for (AgreeVar var : subAgreeNode.locals) {
-			varCount++;
-			AgreeVar local = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
-			outputs.add(local);
-		}
+//		for (AgreeVar var : subAgreeNode.locals) {
+//			varCount++;
+//			AgreeVar local = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
+//			outputs.add(local);
+//		}
 
 		int i = 0;
 		for (AgreeStatement statement : subAgreeNode.assumptions) {

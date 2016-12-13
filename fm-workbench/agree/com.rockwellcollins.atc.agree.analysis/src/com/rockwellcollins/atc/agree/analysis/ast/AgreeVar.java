@@ -21,6 +21,10 @@ public class AgreeVar extends VarDecl implements AgreeASTElement {
 		this.featInst = featInst;
 	}
 	
+	public AgreeVar(String name, Type type, EObject reference, ComponentInstance compInst) {
+		this(name, type, reference, compInst, null);
+	}
+	
 	public AgreeVar(String name, Type type, EObject reference) {
 		this(name, type, reference, null, null);
 	}
@@ -39,12 +43,21 @@ public class AgreeVar extends VarDecl implements AgreeASTElement {
 		if (!(obj instanceof AgreeVar)) {
 			return false;
 		}
-		return ((AgreeVar) obj).id.equals(id);
+		AgreeVar otherVar = (AgreeVar) obj;
+		return otherVar.compInst == compInst && otherVar.id.equals(id);
 	}
 
 	@Override
 	public <T> T accept(AgreeASTVisitor<T> visitor) {
 		return visitor.visit(this);
+	}
+	
+	@Override
+	public String toString(){
+		if(compInst != null){
+			return compInst.getInstanceObjectPath() + "." + id;
+		}
+		return id;
 	}
 
 }
