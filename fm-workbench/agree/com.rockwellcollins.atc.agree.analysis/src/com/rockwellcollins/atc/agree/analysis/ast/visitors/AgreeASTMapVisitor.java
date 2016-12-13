@@ -34,6 +34,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
 
 import jkind.lustre.Expr;
 import jkind.lustre.Node;
@@ -231,8 +232,9 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		Type type = e.type.accept(lustreTypeMapVisitor);
 		EObject reference = e.reference;
 		ComponentInstance compInst = e.compInst;
+        FeatureInstance featInst = e.featInst;
 
-		return new AgreeVar(name, type, reference, compInst);
+        return new AgreeVar(name, type, reference, compInst, featInst);
 	}
 
 	@Override

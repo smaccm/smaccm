@@ -22,7 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package com.rockwellcollins.atc.tcg.handlers;
 
 import java.io.FileNotFoundException;
-import java.util.Map;
+import java.util.List;
 
 import jkind.lustre.Type;
 
@@ -100,7 +100,7 @@ public class SaveHandler extends NoElementHandler {
 							startingFilePath = filePath;
 							System.out.println("filePath: " + filePath);
 							TestSuiteLinker linker = view.getMenuListener().getLinker();
-							Map<String, Type> types = linker.getAgreeProgram().globalTypes;
+							List<Type> types = linker.getAgreeProgram().globalTypes;
 							try {
 								TcgXmlWriter tcgXmlWriter = new TcgXmlWriter(filePath, types, false);
 								tcgXmlWriter.writeSuite(suite);

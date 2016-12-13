@@ -1,6 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis.ast;
 
 import java.util.List;
+
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
 
 import jkind.lustre.Node;

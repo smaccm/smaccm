@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,7 +55,7 @@ import jkind.util.Util;
 public class TcgXmlWriter extends TcgWriter {
 
 	private final PrintWriter out;
-	private final Map<String, Type> types;
+	private final List<Type> types;
 
 	public String escapeXml(String target) throws Exception {
 		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -68,7 +69,7 @@ public class TcgXmlWriter extends TcgWriter {
 		return writer.toString();
 	}
 	
-	public TcgXmlWriter(String filename, Map<String, Type> types, boolean useStdout)
+	public TcgXmlWriter(String filename, List<Type> types, boolean useStdout)
 			throws FileNotFoundException {
 		if (useStdout) {
 			this.out = new PrintWriter(System.out, true);

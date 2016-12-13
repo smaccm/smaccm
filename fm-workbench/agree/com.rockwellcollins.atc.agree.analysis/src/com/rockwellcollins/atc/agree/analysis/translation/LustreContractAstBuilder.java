@@ -1,15 +1,8 @@
 package com.rockwellcollins.atc.agree.analysis.translation;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.ComponentClassifier;
-import org.osate.aadl2.ComponentImplementation;
-
-import jkind.api.xml.XmlParseThread;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
@@ -22,9 +15,7 @@ import jkind.lustre.NamedType;
 import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.Program;
-import jkind.lustre.RecordType;
 import jkind.lustre.TupleExpr;
-import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
@@ -32,9 +23,7 @@ import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
@@ -195,7 +184,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 			List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, Expr clockExpr, Node lustreNode) {
 		if (agreeNode.timing != TimingModel.SYNC) {
 			String tickedName = subAgreeNode.id + "___TICKED";
-			outputs.add(new AgreeVar(tickedName, NamedType.BOOL, null, agreeNode.compInst));
+			outputs.add(new AgreeVar(tickedName, NamedType.BOOL, null, agreeNode.compInst, null));
 			Expr tickedId = new IdExpr(tickedName);
 			Expr preTicked = new UnaryExpr(UnaryOp.PRE, tickedId);
 			Expr tickedOrPre = new BinaryExpr(clockExpr, BinaryOp.OR, preTicked);
@@ -294,22 +283,25 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
     protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs,
             AgreeNode subAgreeNode, Node lustreNode, String prefix) {
         for (AgreeVar var : subAgreeNode.inputs) {
-            AgreeVar input = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
+            AgreeVar input = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
             inputs.add(input);
         }
 
         for (AgreeVar var : subAgreeNode.outputs) {
-            AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
+            AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
             outputs.add(output);
         }
 
         // right now we do not support local variables in our translation
-        for (AgreeVar var : subAgreeNode.locals) {
+//        for (AgreeVar var : subAgreeNode.locals) {
+//            throw new AgreeException("What is an example of this?");
+//            // varCount++;
+//            // AgreeVar local = new AgreeVar(prefix+var.id, var.type,
+//            // var.reference, var.compInst);
+//            // outputs.add(local);
+//        }
+        if (!subAgreeNode.locals.isEmpty()) {
             throw new AgreeException("What is an example of this?");
-            // varCount++;
-            // AgreeVar local = new AgreeVar(prefix+var.id, var.type,
-            // var.reference, var.compInst);
-            // outputs.add(local);
         }
 
         inputs.add(subAgreeNode.clockVar);
@@ -329,7 +321,8 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
         for (VarDecl var : lustreNode.outputs) {
             AgreeVar outputVar = (AgreeVar) var;
             String dummyName = prefix + var.id + "__DUMMY";
-            AgreeVar dummyVar = new AgreeVar(dummyName, outputVar.type, outputVar.reference, outputVar.compInst);
+            AgreeVar dummyVar = new AgreeVar(dummyName, outputVar.type, outputVar.reference, outputVar.compInst,
+                    outputVar.featInst);
             
             if (!inputs.contains(dummyVar)) {
                 inputs.add(dummyVar);

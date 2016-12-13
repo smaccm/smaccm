@@ -59,8 +59,8 @@ public class AgreeInlineLatchedConnections extends ExprMapVisitor implements Agr
 
     private void addLatchedInputEqs(AgreeNodeBuilder builder, AgreeNode subNode) {
         for (AgreeVar var : subNode.inputs) {
-            AgreeVar latchVar =
-                    new AgreeVar(subNode.id + "__" + var.id + LATCHED_SUFFIX, var.type, var.reference, var.compInst);
+            AgreeVar latchVar = new AgreeVar(subNode.id + "__" + var.id + LATCHED_SUFFIX, var.type, var.reference,
+                    var.compInst, var.featInst);
             builder.addLocal(latchVar);
 
             Expr clockExpr = new IdExpr(subNode.id + AgreeASTBuilder.clockIDSuffix);

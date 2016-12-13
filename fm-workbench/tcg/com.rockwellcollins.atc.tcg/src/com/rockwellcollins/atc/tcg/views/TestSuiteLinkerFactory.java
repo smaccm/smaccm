@@ -74,9 +74,9 @@ public class TestSuiteLinkerFactory {
 			throw new AgreeException("There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
 		}
 
-		AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+		AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, monolithicAnalysis);
 		System.out.println("Constructing LUSTRE program...");
-		Program program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, monolithicAnalysis);
+		Program program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram);
 		AgreeRenaming agreeRenaming = new AgreeRenaming(); 
 		AgreeLayout layout = new AgreeLayout();
 		RenamingVisitor.addRenamings(program, agreeRenaming, layout);

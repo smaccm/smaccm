@@ -2,9 +2,11 @@ package com.rockwellcollins.atc.agree.analysis.translation;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.util.Tuples;
@@ -14,6 +16,7 @@ import org.eclipse.xtext.util.Pair;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.Activator;
@@ -90,7 +93,7 @@ public class LustreAstBuilder {
 
         for (AgreeStatement guarantee : topNode.guarantees) {
             String guarName = guarSuffix + i++;
-            locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, topNode.compInst));
+            locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, topNode.compInst, null));
             equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
             properties.add(guarName);
         }
@@ -183,9 +186,9 @@ public class LustreAstBuilder {
 		int j = 0;
 		for (AgreeStatement assumption : flatNode.assumptions) {
 			String assumName = assumeSuffix + j++;
-            locals.add(new AgreeVar(assumName, NamedType.BOOL, assumption.reference, flatNode.compInst));
-            IdExpr assumId = new IdExpr(assumName);
-            equations.add(new Equation(assumId, assumption.expr));
+			locals.add(new AgreeVar(assumName, NamedType.BOOL, assumption.reference, flatNode.compInst, null));
+			IdExpr assumId = new IdExpr(assumName);
+			equations.add(new Equation(assumId, assumption.expr));
 			assertions.add(assumId);
 			ivcs.add(assumId.id);
 		}
@@ -208,7 +211,7 @@ public class LustreAstBuilder {
 			assumeConj = new BinaryExpr(new IdExpr(subNode.id + "__" + assumeHistSufix), BinaryOp.AND, assumeConj);
 		}
 		AgreeVar assumeHistVar = new AgreeVar(assumeHistSufix, NamedType.BOOL,
-				agreeProgram.topNode.compInst.getComponentClassifier(), agreeProgram.topNode.compInst);
+				agreeProgram.topNode.compInst.getComponentClassifier(), agreeProgram.topNode.compInst, null);
 		locals.add(assumeHistVar);
 		equations.add(new Equation(new IdExpr(assumeHistVar.id), assumeConj));
 		properties.add(assumeHistVar.id);
@@ -216,7 +219,7 @@ public class LustreAstBuilder {
 		int k = 0;
 		for (AgreeStatement patternPropState : flatNode.patternProps) {
 			String patternVarName = patternPropSuffix + k++;
-			locals.add(new AgreeVar(patternVarName, NamedType.BOOL, patternPropState, flatNode.compInst));
+			locals.add(new AgreeVar(patternVarName, NamedType.BOOL, patternPropState, flatNode.compInst, null));
 			equations.add(new Equation(new IdExpr(patternVarName), patternPropState.expr));
 			properties.add(patternVarName);
 		}
@@ -224,14 +227,14 @@ public class LustreAstBuilder {
 		int i = 0;
 		for (AgreeStatement guarantee : flatNode.lemmas) {
 			String guarName = guarSuffix + i++;
-			locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, flatNode.compInst));
+			locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, flatNode.compInst, null));
 			equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
 			properties.add(guarName);
 		}
 
 		for (AgreeStatement guarantee : flatNode.guarantees) {
 			String guarName = guarSuffix + i++;
-			locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, flatNode.compInst));
+			locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, flatNode.compInst, null));
 			equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
 			properties.add(guarName);
 		}
@@ -245,8 +248,8 @@ public class LustreAstBuilder {
 		}
 
 		equations.addAll(flatNode.localEquations);
-	    assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
-	    
+		assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
+
 		NodeBuilder builder = new NodeBuilder("main");
 		builder.addInputs(inputs);
 		builder.addLocals(locals);
@@ -263,7 +266,7 @@ public class LustreAstBuilder {
 
 		// add realtime constraint nodes
 		nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
-        List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
+		List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
 		Program program = new Program(types, null, nodes, main.id);
 
 		return program;
@@ -416,10 +419,10 @@ public class LustreAstBuilder {
 
 		EObject classifier = agreeNode.compInst.getComponentClassifier();
 
-		AgreeVar countVar = new AgreeVar("__COUNT", NamedType.INT, null);
-		AgreeVar stuffVar = new AgreeVar("__STUFF", NamedType.BOOL, null);
-		AgreeVar histVar = new AgreeVar("__HIST", NamedType.BOOL, null);
-		AgreeVar propVar = new AgreeVar("__PROP", NamedType.BOOL, classifier, agreeNode.compInst);
+		AgreeVar countVar = new AgreeVar("__COUNT", NamedType.INT, null, null, null);
+		AgreeVar stuffVar = new AgreeVar("__STUFF", NamedType.BOOL, null, null, null);
+		AgreeVar histVar = new AgreeVar("__HIST", NamedType.BOOL, null, null, null);
+		AgreeVar propVar = new AgreeVar("__PROP", NamedType.BOOL, classifier, agreeNode.compInst, null);
 
 		locals.add(countVar);
 		locals.add(stuffVar);
@@ -488,12 +491,12 @@ public class LustreAstBuilder {
 
 		// add assumption history variable
 		IdExpr assumHist = new IdExpr(assumeHistSufix);
-		inputs.add(new AgreeVar(assumHist.id, NamedType.BOOL, null, agreeNode.compInst));
+		inputs.add(new AgreeVar(assumHist.id, NamedType.BOOL, null, agreeNode.compInst, null));
 
 		int i = 0;
 		for (AgreeStatement statement : agreeNode.assumptions) {
 			String inputName = assumeSuffix + i++;
-			inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+			inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst, null));
 			IdExpr assumeId = new IdExpr(inputName);
 			assertions.add(new BinaryExpr(assumeId, BinaryOp.EQUAL, statement.expr));
 		}
@@ -501,7 +504,7 @@ public class LustreAstBuilder {
 		int j = 0;
 		for (AgreeStatement statement : agreeNode.lemmas) {
 			String inputName = lemmaSuffix + j++;
-			inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+			inputs.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst, null));
 			IdExpr lemmaId = new IdExpr(inputName);
 			assertions.add(new BinaryExpr(lemmaId, BinaryOp.EQUAL, statement.expr));
 		}
@@ -510,7 +513,7 @@ public class LustreAstBuilder {
 		Expr guarConjExpr = new BoolExpr(true);
 		for (AgreeStatement statement : agreeNode.guarantees) {
 			String inputName = guarSuffix + k++;
-			locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst));
+			locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst, null));
 			IdExpr guarId = new IdExpr(inputName);
 			equations.add(new Equation(guarId, statement.expr));
 			ivcs.add(guarId.id);
@@ -532,7 +535,7 @@ public class LustreAstBuilder {
 		int l = 0;
 		for (AgreeStatement patternPropState : agreeNode.patternProps) {
 			String patternVarName = patternPropSuffix + l++;
-			inputs.add(new AgreeVar(patternVarName, NamedType.BOOL, patternPropState, agreeNode.compInst));
+			inputs.add(new AgreeVar(patternVarName, NamedType.BOOL, patternPropState, agreeNode.compInst, null));
 			assertions.add(new BinaryExpr(new IdExpr(patternVarName), BinaryOp.EQUAL, patternPropState.expr));
 		}
 
@@ -669,7 +672,7 @@ public class LustreAstBuilder {
 	private static void addTimeEvents(Set<AgreeVar> timeEvents, AgreeNode flatNode, String prefix,
 			List<AgreeStatement> assertions) {
 		for (AgreeVar event : flatNode.eventTimes) {
-			timeEvents.add(new AgreeVar(prefix + event.id, event.type, event.reference, event.compInst));
+			timeEvents.add(new AgreeVar(prefix + event.id, event.type, event.reference, event.compInst, null));
 		}
 		// set the time variable to be equal
 		IdExpr timeId = AgreePatternTranslator.timeExpr;
@@ -745,21 +748,27 @@ public class LustreAstBuilder {
 		int varCount = 0;
 		for (AgreeVar var : subAgreeNode.inputs) {
 			varCount++;
-			AgreeVar input = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
+			AgreeVar input = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
 			inputs.add(input);
 		}
 
 		for (AgreeVar var : subAgreeNode.outputs) {
 			varCount++;
-			AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst);
+			AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
 			outputs.add(output);
+		}
+
+		for (AgreeVar var : subAgreeNode.locals) {
+			varCount++;
+			AgreeVar local = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
+			outputs.add(local);
 		}
 
 		int i = 0;
 		for (AgreeStatement statement : subAgreeNode.assumptions) {
 			varCount++;
 			AgreeVar output = new AgreeVar(prefix + assumeSuffix + i++, NamedType.BOOL, statement.reference,
-					subAgreeNode.compInst);
+					subAgreeNode.compInst, null);
 			outputs.add(output);
 		}
 
@@ -767,7 +776,7 @@ public class LustreAstBuilder {
 		for (AgreeStatement statement : subAgreeNode.patternProps) {
 			varCount++;
 			AgreeVar output = new AgreeVar(prefix + patternPropSuffix + k++, NamedType.BOOL, statement,
-					subAgreeNode.compInst);
+					subAgreeNode.compInst, null);
 			patternProps.add(new AgreeStatement(prefix.replace("__", "") + ": " + statement.string,
 					new IdExpr(output.id), statement.reference));
 			outputs.add(output);
@@ -775,13 +784,13 @@ public class LustreAstBuilder {
 
 		// add the assumption history var
 		varCount++;
-		outputs.add(new AgreeVar(prefix + assumeSuffix + "__HIST", NamedType.BOOL, null, subAgreeNode.compInst));
+		outputs.add(new AgreeVar(prefix + assumeSuffix + "__HIST", NamedType.BOOL, null, subAgreeNode.compInst, null));
 
 		int j = 0;
 		for (AgreeStatement statement : subAgreeNode.lemmas) {
 			varCount++;
 			AgreeVar output = new AgreeVar(prefix + lemmaSuffix + j++, NamedType.BOOL, statement.reference,
-					subAgreeNode.compInst);
+					subAgreeNode.compInst, null);
 			outputs.add(output);
 		}
 
