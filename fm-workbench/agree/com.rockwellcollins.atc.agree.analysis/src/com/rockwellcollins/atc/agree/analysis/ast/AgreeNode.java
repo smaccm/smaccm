@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
+
 import jkind.lustre.Expr;
 
 public class AgreeNode implements AgreeASTElement{

@@ -119,7 +119,7 @@ public class AgreePatternTranslator {
             builder.addSubNode(new AgreePatternTranslator().translateNode(subNode, false));
         }
 
-        builder.addInput(new AgreeVar(timeExpr.id, NamedType.REAL, null, node.compInst));
+        builder.addInput(new AgreeVar(timeExpr.id, NamedType.REAL, null, node.compInst, null));
         return builder.build();
     }
 

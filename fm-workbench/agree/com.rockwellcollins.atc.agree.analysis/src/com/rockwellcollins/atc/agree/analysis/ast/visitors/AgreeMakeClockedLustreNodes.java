@@ -146,7 +146,7 @@ public class AgreeMakeClockedLustreNodes extends ExprMapVisitor {
 			stateVarExpr = expr("if clk then stateVarExpr else (pre stateVar)", to("stateVar", stateVarId),
 					to("stateVarExpr", stateVarExpr), to("clk", clockVarName));
 
-			stateVars.add(new AgreeVar(stateVarId.id, e.accept(typeReconstructor), null, null));
+			stateVars.add(new AgreeVar(stateVarId.id, e.accept(typeReconstructor), null, null, null));
 			stateVarEqs.add(new Equation(stateVarId, stateVarExpr));
 
 			return stateVarId;

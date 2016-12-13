@@ -229,7 +229,7 @@ public class LinearizationAgreeASTVisitor extends AgreeASTMapVisitor {
 
 		if (linCallDef != null) {
 			AgreeVar ephemeral = new AgreeVar(ephemeralBaseName + Integer.toString(ephemeralIndex),
-					jkind.lustre.NamedType.REAL, null, contextStack.peek().componentInstance);
+					jkind.lustre.NamedType.REAL, null, contextStack.peek().componentInstance, null);
 			++ephemeralIndex;
 
 			List<Expr> args = visitExprs(e.args);

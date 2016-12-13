@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="edu.uah.rsesc.aadlsimulator.ui.DefaultSimulationUIService">
+	<implementation class="edu.uah.rsesc.aadlsimulator.ui.services.impl.ServiceContextFunction"/>
+	<property 
+		name="service.context.key" 
+		type="String" 
+		value="edu.uah.rsesc.aadlsimulator.ui.services.SimulationUIService"/>
+	<service>
+		<provide interface="org.eclipse.e4.core.contexts.IContextFunction"/>
+	</service>
+</scr:component>

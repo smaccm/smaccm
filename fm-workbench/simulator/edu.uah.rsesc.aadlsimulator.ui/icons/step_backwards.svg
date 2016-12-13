@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   sodipodi:modified="TRUE"
+   viewBox="0 0 16 16"
+   inkscape:export-ydpi="90"
+   inkscape:export-xdpi="90"
+   version="1.0"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docname="step_backwards.svg"
+   inkscape:export-filename="Y:\Projects\SoSITE\aadl-simulator\edu.uah.rsesc.aadlsimulator.ui\icons\step_backwards.png"
+   inkscape:version="0.91 r13725"
+   sodipodi:version="0.32"
+   width="16"
+   height="16">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3366"
+       y2="22"
+       gradientUnits="userSpaceOnUse"
+       x2="23"
+       y1="9"
+       x1="11"
+       inkscape:collect="always"
+       gradientTransform="matrix(-0.55173585,0,0,0.55173585,16.143738,13.773508)">
+      <stop
+         id="stop3362"
+         style="stop-color:#aeed72"
+         offset="0" />
+      <stop
+         id="stop3364"
+         style="stop-color:#71c91c"
+         offset="1" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     inkscape:zoom="38.042346"
+     height="30px"
+     borderopacity="1.0"
+     inkscape:current-layer="layer1"
+     inkscape:cx="7.6602222"
+     inkscape:cy="9.0135146"
+     inkscape:grid-points="true"
+     showgrid="true"
+     width="30px"
+     inkscape:snap-global="true"
+     showguides="true"
+     bordercolor="#666666"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-width="1920"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     pagecolor="#ffffff"
+     gridtolerance="10000"
+     inkscape:document-units="px"
+     inkscape:window-height="1018"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       id="grid2395"
+       type="xygrid" />
+  </sodipodi:namedview>
+  <g
+     id="layer1"
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     transform="translate(0,-14)">
+    <rect
+       id="rect3465"
+       style="fill:#427bc3"
+       ry="0"
+       height="0"
+       width="6"
+       y="12.5"
+       x="16" />
+    <path
+       id="path3354"
+       style="fill:#4e9a06"
+       d="m 9.2470398,15.187332 c 0.5688386,0.05358 1.0025042,0.532259 0.9997452,1.103471 l 0,1.448307 4.034845,0 c 0.609391,5.6e-5 1.103416,0.494079 1.103472,1.103472 l 0,6.413378 c -5.6e-5,0.609667 -0.494081,1.103471 -1.103472,1.103471 l -4.034845,0 0,1.448858 c 0,0.609117 -0.4938036,1.10292 -1.1034717,1.103472 l -1.2756138,0 c -0.2504878,0 -0.4938033,-0.08497 -0.6896694,-0.241661 L 0.7641006,23.54944 C 0.50257779,23.33978 0.35029869,23.022532 0.35029869,22.687077 l 0,-1.275613 c 0,-0.335455 0.1522791,-0.652704 0.41380191,-0.862364 l 6.4139295,-5.12066 c 0.1958661,-0.156417 0.4391816,-0.24155 0.6896694,-0.241384 l 1.2756138,0 c 0.034763,-0.0017 0.069515,-0.0017 0.1037265,0 z"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path3358"
+       style="fill:url(#linearGradient3366)"
+       d="m 8.7990304,16.635638 0,2.206944 c 0,0.190459 0.1539338,0.344834 0.3442829,0.344834 l 4.7934807,0 0,5.724812 -4.7934807,0 c -0.1903491,0 -0.3442829,0.153933 -0.3442829,0.344283 l 0,2.206943 -0.8105005,0 -6.1899245,-4.947966 0,-0.931332 6.1899245,-4.948242 0.8105005,0 z"
+       inkscape:connector-curvature="0" />
+  </g>
+  <metadata
+     id="metadata13">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title></dc:title>
+        <dc:date>2008-05-26T11:58:06</dc:date>
+        <dc:description />
+        <dc:source>https://openclipart.org/detail/17020/icon_arrow_right_green-by-jean_victor_balin</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>jean_victor_balin</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>arrow</rdf:li>
+            <rdf:li>icon</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>
