@@ -5,6 +5,7 @@ package com.rockwellcollins.atc.agree.agree.impl;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.PatternStatement;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -24,6 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl#getStr <em>Str</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl#getPattern <em>Pattern</em>}</li>
  * </ul>
  *
  * @generated
@@ -59,6 +61,16 @@ public class LemmaStatementImpl extends SpecStatementImpl implements LemmaStatem
    * @ordered
    */
   protected Expr expr;
+
+  /**
+   * The cached value of the '{@link #getPattern() <em>Pattern</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getPattern()
+   * @generated
+   * @ordered
+   */
+  protected PatternStatement pattern;
 
   /**
    * <!-- begin-user-doc -->
@@ -157,6 +169,54 @@ public class LemmaStatementImpl extends SpecStatementImpl implements LemmaStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  public PatternStatement getPattern()
+  {
+    return pattern;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetPattern(PatternStatement newPattern, NotificationChain msgs)
+  {
+    PatternStatement oldPattern = pattern;
+    pattern = newPattern;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.LEMMA_STATEMENT__PATTERN, oldPattern, newPattern);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setPattern(PatternStatement newPattern)
+  {
+    if (newPattern != pattern)
+    {
+      NotificationChain msgs = null;
+      if (pattern != null)
+        msgs = ((InternalEObject)pattern).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LEMMA_STATEMENT__PATTERN, null, msgs);
+      if (newPattern != null)
+        msgs = ((InternalEObject)newPattern).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LEMMA_STATEMENT__PATTERN, null, msgs);
+      msgs = basicSetPattern(newPattern, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.LEMMA_STATEMENT__PATTERN, newPattern, newPattern));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -164,6 +224,8 @@ public class LemmaStatementImpl extends SpecStatementImpl implements LemmaStatem
     {
       case AgreePackage.LEMMA_STATEMENT__EXPR:
         return basicSetExpr(null, msgs);
+      case AgreePackage.LEMMA_STATEMENT__PATTERN:
+        return basicSetPattern(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -182,6 +244,8 @@ public class LemmaStatementImpl extends SpecStatementImpl implements LemmaStatem
         return getStr();
       case AgreePackage.LEMMA_STATEMENT__EXPR:
         return getExpr();
+      case AgreePackage.LEMMA_STATEMENT__PATTERN:
+        return getPattern();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -201,6 +265,9 @@ public class LemmaStatementImpl extends SpecStatementImpl implements LemmaStatem
         return;
       case AgreePackage.LEMMA_STATEMENT__EXPR:
         setExpr((Expr)newValue);
+        return;
+      case AgreePackage.LEMMA_STATEMENT__PATTERN:
+        setPattern((PatternStatement)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -222,6 +289,9 @@ public class LemmaStatementImpl extends SpecStatementImpl implements LemmaStatem
       case AgreePackage.LEMMA_STATEMENT__EXPR:
         setExpr((Expr)null);
         return;
+      case AgreePackage.LEMMA_STATEMENT__PATTERN:
+        setPattern((PatternStatement)null);
+        return;
     }
     super.eUnset(featureID);
   }
@@ -240,6 +310,8 @@ public class LemmaStatementImpl extends SpecStatementImpl implements LemmaStatem
         return STR_EDEFAULT == null ? str != null : !STR_EDEFAULT.equals(str);
       case AgreePackage.LEMMA_STATEMENT__EXPR:
         return expr != null;
+      case AgreePackage.LEMMA_STATEMENT__PATTERN:
+        return pattern != null;
     }
     return super.eIsSet(featureID);
   }

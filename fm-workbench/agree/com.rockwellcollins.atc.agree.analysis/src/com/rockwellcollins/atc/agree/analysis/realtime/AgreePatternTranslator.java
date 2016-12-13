@@ -532,7 +532,9 @@ public class AgreePatternTranslator {
         
         Expr expr = expr("(timer > 0.0 => timeOfCause >= 0.0) and "
         		       + "(timer <= time) and"
-        		       + "(timeOfEffect >= timeOfCause and timer <= high and timeOfEffect >= time - timer + low => not run)", 
+        		       + "(timeOfEffect >= timeOfCause and timer <= high and timeOfEffect >= time - timer + low => not run) and"
+        		       + "(true -> (pre(timeOfEffect >= timeOfCause + low and timeOfEffect <= timeOfCause + high and timer <= high) => timer = 0.0)) and"
+        		       + "(timer = 0.0 or timer >= time - timeOfCause)", 
 		           to("timer", timerVar),
 		           to("timeOfCause", timeOfCause),
 		           to("timeOfEffect", timeOfEffect),

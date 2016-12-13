@@ -2321,13 +2321,22 @@ public interface AgreePackage extends EPackage
   int LEMMA_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 1;
 
   /**
+   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__PATTERN = SPEC_STATEMENT_FEATURE_COUNT + 2;
+
+  /**
    * The number of structural features of the '<em>Lemma Statement</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int LEMMA_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 2;
+  int LEMMA_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LiftStatementImpl <em>Lift Statement</em>}' class.
@@ -5722,6 +5731,17 @@ public interface AgreePackage extends EPackage
   EReference getLemmaStatement_Expr();
 
   /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement#getPattern <em>Pattern</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Pattern</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement#getPattern()
+   * @see #getLemmaStatement()
+   * @generated
+   */
+  EReference getLemmaStatement_Pattern();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.LiftStatement <em>Lift Statement</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -7721,6 +7741,14 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference LEMMA_STATEMENT__EXPR = eINSTANCE.getLemmaStatement_Expr();
+
+    /**
+     * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LEMMA_STATEMENT__PATTERN = eINSTANCE.getLemmaStatement_Pattern();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.LiftStatementImpl <em>Lift Statement</em>}' class.

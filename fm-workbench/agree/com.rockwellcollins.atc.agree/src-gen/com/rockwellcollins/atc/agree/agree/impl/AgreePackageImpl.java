@@ -1758,6 +1758,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getLemmaStatement_Pattern()
+  {
+    return (EReference)lemmaStatementEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getLiftStatement()
   {
     return liftStatementEClass;
@@ -2961,6 +2971,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     lemmaStatementEClass = createEClass(LEMMA_STATEMENT);
     createEAttribute(lemmaStatementEClass, LEMMA_STATEMENT__STR);
     createEReference(lemmaStatementEClass, LEMMA_STATEMENT__EXPR);
+    createEReference(lemmaStatementEClass, LEMMA_STATEMENT__PATTERN);
 
     liftStatementEClass = createEClass(LIFT_STATEMENT);
     createEReference(liftStatementEClass, LIFT_STATEMENT__SUBCOMP);
@@ -3378,6 +3389,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(lemmaStatementEClass, LemmaStatement.class, "LemmaStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getLemmaStatement_Str(), theEcorePackage.getEString(), "str", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLemmaStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLemmaStatement_Pattern(), this.getPatternStatement(), null, "pattern", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(liftStatementEClass, LiftStatement.class, "LiftStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getLiftStatement_Subcomp(), this.getNestedDotID(), null, "subcomp", null, 0, 1, LiftStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

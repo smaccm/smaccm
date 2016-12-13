@@ -136,6 +136,7 @@
     <genClasses ecoreClass="Agree.ecore#//LemmaStatement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LemmaStatement/expr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LemmaStatement/pattern"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//LiftStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LiftStatement/subcomp"/>

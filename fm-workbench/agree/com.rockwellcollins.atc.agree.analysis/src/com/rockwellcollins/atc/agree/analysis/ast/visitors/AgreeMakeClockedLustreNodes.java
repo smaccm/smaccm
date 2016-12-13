@@ -79,9 +79,10 @@ public class AgreeMakeClockedLustreNodes extends ExprMapVisitor {
 	public Expr visit(NodeCallExpr e) {
 		//check to see if we have already made a clocked version of this node
 		Node clockedNode = getClockedNode(e.node);
-		List<Expr> argList = new ArrayList<>(e.args);
+		List<Expr> argList = new ArrayList<>();
 		argList.add(new IdExpr(clockVarName));
 		argList.add(new IdExpr(initVarName));
+		argList.addAll(e.args);
 		return new NodeCallExpr(clockedNode.id, acceptList(argList));
 	}
 	

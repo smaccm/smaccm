@@ -765,7 +765,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
-	 *     (str=STRING expr=Expr)
+	 *     (str=STRING (expr=Expr | pattern=PatternStatement))
 	 */
 	protected void sequence_SpecStatement(EObject context, LemmaStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

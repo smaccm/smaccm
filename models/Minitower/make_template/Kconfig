@@ -1,6 +1,6 @@
-config APP_MINITOWER
-    bool "Minitower (from AADL)"
+config APP_SMACCMCOPTER
+    bool "smaccmcopter (from AADL)"
     default n
     select APP_CAMKES_EXECUTIVE
     help
-        Minitower (from AADL).
+        smaccmcopter (from AADL).
