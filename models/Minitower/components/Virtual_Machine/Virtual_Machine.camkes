@@ -99,9 +99,9 @@ component Virtual_Machine {
         vm_obj.simple_untyped24_pool = 10;
 
         vm_obj.base_prio = 100;
-        vm_obj._priority = 101;
-        vchan_obj._priority = 102;
-        vm_shim_obj._priority = 103;
+        vm_obj.priority = 101;
+        vchan_obj.priority = 102;
+        vm_shim_obj.priority = 103;
 
         vm_obj.sem_value = 0;
         vm_obj.num_extra_frame_caps = 0;
