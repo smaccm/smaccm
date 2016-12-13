@@ -359,6 +359,11 @@ public abstract class CodeGeneratorBase {
             emitter.writeThreadHFiles(tinst, includeDirectory, ports);
          }
       }
+      for (PortFeature pf: ports) {
+         PortEmitter pe = EmitterFactory.port(pf);
+         pe.getWritePortHFiles(includeDirectory);
+         pe.getWritePortCFiles(srcDirectory);
+      }
    }
 
    public void copyFile(InputStream is, OutputStream os) throws IOException {
