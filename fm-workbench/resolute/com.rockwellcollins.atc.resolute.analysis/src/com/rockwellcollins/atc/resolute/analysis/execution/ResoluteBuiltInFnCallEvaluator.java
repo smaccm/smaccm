@@ -764,7 +764,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new IntValue((long) value.getScaledValue());
 		} else if (expr instanceof RealLiteral) {
 			RealLiteral value = (RealLiteral) expr;
-			return new RealValue(value.getValue());
+			return new RealValue(value.getScaledValue());
 		} else if (expr instanceof org.osate.aadl2.RangeValue) {
 			org.osate.aadl2.RangeValue value = (org.osate.aadl2.RangeValue) expr;
 			return new RangeValue(exprToValue(value.getMinimum()), exprToValue(value.getMaximum()));
