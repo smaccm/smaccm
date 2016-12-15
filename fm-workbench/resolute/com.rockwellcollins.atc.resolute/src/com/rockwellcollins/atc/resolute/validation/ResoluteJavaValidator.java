@@ -239,8 +239,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		Type letType;
 		exprType = getExprType(letExpr.getBinding().getExpr());
 		letType = letExpr.getBinding().getType();
-		if (!exprType.similar(letType)) {
-			error(letExpr, "types mismatch");
+		ResoluteType resLetType = typeToResoluteType(letType);
+		if (!exprType.equals(resLetType)) {
+			error(letExpr, "types mismatch in let expression for variable '"+letExpr.getBinding().getName()+"'. "
+					+ "The binding is of type '"+resLetType+"' but the expression is of type '"+exprType+"'");
 		}
 
 		// System.out.println("binding=" + letExpr.getBinding());
