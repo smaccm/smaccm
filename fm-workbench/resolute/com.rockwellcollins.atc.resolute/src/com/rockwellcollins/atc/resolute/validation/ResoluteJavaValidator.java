@@ -1064,8 +1064,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		if (funCall.getArgs().size() != 2) {
 			return BaseType.FAIL;
 		}
-		// EList<Expr> actuals = funCall.getArgs();
-		// getExprType (funCall.getArgs().get(1));
 
 		Expr propExpr = funCall.getArgs().get(1);
 		if (!(propExpr instanceof IdExpr)) {
@@ -1078,18 +1076,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		if (idExpr.getId() instanceof Property) {
 			prop = (Property) idExpr.getId();
 		}
-		// if (idExpr.getId() instanceof Arg) {
-		// Arg arg = (Arg) idExpr.getId();
-		//
-		// System.out.println("arg =" + arg);
-		// System.out.println("getexpr=" + getExprType(propExpr));
-		//
-		// for (org.osate.aadl2.Element e : arg.getChildren()) {
-		// System.out.println("e=" + e);
-		//
-		// }
-		// }
-
+		
 		if (prop == null) {
 			error(funCall, "Cannot perform property lookup without literal property reference");
 			return BaseType.FAIL;

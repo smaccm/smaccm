@@ -653,6 +653,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 			ConnectionEnd destPort = absConnDest.getConnectionEnd();
 			ConnectionEnd sourPort = absConnSour.getConnectionEnd();
+			
+			if(sourPort instanceof DataSubcomponent || destPort instanceof DataSubcomponent){
+				AgreeLogger.logWarning("unable to reason about connection '"+ conn.getName() +"' because it connects to a data subcomponent");
+				continue;
+			}
 
 			String sourPortName = getAgreePortName(absConnSour, sourContext);
 			String destPortName = getAgreePortName(absConnDest, destContext);
