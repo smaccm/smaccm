@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkesVM;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortListEmitterRPC;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.VMSharedMem.PortListEmitterSimpleVMDataport;
 
 /****************************************************
  * 
@@ -26,6 +28,16 @@ public class EmitterListRegistry {
 
    static public final List<PortListEmitter> getPortListEmitters() {
       return portListEmitters;
+   }
+
+   static private List<PortListEmitterCamkesVM> camkesPortListEmitters;
+   static {
+      camkesPortListEmitters = new ArrayList<>();
+      camkesPortListEmitters.add(new PortListEmitterSimpleVMDataport());
+   }
+   
+   static public final List<PortListEmitterCamkesVM> getVMPortListEmitters() {
+      return camkesPortListEmitters;
    }
    
    static public void addPortListEmitter(PortListEmitter pe) {

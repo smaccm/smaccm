@@ -12,6 +12,7 @@ import java.util.Set;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
@@ -202,6 +203,11 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
      }
    }
 
+  public void createVMDeclarations() {
+     ModelNames mn = EmitterFactory.model(model);
+     mn.getAddVMLinuxFiles(this.componentsDirectory);
+  }
+  
   @Override
   public void write() throws TbFailure {
     createTypesHeader();
@@ -210,6 +216,8 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
     createMainFile();
     createProcesses(); 
     createTemplateMakefile();
+    // declarations added if part of a VM.
+    createVMDeclarations(); 
     
     // final check for errors from string template.
     if (listener.isErrorOccurred()) {

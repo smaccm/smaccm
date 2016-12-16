@@ -14,29 +14,19 @@ import org.stringtemplate.v4.STGroupFile;
 import edu.umn.cs.crisys.tb.util.*;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkesVM;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem.PortEmitterSharedMem;
-import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.codegen.linux.LinuxUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
-import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
-import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
-import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
-import edu.umn.cs.crisys.tb.model.type.RecordType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 
 /**
@@ -122,6 +112,31 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
       return "";
    }
    
+   /* 
+    * #define READY "/dev/camkes_reverse_ready"
+#define DONE "/dev/camkes_reverse_done"
+#define SRC "/dev/camkes_reverse_src"
+#define DEST "/dev/camkes_reverse_dest"
+
+    int ready = open(READY, O_RDWR);
+    int done = open(DONE, O_RDWR);
+    int src = open(SRC, O_RDWR);
+    int dest = open(DEST, O_RDWR);
+
+    const ssize_t src_size = dataport_get_size(src);
+
+    char *src_data = (char*)dataport_mmap(src);
+    assert(src_data != MAP_FAILED);
+
+    char *dest_data = (char*)dataport_mmap(dest);
+    assert(dest_data != MAP_FAILED);
+
+    * (non-Javadoc)
+    * @see edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter#getWritePortHPrototypes()
+    * 
+    *
+    */
+   
    @Override
    public String getWritePortHPrototypes() {
       String result = ""; 
@@ -169,17 +184,13 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
 
    @Override
    public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
-
-      return "// connect dataport to VM here; need to find OS Model for " + System.lineSeparator() + 
-             "// 'other side' port, then find its VM name (add this to ModelNames) " + System.lineSeparator() + 
-             "// then wire this port to the declaration in the VM";
+      return "";
    }
 
    @Override
    public String getCamkesAddAssemblyFileConfigDeclarations() {
-      return "// Nothing to do here for the 'source' of the VM connection, I believe" + 
-            "// the configuration all has to do with the 'fake' port in the VM.";
-      
+      // managed by connection rather than port.
+      return "";
    }
 
    @Override
@@ -359,4 +370,5 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
       return connections;
    }
 
+   // yay! snacks!
 }

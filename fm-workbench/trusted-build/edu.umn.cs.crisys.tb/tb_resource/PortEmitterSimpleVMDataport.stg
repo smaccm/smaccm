@@ -125,7 +125,9 @@ bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.
 }
 >>
 
+
 componentLocalWriterDecl(port) ::= <<
+// file location for shared memory dataport: /dev/<port.name>
 
 <port.connections:writeConnectionDecl()>
 <localCallerFunction(port)>
@@ -167,25 +169,53 @@ dpConnection(cid, from1, from2, to1, to2) ::=
    "connection seL4SharedDataWithCaps <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
 connectCamkesSourceToVm(connection, vm) ::= <<
-<dpConnection(vm.generateConnectionName,
+<dpConnection(vm.parent.generateConnectionName,
     connection.sourcePort.threadImplementation.componentInstanceName,
     connection.sourcePort.name,
     vm.vmInstanceName,
-    connection.name)>
+    connection.sourcePort.qualifiedName)>
 
 >>
 
 connectVmToCamkesDest(connection, vm) ::= <<
-<dpConnection(vm.generateConnectionName,
+<dpConnection(vm.parent.generateConnectionName,
     connection.destPort.threadImplementation.componentInstanceName,
     connection.destPort.name,
     vm.vmInstanceName,
-    connection.name)>
+    connection.sourcePort.qualifiedName)>
 >>
 
-assemblyConfigConnection(vm, connection) ::= <<
-    <vm.instanceName>.<connection.name>_id = <connection.connectionNumber>;
-
+assemblyConfigPort(vm, port, index) ::= <<
+    <vm.vmInstanceName>.<port.qualifiedName>_id = index;
     // Q for Ihor: is sizeof allowed in assembly files?
-    <vm.instanceName>.<connection.name>_size = sizeof(<connection.srcPort.type>)
+    <vm.vmInstanceName>.<port.qualifiedName>_size = sizeof(<port.type>)
+>>
+
+
+camkesInitBody(dpinit_pairs, event_inits) ::= <<
+#
+# Copyright 2016, Data 61 and University of Minnesota
+# Commonwealth Scientific and Industrial Research Organisation (CSIRO)
+# ABN 41 687 119 230.
+#
+# This software may be distributed and modified according to the terms of
+# the GNU General Public License version 2. Note that NO WARRANTY is provided.
+# See "LICENSE_GPLv2.txt" for details.
+#
+# @TAG(D61_GPL)
+#
+
+# Initialises linux-side of cross vm connections.
+
+# Dataport sizes must match those in the camkes spec.
+# For each argument to dataport_init, the nth pair
+# corresponds to the dataport with id n.
+# Example: dataport_init /dev/camkes_reverse_src 8192 /dev/camkes_reverse_dest 8192
+dataport_init <dpinit_pairs>
+
+# The nth argument to event_init corresponds to the
+# event with id n according to the camkes vmm.
+# Example: consumes_event_init /dev/camkes_reverse_done
+# Example: emits_event_init /dev/camkes_reverse_ready
+<event_inits>
 >>

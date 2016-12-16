@@ -64,6 +64,7 @@ public class ThreadInstance extends ModelElementBase {
      this.isDstOfPortConnectionList.add(c);
   }
 
+  
   public ThreadImplementation getThreadImplementation() {
 	  return this.impl;
 	}
@@ -83,6 +84,11 @@ public class ThreadInstance extends ModelElementBase {
 	  return isDstOfPortConnectionList;
 	}
 	
+	public List<PortConnection> getAllConnectionsList() {
+	   List<PortConnection> allPorts = new ArrayList<>(getIsSrcOfConnectionList()); 
+	   allPorts.addAll(getIsDstOfConnectionList());
+	   return allPorts;
+	}
 	public int getStackSize() {
 		return this.impl.getStackSize();
 	}

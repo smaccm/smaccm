@@ -504,6 +504,32 @@ However, now is the time when we need to figure out who is in charge of the over
 			...but this is o.k., because this is the VM interface stuff I just added.
 			...How do I thread this needle?
 				It needs to be defined per connection, rather than per port; done.
-					
 			
+		
+		For the Camkes VM component, we need to have a port for every send port that crosses the VM boundary.
+			We need to define a number for it, and we need the size associated with it to satisfy Stephen's constraints.
+			We would also like to know which side of the VM boundary the port is on for securing it.
+			
+			So, we use the extended data map (for the first time!) on the ports to store the vm:dataport combo.
+			We just return all the ports when emitting code. 
+			
+			However, we also have to emit ports in order, and mailboxes will introduce multiple dataports for a particular
+			communication.  This would be a good thing for a port list, because the ports could easily be filtered.
+			(at some point port lists will have to become port instance lists)
+		
+			Furthermore, we could sort the lists alphabetically, which would ensure ordering is preserved.
+			
+			Seems like the right place to put this.
+			
+			For VMs, connections are performed by the connection emitter.
+			
+			For linux, we need to find the cross-VM connections for a particular component, load them up and go.
+			
+			This *should* be done on a per-instance basis.  
+				For Camkes, it doesn't matter, because Camkes takes care of making the wiring uniform.
+				For linux, it does matter, because we are wiring the linux process to a specific port.
+				
+			Right now, we still assume only one instance per process / thread.
+			
+			Fuck it, code it up now, fix it later.  More technical debt, but meh.
 			

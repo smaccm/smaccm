@@ -24,7 +24,7 @@ filePostfix(name, path) ::= <<
 
 createVMInit(vm) ::= <<
 component Init<vm.vmNumber> {
-    <vm.vmCrossingConnections: {conn | <conn.camkesAddAssemblyFileVMPortDeclarations> }>
+    <vm.vmComponentDefs>
     VM_INIT_DEF()
 }
 
@@ -137,17 +137,14 @@ configurePorts(threadImpl) ::= <<
 
 composeVms(model) ::= <<
 <model.virtualMachineList: {vm |
-// Need to make sure this correctly ties a number to the model <vm.pathName>
 VM_PER_VM_COMP_DEF(<vm.vmNumber>)
-<vm.vmCrossingConnections:{conn | <conn.camkesAddAssemblyFileVMCompositionPortDeclarations>} >
+<vm.perVmConnections>
 }>
 
 >>
 
 configVms(model) ::= <<
 <model.virtualMachineList: {vm |
-// Need something here tying the second number to the first model <model>
-// Temporarily here I will just use the iteration number
 <vm.perVmConfigDefs>
 
 }>
@@ -181,9 +178,10 @@ import \<TimeServerOdroid/TimeServer.camkes>;
 <model.threadImplementations:assemblyThreadImplementationImports()>
 
 <\\>
+// 12/12 MWW modified for CaMKes-next
 connector seL4RPCCallDataport {
-    from Procedure client template "seL4RPCCallDataport-from.template.c";
-    to Procedure server template "seL4RPCCallDataport-to.template.c";
+    from Procedure template "seL4RPCCallDataport-from.template.c";
+    to Procedure template "seL4RPCCallDataport-to.template.c";
 }
 
 <if(model.containsVM)>
@@ -241,7 +239,7 @@ assembly {
         <configVms(model)>
         <endif>
         <if(model.threadCalendar.hasDispatchers)>
-        <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = "<model.generateCamkesTimeServerThreadIndex>";
+        <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";
         <model.threadCalendar.periodicDispatcherInstanceName>.priority = 201;
