@@ -354,6 +354,23 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 			conns.add(replacementConn);
 		}
+		
+		//throw errors for non-override connections with multiple fanin
+		Set<AgreeVar> destinations = new HashSet<>();
+		
+		for(AgreeConnection conn : conns){
+			if(conn instanceof AgreeAADLConnection){
+				AgreeAADLConnection aadlConn = (AgreeAADLConnection)conn;
+				if(!destinations.add(aadlConn.destVar)){
+					String message = "Multiple connections to feature '" + aadlConn.destVar + "'. Remove "
+							+ "the additional AADL connections or override them with a connection statement "
+							+ "in the AGREE annex.";
+					throw new AgreeException(message);
+				}
+			}
+		
+		}
+		
 		return conns;
 	}
 
@@ -599,7 +616,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private List<AgreeAADLConnection> getConnections(EList<Connection> connections, ComponentInstance compInst,
 			List<AgreeNode> subNodes, boolean latched) {
 
-		Set<AgreeVar> destinationSet = new HashSet<>();
+//		Set<AgreeVar> destinationSet = new HashSet<>();
 
 		Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(OsateResourceUtil.getResourceSet(),
 				"Communication_Properties::Timing");
@@ -653,13 +670,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourceVar, destVar,
 						connType, latched, delayed, conn);
 
-				if (!destinationSet.add(agreeConnection.destVar)) {
-					String message = "Multiple connections to feature '" + agreeConnection.destVar + "'. Remove "
-							+ "the additional AADL connections or override them with a connection statement "
-							+ "in the AGREE annex.";
-					throw new AgreeException(message);
-					//AgreeLogger.logWarning(message);
-				}
+//				if (!destinationSet.add(agreeConnection.destVar)) {
+//					String message = "Multiple connections to feature '" + agreeConnection.destVar + "'. Remove "
+//							+ "the additional AADL connections or override them with a connection statement "
+//							+ "in the AGREE annex.";
+//					throw new AgreeException(message);
+//					//AgreeLogger.logWarning(message);
+//				}
 
 				agreeConns.add(agreeConnection);
 
@@ -688,12 +705,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourVar, destVar,
 					connType, latched, delayed, conn);
 
-			if (!destinationSet.add(agreeConnection.destVar)) {
-				String message = "Multiple connections to feature '" + agreeConnection.destVar + "'. Remove "
-						+ "the additional AADL connections or override them with a connection statement "
-						+ "in the AGREE annex.";
-				throw new AgreeException(message);
-			}
+//			if (!destinationSet.add(agreeConnection.destVar)) {
+//				String message = "Multiple connections to feature '" + agreeConnection.destVar + "'. Remove "
+//						+ "the additional AADL connections or override them with a connection statement "
+//						+ "in the AGREE annex.";
+//				throw new AgreeException(message);
+//			}
 
 			agreeConns.add(agreeConnection);
 		}
