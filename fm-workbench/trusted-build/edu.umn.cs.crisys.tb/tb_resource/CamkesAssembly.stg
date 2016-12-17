@@ -33,14 +33,23 @@ component Init<vm.vmNumber> {
 
 assemblyThreadImplementationImports(threadImpl) ::= <<
 import "<threadImpl.rootToCamkesComponentFilePath>";
-<threadImpl.portList: {port | <port.camkesAddAssemblyFilePortDeclarations>
-} >
+<threadImpl.portList: {port | <port.camkesAddAssemblyFilePortDeclarations>} >
 
+>>
+
+monitorPerConnection(cnxshn) ::= <<
+component Monitor_<cnxshn.sourcePort.type.name> monitor_<cnxshn.name>;
+
+>>
+
+monitorGeneration(port) ::= <<
+<port.connections:monitorPerConnection()>
 >>
 
 assemblyThreadComponent(threadImpl) ::= <<
 component <threadImpl.componentName> <threadImpl.componentInstanceName>;
-
+<threadImpl.inputEventPortList:monitorGeneration()>
+<threadImpl.inputEventDataPortList:monitorGeneration()>
 >>
 
 

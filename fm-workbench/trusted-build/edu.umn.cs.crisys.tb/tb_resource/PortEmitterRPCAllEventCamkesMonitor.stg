@@ -1,0 +1,405 @@
+import "Common.stg"
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Templates for managing data port interfaces between active threads.
+//
+// RPC / LPC implementation
+// 
+// 10/26/2016 MWW
+// 
+///////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Header templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
+<if(dispatcher.hasData)>
+void <externalHandler.handlerName>(const <dispatcher.type.aadlInputType.name> <dispatcher.name>);
+<else>
+void <externalHandler.handlerName>(void);
+<endif>
+
+>>
+
+writeUdePrototype(dispatcher) ::= <<
+<commentIf({user dispatch entrypoints for port <dispatcher.name>},
+           (dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)))>
+
+>>
+
+writePortWriterPrototype(port) ::= <<
+<if(port.hasData)>
+bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+<else>
+bool <port.localWriterName>(void);
+<endif>
+
+>>
+
+writePortReaderPrototype(port) ::= <<
+// reader prototype for <port.name>
+<if(port.hasData)>
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+<else>
+bool <port.localReaderName>(void);
+<endif>
+
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// C File templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////
+//
+// Functions for event data ports: managing send/receive queues.
+// Used for active thread to active thread communications.
+//
+/////////////////////////////////////////////////////////////////////
+
+
+copyToQueueDataStmt(port) ::= <<
+<if(port.type.isBaseType)><port.queueDataName>[<port.queueBackName>] = *<port.name> ;
+<else><aadlInputToValMemcpy(port.type, {<port.queueDataName>[<port.queueBackName>]}, port.name )>
+<endif>
+>>
+
+copyFromQueueDataStmt(port) ::= <<
+<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.queueDataName>[<port.queueFrontName>] ;
+<else><valToAadlOutputMemcpy(port.type, port.name, {<port.queueDataName>[<port.queueFrontName>]})>
+<endif>
+>>
+
+
+InputEventDataPortDecls(port) ::= <<
+
+/************************************************************************
+ *
+ * Static variables and queue management functions for event data port:
+ *     <port.name>
+ *
+ ************************************************************************/
+
+static <port.queueDataDecl>;
+static <port.queueFullDecl> = false;
+static <port.queueFrontDecl> = 0;
+static <port.queueBackDecl> = 0;
+
+static bool <port.queueIsFullName>() {
+    return (<port.queueFrontName> == <port.queueBackName>) && (<port.queueFullName>);
+}
+
+static bool <port.queueIsEmptyName>() {
+    return (<port.queueFrontName> == <port.queueBackName>) && (!<port.queueFullName>);
+}
+
+static bool <port.queueReadName>(<port.type.aadlOutputType.name> <port.name>) {
+    if (<port.queueIsEmptyName>()) {
+        return false;
+    } else {
+        <copyFromQueueDataStmt(port)>
+        <port.queueFrontName> = (<port.queueFrontName> + 1) % <port.queueSize>;
+        <port.queueFullName> = false ;
+        return true;
+    }
+}
+
+static bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
+    if (<port.queueIsFullName>()) {
+        return false;
+    } else {
+        <copyToQueueDataStmt(port)>
+        <port.queueBackName> = (<port.queueBackName> + 1) % <port.queueSize>;
+        if (<port.queueBackName> == <port.queueFrontName>) {
+            <port.queueFullName> = true ;
+        }
+        return true;
+    }
+}
+
+/************************************************************************
+ *  <port.incomingWriterName>:
+ * Invoked by: remote interface.
+ *
+ * This is the function invoked by a remote RPC to write to an active-thread
+ * input event data port.  It queues the input message into a circular buffer.
+ *
+ ************************************************************************/
+
+bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
+    bool result;
+    <port.lockStmt>
+    result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
+    <port.unlockStmt>
+    <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
+    return result;
+}
+
+
+/************************************************************************
+ *  <port.localReaderName>:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked by the active thread to read from the
+ * input event data queue circular buffer.
+ *
+ ************************************************************************/
+
+bool <port.localReaderName>(<port.type.aadlOutputType.name> arg) {
+    bool result;
+    <port.lockStmt>
+    result = <port.queueReadName>(arg);
+    <port.unlockStmt>
+    return result;
+}
+
+>>
+
+InputEventPortDecls(port) ::= <<
+
+/************************************************************************
+ *
+ * Static variables and queue management functions for event port:
+ *     <port.name>
+ *
+ ************************************************************************/
+
+static <port.indexType.name> <port.index> = 0;
+
+<!
+static bool <port.queueIsFullName>() {
+    return false;
+}
+
+static bool <port.queueIsEmptyName>() {
+    return <port.index> == 0;
+}
+!>
+
+/************************************************************************
+ *  <port.incomingWriterName>:
+ * Invoked by: remote RPC
+ *
+ * This is the function invoked by a remote RPC to write to an active-thread
+ * input event port.  It increments a count of received messages.
+ *
+ ************************************************************************/
+
+bool <port.incomingWriterName>() {
+    bool result;
+    <port.lockStmt>
+    // Note: possibility for overflow here - I have set (arbitrary) maximum.
+    if (<port.index> <\u003C> <port.indexMax>) {
+      result = true;
+      <port.index>++;
+    } else {
+      result = false;
+    }
+    <port.unlockStmt>
+    <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
+    return true;
+}
+
+/************************************************************************
+ *  <port.localReaderName>:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked by the active thread to decrement the
+ * input event index.
+ *
+ ************************************************************************/
+
+bool <port.localReaderName>() {
+    bool result;
+    <port.lockStmt>
+    if (<port.index> > 0) {
+        <port.index>--;
+        result = true;
+    } else {
+        result = false;
+    }
+    <port.unlockStmt>
+    return result;
+}
+
+>>
+
+
+///////////////////////////////////////////////////////////////
+//
+// Writer functions
+//
+///////////////////////////////////////////////////////////////
+
+
+callRemoteWriterStmt(connection) ::= << 
+<if(port.hasData)>
+tb_result &= <connection.outgoingPortWriterName>(<port.type.aadlInputToCamkesInput><connection.sourcePort.name>);
+<else>
+tb_result &= <connection.outgoingPortWriterName>();
+<endif>
+>>
+
+remoteCallerFunction(srcPort) ::= <<
+/************************************************************************
+ *  <srcPort.localWriterName>:
+ * Invoked from user code in the local thread.
+ *
+ * This is the function invoked by the local thread to make a
+ * call to write to a remote data port.
+ *
+ ************************************************************************/
+
+<if(srcPort.hasData)>
+bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
+<else>
+bool <srcPort.localWriterName>(void) {
+<endif>
+    bool tb_result = true ; 
+    <srcPort.connections:callRemoteWriterStmt()>
+    return tb_result;
+}
+>>
+
+componentRemoteWriterDecl(port) ::= <<
+<remoteCallerFunction(port)>
+>>
+
+///////////////////////////////////////////////////////////////
+//
+// Dispatch functions
+//
+///////////////////////////////////////////////////////////////
+
+eventDataDispatcher(dispatcher) ::= <<
+while (!<dispatcher.queueIsEmptyName>()) {
+    <dispatcher.varDecl>;
+    <dispatcher.localReaderName>(<dispatcher.type.valToAadlOutput><dispatcher.name>);
+    <dispatcher.activeThreadInternalDispatcherFnName>(<dispatcher.type.valToAadlInput><dispatcher.name>);
+}
+
+>>
+
+eventDispatcher(dispatcher) ::= <<
+while (<dispatcher.localReaderName>()) {
+    <dispatcher.activeThreadInternalDispatcherFnName>();
+}
+
+>>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// CAmkES OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+inputPortDeclarations(port) ::= <<
+uses Monitor_<port.typeName> <port.name>;
+consumes QueueData q<port.name>;
+has mutex <port.mutex>;
+
+>>
+
+outputPortDeclarations(port) ::= <<
+<port.connections:{c | uses Monitor_<port.typeName> <c.outgoingPortName>;
+}>
+>>
+
+rpcConnection(cid, from1, from2, mon) ::=
+   "connection seL4RPCCall <cid> (from <from1>.<from2>, to monitor_<mon>.mon);"
+notifyConnection(cid, mon, to1, to2) ::=
+   "connection seL4RPCCall <cid> (from monitor_<mon>.qd, to <to1>.q<to2>);"
+
+connectReaderWriter(connection, model) ::= <<
+<rpcConnection
+    ( model.generateConnectionName
+    , connection.sourcePort.threadImplementation.componentInstanceName
+    , connection.outgoingPortName
+    , connection.name)>
+<notifyConnection
+    ( model.generateConnectionName
+    , connection.name
+    , connection.destPort.threadImplementation.componentInstanceName
+    , connection.destPort.name)>
+<rpcConnection
+    ( model.generateConnectionName
+    , connection.destPort.threadImplementation.componentInstanceName
+    , connection.destPort.name
+    , connection.name)>
+
+>>
+// TODO: I wonder if this macro should be parameterized by a file name
+// rather than assuming that all types are defined in "tb_toplevel_types.h"
+monitorCamkesIdl4Writer(iname, tname) ::= <<
+procedure <iname> {
+  include <\u003C>stdbool.h<\u003E>
+  include <\u003C>stdbool.h<\u003E>;
+  include <\u003C>tb_toplevel_types.h<\u003E>;
+  bool enqueue(refin <tname> m);
+  bool dequeue(out <tname> m);
+};
+>>
+
+monitorCamkesWriter(cname,iname) ::= <<
+import "../../interfaces/<iname>.idl4";
+
+component <cname> {
+
+  provides <iname> mon;
+  emits QueuedData qd;
+
+}
+>>
+
+
+monitorCamkesCWriter(tname,qsz) ::= <<
+#include <\u003C>stdbool.h<\u003E>
+#include <\u003C>tb_toplevel_types.h<\u003E>
+#include <\u003C>stdio.h<\u003E>
+
+<tname> contents[<qsz>];
+uint32_t front = 0;
+uint32_t length = 0;
+
+bool is_full(void) {
+  return length == <qsz>;
+}
+
+bool is_empty(void) {
+  return length == 0;
+}
+
+bool mon_dequeue(<tname> * m) {
+  if (is_empty()) {
+    return false;
+  } else {
+    *m = contents[front];
+    front = (front + 1) % <qsz>;
+    length--;
+    return true;
+  }
+}
+
+bool mon_enqueue(const <tname> * m) {
+  if (is_full()) {
+    return false;
+  } else {
+    contents[(front + length) % <qsz>] = *m;
+    length++;
+    qd_emit();
+    return true;
+  }
+}
+>>

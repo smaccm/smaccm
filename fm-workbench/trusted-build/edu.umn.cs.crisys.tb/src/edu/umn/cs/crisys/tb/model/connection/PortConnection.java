@@ -4,6 +4,7 @@ import edu.umn.cs.crisys.tb.model.ModelElement;
 import edu.umn.cs.crisys.tb.model.ModelElementBase;
 import edu.umn.cs.crisys.tb.model.port.*;
 import edu.umn.cs.crisys.tb.model.thread.ThreadInstance;
+import edu.umn.cs.crisys.tb.model.type.Type;
 
 
 public class PortConnection extends ModelElementBase {
@@ -79,5 +80,9 @@ public class PortConnection extends ModelElementBase {
    @Override
    public ModelElement getParent() {
       return null;
+   }
+   
+   public Type getType() {
+     return this.destPort.getType();
    }
 }

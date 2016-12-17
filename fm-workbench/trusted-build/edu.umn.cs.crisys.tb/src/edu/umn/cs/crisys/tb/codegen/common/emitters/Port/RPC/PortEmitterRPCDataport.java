@@ -105,8 +105,6 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    public void getWritePortHFiles(File directory) {
       // No-op for data ports
    }
-
-
    
    public ST getTemplateST(String stName) {
       STGroupFile template = Util.createTemplate("PortEmitterRPCDataport.stg");
@@ -304,6 +302,19 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
     * 
     ************************************************************/
 
+   @Override
+   public void getWriteCamkesPortComponents(File componentsDirectory) {
+   	// TODO Auto-generated method stub
+   	
+   }
+
+   @Override
+   public void getWriteCamkesPortIdls(File interfacesDirectory) {
+   	// TODO Auto-generated method stub
+   	
+   }
+
+   
    private String addComponentInputDataPortDeclarations() {
       String element = 
          "provides " + this.getType().getReaderWriterInterfaceName() + " " + 

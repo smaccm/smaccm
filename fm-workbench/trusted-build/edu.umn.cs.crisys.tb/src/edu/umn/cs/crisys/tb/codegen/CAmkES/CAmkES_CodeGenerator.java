@@ -27,6 +27,8 @@ import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.*;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
@@ -133,6 +135,8 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     }
   }
 
+
+  
   public Set<Type> getSharedVariableTypes() {
     // write dispatcher types
     Set<Type> svTypeSet = new HashSet<Type>();
@@ -314,8 +318,8 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     createTemplateFile("Kconfig", "camkesKconfig");
   }
   
-	public void write() throws TbFailure {
-	 createTypesHeader();
+public void write() throws TbFailure {
+    createTypesHeader();
     createRpcIdlInterfaces();
     createPortIdlInterfaces(); 
     createSharedVariableIdlInterfaces();
@@ -364,6 +368,15 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
     }
     return rwTypeSet ; 
   }
+
+@Override
+protected void osSpecificPortComponentFiles(PortFeature pf, PortEmitter pe, File componentDirectory) throws TbFailure {
+	assert(pe instanceof PortEmitterCamkes);
+	PortEmitterCamkes pec = (PortEmitterCamkes)pe;
+	pec.getWriteCamkesPortComponents(componentDirectory);
+	pec.getWriteCamkesPortIdls(interfacesDirectory);
+
+}
 
 }
 

@@ -8,6 +8,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortConnectionEmitterRPCImpl;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCAllEvent;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCAllEventCAmkESMonitor;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCDataport;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem.PortConnectionEmitterSharedMemDataport;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem.PortEmitterSharedMemDataport;
@@ -41,7 +42,9 @@ public class EmitterFactory {
          return new PortEmitterSharedMemDataport(dp);
       }
       // Default port emitters
-      else if (PortEmitterRPCAllEvent.isApplicable(dp)) {
+      else if (PortEmitterRPCAllEventCAmkESMonitor.isApplicable(dp)) {
+          return new PortEmitterRPCAllEventCAmkESMonitor(dp); 
+      } else if (PortEmitterRPCAllEvent.isApplicable(dp)) {
          return new PortEmitterRPCAllEvent(dp); 
       } else if (PortEmitterRPCDataport.isApplicable(dp)) {
          return new PortEmitterRPCDataport(dp);

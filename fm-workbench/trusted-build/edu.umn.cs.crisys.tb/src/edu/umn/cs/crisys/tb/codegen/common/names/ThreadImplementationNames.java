@@ -3,7 +3,6 @@
  */
 package edu.umn.cs.crisys.tb.codegen.common.names;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;

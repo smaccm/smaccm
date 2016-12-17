@@ -399,5 +399,17 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
       return getName() + "_hw"; 
    }
 
+@Override
+public void getWriteCamkesPortComponents(File componentsDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void getWriteCamkesPortIdls(File interfacesDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
 
 }

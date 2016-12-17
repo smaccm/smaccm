@@ -330,6 +330,8 @@ public abstract class CodeGeneratorBase {
          File componentDirectory, 
          File srcDirectory, File includeDirectory) throws TbFailure;
 
+   protected abstract void osSpecificPortComponentFiles(PortFeature pf, PortEmitter pe, File componentDirectory) throws TbFailure;
+   
    private void createComponent(ThreadImplementation ti) throws TbFailure { 
 
       String name = ti.getNormalizedName();
@@ -359,10 +361,12 @@ public abstract class CodeGeneratorBase {
             emitter.writeThreadHFiles(tinst, includeDirectory, ports);
          }
       }
+
       for (PortFeature pf: ports) {
          PortEmitter pe = EmitterFactory.port(pf);
          pe.getWritePortHFiles(includeDirectory);
          pe.getWritePortCFiles(srcDirectory);
+         osSpecificPortComponentFiles(pf,pe,componentsDirectory);
       }
    }
 

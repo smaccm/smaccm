@@ -13,6 +13,7 @@ import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ProcessImplementationNames;
@@ -250,4 +251,10 @@ public class Linux_CodeGenerator extends CodeGeneratorBase {
     }
     return rwTypeSet ; 
   }
+
+@Override
+protected void osSpecificPortComponentFiles(PortFeature pf, PortEmitter pe, File componentDirectory) {
+	// TODO Auto-generated method stub
+	
+}
 }

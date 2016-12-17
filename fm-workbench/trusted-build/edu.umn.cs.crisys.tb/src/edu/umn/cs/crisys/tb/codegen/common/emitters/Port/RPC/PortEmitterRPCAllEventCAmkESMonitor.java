@@ -1,5 +1,8 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,16 +11,11 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.codegen.VxWorks.VxWorksUtil;
+import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
-import edu.umn.cs.crisys.tb.codegen.eChronos.EChronosUtil;
-import edu.umn.cs.crisys.tb.codegen.linux.LinuxUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
@@ -31,34 +29,24 @@ import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux, PortEmitterRPC {
+public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterRPC {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
       boolean ok = (pf instanceof InputEventPort ||
                     pf instanceof OutputEventPort);
-      
       OSModel model = Util.getElementOSModel(pf);
       OSModel.OSTarget target = model.getOsTarget();
 
       // linux is not yet supported until we get our act together.
-      ok &= (target == OSModel.OSTarget.CAmkES || 
-             target == OSModel.OSTarget.eChronos ||
-             target == OSModel.OSTarget.VxWorks || 
-             target == OSModel.OSTarget.linux);
-      
-      if (target == OSModel.OSTarget.linux) {
-         // TODO: check here to see if source and target process 
-         // are the same for all connections from this port.
-         ok &= Util.allConnectionsInProcess(pf);
-      }
+      ok &= (target == OSModel.OSTarget.CAmkES );
       
       return ok;
    }
    
    Type indexType = new IntType(32, false); 
    
-   public PortEmitterRPCAllEvent(PortFeature pf) {
+   public PortEmitterRPCAllEventCAmkESMonitor(PortFeature pf) {
       super(pf, Util.getElementOSModel(pf)); 
    }
    
@@ -74,15 +62,82 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       // no-op for RPCEventDataPorts
    }
 
-   @Override
-   public void getWritePortHFiles(File directory) {
-      // no-op for RPCEventDataPorts
+  @Override
+  public void getWritePortHFiles(File directory) {
+    // no-op for RPCEventDataPorts
+  }
+  
+  public String getTypeName() { 
+    return port.getType().toString();
+  }
+
+  public ST getTemplateST(String stName) {
+    STGroupFile template = Util.createTemplate("PortEmitterRPCAllEventCamkesMonitor.stg");
+    return template.getInstanceOf(stName); 
+  }
+
+  private void writeToFile(File file, String str, String exnPrefix) throws TbFailure{
+    try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(file))) { 
+      hwriter.append(str);
+    } catch (IOException e) {
+      // TODO: Get access to the log.
+      System.out.println(exnPrefix + e);
+      throw new TbFailure();
+    }
+  }
+
+  @Override
+  public void getWriteCamkesPortComponents(File componentsDirectory) throws TbFailure {
+    if(port instanceof InputEventPort) {
+      for ( PortConnection cnxshn : port.getConnections()) {
+        // Create component directory for connections.
+        String monitorComponentName = "Monitor_"+cnxshn.getName();
+        File componentDirectory = new File(componentsDirectory, monitorComponentName);
+        componentDirectory.mkdirs();
+
+        // Write camkes specification for this component.
+        File camkesspec = new File(componentDirectory,monitorComponentName+".camkes");
+        ST st = this.getTemplateST("monitorCamkesWriter");
+        st.add("cname", monitorComponentName);
+        st.add("iname", "Monitor_"+port.getType());
+        String err = "IOException occurred during getWriteCamkesPortComponents"
+          +" while writing "+camkesspec+":";
+        writeToFile(camkesspec,st.render(),err);
+
+        // Make source directory in the component directory.
+        File componentSrcDirectory = new File(componentDirectory,"src");
+        componentSrcDirectory.mkdirs();
+
+        // Write source file for this component.
+        File sourcefile = new File(componentSrcDirectory,monitorComponentName+".c");
+        st = this.getTemplateST("monitorCamkesCWriter");
+        st.add("tname", port.getType());
+        // TODO: This should be pulled in from some parameter in the AADL model.
+        st.add("qsz", "1");
+        err = "IOException occurred during getWriteCamkesPortComponents"
+          +" while writing "+sourcefile+":";
+        writeToFile(sourcefile,st.render(),err);
+      }
+    } else {
+      // TODO: Is there something that should be done here? If not remove me.
+    }
+  }
+
+  @Override
+  public void getWriteCamkesPortIdls(File interfacesDirectory) throws TbFailure {
+    if(port instanceof InputEventPort) {
+      String idlname = "Monitor_" + port.getType();
+      String idlfilename = idlname + ".idl4";
+      File idlfile = new File(interfacesDirectory, idlfilename);
+      ST st = this.getTemplateST("monitorCamkesIdl4Writer");
+      st.add("iname", idlname);
+      st.add("tname", port.getType());
+      writeToFile(idlfile,st.render(),"IOException occurred during getWriteCamkesPortIdls: ");
+    } else {
+      
+    }
    }
    
-   public ST getTemplateST(String stName) {
-      STGroupFile template = Util.createTemplate("PortEmitterRPCAllEvent.stg");
-      return template.getInstanceOf(stName); 
-   }
    @Override
    public String getWritePortHPrototypes() {
       String result = ""; 
@@ -178,181 +233,6 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
 
    /************************************************************
     * 
-    * VxWorks-specific functions 
-    * 
-    ************************************************************/
-
-   
-   @Override
-   public String getVxWorksAddCommonHFileDeclarations() {
-      String toReturn = ""; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += VxWorksUtil.writeExternMutexDecl(this.getMutex());
-         toReturn += getEChronosAddCommonHFileDeclarations();
-      } 
-      return toReturn;
-   }
-
-   @Override
-   public String getVxWorksAddMainCFileIncludes() {
-      return "";
-   }
-
-   @Override
-   public String getVxWorksAddMainCFileDeclarations() {
-      String toReturn = ""; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += VxWorksUtil.writeMutexDecl(this.getMutex());
-      }
-      return toReturn;
-   }
-
-   @Override
-   public String getVxWorksAddMainCFileInitializers() {
-      String toReturn = ""; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += this.getMutex() + " = " + VxWorksUtil.createMutex() + ";" + System.lineSeparator();
-         toReturn += "assert(" + this.getMutex() + " != NULL );" + System.lineSeparator();
-      }
-      ExternalHandler initializer = 
-            this.getModelElement().getInitializeEntrypointSourceText();
-      if (initializer != null) {
-         toReturn += initializer.getHandlerName() + "();"+ System.lineSeparator();
-      }
-
-      return toReturn;
-   }
-
-   @Override
-   public String getVxWorksAddMainCFileDestructors() {
-      String toReturn = ""; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += "semDelete(" + this.getMutex() + ");" + System.lineSeparator();
-      }
-      return toReturn;
-   }
-
-   /************************************************************
-    * 
-    * linux-specific functions (implementing RPCEventDataPortCamkes)
-    * 
-    ************************************************************/
-   @Override
-   public String getLinuxAddCommonHFileDeclarations() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddMainCFileIncludes() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddMainCFileDeclarations() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddMainCFileInitializers() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddMainCFileDestructors() {
-      return ""; 
-   }
-
-   @Override
-   public String getLinuxAddProcessHFileDeclarations() {
-      // TODO Auto-generated method stub
-      String toReturn = "" + System.lineSeparator(); 
-   if (this.getModelElement() instanceof InputPort) {
-      toReturn += LinuxUtil.writeExternMutexDecl(this.getMutex());
-      toReturn += getEChronosAddCommonHFileDeclarations();
-   } 
-   return toReturn + System.lineSeparator();
-   }
-
-   @Override
-   public String getLinuxAddProcessCFileIncludes() {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   @Override
-   public String getLinuxAddProcessCFileDeclarations() {
-      String toReturn = ""; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += LinuxUtil.writeMutexDecl(this.getMutex());
-      }
-      return toReturn;
-   }
-
-   @Override
-   public String getLinuxAddProcessCFileInitializers() {
-      String toReturn = ""; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += LinuxUtil.createInterprocMutex(this.getMutex());
-      }
-      ExternalHandler initializer = 
-            this.getModelElement().getInitializeEntrypointSourceText();
-      if (initializer != null) {
-         toReturn += initializer.getHandlerName() + "();" + System.lineSeparator();
-      }
-      return toReturn;
-   }
-
-   @Override
-   public String getLinuxAddProcessCFileDestructors() {
-      String toReturn = ""; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += LinuxUtil.deleteMutex(this.getMutex());
-      }
-      return toReturn;
-   }
-
-   /************************************************************
-    * 
-    * eChronos-specific functions (implementing RPCEventDataPortCamkes)
-    * 
-    ************************************************************/
-
-   public String getEChronosAddPrxMutexes() {
-      String toReturn = "";
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += EChronosUtil.addPrxMutex(this.getMutex());
-      }
-      return toReturn;
-   }
-   
-   
-   
-   public String getEChronosAddPrxSemaphores() {
-      return "";
-   }
-
-   @Override
-   public String getEChronosAddCommonHFileDeclarations() {
-      String toReturn = ""; 
-      if (this.getModelElement() instanceof InputPort) {
-         toReturn += EChronosUtil.eChronosPortWriterPrototype(
-            getIncomingWriterName(), this.getModelElement().getType()); 
-      }
-      return toReturn;
-   }
-
-   @Override
-   public String getEChronosAddTrampolines() { return ""; }
-   
-   @Override
-   public String getEChronosAddInternalIrqs() { return ""; }
-   
-   @Override
-   public String getEChronosAddExternalIrqs() { return ""; }
-
-   
-   /************************************************************
-    * 
     * CAmkES-specific functions (implementing RPCDataPortCamkes)
     * 
     ************************************************************/
@@ -371,7 +251,6 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    
    @Override
    public String getCamkesAddComponentPortLevelDeclarations() {
-      // TODO Auto-generated method stub
       PortFeature pf = this.getModelElement();
       if (pf instanceof InputPort) {
          return addComponentInputPortDeclarations();
@@ -380,18 +259,6 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       } else {
          throw new TbException("RPCEventDataPortEmitter::addComponentPortLevelDeclarations: event data port emitter used with non-event data port class: " + pf.getName());
       }
-   }
-   
-   @Override
-   public void getWriteCamkesPortComponents(File componentsDirectory) {
-   	// TODO Auto-generated method stub
-   	
-   }
-
-   @Override
-   public void getWriteCamkesPortIdls(File interfacesDirectory) {
-   	// TODO Auto-generated method stub
-   	
    }
 
    public String addAssemblyConnection(PortConnection conn, OSModel model) {
@@ -404,7 +271,7 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    @Override
    public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
       PortFeature pf = this.getModelElement();
-      if (pf instanceof OutputPort) {
+      if (pf instanceof InputPort) {
          String result = ""; 
          for (PortConnection conn : pf.getConnections()) {
             result += addAssemblyConnection(conn, this.model); 
@@ -421,7 +288,16 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    }
    
    @Override
-   public String getCamkesAddAssemblyFilePortDeclarations() { return ""; }
+   public String getCamkesAddAssemblyFilePortDeclarations() {
+     String retval = "";
+     if(port instanceof InputEventPort) {
+       for (PortConnection cnxshn: port.getConnections()) {
+         String name = "Monitor_"+cnxshn.getName();
+         retval += "import \"components/"+name+"/"+name+".camkes\";\n";
+       }
+     }
+     return retval;
+    }
 
    /************************************************************
     * 
