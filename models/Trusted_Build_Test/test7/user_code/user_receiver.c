@@ -1,5 +1,5 @@
 #ifdef __TB_OS_CAMKES__
-	#include <sender.h>
+	#include <camkes.h>
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>
 #endif

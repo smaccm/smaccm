@@ -75,6 +75,8 @@ TEMPLATES := ../../projects/templates ../../projects/global-components/templates
 include TimeServerKZM/TimeServer.mk
 <elseif(model.isOdroidTarget)>
 include TimeServerOdroid/TimeServer.mk
+<elseif(model.isx86Target)>
+include TimeServerX86Stack/TimeServer.mk
 <else>
 # MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
 <endif>

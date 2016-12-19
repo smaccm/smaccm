@@ -1,5 +1,5 @@
 #include <smaccm_sender.h>
-#include <sender.h>
+#include <camkes.h>
 #include <inttypes.h>
 
 void periodic_ping(const int64_t * periodic_100_ms) {

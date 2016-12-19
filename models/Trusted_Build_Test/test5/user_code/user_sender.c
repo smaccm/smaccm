@@ -1,6 +1,6 @@
 #include "tb_sender.h"
 #ifdef __TB_OS_CAMKES__
-	#include <sender.h>
+	#include <camkes.h>
 #endif
 #include <inttypes.h>
 #ifndef __TB_OS_ECHRONOS__

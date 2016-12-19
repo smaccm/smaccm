@@ -4,8 +4,8 @@ package edu.umn.cs.crisys.tb.codegen.common.emitters;
 import java.util.Map;
 
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Mailbox.PortConnectionEmitterMailBoxDataport;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Mailbox.PortEmitterMailBoxDataport;
+//import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Mailbox.PortConnectionEmitterMailBoxDataport;
+//import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Mailbox.PortEmitterMailBoxDataport;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortConnectionEmitterRPCImpl;

@@ -214,6 +214,10 @@ public class ModelNames implements NameEmitter {
   public boolean getIsQemuTarget() {
     return m.getHWTarget().equalsIgnoreCase("qemu");
   }
+  
+  public boolean getIsx86Target() {
+     return m.getHWTarget().equalsIgnoreCase("x86");
+  }
     
   public String getOsTarget() {
     return m.getOsTarget().toString();

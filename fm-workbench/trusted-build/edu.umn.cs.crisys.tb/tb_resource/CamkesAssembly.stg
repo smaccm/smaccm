@@ -165,6 +165,8 @@ import "<model.threadCalendar.periodicDispatcherPathName>";
 import \<TimeServerKZM/TimeServer.camkes>;
 <elseif(model.isOdroidTarget)>
 import \<TimeServerOdroid/TimeServer.camkes>;
+<elseif(model.isx86Target)>
+import \<TimeServerX86Stack/TimeServer.camkes>;
 <else>
 // TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU and ODROID time server.
 <endif>
@@ -201,6 +203,8 @@ assembly {
         component TimeServerKZM time_server;
         <elseif(model.isOdroidTarget)>
         component TimeServerOdroid time_server;
+        <elseif(model.isx86Target)>
+        component TimeServer time_server;
         <else>
         // MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
         <endif>
