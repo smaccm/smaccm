@@ -233,16 +233,42 @@ ruleType returns [EObject current=null]
     	newLeafNode(otherlv_3, grammarAccess.getTypeAccess().getRightCurlyBracketKeyword_0_3());
     }
 )
-    |
+    |(
     { 
-        newCompositeNode(grammarAccess.getTypeAccess().getBaseTypeParserRuleCall_1()); 
+        newCompositeNode(grammarAccess.getTypeAccess().getBaseTypeParserRuleCall_1_0()); 
     }
     this_BaseType_4=ruleBaseType
     { 
         $current = $this_BaseType_4.current; 
         afterParserOrEnumRuleCall();
     }
+(	otherlv_5='<' 
+    {
+    	newLeafNode(otherlv_5, grammarAccess.getTypeAccess().getLessThanSignKeyword_1_1_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getTypeAccess().getParamTypeTypeParserRuleCall_1_1_1_0()); 
+	    }
+		lv_paramType_6_0=ruleType		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getTypeRule());
+	        }
+       		set(
+       			$current, 
+       			"paramType",
+        		lv_paramType_6_0, 
+        		"Type");
+	        afterParserOrEnumRuleCall();
+	    }
+
 )
+)	otherlv_7='>' 
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getTypeAccess().getGreaterThanSignKeyword_1_1_2());
+    }
+)?))
 ;
 
 

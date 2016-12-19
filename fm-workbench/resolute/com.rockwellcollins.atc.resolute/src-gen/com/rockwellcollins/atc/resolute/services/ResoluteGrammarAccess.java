@@ -159,13 +159,19 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cTypeAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
 		private final RuleCall cTypeTypeParserRuleCall_0_2_0 = (RuleCall)cTypeAssignment_0_2.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
-		private final RuleCall cBaseTypeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final RuleCall cBaseTypeParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
+		private final Keyword cLessThanSignKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
+		private final Assignment cParamTypeAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
+		private final RuleCall cParamTypeTypeParserRuleCall_1_1_1_0 = (RuleCall)cParamTypeAssignment_1_1_1.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
 		
 		//Type:
-		//	{SetType} "{" type=Type "}" | BaseType;
+		//	{SetType} "{" type=Type "}" | BaseType ("<" paramType=Type ">")?;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{SetType} "{" type=Type "}" | BaseType
+		//{SetType} "{" type=Type "}" | BaseType ("<" paramType=Type ">")?
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{SetType} "{" type=Type "}"
@@ -186,8 +192,26 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//"}"
 		public Keyword getRightCurlyBracketKeyword_0_3() { return cRightCurlyBracketKeyword_0_3; }
 
+		//BaseType ("<" paramType=Type ">")?
+		public Group getGroup_1() { return cGroup_1; }
+
 		//BaseType
-		public RuleCall getBaseTypeParserRuleCall_1() { return cBaseTypeParserRuleCall_1; }
+		public RuleCall getBaseTypeParserRuleCall_1_0() { return cBaseTypeParserRuleCall_1_0; }
+
+		//("<" paramType=Type ">")?
+		public Group getGroup_1_1() { return cGroup_1_1; }
+
+		//"<"
+		public Keyword getLessThanSignKeyword_1_1_0() { return cLessThanSignKeyword_1_1_0; }
+
+		//paramType=Type
+		public Assignment getParamTypeAssignment_1_1_1() { return cParamTypeAssignment_1_1_1; }
+
+		//Type
+		public RuleCall getParamTypeTypeParserRuleCall_1_1_1_0() { return cParamTypeTypeParserRuleCall_1_1_1_0; }
+
+		//">"
+		public Keyword getGreaterThanSignKeyword_1_1_2() { return cGreaterThanSignKeyword_1_1_2; }
 	}
 
 	public class BaseTypeElements extends AbstractParserRuleElementFinder {
@@ -2479,7 +2503,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Type:
-	//	{SetType} "{" type=Type "}" | BaseType;
+	//	{SetType} "{" type=Type "}" | BaseType ("<" paramType=Type ">")?;
 	public TypeElements getTypeAccess() {
 		return pType;
 	}

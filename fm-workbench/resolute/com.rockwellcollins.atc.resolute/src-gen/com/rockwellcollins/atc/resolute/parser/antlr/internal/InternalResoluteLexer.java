@@ -238,11 +238,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__17;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:13:7: ( 'int' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:13:9: 'int'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:13:7: ( '<' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:13:9: '<'
             {
-            match("int"); 
-
+            match('<'); 
 
             }
 
@@ -259,11 +258,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__18;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:14:7: ( 'real' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:14:9: 'real'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:14:7: ( '>' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:14:9: '>'
             {
-            match("real"); 
-
+            match('>'); 
 
             }
 
@@ -280,10 +278,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__19;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:15:7: ( 'string' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:15:9: 'string'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:15:7: ( 'int' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:15:9: 'int'
             {
-            match("string"); 
+            match("int"); 
 
 
             }
@@ -301,10 +299,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__20;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:16:7: ( 'bool' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:16:9: 'bool'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:16:7: ( 'real' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:16:9: 'real'
             {
-            match("bool"); 
+            match("real"); 
 
 
             }
@@ -322,10 +320,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__21;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:17:7: ( 'range' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:17:9: 'range'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:17:7: ( 'string' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:17:9: 'string'
             {
-            match("range"); 
+            match("string"); 
 
 
             }
@@ -343,10 +341,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__22;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:18:7: ( 'aadl' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:18:9: 'aadl'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:18:7: ( 'bool' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:18:9: 'bool'
             {
-            match("aadl"); 
+            match("bool"); 
 
 
             }
@@ -364,10 +362,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__23;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:19:7: ( 'component' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:19:9: 'component'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:19:7: ( 'range' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:19:9: 'range'
             {
-            match("component"); 
+            match("range"); 
 
 
             }
@@ -385,10 +383,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__24;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:20:7: ( 'abstract' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:20:9: 'abstract'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:20:7: ( 'aadl' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:20:9: 'aadl'
             {
-            match("abstract"); 
+            match("aadl"); 
 
 
             }
@@ -406,10 +404,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__25;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:21:7: ( 'bus' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:21:9: 'bus'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:21:7: ( 'component' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:21:9: 'component'
             {
-            match("bus"); 
+            match("component"); 
 
 
             }
@@ -427,10 +425,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__26;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:22:7: ( 'data' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:22:9: 'data'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:22:7: ( 'abstract' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:22:9: 'abstract'
             {
-            match("data"); 
+            match("abstract"); 
 
 
             }
@@ -448,10 +446,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__27;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:23:7: ( 'device' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:23:9: 'device'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:23:7: ( 'bus' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:23:9: 'bus'
             {
-            match("device"); 
+            match("bus"); 
 
 
             }
@@ -469,10 +467,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__28;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:24:7: ( 'memory' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:24:9: 'memory'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:24:7: ( 'data' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:24:9: 'data'
             {
-            match("memory"); 
+            match("data"); 
 
 
             }
@@ -490,10 +488,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__29;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:25:7: ( 'processor' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:25:9: 'processor'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:25:7: ( 'device' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:25:9: 'device'
             {
-            match("processor"); 
+            match("device"); 
 
 
             }
@@ -511,10 +509,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__30;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:26:7: ( 'process' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:26:9: 'process'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:26:7: ( 'memory' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:26:9: 'memory'
             {
-            match("process"); 
+            match("memory"); 
 
 
             }
@@ -532,10 +530,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__31;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:27:7: ( 'subprogram_group' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:27:9: 'subprogram_group'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:27:7: ( 'processor' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:27:9: 'processor'
             {
-            match("subprogram_group"); 
+            match("processor"); 
 
 
             }
@@ -553,10 +551,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__32;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:28:7: ( 'subprogram' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:28:9: 'subprogram'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:28:7: ( 'process' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:28:9: 'process'
             {
-            match("subprogram"); 
+            match("process"); 
 
 
             }
@@ -574,10 +572,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__33;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:29:7: ( 'system' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:29:9: 'system'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:29:7: ( 'subprogram_group' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:29:9: 'subprogram_group'
             {
-            match("system"); 
+            match("subprogram_group"); 
 
 
             }
@@ -595,10 +593,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__34;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:30:7: ( 'thread_group' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:30:9: 'thread_group'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:30:7: ( 'subprogram' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:30:9: 'subprogram'
             {
-            match("thread_group"); 
+            match("subprogram"); 
 
 
             }
@@ -616,10 +614,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__35;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:31:7: ( 'thread' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:31:9: 'thread'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:31:7: ( 'system' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:31:9: 'system'
             {
-            match("thread"); 
+            match("system"); 
 
 
             }
@@ -637,10 +635,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__36;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:32:7: ( 'virtual_bus' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:32:9: 'virtual_bus'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:32:7: ( 'thread_group' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:32:9: 'thread_group'
             {
-            match("virtual_bus"); 
+            match("thread_group"); 
 
 
             }
@@ -658,10 +656,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__37;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:33:7: ( 'virtual_processor' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:33:9: 'virtual_processor'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:33:7: ( 'thread' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:33:9: 'thread'
             {
-            match("virtual_processor"); 
+            match("thread"); 
 
 
             }
@@ -679,10 +677,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__38;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:34:7: ( 'connection' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:34:9: 'connection'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:34:7: ( 'virtual_bus' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:34:9: 'virtual_bus'
             {
-            match("connection"); 
+            match("virtual_bus"); 
 
 
             }
@@ -700,10 +698,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__39;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:35:7: ( 'property' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:35:9: 'property'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:35:7: ( 'virtual_processor' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:35:9: 'virtual_processor'
             {
-            match("property"); 
+            match("virtual_processor"); 
 
 
             }
@@ -721,10 +719,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__40;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:36:7: ( 'feature' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:36:9: 'feature'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:36:7: ( 'connection' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:36:9: 'connection'
             {
-            match("feature"); 
+            match("connection"); 
 
 
             }
@@ -742,10 +740,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__41;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:37:7: ( 'port' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:37:9: 'port'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:37:7: ( 'property' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:37:9: 'property'
             {
-            match("port"); 
+            match("property"); 
 
 
             }
@@ -763,10 +761,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__42;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:38:7: ( 'data_port' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:38:9: 'data_port'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:38:7: ( 'feature' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:38:9: 'feature'
             {
-            match("data_port"); 
+            match("feature"); 
 
 
             }
@@ -784,10 +782,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__43;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:39:7: ( 'event_port' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:39:9: 'event_port'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:39:7: ( 'port' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:39:9: 'port'
             {
-            match("event_port"); 
+            match("port"); 
 
 
             }
@@ -805,10 +803,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__44;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:40:7: ( 'event_data_port' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:40:9: 'event_data_port'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:40:7: ( 'data_port' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:40:9: 'data_port'
             {
-            match("event_data_port"); 
+            match("data_port"); 
 
 
             }
@@ -826,10 +824,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__45;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:41:7: ( 'feature_group' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:41:9: 'feature_group'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:41:7: ( 'event_port' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:41:9: 'event_port'
             {
-            match("feature_group"); 
+            match("event_port"); 
 
 
             }
@@ -847,10 +845,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__46;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:42:7: ( 'access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:42:9: 'access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:42:7: ( 'event_data_port' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:42:9: 'event_data_port'
             {
-            match("access"); 
+            match("event_data_port"); 
 
 
             }
@@ -868,10 +866,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__47;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:43:7: ( 'bus_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:43:9: 'bus_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:43:7: ( 'feature_group' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:43:9: 'feature_group'
             {
-            match("bus_access"); 
+            match("feature_group"); 
 
 
             }
@@ -889,10 +887,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__48;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:44:7: ( 'provides_bus_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:44:9: 'provides_bus_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:44:7: ( 'access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:44:9: 'access'
             {
-            match("provides_bus_access"); 
+            match("access"); 
 
 
             }
@@ -910,10 +908,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__49;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:45:7: ( 'requires_bus_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:45:9: 'requires_bus_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:45:7: ( 'bus_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:45:9: 'bus_access'
             {
-            match("requires_bus_access"); 
+            match("bus_access"); 
 
 
             }
@@ -931,10 +929,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__50;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:46:7: ( 'data_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:46:9: 'data_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:46:7: ( 'provides_bus_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:46:9: 'provides_bus_access'
             {
-            match("data_access"); 
+            match("provides_bus_access"); 
 
 
             }
@@ -952,10 +950,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__51;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:47:7: ( 'provides_data_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:47:9: 'provides_data_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:47:7: ( 'requires_bus_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:47:9: 'requires_bus_access'
             {
-            match("provides_data_access"); 
+            match("requires_bus_access"); 
 
 
             }
@@ -973,10 +971,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__52;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:48:7: ( 'requires_data_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:48:9: 'requires_data_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:48:7: ( 'data_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:48:9: 'data_access'
             {
-            match("requires_data_access"); 
+            match("data_access"); 
 
 
             }
@@ -994,10 +992,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__53;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:49:7: ( 'subprogram_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:49:9: 'subprogram_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:49:7: ( 'provides_data_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:49:9: 'provides_data_access'
             {
-            match("subprogram_access"); 
+            match("provides_data_access"); 
 
 
             }
@@ -1015,10 +1013,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__54;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:50:7: ( 'provides_subprogram_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:50:9: 'provides_subprogram_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:50:7: ( 'requires_data_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:50:9: 'requires_data_access'
             {
-            match("provides_subprogram_access"); 
+            match("requires_data_access"); 
 
 
             }
@@ -1036,10 +1034,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__55;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:51:7: ( 'requires_subprogram_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:51:9: 'requires_subprogram_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:51:7: ( 'subprogram_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:51:9: 'subprogram_access'
             {
-            match("requires_subprogram_access"); 
+            match("subprogram_access"); 
 
 
             }
@@ -1057,10 +1055,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__56;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:52:7: ( 'subprogram_group_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:52:9: 'subprogram_group_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:52:7: ( 'provides_subprogram_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:52:9: 'provides_subprogram_access'
             {
-            match("subprogram_group_access"); 
+            match("provides_subprogram_access"); 
 
 
             }
@@ -1078,10 +1076,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__57;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:53:7: ( 'provides_subprogram_group_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:53:9: 'provides_subprogram_group_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:53:7: ( 'requires_subprogram_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:53:9: 'requires_subprogram_access'
             {
-            match("provides_subprogram_group_access"); 
+            match("requires_subprogram_access"); 
 
 
             }
@@ -1099,10 +1097,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__58;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:54:7: ( 'requires_subprogram_group_access' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:54:9: 'requires_subprogram_group_access'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:54:7: ( 'subprogram_group_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:54:9: 'subprogram_group_access'
             {
-            match("requires_subprogram_group_access"); 
+            match("subprogram_group_access"); 
 
 
             }
@@ -1120,10 +1118,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__59;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:55:7: ( 'flow_specification' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:55:9: 'flow_specification'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:55:7: ( 'provides_subprogram_group_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:55:9: 'provides_subprogram_group_access'
             {
-            match("flow_specification"); 
+            match("provides_subprogram_group_access"); 
 
 
             }
@@ -1141,10 +1139,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__60;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:56:7: ( 'end_to_end_flow' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:56:9: 'end_to_end_flow'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:56:7: ( 'requires_subprogram_group_access' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:56:9: 'requires_subprogram_group_access'
             {
-            match("end_to_end_flow"); 
+            match("requires_subprogram_group_access"); 
 
 
             }
@@ -1162,10 +1160,11 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__61;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:57:7: ( ':' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:57:9: ':'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:57:7: ( 'flow_specification' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:57:9: 'flow_specification'
             {
-            match(':'); 
+            match("flow_specification"); 
+
 
             }
 
@@ -1182,10 +1181,11 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__62;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:58:7: ( '=' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:58:9: '='
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:58:7: ( 'end_to_end_flow' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:58:9: 'end_to_end_flow'
             {
-            match('='); 
+            match("end_to_end_flow"); 
+
 
             }
 
@@ -1202,10 +1202,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__63;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:59:7: ( '(' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:59:9: '('
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:59:7: ( ':' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:59:9: ':'
             {
-            match('('); 
+            match(':'); 
 
             }
 
@@ -1222,10 +1222,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__64;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:60:7: ( ',' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:60:9: ','
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:60:7: ( '=' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:60:9: '='
             {
-            match(','); 
+            match('='); 
 
             }
 
@@ -1242,10 +1242,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__65;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:61:7: ( ')' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:61:9: ')'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:61:7: ( '(' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:61:9: '('
             {
-            match(')'); 
+            match('('); 
 
             }
 
@@ -1262,11 +1262,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__66;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:62:7: ( '<=' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:62:9: '<='
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:62:7: ( ',' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:62:9: ','
             {
-            match("<="); 
-
+            match(','); 
 
             }
 
@@ -1283,11 +1282,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__67;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:63:7: ( '**' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:63:9: '**'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:63:7: ( ')' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:63:9: ')'
             {
-            match("**"); 
-
+            match(')'); 
 
             }
 
@@ -1304,10 +1302,11 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__68;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:64:7: ( '%' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:64:9: '%'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:64:7: ( '<=' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:64:9: '<='
             {
-            match('%'); 
+            match("<="); 
+
 
             }
 
@@ -1324,10 +1323,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__69;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:65:7: ( '=>' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:65:9: '=>'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:65:7: ( '**' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:65:9: '**'
             {
-            match("=>"); 
+            match("**"); 
 
 
             }
@@ -1345,11 +1344,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__70;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:66:7: ( 'or' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:66:9: 'or'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:66:7: ( '%' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:66:9: '%'
             {
-            match("or"); 
-
+            match('%'); 
 
             }
 
@@ -1366,10 +1364,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__71;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:67:7: ( 'and' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:67:9: 'and'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:67:7: ( '=>' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:67:9: '=>'
             {
-            match("and"); 
+            match("=>"); 
 
 
             }
@@ -1387,10 +1385,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__72;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:68:7: ( 'andthen' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:68:9: 'andthen'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:68:7: ( 'or' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:68:9: 'or'
             {
-            match("andthen"); 
+            match("or"); 
 
 
             }
@@ -1408,10 +1406,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__73;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:69:7: ( 'instanceof' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:69:9: 'instanceof'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:69:7: ( 'and' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:69:9: 'and'
             {
-            match("instanceof"); 
+            match("and"); 
 
 
             }
@@ -1429,10 +1427,11 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__74;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:70:7: ( '<' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:70:9: '<'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:70:7: ( 'andthen' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:70:9: 'andthen'
             {
-            match('<'); 
+            match("andthen"); 
+
 
             }
 
@@ -1449,10 +1448,11 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = T__75;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:71:7: ( '>' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:71:9: '>'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:71:7: ( 'instanceof' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:71:9: 'instanceof'
             {
-            match('>'); 
+            match("instanceof"); 
+
 
             }
 
@@ -3434,12 +3434,12 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5236:17: ( '--' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5236:19: '--' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5262:17: ( '--' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5262:19: '--' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("--"); 
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5236:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5262:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop1:
             do {
                 int alt1=2;
@@ -3452,7 +3452,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5236:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5262:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -3472,7 +3472,7 @@ public class InternalResoluteLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5236:40: ( ( '\\r' )? '\\n' )?
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5262:40: ( ( '\\r' )? '\\n' )?
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -3481,9 +3481,9 @@ public class InternalResoluteLexer extends Lexer {
             }
             switch (alt3) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5236:41: ( '\\r' )? '\\n'
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5262:41: ( '\\r' )? '\\n'
                     {
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5236:41: ( '\\r' )?
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5262:41: ( '\\r' )?
                     int alt2=2;
                     int LA2_0 = input.LA(1);
 
@@ -3492,7 +3492,7 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     switch (alt2) {
                         case 1 :
-                            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5236:41: '\\r'
+                            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5262:41: '\\r'
                             {
                             match('\r'); 
 
@@ -3522,8 +3522,8 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_EXPONENT"
     public final void mRULE_EXPONENT() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5238:24: ( ( 'e' | 'E' ) ( '+' | '-' )? ( RULE_DIGIT )+ )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5238:26: ( 'e' | 'E' ) ( '+' | '-' )? ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5264:24: ( ( 'e' | 'E' ) ( '+' | '-' )? ( RULE_DIGIT )+ )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5264:26: ( 'e' | 'E' ) ( '+' | '-' )? ( RULE_DIGIT )+
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -3534,7 +3534,7 @@ public class InternalResoluteLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5238:36: ( '+' | '-' )?
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5264:36: ( '+' | '-' )?
             int alt4=2;
             int LA4_0 = input.LA(1);
 
@@ -3560,7 +3560,7 @@ public class InternalResoluteLexer extends Lexer {
 
             }
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5238:47: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5264:47: ( RULE_DIGIT )+
             int cnt5=0;
             loop5:
             do {
@@ -3574,7 +3574,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5238:47: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5264:47: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -3602,8 +3602,8 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_INT_EXPONENT"
     public final void mRULE_INT_EXPONENT() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5240:28: ( ( 'e' | 'E' ) ( '+' )? ( RULE_DIGIT )+ )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5240:30: ( 'e' | 'E' ) ( '+' )? ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5266:28: ( ( 'e' | 'E' ) ( '+' )? ( RULE_DIGIT )+ )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5266:30: ( 'e' | 'E' ) ( '+' )? ( RULE_DIGIT )+
             {
             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                 input.consume();
@@ -3614,7 +3614,7 @@ public class InternalResoluteLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5240:40: ( '+' )?
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5266:40: ( '+' )?
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -3623,7 +3623,7 @@ public class InternalResoluteLexer extends Lexer {
             }
             switch (alt6) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5240:40: '+'
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5266:40: '+'
                     {
                     match('+'); 
 
@@ -3632,7 +3632,7 @@ public class InternalResoluteLexer extends Lexer {
 
             }
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5240:45: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5266:45: ( RULE_DIGIT )+
             int cnt7=0;
             loop7:
             do {
@@ -3646,7 +3646,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5240:45: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5266:45: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -3676,10 +3676,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_REAL_LIT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:15: ( ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* '.' ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( RULE_EXPONENT )? )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:17: ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* '.' ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( RULE_EXPONENT )?
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:15: ( ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* '.' ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( RULE_EXPONENT )? )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:17: ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* '.' ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( RULE_EXPONENT )?
             {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:17: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:17: ( RULE_DIGIT )+
             int cnt8=0;
             loop8:
             do {
@@ -3693,7 +3693,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:17: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:17: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -3709,7 +3709,7 @@ public class InternalResoluteLexer extends Lexer {
                 cnt8++;
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:29: ( '_' ( RULE_DIGIT )+ )*
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:29: ( '_' ( RULE_DIGIT )+ )*
             loop10:
             do {
                 int alt10=2;
@@ -3722,10 +3722,10 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:30: '_' ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:30: '_' ( RULE_DIGIT )+
             	    {
             	    match('_'); 
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:34: ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:34: ( RULE_DIGIT )+
             	    int cnt9=0;
             	    loop9:
             	    do {
@@ -3739,7 +3739,7 @@ public class InternalResoluteLexer extends Lexer {
 
             	        switch (alt9) {
             	    	case 1 :
-            	    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:34: RULE_DIGIT
+            	    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:34: RULE_DIGIT
             	    	    {
             	    	    mRULE_DIGIT(); 
 
@@ -3765,7 +3765,7 @@ public class InternalResoluteLexer extends Lexer {
             } while (true);
 
             match('.'); 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:52: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:52: ( RULE_DIGIT )+
             int cnt11=0;
             loop11:
             do {
@@ -3779,7 +3779,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:52: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:52: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -3795,7 +3795,7 @@ public class InternalResoluteLexer extends Lexer {
                 cnt11++;
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:64: ( '_' ( RULE_DIGIT )+ )*
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:64: ( '_' ( RULE_DIGIT )+ )*
             loop13:
             do {
                 int alt13=2;
@@ -3808,10 +3808,10 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt13) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:65: '_' ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:65: '_' ( RULE_DIGIT )+
             	    {
             	    match('_'); 
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:69: ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:69: ( RULE_DIGIT )+
             	    int cnt12=0;
             	    loop12:
             	    do {
@@ -3825,7 +3825,7 @@ public class InternalResoluteLexer extends Lexer {
 
             	        switch (alt12) {
             	    	case 1 :
-            	    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:69: RULE_DIGIT
+            	    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:69: RULE_DIGIT
             	    	    {
             	    	    mRULE_DIGIT(); 
 
@@ -3850,7 +3850,7 @@ public class InternalResoluteLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:83: ( RULE_EXPONENT )?
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:83: ( RULE_EXPONENT )?
             int alt14=2;
             int LA14_0 = input.LA(1);
 
@@ -3859,7 +3859,7 @@ public class InternalResoluteLexer extends Lexer {
             }
             switch (alt14) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5242:83: RULE_EXPONENT
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5268:83: RULE_EXPONENT
                     {
                     mRULE_EXPONENT(); 
 
@@ -3884,10 +3884,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_INTEGER_LIT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:18: ( ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? ) )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:20: ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:18: ( ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? ) )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:20: ( RULE_DIGIT )+ ( '_' ( RULE_DIGIT )+ )* ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? )
             {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:20: ( RULE_DIGIT )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:20: ( RULE_DIGIT )+
             int cnt15=0;
             loop15:
             do {
@@ -3901,7 +3901,7 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt15) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:20: RULE_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:20: RULE_DIGIT
             	    {
             	    mRULE_DIGIT(); 
 
@@ -3917,7 +3917,7 @@ public class InternalResoluteLexer extends Lexer {
                 cnt15++;
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:32: ( '_' ( RULE_DIGIT )+ )*
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:32: ( '_' ( RULE_DIGIT )+ )*
             loop17:
             do {
                 int alt17=2;
@@ -3930,10 +3930,10 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt17) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:33: '_' ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:33: '_' ( RULE_DIGIT )+
             	    {
             	    match('_'); 
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:37: ( RULE_DIGIT )+
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:37: ( RULE_DIGIT )+
             	    int cnt16=0;
             	    loop16:
             	    do {
@@ -3947,7 +3947,7 @@ public class InternalResoluteLexer extends Lexer {
 
             	        switch (alt16) {
             	    	case 1 :
-            	    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:37: RULE_DIGIT
+            	    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:37: RULE_DIGIT
             	    	    {
             	    	    mRULE_DIGIT(); 
 
@@ -3972,7 +3972,7 @@ public class InternalResoluteLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:51: ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:51: ( '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )? | ( RULE_INT_EXPONENT )? )
             int alt20=2;
             int LA20_0 = input.LA(1);
 
@@ -3983,12 +3983,12 @@ public class InternalResoluteLexer extends Lexer {
                 alt20=2;}
             switch (alt20) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:52: '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )?
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:52: '#' RULE_BASED_INTEGER '#' ( RULE_INT_EXPONENT )?
                     {
                     match('#'); 
                     mRULE_BASED_INTEGER(); 
                     match('#'); 
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:79: ( RULE_INT_EXPONENT )?
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:79: ( RULE_INT_EXPONENT )?
                     int alt18=2;
                     int LA18_0 = input.LA(1);
 
@@ -3997,7 +3997,7 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     switch (alt18) {
                         case 1 :
-                            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:79: RULE_INT_EXPONENT
+                            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:79: RULE_INT_EXPONENT
                             {
                             mRULE_INT_EXPONENT(); 
 
@@ -4010,9 +4010,9 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:98: ( RULE_INT_EXPONENT )?
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:98: ( RULE_INT_EXPONENT )?
                     {
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:98: ( RULE_INT_EXPONENT )?
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:98: ( RULE_INT_EXPONENT )?
                     int alt19=2;
                     int LA19_0 = input.LA(1);
 
@@ -4021,7 +4021,7 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     switch (alt19) {
                         case 1 :
-                            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5244:98: RULE_INT_EXPONENT
+                            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5270:98: RULE_INT_EXPONENT
                             {
                             mRULE_INT_EXPONENT(); 
 
@@ -4050,8 +4050,8 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_DIGIT"
     public final void mRULE_DIGIT() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5246:21: ( '0' .. '9' )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5246:23: '0' .. '9'
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5272:21: ( '0' .. '9' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5272:23: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -4066,8 +4066,8 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_EXTENDED_DIGIT"
     public final void mRULE_EXTENDED_DIGIT() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5248:30: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5248:32: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5274:30: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5274:32: ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' )
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='F')||(input.LA(1)>='a' && input.LA(1)<='f') ) {
                 input.consume();
@@ -4090,11 +4090,11 @@ public class InternalResoluteLexer extends Lexer {
     // $ANTLR start "RULE_BASED_INTEGER"
     public final void mRULE_BASED_INTEGER() throws RecognitionException {
         try {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5250:29: ( RULE_EXTENDED_DIGIT ( ( '_' )? RULE_EXTENDED_DIGIT )* )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5250:31: RULE_EXTENDED_DIGIT ( ( '_' )? RULE_EXTENDED_DIGIT )*
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5276:29: ( RULE_EXTENDED_DIGIT ( ( '_' )? RULE_EXTENDED_DIGIT )* )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5276:31: RULE_EXTENDED_DIGIT ( ( '_' )? RULE_EXTENDED_DIGIT )*
             {
             mRULE_EXTENDED_DIGIT(); 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5250:51: ( ( '_' )? RULE_EXTENDED_DIGIT )*
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5276:51: ( ( '_' )? RULE_EXTENDED_DIGIT )*
             loop22:
             do {
                 int alt22=2;
@@ -4107,9 +4107,9 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt22) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5250:52: ( '_' )? RULE_EXTENDED_DIGIT
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5276:52: ( '_' )? RULE_EXTENDED_DIGIT
             	    {
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5250:52: ( '_' )?
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5276:52: ( '_' )?
             	    int alt21=2;
             	    int LA21_0 = input.LA(1);
 
@@ -4118,7 +4118,7 @@ public class InternalResoluteLexer extends Lexer {
             	    }
             	    switch (alt21) {
             	        case 1 :
-            	            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5250:52: '_'
+            	            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5276:52: '_'
             	            {
             	            match('_'); 
 
@@ -4151,10 +4151,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt25=2;
             int LA25_0 = input.LA(1);
 
@@ -4172,10 +4172,10 @@ public class InternalResoluteLexer extends Lexer {
             }
             switch (alt25) {
                 case 1 :
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop23:
                     do {
                         int alt23=3;
@@ -4191,7 +4191,7 @@ public class InternalResoluteLexer extends Lexer {
 
                         switch (alt23) {
                     	case 1 :
-                    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -4207,7 +4207,7 @@ public class InternalResoluteLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:66: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:66: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -4232,10 +4232,10 @@ public class InternalResoluteLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:86: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:91: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop24:
                     do {
                         int alt24=3;
@@ -4251,7 +4251,7 @@ public class InternalResoluteLexer extends Lexer {
 
                         switch (alt24) {
                     	case 1 :
-                    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
+                    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:92: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | 'u' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||(input.LA(1)>='t' && input.LA(1)<='u') ) {
@@ -4267,7 +4267,7 @@ public class InternalResoluteLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5252:137: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5278:137: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -4310,8 +4310,8 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5254:9: ( ( 'a' .. 'z' | 'A' .. 'Z' ) ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )* )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5254:11: ( 'a' .. 'z' | 'A' .. 'Z' ) ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )*
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5280:9: ( ( 'a' .. 'z' | 'A' .. 'Z' ) ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )* )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5280:11: ( 'a' .. 'z' | 'A' .. 'Z' ) ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )*
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
                 input.consume();
@@ -4322,7 +4322,7 @@ public class InternalResoluteLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5254:31: ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )*
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5280:31: ( ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' ) )*
             loop27:
             do {
                 int alt27=2;
@@ -4335,9 +4335,9 @@ public class InternalResoluteLexer extends Lexer {
 
                 switch (alt27) {
             	case 1 :
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5254:32: ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5280:32: ( '_' )? ( 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' )
             	    {
-            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5254:32: ( '_' )?
+            	    // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5280:32: ( '_' )?
             	    int alt26=2;
             	    int LA26_0 = input.LA(1);
 
@@ -4346,7 +4346,7 @@ public class InternalResoluteLexer extends Lexer {
             	    }
             	    switch (alt26) {
             	        case 1 :
-            	            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5254:32: '_'
+            	            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5280:32: '_'
             	            {
             	            match('_'); 
 
@@ -4389,10 +4389,10 @@ public class InternalResoluteLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5256:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5256:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5282:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5282:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5256:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../com.rockwellcollins.atc.resolute/src-gen/com/rockwellcollins/atc/resolute/parser/antlr/internal/InternalResolute.g:5282:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt28=0;
             loop28:
             do {
@@ -5581,10 +5581,10 @@ public class InternalResoluteLexer extends Lexer {
 
     protected DFA29 dfa29 = new DFA29(this);
     static final String DFA29_eotS =
-        "\3\uffff\15\50\1\125\1\127\3\uffff\1\132\1\134\1\uffff\1\50\1\137"+
+        "\3\uffff\1\54\1\56\15\50\1\132\1\134\3\uffff\1\136\1\uffff\1\50"+
         "\1\141\1\143\1\uffff\1\50\1\147\1\uffff\1\50\1\uffff\2\50\2\uffff"+
-        "\1\155\3\uffff\1\162\1\163\34\50\1\u009b\13\50\11\uffff\1\u00a9"+
-        "\6\uffff\2\50\2\uffff\5\50\3\uffff\1\u00b4\1\50\3\uffff\7\50\1\u00c9"+
+        "\1\155\10\uffff\1\162\1\163\34\50\1\u009b\13\50\6\uffff\1\u00a9"+
+        "\4\uffff\2\50\2\uffff\5\50\3\uffff\1\u00b4\1\50\3\uffff\7\50\1\u00c9"+
         "\4\50\1\u00cf\4\50\1\u00d5\24\50\1\uffff\6\50\1\u00f6\6\50\1\uffff"+
         "\1\u00fd\1\50\1\u00ff\5\50\1\155\1\50\1\uffff\14\50\1\u0116\7\50"+
         "\1\uffff\2\50\1\u0120\1\u0121\2\uffff\1\50\1\u0124\3\50\1\uffff"+
@@ -5632,14 +5632,14 @@ public class InternalResoluteLexer extends Lexer {
     static final String DFA29_eofS =
         "\u03d5\uffff";
     static final String DFA29_minS =
-        "\1\11\2\uffff\1\146\1\141\2\151\1\141\1\154\1\141\1\145\1\141\1"+
-        "\150\1\151\1\141\1\154\1\72\1\76\3\uffff\1\75\1\52\1\uffff\1\162"+
-        "\2\75\1\55\1\uffff\1\141\1\56\1\uffff\1\145\1\uffff\1\141\1\156"+
-        "\2\uffff\1\56\3\uffff\2\60\1\137\1\141\1\156\1\162\1\142\1\163\1"+
-        "\165\1\172\1\157\1\163\1\156\1\144\1\163\1\143\1\141\1\160\1\155"+
+        "\1\11\2\uffff\2\75\1\146\1\141\2\151\1\141\1\154\1\141\1\145\1"+
+        "\141\1\150\1\151\1\141\1\154\1\72\1\76\3\uffff\1\52\1\uffff\1\162"+
+        "\1\75\1\55\1\uffff\1\141\1\56\1\uffff\1\145\1\uffff\1\141\1\156"+
+        "\2\uffff\1\56\10\uffff\2\60\1\137\1\141\1\156\1\162\1\142\1\163"+
+        "\1\165\1\172\1\157\1\163\1\156\1\144\1\163\1\143\1\141\1\160\1\155"+
         "\1\141\1\164\1\142\1\162\1\155\1\144\1\157\2\162\1\145\1\160\1\60"+
         "\1\165\1\162\1\141\1\157\1\151\1\162\1\145\1\144\1\163\1\151\1\162"+
-        "\11\uffff\1\60\6\uffff\1\164\1\155\2\uffff\1\156\1\167\1\163\1\160"+
+        "\6\uffff\1\60\4\uffff\1\164\1\155\2\uffff\1\156\1\167\1\163\1\160"+
         "\1\151\1\uffff\1\60\1\uffff\1\60\1\164\2\uffff\1\60\1\154\1\165"+
         "\2\145\1\147\1\151\1\143\1\60\1\164\1\162\1\145\1\154\1\60\1\144"+
         "\1\154\1\164\1\145\1\60\2\154\1\160\1\156\1\163\1\141\1\151\1\164"+
@@ -5716,15 +5716,15 @@ public class InternalResoluteLexer extends Lexer {
         "\163\1\160\1\163\1\137\1\163\1\137\4\60\1\uffff\1\143\1\uffff\3"+
         "\143\2\145\4\163\2\60\2\uffff";
     static final String DFA29_maxS =
-        "\1\175\2\uffff\1\163\1\145\1\171\1\165\1\160\1\157\1\151\1\157"+
-        "\1\162\1\171\1\151\1\157\1\170\1\72\1\76\3\uffff\1\76\1\52\1\uffff"+
-        "\1\162\2\75\1\55\1\uffff\1\157\1\56\1\uffff\1\157\1\uffff\1\141"+
-        "\1\160\2\uffff\1\137\3\uffff\2\172\1\137\1\161\1\156\1\162\1\155"+
-        "\1\163\1\165\1\172\1\157\1\163\1\156\1\144\1\163\1\143\1\144\1\160"+
-        "\1\156\1\141\1\164\1\166\1\162\1\155\1\144\1\157\3\162\1\160\1\172"+
-        "\1\165\1\162\1\141\1\157\1\154\1\162\1\145\1\165\1\163\1\151\1\162"+
-        "\11\uffff\1\172\6\uffff\1\164\1\155\2\uffff\1\164\1\167\1\163\1"+
-        "\160\1\151\1\uffff\1\71\1\uffff\1\172\1\164\2\uffff\1\172\1\154"+
+        "\1\175\2\uffff\1\76\1\75\1\163\1\145\1\171\1\165\1\160\1\157\1"+
+        "\151\1\157\1\162\1\171\1\151\1\157\1\170\1\72\1\76\3\uffff\1\52"+
+        "\1\uffff\1\162\1\75\1\55\1\uffff\1\157\1\56\1\uffff\1\157\1\uffff"+
+        "\1\141\1\160\2\uffff\1\137\10\uffff\2\172\1\137\1\161\1\156\1\162"+
+        "\1\155\1\163\1\165\1\172\1\157\1\163\1\156\1\144\1\163\1\143\1\144"+
+        "\1\160\1\156\1\141\1\164\1\166\1\162\1\155\1\144\1\157\3\162\1\160"+
+        "\1\172\1\165\1\162\1\141\1\157\1\154\1\162\1\145\1\165\1\163\1\151"+
+        "\1\162\6\uffff\1\172\4\uffff\1\164\1\155\2\uffff\1\164\1\167\1\163"+
+        "\1\160\1\151\1\uffff\1\71\1\uffff\1\172\1\164\2\uffff\1\172\1\154"+
         "\1\165\2\145\1\147\1\151\1\160\1\172\1\164\1\162\1\145\1\154\1\172"+
         "\1\144\1\154\1\164\1\145\1\172\2\154\1\160\1\164\1\163\1\141\1\151"+
         "\1\164\1\165\1\164\1\145\1\157\1\145\1\166\1\164\2\145\1\163\1\156"+
@@ -5801,72 +5801,72 @@ public class InternalResoluteLexer extends Lexer {
         "\145\1\165\1\163\1\160\1\uffff\1\163\1\160\1\163\1\137\1\163\1\137"+
         "\4\172\1\uffff\1\143\1\uffff\3\143\2\145\4\163\2\172\2\uffff";
     static final String DFA29_acceptS =
-        "\1\uffff\1\1\1\2\17\uffff\1\61\1\62\1\63\2\uffff\1\66\4\uffff\1"+
+        "\1\uffff\1\1\1\2\21\uffff\1\63\1\64\1\65\1\uffff\1\70\3\uffff\1"+
         "\103\2\uffff\1\116\1\uffff\1\120\2\uffff\1\u0095\1\u0096\1\uffff"+
-        "\1\u009f\1\u00a0\1\u00a1\52\uffff\1\u009b\1\57\1\67\1\60\1\64\1"+
-        "\77\1\74\1\65\1\102\1\uffff\1\76\1\75\1\u008b\1\100\1\u009c\1\101"+
-        "\2\uffff\1\u0099\1\106\5\uffff\1\u009e\1\uffff\1\u009d\2\uffff\1"+
-        "\u008f\1\110\47\uffff\1\u008e\15\uffff\1\70\12\uffff\1\3\24\uffff"+
-        "\1\170\5\uffff\1\13\5\uffff\1\71\40\uffff\1\115\6\uffff\1\104\1"+
-        "\uffff\1\117\26\uffff\1\4\11\uffff\1\173\1\6\2\uffff\1\10\14\uffff"+
-        "\1\14\15\uffff\1\33\2\uffff\1\105\1\111\1\126\1\u0092\3\uffff\1"+
-        "\107\5\uffff\1\112\2\uffff\1\125\33\uffff\1\7\26\uffff\1\177\1\u009a"+
+        "\1\u009f\1\u00a0\1\u00a1\1\66\1\77\1\3\1\76\1\4\52\uffff\1\u009b"+
+        "\1\61\1\71\1\62\1\67\1\102\1\uffff\1\u008b\1\100\1\u009c\1\101\2"+
+        "\uffff\1\u0099\1\106\5\uffff\1\u009e\1\uffff\1\u009d\2\uffff\1\u008f"+
+        "\1\110\47\uffff\1\u008e\15\uffff\1\72\12\uffff\1\5\24\uffff\1\170"+
+        "\5\uffff\1\15\5\uffff\1\73\40\uffff\1\115\6\uffff\1\104\1\uffff"+
+        "\1\117\26\uffff\1\6\11\uffff\1\173\1\10\2\uffff\1\12\14\uffff\1"+
+        "\16\15\uffff\1\35\2\uffff\1\105\1\111\1\126\1\u0092\3\uffff\1\107"+
+        "\5\uffff\1\112\2\uffff\1\125\33\uffff\1\11\26\uffff\1\177\1\u009a"+
         "\3\uffff\1\u0091\4\uffff\1\u008a\7\uffff\1\u0093\16\uffff\1\171"+
-        "\10\uffff\1\136\13\uffff\1\5\2\uffff\1\23\1\155\3\uffff\1\40\13"+
-        "\uffff\1\15\2\uffff\1\16\1\167\4\uffff\1\124\1\uffff\1\25\6\uffff"+
+        "\10\uffff\1\136\13\uffff\1\7\2\uffff\1\25\1\155\3\uffff\1\42\13"+
+        "\uffff\1\17\2\uffff\1\20\1\167\4\uffff\1\124\1\uffff\1\27\6\uffff"+
         "\1\113\4\uffff\1\114\1\uffff\1\172\13\uffff\1\163\6\uffff\1\144"+
-        "\13\uffff\1\u0090\1\uffff\1\72\1\uffff\1\u008d\1\uffff\1\u0097\11"+
-        "\uffff\1\20\7\uffff\1\32\24\uffff\1\175\24\uffff\1\12\1\u0080\3"+
-        "\uffff\1\u008c\7\uffff\1\31\6\uffff\1\151\15\uffff\1\127\3\uffff"+
+        "\13\uffff\1\u0090\1\uffff\1\74\1\uffff\1\u008d\1\uffff\1\u0097\11"+
+        "\uffff\1\22\7\uffff\1\34\24\uffff\1\175\24\uffff\1\14\1\u0080\3"+
+        "\uffff\1\u008c\7\uffff\1\33\6\uffff\1\151\15\uffff\1\127\3\uffff"+
         "\1\174\1\uffff\1\176\3\uffff\1\135\2\uffff\1\140\2\uffff\1\141\1"+
-        "\142\7\uffff\1\u0094\3\uffff\1\11\3\uffff\1\34\2\uffff\1\157\1\17"+
-        "\26\uffff\1\132\2\uffff\1\73\2\uffff\1\143\5\uffff\1\146\7\uffff"+
-        "\1\22\1\uffff\1\41\1\uffff\1\30\1\uffff\1\u0098\17\uffff\1\35\7"+
+        "\142\7\uffff\1\u0094\3\uffff\1\13\3\uffff\1\36\2\uffff\1\157\1\21"+
+        "\26\uffff\1\132\2\uffff\1\75\2\uffff\1\143\5\uffff\1\146\7\uffff"+
+        "\1\24\1\uffff\1\43\1\uffff\1\32\1\uffff\1\u0098\17\uffff\1\37\7"+
         "\uffff\1\123\1\150\1\uffff\1\130\4\uffff\1\147\13\uffff\1\152\1"+
-        "\uffff\1\44\1\156\6\uffff\1\26\3\uffff\1\u0085\6\uffff\1\165\2\uffff"+
-        "\1\166\1\133\3\uffff\1\162\20\uffff\1\24\11\uffff\1\121\3\uffff"+
+        "\uffff\1\46\1\156\6\uffff\1\30\3\uffff\1\u0085\6\uffff\1\165\2\uffff"+
+        "\1\166\1\133\3\uffff\1\162\20\uffff\1\26\11\uffff\1\121\3\uffff"+
         "\1\145\1\uffff\1\160\4\uffff\1\u0081\2\uffff\1\154\1\u0082\6\uffff"+
-        "\1\37\2\uffff\1\u0087\6\uffff\1\137\1\164\22\uffff\1\131\7\uffff"+
-        "\1\122\1\u0083\6\uffff\1\36\1\uffff\1\56\10\uffff\1\21\6\uffff\1"+
-        "\u0086\1\u0089\10\uffff\1\47\3\uffff\1\27\1\uffff\1\153\13\uffff"+
-        "\1\55\2\uffff\1\161\1\43\3\uffff\1\42\2\uffff\1\u0088\1\uffff\1"+
-        "\134\1\46\3\uffff\1\45\10\uffff\1\u0084\7\uffff\1\52\12\uffff\1"+
-        "\51\1\uffff\1\50\13\uffff\1\54\1\53";
+        "\1\41\2\uffff\1\u0087\6\uffff\1\137\1\164\22\uffff\1\131\7\uffff"+
+        "\1\122\1\u0083\6\uffff\1\40\1\uffff\1\60\10\uffff\1\23\6\uffff\1"+
+        "\u0086\1\u0089\10\uffff\1\51\3\uffff\1\31\1\uffff\1\153\13\uffff"+
+        "\1\57\2\uffff\1\161\1\45\3\uffff\1\44\2\uffff\1\u0088\1\uffff\1"+
+        "\134\1\50\3\uffff\1\47\10\uffff\1\u0084\7\uffff\1\54\12\uffff\1"+
+        "\53\1\uffff\1\52\13\uffff\1\56\1\55";
     static final String DFA29_specialS =
         "\u03d5\uffff}>";
     static final String[] DFA29_transitionS = {
-            "\2\51\2\uffff\1\51\22\uffff\1\51\1\uffff\1\47\2\uffff\1\27"+
-            "\1\uffff\1\47\1\22\1\24\1\26\1\32\1\23\1\33\1\36\1\34\12\46"+
-            "\1\20\1\41\1\25\1\21\1\31\2\uffff\32\50\1\44\1\uffff\1\45\3"+
-            "\uffff\1\7\1\6\1\10\1\11\1\17\1\16\1\50\1\42\1\3\2\50\1\40\1"+
-            "\12\1\35\1\30\1\13\1\50\1\4\1\5\1\14\1\43\1\15\4\50\1\1\1\37"+
-            "\1\2",
+            "\2\51\2\uffff\1\51\22\uffff\1\51\1\uffff\1\47\2\uffff\1\30"+
+            "\1\uffff\1\47\1\24\1\26\1\27\1\32\1\25\1\33\1\36\1\34\12\46"+
+            "\1\22\1\41\1\3\1\23\1\4\2\uffff\32\50\1\44\1\uffff\1\45\3\uffff"+
+            "\1\11\1\10\1\12\1\13\1\21\1\20\1\50\1\42\1\5\2\50\1\40\1\14"+
+            "\1\35\1\31\1\15\1\50\1\6\1\7\1\16\1\43\1\17\4\50\1\1\1\37\1"+
+            "\2",
             "",
             "",
-            "\1\53\7\uffff\1\52\4\uffff\1\54",
-            "\1\56\3\uffff\1\55",
-            "\1\63\5\uffff\1\62\4\uffff\1\57\1\60\3\uffff\1\61",
-            "\1\66\5\uffff\1\64\5\uffff\1\65",
-            "\1\67\1\70\1\71\12\uffff\1\72\1\uffff\1\73",
-            "\1\75\2\uffff\1\74",
-            "\1\76\3\uffff\1\77\3\uffff\1\100",
-            "\1\101\11\uffff\1\102",
-            "\1\105\15\uffff\1\104\2\uffff\1\103",
-            "\1\106\6\uffff\1\110\2\uffff\1\111\6\uffff\1\107",
-            "\1\112",
-            "\1\115\3\uffff\1\113\6\uffff\1\114\2\uffff\1\116",
-            "\1\121\1\uffff\1\120\3\uffff\1\123\3\uffff\1\117\1\uffff\1"+
-            "\122",
-            "\1\124",
-            "\1\126",
-            "",
-            "",
-            "",
-            "\1\130\1\131",
+            "\1\52\1\53",
+            "\1\55",
+            "\1\60\7\uffff\1\57\4\uffff\1\61",
+            "\1\63\3\uffff\1\62",
+            "\1\70\5\uffff\1\67\4\uffff\1\64\1\65\3\uffff\1\66",
+            "\1\73\5\uffff\1\71\5\uffff\1\72",
+            "\1\74\1\75\1\76\12\uffff\1\77\1\uffff\1\100",
+            "\1\102\2\uffff\1\101",
+            "\1\103\3\uffff\1\104\3\uffff\1\105",
+            "\1\106\11\uffff\1\107",
+            "\1\112\15\uffff\1\111\2\uffff\1\110",
+            "\1\113\6\uffff\1\115\2\uffff\1\116\6\uffff\1\114",
+            "\1\117",
+            "\1\122\3\uffff\1\120\6\uffff\1\121\2\uffff\1\123",
+            "\1\126\1\uffff\1\125\3\uffff\1\130\3\uffff\1\124\1\uffff\1"+
+            "\127",
+            "\1\131",
             "\1\133",
             "",
+            "",
+            "",
             "\1\135",
-            "\1\136",
+            "",
+            "\1\137",
             "\1\140",
             "\1\142",
             "",
@@ -5880,6 +5880,11 @@ public class InternalResoluteLexer extends Lexer {
             "",
             "",
             "\1\157\1\uffff\12\46\45\uffff\1\156",
+            "",
+            "",
+            "",
+            "",
+            "",
             "",
             "",
             "",
@@ -5932,12 +5937,7 @@ public class InternalResoluteLexer extends Lexer {
             "",
             "",
             "",
-            "",
-            "",
-            "",
             "\12\50\7\uffff\32\50\4\uffff\1\50\1\uffff\32\50",
-            "",
-            "",
             "",
             "",
             "",

@@ -40,7 +40,7 @@ Definition:
 
 Type:
 	{SetType} '{' type=Type '}'
-|	BaseType
+|	BaseType ('<' paramType=Type '>')?
 ;
 
 BaseType:

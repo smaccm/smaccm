@@ -240,7 +240,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		exprType = getExprType(letExpr.getBinding().getExpr());
 		letType = letExpr.getBinding().getType();
 		ResoluteType resLetType = typeToResoluteType(letType);
-		if (!exprType.equals(resLetType)) {
+		if (!exprType.subtypeOf(resLetType)) {
 			error(letExpr, "types mismatch in let expression for variable '"+letExpr.getBinding().getName()+"'. "
 					+ "The binding is of type '"+resLetType+"' but the expression is of type '"+exprType+"'");
 		}
@@ -937,7 +937,14 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		}
 
 		if (idClass instanceof Property) {
-			return BaseType.PROPERTY;
+			Property prop = (Property) idClass;
+			ResoluteType type = convertPropertyType(prop.getPropertyType());
+			if (type == null) {
+				error(id, "Unknown property type");
+				return BaseType.FAIL;
+			} else {
+				return type;
+			}
 		}
 
 		if (idClass instanceof ConstantDefinition) {
@@ -1066,59 +1073,60 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		}
 
 		Expr propExpr = funCall.getArgs().get(1);
-		if (!(propExpr instanceof IdExpr)) {
-			error(funCall, "Cannot perform property lookup without literal property reference");
+		ResoluteType type = getExprType(propExpr);
+		if (!(type instanceof ParametricType)) {
+			error(propExpr, "The expressions given to property lookup statements must either "
+					+ "be an AADL property or an expression of parameterized property type");
 			return BaseType.FAIL;
 		}
+		ParametricType paramType = (ParametricType) type;
+		BaseType baseType = paramType.getBaseType();
+		if (!baseType.equals(BaseType.PROPERTY)) {
+			error(propExpr, "The base type of the property is '" + baseType + "' but must be of type 'property'");
+			return BaseType.FAIL;
+		}
+		return paramType.getParamType();
 
-		IdExpr idExpr = (IdExpr) propExpr;
-		Property prop = null;
-		if (idExpr.getId() instanceof Property) {
-			prop = (Property) idExpr.getId();
-		}
-		
-		if (prop == null) {
-			error(funCall, "Cannot perform property lookup without literal property reference");
-			return BaseType.FAIL;
-		}
-
-		ResoluteType type = convertPropertyType(prop.getPropertyType());
-		if (type == null) {
-			error(funCall.getArgs().get(1), "Unknown property type");
-			return BaseType.FAIL;
-		} else {
-			return type;
-		}
 	}
 
-	private ResoluteType convertPropertyType(PropertyType propType) {
+	private ResoluteType convertPropertyType(PropertyType propType){
+		 ResoluteType type = convertPropertyTypeHelper(propType);
+		 if(type == null){
+			 return null;
+		 }
+		 return new ParametricType(BaseType.PROPERTY, type);
+	}
+	
+	private ResoluteType convertPropertyTypeHelper(PropertyType propType) {
+		ResoluteType type;
 		if (propType instanceof AadlBoolean) {
-			return BaseType.BOOL;
+			type = BaseType.BOOL;
 		} else if (propType instanceof AadlString || propType instanceof EnumerationType) {
-			return BaseType.STRING;
+			type = BaseType.STRING;
 		} else if (propType instanceof AadlInteger) {
-			return BaseType.INT;
+			type = BaseType.INT;
 		} else if (propType instanceof AadlReal) {
-			return BaseType.REAL;
+			type = BaseType.REAL;
 		} else if (propType instanceof ClassifierType) {
-			return BaseType.COMPONENT;
+			type = BaseType.COMPONENT;
 		} else if (propType instanceof RangeType) {
-			return BaseType.RANGE;
+			type = BaseType.RANGE;
 		} else if (propType instanceof ReferenceType) {
-			return BaseType.AADL;
+			type = BaseType.AADL;
 		} else if (propType instanceof RecordType) {
-			return BaseType.RECORD;
+			type = BaseType.RECORD;
 		} else if (propType instanceof ListType) {
 			ListType listType = (ListType) propType;
-			ResoluteType elementType = convertPropertyType(listType.getElementType());
+			ResoluteType elementType = convertPropertyTypeHelper(listType.getElementType());
 			if (elementType == null) {
 				return null;
 			} else {
-				return new SetType(elementType);
+				type = new SetType(elementType);
 			}
 		} else {
 			return null;
 		}
+		return type;
 	}
 
 	private ResoluteType getSumType(BuiltInFnCallExpr funCall) {
@@ -1223,6 +1231,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return BaseType.FAIL;
 		} else if (type instanceof com.rockwellcollins.atc.resolute.resolute.BaseType) {
 			com.rockwellcollins.atc.resolute.resolute.BaseType bt = (com.rockwellcollins.atc.resolute.resolute.BaseType) type;
+			Type paramType = bt.getParamType();
+			if(paramType != null){
+				return new ParametricType(new BaseType(bt.getType()), typeToResoluteType(paramType));
+			}
 			return new BaseType(bt.getType());
 		} else if (type instanceof com.rockwellcollins.atc.resolute.resolute.SetType) {
 			com.rockwellcollins.atc.resolute.resolute.SetType st = (com.rockwellcollins.atc.resolute.resolute.SetType) type;

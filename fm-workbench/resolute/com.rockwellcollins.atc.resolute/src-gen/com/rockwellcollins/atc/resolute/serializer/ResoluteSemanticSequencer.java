@@ -180,8 +180,15 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				sequence_Arg(context, (Arg) semanticObject); 
 				return; 
 			case ResolutePackage.BASE_TYPE:
-				sequence_BaseType(context, (BaseType) semanticObject); 
-				return; 
+				if(context == grammarAccess.getBaseTypeRule()) {
+					sequence_BaseType(context, (BaseType) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getTypeRule()) {
+					sequence_BaseType_Type(context, (BaseType) semanticObject); 
+					return; 
+				}
+				else break;
 			case ResolutePackage.BINARY_EXPR:
 				sequence_AndExpr_ImpliesExpr_OrExpr_PlusExpr_RelationalExpr_TimesExpr(context, (BinaryExpr) semanticObject); 
 				return; 
@@ -489,6 +496,63 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_BaseType(EObject context, BaseType semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             type='int' | 
+	 *             type='real' | 
+	 *             type='string' | 
+	 *             type='bool' | 
+	 *             type='range' | 
+	 *             type='aadl' | 
+	 *             type='component' | 
+	 *             type='abstract' | 
+	 *             type='bus' | 
+	 *             type='data' | 
+	 *             type='device' | 
+	 *             type='memory' | 
+	 *             type='processor' | 
+	 *             type='process' | 
+	 *             type='subprogram_group' | 
+	 *             type='subprogram' | 
+	 *             type='system' | 
+	 *             type='thread_group' | 
+	 *             type='thread' | 
+	 *             type='virtual_bus' | 
+	 *             type='virtual_processor' | 
+	 *             type='connection' | 
+	 *             type='property' | 
+	 *             type='feature' | 
+	 *             type='port' | 
+	 *             type='data_port' | 
+	 *             type='event_port' | 
+	 *             type='event_data_port' | 
+	 *             type='feature_group' | 
+	 *             type='access' | 
+	 *             type='bus_access' | 
+	 *             type='provides_bus_access' | 
+	 *             type='requires_bus_access' | 
+	 *             type='data_access' | 
+	 *             type='provides_data_access' | 
+	 *             type='requires_data_access' | 
+	 *             type='subprogram_access' | 
+	 *             type='provides_subprogram_access' | 
+	 *             type='requires_subprogram_access' | 
+	 *             type='subprogram_group_access' | 
+	 *             type='provides_subprogram_group_access' | 
+	 *             type='requires_subprogram_group_access' | 
+	 *             type='flow_specification' | 
+	 *             type='end_to_end_flow'
+	 *         ) 
+	 *         paramType=Type?
+	 *     )
+	 */
+	protected void sequence_BaseType_Type(EObject context, BaseType semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
