@@ -61,9 +61,6 @@ import \<Timer.idl4>;
 <endif>
 
 
-<commentIf("Idl files for ports",
-           (threadImpl.threadPortTypes:importReaderWriterIdl()))><\\>
-
 <commentIf("Idl files for shared data accessors",
             (threadImpl.sharedDataAccessorList:importSharedDataAccessorIdl()))><\\>
 

@@ -8,6 +8,7 @@ import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
@@ -34,7 +35,7 @@ import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterInitializer extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux {
+public class PortEmitterInitializer extends DispatchableInputPortCommon implements PortEmitter  {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
@@ -67,12 +68,16 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
    public void getWritePortHFiles(File directory) {
       // no-op for InitializerPorts
    }
+
+   public boolean getHasDummyArg() { return !(port.getType() instanceof UnitType); }
    
    public String writeExternalHandlerPrototype(ExternalHandler hdlr) {
       String result = ""; 
-      result += "void " + hdlr.getHandlerName() + "(void);" + System.lineSeparator();
+      String arg = (getHasDummyArg()) ? "const int64_t *arg" : "void";
+      result += "void " + hdlr.getHandlerName() + "(" + arg + ");" + System.lineSeparator();
       return result;
    }
+   
    
    @Override
    public String getWritePortHPrototypes() {
@@ -126,160 +131,6 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
    }
 
    
-   /************************************************************
-    * 
-    * VxWorks-specific functions (implementing RPCEventDataPortCamkes)
-    * 
-    ************************************************************/
-
-   
-   @Override
-   public String getVxWorksAddCommonHFileDeclarations() {
-      // no-op for InitializerPorts
-      return "";
-   }
-
-   @Override
-   public String getVxWorksAddMainCFileIncludes() {
-      // no-op for InitializerPorts
-      return "";
-   }
-
-   @Override
-   public String getVxWorksAddMainCFileDeclarations() {
-      // no-op for InitializerPorts
-      return "";
-   }
-
-   private String callHandler(ExternalHandler hdlr) {
-      String result = ""; 
-      result += hdlr.getHandlerName() + "();" + System.lineSeparator();
-      return result;
-   }
-
-   @Override
-   public String getVxWorksAddMainCFileInitializers() {
-      // thread initialization routines (if any)...
-      String result = ""; 
-      InitializerPort p = (InitializerPort)this.getModelElement(); 
-      for (ExternalHandler hdlr : p.getExternalHandlerList()) {
-         result += callHandler(hdlr); 
-      }
-      return result; 
-   }
-
-   @Override
-   public String getVxWorksAddMainCFileDestructors() {
-      return "";
-   }
-
-   /************************************************************
-    * 
-    * eChronos-specific functions (implementing RPCEventDataPortCamkes)
-    * 
-    ************************************************************/
-
-   public String getEChronosAddPrxMutexes() {
-      return "";
-   }
-   
-   public String getEChronosAddPrxSemaphores() {
-      return "";
-   }
-
-   @Override
-   public String getEChronosAddCommonHFileDeclarations() {
-      return "";
-   }
-
-   @Override
-   public String getEChronosAddTrampolines() { return ""; }
-   
-   @Override
-   public String getEChronosAddInternalIrqs() { return ""; }
-   
-   @Override
-   public String getEChronosAddExternalIrqs() { return ""; }
-   
-   /************************************************************
-    * 
-    * CAmkES-specific functions (implementing RPCDataPortCamkes)
-    * 
-    ************************************************************/
-
-   @Override
-   public String getCamkesAddComponentPortLevelDeclarations() {
-      return ""; 
-   }
-
-   @Override
-   public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
-      return ""; 
-   }
-   
-   @Override
-   public String getCamkesAddAssemblyFileConfigDeclarations() {
-      return "";
-   }
-   
-   @Override
-   public String getCamkesAddAssemblyFilePortDeclarations() { return ""; }
-
-   /************************************************************
-    * 
-    * linux-specific functions 
-    * 
-    ************************************************************/
-
-   @Override
-   public String getLinuxAddCommonHFileDeclarations() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddMainCFileIncludes() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddMainCFileDeclarations() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddMainCFileInitializers() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddMainCFileDestructors() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddProcessHFileDeclarations() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddProcessCFileIncludes() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddProcessCFileDeclarations() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddProcessCFileInitializers() {
-      return "";
-   }
-
-   @Override
-   public String getLinuxAddProcessCFileDestructors() {
-      return "";
-   }
 
    /************************************************************
     * 

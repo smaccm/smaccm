@@ -87,9 +87,9 @@ connectVmToCamkesDest(connection, vm) ::= <<
 >>
 
 assemblyConfigPort(vm, port, index) ::= <<
-    <vm.vmInstanceName>.<port.qualifiedName>_id = index;
-    // MWW: TODO: TEMPORARY!
-    <vm.vmInstanceName>.<port.qualifiedName>_size = 8192;
+<vm.vmInstanceName>.<port.qualifiedName>_id = <index>;
+<vm.vmInstanceName>.<port.qualifiedName>_size = <port.type.overApproximateSizeInBytes>;
+<vm.vmInstanceName>.<port.qualifiedName>_access = <if(port.isInputPort)>"R"<else>"W"<endif>;
 >>
 
 

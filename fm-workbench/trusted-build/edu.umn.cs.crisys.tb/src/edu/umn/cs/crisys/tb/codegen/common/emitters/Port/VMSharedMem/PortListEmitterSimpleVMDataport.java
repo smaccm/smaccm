@@ -67,7 +67,6 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
       STGroupFile template = Util.createTemplate("PortEmitterSimpleVMDataport.stg");
       return template.getInstanceOf(stName); 
    }
-
    
    @Override
    public String getCamkesAddAssemblyFileVMConfigDeclarations(OSModel vm, List<PortFeature> pl) {
@@ -79,7 +78,7 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
             ST st = getTemplateST("assemblyConfigPort");
             st.add("port", p);
             st.add("vm", EmitterFactory.model(vm));
-            st.add("index", ports.indexOf(p));
+            st.add("index", ports.indexOf(p) + 1);
             return st.render();})
          .collect(Collectors.joining(""));
    }

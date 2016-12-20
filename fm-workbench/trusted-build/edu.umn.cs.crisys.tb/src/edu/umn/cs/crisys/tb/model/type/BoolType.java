@@ -23,6 +23,8 @@ package edu.umn.cs.crisys.tb.model.type;
 
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.TbFailure;
+
 public class BoolType extends Type {
 	@Override
 	public String toString() {
@@ -57,5 +59,10 @@ public class BoolType extends Type {
 	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof BoolType);
+	}
+	
+	// Bool is usually mapped to a word.  I will overapproximate with 8.
+	public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
+	   return 8; 
 	}
 }

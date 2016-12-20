@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.osate.aadl2.Property;
+import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
@@ -32,6 +34,7 @@ import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
+import edu.umn.cs.crisys.tb.util.PropertyUtil;
 import edu.umn.cs.crisys.tb.util.Util;
 
 /**
@@ -229,6 +232,14 @@ public class ModelNames implements NameEmitter {
   
   public boolean getUseOSRealTimeExtensions() {
 	  return m.isUseOSRealTimeExtensions();
+  }
+  
+  final public static Property TB_SYS_ADD_DUMMY_ARGS_TO_VOID_FNS = Util
+        .getPropertyDefinitionInWorkspace("TB_SYS::Add_Dummy_Arg_To_Void_Fns");
+
+  public boolean addDummyArgToVoidFns() {
+     return (boolean) PropertyUtils.getBooleanValue(m.getProcessorImpl(), 
+           TB_SYS_ADD_DUMMY_ARGS_TO_VOID_FNS);
   }
   
   public List<ModelNames> getVirtualMachineList() {

@@ -8,6 +8,7 @@ import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.type.ArrayType;
+import edu.umn.cs.crisys.tb.model.type.ExternalType;
 import edu.umn.cs.crisys.tb.model.type.IdType;
 import edu.umn.cs.crisys.tb.model.type.PointerType;
 import edu.umn.cs.crisys.tb.model.type.RecordType;
@@ -251,6 +252,13 @@ public class TypeNames implements NameEmitter {
     return "write_" + getName();
   }
   
+  public int getOverApproximateSizeInBytes() {
+     try {
+        return this.t.getOverApproximateSizeInBytes(64);
+     } catch (TbFailure te) {
+        throw new TbException(te.getMessage());
+     }
+  }
   
   // TODO MWW: Hacks!  To get arrays working with CAmkES.
   static private String getCamkesArrayContainerName(IdType idt) {
@@ -268,5 +276,7 @@ public class TypeNames implements NameEmitter {
             TypeNames.getCamkesArrayContainerName(idt),
             TypeNames.constructCamkesArrayContainer(idt));
   }
+  
+  
 }
 

@@ -153,6 +153,8 @@ public class OSModel extends ModelElementBase {
    // how do we want to represent hierarchy?
    public OSModel(ComponentImplementation processorImpl,
          ComponentInstance processorInstance) {
+      this.processorImpl = processorImpl;
+      this.processorInstance = processorInstance;
       this.instanceName = processorInstance.getName();
    }
 //   public SystemImplementation getSystemImplementation() {

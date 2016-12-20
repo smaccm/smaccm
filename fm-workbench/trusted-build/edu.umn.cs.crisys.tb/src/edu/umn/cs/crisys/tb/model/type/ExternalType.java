@@ -3,15 +3,26 @@ package edu.umn.cs.crisys.tb.model.type;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.TbFailure;
+
 public class ExternalType extends Type {
 
+   public static final int UNKNOWN_TYPE_SIZE = -1;
+   
   public String headerName; 
   public String typeId;
+  public int typeSize = UNKNOWN_TYPE_SIZE; 
   
-  public ExternalType(String tid, String headerName) { 
+  public ExternalType(String tid, String headerName, int typeSize) { 
     this.typeId = tid;
     this.headerName = headerName;
+    this.typeSize = typeSize;
   }
+  public ExternalType(String tid, String headerName) {
+     this.typeId = tid;
+     this.headerName = headerName;
+  }
+  
   
   public String getTypeId() {
     return typeId;
@@ -78,6 +89,16 @@ public class ExternalType extends Type {
   @Override
   public CType getCType(int indent) {
     return new CType(this.getTypeId(), "");
+  }
+
+  public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
+     if (typeSize != UNKNOWN_TYPE_SIZE) {
+        return typeSize;
+     } else {
+        TbFailure f = new TbFailure();
+        f.addMessage("Unable to estimate size of external type.  Please add C_Type_Size property.");
+        throw f;
+     }
   }
   
 }

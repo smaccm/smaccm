@@ -3,8 +3,10 @@ property set TB_SYS is
     CommPrim_Source_Header: aadlstring applies to (port, access, data);
     CommPrim_Source_Text: aadlstring applies to (port, access);
     C_Type_Name : aadlstring applies to (data, data implementation);
+    C_Type_Size : aadlinteger applies to (data, data implementation);
     Compute_Entrypoint_Source_Text : list of aadlstring applies to (processor, virtual processor, system, system implementation, port, thread);
-
+	Add_Dummy_Arg_To_Void_Fns: aadlboolean => false applies to (processor, virtual processor);
+	
     -- For including additional libraries into the build process
     Link_Libraries : list of aadlstring applies to (processor, virtual processor, system, system implementation);
 

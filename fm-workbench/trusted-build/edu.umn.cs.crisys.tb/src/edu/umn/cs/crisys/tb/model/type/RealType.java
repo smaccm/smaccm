@@ -73,4 +73,13 @@ public class RealType extends Type {
 		}
 	  return false;
 	}
+
+	// assume IEEE types.
+   public int getOverApproximateSizeInBytes(int byteAlign) {
+      if (FloatEnum.DOUBLE == realKind) {
+         return 8; 
+      } else {
+         return 4;
+      }
+   }
 }

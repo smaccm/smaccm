@@ -54,4 +54,8 @@ public class UnitType extends Type {
 	public boolean equals(Object obj) {
 		return (obj instanceof UnitType);
 	}
+	
+	public int getOverApproximateSizeInBytes(int byteAlign) {
+	   return 0;
+	}
 }

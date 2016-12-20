@@ -23,6 +23,9 @@ package edu.umn.cs.crisys.tb.model.type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import edu.umn.cs.crisys.tb.TbFailure;
 
 /* TO DO: make this a list instead of a set */
 
@@ -148,5 +151,17 @@ public class RecordType extends Type {
 			return false;
 		}
 		return true;
+	}
+	
+	// if field is 1 byte and byteAlign = 8, then pad = 7.
+	// if field is 8 bytes with byteAlign = 8, then pad = 0;
+	public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
+	   int sum = 0; 
+	   for (RecordField f: fields) {
+	      int fieldSize = f.type.getOverApproximateSizeInBytes(byteAlign);
+	      int pad = (fieldSize % byteAlign == 0) ? 0 : fieldSize - (fieldSize % byteAlign); 
+	      sum += fieldSize + pad;
+	   }
+	   return sum;
 	}
 }

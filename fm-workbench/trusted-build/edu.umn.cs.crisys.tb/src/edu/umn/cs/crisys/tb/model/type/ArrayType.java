@@ -24,6 +24,8 @@ package edu.umn.cs.crisys.tb.model.type;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.TbFailure;
+
 public class ArrayType extends Type {
 
 	Type elem;
@@ -80,5 +82,9 @@ public class ArrayType extends Type {
 	
 	public Type getElemType() {
 	  return elem;
+	}
+
+	public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
+	   return dimension * elem.getOverApproximateSizeInBytes(byteAlign);
 	}
 }

@@ -1341,7 +1341,13 @@ public class AadlModelParser {
          try {
             String name = dc.getName();
             String header = Util.getStringValue(dc, PropertyUtil.TB_SYS_COMMPRIM_SOURCE_HEADER);
-            Type et = new ExternalType(name, header);
+            Integer typeSize = Util.getIntegerValueOpt(dc, PropertyUtil.C_TYPE_SIZE);
+            Type et;
+            if (typeSize != null) {
+               et = new ExternalType(name, header, typeSize.intValue());
+            } else {
+               et = new ExternalType(name, header);
+            }
             this.tlm.getAstTypes().put(name, et);
             this.tlm.getExternalTypeHeaders().add(header);
             logger.info("Creating external type: " + name);

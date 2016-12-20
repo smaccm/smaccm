@@ -10,6 +10,10 @@
 #include <stdio.h>
 #endif
 
+void initialize_sender(const int64_t *dummy) {
+	// dummy to check parameters.
+}
+
 void sender_periodic_ping(const int64_t *the_time) {
 
 	#ifdef __TB_OS_VXWORKS__

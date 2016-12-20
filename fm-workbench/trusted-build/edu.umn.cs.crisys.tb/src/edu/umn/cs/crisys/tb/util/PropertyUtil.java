@@ -99,6 +99,8 @@ public abstract class PropertyUtil {
          .getPropertyDefinitionInWorkspace("TB_SYS::Use_OS_Real_Time_Extensions");
    final public static Property C_TYPE_NAME = Util
          .getPropertyDefinitionInWorkspace("TB_SYS::C_Type_Name");
+   final public static Property C_TYPE_SIZE = Util
+         .getPropertyDefinitionInWorkspace("TB_SYS::C_Type_Size");
    final public static Property PASS_BY_REFERENCE = Util
          .getPropertyDefinitionInWorkspace("TB_SYS::By_Reference");
    final public static Property EXTERNAL_TIMER_COMPONENT = Util

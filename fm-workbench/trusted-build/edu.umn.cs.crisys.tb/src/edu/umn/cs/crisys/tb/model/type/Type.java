@@ -76,8 +76,11 @@ public abstract class Type implements DependsOn<Type> {
 	
 	public CType getCType() { return this.getCType(0); }
 	
-	
+   	
 	public Type getRootType() throws TbFailure {
 		return this;
 	}
+	
+	// for 32 bit alignment, choose byteAlign = 4; for 64 bit, choose 8.
+	public abstract int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure; 
 }
