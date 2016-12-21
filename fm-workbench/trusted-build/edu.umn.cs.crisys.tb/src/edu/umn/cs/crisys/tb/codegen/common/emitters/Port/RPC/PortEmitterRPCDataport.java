@@ -513,4 +513,10 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       return EmitterFactory.threadImplementation(this.dataPort.getOwner());
    }
 
+  @Override
+  public String getCamkesAddComponentPortImports() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

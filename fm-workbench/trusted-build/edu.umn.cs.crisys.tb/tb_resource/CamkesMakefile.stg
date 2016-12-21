@@ -53,6 +53,27 @@ writeComponentName(name) ::= <<
 
 >>
 
+writeComponentPerConnection(name) ::= <<
+Monitor_<name>_CFILES :=  \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Monitor_<name>/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Monitor_<name>/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Monitor_<name>/src/arch/${ARCH}/*.c))
+
+Monitor_<name>_HFILES := \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Monitor_<name>/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
+
+Monitor_<name>_ASMFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Monitor_<name>/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Monitor_<name>/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Monitor_<name>/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Monitor_<name>/src/plat/${PLAT}/*.S))
+
+>>
+
+writeComponentPerPort(port) ::= <<
+<port.connections:{ cnxshn| <writeComponentPerConnection(cnxshn.name)>}>
+>>
 /*
 *  Silly but necessary comment because XText is confused by /* in earlier definitions.
 */
@@ -60,6 +81,8 @@ writeComponentName(name) ::= <<
 writeComponent(component) ::= <<
 
 <writeComponentName(component.normalizedName)>
+<component.inputEventPortList:writeComponentPerPort()>
+<component.inputEventDataPortList:writeComponentPerPort()>
 
 >>
 

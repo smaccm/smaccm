@@ -424,4 +424,12 @@ public void getWriteCamkesPortIdls(File interfacesDirectory) {
 	
 }
 
+
+
+@Override
+public String getCamkesAddComponentPortImports() {
+  // TODO Auto-generated method stub
+  return null;
+}
+
 }

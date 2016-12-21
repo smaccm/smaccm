@@ -411,5 +411,10 @@ public void getWriteCamkesPortIdls(File interfacesDirectory) {
 	
 }
 
+@Override
+public String getCamkesAddComponentPortImports() {
+  return port.getType() + "_writer.idl4";
+}
+
 
 }

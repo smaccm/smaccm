@@ -549,4 +549,9 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       return pcl;
    }
 
+  @Override
+  public String getCamkesAddComponentPortImports() {
+    return port.getType() + "_writer.idl4";
+  }
+
 }

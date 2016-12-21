@@ -225,7 +225,7 @@ public class TypeNames implements NameEmitter {
 //  }
 
   public String getReaderWriterInterfaceName() {
-    return t.getCType().typeString() + "_writer";
+    return t.getCType().typeString();
   }    
 
   public String getReaderWriterIdlFileName() {

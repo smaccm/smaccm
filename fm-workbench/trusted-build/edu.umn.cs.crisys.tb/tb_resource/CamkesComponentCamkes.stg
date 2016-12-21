@@ -22,11 +22,6 @@ import "../../interfaces/<threadImpl.idlFileName>";
 
 >>
 
-importReaderWriterIdl(type) ::= <<
-import "../../interfaces/<type.readerWriterIdlFileName>";
-
->>
-
 importSharedDataAccessorIdl(sharedDataAccessor) ::= <<
 import "../../interfaces/<sharedDataAccessor.type.sharedDataIdlFileName>";
 
@@ -61,8 +56,8 @@ import \<Timer.idl4>;
 <endif>
 
 
-<commentIf("Idl files for ports",
-           (threadImpl.threadPortTypes:importReaderWriterIdl()))><\\>
+<threadImpl.portList:{ port | import "../../interfaces/<port.camkesAddComponentPortImports>";
+}><\\>
 
 <commentIf("Idl files for shared data accessors",
             (threadImpl.sharedDataAccessorList:importSharedDataAccessorIdl()))><\\>
