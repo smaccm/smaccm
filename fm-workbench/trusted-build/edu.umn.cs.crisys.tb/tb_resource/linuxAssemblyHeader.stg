@@ -1,4 +1,4 @@
-import "LinuxComponentC.stg"
+import "linuxComponentC.stg"
 import "Common.stg"
 import "CommonCPrototypes.stg"
 
