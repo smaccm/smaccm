@@ -149,8 +149,9 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
 
    @Override
    public String getCamkesAddAssemblyFileConfigDeclarations() {
-      // managed by connection rather than port.
-      return "";
+      ST st = this.getTemplateST("assemblyConfigPort");
+      st.add("port", this);
+      return st.render();
    }
 
    @Override

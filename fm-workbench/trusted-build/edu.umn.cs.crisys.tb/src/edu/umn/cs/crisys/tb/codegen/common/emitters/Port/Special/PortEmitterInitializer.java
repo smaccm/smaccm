@@ -1,41 +1,21 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special;
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroupFile;
 
-import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.DispatchableInputPortCommon;
-import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
-import edu.umn.cs.crisys.tb.model.OSModel;
-import edu.umn.cs.crisys.tb.model.connection.PortConnection;
-import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
 import edu.umn.cs.crisys.tb.model.port.InitializerPort;
-import edu.umn.cs.crisys.tb.model.port.InputDataPort;
-import edu.umn.cs.crisys.tb.model.port.InputEventPort;
-import edu.umn.cs.crisys.tb.model.port.InputPort;
-import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
-import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
-import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
-import edu.umn.cs.crisys.tb.model.type.BoolType;
-import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
-public class PortEmitterInitializer extends DispatchableInputPortCommon implements PortEmitter  {
+public class PortEmitterInitializer extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks, PortEmitterLinux {
 
    public static boolean isApplicable(PortFeature pf) {
       // right kind of port
@@ -131,6 +111,149 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
    }
 
    
+   /************************************************************
+    * 
+    * VxWorks-specific functions (implementing RPCEventDataPortCamkes)
+    * 
+    ************************************************************/
+
+   
+   @Override
+   public String getVxWorksAddCommonHFileDeclarations() {
+      // no-op for InitializerPorts
+      return "";
+   }
+   
+   @Override
+   public String getVxWorksAddMainCFileIncludes() {
+      // no-op for InitializerPorts
+      return "";
+   }
+
+   @Override
+   public String getVxWorksAddMainCFileDeclarations() {
+      // no-op for InitializerPorts
+      return "";
+   }
+
+ 
+   @Override
+   public String getVxWorksAddMainCFileInitializers() {
+      return ""; 
+   }
+
+   @Override
+   public String getVxWorksAddMainCFileDestructors() {
+      return "";
+   }
+
+   /************************************************************
+    * 
+    * eChronos-specific functions (implementing RPCEventDataPortCamkes)
+    * 
+    ************************************************************/
+
+   public String getEChronosAddPrxMutexes() {
+      return "";
+   }
+   
+   public String getEChronosAddPrxSemaphores() {
+      return "";
+   }
+
+   @Override
+   public String getEChronosAddCommonHFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getEChronosAddTrampolines() { return ""; }
+   
+   @Override
+   public String getEChronosAddInternalIrqs() { return ""; }
+   
+   @Override
+   public String getEChronosAddExternalIrqs() { return ""; }
+   
+   /************************************************************
+    * 
+    * CAmkES-specific functions (implementing RPCDataPortCamkes)
+    * 
+    ************************************************************/
+
+   @Override
+   public String getCamkesAddComponentPortLevelDeclarations() {
+      return ""; 
+   }
+
+   @Override
+   public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
+      return ""; 
+   }
+   
+   @Override
+   public String getCamkesAddAssemblyFileConfigDeclarations() {
+      return "";
+   }
+   
+   @Override
+   public String getCamkesAddAssemblyFilePortDeclarations() { return ""; }
+
+   /************************************************************
+    * 
+    * linux-specific functions 
+    * 
+    ************************************************************/
+
+   @Override
+   public String getLinuxAddCommonHFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileIncludes() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileInitializers() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddMainCFileDestructors() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessHFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileIncludes() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDeclarations() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileInitializers() {
+      return "";
+   }
+
+   @Override
+   public String getLinuxAddProcessCFileDestructors() {
+      return "";
+   }
 
    /************************************************************
     * 

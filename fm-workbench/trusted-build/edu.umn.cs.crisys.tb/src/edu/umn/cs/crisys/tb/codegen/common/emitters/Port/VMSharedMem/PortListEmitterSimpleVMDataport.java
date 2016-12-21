@@ -75,9 +75,13 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
       List<PortEmitter> ports = getOutputVmPorts(pl); 
       return ports.stream()
          .map(p -> {
-            ST st = getTemplateST("assemblyConfigPort");
+            int pageMultiple = Util.moduloCeiling(4096, 
+                  p.getType().getOverApproximateSizeInBytes());
+                  
+            ST st = getTemplateST("assemblyConfigVMPort");
             st.add("port", p);
             st.add("vm", EmitterFactory.model(vm));
+            st.add("size", pageMultiple);
             st.add("index", ports.indexOf(p) + 1);
             return st.render();})
          .collect(Collectors.joining(""));

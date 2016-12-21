@@ -73,44 +73,6 @@ public class PortConnectionEmitterVMDataport implements PortConnectionEmitter {
       return result;
    }
 
-   /* 
-    * 
-    * Method only works if invariant from isApplicable is true.
-    * 
-    */
-   private boolean srcIsHost() {
-      OSModel srcModel = (Util.getElementOSModel(c.getSourcePort())); 
-      OSModel dstModel = (Util.getElementOSModel(c.getDestPort())); 
-      
-      OSTarget srcOS = srcModel.getOsTarget();
-      OSTarget dstOS = dstModel.getOsTarget();
-
-      return (srcOS == OSTarget.CAmkES) && 
-                  (dstOS == OSTarget.linux) && 
-                  (dstModel.getParent() == srcModel); 
-   }
-   
-   private OSModel getHostOS() {
-      if (srcIsHost()) {
-         return (Util.getElementOSModel(c.getSourcePort()));
-      } else {
-         return (Util.getElementOSModel(c.getDestPort()));
-      }
-   }
-   
-   private OSModel getVmOS() {
-      if (srcIsHost()) {
-         return (Util.getElementOSModel(c.getDestPort()));
-      } else {
-         return (Util.getElementOSModel(c.getSourcePort()));
-      }
-   }
-   
-   public int getConnectionNumber() {
-      OSModel model = getHostOS(); 
-      // connections are 1-indexed in Camkes for some reason.
-      return model.getVmCrossingConnections().indexOf(c) + 1;
-   }
    
    public PortConnectionEmitterVMDataport(PortConnection c) {
       this.c = c;

@@ -212,6 +212,10 @@ public class Util {
 
    }
 
+   public static int moduloCeiling(int modulus, int val) {
+      return ((val % modulus) == 0) ? val : val + (modulus - (val % modulus));  
+   }
+   
    public static <T> T assertNonNull(T obj, String error) {
       if (obj == null) {
          throw new TbException(error);
