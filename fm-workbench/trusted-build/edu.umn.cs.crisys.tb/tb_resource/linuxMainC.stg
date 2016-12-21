@@ -1,7 +1,7 @@
 import "Common.stg"
 import "CommonOSSpecificNames.stg"
 import "CommonCPrototypes.stg"
-import "LinuxAssemblyHeader.stg"
+import "linuxAssemblyHeader.stg"
 
 /*********************************************************************
  *
