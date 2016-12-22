@@ -26,6 +26,6 @@ void sender_periodic_ping(const int64_t *the_time) {
 	#endif	
 	
    uint32_t to_send = ((uint32_t)*the_time) + 1;
-   ping_Output1(&to_send);
+   *Output1 = to_send;
  	
 }
