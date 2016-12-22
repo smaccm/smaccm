@@ -41,10 +41,11 @@
 
  **************************************************************************/
 
+
 // user entrypoints for periodic dispatch
 void component_entry(const int64_t * periodic_dispatcher);
 
- void component_init(const int64_t * periodic_dispatcher);
+ void component_init(const int64_t *arg);
  bool tb_Server_read_vm2self(SMACCM_DATA__Camera_Bounding_Box_i * vm2self); bool tb_Server_write_self2encrypt(const SMACCM_DATA__GIDL self2encrypt);
  // reader prototype for decrypt2self
 bool tb_Server_read_decrypt2self(SMACCM_DATA__GIDL decrypt2self);
@@ -53,7 +54,6 @@ bool tb_Server_read_decrypt2self(SMACCM_DATA__GIDL decrypt2self);
 bool tb_Server_read_framing2self(SMACCM_DATA__GIDL framing2self);
  bool tb_Server_write_self2vm_reboot(const bool * self2vm_reboot);
  
-
 
 
 #endif // __TB_AADL_Server_types__H

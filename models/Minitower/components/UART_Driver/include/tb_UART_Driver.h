@@ -41,12 +41,12 @@
 
  **************************************************************************/
 
+
 bool tb_UART_Driver_write_self2decrypt(const SMACCM_DATA__UART_Packet_i * self2decrypt);
  // reader prototype for encrypt2self
 bool tb_UART_Driver_read_encrypt2self(SMACCM_DATA__UART_Packet_i * encrypt2self);
  bool tb_UART_Driver_write_self2encrypt(const bool * self2encrypt);
  
-
 
 //////////////////////////////////////////////////////////////////////////
 //

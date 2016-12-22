@@ -201,8 +201,8 @@ void tb_entrypoint_Decrypt_periodic_dispatcher(const int64_t * in_arg) {
  * context for the user-defined entrypoint, then calls it.
  *
  ************************************************************************/
-void tb_entrypoint_Decrypt_Decrypt_initializer(void) {
-    component_init(NULL);
+void tb_entrypoint_Decrypt_Decrypt_initializer(const int64_t * in_arg) {
+    component_init( in_arg);
 
 }
 
@@ -225,9 +225,10 @@ void tb_entrypoint_Decrypt_uart2self(const SMACCM_DATA__UART_Packet_i * in_arg) 
  ************************************************************************/
 
 int run(void) {
-    // thread initialization routines (if any)...
-    tb_entrypoint_Decrypt_Decrypt_initializer();
-
+    {
+    int64_t tb_dummy;
+    tb_entrypoint_Decrypt_Decrypt_initializer(&tb_dummy);
+    }
     // Initial lock to await dispatch input.
     tb_dispatch_sem_wait();
 

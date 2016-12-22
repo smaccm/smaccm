@@ -42,21 +42,15 @@ import "components/dispatch_periodic/dispatch_periodic.camkes";
 import <TimeServerOdroid/TimeServer.camkes>;
 
 import "components/UART_Driver/UART_Driver.camkes";
-
 import "components/Decrypt/Decrypt.camkes";
-
 import "components/Encrypt/Encrypt.camkes";
-
 import "components/Server/Server.camkes";
-
 import "components/CAN_Framing/CAN_Framing.camkes";
-
 import "components/CAN_Driver/CAN_Driver.camkes";
-
 import "components/Virtual_Machine/Virtual_Machine.camkes";
 
 
-
+// 12/12 MWW modified for CaMKes-next
 connector seL4RPCCallDataport {
     from Procedure template "seL4RPCCallDataport-from.template.c";
     to Procedure template "seL4RPCCallDataport-to.template.c";

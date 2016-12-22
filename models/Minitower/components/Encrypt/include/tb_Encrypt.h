@@ -41,17 +41,17 @@
 
  **************************************************************************/
 
+
 // user entrypoints for periodic dispatch
 void component_entry(const int64_t * periodic_dispatcher);
 
- void component_init(const int64_t * periodic_dispatcher);
+ void component_init(const int64_t *arg);
  // reader prototype for server2self
 bool tb_Encrypt_read_server2self(SMACCM_DATA__GIDL server2self);
  bool tb_Encrypt_write_self2uart(const SMACCM_DATA__UART_Packet_i * self2uart);
  // reader prototype for uart2self
 bool tb_Encrypt_read_uart2self(bool * uart2self);
  
-
 
 
 #endif // __TB_AADL_Encrypt_types__H
