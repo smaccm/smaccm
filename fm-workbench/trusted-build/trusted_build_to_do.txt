@@ -533,3 +533,17 @@ However, now is the time when we need to figure out who is in charge of the over
 			
 			Fuck it, code it up now, fix it later.  More technical debt, but meh.
 			
+
+Code locations for VM stuff: 
+	
+	Only necessary if you use VMs, presumably.
+	
+	/configurations/<proj_name>.h
+		#define VM_NUM_GUESTS 1
+		/* All our guests use the same kernel image, rootfs and cmdline */
+		#define C162_KERNEL_IMAGE "bzimage"
+		#define C162_ROOTFS "rootfs.cpio"
+		#define VM_GUEST_CMDLINE "earlyprintk=ttyS0,115200 console=ttyS0,115200 root=/dev/mem i8042.nokbd=y i8042.nomux=y i8042.noaux=y io_delay=udelay noisapnp pci=nomsi"
+	
+	Makefile
+		
