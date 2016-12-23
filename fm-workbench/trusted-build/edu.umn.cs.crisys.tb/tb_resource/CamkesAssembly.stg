@@ -49,6 +49,9 @@ assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 >>
 
 
+rpcConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
 connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName,
     srcThreadImpl.componentInstanceName,
