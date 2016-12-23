@@ -38,7 +38,7 @@ import "<threadImpl.rootToCamkesComponentFilePath>";
 >>
 
 monitorPerConnection(cnxshn) ::= <<
-component Monitor_<cnxshn.sourcePort.type.name> monitor_<cnxshn.name>;
+component Monitor_<cnxshn.name> monitor_<cnxshn.name>;
 
 >>
 
@@ -190,10 +190,7 @@ import \<TimeServerOdroid/TimeServer.camkes>;
 <model.threadImplementations:assemblyThreadImplementationImports()>
 
 <\\>
-connector seL4RPCCallDataport {
-    from Procedure client template "seL4RPCCallDataport-from.template.c";
-    to Procedure server template "seL4RPCCallDataport-to.template.c";
-}
+
 
 <if(model.containsVM)>
 <model.virtualMachineList:createVMInit()>

@@ -6,4 +6,4 @@ void In(const PingTwins__msg_impl * msg_data) {
 	Out(msg_data);	
 }
 
-void pong(const uint64_t * periodic_100_m) {}
+void pong(const int64_t * periodic_100_m) {}

@@ -152,6 +152,10 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       st.add("port", port);
       st.add("unlock", ti.getCamkesDispatcherUnlockStmt());
       return st.render();
+    } else if (port instanceof OutputEventPort) {
+      ST st = getTemplateST("componentRemoteWriterDecl");
+      st.add("port", this);
+      return st.render();
     }
     return "";
   }
@@ -374,11 +378,11 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
    }   
    
    public String getLocalReaderName() {
-      return port.getName()+"_mon_dequeue";
+      return port.getName()+"_dequeue";
    }
    
    public String getLocalWriterName() {
-      return  port.getName()+"_mon_enqueue";
+      return  getLocalReaderWriterName("write");
    }   
 
    

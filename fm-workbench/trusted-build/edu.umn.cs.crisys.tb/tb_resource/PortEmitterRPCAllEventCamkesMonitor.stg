@@ -83,6 +83,22 @@ copyFromQueueDataStmt(port) ::= <<
 
 
 InputEventDataPortDecls(port) ::= <<
+
+/************************************************************************
+ *  <port.incomingWriterName>:
+ * Invoked by: remote interface.
+ *
+ * This is the function invoked by a remote RPC to write to an active-thread
+ * input event data port.  It queues the input message into a circular buffer.
+ *
+ ************************************************************************/
+
+bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
+    bool result;
+    result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
+    return result;
+}
+
 >>
 
 InputEventPortDecls(port) ::= <<
@@ -182,7 +198,7 @@ while (<dispatcher.localReaderName>()) {
 
 inputPortDeclarations(port) ::= <<
 uses Monitor_<port.typeName> <port.name>;
-consumes QueueData q<port.name>;
+consumes QueuedData q<port.name>;
 
 >>
 
@@ -194,7 +210,7 @@ outputPortDeclarations(port) ::= <<
 rpcConnection(cid, from1, from2, mon) ::=
    "connection seL4RPCCall <cid> (from <from1>.<from2>, to monitor_<mon>.mon);"
 notifyConnection(cid, mon, to1, to2) ::=
-   "connection seL4RPCCall <cid> (from monitor_<mon>.qd, to <to1>.q<to2>);"
+   "connection seL4Notification <cid> (from monitor_<mon>.qd, to <to1>.q<to2>);"
 
 connectReaderWriter(connection, model) ::= <<
 <rpcConnection
@@ -218,7 +234,7 @@ connectReaderWriter(connection, model) ::= <<
 // rather than assuming that all types are defined in "tb_toplevel_types.h"
 monitorCamkesIdl4Writer(iname, tname) ::= <<
 procedure <iname> {
-  include <\u003C>stdbool.h<\u003E>
+  include <\u003C>stdbool.h<\u003E>;
   include <\u003C>stdbool.h<\u003E>;
   include <\u003C>tb_toplevel_types.h<\u003E>;
   bool enqueue(refin <tname> m);
@@ -280,7 +296,7 @@ bool mon_enqueue(const <tname> * m) {
 
 monitorCamkesEventHandler(port,unlock) ::= <<
 static void q<port.name>_handler(void * unused) {
-    q<port.name>_reg_callback(q<port.name>_handler, null);
+    q<port.name>_reg_callback(q<port.name>_handler, NULL);
     <unlock>}
 
 >>

@@ -40,9 +40,8 @@ public class EmitterFactory {
       // Shared memory only emitter (no RPCs) for linux 
       else if (PortEmitterSharedMemDataport.isApplicable(dp)) {
          return new PortEmitterSharedMemDataport(dp);
-      }
       // Default port emitters
-      else if (PortEmitterRPCAllEventCAmkESMonitor.isApplicable(dp)) {
+      } else if (PortEmitterRPCAllEventCAmkESMonitor.isApplicable(dp)) {
           return new PortEmitterRPCAllEventCAmkESMonitor(dp); 
       } else if (PortEmitterRPCAllEvent.isApplicable(dp)) {
          return new PortEmitterRPCAllEvent(dp); 

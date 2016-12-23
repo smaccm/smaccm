@@ -3,17 +3,16 @@
  */
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC;
 
+
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.ThreadEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.OSModel.OSTarget;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
-import edu.umn.cs.crisys.tb.model.port.PortFeature;
+import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.util.*; 
 
 
@@ -118,8 +117,14 @@ public String getFullyQualifiedName() {
 @Override
 public String getOutgoingPortWriterName() {
      OSModel os = c.getSourcePort().getOwner().getModel();
+     // TODO: This should probably be rewritten and the name generation
+     // for output ports, at minimum for camkes, should be hidden in a PortEmitter method.
      if (os.getOsTarget() == OSModel.OSTarget.CAmkES) {
-        return getOutgoingPortName() + "_" + this.getSourcePort().getType().getWriterFn();
+         if (this.getSourcePort().getModelElement() instanceof OutputEventPort) {
+           return getOutgoingPortName() + "_enqueue";
+         } else {
+           return getOutgoingPortName() + "_" + this.getSourcePort().getType().getWriterFn();
+         }
      } else if (os.getOsTarget() == OSModel.OSTarget.eChronos || 
                 os.getOsTarget() == OSModel.OSTarget.VxWorks ||
                 os.getOsTarget() == OSModel.OSTarget.linux) {

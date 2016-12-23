@@ -9,9 +9,9 @@ import "CommonComponentC.stg"
 
 osSpecificThreadInitializer(threadImpl) ::= <<
 void pre_init(void) {
-    <threadImpl.inputEventPortList:{ port | q<port.name>_reg_callback(q<port.name>_handler)
+    <threadImpl.inputEventPortList:{ port | q<port.name>_reg_callback(q<port.name>_handler,NULL);
 }>
-    <threadImpl.inputEventDataPortList:{ port | q<port.name>_reg_callback(q<port.name>_handler)
+    <threadImpl.inputEventDataPortList:{ port | q<port.name>_reg_callback(q<port.name>_handler,NULL);
 }>
 
 }
