@@ -118,6 +118,32 @@ public class OSModel extends ModelElementBase {
    private boolean camkesUseMailboxDataports = false;
    private boolean useOSRealTimeExtensions = false; 
 
+   // Properties related to VMs
+   public class VMDataport {
+      public ThreadInstance owner; 
+      public String name;
+      public Type type;
+      public VMDataport(ThreadInstance o, String n, Type t) { owner = o; name = n; type = t;}
+      public boolean equals(Object o) {
+         if (o == null) return false;
+         if (!(o instanceof VMDataport)) return false;
+         VMDataport other = (VMDataport)o;
+         return (owner.equals(other.owner) &&
+                 name.equals(other.name) &&
+                 type.equals(other.type));
+      }
+   };
+   
+   public class CrossVMDataportConnection {
+      public VMDataport src;
+      public List<VMDataport> dests;
+      public CrossVMDataportConnection(VMDataport s, List<VMDataport> d) {src = s; dests = d;}
+   }
+   
+   private List<CrossVMDataportConnection> crossVmConnections = new ArrayList<>();
+   
+   public List<CrossVMDataportConnection> getCrossVmConnections() { return crossVmConnections; }
+   
    /**
     * @return the useOSRealTimeExtensions
     */

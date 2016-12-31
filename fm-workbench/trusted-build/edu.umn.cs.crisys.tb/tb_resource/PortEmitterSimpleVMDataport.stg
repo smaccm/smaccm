@@ -126,3 +126,45 @@ dataport_init <dpinit_pairs>
 # Example: emits_event_init /dev/camkes_reverse_ready
 <event_inits>
 >>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// VM component C files
+//
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+cross_vm_dataports_body(ports) ::= <<
+
+/*
+ * Copyright 2016, University of Minnesota
+ *
+ * This software may be distributed and modified according to the terms of
+ * the GNU General Public License version 2. Note that NO WARRANTY is provided.
+ * See "LICENSE_GPLv2.txt" for details.
+ *
+ * @TAG(D61_GPL)
+ */
+
+#include \<camkes.h>
+#include \<dataport_caps.h>
+#include \<cross_vm_dataport.h>
+#include \<vmm/vmm.h>
+
+<ports:{p |extern dataport_caps_handle_t <p.qualifiedName>_handle;
+
+}>
+
+static dataport_caps_handle_t *dataports[] = {
+    NULL, // entry 0 is NULL so ids correspond with indices
+    <ports:{p |&<p.qualifiedName>_handle
+    }; separator=", ">
+};
+
+int cross_vm_dataports_init(vmm_t *vmm) {
+    return cross_vm_dataports_init_common(vmm, dataports, sizeof(dataports)/sizeof(dataports[0]));
+}
+
+>>

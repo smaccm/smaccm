@@ -23,7 +23,7 @@ filePostfix(name, path) ::= <<
 >>
 
 createVMInit(vm) ::= <<
-component Init<vm.vmNumber> {
+component <vm.vmComponentName> {
     <vm.vmComponentDefs>
     VM_INIT_DEF()
 }
@@ -152,8 +152,10 @@ configVms(model) ::= <<
 >>
 
 camkesAssemblyBody(model) ::= <<
-
+import \<VM/vm.camkes>;
 import \<std_connector.camkes>;
+
+#include \<autoconf.h>
 
 <if(model.containsVM)>
 #include \<configurations/vm.h>
@@ -166,7 +168,7 @@ import \<TimeServerKZM/TimeServer.camkes>;
 <elseif(model.isOdroidTarget)>
 import \<TimeServerOdroid/TimeServer.camkes>;
 <elseif(model.isx86Target)>
-import \<TimeServerX86Stack/TimeServer.camkes>;
+// MWW: import \<TimeServer/TimeServer.camkes> included in VM import;
 <else>
 // TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU and ODROID time server.
 <endif>
@@ -205,6 +207,10 @@ assembly {
         component TimeServerOdroid time_server;
         <elseif(model.isx86Target)>
         component TimeServer time_server;
+        component PIT pit;
+        connection seL4HardwareIOPort pit_command(from time_server.pit_command, to pit.command);
+        connection seL4HardwareIOPort pit_channel0(from time_server.pit_channel0, to pit.channel0);
+        connection seL4HardwareInterrupt pit_irq(from pit.irq, to time_server.irq);
         <else>
         // MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
         <endif>
@@ -243,6 +249,19 @@ assembly {
         <configVms(model)>
         <endif>
         <if(model.threadCalendar.hasDispatchers)>
+        <if(!model.containsVM && !model.externalTimerComponent)>
+        time_server.putchar_attributes = "0";
+        time_server.timers_per_client = 9;
+        time_server.heap_size = 8192;
+        time_server.priority = 255;
+        pit.command_attributes = "0x43:0x43";
+        pit.channel0_attributes = "0x40:0x40";
+        pit.irq_irq_type = "isa";
+        pit.irq_irq_ioapic = 0;
+        pit.irq_irq_ioapic_pin = 2;
+        pit.irq_irq_vector = 2;
+        pit.heap_size = 0;
+        <endif>
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";

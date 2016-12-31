@@ -321,6 +321,10 @@ public class ModelNames implements NameEmitter {
      return "vm" + getVmNumber(); 
   }
   
+  public String getVmComponentName() {
+     return "Init" + getVmNumber(); 
+  }
+
   public ST getTemplateST(String stName) {
      STGroupFile template = Util.createTemplate("PortEmitterRPCAllEvent.stg");
      return template.getInstanceOf(stName); 
@@ -365,6 +369,13 @@ public class ModelNames implements NameEmitter {
         pe.getAddLinuxVMFiles(m, m.getVmCrossingPorts(), linuxDirectory);
      }
   }
+
+  public void getAddVMComponentFiles(File componentDirectory) {
+     for (PortListEmitterCamkesVM pe: EmitterListRegistry.getVMPortListEmitters()) {
+        pe.getAddVMComponentFiles(m, m.getVmCrossingPorts(), componentDirectory);
+     }
+  }
+
   /* How to do the linux side?  Well, depends on who is calling. */
   /*
   public List<PortConnectionEmitter> getHostSourceToVMDestConnections() {

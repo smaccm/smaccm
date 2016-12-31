@@ -35,6 +35,7 @@ thread sender
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
+	    TB_SYS::Requires_Time_Services => true;
 end sender ; 
 
 -- Example of a periodically dispatched "Active" thread.   

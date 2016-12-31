@@ -75,13 +75,12 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
       List<PortEmitter> ports = getOutputVmPorts(pl); 
       return ports.stream()
          .map(p -> {
-            int pageMultiple = Util.moduloCeiling(4096, 
-                  p.getType().getOverApproximateSizeInBytes());
+            int size = p.getType().getOverApproximateSizeInBytes();
                   
             ST st = getTemplateST("assemblyConfigVMPort");
             st.add("port", p);
             st.add("vm", EmitterFactory.model(vm));
-            st.add("size", pageMultiple);
+            st.add("size", size);
             st.add("index", ports.indexOf(p) + 1);
             return st.render();})
          .collect(Collectors.joining(""));
@@ -118,10 +117,10 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
       try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
         ST st = getTemplateST("camkesInitBody");
         String dpinit_pairs = getOutputVmPorts(pf).stream()
-           .map(p -> "/dev/" + p.getQualifiedName() + " " + "8192 ")
+           .map(p -> "/dev/" + p.getQualifiedName() + " " + p.getType().getOverApproximateSizeInBytes())
            .collect(Collectors.joining(" "));
         dpinit_pairs += System.lineSeparator() 
-              + "# note: this 8192 value is total crap; need to find type size";
+              + "# note: the size value is approximate and assumes 32-bit word alignment for struct fields.  Your mileage may vary.";
         st.add("dpinit_pairs", dpinit_pairs);   
         st.add("event_inits", "");
         hwriter.append(st.render());
@@ -129,5 +128,21 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
         throw new TbException("IOException occurred during write of linux buffer: " + e);
       }
    }
+
+   @Override
+   public void getAddVMComponentFiles(OSModel vm, List<PortFeature> pf, File componentDir) {
+      File srcDirectory = new File(componentDir, "src");
+      srcDirectory.mkdirs();
+      
+      File CFile = new File(srcDirectory, "cross_vm_dataports.c");
+      try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(CFile))) { 
+        ST st = getTemplateST("cross_vm_dataports_body");
+        st.add("ports", getOutputVmPorts(pf));
+        hwriter.append(st.render());
+      } catch (IOException e) {
+        throw new TbException("IOException occurred during write of linux buffer: " + e);
+      }
+   }
    
+
 }

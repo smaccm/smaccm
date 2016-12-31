@@ -254,7 +254,7 @@ public class TypeNames implements NameEmitter {
   
   public int getOverApproximateSizeInBytes() {
      try {
-        return this.t.getOverApproximateSizeInBytes(64);
+        return this.t.getOverApproximateSizeInBytes(4);
      } catch (TbFailure te) {
         throw new TbException(te.getMessage());
      }

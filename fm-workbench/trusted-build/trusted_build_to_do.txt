@@ -545,5 +545,71 @@ Code locations for VM stuff:
 		#define C162_ROOTFS "rootfs.cpio"
 		#define VM_GUEST_CMDLINE "earlyprintk=ttyS0,115200 console=ttyS0,115200 root=/dev/mem i8042.nokbd=y i8042.nomux=y i8042.noaux=y io_delay=udelay noisapnp pci=nomsi"
 	
+	These definitions show up in the config for the VM in the .camkes file.
+	
+	I don't see them anywhere else.
+	
+	
+	Suppose we give native support for dataport tunneling within TB to do the whole smack: 
+- Camkes VM component definitions
+- Camkes Assembly connections
+- Camkes Config definitions
+- Linux C code generation
+- Generation of camkes_init driver information on linux
+- Generation of C file for the 'Init' VM component (one per VM)
+	
+	Fuck!
+	So, what would we specify? 
+	
+	We wish to have a dataport that crosses the VM.  It has writer X and readers {Y1, Y2, Y3}, where the writer and readers are on different sides of the VM boundary.  We need to know the (threadname, dataportname) pair for each of the dataports, and the type of the dataport.  
+	
 	Makefile
+		For the makefile, we 
+
+12/29
+	Getting close the end of this f*cking year.
+	
+	Code Freeze Meeting: 
+Room Assignments for breakouts
+Food
+Reception information
+Financial walkthrough
+	Food
+	Venue
+	Speakers
+	Reception
+Forms walkthrough
+	Any alcohol release forms necessary?
+Hotel room booking (Commons full?)
+Dates for final e-mail announcements
+	Advertising with St. Thomas?
+
+	Interface (user):
+		CamkesDataport(ThreadInstance, Name, Type);
+		addDataportConnection(CamkesDataport src, List<CamkesDataport> dst);
+	
+	Interface (emitter): 
+		Write InitVM component declarations:
+			One dataport for each connection source that crosses a VM boundary (matching the VMDataPortConnection type).
+			
+		Write Camkes assembly connections
+		Write Camkes assembly configuration information
+		Write Camkes Component C file
+		Write Linux camkes_init file
+		Write Linux thread declaration connection to dataports
+		Write Camkes configuration 
+	
+	Where do we store this dataport information?  Could store it in CamkesCodeGenerator
+		Issue: how do we pass it in to the places we need it?
+		Easier if we store it in the OSModel for the VM.  
+	
+	Plan: 
+		Walk through Andrew's changes
+			Any remaining gotchas?
+		Run some non-VM models through to test timer performance (Andrew?)
+		Run one VM model through to check automation.
+		Report to Aleksey and push changes
+		
+		
+		
 		
