@@ -192,7 +192,7 @@ connector seL4RPCCallDataport {
 <model.virtualMachineList:createVMInit()>
 <endif>
 
-assembly {
+component VM {
     composition {
         <if(model.containsVM)>
         VM_COMPOSITION_DEF()
@@ -206,11 +206,13 @@ assembly {
         <elseif(model.isOdroidTarget)>
         component TimeServerOdroid time_server;
         <elseif(model.isx86Target)>
+        <if(!model.containsVM)>
         component TimeServer time_server;
         component PIT pit;
         connection seL4HardwareIOPort pit_command(from time_server.pit_command, to pit.command);
         connection seL4HardwareIOPort pit_channel0(from time_server.pit_channel0, to pit.channel0);
         connection seL4HardwareInterrupt pit_irq(from pit.irq, to time_server.irq);
+        <endif>
         <else>
         // MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
         <endif>
@@ -280,6 +282,16 @@ assembly {
         <endif>
         <model.threadImplementations:configConnectTimeServices(model)>
         <model.activeThreadImplementations:configActiveToPassiveRegionDataportId(model)>
+    }
+}
+
+/*  MWW: Why do we need an assembly with one VM component to make the VM stuff work?
+         I do not know.
+*/
+assembly {
+    composition {
+        /* The VM sub component */
+        component VM vm;
     }
 }
 
