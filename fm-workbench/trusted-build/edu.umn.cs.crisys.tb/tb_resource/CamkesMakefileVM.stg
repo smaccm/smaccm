@@ -149,13 +149,13 @@ include TimeServer/TimeServer.mk
 # MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
 <endif>
 
-# TO DO HERE: Include auto-generated component for each VM.
-# Need to generate a C file as well with component information.  Yuck!
 
 <model.threadImplementations:writeComponent()>
 <if(model.threadCalendar.hasDispatchers)>
 <writeComponentName(model.threadCalendar.periodicDispatcherComponentName)>
 <endif>
+
+<model.virtualMachineList:writeVM()>
 
 # We want to run C99
 CFLAGS += -std=gnu99 "-DCAMKES_VM_CONFIG=${VM_CONFIG}" -I${SOURCE_DIR}/configurations -I${SOURCE_DIR}/../../components/VM/configurations
