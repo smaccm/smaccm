@@ -78,7 +78,7 @@ assemblyConnectSharedData(sharedData, model) ::= <<
 
 assemblySetPriorities(threadImpl) ::= <<
 <if(!threadImpl.isExternal)>
-<threadImpl.componentInstanceName>.priority = <threadImpl.priority>;
+<threadImpl.componentInstanceName>._priority = <threadImpl.priority>;
 <endif>
 >>
 
