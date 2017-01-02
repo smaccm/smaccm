@@ -20,7 +20,7 @@ camkesMakefilePurpose() ::= <<
 # extended.
 #
 # This Makefile is designed for use with the Camkes distribution supporting
-# linux VMs.
+# linux VMs.  It does not require that the project to be built actually contains VMs.
 #
 # The directory containing this file should be placed under the projects/vm/apps
 # directory, and a symbolic link to this directory should be created from the
