@@ -9,7 +9,8 @@
 #endif
 #include <inttypes.h>
 
-char buffer[4096];
+#define BUFF_SIZE 4096
+char buffer[BUFF_SIZE];
 
 void receiver_periodic_ping( const int64_t * periodic_1000_ms) {
 #ifdef __TB_OS_LINUX__
@@ -20,7 +21,7 @@ void receiver_periodic_ping( const int64_t * periodic_1000_ms) {
 #endif
 	uint32_t results;
 	int position = 0;
-    while (tb_receiver_read_Input1(&results)) {
+    while (tb_receiver_read_Input1(&results) && position < BUFF_SIZE) {
 		buffer[position++] = '.';
 	}
 	buffer[position] = 0;

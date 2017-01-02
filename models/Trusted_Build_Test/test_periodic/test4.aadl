@@ -28,7 +28,7 @@ thread sender1
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 20;
@@ -47,7 +47,7 @@ thread sender2
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 19;
@@ -66,7 +66,7 @@ thread sender3
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 18;
@@ -85,7 +85,7 @@ thread sender4
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 17;
@@ -104,7 +104,7 @@ thread sender5
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 16;
@@ -123,7 +123,7 @@ thread sender6
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 15;
@@ -142,7 +142,7 @@ thread sender7
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 14;
@@ -161,7 +161,7 @@ thread sender8
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 13;
@@ -180,7 +180,7 @@ thread sender9
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 12;
@@ -199,7 +199,7 @@ thread sender10
    properties 
        Dispatch_Protocol => Periodic;
        TB_SYS::Thread_Type => Active ;
-       Period => 100 ms;
+       Period => 20 ms;
        Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
        TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
        Priority => 11;
@@ -213,7 +213,7 @@ thread receiver
    features
       Input1: in event data port Base_Types::Unsigned_32 {
         -- TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
-        Queue_Size => 250;
+        Queue_Size => 4096;
       }; 
       
    properties 
