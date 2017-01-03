@@ -27,6 +27,7 @@ import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
@@ -659,13 +660,20 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				continue;
 			}
 
-			String sourPortName = getAgreePortName(absConnSour, sourContext);
-			String destPortName = getAgreePortName(absConnDest, destContext);
-
-			ConnectionType connType;
+			//weirdness with feature groups
+			String sourPrefix = null;
+			if(sourContext instanceof FeatureGroup){
+				sourPrefix = sourContext.getName();
+			}
+			String destPrefix = null;
+			if(destContext instanceof FeatureGroup){
+				destPrefix = destContext.getName();
+			}
+			String sourPortName = getAgreePortName(sourPort, sourPrefix).get(0);
+			String destPortName = getAgreePortName(destPort, destPrefix).get(0);
 
 			if (destPort instanceof EventDataPort && sourPort instanceof EventDataPort) {
-				connType = ConnectionType.EVENT;
+				ConnectionType connType = ConnectionType.EVENT;
 
 				AgreeVar sourceVar = new AgreeVar(sourPortName + eventSuffix, NamedType.BOOL, sourPort,
 						sourceNode == null ? null : sourceNode.compInst);
@@ -674,14 +682,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourceVar, destVar,
 						connType, latched, delayed, conn);
-
-//				if (!destinationSet.add(agreeConnection.destVar)) {
-//					String message = "Multiple connections to feature '" + agreeConnection.destVar + "'. Remove "
-//							+ "the additional AADL connections or override them with a connection statement "
-//							+ "in the AGREE annex.";
-//					throw new AgreeException(message);
-//					//AgreeLogger.logWarning(message);
-//				}
 
 				agreeConns.add(agreeConnection);
 
@@ -692,7 +692,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 						+ "' and '" + sourPort.getName() + "' of differing type");
 				continue;
 			}
-			connType = ConnectionType.DATA;
+			ConnectionType connType = ConnectionType.DATA;
 
 			DataSubcomponentType dataClass = getConnectionEndDataClass(destPort);
 
@@ -710,34 +710,27 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourVar, destVar,
 					connType, latched, delayed, conn);
 
-//			if (!destinationSet.add(agreeConnection.destVar)) {
-//				String message = "Multiple connections to feature '" + agreeConnection.destVar + "'. Remove "
-//						+ "the additional AADL connections or override them with a connection statement "
-//						+ "in the AGREE annex.";
-//				throw new AgreeException(message);
-//			}
-
 			agreeConns.add(agreeConnection);
 		}
 		return agreeConns;
 	}
 
-	private String getAgreePortName(ConnectedElement absConn, Context context) {
-		ConnectionEnd port = absConn.getConnectionEnd();
+	private List<String> getAgreePortName(ConnectionEnd port, String prefix) {
+		
+		if(port instanceof FeatureGroup){
+			FeatureGroup featGroup = (FeatureGroup)port;
+			FeatureGroupType featType = featGroup.getFeatureGroupType();
+			featType.getownedD 
+			System.out.println();
+		}
 		String portName = port.getName();
-		if (context == null) {
-			return portName;
-		}
-		String contextName = context.getName();
-		if (port instanceof DataPort || port instanceof EventDataPort) {
-			if (context instanceof FeatureGroup) {
-				portName = contextName + dotChar + portName;
-			}
-			return portName;
+		if (prefix == null) {
+			return Collections.singletonList(portName);
 		} else if (port instanceof DataSubcomponent) {
-			return contextName + "." + port.getName();
+			return Collections.singletonList(prefix + "." + port.getName());
 		}
-		return null;
+		return Collections.singletonList(prefix + dotChar + portName);
+			
 	}
 
 	private DataSubcomponentType getConnectionEndDataClass(ConnectionEnd port) {

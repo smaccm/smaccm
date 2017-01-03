@@ -1,5 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis.lustre.visitors;
 
+import org.antlr.runtime.tree.DOTTreeGenerator;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -128,7 +129,10 @@ public class RenamingVisitor extends AstIterVisitor{
 		} else if (reference instanceof EventDataPort) {
 			return prefix + seperator + ((EventDataPort) reference).getName() + suffix;
 		} else if (reference instanceof FeatureGroup) {
-			return prefix + seperator + ((FeatureGroup) reference).getName();
+			String featName = ((FeatureGroup) reference).getName();
+			String varName = var.toString();
+			featName = varName.substring(varName.indexOf(featName)).replace("__", ".");
+			return prefix + seperator + featName;
 		} else if (reference instanceof PropertyStatement) {
 			return prefix + seperator + ((PropertyStatement) reference).getName();
 		} else if (reference instanceof ComponentType || reference instanceof ComponentImplementation

@@ -20,6 +20,7 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
@@ -806,9 +807,13 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return dp.getDataFeatureClassifier();
 		} else if (ne instanceof FeatureInstance) {
 			FeatureInstance fi = (FeatureInstance) ne;
-			if (fi.getFeature() instanceof DataPort) {
-				DataPort dp = (DataPort) fi.getFeature();
+			Feature feature = fi.getFeature();
+			if (feature instanceof DataPort) {
+				DataPort dp = (DataPort) feature;
 				return dp.getDataFeatureClassifier();
+			}else if(feature instanceof FeatureGroup){
+				FeatureGroup featGroup = (FeatureGroup)feature;
+				return featGroup.getAllFeatureGroupType();
 			}
 			return (NamedElement) fi.getFeature().getFeatureClassifier();
 		} else if (ne instanceof ComponentInstance) {
