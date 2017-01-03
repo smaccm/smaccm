@@ -41,12 +41,12 @@
 
  **************************************************************************/
 
+
 // reader prototype for framing2self
 bool tb_CAN_Driver_read_framing2self(SMACCM_DATA__CAN_Frame_i * framing2self);
  bool tb_CAN_Driver_write_self2framing_status(const bool * self2framing_status);
  bool tb_CAN_Driver_write_self2framing_frame(const SMACCM_DATA__CAN_Frame_i * self2framing_frame);
  
-
 
 //////////////////////////////////////////////////////////////////////////
 //

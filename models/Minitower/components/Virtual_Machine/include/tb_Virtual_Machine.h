@@ -41,10 +41,10 @@
 
  **************************************************************************/
 
+
 bool tb_Virtual_Machine_write_self2server(const SMACCM_DATA__Camera_Bounding_Box_i * self2server); // reader prototype for server2self_reboot
 bool tb_Virtual_Machine_read_server2self_reboot(bool * server2self_reboot);
  
-
 
 //////////////////////////////////////////////////////////////////////////
 //

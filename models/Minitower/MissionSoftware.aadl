@@ -22,6 +22,7 @@ public
 	   properties
 	      TB_SYS::OS => CAmkES;
 	      TB_SYS::HW => ODROID;
+	      TB_SYS::Add_Dummy_Arg_To_Void_Fns => True;
 	end exynos5.camkes;
 
 	process Mission_Software

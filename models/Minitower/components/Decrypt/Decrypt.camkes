@@ -37,11 +37,14 @@
  **************************************************************************/
 
 
-// Idl files for ports
-import "../../interfaces/SMACCM_DATA__GIDL_writer.idl4";
-import "../../interfaces/SMACCM_DATA__UART_Packet_i_writer.idl4";
 import "../../interfaces/int64_t_writer.idl4";
+
 import "../../interfaces/void_writer.idl4";
+
+import "../../interfaces/SMACCM_DATA__UART_Packet_i_writer.idl4";
+
+import "../../interfaces/SMACCM_DATA__GIDL_writer.idl4";
+
 
 
 component Decrypt {

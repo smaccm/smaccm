@@ -41,10 +41,11 @@
 
  **************************************************************************/
 
+
 // user entrypoints for periodic dispatch
 void component_entry(const int64_t * periodic_dispatcher);
 
- void component_init(const int64_t * periodic_dispatcher);
+ void component_init(const int64_t *arg);
  // reader prototype for server2self
 bool tb_CAN_Framing_read_server2self(SMACCM_DATA__GIDL server2self);
  bool tb_CAN_Framing_write_self2server(const SMACCM_DATA__GIDL self2server);
@@ -54,7 +55,6 @@ bool tb_CAN_Framing_read_can2self_frame(SMACCM_DATA__CAN_Frame_i * can2self_fram
 bool tb_CAN_Framing_read_can2self_status(bool * can2self_status);
  bool tb_CAN_Framing_write_self2can(const SMACCM_DATA__CAN_Frame_i * self2can);
  
-
 
 
 #endif // __TB_AADL_CAN_Framing_types__H
