@@ -198,8 +198,12 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				varStack.peek().put(arg, value);
 				ResoluteResult subResult = forall(rest, body);
 				children.add(subResult);
-				// shortcut only if call is not to a claim
-				if (!subResult.isValid() && !claimCall && !containsClaim(subResult)) {
+				// We used to continue producing false claims rather than short circuit.
+				// We no longer do this.
+//				if (!subResult.isValid() && !claimCall && !containsClaim(subResult)) {
+//					break;
+//				}
+				if(!subResult.isValid()){
 					break;
 				}
 			}
