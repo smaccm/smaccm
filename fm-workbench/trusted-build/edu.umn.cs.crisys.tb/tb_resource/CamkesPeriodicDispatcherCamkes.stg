@@ -23,6 +23,7 @@ filePostfix(name, path) ::= <<
 
 writePeriodicSender(dispatcher) ::= <<
 uses <dispatcher.type.readerWriterInterfaceName> <dispatcher.qualifiedName>;
+
 >>
 
 writePeriodicSenders(threadImpl) ::= <<
