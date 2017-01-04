@@ -62,23 +62,8 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
    @Override
    public void addPortPublicTypeDeclarations(Map<String, Type> typeList) {
       for (MemoryRegionNames memRegion: this.getMemoryRegions()) {
-         StringTokenizer tok = 
-               new StringTokenizer(memRegion.getRegion(), ":"); 
-         String base = tok.nextToken();
-         String size = tok.nextToken(); 
-         System.out.println("Tokenizing memory regions: base = " + base + 
-               "; size = " + size + ".");
-         if (base == null || size == null) {
-            throw new TbException("In IRQ port " + port.getName() + ", memory region is mis-specified");
-         }
-         int sizeVal;
-         try {
-            sizeVal = Integer.decode(size);
-         } catch (NumberFormatException ne) {
-            throw new TbException("In IRQ port " + port.getName() + ", memory region is mis-specified");
-         }
          RecordType sizeRecordType = new RecordType();
-         ArrayType byteArrayType = new ArrayType(new IntType(8, false), sizeVal);
+         ArrayType byteArrayType = new ArrayType(new IntType(8, false), memRegion.getSize());
          sizeRecordType.addField("memRegion", byteArrayType);
          model.getAstTypes().put(
                memRegion.getRegionTypeName(), sizeRecordType);
@@ -163,8 +148,7 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
    public String getWritePortThreadInitializer() {
       String result = "";
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         result += this.getName() + "_reg_callback(" + 
-               this.getIncomingWriterName() + ", NULL); " + System.lineSeparator();
+         // no-op in Camkes next; now automatically handled by middleware  
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          // no-op.  I know that this is indeed a no-op; it is handled
          // in the prx file.
