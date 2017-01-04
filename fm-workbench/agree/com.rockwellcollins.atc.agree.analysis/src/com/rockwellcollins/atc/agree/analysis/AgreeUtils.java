@@ -274,26 +274,6 @@ public class AgreeUtils {
         }
         throw new AgreeException("Unhandled initial type for type '"+type+"'");
     }
-    
-//    public static boolean referenceIsNullOrContractEqOrProperty(EObject reference){
-//        if(reference == null){
-//            throw new AgreeException("AgreeStatement must have a reference");
-//        }
-//        if (reference instanceof EqStatement
-//                || reference instanceof PropertyStatement
-//                || reference instanceof GuaranteeStatement
-//                || reference instanceof AssumeStatement) {
-//            EObject container = reference.eContainer();
-//            while (!(container instanceof ComponentClassifier)) {
-//                container = container.eContainer();
-//            }
-//            if (container instanceof ComponentImplementation) {
-//                return false;
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
 
     public static boolean referenceIsInContract(EObject reference, ComponentInstance compInst) {
     	ComponentClassifier compClass = compInst.getComponentClassifier();

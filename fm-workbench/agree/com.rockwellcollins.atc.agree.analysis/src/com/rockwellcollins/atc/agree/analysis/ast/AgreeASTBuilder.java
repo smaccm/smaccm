@@ -25,6 +25,7 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
+import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
@@ -581,22 +582,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			return;
 		}
 
-		String typeName = AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, typeExpressions);
-		if (typeName == null) {
-			// we do not reason about this type
+		Type type = AgreeRecordUtils.getRecordType(dataClass, typeMap, typeExpressions);
+		if(type == null){
+			//we do not reason about this type
 			return;
-		}
-
-		Type type = getNamedType(typeName);
-		for (RecordType recType : typeExpressions) {
-			if (recType.id.equals(typeName)) {
-				type = recType;
-				break;
-			}
-		}
-
-		if (type == null) {
-			throw new AgreeException("The type name should have been created");
 		}
 
 		AgreeVar agreeVar = new AgreeVar(name, type, feature.getFeature(), feature.getComponentInstance(), feature);
@@ -669,67 +658,104 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			if(destContext instanceof FeatureGroup){
 				destPrefix = destContext.getName();
 			}
-			String sourPortName = getAgreePortName(sourPort, sourPrefix).get(0);
-			String destPortName = getAgreePortName(destPort, destPrefix).get(0);
 
-			if (destPort instanceof EventDataPort && sourPort instanceof EventDataPort) {
-				ConnectionType connType = ConnectionType.EVENT;
+			List<AgreeVar> sourVars = getAgreePortNames(sourPort, sourPrefix,  sourceNode == null ? null : sourceNode.compInst);
+			List<AgreeVar> destVars = getAgreePortNames(destPort, destPrefix, destNode == null ? null : destNode.compInst);
+			
+			if(sourVars.size() != destVars.size()){
+				throw new AgreeException("Something went wrong while generating connections");
+			}
+			
+			for(int i = 0; i < sourVars.size(); i++){
+				AgreeVar sourVar = sourVars.get(i);
+				AgreeVar destVar = destVars.get(i);
+				
+				if (!matches((ConnectionEnd)sourVar.reference, (ConnectionEnd)destVar.reference)) {
+					AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '" + sourVar.id.replace(dotChar, ".")
+							+ "' and '" + destVar.id.replace(dotChar, ".") + "' of differing type");
+					continue;
+				}
 
-				AgreeVar sourceVar = new AgreeVar(sourPortName + eventSuffix, NamedType.BOOL, sourPort,
-						sourceNode == null ? null : sourceNode.compInst);
-				AgreeVar destVar = new AgreeVar(destPortName + eventSuffix, NamedType.BOOL, destPort,
-						destNode == null ? null : destNode.compInst);
-
-				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourceVar, destVar,
+				if(!sourVar.type.equals(destVar.type)){
+					throw new AgreeException("Type mismatch during connection generation");
+				}
+				
+				ConnectionType connType;
+				
+				if(sourVar.id.endsWith(eventSuffix)){
+					connType = ConnectionType.EVENT;
+				}else{
+					connType = ConnectionType.DATA;
+				}
+				
+				AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourVar, destVar,
 						connType, latched, delayed, conn);
 
 				agreeConns.add(agreeConnection);
-
 			}
-
-			if (!matches(sourPort, destPort)) {
-				AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '" + destPort.getName()
-						+ "' and '" + sourPort.getName() + "' of differing type");
-				continue;
-			}
-			ConnectionType connType = ConnectionType.DATA;
-
-			DataSubcomponentType dataClass = getConnectionEndDataClass(destPort);
-
-			NamedType type = getNamedType(AgreeRecordUtils.getRecordTypeName(dataClass, typeMap, globalTypes));
-
-			if (dataClass == null || type == null) {
-				// we don't reason about this type
-				continue;
-			}
-
-			AgreeVar sourVar = new AgreeVar(sourPortName, type, sourPort,
-					sourceNode == null ? null : sourceNode.compInst);
-			AgreeVar destVar = new AgreeVar(destPortName, type, destPort, destNode == null ? null : destNode.compInst);
-
-			AgreeAADLConnection agreeConnection = new AgreeAADLConnection(sourceNode, destNode, sourVar, destVar,
-					connType, latched, delayed, conn);
-
-			agreeConns.add(agreeConnection);
+			
+			
 		}
 		return agreeConns;
 	}
+	
+	private Type getConnectionEndType(ConnectionEnd port){
+		DataSubcomponentType dataClass = getConnectionEndDataClass(port);
+		if(dataClass == null){
+			return null;
+		}
+		return AgreeRecordUtils.getRecordType(dataClass, typeMap, globalTypes);
+	}
 
-	private List<String> getAgreePortName(ConnectionEnd port, String prefix) {
+	private List<AgreeVar> getAgreePortNames(ConnectionEnd port, String prefix, ComponentInstance compInst) {
+		String portName = port.getName();
+		List<AgreeVar> subVars = new ArrayList<>();
+		
+		//if the port is a datasubcomponent then it is a member
+		//of a record type. Otherwise it is the first member of a feature group
+		if(prefix == null){
+			prefix = "";
+		}else if(port instanceof DataSubcomponent){
+			prefix = prefix + ".";
+		}else{
+			prefix = prefix + dotChar;
+		}
 		
 		if(port instanceof FeatureGroup){
 			FeatureGroup featGroup = (FeatureGroup)port;
 			FeatureGroupType featType = featGroup.getFeatureGroupType();
-			featType.getownedD 
-			System.out.println();
+			for(FeatureGroup subFeatGroup : featType.getOwnedFeatureGroups()){
+				subVars.addAll(getAgreePortNames(subFeatGroup, null, compInst));
+			}
+			for(DataPort subPort : featType.getOwnedDataPorts()){
+				subVars.addAll(getAgreePortNames(subPort, null, compInst));
+			}
+			for(EventDataPort subPort : featType.getOwnedEventDataPorts()){
+				subVars.addAll(getAgreePortNames(subPort, null, compInst));
+			}
+			for(EventPort subPort : featType.getOwnedEventPorts()){
+				subVars.addAll(getAgreePortNames(subPort, null, compInst));
+			}
+			
+			List<AgreeVar> prefixedStrs = new ArrayList<>();
+			for(AgreeVar subVar : subVars){
+				prefixedStrs.add(new AgreeVar(prefix + portName + dotChar + subVar.id, subVar.type, subVar.reference, compInst));
+			}
+			subVars = prefixedStrs;
 		}
-		String portName = port.getName();
-		if (prefix == null) {
-			return Collections.singletonList(portName);
-		} else if (port instanceof DataSubcomponent) {
-			return Collections.singletonList(prefix + "." + port.getName());
+		if(port instanceof DataPort || 
+				port instanceof EventDataPort ||
+				port instanceof DataSubcomponent){
+			Type type = getConnectionEndType(port);
+			if (type != null) {
+				subVars.add(new AgreeVar(prefix + portName, type, port, compInst));
+			}
 		}
-		return Collections.singletonList(prefix + dotChar + portName);
+		if(port instanceof EventDataPort || port instanceof EventPort){
+			subVars.add(new AgreeVar(prefix + portName + eventSuffix, NamedType.BOOL, port, compInst));
+		}
+		
+		return subVars;
 			
 	}
 

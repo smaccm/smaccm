@@ -84,6 +84,20 @@ public class AgreeRecordUtils {
         recordRecType(finalId, typeMap, typeExpressions);
         return typeMap.get(finalId);
     }
+    
+    public static Type getRecordType(NamedElement finalId, Map<NamedElement, String> typeMap,
+            Set<jkind.lustre.RecordType> typeExpressions) {
+    	String name = getRecordTypeName(finalId, typeMap, typeExpressions);
+    	if(name == null){
+    		return null;
+    	}
+    	for (jkind.lustre.RecordType recType : typeExpressions) {
+			if (recType.id.equals(name)) {
+				return recType;
+			}
+		}
+    	return new NamedType(name);
+    }
 
     private static void recordRecType(NamedElement el, Map<NamedElement, String> typeMap,
             Set<jkind.lustre.RecordType> typeExpressions) {
