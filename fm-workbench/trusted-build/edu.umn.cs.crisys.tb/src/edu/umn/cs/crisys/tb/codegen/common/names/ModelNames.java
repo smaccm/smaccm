@@ -14,6 +14,7 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
+import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
@@ -317,6 +318,14 @@ public class ModelNames implements NameEmitter {
      return ((OSModel)this.m.getParent()).virtualMachineList.indexOf(m);
   }
   
+  public int getVmConfigNumberMin() {
+     return getVmNumber();
+  }
+
+  public int getVmConfigNumberMax() {
+     return getVmNumber() + 2;
+  }
+  
   public String getVmInstanceName() {
      return "vm" + getVmNumber(); 
   }
@@ -338,9 +347,30 @@ public class ModelNames implements NameEmitter {
      return result;
   }
   
+  final public static Property VM_CONFIG_FILE = Util
+        .getPropertyDefinitionInWorkspace("TB_SYS::VM_Config_File");
+  
+  
   public String getPerVmConfigDefs() {
      String result = ""; 
-     ST st = Util.createTemplate("CamkesVmConfig.stg").getInstanceOf("VmConfig");
+     
+     String configFileName = 
+        Util.getStringValueOpt(m.getProcessorImpl(), VM_CONFIG_FILE);
+     
+     ST st; 
+     if (configFileName != null) {
+        File aadlDirectory = Util.getDirectory(m.getProcessorImpl());
+        File srcFilePath = new File(aadlDirectory, configFileName);
+        
+        STGroupFile templates = new STGroupFile(srcFilePath.getAbsolutePath());
+        templates.setListener(Util.getListener());
+        st = templates.getInstanceOf("VmConfig");
+        if (st == null) {
+           throw new TbException("Error: Vm configuration file: " + srcFilePath + " not found, or does not contain a template named 'VmConfig'");
+        }            
+     } else {
+        st = Util.createTemplate("CamkesVmConfig.stg").getInstanceOf("VmConfig");
+     }
      st.add("model", this);
      result += st.render();
      for (PortListEmitterCamkesVM pe: EmitterListRegistry.getVMPortListEmitters()) {

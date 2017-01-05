@@ -94,10 +94,11 @@ virtual processor implementation linux_vm.impl
    properties
       TB_SYS::OS => linux;
       TB_SYS::HW => QEMU;
-      Frame_Period => 500 ms;
-      Slot_Time => 100 us; 
-      -- Need to add priority to SMACCM_SYS.  SMACCM_SYS::Priority => 7;
+      -- Frame_Period => 500 ms;
+      -- Slot_Time => 100 us; 
+      -- Need to add priority to TB_SYS.  TB_SYS::Priority => 7;
       Deployment::Execution_Platform => linux32;
+      TB_SYS::Vm_Config_File => "user_code/linux_vm_config.stg";
 end linux_vm.impl;
 
 processor x86		
