@@ -1,0 +1,19 @@
+import <bool_writer.idl4>;
+import <SMACCM_DATA__CAN_Frame_i_writer.idl4>;
+
+import "can_shim/can_shim.camkes";
+
+component CAN_Driver {
+    include <tb_smaccmcopter_types.h>;
+    provides SMACCM_DATA__CAN_Frame_i_writer framing2self;
+    uses bool_writer self2framing_status;
+    uses SMACCM_DATA__CAN_Frame_i_writer self2framing_frame;
+
+    composition {
+        component can_shim can_shim_obj;
+
+        export can_shim_obj.framing2self -> framing2self;
+        export can_shim_obj.self2framing_status -> self2framing_status;
+        export can_shim_obj.self2framing_frame -> self2framing_frame;
+    }
+}
