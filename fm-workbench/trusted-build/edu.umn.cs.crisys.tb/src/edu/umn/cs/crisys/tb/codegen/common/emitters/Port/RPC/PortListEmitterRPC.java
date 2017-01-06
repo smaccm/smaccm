@@ -31,6 +31,7 @@ import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.tb.model.type.Type;
+import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
 /*****************************************************************
@@ -58,6 +59,20 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
       return rpcs;
    }
 
+   public Set<Type> relevantPortTypes(List<PortFeature> pl) {
+      Set<Type> types = new HashSet<>(); 
+      for (PortEmitterRPC perpc : relevantPorts(pl)) {
+         types.add(perpc.getModelElement().getType());
+      }
+      // add a type for the periodic dispatcher, which is an RPC port, but 
+      // also a "special" port.
+      types.add(InputPeriodicPort.getPortType());  
+      types.add(new UnitType());
+
+      return types;
+   }
+ 
+   
    public ST getIdlTemplateST(String stName) {
       STGroupFile template = Util.createTemplate("CamkesIdl4ReaderWriter.stg");
       return template.getInstanceOf(stName); 
@@ -94,21 +109,10 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
    // generate any .idl4 files associated with the RPC ports 
    public void camkesGenerateModelIdl(File directory, OSModel mdl, List<PortFeature> pl) {
 
-      // First, find all the RPC ports for this OS model. 
-      List<PortEmitterRPC> rpcPorts = relevantPorts(pl);
+      // Find set of unique types associated with all RPC ports
+      Set<Type> types = relevantPortTypes(pl); 
 
-      // Next, find set of unique types associated with all RPC ports
-      Set<Type> types = new HashSet<>(); 
-      for (PortEmitterRPC perpc : rpcPorts) {
-         types.add(perpc.getModelElement().getType());
-      }
-
-      // add a type for the periodic dispatcher, which is an RPC port, but 
-      // also a "special" port.
-      types.add(InputPeriodicPort.getPortType());  
-      types.add(InitializerPort.initializerPortType());
-
-      // Finally, create the reader/writer interfaces for these types.
+      // Create the reader/writer interfaces for these types.
       for (Type t: types) {
          writeIdl4File(directory, mdl, t); 
       }
@@ -116,8 +120,15 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
 
 
    @Override
-   public String camkesAddComponentLevelDeclarations(ThreadImplementation ti, List<PortFeature> ports) {
-      return "";
+   public String camkesAddComponentLevelDeclarations(ThreadImplementation ti, List<PortFeature> pl) {
+      String result = ""; 
+      STGroupFile template = Util.createTemplate("CamkesComponentCamkes.stg");
+      for (Type t: relevantPortTypes(pl)) {
+         ST st = template.getInstanceOf("importReaderWriterIdl"); 
+         st.add("type", EmitterFactory.type(t));
+         result += st.render() + System.lineSeparator(); 
+      }
+      return result;
    }
 
    @Override

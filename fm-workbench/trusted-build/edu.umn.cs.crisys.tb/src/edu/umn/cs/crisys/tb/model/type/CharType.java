@@ -23,6 +23,8 @@ package edu.umn.cs.crisys.tb.model.type;
 
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.TbFailure;
+
 public class CharType extends Type {
 
 	CharEnum charSet;
@@ -72,5 +74,17 @@ public class CharType extends Type {
 	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof CharType && ((CharType) obj).getCharSet() == getCharSet());
+	}
+
+	public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
+	   if (CharEnum.ASCII == charSet) {
+	      return 1;
+	   } else if (CharEnum.UNICODE == charSet) {
+	      return 2;  
+	   } else {
+	      TbFailure error = new TbFailure();
+	      error.addMessage("Unknown character type for getApproximateSize");
+	      throw error;
+	   }
 	}
 }

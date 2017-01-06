@@ -22,6 +22,11 @@ import "../../interfaces/<threadImpl.idlFileName>";
 
 >>
 
+importReaderWriterIdl(type) ::= <<
+import "../../interfaces/<type.readerWriterIdlFileName>";
+
+>>
+
 importSharedDataAccessorIdl(sharedDataAccessor) ::= <<
 import "../../interfaces/<sharedDataAccessor.type.sharedDataIdlFileName>";
 
@@ -48,6 +53,12 @@ writeRpgInterface(endpoint) ::= <<
 
 >>
 
+camkesAddComponentPortImports(port) ::= <<
+<if(port.camkesAddComponentPortImports)>
+import "../../interfaces/<port.camkesAddComponentPortImports>";
+<endif>
+>>
+
 componentCamkesBody(threadImpl) ::= <<
 
 <! import "../../interfaces/<threadImpl.idlFileName>"; !>
@@ -55,9 +66,9 @@ componentCamkesBody(threadImpl) ::= <<
 import \<Timer.idl4>;
 <endif>
 
+<threadImpl.portList:camkesAddComponentPortImports()>
+<\\>
 
-<threadImpl.portList:{ port | import "../../interfaces/<port.camkesAddComponentPortImports>";
-}><\\>
 
 <commentIf("Idl files for shared data accessors",
             (threadImpl.sharedDataAccessorList:importSharedDataAccessorIdl()))><\\>

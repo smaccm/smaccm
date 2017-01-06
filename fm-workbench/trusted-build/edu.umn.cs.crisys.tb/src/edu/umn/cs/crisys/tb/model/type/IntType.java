@@ -81,4 +81,8 @@ public class IntType extends Type {
 	  }
 		return false;
 	}
+
+	public int getOverApproximateSizeInBytes(int byteAlign) {
+	   return (bitSize / 8) + (bitSize % 8 != 0 ? 1 : 0); 
+	}	     
 }

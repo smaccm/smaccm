@@ -119,24 +119,6 @@ userEntrypointCallerFn(dispatcher) ::= <<
 >>
 
 
-
-
-drainDispatcher(dispatcher) ::= <<
-<if(dispatcher.isPeriodic)><\\>
-<dispatcher:periodicDispatcher()>
-<elseif(dispatcher.isIRQ)><\\>
-<dispatcher:irqDispatcher()>
-<elseif(dispatcher.isInputEvent)><\\>
-<dispatcher:eventDispatcher()>
-<elseif(dispatcher.isInputEventData)>
-<dispatcher:eventDataDispatcher()>
-<elseif(dispatcher.isInitializer)>
-<else>
-    ERROR: dispatcher is not of periodic, IRQ, Event, or EventData type.
-<endif>
->>
-
-
 dispatcherComponentMainFunction(threadImpl) ::= <<
 /************************************************************************
  * <osSpecificThreadEntrypoint(threadImpl)>
@@ -149,8 +131,14 @@ dispatcherComponentMainFunction(threadImpl) ::= <<
                (threadImpl.portList:{ port | <port.writePortThreadInitializer>}))><\\>
 
     <if(threadImpl.hasInitializeEntrypoint)>
-    // thread initialization routines (if any)...
+    <if(threadImpl.initializeEntrypointOpt.hasDummyArg)>
+    {
+    int64_t tb_dummy;
+    <threadImpl.initializeEntrypointOpt.userEntrypointCallerName>(&tb_dummy);
+    }
+    <else>
     <threadImpl.initializeEntrypointOpt.userEntrypointCallerName>();
+    <endif>
     <endif>
 
     <commentIf("Register interrupt handlers",

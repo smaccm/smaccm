@@ -29,6 +29,7 @@ thread sender
 	    Dispatch_Protocol => Periodic;
 	    TB_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
+	    Initialize_Entrypoint_Source_Text => "initialize_sender";
 		Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
 	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
 	    Priority => 10;
@@ -67,7 +68,7 @@ process implementation proc.Impl
 		s: thread sender;
 		r: thread receiver;
 	connections
-		s_to_r : port s.Output1 -> r.Input1;
+		s_to_r : port s.Output1 -> r.Input1 {TB_SYS::Mailbox => true; } ;
 end proc.Impl;
 
 processor main     
@@ -76,7 +77,8 @@ end main;
 processor implementation main.camkes
    properties
       TB_SYS::OS => camkes;
-      TB_SYS::HW => QEMU;
+      TB_SYS::HW => x86;
+      TB_SYS::Add_Dummy_Arg_To_Void_Fns => true;  
 end main.camkes;
 
 processor implementation main.linux

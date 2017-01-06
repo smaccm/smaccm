@@ -77,4 +77,9 @@ public class PointerType extends Type {
 	  }
 	  return false;
 	}
+	
+	// assume 64-bit pointers.
+	public int getOverApproximateSizeInBytes(int byteAlign) {
+	   return 8; 
+	}
 }

@@ -1,10 +1,10 @@
+#include "tb_sender.h"
 #ifdef __TB_OS_CAMKES__
-	#include <sender.h>
+	#include <camkes.h>
 	#include <inttypes.h>
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>
 #endif
-#include "tb_sender.h"
 #include <inttypes.h>
 #ifndef __TB_OS_ECHRONOS
 #include <stdio.h>
@@ -26,6 +26,6 @@ void sender_periodic_ping(const int64_t *the_time) {
 	#endif	
 	
    uint32_t to_send = ((uint32_t)*the_time) + 1;
-   ping_Output1(&to_send);
+   *Output1 = to_send;
  	
 }

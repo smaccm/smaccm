@@ -3,11 +3,14 @@
  */
 package edu.umn.cs.crisys.tb.codegen.common.names;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.osate.aadl2.Property;
+import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
@@ -18,6 +21,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkesVM;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.connection.SharedData;
@@ -30,6 +34,7 @@ import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
+import edu.umn.cs.crisys.tb.util.PropertyUtil;
 import edu.umn.cs.crisys.tb.util.Util;
 
 /**
@@ -212,6 +217,10 @@ public class ModelNames implements NameEmitter {
   public boolean getIsQemuTarget() {
     return m.getHWTarget().equalsIgnoreCase("qemu");
   }
+  
+  public boolean getIsx86Target() {
+     return m.getHWTarget().equalsIgnoreCase("x86");
+  }
     
   public String getOsTarget() {
     return m.getOsTarget().toString();
@@ -223,6 +232,14 @@ public class ModelNames implements NameEmitter {
   
   public boolean getUseOSRealTimeExtensions() {
 	  return m.isUseOSRealTimeExtensions();
+  }
+  
+  final public static Property TB_SYS_ADD_DUMMY_ARGS_TO_VOID_FNS = Util
+        .getPropertyDefinitionInWorkspace("TB_SYS::Add_Dummy_Arg_To_Void_Fns");
+
+  public boolean addDummyArgToVoidFns() {
+     return (boolean) PropertyUtils.getBooleanValue(m.getProcessorImpl(), 
+           TB_SYS_ADD_DUMMY_ARGS_TO_VOID_FNS);
   }
   
   public List<ModelNames> getVirtualMachineList() {
@@ -304,17 +321,62 @@ public class ModelNames implements NameEmitter {
      return "vm" + getVmNumber(); 
   }
   
+  public String getVmComponentName() {
+     return "Init" + getVmNumber(); 
+  }
+
   public ST getTemplateST(String stName) {
      STGroupFile template = Util.createTemplate("PortEmitterRPCAllEvent.stg");
      return template.getInstanceOf(stName); 
   }
 
+  public String getVmComponentDefs() {
+     String result = "";
+     for (PortListEmitterCamkesVM pe: EmitterListRegistry.getVMPortListEmitters()) {
+        result += pe.getCamkesAddVMComponentLevelDeclarations(m, m.getVmCrossingPorts());
+     }
+     return result;
+  }
+  
   public String getPerVmConfigDefs() {
+     String result = ""; 
      ST st = Util.createTemplate("CamkesVmConfig.stg").getInstanceOf("VmConfig");
      st.add("model", this);
-     return st.render();
+     result += st.render();
+     for (PortListEmitterCamkesVM pe: EmitterListRegistry.getVMPortListEmitters()) {
+        result += pe.getCamkesAddAssemblyFileVMConfigDeclarations(m, m.getVmCrossingPorts());
+     }
+     return result;
   }
 
+  public String getPerVmConnections() {
+     String result = ""; 
+     for (PortListEmitterCamkesVM pe: EmitterListRegistry.getVMPortListEmitters()) {
+        result += pe.getCamkesAddAssemblyFileVMCompositionDeclarations(m, m.getVmCrossingPorts());
+     }
+     return result;
+     
+  }
+
+  public ModelNames getParent() {
+     if (m.getParent() != null) {
+        return EmitterFactory.model((OSModel)m.getParent());
+     } 
+     else return null;
+  }
+  public void getAddVMLinuxFiles(File linuxDirectory) {
+     for (PortListEmitterCamkesVM pe: EmitterListRegistry.getVMPortListEmitters()) {
+        pe.getAddLinuxVMFiles(m, m.getVmCrossingPorts(), linuxDirectory);
+     }
+  }
+
+  public void getAddVMComponentFiles(File componentDirectory) {
+     for (PortListEmitterCamkesVM pe: EmitterListRegistry.getVMPortListEmitters()) {
+        pe.getAddVMComponentFiles(m, m.getVmCrossingPorts(), componentDirectory);
+     }
+  }
+
+  /* How to do the linux side?  Well, depends on who is calling. */
   /*
   public List<PortConnectionEmitter> getHostSourceToVMDestConnections() {
      List<PortConnectionEmitter> elemList = new ArrayList<>(); 
@@ -337,6 +399,14 @@ public class ModelNames implements NameEmitter {
      List<PortConnectionEmitter> elemList = new ArrayList<>(); 
      for (PortConnection pc: m.getVmCrossingConnections()) {
         elemList.add(EmitterFactory.portConnection(pc));
+     }
+     return elemList;
+  }
+  
+  public List<PortEmitter> getVmCrossingPorts() {
+     List<PortEmitter> elemList = new ArrayList<>(); 
+     for (PortFeature pc: m.getVmCrossingPorts()) {
+        elemList.add(EmitterFactory.port(pc));
      }
      return elemList;
   }

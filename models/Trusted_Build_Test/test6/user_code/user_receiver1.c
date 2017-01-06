@@ -1,7 +1,7 @@
 #include "tb_receiver1.h"
 #include <stdio.h>
 #ifdef __TB_OS_CAMKES__
-	#include <receiver1.h>
+	#include <camkes.h>
 	#include <inttypes.h>
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>

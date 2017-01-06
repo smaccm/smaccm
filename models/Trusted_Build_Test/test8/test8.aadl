@@ -67,7 +67,7 @@ process implementation proc.Impl
 		s: thread sender;
 		r: thread receiver;
 	connections
-		s_to_r : port s.Output1 -> r.Input1;
+		s_to_r : port s.Output1 -> r.Input1 {TB_SYS::Mailbox => true; } ; 
 end proc.Impl;
 
 processor main     
@@ -77,6 +77,7 @@ processor implementation main.camkes
    properties
       TB_SYS::OS => camkes;
       TB_SYS::HW => QEMU;
+      TB_SYS::Mailbox => true;
 end main.camkes;
 
 processor implementation main.linux

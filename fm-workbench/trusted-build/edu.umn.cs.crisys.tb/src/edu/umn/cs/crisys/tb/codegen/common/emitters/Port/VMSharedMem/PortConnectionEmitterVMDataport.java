@@ -3,13 +3,9 @@
  */
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.VMSharedMem;
 
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroupFile;
-
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkesVM;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.OSModel.OSTarget;
@@ -21,7 +17,7 @@ import edu.umn.cs.crisys.tb.util.*;
  * @author Whalen
  *
  */
-public class PortConnectionEmitterVMDataport implements PortConnectionEmitter, PortConnectionEmitterCamkesVM {
+public class PortConnectionEmitterVMDataport implements PortConnectionEmitter {
 
    PortConnection c;
 
@@ -69,44 +65,6 @@ public class PortConnectionEmitterVMDataport implements PortConnectionEmitter, P
       return result;
    }
 
-   /* 
-    * 
-    * Method only works if invariant from isApplicable is true.
-    * 
-    */
-   private boolean srcIsHost() {
-      OSModel srcModel = (Util.getElementOSModel(c.getSourcePort())); 
-      OSModel dstModel = (Util.getElementOSModel(c.getDestPort())); 
-      
-      OSTarget srcOS = srcModel.getOsTarget();
-      OSTarget dstOS = dstModel.getOsTarget();
-
-      return (srcOS == OSTarget.CAmkES) && 
-                  (dstOS == OSTarget.linux) && 
-                  (dstModel.getParent() == srcModel); 
-   }
-   
-   private OSModel getHostOS() {
-      if (srcIsHost()) {
-         return (Util.getElementOSModel(c.getSourcePort()));
-      } else {
-         return (Util.getElementOSModel(c.getDestPort()));
-      }
-   }
-   
-   private OSModel getVmOS() {
-      if (srcIsHost()) {
-         return (Util.getElementOSModel(c.getDestPort()));
-      } else {
-         return (Util.getElementOSModel(c.getSourcePort()));
-      }
-   }
-   
-   public int getConnectionNumber() {
-      OSModel model = getHostOS(); 
-      // connections are 1-indexed in Camkes for some reason.
-      return model.getVmCrossingConnections().indexOf(c) + 1;
-   }
    
    public PortConnectionEmitterVMDataport(PortConnection c) {
       this.c = c;
@@ -153,65 +111,6 @@ public class PortConnectionEmitterVMDataport implements PortConnectionEmitter, P
       return c.getSourcePort().getQualifiedName() + "_" + c.getDestPort().getQualifiedName();
    }
 
-   public ST getTemplateST(String stName) {
-      STGroupFile template = Util.createTemplate("PortEmitterSimpleVMDataport.stg");
-      return template.getInstanceOf(stName); 
-   }
 
-   /******************************************************************
-    * 
-    * Camkes declarations
-    * 
-    ******************************************************************/
-   
-   @Override
-   public String getCamkesAddVMComponentPortLevelDeclarations() {
-      String result = ""; 
-      // result = "// Connection: " + this.getName() + " should be a port on the linux side of " + System.lineSeparator();
-      return result;
-   }
-
-   @Override
-   public String getCamkesAddAssemblyFileVMPortDeclarations() {
-      String result = ""; 
-//      result = "// Connection: " + this.getName() + " connects a port on the linux side of " + System.lineSeparator() + 
-//            "// Here we need to implement its assembly equivalent declarations in Camkes to be the edge " + System.lineSeparator() + 
-//            "// in the VM that communicates with Linux.  ";
-      result += "dataport " + this.getSourcePort().getType().getCamkesName() + " " + this.getName() + ";" + System.lineSeparator();
-      return result;
-   }
-
-   @Override        
-   public String getCamkesAddAssemblyFileVMCompositionPortDeclarations() {
-      String result = ""; 
-      //result = "// Port: " + this.getName() + " should be a port on the linux side of " + System.lineSeparator() + 
-      //      "// Here we need to implement its assembly equivalent configuration in Camkes to be the edge " + System.lineSeparator() + 
-      //      "// in the VM that communicates with Linux.  ";
-      OSModel vm = this.getVmOS(); 
-      String templateName;
-      if (srcIsHost()) {
-         templateName = "connectCamkesSourceToVm";
-      } else {
-         templateName = "connectVmToCamkesDest"; 
-      }
-      ST st = this.getTemplateST(templateName);
-      st.add("vm", EmitterFactory.model(vm));
-      st.add("connection", this);
-      result += st.render();
-      return result;
-   }
-
-   @Override
-   public String getCamkesAddAssemblyFileVMConfigDeclarations() {
-      String result = ""; 
-      result = "// Connection: " + this.getName() + " connects a port on the linux side of " + System.lineSeparator() + 
-            "// Here we need to implement its assembly equivalent connections in Camkes to be the edge " + System.lineSeparator() + 
-            "// in the VM that communicates with Linux.  ";
-      ST st = getTemplateST("assemblyConfigConnection");
-      st.add("connection", this);
-      st.add("vm", EmitterFactory.model(getVmOS()));
-      
-      return result;
-   }
 
 }

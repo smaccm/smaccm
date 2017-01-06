@@ -1,11 +1,11 @@
 #include <tb_receiver.h>
 #include <stdio.h>
 #ifdef __TB_OS_CAMKES__
-	#include <receiver.h>
-	#include <inttypes.h>
+	#include <camkes.h>
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>
 #endif
+#include <inttypes.h>
 
 void receiver_periodic_ping(const int64_t * the_time) {
 	#ifdef __TB_OS_VXWORKS__

@@ -1,5 +1,5 @@
 #ifdef __TB_OS_CAMKES__
-	#include <sender.h>
+	#include <camkes.h>
 	#include <inttypes.h>
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>
@@ -9,6 +9,10 @@
 #ifndef __TB_OS_ECHRONOS
 #include <stdio.h>
 #endif
+
+void initialize_sender(const int64_t *dummy) {
+	// dummy to check parameters.
+}
 
 void sender_periodic_ping(const int64_t *the_time) {
 

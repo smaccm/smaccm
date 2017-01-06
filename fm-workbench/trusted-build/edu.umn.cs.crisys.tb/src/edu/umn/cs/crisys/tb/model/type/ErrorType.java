@@ -23,6 +23,8 @@ package edu.umn.cs.crisys.tb.model.type;
 
 import java.util.List;
 
+import edu.umn.cs.crisys.tb.TbFailure;
+
 public class ErrorType extends Type {
 	@Override
 	public String toString() {
@@ -58,4 +60,8 @@ public class ErrorType extends Type {
 	public boolean equals(Object obj) {
 		return (obj instanceof ErrorType);
 	}
+	
+	public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
+	   return 0;
+	}   
 }

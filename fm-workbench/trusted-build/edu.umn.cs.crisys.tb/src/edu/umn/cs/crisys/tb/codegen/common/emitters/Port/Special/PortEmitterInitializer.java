@@ -1,35 +1,16 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special;
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroupFile;
 
-import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.DispatchableInputPortCommon;
-import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
-import edu.umn.cs.crisys.tb.model.OSModel;
-import edu.umn.cs.crisys.tb.model.connection.PortConnection;
-import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
 import edu.umn.cs.crisys.tb.model.port.InitializerPort;
-import edu.umn.cs.crisys.tb.model.port.InputDataPort;
-import edu.umn.cs.crisys.tb.model.port.InputEventPort;
-import edu.umn.cs.crisys.tb.model.port.InputPort;
-import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
-import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
-import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
-import edu.umn.cs.crisys.tb.model.type.BoolType;
-import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
@@ -67,12 +48,16 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
    public void getWritePortHFiles(File directory) {
       // no-op for InitializerPorts
    }
+
+   public boolean getHasDummyArg() { return !(port.getType() instanceof UnitType); }
    
    public String writeExternalHandlerPrototype(ExternalHandler hdlr) {
       String result = ""; 
-      result += "void " + hdlr.getHandlerName() + "(void);" + System.lineSeparator();
+      String arg = (getHasDummyArg()) ? "const int64_t *arg" : "void";
+      result += "void " + hdlr.getHandlerName() + "(" + arg + ");" + System.lineSeparator();
       return result;
    }
+   
    
    @Override
    public String getWritePortHPrototypes() {
@@ -138,7 +123,7 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
       // no-op for InitializerPorts
       return "";
    }
-
+   
    @Override
    public String getVxWorksAddMainCFileIncludes() {
       // no-op for InitializerPorts
@@ -151,21 +136,10 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
       return "";
    }
 
-   private String callHandler(ExternalHandler hdlr) {
-      String result = ""; 
-      result += hdlr.getHandlerName() + "();" + System.lineSeparator();
-      return result;
-   }
-
+ 
    @Override
    public String getVxWorksAddMainCFileInitializers() {
-      // thread initialization routines (if any)...
-      String result = ""; 
-      InitializerPort p = (InitializerPort)this.getModelElement(); 
-      for (ExternalHandler hdlr : p.getExternalHandlerList()) {
-         result += callHandler(hdlr); 
-      }
-      return result; 
+      return ""; 
    }
 
    @Override

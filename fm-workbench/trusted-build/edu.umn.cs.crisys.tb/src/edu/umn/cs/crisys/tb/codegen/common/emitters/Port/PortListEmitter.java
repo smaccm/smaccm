@@ -30,8 +30,8 @@ public interface PortListEmitter extends NameEmitter {
    void writeProcessHFiles(ProcessInstance pi, File directory, List<PortFeature> pl);
    
    // Called once per thread
-   void writeThreadCFiles(ThreadInstance ti, File directory, List<PortFeature> pl); 
-   void writeThreadHFiles(ThreadInstance ti, File directory, List<PortFeature> pl);
+   void writeThreadCFiles(ThreadInstance ti, File directory, List<PortFeature> ports); 
+   void writeThreadHFiles(ThreadInstance ti, File directory, List<PortFeature> ports);
    
    
    // The header prototypes can be additional include files or other declarations.

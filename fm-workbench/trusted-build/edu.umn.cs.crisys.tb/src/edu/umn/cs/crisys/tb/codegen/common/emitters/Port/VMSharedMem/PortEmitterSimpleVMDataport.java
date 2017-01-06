@@ -12,7 +12,6 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.tb.util.*;
-import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
@@ -21,8 +20,10 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.model.OSModel;
+import edu.umn.cs.crisys.tb.model.OSModel.OSTarget;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
+import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.type.Type;
@@ -49,7 +50,7 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
               pf instanceof OutputDataPort); 
       
       OSModel model = Util.getElementOSModel(pf);
-      OSModel.OSTarget target = model.getOsTarget();
+
 
       // no fan-in!
       if (pf instanceof InputDataPort &&
@@ -107,41 +108,23 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
 
    @Override
    public String getWritePortThreadInitializer() {
-      return "";
+      if (Util.getElementOSModel(this.dataPort).getOsTarget() == OSTarget.linux) {
+         ST st = this.getTemplateST("linuxPortInitializer");
+         st.add("port", this);
+         return st.render();
+      }
+      else 
+           return "";
    }
    
    @Override
    public String getWritePortHPrototypes() {
-      String result = ""; 
-      
-      ST st; 
-      PortFeature p = getModelElement();
-      if (p instanceof OutputDataPort) {
-         st = getTemplateST("writePortWriterPrototype");         
-      } else if (p instanceof InputDataPort) {
-         st = getTemplateST("writePortReaderPrototype");         
-      } else {
-         throw new TbException("Error: writePortHPrototypes: port " + this.getName() + " is not a data port.");
-      }
-      st.add("port", this);
-      result += st.render();
-      
-      return result;
+      return getReaderWriterImplVarExternDecl(); 
    }
 
    @Override
    public String getWritePortDeclarations() {
-      ST st; 
-      PortFeature p = getModelElement();
-      if (p instanceof OutputDataPort) {
-         st = getTemplateST("componentLocalWriterDecl");   
-      } else if (p instanceof InputDataPort) {
-         st = getTemplateST("componentLocalReaderDecl");         
-      } else {
-         throw new TbException("Error: writePortDeclarations: port " + this.getName() + " is not a data port.");
-      }
-      st.add("port", this);
-      return st.render();
+      return getReaderWriterImplVarDecl(); 
    }
 
    /*****************************************************************
@@ -157,17 +140,14 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
 
    @Override
    public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
-
-      return "// connect dataport to VM here; need to find OS Model for " + System.lineSeparator() + 
-             "// 'other side' port, then find its VM name (add this to ModelNames) " + System.lineSeparator() + 
-             "// then wire this port to the declaration in the VM";
+      return "";
    }
 
    @Override
    public String getCamkesAddAssemblyFileConfigDeclarations() {
-      return "// Nothing to do here for the 'source' of the VM connection, I believe" + 
-            "// the configuration all has to do with the 'fake' port in the VM.";
-      
+      ST st = this.getTemplateST("assemblyConfigPort");
+      st.add("port", this);
+      return st.render();
    }
 
    @Override
@@ -182,10 +162,7 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
     * 
     ************************************************************/
 
-   public String addCommonHFileDeclarations() {
-      String result = ""; 
-      return result;
-   }
+   public String addCommonHFileDeclarations() { return ""; }
    
    @Override
    public String getLinuxAddCommonHFileDeclarations() { return ""; }
@@ -203,11 +180,7 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
    public String getLinuxAddMainCFileDestructors() { return ""; }
 
    @Override
-   public String getLinuxAddProcessHFileDeclarations() {
-      String result = "";
-      result += this.getReaderWriterImplVarExternDecl() + System.lineSeparator(); 
-      return result;
-   }
+   public String getLinuxAddProcessHFileDeclarations() { return ""; }
 
    @Override
    public String getLinuxAddProcessCFileIncludes() { return ""; }
@@ -217,10 +190,7 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
 
    @Override
    public String getLinuxAddProcessCFileInitializers() {
-      String result = ""; 
-      result += "// Here is where we open the file for port " + this.getName() + System.lineSeparator(); 
-      result += "// Here is where we memory map to the file for port " + this.getName() + System.lineSeparator();
-      return result;
+      return "";
    }
 
    @Override
@@ -247,10 +217,6 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
     *    getType()
     *    
     * For incoming dataports, this is:
-    *    getIncomingWriterName()    <-- OS-specific
-    *    getLocalReaderName()
-    *    getLockStmt()              <-- OS-specific
-    *    getUnlockStmt()            <-- OS-specific
     *    getReaderWriterImplVar()
     *    getReaderWriterImplVarDecl()
     * 
@@ -270,8 +236,17 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
       return Util.getPrefix() + "_" + getQualifiedName() + "_var";
    }
 
+   public boolean getIsInputPort() {
+      return (this.dataPort instanceof InputPort);
+   }
+   
+   public boolean getIsOutputPort() {
+      return !getIsInputPort();
+   }
+
+   
    public String getReaderWriterImplVarDeclInternal(String isExtern) {
-      return isExtern + this.getType().getName() + " *" + this.getReaderWriterImplVar() + ";" + System.lineSeparator();
+      return isExtern + "volatile " + this.getType().getName() + " *" + this.getReaderWriterImplVar() + ";" + System.lineSeparator();
    }
    
    public String getReaderWriterImplVarDecl() {
@@ -295,50 +270,7 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
       return EmitterFactory.type(this.getModelElement().getType()); 
    }
 
-   public String writeType() {
-      return "_write" + getModelElement().getType().getCType().typeString();
-   }
-
-   public String getLpcPortWriterName() {
-      return Util.getPrefix_() + getModelElement().getQualifiedName() + 
-            writeType();
-   }
-
-   // local reader/writer name does not have to be compatible with any CAmkES stuff.
-   public String getLocalReaderWriterName(String readWrite) {
-      PortFeature dp = getModelElement();
-      if (dp.getCommprimFnNameOpt() != null) {
-         return dp.getCommprimFnNameOpt();
-      } else {
-         String result = Util.getPrefix_() +
-            dp.getOwner().getNormalizedName() + "_" + readWrite + "_" + dp.getName();
-         return result;
-      }
-   }   
-   
-   public String getLocalReaderName() {
-      return getLocalReaderWriterName("read");
-   }
-   
-   public String getLocalWriterName() {
-      return getLocalReaderWriterName("write");
-   }   
-
-   
-       
-   public String getLockStmt() {
-      return ""; 
-   }
-
-   public String getUnlockStmt() {
-      return ""; 
-   }
-
-   public String getDataExpr() {
-      return this.getReaderWriterImplVar();
-   }
-
-   
+      
    public List<PortConnectionEmitter> getConnections() {
       List<PortConnectionEmitter> connections = new ArrayList<>();
       for (PortConnection pc: this.getModelElement().getConnections()) {
@@ -365,4 +297,13 @@ public String getCamkesAddComponentPortImports() {
   return null;
 }
 
+   // We do not allow "fan in" on mailboxes or my simple port type.
+   public PortEmitter getSourcePort() {
+      if (getIsOutputPort()) { return this; }
+      else {
+         assert(this.dataPort.getConnections().size() == 1);
+         return 
+               EmitterFactory.port(this.dataPort.getConnections().get(0).getSourcePort());
+      }
+   }
 }

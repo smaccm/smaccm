@@ -29,7 +29,7 @@ thread sender
 	    Dispatch_Protocol => Periodic;
 	    TB_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
-		Source_Text => ("user_code/user_sender.c", "user_code/linux_main.c");
+		Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
 	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;

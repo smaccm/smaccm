@@ -4,6 +4,8 @@ package edu.umn.cs.crisys.tb.codegen.common.emitters;
 import java.util.Map;
 
 import edu.umn.cs.crisys.tb.TbException;
+//import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.MailBox.PortConnectionEmitterMailBoxDataport;
+//import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.MailBox.PortEmitterMailBoxDataport;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortConnectionEmitterRPCImpl;
@@ -34,6 +36,9 @@ public class EmitterFactory {
       
       
       // Cross VM dataport emitter (placeholder for mailboxes)
+//      if (PortEmitterMailBoxDataport.isApplicable(dp)) {
+//         return new PortEmitterMailBoxDataport(dp);
+//      }
       if (PortEmitterSimpleVMDataport.isApplicable(dp)) {
          return new PortEmitterSimpleVMDataport(dp);
       }
@@ -61,7 +66,11 @@ public class EmitterFactory {
    
    public static PortConnectionEmitter portConnection(PortConnection pc) {
       
+      
       // Specialized VM connection emitter
+//      if (PortConnectionEmitterMailBoxDataport.isApplicable(pc)) {
+//         return new PortConnectionEmitterMailBoxDataport(pc);
+//      }
       if (PortConnectionEmitterVMDataport.isApplicable(pc)) {
          return new PortConnectionEmitterVMDataport(pc);
       }

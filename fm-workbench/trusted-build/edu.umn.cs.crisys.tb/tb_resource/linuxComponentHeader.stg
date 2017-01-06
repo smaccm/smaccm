@@ -1,5 +1,5 @@
 import "CommonComponentHeader.stg"
-import "LinuxAssemblyHeader.stg"
+import "linuxAssemblyHeader.stg"
 
 sharedDataDecl(sharedDataAccessor) ::= <<
 extern <sharedDataAccessor.type.name> *<sharedDataAccessor.name>;

@@ -118,6 +118,32 @@ public class OSModel extends ModelElementBase {
    private boolean camkesUseMailboxDataports = false;
    private boolean useOSRealTimeExtensions = false; 
 
+   // Properties related to VMs
+   public class VMDataport {
+      public ThreadInstance owner; 
+      public String name;
+      public Type type;
+      public VMDataport(ThreadInstance o, String n, Type t) { owner = o; name = n; type = t;}
+      public boolean equals(Object o) {
+         if (o == null) return false;
+         if (!(o instanceof VMDataport)) return false;
+         VMDataport other = (VMDataport)o;
+         return (owner.equals(other.owner) &&
+                 name.equals(other.name) &&
+                 type.equals(other.type));
+      }
+   };
+   
+   public class CrossVMDataportConnection {
+      public VMDataport src;
+      public List<VMDataport> dests;
+      public CrossVMDataportConnection(VMDataport s, List<VMDataport> d) {src = s; dests = d;}
+   }
+   
+   private List<CrossVMDataportConnection> crossVmConnections = new ArrayList<>();
+   
+   public List<CrossVMDataportConnection> getCrossVmConnections() { return crossVmConnections; }
+   
    /**
     * @return the useOSRealTimeExtensions
     */
@@ -153,6 +179,8 @@ public class OSModel extends ModelElementBase {
    // how do we want to represent hierarchy?
    public OSModel(ComponentImplementation processorImpl,
          ComponentInstance processorInstance) {
+      this.processorImpl = processorImpl;
+      this.processorInstance = processorInstance;
       this.instanceName = processorInstance.getName();
    }
 //   public SystemImplementation getSystemImplementation() {
@@ -476,6 +504,12 @@ public class OSModel extends ModelElementBase {
       return connNumber;
    }
 
+   int vmDataportNumber = 0; 
+   public int getGenerateVmDataportNumber() {
+      vmDataportNumber++; 
+      return vmDataportNumber;
+   }
+   
    public static String getPrefix() {
       return Util.getPrefix();
    }
@@ -608,10 +642,10 @@ public class OSModel extends ModelElementBase {
    public List<PortConnection> getHostSourceToVMDestConnections() {
       List<PortConnection> vmCrossing = new ArrayList<>(); 
       for (ThreadInstance ti: this.getAllThreadInstances()) {
-         for (PortConnection pi: ti.getIsSrcOfConnectionList()) {
-            ThreadInstance dst = pi.getDestThreadInstance(); 
-            OSModel dstModel = Util.getElementOSModel(dst);
-            if (dstModel != this) {
+         for (PortConnection pi: ti.getAllConnectionsList()) {
+            ThreadInstance src = pi.getSourceThreadInstance(); 
+            OSModel srcModel = Util.getElementOSModel(src);
+            if (srcModel == this.getParent()) {
                vmCrossing.add(pi);
             }
          }
@@ -619,13 +653,17 @@ public class OSModel extends ModelElementBase {
       return vmCrossing;
    }
    
+   public boolean isVM() {
+       return (this.getParent() != null); 
+   }
+   
    public List<PortConnection> getHostDestToVMSourceConnections() {
       List<PortConnection> vmCrossing = new ArrayList<>(); 
       for (ThreadInstance ti: this.getAllThreadInstances()) {
-         for (PortConnection pi: ti.getIsDstOfConnectionList()) {
-            ThreadInstance src = pi.getSourceThreadInstance(); 
-            OSModel srcModel = Util.getElementOSModel(src);
-            if (srcModel != this) {
+         for (PortConnection pi: ti.getAllConnectionsList()) {
+            ThreadInstance dst = pi.getDestThreadInstance();
+            OSModel dstModel = Util.getElementOSModel(dst);
+            if (dstModel == this.getParent()) {
                vmCrossing.add(pi);
             }
          }
@@ -637,5 +675,15 @@ public class OSModel extends ModelElementBase {
       List<PortConnection> elemList = getHostSourceToVMDestConnections();
       elemList.addAll(getHostDestToVMSourceConnections());  
       return elemList;
+   }
+   
+   public List<PortFeature> getVmCrossingPorts() {
+      Set<PortFeature> portSet = new HashSet<>(); 
+      for (PortConnection conn: getVmCrossingConnections()) {
+         portSet.add(conn.getSourcePort());
+         portSet.add(conn.getDestPort());
+      }
+      return new ArrayList<PortFeature>(portSet);
+      
    }
 }

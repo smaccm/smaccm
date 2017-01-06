@@ -20,41 +20,41 @@ end a_struct.impl;
 
 -- Example of a periodically dispatched "Active" thread.   
 thread sender
-	features
-		Output1: out event data port Base_Types::Unsigned_32 {
-	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
-		};
-	
-	properties 
-	    Dispatch_Protocol => Periodic;
-	    TB_SYS::Thread_Type => Active ;
-	    Period => 1000 ms;
-		Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
-	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
-	    Priority => 10;
-	    Stack_Size => 256 bytes;
-	    Compute_Execution_Time => 10 us .. 50 us;
-	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
+   features
+      Output1: out event data port Base_Types::Unsigned_32 {
+         TB_SYS::CommPrim_Source_Text => "ping_Output1";       
+      };
+   
+   properties 
+       Dispatch_Protocol => Periodic;
+       TB_SYS::Thread_Type => Active ;
+       Period => 1000 ms;
+       Source_Text => ("user_code/user_sender.c", "user_code/opt_main.c");
+       TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
+       Priority => 10;
+       Stack_Size => 4096 bytes;
+       Compute_Execution_Time => 10 us .. 50 us;
+       TB_SYS::Sends_Events_To => "{{1 Output1}}";
 end sender ; 
 
 -- Example of a periodically dispatched "Active" thread.   
 thread receiver
-	features
-		Input1: in event data port Base_Types::Unsigned_32 {
-	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
-		  Queue_Size => 8;
-		}; 
-		
-	properties 
-	    Dispatch_Protocol => Periodic;
-	    TB_SYS::Thread_Type => Active ;
-	    Period => 1000 ms;
-		Source_Text => ("user_code/user_receiver.c");
-	    TB_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
-	    Priority => 8;
-	    Stack_Size => 256 bytes;
-	    Compute_Execution_Time => 10 us .. 50 us;
-	    TB_SYS::Sends_Events_To => "{{}}";
+   features
+      Input1: in event data port Base_Types::Unsigned_32 {
+         TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+        Queue_Size => 8;
+      }; 
+      
+   properties 
+       Dispatch_Protocol => Periodic;
+       TB_SYS::Thread_Type => Active ;
+       Period => 1000 ms;
+      Source_Text => ("user_code/user_receiver.c");
+       TB_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
+       Priority => 8;
+       Stack_Size => 4096 bytes;
+       Compute_Execution_Time => 10 us .. 50 us;
+       TB_SYS::Sends_Events_To => "{{}}";
 end receiver ; 
 
 process proc
@@ -62,11 +62,11 @@ process proc
 end proc;
 
 process implementation proc.Impl
-	subcomponents
-		s: thread sender;
-		r: thread receiver;
-	connections
-		s_to_r : port s.Output1 -> r.Input1;
+   subcomponents
+      s: thread sender;
+      r: thread receiver;
+   connections
+      s_to_r : port s.Output1 -> r.Input1;
 end proc.Impl;
 
 processor main     

@@ -3,8 +3,10 @@ property set TB_SYS is
     CommPrim_Source_Header: aadlstring applies to (port, access, data);
     CommPrim_Source_Text: aadlstring applies to (port, access);
     C_Type_Name : aadlstring applies to (data, data implementation);
+    C_Type_Size : aadlinteger applies to (data, data implementation);
     Compute_Entrypoint_Source_Text : list of aadlstring applies to (processor, virtual processor, system, system implementation, port, thread);
-
+	Add_Dummy_Arg_To_Void_Fns: aadlboolean => false applies to (processor, virtual processor);
+	
     -- For including additional libraries into the build process
     Link_Libraries : list of aadlstring applies to (processor, virtual processor, system, system implementation);
 
@@ -55,7 +57,7 @@ property set TB_SYS is
 
     -- For CAmkES, specifically
     CAmkES_Owner_Thread : aadlstring applies to ( data );
-    Use_OS_Real_Time_Extensions : aadlboolean => true applies to (processor, virtual processor, system implementation);
+    Use_OS_Real_Time_Extensions : aadlboolean => false applies to (processor, virtual processor, system implementation);
 
 	-- For CAmkES and ground team, specifically.
 	Mailbox : aadlboolean => false applies to (processor, virtual processor, system implementation, connection);

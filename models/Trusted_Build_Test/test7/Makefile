@@ -18,7 +18,8 @@ ADL := test_camkes_assembly.camkes
 # For time server: subdirectory containing extra templates.
 TEMPLATES := ../../projects/templates ../../projects/global-components/templates
 
-include TimeServerKZM/TimeServer.mk
+include TimeServerX86Stack/TimeServer.mk
+include TimeServerX86/TimeServerX86.mk
 
 receiver_CFILES :=  \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/receiver/src/*.c)) \

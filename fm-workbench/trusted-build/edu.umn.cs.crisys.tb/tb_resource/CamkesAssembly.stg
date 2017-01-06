@@ -23,8 +23,8 @@ filePostfix(name, path) ::= <<
 >>
 
 createVMInit(vm) ::= <<
-component Init<vm.vmNumber> {
-    <vm.vmCrossingConnections: {conn | <conn.camkesAddAssemblyFileVMPortDeclarations> }>
+component <vm.vmComponentName> {
+    <vm.vmComponentDefs>
     VM_INIT_DEF()
 }
 
@@ -58,6 +58,9 @@ assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 >>
 
 
+rpcConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
 connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName,
     srcThreadImpl.componentInstanceName,
@@ -84,7 +87,7 @@ assemblyConnectSharedData(sharedData, model) ::= <<
 
 assemblySetPriorities(threadImpl) ::= <<
 <if(!threadImpl.isExternal)>
-<threadImpl.componentInstanceName>.priority = <threadImpl.priority>;
+<threadImpl.componentInstanceName>._priority = <threadImpl.priority>;
 <endif>
 >>
 
@@ -146,17 +149,14 @@ configurePorts(threadImpl) ::= <<
 
 composeVms(model) ::= <<
 <model.virtualMachineList: {vm |
-// Need to make sure this correctly ties a number to the model <vm.pathName>
 VM_PER_VM_COMP_DEF(<vm.vmNumber>)
-<vm.vmCrossingConnections:{conn | <conn.camkesAddAssemblyFileVMCompositionPortDeclarations>} >
+<vm.perVmConnections>
 }>
 
 >>
 
 configVms(model) ::= <<
 <model.virtualMachineList: {vm |
-// Need something here tying the second number to the first model <model>
-// Temporarily here I will just use the iteration number
 <vm.perVmConfigDefs>
 
 }>
@@ -164,8 +164,9 @@ configVms(model) ::= <<
 >>
 
 camkesAssemblyBody(model) ::= <<
-
 import \<std_connector.camkes>;
+
+#include \<autoconf.h>
 
 <if(model.containsVM)>
 #include \<configurations/vm.h>
@@ -177,6 +178,8 @@ import "<model.threadCalendar.periodicDispatcherPathName>";
 import \<TimeServerKZM/TimeServer.camkes>;
 <elseif(model.isOdroidTarget)>
 import \<TimeServerOdroid/TimeServer.camkes>;
+<elseif(model.isx86Target)>
+// MWW: import \<TimeServer/TimeServer.camkes> included in VM import;
 <else>
 // TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU and ODROID time server.
 <endif>
@@ -191,12 +194,17 @@ import \<TimeServerOdroid/TimeServer.camkes>;
 
 <\\>
 
+// 12/12 MWW modified for CaMKes-next
+connector seL4RPCCallDataport {
+    from Procedure template "seL4RPCCallDataport-from.template.c";
+    to Procedure template "seL4RPCCallDataport-to.template.c";
+}
 
 <if(model.containsVM)>
 <model.virtualMachineList:createVMInit()>
 <endif>
 
-assembly {
+component VM {
     composition {
         <if(model.containsVM)>
         VM_COMPOSITION_DEF()
@@ -209,6 +217,14 @@ assembly {
         component TimeServerKZM time_server;
         <elseif(model.isOdroidTarget)>
         component TimeServerOdroid time_server;
+        <elseif(model.isx86Target)>
+        <if(!model.containsVM)>
+        component TimeServer time_server;
+        component PIT pit;
+        connection seL4HardwareIOPort pit_command(from time_server.pit_command, to pit.command);
+        connection seL4HardwareIOPort pit_channel0(from time_server.pit_channel0, to pit.channel0);
+        connection seL4HardwareInterrupt pit_irq(from pit.irq, to time_server.irq);
+        <endif>
         <else>
         // MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
         <endif>
@@ -247,7 +263,20 @@ assembly {
         <configVms(model)>
         <endif>
         <if(model.threadCalendar.hasDispatchers)>
-        <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = "<model.generateCamkesTimeServerThreadIndex>";
+        <if(!model.containsVM && !model.externalTimerComponent)>
+        time_server.putchar_attributes = "0";
+        time_server.timers_per_client = 9;
+        time_server.heap_size = 8192;
+        time_server.priority = 255;
+        pit.command_attributes = "0x43:0x43";
+        pit.channel0_attributes = "0x40:0x40";
+        pit.irq_irq_type = "isa";
+        pit.irq_irq_ioapic = 0;
+        pit.irq_irq_ioapic_pin = 2;
+        pit.irq_irq_vector = 2;
+        pit.heap_size = 0;
+        <endif>
+        <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";
         <model.threadCalendar.periodicDispatcherInstanceName>.priority = 201;
@@ -265,6 +294,16 @@ assembly {
         <endif>
         <model.threadImplementations:configConnectTimeServices(model)>
         <model.activeThreadImplementations:configActiveToPassiveRegionDataportId(model)>
+    }
+}
+
+/*  MWW: Why do we need an assembly with one VM component to make the VM stuff work?
+         I do not know.
+*/
+assembly {
+    composition {
+        /* The VM sub component */
+        component VM vm;
     }
 }
 

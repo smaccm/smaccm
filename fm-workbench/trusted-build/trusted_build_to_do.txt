@@ -504,6 +504,112 @@ However, now is the time when we need to figure out who is in charge of the over
 			...but this is o.k., because this is the VM interface stuff I just added.
 			...How do I thread this needle?
 				It needs to be defined per connection, rather than per port; done.
-					
 			
+		
+		For the Camkes VM component, we need to have a port for every send port that crosses the VM boundary.
+			We need to define a number for it, and we need the size associated with it to satisfy Stephen's constraints.
+			We would also like to know which side of the VM boundary the port is on for securing it.
 			
+			So, we use the extended data map (for the first time!) on the ports to store the vm:dataport combo.
+			We just return all the ports when emitting code. 
+			
+			However, we also have to emit ports in order, and mailboxes will introduce multiple dataports for a particular
+			communication.  This would be a good thing for a port list, because the ports could easily be filtered.
+			(at some point port lists will have to become port instance lists)
+		
+			Furthermore, we could sort the lists alphabetically, which would ensure ordering is preserved.
+			
+			Seems like the right place to put this.
+			
+			For VMs, connections are performed by the connection emitter.
+			
+			For linux, we need to find the cross-VM connections for a particular component, load them up and go.
+			
+			This *should* be done on a per-instance basis.  
+				For Camkes, it doesn't matter, because Camkes takes care of making the wiring uniform.
+				For linux, it does matter, because we are wiring the linux process to a specific port.
+				
+			Right now, we still assume only one instance per process / thread.
+			
+			Fuck it, code it up now, fix it later.  More technical debt, but meh.
+			
+
+Code locations for VM stuff: 
+	
+	Only necessary if you use VMs, presumably.
+	
+	/configurations/<proj_name>.h
+		#define VM_NUM_GUESTS 1
+		/* All our guests use the same kernel image, rootfs and cmdline */
+		#define C162_KERNEL_IMAGE "bzimage"
+		#define C162_ROOTFS "rootfs.cpio"
+		#define VM_GUEST_CMDLINE "earlyprintk=ttyS0,115200 console=ttyS0,115200 root=/dev/mem i8042.nokbd=y i8042.nomux=y i8042.noaux=y io_delay=udelay noisapnp pci=nomsi"
+	
+	These definitions show up in the config for the VM in the .camkes file.
+	
+	I don't see them anywhere else.
+	
+	
+	Suppose we give native support for dataport tunneling within TB to do the whole smack: 
+- Camkes VM component definitions
+- Camkes Assembly connections
+- Camkes Config definitions
+- Linux C code generation
+- Generation of camkes_init driver information on linux
+- Generation of C file for the 'Init' VM component (one per VM)
+	
+	Fuck!
+	So, what would we specify? 
+	
+	We wish to have a dataport that crosses the VM.  It has writer X and readers {Y1, Y2, Y3}, where the writer and readers are on different sides of the VM boundary.  We need to know the (threadname, dataportname) pair for each of the dataports, and the type of the dataport.  
+	
+	Makefile
+		For the makefile, we 
+
+12/29
+	Getting close the end of this f*cking year.
+	
+	Code Freeze Meeting: 
+Room Assignments for breakouts
+Food
+Reception information
+Financial walkthrough
+	Food
+	Venue
+	Speakers
+	Reception
+Forms walkthrough
+	Any alcohol release forms necessary?
+Hotel room booking (Commons full?)
+Dates for final e-mail announcements
+	Advertising with St. Thomas?
+
+	Interface (user):
+		CamkesDataport(ThreadInstance, Name, Type);
+		addDataportConnection(CamkesDataport src, List<CamkesDataport> dst);
+	
+	Interface (emitter): 
+		Write InitVM component declarations:
+			One dataport for each connection source that crosses a VM boundary (matching the VMDataPortConnection type).
+			
+		Write Camkes assembly connections
+		Write Camkes assembly configuration information
+		Write Camkes Component C file
+		Write Linux camkes_init file
+		Write Linux thread declaration connection to dataports
+		Write Camkes configuration 
+	
+	Where do we store this dataport information?  Could store it in CamkesCodeGenerator
+		Issue: how do we pass it in to the places we need it?
+		Easier if we store it in the OSModel for the VM.  
+	
+	Plan: 
+		Walk through Andrew's changes
+			Any remaining gotchas?
+		Run some non-VM models through to test timer performance (Andrew?)
+		Run one VM model through to check automation.
+		Report to Aleksey and push changes
+		
+		
+		
+		
