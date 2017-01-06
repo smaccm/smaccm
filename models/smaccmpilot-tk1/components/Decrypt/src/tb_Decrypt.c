@@ -89,7 +89,7 @@ bool periodic_dispatcher_write_int64_t(const int64_t * arg) {
  *
  ************************************************************************/
 
-static SMACCM_DATA__UART_Packet_i tb_queue_uart2self [100];
+static SMACCM_DATA__UART_Packet_i tb_queue_uart2self [1000];
 static bool tb_queue_full_uart2self  = false;
 static uint32_t tb_queue_front_uart2self  = 0;
 static uint32_t tb_queue_back_uart2self  = 0;
@@ -108,7 +108,7 @@ static bool tb_queue_read_uart2self(SMACCM_DATA__UART_Packet_i * uart2self) {
     } else {
         memcpy(uart2self, &tb_queue_uart2self[tb_queue_front_uart2self], sizeof(SMACCM_DATA__UART_Packet_i));
 
-        tb_queue_front_uart2self = (tb_queue_front_uart2self + 1) % 100;
+        tb_queue_front_uart2self = (tb_queue_front_uart2self + 1) % 1000;
         tb_queue_full_uart2self = false ;
         return true;
     }
@@ -120,7 +120,7 @@ static bool tb_queue_write_uart2self(const SMACCM_DATA__UART_Packet_i * uart2sel
     } else {
         memcpy(&tb_queue_uart2self[tb_queue_back_uart2self], uart2self, sizeof(SMACCM_DATA__UART_Packet_i));
 
-        tb_queue_back_uart2self = (tb_queue_back_uart2self + 1) % 100;
+        tb_queue_back_uart2self = (tb_queue_back_uart2self + 1) % 1000;
         if (tb_queue_back_uart2self == tb_queue_front_uart2self) {
             tb_queue_full_uart2self = true ;
         }
