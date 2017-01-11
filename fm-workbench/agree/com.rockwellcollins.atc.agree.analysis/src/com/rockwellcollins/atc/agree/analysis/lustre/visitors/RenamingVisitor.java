@@ -1,6 +1,5 @@
 package com.rockwellcollins.atc.agree.analysis.lustre.visitors;
 
-import org.antlr.runtime.tree.DOTTreeGenerator;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;

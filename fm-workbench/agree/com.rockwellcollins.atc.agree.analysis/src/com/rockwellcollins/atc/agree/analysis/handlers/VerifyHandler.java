@@ -6,9 +6,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import jkind.JKindException;
@@ -335,6 +337,14 @@ public abstract class VerifyHandler extends AadlHandler {
             addKind2Properties(agreeProgram.topNode, properties, renaming, "_TOP", "");
         } else {
             properties.addAll(mainNode.properties);
+        }
+        
+        Set<String> strs = new HashSet<>();
+        for(String prop : properties){
+        	String renamed = renaming.rename(prop);
+        	if(!strs.add(renamed)){
+        		throw new AgreeException("Multiple properties named \""+renamed+"\"");
+        	}
         }
 
     }
