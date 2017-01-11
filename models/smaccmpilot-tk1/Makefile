@@ -1,4 +1,4 @@
-# This flag is used by encrypt/decrypt to determine big or little endian
+# This flag is used by encrypt/decrypt to determine where endian.h is found
 # Would be nice to give it a better name
 CFLAGS += -DODROID
 
@@ -26,6 +26,20 @@ can_shim_HFILES := \
 can_shim_CFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/can_shim/src/*.c))
 
+spi_HFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/spi/include/*.h)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
+spi_CFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/spi/src/*.c))
+
+can_HFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/can/include/*.h)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
+can_CFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/can/src/*.c))
+
+include ${PWD}/projects/DARPA-tk1/components/gpio/gpio.mk
+
 ###### End CAN
 
 
@@ -51,5 +65,6 @@ clkcar_shim_CFILES := \
 include ${PWD}/projects/DARPA-tk1/components/clkcar/clkcar.mk
 
 ###### Clock_Initializer UART
+
 
 include ${PWD}/tools/camkes/camkes.mk
