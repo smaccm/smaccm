@@ -1,0 +1,22 @@
+import <std_connector.camkes>;
+
+import "VM_shim/VM_shim.camkes";
+
+import <SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4>;
+
+component Virtual_Machine {
+    include "tb_smaccmcopter_types.h";
+    uses SMACCM_DATA__Camera_Bounding_Box_i_writer self2server;
+    provides bool_writer server2self_reboot;
+
+    composition {
+        component VM_shim vm_shim_obj;
+
+        export vm_shim_obj.self2server -> self2server;
+        export vm_shim_obj.server2self_reboot -> server2self_reboot;
+    }
+
+    configuration {
+        vm_shim_obj.priority = 103;
+    }
+}
