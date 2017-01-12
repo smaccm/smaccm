@@ -59,7 +59,7 @@ void tb_thread_calendar() {
         // MWW: modification of time type to match Ivory/Tower (our stuff uses uint64_t in milliseconds and Tower expects int64_t * in microseconds)
         int64_t the_time = ((int64_t)clock_get_time())*1000;
         CAN_Framing_periodic_dispatcher_write_int64_t(&the_time);
-    }if ((aadl_calendar_counter % (5 / aadl_tick_interval)) == 0) {
+    }if ((aadl_calendar_counter % (1 / aadl_tick_interval)) == 0) {
         // MWW: modification of time type to match Ivory/Tower (our stuff uses uint64_t in milliseconds and Tower expects int64_t * in microseconds)
         int64_t the_time = ((int64_t)clock_get_time())*1000;
         Decrypt_periodic_dispatcher_write_int64_t(&the_time);
