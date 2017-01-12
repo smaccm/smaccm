@@ -21,6 +21,7 @@ import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ClosedTimeInterval;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
@@ -40,6 +41,7 @@ import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -257,6 +259,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.CONST_STATEMENT:
 				sequence_ConstStatement(context, (ConstStatement) semanticObject); 
 				return; 
+			case AgreePackage.ENUM_STATEMENT:
+				sequence_EnumStatement(context, (EnumStatement) semanticObject); 
+				return; 
 			case AgreePackage.EQ_STATEMENT:
 				sequence_EqStatement(context, (EqStatement) semanticObject); 
 				return; 
@@ -313,6 +318,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.MN_SYNCH_STATEMENT:
 				sequence_SynchStatement(context, (MNSynchStatement) semanticObject); 
+				return; 
+			case AgreePackage.NAMED_ID:
+				sequence_NamedID(context, (NamedID) semanticObject); 
 				return; 
 			case AgreePackage.NESTED_DOT_ID:
 				sequence_NestedDotID(context, (NestedDotID) semanticObject); 
@@ -516,6 +524,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Constraint:
+	 *     (name=ID enums+=NamedID enums+=NamedID*)
+	 */
+	protected void sequence_EnumStatement(EObject context, EnumStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (lhs+=Arg lhs+=Arg* expr=Expr?)
 	 */
 	protected void sequence_EqStatement(EObject context, EqStatement semanticObject) {
@@ -581,6 +598,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     (start=Expr end=Expr)
 	 */
 	protected void sequence_LinearizationInterval(EObject context, LinearizationInterval semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     name=ID
+	 */
+	protected void sequence_NamedID(EObject context, NamedID semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import jkind.lustre.BoolExpr;
+import jkind.lustre.EnumType;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
@@ -349,9 +350,16 @@ public class AgreeUtils {
     
     public static List<TypeDef> getLustreTypes(AgreeProgram agreeProgram) {
         List<TypeDef> types = new ArrayList<>();
-        for (Type type : agreeProgram.globalTypes) {
-            RecordType recType = (RecordType) type;
-            types.add(new TypeDef(recType.id, type));
+		for (Type type : agreeProgram.globalTypes) {
+			String typeName;
+			if (type instanceof RecordType) {
+				typeName = ((RecordType) type).id;
+			} else if (type instanceof EnumType) {
+				typeName = ((EnumType) type).id;
+			}else{
+				throw new AgreeException("Unable to handle type of type '"+type.getClass()+"'");
+			}
+            types.add(new TypeDef(typeName, type));
         }
         
         //add synonym types

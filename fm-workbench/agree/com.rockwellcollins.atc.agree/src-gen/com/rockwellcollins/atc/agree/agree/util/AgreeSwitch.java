@@ -200,6 +200,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ENUM_STATEMENT:
+      {
+        EnumStatement enumStatement = (EnumStatement)theEObject;
+        T result = caseEnumStatement(enumStatement);
+        if (result == null) result = caseNamedElement(enumStatement);
+        if (result == null) result = caseSpecStatement(enumStatement);
+        if (result == null) result = caseElement(enumStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.EQ_STATEMENT:
       {
         EqStatement eqStatement = (EqStatement)theEObject;
@@ -346,6 +356,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseComplexExpr(nestedDotID);
         if (result == null) result = caseExpr(nestedDotID);
         if (result == null) result = caseElement(nestedDotID);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.NAMED_ID:
+      {
+        NamedID namedID = (NamedID)theEObject;
+        T result = caseNamedID(namedID);
+        if (result == null) result = caseNamedElement(namedID);
+        if (result == null) result = caseElement(namedID);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1061,6 +1080,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Enum Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Enum Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEnumStatement(EnumStatement object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Eq Statement</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1312,6 +1347,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNestedDotID(NestedDotID object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Named ID</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Named ID</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNamedID(NamedID object)
   {
     return null;
   }

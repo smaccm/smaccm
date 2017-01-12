@@ -151,6 +151,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createConstStatementAdapter();
       }
       @Override
+      public Adapter caseEnumStatement(EnumStatement object)
+      {
+        return createEnumStatementAdapter();
+      }
+      @Override
       public Adapter caseEqStatement(EqStatement object)
       {
         return createEqStatementAdapter();
@@ -229,6 +234,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseNestedDotID(NestedDotID object)
       {
         return createNestedDotIDAdapter();
+      }
+      @Override
+      public Adapter caseNamedID(NamedID object)
+      {
+        return createNamedIDAdapter();
       }
       @Override
       public Adapter caseAgreeContractLibrary(AgreeContractLibrary object)
@@ -753,6 +763,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.EnumStatement <em>Enum Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.EnumStatement
+   * @generated
+   */
+  public Adapter createEnumStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.EqStatement <em>Eq Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -988,6 +1013,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNestedDotIDAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NamedID <em>Named ID</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.NamedID
+   * @generated
+   */
+  public Adapter createNamedIDAdapter()
   {
     return null;
   }

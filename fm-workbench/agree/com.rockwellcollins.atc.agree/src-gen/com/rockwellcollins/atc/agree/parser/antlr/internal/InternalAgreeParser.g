@@ -113,41 +113,61 @@ ruleNamedElement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_4()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getEnumStatementParserRuleCall_4()); 
     }
-    this_NodeDefExpr_4=ruleNodeDefExpr
+    this_EnumStatement_4=ruleEnumStatement
     {
-        $current = $this_NodeDefExpr_4.current;
+        $current = $this_EnumStatement_4.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getLinearizationDefExprParserRuleCall_5()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_5()); 
     }
-    this_LinearizationDefExpr_5=ruleLinearizationDefExpr
+    this_NodeDefExpr_5=ruleNodeDefExpr
     {
-        $current = $this_LinearizationDefExpr_5.current;
+        $current = $this_NodeDefExpr_5.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getLibraryFnDefExprParserRuleCall_6()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getLinearizationDefExprParserRuleCall_6()); 
     }
-    this_LibraryFnDefExpr_6=ruleLibraryFnDefExpr
+    this_LinearizationDefExpr_6=ruleLinearizationDefExpr
     {
-        $current = $this_LibraryFnDefExpr_6.current;
+        $current = $this_LinearizationDefExpr_6.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_7()); 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getLibraryFnDefExprParserRuleCall_7()); 
     }
-    this_RecordDefExpr_7=ruleRecordDefExpr
+    this_LibraryFnDefExpr_7=ruleLibraryFnDefExpr
     {
-        $current = $this_RecordDefExpr_7.current;
+        $current = $this_LibraryFnDefExpr_7.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_8()); 
+    }
+    this_RecordDefExpr_8=ruleRecordDefExpr
+    {
+        $current = $this_RecordDefExpr_8.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getNamedElementAccess().getNamedIDParserRuleCall_9()); 
+    }
+    this_NamedID_9=ruleNamedID
+    {
+        $current = $this_NamedID_9.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -848,81 +868,91 @@ ruleSpecStatement returns [EObject current=null]
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getEqStatementParserRuleCall_12()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getEnumStatementParserRuleCall_12()); 
     }
-    this_EqStatement_53=ruleEqStatement
+    this_EnumStatement_53=ruleEnumStatement
     {
-        $current = $this_EqStatement_53.current;
+        $current = $this_EnumStatement_53.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getAssignStatementParserRuleCall_13()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getEqStatementParserRuleCall_13()); 
     }
-    this_AssignStatement_54=ruleAssignStatement
+    this_EqStatement_54=ruleEqStatement
     {
-        $current = $this_AssignStatement_54.current;
+        $current = $this_EqStatement_54.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getLinearizationDefExprParserRuleCall_14()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getAssignStatementParserRuleCall_14()); 
     }
-    this_LinearizationDefExpr_55=ruleLinearizationDefExpr
+    this_AssignStatement_55=ruleAssignStatement
     {
-        $current = $this_LinearizationDefExpr_55.current;
+        $current = $this_AssignStatement_55.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getFnDefExprParserRuleCall_15()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getLinearizationDefExprParserRuleCall_15()); 
     }
-    this_FnDefExpr_56=ruleFnDefExpr
+    this_LinearizationDefExpr_56=ruleLinearizationDefExpr
     {
-        $current = $this_FnDefExpr_56.current;
+        $current = $this_LinearizationDefExpr_56.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getLibraryFnDefExprParserRuleCall_16()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getFnDefExprParserRuleCall_16()); 
     }
-    this_LibraryFnDefExpr_57=ruleLibraryFnDefExpr
+    this_FnDefExpr_57=ruleFnDefExpr
     {
-        $current = $this_LibraryFnDefExpr_57.current;
+        $current = $this_FnDefExpr_57.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_17()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getLibraryFnDefExprParserRuleCall_17()); 
     }
-    this_NodeDefExpr_58=ruleNodeDefExpr
+    this_LibraryFnDefExpr_58=ruleLibraryFnDefExpr
     {
-        $current = $this_NodeDefExpr_58.current;
+        $current = $this_LibraryFnDefExpr_58.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_18()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_18()); 
     }
-    this_RecordDefExpr_59=ruleRecordDefExpr
+    this_NodeDefExpr_59=ruleNodeDefExpr
     {
-        $current = $this_RecordDefExpr_59.current;
+        $current = $this_NodeDefExpr_59.current;
         afterParserOrEnumRuleCall();
     }
 
     |
     { 
-        newCompositeNode(grammarAccess.getSpecStatementAccess().getInputStatementParserRuleCall_19()); 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_19()); 
     }
-    this_InputStatement_60=ruleInputStatement
+    this_RecordDefExpr_60=ruleRecordDefExpr
     {
-        $current = $this_InputStatement_60.current;
+        $current = $this_RecordDefExpr_60.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getSpecStatementAccess().getInputStatementParserRuleCall_20()); 
+    }
+    this_InputStatement_61=ruleInputStatement
+    {
+        $current = $this_InputStatement_61.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -2972,6 +3002,111 @@ ruleConstStatement returns [EObject current=null]
 	otherlv_6=Semicolon
     {
     	newLeafNode(otherlv_6, grammarAccess.getConstStatementAccess().getSemicolonKeyword_6());
+    }
+)
+;
+
+
+
+
+
+// Entry rule entryRuleEnumStatement
+entryRuleEnumStatement returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getEnumStatementRule()); }
+	 iv_ruleEnumStatement=ruleEnumStatement 
+	 { $current=$iv_ruleEnumStatement.current; } 
+	 EOF 
+;
+
+// Rule EnumStatement
+ruleEnumStatement returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+	otherlv_0=Enum
+    {
+    	newLeafNode(otherlv_0, grammarAccess.getEnumStatementAccess().getEnumKeyword_0());
+    }
+(
+(
+		lv_name_1_0=RULE_ID
+		{
+			newLeafNode(lv_name_1_0, grammarAccess.getEnumStatementAccess().getNameIDTerminalRuleCall_1_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getEnumStatementRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_1_0, 
+        		"ID");
+	    }
+
+)
+)
+	otherlv_2=EqualsSign
+    {
+    	newLeafNode(otherlv_2, grammarAccess.getEnumStatementAccess().getEqualsSignKeyword_2());
+    }
+
+	otherlv_3=LeftCurlyBracket
+    {
+    	newLeafNode(otherlv_3, grammarAccess.getEnumStatementAccess().getLeftCurlyBracketKeyword_3());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getEnumStatementAccess().getEnumsNamedIDParserRuleCall_4_0()); 
+	    }
+		lv_enums_4_0=ruleNamedID		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getEnumStatementRule());
+	        }
+       		add(
+       			$current, 
+       			"enums",
+        		lv_enums_4_0, 
+        		"NamedID");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(
+	otherlv_5=Comma
+    {
+    	newLeafNode(otherlv_5, grammarAccess.getEnumStatementAccess().getCommaKeyword_5_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getEnumStatementAccess().getEnumsNamedIDParserRuleCall_5_1_0()); 
+	    }
+		lv_enums_6_0=ruleNamedID		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getEnumStatementRule());
+	        }
+       		add(
+       			$current, 
+       			"enums",
+        		lv_enums_6_0, 
+        		"NamedID");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*
+	otherlv_7=RightCurlyBracket
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getEnumStatementAccess().getRightCurlyBracketKeyword_6());
+    }
+
+	otherlv_8=Semicolon
+    {
+    	newLeafNode(otherlv_8, grammarAccess.getEnumStatementAccess().getSemicolonKeyword_7());
     }
 )
 ;
@@ -6766,6 +6901,45 @@ ruleReservedVarTag returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRule
     }
 )
     ;
+
+
+
+
+
+// Entry rule entryRuleNamedID
+entryRuleNamedID returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getNamedIDRule()); }
+	 iv_ruleNamedID=ruleNamedID 
+	 { $current=$iv_ruleNamedID.current; } 
+	 EOF 
+;
+
+// Rule NamedID
+ruleNamedID returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(
+(
+		lv_name_0_0=RULE_ID
+		{
+			newLeafNode(lv_name_0_0, grammarAccess.getNamedIDAccess().getNameIDTerminalRuleCall_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getNamedIDRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_0_0, 
+        		"ID");
+	    }
+
+)
+)
+;
 
 
 

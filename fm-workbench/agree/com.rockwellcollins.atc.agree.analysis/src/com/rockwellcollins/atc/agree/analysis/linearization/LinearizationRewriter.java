@@ -53,7 +53,7 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
-import com.rockwellcollins.atc.agree.analysis.AgreeRecordUtils;
+import com.rockwellcollins.atc.agree.analysis.AgreeTypeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.linearization.Linearize.BoundingSegments;
 import com.rockwellcollins.atc.agree.analysis.linearization.Linearize.Segment;
@@ -105,7 +105,7 @@ public class LinearizationRewriter {
 
 	@SuppressWarnings("unused")
 	private static jkind.lustre.Node generateLustreConstraintForm(LinearizationDefExpr linDef, BoundingSegments segs) {
-		String nodeName = getConstraintFormName(AgreeRecordUtils.getNodeName(linDef));
+		String nodeName = getConstraintFormName(AgreeTypeUtils.getNodeName(linDef));
 
 		List<VarDecl> inputs = new ArrayList<>();
 		inputs.add(new jkind.lustre.VarDecl(inputId, jkind.lustre.NamedType.REAL));
@@ -223,7 +223,7 @@ public class LinearizationRewriter {
 
 	private static NodeDefExpr generateAgreeConstraintForm(LinearizationDefExpr linDef, BoundingSegments segs) {
 		NodeDefExpr result = af.createNodeDefExpr();
-		result.setName(getConstraintFormName(AgreeRecordUtils.getNodeName(linDef)));
+		result.setName(getConstraintFormName(AgreeTypeUtils.getNodeName(linDef)));
 
 		Arg inputArg = af.createArg();
 		PrimType inputArgType = af.createPrimType();
@@ -345,7 +345,7 @@ public class LinearizationRewriter {
 	public AgreeNode visit(AgreeNode agreeNode) {
 		Map<String, String> linearizationMap = new HashMap<>();
 		for (Map.Entry<LinearizationDefExpr, NodeDefExpr> entry : linearizationDefToConstraintNodeDefMap.entrySet()) {
-			linearizationMap.put(AgreeRecordUtils.getNodeName(entry.getKey()), entry.getValue().getName());
+			linearizationMap.put(AgreeTypeUtils.getNodeName(entry.getKey()), entry.getValue().getName());
 		}
 		LinearizationAgreeASTVisitor visitor = new LinearizationAgreeASTVisitor(linearizationMap);
 		return visitor.visit(agreeNode);

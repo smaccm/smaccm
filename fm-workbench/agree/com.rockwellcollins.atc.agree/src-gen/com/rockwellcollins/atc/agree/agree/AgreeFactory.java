@@ -149,6 +149,15 @@ public interface AgreeFactory extends EFactory
   ConstStatement createConstStatement();
 
   /**
+   * Returns a new object of class '<em>Enum Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Enum Statement</em>'.
+   * @generated
+   */
+  EnumStatement createEnumStatement();
+
+  /**
    * Returns a new object of class '<em>Eq Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -291,6 +300,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   NestedDotID createNestedDotID();
+
+  /**
+   * Returns a new object of class '<em>Named ID</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Named ID</em>'.
+   * @generated
+   */
+  NamedID createNamedID();
 
   /**
    * Returns a new object of class '<em>Contract Library</em>'.

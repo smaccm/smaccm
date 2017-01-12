@@ -24,6 +24,7 @@ import com.rockwellcollins.atc.agree.agree.ComplexExpr;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
+import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -44,6 +45,7 @@ import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -209,6 +211,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass enumStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass eqStatementEClass = null;
 
   /**
@@ -315,6 +324,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass nestedDotIDEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass namedIDEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1068,6 +1084,26 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getEnumStatement()
+  {
+    return enumStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEnumStatement_Enums()
+  {
+    return (EReference)enumStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getEqStatement()
   {
     return eqStatementEClass;
@@ -1491,6 +1527,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getNestedDotID_Sub()
   {
     return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNamedID()
+  {
+    return namedIDEClass;
   }
 
   /**
@@ -2878,6 +2924,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(constStatementEClass, CONST_STATEMENT__TYPE);
     createEReference(constStatementEClass, CONST_STATEMENT__EXPR);
 
+    enumStatementEClass = createEClass(ENUM_STATEMENT);
+    createEReference(enumStatementEClass, ENUM_STATEMENT__ENUMS);
+
     eqStatementEClass = createEClass(EQ_STATEMENT);
     createEReference(eqStatementEClass, EQ_STATEMENT__LHS);
     createEReference(eqStatementEClass, EQ_STATEMENT__EXPR);
@@ -2936,6 +2985,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(nestedDotIDEClass, NESTED_DOT_ID__BASE);
     createEAttribute(nestedDotIDEClass, NESTED_DOT_ID__TAG);
     createEReference(nestedDotIDEClass, NESTED_DOT_ID__SUB);
+
+    namedIDEClass = createEClass(NAMED_ID);
 
     agreeContractLibraryEClass = createEClass(AGREE_CONTRACT_LIBRARY);
     createEReference(agreeContractLibraryEClass, AGREE_CONTRACT_LIBRARY__CONTRACT);
@@ -3169,6 +3220,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     propertyStatementEClass.getESuperTypes().add(this.getSpecStatement());
     constStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     constStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    enumStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    enumStatementEClass.getESuperTypes().add(this.getSpecStatement());
     eqStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     eqStatementEClass.getESuperTypes().add(this.getSpecStatement());
     inputStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
@@ -3196,6 +3249,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
     complexExprEClass.getESuperTypes().add(this.getExpr());
     nestedDotIDEClass.getESuperTypes().add(this.getComplexExpr());
+    namedIDEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     agreeContractLibraryEClass.getESuperTypes().add(this.getAgreeLibrary());
     agreeContractSubclauseEClass.getESuperTypes().add(this.getAgreeSubclause());
     agreeContractEClass.getESuperTypes().add(this.getContract());
@@ -3296,6 +3350,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getConstStatement_Type(), this.getType(), null, "type", null, 0, 1, ConstStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getConstStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ConstStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(enumStatementEClass, EnumStatement.class, "EnumStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getEnumStatement_Enums(), this.getNamedID(), null, "enums", null, 0, -1, EnumStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(eqStatementEClass, EqStatement.class, "EqStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getEqStatement_Lhs(), this.getArg(), null, "lhs", null, 0, -1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getEqStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3354,6 +3411,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getNestedDotID_Base(), theAadl2Package.getNamedElement(), null, "base", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getNestedDotID_Tag(), theEcorePackage.getEString(), "tag", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getNestedDotID_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(namedIDEClass, NamedID.class, "NamedID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(agreeContractLibraryEClass, AgreeContractLibrary.class, "AgreeContractLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAgreeContractLibrary_Contract(), this.getContract(), null, "contract", null, 0, 1, AgreeContractLibrary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

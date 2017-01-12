@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import jkind.lustre.BoolExpr;
+import jkind.lustre.EnumType;
 import jkind.lustre.Expr;
 import jkind.lustre.IntExpr;
 import jkind.lustre.NamedType;
@@ -34,6 +35,8 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.EnumStatement;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -41,14 +44,14 @@ import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
-public class AgreeRecordUtils {
+public class AgreeTypeUtils {
 
     private static final String dotChar = "__";
     private static final Expr initBool = new BoolExpr(false);
     private static final Expr initReal = new RealExpr(BigDecimal.ZERO);
     private static final Expr initInt = new IntExpr(BigInteger.ZERO);
 
-    public static String getRecordTypeName(com.rockwellcollins.atc.agree.agree.Type type) {
+    public static String getTypeName(com.rockwellcollins.atc.agree.agree.Type type) {
         if (type instanceof PrimType) {
             return ((PrimType) type).getString();
         } else {
@@ -56,23 +59,23 @@ public class AgreeRecordUtils {
         }
     }
 
-    public static String getRecordTypeName(com.rockwellcollins.atc.agree.agree.Type type,
-            Map<NamedElement, String> typeMap, Set<jkind.lustre.RecordType> typeExpressions) {
+    public static String getTypeName(com.rockwellcollins.atc.agree.agree.Type type,
+            Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
         if (type instanceof PrimType) {
             return ((PrimType) type).getString();
         } else {
-            return getRecordTypeName(((RecordType) type).getRecord(), typeMap, typeExpressions);
+            return getTypeName(((RecordType) type).getRecord(), typeMap, typeExpressions);
         }
     }
 
-    public static String getRecordTypeName(NestedDotID recId, Map<NamedElement, String> typeMap,
-            Set<jkind.lustre.RecordType> typeExpressions) {
+    public static String getTypeName(NestedDotID recId, Map<NamedElement, String> typeMap,
+            Set<Type> typeExpressions) {
         NamedElement finalId = AgreeUtils.getFinalNestId(recId);
-        return getRecordTypeName(finalId, typeMap, typeExpressions);
+        return getTypeName(finalId, typeMap, typeExpressions);
     }
 
-    public static String getRecordTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
-            Set<jkind.lustre.RecordType> typeExpressions) {
+    public static String getTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
+            Set<Type> typeExpressions) {
 
     	if(finalId == null){
     		return null;
@@ -81,26 +84,26 @@ public class AgreeRecordUtils {
         if (typeMap.containsKey(finalId)) {
             return typeMap.get(finalId);
         }
-        recordRecType(finalId, typeMap, typeExpressions);
+        recordType(finalId, typeMap, typeExpressions);
         return typeMap.get(finalId);
     }
     
-    public static Type getRecordType(NamedElement finalId, Map<NamedElement, String> typeMap,
-            Set<jkind.lustre.RecordType> typeExpressions) {
-    	String name = getRecordTypeName(finalId, typeMap, typeExpressions);
+    public static Type getType(NamedElement finalId, Map<NamedElement, String> typeMap,
+            Set<Type> typeExpressions) {
+    	String name = getTypeName(finalId, typeMap, typeExpressions);
     	if(name == null){
     		return null;
     	}
-    	for (jkind.lustre.RecordType recType : typeExpressions) {
-			if (recType.id.equals(name)) {
-				return recType;
+    	for (Type type : typeExpressions) {
+			if (type.toString().equals(name)) {
+				return type;
 			}
 		}
     	return new NamedType(name);
     }
 
-    private static void recordRecType(NamedElement el, Map<NamedElement, String> typeMap,
-            Set<jkind.lustre.RecordType> typeExpressions) {
+    private static void recordType(NamedElement el, Map<NamedElement, String> typeMap,
+            Set<Type> typeExpressions) {
         Map<String, Type> subTypeMap = new HashMap<String, Type>();
         if (el instanceof ComponentImplementation) {
             ComponentImplementation compImpl = (ComponentImplementation) el;
@@ -114,9 +117,9 @@ public class AgreeRecordUtils {
                 ComponentImplementation subCompImpl = subComp.getComponentImplementation();
                 if (subCompImpl == null) {
                     ComponentType subCompType = subComp.getComponentType();
-                    typeStr = getRecordTypeName(subCompType, typeMap, typeExpressions);
+                    typeStr = getTypeName(subCompType, typeMap, typeExpressions);
                 } else {
-                    typeStr = getRecordTypeName(subCompImpl, typeMap, typeExpressions);
+                    typeStr = getTypeName(subCompImpl, typeMap, typeExpressions);
                 }
                 if (typeStr != null) {
                     subTypeMap.put(subComp.getName(), getNamedType(typeStr));
@@ -133,19 +136,29 @@ public class AgreeRecordUtils {
                 } else {
                     NestedDotID nestId = ((RecordType) argType).getRecord();
                     NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
-                    typeStr = getRecordTypeName(namedEl, typeMap, typeExpressions);
-                }
-                subTypeMap.put(arg.getName(), getNamedType(typeStr));
-            }
+                    typeStr = getTypeName(namedEl, typeMap, typeExpressions);
+				}
+				subTypeMap.put(arg.getName(), getNamedType(typeStr));
+			}
 
-        } else if (el instanceof ComponentType) {
-            String typeStr = getIDTypeStr(el);
-            typeMap.put(el, typeStr);
-            return;
-        }
-        String typeStr = getIDTypeStr(el);
-        typeMap.put(el, typeStr);
-        jkind.lustre.RecordType lustreRecord = new jkind.lustre.RecordType(typeStr, subTypeMap);
+		} else if (el instanceof EnumStatement) {
+			List<String> vals = new ArrayList<>();
+			EnumStatement enumStatement = (EnumStatement)el;
+			for(NamedID id : enumStatement.getEnums()){
+				vals.add(id.getName());
+			}
+			String typeStr = getIDTypeStr(enumStatement);
+			typeMap.put(el, typeStr);
+			typeExpressions.add(new EnumType(typeStr, vals));
+			return;
+		} else if (el instanceof ComponentType) {
+			String typeStr = getIDTypeStr(el);
+			typeMap.put(el, typeStr);
+			return;
+		}
+		String typeStr = getIDTypeStr(el);
+		typeMap.put(el, typeStr);
+		jkind.lustre.RecordType lustreRecord = new jkind.lustre.RecordType(typeStr, subTypeMap);
         // getInitType(lustreRecord);
         typeExpressions.add(lustreRecord);
 
@@ -287,10 +300,10 @@ public class AgreeRecordUtils {
     }
 
     public static List<VarDecl> argsToVarDeclList(EList<Arg> args, Map<NamedElement, String> typeMap,
-            Set<jkind.lustre.RecordType> typeExpressions) {
+            Set<Type> typeExpressions) {
         List<VarDecl> varList = new ArrayList<VarDecl>();
         for (Arg arg : args) {
-            Type type = getNamedType(getRecordTypeName(arg.getType(), typeMap, typeExpressions));
+            Type type = getNamedType(getTypeName(arg.getType(), typeMap, typeExpressions));
             VarDecl varDecl = new VarDecl(arg.getName(), type);
             varList.add(varDecl);
         }

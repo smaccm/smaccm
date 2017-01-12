@@ -10,10 +10,12 @@ NamedElement returns aadl2::NamedElement:
 	| FnDefExpr
 	| PropertyStatement
 	| ConstStatement
+	| EnumStatement
 	| NodeDefExpr
 	| LinearizationDefExpr
 	| LibraryFnDefExpr
-	| RecordDefExpr;
+	| RecordDefExpr
+	| NamedID;
 
 Element returns aadl2::Element:
 	Expr
@@ -54,6 +56,7 @@ SpecStatement:
 	| OrderStatement
 	| PropertyStatement
 	| ConstStatement
+	| EnumStatement
 	| EqStatement
 	| AssignStatement
 	| LinearizationDefExpr
@@ -127,6 +130,9 @@ PropertyStatement:
 
 ConstStatement:
 	'const' name=ID ':' type=Type '=' expr=Expr ';'; //this should really be an "Arg"
+	
+EnumStatement:
+	'enum' name=ID '=' '{' enums+=NamedID (',' enums+=NamedID)* '}' ';';
 
 EqStatement:
 	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
@@ -269,6 +275,10 @@ ReservedVarTag:
 |	'_INSERT'
 |	'_COUNT'
 |   '_CLK';
+
+NamedID:
+	name=ID
+;
 
 JavaQualifiedName:
 	ID ('.' ID)*;

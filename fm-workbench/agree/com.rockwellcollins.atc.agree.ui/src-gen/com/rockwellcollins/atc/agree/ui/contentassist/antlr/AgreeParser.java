@@ -143,6 +143,8 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getOrderStatementAccess().getGroup_3(), "rule__OrderStatement__Group_3__0");
 					put(grammarAccess.getPropertyStatementAccess().getGroup(), "rule__PropertyStatement__Group__0");
 					put(grammarAccess.getConstStatementAccess().getGroup(), "rule__ConstStatement__Group__0");
+					put(grammarAccess.getEnumStatementAccess().getGroup(), "rule__EnumStatement__Group__0");
+					put(grammarAccess.getEnumStatementAccess().getGroup_5(), "rule__EnumStatement__Group_5__0");
 					put(grammarAccess.getEqStatementAccess().getGroup(), "rule__EqStatement__Group__0");
 					put(grammarAccess.getEqStatementAccess().getGroup_1(), "rule__EqStatement__Group_1__0");
 					put(grammarAccess.getEqStatementAccess().getGroup_1_1(), "rule__EqStatement__Group_1_1__0");
@@ -381,6 +383,9 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getConstStatementAccess().getNameAssignment_1(), "rule__ConstStatement__NameAssignment_1");
 					put(grammarAccess.getConstStatementAccess().getTypeAssignment_3(), "rule__ConstStatement__TypeAssignment_3");
 					put(grammarAccess.getConstStatementAccess().getExprAssignment_5(), "rule__ConstStatement__ExprAssignment_5");
+					put(grammarAccess.getEnumStatementAccess().getNameAssignment_1(), "rule__EnumStatement__NameAssignment_1");
+					put(grammarAccess.getEnumStatementAccess().getEnumsAssignment_4(), "rule__EnumStatement__EnumsAssignment_4");
+					put(grammarAccess.getEnumStatementAccess().getEnumsAssignment_5_1(), "rule__EnumStatement__EnumsAssignment_5_1");
 					put(grammarAccess.getEqStatementAccess().getLhsAssignment_1_0(), "rule__EqStatement__LhsAssignment_1_0");
 					put(grammarAccess.getEqStatementAccess().getLhsAssignment_1_1_1(), "rule__EqStatement__LhsAssignment_1_1_1");
 					put(grammarAccess.getEqStatementAccess().getExprAssignment_2_1(), "rule__EqStatement__ExprAssignment_2_1");
@@ -480,6 +485,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getNestedDotIDAccess().getBaseAssignment_0(), "rule__NestedDotID__BaseAssignment_0");
 					put(grammarAccess.getNestedDotIDAccess().getTagAssignment_1_0_1_0(), "rule__NestedDotID__TagAssignment_1_0_1_0");
 					put(grammarAccess.getNestedDotIDAccess().getSubAssignment_1_0_1_1(), "rule__NestedDotID__SubAssignment_1_0_1_1");
+					put(grammarAccess.getNamedIDAccess().getNameAssignment(), "rule__NamedID__NameAssignment");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getPropertyAssignment_0(), "rule__ContainedPropertyAssociation__PropertyAssignment_0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getAppendAssignment_1_1(), "rule__ContainedPropertyAssociation__AppendAssignment_1_1");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getConstantAssignment_2(), "rule__ContainedPropertyAssociation__ConstantAssignment_2");

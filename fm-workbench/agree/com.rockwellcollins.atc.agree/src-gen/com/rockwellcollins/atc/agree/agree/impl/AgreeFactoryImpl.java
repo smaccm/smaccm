@@ -78,6 +78,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.CALL_DEF: return createCallDef();
       case AgreePackage.PROPERTY_STATEMENT: return createPropertyStatement();
       case AgreePackage.CONST_STATEMENT: return createConstStatement();
+      case AgreePackage.ENUM_STATEMENT: return createEnumStatement();
       case AgreePackage.EQ_STATEMENT: return createEqStatement();
       case AgreePackage.INPUT_STATEMENT: return createInputStatement();
       case AgreePackage.ASSIGN_STATEMENT: return createAssignStatement();
@@ -94,6 +95,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.EXPR: return createExpr();
       case AgreePackage.COMPLEX_EXPR: return createComplexExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
+      case AgreePackage.NAMED_ID: return createNamedID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
       case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
       case AgreePackage.AGREE_CONTRACT: return createAgreeContract();
@@ -311,6 +313,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public EnumStatement createEnumStatement()
+  {
+    EnumStatementImpl enumStatement = new EnumStatementImpl();
+    return enumStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EqStatement createEqStatement()
   {
     EqStatementImpl eqStatement = new EqStatementImpl();
@@ -480,6 +493,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     NestedDotIDImpl nestedDotID = new NestedDotIDImpl();
     return nestedDotID;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NamedID createNamedID()
+  {
+    NamedIDImpl namedID = new NamedIDImpl();
+    return namedID;
   }
 
   /**

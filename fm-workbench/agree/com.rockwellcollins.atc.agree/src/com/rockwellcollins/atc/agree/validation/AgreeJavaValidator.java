@@ -73,6 +73,7 @@ import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -93,6 +94,7 @@ import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -136,13 +138,63 @@ import com.rockwellcollins.atc.agree.visitors.ExprCycleVisitor;
  * see http://www.eclipse.org/Xtext/documentation.html#validation
  */
 public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
-	private Set<CallDef> checkedRecCalls = new HashSet<>();
+	private final Set<CallDef> checkedRecCalls = new HashSet<>();
+	private final Map<String, Map<String, NamedID>> enumSets = new HashMap<>(); 
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
 		return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
 	}
 
+
+	@Check(CheckType.FAST)
+	public void checkEnumStatement(EnumStatement statement){
+		String contextProject = statement.eResource().getURI().segment(1);
+		Map<String, NamedID> enumMap;
+		if(!enumSets.containsKey(contextProject)){
+			enumMap = new HashMap<>();
+			enumSets.put(contextProject, enumMap);
+		}else{
+			enumMap = enumSets.get(contextProject);
+		}
+		for(NamedID id : statement.getEnums()){
+			NamedID otherEnum = enumMap.get(id.getName());
+			if (otherEnum == null) {
+				enumMap.put(id.getName(), id);
+			} else if (otherEnum != id) {
+				if (otherEnum.eResource() != null && otherEnum.eResource().equals(id.eResource())) {
+					
+					String message = "Multiple uses of the same enum value '" + id.getName() + "' in '"
+							+ getEnumValueDefLocation(otherEnum) + "' and '" + getEnumValueDefLocation(id) + "'";
+					error(otherEnum, message);
+					error(id, message);
+				} else {
+					enumMap.put(id.getName(), id);
+				}
+			}
+		}
+		EObject container = statement.eContainer();
+		while(!(container instanceof AadlPackage) &&
+				!(container instanceof ComponentClassifier)){
+			container = container.eContainer();
+		}
+		if(!(container instanceof AadlPackage)){
+			error(statement, "Enumerations can only be defined in AADL packages");
+		}
+		
+	}
+	
+	private String getEnumValueDefLocation(NamedID id){
+		EObject container = id.eContainer();
+		EnumStatement enumStatement = (EnumStatement)container;
+		String enumName = enumStatement.getName();
+		while(!(container instanceof AadlPackage) &&
+				!(container instanceof ComponentClassifier)){
+			container = container.eContainer();
+		}
+		return ((NamedElement)container).getQualifiedName() + "::" + enumName;
+	}
+	
 	@Check(CheckType.FAST)
 	public void checkConnectionStatement(ConnectionStatement conn) {
 		Classifier container = conn.getContainingClassifier();
@@ -969,8 +1021,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		if (!(finalId instanceof DataImplementation) && 
 		        !(finalId instanceof RecordDefExpr) &&
-		        !(finalId instanceof DataType)) {
-			error(recType, "types must be record definition, data implementation, or datatype");
+		        !(finalId instanceof DataType) &&
+		        !(finalId instanceof EnumStatement)) {
+			error(recType, "types must be record definition, data implementation, enumeration, or datatype");
 		}
 
 		if (finalId instanceof DataImplementation) {
@@ -1267,6 +1320,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			typeName = recEl.getName();
 		} else if (recEl instanceof DataType) {
 		    return getAgreeType((ComponentClassifier)recEl);
+		} else if(recEl instanceof EnumStatement){
+			typeName = recEl.getFullName();
 		}
 		typeName = packName + "::" + typeName;
 
@@ -2193,11 +2248,35 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return getAgreeType((ComponentClassifier) namedEl);
 		} else if (namedEl instanceof DataImplementation) {
 			return getAgreeType((DataImplementation) namedEl);
+		} else if(namedEl instanceof NamedID){
+			return getAgreeType((NamedID) namedEl);
 		}
 
 		return ERROR;
 	}
 
+	private AgreeType getAgreeType(NamedID id){
+		EObject container = id.eContainer();
+		if(!(container instanceof EnumStatement)){
+			throw new IllegalArgumentException("we expect that NamedIDs only live in enum statements");
+		}
+		return getAgreeType((EnumStatement)container);
+	}
+	
+   private AgreeType getAgreeType(EnumStatement statement){
+	   String name = statement.getName();
+	   EObject container = statement.eContainer();
+	   
+	   while(!(container instanceof AadlPackage)){
+		   if(container instanceof ComponentClassifier){
+			   name = ((ComponentClassifier) container).getName() + "::" + name;
+		   }
+		   container = container.eContainer();
+	   }
+	   name = ((AadlPackage)container).getName() + "::" + name;
+	   return new AgreeType(name);
+   }
+	
 	private AgreeType getAgreeType(DataImplementation dataImpl) {
 
 		AgreeType nativeType = getNativeType(dataImpl);
