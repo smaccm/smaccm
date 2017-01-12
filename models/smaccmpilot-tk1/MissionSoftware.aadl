@@ -81,7 +81,7 @@ public
 			Priority => 150;
 			Stack_Size => 1024 Bytes;
 			Compute_Execution_Time => 10 us .. 100 us;
-			Period => 5 ms;
+			Period => 1 ms;
 			TB_SYS::Sends_Events_To => "{{}}";
 			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
 			Initialize_Entrypoint_Source_Text => "component_init";
