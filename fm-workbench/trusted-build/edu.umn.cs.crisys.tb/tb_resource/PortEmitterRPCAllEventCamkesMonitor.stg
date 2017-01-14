@@ -2,16 +2,42 @@ import "Common.stg"
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// Templates for managing data port interfaces between active threads.
-//
-// RPC / LPC implementation
+// Templates for managing all event port interfaces between active threads.
+// The implementation generates separate monitor comopenents for each unique
+// input port of that type.
 // 
-// 10/26/2016 MWW
+// 01/11/2017 DWD
 // 
 ///////////////////////////////////////////////////////////////////////////
 
+filePrefix(purpose, date, path) ::= "<stdFilePrefix(date, path, purpose)>"
 
+inputPortCamkesMonitorPurpose(port) ::= <<
+  Monitor of type <port.typeName> with input port <port.qualifiedName>
+  queue size of <port.queueSize>. The output port set follows:
 
+<port.connections:{ c |     c.sourcePort
+}>
+>>
+
+inputPortCMonitorPurpose(port) ::= <<
+  Implementing a Monitor of type <port.typeName> with a queue size of 
+  <port.queueSize>. The input port that will be calling dequeue and receiving notifications 
+  is <port.qualifiedName>. The output port set follows:
+
+<port.connections:{ c |     c.sourcePort
+}>
+>>
+
+inputPortIDL4MonitorPurpose(port,str_direction) ::= <<
+  <str_direction> interface with type <port.typeName> and queue size of <port.queueSize>.
+}>
+>>
+
+preinitStatements(port) ::= <<
+    q<port.name>_reg_callback(q<port.name>_handler,NULL);
+
+>>
 ///////////////////////////////////////////////////////////////////////////
 //
 // Header templates
@@ -76,8 +102,8 @@ copyToQueueDataStmt(port) ::= <<
 >>
 
 copyFromQueueDataStmt(port) ::= <<
-<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.queueDataName>[<port.queueFrontName>] ;
-<else><valToAadlOutputMemcpy(port.type, port.name, {<port.queueDataName>[<port.queueFrontName>]})>
+<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.queueDataName>[<port.queueFronstr_type_name>] ;
+<else><valToAadlOutputMemcpy(port.type, port.name, {<port.queueDataName>[<port.queueFronstr_type_name>]})>
 <endif>
 >>
 
@@ -136,17 +162,17 @@ bool <port.localReaderName>() {
 ///////////////////////////////////////////////////////////////
 
 
-callRemoteWriterStmt(connection) ::= << 
+callRemoteWriterStmt(port, dname) ::= << 
 <if(port.hasData)>
-tb_result &= <connection.outgoingPortWriterName>(<port.type.aadlInputToCamkesInput><connection.sourcePort.name>);
+tb_result &= <dname>(<port.type.aadlInputToCamkesInput><port.name>);
 <else>
-tb_result &= <connection.outgoingPortWriterName>();
+tb_result &= <dname>();
 <endif>
 >>
 
-remoteCallerFunction(srcPort) ::= <<
+remoteCallerFunction(port) ::= <<
 /************************************************************************
- *  <srcPort.localWriterName>:
+ *  <port.localWriterName>:
  * Invoked from user code in the local thread.
  *
  * This is the function invoked by the local thread to make a
@@ -154,15 +180,16 @@ remoteCallerFunction(srcPort) ::= <<
  *
  ************************************************************************/
 
-<if(srcPort.hasData)>
-bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
+<if(port.hasData)>
+bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
 <else>
-bool <srcPort.localWriterName>(void) {
+bool <port.localWriterName>(void) {
 <endif>
     bool tb_result = true ; 
-    <srcPort.connections:callRemoteWriterStmt()>
+    <port.outputMonitorNames:{ n | <callRemoteWriterStmt(port,n)>}>
     return tb_result;
 }
+
 >>
 
 componentRemoteWriterDecl(port) ::= <<
@@ -197,106 +224,98 @@ while (<dispatcher.localReaderName>()) {
 ///////////////////////////////////////////////////////////////////////////
 
 inputPortDeclarations(port) ::= <<
-uses Monitor_<port.typeName> <port.name>;
-consumes QueuedData q<port.name>;
+uses <port.inputMonitorInterfaceName> <port.qualifiedName>;
+consumes QueuedData q<port.qualifiedName>;
 
 >>
 
 outputPortDeclarations(port) ::= <<
-<port.connections:{c | uses Monitor_<port.typeName> <c.outgoingPortName>;
-}>
->>
-
-rpcConnection(cid, from1, from2, mon) ::=
-   "connection seL4RPCCall <cid> (from <from1>.<from2>, to monitor_<mon>.mon);"
-notifyConnection(cid, mon, to1, to2) ::=
-   "connection seL4Notification <cid> (from monitor_<mon>.qd, to <to1>.q<to2>);"
-
-connectReaderWriter(connection, model) ::= <<
-<rpcConnection
-    ( model.generateConnectionName
-    , connection.sourcePort.threadImplementation.componentInstanceName
-    , connection.outgoingPortName
-    , connection.name)>
-<notifyConnection
-    ( model.generateConnectionName
-    , connection.name
-    , connection.destPort.threadImplementation.componentInstanceName
-    , connection.destPort.name)>
-<rpcConnection
-    ( model.generateConnectionName
-    , connection.destPort.threadImplementation.componentInstanceName
-    , connection.destPort.name
-    , connection.name)>
+<port.outputMonitorNames:{n | uses <port.outputMonitorInterfaceName> <n>;<\n>}>
 
 >>
-// TODO: I wonder if this macro should be parameterized by a file name
-// rather than assuming that all types are defined in "tb_toplevel_types.h"
-monitorCamkesIdl4Writer(iname, tname) ::= <<
-procedure <iname> {
+
+//monitorCamkesIdl4Writer(iname, str_type_name)
+camkesMonitorEnqueueIdl4(str_interface_name, str_type_name, str_types_include) ::= <<
+procedure <str_interface_name>_Enqueue {
   include <\u003C>stdbool.h<\u003E>;
-  include <\u003C>stdbool.h<\u003E>;
-  include <\u003C>tb_toplevel_types.h<\u003E>;
-  bool enqueue(refin <tname> m);
-  bool dequeue(out <tname> m);
+  include <\u003C><str_types_include><\u003E>;
+  bool enqueue(refin <str_type_name> m);
 };
 >>
 
-monitorCamkesWriter(cname,iname) ::= <<
-import "../../interfaces/<iname>.idl4";
+camkesMonitorDequeueIdl4(str_interface_name, str_type_name, str_types_include) ::= <<
+procedure <str_interface_name>_Dequeue {
+  include <\u003C>stdbool.h<\u003E>;
+  include <\u003C><str_types_include><\u003E>;
+  bool dequeue(out <str_type_name> m);
+};
+>>
 
-component <cname> {
+monitorCamkesWriter(str_component_name,port) ::= <<
+import "../../interfaces/<port.inputMonitorInterfaceName>.idl4";
+import "../../interfaces/<port.outputMonitorInterfaceName>.idl4";
+component <str_component_name> {
 
-  provides <iname> mon;
+  provides <port.outputMonitorInterfaceName> enq;
+  provides <port.inputMonitorInterfaceName> deq;
   emits QueuedData qd;
-
+  has mutex q;
 }
 >>
 
 
-monitorCamkesCWriter(tname,qsz) ::= <<
-#include <\u003C>stdbool.h<\u003E>
-#include <\u003C>tb_toplevel_types.h<\u003E>
+monitorCamkesCWriter(str_type_name, str_qsize, str_types_include) ::= <<
 #include <\u003C>stdio.h<\u003E>
+#include <\u003C>stdbool.h<\u003E>
+#include <\u003C><str_types_include><\u003E>;
 
-<tname> contents[<qsz>];
-uint32_t front = 0;
-uint32_t length = 0;
+<str_type_name> contents[<str_qsize>];
+static uint32_t front = 0;
+static uint32_t length = 0;
 
-bool is_full(void) {
-  return length == <qsz>;
+static bool is_full(void) {
+  return length == <str_qsize>;
 }
 
-bool is_empty(void) {
+static bool is_empty(void) {
   return length == 0;
 }
 
-bool mon_dequeue(<tname> * m) {
+bool deq_dequeue(<str_type_name> * m) {
+  q_lock();
   if (is_empty()) {
+    q_unlock();
     return false;
   } else {
     *m = contents[front];
-    front = (front + 1) % <qsz>;
+    front = (front + 1) % <str_qsize>;
     length--;
+    q_unlock();
     return true;
   }
 }
 
-bool mon_enqueue(const <tname> * m) {
+bool enq_enqueue(const <str_type_name> * m) {
+  q_lock();
   if (is_full()) {
+    q_unlock();
     return false;
   } else {
-    contents[(front + length) % <qsz>] = *m;
+    contents[(front + length) % <str_qsize>] = *m;
     length++;
     qd_emit();
+    q_unlock();
     return true;
   }
 }
+
 >>
 
 monitorCamkesEventHandler(port,unlock) ::= <<
+
 static void q<port.name>_handler(void * unused) {
-    q<port.name>_reg_callback(q<port.name>_handler, NULL);
-    <unlock>}
+  <unlock>
+  q<port.name>_reg_callback(q<port.name>_handler, NULL);
+}
 
 >>

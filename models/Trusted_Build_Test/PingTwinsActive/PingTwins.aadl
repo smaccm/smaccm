@@ -68,9 +68,7 @@ thread ping
 		o1 : out event data port msg.impl {
 	      TB_SYS::CommPrim_Source_Text => "Out1";
 		};
-		i2 : in event data port msg.impl {
-	      TB_SYS::Compute_Entrypoint_Source_Text => ("In2");
-		};
+		i2 : in event data port msg.impl ;
 		o2 : out event data port msg.impl {
 	      TB_SYS::CommPrim_Source_Text => "Out2";
 		};

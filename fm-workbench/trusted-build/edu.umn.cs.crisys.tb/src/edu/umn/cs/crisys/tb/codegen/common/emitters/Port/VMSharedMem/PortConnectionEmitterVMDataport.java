@@ -111,6 +111,11 @@ public class PortConnectionEmitterVMDataport implements PortConnectionEmitter {
       return c.getSourcePort().getQualifiedName() + "_" + c.getDestPort().getQualifiedName();
    }
 
+  @Override
+  public int getConnectionID() {
+    return c.getConnectionID();
+  }
+
 
 
 }

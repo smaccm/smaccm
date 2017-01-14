@@ -306,4 +306,10 @@ public String getCamkesAddComponentPortImports() {
                EmitterFactory.port(this.dataPort.getConnections().get(0).getSourcePort());
       }
    }
+
+  @Override
+  public String getCamkesAddPreInitStatements() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

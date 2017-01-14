@@ -364,7 +364,8 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    }
 
    private String addComponentOutputDataDeclarations() {
-      ST st = getTemplateST("outputPortDeclarations"); 
+      ST st = getTemplateST("outputPortDeclarations");
+      PortConnectionEmitter x = this.getConnections().get(0);
       st.add("port", this);
       return st.render();
    }
@@ -552,6 +553,12 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
   @Override
   public String getCamkesAddComponentPortImports() {
     return port.getType() + "_writer.idl4";
+  }
+
+  @Override
+  public String getCamkesAddPreInitStatements() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

@@ -10,6 +10,7 @@ public interface PortEmitterCamkes extends PortEmitter {
    // they may be covered implicitly.
    public void getWriteCamkesPortComponents(File componentsDirectory) throws TbFailure;
    public void getWriteCamkesPortIdls(File interfacesDirectory) throws TbFailure;
+   public String getCamkesAddPreInitStatements();
    public String getCamkesAddComponentPortLevelDeclarations(); //
    public String getCamkesAddAssemblyFileCompositionPortDeclarations(); //  
    public String getCamkesAddAssemblyFileConfigDeclarations(); //

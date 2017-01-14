@@ -9,13 +9,12 @@ import "CommonComponentC.stg"
 
 osSpecificThreadInitializer(threadImpl) ::= <<
 void pre_init(void) {
-    <threadImpl.inputEventPortList:{ port | q<port.name>_reg_callback(q<port.name>_handler,NULL);
-}>
-    <threadImpl.inputEventDataPortList:{ port | q<port.name>_reg_callback(q<port.name>_handler,NULL);
-}>
 
+<threadImpl.inputPortList:{ port | 
+    // Pre-initialization statements for <port.name>
+<port.camkesAddPreInitStatements>
+}>
 }
-
 >>
 osSpecificThreadEntrypoint(threadImpl) ::= "int run(void)"
 osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"

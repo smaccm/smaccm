@@ -147,4 +147,9 @@ public String writeAssemblyPortConnection() {
    return result;
 }
 
+@Override
+public int getConnectionID() {
+  return c.getConnectionID();
+}
+
 }

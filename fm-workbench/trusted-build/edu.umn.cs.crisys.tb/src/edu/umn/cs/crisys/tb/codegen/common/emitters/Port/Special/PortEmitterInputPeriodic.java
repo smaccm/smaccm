@@ -416,5 +416,11 @@ public String getCamkesAddComponentPortImports() {
   return port.getType() + "_writer.idl4";
 }
 
+@Override
+public String getCamkesAddPreInitStatements() {
+  // TODO Auto-generated method stub
+  return null;
+}
+
 
 }

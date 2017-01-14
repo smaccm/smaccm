@@ -294,4 +294,10 @@ public String getCamkesAddComponentPortImports() {
   return null;
 }
 
+@Override
+public String getCamkesAddPreInitStatements() {
+  // TODO Auto-generated method stub
+  return null;
+}
+
 }

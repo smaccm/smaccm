@@ -519,4 +519,10 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
     return null;
   }
 
+  @Override
+  public String getCamkesAddPreInitStatements() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

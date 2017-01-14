@@ -9,5 +9,7 @@ public interface PortConnectionEmitter extends NameEmitter {
 
    String getName();
    String getFullyQualifiedName();
+   
+   int getConnectionID();
 
 }
