@@ -606,6 +606,8 @@ Dates for final e-mail announcements
 	Plan: 
 		Walk through Andrew's changes
 			Any remaining gotchas?
+			
+			
 		Run some non-VM models through to test timer performance (Andrew?)
 		Run one VM model through to check automation.
 		Report to Aleksey and push changes

@@ -77,7 +77,7 @@ end main;
 processor implementation main.camkes
    properties
       TB_SYS::OS => camkes;
-      TB_SYS::HW => x86;
+      TB_SYS::HW => TK1;
       TB_SYS::Add_Dummy_Arg_To_Void_Fns => true;  
 end main.camkes;
 

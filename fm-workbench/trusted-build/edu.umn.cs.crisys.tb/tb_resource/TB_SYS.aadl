@@ -27,7 +27,7 @@ property set TB_SYS is
     Output_Directory: aadlstring applies to (processor, virtual processor, system implementation);
 
     OS : enumeration (eChronos, CAmkES, VxWorks, linux) applies to (processor, virtual processor, system implementation);
-    HW : enumeration (PIXHAWK, PPC, ODROID, x86, QEMU) applies to (processor, virtual processor, system implementation);
+    HW : enumeration (PIXHAWK, PPC, ODROID, x86, QEMU, TK1) applies to (processor, virtual processor, system implementation);
 
     -- For integrating with other code
     Is_External: aadlboolean => false applies to (thread, subprogram group access, data);

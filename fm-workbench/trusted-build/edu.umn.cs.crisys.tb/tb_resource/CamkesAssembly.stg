@@ -155,7 +155,9 @@ configVms(model) ::= <<
 >>
 
 camkesAssemblyBody(model) ::= <<
+<if(model.isx86Target)>
 import \<VM/vm.camkes>;
+<endif>
 import \<std_connector.camkes>;
 
 #include \<autoconf.h>
@@ -170,6 +172,8 @@ import "<model.threadCalendar.periodicDispatcherPathName>";
 import \<TimeServerKZM/TimeServer.camkes>;
 <elseif(model.isOdroidTarget)>
 import \<TimeServerOdroid/TimeServer.camkes>;
+<elseif(model.isTK1Target)>
+import \<TimeServerTK1/TimeServer.camkes>;
 <elseif(model.isx86Target)>
 // MWW: import \<TimeServer/TimeServer.camkes> included in VM import;
 <else>
@@ -208,6 +212,8 @@ component VM {
         component TimeServerKZM time_server;
         <elseif(model.isOdroidTarget)>
         component TimeServerOdroid time_server;
+        <elseif(model.isTK1Target)>
+        component TimeServerTK1 time_server;
         <elseif(model.isx86Target)>
         <if(!model.containsVM)>
         component TimeServer time_server;
@@ -254,7 +260,7 @@ component VM {
         <configVms(model)>
         <endif>
         <if(model.threadCalendar.hasDispatchers)>
-        <if(!model.containsVM && !model.externalTimerComponent)>
+        <if(model.isx86Target && !model.containsVM && !model.externalTimerComponent)>
         time_server.putchar_attributes = "0";
         time_server.timers_per_client = 9;
         time_server.heap_size = 8192;

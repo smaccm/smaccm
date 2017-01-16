@@ -222,7 +222,11 @@ public class ModelNames implements NameEmitter {
   public boolean getIsx86Target() {
      return m.getHWTarget().equalsIgnoreCase("x86");
   }
-    
+  
+  public boolean getIsTK1Target() {
+     return m.getHWTarget().equalsIgnoreCase("TK1");
+  }
+  
   public String getOsTarget() {
     return m.getOsTarget().toString();
   }
