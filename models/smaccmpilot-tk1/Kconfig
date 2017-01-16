@@ -7,5 +7,3 @@ config APP_SMACCMPILOT_TK1
 
     default n
     select APP_CAMKES_EXECUTIVE
-
-endchoice
