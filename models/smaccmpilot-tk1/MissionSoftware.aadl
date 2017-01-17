@@ -10,26 +10,27 @@ public
 	system implementation top.i
 		subcomponents
 			software: process Mission_Software.i;
-			tk1som: processor exynos5.camkes;
+			smaccmcopter: processor tk1_som.camkes;
 		properties
-			actual_processor_binding => (reference (tk1som)) applies to software;   
+			actual_processor_binding => (reference (smaccmcopter)) applies to software;   
 	end top.i;
 
-	processor exynos5
-	end exynos5;
+	processor tk1_som
+	end tk1_som;
 
-	processor implementation exynos5.camkes
+	processor implementation tk1_som.camkes
 	   properties
 	      TB_SYS::OS => CAmkES;
 	      TB_SYS::HW => TK1;
 	      TB_SYS::Add_Dummy_Arg_To_Void_Fns => True;
-	end exynos5.camkes;
+	end tk1_som.camkes;
 
 	process Mission_Software
 	end Mission_Software;
 
 	process implementation Mission_Software.i
 		subcomponents
+			clock_initializer: thread Clock_Initializer;
 			uart_driver: thread UART_Driver;
 			decrypt: thread Decrypt;
 			encrypt: thread Encrypt;
@@ -57,6 +58,15 @@ public
 			server2vm_reboot: port server.self2vm_reboot -> virtual_machine.server2self_reboot;
 	end Mission_Software.i;
 
+	thread Clock_Initializer
+		properties
+			TB_SYS::Is_External => true;
+			Priority => 253;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+	end Clock_Initializer;
+
 	thread UART_Driver
 		features
 			self2decrypt: out event data port SMACCM_DATA::UART_Packet.i;
@@ -65,6 +75,7 @@ public
 			self2encrypt: out event data port Base_Types::Boolean;
 		properties
 			TB_SYS::Is_External => true;
+			Priority => 250;
 			Dispatch_Protocol => Sporadic;
 			TB_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
@@ -73,7 +84,9 @@ public
 
 	thread Decrypt
 		features
-			uart2self: in event data port SMACCM_DATA::UART_Packet.i;
+			uart2self: in event data port SMACCM_DATA::UART_Packet.i {
+						Queue_Size => 100;
+					};
 			self2server: out event data port SMACCM_DATA::GIDL;
 		properties
 			Dispatch_Protocol => Periodic;
@@ -157,6 +170,7 @@ public
 			self2framing_frame: out event data port SMACCM_DATA::CAN_Frame.i;
 		properties
 			TB_SYS::Is_External => true;
+			Priority => 250;
 			Dispatch_Protocol => Sporadic;
 			TB_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
@@ -169,9 +183,9 @@ public
 			server2self_reboot: in event data port Base_Types::Boolean;
 		properties
 			TB_SYS::Is_External => true;
+			Priority => 100;
 			Dispatch_Protocol => Sporadic;
 			TB_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
-	end Virtual_machine;
-
+	end Virtual_Machine;
 end MissionSoftware;
