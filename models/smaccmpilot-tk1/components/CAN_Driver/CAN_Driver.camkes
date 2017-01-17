@@ -67,10 +67,10 @@ component CAN_Driver {
     }
 
     configuration {
-        can_shim_obj.priority = 253;
-        spi_obj.priority = 254;
-        can_obj.priority = 254;
-        gpio_obj.priority = 254;
+        can_shim_obj.priority = 250;
+        spi_obj.priority = 250;
+        can_obj.priority = 250;
+        gpio_obj.priority = 250;
 
         spibase_obj.spi1_reg_paddr            = 0x7000d000;
         spibase_obj.spi1_reg_size             = 0x1000;
