@@ -11,7 +11,7 @@ component Virtual_Machine {
     provides bool_writer server2self_reboot;
 
     composition {
-        component VM vm_obj;
+//        component VM vm_obj;
         component VM_shim vm_shim_obj;
 
         export vm_shim_obj.self2server -> self2server;
