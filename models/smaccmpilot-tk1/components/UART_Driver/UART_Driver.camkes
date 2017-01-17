@@ -28,6 +28,8 @@ component UART_Driver {
     }
 
     configuration {
+        uart_shim_obj.priority = 250;
+
         uartbase_obj.uart_regs_paddr = 0x70006000;
         uartbase_obj.uart_regs_size = 0x1000;
 

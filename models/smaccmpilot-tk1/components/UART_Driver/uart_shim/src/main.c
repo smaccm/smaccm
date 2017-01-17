@@ -44,8 +44,8 @@ void pre_init(void)
         return;
     }
 
-    // TODO: Set baud rate
     serial_device.flags &= ~SERIAL_AUTO_CR;
+    serial_configure(&serial_device, 57600, 8, PARITY_NONE, 1);
 
     printf("UART initialized\n");
 }

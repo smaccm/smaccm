@@ -20,7 +20,7 @@ component Clock_Initializer {
         clkcarbase_obj.clkcar_reg_paddr = 0x60006000;
         clkcarbase_obj.clkcar_reg_size = 0x1000;
 
-        clkcar_obj.priority = 255;
-        clkcar_shim_obj.priority = 255;
+        clkcar_obj.priority = 253;
+        clkcar_shim_obj.priority = 253;
     }
 }
