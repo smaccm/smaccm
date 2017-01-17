@@ -78,6 +78,8 @@ include TimeServerKZM/TimeServer.mk
 include TimeServerOdroid/TimeServer.mk
 <elseif(model.isx86Target)>
 include TimeServerX86Stack/TimeServer.mk
+<elseif(model.isTK1Target)>
+include TimeServerTK1/TimeServer.mk
 <else>
 # MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
 <endif>

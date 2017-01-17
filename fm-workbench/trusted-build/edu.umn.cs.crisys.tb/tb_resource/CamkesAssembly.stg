@@ -199,7 +199,7 @@ connector seL4RPCCallDataport {
 <model.virtualMachineList:createVMInit()>
 <endif>
 
-component VM {
+assembly {
     composition {
         <if(model.containsVM)>
         VM_COMPOSITION_DEF()
@@ -294,15 +294,6 @@ component VM {
     }
 }
 
-/*  MWW: Why do we need an assembly with one VM component to make the VM stuff work?
-         I do not know.
-*/
-assembly {
-    composition {
-        /* The VM sub component */
-        component VM vm;
-    }
-}
 
 >>
 
