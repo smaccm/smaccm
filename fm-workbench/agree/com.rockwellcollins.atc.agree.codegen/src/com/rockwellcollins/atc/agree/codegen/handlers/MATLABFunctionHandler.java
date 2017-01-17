@@ -100,7 +100,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 			}
 
 			// Get Agree program
-			AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+			AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, false);
 
 			// Translate Agree Node to Lustre Node with pre-statement flatten, helper nodes inlined,
 			// and variable declarations sorted so they are declared before use

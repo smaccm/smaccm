@@ -18,10 +18,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
@@ -59,6 +66,7 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
@@ -143,10 +151,49 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Override
 	protected boolean isResponsible(Map<Object, Object> context, EObject eObject) {
-		return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE);
+		return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE) || eObject instanceof AadlPackage;
 	}
 
 
+//	@Inject
+//	IResourceDescriptions resourceDescriptions;
+//	
+//	@Check(CheckType.FAST)
+//	public void checkAADL2Package(AadlPackage pack){
+//		Resource resource = pack.eResource();
+//		ResourceSet resources = resource.getResourceSet();
+//		for(Resource subRes : resources.getResources()){
+//			TreeIterator<EObject> contents = subRes.getAllContents();
+//			if(contents.hasNext()){
+//				EObject obj = contents.next();
+//				if(obj instanceof AadlPackage){
+//					List<AnnexLibrary> agreeAnnex = AnnexUtil.getAllActualAnnexLibraries((AadlPackage) obj, AgreePackage.eINSTANCE.getAgreeContractLibrary());
+//				}
+//			}
+//			while(contents.hasNext()){
+//				EObject obj = contents.next();
+//			}
+//			System.out.println();
+//		}
+//		
+//		String contextProject = pack.eResource().getURI().segment(1);
+//		for (IResourceDescription resourceDescription : resourceDescriptions.getAllResourceDescriptions()) {
+//			for (IEObjectDescription eobjectDescription : resourceDescription.getExportedObjectsByType(Aadl2Package.eINSTANCE.getAadlPackage())) {
+//				EObject description = eobjectDescription.getEObjectOrProxy();
+//				System.out.println();
+//			}
+//		}
+//	}
+//	
+//	private Map<String, List<NamedElement>> getAllIdToElementMap(AgreeContract contract){
+//		
+//		for(SpecStatement spec : contract.getSpecs()){
+//			if (spec instanceof )
+//		}
+//		
+//		return null;
+//	}
+	
 	@Check(CheckType.FAST)
 	public void checkEnumStatement(EnumStatement statement){
 		String contextProject = statement.eResource().getURI().segment(1);
@@ -1394,6 +1441,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				}
 			}
 		}
+		
+		//check name space collision with enumerated types
+		
 
 	}
 
