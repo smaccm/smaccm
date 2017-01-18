@@ -15,10 +15,10 @@ VM_shim_CFILES := \
     $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM_shim/src/*.c))
 # VM_shim_LIBS += sel4vchan
 
-VM_obj_CFILES   := $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.c))
-VM_obj_OFILES   := archive.o
-VM_obj_HFILES := $(patsubst ${SOURCE_DIR}/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.h))
-VM_obj_LIBS += sel4allocman elf sel4simple sel4simple-default cpio sel4arm-vmm sel4dma usbdrivers
+VM_CFILES   := $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.c))
+VM_OFILES   := archive.o
+VM_HFILES := $(patsubst ${SOURCE_DIR}/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.h))
+VM_LIBS += sel4allocman elf sel4simple sel4simple-default cpio sel4arm-vmm sel4dma usbdrivers
 
 ###### End VM files
 
@@ -92,4 +92,4 @@ ${BUILD_DIR}/src/Virtual_Machine_inst.vm_obj/static/archive.o: ${COMPONENTS}
 	$(Q)mkdir -p $(dir $@)
 	${COMMON_PATH}/files_to_obj.sh $@ _cpio_archive $^
 
-$(VM_obj_CFILES:%.c=%.o) $(COMPONENTS): $(srctree)/.config
+$(VM_CFILES:%.c=%.o) $(COMPONENTS): $(srctree)/.config
