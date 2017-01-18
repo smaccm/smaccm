@@ -16,7 +16,7 @@ inputPortCamkesMonitorPurpose(port) ::= <<
   Monitor of type <port.typeName> with input port <port.qualifiedName>
   queue size of <port.queueSize>. The output port set follows:
 
-<port.connections:{ c |     c.sourcePort
+<port.connections:{ c |     <c.sourcePort.qualifiedName>
 }>
 >>
 
@@ -164,9 +164,9 @@ bool <port.localReaderName>() {
 
 callRemoteWriterStmt(port, dname) ::= << 
 <if(port.hasData)>
-tb_result &= <dname>(<port.type.aadlInputToCamkesInput><port.name>);
+tb_result &= <dname>_enqueue(<port.type.aadlInputToCamkesInput><port.name>);
 <else>
-tb_result &= <dname>();
+tb_result &= <dname>_enqueue();
 <endif>
 >>
 
@@ -177,6 +177,11 @@ remoteCallerFunction(port) ::= <<
  *
  * This is the function invoked by the local thread to make a
  * call to write to a remote data port.
+ *
+ * XXX: When simulating fan out, the caller of this function will only 
+ * receive a positive response when all enqueues are successful. When a
+ * negative response is received it only indicates that at least one
+ * enqueue attempt failied.
  *
  ************************************************************************/
 
@@ -224,8 +229,8 @@ while (<dispatcher.localReaderName>()) {
 ///////////////////////////////////////////////////////////////////////////
 
 inputPortDeclarations(port) ::= <<
-uses <port.inputMonitorInterfaceName> <port.qualifiedName>;
-consumes QueuedData q<port.qualifiedName>;
+uses <port.inputMonitorInterfaceName> <port.name>;
+consumes QueuedData q<port.name>;
 
 >>
 
@@ -264,44 +269,44 @@ component <str_component_name> {
 >>
 
 
-monitorCamkesCWriter(str_type_name, str_qsize, str_types_include) ::= <<
+monitorCamkesCWriter(port, str_types_include) ::= <<
 #include <\u003C>stdio.h<\u003E>
 #include <\u003C>stdbool.h<\u003E>
-#include <\u003C><str_types_include><\u003E>;
+#include <\u003C><str_types_include><\u003E>
 
-<str_type_name> contents[<str_qsize>];
+<port.type.camkesName> contents[<port.queueSize>];
 static uint32_t front = 0;
 static uint32_t length = 0;
 
 static bool is_full(void) {
-  return length == <str_qsize>;
+  return length == <port.queueSize>;
 }
 
 static bool is_empty(void) {
   return length == 0;
 }
 
-bool deq_dequeue(<str_type_name> * m) {
+bool deq_dequeue(<port.typeName> * m) {
   q_lock();
   if (is_empty()) {
     q_unlock();
     return false;
   } else {
-    *m = contents[front];
-    front = (front + 1) % <str_qsize>;
+    *((<port.type.camkesName> *)m) = contents[front];
+    front = (front + 1) % <port.queueSize>;
     length--;
     q_unlock();
     return true;
   }
 }
 
-bool enq_enqueue(const <str_type_name> * m) {
+bool enq_enqueue(const <port.typeName> * m) {
   q_lock();
   if (is_full()) {
     q_unlock();
     return false;
   } else {
-    contents[(front + length) % <str_qsize>] = *m;
+    contents[(front + length) % <port.queueSize>] = *((<port.type.camkesName> *)m);
     length++;
     qd_emit();
     q_unlock();

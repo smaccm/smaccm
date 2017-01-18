@@ -53,9 +53,15 @@ writeRpgInterface(endpoint) ::= <<
 
 >>
 
+camkesAddComponentPortImport(interface) ::= <<
+import "../../interfaces/<interface>";
+
+>>
+
+
 camkesAddComponentPortImports(port) ::= <<
 <if(port.camkesAddComponentPortImports)>
-import "../../interfaces/<port.camkesAddComponentPortImports>";
+<port.camkesAddComponentPortImports:camkesAddComponentPortImport()>
 <endif>
 >>
 

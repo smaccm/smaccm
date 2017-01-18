@@ -514,7 +514,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    }
 
   @Override
-  public String getCamkesAddComponentPortImports() {
+  public List<String> getCamkesAddComponentPortImports() {
     // TODO Auto-generated method stub
     return null;
   }
@@ -522,7 +522,13 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
   @Override
   public String getCamkesAddPreInitStatements() {
     // TODO Auto-generated method stub
-    return null;
+    return "";
+  }
+
+  @Override
+  public String getCamkesAddAssemblyFileCompositionPortConnections() {
+    // TODO Auto-generated method stub
+    return "";
   }
 
 }

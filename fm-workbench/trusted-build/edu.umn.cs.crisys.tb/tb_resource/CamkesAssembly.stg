@@ -132,6 +132,11 @@ portDeclarations(threadImpl) ::= <<
 }>
 >>
 
+portConnections(threadImpl) ::= <<
+<threadImpl.portList:{port | <port.camkesAddAssemblyFileCompositionPortConnections>
+}>
+>>
+
 configurePorts(threadImpl) ::= <<
 <threadImpl.portList:{port | <port.camkesAddAssemblyFileConfigDeclarations>
 }>
@@ -223,9 +228,11 @@ component VM {
         <commentIf("Component instances for all AADL-defined threads",
                    (model.threadImplementations:assemblyThreadComponent()))><\\>
 
-        <commentIf("Port declarations and connections for active threads",
+        <commentIf("Port declarations for active threads",
                    (model.activeThreadImplementations:portDeclarations()))><\\>
         
+        <commentIf("Port connections for active threads",
+                   (model.activeThreadImplementations:portConnections()))><\\>
 
         <if(model.threadCalendar.hasDispatchers)>
         <if(!model.externalTimerComponent)>

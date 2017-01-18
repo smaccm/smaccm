@@ -1,6 +1,7 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -551,14 +552,22 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    }
 
   @Override
-  public String getCamkesAddComponentPortImports() {
-    return port.getType() + "_writer.idl4";
+  public List<String> getCamkesAddComponentPortImports() {
+    List<String> list = new LinkedList<String>();
+    list.add(port.getType() + "_writer.idl4");
+    return list;
   }
 
   @Override
   public String getCamkesAddPreInitStatements() {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public String getCamkesAddAssemblyFileCompositionPortConnections() {
+    // TODO Auto-generated method stub
+    return "";
   }
 
 }

@@ -17,11 +17,13 @@ end msg.impl;
 thread pong1
 	features
 		i: in event data port msg.impl {
-	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");		
+	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");
+		  Queue_Size => 10;
 		};
 
 		o: out event data port msg.impl {
 	      TB_SYS::CommPrim_Source_Text => "Out";				
+	      Queue_Size => 10;
 		};
 		
 	properties 
@@ -40,11 +42,13 @@ end pong1;
 thread pong2
 	features
 		i: in event data port msg.impl {
-	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");		
+	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");
+	      Queue_Size => 10;		
 		};
 
 		o: out event data port msg.impl {
-	      TB_SYS::CommPrim_Source_Text => "Out";				
+	      TB_SYS::CommPrim_Source_Text => "Out";
+	      Queue_Size => 10;				
 		};
 		
 	properties 
@@ -62,17 +66,13 @@ end pong2;
 
 thread ping
 	features
-		i1 : in event data port msg.impl {
-	      TB_SYS::Compute_Entrypoint_Source_Text => ("In1");
+		i : in event data port msg.impl {
+	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");
+	      Queue_Size => 10;
 		};
-		o1 : out event data port msg.impl {
-	      TB_SYS::CommPrim_Source_Text => "Out1";
-		};
-		i2 : in event data port msg.impl {
-	      TB_SYS::Compute_Entrypoint_Source_Text => ("In2");
-		};
-		o2 : out event data port msg.impl {
-	      TB_SYS::CommPrim_Source_Text => "Out2";
+		o : out event data port msg.impl {
+	      TB_SYS::CommPrim_Source_Text => "Out";
+	      Queue_Size => 10;
 		};
 	properties 
 		Dispatch_Protocol => Periodic;
@@ -83,7 +83,7 @@ thread ping
 	    Stack_Size => 256 bytes;
 	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    TB_SYS::Sends_Events_To => "{{1 o1,1 o2}}";
+	    TB_SYS::Sends_Events_To => "{{1 o}}";
 end ping; 
 
 process proc
@@ -96,10 +96,10 @@ process implementation proc.Impl
  		po2: thread pong2;
 		pi: thread ping;
 	connections
-		pi_to_po1 : port pi.o1 -> po1.i;
-		pi_to_po2 : port pi.o2 -> po2.i;
-		po1_to_pi : port po1.o -> pi.i1;
-		po2_to_pi : port po2.o -> pi.i2;
+		pi_to_po1 : port pi.o -> po1.i;
+		pi_to_po2 : port pi.o -> po2.i;
+		po1_to_pi : port po1.o -> pi.i;
+		po2_to_pi : port po2.o -> pi.i;
 end proc.Impl;
 
 system pingtwins

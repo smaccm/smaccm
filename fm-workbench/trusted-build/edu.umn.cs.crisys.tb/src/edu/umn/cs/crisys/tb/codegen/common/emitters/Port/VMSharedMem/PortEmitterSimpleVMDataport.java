@@ -292,7 +292,7 @@ public void getWriteCamkesPortIdls(File interfacesDirectory) {
 }
 
 @Override
-public String getCamkesAddComponentPortImports() {
+public List<String> getCamkesAddComponentPortImports() {
   // TODO Auto-generated method stub
   return null;
 }
@@ -310,6 +310,12 @@ public String getCamkesAddComponentPortImports() {
   @Override
   public String getCamkesAddPreInitStatements() {
     // TODO Auto-generated method stub
-    return null;
+    return "";
+  }
+
+  @Override
+  public String getCamkesAddAssemblyFileCompositionPortConnections() {
+    // TODO Auto-generated method stub
+    return "";
   }
 }

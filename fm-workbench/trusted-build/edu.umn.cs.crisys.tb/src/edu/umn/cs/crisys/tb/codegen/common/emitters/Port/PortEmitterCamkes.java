@@ -1,6 +1,7 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port;
 
 import java.io.File;
+import java.util.List;
 
 import edu.umn.cs.crisys.tb.TbFailure;
 
@@ -15,6 +16,7 @@ public interface PortEmitterCamkes extends PortEmitter {
    public String getCamkesAddAssemblyFileCompositionPortDeclarations(); //  
    public String getCamkesAddAssemblyFileConfigDeclarations(); //
    public String getCamkesAddAssemblyFilePortDeclarations();  //
-   public String getCamkesAddComponentPortImports();
+   public String getCamkesAddAssemblyFileCompositionPortConnections();
+   public List<String> getCamkesAddComponentPortImports();
    
 }

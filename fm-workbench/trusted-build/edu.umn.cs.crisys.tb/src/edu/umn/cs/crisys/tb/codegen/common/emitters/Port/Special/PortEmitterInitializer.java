@@ -1,5 +1,7 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special;
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -289,15 +291,21 @@ public void getWriteCamkesPortIdls(File interfacesDirectory) {
 }
 
 @Override
-public String getCamkesAddComponentPortImports() {
+public List<String> getCamkesAddComponentPortImports() {
   // TODO Auto-generated method stub
-  return null;
+  return (new LinkedList<String>());
 }
 
 @Override
 public String getCamkesAddPreInitStatements() {
   // TODO Auto-generated method stub
-  return null;
+  return "";
+}
+
+@Override
+public String getCamkesAddAssemblyFileCompositionPortConnections() {
+  // TODO Auto-generated method stub
+  return "";
 }
 
 }
