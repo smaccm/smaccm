@@ -1,0 +1,4 @@
+component PerfMon {
+    control;
+    consumes RequestReport report;
+}

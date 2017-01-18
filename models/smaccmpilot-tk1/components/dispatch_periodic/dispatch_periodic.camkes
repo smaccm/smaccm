@@ -44,5 +44,6 @@ component dispatch_periodic {
     uses Timer timer;
     consumes Notification timer_complete;
     uses int64_t_writer Decrypt_periodic_dispatcher;uses int64_t_writer Encrypt_periodic_dispatcher;uses int64_t_writer Server_periodic_dispatcher;uses int64_t_writer CAN_Framing_periodic_dispatcher;
+    emits RequestReport report;
 }
 

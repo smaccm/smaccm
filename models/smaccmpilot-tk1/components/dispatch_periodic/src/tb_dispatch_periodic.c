@@ -53,7 +53,6 @@ const uint32_t aadl_hyperperiod_subdivisions = 5;
 uint32_t aadl_calendar_counter = 0;
 uint32_t aadl_calendar_ticks = 0;
 
-
 void tb_thread_calendar() {
     if ((aadl_calendar_counter % (1 / aadl_tick_interval)) == 0) {
         // MWW: modification of time type to match Ivory/Tower (our stuff uses uint64_t in milliseconds and Tower expects int64_t * in microseconds)
@@ -75,6 +74,11 @@ void tb_thread_calendar() {
 
     aadl_calendar_counter = (aadl_calendar_counter + 1) % aadl_hyperperiod_subdivisions;
     aadl_calendar_ticks++;
+
+    static int counter = 0;
+    if (++counter % 5000 == 0) {
+        report_emit();
+    }
 }
 
 

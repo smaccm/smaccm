@@ -6,6 +6,10 @@ CFLAGS += -DODROID
 include ${PWD}/apps/smaccmpilot-tk1/make_template/Makefile
 
 
+PerfMon_CFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/PerfMon/src/*.c))
+
+
 ####### VM files
 
 VM_shim_HFILES := \

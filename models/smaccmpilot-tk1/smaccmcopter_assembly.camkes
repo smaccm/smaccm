@@ -41,6 +41,7 @@ import <std_connector.camkes>;
 import "components/dispatch_periodic/dispatch_periodic.camkes";
 import <TimeServerTK1/TimeServer.camkes>;
 
+import "components/PerfMon/PerfMon.camkes";
 import "components/Clock_Initializer/Clock_Initializer.camkes";
 import "components/UART_Driver/UART_Driver.camkes";
 import "components/Decrypt/Decrypt.camkes";
@@ -63,6 +64,7 @@ assembly {
 
         component TimeServerTK1 time_server;
         // Component instances for all AADL-defined threads
+        component PerfMon perfmon;
         component Clock_Initializer Clock_Initializer_inst;
         component UART_Driver UART_Driver_inst;
         component Decrypt Decrypt_inst;
@@ -71,6 +73,8 @@ assembly {
         component CAN_Framing CAN_Framing_inst;
         component CAN_Driver CAN_Driver_inst;
         component Virtual_Machine Virtual_Machine_inst;
+
+        connection seL4Notification report(from dispatch_periodic_inst.report, to perfmon.report);
 
         // Port declarations and connections for active threads
         connection seL4RPCCall conn1 (from UART_Driver_inst.self2decrypt, to Decrypt_inst.uart2self);
@@ -110,6 +114,9 @@ assembly {
     }
 
     configuration {
+        perfmon.cnode_size_bits = 14;
+        perfmon.priority = 125;
+
         dispatch_periodic_inst.timer_attributes = 10;
         dispatch_periodic_inst.timer_global_endpoint = "periodic_dispatcher_timer";
         dispatch_periodic_inst.timer_complete_global_endpoint = "periodic_dispatcher_timer";
