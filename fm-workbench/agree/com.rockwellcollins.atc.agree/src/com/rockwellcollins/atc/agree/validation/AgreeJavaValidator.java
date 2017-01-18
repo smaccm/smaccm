@@ -1411,6 +1411,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		// and for collisions between subcomponent and feature names
 
 		EObject container = namedEl.eContainer();
+		if(container == null){
+			return;
+		}
 
 		if (container instanceof RecordDefExpr || container instanceof NodeDefExpr) {
 			// don't care about arguments to recDefs and nodeDefs

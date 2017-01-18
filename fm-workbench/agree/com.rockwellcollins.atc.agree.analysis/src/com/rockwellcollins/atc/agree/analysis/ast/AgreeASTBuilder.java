@@ -138,6 +138,7 @@ import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePeriodicPattern;
+import com.rockwellcollins.atc.agree.analysis.realtime.AgreeSporadicPattern;
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
@@ -443,6 +444,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			ids.addAll(pattern.effect.accept(visitor));
 		} else if (statement instanceof AgreePeriodicPattern) {
 			AgreePeriodicPattern pattern = (AgreePeriodicPattern) statement;
+			ids.addAll(pattern.event.accept(visitor));
+		} else if (statement instanceof AgreeSporadicPattern){
+			AgreeSporadicPattern pattern = (AgreeSporadicPattern) statement;
 			ids.addAll(pattern.event.accept(visitor));
 		} else {
 			ids.addAll(statement.expr.accept(visitor));
