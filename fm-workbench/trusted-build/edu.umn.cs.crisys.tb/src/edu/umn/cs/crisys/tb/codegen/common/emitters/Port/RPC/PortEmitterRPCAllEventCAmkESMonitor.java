@@ -30,7 +30,6 @@ import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
-import edu.umn.cs.crisys.tb.model.type.BoolType;
 import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.util.Util;
@@ -287,13 +286,12 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
 
   @Override
   public String getCamkesAddComponentPortLevelDeclarations() {
-    PortFeature pf = this.getModelElement();
-    if (pf instanceof InputPort) {
+    if (port instanceof InputPort) {
       return addComponentInputPortDeclarations();
-    } else if (pf instanceof OutputPort) {
+    } else if (port instanceof OutputPort) {
       return addComponentOutputDataDeclarations();
     } else {
-      throw new TbException("RPCEventDataPortEmitter::addComponentPortLevelDeclarations: event data port emitter used with non-event data port class: " + pf.getName());
+      throw new TbException("RPCEventDataPortEmitter::addComponentPortLevelDeclarations: event data port emitter used with non-event data port class: " + port.getName());
     }
   }
 
@@ -347,7 +345,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
         result += "connection seL4RPCCall conn" + model.getGenerateConnectionNumber()
         + " (from " + getThreadImplementation().getComponentInstanceName()
         + "." + getName() + suffix;
-        result += ", to monitor_" + pe.getQualifiedName()
+        result += ", to monitor_" + pe.getQualifiedName().toLowerCase()
         + ".enq);\n";
         
       }
@@ -415,19 +413,16 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
 
   // relevant to only event data ports
   public String getQueueSize() {
-    PortFeature dp = this.getModelElement();
     int size = 0;
-    if (dp instanceof InputEventPort) {
-      size = ((InputEventPort)dp).getQueueSize();       
-    } else if (dp instanceof OutputEventPort) {
-      size = 
-          ((InputEventPort)((OutputEventPort)dp).getConnections().get(0).getDestPort()).getQueueSize();
+    if (port instanceof InputEventPort) {
+      size = ((InputEventPort)port).getQueueSize();
+    } else if (port instanceof OutputEventPort) {
+      size = ((InputEventPort)(port.getConnections().get(0).getDestPort())).getQueueSize();
     } else {
-      throw new TbException("Error: getQueueSize: call on non-event port " + dp.getName() + ".");
+      throw new TbException("Error: getQueueSize: call on non-event port " + port.getName() + ".");
     }
     return Integer.toString(size);
   }
-
 
   // local reader/writer name does not have to be compatible with any CAmkES stuff.
   public String getLocalReaderWriterName(String readWrite) {

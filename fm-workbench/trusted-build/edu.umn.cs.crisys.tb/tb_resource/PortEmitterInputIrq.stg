@@ -133,11 +133,11 @@ camkesIrqComponentDecl(dispatcher) ::= <<
 >>
 
 camkesIrqDispatcher(dispatcher) ::= <<
-void <dispatcher.incomingWriterName>(void *_unused) {
+void <dispatcher.name>_handle(void) {
     <dispatcher.firstLevelInterruptHandler>();
     <dispatcher.dispatchOccurredVar> = true;
     <dispatcher.threadImplementation.mainLockReleaseStmt>
-    <dispatcher.name>_reg_callback(<dispatcher.incomingWriterName>, NULL);
+    <dispatcher.name>_acknowledge();
 }
 
 >>
@@ -169,8 +169,11 @@ component <dispatcher.irqComponent> <dispatcher.irqObject>;
 >>
 
 constructIRQConfig(dispatcher) ::= <<
-<dispatcher.memoryRegions:{memoryRegion | <dispatcher.irqObject>.<memoryRegion.name>_attributes = "<memoryRegion.region>"; }>
-<dispatcher.irqObject>.irq_attributes = <dispatcher.signalNumber> ;
+<dispatcher.memoryRegions:{memoryRegion |
+<dispatcher.irqObject>.<memoryRegion.name>_paddr = <memoryRegion.address>;
+<dispatcher.irqObject>.<memoryRegion.name>_size = <memoryRegion.size>;
+}>
+<dispatcher.irqObject>.irq_irq_number = <dispatcher.signalNumber> ;
 
 >>
 

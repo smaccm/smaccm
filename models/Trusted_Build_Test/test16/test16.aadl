@@ -91,7 +91,7 @@ end main;
 processor implementation main.camkes
    properties
       TB_SYS::OS => camkes;
-      TB_SYS::HW => QEMU;
+      TB_SYS::HW => TK1;
 end main.camkes;
 
 processor implementation main.linux
