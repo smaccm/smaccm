@@ -7,12 +7,12 @@
 #include <all_tcb_caps.h>
 
 struct info {
-    unsigned cap;
+    int cap;
     uint64_t util;
 };
 typedef struct info info_t;
 
-static info_t info[ALL_TCB_CAPS_NUM];
+static info_t info[ALL_TCB_CAPS_NUM + 1];
 
 static int info_compare(const void *v1, const void *v2) {
     info_t *i1 = (info_t*) v1;
@@ -32,28 +32,32 @@ static void reset() {
     }
     seL4_BenchmarkResetLog();
 }
-
+static uint64_t T;
 static void report(void *ignore) {
+    seL4_BenchmarkFinalizeLog();
     uint64_t *ipcbuffer = (uint64_t *) &(seL4_GetIPCBuffer()->msg[0]);
+    uint64_t total = 0;
 
     for (int i = 0; i < ALL_TCB_CAPS_NUM; i++) {
         info[i].cap = i + ALL_TCB_CAPS_MIN;
         seL4_BenchmarkGetThreadUtilisation(info[i].cap);
         info[i].util = ipcbuffer[BENCHMARK_TCB_UTILISATION];
+
+        if (i == 0) {
+            info[ALL_TCB_CAPS_NUM].cap = -1;
+            info[ALL_TCB_CAPS_NUM].util = ipcbuffer[BENCHMARK_IDLE_UTILISATION];
+            total = ipcbuffer[BENCHMARK_TOTAL_UTILISATION];
+        }
     }
 
-    qsort(info, ALL_TCB_CAPS_NUM, sizeof(info_t), &info_compare);
-
-    uint64_t total = 0;
-    for (int i = 0; i < ALL_TCB_CAPS_NUM; i++) {
-        total += info[i].util;
-    }
+    qsort(info, ALL_TCB_CAPS_NUM + 1, sizeof(info_t), &info_compare);
 
     printf("\n");
-    for (int i = 0; i < ALL_TCB_CAPS_NUM; i++) {
+    for (int i = 0; i < ALL_TCB_CAPS_NUM + 1; i++) {
         double p = 100.0 * info[i].util / total;
         if (p >= 0.1) {
-            printf("%0.1f%%\t\t%s\n", p, cap_names[info[i].cap]);
+            char *name = info[i].cap == -1 ? "Idle" : cap_names[info[i].cap];
+            printf("%0.1f%%\t\t%s\n", p, name);
         }
     }
     printf("\n");
