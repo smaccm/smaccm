@@ -114,7 +114,7 @@ assembly {
     }
 
     configuration {
-        perfmon.cnode_size_bits = 14;
+        perfmon.all_tcb_caps = true;
         perfmon.priority = 125;
 
         dispatch_periodic_inst.timer_attributes = 10;

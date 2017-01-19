@@ -4,19 +4,15 @@
 #include <string.h>
 #include <sel4/sel4.h>
 #include <sel4/benchmark_utilisation_types.h>
-
-#define CAP_BEGIN 0xd
-#define CAP_END 0x56
-#define NUM_CAPS CAP_END - CAP_BEGIN + 1
+#include <all_tcb_caps.h>
 
 struct info {
     unsigned cap;
     uint64_t util;
-    char name[80];
 };
 typedef struct info info_t;
 
-static info_t info[NUM_CAPS];
+static info_t info[ALL_TCB_CAPS_NUM];
 
 static int info_compare(const void *v1, const void *v2) {
     info_t *i1 = (info_t*) v1;
@@ -31,34 +27,33 @@ static int info_compare(const void *v1, const void *v2) {
 }
 
 static void reset() {
-    for (int i = 0; i < NUM_CAPS; i++) {
-        seL4_BenchmarkResetThreadUtilisation(i + CAP_BEGIN);
+    for (int i = 0; i < ALL_TCB_CAPS_NUM; i++) {
+        seL4_BenchmarkResetThreadUtilisation(i + ALL_TCB_CAPS_MIN);
     }
     seL4_BenchmarkResetLog();
 }
 
-static void report() {
+static void report(void *ignore) {
     uint64_t *ipcbuffer = (uint64_t *) &(seL4_GetIPCBuffer()->msg[0]);
 
-    for (int i = 0; i < NUM_CAPS; i++) {
-        info[i].cap = i + CAP_BEGIN;
-        seL4_BenchmarkGetThreadUtilisation(i + CAP_BEGIN);
+    for (int i = 0; i < ALL_TCB_CAPS_NUM; i++) {
+        info[i].cap = i + ALL_TCB_CAPS_MIN;
+        seL4_BenchmarkGetThreadUtilisation(info[i].cap);
         info[i].util = ipcbuffer[BENCHMARK_TCB_UTILISATION];
-        strlcpy(info[i].name, (char *) &ipcbuffer[1], 80);
     }
 
-    qsort(info, NUM_CAPS, sizeof(info_t), &info_compare);
+    qsort(info, ALL_TCB_CAPS_NUM, sizeof(info_t), &info_compare);
 
     uint64_t total = 0;
-    for (int i = 0; i < NUM_CAPS; i++) {
+    for (int i = 0; i < ALL_TCB_CAPS_NUM; i++) {
         total += info[i].util;
     }
 
     printf("\n");
-    for (int i = 0; i < NUM_CAPS; i++) {
+    for (int i = 0; i < ALL_TCB_CAPS_NUM; i++) {
         double p = 100.0 * info[i].util / total;
         if (p >= 0.1) {
-            printf("%0.1f%%\t\t%s (cap 0x%x)\n", 100.0 * info[i].util / total, info[i].name, info[i].cap);
+            printf("%0.1f%%\t\t%s\n", p, cap_names[info[i].cap]);
         }
     }
     printf("\n");
@@ -67,8 +62,7 @@ static void report() {
     report_reg_callback(&report, NULL);
 }
 
-int run() {
+void report__init(void) {
     reset();
     report_reg_callback(&report, NULL);
-    return 0;
 }
