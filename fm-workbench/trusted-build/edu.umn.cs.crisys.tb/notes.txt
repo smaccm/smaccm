@@ -6,7 +6,6 @@
 - Comments are not uniformly generated before all generated components
   of importance.
 - Some of the generated code has spacing issues.
-- The priorities of all monitors should be configured to 254.
 - I should not output properties of the form "._".
 * CAmkES Issues
 - Suppose we have a connection between two components A and B with

@@ -121,9 +121,9 @@ public String getOutgoingPortWriterName() {
      // for output ports, at minimum for camkes, should be hidden in a PortEmitter method.
      if (os.getOsTarget() == OSModel.OSTarget.CAmkES) {
          if (this.getSourcePort().getModelElement() instanceof OutputEventPort) {
-           return getOutgoingPortName() + "_enqueue";
+           return Util.getPrefix() + "_" +getOutgoingPortName() + "_enqueue";
          } else {
-           return getOutgoingPortName() + "_" + this.getSourcePort().getType().getWriterFn();
+           return Util.getPrefix() + "_" + getOutgoingPortName() + "_" + this.getSourcePort().getType().getWriterFn();
          }
      } else if (os.getOsTarget() == OSModel.OSTarget.eChronos || 
                 os.getOsTarget() == OSModel.OSTarget.VxWorks ||

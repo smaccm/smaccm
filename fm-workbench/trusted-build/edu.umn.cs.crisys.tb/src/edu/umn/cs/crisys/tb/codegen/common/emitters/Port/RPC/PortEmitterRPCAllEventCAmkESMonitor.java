@@ -13,6 +13,7 @@ import java.util.Map;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
+import antlr.Utils;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
@@ -73,7 +74,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   }
 
   public String getTypeName() { 
-    return (new TypeNames(port.getType())).getCamkesName();
+    return (new TypeNames(port.getType())).getName();
   }
 
   public ST getTemplateST(String stName) {
@@ -96,7 +97,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   }
   
   public String getMonitorInterfaceNamePrefix() {
-    return "Monitor_" + getTypeName() + "_" +this.getQueueSize();
+    return "tb_Monitor_" + getTypeName() + "_" +this.getQueueSize();
   }
   
   public String getInputMonitorInterfaceName() {
@@ -108,12 +109,15 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   }
   
   public String getMonitorInputCamkesNamePrefix() {
+    String prefix = "";
     if(port instanceof InputEventPort) {
-      return "Monitor_" + port.getQualifiedName();
+      prefix = getQualifiedName();
+    } else if(port instanceof OutputEventPort) {
+      prefix = EmitterFactory.port((port.getConnections().get(0).getDestPort())).getQualifiedName();
     } else {
-      assert(true);
-      return "unreachable";
+      throw new TbException("PortEmitterRPCAllEventCAmkESMonitor::getMonitorInputCamkesNamePrefix: not input/output even port " + port.getName());
     }
+    return prefix + "_Monitor";
   }
 
   @Override
@@ -318,8 +322,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   
   @Override
   public String getCamkesAddAssemblyFileCompositionPortConnections() {
-    PortFeature pf = this.getModelElement();
-    if (pf instanceof InputPort) {
+    if (port instanceof InputPort) {
       String result = "";
       result += "connection seL4RPCCall conn" + model.getGenerateConnectionNumber()
               + " (from " + getThreadImplementation().getComponentInstanceName()
@@ -329,7 +332,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       result += "connection seL4Notification conn" + model.getGenerateConnectionNumber()
       + " (from " + getMonitorInputCamkesNamePrefix().toLowerCase()
       + ".qd, to " + getThreadImplementation().getComponentInstanceName()
-      + ".q" + getName()
+      + "." + getNotificationName()
       + ");\n";
       return result;         
     } else {
@@ -345,7 +348,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
         result += "connection seL4RPCCall conn" + model.getGenerateConnectionNumber()
         + " (from " + getThreadImplementation().getComponentInstanceName()
         + "." + getName() + suffix;
-        result += ", to monitor_" + pe.getQualifiedName().toLowerCase()
+        result += ", to " + getMonitorInputCamkesNamePrefix().toLowerCase()
         + ".enq);\n";
         
       }
@@ -385,7 +388,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       if(qualified) {
         name = emitter.getQualifiedName().toLowerCase();
       } else {
-        name = emitter.getName().toLowerCase();
+        name =  emitter.getName().toLowerCase();
       }
       if(sz>1) {
         name += i;
@@ -397,7 +400,12 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
 
   @Override
   public String getCamkesAddAssemblyFileConfigDeclarations() {
-    return "";
+    if (port instanceof InputPort) {
+      return getMonitorInputCamkesNamePrefix().toLowerCase()+".priority = 254;";
+    } else {
+      return "";
+    }
+    
   }
 
   @Override
@@ -437,7 +445,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   }   
 
   public String getLocalReaderName() {
-    return port.getName()+"_dequeue";
+    return this.getName()+"_dequeue";
   }
 
   public String getLocalWriterName() {
@@ -455,8 +463,14 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   @Override
   public List<String> getCamkesAddComponentPortImports() {
     List<String> list = new LinkedList<String>();
-    list.add(getInputMonitorInterfaceName()+".idl4");
-    list.add(getOutputMonitorInterfaceName()+".idl4");
+    if(port instanceof InputEventPort) {
+      list.add(getInputMonitorInterfaceName()+".idl4");
+    } else if (port instanceof OutputEventPort) {
+      list.add(getOutputMonitorInterfaceName()+".idl4");
+    } else {
+      throw new TbException("Error: getCamkesAddComponentPortImports: call on non-event port "
+        + port.getName() + ".");
+    }
     return list;
   }
 
@@ -470,5 +484,20 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       return "";
     }
   }
+  
+  @Override
+  public String getName() {
+    return Util.getPrefix() + "_" + super.getName() /* + "_" + getTypeName() */;
+  }
+  
+  @Override
+  public String getQualifiedName() {
+    return Util.getPrefix() + "_" + super.getQualifiedName() /* + "_" + getTypeName() */;
+  }
+  
+  public String getNotificationName() {
+    return Util.getPrefix() + "_" + super.getName() + "_notification";
+  }
+  
 }
 

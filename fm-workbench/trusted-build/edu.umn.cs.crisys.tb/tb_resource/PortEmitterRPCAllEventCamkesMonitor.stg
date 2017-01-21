@@ -87,27 +87,6 @@ bool <port.localReaderName>(void);
 ///////////////////////////////////////////////////////////////////////////
 
 
-/////////////////////////////////////////////////////////////////////
-//
-// Functions for event data ports: managing send/receive queues.
-// Used for active thread to active thread communications.
-//
-/////////////////////////////////////////////////////////////////////
-
-
-copyToQueueDataStmt(port) ::= <<
-<if(port.type.isBaseType)><port.queueDataName>[<port.queueBackName>] = *<port.name> ;
-<else><aadlInputToValMemcpy(port.type, {<port.queueDataName>[<port.queueBackName>]}, port.name )>
-<endif>
->>
-
-copyFromQueueDataStmt(port) ::= <<
-<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.queueDataName>[<port.queueFronstr_type_name>] ;
-<else><valToAadlOutputMemcpy(port.type, port.name, {<port.queueDataName>[<port.queueFronstr_type_name>]})>
-<endif>
->>
-
-
 InputEventDataPortDecls(port) ::= <<
 
 /************************************************************************
@@ -230,7 +209,7 @@ while (<dispatcher.localReaderName>()) {
 
 inputPortDeclarations(port) ::= <<
 uses <port.inputMonitorInterfaceName> <port.name>;
-consumes QueuedData q<port.name>;
+consumes QueuedData <port.notificationName>;
 
 >>
 
@@ -318,9 +297,9 @@ bool enq_enqueue(const <port.typeName> * m) {
 
 monitorCamkesEventHandler(port,unlock) ::= <<
 
-static void q<port.name>_handler(void * unused) {
+static void <port.notificationName>_handler(void * unused) {
   <unlock>
-  q<port.name>_reg_callback(q<port.name>_handler, NULL);
+  <port.notificationName>_reg_callback(<port.notificationName>_handler, NULL);
 }
 
 >>
