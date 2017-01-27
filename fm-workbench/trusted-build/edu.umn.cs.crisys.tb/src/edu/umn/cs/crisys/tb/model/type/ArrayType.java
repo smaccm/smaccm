@@ -87,4 +87,5 @@ public class ArrayType extends Type {
 	public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
 	   return dimension * elem.getOverApproximateSizeInBytes(byteAlign);
 	}
+
 }

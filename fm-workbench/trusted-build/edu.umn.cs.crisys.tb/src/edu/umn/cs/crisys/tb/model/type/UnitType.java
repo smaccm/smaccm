@@ -58,4 +58,8 @@ public class UnitType extends Type {
 	public int getOverApproximateSizeInBytes(int byteAlign) {
 	   return 0;
 	}
+	
+	@Override
+	public boolean getIsUnit() { return true; }
+
 }

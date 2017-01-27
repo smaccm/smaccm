@@ -84,6 +84,7 @@ writeComponent(component) ::= <<
 <writeComponentName(component.normalizedName)>
 <component.inputEventPortList:writeComponentPerPort()>
 <component.inputEventDataPortList:writeComponentPerPort()>
+<component.inputDataPortList:writeComponentPerPort()>
 
 >>
 
@@ -134,4 +135,11 @@ config APP_<CapName>
     select APP_CAMKES_EXECUTIVE
     help
         <name> (from AADL).
+        
+config APP_<CapName>_TB_DEBUG
+    bool "Enable debugging trusted build debugging for the <CapName> application"
+    default n
+    depends on APP_<CapName> && PRINTING
+    help
+        Enable debugging trusted build debugging for the <CapName> application.
 >>

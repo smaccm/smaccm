@@ -63,5 +63,6 @@ public class ErrorType extends Type {
 	
 	public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
 	   return 0;
-	}   
+	}
+	
 }

@@ -1,9 +1,9 @@
 #include <user_pong.h>
 #include <stdio.h>
 
-void In(const PingTwins__msg_impl * msg_data) {
+void In() {
 	printf("In%i: Ping recv'd, sending pong.\n",ID);
-	Out(msg_data);	
+	Out();	
 }
 
 void pong(const int64_t * periodic_100_m) {}

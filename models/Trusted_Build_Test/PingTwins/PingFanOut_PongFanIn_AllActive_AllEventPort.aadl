@@ -16,20 +16,18 @@ end msg.impl;
 
 thread pong1
 	features
-		i: in event data port msg.impl {
+		i: in event port {
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");
-		  Queue_Size => 10;
 		};
 
-		o: out event data port msg.impl {
+		o: out event port {
 	      TB_SYS::CommPrim_Source_Text => "Out";				
-	      Queue_Size => 10;
 		};
 		
 	properties 
 	    Dispatch_Protocol => Periodic;
 		Period => 100 ms;
-		Source_Text => ("user_code/user_pong.c","user_code/includes/pong1/user_pong.h");
+		Source_Text => ("user_code/user_pong_event.c","user_code/includes/pong1/user_pong.h");
 	    TB_SYS::Compute_Entrypoint_Source_Text => ("pong");
 	   	Priority => 10;
 	    Stack_Size => 256 bytes;
@@ -41,20 +39,18 @@ end pong1;
 
 thread pong2
 	features
-		i: in event data port msg.impl {
+		i: in event port {
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");
-	      Queue_Size => 10;		
 		};
 
-		o: out event data port msg.impl {
-	      TB_SYS::CommPrim_Source_Text => "Out";
-	      Queue_Size => 10;				
+		o: out event port {
+	      TB_SYS::CommPrim_Source_Text => "Out";	
 		};
 		
 	properties 
 	    Dispatch_Protocol => Periodic;
 		Period => 100 ms;
-		Source_Text => ("user_code/user_pong.c","user_code/includes/pong2/user_pong.h");
+		Source_Text => ("user_code/user_pong_event.c","user_code/includes/pong2/user_pong.h");
 	    TB_SYS::Compute_Entrypoint_Source_Text => ("pong");
 	   	Priority => 10;
 	    Stack_Size => 256 bytes;
@@ -66,18 +62,17 @@ end pong2;
 
 thread ping
 	features
-		i : in event data port msg.impl {
+		i : in event port {
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");
-	      Queue_Size => 10;
+	      QUEUE_SIZE => 2;
 		};
-		o : out event data port msg.impl {
+		o : out event port {
 	      TB_SYS::CommPrim_Source_Text => "Out";
-	      Queue_Size => 10;
 		};
 	properties 
 		Dispatch_Protocol => Periodic;
 		Period => 100 ms;
-		Source_Text => ("user_code/user_ping.c");
+		Source_Text => ("user_code/user_ping_event.c");
 	    TB_SYS::Compute_Entrypoint_Source_Text => ("ping");
 	   	Priority => 10;
 	    Stack_Size => 256 bytes;

@@ -150,7 +150,7 @@ dispatcherComponentMainFunction(threadImpl) ::= <<
         <dispatcherMainLockWaitStmt(threadImpl)>
 
         // Drain the queues
-        <threadImpl.portList:{ port | <port.writePortEventResponder> } >
+        <threadImpl.portList:{port|<port.writePortEventResponder>}>
     }
 
     // Won't ever get here, but form must be followed
@@ -171,7 +171,7 @@ componentCFileDecls(threadImpl) ::= <<
 #include <\u0022><threadImpl.componentGlueCodeHFileName><\u0022>
 <osSpecificIncludeFiles(threadImpl)>
 
-<threadImpl.portList: {port | <port.writePortDeclarations> }>
+<threadImpl.portList: {port|<port.writePortDeclarations>}>
 
 <threadImpl.portListEmitterCIncludes>
 

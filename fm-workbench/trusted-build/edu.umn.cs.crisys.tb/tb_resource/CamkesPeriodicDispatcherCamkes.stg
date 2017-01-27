@@ -32,7 +32,7 @@ writePeriodicSenders(threadImpl) ::= <<
 
 periodicDispatcherCamkesBody(model, type) ::= <<
 
-import "../../interfaces/<type.readerWriterIdlFileName>";
+import <\u003C><type.readerWriterIdlFileName><\u003E>;
 import <\u003C>Timer.idl4<\u003E>;
 
 component <model.threadCalendar.periodicDispatcherComponentName> {

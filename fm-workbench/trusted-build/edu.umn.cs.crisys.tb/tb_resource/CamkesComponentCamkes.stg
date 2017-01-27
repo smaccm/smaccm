@@ -18,22 +18,22 @@ filePostfix(name, path) ::= <<
 >>
 
 importThreadIdl(threadImpl) ::= <<
-import "../../interfaces/<threadImpl.idlFileName>";
+import <\u003C><threadImpl.idlFileName><\u003E>;
 
 >>
 
 importReaderWriterIdl(type) ::= <<
-import "../../interfaces/<type.readerWriterIdlFileName>";
+import <\u003C><type.readerWriterIdlFileName><\u003E>;
 
 >>
 
 importSharedDataAccessorIdl(sharedDataAccessor) ::= <<
-import "../../interfaces/<sharedDataAccessor.type.sharedDataIdlFileName>";
+import <\u003C><sharedDataAccessor.type.sharedDataIdlFileName><\u003E>;
 
 >>
 
 importRpgIdl(remoteProcedureGroup) ::= <<
-import "../../interfaces/<remoteProcedureGroup.idlName>";
+import <\u003C><remoteProcedureGroup.idlName><\u003E>;
 
 >>
 
@@ -54,7 +54,7 @@ writeRpgInterface(endpoint) ::= <<
 >>
 
 camkesAddComponentPortImport(interface) ::= <<
-import "../../interfaces/<interface>";
+import <\u003C><interface><\u003E>;
 
 >>
 
@@ -67,7 +67,7 @@ camkesAddComponentPortImports(port) ::= <<
 
 componentCamkesBody(threadImpl) ::= <<
 
-<! import "../../interfaces/<threadImpl.idlFileName>"; !>
+<! import <\u003C><threadImpl.idlFileName><\u003E>; !>
 <if(threadImpl.requiresTimeServices)>
 import \<Timer.idl4>;
 <endif>
@@ -85,7 +85,7 @@ import \<Timer.idl4>;
 <threadImpl.portListEmitterCamkesComponentDeclarations>
 
 component <threadImpl.componentName> {
-    include "<threadImpl.model.systemTypeHeaderName>";
+    include <\u003C><threadImpl.model.systemTypeHeaderName><\u003E>;
     <if(threadImpl.isActive)>
     control;
     has semaphore <threadImpl.dispatcherComponentSemaphoreName>;

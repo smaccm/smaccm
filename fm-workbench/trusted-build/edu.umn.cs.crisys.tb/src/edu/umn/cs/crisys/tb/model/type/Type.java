@@ -26,12 +26,17 @@ import java.util.Map;
 
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.TbFailure;
+import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.topsort.DependsOn;
 
 public abstract class Type implements DependsOn<Type> {
 	// public abstract Expr getDefaultValue();
 
 	abstract public boolean isBaseType();
+	
+	public boolean getIsBaseType() {
+	  return isBaseType();
+	}
 
 	public class CType {
 	  String prefix;
@@ -82,5 +87,8 @@ public abstract class Type implements DependsOn<Type> {
 	}
 	
 	// for 32 bit alignment, choose byteAlign = 4; for 64 bit, choose 8.
-	public abstract int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure; 
+	public abstract int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure;
+	
+	public boolean getIsUnit() { return false; }
+	
 }

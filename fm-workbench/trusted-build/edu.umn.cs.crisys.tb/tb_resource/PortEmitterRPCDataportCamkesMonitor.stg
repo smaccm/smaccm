@@ -13,16 +13,16 @@ import "Common.stg"
 filePrefix(purpose, date, path) ::= "<stdFilePrefix(date, path, purpose)>"
 
 inputPortCamkesMonitorPurpose(port) ::= <<
-  Monitor of type <port.typeName> with input port <port.qualifiedName>
-  queue size of <port.queueSize>. The output port set follows:
+  Monitor of type <port.typeName> with input port <port.qualifiedName>. 
+  The output port set follows:
 
-<port.connections:{ c |    <c.sourcePort.qualifiedName>
+<port.connections:{ c |     <c.sourcePort.qualifiedName>
 }>
 >>
 
 inputPortCMonitorPurpose(port) ::= <<
-  Implementing a Monitor of type <port.typeName> with a queue size of 
-  <port.queueSize>. The input port that will be calling dequeue and receiving notifications 
+  Implementing a Monitor of type <port.typeName>. The input port that will be 
+  calling dequeue and receiving notifications 
   is <port.qualifiedName>. The output port set follows:
 
 <port.connections:{ c |     c.sourcePort
@@ -30,7 +30,7 @@ inputPortCMonitorPurpose(port) ::= <<
 >>
 
 inputPortIDL4MonitorPurpose(port,str_direction) ::= <<
-  <str_direction> interface with type <port.typeName> and queue size of <port.queueSize>.
+  <str_direction> interface with type <port.typeName>.
 }>
 >>
 
@@ -45,11 +45,7 @@ preinitStatements(port) ::= <<
 ///////////////////////////////////////////////////////////////////////////
 
 writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
-<if(dispatcher.hasData)>
 void <externalHandler.handlerName>(const <dispatcher.type.aadlInputType.name> <dispatcher.name>);
-<else>
-void <externalHandler.handlerName>(void);
-<endif>
 
 >>
 
@@ -60,22 +56,13 @@ writeUdePrototype(dispatcher) ::= <<
 >>
 
 writePortWriterPrototype(port) ::= <<
-<if(port.hasData)>
-bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
-<else>
-bool <port.localWriterName>(void);
-<endif>
+void <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
 
 >>
 
 writePortReaderPrototype(port) ::= <<
 // reader prototype for <port.name>
-<if(port.hasData)>
-bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
-<else>
-bool <port.localReaderName>(void);
-<endif>
-
+void <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
 >>
 
 
@@ -99,40 +86,10 @@ InputEventDataPortDecls(port) ::= <<
  ************************************************************************/
 
 bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
-    bool result;
-    result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
-    return result;
+    <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
 }
 
 >>
-
-InputEventPortDecls(port) ::= <<
-
-
-/************************************************************************
- *  <port.localReaderName>:
- * Invoked from local active thread.
- *
- * This is the function invoked by the active thread to decrement the
- * input event index.
- *
- ************************************************************************/
-
-bool <port.localReaderName>() {
-    bool result;
-    <port.lockStmt>
-    if (<port.index> > 0) {
-        <port.index>--;
-        result = true;
-    } else {
-        result = false;
-    }
-    <port.unlockStmt>
-    return result;
-}
-
->>
-
 
 ///////////////////////////////////////////////////////////////
 //
@@ -142,11 +99,7 @@ bool <port.localReaderName>() {
 
 
 callRemoteWriterStmt(port, dname) ::= << 
-<if(port.hasData)>
-tb_result &= <dname>_enqueue(<port.type.aadlInputToCamkesInput><port.name>);
-<else>
-tb_result &= <dname>_enqueue();
-<endif>
+<dname>_write(<port.type.aadlInputToCamkesInput><port.name>);
 >>
 
 remoteCallerFunction(port) ::= <<
@@ -164,14 +117,9 @@ remoteCallerFunction(port) ::= <<
  *
  ************************************************************************/
 
-<if(port.hasData)>
-bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
-<else>
-bool <port.localWriterName>(void) {
-<endif>
-    bool tb_result = true ; 
+void <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
     <port.outputMonitorNames:{ n | <callRemoteWriterStmt(port,n)>}>
-    return tb_result;
+    return;
 }
 
 >>
@@ -186,16 +134,10 @@ componentRemoteWriterDecl(port) ::= <<
 //
 ///////////////////////////////////////////////////////////////
 
-eventDataDispatcher(dispatcher) ::= <<
-while (<dispatcher.localReaderName>(<dispatcher.type.valToAadlOutput><dispatcher.name>)) {
+dataportDispatcher(dispatcher) ::= <<
+{
+    <dispatcher.localReaderName>(<dispatcher.type.valToAadlOutput><dispatcher.name>);
     <dispatcher.activeThreadInternalDispatcherFnName>(<dispatcher.type.valToAadlInput><dispatcher.name>);
-}
-
->>
-
-eventDispatcher(dispatcher) ::= <<
-while (<dispatcher.localReaderName>()) {
-    <dispatcher.activeThreadInternalDispatcherFnName>();
 }
 
 >>
@@ -209,7 +151,7 @@ while (<dispatcher.localReaderName>()) {
 
 inputPortDeclarations(port) ::= <<
 uses <port.inputMonitorInterfaceName> <port.name>;
-consumes QueuedData <port.notificationName>;
+consumes DataportWrite <port.notificationName>;
 
 >>
 
@@ -219,27 +161,17 @@ outputPortDeclarations(port) ::= <<
 >>
 
 //monitorCamkesIdl4Writer(iname, str_type_name)
-camkesMonitorEnqueueIdl4(str_interface_name, port) ::= <<
-procedure <str_interface_name>_Enqueue {
-  include <\u003C>stdbool.h<\u003E>;
-  <if(!port.type.isUnit)>
-  include <\u003C><port.systemTypesInclude><\u003E>;
-  bool enqueue(refin <port.typeName> m);
-  <else>
-  bool enqueue(void);
-  <endif>
+camkesMonitorWriteIdl4(str_interface_name, str_type_name, str_types_include) ::= <<
+procedure <str_interface_name>_Write {
+  include <\u003C><str_types_include><\u003E>;
+  void write(refin <str_type_name> m);
 };
 >>
 
-camkesMonitorDequeueIdl4(str_interface_name, port) ::= <<
-procedure <str_interface_name>_Dequeue {
-  include <\u003C>stdbool.h<\u003E>;
-  <if(!port.type.isUnit)>
-  include <\u003C><port.systemTypesInclude><\u003E>;
-  bool dequeue(out <port.typeName> m);
-  <else>
-  bool dequeue(void);
-  <endif>
+camkesMonitorReadIdl4(str_interface_name, str_type_name, str_types_include) ::= <<
+procedure <str_interface_name>_Read {
+  include <\u003C><str_types_include><\u003E>;
+  void read(out <str_type_name> m);
 };
 >>
 
@@ -248,74 +180,42 @@ import <\u003C><port.inputMonitorInterfaceName>.idl4<\u003E>;
 import <\u003C><port.outputMonitorInterfaceName>.idl4<\u003E>;
 component <str_component_name> {
 
-  provides <port.outputMonitorInterfaceName> enq;
-  provides <port.inputMonitorInterfaceName> deq;
-  emits QueuedData qd;
-  has mutex q;
+  provides <port.outputMonitorInterfaceName> dpw;
+  provides <port.inputMonitorInterfaceName> dpr;
+  emits DataportWrite dpn;
+  has mutex dp;
 }
 >>
 
-
 monitorCamkesCWriter(port, str_types_include) ::= <<
 #include <\u003C>stdio.h<\u003E>
-#include <\u003C>stdbool.h<\u003E>
+#include <\u003C>string.h<\u003E>
 #include <\u003C>camkes.h<\u003E>
 #include <\u003C><port.systemTypeHeader><\u003E>
 
-<if(!port.type.isUnit)>
-<port.type.camkesName> contents[<port.queueSize>];
-<endif>
-static uint32_t front = 0;
-static uint32_t length = 0;
+static <port.type.camkesName> contents;
 
-static bool is_full(void) {
-  return length == <port.queueSize>;
+void dpr_read(<port.typeName> * m) {
+  dp_lock();
+  *((<port.type.camkesName> *)m) = contents;
+  dp_unlock();
+  return;
 }
 
-static bool is_empty(void) {
-  return length == 0;
-}
-<if(!port.type.isUnit)>
-bool deq_dequeue(<port.typeName> * m) {
-<else>
-bool deq_dequeue(void) {
-<endif>
-  q_lock();
-  if (is_empty()) {
-    q_unlock();
-    return false;
-  } else {
-    <if(!port.type.isUnit)>
-    *((<port.type.camkesName> *)m) = contents[front];
-    <endif>
-    front = (front + 1) % <port.queueSize>;
-    length--;
-    q_unlock();
-    return true;
-  }
-}
-
-<if(!port.type.isUnit)>
-bool enq_enqueue(const <port.typeName> * m) {
-<else>
-bool enq_enqueue(void) {
-<endif>
-  q_lock();
-  if (is_full()) {
-    q_unlock();
-    #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
-    fprintf(stderr,"Monitor <port.qualifiedName> is full!\n");
-    #endif 
-    return false;
-  } else {
-    <if(!port.type.isUnit)>
-    contents[(front + length) % <port.queueSize>] = *((<port.type.camkesName> *)m);
-    <endif>
-    length++;
-    qd_emit();
-    q_unlock();
-    return true;
-  }
+void dpw_write(const <port.typeName> * m) {
+  dp_lock();
+  
+  //XXX: May result in spurious notification due to padding. The right way to do
+  //this would be to generate a structural equality function for each monitor.
+  //Howver, I am not sure to do lookup the actual type corresponding to an 
+  //idtype.
+  //if(0==memcmp(&contents,(<port.type.camkesName> *)m,sizeof(<port.type.camkesName>))) {}
+  //else {
+    contents = *((<port.type.camkesName> *)m);
+    dpn_emit();
+  //}
+  dp_unlock();
+  return;
 }
 
 >>

@@ -6,10 +6,6 @@ import java.util.List;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
@@ -149,23 +145,6 @@ public class DispatchableInputPortCommon {
    public final String getUserEntrypointCallerName() {
          return this.getPrefix() + "_entrypoint_" + 
                this.getQualifiedName(); 
-   /*
-         if (this.model.getOsTarget() == OSModel.OSTarget.CAmkES){
-            ThreadImplementationNames tnames = 
-                  EmitterFactory.threadImplementation(this.getModelElement().getOwner());
-            String name = tnames.getComponentDispatcherInterfaceVarIdName() + "_" + 
-                        this.getIdlDispatcherName() ; 
-            return name;
-         } else if (this.model.getOsTarget() == OSModel.OSTarget.eChronos) {
-            return this.getPrefix() + "_entrypoint_" + 
-                   this.getQualifiedName(); 
-         } else if (this.model.getOsTarget() == OSModel.OSTarget.VxWorks) {
-            return this.getIncomingWriterName();
-         } else {
-            throw new TbException("in RPCEventDataPortEmitter::getUserEntrypointName: OS [" + 
-                  this.model.getOsTarget() + "] is not supported.");
-         }
-     */
       }
 
    public final String getActiveThreadInternalDispatcherFnName() {
@@ -204,6 +183,17 @@ public class DispatchableInputPortCommon {
          ehl.add(EmitterFactory.externalHandler(eh)); 
       }
       return ehl;
+   }
+   
+   public String getCapName() {
+     ModelNames mn = new ModelNames(model);
+     return mn.getPathName().toUpperCase();
+   }
+   
+   public String getSystemTypeHeader() {
+     ModelNames mn = new ModelNames(model);
+     return mn.getSystemTypeHeaderName();
+     
    }
 
 }

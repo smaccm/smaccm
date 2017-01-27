@@ -150,4 +150,5 @@ public class IdType extends Type {
   public int getOverApproximateSizeInBytes(int byteAlign) throws TbFailure {
      return getRootType().getOverApproximateSizeInBytes(byteAlign);
   }
+  
 }
