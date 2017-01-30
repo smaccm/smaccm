@@ -56,9 +56,7 @@ writeRpgInterface(endpoint) ::= <<
 componentCamkesBody(threadImpl) ::= <<
 
 <! import "../../interfaces/<threadImpl.idlFileName>"; !>
-<if(threadImpl.requiresTimeServices)>
 import \<Timer.idl4>;
-<endif>
 
 
 <commentIf("Idl files for shared data accessors",
@@ -84,10 +82,5 @@ component <threadImpl.componentName> {
 
     <commentIf("Provided interfaces for shared data",
                (threadImpl.sharedDataAccessorList:sharedDataAccessorDecl()))><\\>
-
-    <if(threadImpl.requiresTimeServices)>
-    // For time services
-    uses Timer timer;
-    <endif>
 }
 >>

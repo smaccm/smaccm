@@ -61,7 +61,8 @@ property set TB_SYS is
     -- For CAmkES, specifically
     CAmkES_Owner_Thread : aadlstring applies to ( data );
     Use_OS_Real_Time_Extensions : aadlboolean => false applies to (processor, virtual processor, system implementation);
-
+	CAmkES_Custom_Connector : aadlstring applies to (connection);
+	
 	-- For CAmkES and ground team, specifically.
 	Mailbox : aadlboolean => false applies to (processor, virtual processor, system implementation, connection);
 

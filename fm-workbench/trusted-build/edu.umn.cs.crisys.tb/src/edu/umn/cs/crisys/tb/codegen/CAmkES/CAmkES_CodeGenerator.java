@@ -251,43 +251,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
    }
 
 
-   public void createPeriodicDispatcherCFile(File srcDirectory) throws TbFailure {
-      ModelNames mn = new ModelNames(model);
-      ThreadCalendarNames tcn = new ThreadCalendarNames(model.getThreadCalendar());
-
-      writeGeneric(srcDirectory, "PeriodicDispatcherC.stg", "periodicComponentCBody", 
-            new String[] {"model", "threadCalendar"}, 
-            new Object[] {mn, tcn}, 
-            tcn.getPeriodicDispatcherComponentName(), false, tcn.getPeriodicDispatcherCFileName());
-   }
-
-   // create this only if we have periodic threads.
-
-   public void createPeriodicDispatcherComponent() throws TbFailure {
-      ModelNames mn = new ModelNames(model); 
-      TypeNames tn = new TypeNames(InputPeriodicPort.getPortType());
-
-      ThreadCalendarNames cn = mn.getThreadCalendar(); 
-
-
-      File componentDirectory = new File(componentsDirectory, cn.getPeriodicDispatcherComponentName());
-      componentDirectory.mkdirs();
-
-      File srcDirectory = new File(componentDirectory, "src");
-      srcDirectory.mkdirs();
-
-      File includeDirectory = new File(componentDirectory, "include");
-      includeDirectory.mkdirs();
-
-      // MWW: removed to work with new periodic driver architecture.
-      // createClockDriver(srcDirectory, includeDirectory);
-      createPeriodicDispatcherCFile(srcDirectory); 
-
-      writeGeneric(componentDirectory, "PeriodicDispatcherCamkes.stg", "periodicDispatcherCamkesBody", 
-            new String[] {"model", "type"}, 
-            new Object[] {mn, tn}, 
-            cn.getPeriodicDispatcherComponentName(), false, cn.getPeriodicDispatcherCamkesFileName());
-   }
+   public void createPeriodicDispatcherComponent() throws TbFailure { }
 
 
    void createAssembly() throws TbFailure {

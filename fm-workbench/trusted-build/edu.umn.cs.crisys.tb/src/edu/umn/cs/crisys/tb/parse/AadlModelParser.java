@@ -45,6 +45,7 @@ import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Parameter;
 import org.osate.aadl2.PortCategory;
+import org.osate.aadl2.Property;
 import org.osate.aadl2.SubprogramAccess;
 // import org.osate.aadl2.SubprogramGroupAccess;
 import org.osate.aadl2.SystemImplementation;
@@ -991,6 +992,8 @@ public class AadlModelParser {
       return threadInst;
    }
 
+   final public static Property CUSTOM_CAMKES_CONNECTOR = Util.getPropertyDefinitionInWorkspace("TB_SYS::CAmkES_Custom_Connector");
+
    private PortConnection constructPortConnection(ConnectionInstance ci) {
       PortImpl destPortImpl = PortUtil.getPortImplFromConnectionInstanceEnd(ci.getDestination());
       PortImpl sourcePortImpl = PortUtil.getPortImplFromConnectionInstanceEnd(ci.getSource());
@@ -1036,6 +1039,11 @@ public class AadlModelParser {
          useMailbox = PropertyUtils.getBooleanValue(ci, PropertyUtil.MAILBOX);
       } catch(Exception e) {}
       conn.setIsMailbox(useMailbox);
+
+      String camkesCustomConnector = Util.getStringValueOpt(ci, CUSTOM_CAMKES_CONNECTOR);
+      if (camkesCustomConnector != null) {
+         conn.setExtendedData("CamkesCustomConnector", camkesCustomConnector);
+      }
 
       return conn;
    }
@@ -1179,6 +1187,13 @@ public class AadlModelParser {
       EndpointConnection ec = new EndpointConnection(requiresInstance, requiresEnd, 
             providesInstance, providesEnd);
 
+      String camkesCustomConnector = Util.getStringValueOpt(ci, CUSTOM_CAMKES_CONNECTOR);
+      if (camkesCustomConnector != null) {
+         ec.setExtendedData("CamkesCustomConnector", camkesCustomConnector);
+      }
+
+
+      
       requiresInstance.addIsRequiresOfEndpointConnectionList(ec);
       providesInstance.addIsProvidesOfEndpointConnectionList(ec);
 

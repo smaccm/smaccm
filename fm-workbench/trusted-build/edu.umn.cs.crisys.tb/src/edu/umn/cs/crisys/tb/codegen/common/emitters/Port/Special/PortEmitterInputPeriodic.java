@@ -111,6 +111,10 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
          st = getTemplateST("linuxDispatcherComponentPeriodicEventDecls");
          st.add("dispatcher", this);
          result += st.render(); 
+      } else if (model.getOsTarget() == OSTarget.CAmkES) {
+         st = getTemplateST("camkesDispatcherComponentPeriodicEventDecls");
+         st.add("dispatcher", this);
+         result += st.render();
       }
       
       return result; 
@@ -147,6 +151,10 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
       } else if (model.getOsTarget() == OSModel.OSTarget.linux) {
          ST st = getTemplateST("dispatcherComponentInit");
          st.add("dispatcher", this);
+         result += st.render();
+      } else if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
+         ST st = getTemplateST("camkesComponentCInitializer");
+         st.add("port", this);
          result += st.render();
       }
       return result;
@@ -237,11 +245,9 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
 
    @Override
    public String getCamkesAddComponentPortLevelDeclarations() {
-      String toReturn = ""; 
-      toReturn += "provides ";
-      toReturn += this.getType().getReaderWriterInterfaceName(); 
-      toReturn += " " + this.getName() + ";" + System.lineSeparator();
-      return toReturn;
+      ST st = getTemplateST("componentPortLevelDeclarations");
+      st.add("port", this);
+      return st.render();
    }
 
    @Override
@@ -252,10 +258,8 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
    @Override
    public String getCamkesAddAssemblyFileCompositionPortDeclarations() {
       String result = ""; 
-      ST st = getTemplateST("connectActivePeriodic");
-      st.add("dispatcher", this);
-      st.add("threadImpl", this.getThreadImplementation()); 
-      st.add("model", EmitterFactory.model(this.model));
+      ST st = getTemplateST("camkesAssemblyPeriodicDispatcherConnections");
+      st.add("port", this);
       result += st.render();
       
       return result;

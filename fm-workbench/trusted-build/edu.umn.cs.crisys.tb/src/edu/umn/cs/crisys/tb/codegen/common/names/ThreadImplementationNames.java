@@ -458,7 +458,7 @@ public class ThreadImplementationNames implements NameEmitter {
   }
   
   public String getTimeServicesConnectionName() {
-    return ti.getNormalizedName() + "_time_services"; 
+    return ti.getNormalizedName() + "_tb_timer"; 
   }
   
   //////////////////////////////////////////////////////////

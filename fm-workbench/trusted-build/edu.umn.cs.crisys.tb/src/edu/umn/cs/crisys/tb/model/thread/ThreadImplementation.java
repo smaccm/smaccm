@@ -570,7 +570,9 @@ public class ThreadImplementation extends ModelElementBase {
    }
 
    public Boolean getRequiresTimeServices() {
-      return requiresTimeServices;
+      return requiresTimeServices || 
+            this.getDispatchProtocol().equalsIgnoreCase("Periodic") || 
+            this.getDispatchProtocol().equalsIgnoreCase("Hybrid");
    }
 
    public void setRequiresTimeServices(Boolean requiresTimeServices) {

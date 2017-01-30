@@ -142,4 +142,12 @@ public String writeAssemblyPortConnection() {
    return result;
 }
 
+public String getConnector() {
+   if (c.containsExtendedData("CamkesCustomConnector")) {
+      return (String)c.getExtendedData("CamkesCustomConnector");
+   } else {
+      return "seL4RPCCall";
+   }
+}
+
 }

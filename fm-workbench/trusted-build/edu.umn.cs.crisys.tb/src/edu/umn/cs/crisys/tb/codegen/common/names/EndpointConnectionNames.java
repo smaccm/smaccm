@@ -34,4 +34,13 @@ public class EndpointConnectionNames implements NameEmitter {
   public NameEmitter getProvidesThreadImplementation() {
     return EmitterFactory.threadImplementation(conn.getProvidesThreadInstance().getThreadImplementation());
   }
+  
+  public String getConnector() {
+     if (conn.containsExtendedData("CamkesCustomConnector")) {
+        return (String)conn.getExtendedData("CamkesCustomConnector");
+     } else {
+        return "seL4RPCCall";
+     }
+  }
+
 }
