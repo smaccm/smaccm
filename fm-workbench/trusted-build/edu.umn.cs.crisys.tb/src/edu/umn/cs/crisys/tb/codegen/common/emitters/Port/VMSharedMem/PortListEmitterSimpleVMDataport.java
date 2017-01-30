@@ -102,7 +102,7 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
       result += 
          getVMConnections(vm.getHostDestToVMSourceConnections()).stream()
          .map(p -> {
-            ST st = getTemplateST("connectVmtoCamkesDest");
+            ST st = getTemplateST("connectVmToCamkesDest");
             st.add("connection", p);
             st.add("vm", EmitterFactory.model(vm));
             return st.render();
