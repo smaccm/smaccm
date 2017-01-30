@@ -270,8 +270,6 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
       // no-op for Input Periodic Ports for Camkes
       // sender_inst.periodic_dispatcher
       String result = ""; 
-      result += this.getThreadImplementation().getComponentInstanceName() + "." 
-            + this.getName() + "_priority = 202; " + System.lineSeparator();
       return result;
    }
 

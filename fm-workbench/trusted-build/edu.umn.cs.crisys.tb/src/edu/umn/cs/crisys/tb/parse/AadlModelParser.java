@@ -1066,14 +1066,12 @@ public class AadlModelParser {
       DataAccessImpl destAccessImpl = 
             PortUtil.getDataAccessImplFromConnectionInstanceEnd(destination);
       DataSubcomponentImpl srcDataComponent = 
-            PortUtil.getDataSubcomponentImplFromConnectionInstanceEnd(ci.getSource());
+            PortUtil.getDataSubcomponentImplFromConnectionInstanceEnd(source);
       String commprimFnNameOpt = Util.getStringValueOpt(destAccessImpl, PropertyUtil.TB_SYS_COMMPRIM_SOURCE_TEXT);
       String commprimHeaderNameOpt = Util.getStringValueOpt(destAccessImpl, PropertyUtil.TB_SYS_COMMPRIM_SOURCE_HEADER);
       SharedDataAccessor.AccessType accessType = getDataAccessRights(destAccessImpl); 
-
       SharedData sharedData;
-      OSModel sourceOS = findOsModel(source);
-      OSModel destinationOS = findOsModel(destination);
+      OSModel destinationOS = findOsModel(destination.getComponentInstance());
       
       if (this.sharedDataMap.containsKey(srcDataComponent)) {
          sharedData = this.sharedDataMap.get(srcDataComponent);
@@ -1081,9 +1079,9 @@ public class AadlModelParser {
          String ttiName = null;
          sharedData = new SharedData(srcDataComponent.getName(), getDataType(srcDataComponent));
          this.sharedDataMap.put(srcDataComponent, sharedData);
+         destinationOS.getSharedDataList().add(sharedData);
          
-         if (sourceOS.getOsTarget() == OSTarget.CAmkES || 
-             destinationOS.getOsTarget() == OSTarget.CAmkES) {
+         if (destinationOS.getOsTarget() == OSTarget.CAmkES) {
             try {
                ttiName = Util.getStringValue(srcDataComponent, PropertyUtil.CAMKES_OWNER_THREAD);
             } catch (Exception e) {

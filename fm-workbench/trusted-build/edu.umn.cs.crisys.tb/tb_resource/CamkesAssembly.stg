@@ -60,6 +60,9 @@ assemblyConnectRpgs(threadImpl, model) ::= <<
 <threadImpl.isRequiresOfConnectionList:connectRpg(threadImpl, model)>
 >>
 
+sdaConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4SharedData <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
 assemblyConnectAccessor(sharedDataAccessor, otherSda, model) ::= <<
 <sdaConnection(model.generateConnectionName,
                sharedDataAccessor.owner.componentInstanceName,
@@ -240,7 +243,6 @@ assembly {
         time_server.putchar_attributes = "0";
         time_server.timers_per_client = 9;
         time_server.heap_size = 8192;
-        time_server.priority = 255;
         pit.command_attributes = "0x43:0x43";
         pit.channel0_attributes = "0x40:0x40";
         pit.irq_irq_type = "isa";
@@ -249,6 +251,7 @@ assembly {
         pit.irq_irq_vector = 2;
         pit.heap_size = 0;
         <endif>
+        time_server.priority = 254;
         <endif>
         
         
