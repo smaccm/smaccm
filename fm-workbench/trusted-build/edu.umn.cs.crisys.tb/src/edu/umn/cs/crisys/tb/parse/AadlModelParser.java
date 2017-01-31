@@ -178,6 +178,8 @@ public class AadlModelParser {
       this.tlm.getModels().sort(Comparator.comparing(OSModel::getPathName));
    }
 
+   final public static Property CAMKES_VM_BUILD = Util.getPropertyDefinitionInWorkspace("TB_SYS::Camkes_VM_Build");
+
    /***************************************************************************
     * 
     * Functions for building properties related to model 
@@ -231,6 +233,11 @@ public class AadlModelParser {
          throw new TbException("Parse failure on one of [camkesTimeServerAadlThreadMinIndex, camkesDataportRpcMinIndex] target property ");
       }
 
+      boolean useVmBuild = PropertyUtils.getBooleanValue(sysimpl, CAMKES_VM_BUILD);
+      if (useVmBuild) {
+         model.getExtendedDataMap().put("Camkes_VM_Build", new Boolean(useVmBuild));
+      }
+      
       if (model.isExternalTimerComponent()) {
          try {
             model.setCamkesExternalTimerCompletePath(PropertyUtils.getStringValue(systemImplementation, PropertyUtil.CAMKES_EXTERNAL_TIMER_COMPLETE_PATH));

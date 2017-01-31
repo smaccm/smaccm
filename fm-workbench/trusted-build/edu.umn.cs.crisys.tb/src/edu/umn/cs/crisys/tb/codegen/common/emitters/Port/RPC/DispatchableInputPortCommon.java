@@ -34,6 +34,10 @@ public class DispatchableInputPortCommon {
    public PortFeature getModelElement() {
       return this.port;
    }
+   
+   public ModelNames getModel() {
+      return EmitterFactory.model(model);
+   }
 
    public String getName() {
       return this.getModelElement().getName();
