@@ -395,7 +395,7 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
   @Override
   public String getCamkesAddAssemblyFileConfigDeclarations() {
     if (port instanceof InputPort) {
-      return getMonitorInputCamkesNamePrefix().toLowerCase()+".priority = 254;";
+      return getMonitorInputCamkesNamePrefix().toLowerCase()+".priority = 230;";
     } else {
       return "";
     }
