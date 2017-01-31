@@ -86,6 +86,9 @@ include TimeServerTK1/TimeServer.mk
 
 
 <model.threadImplementations:writeComponent()>
+<if(model.threadCalendar.hasDispatchers)>
+<writeComponentName(model.threadCalendar.periodicDispatcherComponentName)>
+<endif>
 
 include ${PWD}/tools/camkes/camkes.mk
 

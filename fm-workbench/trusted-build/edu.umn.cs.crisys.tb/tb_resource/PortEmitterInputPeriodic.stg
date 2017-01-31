@@ -181,7 +181,7 @@ tb_timer_periodic(0, ((uint64_t)<port.periodicDispatcherPeriod>)*NS_IN_MS);
 camkesAssemblyPeriodicDispatcherConnections(port) ::= <<
 
 connection seL4TimeServer tb_<port.qualifiedName>_timer(from <port.threadImplementation.componentInstanceName>.tb_timer, to time_server.the_timer);
-connection seL4GlobalAsynchCallback tb_<port.qualifiedName>_echo_int(from time_server.timer_notification, to <port.threadImplementation.componentInstanceName>.tb_timer_complete);
+connection seL4GlobalAsynchCallback tb_<port.qualifiedName>_echo_int(from <port.model.threadCalendar.periodicDispatcherInstanceName>.<port.qualifiedName>, to <port.threadImplementation.componentInstanceName>.tb_timer_complete);
 
 >>
 
@@ -222,10 +222,12 @@ void <periodicClockFn(dispatcher)>(union sigval data) {
 
 dispatcherComponentInit(dispatcher) ::= <<
 {
+/* unnecessary if we use TB time server.
    int tb_result;
    tb_result = tb_make_periodic_timer(<dispatcher.periodicDispatcherPeriod>*1000,
                    <periodicClockFn(dispatcher)>,
                    &<periodicClock(dispatcher)>);
    assert(tb_result != -1);
+*/
 }
 >>

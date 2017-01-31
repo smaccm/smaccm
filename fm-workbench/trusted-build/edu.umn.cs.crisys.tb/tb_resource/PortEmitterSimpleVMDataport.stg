@@ -92,11 +92,11 @@ connectVmToCamkesDest(connection, vm) ::= <<
 assemblyConfigVMPort(vm, port, index, size) ::= <<
 <vm.vmInstanceName>.<port.qualifiedName>_id = <index>;
 <vm.vmInstanceName>.<port.qualifiedName>_size = <size>;
-// MWW: currently this doesn't seem to work: <vm.vmInstanceName>.<port.qualifiedName>_access = <if(port.isOutputPort)>"R"<else>"W"<endif>;
+<vm.vmInstanceName>.<port.qualifiedName>_access = <if(port.isOutputPort)>"R"<else>"W"<endif>;
 >>
 
 assemblyConfigPort(port) ::= <<
-// MWW: currently this doesn't seem to work: <port.threadImplementation.componentInstanceName>.<port.name>_access = <if(port.isInputPort)>"R"<else>"W"<endif>;
+<port.threadImplementation.componentInstanceName>.<port.name>_access = <if(port.isInputPort)>"R"<else>"W"<endif>;
 >>
 
 camkesInitBody(dpinit_pairs, event_inits) ::= <<

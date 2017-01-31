@@ -151,6 +151,9 @@ include TimeServer/TimeServer.mk
 
 
 <model.threadImplementations:writeComponent()>
+<if(model.threadCalendar.hasDispatchers)>
+<writeComponentName(model.threadCalendar.periodicDispatcherComponentName)>
+<endif>
 
 <model.virtualMachineList:writeVM()>
 
