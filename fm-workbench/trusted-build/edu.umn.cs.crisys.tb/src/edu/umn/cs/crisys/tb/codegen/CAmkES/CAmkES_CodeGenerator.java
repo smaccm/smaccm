@@ -293,7 +293,6 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
             cn.getPeriodicDispatcherComponentName(), false, cn.getPeriodicDispatcherCamkesFileName());
    }
 
-
    void createAssembly() throws TbFailure {
       ModelNames mn = new ModelNames(model); 
       writeGeneric(outputDirectory, "Assembly.stg", "camkesAssemblyBody", "model", mn,  

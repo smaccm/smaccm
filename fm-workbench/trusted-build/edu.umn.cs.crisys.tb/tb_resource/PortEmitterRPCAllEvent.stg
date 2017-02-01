@@ -315,11 +315,12 @@ outputPortDeclarations(port) ::= <<
 }>
 >>
 
-rpcConnection(cid, from1, from2, to1, to2) ::=
-   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+rpcConnection(connector, cid, from1, from2, to1, to2) ::=
+   "connection <connector> <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
 connectReaderWriter(connection, model) ::= <<
 <rpcConnection(model.generateConnectionName,
+    connection.connector,
     connection.sourcePort.threadImplementation.componentInstanceName,
     connection.outgoingPortName,
     connection.destPort.threadImplementation.componentInstanceName,

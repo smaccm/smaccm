@@ -35,6 +35,7 @@ import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.thread.ThreadInstance;
 import edu.umn.cs.crisys.tb.model.type.Type;
+import edu.umn.cs.crisys.tb.util.Util;
 
 /**
  * @author Whalen
@@ -395,11 +396,11 @@ public class ThreadImplementationNames implements NameEmitter {
   //////////////////////////////////////////////////////////
   
   public String getCamkesDispatcherLockStmt() {
-    return "(void)" + getDispatcherComponentSemaphoreName() + "_wait();" + System.lineSeparator();
+    return Util.wrapMutexOp(getDispatcherComponentSemaphoreName() + "_wait()");
   }
   
   public String getCamkesDispatcherUnlockStmt() {
-    return "(void)" + getDispatcherComponentSemaphoreName() + "_post();" + System.lineSeparator();
+    return Util.wrapMutexOp(getDispatcherComponentSemaphoreName() + "_post()");
   }
 
   //////////////////////////////////////////////////////////
@@ -457,7 +458,7 @@ public class ThreadImplementationNames implements NameEmitter {
   }
   
   public String getTimeServicesConnectionName() {
-    return ti.getNormalizedName() + "_time_services"; 
+    return ti.getNormalizedName() + "_tb_timer"; 
   }
   
   //////////////////////////////////////////////////////////

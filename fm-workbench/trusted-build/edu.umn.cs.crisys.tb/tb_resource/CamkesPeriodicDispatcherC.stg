@@ -1,8 +1,50 @@
-import "CommonPeriodicDispatcherC.stg"
+import "Common.stg"
+import "CommonOSSpecificNames.stg"
 
-// Copied from "CamkesComponentC.stg"
-incomingActiveThreadDispatchName(dispatcher) ::= "<dispatcher.qualifiedName>_<dispatcher.type.writerFn>"
-outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for periodic dispatcher gluecode c file
+//
+////////////////////////////////////////////////////////////////////////////
+
+periodicDispatcherCPurpose(componentName) ::= <<
+This .c file contains the CAmkES periodic dispatcher component definition.
+>>
+
+filePrefix(name, date, path, datatypesHeader) ::= <<
+<DARPALicenseComment()>
+
+<filenameBlockComment(date, path, periodicDispatcherCPurpose(name))>
+
+>>
+
+writePeriodicDispatcher(dispatcher, threadCalendar) ::= <<
+if ((aadl_calendar_counter % (<dispatcher.periodicDispatcherPeriod> / aadl_tick_interval)) == 0) {
+    <dispatcher.qualifiedName>_emit();
+}
+>>
+
+periodicComponentCDispatchers(threadCalendar) ::= <<
+
+// Declarations for managing periodic thread dispatch
+const uint32_t aadl_tick_interval = <threadCalendar.greatestCommonDivisorInMilliseconds>;
+const uint32_t aadl_hyperperiod_subdivisions = <threadCalendar.hyperperiodSubdivisions>;
+uint32_t aadl_calendar_counter = 0;
+uint32_t aadl_calendar_ticks = 0;
+
+
+void <threadCalendar.calendarFnName>() {
+    <threadCalendar.periodicDispatchers:writePeriodicDispatcher(threadCalendar)>
+
+    aadl_calendar_counter = (aadl_calendar_counter + 1) % aadl_hyperperiod_subdivisions;
+    aadl_calendar_ticks++;
+}
+
+>>
+
+filePostfix(name, path) ::= <<
+>>
+
 
 periodicComponentCBody(model, threadCalendar) ::= <<
 

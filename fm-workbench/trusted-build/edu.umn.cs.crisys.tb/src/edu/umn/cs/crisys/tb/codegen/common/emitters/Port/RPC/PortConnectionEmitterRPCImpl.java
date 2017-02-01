@@ -147,9 +147,18 @@ public String writeAssemblyPortConnection() {
    return result;
 }
 
+
 @Override
 public int getConnectionID() {
   return c.getConnectionID();
+}
+
+public String getConnector() {
+   if (c.containsExtendedData("CamkesCustomConnector")) {
+      return (String)c.getExtendedData("CamkesCustomConnector");
+   } else {
+      return "seL4RPCCall";
+   }
 }
 
 }

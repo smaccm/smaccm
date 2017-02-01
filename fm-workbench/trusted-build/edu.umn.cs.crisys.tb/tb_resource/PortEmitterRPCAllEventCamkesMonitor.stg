@@ -34,9 +34,15 @@ inputPortIDL4MonitorPurpose(port,str_direction) ::= <<
 }>
 >>
 
-preinitStatements(port) ::= <<
-    <port.notificationName>_reg_callback(<port.notificationName>_handler, NULL);
+registerCallback(port) ::= <<
+if(<port.notificationName>_reg_callback(<port.notificationName>_handler, NULL)) {
+  fprintf(stderr,"Failed to register callback for <port.notificationName> in %s at %d.\n",__FILE__,__LINE__);
+  *((int*)0) = 0xdeadbeef;
+}
+>>
 
+preinitStatements(port) ::= <<
+    <registerCallback(port)>
 >>
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -71,7 +77,7 @@ bool <port.localWriterName>(void);
 writePortReaderPrototype(port) ::= <<
 // reader prototype for <port.name>
 <if(port.hasData)>
-bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+bool <port.localReaderName>(<port.type.aadlInputType.name> <port.name>);
 <else>
 bool <port.localReaderName>(void);
 <endif>
@@ -256,7 +262,7 @@ component <str_component_name> {
 >>
 
 
-monitorCamkesCWriter(port, str_types_include) ::= <<
+monitorCamkesCWriter(port, str_types_include,unlock,lock) ::= <<
 #include <\u003C>stdio.h<\u003E>
 #include <\u003C>stdbool.h<\u003E>
 #include <\u003C>camkes.h<\u003E>
@@ -280,9 +286,9 @@ bool deq_dequeue(<port.typeName> * m) {
 <else>
 bool deq_dequeue(void) {
 <endif>
-  q_lock();
+  <lock>
   if (is_empty()) {
-    q_unlock();
+    <unlock>
     return false;
   } else {
     <if(!port.type.isUnit)>
@@ -290,7 +296,7 @@ bool deq_dequeue(void) {
     <endif>
     front = (front + 1) % <port.queueSize>;
     length--;
-    q_unlock();
+    <unlock>
     return true;
   }
 }
@@ -300,9 +306,9 @@ bool enq_enqueue(const <port.typeName> * m) {
 <else>
 bool enq_enqueue(void) {
 <endif>
-  q_lock();
+  <lock>
   if (is_full()) {
-    q_unlock();
+    <unlock>
     #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
     fprintf(stderr,"Monitor <port.qualifiedName> is full!\n");
     #endif 
@@ -313,7 +319,7 @@ bool enq_enqueue(void) {
     <endif>
     length++;
     qd_emit();
-    q_unlock();
+    <unlock>
     return true;
   }
 }
@@ -322,9 +328,10 @@ bool enq_enqueue(void) {
 
 monitorCamkesEventHandler(port,unlock) ::= <<
 
+
 static void <port.notificationName>_handler(void * unused) {
   <unlock>
-  <port.notificationName>_reg_callback(<port.notificationName>_handler, NULL);
+  <registerCallback(port)>
 }
 
 >>

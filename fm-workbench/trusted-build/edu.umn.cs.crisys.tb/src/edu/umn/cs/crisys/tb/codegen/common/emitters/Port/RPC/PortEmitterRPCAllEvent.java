@@ -87,7 +87,6 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    @Override
    public String getWritePortHPrototypes() {
       String result = ""; 
-      
       ST st; 
       PortFeature p = getModelElement();
       if (p instanceof OutputEventPort) {

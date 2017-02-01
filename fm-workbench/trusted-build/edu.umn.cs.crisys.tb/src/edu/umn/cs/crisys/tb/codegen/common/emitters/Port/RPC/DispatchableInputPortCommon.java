@@ -30,6 +30,10 @@ public class DispatchableInputPortCommon {
    public PortFeature getModelElement() {
       return this.port;
    }
+   
+   public ModelNames getModel() {
+      return EmitterFactory.model(model);
+   }
 
    public String getName() {
       return this.getModelElement().getName();
@@ -105,7 +109,7 @@ public class DispatchableInputPortCommon {
    
    public final String getLockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return "(void)" + getMutex() + "_lock();" ;
+         return Util.wrapMutexOp(getMutex() + "_lock()");
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          return "rtos_mutex_lock(" + getEChronosMutexConst() + ");";
       } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
@@ -119,7 +123,7 @@ public class DispatchableInputPortCommon {
 
    public final String getUnlockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return "(void)" + getMutex() + "_unlock();" ;
+         return Util.wrapMutexOp(getMutex() + "_unlock()");
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          return "rtos_mutex_unlock(" + getEChronosMutexConst() + ");";
       } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {

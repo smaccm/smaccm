@@ -6,11 +6,6 @@ import "Common.stg"
 //
 ////////////////////////////////////////////////////////////////////////////
 
-constructPeriodicComponent(calendar) ::= <<
-<if(calendar.hasDispatchers)>
-component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatcherInstanceName>;
-<endif>
->>
 
 camkesAssemblyPurpose(sysInstanceName) ::= <<
 This file contains the main CAmkES assembly for the
@@ -28,6 +23,12 @@ component <vm.vmComponentName> {
     VM_INIT_DEF()
 }
 
+>>
+
+constructPeriodicComponent(calendar) ::= <<
+<if(calendar.hasDispatchers)>
+component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatcherInstanceName>;
+<endif>
 >>
 
 
@@ -48,11 +49,12 @@ assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
 >>
 
 
-rpcConnection(cid, from1, from2, to1, to2) ::=
-   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+rpcConnection(connector, cid, from1, from2, to1, to2) ::=
+   "connection <connector> <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
 connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
 <rpcConnection(model.generateConnectionName,
+    endpointConnection.connector,
     srcThreadImpl.componentInstanceName,
     endpointConnection.requiresEndpoint.name,
     endpointConnection.providesThreadImplementation.componentInstanceName,
@@ -62,6 +64,9 @@ connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
 assemblyConnectRpgs(threadImpl, model) ::= <<
 <threadImpl.isRequiresOfConnectionList:connectRpg(threadImpl, model)>
 >>
+
+sdaConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4SharedData <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
 assemblyConnectAccessor(sharedDataAccessor, otherSda, model) ::= <<
 <sdaConnection(model.generateConnectionName,
@@ -77,7 +82,7 @@ assemblyConnectSharedData(sharedData, model) ::= <<
 
 assemblySetPriorities(threadImpl) ::= <<
 <if(!threadImpl.isExternal)>
-<threadImpl.componentInstanceName>._priority = <threadImpl.priority>;
+<threadImpl.componentInstanceName>.priority = <threadImpl.priority>;
 <endif>
 >>
 
@@ -98,15 +103,6 @@ assemblySetTiming(threadImpl) ::= <<
 
 >>
 
-assemblyConnectTimeServices(threadImpl, model) ::= <<
-<if(threadImpl.requiresTimeServices)><\\>
-<if(model.externalTimerComponent)>
-connection seL4TimeServer <threadImpl.timeServicesConnectionName>(from <threadImpl.componentInstanceName>.timer, to <model.camkesExternalTimerInterfacePath>);
-<else>
-connection seL4TimeServer <threadImpl.timeServicesConnectionName>(from <threadImpl.componentInstanceName>.timer, to time_server.the_timer);
-<endif>
-<endif>
->>
 
 configActiveToPassiveDataportId(passiveThreadImpl, activeThreadImpl, model) ::= <<
 <if(passiveThreadImpl.containsDispatchers)><\\>
@@ -121,9 +117,9 @@ configActiveToPassiveRegionDataportId(threadImpl, model) ::= <<
 
 configConnectTimeServices(threadImpl, model) ::= <<
 <if(threadImpl.requiresTimeServices)>
-<threadImpl.componentInstanceName>.timer_attributes = "<model.generateCamkesTimeServerThreadIndex>";
-<threadImpl.componentInstanceName>.timer_global_endpoint = "<threadImpl.timeServicesConnectionName>";
-<threadImpl.componentInstanceName>.timer_complete_global_endpoint = "<threadImpl.timeServicesConnectionName>";
+<threadImpl.componentInstanceName>.tb_timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
+<threadImpl.componentInstanceName>.tb_timer_global_endpoint = "<threadImpl.timeServicesConnectionName>";
+<threadImpl.componentInstanceName>.tb_timer_complete_global_endpoint = "<threadImpl.timeServicesConnectionName>";
 <endif>
 >>
 
@@ -159,7 +155,7 @@ configVms(model) ::= <<
 >>
 
 camkesAssemblyBody(model) ::= <<
-<if(model.isx86Target)>
+<if(model.isx86Target && model.useVmBuild)>
 import \<VM/vm.camkes>;
 <endif>
 import \<std_connector.camkes>;
@@ -171,6 +167,7 @@ import \<std_connector.camkes>;
 <endif>
 <if(model.threadCalendar.hasDispatchers)>
 import "<model.threadCalendar.periodicDispatcherPathName>";
+import \<Timer.idl4>;
 <if(!model.externalTimerComponent)>
 <if(model.isQemuTarget)>
 import \<TimeServerKZM/TimeServer.camkes>;
@@ -179,7 +176,11 @@ import \<TimeServerOdroid/TimeServer.camkes>;
 <elseif(model.isTK1Target)>
 import \<TimeServerTK1/TimeServer.camkes>;
 <elseif(model.isx86Target)>
+<if(model.useVmBuild)>
 // MWW: import \<TimeServer/TimeServer.camkes> included in VM import;
+<else>
+import \<TimeServer/TimeServer.camkes>;
+<endif>
 <else>
 // TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU and ODROID time server.
 <endif>
@@ -210,6 +211,7 @@ assembly {
         VM_COMPOSITION_DEF()
         <composeVms(model)>
         <endif>
+
         <constructPeriodicComponent(model.threadCalendar)><\\>
 
         <if(model.threadCalendar.hasDispatchers && !model.externalTimerComponent)>
@@ -237,9 +239,15 @@ assembly {
 
         <commentIf("Port declarations for active threads",
                    (model.activeThreadImplementations:portDeclarations()))><\\>
-        
+                   
         <commentIf("Port connections for active threads",
                    (model.activeThreadImplementations:portConnections()))><\\>
+                   
+        <commentIf("Direct RPC connections",
+                   (model.threadImplementations:assemblyConnectRpgs(model)))><\\>
+
+        <commentIf("Shared memory connections",
+                   (model.sharedData:assemblyConnectSharedData(model)))>
 
         <if(model.threadCalendar.hasDispatchers)>
         <if(!model.externalTimerComponent)>
@@ -250,15 +258,6 @@ assembly {
         connection seL4GlobalAsynchCallback echo_int(from <model.camkesExternalTimerCompletePath>, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
         <endif>
         <endif>
-
-
-        <model.threadImplementations:assemblyConnectTimeServices(model)><\\>
-
-        <commentIf("Direct RPC connections",
-                   (model.threadImplementations:assemblyConnectRpgs(model)))><\\>
-
-        <commentIf("Shared memory connections",
-                   (model.sharedData:assemblyConnectSharedData(model)))>
     }
 
     configuration {
@@ -271,7 +270,6 @@ assembly {
         time_server.putchar_attributes = "0";
         time_server.timers_per_client = 9;
         time_server.heap_size = 8192;
-        time_server.priority = 255;
         pit.command_attributes = "0x43:0x43";
         pit.channel0_attributes = "0x40:0x40";
         pit.irq_irq_type = "isa";
@@ -280,6 +278,7 @@ assembly {
         pit.irq_irq_vector = 2;
         pit.heap_size = 0;
         <endif>
+        time_server.priority = 254;
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";

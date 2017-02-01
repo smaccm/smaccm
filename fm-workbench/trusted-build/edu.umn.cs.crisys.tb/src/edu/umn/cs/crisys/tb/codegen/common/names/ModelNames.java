@@ -184,6 +184,7 @@ public class ModelNames implements NameEmitter {
   public String getEChronosPrxFileName() {
     return getPathName() + ".prx";
   }
+  
   public boolean getGenerateSystickIrq() {
 	  return m.getGenerateSystickIRQ();
   }
@@ -192,6 +193,11 @@ public class ModelNames implements NameEmitter {
 		return m.getExternalIRQs();
   }
 
+  public boolean getUseVmBuild() {
+     return !m.getVirtualMachineList().isEmpty() || 
+           m.getExtendedDataMap().containsKey("Camkes_VM_Build");
+  }
+  
   public String getGenerateConnectionName() {
     return "conn" + m.getGenerateConnectionNumber();
   }

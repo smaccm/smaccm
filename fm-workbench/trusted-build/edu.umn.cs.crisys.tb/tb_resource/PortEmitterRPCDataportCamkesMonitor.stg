@@ -34,10 +34,17 @@ inputPortIDL4MonitorPurpose(port,str_direction) ::= <<
 }>
 >>
 
-preinitStatements(port) ::= <<
-    <port.notificationName>_reg_callback(<port.notificationName>_handler, NULL);
-
+registerCallback(port) ::= <<
+if(<port.notificationName>_reg_callback(<port.notificationName>_handler, NULL)) {
+  fprintf(stderr,"Failed to register callback for <port.notificationName> in %s at %d.\n",__FILE__,__LINE__);
+  *((int*)0) = 0xdeadbeef;
+}
 >>
+
+preinitStatements(port) ::= <<
+    <registerCallback(port)>
+>>
+
 ///////////////////////////////////////////////////////////////////////////
 //
 // Header templates
@@ -56,13 +63,13 @@ writeUdePrototype(dispatcher) ::= <<
 >>
 
 writePortWriterPrototype(port) ::= <<
-void <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
 
 >>
 
 writePortReaderPrototype(port) ::= <<
 // reader prototype for <port.name>
-void <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
 >>
 
 
@@ -117,9 +124,9 @@ remoteCallerFunction(port) ::= <<
  *
  ************************************************************************/
 
-void <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
+bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
     <port.outputMonitorNames:{ n | <callRemoteWriterStmt(port,n)>}>
-    return;
+    return true;
 }
 
 >>
@@ -164,14 +171,14 @@ outputPortDeclarations(port) ::= <<
 camkesMonitorWriteIdl4(str_interface_name, str_type_name, str_types_include) ::= <<
 procedure <str_interface_name>_Write {
   include <\u003C><str_types_include><\u003E>;
-  void write(refin <str_type_name> m);
+  bool write(refin <str_type_name> m);
 };
 >>
 
 camkesMonitorReadIdl4(str_interface_name, str_type_name, str_types_include) ::= <<
 procedure <str_interface_name>_Read {
   include <\u003C><str_types_include><\u003E>;
-  void read(out <str_type_name> m);
+  bool read(out <str_type_name> m);
 };
 >>
 
@@ -187,7 +194,7 @@ component <str_component_name> {
 }
 >>
 
-monitorCamkesCWriter(port, str_types_include) ::= <<
+monitorCamkesCWriter(port, str_types_include, unlock, lock) ::= <<
 #include <\u003C>stdio.h<\u003E>
 #include <\u003C>string.h<\u003E>
 #include <\u003C>camkes.h<\u003E>
@@ -195,27 +202,19 @@ monitorCamkesCWriter(port, str_types_include) ::= <<
 
 static <port.type.camkesName> contents;
 
-void dpr_read(<port.typeName> * m) {
-  dp_lock();
+bool dpr_read(<port.typeName> * m) {
+  <lock>
   *((<port.type.camkesName> *)m) = contents;
-  dp_unlock();
-  return;
+  <unlock>
+  return true;
 }
 
-void dpw_write(const <port.typeName> * m) {
-  dp_lock();
-  
-  //XXX: May result in spurious notification due to padding. The right way to do
-  //this would be to generate a structural equality function for each monitor.
-  //Howver, I am not sure to do lookup the actual type corresponding to an 
-  //idtype.
-  //if(0==memcmp(&contents,(<port.type.camkesName> *)m,sizeof(<port.type.camkesName>))) {}
-  //else {
-    contents = *((<port.type.camkesName> *)m);
-    dpn_emit();
-  //}
-  dp_unlock();
-  return;
+bool dpw_write(const <port.typeName> * m) {
+  <lock>
+  contents = *((<port.type.camkesName> *)m);
+  dpn_emit();
+  <unlock>
+  return true;
 }
 
 >>
@@ -224,7 +223,7 @@ monitorCamkesEventHandler(port,unlock) ::= <<
 
 static void <port.notificationName>_handler(void * unused) {
   <unlock>
-  <port.notificationName>_reg_callback(<port.notificationName>_handler, NULL);
+  <registerCallback(port)>
 }
 
 >>

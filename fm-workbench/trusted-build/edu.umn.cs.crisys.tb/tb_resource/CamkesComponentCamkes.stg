@@ -67,10 +67,8 @@ camkesAddComponentPortImports(port) ::= <<
 
 componentCamkesBody(threadImpl) ::= <<
 
-<! import <\u003C><threadImpl.idlFileName><\u003E>; !>
-<if(threadImpl.requiresTimeServices)>
+<! import "../../interfaces/<threadImpl.idlFileName>"; !>
 import \<Timer.idl4>;
-<endif>
 
 <threadImpl.portList:camkesAddComponentPortImports()>
 <\\>
@@ -99,10 +97,5 @@ component <threadImpl.componentName> {
 
     <commentIf("Provided interfaces for shared data",
                (threadImpl.sharedDataAccessorList:sharedDataAccessorDecl()))><\\>
-
-    <if(threadImpl.requiresTimeServices)>
-    // For time services
-    uses Timer timer;
-    <endif>
 }
 >>

@@ -45,6 +45,7 @@ import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Parameter;
 import org.osate.aadl2.PortCategory;
+import org.osate.aadl2.Property;
 import org.osate.aadl2.SubprogramAccess;
 // import org.osate.aadl2.SubprogramGroupAccess;
 import org.osate.aadl2.SystemImplementation;
@@ -177,6 +178,8 @@ public class AadlModelParser {
       this.tlm.getModels().sort(Comparator.comparing(OSModel::getPathName));
    }
 
+   final public static Property CAMKES_VM_BUILD = Util.getPropertyDefinitionInWorkspace("TB_SYS::Camkes_VM_Build");
+
    /***************************************************************************
     * 
     * Functions for building properties related to model 
@@ -230,6 +233,11 @@ public class AadlModelParser {
          throw new TbException("Parse failure on one of [camkesTimeServerAadlThreadMinIndex, camkesDataportRpcMinIndex] target property ");
       }
 
+      boolean useVmBuild = PropertyUtils.getBooleanValue(sysimpl, CAMKES_VM_BUILD);
+      if (useVmBuild) {
+         model.getExtendedDataMap().put("Camkes_VM_Build", new Boolean(useVmBuild));
+      }
+      
       if (model.isExternalTimerComponent()) {
          try {
             model.setCamkesExternalTimerCompletePath(PropertyUtils.getStringValue(systemImplementation, PropertyUtil.CAMKES_EXTERNAL_TIMER_COMPLETE_PATH));
@@ -993,6 +1001,8 @@ public class AadlModelParser {
       return threadInst;
    }
 
+   final public static Property CUSTOM_CAMKES_CONNECTOR = Util.getPropertyDefinitionInWorkspace("TB_SYS::CAmkES_Custom_Connector");
+
    private PortConnection constructPortConnection(ConnectionInstance ci) {
       PortImpl destPortImpl = PortUtil.getPortImplFromConnectionInstanceEnd(ci.getDestination());
       PortImpl sourcePortImpl = PortUtil.getPortImplFromConnectionInstanceEnd(ci.getSource());
@@ -1039,6 +1049,11 @@ public class AadlModelParser {
       } catch(Exception e) {}
       conn.setIsMailbox(useMailbox);
 
+      String camkesCustomConnector = Util.getStringValueOpt(ci, CUSTOM_CAMKES_CONNECTOR);
+      if (camkesCustomConnector != null) {
+         conn.setExtendedData("CamkesCustomConnector", camkesCustomConnector);
+      }
+
       return conn;
    }
 
@@ -1060,14 +1075,12 @@ public class AadlModelParser {
       DataAccessImpl destAccessImpl = 
             PortUtil.getDataAccessImplFromConnectionInstanceEnd(destination);
       DataSubcomponentImpl srcDataComponent = 
-            PortUtil.getDataSubcomponentImplFromConnectionInstanceEnd(ci.getSource());
+            PortUtil.getDataSubcomponentImplFromConnectionInstanceEnd(source);
       String commprimFnNameOpt = Util.getStringValueOpt(destAccessImpl, PropertyUtil.TB_SYS_COMMPRIM_SOURCE_TEXT);
       String commprimHeaderNameOpt = Util.getStringValueOpt(destAccessImpl, PropertyUtil.TB_SYS_COMMPRIM_SOURCE_HEADER);
       SharedDataAccessor.AccessType accessType = getDataAccessRights(destAccessImpl); 
-
       SharedData sharedData;
-      OSModel sourceOS = findOsModel(source);
-      OSModel destinationOS = findOsModel(destination);
+      OSModel destinationOS = findOsModel(destination.getComponentInstance());
       
       if (this.sharedDataMap.containsKey(srcDataComponent)) {
          sharedData = this.sharedDataMap.get(srcDataComponent);
@@ -1075,9 +1088,9 @@ public class AadlModelParser {
          String ttiName = null;
          sharedData = new SharedData(srcDataComponent.getName(), getDataType(srcDataComponent));
          this.sharedDataMap.put(srcDataComponent, sharedData);
+         destinationOS.getSharedDataList().add(sharedData);
          
-         if (sourceOS.getOsTarget() == OSTarget.CAmkES || 
-             destinationOS.getOsTarget() == OSTarget.CAmkES) {
+         if (destinationOS.getOsTarget() == OSTarget.CAmkES) {
             try {
                ttiName = Util.getStringValue(srcDataComponent, PropertyUtil.CAMKES_OWNER_THREAD);
             } catch (Exception e) {
@@ -1181,6 +1194,13 @@ public class AadlModelParser {
       EndpointConnection ec = new EndpointConnection(requiresInstance, requiresEnd, 
             providesInstance, providesEnd);
 
+      String camkesCustomConnector = Util.getStringValueOpt(ci, CUSTOM_CAMKES_CONNECTOR);
+      if (camkesCustomConnector != null) {
+         ec.setExtendedData("CamkesCustomConnector", camkesCustomConnector);
+      }
+
+
+      
       requiresInstance.addIsRequiresOfEndpointConnectionList(ec);
       providesInstance.addIsProvidesOfEndpointConnectionList(ec);
 

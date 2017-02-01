@@ -157,17 +157,33 @@ assert(<periodicClock(dispatcher)> != NULL);
 //
 //////////////////////////////////////////////////////
 
-rpcConnection(cid, from1, from2, to1, to2) ::=
-   "connection seL4RPCCall <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
-connectActivePeriodic(dispatcher, threadImpl, model) ::= <<
-<rpcConnection(model.generateConnectionName,
-    model.threadCalendar.periodicDispatcherInstanceName,
-    dispatcher.qualifiedName,
-    threadImpl.componentInstanceName,
-    dispatcher.name)>
+componentPortLevelDeclarations(port) ::= <<
+uses Timer tb_timer;
+consumes Notification tb_timer_complete;
+
 >>
 
+
+camkesDispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
+
+void tb_timer_complete_callback() {
+   int64_t tb_time_periodic_dispatcher = tb_timer_time();
+   (void)<dispatcher.incomingWriterName>(&tb_time_periodic_dispatcher);
+}
+
+>>
+
+camkesComponentCInitializer(port) ::= <<
+tb_timer_periodic(0, ((uint64_t)<port.periodicDispatcherPeriod>)*NS_IN_MS);
+>>
+
+camkesAssemblyPeriodicDispatcherConnections(port) ::= <<
+
+connection seL4TimeServer tb_<port.qualifiedName>_timer(from <port.threadImplementation.componentInstanceName>.tb_timer, to time_server.the_timer);
+connection seL4GlobalAsynchCallback tb_<port.qualifiedName>_echo_int(from <port.model.threadCalendar.periodicDispatcherInstanceName>.<port.qualifiedName>, to <port.threadImplementation.componentInstanceName>.tb_timer_complete);
+
+>>
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -206,10 +222,12 @@ void <periodicClockFn(dispatcher)>(union sigval data) {
 
 dispatcherComponentInit(dispatcher) ::= <<
 {
+/* unnecessary if we use TB time server.
    int tb_result;
    tb_result = tb_make_periodic_timer(<dispatcher.periodicDispatcherPeriod>*1000,
                    <periodicClockFn(dispatcher)>,
                    &<periodicClock(dispatcher)>);
    assert(tb_result != -1);
+*/
 }
 >>

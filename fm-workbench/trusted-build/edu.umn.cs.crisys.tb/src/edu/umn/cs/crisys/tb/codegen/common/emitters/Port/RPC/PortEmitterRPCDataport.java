@@ -479,7 +479,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    
    public String getLockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return "(void)" + getMutex() + "_lock();" ;
+         return Util.wrapMutexOp(getMutex() + "_lock()");
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          return "rtos_mutex_lock(" + getEChronosMutexConst() + ");";
       } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
@@ -491,7 +491,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
 
    public String getUnlockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return "(void)" + getMutex() + "_unlock();" ;
+         return Util.wrapMutexOp(getMutex() + "_unlock()");
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          return "rtos_mutex_unlock(" + getEChronosMutexConst() + ");";
       } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {

@@ -25,8 +25,10 @@ import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
+import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
+import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
@@ -147,6 +149,8 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
         ST ctmplt = this.getTemplateST("monitorCamkesCWriter");
         ctmplt.add("port", this);
         ctmplt.add("str_types_include",(new ModelNames(model)).getSystemTypeHeaderName());
+        ctmplt.add("unlock", Util.wrapMutexOp("dp_unlock()"));
+        ctmplt.add("lock", Util.wrapMutexOp("dp_lock()"));
         String err = "IOException occurred during getWriteCamkesPortComponents"
             +" while writing "+sourcefile+":";
         ST purposetmplt = this.getTemplateST("inputPortCMonitorPurpose");
@@ -200,7 +204,29 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
   }
 
   @Override
-  public String getWritePortHPrototypes() {return "";}
+  public String getWritePortHPrototypes() {    
+    String result = ""; 
+    ST st; 
+    PortFeature p = getModelElement();
+    if (p instanceof OutputDataPort) {
+      st = getTemplateST("writePortWriterPrototype");         
+      st.add("port", this);
+      result += st.render();
+    } else if (p instanceof InputDataPort) {
+      st = getTemplateST("writePortReaderPrototype");         
+      st.add("port", this);
+      result += st.render();
+
+      st = getTemplateST("writeUdePrototype");
+      st.add("dispatcher", this);
+      result += st.render();
+    } else {
+      throw new TbException("Error: writePortHPrototypes: port " + this.getName() + " is not an event data port.");
+    }
+
+    result += writeOptPortThreadInitializerPrototype("void"); 
+    return result;
+  }
 
   @Override
   public String getWritePortDeclarations() {
