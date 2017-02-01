@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.resolute.analysis.handlers;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -28,12 +31,13 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.AnnexSubclause;
-import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.ConnectionInstance;
+import org.osate.aadl2.instance.EndToEndFlowInstance;
+import org.osate.aadl2.instance.FlowSpecificationInstance;
+import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.aadl2.util.Aadl2Util;
@@ -49,10 +53,12 @@ import com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult;
 import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
+import com.rockwellcollins.atc.resolute.resolute.IdExpr;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteFactory;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
+import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
 import com.rockwellcollins.atc.resolute.validation.BaseType;
 
 public class ResoluteHandler extends AadlHandler {
@@ -67,7 +73,8 @@ public class ResoluteHandler extends AadlHandler {
 	private static FunctionDefinition resolveResoluteFunction(EObject context, String resoluteFunctionName) {
 
 		// psNode.setText(resoluteFunctionName);
-		// val List<EObject> boundList = resoluteLinkingService.getLinkedObjects(context,
+		// val List<EObject> boundList =
+		// resoluteLinkingService.getLinkedObjects(context,
 		// ResolutePackage.eINSTANCE.getFnCallExpr_Fn(), psNode);
 		// if (boundList.size() > 0) {
 		// return boundList.get(0) as FunctionDefinition;
@@ -80,7 +87,8 @@ public class ResoluteHandler extends AadlHandler {
 
 	private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
 
-		// This code will only link to objects in the projects visible from the current project
+		// This code will only link to objects in the projects visible from the
+		// current project
 		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
 				eclass);
 		String contextProject = context.eResource().getURI().segment(1);
@@ -171,13 +179,14 @@ public class ResoluteHandler extends AadlHandler {
 			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
 			fnCallExpr.setFn(functionDefinition);
 
-//					Arg a = ResoluteFactory.eINSTANCE.createArg();
-//					com.rockwellcollins.atc.resolute.resolute.BaseType t = ResoluteFactory.eINSTANCE.createBaseType();
-//					a.setName("s");
-//					t.setType("system");
-//					a.setType(t);
-//					fnCallExpr.getFn().getArgs().clear();
-//					fnCallExpr.getFn().getArgs().add(a);
+			// Arg a = ResoluteFactory.eINSTANCE.createArg();
+			// com.rockwellcollins.atc.resolute.resolute.BaseType t =
+			// ResoluteFactory.eINSTANCE.createBaseType();
+			// a.setName("s");
+			// t.setType("system");
+			// a.setType(t);
+			// fnCallExpr.getFn().getArgs().clear();
+			// fnCallExpr.getFn().getArgs().add(a);
 			proveStatement.setExpr(fnCallExpr);
 			resoluteSubclause.getProves().add(proveStatement);
 			si.getComponentClassifier().getOwnedAnnexSubclauses().add(resoluteSubclause);
@@ -185,7 +194,11 @@ public class ResoluteHandler extends AadlHandler {
 			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
 
 			for (ProveStatement ps : resoluteSubclause.getProves()) {
-				proofTrees.add(interpreter.evaluateProveStatement(ps));
+				try {
+					proofTrees.add(interpreter.evaluateProveStatement(ps));
+				} catch (Exception e) {
+					handleProveStatementException(ps, e);
+				}
 				drawProofs(proofTrees);
 			}
 
@@ -201,7 +214,11 @@ public class ResoluteHandler extends AadlHandler {
 						EvaluationContext context = new EvaluationContext(compInst, sets, featToConnsMap);
 						ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
 						for (ProveStatement ps : resoluteSubclause.getProves()) {
-							proofTrees.add(interpreter.evaluateProveStatement(ps));
+							try {
+								proofTrees.add(interpreter.evaluateProveStatement(ps));
+							} catch (Exception e) {
+								handleProveStatementException(ps, e);
+							}
 							drawProofs(proofTrees);
 						}
 					}
@@ -209,53 +226,58 @@ public class ResoluteHandler extends AadlHandler {
 			}
 		}
 
-//		else {
-//			ResoluteSubclause subclause;
-//			ProveStatement proveStatement;
-//			FnCallExpr fnCallExpr;
-//
-//			subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
-//			proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
-//			fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
-//			fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
-//subclause.s
-//			for (IEObjectDescription tmp : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(ResolutePackage.eINSTANCE
-//					.getFunctionDefinition())) {
-//
-//				if (tmp.getName().getLastSegment().equalsIgnoreCase(theorem)) {
-//					EObject eobj = tmp.getEObjectOrProxy();
-//
-//					EObject resolved = EcoreUtil.resolve(eobj, root.eResource().getResourceSet());
-////					System.out.println("resolved=" + resolved);
-//
-//					FunctionDefinition functionDefinition = (FunctionDefinition) resolved;
-//
-//					fnCallExpr.setFn(functionDefinition);
-//
-//				}
-//			}
-//			Arg a = ResoluteFactory.eINSTANCE.createArg();
-//			com.rockwellcollins.atc.resolute.resolute.BaseType t = ResoluteFactory.eINSTANCE.createBaseType();
-//			a.setName("s");
-//			t.setType("system");
-//			a.setType(t);
-//			fnCallExpr.getFn().getArgs().clear();
-//			fnCallExpr.getFn().getArgs().add(a);
-//			proveStatement.setExpr(fnCallExpr);
-//			subclause.getProves().add(proveStatement);
-//
-//			EvaluationContext context = new EvaluationContext((ComponentInstance) si.getComponentInstance(), sets,
-//					featToConnsMap);
-//			ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
-//			for (ProveStatement ps : subclause.getProves()) {
-//				try {
-//					proofTrees.add(interpreter.evaluateProveStatement(ps));
-//					drawProofs(proofTrees);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		// else {
+		// ResoluteSubclause subclause;
+		// ProveStatement proveStatement;
+		// FnCallExpr fnCallExpr;
+		//
+		// subclause = ResoluteFactory.eINSTANCE.createResoluteSubclause();
+		// proveStatement = ResoluteFactory.eINSTANCE.createProveStatement();
+		// fnCallExpr = ResoluteFactory.eINSTANCE.createFnCallExpr();
+		// fnCallExpr.getArgs().add(ResoluteFactory.eINSTANCE.createThisExpr());
+		// subclause.s
+		// for (IEObjectDescription tmp :
+		// EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(ResolutePackage.eINSTANCE
+		// .getFunctionDefinition())) {
+		//
+		// if (tmp.getName().getLastSegment().equalsIgnoreCase(theorem)) {
+		// EObject eobj = tmp.getEObjectOrProxy();
+		//
+		// EObject resolved = EcoreUtil.resolve(eobj,
+		// root.eResource().getResourceSet());
+		//// System.out.println("resolved=" + resolved);
+		//
+		// FunctionDefinition functionDefinition = (FunctionDefinition)
+		// resolved;
+		//
+		// fnCallExpr.setFn(functionDefinition);
+		//
+		// }
+		// }
+		// Arg a = ResoluteFactory.eINSTANCE.createArg();
+		// com.rockwellcollins.atc.resolute.resolute.BaseType t =
+		// ResoluteFactory.eINSTANCE.createBaseType();
+		// a.setName("s");
+		// t.setType("system");
+		// a.setType(t);
+		// fnCallExpr.getFn().getArgs().clear();
+		// fnCallExpr.getFn().getArgs().add(a);
+		// proveStatement.setExpr(fnCallExpr);
+		// subclause.getProves().add(proveStatement);
+		//
+		// EvaluationContext context = new EvaluationContext((ComponentInstance)
+		// si.getComponentInstance(), sets,
+		// featToConnsMap);
+		// ResoluteInterpreter interpreter = new ResoluteInterpreter(context);
+		// for (ProveStatement ps : subclause.getProves()) {
+		// try {
+		// proofTrees.add(interpreter.evaluateProveStatement(ps));
+		// drawProofs(proofTrees);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// }
 
 		stop = System.currentTimeMillis();
 		System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
@@ -266,13 +288,36 @@ public class ResoluteHandler extends AadlHandler {
 		return Status.OK_STATUS;
 	}
 
+	private void handleProveStatementException(ProveStatement ps, Exception e) {
+		String bodyText = simpleSerializer(ps.getExpr());
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			MessageDialog.openError(getWindow().getShell(), "Error in prove statement: " + bodyText, e.getMessage());
+		});
+		e.printStackTrace();
+	}
+
+	private String simpleSerializer(EObject e) {
+		if (e instanceof FnCallExpr) {
+			FnCallExpr fce = (FnCallExpr) e;
+			String args = fce.getArgs().stream().map(this::simpleSerializer).collect(joining(", "));
+			return fce.getFn().getName() + "(" + args + ")";
+		} else if (e instanceof ThisExpr) {
+			return "this";
+		} else if (e instanceof IdExpr) {
+			IdExpr ide = (IdExpr) e;
+			return ide.getId().getFullName();
+		} else {
+			return e.toString();
+		}
+	}
+
 	private void enableRerunHandler(final Element root) {
 		getWindow().getShell().getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				IHandlerService handlerService = getHandlerService();
-				rerunActivation = handlerService
-						.activateHandler(RERUN_ID, new RerunHandler(root, ResoluteHandler.this));
+				rerunActivation = handlerService.activateHandler(RERUN_ID,
+						new RerunHandler(root, ResoluteHandler.this));
 			}
 		});
 	}
@@ -291,7 +336,7 @@ public class ResoluteHandler extends AadlHandler {
 	}
 
 	private IHandlerService getHandlerService() {
-		return (IHandlerService) getWindow().getService(IHandlerService.class);
+		return getWindow().getService(IHandlerService.class);
 	}
 
 	private void initializeSets(ComponentInstance ci, Map<String, SortedSet<NamedElement>> sets) {
@@ -299,20 +344,26 @@ public class ResoluteHandler extends AadlHandler {
 			return;
 		}
 
-		addToSet(sets, getCategoryName(ci.getCategory()), ci);
-		addToSet(sets, "component", ci);
-
-		for (ComponentInstance sub : ci.getComponentInstances()) {
-			initializeSets(sub, sets);
+		addToSet(sets, ci);
+		for (InstanceObject io : EcoreUtil2.getAllContentsOfType(ci, InstanceObject.class)) {
+			addToSet(sets, io);
 		}
 
-		for (ConnectionInstance conn : ci.getConnectionInstances()) {
-			addToSet(sets, "connection", conn);
+		for (FlowSpecificationInstance flowSpec : ci.getFlowSpecifications()) {
+			addToSet(sets, "flow_specification", flowSpec);
+		}
+
+		for (EndToEndFlowInstance etef : ci.getEndToEndFlows()) {
+			addToSet(sets, "end_to_end_flow", etef);
 		}
 	}
 
-	private String getCategoryName(ComponentCategory category) {
-		return new BaseType(category).toString();
+	private void addToSet(Map<String, SortedSet<NamedElement>> sets, InstanceObject io) {
+		BaseType type = new BaseType(io);
+		for (BaseType superType : type.getAllSuperTypes()) {
+			addToSet(sets, superType.name, io);
+		}
+
 	}
 
 	private void addToSet(Map<String, SortedSet<NamedElement>> sets, String name, NamedElement ne) {
@@ -346,6 +397,6 @@ public class ResoluteHandler extends AadlHandler {
 	}
 
 	protected void clearProofs() {
-		drawProofs(Collections.<ResoluteResult> emptyList());
+		drawProofs(Collections.<ResoluteResult>emptyList());
 	}
 }

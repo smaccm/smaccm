@@ -1,0 +1,24 @@
+import "CommonTypesHeader.stg"
+
+osSpecificDefine() ::= "#define __TB_OS_VXWORKS__"
+
+filePrefix(name, date, path) ::= <<
+#ifndef <datatypesHeaderIfdef(name)>
+#define <datatypesHeaderIfdef(name)>
+
+<DARPALicenseComment()>
+
+<filenameBlockComment(date, path, datatypesblockPurpose(name))>
+
+#include \<../usr/h/stdbool.h>
+#include \<stddef.h>
+#include \<../usr/h/stdint.h>
+
+<osSpecificDefine()>
+
+>>
+
+writeExternal(string) ::= <<
+#include "<string>"
+
+>>

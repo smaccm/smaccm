@@ -173,14 +173,23 @@ public class PortNames {
   }
   
   public List<PortConnectionNames> getConnections() {
-	  
 	  List<PortConnectionNames> connections = new ArrayList<>();
 	  for (PortConnection i: dp.getConnections()) {
 		  connections.add(new PortConnectionNames(i));
 	  }
 	  return connections;
   }
-    
+  
+  public PortConnectionNames getSingletonConnection() {
+	  if (dp.getConnections().size() != 1) {
+		  throw new Aadl2RtosException(
+				  "PortNames::getSingletonConnection: The port " + dp.getName() + 
+				  " has multiple connections, violating the invariant.");
+	  }
+	  else {
+		  return new PortConnectionNames(dp.getConnections().get(0));
+	  }
+  }
   //////////////////////////////////////////////////////////////
   //
   // Names for mutex function calls
@@ -261,7 +270,7 @@ public class PortNames {
     InputIrqPort iip = (InputIrqPort)dp; 
     List<MemoryRegionName> regions = new ArrayList<>();
     for (Map.Entry<String, String> entry : iip.getMemoryRegions().entrySet()) {
-        MemoryRegionName region = new MemoryRegionName(entry.getKey(), entry.getValue());
+        MemoryRegionName region = new MemoryRegionName(this, entry.getKey(), entry.getValue());
         regions.add(region);
     }
     return regions; 
@@ -295,6 +304,11 @@ public class PortNames {
      return "smaccm_" + getQualifiedName() + "_struct"; 
   }
 
+  
+  public String getMailboxStructTypeName() {
+	  return "smaccm_" + getQualifiedName() + "_mbox";
+  }
+  
   public String getDispatchStructArgName() {
     return "smaccm_" + getQualifiedName() + "_arg";
   }
@@ -310,7 +324,7 @@ public class PortNames {
     return odcNames;
   }
   
-
+  
   public List<DispatchContractNames> getDispatchableContracts() {
     DispatchableInputPort dip = (DispatchableInputPort )dp; 
     OutgoingDispatchContract odc = 
@@ -473,4 +487,19 @@ public class PortNames {
     return dp.getType().getCType().varString(getReaderWriterImplVar());
   }
    
+  /////////////////////////////////////////////////////////////////
+  //
+  // Mailbox id for the port.
+  // 
+  // Right now, trusted build iterates through each connection and 
+  // builds the necessary shared memory or CAmkES RPC for each.
+  // The wrinkle for mailboxes is that we want write access for 
+  // some buffers but not others.
+  //
+  /////////////////////////////////////////////////////////////////
+  
+  public int getCalculateWriterBufferSize() {
+	  return 12 * (dp.getConnections().size() + 2);
+  }
+  
 };

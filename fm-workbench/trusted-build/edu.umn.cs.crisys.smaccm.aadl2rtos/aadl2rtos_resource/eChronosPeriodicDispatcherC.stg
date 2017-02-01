@@ -15,7 +15,7 @@ periodicComponentCBody(model, threadCalendar) ::= <<
 
 
 // clock function prototypes
-void clock_init(); 
+void clock_init();
 void clock_set_interval_in_ms(uint32_t interval);
 void clock_start_timer(void);
 void clock_irq_callback(void);
@@ -26,19 +26,19 @@ uint64_t clock_get_time();
 <periodicComponentCDispatchers(threadCalendar)>
 
 bool initialize_periodic_dispatcher() {
-	clock_init();
-	clock_set_interval_in_ms(1); 
-	clock_start_timer();
-	return true;
+    clock_init();
+    clock_set_interval_in_ms(1);
+    clock_start_timer();
+    return true;
 }
 
-/* 
- * 
+/*
+ *
  * MWW Note: we currently do not use the timer functionality in eChronos to have
  * more similarity to the CAmkES-generated code.  However, it would be fairly
  * trivial to change.  On the other hand, we *support* timers running at a base rate
  * of 1 ms, if client code wishes to use them.
- * 
+ *
  */
 bool
 smaccm_tick_irq(void)
@@ -48,10 +48,10 @@ smaccm_tick_irq(void)
     clock_irq_callback();
     rtos_timer_tick();
     if (count == 0) {
-    	smaccm_thread_calendar();
+        smaccm_thread_calendar();
     }
 
-	count = (count + 1) % <threadCalendar.greatestCommonDivisorInMilliseconds>;
+    count = (count + 1) % <threadCalendar.greatestCommonDivisorInMilliseconds>;
     return true;
 }
 
@@ -60,11 +60,11 @@ smaccm_tick_irq(void)
 /*
 int run(void)
 {
-	clock_init();
-	clock_set_interval_in_ms(<threadCalendar.greatestCommonDivisorInMilliseconds>);
+    clock_init();
+    clock_set_interval_in_ms(<threadCalendar.greatestCommonDivisorInMilliseconds>);
 
-	clock_start_timer();
+    clock_start_timer();
 
-	return 0;
+    return 0;
 }
 */

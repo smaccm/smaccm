@@ -5,5 +5,6 @@
 
 void callback_output_Server_UART_out_put_pt_data_2(const uint8_t n_var0[80U])
 {
-    Server_UART_out_put_pt_data(n_var0);
+    //Server_UART_out_put_pt_data(n_var0);
+    Server_write_send_output(n_var0);
 }

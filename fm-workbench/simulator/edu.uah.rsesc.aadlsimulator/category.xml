@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/edu.uah.rsesc.aadlsimulator_0.1.0.qualifier.jar" id="edu.uah.rsesc.aadlsimulator" version="0.1.0.qualifier">
+      <category name="edu.uah.rsesc.aadlsimulator"/>
+   </feature>
+   <feature url="features/edu.uah.rsesc.aadlsimulator.agree_0.1.0.qualifier.jar" id="edu.uah.rsesc.aadlsimulator.agree" version="0.1.0.qualifier">
+      <category name="edu.uah.rsesc.aadlsimulator"/>
+   </feature>
+   <category-def name="edu.uah.rsesc.aadlsimulator" label="AADL Simulator"/>
+</site>

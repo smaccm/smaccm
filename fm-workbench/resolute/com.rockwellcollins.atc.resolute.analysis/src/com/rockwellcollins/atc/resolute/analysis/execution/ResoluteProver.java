@@ -81,8 +81,8 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 	}
 
 	/**
-	 * The ResoluteProver will only be called on formulas. Everything else is handled by the
-	 * ResoluteEvaluator.
+	 * The ResoluteProver will only be called on formulas. Everything else is
+	 * handled by the ResoluteEvaluator.
 	 */
 	@Override
 	public ResoluteResult defaultCase(EObject object) {
@@ -97,6 +97,9 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			ResoluteResult leftResult = doSwitch(object.getLeft());
 			switch (op) {
 			case "and": {
+				if(!leftResult.isValid()){
+					return leftResult;
+				}
 				ResoluteResult rightResult = doSwitch(object.getRight());
 
 				ResoluteResult result = new ResoluteResult(leftResult, rightResult);
@@ -108,7 +111,13 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				if (leftResult.isValid()) {
 					return leftResult;
 				} else {
-					return doSwitch(object.getRight());
+					ResoluteResult rightResult = doSwitch(object.getRight());
+					if(rightResult.isValid()){
+						return rightResult;
+					}
+					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+					result.setValid(false);
+					return result;
 				}
 			case "andthen":
 				if (!leftResult.isValid()) {
@@ -189,8 +198,12 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				varStack.peek().put(arg, value);
 				ResoluteResult subResult = forall(rest, body);
 				children.add(subResult);
-				// shortcut only if call is not to a claim
-				if (!subResult.isValid() && !claimCall && !containsClaim(subResult)) {
+				// We used to continue producing false claims rather than short circuit.
+				// We no longer do this.
+//				if (!subResult.isValid() && !claimCall && !containsClaim(subResult)) {
+//					break;
+//				}
+				if(!subResult.isValid()){
 					break;
 				}
 			}
@@ -210,26 +223,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 
 	@Override
 	public ResoluteResult caseFailExpr(FailExpr object) {
-		String str;
-		str = "unknown failure";
-
-		if (object.getVal() instanceof BinaryExpr) {
-			BinaryExpr binExpr = (BinaryExpr) object.getVal();
-			Object val = doSwitch(binExpr);
-			StringValue strVal = (StringValue) val;
-			str = strVal.getString();
-		}
-
-		if (object.getVal() instanceof StringExpr) {
-			StringExpr stringExpr = (StringExpr) object.getVal();
-			str = stringExpr.getVal().getValue();
-		}
-
-		if (!object.getFailmsg().isEmpty()) {
-			str = createClaimText(object.getFailmsg());
-		}
-
-		return new FailResult("Fail Statement: " + str.replaceAll("\"", ""), object);
+		return createFailResult("Failure: ", object);
 	}
 
 	@Override
@@ -261,13 +255,39 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		try {
 			subResult = doSwitch(body.getExpr());
 		} catch (ResoluteFailException e) {
-			subResult = new FailResult(e.getMessage(), e.getLocation());
+			if (e.getLocation() instanceof FailExpr) {
+				subResult = createFailResult(e.getMessage(), (FailExpr) e.getLocation());
+			} else {
+				subResult = new FailResult(e.getMessage(), e.getLocation());
+			}
 		}
 
 		varStack.pop();
 		claimCallContexts.remove(context);
 
 		return new ClaimResult(text, subResult, references, funcDef);
+	}
+
+	private ResoluteResult createFailResult(String message, FailExpr object) {
+		String str = "unknown failure";
+
+		if (object.getVal() instanceof BinaryExpr) {
+			BinaryExpr binExpr = (BinaryExpr) object.getVal();
+			Object val = doSwitch(binExpr);
+			StringValue strVal = (StringValue) val;
+			str = strVal.getString();
+		}
+
+		if (object.getVal() instanceof StringExpr) {
+			StringExpr stringExpr = (StringExpr) object.getVal();
+			str = stringExpr.getVal().getValue();
+		}
+
+		if (!object.getFailmsg().isEmpty()) {
+			str = createClaimText(object.getFailmsg());
+		}
+
+		return new FailResult("Failure: " + str.replaceAll("\"", ""), object);
 	}
 
 	private String createClaimText(EList<ClaimText> claimBody) {
@@ -277,7 +297,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			if (claim instanceof ClaimArg) {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
 				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
-//				text.append("'");
+				// text.append("'");
 				ResoluteValue val = varStack.peek().get(claimArg);
 				if (val == null) {
 					if (claimArg instanceof ConstantDefinition) {
@@ -303,7 +323,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				if (claimArgUnit != null) {
 					text.append(" " + claimArgUnit.getName());
 				}
-//				text.append("'");
+				// text.append("'");
 			} else if (claim instanceof ClaimString) {
 				text.append(((ClaimString) claim).getStr());
 			} else {

@@ -5,11 +5,16 @@ import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import jkind.JKindException;
+import jkind.api.JKindApi;
 import jkind.api.JRealizabilityApi;
 import jkind.api.KindApi;
 import jkind.api.results.AnalysisResult;
@@ -76,6 +81,9 @@ public abstract class VerifyHandler extends AadlHandler {
     private IHandlerActivation terminateActivation;
     private IHandlerActivation terminateAllActivation;
     private IHandlerService handlerService;
+    private Map<String, String> rerunAdviceMap = new HashMap<>();
+    private int adviceCount = 0;
+    private boolean calledFromRerun = false;
 
     private enum AnalysisType {
         AssumeGuarantee, Consistency, Realizability
@@ -142,6 +150,12 @@ public abstract class VerifyHandler extends AadlHandler {
 
     @Override
     protected IStatus runJob(Element root, IProgressMonitor monitor) {
+    	//this flag is set by the rerun handler to prevent clearing the advice map
+    	if(!calledFromRerun){
+    		rerunAdviceMap.clear();
+    	}
+    	calledFromRerun = false;
+    	
         disableRerunHandler();
         handlerService = (IHandlerService) getWindow().getService(IHandlerService.class);
 
@@ -169,7 +183,7 @@ public abstract class VerifyHandler extends AadlHandler {
                 wrapper.addChild(result);
                 result = wrapper;
             } else if (isRealizability()) {
-                AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+                AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, false);
                 Program program = LustreAstBuilder.getRealizabilityLustreProgram(agreeProgram);
                 wrapper.addChild(
                         createVerification("Realizability Check", si, program, agreeProgram, AnalysisType.Realizability));
@@ -187,7 +201,7 @@ public abstract class VerifyHandler extends AadlHandler {
     }
 
     private void wrapVerificationResult(ComponentInstance si, CompositeAnalysisResult wrapper) {
-        AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+        AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, isMonolithic());
  
         // generate different lustre depending on which model checker we are
         // using
@@ -199,10 +213,10 @@ public abstract class VerifyHandler extends AadlHandler {
             }
             program = LustreContractAstBuilder.getContractLustreProgram(agreeProgram);
         } else {
-            program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram, isMonolithic());
+            program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram);
         }
         List<Pair<String, Program>> consistencies =
-                LustreAstBuilder.getConsistencyChecks(agreeProgram, isMonolithic());
+                LustreAstBuilder.getConsistencyChecks(agreeProgram);
 
         wrapper.addChild(
                 createVerification("Contract Guarantees", si, program, agreeProgram, AnalysisType.AssumeGuarantee));
@@ -324,6 +338,14 @@ public abstract class VerifyHandler extends AadlHandler {
         } else {
             properties.addAll(mainNode.properties);
         }
+        
+        Set<String> strs = new HashSet<>();
+        for(String prop : properties){
+        	String renamed = renaming.rename(prop);
+        	if(!strs.add(renamed)){
+        		throw new AgreeException("Multiple properties named \""+renamed+"\"");
+        	}
+        }
 
     }
     
@@ -395,6 +417,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
         Thread analysisThread = new Thread() {
             public void run() {
+
                 activateTerminateHandlers(globalMonitor);
                 KindApi api = PreferencesUtil.getKindApi();
                 KindApi consistApi = PreferencesUtil.getConsistencyApi();
@@ -406,6 +429,19 @@ public abstract class VerifyHandler extends AadlHandler {
                     monitorRef.set(subMonitor);
 
                     Program program = linker.getProgram(result);
+
+					if (api instanceof JKindApi) {
+						String resultName = result.getName();
+						String adviceFileName = rerunAdviceMap.get(resultName);
+						if(adviceFileName == null){
+							adviceFileName = "agree_advice"+adviceCount++;
+							rerunAdviceMap.put(resultName, adviceFileName);
+						}else{
+							((JKindApi) api).setReadAdviceFile(adviceFileName);
+						}
+						((JKindApi) api).setWriteAdviceFile(adviceFileName);
+					}
+					
                     try {
                         if (result instanceof ConsistencyResult) {
                             consistApi.execute(program, result, subMonitor);
@@ -488,4 +524,9 @@ public abstract class VerifyHandler extends AadlHandler {
     private IHandlerService getHandlerService() {
         return (IHandlerService) getWindow().getService(IHandlerService.class);
     }
+    
+    public void setCalledFromRerun(){
+    	calledFromRerun = true;
+    }
+    
 }

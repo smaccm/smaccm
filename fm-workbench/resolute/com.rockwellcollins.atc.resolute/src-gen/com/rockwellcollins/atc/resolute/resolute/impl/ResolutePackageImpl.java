@@ -457,9 +457,19 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getBaseType_ParamType()
+  {
+    return (EReference)baseTypeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EAttribute getBaseType_Type()
   {
-    return (EAttribute)baseTypeEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)baseTypeEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1370,6 +1380,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     typeEClass = createEClass(TYPE);
 
     baseTypeEClass = createEClass(BASE_TYPE);
+    createEReference(baseTypeEClass, BASE_TYPE__PARAM_TYPE);
     createEAttribute(baseTypeEClass, BASE_TYPE__TYPE);
 
     argEClass = createEClass(ARG);
@@ -1578,6 +1589,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(baseTypeEClass, BaseType.class, "BaseType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getBaseType_ParamType(), this.getType(), null, "paramType", null, 0, 1, BaseType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getBaseType_Type(), theEcorePackage.getEString(), "type", null, 0, 1, BaseType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(argEClass, Arg.class, "Arg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

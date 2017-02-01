@@ -1,0 +1,7 @@
+import <clkcar.idl4>;
+
+component clkcar_shim {
+    control;
+
+    uses clkcar_inf clkcar;
+}

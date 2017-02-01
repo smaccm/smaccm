@@ -4,6 +4,7 @@
 package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
@@ -42,6 +43,7 @@ public class ThreadCalendarNames {
     for (InputPeriodicPort d: c.getPeriodicDispatchers()) {
       dl.add(new PortNames(d));
     }
+    dl.sort(Comparator.comparing(PortNames::getQualifiedName));
     return dl;
   }
 
@@ -91,6 +93,32 @@ public class ThreadCalendarNames {
   
   public String getGreatestCommonDivisorInMilliseconds() {
     return Integer.toString(c.getGreatestCommonDivisorInMilliseconds());
+  }
+  
+  public String getHzTickRate() { 
+	  if (c.hasFixedTickRate()) {
+	     c.checkFixedTickRateForPeriods();
+	     return Integer.toString(c.fixedTickRateInHz()); 
+	  }
+     // HACK for QEMU (simulator) target for VxWorks
+	  else if (c.getModel().getHWTarget().equalsIgnoreCase("QEMU")) {
+		  return Integer.toString(100);
+	  } else {
+		  return Integer.toString(1000);
+	  }
+  }
+  
+  public String getMsPerTick() {
+     if (c.hasFixedTickRate()) {
+        c.checkFixedTickRateForPeriods();
+        return Integer.toString(c.getFixedTickRateInMS()); 
+     }
+	  // HACK for QEMU (simulator) target for VxWorks
+	  if (c.getModel().getHWTarget().equalsIgnoreCase("QEMU")) {
+		 return Integer.toString(10);  
+	  } else {
+		  return Integer.toString(1); 
+	  }
   }
   
   public String getPriority() {

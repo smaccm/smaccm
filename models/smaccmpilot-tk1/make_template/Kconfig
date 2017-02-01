@@ -1,0 +1,6 @@
+config APP_SMACCMCOPTER
+    bool "smaccmcopter (from AADL)"
+    default n
+    select APP_CAMKES_EXECUTIVE
+    help
+        smaccmcopter (from AADL).

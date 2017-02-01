@@ -1,0 +1,177 @@
+package MissionSoftware
+public
+	with TB_SYS;
+	with SMACCM_DATA;
+	with Base_Types;
+
+	system top
+	end top;
+
+	system implementation top.i
+		subcomponents
+			software: process Mission_Software.i;
+			odroid: processor exynos5.camkes;
+		properties
+			actual_processor_binding => (reference (odroid)) applies to software;   
+	end top.i;
+
+	processor exynos5
+	end exynos5;
+
+	processor implementation exynos5.camkes
+	   properties
+	      TB_SYS::OS => CAmkES;
+	      TB_SYS::HW => ODROID;
+	      TB_SYS::Add_Dummy_Arg_To_Void_Fns => True;
+	end exynos5.camkes;
+
+	process Mission_Software
+	end Mission_Software;
+
+	process implementation Mission_Software.i
+		subcomponents
+			uart_driver: thread UART_Driver;
+			decrypt: thread Decrypt;
+			encrypt: thread Encrypt;
+			server: thread Server;
+			can_framing: thread CAN_Framing;
+			can_driver: thread CAN_Driver;
+			virtual_machine: thread Virtual_Machine;
+
+		connections
+			uart2decrypt: port uart_driver.self2decrypt -> decrypt.uart2self;
+			uart2encrypt: port uart_driver.self2encrypt -> encrypt.uart2self;
+			encrypt2uart: port encrypt.self2uart -> uart_driver.encrypt2self;
+
+			decrypt2server: port decrypt.self2server -> server.decrypt2self;
+			server2encrypt: port server.self2encrypt -> encrypt.server2self;
+
+			server2framing: port server.self2framing -> can_framing.server2self;
+			framing2server: port can_framing.self2server -> server.framing2self;
+
+			framing2can_request: port can_framing.self2can -> can_driver.framing2self;
+			can2framing_status: port can_driver.self2framing_status -> can_framing.can2self_status;
+			can2framing_frame: port can_driver.self2framing_frame -> can_framing.can2self_frame;
+
+			vm2server: port virtual_machine.self2server -> server.vm2self;
+			server2vm_reboot: port server.self2vm_reboot -> virtual_machine.server2self_reboot;
+	end Mission_Software.i;
+
+	thread UART_Driver
+		features
+			self2decrypt: out event data port SMACCM_DATA::UART_Packet.i;
+
+			encrypt2self: in event data port SMACCM_DATA::UART_Packet.i;
+			self2encrypt: out event data port Base_Types::Boolean;
+		properties
+			TB_SYS::Is_External => true;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+			TB_SYS::Sends_Events_To => "{{}}";
+	end UART_Driver;
+
+	thread Decrypt
+		features
+			uart2self: in event data port SMACCM_DATA::UART_Packet.i;
+			self2server: out event data port SMACCM_DATA::GIDL;
+		properties
+			Dispatch_Protocol => Periodic;
+			TB_SYS::Thread_Type => Active;
+			Priority => 150;
+			Stack_Size => 1024 Bytes;
+			Compute_Execution_Time => 10 us .. 100 us;
+			Period => 5 ms;
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			Initialize_Entrypoint_Source_Text => "component_init";
+	end Decrypt;
+
+	thread Encrypt
+		features
+			server2self: in event data port SMACCM_DATA::GIDL;
+
+			self2uart: out event data port SMACCM_DATA::UART_Packet.i;
+			uart2self: in event data port Base_Types::Boolean;
+		properties
+			Dispatch_Protocol => Periodic;
+			TB_SYS::Thread_Type => Active;
+			Priority => 150;
+			Stack_Size => 1024 Bytes;
+			Compute_Execution_Time => 10 us .. 100 us;
+			Period => 5 ms;
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			Initialize_Entrypoint_Source_Text => "component_init";
+	end Encrypt;
+
+	thread Server
+		features
+			self2encrypt: out event data port SMACCM_DATA::GIDL;
+			decrypt2self: in event data port SMACCM_DATA::GIDL;
+
+			self2framing: out event data port SMACCM_DATA::GIDL;
+			framing2self: in event data port SMACCM_DATA::GIDL;
+
+			vm2self: in data port SMACCM_DATA::Camera_Bounding_Box.i;
+			self2vm_reboot: out event data port Base_Types::Boolean;
+		properties
+			Dispatch_Protocol => Periodic;
+			TB_SYS::Thread_Type => Active;
+			Priority => 150;
+			Stack_Size => 1024 Bytes;
+			Compute_Execution_Time => 10 us .. 100 us;
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			Initialize_Entrypoint_Source_Text => "component_init";
+			Period => 5 ms;
+	end Server;
+
+	thread CAN_Framing
+		features
+			server2self: in event data port SMACCM_DATA::GIDL;
+			self2server: out event data port SMACCM_DATA::GIDL;
+
+			can2self_frame: in event data port SMACCM_DATA::CAN_Frame.i {
+						Queue_Size => 10;
+					};
+			can2self_status: in event data port Base_Types::Boolean;
+			self2can: out event data port SMACCM_DATA::CAN_Frame.i;
+
+		properties
+			Dispatch_Protocol => Periodic;
+			TB_SYS::Thread_Type => Active;
+			Priority => 150;
+			Stack_Size => 1024 Bytes;
+			Compute_Execution_Time => 10 us .. 100 us;
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			Initialize_Entrypoint_Source_Text => "component_init";
+			Period => 1 ms;
+	end CAN_Framing;
+
+	thread CAN_Driver
+		features
+			framing2self: in event data port SMACCM_DATA::CAN_Frame.i;
+			self2framing_status: out event data port Base_Types::Boolean;
+			self2framing_frame: out event data port SMACCM_DATA::CAN_Frame.i;
+		properties
+			TB_SYS::Is_External => true;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+			TB_SYS::Sends_Events_To => "{{}}";
+	end CAN_Driver;
+
+	thread Virtual_Machine
+		features
+			self2server: out data port SMACCM_DATA::Camera_Bounding_Box.i;
+			server2self_reboot: in event data port Base_Types::Boolean;
+		properties
+			TB_SYS::Is_External => true;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+	end Virtual_machine;
+
+end MissionSoftware;

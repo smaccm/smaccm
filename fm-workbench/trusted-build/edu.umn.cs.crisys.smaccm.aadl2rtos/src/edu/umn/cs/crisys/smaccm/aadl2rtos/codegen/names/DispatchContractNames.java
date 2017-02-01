@@ -9,7 +9,6 @@ import java.util.Map;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.*;

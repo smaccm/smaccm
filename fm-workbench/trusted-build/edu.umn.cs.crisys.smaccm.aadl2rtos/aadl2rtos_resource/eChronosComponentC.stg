@@ -2,11 +2,12 @@ import "CommonComponentC.stg"
 
 /*
  * Overrides for OS-specific names/behavior for generated C code.
- * 
+ *
  */
 // import "eChronosCNames.stg"
 // import does not override declarations.  Why?
-osSpecificThreadEntrypoint(threadImpl) ::= "<threadImpl.threadImplMainFnName>"
+osSpecificThreadEntrypoint(threadImpl) ::= "int <threadImpl.threadImplMainFnName>(void)"
+osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
 
 incomingPortWriterName(port) ::= "smaccm_<port.qualifiedName>_<port.type.writerFn>"
 
@@ -19,13 +20,13 @@ incomingUserEntrypointCallerName(dispatcher) ::= "smaccm_entrypoint_<dispatcher.
 
 outgoingUserEntrypointCallerName(dispatcher) ::= "<incomingUserEntrypointCallerName(dispatcher)>"
 
-portLockStmt(port) ::= << 
-rtos_mutex_lock(<port.eChronosMutexConst>);  
+portLockStmt(port) ::= <<
+rtos_mutex_lock(<port.eChronosMutexConst>);
 
 >>
 
 portUnlockStmt(port) ::= <<
-rtos_mutex_unlock(<port.eChronosMutexConst>); 
+rtos_mutex_unlock(<port.eChronosMutexConst>);
 
 >>
 
@@ -42,14 +43,14 @@ rtos_mutex_unlock(<dispatcher.threadImplementation.eChronosThreadDispatcherMutex
 dispatcherMainInitializeLockStmt(threadImpl) ::= " "
 
 dispatcherMainLockWaitStmt(threadImpl) ::= <<
-	rtos_signal_wait(<threadImpl.eChronosDispatchSignalConst>);
+    rtos_signal_wait(<threadImpl.eChronosDispatchSignalConst>);
 >>
 
 dispatcherMainLockReleaseStmt(dispatcher) ::= <<
-	<if(dispatcher.isIRQ || dispatcher.isPeriodic)>
-	rtos_interrupt_event_raise(<dispatcher.threadImplementation.eChronosInterruptSignalConst>);<else>
-	rtos_signal_send(<dispatcher.threadImplementation.eChronosTaskIdConst>, <dispatcher.threadImplementation.eChronosDispatchSignalConst>);
-	<endif>
+    <if(dispatcher.isIRQ || dispatcher.isPeriodic)>
+    rtos_interrupt_event_raise(<dispatcher.threadImplementation.eChronosInterruptSignalConst>);<else>
+    rtos_signal_send(<dispatcher.threadImplementation.eChronosTaskIdConst>, <dispatcher.threadImplementation.eChronosDispatchSignalConst>);
+    <endif>
 >>
 
 osSpecificIncludeFiles(threadImpl) ::= <<
@@ -58,19 +59,18 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 
 >>
 
-osSpecificIrqDispatcher(dispatcher) ::= << 
+osSpecificIrqDispatcher(dispatcher) ::= <<
 bool <incomingActiveThreadDispatchName(dispatcher)>() {
-	<dispatcher.firstLevelInterruptHandler>();
-	<dispatcher.dispatchOccurredVar> = true;
-	<dispatcherMainLockReleaseStmt(dispatcher)>
-	return true;
+    <dispatcher.firstLevelInterruptHandler>();
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcherMainLockReleaseStmt(dispatcher)>
+    return true;
 }
 >>
 
-osSpecificRegisterIrqs(dispatcher) ::= ""
+osSpecificThreadPostInitializer(threadImpl) ::= ""
 
 osSpecificComponentLocalCallerFunction(connection) ::= ""
 
 // TODO: add an eChronos assert function.
 osSpecificAssert(predicate) ::= ""
-

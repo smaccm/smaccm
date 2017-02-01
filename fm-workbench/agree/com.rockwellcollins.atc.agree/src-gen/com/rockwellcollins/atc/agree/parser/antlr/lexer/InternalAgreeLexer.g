@@ -16,13 +16,21 @@ import org.eclipse.xtext.parser.antlr.Lexer;
 
 
 
+Linearization : ('L'|'l')('I'|'i')('N'|'n')('E'|'e')('A'|'a')('R'|'r')('I'|'i')('Z'|'z')('A'|'a')('T'|'t')('I'|'i')('O'|'o')('N'|'n');
+
 Get_Property : ('G'|'g')('E'|'e')('T'|'t')'_'('P'|'p')('R'|'r')('O'|'o')('P'|'p')('E'|'e')('R'|'r')('T'|'t')('Y'|'y');
 
 Asynchronous : ('A'|'a')('S'|'s')('Y'|'y')('N'|'n')('C'|'c')('H'|'h')('R'|'r')('O'|'o')('N'|'n')('O'|'o')('U'|'u')('S'|'s');
 
+Agree_input : ('A'|'a')('G'|'g')('R'|'r')('E'|'e')('E'|'e')'_'('I'|'i')('N'|'n')('P'|'p')('U'|'u')('T'|'t');
+
+Exclusively : ('E'|'e')('X'|'x')('C'|'c')('L'|'l')('U'|'u')('S'|'s')('I'|'i')('V'|'v')('E'|'e')('L'|'l')('Y'|'y');
+
 Classifier : ('C'|'c')('L'|'l')('A'|'a')('S'|'s')('S'|'s')('I'|'i')('F'|'f')('I'|'i')('E'|'e')('R'|'r');
 
 Connection : ('C'|'c')('O'|'o')('N'|'n')('N'|'n')('E'|'e')('C'|'c')('T'|'t')('I'|'i')('O'|'o')('N'|'n');
+
+Condition : ('C'|'c')('O'|'o')('N'|'n')('D'|'d')('I'|'i')('T'|'t')('I'|'i')('O'|'o')('N'|'n');
 
 Guarantee : ('G'|'g')('U'|'u')('A'|'a')('R'|'r')('A'|'a')('N'|'n')('T'|'t')('E'|'e')('E'|'e');
 
@@ -40,9 +48,19 @@ Calendar : ('C'|'c')('A'|'a')('L'|'l')('E'|'e')('N'|'n')('D'|'d')('A'|'a')('R'|'
 
 Constant : ('C'|'c')('O'|'o')('N'|'n')('S'|'s')('T'|'t')('A'|'a')('N'|'n')('T'|'t');
 
+External : ('E'|'e')('X'|'x')('T'|'t')('E'|'e')('R'|'r')('N'|'n')('A'|'a')('L'|'l');
+
 Ordering : ('O'|'o')('R'|'r')('D'|'d')('E'|'e')('R'|'r')('I'|'i')('N'|'n')('G'|'g');
 
 Property : ('P'|'p')('R'|'r')('O'|'o')('P'|'p')('E'|'e')('R'|'r')('T'|'t')('Y'|'y');
+
+Sporadic : ('S'|'s')('P'|'p')('O'|'o')('R'|'r')('A'|'a')('D'|'d')('I'|'i')('C'|'c');
+
+Timefall : ('T'|'t')('I'|'i')('M'|'m')('E'|'e')('F'|'f')('A'|'a')('L'|'l')('L'|'l');
+
+Timerise : ('T'|'t')('I'|'i')('M'|'m')('E'|'e')('R'|'r')('I'|'i')('S'|'s')('E'|'e');
+
+Whenever : ('W'|'w')('H'|'h')('E'|'e')('N'|'n')('E'|'e')('V'|'v')('E'|'e')('R'|'r');
 
 KW__INSERT : '_'('I'|'i')('N'|'n')('S'|'s')('E'|'e')('R'|'r')('T'|'t');
 
@@ -50,9 +68,13 @@ KW__REMOVE : '_'('R'|'r')('E'|'e')('M'|'m')('O'|'o')('V'|'v')('E'|'e');
 
 Applies : ('A'|'a')('P'|'p')('P'|'p')('L'|'l')('I'|'i')('E'|'e')('S'|'s');
 
+Becomes : ('B'|'b')('E'|'e')('C'|'c')('O'|'o')('M'|'m')('E'|'e')('S'|'s');
+
 Binding : ('B'|'b')('I'|'i')('N'|'n')('D'|'d')('I'|'i')('N'|'n')('G'|'g');
 
 Compute : ('C'|'c')('O'|'o')('M'|'m')('P'|'p')('U'|'u')('T'|'t')('E'|'e');
+
+Implies : ('I'|'i')('M'|'m')('P'|'p')('L'|'l')('I'|'i')('E'|'e')('S'|'s');
 
 Latched : ('L'|'l')('A'|'a')('T'|'t')('C'|'c')('H'|'h')('E'|'e')('D'|'d');
 
@@ -60,15 +82,29 @@ Returns : ('R'|'r')('E'|'e')('T'|'t')('U'|'u')('R'|'r')('N'|'n')('S'|'s');
 
 KW__COUNT : '_'('C'|'c')('O'|'o')('U'|'u')('N'|'n')('T'|'t');
 
+Always : ('A'|'a')('L'|'l')('W'|'w')('A'|'a')('Y'|'y')('S'|'s');
+
 Assert : ('A'|'a')('S'|'s')('S'|'s')('E'|'e')('R'|'r')('T'|'t');
 
 Assign : ('A'|'a')('S'|'s')('S'|'s')('I'|'i')('G'|'g')('N'|'n');
 
 Assume : ('A'|'a')('S'|'s')('S'|'s')('U'|'u')('M'|'m')('E'|'e');
 
+During : ('D'|'d')('U'|'u')('R'|'r')('I'|'i')('N'|'n')('G'|'g');
+
+Jitter : ('J'|'j')('I'|'i')('T'|'t')('T'|'t')('E'|'e')('R'|'r');
+
+Occurs : ('O'|'o')('C'|'c')('C'|'c')('U'|'u')('R'|'r')('S'|'s');
+
+Raises : ('R'|'r')('A'|'a')('I'|'i')('S'|'s')('E'|'e')('S'|'s');
+
 Simult : ('S'|'s')('I'|'i')('M'|'m')('U'|'u')('L'|'l')('T'|'t');
 
 Struct : ('S'|'s')('T'|'t')('R'|'r')('U'|'u')('C'|'c')('T'|'t');
+
+Timeof : ('T'|'t')('I'|'i')('M'|'m')('E'|'e')('O'|'o')('F'|'f');
+
+Within : ('W'|'w')('I'|'i')('T'|'t')('H'|'h')('I'|'i')('N'|'n');
 
 Const : ('C'|'c')('O'|'o')('N'|'n')('S'|'s')('T'|'t');
 
@@ -80,19 +116,31 @@ False : ('F'|'f')('A'|'a')('L'|'l')('S'|'s')('E'|'e');
 
 Floor : ('F'|'f')('L'|'l')('O'|'o')('O'|'o')('R'|'r');
 
+Holds : ('H'|'h')('O'|'o')('L'|'l')('D'|'d')('S'|'s');
+
 Lemma : ('L'|'l')('E'|'e')('M'|'m')('M'|'m')('A'|'a');
 
 Modes : ('M'|'m')('O'|'o')('D'|'d')('E'|'e')('S'|'s');
+
+Occur : ('O'|'o')('C'|'c')('C'|'c')('U'|'u')('R'|'r');
+
+Times : ('T'|'t')('I'|'i')('M'|'m')('E'|'e')('S'|'s');
 
 KW__CLK : '_'('C'|'c')('L'|'l')('K'|'k');
 
 Bool : ('B'|'b')('O'|'o')('O'|'o')('L'|'l');
 
+Each : ('E'|'e')('A'|'a')('C'|'c')('H'|'h');
+
 Else : ('E'|'e')('L'|'l')('S'|'s')('E'|'e');
+
+Enum : ('E'|'e')('N'|'n')('U'|'u')('M'|'m');
 
 Lift : ('L'|'l')('I'|'i')('F'|'f')('T'|'t');
 
 Node : ('N'|'n')('O'|'o')('D'|'d')('E'|'e');
+
+Over : ('O'|'o')('V'|'v')('E'|'e')('R'|'r');
 
 Prev : ('P'|'p')('R'|'r')('E'|'e')('V'|'v');
 
@@ -102,13 +150,21 @@ Then : ('T'|'t')('H'|'h')('E'|'e')('N'|'n');
 
 This : ('T'|'t')('H'|'h')('I'|'i')('S'|'s');
 
+Time : ('T'|'t')('I'|'i')('M'|'m')('E'|'e');
+
 True : ('T'|'t')('R'|'r')('U'|'u')('E'|'e');
 
 Type : ('T'|'t')('Y'|'y')('P'|'p')('E'|'e');
 
+When : ('W'|'w')('H'|'h')('E'|'e')('N'|'n');
+
+With : ('W'|'w')('I'|'i')('T'|'t')('H'|'h');
+
 PlusSignEqualsSignGreaterThanSign : '+''=''>';
 
 LessThanSignEqualsSignGreaterThanSign : '<''=''>';
+
+IAT : ('I'|'i')('A'|'a')('T'|'t');
 
 And : ('A'|'a')('N'|'n')('D'|'d');
 
@@ -187,6 +243,8 @@ GreaterThanSign : '>';
 LeftSquareBracket : '[';
 
 RightSquareBracket : ']';
+
+CircumflexAccent : '^';
 
 LeftCurlyBracket : '{';
 

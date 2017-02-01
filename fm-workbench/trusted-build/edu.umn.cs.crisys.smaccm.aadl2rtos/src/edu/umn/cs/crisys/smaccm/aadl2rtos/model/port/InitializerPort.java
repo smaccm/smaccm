@@ -6,7 +6,7 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.model.port;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IntType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.Type;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
+//import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.UnitType;
 
 /**
  * @author Whalen

@@ -1,0 +1,115 @@
+-- AADL example for shared data.
+
+package test16
+public 
+   with Base_Types;
+   with SMACCM_SYS;   
+   with Data_Model;
+
+
+data a_array
+  
+end a_array;
+
+
+data implementation a_array.impl
+  properties
+    Data_Model::Data_Representation => Array;
+    Data_Model::Base_Type => (classifier (Base_Types::Unsigned_8));
+    Data_Model::Dimension => (255);
+end a_array.impl;
+
+data a_struct_wrapper
+  properties
+    Data_Model::Data_Representation => Struct;
+end a_struct_wrapper;
+
+data implementation a_struct_wrapper.impl
+  subcomponents
+    f : data a_array.impl;
+end a_struct_wrapper.impl;
+
+-- Example of a periodically dispatched "Active" thread.   
+thread sender
+	features
+		buff1 : requires data access a_struct_wrapper.impl
+		{
+			Access_Right => READ_WRITE;
+		}; 
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Period => 250 ms;
+		Source_Text => ("user_code/user_sender.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end sender ; 
+
+-- Example of a periodically dispatched "Active" thread.   
+thread receiver
+	features
+		buff2 : requires data access a_struct_wrapper.impl 
+		{
+			Access_Right => READ_WRITE;
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    SMACCM_SYS::Thread_Type => Active ;
+	    Period => 1000 ms;
+		Source_Text => ("user_code/user_receiver.c");
+	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
+	    Priority => 8;
+	    Stack_Size => 256 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    SMACCM_SYS::Sends_Events_To => "{{}}";
+end receiver ; 
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+		r: thread receiver;
+		shared: data a_struct_wrapper.impl {
+			SMACCM_SYS::CAmkES_Owner_Thread => "sender";
+		};
+	connections
+		conn1: data access shared -> s.buff1;
+		conn2: data access shared -> r.buff2;
+end proc.Impl;
+
+system test
+end test;
+
+system implementation test.camkes
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => CAmkES;
+		SMACCM_SYS::HW => QEMU;
+end test.camkes;
+
+system implementation test.echronos
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => echronos;
+		SMACCM_SYS::HW => QEMU;
+end test.echronos;
+
+system implementation test.vxworks
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => VxWorks;
+		SMACCM_SYS::HW => QEMU;
+end test.vxworks;
+
+end test16;

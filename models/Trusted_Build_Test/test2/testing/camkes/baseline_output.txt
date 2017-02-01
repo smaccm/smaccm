@@ -1,0 +1,389 @@
+
+
+ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
+
+  paddr=[82000000..8211801f]
+
+ELF-loading image 'kernel'
+
+  paddr=[80000000..80033fff]
+
+  vaddr=[f0000000..f0033fff]
+
+  virt_entry=f0000000
+
+ELF-loading image 'capdl-loader-experimental'
+
+  paddr=[80034000..8031cfff]
+
+  vaddr=[8000..2f0fff]
+
+  virt_entry=e204
+
+Enabling MMU and paging
+
+Jumping to kernel-image entry point...
+
+
+Bootstrapping kernel
+
+sender: periodic dispatch received at time: 104000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 204000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 304000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 404000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 504000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 604000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 704000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 804000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 904000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1004000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1104000.  Writing to receiver. 
+a
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1204000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1304000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1404000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1504000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1604000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1704000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1804000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 1904000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2004000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2104000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2204000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2304000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2404000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2504000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2604000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2704000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2804000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 2904000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3004000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3104000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3204000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3304000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3404000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3504000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3604000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3704000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3804000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 3904000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4004000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4104000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4204000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4304000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4404000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4504000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4604000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4704000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4804000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 4904000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5004000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5104000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5204000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5304000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5404000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5504000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5604000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5704000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5804000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 5904000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+
+sender: periodic dispatch received at time: 6004000.  Writing to receiver. 
+
+sender: second attempt at pinging receiver was: 0
+
+receiver ping received (1.000000, 2.000000)
+

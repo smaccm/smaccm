@@ -31,7 +31,6 @@ process main
   	--bounds frequency for can messages
   	const CAN_PERIOD : real = 100.0;
 
-  	eq time : real;
   	eq next_time : real;
   	eq control_mode : int;
   	  	
@@ -473,9 +472,9 @@ thread control_law_t
         thr_mode = 0;
         autothr_source = 0;
         stab_source = 0;
-        head_source = 0;
-        time = 0
-		};
+        tstamp = 0;
+        head_source = 0
+		}; 
   
   	eq ui_source_mavlink : bool = false ->
   	  mav_law.set_ui_mavlink and ppm_law.set_ui_mavlink;
@@ -683,7 +682,6 @@ thread motmix_t
     motors : out event data port software_types::motors_data.impl;
     control_in : in event data port software_types::controloutput.impl;
     control_law_in : in event data port software_types::control_law.impl;
-    time : in data port Base_Types::Float;
   
   properties
     SMACCM::Language => "Ivory";

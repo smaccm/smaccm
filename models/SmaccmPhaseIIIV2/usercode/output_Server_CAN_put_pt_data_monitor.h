@@ -80,6 +80,7 @@ extern "C" {
 #include "xyz_calibration_types.h"
 #include "xyz_types.h"
 #include "yaw_mode_types.h"
+#include "smaccm_Server.h"
 void callback_output_Server_CAN_put_pt_data_2(const uint8_t n_var0[80U]);
 
 #ifdef __cplusplus

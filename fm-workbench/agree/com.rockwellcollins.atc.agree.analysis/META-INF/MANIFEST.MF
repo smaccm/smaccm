@@ -20,7 +20,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  dependencies/jkind-api.jar,
- dependencies/jxl.jar
+ dependencies/jxl.jar,
+ dependencies/antlr-runtime-4.4.jar
 Import-Package: 
  org.osate.aadl2.instantiation,
  org.osate.annexsupport
@@ -28,16 +29,19 @@ Export-Package: com.rockwellcollins.atc.agree.analysis,
  com.rockwellcollins.atc.agree.analysis.ast,
  com.rockwellcollins.atc.agree.analysis.extentions,
  com.rockwellcollins.atc.agree.analysis.handlers,
+ com.rockwellcollins.atc.agree.analysis.lustre.visitors,
  com.rockwellcollins.atc.agree.analysis.preferences,
  com.rockwellcollins.atc.agree.analysis.translation,
  com.rockwellcollins.atc.agree.analysis.views,
  jkind,
  jkind.api,
  jkind.api.results,
- jkind.api.workarounds,
+ jkind.api.ui.results,
  jkind.lustre,
  jkind.lustre.builders,
  jkind.lustre.values,
  jkind.lustre.visitors,
  jkind.results,
+ jkind.results.layout,
+ jkind.translation,
  jkind.util

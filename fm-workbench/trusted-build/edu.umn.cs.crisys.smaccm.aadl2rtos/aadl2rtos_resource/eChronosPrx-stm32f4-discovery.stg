@@ -15,11 +15,11 @@ prxBody(model) ::= <<
       </trampolines>
     </module>
     <module name="armv7m.vectable">
-      <flash_load_addr>0x8000000</flash_load_addr>
+      <flash_load_addr>$if(model.eChronosFlashLoadAddress)$ $model.eChronosFlashLoadAddress$ $else$ 0x8000000 $endif$ </flash_load_addr>
       <preemption>true</preemption>
        $writeInterruptHandlers(model)$
     </module>
-    <module name="armv7m.semihost-debug" />
+    <module name="stub.debug" />
     <module name="generic.debug" />
 
     <module name="armv7m.rtos-kochab">
@@ -29,28 +29,28 @@ prxBody(model) ::= <<
       <api_asserts>true</api_asserts>
       <internal_asserts>true</internal_asserts>
       <fatal_error>fatal</fatal_error>
-      
+
       <signal_labels>
         <signal_label>
           <name>$model.eChronosDispatchSignal$</name>
         </signal_label>
-      	$writeSignalLabels(model)$
+          $writeSignalLabels(model)$
       </signal_labels>
-      
+
       <tasks>
-      	$writeTasks(model)$
+          $writeTasks(model)$
       </tasks>
-      
+
       <mutexes>
-      	$writeMutexes(model)$
+          $writeMutexes(model)$
       </mutexes>
-      
+
       <semaphores>
-      	$writeSemaphores(model)$
+          $writeSemaphores(model)$
       </semaphores>
-      
+
       <interrupt_events>
-      	$writeInterruptEvents(model)$
+          $writeInterruptEvents(model)$
       </interrupt_events>
 
       <!-- MWW: What is this for?!? -->
@@ -60,8 +60,8 @@ prxBody(model) ::= <<
 
     </module>
 $if(model.eChronosGenerateCModules)$
-	$writeCodeModules(model)$
-$endif$    
+    $writeCodeModules(model)$
+$endif$
   </modules>
 </system>
 

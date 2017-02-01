@@ -37,6 +37,10 @@ public class DispatchableInputPort extends InputPort {
     return externalHandlerList;
   }
 
+  public boolean getHasHandler() {
+	  return !getExternalHandlerList().isEmpty();
+  }
+  
   public void setExternalHandlerList(List<ExternalHandler> externalHandlerList) {
     this.externalHandlerList = externalHandlerList;
   }

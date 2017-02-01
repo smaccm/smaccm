@@ -1,0 +1,296 @@
+
+ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
+  paddr=[82000000..8211401f]
+ELF-loading image 'kernel'
+  paddr=[80000000..80033fff]
+  vaddr=[f0000000..f0033fff]
+  virt_entry=f0000000
+ELF-loading image 'capdl-loader-experimental'
+  paddr=[80034000..80319fff]
+  vaddr=[8000..2edfff]
+  virt_entry=e204
+Enabling MMU and paging
+Jumping to kernel-image entry point...
+
+Bootstrapping kernel
+sender ping received (100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (1900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (2900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (3900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (4900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (5900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6602000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (6900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (7900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (8900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (9900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (10900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (11900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (12900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13000000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13100000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13200000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13300000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13400000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13500000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13600000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13700000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13800000).  Writing to receiver 
+receiver ping received. 
+sender ping received (13900000).  Writing to receiver 
+receiver ping received. 
+sender ping received (14000000).  Writing to receiver 
+receiver ping received. 
+

@@ -40,7 +40,7 @@ Definition:
 
 Type:
 	{SetType} '{' type=Type '}'
-|	BaseType
+|	BaseType ('<' paramType=Type '>')?
 ;
 
 BaseType:
@@ -86,6 +86,8 @@ BaseType:
          | 'subprogram_group_access'
          | 'provides_subprogram_group_access'
          | 'requires_subprogram_group_access'
+         | 'flow_specification'
+         | 'end_to_end_flow'
          );
 
 //Arg types are used for functions, claims, and quantifiers
@@ -185,16 +187,36 @@ BuiltInFn:
 // Primary type: aadl
 	'has_property'
 |	'property'
+|	'property_member'
 |	'has_parent'
 |	'parent'
 |	'name'
 |	'type'
 |	'has_type'
+|	'is_in_array'
+|	'has_prototypes'
+|	'has_modes'
+
+|	'is_processor'
+|	'is_virtual_processor'
+|	'is_system'
+|	'is_bus'
+|	'is_virtual_bus'
+|	'is_device'
+|	'is_memory'
+|	'is_thread'
+|	'is_process'
+|	'is_data'
+
+|	'is_subprogram'
 |   'is_of_type'
 |   'is_bound_to'
 |	'has_member'
 |   'features'
 |	'connections'
+
+// Primary type: property
+|   'enumerated_values'
 
 // Primary type: component
 |	'subcomponents'
@@ -206,6 +228,10 @@ BuiltInFn:
 // Primary type: feature
 |	'direction'
 |	'is_event_port'
+|	'is_abstract_feature'
+|	'is_data_port'
+|	'is_port'
+|	'is_data_access'
 
 // Primary type: range
 |	'lower_bound'
@@ -222,6 +248,7 @@ BuiltInFn:
 // Other
 |	'instance'
 |	'instances'
+|	'debug'
 |	'analysis'
 
 // Error Annex
@@ -229,6 +256,12 @@ BuiltInFn:
 |	'contain_error'           // the component contain the error
 |	'propagate_error'         // the component propagate an error
 |   'error_state_reachable'   // the error state is reachable
+
+|   'flow_source'
+|   'flow_destination'
+|   'flow_elements'
+|   'flow_specifications'
+|   'end_to_end_flows'
 ;
 
 RealTerm returns aadl2::RealLiteral:

@@ -10,7 +10,7 @@ void clock_start_timer(void);
 void clock_irq_callback(void);
 uint64_t clock_get_time();
 /* pixhawk only */
-void clock_set_cpu_rate_in_hz(uint64_t rate); 
+void clock_set_cpu_rate_in_hz(uint64_t rate);
 
 
 #endif

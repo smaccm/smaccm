@@ -47,49 +47,49 @@ uint32_t the_interval = 0;
 
 void clock_init()
 {
-	REG_VAL(KZM_EPIT_CTRL_ADDR) = 0;
+    REG_VAL(KZM_EPIT_CTRL_ADDR) = 0;
 
-	/* Disable EPIT and reset. */
-	REG_VAL(KZM_EPIT_CTRL_ADDR) = CTRL_SWR;
+    /* Disable EPIT and reset. */
+    REG_VAL(KZM_EPIT_CTRL_ADDR) = CTRL_SWR;
 
-	/* Select Clock source */
-	REG_VAL(KZM_EPIT_CTRL_ADDR) = (CLKSRC_IPG << CTRL_CLKSRC_SHIFT);
+    /* Select Clock source */
+    REG_VAL(KZM_EPIT_CTRL_ADDR) = (CLKSRC_IPG << CTRL_CLKSRC_SHIFT);
 
-	/* Reload from load register */
-	REG_VAL(KZM_EPIT_CTRL_ADDR) |= (CTRL_RLD | CTRL_ENMOD);
+    /* Reload from load register */
+    REG_VAL(KZM_EPIT_CTRL_ADDR) |= (CTRL_RLD | CTRL_ENMOD);
 
-	/* Enable interrupt */
-	REG_VAL(KZM_EPIT_CTRL_ADDR) |= CTRL_OCIEN;
+    /* Enable interrupt */
+    REG_VAL(KZM_EPIT_CTRL_ADDR) |= CTRL_OCIEN;
 
 }
 
 /* Set interrupt interval, in milliseconds. */
 void clock_set_interval_in_ms(uint32_t interval)
 {
-	REG_VAL(KZM_EPIT_LOAD_ADDR) = (IPG_CLK_KHZ * interval) ;
-	REG_VAL(KZM_EPIT_COMP_ADDR) = 0;
-	the_interval = interval;
+    REG_VAL(KZM_EPIT_LOAD_ADDR) = (IPG_CLK_KHZ * interval) ;
+    REG_VAL(KZM_EPIT_COMP_ADDR) = 0;
+    the_interval = interval;
 }
 
 void clock_start_timer(void)
 {
-	ticks = 0;
-	REG_VAL(KZM_EPIT_STAT_ADDR) = 0x1;
+    ticks = 0;
+    REG_VAL(KZM_EPIT_STAT_ADDR) = 0x1;
 
-	/* Enable timer */
-	REG_VAL(KZM_EPIT_CTRL_ADDR) |= CTRL_EN;
+    /* Enable timer */
+    REG_VAL(KZM_EPIT_CTRL_ADDR) |= CTRL_EN;
 }
 
 void clock_irq_callback(void)
 {
-	/* Clear status bit. */
-	REG_VAL(KZM_EPIT_STAT_ADDR) = 0x1;
+    /* Clear status bit. */
+    REG_VAL(KZM_EPIT_STAT_ADDR) = 0x1;
 
-	ticks++;
+    ticks++;
 }
 
 
 uint64_t clock_get_time()
 {
-	return ticks*((uint64_t)the_interval) ;
+    return ticks*((uint64_t)the_interval) ;
 }

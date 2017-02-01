@@ -1,0 +1,17 @@
+import <SMACCM_DATA__UART_Packet_i_writer.idl4>;
+import <bool_writer.idl4>;
+
+component uart {
+    control;
+
+    // AADL interface
+    include "tb_smaccmcopter_types.h";
+    uses SMACCM_DATA__UART_Packet_i_writer self2decrypt;
+    provides SMACCM_DATA__UART_Packet_i_writer encrypt2self;
+    uses bool_writer self2encrypt;
+
+    // Internal interface
+    dataport Buf            vaddr;
+    consumes DataAvailable  interrupt;
+    has semaphore           read_sem;
+}

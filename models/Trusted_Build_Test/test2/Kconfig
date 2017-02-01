@@ -1,6 +1,6 @@
 config APP_TEST2
-    bool "AADL Test 2: active -> passive threads using struct send"
+    bool "test2 (from AADL)"
     default n
     select APP_CAMKES_EXECUTIVE
     help
-        AADL Test 2: active -> passive threads using struct send. 
+        test2 (from AADL).

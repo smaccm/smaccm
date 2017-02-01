@@ -22,7 +22,7 @@
             /*- set instance = c.from_instance.name -*/
             /*- set interface = c.from_interface.name -*/
             /*- include 'global-endpoint.template.c' -*/
-            /*- set aep = pop('aep') -*/
+            /*- set notification = pop('notification') -*/
             /*- set _badge = [] -*/
             /*- set _mac = [] -*/
             /*- for s in configuration.settings -*/
@@ -40,7 +40,7 @@
             /*- set badge = _badge.pop() -*/
             /*- set mac = _mac.pop() -*/
             void /*? me.to_interface.name ?*/_emit_/*? badge ?*/(void) {
-                seL4_Notify(/*? aep ?*/, 0);
+                seL4_Signal(/*? notification ?*/, 0);
             }
             /*- do badges.append(badge) -*/
             /*- do macs.append( (badge, mac) ) -*/

@@ -1,0 +1,18 @@
+import <VchanInterface.idl4>;
+import <SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4>;
+
+component VM_shim {
+    control;
+
+    // AADL interface
+    include <tb_smaccmcopter_types.h>;
+    uses SMACCM_DATA__Camera_Bounding_Box_i_writer self2server;
+    provides bool_writer server2self_reboot;
+
+    // Internal interface
+    include "sel4vchan/vchan_sharemem.h";
+    dataport vchan_headers_t share_mem;
+    uses VchanInterface vchan_con;
+    consumes VchanEvent vevent;
+    emits restart restart_vm;
+}

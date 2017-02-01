@@ -275,6 +275,11 @@ system Microwave_Control
 		right_digit : out data port Base_Types::Integer; 
 					
 	annex agree {** 
+<<<<<<< HEAD
+			
+		eq ctime : int = (left_digit * 60) + (middle_digit * 10) + right_digit;
+=======
+>>>>>>> develop
 		
 		guarantee "heating_element_on implies door_closed_sensor" : 
 			true ;  
@@ -283,7 +288,11 @@ system Microwave_Control
 			true; 
 					
 		guarantee "time to cook = 0 implies heating_element_off" : 
+<<<<<<< HEAD
+			ctime = 0 => not heating_element_on; 
+=======
 			true; 
+>>>>>>> develop
 		
 			
 	**};	

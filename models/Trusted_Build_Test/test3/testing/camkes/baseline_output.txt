@@ -1,0 +1,81 @@
+
+ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
+  paddr=[82000000..820e001f]
+ELF-loading image 'kernel'
+  paddr=[80000000..80033fff]
+  vaddr=[f0000000..f0033fff]
+  virt_entry=f0000000
+ELF-loading image 'capdl-loader-experimental'
+  paddr=[80034000..802e7fff]
+  vaddr=[8000..2bbfff]
+  virt_entry=e204
+Enabling MMU and paging
+Jumping to kernel-image entry point...
+
+Bootstrapping kernel
+sender: periodic dispatch received at time: 1002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 2002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 3002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 4002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 5002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 6002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 7002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 8002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 9002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 10002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 11002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 12002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+sender: periodic dispatch received at time: 13002000.  Writing to receiver. 
+sender: sending array: (0, 1, 2, 3) to receiver 
+sender: first attempt at pinging receiver was: 1. 
+sender: second attempt at pinging receiver was: 0. 
+receiver: ping received (0, 1, 2, 3)
+qemu: terminating on signal 15 from pid 24541

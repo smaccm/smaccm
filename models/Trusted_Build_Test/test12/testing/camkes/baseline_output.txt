@@ -1,0 +1,218 @@
+
+ELF-loader started on CPU: ARM Ltd. ARMv6 Part: 0xb36 r1p3
+  paddr=[82000000..8211401f]
+ELF-loading image 'kernel'
+  paddr=[80000000..80033fff]
+  vaddr=[f0000000..f0033fff]
+  virt_entry=f0000000
+ELF-loading image 'capdl-loader-experimental'
+  paddr=[80034000..80318fff]
+  vaddr=[8000..2ecfff]
+  virt_entry=e204
+Enabling MMU and paging
+Jumping to kernel-image entry point...
+
+Bootstrapping kernel
+receiver: periodic dispatch received at time: 504000 
+receiver: queue emptied.
+sender: periodic dispatch received (510000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (1004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 1504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (1506000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (2004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 2504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (2506000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (3004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 3504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (3508000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (4004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 4504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (4506000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (5004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 5504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (5508000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (6004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 6504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (6506000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (7004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 7504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (7510000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (8004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 8504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (8508000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (9004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 9504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (9506000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (10004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 10504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (10514000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (11004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 11504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (11506000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (12004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 12504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (12506000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (13004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 13504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (13508000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+sender: periodic dispatch received (14004000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+receiver: periodic dispatch received at time: 14504000 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: data received: (0, 1, 2, 3) 
+receiver: queue emptied.
+sender: periodic dispatch received (14508000).  Writing to receiver 
+sender: sending test data: (0, 1, 2, 3) to receiver 
+first attempt at pinging receiver was: 1. 
+second attempt at pinging receiver was: 1. 
+

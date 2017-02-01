@@ -78,11 +78,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
 	@Override
 	public ResoluteValue caseFailExpr(FailExpr object) {
-		if (object.getVal() != null || object.getFailmsg() != null) {
-			return FALSE;
-		} else {
-			throw new ResoluteFailException("Fail Statement Reached", object);
-		}
+		throw new ResoluteFailException("Failure: ", object);
 	}
 
 	@Override
@@ -102,12 +98,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		// Short circuit ops first
 		ResoluteValue leftValue = doSwitch(object.getLeft());
 		switch (op) {
+
+			
 		case "and":
 			if (leftValue.getBool()) {
 				return doSwitch(object.getRight());
 			} else {
 				return FALSE;
-			}
+			}			
 
 		case "or":
 			if (leftValue.getBool()) {
@@ -367,7 +365,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	public List<ResoluteValue> getArgSet(Arg arg) {
 		if (arg instanceof QuantArg) {
 			QuantArg quantArg = (QuantArg) arg;
-			return doSwitch(quantArg.getExpr()).getSet();
+			ResoluteValue val = doSwitch(quantArg.getExpr());
+			if(val.isSet()){
+				return val.getSet();
+			}
+			List<ResoluteValue> list = new ArrayList<>();
+			list.add(val);
+			return list;
 		} else {
 			List<ResoluteValue> values = new ArrayList<ResoluteValue>();
 			BaseType type = (BaseType) arg.getType();

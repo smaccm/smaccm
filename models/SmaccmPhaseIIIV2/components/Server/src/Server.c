@@ -31,7 +31,8 @@ void component_entry_aux(void)
 {
     uint8_t n_local0[80U] = {};
     uint8_t *n_ref1 = n_local0;
-    bool n_r2 = UART_in_Server_get_pt_data(n_ref1);
+    //bool n_r2 = UART_in_Server_get_pt_data(n_ref1);
+    bool n_r2 = Server_read_get_input(n_ref1);
     
     if (n_r2) {
         callback_input_UART_in_Server_get_pt_data_handler(n_ref1);
@@ -43,7 +44,8 @@ void component_entry_aux_2(void)
 {
     uint8_t n_local0[80U] = {};
     uint8_t *n_ref1 = n_local0;
-    bool n_r2 = CAN_Server_get_pt_data(n_ref1);
+    //bool n_r2 = CAN_Server_get_pt_data(n_ref1);
+    bool n_r2 = Server_read_get_can(n_ref1);
     
     if (n_r2) {
         callback_input_CAN_Server_get_pt_data_handler(n_ref1);
@@ -53,9 +55,13 @@ void component_entry_aux_2(void)
 
 void component_entry_aux_3(void)
 {
-    struct camera_data n_local0 = {};
-    struct camera_data *n_ref1 = &n_local0;
-    bool n_r2 = Camera_VM_Server_get_camera_data(n_ref1);
+    //struct camera_data n_local0 = {};
+    //struct camera_data *n_ref1 = &n_local0;
+    //bool n_r2 = Camera_VM_Server_get_camera_data(n_ref1);
+
+    struct SMACCM_DATA__camera_data_i n_local0 = {};
+    struct  SMACCM_DATA__camera_data_i *n_ref1 = &n_local0;
+    bool n_r2 = Server_read_camera_data(n_ref1);
     
     if (n_r2) {
         callback_input_Camera_VM_Server_get_camera_data_handler(n_ref1);
