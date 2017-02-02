@@ -87,8 +87,7 @@ public class TypeNames implements NameEmitter {
    * 
    */ 
   public boolean isNativePointerArg() {
-	    return (t_structural instanceof PointerType) || 
-	           (t_structural instanceof ArrayType);
+	    return (t_structural instanceof PointerType);
 	  }
   
   public TypeNames getAadlOutputType() { 
@@ -226,7 +225,7 @@ public class TypeNames implements NameEmitter {
 //  }
 
   public String getReaderWriterInterfaceName() {
-    return t.getCType().typeString() + "_writer";
+    return t.getCType().typeString()+"_writer";
   }    
 
   public String getReaderWriterIdlFileName() {

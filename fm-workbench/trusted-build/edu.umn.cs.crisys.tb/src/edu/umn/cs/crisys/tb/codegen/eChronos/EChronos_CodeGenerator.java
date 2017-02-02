@@ -7,6 +7,7 @@ import java.util.Set;
 import edu.umn.cs.crisys.tb.Logger;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.CodeGeneratorBase;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadCalendarNames;
 import edu.umn.cs.crisys.tb.model.OSModel;
@@ -16,6 +17,7 @@ import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
+import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
@@ -159,4 +161,10 @@ public class EChronos_CodeGenerator extends CodeGeneratorBase {
     }
     return rwTypeSet ; 
   }
+
+@Override
+protected void osSpecificPortComponentFiles(PortFeature pf, PortEmitter pe, File componentDirectory) {
+	// TODO Auto-generated method stub
+	
+}
 }

@@ -11,9 +11,7 @@ import java.util.Map;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
-import antlr.Utils;
 import edu.umn.cs.crisys.tb.util.*;
-import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
@@ -21,14 +19,12 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
-import edu.umn.cs.crisys.tb.codegen.linux.LinuxUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.OSModel.OSTarget;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
-import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.type.Type;
 
@@ -54,7 +50,7 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
               pf instanceof OutputDataPort); 
       
       OSModel model = Util.getElementOSModel(pf);
-      OSModel.OSTarget target = model.getOsTarget();
+
 
       // no fan-in!
       if (pf instanceof InputDataPort &&
@@ -283,6 +279,24 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
       return connections;
    }
 
+@Override
+public void getWriteCamkesPortComponents(File componentsDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void getWriteCamkesPortIdls(File interfacesDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public List<String> getCamkesAddComponentPortImports() {
+  // TODO Auto-generated method stub
+  return null;
+}
+
    // We do not allow "fan in" on mailboxes or my simple port type.
    public PortEmitter getSourcePort() {
       if (getIsOutputPort()) { return this; }
@@ -292,4 +306,16 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
                EmitterFactory.port(this.dataPort.getConnections().get(0).getSourcePort());
       }
    }
+
+  @Override
+  public String getCamkesAddPreInitStatements() {
+    // TODO Auto-generated method stub
+    return "";
+  }
+
+  @Override
+  public String getCamkesAddAssemblyFileCompositionPortConnections() {
+    // TODO Auto-generated method stub
+    return "";
+  }
 }

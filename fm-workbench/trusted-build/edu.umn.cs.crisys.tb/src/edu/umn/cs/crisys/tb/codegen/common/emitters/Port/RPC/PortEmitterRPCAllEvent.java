@@ -1,6 +1,7 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,24 +12,18 @@ import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.VxWorks.VxWorksUtil;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
-import edu.umn.cs.crisys.tb.codegen.common.names.ExternalHandlerNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.codegen.eChronos.EChronosUtil;
 import edu.umn.cs.crisys.tb.codegen.linux.LinuxUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
-import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
-import edu.umn.cs.crisys.tb.model.port.InputDataPort;
 import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
-import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
@@ -92,7 +87,6 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    @Override
    public String getWritePortHPrototypes() {
       String result = ""; 
-      
       ST st; 
       PortFeature p = getModelElement();
       if (p instanceof OutputEventPort) {
@@ -370,7 +364,8 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
    }
 
    private String addComponentOutputDataDeclarations() {
-      ST st = getTemplateST("outputPortDeclarations"); 
+      ST st = getTemplateST("outputPortDeclarations");
+      PortConnectionEmitter x = this.getConnections().get(0);
       st.add("port", this);
       return st.render();
    }
@@ -386,6 +381,18 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       } else {
          throw new TbException("RPCEventDataPortEmitter::addComponentPortLevelDeclarations: event data port emitter used with non-event data port class: " + pf.getName());
       }
+   }
+   
+   @Override
+   public void getWriteCamkesPortComponents(File componentsDirectory) {
+   	// TODO Auto-generated method stub
+   	
+   }
+
+   @Override
+   public void getWriteCamkesPortIdls(File interfacesDirectory) {
+   	// TODO Auto-generated method stub
+   	
    }
 
    public String addAssemblyConnection(PortConnection conn, OSModel model) {
@@ -542,5 +549,24 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
       }
       return pcl;
    }
+
+  @Override
+  public List<String> getCamkesAddComponentPortImports() {
+    List<String> list = new LinkedList<String>();
+    list.add(port.getType() + "_writer.idl4");
+    return list;
+  }
+
+  @Override
+  public String getCamkesAddPreInitStatements() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getCamkesAddAssemblyFileCompositionPortConnections() {
+    // TODO Auto-generated method stub
+    return "";
+  }
 
 }

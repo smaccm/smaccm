@@ -33,7 +33,7 @@ filePrefix(name, date, path) ::= <<
 >>
 
 writeExternal(string) ::= <<
-#include "<string>"
+#include <\u003C>string<\u003E>
 
 >>
 

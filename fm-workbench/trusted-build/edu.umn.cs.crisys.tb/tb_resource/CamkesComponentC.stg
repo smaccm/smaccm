@@ -7,7 +7,15 @@ import "CommonComponentC.stg"
 // Import does not override earlier definitions!  Why?
 // import "CamkesCNames.stg"
 
+osSpecificThreadInitializer(threadImpl) ::= <<
+void pre_init(void) {
 
+<threadImpl.inputPortList:{ port | 
+    // Pre-initialization statements for <port.name>
+<port.camkesAddPreInitStatements>
+}>
+}
+>>
 osSpecificThreadEntrypoint(threadImpl) ::= "int run(void)"
 osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
 

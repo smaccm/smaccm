@@ -1,6 +1,7 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -403,6 +404,37 @@ public class PortEmitterInputPeriodic extends DispatchableInputPortCommon implem
    public String getIrqComponent() {
       return getName() + "_hw"; 
    }
+
+@Override
+public void getWriteCamkesPortComponents(File componentsDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void getWriteCamkesPortIdls(File interfacesDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public List<String> getCamkesAddComponentPortImports() {
+  List<String> list = new LinkedList<String>();
+  list.add(port.getType() + "_writer.idl4");
+  return list;
+}
+
+@Override
+public String getCamkesAddPreInitStatements() {
+  // TODO Auto-generated method stub
+  return "";
+}
+
+@Override
+public String getCamkesAddAssemblyFileCompositionPortConnections() {
+  // TODO Auto-generated method stub
+  return "";
+}
 
 
 }

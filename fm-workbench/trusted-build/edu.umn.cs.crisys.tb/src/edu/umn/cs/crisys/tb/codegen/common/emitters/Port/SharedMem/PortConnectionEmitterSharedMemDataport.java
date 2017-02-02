@@ -98,4 +98,9 @@ public class PortConnectionEmitterSharedMemDataport implements PortConnectionEmi
       return c.getSourcePort().getQualifiedName() + "_" + c.getDestPort().getQualifiedName();
    }
 
+  @Override
+  public int getConnectionID() {
+    return c.getConnectionID();
+  }
+
 }

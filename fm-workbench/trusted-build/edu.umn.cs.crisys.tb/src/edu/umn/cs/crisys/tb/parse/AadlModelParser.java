@@ -411,9 +411,7 @@ public class AadlModelParser {
       }
    }
 
-   InputEventPort addInputEventPort(PortImpl port, Type datatype, ThreadImplementation ti) {
-      int queueSize = PropertyUtil.getQueueSize(port); 
-      InputEventPort iep = new InputEventPort(port.getName(), datatype, ti, queueSize);
+   void addExtHandlersAndOptSendStrings(DispatchableInputPort dpi, PortImpl port, ThreadImplementation ti) {
 
       List<String> entrypoints = PropertyUtil.getComputeEntrypointList(port);
       if (entrypoints != null) {
@@ -424,15 +422,14 @@ public class AadlModelParser {
          }
          List<String> files = Util.getSourceTextListOpt(port,PropertyUtil.SOURCE_TEXT);
          String sendsEventsTo = Util.getStringValueOpt(port, PropertyUtil.TB_SYS_SENDS_EVENTS_TO);
-         iep.setExternalHandlerList(ehl);
-         iep.setOptSendsEventsToString(sendsEventsTo);
+         dpi.setExternalHandlerList(ehl);
+         dpi.setOptSendsEventsToString(sendsEventsTo);
          if (files != null) {
-            iep.setImplementationFileList(files);
+            dpi.setImplementationFileList(files);
          }
       } else {
-         logger.warn("Warning: event port: " + port.getName() + " in thread: " + ti.getName() + " does not have a compute entrypoint and will not be dispatched.");
+         logger.warn("Warning: port: " + port.getName() + " in thread: " + ti.getName() + " does not have a compute entrypoint and will not be dispatched.");
       }
-      return iep;
    }
 
    void addPort(PortImpl port, ThreadImplementation ti) {
@@ -445,6 +442,7 @@ public class AadlModelParser {
       if (port.getCategory() == PortCategory.DATA) {
          if (port.getDirection() == DirectionType.IN) {
             dp = new InputDataPort(port.getName(), datatype, ti);
+            addExtHandlersAndOptSendStrings((DispatchableInputPort)dp,port,ti);
          } else {
             dp = new OutputDataPort(port.getName(), datatype, ti);
          }
@@ -454,7 +452,9 @@ public class AadlModelParser {
             if (PropertyUtil.getIsIsr(port)) {
                throw new TbException("ISR ports must be event-data ports with type Base_Types::Integer_64.");
             } else {
-               dp = addInputEventPort(port, new UnitType(), ti);
+              int queueSize = PropertyUtil.getQueueSize(port); 
+              dp = new InputEventPort(port.getName(), new UnitType(), ti, queueSize);
+              addExtHandlersAndOptSendStrings((DispatchableInputPort)dp,port,ti);
             }
          } else {
             dp = new OutputEventPort(port.getName(), new UnitType(), ti);
@@ -468,7 +468,9 @@ public class AadlModelParser {
                   throw new TbException("ISR ports must be event-data ports with type Base_Types::Integer_64.");
                }
             } else {
-               dp = addInputEventPort(port, datatype, ti);
+              int queueSize = PropertyUtil.getQueueSize(port); 
+              dp = new InputEventPort(port.getName(), datatype, ti, queueSize);
+              addExtHandlersAndOptSendStrings((DispatchableInputPort)dp,port,ti);
             }
          } else {
             dp = new OutputEventPort(port.getName(), datatype, ti);

@@ -394,4 +394,40 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
       return getPrefix() + "_occurred_" + getName(); 
    }
 
+@Override
+public void getWriteCamkesPortComponents(File componentsDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+
+@Override
+public void getWriteCamkesPortIdls(File interfacesDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+
+@Override
+public List<String> getCamkesAddComponentPortImports() {
+  // TODO Auto-generated method stub
+  return null;
+}
+
+
+
+@Override
+public String getCamkesAddPreInitStatements() {
+  // TODO Auto-generated method stub
+  return "";
+}
+
+@Override
+public String getCamkesAddAssemblyFileCompositionPortConnections() {
+  // TODO Auto-generated method stub
+  return "";
+}
+
 }

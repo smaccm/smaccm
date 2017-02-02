@@ -34,8 +34,7 @@ component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatche
 
 assemblyThreadImplementationImports(threadImpl) ::= <<
 import "<threadImpl.rootToCamkesComponentFilePath>";
-<threadImpl.portList: {port | <port.camkesAddAssemblyFilePortDeclarations>
-} >
+<threadImpl.portList: {port | <port.camkesAddAssemblyFilePortDeclarations>} >
 
 >>
 
@@ -129,6 +128,11 @@ portDeclarations(threadImpl) ::= <<
 }>
 >>
 
+portConnections(threadImpl) ::= <<
+<threadImpl.portList:{port | <port.camkesAddAssemblyFileCompositionPortConnections>
+}>
+>>
+
 configurePorts(threadImpl) ::= <<
 <threadImpl.portList:{port | <port.camkesAddAssemblyFileConfigDeclarations>
 }>
@@ -190,6 +194,7 @@ import \<TimeServer/TimeServer.camkes>;
 <model.threadImplementations:assemblyThreadImplementationImports()>
 
 <\\>
+
 // 12/12 MWW modified for CaMKes-next
 connector seL4RPCCallDataport {
     from Procedure template "seL4RPCCallDataport-from.template.c";
@@ -232,9 +237,12 @@ assembly {
         <commentIf("Component instances for all AADL-defined threads",
                    (model.threadImplementations:assemblyThreadComponent()))><\\>
 
-        <commentIf("Port declarations and connections for active threads",
+        <commentIf("Port declarations for active threads",
                    (model.activeThreadImplementations:portDeclarations()))><\\>
-        
+                   
+        <commentIf("Port connections for active threads",
+                   (model.activeThreadImplementations:portConnections()))><\\>
+                   
         <commentIf("Direct RPC connections",
                    (model.threadImplementations:assemblyConnectRpgs(model)))><\\>
 

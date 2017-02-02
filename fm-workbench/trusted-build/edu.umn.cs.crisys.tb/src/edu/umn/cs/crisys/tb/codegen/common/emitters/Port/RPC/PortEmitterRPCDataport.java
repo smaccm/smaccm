@@ -105,8 +105,6 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    public void getWritePortHFiles(File directory) {
       // No-op for data ports
    }
-
-
    
    public ST getTemplateST(String stName) {
       STGroupFile template = Util.createTemplate("PortEmitterRPCDataport.stg");
@@ -304,6 +302,19 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
     * 
     ************************************************************/
 
+   @Override
+   public void getWriteCamkesPortComponents(File componentsDirectory) {
+   	// TODO Auto-generated method stub
+   	
+   }
+
+   @Override
+   public void getWriteCamkesPortIdls(File interfacesDirectory) {
+   	// TODO Auto-generated method stub
+   	
+   }
+
+   
    private String addComponentInputDataPortDeclarations() {
       String element = 
          "provides " + this.getType().getReaderWriterInterfaceName() + " " + 
@@ -468,7 +479,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    
    public String getLockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return "(void)" + getMutex() + "_lock();" ;
+         return Util.wrapMutexOp(getMutex() + "_lock()");
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          return "rtos_mutex_lock(" + getEChronosMutexConst() + ");";
       } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
@@ -480,7 +491,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
 
    public String getUnlockStmt() {
       if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return "(void)" + getMutex() + "_unlock();" ;
+         return Util.wrapMutexOp(getMutex() + "_unlock()");
       } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
          return "rtos_mutex_unlock(" + getEChronosMutexConst() + ");";
       } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
@@ -501,5 +512,23 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    public final ThreadImplementationNames getThreadImplementation() {
       return EmitterFactory.threadImplementation(this.dataPort.getOwner());
    }
+
+  @Override
+  public List<String> getCamkesAddComponentPortImports() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getCamkesAddPreInitStatements() {
+    // TODO Auto-generated method stub
+    return "";
+  }
+
+  @Override
+  public String getCamkesAddAssemblyFileCompositionPortConnections() {
+    // TODO Auto-generated method stub
+    return "";
+  }
 
 }

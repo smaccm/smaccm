@@ -28,6 +28,8 @@ import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.*;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterListRegistry;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
@@ -143,6 +145,15 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
          createRpcIdlInterface(t); 
       }
    }
+   
+   @Override
+   public void osSpecificComponentFiles(ThreadImplementation ti, 
+         File componentDirectory, 
+         File srcDirectory, File includeDirectory) throws TbFailure {
+      //createDispatchInterface(ti);
+      createComponentCamkesFile(componentDirectory, ti);
+   }
+
 
    public Set<Type> getSharedVariableTypes() {
       // write dispatcher types
@@ -193,14 +204,6 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
             tin.getComponentName(), false, fname);
    }
 
-   @Override
-   public void osSpecificComponentFiles(ThreadImplementation ti, 
-         File componentDirectory, 
-         File srcDirectory, File includeDirectory) throws TbFailure {
-      //createDispatchInterface(ti);
-      createComponentCamkesFile(componentDirectory, ti);
-   }
-
    public void createClockDriver(File srcDirectory, File includeDirectory) throws TbFailure {
 
       String concrete_driver = null; 
@@ -249,6 +252,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
          throw new TbFailure();
       }
    }
+
 
 
    public void createPeriodicDispatcherCFile(File srcDirectory) throws TbFailure {
@@ -388,6 +392,15 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
       }
       return rwTypeSet ; 
    }
+
+@Override
+protected void osSpecificPortComponentFiles(PortFeature pf, PortEmitter pe, File componentDirectory) throws TbFailure {
+	assert(pe instanceof PortEmitterCamkes);
+	PortEmitterCamkes pec = (PortEmitterCamkes)pe;
+	pec.getWriteCamkesPortComponents(componentDirectory);
+	pec.getWriteCamkesPortIdls(interfacesDirectory);
+
+}
 
 }
 

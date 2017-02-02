@@ -11,7 +11,9 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Notification.PortEmitterNotification;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortConnectionEmitterRPCImpl;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCAllEvent;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCAllEventCAmkESMonitor;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCDataport;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCDataportCAmkESMonitor;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem.PortConnectionEmitterSharedMemDataport;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.SharedMem.PortEmitterSharedMemDataport;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special.PortEmitterInitializer;
@@ -49,9 +51,13 @@ public class EmitterFactory {
       // A notification-based event port for Camkes
       if (PortEmitterNotification.isApplicable(dp)) {
          return new PortEmitterNotification(dp);
-      }
+      // Camkes port emitters...
+      } else if (PortEmitterRPCAllEventCAmkESMonitor.isApplicable(dp)) {
+          return new PortEmitterRPCAllEventCAmkESMonitor(dp);
+      } else if (PortEmitterRPCDataportCAmkESMonitor.isApplicable(dp)) {
+        return new PortEmitterRPCDataportCAmkESMonitor(dp); 
       // Default port emitters
-      else if (PortEmitterRPCAllEvent.isApplicable(dp)) {
+      } else if (PortEmitterRPCAllEvent.isApplicable(dp)) {
          return new PortEmitterRPCAllEvent(dp); 
       } else if (PortEmitterRPCDataport.isApplicable(dp)) {
          return new PortEmitterRPCDataport(dp);

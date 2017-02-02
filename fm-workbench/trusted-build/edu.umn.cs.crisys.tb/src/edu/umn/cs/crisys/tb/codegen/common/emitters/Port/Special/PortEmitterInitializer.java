@@ -1,5 +1,7 @@
 package edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Special;
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -275,5 +277,35 @@ public class PortEmitterInitializer extends DispatchableInputPortCommon implemen
    public String getIdlDispatcherName() {
       return "dispatch_" + getName();
    }
+
+@Override
+public void getWriteCamkesPortComponents(File componentsDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void getWriteCamkesPortIdls(File interfacesDirectory) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public List<String> getCamkesAddComponentPortImports() {
+  // TODO Auto-generated method stub
+  return (new LinkedList<String>());
+}
+
+@Override
+public String getCamkesAddPreInitStatements() {
+  // TODO Auto-generated method stub
+  return "";
+}
+
+@Override
+public String getCamkesAddAssemblyFileCompositionPortConnections() {
+  // TODO Auto-generated method stub
+  return "";
+}
 
 }

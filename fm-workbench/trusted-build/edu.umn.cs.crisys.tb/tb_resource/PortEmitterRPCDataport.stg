@@ -141,7 +141,7 @@ connectReaderWriter(connection, model) ::= <<
 writerDecl(port) ::= <<
 <if(port.isIRQ)>
 <else>
-bool <incomingPortWriterName(port)><if(port.hasData)>(const <port.type.camkesInputType.name> arg);<else>();<endif>
+bool <incomingPortWriterName(port)>(const <port.type.camkesInputType.name> arg);
 <endif>
 >>
 

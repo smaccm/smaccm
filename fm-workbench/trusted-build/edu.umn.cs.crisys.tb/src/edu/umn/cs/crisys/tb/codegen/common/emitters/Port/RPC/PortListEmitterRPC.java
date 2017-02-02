@@ -122,7 +122,6 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
    @Override
    public String camkesAddComponentLevelDeclarations(ThreadImplementation ti, List<PortFeature> pl) {
       String result = ""; 
-      Set<Type> types = relevantPortTypes(pl); 
       STGroupFile template = Util.createTemplate("CamkesComponentCamkes.stg");
       for (Type t: relevantPortTypes(pl)) {
          ST st = template.getInstanceOf("importReaderWriterIdl"); 
