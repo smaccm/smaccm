@@ -133,7 +133,8 @@ void <periodicClockFn(dispatcher)>(void)
        
     // FIXME NB: This WILL roll over given a fast enough clock rate.  We need an alternate scheme
     // over the long term.
-    <dispatcher.periodicTimeVar> = (long long)tickGet() * (long long)<dispatcher.threadImplementation.model.threadCalendar.msPerTick>;
+    // We want the result in microseconds.
+    <dispatcher.periodicTimeVar> = ((long long)tickGet() * (long long)<dispatcher.threadImplementation.model.threadCalendar.msPerTick>);
     
     dispatcherOk = <dispatcher.threadImplementation.mainLockReleaseStmt>
     
@@ -168,7 +169,8 @@ consumes Notification tb_timer_complete;
 camkesDispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
 
 void tb_timer_complete_callback() {
-   int64_t tb_time_periodic_dispatcher = tb_timer_time();
+   // we want time in microseconds, not nanoseconds, so we divide by 1000.
+   int64_t tb_time_periodic_dispatcher = tb_timer_time() / 1000LL;
    (void)<dispatcher.incomingWriterName>(&tb_time_periodic_dispatcher);
 }
 

@@ -213,7 +213,7 @@ public abstract class PropertyUtil {
       try {
          lit = PropertyUtils.getEnumLiteral(tti, PropertyUtil.TB_SYS_OS);
       } catch (Exception e) {
-         throw new TbException("Required property 'OS' not found for system instance: " + tti.getName() + "Exception: " + e.toString());
+         throw new TbException("Required property 'OS' not found for system instance: " + tti.getName() + "Exception: " + e.toString() + "; is your AADL file a part of an AADL project?");
       }
       return lit.getName();
    }

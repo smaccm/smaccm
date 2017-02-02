@@ -8,6 +8,7 @@ import edu.umn.cs.crisys.tb.TbException;
 //import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.MailBox.PortEmitterMailBoxDataport;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Notification.PortEmitterNotification;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortConnectionEmitterRPCImpl;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCAllEvent;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.PortEmitterRPCDataport;
@@ -34,16 +35,20 @@ public class EmitterFactory {
       // Mailbox port emitter here!
       
       
-      // Cross VM dataport emitter (placeholder for mailboxes)
 //      if (PortEmitterMailBoxDataport.isApplicable(dp)) {
 //         return new PortEmitterMailBoxDataport(dp);
 //      }
+      // Cross VM dataport emitter (placeholder for mailboxes)
       if (PortEmitterSimpleVMDataport.isApplicable(dp)) {
          return new PortEmitterSimpleVMDataport(dp);
       }
       // Shared memory only emitter (no RPCs) for linux 
       else if (PortEmitterSharedMemDataport.isApplicable(dp)) {
          return new PortEmitterSharedMemDataport(dp);
+      }
+      // A notification-based event port for Camkes
+      if (PortEmitterNotification.isApplicable(dp)) {
+         return new PortEmitterNotification(dp);
       }
       // Default port emitters
       else if (PortEmitterRPCAllEvent.isApplicable(dp)) {
@@ -73,7 +78,7 @@ public class EmitterFactory {
          return new PortConnectionEmitterVMDataport(pc);
       }
       
-      // 'standard' emitters
+      // 'standard' emitters - the RPC emitter also works for notifications. 
       else if (PortConnectionEmitterSharedMemDataport.isApplicable(pc)) {
          return new PortConnectionEmitterSharedMemDataport(pc);
       } else if (PortConnectionEmitterRPCImpl.isApplicable(pc)) {

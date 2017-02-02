@@ -171,7 +171,7 @@ public class DispatchableInputPortCommon {
          }
      */
       }
-
+   
    public final String getActiveThreadInternalDispatcherFnName() {
       return getUserEntrypointCallerName(); 
    }

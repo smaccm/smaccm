@@ -10,6 +10,7 @@ import edu.umn.cs.crisys.tb.codegen.common.emitters.ThreadEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.Notification.PortEmitterNotification;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.OSModel.OSTarget;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
@@ -29,6 +30,10 @@ public class PortConnectionEmitterRPCImpl implements PortConnectionEmitterCamkes
      return (p instanceof PortEmitterRPC);
   }
   
+  static boolean isNotificationDataport(PortEmitter p) {
+     return (p instanceof PortEmitterNotification);
+  }
+  
   static boolean isSupportedOS(OSTarget p) {
      return (p == OSTarget.CAmkES || 
              p == OSTarget.eChronos || 
@@ -44,7 +49,8 @@ public class PortConnectionEmitterRPCImpl implements PortConnectionEmitterCamkes
      PortEmitter dest = EmitterFactory.port(c.getDestPort()); 
 
      // applicable if both source and destination ports are RPC dataports
-     result &= isRpcDataport(source) && isRpcDataport(dest);  
+     result &= (isRpcDataport(source) && isRpcDataport(dest)) || 
+               (isNotificationDataport(source) && isNotificationDataport(dest));  
      
      // applicable if OS is one of {eChronos, VxWorks, Camkes}
      OSTarget srcOS = (Util.getElementOSModel(c.getSourcePort())).getOsTarget();
