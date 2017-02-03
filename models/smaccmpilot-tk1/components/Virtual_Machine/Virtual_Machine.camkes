@@ -3,19 +3,22 @@ import <std_connector.camkes>;
 import "VM_shim/VM_shim.camkes";
 import "VM/VM.camkes";
 
-import <SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4>;
+import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Write.idl4>;
+import <tb_Monitor_bool_1_Dequeue.idl4>;
 
 component Virtual_Machine {
-    include "tb_smaccmcopter_types.h";
-    uses SMACCM_DATA__Camera_Bounding_Box_i_writer self2server;
-    provides bool_writer server2self_reboot;
+    include <tb_smaccmpilot_tk1_types.h>;
+    uses tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Write tb_self2server;
+    uses tb_Monitor_bool_1_Dequeue tb_server2self_reboot;
+    consumes QueuedData tb_server2self_reboot_notification;
 
     composition {
 //        component VM vm_obj;
         component VM_shim vm_shim_obj;
 
-        export vm_shim_obj.self2server -> self2server;
-        export vm_shim_obj.server2self_reboot -> server2self_reboot;
+        export vm_shim_obj.tb_self2server -> tb_self2server;
+        export vm_shim_obj.tb_server2self_reboot -> tb_server2self_reboot;
+        export vm_shim_obj.tb_server2self_reboot_notification -> tb_server2self_reboot_notification;
     }
 
     configuration {

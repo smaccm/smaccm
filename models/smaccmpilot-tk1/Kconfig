@@ -7,3 +7,10 @@ config APP_SMACCMPILOT_TK1
 
     default n
     select APP_CAMKES_EXECUTIVE
+
+config APP_SMACCMPILOT_TK1_TB_DEBUG
+    bool "Enable debugging trusted build monitors"
+    default n
+    depends on APP_SMACCMPILOT_TK1 && PRINTING
+    help
+        Enable debugging trusted build monitors

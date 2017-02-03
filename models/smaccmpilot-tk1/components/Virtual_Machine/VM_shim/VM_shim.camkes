@@ -1,10 +1,12 @@
-import <SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4>;
+import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Write.idl4>;
+import <tb_Monitor_bool_1_Dequeue.idl4>;
 
 component VM_shim {
     control;
 
     // AADL interface
-    include <tb_smaccmcopter_types.h>;
-    uses SMACCM_DATA__Camera_Bounding_Box_i_writer self2server;
-    provides bool_writer server2self_reboot;
+    include <tb_smaccmpilot_tk1_types.h>;
+    uses tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Write tb_self2server;
+    uses tb_Monitor_bool_1_Dequeue tb_server2self_reboot;
+    consumes QueuedData tb_server2self_reboot_notification;
 }

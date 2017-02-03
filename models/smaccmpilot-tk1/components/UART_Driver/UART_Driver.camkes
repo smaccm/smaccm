@@ -1,7 +1,8 @@
 import "uart_shim/uart_shim.camkes";
 
-import <SMACCM_DATA__UART_Packet_i_writer.idl4>;
-import <bool_writer.idl4>;
+import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__UART_Packet_i_1_Dequeue.idl4>;
+import <tb_Monitor_bool_1_Enqueue.idl4>;
 
 component uartbase {
     hardware;
@@ -10,10 +11,11 @@ component uartbase {
 }
 
 component UART_Driver {
-    include "tb_smaccmcopter_types.h";
-    uses SMACCM_DATA__UART_Packet_i_writer self2decrypt;
-    provides SMACCM_DATA__UART_Packet_i_writer encrypt2self;
-    uses bool_writer self2encrypt;
+    include <tb_smaccmpilot_tk1_types.h>;
+    uses tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue tb_self2decrypt;
+    uses tb_Monitor_SMACCM_DATA__UART_Packet_i_1_Dequeue tb_encrypt2self;
+    consumes QueuedData tb_encrypt2self_notification;
+    uses tb_Monitor_bool_1_Enqueue tb_self2encrypt;
   
     composition {
         component uartbase uartbase_obj;
@@ -22,9 +24,10 @@ component UART_Driver {
         connection seL4HardwareMMIO uart_regs_mmio(from uart_shim_obj.uart_regs, to uartbase_obj.uart_regs);
         connection seL4HardwareInterrupt uart_irq(from uartbase_obj.irq, to uart_shim_obj.interrupt);
 
-        export uart_shim_obj.self2decrypt -> self2decrypt;
-        export uart_shim_obj.encrypt2self -> encrypt2self;
-        export uart_shim_obj.self2encrypt -> self2encrypt;
+        export uart_shim_obj.tb_self2decrypt -> tb_self2decrypt;
+        export uart_shim_obj.tb_encrypt2self -> tb_encrypt2self;
+        export uart_shim_obj.tb_encrypt2self_notification -> tb_encrypt2self_notification;
+        export uart_shim_obj.tb_self2encrypt -> tb_self2encrypt;
     }
 
     configuration {

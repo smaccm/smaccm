@@ -14,6 +14,18 @@
 
 #include <camkes.h>
 
+static void tb_server2self_reboot_callback(void *unused) {
+    bool b;
+    while (tb_server2self_reboot_dequeue(&b)) {
+        printf("Reboot requested (not implemented)\n");
+    }
+    tb_server2self_reboot_notification_reg_callback(&tb_server2self_reboot_callback, NULL);
+}
+
+void pre_init(void) {
+    tb_server2self_reboot_notification_reg_callback(&tb_server2self_reboot_callback, NULL);
+}
+
 int run(void) {
     SMACCM_DATA__Camera_Bounding_Box_i box;
     box.left = 0;
@@ -22,13 +34,8 @@ int run(void) {
         for (int i = 0; i < 200; i++) {
             box.right = i;
             box.bottom = i;
-            self2server_write_SMACCM_DATA__Camera_Bounding_Box_i(&box);
+            tb_self2server_write(&box);
         }
     }
     return 0;
-}
-
-bool server2self_reboot_write_bool(const bool *arg) {
-    printf("Reboot requested (not implemented)\n");
-    return true;
 }
