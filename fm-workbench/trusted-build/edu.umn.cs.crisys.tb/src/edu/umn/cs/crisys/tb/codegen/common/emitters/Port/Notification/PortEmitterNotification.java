@@ -204,7 +204,14 @@ public class PortEmitterNotification implements PortEmitterCamkes {
    
    @Override
    public String getWritePortThreadInitializer() {
-      return writeOptPortThreadInitializerPrototype(""); 
+      String result = ""; 
+      if (this.port instanceof InputEventPort && this.getHasDispatcher()) {
+         ST st = getTemplateST("portInitializer");
+         st.add("port", this);
+         result += st.render();
+      }
+      result += writeOptPortThreadInitializerPrototype(""); 
+      return result;
    }
 
    
@@ -261,8 +268,17 @@ public class PortEmitterNotification implements PortEmitterCamkes {
    
    @Override
    public String getCamkesAddAssemblyFileConfigDeclarations() {
-      return "";
+      String result = ""; 
+      PortFeature pf = this.port;
+      if (pf instanceof InputPort) {
+         ST st = getTemplateST("assemblyConfig");
+         st.add("port", this);
+         result += st.render();
+      }
+      return result;
    }
+   
+   public String getMonitorInputCamkesNamePrefix() { return null; }
    
    @Override
    public String getCamkesAddAssemblyFilePortDeclarations() { return ""; }
@@ -308,7 +324,7 @@ public class PortEmitterNotification implements PortEmitterCamkes {
    public final String getIncomingWriterName() {
       // O.k., here we need to know the port name and 
       // the camkes extension it uses for the handler.
-      return getName() + "_complete"; 
+      return getName() + "_callback"; 
    }
 
    public final String getPrefix() { return Util.getPrefix(); }
