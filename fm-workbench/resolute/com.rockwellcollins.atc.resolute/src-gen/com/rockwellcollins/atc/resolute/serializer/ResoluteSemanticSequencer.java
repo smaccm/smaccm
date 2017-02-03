@@ -568,7 +568,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ResolutePackage.Literals.ID_EXPR__ID));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAtomicExprAccess().getIdNamedElementQCREFParserRuleCall_0_1_0_1(), semanticObject.getId());
+		feeder.accept(grammarAccess.getAtomicExprAccess().getIdNamedElementQCREFParserRuleCall_0_1_0_1(), semanticObject.eGet(ResolutePackage.Literals.ID_EXPR__ID, false));
 		feeder.finish();
 	}
 	

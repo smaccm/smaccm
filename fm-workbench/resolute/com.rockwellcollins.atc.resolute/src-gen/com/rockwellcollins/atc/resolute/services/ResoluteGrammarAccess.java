@@ -23,7 +23,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cResoluteLibraryParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//AnnexLibrary aadl2::AnnexLibrary:
-		//	ResoluteLibrary
+		//	ResoluteLibrary;
 		@Override public ParserRule getRule() { return rule; }
 
 		//ResoluteLibrary
@@ -35,7 +35,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cResoluteSubclauseParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//AnnexSubclause aadl2::AnnexSubclause:
-		//	ResoluteSubclause
+		//	ResoluteSubclause;
 		@Override public ParserRule getRule() { return rule; }
 
 		//ResoluteSubclause
@@ -47,7 +47,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFunctionDefinitionParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//Namespace aadl2::Namespace:
-		//	FunctionDefinition
+		//	FunctionDefinition;
 		@Override public ParserRule getRule() { return rule; }
 
 		//FunctionDefinition
@@ -64,7 +64,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//NamedElement aadl2::NamedElement:
 		//	Definition
 		//	| Arg
-		//	| LetBinding
+		//	| LetBinding;
 		@Override public ParserRule getRule() { return rule; }
 
 		//Definition | Arg | LetBinding
@@ -92,7 +92,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	Expr
 		//	| ProveStatement
 		//	| ClaimText
-		//	| DefinitionBody
+		//	| DefinitionBody;
 		@Override public ParserRule getRule() { return rule; }
 
 		//Expr | ProveStatement | ClaimText | DefinitionBody
@@ -496,7 +496,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//=> (name=ID ':' type=Type)
 		public Group getGroup_0() { return cGroup_0; }
 
-		//(name=ID ':' type=Type)
+		//name=ID ':' type=Type
 		public Group getGroup_0_0() { return cGroup_0_0; }
 
 		//name=ID
@@ -707,7 +707,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//'<='
 		public Keyword getLessThanSignEqualsSignKeyword_1_1() { return cLessThanSignEqualsSignKeyword_1_1; }
 
-		//('**' claim+=ClaimText+ '**')
+		//'**' claim+=ClaimText+ '**'
 		public Group getGroup_1_2() { return cGroup_1_2; }
 
 		//'**'
@@ -848,7 +848,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRightImpliesExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//ImpliesExpr Expr:
-		//	OrExpr (=> ({BinaryExpr.left=current} op='=>') right=ImpliesExpr)?
+		//	OrExpr (=> ({BinaryExpr.left=current} op='=>') right=ImpliesExpr)?;
 		@Override public ParserRule getRule() { return rule; }
 
 		//OrExpr (=> ({BinaryExpr.left=current} op='=>') right=ImpliesExpr)?
@@ -863,7 +863,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryExpr.left=current} op='=>')
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//({BinaryExpr.left=current} op='=>')
+		//{BinaryExpr.left=current} op='=>'
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
@@ -896,7 +896,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRightAndExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//OrExpr Expr:
-		//	AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*
+		//	AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*;
 		@Override public ParserRule getRule() { return rule; }
 
 		//AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*
@@ -911,7 +911,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryExpr.left=current} op='or')
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//({BinaryExpr.left=current} op='or')
+		//{BinaryExpr.left=current} op='or'
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
@@ -947,7 +947,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRightInstanceOfExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//AndExpr Expr:
-		//	InstanceOfExpr (=> ({BinaryExpr.left=current} (op='and' | op='andthen')) right=InstanceOfExpr)*
+		//	InstanceOfExpr (=> ({BinaryExpr.left=current} (op='and' | op='andthen')) right=InstanceOfExpr)*;
 		@Override public ParserRule getRule() { return rule; }
 
 		//InstanceOfExpr (=> ({BinaryExpr.left=current} (op='and' | op='andthen')) right=InstanceOfExpr)*
@@ -962,13 +962,13 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryExpr.left=current} (op='and' | op='andthen'))
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//({BinaryExpr.left=current} (op='and' | op='andthen'))
+		//{BinaryExpr.left=current} (op='and' | op='andthen')
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
 		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
 
-		//(op='and' | op='andthen')
+		//op='and' | op='andthen'
 		public Alternatives getAlternatives_1_0_0_1() { return cAlternatives_1_0_0_1; }
 
 		//op='and'
@@ -1003,7 +1003,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeBaseTypeParserRuleCall_1_1_0 = (RuleCall)cTypeAssignment_1_1.eContents().get(0);
 		
 		//InstanceOfExpr Expr:
-		//	RelationalExpr (=> ({InstanceOfExpr.expr=current} 'instanceof') type=BaseType)?
+		//	RelationalExpr (=> ({InstanceOfExpr.expr=current} 'instanceof') type=BaseType)?;
 		@Override public ParserRule getRule() { return rule; }
 
 		//RelationalExpr (=> ({InstanceOfExpr.expr=current} 'instanceof') type=BaseType)?
@@ -1018,7 +1018,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({InstanceOfExpr.expr=current} 'instanceof')
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//({InstanceOfExpr.expr=current} 'instanceof')
+		//{InstanceOfExpr.expr=current} 'instanceof'
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{InstanceOfExpr.expr=current}
@@ -1084,7 +1084,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRightPlusExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//RelationalExpr Expr:
-		//	PlusExpr (=> ({BinaryExpr.left=current} op=RelationalOp) right=PlusExpr)?
+		//	PlusExpr (=> ({BinaryExpr.left=current} op=RelationalOp) right=PlusExpr)?;
 		@Override public ParserRule getRule() { return rule; }
 
 		//PlusExpr (=> ({BinaryExpr.left=current} op=RelationalOp) right=PlusExpr)?
@@ -1099,7 +1099,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryExpr.left=current} op=RelationalOp)
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//({BinaryExpr.left=current} op=RelationalOp)
+		//{BinaryExpr.left=current} op=RelationalOp
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
@@ -1134,7 +1134,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRightTimesExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//PlusExpr Expr:
-		//	TimesExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=TimesExpr)*
+		//	TimesExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=TimesExpr)*;
 		@Override public ParserRule getRule() { return rule; }
 
 		//TimesExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=TimesExpr)*
@@ -1149,7 +1149,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryExpr.left=current} op=('+' | '-'))
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//({BinaryExpr.left=current} op=('+' | '-'))
+		//{BinaryExpr.left=current} op=('+' | '-')
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
@@ -1191,7 +1191,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRightPrefixExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//TimesExpr Expr:
-		//	PrefixExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*
+		//	PrefixExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*;
 		@Override public ParserRule getRule() { return rule; }
 
 		//PrefixExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*
@@ -1206,7 +1206,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ({BinaryExpr.left=current} op=('*' | '/' | '%'))
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//({BinaryExpr.left=current} op=('*' | '/' | '%'))
+		//{BinaryExpr.left=current} op=('*' | '/' | '%')
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
@@ -1258,7 +1258,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//PrefixExpr Expr:
 		//	{UnaryExpr} op=('-' | 'not') expr=PrefixExpr
 		//	| {CastExpr} '(' type=BaseType ')' expr=PrefixExpr
-		//	| AtomicExpr
+		//	| AtomicExpr;
 		@Override public ParserRule getRule() { return rule; }
 
 		//{UnaryExpr} op=('-' | 'not') expr=PrefixExpr | {CastExpr} '(' type=BaseType ')' expr=PrefixExpr | AtomicExpr
@@ -1464,7 +1464,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	exprs+=Expr)*) '}'
 		//	| {SetExpr} '{' '}'
 		//	| {LetExpr} 'let' binding=LetBinding ';' expr=Expr
-		//	| '(' Expr ')'
+		//	| '(' Expr ')';
 		@Override public ParserRule getRule() { return rule; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} 'this' ('.' sub=NestedDotID)? | {FailExpr} 'fail' (val=Expr | '**'
@@ -1521,7 +1521,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//'fail'
 		public Keyword getFailKeyword_2_1() { return cFailKeyword_2_1; }
 
-		//(val=Expr | '**' failmsg+=ClaimText+ '**')
+		//val=Expr | '**' failmsg+=ClaimText+ '**'
 		public Alternatives getAlternatives_2_2() { return cAlternatives_2_2; }
 
 		//val=Expr
@@ -1759,8 +1759,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr
 		public RuleCall getExprParserRuleCall_11_1() { return cExprParserRuleCall_11_1; }
 
-		//({FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (','
-		//exprs+=Expr)*)
+		//{FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (',' exprs+=Expr)*
 		public Alternatives getAlternatives_11_2() { return cAlternatives_11_2; }
 
 		//{FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)?
@@ -2199,7 +2198,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cUnitUnitLiteralIDTerminalRuleCall_1_0_1 = (RuleCall)cUnitUnitLiteralCrossReference_1_0.eContents().get(1);
 		
 		//RealTerm aadl2::RealLiteral:
-		//	value=UnsignedReal unit=[aadl2::UnitLiteral]?
+		//	value=UnsignedReal unit=[aadl2::UnitLiteral]?;
 		@Override public ParserRule getRule() { return rule; }
 
 		//value=UnsignedReal unit=[aadl2::UnitLiteral]?
@@ -2226,7 +2225,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cREAL_LITTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//UnsignedReal aadl2::Real:
-		//	REAL_LIT
+		//	REAL_LIT;
 		@Override public ParserRule getRule() { return rule; }
 
 		//REAL_LIT
@@ -2243,7 +2242,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cUnitUnitLiteralIDTerminalRuleCall_1_0_1 = (RuleCall)cUnitUnitLiteralCrossReference_1_0.eContents().get(1);
 		
 		//IntegerTerm aadl2::IntegerLiteral:
-		//	value=UnsignedInt unit=[aadl2::UnitLiteral]?
+		//	value=UnsignedInt unit=[aadl2::UnitLiteral]?;
 		@Override public ParserRule getRule() { return rule; }
 
 		//value=UnsignedInt unit=[aadl2::UnitLiteral]?
@@ -2270,7 +2269,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cINTEGER_LITTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//UnsignedInt aadl2::Integer:
-		//	INTEGER_LIT
+		//	INTEGER_LIT;
 		@Override public ParserRule getRule() { return rule; }
 
 		//INTEGER_LIT
@@ -2476,7 +2475,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//AnnexLibrary aadl2::AnnexLibrary:
-	//	ResoluteLibrary
+	//	ResoluteLibrary;
 	public AnnexLibraryElements getAnnexLibraryAccess() {
 		return pAnnexLibrary;
 	}
@@ -2486,7 +2485,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AnnexSubclause aadl2::AnnexSubclause:
-	//	ResoluteSubclause
+	//	ResoluteSubclause;
 	public AnnexSubclauseElements getAnnexSubclauseAccess() {
 		return pAnnexSubclause;
 	}
@@ -2496,7 +2495,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Namespace aadl2::Namespace:
-	//	FunctionDefinition
+	//	FunctionDefinition;
 	public NamespaceElements getNamespaceAccess() {
 		return pNamespace;
 	}
@@ -2508,7 +2507,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//NamedElement aadl2::NamedElement:
 	//	Definition
 	//	| Arg
-	//	| LetBinding
+	//	| LetBinding;
 	public NamedElementElements getNamedElementAccess() {
 		return pNamedElement;
 	}
@@ -2521,7 +2520,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	Expr
 	//	| ProveStatement
 	//	| ClaimText
-	//	| DefinitionBody
+	//	| DefinitionBody;
 	public ElementElements getElementAccess() {
 		return pElement;
 	}
@@ -2688,7 +2687,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ImpliesExpr Expr:
-	//	OrExpr (=> ({BinaryExpr.left=current} op='=>') right=ImpliesExpr)?
+	//	OrExpr (=> ({BinaryExpr.left=current} op='=>') right=ImpliesExpr)?;
 	public ImpliesExprElements getImpliesExprAccess() {
 		return pImpliesExpr;
 	}
@@ -2698,7 +2697,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//OrExpr Expr:
-	//	AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*
+	//	AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*;
 	public OrExprElements getOrExprAccess() {
 		return pOrExpr;
 	}
@@ -2708,7 +2707,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AndExpr Expr:
-	//	InstanceOfExpr (=> ({BinaryExpr.left=current} (op='and' | op='andthen')) right=InstanceOfExpr)*
+	//	InstanceOfExpr (=> ({BinaryExpr.left=current} (op='and' | op='andthen')) right=InstanceOfExpr)*;
 	public AndExprElements getAndExprAccess() {
 		return pAndExpr;
 	}
@@ -2718,7 +2717,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//InstanceOfExpr Expr:
-	//	RelationalExpr (=> ({InstanceOfExpr.expr=current} 'instanceof') type=BaseType)?
+	//	RelationalExpr (=> ({InstanceOfExpr.expr=current} 'instanceof') type=BaseType)?;
 	public InstanceOfExprElements getInstanceOfExprAccess() {
 		return pInstanceOfExpr;
 	}
@@ -2738,7 +2737,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//RelationalExpr Expr:
-	//	PlusExpr (=> ({BinaryExpr.left=current} op=RelationalOp) right=PlusExpr)?
+	//	PlusExpr (=> ({BinaryExpr.left=current} op=RelationalOp) right=PlusExpr)?;
 	public RelationalExprElements getRelationalExprAccess() {
 		return pRelationalExpr;
 	}
@@ -2748,7 +2747,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//PlusExpr Expr:
-	//	TimesExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=TimesExpr)*
+	//	TimesExpr (=> ({BinaryExpr.left=current} op=('+' | '-')) right=TimesExpr)*;
 	public PlusExprElements getPlusExprAccess() {
 		return pPlusExpr;
 	}
@@ -2758,7 +2757,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TimesExpr Expr:
-	//	PrefixExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*
+	//	PrefixExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*;
 	public TimesExprElements getTimesExprAccess() {
 		return pTimesExpr;
 	}
@@ -2770,7 +2769,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//PrefixExpr Expr:
 	//	{UnaryExpr} op=('-' | 'not') expr=PrefixExpr
 	//	| {CastExpr} '(' type=BaseType ')' expr=PrefixExpr
-	//	| AtomicExpr
+	//	| AtomicExpr;
 	public PrefixExprElements getPrefixExprAccess() {
 		return pPrefixExpr;
 	}
@@ -2793,7 +2792,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	exprs+=Expr)*) '}'
 	//	| {SetExpr} '{' '}'
 	//	| {LetExpr} 'let' binding=LetBinding ';' expr=Expr
-	//	| '(' Expr ')'
+	//	| '(' Expr ')';
 	public AtomicExprElements getAtomicExprAccess() {
 		return pAtomicExpr;
 	}
@@ -2838,7 +2837,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//RealTerm aadl2::RealLiteral:
-	//	value=UnsignedReal unit=[aadl2::UnitLiteral]?
+	//	value=UnsignedReal unit=[aadl2::UnitLiteral]?;
 	public RealTermElements getRealTermAccess() {
 		return pRealTerm;
 	}
@@ -2848,7 +2847,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//UnsignedReal aadl2::Real:
-	//	REAL_LIT
+	//	REAL_LIT;
 	public UnsignedRealElements getUnsignedRealAccess() {
 		return pUnsignedReal;
 	}
@@ -2858,7 +2857,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//IntegerTerm aadl2::IntegerLiteral:
-	//	value=UnsignedInt unit=[aadl2::UnitLiteral]?
+	//	value=UnsignedInt unit=[aadl2::UnitLiteral]?;
 	public IntegerTermElements getIntegerTermAccess() {
 		return pIntegerTerm;
 	}
@@ -2868,7 +2867,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//UnsignedInt aadl2::Integer:
-	//	INTEGER_LIT
+	//	INTEGER_LIT;
 	public UnsignedIntElements getUnsignedIntAccess() {
 		return pUnsignedInt;
 	}
@@ -2908,7 +2907,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//PModel aadl2::Element:
-	//	ContainedPropertyAssociation
+	//	ContainedPropertyAssociation //| BasicPropertyAssociation | PropertyAssociation
+	//;
 	public PropertiesGrammarAccess.PModelElements getPModelAccess() {
 		return gaProperties.getPModelAccess();
 	}
@@ -2922,7 +2922,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	property=[aadl2::Property|QPREF] ('=>' | append?='+=>') constant?='constant'? (ownedValue+=OptionalModalPropertyValue
 	//	(',' ownedValue+=OptionalModalPropertyValue)*) ('applies' 'to' appliesTo+=ContainmentPath (','
 	//	appliesTo+=ContainmentPath)*)? ('in' 'binding' '(' inBinding+=[aadl2::Classifier|QCREF] ')')?
-	//	';'
+	//	';';
 	public PropertiesGrammarAccess.ContainedPropertyAssociationElements getContainedPropertyAssociationAccess() {
 		return gaProperties.getContainedPropertyAssociationAccess();
 	}
@@ -2934,7 +2934,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//PropertyAssociation aadl2::PropertyAssociation:
 	//	property=[aadl2::Property|QPREF] ('=>' | append?='+=>') constant?='constant'? (ownedValue+=OptionalModalPropertyValue
 	//	(',' ownedValue+=OptionalModalPropertyValue)*) ('in' 'binding' '(' inBinding+=[aadl2::Classifier|QCREF] ')')?
-	//	';'
+	//	';';
 	public PropertiesGrammarAccess.PropertyAssociationElements getPropertyAssociationAccess() {
 		return gaProperties.getPropertyAssociationAccess();
 	}
@@ -2945,7 +2945,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 	//BasicPropertyAssociation aadl2::PropertyAssociation:
 	//	property=[aadl2::Property|QPREF]
-	//	'=>' ownedValue+=PropertyValue ';'
+	//	'=>' ownedValue+=PropertyValue ';';
 	public PropertiesGrammarAccess.BasicPropertyAssociationElements getBasicPropertyAssociationAccess() {
 		return gaProperties.getBasicPropertyAssociationAccess();
 	}
@@ -2956,6 +2956,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 	//ContainmentPath aadl2::ContainedNamedElement:
 	//	path=ContainmentPathElement
+	//	//	( 'annex' containmentPathElement+=AnnexPath )?
+	//;
 	public PropertiesGrammarAccess.ContainmentPathElements getContainmentPathAccess() {
 		return gaProperties.getContainmentPathAccess();
 	}
@@ -2970,7 +2972,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	ownedValue=PropertyExpression
 	//	'in' 'modes' '('
 	//	inMode+=[aadl2::Mode] (',' inMode+=[aadl2::Mode])*
-	//	')'
+	//	')';
 	public PropertiesGrammarAccess.ModalPropertyValueElements getModalPropertyValueAccess() {
 		return gaProperties.getModalPropertyValueAccess();
 	}
@@ -2982,7 +2984,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//OptionalModalPropertyValue aadl2::ModalPropertyValue:
 	//	ownedValue=PropertyExpression ('in' 'modes' '('
 	//	inMode+=[aadl2::Mode] (',' inMode+=[aadl2::Mode])*
-	//	')')?
+	//	')')?;
 	public PropertiesGrammarAccess.OptionalModalPropertyValueElements getOptionalModalPropertyValueAccess() {
 		return gaProperties.getOptionalModalPropertyValueAccess();
 	}
@@ -2993,7 +2995,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 	//// &&&&&&&&&& handling of in binding
 	//PropertyValue aadl2::ModalPropertyValue:
-	//	ownedValue=PropertyExpression
+	//	ownedValue=PropertyExpression;
 	public PropertiesGrammarAccess.PropertyValueElements getPropertyValueAccess() {
 		return gaProperties.getPropertyValueAccess();
 	}
@@ -3007,7 +3009,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	| ComputedTerm | StringTerm | NumericRangeTerm
 	//	| super::RealTerm | super::IntegerTerm
 	//	| ListTerm
-	//	| BooleanLiteral | LiteralorReferenceTerm
+	//	| BooleanLiteral | LiteralorReferenceTerm;
 	public PropertiesGrammarAccess.PropertyExpressionElements getPropertyExpressionAccess() {
 		return gaProperties.getPropertyExpressionAccess();
 	}
@@ -3017,7 +3019,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//LiteralorReferenceTerm aadl2::NamedValue:
-	//	namedValue=[aadl2::AbstractNamedValue|QPREF]
+	//	namedValue=[aadl2::AbstractNamedValue|QPREF];
 	public PropertiesGrammarAccess.LiteralorReferenceTermElements getLiteralorReferenceTermAccess() {
 		return gaProperties.getLiteralorReferenceTermAccess();
 	}
@@ -3027,7 +3029,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//BooleanLiteral aadl2::BooleanLiteral:
-	//	{aadl2::BooleanLiteral} (value?='true' | 'false')
+	//	{aadl2::BooleanLiteral} (value?='true' | 'false');
 	public PropertiesGrammarAccess.BooleanLiteralElements getBooleanLiteralAccess() {
 		return gaProperties.getBooleanLiteralAccess();
 	}
@@ -3037,7 +3039,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ConstantValue aadl2::NamedValue:
-	//	namedValue=[aadl2::PropertyConstant|QPREF]
+	//	namedValue=[aadl2::PropertyConstant|QPREF];
 	public PropertiesGrammarAccess.ConstantValueElements getConstantValueAccess() {
 		return gaProperties.getConstantValueAccess();
 	}
@@ -3053,7 +3055,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	//	containmentPathElement+=ContainmentPathElement
 	//	//	( '.' containmentPathElement+=ContainmentPathElement)*
 	//	//	'**}')?
-	//	')'
+	//	')';
 	public PropertiesGrammarAccess.ReferenceTermElements getReferenceTermAccess() {
 		return gaProperties.getReferenceTermAccess();
 	}
@@ -3065,7 +3067,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//RecordTerm aadl2::RecordValue:
 	//	'['
 	//	ownedFieldValue+=FieldPropertyAssociation+
-	//	']'
+	//	']';
 	public PropertiesGrammarAccess.RecordTermElements getRecordTermAccess() {
 		return gaProperties.getRecordTermAccess();
 	}
@@ -3077,7 +3079,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//OldRecordTerm aadl2::RecordValue:
 	//	'('
 	//	ownedFieldValue+=FieldPropertyAssociation+
-	//	')'
+	//	')';
 	public PropertiesGrammarAccess.OldRecordTermElements getOldRecordTermAccess() {
 		return gaProperties.getOldRecordTermAccess();
 	}
@@ -3089,7 +3091,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ComputedTerm aadl2::ComputedValue:
 	//	'compute' '('
 	//	function=ID
-	//	')'
+	//	')';
 	public PropertiesGrammarAccess.ComputedTermElements getComputedTermAccess() {
 		return gaProperties.getComputedTermAccess();
 	}
@@ -3101,7 +3103,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ComponentClassifierTerm aadl2::ClassifierValue:
 	//	'classifier' '('
 	//	classifier=[aadl2::ComponentClassifier|QCREF]
-	//	')'
+	//	')';
 	public PropertiesGrammarAccess.ComponentClassifierTermElements getComponentClassifierTermAccess() {
 		return gaProperties.getComponentClassifierTermAccess();
 	}
@@ -3113,7 +3115,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ListTerm aadl2::ListValue:
 	//	{aadl2::ListValue}
 	//	'(' (ownedListElement+=PropertyExpression (',' ownedListElement+=PropertyExpression)*)?
-	//	')'
+	//	')';
 	public PropertiesGrammarAccess.ListTermElements getListTermAccess() {
 		return gaProperties.getListTermAccess();
 	}
@@ -3126,7 +3128,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	property=[aadl2::BasicProperty]
 	//	'=>'
 	//	ownedValue=PropertyExpression
-	//	';'
+	//	';';
 	public PropertiesGrammarAccess.FieldPropertyAssociationElements getFieldPropertyAssociationAccess() {
 		return gaProperties.getFieldPropertyAssociationAccess();
 	}
@@ -3139,6 +3141,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//// need to add annex path element
 	//ContainmentPathElement aadl2::ContainmentPathElement:
 	//	(namedElement=[aadl2::NamedElement] arrayRange+=ArrayRange*) ('.' path=ContainmentPathElement)?
+	//	//	 | 	 'annex' namedElement=[aadl2::NamedElement|ID]
+	//;
 	public PropertiesGrammarAccess.ContainmentPathElementElements getContainmentPathElementAccess() {
 		return gaProperties.getContainmentPathElementAccess();
 	}
@@ -3158,7 +3162,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//PlusMinus aadl2::OperationKind:
-	//	'+' | '-'
+	//	'+' | '-';
 	public PropertiesGrammarAccess.PlusMinusElements getPlusMinusAccess() {
 		return gaProperties.getPlusMinusAccess();
 	}
@@ -3168,7 +3172,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//StringTerm aadl2::StringLiteral:
-	//	value=NoQuoteString
+	//	value=NoQuoteString;
 	public PropertiesGrammarAccess.StringTermElements getStringTermAccess() {
 		return gaProperties.getStringTermAccess();
 	}
@@ -3190,7 +3194,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//ArrayRange aadl2::ArrayRange:
 	//	{aadl2::ArrayRange}
 	//	'[' lowerBound=INTVALUE ('..' upperBound=INTVALUE)?
-	//	']'
+	//	']';
 	public PropertiesGrammarAccess.ArrayRangeElements getArrayRangeAccess() {
 		return gaProperties.getArrayRangeAccess();
 	}
@@ -3200,7 +3204,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//SignedConstant aadl2::Operation:
-	//	op=PlusMinus ownedPropertyExpression+=ConstantValue
+	//	op=PlusMinus ownedPropertyExpression+=ConstantValue;
 	public PropertiesGrammarAccess.SignedConstantElements getSignedConstantAccess() {
 		return gaProperties.getSignedConstantAccess();
 	}
@@ -3210,7 +3214,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//SignedInt aadl2::Integer:
-	//	('+' | '-')? INTEGER_LIT
+	//	('+' | '-')? INTEGER_LIT;
 	public PropertiesGrammarAccess.SignedIntElements getSignedIntAccess() {
 		return gaProperties.getSignedIntAccess();
 	}
@@ -3220,7 +3224,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//SignedReal aadl2::Real:
-	//	('+' | '-')? REAL_LIT
+	//	('+' | '-')? REAL_LIT;
 	public PropertiesGrammarAccess.SignedRealElements getSignedRealAccess() {
 		return gaProperties.getSignedRealAccess();
 	}
@@ -3232,7 +3236,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//NumericRangeTerm aadl2::RangeValue:
 	//	minimum=NumAlt //(RealTerm|IntegerTerm| SignedConstant | ConstantValue)  
 	//	'..' maximum=NumAlt ('delta' delta=NumAlt //(RealTerm|IntegerTerm| SignedConstant | ConstantValue)
-	//)?
+	//)?;
 	public PropertiesGrammarAccess.NumericRangeTermElements getNumericRangeTermAccess() {
 		return gaProperties.getNumericRangeTermAccess();
 	}
@@ -3242,7 +3246,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//NumAlt aadl2::PropertyExpression:
-	//	super::RealTerm | super::IntegerTerm | SignedConstant | ConstantValue
+	//	super::RealTerm | super::IntegerTerm | SignedConstant | ConstantValue;
 	public PropertiesGrammarAccess.NumAltElements getNumAltAccess() {
 		return gaProperties.getNumAltAccess();
 	}
@@ -3258,7 +3262,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	} 
 
 	//INTVALUE aadl2::Integer:
-	//	INTEGER_LIT
+	//	INTEGER_LIT //NUMERAL 	
+	//;
 	public PropertiesGrammarAccess.INTVALUEElements getINTVALUEAccess() {
 		return gaProperties.getINTVALUEAccess();
 	}
