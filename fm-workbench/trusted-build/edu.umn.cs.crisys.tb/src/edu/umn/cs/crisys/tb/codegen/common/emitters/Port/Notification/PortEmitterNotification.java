@@ -163,6 +163,7 @@ public class PortEmitterNotification implements PortEmitterCamkes {
       // However, this should make it easy!!
       return "";
    }
+   
 
    public final boolean getHasDispatcher() {
       if (this.getModelElement() instanceof DispatchableInputPort) {

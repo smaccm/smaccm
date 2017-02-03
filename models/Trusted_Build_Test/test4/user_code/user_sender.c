@@ -15,6 +15,7 @@ bool ping_Output1(const uint32_t * Output1);
 void sender_periodic_ping(const int64_t *the_time) {
 	
    uint32_t to_send = ((uint32_t)*the_time) + 1;
+   printf("sender_periodic_ping: Sending %d\n",to_send);
    ping_Output1(&to_send);
 	
 }
