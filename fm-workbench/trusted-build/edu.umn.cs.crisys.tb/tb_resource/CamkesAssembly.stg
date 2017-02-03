@@ -119,7 +119,7 @@ configConnectTimeServices(threadImpl, model) ::= <<
 <if(threadImpl.requiresTimeServices)>
 <threadImpl.componentInstanceName>.tb_timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
 <threadImpl.componentInstanceName>.tb_timer_global_endpoint = "<threadImpl.timeServicesConnectionName>";
-<threadImpl.componentInstanceName>.tb_timer_complete_global_endpoint = "<threadImpl.timeServicesConnectionName>";
+<! <threadImpl.componentInstanceName>.tb_timer_complete_global_endpoint = "<threadImpl.timeServicesConnectionName>"; !>
 <endif>
 >>
 

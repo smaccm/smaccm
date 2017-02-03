@@ -73,7 +73,9 @@ writeComponentPerConnection(name) ::= <<
 >>
 
 writeComponentPerPort(port) ::= <<
+<if(port.monitorInputCamkesNamePrefix)>
 <writeComponentPerConnection(port.monitorInputCamkesNamePrefix)>
+<endif>
 >>
 /*
 *  Silly but necessary comment because XText is confused by /* in earlier definitions.
