@@ -332,7 +332,7 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
     PortFeature pf = this.getModelElement();
     if (pf instanceof InputPort) {
       String name = getMonitorInputCamkesNamePrefix();
-      String result = "component " + name + " " + name.toLowerCase() + ";\n";
+      String result = "component " + name + " " +  getMonitorAssemblyInstance() + ";\n";
       return result;         
     } else {
       String result = "";
@@ -347,10 +347,10 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
       result += "connection seL4RPCCall conn" + model.getGenerateConnectionNumber()
               + " (from " + getThreadImplementation().getComponentInstanceName()
               + "." + getName()
-              + ", to " + getMonitorInputCamkesNamePrefix().toLowerCase()
+              + ", to " +  getMonitorAssemblyInstance()
               + ".dpr);\n";
       result += "connection seL4Notification conn" + model.getGenerateConnectionNumber()
-      + " (from " + getMonitorInputCamkesNamePrefix().toLowerCase()
+      + " (from " +  getMonitorAssemblyInstance()
       + ".dpn, to " + getThreadImplementation().getComponentInstanceName()
       + "." + getNotificationName()
       + ");\n";
@@ -368,7 +368,7 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
         result += "connection seL4RPCCall conn" + model.getGenerateConnectionNumber()
         + " (from " + getThreadImplementation().getComponentInstanceName()
         + "." + getName() + suffix;
-        result += ", to " + pe.getMonitorInputCamkesNamePrefix().toLowerCase()
+        result += ", to " + pe. getMonitorAssemblyInstance()
         + ".dpw);\n";
         
       }
@@ -406,9 +406,9 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
       PortEmitterRPCDataportCAmkESMonitor emitter = new PortEmitterRPCDataportCAmkESMonitor(porti);
       String name = "";
       if(qualified) {
-        name = emitter.getQualifiedName().toLowerCase();
+        name = emitter.getQualifiedName();
       } else {
-        name =  emitter.getName().toLowerCase();
+        name =  emitter.getName();
       }
       if(sz>1) {
         name += i;
@@ -421,7 +421,7 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
   @Override
   public String getCamkesAddAssemblyFileConfigDeclarations() {
     if (port instanceof InputPort) {
-      return getMonitorInputCamkesNamePrefix().toLowerCase()+".priority = 230;";
+      return  getMonitorAssemblyInstance() + ".priority = 230;";
     } else {
       return "";
     }
@@ -505,6 +505,10 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
   
   public String getNotificationName() {
     return Util.getPrefix() + "_" + super.getName() + "_notification";
+  }
+  
+  public String getMonitorAssemblyInstance() {
+    return this.getMonitorInputCamkesNamePrefix().toLowerCase();
   }
   
 }

@@ -163,6 +163,10 @@ public class PortEmitterNotification implements PortEmitterCamkes {
       // However, this should make it easy!!
       return "";
    }
+   
+   public String getMonitorInputCamkesNamePrefix() {
+     return "";
+   }
 
    public final boolean getHasDispatcher() {
       if (this.getModelElement() instanceof DispatchableInputPort) {
