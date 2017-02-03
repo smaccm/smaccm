@@ -78,8 +78,9 @@ end main;
 processor implementation main.camkes
    properties
       TB_SYS::OS => camkes;
-      TB_SYS::HW => x86;
+      TB_SYS::HW => QEMU;
       TB_SYS::Add_Dummy_Arg_To_Void_Fns => true;  
+      TB_SYS::Camkes_VM_Build => true;
 end main.camkes;
 
 processor implementation main.linux
