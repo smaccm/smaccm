@@ -38,6 +38,7 @@ extern char _cpio_archive[];
 
 extern vka_t _vka;
 extern vspace_t _vspace;
+extern simple_t _simple;
 extern irq_server_t _irq_server;
 extern seL4_CPtr _fault_endpoint;
 
@@ -46,156 +47,158 @@ static const struct device *linux_pt_devices[] = {
 };
 
 static const int linux_pt_irqs[] = {
-INTERRUPT_VTIMER               , 
-INTERRUPT_TMR1                 , 
+INTERRUPT_VTIMER               ,
+INTERRUPT_KEYPAD               ,
+INTERRUPT_SDMMC4               ,
+INTERRUPT_UARTD                ,
+#ifdef CONFIG_TK1_INSECURE
+INTERRUPT_TMR1                 ,
 INTERRUPT_TMR2                 ,
-INTERRUPT_RTC                  , 
-INTERRUPT_CEC                  , 
+INTERRUPT_RTC                  ,
+INTERRUPT_CEC                  ,
 INTERRUPT_SHR_SEM_INBOX_FULL   ,
-INTERRUPT_SHR_SEM_INBOX_EMPTY  , 
-INTERRUPT_SHR_SEM_OUTBOX_FULL  , 
-INTERRUPT_SHR_SEM_OUTBOX_EMPTY , 
-INTERRUPT_VDE_UCQ              , 
-INTERRUPT_VDE_SYNC_TOKEN       , 
-INTERRUPT_VDE_BSEV             , 
-INTERRUPT_VDE_BSEA             , 
-INTERRUPT_VDE_SXE              , 
-INTERRUPT_SATA_RX_STAT         , 
-INTERRUPT_SDMMC1               , 
-INTERRUPT_SDMMC2               , 
-INTERRUPT_VDE                  , 
-INTERRUPT_AVP_UCQ              , 
-INTERRUPT_SDMMC3               , 
-INTERRUPT_USB                  , 
-INTERRUPT_KEYPAD               , 
-INTERRUPT_USB2                 , 
-INTERRUPT_SATA_CTL             , 
-INTERRUPT_VCP                  , 
-INTERRUPT_APB_DMA_CPU          , 
-INTERRUPT_AHB_DMA_CPU          , 
-INTERRUPT_ARB_SEM_GNT_CPU      , 
-INTERRUPT_OWR                  , 
-INTERRUPT_SDMMC4               , 
-INTERRUPT_GPIO1                , 
-INTERRUPT_GPIO2                , 
-INTERRUPT_GPIO3                , 
-INTERRUPT_GPIO4                , 
-INTERRUPT_UARTA                , 
-INTERRUPT_UARTB                , 
-INTERRUPT_I2C                  , 
-INTERRUPT_USB3_HOST            , 
-INTERRUPT_USB3_HOST_SMI        , 
-INTERRUPT_TMR3                 , 
-INTERRUPT_TMR4                 , 
-INTERRUPT_USB3_HOST_PME        , 
-INTERRUPT_USB3_DEV_HOST        , 
-INTERRUPT_ACTMON               , 
-INTERRUPT_UARTC                , 
-INTERRUPT_HSI                  , 
-INTERRUPT_THERMAL              , 
-INTERRUPT_XUSB_PADCTL          , 
-INTERRUPT_TSEC                 , 
-INTERRUPT_EDP                  , 
-INTERRUPT_VFIR                 , 
-INTERRUPT_I2C5                 , 
-INTERRUPT_STAT_MON             , 
-INTERRUPT_GPIO5                , 
-INTERRUPT_USB3_DEV_SMI         , 
-INTERRUPT_USB3_DEV_PME         , 
-INTERRUPT_SE                   , 
-INTERRUPT_SPI1                 , 
-INTERRUPT_APB_DMA_COP          , 
-INTERRUPT_AHB_DMA_COP          , 
-INTERRUPT_CLDVFS               , 
-INTERRUPT_I2C6                 , 
-INTERRUPT_HOST1X_SYNCPT_COP    , 
-INTERRUPT_HOST1X_SYNCPT_CPU    , 
-INTERRUPT_HOST1X_GEN_COP       , 
-INTERRUPT_HOST1X_GEN_CPU       , 
-INTERRUPT_MSENC                , 
-INTERRUPT_VI                   , 
-INTERRUPT_ISPB                 , 
-INTERRUPT_ISP                  , 
-INTERRUPT_VIC                  , 
-INTERRUPT_DISPLAY              , 
-INTERRUPT_DISPLAYB             , 
-INTERRUPT_HDMI                 , 
-INTERRUPT_SOR                  , 
-INTERRUPT_EMC                  , 
-INTERRUPT_SPI6                 , 
-INTERRUPT_HDA                  , 
-INTERRUPT_SPI2                 , 
-INTERRUPT_SPI3                 , 
-INTERRUPT_I2C2                 , 
-INTERRUPT_PMU_EXT              , 
-INTERRUPT_GPIO6                , 
-INTERRUPT_GPIO7                , 
-INTERRUPT_UARTD                , 
-INTERRUPT_I2C3                 , 
-INTERRUPT_SW                   , 
-INTERRUPT_SNOR                 , 
-INTERRUPT_USB3                 , 
-INTERRUPT_PCIE_INT             , 
-INTERRUPT_PCIE_MSI             , 
-INTERRUPT_PCIE_WAKE            , 
-INTERRUPT_AVP_CACHE            , 
-INTERRUPT_AUDIO_CLUSTER        , 
-INTERRUPT_APB_DMA_CH0          , 
-INTERRUPT_APB_DMA_CH1          , 
-INTERRUPT_APB_DMA_CH2          , 
-INTERRUPT_APB_DMA_CH3          , 
-INTERRUPT_APB_DMA_CH4          , 
-INTERRUPT_APB_DMA_CH5          , 
-INTERRUPT_APB_DMA_CH6          , 
-INTERRUPT_APB_DMA_CH7          , 
-INTERRUPT_APB_DMA_CH8          , 
-INTERRUPT_APB_DMA_CH9          , 
-INTERRUPT_APB_DMA_CH10         , 
-INTERRUPT_APB_DMA_CH11         , 
-INTERRUPT_APB_DMA_CH12         , 
-INTERRUPT_APB_DMA_CH13         , 
-INTERRUPT_APB_DMA_CH14         , 
-INTERRUPT_APB_DMA_CH15         , 
-INTERRUPT_I2C4                 , 
-INTERRUPT_TMR5                 , 
-INTERRUPT_HIER_GROUP1_COP      , 
-INTERRUPT_WDT_CPU              , 
-INTERRUPT_WDT_AVP              , 
-INTERRUPT_GPIO8                , 
-INTERRUPT_CAR                  , 
-INTERRUPT_HIER_GROUP1_CPU      , 
-INTERRUPT_APB_DMA_CH16         , 
-INTERRUPT_APB_DMA_CH17         , 
-INTERRUPT_APB_DMA_CH18         , 
-INTERRUPT_APB_DMA_CH19         , 
-INTERRUPT_APB_DMA_CH20         , 
-INTERRUPT_APB_DMA_CH21         , 
-INTERRUPT_APB_DMA_CH22         , 
-INTERRUPT_APB_DMA_CH23         , 
-INTERRUPT_APB_DMA_CH24         , 
-INTERRUPT_APB_DMA_CH25         , 
-INTERRUPT_APB_DMA_CH26         , 
-INTERRUPT_APB_DMA_CH27         , 
-INTERRUPT_APB_DMA_CH28         , 
-INTERRUPT_APB_DMA_CH29         , 
-INTERRUPT_APB_DMA_CH30         , 
-INTERRUPT_APB_DMA_CH31         , 
-INTERRUPT_CPU0_PMU             , 
-INTERRUPT_CPU1_PMU             , 
-INTERRUPT_CPU2_PMU             , 
-INTERRUPT_CPU3_PMU             , 
-INTERRUPT_SDMMC1_SYS           , 
-INTERRUPT_SDMMC2_SYS           , 
-INTERRUPT_SDMMC3_SYS           , 
-INTERRUPT_SDMMC4_SYS           , 
-INTERRUPT_TMR6                 , 
-INTERRUPT_TMR7                 , 
-INTERRUPT_TMR8                 , 
-INTERRUPT_TMR9                 , 
-INTERRUPT_TMR0                 , 
-INTERRUPT_GPU                  , 
-INTERRUPT_GPU_NONSTALL         , 
-ARDPAUX                        , 
+INTERRUPT_SHR_SEM_INBOX_EMPTY  ,
+INTERRUPT_SHR_SEM_OUTBOX_FULL  ,
+INTERRUPT_SHR_SEM_OUTBOX_EMPTY ,
+INTERRUPT_VDE_UCQ              ,
+INTERRUPT_VDE_SYNC_TOKEN       ,
+INTERRUPT_VDE_BSEV             ,
+INTERRUPT_VDE_BSEA             ,
+INTERRUPT_VDE_SXE              ,
+INTERRUPT_SATA_RX_STAT         ,
+INTERRUPT_SDMMC1               ,
+INTERRUPT_SDMMC2               ,
+INTERRUPT_VDE                  ,
+INTERRUPT_AVP_UCQ              ,
+INTERRUPT_SDMMC3               ,
+INTERRUPT_USB                  ,
+INTERRUPT_USB2                 ,
+INTERRUPT_SATA_CTL             ,
+INTERRUPT_VCP                  ,
+INTERRUPT_APB_DMA_CPU          ,
+INTERRUPT_AHB_DMA_CPU          ,
+INTERRUPT_ARB_SEM_GNT_CPU      ,
+INTERRUPT_OWR                  ,
+INTERRUPT_GPIO1                ,
+INTERRUPT_GPIO2                ,
+INTERRUPT_GPIO3                ,
+INTERRUPT_GPIO4                ,
+INTERRUPT_UARTA                ,
+INTERRUPT_UARTB                ,
+INTERRUPT_I2C                  ,
+INTERRUPT_USB3_HOST            ,
+INTERRUPT_USB3_HOST_SMI        ,
+INTERRUPT_TMR3                 ,
+INTERRUPT_TMR4                 ,
+INTERRUPT_USB3_HOST_PME        ,
+INTERRUPT_USB3_DEV_HOST        ,
+INTERRUPT_ACTMON               ,
+INTERRUPT_UARTC                ,
+INTERRUPT_HSI                  ,
+INTERRUPT_THERMAL              ,
+INTERRUPT_XUSB_PADCTL          ,
+INTERRUPT_TSEC                 ,
+INTERRUPT_EDP                  ,
+INTERRUPT_VFIR                 ,
+INTERRUPT_I2C5                 ,
+INTERRUPT_STAT_MON             ,
+INTERRUPT_GPIO5                ,
+INTERRUPT_USB3_DEV_SMI         ,
+INTERRUPT_USB3_DEV_PME         ,
+INTERRUPT_SE                   ,
+INTERRUPT_SPI1                 ,
+INTERRUPT_APB_DMA_COP          ,
+INTERRUPT_AHB_DMA_COP          ,
+INTERRUPT_CLDVFS               ,
+INTERRUPT_I2C6                 ,
+INTERRUPT_HOST1X_SYNCPT_COP    ,
+INTERRUPT_HOST1X_SYNCPT_CPU    ,
+INTERRUPT_HOST1X_GEN_COP       ,
+INTERRUPT_HOST1X_GEN_CPU       ,
+INTERRUPT_MSENC                ,
+INTERRUPT_VI                   ,
+INTERRUPT_ISPB                 ,
+INTERRUPT_ISP                  ,
+INTERRUPT_VIC                  ,
+INTERRUPT_DISPLAY              ,
+INTERRUPT_DISPLAYB             ,
+INTERRUPT_HDMI                 ,
+INTERRUPT_SOR                  ,
+INTERRUPT_EMC                  ,
+INTERRUPT_SPI6                 ,
+INTERRUPT_HDA                  ,
+INTERRUPT_SPI2                 ,
+INTERRUPT_SPI3                 ,
+INTERRUPT_I2C2                 ,
+INTERRUPT_PMU_EXT              ,
+INTERRUPT_GPIO6                ,
+INTERRUPT_GPIO7                ,
+INTERRUPT_I2C3                 ,
+INTERRUPT_SW                   ,
+INTERRUPT_SNOR                 ,
+INTERRUPT_USB3                 ,
+INTERRUPT_PCIE_INT             ,
+INTERRUPT_PCIE_MSI             ,
+INTERRUPT_PCIE_WAKE            ,
+INTERRUPT_AVP_CACHE            ,
+INTERRUPT_AUDIO_CLUSTER        ,
+INTERRUPT_APB_DMA_CH0          ,
+INTERRUPT_APB_DMA_CH1          ,
+INTERRUPT_APB_DMA_CH2          ,
+INTERRUPT_APB_DMA_CH3          ,
+INTERRUPT_APB_DMA_CH4          ,
+INTERRUPT_APB_DMA_CH5          ,
+INTERRUPT_APB_DMA_CH6          ,
+INTERRUPT_APB_DMA_CH7          ,
+INTERRUPT_APB_DMA_CH8          ,
+INTERRUPT_APB_DMA_CH9          ,
+INTERRUPT_APB_DMA_CH10         ,
+INTERRUPT_APB_DMA_CH11         ,
+INTERRUPT_APB_DMA_CH12         ,
+INTERRUPT_APB_DMA_CH13         ,
+INTERRUPT_APB_DMA_CH14         ,
+INTERRUPT_APB_DMA_CH15         ,
+INTERRUPT_I2C4                 ,
+INTERRUPT_TMR5                 ,
+INTERRUPT_HIER_GROUP1_COP      ,
+INTERRUPT_WDT_CPU              ,
+INTERRUPT_WDT_AVP              ,
+INTERRUPT_GPIO8                ,
+INTERRUPT_CAR                  ,
+INTERRUPT_HIER_GROUP1_CPU      ,
+INTERRUPT_APB_DMA_CH16         ,
+INTERRUPT_APB_DMA_CH17         ,
+INTERRUPT_APB_DMA_CH18         ,
+INTERRUPT_APB_DMA_CH19         ,
+INTERRUPT_APB_DMA_CH20         ,
+INTERRUPT_APB_DMA_CH21         ,
+INTERRUPT_APB_DMA_CH22         ,
+INTERRUPT_APB_DMA_CH23         ,
+INTERRUPT_APB_DMA_CH24         ,
+INTERRUPT_APB_DMA_CH25         ,
+INTERRUPT_APB_DMA_CH26         ,
+INTERRUPT_APB_DMA_CH27         ,
+INTERRUPT_APB_DMA_CH28         ,
+INTERRUPT_APB_DMA_CH29         ,
+INTERRUPT_APB_DMA_CH30         ,
+INTERRUPT_APB_DMA_CH31         ,
+INTERRUPT_CPU0_PMU             ,
+INTERRUPT_CPU1_PMU             ,
+INTERRUPT_CPU2_PMU             ,
+INTERRUPT_CPU3_PMU             ,
+INTERRUPT_SDMMC1_SYS           ,
+INTERRUPT_SDMMC2_SYS           ,
+INTERRUPT_SDMMC3_SYS           ,
+INTERRUPT_SDMMC4_SYS           ,
+INTERRUPT_TMR6                 ,
+INTERRUPT_TMR7                 ,
+INTERRUPT_TMR8                 ,
+INTERRUPT_TMR9                 ,
+INTERRUPT_TMR0                 ,
+INTERRUPT_GPU                  ,
+INTERRUPT_GPU_NONSTALL         ,
+ARDPAUX                        ,
+#endif
 };
 
 struct pwr_token {
@@ -340,6 +343,96 @@ configure_clocks(vm_t *vm)
 #endif /* CONFIG_APP_LINUX_SECURE */
 }
 
+struct virq_handle {
+    int virq;
+    void (*ack)(void* token);
+    void* token;
+    vm_t* vm;
+};
+
+/*
+static int
+uartd_device_fault_handler(struct device* d UNUSED, vm_t* vm, fault_t* fault){
+    uint32_t data = fault_get_data(fault);
+    uint32_t addr = fault_get_address(fault);
+    struct virq_handle virq = {.virq = 122, .vm = vm};
+    if(addr == 0x70006300){
+      uint8_t c = data & 0xff;
+      printf("%c",c); 
+      ignore_fault(fault);
+      //int err = vm_inject_IRQ(&virq);
+      //assert(!err);
+    } else if(addr == 0x70006314) {
+      fault_set_data(fault, 3 << 5);
+      advance_fault(fault);
+    } else {
+      //print_fault(fault);
+      ignore_fault(fault);
+    }
+    //printf("Fault addr is %p\n", addr);
+    return 0;
+}
+*/
+
+static int
+uartd_device_fault_handler(struct device* d UNUSED, vm_t* vm, fault_t* fault){
+    uint32_t data = fault_get_data(fault);
+    uint32_t addr = fault_get_address(fault);
+    struct virq_handle virq = {.virq = 122, .vm = vm};
+    //pass uartd through to the hardware
+    if(addr >= 0x70006300 && addr <= 0x700063ff){
+      if(fault_is_write(fault)){
+        *(uint32_t *)addr = data;
+        ignore_fault(fault);
+      }else if(fault_is_read(fault)){
+        data = *(uint32_t *)addr;
+        fault_set_data(fault, data);
+        advance_fault(fault);
+      }else{
+          ignore_fault(fault);
+      }
+    } else {
+      ignore_fault(fault);
+    }
+    return 0;
+}
+
+static int clock_car_fault_handler(struct device* d UNUSED, vm_t* vm, fault_t* fault){
+    uint32_t data = fault_get_data(fault);
+    uint32_t addr = fault_get_address(fault);
+    if(fault_is_write(fault)){
+        print_fault(fault);
+        printf("fault data: %d\n", data);
+        ignore_fault(fault);
+    }else{
+        data = *(uint32_t *)addr;
+        fault_set_data(fault, data);
+        advance_fault(fault);
+    }
+
+
+    return 0;
+}
+
+struct device uartd_dev = {
+        .devid = DEV_CUSTOM,
+        .name = "DEBUG Serial Port",
+        .pstart = 0x70006000,
+        .size = 0x1000,
+        .handle_page_fault = &uartd_device_fault_handler,
+        .priv = NULL,
+};
+
+struct device clock_car_dev = {
+        .devid = DEV_CUSTOM,
+        .name = "DEBUG Clock CAR",
+        .pstart = 0x60006000,
+        .size = 0x1000,
+        .handle_page_fault = &clock_car_fault_handler,
+        .priv = NULL,
+};
+
+
 static int
 install_linux_devices(vm_t* vm)
 {
@@ -373,6 +466,19 @@ install_linux_devices(vm_t* vm)
         err = vm_install_passthrough_device(vm, linux_pt_devices[i]);
         assert(!err);
     }
+
+    //map the page for the serial
+    map_device(vm->vmm_vspace, vm->vka, vm->simple, 0x70006000, 0x70006000, seL4_AllRights);
+    //map the page for the CAR
+    map_device(vm->vmm_vspace, vm->vka, vm->simple, 0x60006000, 0x60006000, seL4_AllRights);
+    
+    err = vm_add_device(vm, &uartd_dev);
+    assert(!err);
+
+    err = vm_add_device(vm, &clock_car_dev);
+    assert(!err);
+
+    //vm_install_listening_device(vm, &uartd_dev); 
 
     return 0;
 }
