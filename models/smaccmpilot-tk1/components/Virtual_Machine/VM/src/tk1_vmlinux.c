@@ -38,6 +38,7 @@ extern char _cpio_archive[];
 
 extern vka_t _vka;
 extern vspace_t _vspace;
+extern simple_t _simple;
 extern irq_server_t _irq_server;
 extern seL4_CPtr _fault_endpoint;
 
@@ -342,6 +343,96 @@ configure_clocks(vm_t *vm)
 #endif /* CONFIG_APP_LINUX_SECURE */
 }
 
+struct virq_handle {
+    int virq;
+    void (*ack)(void* token);
+    void* token;
+    vm_t* vm;
+};
+
+/*
+static int
+uartd_device_fault_handler(struct device* d UNUSED, vm_t* vm, fault_t* fault){
+    uint32_t data = fault_get_data(fault);
+    uint32_t addr = fault_get_address(fault);
+    struct virq_handle virq = {.virq = 122, .vm = vm};
+    if(addr == 0x70006300){
+      uint8_t c = data & 0xff;
+      printf("%c",c); 
+      ignore_fault(fault);
+      //int err = vm_inject_IRQ(&virq);
+      //assert(!err);
+    } else if(addr == 0x70006314) {
+      fault_set_data(fault, 3 << 5);
+      advance_fault(fault);
+    } else {
+      //print_fault(fault);
+      ignore_fault(fault);
+    }
+    //printf("Fault addr is %p\n", addr);
+    return 0;
+}
+*/
+
+static int
+uartd_device_fault_handler(struct device* d UNUSED, vm_t* vm, fault_t* fault){
+    uint32_t data = fault_get_data(fault);
+    uint32_t addr = fault_get_address(fault);
+    struct virq_handle virq = {.virq = 122, .vm = vm};
+    //pass uartd through to the hardware
+    if(addr >= 0x70006300 && addr <= 0x700063ff){
+      if(fault_is_write(fault)){
+        *(uint32_t *)addr = data;
+        ignore_fault(fault);
+      }else if(fault_is_read(fault)){
+        data = *(uint32_t *)addr;
+        fault_set_data(fault, data);
+        advance_fault(fault);
+      }else{
+          ignore_fault(fault);
+      }
+    } else {
+      ignore_fault(fault);
+    }
+    return 0;
+}
+
+static int clock_car_fault_handler(struct device* d UNUSED, vm_t* vm, fault_t* fault){
+    uint32_t data = fault_get_data(fault);
+    uint32_t addr = fault_get_address(fault);
+    if(fault_is_write(fault)){
+        print_fault(fault);
+        printf("fault data: %d\n", data);
+        ignore_fault(fault);
+    }else{
+        data = *(uint32_t *)addr;
+        fault_set_data(fault, data);
+        advance_fault(fault);
+    }
+
+
+    return 0;
+}
+
+struct device uartd_dev = {
+        .devid = DEV_CUSTOM,
+        .name = "DEBUG Serial Port",
+        .pstart = 0x70006000,
+        .size = 0x1000,
+        .handle_page_fault = &uartd_device_fault_handler,
+        .priv = NULL,
+};
+
+struct device clock_car_dev = {
+        .devid = DEV_CUSTOM,
+        .name = "DEBUG Clock CAR",
+        .pstart = 0x60006000,
+        .size = 0x1000,
+        .handle_page_fault = &clock_car_fault_handler,
+        .priv = NULL,
+};
+
+
 static int
 install_linux_devices(vm_t* vm)
 {
@@ -375,6 +466,19 @@ install_linux_devices(vm_t* vm)
         err = vm_install_passthrough_device(vm, linux_pt_devices[i]);
         assert(!err);
     }
+
+    //map the page for the serial
+    map_device(vm->vmm_vspace, vm->vka, vm->simple, 0x70006000, 0x70006000, seL4_AllRights);
+    //map the page for the CAR
+    map_device(vm->vmm_vspace, vm->vka, vm->simple, 0x60006000, 0x60006000, seL4_AllRights);
+    
+    err = vm_add_device(vm, &uartd_dev);
+    assert(!err);
+
+    err = vm_add_device(vm, &clock_car_dev);
+    assert(!err);
+
+    //vm_install_listening_device(vm, &uartd_dev); 
 
     return 0;
 }

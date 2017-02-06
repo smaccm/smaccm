@@ -95,6 +95,7 @@ bool framing2self_write_SMACCM_DATA__CAN_Frame_i(const SMACCM_DATA__CAN_Frame_i 
 
 int run(void) {
     for (;;) {
+    printf("Starting CAN\n");
 	can_frame_t d_frame; // Driver frame
 	can_rx_recv(&d_frame);
 	if (d_frame.dlc > MAX_FRAME_LEN) {

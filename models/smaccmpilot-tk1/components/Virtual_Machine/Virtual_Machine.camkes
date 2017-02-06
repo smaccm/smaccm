@@ -11,7 +11,7 @@ component Virtual_Machine {
     provides bool_writer server2self_reboot;
 
     composition {
-//        component VM vm_obj;
+        component VM vm_obj;
         component VM_shim vm_shim_obj;
 
         export vm_shim_obj.self2server -> self2server;
@@ -21,12 +21,18 @@ component Virtual_Machine {
     configuration {
         vm_obj.priority = 101;
         vm_shim_obj.priority = 103;
-        
+ 
+
+        vm_obj.mmios = [
+            "0x60006000:0x1000:12", // Clock and Reset (CAR)
+            "0x70006000:0x1000:12", // UARTA, UARTB, VFIR, UARTC, UARTD, HDMI_IOBIST, MIPI_IOBIST, LPDDR2_IOBIST, PCIE_X2_0_IOBIST, PCIE_X2_1_IOBIST, PCIE_X4_IOBIST, SATA_IOBIST
+            ];
+
         vm_obj.untyped_mmios = [
             "0x50046000:12", // Interrupt Controller Virtual CPU interface (Virtual Machine view)
             "0x60004000:12", // Interrupt controller registers (ICTLR)
-            "0x60006000:12", // Clock and Reset (CAR)
-            "0x70006000:12", // UARTA, UARTB, VFIR, UARTC, UARTD, HDMI_IOBIST, MIPI_IOBIST, LPDDR2_IOBIST, PCIE_X2_0_IOBIST, PCIE_X2_1_IOBIST, PCIE_X4_IOBIST, SATA_IOBIST
+            //"0x60006000:12", // Clock and Reset (CAR)
+            //"0x70006000:12", // UARTA, UARTB, VFIR, UARTC, UARTD, HDMI_IOBIST, MIPI_IOBIST, LPDDR2_IOBIST, PCIE_X2_0_IOBIST, PCIE_X2_1_IOBIST, PCIE_X4_IOBIST, SATA_IOBIST
             "0x700b0000:12", // SDMMC-1
             "0x7d000000:12", // USB
             "0x7d004000:12", // USB2

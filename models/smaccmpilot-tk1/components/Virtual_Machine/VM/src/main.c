@@ -573,6 +573,7 @@ extern const int __attribute__((weak)) base_prio;
 int 
 run(void) {
     /* if the base_prio attribute is set, use it */
+    printf("STARTING VM\n");
     if (&base_prio != NULL) {
        VM_PRIO = base_prio;
     }
