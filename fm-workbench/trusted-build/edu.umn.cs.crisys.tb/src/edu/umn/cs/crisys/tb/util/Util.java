@@ -410,10 +410,4 @@ public class Util {
       Date d = new Date();
       return dateFormat.format(d);  
    }
-   
-   public static String wrapMutexOp(String op) {
-     String ret = "if("+op+" != 0) {\n  fprintf(stderr,\"Operation '"+op+"' failed in %s at %d.\\n\",__FILE__,__LINE__);\n  *((int*)0)=0xdeadbeef;\n}";
-     return ret;
-   }
-   
 }

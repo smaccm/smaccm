@@ -124,7 +124,7 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
     if(port instanceof InputDataPort) {
       // Create component directory for connections.
       String monitorComponentName = getMonitorInputCamkesNamePrefix();
-      File componentDirectory = new File(componentsDirectory, monitorComponentName);
+      File componentDirectory = new File(new File(componentsDirectory, "tb_Monitors"), monitorComponentName);
       componentDirectory.mkdirs();
 
       // Write camkes specification for this component.
@@ -149,8 +149,8 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
         ST ctmplt = this.getTemplateST("monitorCamkesCWriter");
         ctmplt.add("port", this);
         ctmplt.add("str_types_include",(new ModelNames(model)).getSystemTypeHeaderName());
-        ctmplt.add("unlock", Util.wrapMutexOp("dp_unlock()"));
-        ctmplt.add("lock", Util.wrapMutexOp("dp_lock()"));
+        ctmplt.add("unlock", "MUTEXOP(dp_unlock())");
+        ctmplt.add("lock", "MUTEXOP(dp_lock())");
         String err = "IOException occurred during getWriteCamkesPortComponents"
             +" while writing "+sourcefile+":";
         ST purposetmplt = this.getTemplateST("inputPortCMonitorPurpose");
@@ -230,19 +230,20 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
 
   @Override
   public String getWritePortDeclarations() {
-    if(port instanceof InputDataPort && !((InputDataPort)port).getExternalHandlerList().isEmpty()) {
-      assert(port.getParent() instanceof ThreadImplementation);
-      ThreadImplementationNames ti = new ThreadImplementationNames((ThreadImplementation) port.getParent());
-      ST st = this.getTemplateST("monitorCamkesEventHandler");
-      st.add("port", this);
-      st.add("unlock", ti.getCamkesDispatcherUnlockStmt());
-      return st.render();
-    } else if (port instanceof OutputDataPort) {
+    if (port instanceof OutputDataPort) {
       ST st = getTemplateST("componentRemoteWriterDecl");
+      st.add("port", this);
+      return st.render();
+    } else if (port instanceof InputDataPort && port.getCommprimFnNameOpt() != null) {
+      ST st = getTemplateST("generateLocalReaderWrapper");
       st.add("port", this);
       return st.render();
     }
     return "";
+  }
+  
+  public String getCommprimFnNameOpt() {
+    return port.getCommprimFnNameOpt();
   }
 
   @Override
@@ -262,14 +263,7 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
 
   @Override
   public String getWritePortEventResponder() {
-    ST st; 
-    if (port instanceof InputDataPort && getHasDispatcher()) {
-      st = getTemplateST("dataportDispatcher");
-      st.add("dispatcher", EmitterFactory.port(port));
-      return st.render(); 
-    } else {
-      return "";
-    }
+    return "";
   }
 
   public String writeOptPortThreadInitializerPrototype(String v) {
@@ -284,9 +278,6 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
   @Override
   public String getWritePortThreadInitializer() {
     String result = writeOptPortThreadInitializerPrototype("");
-    if (this.getModelElement() instanceof InputPort) {
-      result = getTypeName()+" "+getName()+";\n"+result;
-    } 
     return result;
   }
 
@@ -433,7 +424,7 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
     String retval = "";
     if(port instanceof InputDataPort) {
       String name = getMonitorInputCamkesNamePrefix();
-      return "import \"components/"+name+"/"+name+".camkes\";\n";
+      return "import \"components/tb_Monitors/"+name+"/"+name+".camkes\";\n";
     } else {
       return "";
     }
@@ -442,18 +433,13 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
 
   // local reader/writer name does not have to be compatible with any CAmkES stuff.
   public String getLocalReaderWriterName(String readWrite) {
-    PortFeature dp = getModelElement();
-    if (dp.getCommprimFnNameOpt() != null) {
-      return dp.getCommprimFnNameOpt();
-    } else {
-      String result = Util.getPrefix_() +
-          dp.getOwner().getNormalizedName() + "_" + readWrite + "_" + dp.getName();
-      return result;
-    }
+    String result = Util.getPrefix_() +
+        port.getName() + "_" + readWrite;
+    return result;
   }   
 
   public String getLocalReaderName() {
-    return this.getName()+"_read";
+    return getLocalReaderWriterName("read");
   }
 
   public String getLocalWriterName() {
@@ -484,13 +470,7 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
 
   @Override
   public String getCamkesAddPreInitStatements() {
-    if(!((InputDataPort)port).getExternalHandlerList().isEmpty()) {
-      ST st = this.getTemplateST("preinitStatements");
-      st.add("port", this);
-      return st.render();
-    } else {
       return "";
-    }
   }
   
   @Override

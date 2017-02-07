@@ -442,7 +442,6 @@ public class AadlModelParser {
       if (port.getCategory() == PortCategory.DATA) {
          if (port.getDirection() == DirectionType.IN) {
             dp = new InputDataPort(port.getName(), datatype, ti);
-            addExtHandlersAndOptSendStrings((DispatchableInputPort)dp,port,ti);
          } else {
             dp = new OutputDataPort(port.getName(), datatype, ti);
          }

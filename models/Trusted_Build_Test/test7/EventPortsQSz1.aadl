@@ -1,0 +1,139 @@
+-- AADL Test 7: active -> active threads using scalar read/write on dataport.
+
+package EventPortsQSz1
+public 
+   with Base_Types;
+   with TB_SYS;   
+   with Data_Model;
+
+
+data a_struct
+  properties
+    Data_Model::Data_Representation => Struct;
+end a_struct;
+
+data implementation a_struct.impl
+  subcomponents
+    field1 : data Base_Types::Float;
+    field2 : data Base_Types::Float;
+end a_struct.impl;
+
+-- Example of a periodically dispatched "Active" thread.   
+thread sender
+	features
+		Output1: out event port  {
+	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
+		};
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    TB_SYS::Thread_Type => Active ;
+	    Period => 1000 ms;
+	    Initialize_Entrypoint_Source_Text => "initialize_sender";
+		Source_Text => ("user_code/user_sender_event.c", "user_code/opt_main.c");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
+      TB_SYS::Requires_Time_Services => true;
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender ; 
+
+-- Example of a periodically dispatched "Active" thread.   
+thread receiver
+	features
+		Input1: in event  port  {
+	      TB_SYS::CommPrim_Source_Text => "ping_Input1";		
+	      -- TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		  --Queue_Size => 8;
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    TB_SYS::Thread_Type => Active ;
+	    Period => 1000 ms;
+		Source_Text => ("user_code/user_receiver_event.c");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
+	    Priority => 8;
+	    Stack_Size => 256 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    TB_SYS::Sends_Events_To => "{{}}";
+end receiver ; 
+
+process proc
+
+end proc;
+
+process implementation proc.Impl
+	subcomponents
+		s: thread sender;
+		r: thread receiver;
+	connections
+		s_to_r : port s.Output1 -> r.Input1 {TB_SYS::Mailbox => true; } ;
+end proc.Impl;
+
+processor main     
+end main;
+
+processor implementation main.camkes
+   properties
+      TB_SYS::OS => camkes;
+      TB_SYS::HW => QEMU;
+      TB_SYS::Add_Dummy_Arg_To_Void_Fns => true;  
+end main.camkes;
+
+processor implementation main.linux
+   properties
+      TB_SYS::OS => linux;
+      TB_SYS::HW => X86;
+end main.linux;
+
+processor implementation main.vxworks
+   properties
+      TB_SYS::OS => vxworks;
+      TB_SYS::HW => x86;
+end main.vxworks;
+
+processor implementation main.echronos
+   properties
+      TB_SYS::OS => echronos;
+      TB_SYS::HW => pixhawk;
+end main.echronos;
+
+system test
+end test;
+
+system implementation test.camkes
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.camkes;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
+end test.camkes;
+
+system implementation test.echronos
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.echronos;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
+end test.echronos;
+
+system implementation test.vxworks
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.vxworks;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
+end test.vxworks;
+
+system implementation test.linux
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.linux;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
+end test.linux;
+
+
+end test7;

@@ -1,3 +1,23 @@
 import "CommonTypesHeader.stg"
 
 osSpecificDefine() ::= "#define __TB_OS_CAMKES__"
+
+mutexOP() ::= <<
+#define MUTEXOP(OP)\
+if((OP) != 0) {\
+  fprintf(stderr,"Operation " #OP " failed in %s at %d.\\n",__FILE__,__LINE__);\
+  *((int*)0)=0xdeadbeef;\
+}
+
+
+>>
+
+callbackOP() ::= <<
+#define CALLBACKOP(OP)\
+if((OP) != 0) {\
+  fprintf(stderr,"Operation " #OP " failed in %s at %d.\\n",__FILE__,__LINE__);\
+  *((int*)0)=0xdeadbeef;\
+}
+
+
+>>
