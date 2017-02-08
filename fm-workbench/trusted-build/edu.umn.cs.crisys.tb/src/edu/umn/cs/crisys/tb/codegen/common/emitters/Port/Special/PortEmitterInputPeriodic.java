@@ -420,7 +420,6 @@ public void getWriteCamkesPortIdls(File interfacesDirectory) {
 @Override
 public List<String> getCamkesAddComponentPortImports() {
   List<String> list = new LinkedList<String>();
-  list.add(port.getType() + "_writer.idl4");
   return list;
 }
 

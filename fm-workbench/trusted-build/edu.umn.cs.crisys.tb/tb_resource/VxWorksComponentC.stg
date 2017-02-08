@@ -13,6 +13,7 @@ dispatcherMainInitializeLockStmt(threadImpl) ::= <<
 semTake(<threadImpl.threadDispatcherMutex>, WAIT_FOREVER);
 >>
 
+osSpecificThreadInitializer(threadImpl) ::= ""
 
 osSpecificThreadPostInitializer(threadImpl) ::= <<
 >>

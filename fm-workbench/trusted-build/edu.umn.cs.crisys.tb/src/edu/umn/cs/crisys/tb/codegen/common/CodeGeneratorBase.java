@@ -429,11 +429,17 @@ public abstract class CodeGeneratorBase {
          ST st = stg.getInstanceOf("externalTypeDecls");
          st.add("model", mn);
          hwriter.append(st.render()); 
-
+         st = stg.getInstanceOf("mutexOP");
+         String result = st.render();
+         hwriter.append(st.render());
+         st = stg.getInstanceOf("callbackOP");
+         hwriter.append(st.render());
          // TODO: MWW: this needs to be refactored for new architecture.
          // createComponentDispatchTypes();
          createPortTypes();
          C_Type_Writer.writeTypes(hwriter, model, 6);
+         
+         
 
          writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("filePostfix"));
 

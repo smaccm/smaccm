@@ -13,6 +13,7 @@ dispatcherMainInitializeLockStmt(threadImpl) ::= <<
 tb_sem_wait(&<threadImpl.threadDispatcherMutex>);
 >>
 
+osSpecificThreadInitializer(threadImpl) ::= ""
 
 osSpecificThreadPostInitializer(threadImpl) ::= <<
 >>
@@ -75,8 +76,10 @@ osSpecificIncludeFiles(threadImpl) ::= <<
 #include "<threadImpl.parentProcess.headerName>"
 #include <\u003C>string.h<\u003E>
 #include \<assert.h>
+#include \<fcntl.h>
+#include \<sys/mman.h>
 #include "tb_linux_support.h"
-
+#include "dataport.h"
 
 <writeDecls(threadImpl)>
 

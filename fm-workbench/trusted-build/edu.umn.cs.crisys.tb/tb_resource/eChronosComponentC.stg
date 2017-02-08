@@ -14,6 +14,8 @@ import "CommonComponentC.stg"
 osSpecificThreadEntrypoint(threadImpl) ::= "int <threadImpl.threadImplMainFnName>(void)"
 osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
 
+osSpecificThreadInitializer(threadImpl) ::= ""
+
 dispatcherMainInitializeLockStmt(threadImpl) ::= " "
 
 dispatcherMainLockWaitStmt(threadImpl) ::= <<

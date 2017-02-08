@@ -35,10 +35,7 @@ inputPortIDL4MonitorPurpose(port,str_direction) ::= <<
 >>
 
 registerCallback(port) ::= <<
-if(<port.notificationName>_reg_callback(<port.notificationName>_handler, NULL)) {
-  fprintf(stderr,"Failed to register callback for <port.notificationName> in %s at %d.\n",__FILE__,__LINE__);
-  *((int*)0) = 0xdeadbeef;
-}
+CALLBACKOP(<port.notificationName>_reg_callback(<port.notificationName>_handler, NULL));
 >>
 
 preinitStatements(port) ::= <<
@@ -57,22 +54,35 @@ void <externalHandler.handlerName>(const <dispatcher.type.aadlInputType.name> <d
 >>
 
 writeUdePrototype(dispatcher) ::= <<
-<commentIf({user dispatch entrypoints for port <dispatcher.name>},
-           (dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)))>
-
 >>
 
 writePortWriterPrototype(port) ::= <<
 bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+
+<if(port.commprimFnNameOpt)>
+bool <port.commprimFnNameOpt>(const <port.type.aadlInputType.name> <port.name>);
+<endif>
 
 >>
 
 writePortReaderPrototype(port) ::= <<
 // reader prototype for <port.name>
 bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+
+<if(port.commprimFnNameOpt)>
+bool <port.commprimFnNameOpt>(<port.type.aadlOutputType.name> <port.name>);
+<endif>
+
 >>
 
+generateLocalReaderWrapper(port) ::= <<
 
+
+bool <port.commprimFnNameOpt>(<port.type.aadlOutputType.name> <port.name>) {
+  return <port.localReaderName>(<port.name>);
+}
+
+>>
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -123,8 +133,11 @@ remoteCallerFunction(port) ::= <<
  * enqueue attempt failed.
  *
  ************************************************************************/
-
+<if(port.commprimFnNameOpt)> 
+bool <port.commprimFnNameOpt>(const <port.type.aadlInputType.name> <port.name>) {
+<else>
 bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
+<endif>
     <port.outputMonitorNames:{ n | <callRemoteWriterStmt(port,n)>}>
     return true;
 }
@@ -134,21 +147,6 @@ bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
 componentRemoteWriterDecl(port) ::= <<
 <remoteCallerFunction(port)>
 >>
-
-///////////////////////////////////////////////////////////////
-//
-// Dispatch functions
-//
-///////////////////////////////////////////////////////////////
-
-dataportDispatcher(dispatcher) ::= <<
-{
-    <dispatcher.localReaderName>(<dispatcher.type.valToAadlOutput><dispatcher.name>);
-    <dispatcher.activeThreadInternalDispatcherFnName>(<dispatcher.type.valToAadlInput><dispatcher.name>);
-}
-
->>
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -215,15 +213,6 @@ bool dpw_write(const <port.typeName> * m) {
   dpn_emit();
   <unlock>
   return true;
-}
-
->>
-
-monitorCamkesEventHandler(port,unlock) ::= <<
-
-static void <port.notificationName>_handler(void * unused) {
-  <unlock>
-  <registerCallback(port)>
 }
 
 >>

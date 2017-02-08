@@ -43,13 +43,13 @@ linuxPortInitializer(port) ::= <<
 {
     // map to the file resource and shared memory.
     <if(port.isInputPort)>
-    int <port.readerWriterImplVar>_file = open(<port.sourcePort.qualifiedName>, O_RDONLY);
+    int <port.readerWriterImplVar>_file = open("dev/<port.sourcePort.qualifiedName>", O_RDONLY);
     <else>
-    int <port.readerWriterImplVar>_file = open(<port.sourcePort.qualifiedName>, O_WRONLY);
+    int <port.readerWriterImplVar>_file = open("dev/<port.sourcePort.qualifiedName>", O_WRONLY);
     <endif>
 
-    <port.readerWriterImplVar> = (volatile <port.type.aadlInputType.name>)dataport_mmap(src);
-    assert(src_data != MAP_FAILED);
+    <port.readerWriterImplVar> = (volatile <port.type.aadlInputType.name>)dataport_mmap(<port.readerWriterImplVar>_file);
+    assert(<port.readerWriterImplVar> != MAP_FAILED);
 
 }
 >>

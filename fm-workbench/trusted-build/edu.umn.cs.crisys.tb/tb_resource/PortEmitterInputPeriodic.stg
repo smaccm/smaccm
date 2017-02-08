@@ -172,14 +172,14 @@ void tb_timer_complete_callback(void *_ UNUSED) {
    // we want time in microseconds, not nanoseconds, so we divide by 1000.
    int64_t tb_time_periodic_dispatcher = tb_timer_time() / 1000LL;
    (void)<dispatcher.incomingWriterName>(&tb_time_periodic_dispatcher);
-   <camkesWrapReturnCallFail({tb_timer_complete_reg_callback(tb_timer_complete_reg_callback, NULL)})>;
+   CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
 }
 
 >>
 
 camkesComponentCInitializer(port) ::= <<
 // tb_timer_periodic(0, ((uint64_t)<port.periodicDispatcherPeriod>)*NS_IN_MS);
-   <camkesWrapReturnCallFail({tb_timer_complete_reg_callback(tb_timer_complete_reg_callback, NULL)})>;
+   CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
 >>
 
 camkesAssemblyPeriodicDispatcherConnections(port) ::= <<
@@ -216,7 +216,7 @@ static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
  ************************************************************************/
 
 void <periodicClockFn(dispatcher)>(union sigval data) {
-    periodic_info *info = (periodic_info *)data.sival_ptr;
+    // periodic_info *info = (periodic_info *)data.sival_ptr;
     <dispatcher.dispatchOccurredVar> = true;
     <dispatcher.periodicTimeVar> += ((long long)<dispatcher.periodicDispatcherPeriod>)*1000LL;
     <dispatcher.threadImplementation.mainLockReleaseStmt>
@@ -226,12 +226,10 @@ void <periodicClockFn(dispatcher)>(union sigval data) {
 
 dispatcherComponentInit(dispatcher) ::= <<
 {
-/* unnecessary if we use TB time server.
    int tb_result;
    tb_result = tb_make_periodic_timer(<dispatcher.periodicDispatcherPeriod>*1000,
                    <periodicClockFn(dispatcher)>,
                    &<periodicClock(dispatcher)>);
    assert(tb_result != -1);
-*/
 }
 >>

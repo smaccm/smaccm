@@ -61,7 +61,7 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
       String result = ""; 
       result += getOutputVmPorts(pl).stream()
          .map(output ->  
-            "dataport " + output.getType().getCamkesName() + " " + output.getQualifiedName() + ";" + System.lineSeparator())
+            "dataport Buf(" + output.getType().getFrameSizeInBytes() + ") " + output.getQualifiedName() + ";" + System.lineSeparator())
          .collect(Collectors.joining(""));
       return result;
    }

@@ -22,7 +22,7 @@ void sender_periodic_ping(const int64_t *the_time) {
 	#elif __TB_OS_ECHRONOS__
 		debug_print("sender: periodic dispatch received at time ");
 		debug_printhex32((uint32_t)*the_time);
-		debug_println(".  Writing to receiver.");
+		debug_println(".  Writing to receiver.\n");
 	#elif __TB_OS_LINUX__
 		printf("sender: periodic dispatch received at time: %" PRId64 ".  Writing to receiver. \n", *the_time);
 	#else

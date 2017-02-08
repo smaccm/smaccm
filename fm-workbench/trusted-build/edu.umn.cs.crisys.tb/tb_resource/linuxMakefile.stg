@@ -42,8 +42,10 @@ obj = $(src:.c=.o)
 
 LDFLAGS = -lrt
 
+CFLAGS = -I. -pthread -Wall -Werror
+
 myprog: $(obj)
-	$(CC) -pthread -Wall -Werror -o $@ $^ $(LDFLAGS)
+    $(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 .PHONY: clean
 clean:

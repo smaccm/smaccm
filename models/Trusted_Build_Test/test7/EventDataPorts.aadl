@@ -1,6 +1,6 @@
 -- AADL Test 7: active -> active threads using scalar read/write on dataport.
 
-package test7
+package EventDataPorts
 public 
    with Base_Types;
    with TB_SYS;   
@@ -21,7 +21,7 @@ end a_struct.impl;
 -- Example of a periodically dispatched "Active" thread.   
 thread sender
 	features
-		Output1: out data port Base_Types::Unsigned_32 {
+		Output1: out event data port Base_Types::Unsigned_32 {
 	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
 		};
 	
@@ -42,7 +42,7 @@ end sender ;
 -- Example of a periodically dispatched "Active" thread.   
 thread receiver
 	features
-		Input1: in data port Base_Types::Unsigned_32 {
+		Input1: in event data port Base_Types::Unsigned_32 {
 	      TB_SYS::CommPrim_Source_Text => "ping_Input1";			
 	      -- TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  --Queue_Size => 8;
@@ -80,7 +80,6 @@ processor implementation main.camkes
       TB_SYS::OS => camkes;
       TB_SYS::HW => QEMU;
       TB_SYS::Add_Dummy_Arg_To_Void_Fns => true;  
-      TB_SYS::Camkes_VM_Build => true;
 end main.camkes;
 
 processor implementation main.linux

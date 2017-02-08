@@ -35,10 +35,7 @@ inputPortIDL4MonitorPurpose(port,str_direction) ::= <<
 >>
 
 registerCallback(port) ::= <<
-if(<port.notificationName>_reg_callback(<port.notificationName>_handler, NULL)) {
-  fprintf(stderr,"Failed to register callback for <port.notificationName> in %s at %d.\n",__FILE__,__LINE__);
-  *((int*)0) = 0xdeadbeef;
-}
+CALLBACKOP(<port.notificationName>_reg_callback(<port.notificationName>_handler, NULL));
 >>
 
 preinitStatements(port) ::= <<
@@ -68,8 +65,14 @@ writeUdePrototype(dispatcher) ::= <<
 writePortWriterPrototype(port) ::= <<
 <if(port.hasData)>
 bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+<if(port.commprimFnNameOpt)>
+bool <port.commprimFnNameOpt>(const <port.type.aadlInputType.name> <port.name>);
+<endif>
 <else>
 bool <port.localWriterName>(void);
+<if(port.commprimFnNameOpt)>
+bool <port.commprimFnNameOpt>(void);
+<endif>
 <endif>
 
 >>
@@ -78,13 +81,27 @@ writePortReaderPrototype(port) ::= <<
 // reader prototype for <port.name>
 <if(port.hasData)>
 bool <port.localReaderName>(<port.type.aadlInputType.name> <port.name>);
+<if(port.commprimFnNameOpt)>
+bool <port.commprimFnNameOpt>(<port.type.aadlOutputType.name> <port.name>);
+<endif>
 <else>
 bool <port.localReaderName>(void);
+<if(port.commprimFnNameOpt)>
+bool <port.commprimFnNameOpt>(void);
+<endif>
+
 <endif>
 
 >>
 
+generateLocalReaderWrapper(port) ::= <<
 
+bool <port.commprimFnNameOpt><if(port.hasData)>(<port.type.aadlOutputType.name> <port.name>)<else>(void)<endif>
+{
+  return <port.localReaderName><if(port.hasData)>(<port.name>)<else>()<endif>;
+}
+
+>>
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -169,11 +186,15 @@ remoteCallerFunction(port) ::= <<
  * enqueue attempt failed.
  *
  ************************************************************************/
-
-<if(port.hasData)>
-bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
+<if(port.commprimFnNameOpt)> 
+bool <port.commprimFnNameOpt>
 <else>
-bool <port.localWriterName>(void) {
+bool <port.localWriterName>
+<endif>
+<if(port.hasData)>
+(const <port.type.aadlInputType.name> <port.name>) {
+<else>
+(void) {
 <endif>
     bool tb_result = true ; 
     <port.outputMonitorNames:{ n | <callRemoteWriterStmt(port,n)>}>

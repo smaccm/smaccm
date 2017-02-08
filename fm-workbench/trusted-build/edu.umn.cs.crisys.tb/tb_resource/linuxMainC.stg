@@ -164,6 +164,8 @@ body(model) ::= <<
 #include <\u003C>assert.h<\u003E>
 #include <\u003C>sys/prctl.h<\u003E>
 #include \<sys/mman.h>
+#include \<sys/types.h>
+#include \<sys/wait.h>
 
 <model.threadImplementations:writeThreadPortIncludes()>
 

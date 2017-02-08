@@ -363,15 +363,9 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
       // write dispatcher types
       Set<Type> rwTypeSet = new HashSet<Type>();
 
-      // "for free types" that are always necessary; void for event ports
-      // and uint32_t for periodic dispatchers.  Note if the dispatcher 
-      // time type changes, it may break code, so perhaps we should 
-      // store the time type somewhere (model?); 
-      // MWW: updated: store this in the periodic dispatcher class.
-
       rwTypeSet.add(new UnitType());
       //rwTypeSet.add(new IntType(32, false));  
-      rwTypeSet.add(InputPeriodicPort.getPortType());  
+      //rwTypeSet.add(InputPeriodicPort.getPortType());  
 
       for (ThreadImplementation ti : model.getThreadImplementationList()) {
          for (OutputDataPort d : ti.getOutputDataPortList()) {

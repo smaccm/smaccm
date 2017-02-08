@@ -73,10 +73,8 @@ import \<Timer.idl4>;
 <threadImpl.portList:camkesAddComponentPortImports()>
 <\\>
 
-
 <commentIf("Idl files for shared data accessors",
             (threadImpl.sharedDataAccessorList:importSharedDataAccessorIdl()))><\\>
-
 <commentIf("Idl files for RPCs",
            (threadImpl.usedRpgs:importRpgIdl()))><\\>
 

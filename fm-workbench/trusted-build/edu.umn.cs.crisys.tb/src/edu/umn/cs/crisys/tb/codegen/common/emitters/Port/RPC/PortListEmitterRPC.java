@@ -64,10 +64,7 @@ public class PortListEmitterRPC implements PortListEmitter, PortListEmitterCamke
       for (PortEmitterRPC perpc : relevantPorts(pl)) {
          types.add(perpc.getModelElement().getType());
       }
-      // add a type for the periodic dispatcher, which is an RPC port, but 
-      // also a "special" port.
-      types.add(InputPeriodicPort.getPortType());  
-      types.add(new UnitType());
+      // types.add(new UnitType());
 
       return types;
    }
