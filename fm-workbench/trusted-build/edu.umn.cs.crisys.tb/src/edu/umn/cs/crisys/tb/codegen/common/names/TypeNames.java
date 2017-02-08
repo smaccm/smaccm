@@ -259,6 +259,14 @@ public class TypeNames implements NameEmitter {
      }
   }
   
+  public static int PAGE_SIZE = 4096;
+  
+  public int getFrameSizeInBytes() {
+     int size = getOverApproximateSizeInBytes();
+     int frames = size / PAGE_SIZE + ((size % PAGE_SIZE == 0) ? 0 : 1);
+     return frames * PAGE_SIZE;
+  }
+  
   // TODO MWW: Hacks!  To get arrays working with CAmkES.
   static private String getCamkesArrayContainerName(IdType idt) {
     return getPrefix() + "_" + idt.getTypeId() + "_container";

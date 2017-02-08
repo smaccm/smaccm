@@ -135,7 +135,8 @@ public class PortEmitterSimpleVMDataport implements PortEmitter, PortEmitterLinu
    
    @Override
    public String getCamkesAddComponentPortLevelDeclarations() {
-      return "dataport " + this.getType().getCamkesName() + " " + this.getName() + "; " + System.lineSeparator(); 
+      int size = this.getType().getFrameSizeInBytes();
+      return "dataport Buf(" + size + ") " + this.getName() + "; " + System.lineSeparator(); 
    }
 
    @Override

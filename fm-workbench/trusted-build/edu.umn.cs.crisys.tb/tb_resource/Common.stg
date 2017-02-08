@@ -140,3 +140,10 @@ memcpy(<type.valToPtr><dst>, <type.camkesInputToPtr><src>, sizeof(<type.name>));
 valToCamkesOutputMemcpy(type, dst, src) ::= <<
 memcpy(<type.camkesOutputToPtr><dst>, <type.valToPtr><src>, sizeof(<type.name>));
 >>
+
+camkesWrapReturnCallFail(str) ::= <<
+if(<str> != 0) {
+   fprintf(stderr,\"Operation '"+<str>+"' failed in %s at %d.\\n\",__FILE__,__LINE__);
+   *((int*)0)=0xdeadbeef;
+}
+>>

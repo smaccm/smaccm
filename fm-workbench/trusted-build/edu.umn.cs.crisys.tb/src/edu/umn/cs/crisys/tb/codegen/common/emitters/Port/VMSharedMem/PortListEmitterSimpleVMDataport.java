@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,11 +14,13 @@ import org.stringtemplate.v4.STGroupFile;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
+import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortListEmitterCamkesVM;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
+import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.util.Util;
@@ -27,6 +30,11 @@ import edu.umn.cs.crisys.tb.util.Util;
  * sorry if this is illegible, but it sure is fun!
  */
 public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM {
+
+   public final List<NameEmitter> getExternalHandlers() {
+      List<NameEmitter> ehl = new ArrayList<>(); 
+      return ehl;
+   }
 
    public List<PortEmitter> getOutputVmPorts(List<PortFeature> pl) {
       return pl.stream()
@@ -68,6 +76,7 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
       return template.getInstanceOf(stName); 
    }
    
+   
    @Override
    public String getCamkesAddAssemblyFileVMConfigDeclarations(OSModel vm, List<PortFeature> pl) {
       // O.k., here we need to generate numbers to go along with 
@@ -75,7 +84,7 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
       List<PortEmitter> ports = getOutputVmPorts(pl); 
       return ports.stream()
          .map(p -> {
-            int size = p.getType().getOverApproximateSizeInBytes();
+            int size = p.getType().getFrameSizeInBytes();
                   
             ST st = getTemplateST("assemblyConfigVMPort");
             st.add("port", p);
@@ -110,14 +119,19 @@ public class PortListEmitterSimpleVMDataport implements PortListEmitterCamkesVM 
          .collect(Collectors.joining(""));
       return result;
    }
-
+   
    @Override
    public void getAddLinuxVMFiles(OSModel vm, List<PortFeature> pf, File linuxDir) {
       File HFile = new File(linuxDir, "camkes_init");
       try (BufferedWriter hwriter = new BufferedWriter(new FileWriter(HFile))) { 
         ST st = getTemplateST("camkesInitBody");
+        
         String dpinit_pairs = getOutputVmPorts(pf).stream()
-           .map(p -> "/dev/" + p.getQualifiedName() + " " + p.getType().getOverApproximateSizeInBytes())
+           .map(p -> {
+             int size = p.getType().getFrameSizeInBytes();
+             
+             return "/dev/" + p.getQualifiedName() + " " + size;
+           })
            .collect(Collectors.joining(" "));
         dpinit_pairs += System.lineSeparator() 
               + "# note: the size value is approximate and assumes 32-bit word alignment for struct fields.  Your mileage may vary.";

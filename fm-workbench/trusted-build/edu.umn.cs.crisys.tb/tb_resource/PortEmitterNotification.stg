@@ -80,7 +80,7 @@ static bool <port.index> = false;
 bool <port.incomingWriterName>(void *_ UNUSED) {
     <port.index> = true;
     <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
-    <port.name>_reg_callback(<port.incomingWriterName>, NULL);
+    <camkesWrapReturnCallFail({<port.name>_reg_callback(<port.incomingWriterName>, NULL)})>;
     return true;
 }
 
@@ -151,7 +151,7 @@ if (<dispatcher.localReaderName>()) {
 
 
 portInitializer(port) ::= <<
-<port.name>_reg_callback(<port.incomingWriterName>, NULL);
+<camkesWrapReturnCallFail({<port.name>_reg_callback(<port.incomingWriterName>, NULL)})>;
 >>
 
 ///////////////////////////////////////////////////////////////////////////

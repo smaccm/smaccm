@@ -34,6 +34,9 @@
  */
 package edu.umn.cs.crisys.tb;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -46,6 +49,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -78,7 +82,30 @@ abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 	
 	abstract protected IStatus runJob(Element sel, IProgressMonitor monitor, Logger log);
 	
-	public void run(IAction action) {
+	
+   public void determineNature(XtextEditor editor, Logger log) {
+      // let's see what project this is.
+      IProject project = editor.getResource().getProject(); 
+      System.out.println(project);
+      try {
+         IProjectDescription description = project.getDescription();
+         String[] natures = description.getNatureIds();
+         boolean aadlNature = false; 
+         for (String nature: natures) {
+            if (nature.equalsIgnoreCase("org.osate.core.aadlnature")) {
+               aadlNature = true;
+            }
+         }
+         if (!aadlNature) {
+            log.warn("WARNING: Project does not have aadl nature; this will likely fail during compilation because of missing property sets.  Please create a project with aadl nature."); 
+         }
+      } catch (Exception e) {
+         log.warn("WARNING: Unable to determine nature of project; if it does not have aadl nature it will likely fail during compilation.  Please create a project with aadl nature."); 
+         
+      }
+   }
+
+   public void run(IAction action) {
 		final Logger log = new ConsoleLogger(Logger.INFO, "AADL Validation", getWindow());
 
 		WorkspaceJob job = new WorkspaceJob("AADL Job") {
@@ -104,7 +131,9 @@ abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 				}
 				
 				xtextEditor = (XtextEditor) activeEditor.getAdapter(XtextEditor.class);
-
+				
+				determineNature(xtextEditor, log);
+				
 				if (xtextEditor != null)
 				{
 					node = (EObjectNode) currentSelection;

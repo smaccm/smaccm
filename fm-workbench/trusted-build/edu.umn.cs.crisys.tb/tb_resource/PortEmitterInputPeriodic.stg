@@ -172,14 +172,14 @@ void tb_timer_complete_callback(void *_ UNUSED) {
    // we want time in microseconds, not nanoseconds, so we divide by 1000.
    int64_t tb_time_periodic_dispatcher = tb_timer_time() / 1000LL;
    (void)<dispatcher.incomingWriterName>(&tb_time_periodic_dispatcher);
-   tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL);
+   <camkesWrapReturnCallFail({tb_timer_complete_reg_callback(tb_timer_complete_reg_callback, NULL)})>;
 }
 
 >>
 
 camkesComponentCInitializer(port) ::= <<
 // tb_timer_periodic(0, ((uint64_t)<port.periodicDispatcherPeriod>)*NS_IN_MS);
-   tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL);
+   <camkesWrapReturnCallFail({tb_timer_complete_reg_callback(tb_timer_complete_reg_callback, NULL)})>;
 >>
 
 camkesAssemblyPeriodicDispatcherConnections(port) ::= <<

@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,6 +70,7 @@ public class TbAction extends AadlAction {
          return Status.CANCEL_STATUS;
       }
 
+      
       IStatus execStatus = execute(null, (SystemImplementation) sel, monitor, null, null, logger); 
 
       if (execStatus == Status.OK_STATUS) 

@@ -2,6 +2,8 @@ package edu.umn.cs.crisys.tb.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,6 +58,28 @@ public abstract class AadlHandler extends AbstractHandler {
         return executeURI(uri);
     }
 
+    public void determineNature(XtextEditor editor, Logger log) {
+       // let's see what project this is.
+       IProject project = editor.getResource().getProject(); 
+       System.out.println(project);
+       try {
+          IProjectDescription description = project.getDescription();
+          String[] natures = description.getNatureIds();
+          boolean aadlNature = false; 
+          for (String nature: natures) {
+             if (nature.equalsIgnoreCase("org.osate.core.aadlnature")) {
+                aadlNature = true;
+             }
+          }
+          if (!aadlNature) {
+             log.warn("WARNING: Project does not have aadl nature; this will likely fail during compilation because of missing property sets.  Please create a project with aadl nature."); 
+          } else {
+          }
+       } catch (Exception e) {
+          log.warn("WARNING: Unable to determine nature of project; if it does not have aadl nature it will likely fail during compilation.  Please create a project with aadl nature."); 
+       }
+    }
+    
     public Object executeURI(final URI uri) {
     	log = new ConsoleLogger(Logger.INFO, "AADL Validation", getWindow());
     	final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
@@ -63,6 +87,8 @@ public abstract class AadlHandler extends AbstractHandler {
             return null;
         }
 
+        determineNature(xtextEditor, log);
+        
         if (!saveChanges(window.getActivePage().getDirtyEditors())) {
             return null;
         }
