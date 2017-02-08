@@ -15,7 +15,7 @@ void receiver_periodic_ping(const int64_t * periodic_1000_ms) {
 
 	bool result = true; 
 	while (result) {
-		result = tb_receiver_read_Input1(); 
+		result = read_input1(); 
 		if (result) {
    			printf("receiver: event consumed\n");
    		} else {

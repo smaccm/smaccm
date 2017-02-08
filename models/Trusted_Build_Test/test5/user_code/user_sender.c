@@ -10,7 +10,7 @@
 void sender_periodic_ping(const int64_t * periodic_100_ms) {
 
 	// to normalize across OSes.
-   printf("sender: periodic dispatch received (%d).  Writing to receiver \n", (int32_t)(*periodic_100_ms));
+   printf("test5: sender: periodic dispatch received (%d).  Writing to receiver \n", (int32_t)(*periodic_100_ms));
    
    test5__a_struct_impl test_data;
    test_data.field1 = 1.0;

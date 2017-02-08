@@ -42,6 +42,7 @@ end sender ;
 thread receiver
 	features
 		Input1: in event data port Base_Types::Unsigned_32 {
+         TB_SYS::CommPrim_Source_Text => "read_input1";       
 	      --TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  Queue_Size => 3;
 		}; 

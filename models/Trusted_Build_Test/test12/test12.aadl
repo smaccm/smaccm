@@ -51,6 +51,7 @@ end sender ;
 thread receiver
 	features
 		Input1: in event data port a_array.impl {
+         TB_SYS::CommPrim_Source_Text => "read_input1";       
 	      --TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  Queue_Size => 12;
 		}; 
@@ -119,7 +120,7 @@ end test.camkes;
 
 system implementation test.echronos
    subcomponents
-      tl: process proc.Impl;
+      tl: process proc.Impl;  
       toplevel: processor main.echronos;
    properties
       actual_processor_binding => (reference (toplevel)) applies to tl;     

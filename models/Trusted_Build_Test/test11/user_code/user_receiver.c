@@ -16,7 +16,7 @@ void receiver_periodic_ping(const int64_t * periodic_1000_ms) {
 	test11__a_struct_impl test_data;
 	bool result = true; 
 	while (result) {
-		result = tb_receiver_read_Input1(&test_data); 
+		result = read_input1(&test_data); 
 		if (result) {
    			printf("receiver: data received (%f, %f)\n", test_data.field1, test_data.field2);
    		} else {

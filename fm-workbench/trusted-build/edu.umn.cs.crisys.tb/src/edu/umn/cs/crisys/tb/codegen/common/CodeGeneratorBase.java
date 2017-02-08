@@ -430,7 +430,6 @@ public abstract class CodeGeneratorBase {
          st.add("model", mn);
          hwriter.append(st.render()); 
          st = stg.getInstanceOf("mutexOP");
-         String result = st.render();
          hwriter.append(st.render());
          st = stg.getInstanceOf("callbackOP");
          hwriter.append(st.render());

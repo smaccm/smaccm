@@ -1,4 +1,4 @@
-#include <smaccm_sender.h>
+#include <tb_sender.h>
 #include <camkes.h>
 #include <inttypes.h>
 

@@ -12,6 +12,6 @@
 
 void sender_periodic_ping(const int64_t * periodic_100_ms) {
 
-   printf("sender ping received (%d).  Writing to receiver \n", (int32_t)*periodic_100_ms);
+   printf("test13: sender ping received (%d).  Writing to receiver \n", (int32_t)*periodic_100_ms);
    ping_Output1(); 
 }

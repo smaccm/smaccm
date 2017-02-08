@@ -30,7 +30,7 @@ thread receiver
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 	      Source_Text => ("user_code/user_receiver.c");
 		}; 
-		
+		 
 	properties 
        Dispatch_Protocol => Sporadic;
        Period => 100 ms;

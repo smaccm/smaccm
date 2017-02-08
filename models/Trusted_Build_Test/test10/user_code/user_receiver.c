@@ -17,10 +17,11 @@ void receiver_periodic_ping(const int64_t * periodic_1000_ms) {
 	uint32_t test_data;
 	bool result = true; 
 	while (result) {
-		result = tb_receiver_read_Input1(&test_data); 
+		result = read_input1(&test_data); 
 		if (result) {
    			printf("receiver: data received (%d)\n", test_data);
    		} else {
+   			printf("receiver: final data received (%d)\n", test_data);
    			printf("receiver: queue emptied.\n");
    		}
    	}		
