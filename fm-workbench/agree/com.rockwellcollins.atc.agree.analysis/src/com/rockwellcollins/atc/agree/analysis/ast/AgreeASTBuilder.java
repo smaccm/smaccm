@@ -667,7 +667,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			List<AgreeVar> destVars = getAgreePortNames(destPort, destPrefix, destNode == null ? null : destNode.compInst);
 			
 			if(sourVars.size() != destVars.size()){
-				throw new AgreeException("Something went wrong while generating connections");
+				throw new AgreeException("The number of AGREE variables differ for connection '" + conn.getQualifiedName() +
+						"'. Do the types of the source and destination differ? Perhaps one is an implementation and the other is a type?");
 			}
 			
 			for(int i = 0; i < sourVars.size(); i++){

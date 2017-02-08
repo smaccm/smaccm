@@ -404,12 +404,17 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "intersect":
 			checkBinarySetOpCall(funCall, actualTypes);
 			return;
+			
+		case "property":
+			checkPropertyCall(funCall, actualTypes);
+		    return;
 
 		case "debug":
 		{
 			return;
 		}
 		}
+
 
 
 
@@ -420,7 +425,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		if (actualTypes.size() != expectedTypes.size()
 				// special case for property statement
-				&& !(funCall.getFn().equalsIgnoreCase("property") && actualTypes.size() + 1 == expectedTypes.size())) {
+				&& !(actualTypes.size() + 1 == expectedTypes.size())) {
 
 			error(funCall, "Function expects " + expectedTypes.size() + " arguments but found " + actualTypes.size()
 					+ " arguments");
@@ -435,6 +440,23 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 				error(funCall.getArgs().get(i), "Expected type " + expected + " but found type " + actual);
 			}
 		}
+	}
+
+	private void checkPropertyCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
+		if(actualTypes.size() == 3){
+			ResoluteType type1 = actualTypes.get(1);
+			ResoluteType type2 = actualTypes.get(2);
+			if (type1 instanceof ParametricType) {
+				ParametricType paramType = (ParametricType) type1;
+				if(paramType.getParamType().equals(type2)){
+					return;
+				}
+			}
+			error(funCall, "If the second argument of a \"propery\" statement is a "
+					+ "parametric type is parameter must be the same type as the third argument. "
+					+ "The second argument is of type '"+type1+"' and the third argument is of type '"+type2+"'");
+		}
+		
 	}
 
 	private boolean containsFail(List<ResoluteType> types) {

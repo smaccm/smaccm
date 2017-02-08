@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BasicPropertyAssociation;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -193,9 +194,10 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "is_of_type": {
 			NamedElement element = args.get(0).getNamedElement();
 			NamedElement type = args.get(1).getNamedElement();
+			ComponentType ct = null;
+
 			if (element instanceof ComponentInstance) {
 				ComponentInstance ci;
-				ComponentType ct;
 				ci = (ComponentInstance) element;
 				ComponentClassifier classifier = ci.getComponentClassifier();
 				if(classifier instanceof ComponentImplementation){
@@ -203,13 +205,23 @@ public class ResoluteBuiltInFnCallEvaluator {
 				}else{
 					ct = (ComponentType)classifier;
 				}
-				while (ct != null) {
-					if (ct == type) {
-						return bool(true);
-					}
-					ct = ct.getExtended();
+			} else if (element instanceof FeatureInstance) {
+				FeatureInstance featInst = (FeatureInstance) element;
+				Feature feat = featInst.getFeature();
+				Classifier classifier = feat.getClassifier();
+				if(classifier == null){
+					return bool(false);
 				}
-
+				if(classifier instanceof ComponentImplementation){
+					classifier = ((ComponentImplementation) classifier).getType();
+				}
+				ct = (ComponentType)classifier;
+			}
+			while (ct != null) {
+				if (ct == type) {
+					return bool(true);
+				}
+				ct = ct.getExtended();
 			}
 			return bool(false);
 		}
