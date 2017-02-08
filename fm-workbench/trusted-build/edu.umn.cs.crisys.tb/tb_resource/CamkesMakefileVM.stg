@@ -108,7 +108,7 @@ writeVmName(name) ::= <<
 <name>_CFILES +=  \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/<name>/src/*.c)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/<name>/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard $(SOURCE_DIR)/common/src/*.c)) \ 
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard $(SOURCE_DIR)/common/src/*.c)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/<name>/src/arch/${ARCH}/*.c))
 
 <name>_HFILES += \
