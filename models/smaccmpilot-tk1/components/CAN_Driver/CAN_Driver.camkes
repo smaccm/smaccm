@@ -1,5 +1,6 @@
-import <bool_writer.idl4>;
-import <SMACCM_DATA__CAN_Frame_i_writer.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Dequeue.idl4>;
+import <tb_Monitor_bool_1_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue.idl4>;
 
 import "can_shim/can_shim.camkes";
 import "spi/spi.camkes";
@@ -22,10 +23,11 @@ component gpiobase {
 }
 
 component CAN_Driver {
-    include <tb_smaccmcopter_types.h>;
-    provides SMACCM_DATA__CAN_Frame_i_writer framing2self;
-    uses bool_writer self2framing_status;
-    uses SMACCM_DATA__CAN_Frame_i_writer self2framing_frame;
+    include <tb_smaccmpilot_tk1_types.h>;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Dequeue tb_framing2self;
+    consumes QueuedData tb_framing2self_notification;
+    uses tb_Monitor_bool_1_Enqueue tb_self2framing_status;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue tb_self2framing_frame;
     
     composition {
         /* hardware components */
@@ -39,9 +41,10 @@ component CAN_Driver {
         component gpio      gpio_obj;
 
         /* exported interfaces */
-        export can_shim_obj.framing2self -> framing2self;
-        export can_shim_obj.self2framing_status -> self2framing_status;
-        export can_shim_obj.self2framing_frame -> self2framing_frame;
+        export can_shim_obj.tb_framing2self -> tb_framing2self;
+        export can_shim_obj.tb_framing2self_notification -> tb_framing2self_notification;
+        export can_shim_obj.tb_self2framing_status -> tb_self2framing_status;
+        export can_shim_obj.tb_self2framing_frame -> tb_self2framing_frame;
 
         /* hardware connections */
         connection seL4HardwareMMIO gpio_mem1(from gpio_obj.gpio1base, to gpiobase_obj.gpio1base);

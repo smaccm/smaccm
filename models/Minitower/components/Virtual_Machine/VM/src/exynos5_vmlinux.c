@@ -307,6 +307,7 @@ install_linux_devices(vm_t* vm)
 {
     int err;
     int i;
+    struct gpio_device* gpio_dev;
     /* Install virtual devices */
     err = vm_install_vgic(vm);
     assert(!err);
@@ -330,6 +331,9 @@ install_linux_devices(vm_t* vm)
 
     err = vm_install_ac_uart(vm, &dev_vconsole);
     assert(!err);
+
+    gpio_dev = vm_install_ac_gpio(vm, VACDEV_DEFAULT_ALLOW, VACDEV_REPORT_AND_MASK);
+    assert(gpio_dev);
 
     /* Device for signalling to the VM */
     err = vm_add_device(vm, &pwmsig_dev);

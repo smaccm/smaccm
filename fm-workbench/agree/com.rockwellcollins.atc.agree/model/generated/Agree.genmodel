@@ -4,7 +4,7 @@
     editorDirectory="/com.rockwellcollins.atc.agree.editor/src" modelPluginID="com.rockwellcollins.atc.agree"
     forceOverwrite="true" modelName="Agree" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="6.0" copyrightFields="false" editPluginID="com.rockwellcollins.atc.agree.edit"
-    editorPluginID="com.rockwellcollins.atc.agree.editor" runtimeVersion="2.12" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/resource/org.osate.aadl2/model/aadl2.genmodel#//aadl2">
+    editorPluginID="com.rockwellcollins.atc.agree.editor" runtimeVersion="2.11" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/resource/org.osate.aadl2/model/aadl2.genmodel#//aadl2">
   <genPackages prefix="Agree" basePackage="com.rockwellcollins.atc.agree" disposableProviderFactory="true"
       ecorePackage="Agree.ecore#/">
     <genClasses ecoreClass="Agree.ecore#//AgreeLibrary"/>
@@ -47,7 +47,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ConstStatement/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//EnumStatement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EReference Agree.ecore#//EnumStatement/enums"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EnumStatement/enums"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//EqStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EqStatement/lhs"/>

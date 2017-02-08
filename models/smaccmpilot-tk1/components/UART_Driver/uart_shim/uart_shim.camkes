@@ -1,15 +1,16 @@
-import <SMACCM_DATA__UART_Packet_i_writer.idl4>;
-import <bool_writer.idl4>;
-import <uart.idl4>;
+import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__UART_Packet_i_1_Dequeue.idl4>;
+import <tb_Monitor_bool_1_Enqueue.idl4>;
 
 component uart_shim {
     control;
 
     // AADL interface
-    include "tb_smaccmcopter_types.h";
-    uses SMACCM_DATA__UART_Packet_i_writer self2decrypt;
-    provides SMACCM_DATA__UART_Packet_i_writer encrypt2self;
-    uses bool_writer self2encrypt;
+    include <tb_smaccmpilot_tk1_types.h>;
+    uses tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue tb_self2decrypt;
+    uses tb_Monitor_SMACCM_DATA__UART_Packet_i_1_Dequeue tb_encrypt2self;
+    consumes QueuedData tb_encrypt2self_notification;
+    uses tb_Monitor_bool_1_Enqueue tb_self2encrypt;
 
     // Internal interface
     dataport Buf uart_regs;

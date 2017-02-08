@@ -1,5 +1,5 @@
 #include <string.h>
-#include <tb_smaccmcopter_types.h>
+#include <tb_smaccmpilot_tk1_types.h>
 #include <camkes.h>
 #include <stdio.h>
 
@@ -7,14 +7,14 @@ static bool STATIC_TRUE = true;
 
 #define MAX_FRAME_LEN 8
 
-void txb0_ack_callback(void *arg) {
+static void txb0_ack_callback(void *arg) {
     if (status_0_semaphore_trywait() == 0) {
-	self2framing_status_write_bool(&STATIC_TRUE);
+	tb_self2framing_status_enqueue(&STATIC_TRUE);
     }
     txb0_ack_reg_callback(txb0_ack_callback, NULL);
 }
 
-void txb1_ack_callback(void *arg) {
+static void txb1_ack_callback(void *arg) {
     if (status_1_semaphore_trywait() == 0) {
 	// XXX Ignore the other two mailboxes. Noops.
 	/* can_node_Output_statusHandler0_0_write_bool(&STATIC_TRUE); */
@@ -22,7 +22,7 @@ void txb1_ack_callback(void *arg) {
     txb1_ack_reg_callback(txb1_ack_callback, NULL);
 }
 
-void txb2_ack_callback(void *arg) {
+static void txb2_ack_callback(void *arg) {
     if (status_2_semaphore_trywait() == 0) {
 	// XXX Ignore the other two mailboxes. Noops.
 	/* can_node_Output_statusHandler0_0_write_bool(&STATIC_TRUE); */
@@ -30,20 +30,7 @@ void txb2_ack_callback(void *arg) {
     txb2_ack_reg_callback(txb2_ack_callback, NULL);
 }
 
-void pre_init(void) {
-    can_tx_setup(125000);
-
-    txb0_ack_reg_callback(txb0_ack_callback, NULL);
-    txb1_ack_reg_callback(txb1_ack_callback, NULL);
-    txb2_ack_reg_callback(txb2_ack_callback, NULL);
-
-    status_0_semaphore_wait();
-    status_1_semaphore_wait();
-    status_2_semaphore_wait();
-    printf("Finished setting up CAN node\n");
-}
-
-bool sendit(int txb_idx, const SMACCM_DATA__CAN_Frame_i *a_frame) {
+static bool sendit(int txb_idx, const SMACCM_DATA__CAN_Frame_i *a_frame) {
     if (a_frame->id >= (1 << 31)) {
 	printf("Incorrect CAN message ID: %i\n", a_frame->id);
 	return false;
@@ -88,9 +75,28 @@ bool sendit(int txb_idx, const SMACCM_DATA__CAN_Frame_i *a_frame) {
     return true;
 }
 
-bool framing2self_write_SMACCM_DATA__CAN_Frame_i(const SMACCM_DATA__CAN_Frame_i *a_frame) {
-    status_0_semaphore_post();
-    return sendit(0, a_frame);
+static void tb_framing2self_callback(void *unused) {
+    SMACCM_DATA__CAN_Frame_i a_frame;
+    while (tb_framing2self_dequeue(&a_frame)) {
+        status_0_semaphore_post();
+        sendit(0, &a_frame);
+    }
+    tb_framing2self_notification_reg_callback(&tb_framing2self_callback, NULL);
+}
+
+void pre_init(void) {
+    can_tx_setup(125000);
+
+    txb0_ack_reg_callback(txb0_ack_callback, NULL);
+    txb1_ack_reg_callback(txb1_ack_callback, NULL);
+    txb2_ack_reg_callback(txb2_ack_callback, NULL);
+
+    status_0_semaphore_wait();
+    status_1_semaphore_wait();
+    status_2_semaphore_wait();
+
+    tb_framing2self_notification_reg_callback(&tb_framing2self_callback, NULL);
+    printf("Finished setting up CAN node\n");
 }
 
 int run(void) {
@@ -106,7 +112,7 @@ int run(void) {
 	a_frame.id = d_frame.ident.id << 20;
 	a_frame.buf_len = d_frame.dlc;
 	memcpy(a_frame.buf, d_frame.data, d_frame.dlc);
-	bool b = self2framing_frame_write_SMACCM_DATA__CAN_Frame_i(&a_frame);
+	bool b = tb_self2framing_frame_enqueue(&a_frame);
 	if (!b) {
 	    printf("ERROR: CAN Driver: Unable to put CAN message in queue\n");
 	}

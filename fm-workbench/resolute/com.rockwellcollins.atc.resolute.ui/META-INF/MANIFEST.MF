@@ -25,6 +25,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.rockwellcollins.atc.resolute.ui,
  com.rockwellcollins.atc.resolute.ui.contentassist,
  com.rockwellcollins.atc.resolute.ui.contentassist.antlr,
- com.rockwellcollins.atc.resolute.ui.quickfix
+ com.rockwellcollins.atc.resolute.ui.quickfix,
+ com.rockwellcollins.atc.resolute.ui.contentassist.antlr.internal
 Bundle-Activator: com.rockwellcollins.atc.resolute.ui.internal.ResoluteActivator
 Eclipse-BuddyPolicy: registered

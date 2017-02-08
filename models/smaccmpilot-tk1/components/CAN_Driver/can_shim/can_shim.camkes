@@ -1,5 +1,7 @@
-import <bool_writer.idl4>;
-import <SMACCM_DATA__CAN_Frame_i_writer.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Dequeue.idl4>;
+import <tb_Monitor_bool_1_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue.idl4>;
+
 import <can_tx.idl4>;
 import <can_rx.idl4>;
 
@@ -7,11 +9,11 @@ component can_shim {
     control;
 
     // AADL interface
-    include <tb_smaccmcopter_types.h>;
-    provides SMACCM_DATA__CAN_Frame_i_writer framing2self;
-    uses bool_writer self2framing_status;
-    uses SMACCM_DATA__CAN_Frame_i_writer self2framing_frame;
-
+    include <tb_smaccmpilot_tk1_types.h>;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Dequeue tb_framing2self;
+    consumes QueuedData tb_framing2self_notification;
+    uses tb_Monitor_bool_1_Enqueue tb_self2framing_status;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue tb_self2framing_frame;
 
     // Internal interface
     has semaphore status_0_semaphore;

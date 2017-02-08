@@ -47,13 +47,13 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if(match_TermExpr_LeftParenthesisKeyword_14_0_a.equals(syntax))
+			if (match_TermExpr_LeftParenthesisKeyword_14_0_a.equals(syntax))
 				emit_TermExpr_LeftParenthesisKeyword_14_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_TermExpr_LeftParenthesisKeyword_14_0_p.equals(syntax))
+			else if (match_TermExpr_LeftParenthesisKeyword_14_0_p.equals(syntax))
 				emit_TermExpr_LeftParenthesisKeyword_14_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_WheneverStatement_OccurKeyword_0_0_0_6_0_or_OccursKeyword_0_0_0_6_1.equals(syntax))
+			else if (match_WheneverStatement_OccurKeyword_0_0_0_6_0_or_OccursKeyword_0_0_0_6_1.equals(syntax))
 				emit_WheneverStatement_OccurKeyword_0_0_0_6_0_or_OccursKeyword_0_0_0_6_1(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_WheneverStatement_OccurKeyword_1_0_0_7_0_or_OccursKeyword_1_0_0_7_1.equals(syntax))
+			else if (match_WheneverStatement_OccurKeyword_1_0_0_7_0_or_OccursKeyword_1_0_0_7_1.equals(syntax))
 				emit_WheneverStatement_OccurKeyword_1_0_0_7_0_or_OccursKeyword_1_0_0_7_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
@@ -112,7 +112,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'occur' | 'occurs'
+	 *     'occurs' | 'occur'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval
@@ -126,7 +126,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'occur' | 'occurs'
+	 *     'occurs' | 'occur'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval

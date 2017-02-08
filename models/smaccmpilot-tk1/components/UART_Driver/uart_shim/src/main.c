@@ -27,6 +27,33 @@ interrupt_handle()
     interrupt_acknowledge();
 }
 
+static void write_callback(ps_chardevice_t* device,
+                           enum chardev_status stat,
+                           size_t bytes_transfered,
+                           void* token) {
+    const bool b = true;
+    tb_self2encrypt_enqueue(/* unused */ &b);
+}
+
+static void encrypt2self_callback(void *unused) {
+    SMACCM_DATA__UART_Packet_i packet;
+    while (tb_encrypt2self_dequeue(&packet)) {
+        device_lock();
+        int result = ps_cdev_write(&serial_device,
+                                   &packet.buf,
+                                   packet.buf_len,
+                                   &write_callback,
+                                   NULL);
+        device_unlock();
+
+        if (result != 0) {
+            printf("UART Shim: error writing to UART\n");
+        }
+    }
+    
+    tb_encrypt2self_notification_reg_callback(&encrypt2self_callback, NULL);
+}
+
 void pre_init(void)
 {
     ps_io_ops_t uart_shim_io_ops;
@@ -47,41 +74,19 @@ void pre_init(void)
     serial_device.flags &= ~SERIAL_AUTO_CR;
     serial_configure(&serial_device, 57600, 8, PARITY_NONE, 1);
 
+    tb_encrypt2self_notification_reg_callback(&encrypt2self_callback, NULL);
+    
     printf("UART initialized\n");
-}
-
-static void write_callback(ps_chardevice_t* device,
-                           enum chardev_status stat,
-                           size_t bytes_transfered,
-                           void* token) {
-    const bool b = true;
-    self2encrypt_write_bool(/* unused */ &b);
-}
-
-bool encrypt2self_write_SMACCM_DATA__UART_Packet_i(const SMACCM_DATA__UART_Packet_i *packet) {
-    device_lock();
-    int result = ps_cdev_write(&serial_device,
-                               &packet->buf,
-                               packet->buf_len,
-                               &write_callback,
-                               NULL);
-    device_unlock();
-
-    if (result != 0) {
-        printf("UART Shim: error writing to UART\n");
-        return false;
-    }
-    return true;
 }
 
 static struct SMACCM_DATA__UART_Packet_i read_packet;
 
-void read_callback(ps_chardevice_t *device,
+static void read_callback(ps_chardevice_t *device,
                    enum chardev_status stat,
                    size_t bytes_transfered,
                    void *token) {
     read_packet.buf_len = bytes_transfered;
-    if (!self2decrypt_write_SMACCM_DATA__UART_Packet_i(&read_packet)) {
+    if (!tb_self2decrypt_enqueue(&read_packet)) {
         printf("UART Shim: Unable to put UART packet in queue\n");
     }
 

@@ -10,9 +10,9 @@ public
 	system implementation top.i
 		subcomponents
 			software: process Mission_Software.i;
-			smaccmcopter: processor tk1_som.camkes;
+			smaccmpilot_tk1: processor tk1_som.camkes;
 		properties
-			actual_processor_binding => (reference (smaccmcopter)) applies to software;   
+			actual_processor_binding => (reference (smaccmpilot_tk1)) applies to software;   
 	end top.i;
 
 	processor tk1_som
