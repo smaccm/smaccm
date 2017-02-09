@@ -30,7 +30,7 @@ int run(void) {
     SMACCM_DATA__Camera_Bounding_Box_i box;
     box.left = 0;
     box.top = 0;
-    while (1) {
+    while (0) {
         for (int i = 0; i < 200; i++) {
             box.right = i;
             box.bottom = i;

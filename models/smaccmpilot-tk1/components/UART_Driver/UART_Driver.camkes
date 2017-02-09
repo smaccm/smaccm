@@ -4,9 +4,11 @@ import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue.idl4>;
 import <tb_Monitor_SMACCM_DATA__UART_Packet_i_1_Dequeue.idl4>;
 import <tb_Monitor_bool_1_Enqueue.idl4>;
 
+import <gen_fwd.idl4>;
+
 component uartbase {
     hardware;
-    dataport Buf uart_regs;
+    dataport Buf tk1_uart_regs;
     emits DataAvailable irq;
 }
 
@@ -16,25 +18,28 @@ component UART_Driver {
     uses tb_Monitor_SMACCM_DATA__UART_Packet_i_1_Dequeue tb_encrypt2self;
     consumes QueuedData tb_encrypt2self_notification;
     uses tb_Monitor_bool_1_Enqueue tb_self2encrypt;
-  
+
+    provides gen_fwd_inf uartfwd;
+
     composition {
         component uartbase uartbase_obj;
         component uart_shim uart_shim_obj;
 
-        connection seL4HardwareMMIO uart_regs_mmio(from uart_shim_obj.uart_regs, to uartbase_obj.uart_regs);
+        connection seL4HardwareMMIO tk1_uart_regs_mmio(from uart_shim_obj.tk1_uart_regs, to uartbase_obj.tk1_uart_regs);
         connection seL4HardwareInterrupt uart_irq(from uartbase_obj.irq, to uart_shim_obj.interrupt);
 
         export uart_shim_obj.tb_self2decrypt -> tb_self2decrypt;
         export uart_shim_obj.tb_encrypt2self -> tb_encrypt2self;
         export uart_shim_obj.tb_encrypt2self_notification -> tb_encrypt2self_notification;
         export uart_shim_obj.tb_self2encrypt -> tb_self2encrypt;
+        export uart_shim_obj.gen_fwd -> uartfwd;
     }
 
     configuration {
         uart_shim_obj.priority = 250;
 
-        uartbase_obj.uart_regs_paddr = 0x70006000;
-        uartbase_obj.uart_regs_size = 0x1000;
+        uartbase_obj.tk1_uart_regs_paddr = 0x70006000;
+        uartbase_obj.tk1_uart_regs_size = 0x1000;
 
         // uartbase_obj.irq_irq_number = 68;   // UART A
         uartbase_obj.irq_irq_number = 69;      // UART B

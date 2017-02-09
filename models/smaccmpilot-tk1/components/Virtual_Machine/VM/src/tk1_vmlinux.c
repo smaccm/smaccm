@@ -17,6 +17,7 @@
 #include <string.h>
 
 #include <vka/capops.h>
+#include <camkes.h>
 
 #include <sel4arm-vmm/vm.h>
 #include <sel4arm-vmm/images.h>
@@ -27,12 +28,16 @@
 #include <sel4utils/irq_server.h>
 #include <cpio/cpio.h>
 
+#include <sel4arm-vmm/devices/generic_forward.h>
+
 #define ATAGS_ADDR        (LINUX_RAM_BASE + 0x100)
 #define DTB_ADDR          (LINUX_RAM_BASE + 0x01000000)
 
 #define MACH_TYPE_SPECIAL    ~0
 #define MACH_TYPE            MACH_TYPE_SPECIAL
+#define PAGE_SIZE_BITS 12
 
+extern int start_extra_frame_caps;
 
 extern char _cpio_archive[];
 
@@ -47,7 +52,7 @@ static const struct device *linux_pt_devices[] = {
 
 static const int linux_pt_irqs[] = {
 INTERRUPT_VTIMER               ,
-INTERRUPT_KEYPAD               ,
+INTERRUPT_USB2                 ,
 INTERRUPT_SDMMC4               ,
 INTERRUPT_UARTD                ,
 #ifdef CONFIG_TK1_INSECURE
@@ -71,11 +76,11 @@ INTERRUPT_VDE                  ,
 INTERRUPT_AVP_UCQ              ,
 INTERRUPT_SDMMC3               ,
 INTERRUPT_USB                  ,
-INTERRUPT_USB2                 ,
 INTERRUPT_SATA_CTL             ,
 INTERRUPT_VCP                  ,
 INTERRUPT_APB_DMA_CPU          ,
 INTERRUPT_AHB_DMA_CPU          ,
+INTERRUPT_ARB_SEM_GNT_COP      ,
 INTERRUPT_ARB_SEM_GNT_CPU      ,
 INTERRUPT_OWR                  ,
 INTERRUPT_GPIO1                ,
@@ -333,15 +338,19 @@ configure_gpio(vm_t *vm)
 #endif /* CONFIG_APP_LINUX_SECURE */
 }
 
-static void
-configure_clocks(vm_t *vm)
-{
-    /* TODO for TK1 */
-#ifdef CONFIG_APP_LINUX_SECURE
-#else /* CONFIG_APP_LINUX_SECURE */
-#endif /* CONFIG_APP_LINUX_SECURE */
-}
+#ifdef CONFIG_TK1_DEVICE_FWD
 
+struct generic_forward_cfg camkes_uart_d = {
+  .read_fn = uartfwd_read,
+  .write_fn = uartfwd_write
+};
+
+struct generic_forward_cfg camkes_clk_car =  {
+  .read_fn = clkcarfwd_read,
+  .write_fn = clkcarfwd_write
+};
+
+#endif
 static int
 install_linux_devices(vm_t* vm)
 {
@@ -365,15 +374,31 @@ install_linux_devices(vm_t* vm)
 #endif /* CONFIG_APP_LINUX_SECURE */
 
     configure_gpio(vm);
-    configure_clocks(vm);
-
+#ifdef CONFIG_TK1_DEVICE_FWD
+    /* Configure UART forward device */
+    err = vm_install_generic_forward_device(vm, &dev_vconsole, camkes_uart_d);
     assert(!err);
+
+    /* Configure Clock and Reset forward device */
+    err = vm_install_generic_forward_device(vm, &dev_clkcar, camkes_clk_car);
+    assert(!err);
+#endif // CONFIG_TK1_DEVICE_FWD
 
     /* Install pass through devices */
     /* TK1 passes through all devices at the moment by using on-demand device mapping */
     for (i = 0; i < sizeof(linux_pt_devices) / sizeof(*linux_pt_devices); i++) {
         err = vm_install_passthrough_device(vm, linux_pt_devices[i]);
         assert(!err);
+    }
+
+    /* hack to give access to other components
+       see https://github.com/smaccm/vm_hack/blob/master/details.md for details */
+    int offset = 0;
+    for (i = 0; i < num_extra_frame_caps; i++) {
+        err = vm_map_frame(vm, start_extra_frame_caps + i,
+            extra_frame_map_address + offset, PAGE_SIZE_BITS, 1, seL4_AllRights);
+        assert(!err);
+        offset += PAGE_SIZE;
     }
 
     return 0;

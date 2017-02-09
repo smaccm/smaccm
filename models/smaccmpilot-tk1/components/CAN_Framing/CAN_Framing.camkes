@@ -38,8 +38,6 @@ AADL thread implementation CAN_Framing.
 
 import <Timer.idl4>;
 
-import <int64_t_writer.idl4>;
-
 import <tb_Monitor_SMACCM_DATA__GIDL_1_Dequeue.idl4>;
 
 import <tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue.idl4>;
@@ -52,16 +50,11 @@ import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Enqueue.idl4>;
 
 
 
-
 import <bool_writer.idl4>;
 
-import <int64_t_writer.idl4>;
-
-import <void_writer.idl4>;
+import <SMACCM_DATA__GIDL_writer.idl4>;
 
 import <SMACCM_DATA__CAN_Frame_i_writer.idl4>;
-
-import <SMACCM_DATA__GIDL_writer.idl4>;
 
 
 

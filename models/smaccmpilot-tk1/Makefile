@@ -15,8 +15,8 @@ VM_shim_CFILES := \
     $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM_shim/src/*.c))
 # VM_shim_LIBS += sel4vchan
 
-VM_CFILES   := $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.c))
-VM_OFILES   := archive.o
+VM_CFILES := $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.c))
+VM_OFILES := archive.o
 VM_HFILES := $(patsubst ${SOURCE_DIR}/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.h))
 VM_LIBS += sel4allocman elf sel4simple sel4simple-default cpio sel4arm-vmm sel4dma usbdrivers
 
@@ -59,17 +59,17 @@ uart_shim_CFILES := \
 ###### End UART
 
 
-###### Clock_Initializer files
+###### Clock_Driver files
 
 clkcar_shim_HFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/clkcar_shim/include/*.h)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/clkcar_shim/include/*.h)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 clkcar_shim_CFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/clkcar_shim/src/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/clkcar_shim/src/*.c))
 
 include ${PWD}/projects/DARPA-tk1/components/clkcar/clkcar.mk
 
-###### Clock_Initializer UART
+###### End Clock_Driver
 
 
 include ${PWD}/tools/camkes/camkes.mk

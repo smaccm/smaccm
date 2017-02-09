@@ -30,7 +30,7 @@ public
 
 	process implementation Mission_Software.i
 		subcomponents
-			clock_initializer: thread Clock_Initializer;
+			clock_driver: thread Clock_Driver;
 			uart_driver: thread UART_Driver;
 			decrypt: thread Decrypt;
 			encrypt: thread Encrypt;
@@ -56,23 +56,29 @@ public
 
 			vm2server: port virtual_machine.self2server -> server.vm2self;
 			server2vm_reboot: port server.self2vm_reboot -> virtual_machine.server2self_reboot;
+			
+			vm_clk_fwd: subprogram group access virtual_machine.clkcarfwd -> clock_driver.clkcarfwd;
+			vm_uart_fwd: subprogram group access virtual_machine.uartfwd -> uart_driver.uartfwd;
 	end Mission_Software.i;
 
-	thread Clock_Initializer
+	thread Clock_Driver
+		features
+			clkcarfwd: provides subprogram group access gen_fwd_inf;
 		properties
 			TB_SYS::Is_External => true;
 			Priority => 253;
 			Dispatch_Protocol => Sporadic;
 			TB_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
-	end Clock_Initializer;
+	end Clock_Driver;
 
 	thread UART_Driver
 		features
 			self2decrypt: out event data port SMACCM_DATA::UART_Packet.i;
-
 			encrypt2self: in event data port SMACCM_DATA::UART_Packet.i;
 			self2encrypt: out event data port Base_Types::Boolean;
+			
+			uartfwd: provides subprogram group access gen_fwd_inf;
 		properties
 			TB_SYS::Is_External => true;
 			Priority => 250;
@@ -176,11 +182,20 @@ public
 			Compute_Execution_Time => 10 us .. 100 us;
 			TB_SYS::Sends_Events_To => "{{}}";
 	end CAN_Driver;
+	
+	subprogram group gen_fwd_inf
+		properties
+			TB_SYS::Is_External => true;
+			TB_SYS::CommPrim_Source_Header => "gen_fwd.idl4";
+	end gen_fwd_inf;
 
 	thread Virtual_Machine
 		features
 			self2server: out data port SMACCM_DATA::Camera_Bounding_Box.i;
 			server2self_reboot: in event data port Base_Types::Boolean;
+			
+			clkcarfwd: requires subprogram group access gen_fwd_inf;
+			uartfwd: requires subprogram group access gen_fwd_inf;
 		properties
 			TB_SYS::Is_External => true;
 			Priority => 100;

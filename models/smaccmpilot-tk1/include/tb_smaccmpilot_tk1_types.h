@@ -45,6 +45,17 @@ AADL components as defined in the system implementation smaccmpilot_tk1.
 
 #define __TB_OS_CAMKES__
 
+#define MUTEXOP(OP)\
+if((OP) != 0) {\
+  fprintf(stderr,"Operation " #OP " failed in %s at %d.\n",__FILE__,__LINE__);\
+  *((int*)0)=0xdeadbeef;\
+}
+
+#define CALLBACKOP(OP)\
+if((OP) != 0) {\
+  fprintf(stderr,"Operation " #OP " failed in %s at %d.\n",__FILE__,__LINE__);\
+  *((int*)0)=0xdeadbeef;\
+}
 typedef uint8_t SMACCM_DATA__CAN_Buffer [8]; 
 
 typedef uint8_t SMACCM_DATA__UART_Buffer [255]; 
