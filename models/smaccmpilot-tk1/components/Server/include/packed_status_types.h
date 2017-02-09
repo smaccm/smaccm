@@ -17,9 +17,7 @@ typedef struct packed_status {
             float roll;
             float pitch;
             float yaw;
-            float sonar_alt;
-            float baro_alt;
-            float lidar_alt;
+            float alt_est;
             uint8_t fix;
             uint8_t num_sv;
             int32_t lat;

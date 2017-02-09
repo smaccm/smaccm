@@ -12,8 +12,9 @@ void alt_control_debug_get_le(const uint8_t *n_var0, uint32_t n_var1, struct alt
     ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 29U), &n_var2->ui_setp);
     ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 33U), &n_var2->ui_rate_setp);
     pid_state_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 37U), &n_var2->pos);
-    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 54U), &n_var2->pos_setp);
-    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 58U), &n_var2->pos_rate_setp);
+    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 54U), &n_var2->pos_err);
+    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 58U), &n_var2->pos_rate_err);
+    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 62U), &n_var2->vz_ctl);
 }
 
 void alt_control_debug_get_be(const uint8_t *n_var0, uint32_t n_var1, struct alt_control_debug *n_var2)
@@ -25,8 +26,9 @@ void alt_control_debug_get_be(const uint8_t *n_var0, uint32_t n_var1, struct alt
     ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 29U), &n_var2->ui_setp);
     ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 33U), &n_var2->ui_rate_setp);
     pid_state_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 37U), &n_var2->pos);
-    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 54U), &n_var2->pos_setp);
-    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 58U), &n_var2->pos_rate_setp);
+    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 54U), &n_var2->pos_err);
+    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 58U), &n_var2->pos_rate_err);
+    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 62U), &n_var2->vz_ctl);
 }
 
 void alt_control_debug_set_le(uint8_t *n_var0, uint32_t n_var1, const struct alt_control_debug *n_var2)
@@ -38,8 +40,9 @@ void alt_control_debug_set_le(uint8_t *n_var0, uint32_t n_var1, const struct alt
     ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 29U), &n_var2->ui_setp);
     ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 33U), &n_var2->ui_rate_setp);
     pid_state_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 37U), &n_var2->pos);
-    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 54U), &n_var2->pos_setp);
-    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 58U), &n_var2->pos_rate_setp);
+    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 54U), &n_var2->pos_err);
+    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 58U), &n_var2->pos_rate_err);
+    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 62U), &n_var2->vz_ctl);
 }
 
 void alt_control_debug_set_be(uint8_t *n_var0, uint32_t n_var1, const struct alt_control_debug *n_var2)
@@ -51,6 +54,7 @@ void alt_control_debug_set_be(uint8_t *n_var0, uint32_t n_var1, const struct alt
     ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 29U), &n_var2->ui_setp);
     ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 33U), &n_var2->ui_rate_setp);
     pid_state_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 37U), &n_var2->pos);
-    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 54U), &n_var2->pos_setp);
-    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 58U), &n_var2->pos_rate_setp);
+    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 54U), &n_var2->pos_err);
+    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 58U), &n_var2->pos_rate_err);
+    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 62U), &n_var2->vz_ctl);
 }
