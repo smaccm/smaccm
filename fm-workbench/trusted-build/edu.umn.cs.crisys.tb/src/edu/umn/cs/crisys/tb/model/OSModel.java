@@ -48,6 +48,7 @@ import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.tb.model.rpc.InternalRemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.thread.ThreadCalendar;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.thread.ThreadInstance;

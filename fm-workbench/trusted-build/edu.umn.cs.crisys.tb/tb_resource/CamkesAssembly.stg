@@ -53,16 +53,18 @@ rpcConnection(connector, cid, from1, from2, to1, to2) ::=
    "connection <connector> <cid> (from <from1>.<from2>, to <to1>.<to2>);"
 
 connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
-<rpcConnection(model.generateConnectionName,
-    endpointConnection.connector,
+<rpcConnection(endpointConnection.connector,
+    model.generateConnectionName,
     srcThreadImpl.componentInstanceName,
     endpointConnection.requiresEndpoint.name,
     endpointConnection.providesThreadImplementation.componentInstanceName,
     endpointConnection.providesEndpoint.name)>
+
 >>
 
 assemblyConnectRpgs(threadImpl, model) ::= <<
 <threadImpl.isRequiresOfConnectionList:connectRpg(threadImpl, model)>
+
 >>
 
 sdaConnection(cid, from1, from2, to1, to2) ::=

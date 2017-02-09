@@ -12,13 +12,12 @@ import edu.umn.cs.crisys.tb.model.ModelElementBase;
  * @author Whalen
  *
  */
-public class RemoteProcedureGroup extends ModelElementBase {
+public class InternalRemoteProcedureGroup extends RemoteProcedureGroup {
    private List<RemoteProcedure> procedures;
-   private String id;
    
-   public RemoteProcedureGroup(List<RemoteProcedure> procedures, String id) {
-     this.procedures = procedures;
-     this.id = id;
+   public InternalRemoteProcedureGroup(List<RemoteProcedure> procedures, String id) {
+      super(id);
+      this.procedures = procedures;
    }
 
   /**
@@ -35,23 +34,10 @@ public class RemoteProcedureGroup extends ModelElementBase {
     this.procedures = procedures;
   }
 
-  /**
-   * @return the id
-   */
-  public String getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(String id) {
-    this.id = id;
-  }
-
 @Override
-public ModelElement getParent() {
-   return null;
+public String getIdl4FileName() {
+   // TODO Auto-generated method stub
+   return getId() + ".idl4";
 }
    
 }

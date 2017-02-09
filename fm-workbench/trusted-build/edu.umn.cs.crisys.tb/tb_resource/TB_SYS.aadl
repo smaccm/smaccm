@@ -1,6 +1,6 @@
 property set TB_SYS is
     -- Definitions for making threads "tower compatible"
-    CommPrim_Source_Header: aadlstring applies to (port, access, data);
+    CommPrim_Source_Header: aadlstring applies to (port, access, data, subprogram group);
     CommPrim_Source_Text: aadlstring applies to (port, access);
     C_Type_Name : aadlstring applies to (data, data implementation);
     C_Type_Size : aadlinteger applies to (data, data implementation);
@@ -30,7 +30,7 @@ property set TB_SYS is
     HW : enumeration (PIXHAWK, PPC, ODROID, x86, QEMU, TK1) applies to (processor, virtual processor, system implementation);
 
     -- For integrating with other code
-    Is_External: aadlboolean => false applies to (thread, subprogram group access, data);
+    Is_External: aadlboolean => false applies to (thread, subprogram group, data);
     External_Mutex_List: list of aadlstring applies to (processor, virtual processor, thread, system implementation);
     External_Semaphore_List: list of aadlstring applies to (processor, virtual processor, thread, system implementation);
     External_Entrypoint: aadlstring applies to (thread);

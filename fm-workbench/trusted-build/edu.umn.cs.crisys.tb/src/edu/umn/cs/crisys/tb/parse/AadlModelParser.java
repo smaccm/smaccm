@@ -90,8 +90,10 @@ import edu.umn.cs.crisys.tb.model.port.*;
 import edu.umn.cs.crisys.tb.model.process.ProcessImplementation;
 import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 import edu.umn.cs.crisys.tb.model.rpc.Direction;
+import edu.umn.cs.crisys.tb.model.rpc.ExternalRemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedure;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
+import edu.umn.cs.crisys.tb.model.rpc.InternalRemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureParameter;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroupEndpoint.AccessType;
@@ -1130,38 +1132,43 @@ public class AadlModelParser {
          rpg = tlm.getRemoteProcedureGroupMap().get(subGroup.getName());
       } else {
          // construct remote procedure group!
-         ArrayList<RemoteProcedure> remoteProcedures = new ArrayList<>(); 
-         for (SubprogramAccess sa: subGroup.getOwnedSubprogramAccesses()) {
-            SubprogramTypeImpl sub = (SubprogramTypeImpl)sa.getFeatureClassifier();
-            List<RemoteProcedureParameter> args = new ArrayList<>(); 
-
-            // if the initial parameter is an out parameter of type 
-            // "returns", treat it as the return value of the function. 
-            boolean initial = true;
-            Type returnType = new UnitType();
-            for (Parameter parm : sub.getOwnedParameters()) {
-               Type t = lookupType((DataClassifier)parm.getClassifier());
-               String id = parm.getName();
-               Direction dir = 
-                     (parm.getDirection() == DirectionType.IN) ? Direction.IN :
-                        (parm.getDirection() == DirectionType.OUT) ? Direction.OUT :
-                           Direction.IN_OUT;
-               boolean passByReference = PropertyUtil.getIsPassByReference(parm);
-               RemoteProcedureParameter modelParam = 
-                     new RemoteProcedureParameter(t, dir, id, passByReference);
-
-               // kludge for function return values.
-               if (initial && id.equalsIgnoreCase("returns") && 
-                     dir == Direction.OUT) {
-                  returnType = t;
-               } else {
-                  args.add(modelParam);
+         if (PropertyUtil.getIsExternal(subGroup)) {
+            String header = Util.getStringValue(subGroup, PropertyUtil.TB_SYS_COMMPRIM_SOURCE_HEADER);
+            rpg = new ExternalRemoteProcedureGroup(subGroup.getName(), header);
+         } else {
+            ArrayList<RemoteProcedure> remoteProcedures = new ArrayList<>(); 
+            for (SubprogramAccess sa: subGroup.getOwnedSubprogramAccesses()) {
+               SubprogramTypeImpl sub = (SubprogramTypeImpl)sa.getFeatureClassifier();
+               List<RemoteProcedureParameter> args = new ArrayList<>(); 
+   
+               // if the initial parameter is an out parameter of type 
+               // "returns", treat it as the return value of the function. 
+               boolean initial = true;
+               Type returnType = new UnitType();
+               for (Parameter parm : sub.getOwnedParameters()) {
+                  Type t = lookupType((DataClassifier)parm.getClassifier());
+                  String id = parm.getName();
+                  Direction dir = 
+                        (parm.getDirection() == DirectionType.IN) ? Direction.IN :
+                           (parm.getDirection() == DirectionType.OUT) ? Direction.OUT :
+                              Direction.IN_OUT;
+                  boolean passByReference = PropertyUtil.getIsPassByReference(parm);
+                  RemoteProcedureParameter modelParam = 
+                        new RemoteProcedureParameter(t, dir, id, passByReference);
+   
+                  // kludge for function return values.
+                  if (initial && id.equalsIgnoreCase("returns") && 
+                        dir == Direction.OUT) {
+                     returnType = t;
+                  } else {
+                     args.add(modelParam);
+                  }
+                  initial = false;
                }
-               initial = false;
+               remoteProcedures.add(new RemoteProcedure(sa.getName(), args, returnType));
             }
-            remoteProcedures.add(new RemoteProcedure(sa.getName(), args, returnType));
+            rpg = new InternalRemoteProcedureGroup(remoteProcedures, subGroup.getName());
          }
-         rpg = new RemoteProcedureGroup(remoteProcedures, subGroup.getName());
          tlm.getRemoteProcedureGroupMap().put(subGroup.getName(), rpg);
       }
       return rpg;

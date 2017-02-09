@@ -10,6 +10,7 @@ import java.util.Set;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 
+import edu.umn.cs.crisys.tb.model.rpc.InternalRemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.type.Type;
 

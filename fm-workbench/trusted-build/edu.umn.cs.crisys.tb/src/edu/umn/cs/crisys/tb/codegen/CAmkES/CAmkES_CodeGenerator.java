@@ -45,6 +45,7 @@ import edu.umn.cs.crisys.tb.model.port.InputPeriodicPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
+import edu.umn.cs.crisys.tb.model.rpc.InternalRemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.rpc.RemoteProcedureGroup;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.Type;
@@ -131,7 +132,7 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
   }
     */
 
-   public void createRpcIdlInterface(RemoteProcedureGroup rpg) throws TbFailure {
+   public void createRpcIdlInterface(InternalRemoteProcedureGroup rpg) throws TbFailure {
       RemoteProcedureGroupNames rpgn = new RemoteProcedureGroupNames(rpg); 
       ModelNames m = new ModelNames(model); 
       writeGeneric(interfacesDirectory, "Idl4Rpc.stg", "rpgDeclaration", 
@@ -142,7 +143,9 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
 
    public void createRpcIdlInterfaces() throws TbFailure {
       for (RemoteProcedureGroup t : model.getRemoteProcedureGroupMap().values()) {
-         createRpcIdlInterface(t); 
+         if (t instanceof InternalRemoteProcedureGroup) {
+            createRpcIdlInterface((InternalRemoteProcedureGroup)t);
+         }
       }
    }
    
