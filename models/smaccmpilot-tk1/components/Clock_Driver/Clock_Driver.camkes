@@ -1,7 +1,7 @@
-import "clkcar_shim/clkcar_shim.camkes";
 import <clkcar/clkcar.camkes>;
 
 import <gen_fwd.idl4>;
+import <clkcar.idl4>;
 
 component clkcarbase {
     hardware;
@@ -9,24 +9,24 @@ component clkcarbase {
 }
 
 component Clock_Driver {
+    provides clkcar_inf clkcar;
     provides gen_fwd_inf clkcarfwd;
 
     composition {
         component clkcarbase clkcarbase_obj;
         component clkcar clkcar_obj;
-        component clkcar_shim clkcar_shim_obj;
 
         connection seL4HardwareMMIO clkcar_mem(from clkcar_obj.clkcar_reg, to clkcarbase_obj.clkcar_reg);
-        connection seL4RPCCall clkcar_shim_clkcar(from clkcar_shim_obj.clkcar, to clkcar_obj.clkcar);
 
         export clkcar_obj.gen_fwd -> clkcarfwd;
+        export clkcar_obj.clkcar -> clkcar;
     }
 
     configuration {
         clkcarbase_obj.clkcar_reg_paddr = 0x60006000;
         clkcarbase_obj.clkcar_reg_size = 0x1000;
 
-        clkcar_obj.priority = 253;
-        clkcar_shim_obj.priority = 253;
+        clkcar_obj.priority = 250;
+        clkcar_obj.gen_fwd_priority = 101;
     }
 }

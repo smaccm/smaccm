@@ -50,11 +50,11 @@ import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Enqueue.idl4>;
 
 
 
+import <SMACCM_DATA__CAN_Frame_i_writer.idl4>;
+
 import <bool_writer.idl4>;
 
 import <SMACCM_DATA__GIDL_writer.idl4>;
-
-import <SMACCM_DATA__CAN_Frame_i_writer.idl4>;
 
 
 

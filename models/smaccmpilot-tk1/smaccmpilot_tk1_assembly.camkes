@@ -201,8 +201,12 @@ assembly {
 
 
         // Direct RPC connections
-        connection seL4RPCCall conn37 (from Virtual_Machine_inst.clkcarfwd, to Clock_Driver_inst.clkcarfwd);
-        connection seL4RPCCall conn38 (from Virtual_Machine_inst.uartfwd, to UART_Driver_inst.uartfwd);
+        connection seL4RPCCall conn37 (from UART_Driver_inst.clkcar, to Clock_Driver_inst.clkcar);
+
+        connection seL4RPCCall conn38 (from CAN_Driver_inst.clkcar, to Clock_Driver_inst.clkcar);
+
+        connection seL4RPCCall conn39 (from Virtual_Machine_inst.clkcarfwd, to Clock_Driver_inst.clkcarfwd);
+        connection seL4RPCCall conn40 (from Virtual_Machine_inst.uartfwd, to UART_Driver_inst.uartfwd);
 
 
 

@@ -12,8 +12,8 @@
 #include <platsupport/serial.h>
 #include <camkes.h>
 
-#define BAUD_RATE 115200
-//#define BAUD_RATE 57600
+//#define BAUD_RATE 115200
+#define BAUD_RATE 57600
 
 static ps_chardevice_t serial_device;
 
@@ -62,9 +62,8 @@ void pre_init(void)
         return;
     }
 
-    device_lock();
+    clkcar_uart_clk_init(TK1_UARTB_ASYNC);
     ps_chardevice_t *result = ps_cdev_init(TK1_UARTB_ASYNC, &uart_shim_io_ops, &serial_device);
-    device_unlock();
 
     if (result == NULL) {
         printf("UART Shim: Failed to initialize UART B.\n");
@@ -72,7 +71,7 @@ void pre_init(void)
     }
 
     serial_device.flags &= ~SERIAL_AUTO_CR;
-    serial_configure(&serial_device, 57600, 8, PARITY_NONE, 1);
+    serial_configure(&serial_device, BAUD_RATE, 8, PARITY_NONE, 1);
 
     tb_encrypt2self_notification_reg_callback(&encrypt2self_callback, NULL);
     

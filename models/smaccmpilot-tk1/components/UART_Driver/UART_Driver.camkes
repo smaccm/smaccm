@@ -4,6 +4,7 @@ import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue.idl4>;
 import <tb_Monitor_SMACCM_DATA__UART_Packet_i_1_Dequeue.idl4>;
 import <tb_Monitor_bool_1_Enqueue.idl4>;
 
+import <clkcar.idl4>;
 import <gen_fwd.idl4>;
 
 component uartbase {
@@ -19,6 +20,7 @@ component UART_Driver {
     consumes QueuedData tb_encrypt2self_notification;
     uses tb_Monitor_bool_1_Enqueue tb_self2encrypt;
 
+    uses clkcar_inf clkcar;
     provides gen_fwd_inf uartfwd;
 
     composition {
@@ -33,10 +35,12 @@ component UART_Driver {
         export uart_shim_obj.tb_encrypt2self_notification -> tb_encrypt2self_notification;
         export uart_shim_obj.tb_self2encrypt -> tb_self2encrypt;
         export uart_shim_obj.gen_fwd -> uartfwd;
+        export uart_shim_obj.clkcar -> clkcar;
     }
 
     configuration {
         uart_shim_obj.priority = 250;
+        uart_shim_obj.gen_fwd_priority = 101;
 
         uartbase_obj.tk1_uart_regs_paddr = 0x70006000;
         uartbase_obj.tk1_uart_regs_size = 0x1000;

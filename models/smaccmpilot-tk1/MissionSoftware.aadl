@@ -57,12 +57,16 @@ public
 			vm2server: port virtual_machine.self2server -> server.vm2self;
 			server2vm_reboot: port server.self2vm_reboot -> virtual_machine.server2self_reboot;
 			
+			uart_clkcar: subprogram group access uart_driver.clkcar -> clock_driver.clkcar;
+			can_clkcar: subprogram group access can_driver.clkcar -> clock_driver.clkcar;
+			
 			vm_clk_fwd: subprogram group access virtual_machine.clkcarfwd -> clock_driver.clkcarfwd;
 			vm_uart_fwd: subprogram group access virtual_machine.uartfwd -> uart_driver.uartfwd;
 	end Mission_Software.i;
 
 	thread Clock_Driver
 		features
+			clkcar: provides subprogram group access clkcar_inf;
 			clkcarfwd: provides subprogram group access gen_fwd_inf;
 		properties
 			TB_SYS::Is_External => true;
@@ -79,6 +83,7 @@ public
 			self2encrypt: out event data port Base_Types::Boolean;
 			
 			uartfwd: provides subprogram group access gen_fwd_inf;
+			clkcar: requires subprogram group access clkcar_inf;
 		properties
 			TB_SYS::Is_External => true;
 			Priority => 250;
@@ -174,6 +179,8 @@ public
 			framing2self: in event data port SMACCM_DATA::CAN_Frame.i;
 			self2framing_status: out event data port Base_Types::Boolean;
 			self2framing_frame: out event data port SMACCM_DATA::CAN_Frame.i;
+			
+			clkcar: requires subprogram group access clkcar_inf;
 		properties
 			TB_SYS::Is_External => true;
 			Priority => 250;
@@ -188,6 +195,12 @@ public
 			TB_SYS::Is_External => true;
 			TB_SYS::CommPrim_Source_Header => "gen_fwd.idl4";
 	end gen_fwd_inf;
+	
+	subprogram group clkcar_inf
+		properties
+			TB_SYS::Is_External => true;
+			TB_SYS::CommPrim_Source_Header => "clkcar.idl4";
+	end clkcar_inf;
 
 	thread Virtual_Machine
 		features
