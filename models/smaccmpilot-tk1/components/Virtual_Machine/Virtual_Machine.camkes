@@ -26,6 +26,8 @@ component Virtual_Machine {
         export vm_shim_obj.tb_server2self_reboot_notification -> tb_server2self_reboot_notification;
         export vm_obj.uartfwd -> uartfwd;
         export vm_obj.clkcarfwd -> clkcarfwd;
+
+        connection seL4Notification restart(from vm_shim_obj.restart_event, to vm_obj.restart_event);
     }
 
     configuration {

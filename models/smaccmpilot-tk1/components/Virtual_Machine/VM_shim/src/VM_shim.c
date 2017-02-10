@@ -17,7 +17,8 @@
 static void tb_server2self_reboot_callback(void *unused) {
     bool b;
     while (tb_server2self_reboot_dequeue(&b)) {
-        printf("Reboot requested (not implemented)\n");
+        printf("Reboot requested\n");
+        restart_event_emit();
     }
     tb_server2self_reboot_notification_reg_callback(&tb_server2self_reboot_callback, NULL);
 }

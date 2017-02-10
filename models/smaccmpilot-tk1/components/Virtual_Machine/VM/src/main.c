@@ -456,7 +456,6 @@ void reset_resources(void) {
 
 static seL4_CPtr restart_tcb;
 
-#ifdef CONFIG_PLAT_EXYNOS5410
 static void restart_event(void *arg) {
     restart_event_reg_callback(restart_event, NULL);
     seL4_UserContext context = {
@@ -464,7 +463,6 @@ static void restart_event(void *arg) {
     };
     seL4_TCB_WriteRegisters(restart_tcb, true, 0, 1, &context);
 }
-#endif
 
 int
 main_continued(void)
@@ -477,9 +475,7 @@ main_continued(void)
         reset_resources();
     }
     restart_tcb = camkes_get_tls()->tcb_cap;
-#ifdef CONFIG_PLAT_EXYNOS5410
     restart_event_reg_callback(restart_event, NULL);
-#endif
 
     err = vmm_init();
     assert(!err);
