@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,9 @@ import edu.umn.cs.crisys.tb.util.Util;
 
 public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterRPC {
 
+  static private Map<String,Integer> badgemap = new HashMap<String,Integer>();
+  static private int nextbadge = 0; 
+    
   public static boolean isApplicable(PortFeature pf) {
     // right kind of port
     boolean ok = (pf instanceof InputEventPort ||
@@ -101,16 +105,8 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
     }
   }
   
-  public String getMonitorInterfaceNamePrefix() {
+  public String getMonitorInterfaceName() {
     return "tb_Monitor_" + getTypeName() + "_" +this.getQueueSize();
-  }
-  
-  public String getInputMonitorInterfaceName() {
-    return getMonitorInterfaceNamePrefix() + "_Dequeue";
-  }
-  
-  public String getOutputMonitorInterfaceName() {
-    return getMonitorInterfaceNamePrefix() + "_Enqueue";
   }
   
   public String getMonitorInputCamkesNamePrefix() {
@@ -132,10 +128,11 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       String monitorComponentName = getMonitorInputCamkesNamePrefix();
       File componentDirectory = new File(new File(componentsDirectory, "tb_Monitors"), monitorComponentName);
       componentDirectory.mkdirs();
-
+      this.registerMonitorBagdes();
       // Write camkes specification for this component.
-      File camkesspec = new File(componentDirectory,monitorComponentName+".camkes");
+
       {
+        File camkesspec = new File(componentDirectory,monitorComponentName+".camkes");
         ST camkestmplt = this.getTemplateST("monitorCamkesWriter");
         camkestmplt.add("str_component_name", monitorComponentName);
         camkestmplt.add("port",this);
@@ -145,24 +142,43 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
         purposetmplt.add("port", this);
         writeFile(camkesspec,purposetmplt.render(),camkestmplt.render(), err);
       }
-      // Make source directory in the component directory.
-      File componentSrcDirectory = new File(componentDirectory,"src");
-      componentSrcDirectory.mkdirs();
-
+ 
       // Write source file for this component.
       {
+        // Make source directory in the component directory.
+        File componentSrcDirectory = new File(componentDirectory,"src");
+        componentSrcDirectory.mkdirs();
+
         File sourcefile = new File(componentSrcDirectory,monitorComponentName+".c");
         ST ctmplt = this.getTemplateST("monitorCamkesCWriter");
         ctmplt.add("port", this);
         ctmplt.add("str_types_include",(new ModelNames(model)).getSystemTypeHeaderName());
-        ctmplt.add("unlock","MUTEXOP(q_unlock())");
-        ctmplt.add("lock","MUTEXOP(q_lock())");
         String err = "IOException occurred during getWriteCamkesPortComponents"
             +" while writing "+sourcefile+":";
         ST purposetmplt = this.getTemplateST("inputPortCMonitorPurpose");
         purposetmplt.add("port", this);
         writeFile(sourcefile,purposetmplt.render(),ctmplt.render(), err);
       }
+      
+
+      // Write header file for this component.
+      {
+        // Make source directory in the component directory.
+        File componentSrcDirectory = new File(componentDirectory,"include");
+        componentSrcDirectory.mkdirs();
+
+        File sourcefile = new File(componentSrcDirectory,monitorComponentName+".h");
+        ST ctmplt = this.getTemplateST("monitorCamkesHWriter");
+        String mguard = ("__"+monitorComponentName+"_h__").toUpperCase();
+        ctmplt.add("mguard", mguard);
+        ctmplt.add("port", this);
+        String err = "IOException occurred during getWriteCamkesPortComponents"
+            +" while writing "+sourcefile+":";
+        ST purposetmplt = this.getTemplateST("inputPortCMonitorPurpose");
+        purposetmplt.add("port", this);
+        writeFile(sourcefile,purposetmplt.render(),ctmplt.render(), err);
+      }
+      
     } else {
       // TODO: Is there something that should be done here? If not remove me.
     }
@@ -181,28 +197,15 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   // purpose comments contained a list of all components that use them.
   public void getWriteCamkesPortIdls(File interfacesDirectory) throws TbFailure {
     if(port instanceof InputEventPort) {
-      List<String> suffixes = new ArrayList<String>();
-      Collections.addAll(suffixes, "Enqueue","Dequeue");
-      for (String suffix : suffixes) {
-        String idlname = getMonitorInterfaceNamePrefix();
-        String idlfilename = "";
-        if(suffix == "Enqueue") {
-          idlfilename = this.getOutputMonitorInterfaceName();
-        } else if (suffix == "Dequeue") {
-          idlfilename = this.getInputMonitorInterfaceName();
-        } else {
-          assert(false);
-        }
-        idlfilename += ".idl4";
-        File idlfile = new File(interfacesDirectory, idlfilename);
-        ST idl4tmplt = this.getTemplateST("camkesMonitor"+suffix+"Idl4");
-        idl4tmplt.add("str_interface_name", idlname);
-        idl4tmplt.add("port",this);
-        ST purposetmplt = this.getTemplateST("inputPortIDL4MonitorPurpose");
-        purposetmplt.add("port", this);
-        purposetmplt.add("str_direction", suffix);
-        writeFile(idlfile,purposetmplt.render(),idl4tmplt.render(), "IOException occurred during getWriteCamkesPortIdls: ");
-      }
+      String idlname = getMonitorInterfaceName();
+      String idlfilename = idlname + ".idl4";
+      File idlfile = new File(interfacesDirectory, idlfilename);
+      ST idl4tmplt = this.getTemplateST("camkesMonitorIdl4");
+      idl4tmplt.add("str_interface_name", idlname);
+      idl4tmplt.add("port",this);
+      ST purposetmplt = this.getTemplateST("inputPortIDL4MonitorPurpose");
+      purposetmplt.add("port", this);
+      writeFile(idlfile,purposetmplt.render(),idl4tmplt.render(), "IOException occurred during getWriteCamkesPortIdls: ");
     } else {
 
     }
@@ -244,7 +247,6 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       return st.render();
     } else if(port instanceof InputEventPort && port.getCommprimFnNameOpt() != null) {
         assert(port.getParent() instanceof ThreadImplementation);
-        ThreadImplementationNames ti = new ThreadImplementationNames((ThreadImplementation) port.getParent());
         ST st = this.getTemplateST("generateLocalReaderWrapper");
         st.add("port", this);
         return st.render();
@@ -368,10 +370,10 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
               + " (from " + getThreadImplementation().getComponentInstanceName()
               + "." + getName()
               + ", to " + getMonitorAssemblyInstance()
-              + ".deq);\n";
+              + ".mon);\n";
       result += "connection seL4Notification conn" + model.getGenerateConnectionNumber()
       + " (from " + getMonitorAssemblyInstance()
-      + ".qd, to " + getThreadImplementation().getComponentInstanceName()
+      + ".monsig, to " + getThreadImplementation().getComponentInstanceName()
       + "." + getNotificationName()
       + ");\n";
       return result;         
@@ -389,7 +391,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
         + " (from " + getThreadImplementation().getComponentInstanceName()
         + "." + getName() + suffix;
         result += ", to " + pe.getMonitorAssemblyInstance()
-        + ".enq);\n";
+        + ".mon);\n";
         
       }
       return result;
@@ -438,12 +440,68 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
     return list;  
   }
 
+  private String getBadgeNamePrefix() {
+    return getMonitorAssemblyInstance().toUpperCase();
+  }
+  
+  public String getReadBadgeName() {
+    return getBadgeNamePrefix() + "_READ_ACCESS";
+  }
+  
+  public String getWriteBadgeName() {
+    return getBadgeNamePrefix() + "_WRITE_ACCESS";
+  }
+  
+  private int getBadgeID(String key) {
+    if(badgemap.containsKey(key)) {
+      return badgemap.get(key);
+    } else {
+      throw new TbException("PortEmitterRPCAllEventCamkesMonitor::getBadgeID: Failed badge id request for " + key + ".");
+    }
+  }
+  
+  public int getReadBadgeID() {
+    return getBadgeID(getReadBadgeName());
+  }
+
+  public int getWriteBadgeID() {
+    return getBadgeID(getWriteBadgeName());
+  }
+
+  private void registerBadgeName(String key) {
+    if(badgemap.containsKey(key)) {
+      //throw new TbException("PortEmitterRPCAllEventCamkesMonitor::registerBadgeName: badge id " + key + " already registered.");
+    } else {
+      badgemap.put(key, nextbadge++);
+    }    
+  }
+  
+  private void registerMonitorBagdes() {
+    registerBadgeName(getReadBadgeName());
+    registerBadgeName(getWriteBadgeName());
+  }
+  
   @Override
   public String getCamkesAddAssemblyFileConfigDeclarations() {
     if (port instanceof InputPort) {
-      return getMonitorAssemblyInstance()+".priority = 230;";
+      return getMonitorAssemblyInstance()+".priority = 230;\n"
+             + "#define "+ getReadBadgeName() + " " + getReadBadgeID() + "\n" 
+             + getThreadImplementation().getComponentInstanceName() +"." + getName() + "_attributes = " + getReadBadgeName() + ";\n";
     } else {
-      return "";
+      String result = "";
+      List<PortConnection> ports = port.getConnections();
+      int sz = ports.size();
+      for (int i = 0; i < sz; i++) {
+        PortEmitterRPCAllEventCAmkESMonitor pe = new PortEmitterRPCAllEventCAmkESMonitor(ports.get(i).getDestPort());
+        String suffix = "";
+        if(sz>1) {
+          suffix += i;
+        }
+        result += "#define "+ pe.getWriteBadgeName() + " " + pe.getWriteBadgeID() + "\n";
+        result += getThreadImplementation().getComponentInstanceName()
+        + "." + getName() + suffix + "_attributes = " + pe.getWriteBadgeName() + ";\n";
+      }
+      return result;
     }
     
   }
@@ -454,7 +512,6 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
 
   @Override
   public String getCamkesAddAssemblyFilePortDeclarations() {
-    String retval = "";
     if(port instanceof InputEventPort) {
       String name = getMonitorInputCamkesNamePrefix();
       return "import \"components/tb_Monitors/"+name+"/"+name+".camkes\";\n";
@@ -467,9 +524,9 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   public String getQueueSize() {
     int size = 0;
     if (port instanceof InputEventPort) {
-      size = ((InputEventPort)port).getQueueSize();
+      size = ((OutputEventPort)((InputEventPort) port).getConnections().get(0).getSourcePort()).getQueueSize();
     } else if (port instanceof OutputEventPort) {
-      size = ((InputEventPort)(port.getConnections().get(0).getDestPort())).getQueueSize();
+      size = ((OutputEventPort) port).getQueueSize();
     } else {
       throw new TbException("Error: getQueueSize: call on non-event port " + port.getName() + ".");
     }
@@ -507,14 +564,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   @Override
   public List<String> getCamkesAddComponentPortImports() {
     List<String> list = new LinkedList<String>();
-    if(port instanceof InputEventPort) {
-      list.add(getInputMonitorInterfaceName()+".idl4");
-    } else if (port instanceof OutputEventPort) {
-      list.add(getOutputMonitorInterfaceName()+".idl4");
-    } else {
-      throw new TbException("Error: getCamkesAddComponentPortImports: call on non-event port "
-        + port.getName() + ".");
-    }
+    list.add(getMonitorInterfaceName()+".idl4");
     return list;
   }
 

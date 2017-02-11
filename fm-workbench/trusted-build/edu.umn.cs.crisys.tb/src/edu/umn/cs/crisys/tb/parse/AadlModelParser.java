@@ -458,7 +458,8 @@ public class AadlModelParser {
               addExtHandlersAndOptSendStrings((DispatchableInputPort)dp,port,ti);
             }
          } else {
-            dp = new OutputEventPort(port.getName(), new UnitType(), ti);
+           int queueSize = PropertyUtil.getQueueSize(port); 
+           dp = new OutputEventPort(port.getName(), new UnitType(), ti,queueSize);
          }
       } else if (port.getCategory() == PortCategory.EVENT_DATA) {
          if (port.getDirection() == DirectionType.IN) {
@@ -474,7 +475,8 @@ public class AadlModelParser {
               addExtHandlersAndOptSendStrings((DispatchableInputPort)dp,port,ti);
             }
          } else {
-            dp = new OutputEventPort(port.getName(), datatype, ti);
+           int queueSize = PropertyUtil.getQueueSize(port); 
+           dp = new OutputEventPort(port.getName(), datatype, ti, queueSize);
          }
       }
       ti.addPort(dp);

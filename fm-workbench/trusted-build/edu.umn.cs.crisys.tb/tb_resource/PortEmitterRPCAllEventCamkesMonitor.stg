@@ -29,8 +29,8 @@ inputPortCMonitorPurpose(port) ::= <<
 }>
 >>
 
-inputPortIDL4MonitorPurpose(port,str_direction) ::= <<
-  <str_direction> interface with type <port.typeName> and queue size of <port.queueSize>.
+inputPortIDL4MonitorPurpose(port) ::= <<
+  Queue interface with type <port.typeName> and queue size of <port.queueSize>.
 }>
 >>
 
@@ -235,59 +235,60 @@ while (<dispatcher.localReaderName>()) {
 ///////////////////////////////////////////////////////////////////////////
 
 inputPortDeclarations(port) ::= <<
-uses <port.inputMonitorInterfaceName> <port.name>;
+uses <port.monitorInterfaceName> <port.name>;
 consumes QueuedData <port.notificationName>;
 
 >>
 
 outputPortDeclarations(port) ::= <<
-<port.outputMonitorNames:{n | uses <port.outputMonitorInterfaceName> <n>;<\n>}>
+<port.outputMonitorNames:{n | uses <port.monitorInterfaceName> <n>;<\n>}>
 
 >>
 
 //monitorCamkesIdl4Writer(iname, str_type_name)
-camkesMonitorEnqueueIdl4(str_interface_name, port) ::= <<
-procedure <str_interface_name>_Enqueue {
+camkesMonitorIdl4(str_interface_name, port) ::= <<
+procedure <str_interface_name> {
   include <\u003C>stdbool.h<\u003E>;
   <if(!port.type.isUnit)>
   include <\u003C><port.systemTypesInclude><\u003E>;
   bool enqueue(refin <port.typeName> m);
-  <else>
-  bool enqueue(void);
-  <endif>
-};
->>
-
-camkesMonitorDequeueIdl4(str_interface_name, port) ::= <<
-procedure <str_interface_name>_Dequeue {
-  include <\u003C>stdbool.h<\u003E>;
-  <if(!port.type.isUnit)>
-  include <\u003C><port.systemTypesInclude><\u003E>;
   bool dequeue(out <port.typeName> m);
   <else>
+  bool enqueue(void);
   bool dequeue(void);
   <endif>
 };
 >>
 
 monitorCamkesWriter(str_component_name,port) ::= <<
-import <\u003C><port.inputMonitorInterfaceName>.idl4<\u003E>;
-import <\u003C><port.outputMonitorInterfaceName>.idl4<\u003E>;
+import <\u003C><port.monitorInterfaceName>.idl4<\u003E>;
 component <str_component_name> {
 
-  provides <port.outputMonitorInterfaceName> enq;
-  provides <port.inputMonitorInterfaceName> deq;
-  emits QueuedData qd;
-  has mutex q;
+  provides <port.monitorInterfaceName> mon;
+  emits QueuedData monsig;
+  
 }
 >>
 
+monitorCamkesHWriter(mguard,port) ::= <<
+#ifndef <mguard>
+#define <mguard>
 
-monitorCamkesCWriter(port, str_types_include,unlock,lock) ::= <<
+#define <port.readBadgeName> <port.readBadgeID>
+#define <port.writeBadgeName> <port.writeBadgeID>
+
+#endif // <mguard>
+>>
+
+
+monitorCamkesCWriter(port, str_types_include) ::= <<
 #include <\u003C>stdio.h<\u003E>
 #include <\u003C>stdbool.h<\u003E>
 #include <\u003C>camkes.h<\u003E>
 #include <\u003C><port.systemTypeHeader><\u003E>
+#include "../include/<port.monitorInputCamkesNamePrefix>.h"
+
+int mon_get_sender_id(void);
 
 <if(!port.type.isUnit)>
 <port.type.camkesName> contents[<port.queueSize>];
@@ -303,13 +304,16 @@ static bool is_empty(void) {
   return length == 0;
 }
 <if(!port.type.isUnit)>
-bool deq_dequeue(<port.typeName> * m) {
+bool mon_dequeue(<port.typeName> * m) {
 <else>
-bool deq_dequeue(void) {
+bool mon_dequeue(void) {
 <endif>
-  <lock>
-  if (is_empty()) {
-    <unlock>
+  if (mon_get_sender_id() != <port.readBadgeName>) {
+    #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
+    fprintf(stderr, "Monitor <port.qualifiedName>: attempt to dequeue without permission\n");
+    #endif 
+    return false;
+  } else if (is_empty()) {
     return false;
   } else {
     <if(!port.type.isUnit)>
@@ -317,19 +321,24 @@ bool deq_dequeue(void) {
     <endif>
     front = (front + 1) % <port.queueSize>;
     length--;
-    <unlock>
     return true;
   }
+  fprintf(stderr,"Executing unreadable code in %s at %d.\\n",__FILE__,__LINE__);
+  *((int*)0)=0xdeadbeef;
+  return false;
 }
 
 <if(!port.type.isUnit)>
-bool enq_enqueue(const <port.typeName> * m) {
+bool mon_enqueue(const <port.typeName> * m) {
 <else>
-bool enq_enqueue(void) {
+bool mon_enqueue(void) {
 <endif>
-  <lock>
-  if (is_full()) {
-    <unlock>
+  if (mon_get_sender_id() != <port.writeBadgeName>) {
+    #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
+    fprintf(stderr, "Monitor <port.qualifiedName>: attempt to enqueue without permission\n");
+    #endif 
+    return false;
+  } else if (is_full()) {
     #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
     fprintf(stderr,"Monitor <port.qualifiedName> is full!\n");
     #endif 
@@ -339,10 +348,12 @@ bool enq_enqueue(void) {
     contents[(front + length) % <port.queueSize>] = *((<port.type.camkesName> *)m);
     <endif>
     length++;
-    qd_emit();
-    <unlock>
+    monsig_emit();
     return true;
   }
+  fprintf(stderr,"Executing unreadable code in %s at %d.\\n",__FILE__,__LINE__);
+  *((int*)0)=0xdeadbeef;  
+  return false;
 }
 
 >>

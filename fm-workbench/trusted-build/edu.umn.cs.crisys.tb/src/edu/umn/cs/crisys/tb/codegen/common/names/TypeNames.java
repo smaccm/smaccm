@@ -87,7 +87,7 @@ public class TypeNames implements NameEmitter {
    * 
    */ 
   public boolean isNativePointerArg() {
-	    return (t_structural instanceof PointerType);
+	    return (t_structural instanceof PointerType) || (t_structural instanceof ArrayType);
 	  }
   
   public TypeNames getAadlOutputType() { 

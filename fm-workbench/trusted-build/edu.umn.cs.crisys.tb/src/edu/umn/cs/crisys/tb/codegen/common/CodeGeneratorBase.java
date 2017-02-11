@@ -438,7 +438,6 @@ public abstract class CodeGeneratorBase {
          createPortTypes();
          C_Type_Writer.writeTypes(hwriter, model, 6);
          
-         
 
          writeBoilerplateFooter(sysInstanceName, hname, hwriter, stg.getInstanceOf("filePostfix"));
 
