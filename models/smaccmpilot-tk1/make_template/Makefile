@@ -21,20 +21,20 @@ TEMPLATES := ../../projects/templates ../../projects/global-components/templates
 
 include TimeServerTK1/TimeServer.mk
 
-Clock_Initializer_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/src/arch/${ARCH}/*.c))
+Clock_Driver_CFILES :=  \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/src/arch/${ARCH}/*.c))
 
-Clock_Initializer_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/include/*.h)) \
+Clock_Driver_HFILES := \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
-Clock_Initializer_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/src/plat/${PLAT}/*.S))
+Clock_Driver_ASMFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Driver/src/plat/${PLAT}/*.S))
 
 UART_Driver_CFILES :=  \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/UART_Driver/src/*.c)) \
@@ -52,19 +52,19 @@ UART_Driver_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/UART_Driver/src/plat/${PLAT}/*.S))
 
 tb_UART_Driver_encrypt2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_UART_Driver_encrypt2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_UART_Driver_encrypt2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_UART_Driver_encrypt2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_UART_Driver_encrypt2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_UART_Driver_encrypt2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_UART_Driver_encrypt2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_UART_Driver_encrypt2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_UART_Driver_encrypt2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_UART_Driver_encrypt2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_UART_Driver_encrypt2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/src/plat/${PLAT}/*.S))
 
 
 Decrypt_CFILES :=  \
@@ -83,19 +83,19 @@ Decrypt_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Decrypt/src/plat/${PLAT}/*.S))
 
 tb_Decrypt_uart2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Decrypt_uart2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Decrypt_uart2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Decrypt_uart2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Decrypt_uart2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Decrypt_uart2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Decrypt_uart2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_Decrypt_uart2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Decrypt_uart2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Decrypt_uart2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_Decrypt_uart2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Decrypt_uart2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Decrypt_uart2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Decrypt_uart2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Decrypt_uart2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Decrypt_uart2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Decrypt_uart2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Decrypt_uart2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Decrypt_uart2self_Monitor/src/plat/${PLAT}/*.S))
 
 
 Encrypt_CFILES :=  \
@@ -114,34 +114,34 @@ Encrypt_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Encrypt/src/plat/${PLAT}/*.S))
 
 tb_Encrypt_server2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_server2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_server2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_server2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_server2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_server2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_server2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_Encrypt_server2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_server2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_server2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_Encrypt_server2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_server2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_server2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_server2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_server2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_server2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_server2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_server2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_server2self_Monitor/src/plat/${PLAT}/*.S))
 
 tb_Encrypt_uart2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_uart2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_uart2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_uart2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_uart2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_uart2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_uart2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_Encrypt_uart2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_uart2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_uart2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_Encrypt_uart2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_uart2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_uart2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_uart2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Encrypt_uart2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_uart2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_uart2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_uart2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Encrypt_uart2self_Monitor/src/plat/${PLAT}/*.S))
 
 
 Server_CFILES :=  \
@@ -160,50 +160,50 @@ Server_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Server/src/plat/${PLAT}/*.S))
 
 tb_Server_decrypt2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_decrypt2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_decrypt2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_decrypt2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_decrypt2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_decrypt2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_decrypt2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_Server_decrypt2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_decrypt2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_decrypt2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_Server_decrypt2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_decrypt2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_decrypt2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_decrypt2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_decrypt2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_decrypt2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_decrypt2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_decrypt2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_decrypt2self_Monitor/src/plat/${PLAT}/*.S))
 
 tb_Server_framing2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_framing2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_framing2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_framing2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_framing2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_framing2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_framing2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_Server_framing2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_framing2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_framing2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_Server_framing2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_framing2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_framing2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_framing2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_framing2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_framing2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_framing2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_framing2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_framing2self_Monitor/src/plat/${PLAT}/*.S))
 
 
 tb_Server_vm2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_vm2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_vm2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_vm2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_vm2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_vm2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_vm2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_Server_vm2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_vm2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_vm2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_Server_vm2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_vm2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_vm2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_vm2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Server_vm2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_vm2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_vm2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_vm2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Server_vm2self_Monitor/src/plat/${PLAT}/*.S))
 
 
 CAN_Framing_CFILES :=  \
@@ -222,49 +222,49 @@ CAN_Framing_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Framing/src/plat/${PLAT}/*.S))
 
 tb_CAN_Framing_server2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_server2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_server2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_server2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_CAN_Framing_server2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_server2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_CAN_Framing_server2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_server2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_server2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_server2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_server2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/src/plat/${PLAT}/*.S))
 
 tb_CAN_Framing_can2self_frame_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_frame_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_frame_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_frame_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/src/arch/${ARCH}/*.c))
 
 tb_CAN_Framing_can2self_frame_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_frame_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_CAN_Framing_can2self_frame_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_frame_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_frame_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_frame_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_frame_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/src/plat/${PLAT}/*.S))
 
 tb_CAN_Framing_can2self_status_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_status_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_status_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_status_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/src/arch/${ARCH}/*.c))
 
 tb_CAN_Framing_can2self_status_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_status_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_CAN_Framing_can2self_status_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_status_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_status_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_status_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Framing_can2self_status_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/src/plat/${PLAT}/*.S))
 
 
 CAN_Driver_CFILES :=  \
@@ -283,19 +283,19 @@ CAN_Driver_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/src/plat/${PLAT}/*.S))
 
 tb_CAN_Driver_framing2self_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Driver_framing2self_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Driver_framing2self_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Driver_framing2self_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/src/arch/${ARCH}/*.c))
 
 tb_CAN_Driver_framing2self_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Driver_framing2self_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_CAN_Driver_framing2self_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Driver_framing2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Driver_framing2self_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Driver_framing2self_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_CAN_Driver_framing2self_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/src/plat/${PLAT}/*.S))
 
 
 Virtual_Machine_CFILES :=  \
@@ -314,19 +314,19 @@ Virtual_Machine_ASMFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Virtual_Machine/src/plat/${PLAT}/*.S))
 
 tb_Virtual_Machine_server2self_reboot_Monitor_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Virtual_Machine_server2self_reboot_Monitor/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Virtual_Machine_server2self_reboot_Monitor/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Virtual_Machine_server2self_reboot_Monitor/src/arch/${ARCH}/*.c))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/src/arch/${ARCH}/*.c))
 
 tb_Virtual_Machine_server2self_reboot_Monitor_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Virtual_Machine_server2self_reboot_Monitor/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/include/*.h)) \
    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
 tb_Virtual_Machine_server2self_reboot_Monitor_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Virtual_Machine_server2self_reboot_Monitor/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Virtual_Machine_server2self_reboot_Monitor/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Virtual_Machine_server2self_reboot_Monitor/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Virtual_Machine_server2self_reboot_Monitor/src/plat/${PLAT}/*.S))
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/src/plat/${PLAT}/*.S))
 
 
 

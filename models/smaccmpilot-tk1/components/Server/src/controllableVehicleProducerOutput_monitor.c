@@ -677,11 +677,11 @@ void callback_parse_frame(const uint8_t n_var0[80U])
                                                                                                                     
                                                                                                                     *n_ref10 = n_deref199;
                                                                                                                 } else {
-                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 3097259045U)) {
+                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 4155064513U)) {
                                                                                                                         uint32_t n_deref200 = *n_ref1;
                                                                                                                         bool n_local201 = false;
                                                                                                                         bool *n_ref202 = &n_local201;
-                                                                                                                        uint32_t n_cse141 = (uint32_t) (n_deref200 + (uint32_t) 71U);
+                                                                                                                        uint32_t n_cse141 = (uint32_t) (n_deref200 + (uint32_t) 63U);
                                                                                                                         
                                                                                                                         if ((bool) (n_cse141 < (uint32_t) 80U)) {
                                                                                                                             struct sequence_numbered_packed_status n_local203 = {};
@@ -692,7 +692,7 @@ void callback_parse_frame(const uint8_t n_var0[80U])
                                                                                                                             
                                                                                                                             uint32_t n_deref205 = *n_ref1;
                                                                                                                             
-                                                                                                                            *n_ref1 = (uint32_t) ((uint32_t) 71U + n_deref205);
+                                                                                                                            *n_ref1 = (uint32_t) ((uint32_t) 63U + n_deref205);
                                                                                                                             callback_packedStatusGetRespProducer(n_ref204);
                                                                                                                             *n_ref202 = true;
                                                                                                                         }
@@ -1229,11 +1229,11 @@ void callback_parse_frame(const uint8_t n_var0[80U])
                                                                                                                                                                                                                 
                                                                                                                                                                                                                 *n_ref10 = n_deref360;
                                                                                                                                                                                                             } else {
-                                                                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 3467291275U)) {
+                                                                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 3357897920U)) {
                                                                                                                                                                                                                     uint32_t n_deref361 = *n_ref1;
                                                                                                                                                                                                                     bool n_local362 = false;
                                                                                                                                                                                                                     bool *n_ref363 = &n_local362;
-                                                                                                                                                                                                                    uint32_t n_cse256 = (uint32_t) (n_deref361 + (uint32_t) 66U);
+                                                                                                                                                                                                                    uint32_t n_cse256 = (uint32_t) (n_deref361 + (uint32_t) 70U);
                                                                                                                                                                                                                     
                                                                                                                                                                                                                     if ((bool) (n_cse256 < (uint32_t) 80U)) {
                                                                                                                                                                                                                         struct sequence_numbered_alt_control_debug n_local364 = {};
@@ -1244,7 +1244,7 @@ void callback_parse_frame(const uint8_t n_var0[80U])
                                                                                                                                                                                                                         
                                                                                                                                                                                                                         uint32_t n_deref366 = *n_ref1;
                                                                                                                                                                                                                         
-                                                                                                                                                                                                                        *n_ref1 = (uint32_t) ((uint32_t) 66U + n_deref366);
+                                                                                                                                                                                                                        *n_ref1 = (uint32_t) ((uint32_t) 70U + n_deref366);
                                                                                                                                                                                                                         callback_altControlDebugGetRespProducer(n_ref365);
                                                                                                                                                                                                                         *n_ref363 = true;
                                                                                                                                                                                                                     }

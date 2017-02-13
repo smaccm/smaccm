@@ -847,10 +847,10 @@ void callback_packedStatusGetRespProducer(const struct sequence_numbered_packed_
     uint32_t n_local2 = (uint32_t) 0U;
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 75U) < (uint32_t) 80U);
+    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 67U) < (uint32_t) 80U);
     
     if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 3097259045U;
+        uint32_t n_local5 = (uint32_t) 4155064513U;
         uint32_t *n_ref6 = &n_local5;
         uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
         
@@ -859,12 +859,12 @@ void callback_packedStatusGetRespProducer(const struct sequence_numbered_packed_
         uint8_t *n_cse4 = (uint8_t *) n_ref1;
         
         ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 71U) <= (uint32_t) 80U));
+        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 63U) <= (uint32_t) 80U));
         sequence_numbered_packed_status_set_be(n_cse4, n_cse2, n_var0);
         
         uint32_t n_deref7 = *n_ref3;
         
-        *n_ref3 = (uint32_t) ((uint32_t) 75U + n_deref7);
+        *n_ref3 = (uint32_t) ((uint32_t) 67U + n_deref7);
     }
     if (n_cse1) {
         callback_output_tb_self2encrypt_enqueue_2(n_ref1);
@@ -1560,10 +1560,10 @@ void callback_altControlDebugGetRespProducer(const struct sequence_numbered_alt_
     uint32_t n_local2 = (uint32_t) 0U;
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 70U) < (uint32_t) 80U);
+    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 74U) < (uint32_t) 80U);
     
     if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 3467291275U;
+        uint32_t n_local5 = (uint32_t) 3357897920U;
         uint32_t *n_ref6 = &n_local5;
         uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
         
@@ -1572,12 +1572,12 @@ void callback_altControlDebugGetRespProducer(const struct sequence_numbered_alt_
         uint8_t *n_cse4 = (uint8_t *) n_ref1;
         
         ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 66U) <= (uint32_t) 80U));
+        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 70U) <= (uint32_t) 80U));
         sequence_numbered_alt_control_debug_set_be(n_cse4, n_cse2, n_var0);
         
         uint32_t n_deref7 = *n_ref3;
         
-        *n_ref3 = (uint32_t) ((uint32_t) 70U + n_deref7);
+        *n_ref3 = (uint32_t) ((uint32_t) 74U + n_deref7);
     }
     if (n_cse1) {
         callback_output_tb_self2encrypt_enqueue_2(n_ref1);

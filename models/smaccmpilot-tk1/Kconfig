@@ -6,6 +6,7 @@ config APP_SMACCMPILOT_TK1
                LIB_SEL4_DMA && LIB_USB
 
     default n
+    select TK1_DEVICE_FWD
     select APP_CAMKES_EXECUTIVE
 
 config APP_SMACCMPILOT_TK1_TB_DEBUG
@@ -14,3 +15,7 @@ config APP_SMACCMPILOT_TK1_TB_DEBUG
     depends on APP_SMACCMPILOT_TK1 && PRINTING
     help
         Enable debugging trusted build monitors
+
+config TK1_DEVICE_FWD
+    bool
+    default n

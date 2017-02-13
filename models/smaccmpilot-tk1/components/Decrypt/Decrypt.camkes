@@ -38,18 +38,11 @@ AADL thread implementation Decrypt.
 
 import <Timer.idl4>;
 
-import <int64_t_writer.idl4>;
-
 import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Dequeue.idl4>;
 
 import <tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue.idl4>;
 
 
-
-
-import <int64_t_writer.idl4>;
-
-import <void_writer.idl4>;
 
 import <SMACCM_DATA__UART_Packet_i_writer.idl4>;
 

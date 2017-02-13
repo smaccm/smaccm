@@ -2,6 +2,9 @@ import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue.idl4>;
 import <tb_Monitor_SMACCM_DATA__UART_Packet_i_1_Dequeue.idl4>;
 import <tb_Monitor_bool_1_Enqueue.idl4>;
 
+import <clkcar.idl4>;
+import <gen_fwd.idl4>;
+
 component uart_shim {
     control;
 
@@ -12,8 +15,11 @@ component uart_shim {
     consumes QueuedData tb_encrypt2self_notification;
     uses tb_Monitor_bool_1_Enqueue tb_self2encrypt;
 
+    uses clkcar_inf clkcar;
+    provides gen_fwd_inf gen_fwd;
+
     // Internal interface
-    dataport Buf uart_regs;
+    dataport Buf tk1_uart_regs;
     consumes DataAvailable interrupt;
     has mutex device;
 }

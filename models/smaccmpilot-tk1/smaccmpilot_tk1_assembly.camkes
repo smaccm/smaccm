@@ -44,32 +44,32 @@ import "components/dispatch_periodic/dispatch_periodic.camkes";
 import <Timer.idl4>;
 import <TimeServerTK1/TimeServer.camkes>;
 
-import "components/Clock_Initializer/Clock_Initializer.camkes";
+import "components/Clock_Driver/Clock_Driver.camkes";
 import "components/UART_Driver/UART_Driver.camkes";
-import "components/tb_UART_Driver_encrypt2self_Monitor/tb_UART_Driver_encrypt2self_Monitor.camkes";
+import "components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/tb_UART_Driver_encrypt2self_Monitor.camkes";
 
 import "components/Decrypt/Decrypt.camkes";
-import "components/tb_Decrypt_uart2self_Monitor/tb_Decrypt_uart2self_Monitor.camkes";
+import "components/tb_Monitors/tb_Decrypt_uart2self_Monitor/tb_Decrypt_uart2self_Monitor.camkes";
 
 import "components/Encrypt/Encrypt.camkes";
-import "components/tb_Encrypt_server2self_Monitor/tb_Encrypt_server2self_Monitor.camkes";
-import "components/tb_Encrypt_uart2self_Monitor/tb_Encrypt_uart2self_Monitor.camkes";
+import "components/tb_Monitors/tb_Encrypt_server2self_Monitor/tb_Encrypt_server2self_Monitor.camkes";
+import "components/tb_Monitors/tb_Encrypt_uart2self_Monitor/tb_Encrypt_uart2self_Monitor.camkes";
 
 import "components/Server/Server.camkes";
-import "components/tb_Server_vm2self_Monitor/tb_Server_vm2self_Monitor.camkes";
-import "components/tb_Server_decrypt2self_Monitor/tb_Server_decrypt2self_Monitor.camkes";
-import "components/tb_Server_framing2self_Monitor/tb_Server_framing2self_Monitor.camkes";
+import "components/tb_Monitors/tb_Server_vm2self_Monitor/tb_Server_vm2self_Monitor.camkes";
+import "components/tb_Monitors/tb_Server_decrypt2self_Monitor/tb_Server_decrypt2self_Monitor.camkes";
+import "components/tb_Monitors/tb_Server_framing2self_Monitor/tb_Server_framing2self_Monitor.camkes";
 
 import "components/CAN_Framing/CAN_Framing.camkes";
-import "components/tb_CAN_Framing_server2self_Monitor/tb_CAN_Framing_server2self_Monitor.camkes";
-import "components/tb_CAN_Framing_can2self_frame_Monitor/tb_CAN_Framing_can2self_frame_Monitor.camkes";
-import "components/tb_CAN_Framing_can2self_status_Monitor/tb_CAN_Framing_can2self_status_Monitor.camkes";
+import "components/tb_Monitors/tb_CAN_Framing_server2self_Monitor/tb_CAN_Framing_server2self_Monitor.camkes";
+import "components/tb_Monitors/tb_CAN_Framing_can2self_frame_Monitor/tb_CAN_Framing_can2self_frame_Monitor.camkes";
+import "components/tb_Monitors/tb_CAN_Framing_can2self_status_Monitor/tb_CAN_Framing_can2self_status_Monitor.camkes";
 
 import "components/CAN_Driver/CAN_Driver.camkes";
-import "components/tb_CAN_Driver_framing2self_Monitor/tb_CAN_Driver_framing2self_Monitor.camkes";
+import "components/tb_Monitors/tb_CAN_Driver_framing2self_Monitor/tb_CAN_Driver_framing2self_Monitor.camkes";
 
 import "components/Virtual_Machine/Virtual_Machine.camkes";
-import "components/tb_Virtual_Machine_server2self_reboot_Monitor/tb_Virtual_Machine_server2self_reboot_Monitor.camkes";
+import "components/tb_Monitors/tb_Virtual_Machine_server2self_reboot_Monitor/tb_Virtual_Machine_server2self_reboot_Monitor.camkes";
 
 
 
@@ -86,7 +86,7 @@ assembly {
 
         component TimeServerTK1 time_server;
         // Component instances for all AADL-defined threads
-        component Clock_Initializer Clock_Initializer_inst;
+        component Clock_Driver Clock_Driver_inst;
         component UART_Driver UART_Driver_inst;
         component Decrypt Decrypt_inst;
         component Encrypt Encrypt_inst;
@@ -198,6 +198,15 @@ assembly {
 
         connection seL4RPCCall conn35 (from Virtual_Machine_inst.tb_server2self_reboot, to tb_virtual_machine_server2self_reboot_monitor.deq);
         connection seL4Notification conn36 (from tb_virtual_machine_server2self_reboot_monitor.qd, to Virtual_Machine_inst.tb_server2self_reboot_notification);
+
+
+        // Direct RPC connections
+        connection seL4RPCCall conn37 (from UART_Driver_inst.clkcar, to Clock_Driver_inst.clkcar);
+
+        connection seL4RPCCall conn38 (from CAN_Driver_inst.clkcar, to Clock_Driver_inst.clkcar);
+
+        connection seL4RPCCall conn39 (from Virtual_Machine_inst.clkcarfwd, to Clock_Driver_inst.clkcarfwd);
+        connection seL4RPCCall conn40 (from Virtual_Machine_inst.uartfwd, to UART_Driver_inst.uartfwd);
 
 
 

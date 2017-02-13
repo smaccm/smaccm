@@ -17,8 +17,9 @@ typedef struct alt_control_debug {
             float ui_setp;
             float ui_rate_setp;
             struct pid_state pos;
-            float pos_setp;
-            float pos_rate_setp;
+            float pos_err;
+            float pos_rate_err;
+            float vz_ctl;
         } alt_control_debug;
 void alt_control_debug_get_le(const uint8_t *n_var0, uint32_t n_var1, struct alt_control_debug *n_var2);
 void alt_control_debug_get_be(const uint8_t *n_var0, uint32_t n_var1, struct alt_control_debug *n_var2);

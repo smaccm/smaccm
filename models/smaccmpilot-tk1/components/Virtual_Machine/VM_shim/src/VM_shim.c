@@ -17,7 +17,8 @@
 static void tb_server2self_reboot_callback(void *unused) {
     bool b;
     while (tb_server2self_reboot_dequeue(&b)) {
-        printf("Reboot requested (not implemented)\n");
+        printf("Reboot requested\n");
+        restart_event_emit();
     }
     tb_server2self_reboot_notification_reg_callback(&tb_server2self_reboot_callback, NULL);
 }
@@ -30,7 +31,7 @@ int run(void) {
     SMACCM_DATA__Camera_Bounding_Box_i box;
     box.left = 0;
     box.top = 0;
-    while (1) {
+    while (0) {
         for (int i = 0; i < 200; i++) {
             box.right = i;
             box.bottom = i;

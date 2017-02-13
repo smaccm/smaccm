@@ -36,7 +36,7 @@ AADL thread implementation dispatch_periodic.
 
  **************************************************************************/
 
-import <int64_t_writer.idl4>;
+// import <int64_t_writer.idl4>;
 import <Timer.idl4>;
 
 component dispatch_periodic {

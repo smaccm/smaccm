@@ -15,8 +15,8 @@ VM_shim_CFILES := \
     $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM_shim/src/*.c))
 # VM_shim_LIBS += sel4vchan
 
-VM_CFILES   := $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.c))
-VM_OFILES   := archive.o
+VM_CFILES := $(patsubst $(SOURCE_DIR)/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.c))
+VM_OFILES := archive.o
 VM_HFILES := $(patsubst ${SOURCE_DIR}/%,%,$(wildcard $(SOURCE_DIR)/components/Virtual_Machine/VM/src/*.h))
 VM_LIBS += sel4allocman elf sel4simple sel4simple-default cpio sel4arm-vmm sel4dma usbdrivers
 
@@ -31,12 +31,6 @@ can_shim_HFILES := \
 can_shim_CFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/can_shim/src/*.c))
 
-spi_HFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/spi/include/*.h)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
-spi_CFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/spi/src/*.c))
-
 can_HFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/can/include/*.h)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
@@ -44,6 +38,7 @@ can_CFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/CAN_Driver/can/src/*.c))
 
 include ${PWD}/projects/DARPA-tk1/components/gpio/gpio.mk
+include ${PWD}/projects/DARPA-tk1/components/spi/spi.mk
 
 ###### End CAN
 
@@ -59,17 +54,11 @@ uart_shim_CFILES := \
 ###### End UART
 
 
-###### Clock_Initializer files
-
-clkcar_shim_HFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/clkcar_shim/include/*.h)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
-clkcar_shim_CFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Clock_Initializer/clkcar_shim/src/*.c))
+###### Clock_Driver files
 
 include ${PWD}/projects/DARPA-tk1/components/clkcar/clkcar.mk
 
-###### Clock_Initializer UART
+###### End Clock_Driver
 
 
 include ${PWD}/tools/camkes/camkes.mk

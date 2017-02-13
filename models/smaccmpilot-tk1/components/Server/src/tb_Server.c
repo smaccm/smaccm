@@ -78,17 +78,14 @@ static int64_t tb_time_periodic_dispatcher;
 bool periodic_dispatcher_write_int64_t(const int64_t * arg) {
     tb_occurred_periodic_dispatcher = true;
     tb_time_periodic_dispatcher = *arg;
-    if(tb_dispatch_sem_post() != 0) {
-      fprintf(stderr,"Operation 'tb_dispatch_sem_post()' failed in %s at %d.\n",__FILE__,__LINE__);
-      *((int*)0)=0xdeadbeef;
-    }
+    MUTEXOP(tb_dispatch_sem_post())
     return true;
 }
 void tb_timer_complete_callback(void *_ UNUSED) {
    // we want time in microseconds, not nanoseconds, so we divide by 1000.
    int64_t tb_time_periodic_dispatcher = tb_timer_time() / 1000LL;
    (void)periodic_dispatcher_write_int64_t(&tb_time_periodic_dispatcher);
-   tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL);
+   CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
 }
 /************************************************************************
  *  tb_Server_write_self2encrypt:
@@ -103,8 +100,8 @@ void tb_timer_complete_callback(void *_ UNUSED) {
  * enqueue attempt failed.
  *
  ************************************************************************/
-
-bool tb_Server_write_self2encrypt(const SMACCM_DATA__GIDL * tb_self2encrypt) {
+bool tb_Server_write_self2encrypt
+(const SMACCM_DATA__GIDL * tb_self2encrypt) {
     bool tb_result = true ; 
 
     tb_result &= tb_self2encrypt_enqueue((tb_SMACCM_DATA__GIDL_container *) tb_self2encrypt);
@@ -124,8 +121,8 @@ bool tb_Server_write_self2encrypt(const SMACCM_DATA__GIDL * tb_self2encrypt) {
  * enqueue attempt failed.
  *
  ************************************************************************/
-
-bool tb_Server_write_self2framing(const SMACCM_DATA__GIDL * tb_self2framing) {
+bool tb_Server_write_self2framing
+(const SMACCM_DATA__GIDL * tb_self2framing) {
     bool tb_result = true ; 
 
     tb_result &= tb_self2framing_enqueue((tb_SMACCM_DATA__GIDL_container *) tb_self2framing);
@@ -145,8 +142,8 @@ bool tb_Server_write_self2framing(const SMACCM_DATA__GIDL * tb_self2framing) {
  * enqueue attempt failed.
  *
  ************************************************************************/
-
-bool tb_Server_write_self2vm_reboot(const bool * tb_self2vm_reboot) {
+bool tb_Server_write_self2vm_reboot
+(const bool * tb_self2vm_reboot) {
     bool tb_result = true ; 
 
     tb_result &= tb_self2vm_reboot_enqueue(tb_self2vm_reboot);
@@ -193,17 +190,6 @@ void tb_entrypoint_Server_Server_initializer(const int64_t * in_arg) {
 }
 
 /************************************************************************
- *  tb_entrypoint_tb_Server_vm2self:
- *
- * This is the function invoked by an active thread dispatcher to
- * call to a user-defined entrypoint function.  It sets up the dispatch
- * context for the user-defined entrypoint, then calls it.
- *
- ************************************************************************/
-void tb_entrypoint_tb_Server_vm2self(const SMACCM_DATA__Camera_Bounding_Box_i * in_arg) {
-}
-
-/************************************************************************
  *  tb_entrypoint_tb_Server_decrypt2self:
  *
  * This is the function invoked by an active thread dispatcher to
@@ -235,24 +221,15 @@ void tb_entrypoint_tb_Server_framing2self(const SMACCM_DATA__GIDL * in_arg) {
 int run(void) {
     // Port initialization routines
     // tb_timer_periodic(0, ((uint64_t)5)*NS_IN_MS);
-       tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL);SMACCM_DATA__Camera_Bounding_Box_i tb_vm2self;
-    SMACCM_DATA__GIDL tb_decrypt2self;
-    SMACCM_DATA__GIDL tb_framing2self;
-
+       CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
     {
     int64_t tb_dummy;
     tb_entrypoint_Server_Server_initializer(&tb_dummy);
     }
     // Initial lock to await dispatch input.
-    if(tb_dispatch_sem_wait() != 0) {
-      fprintf(stderr,"Operation 'tb_dispatch_sem_wait()' failed in %s at %d.\n",__FILE__,__LINE__);
-      *((int*)0)=0xdeadbeef;
-    }
+    MUTEXOP(tb_dispatch_sem_wait())
     for(;;) {
-        if(tb_dispatch_sem_wait() != 0) {
-          fprintf(stderr,"Operation 'tb_dispatch_sem_wait()' failed in %s at %d.\n",__FILE__,__LINE__);
-          *((int*)0)=0xdeadbeef;
-        }
+        MUTEXOP(tb_dispatch_sem_wait())
 
         // Drain the queues
         if (tb_occurred_periodic_dispatcher) {

@@ -3,9 +3,11 @@ import <tb_Monitor_bool_1_Enqueue.idl4>;
 import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue.idl4>;
 
 import "can_shim/can_shim.camkes";
-import "spi/spi.camkes";
 import "can/can.camkes";
+import <spi/spi.camkes>;
 import <gpio/gpio.camkes>;
+
+import <clkcar.idl4>;
 
 component spibase {
     hardware;
@@ -28,6 +30,8 @@ component CAN_Driver {
     consumes QueuedData tb_framing2self_notification;
     uses tb_Monitor_bool_1_Enqueue tb_self2framing_status;
     uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue tb_self2framing_frame;
+
+    uses clkcar_inf clkcar;
     
     composition {
         /* hardware components */
@@ -45,6 +49,8 @@ component CAN_Driver {
         export can_shim_obj.tb_framing2self_notification -> tb_framing2self_notification;
         export can_shim_obj.tb_self2framing_status -> tb_self2framing_status;
         export can_shim_obj.tb_self2framing_frame -> tb_self2framing_frame;
+
+        export spi_obj.clkcar -> clkcar;
 
         /* hardware connections */
         connection seL4HardwareMMIO gpio_mem1(from gpio_obj.gpio1base, to gpiobase_obj.gpio1base);

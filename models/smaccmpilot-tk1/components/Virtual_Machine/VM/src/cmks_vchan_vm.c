@@ -19,7 +19,7 @@
 
 #include <sel4arm-vmm/vchan_vm_component.h>
 
-#include <camkes.h>
+#include <VM.h>
 
 #include "cmks_vchan_vm.h"
 
