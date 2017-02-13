@@ -1053,7 +1053,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getPreDefFnExprAccess().getComponentExprParserRuleCall_1_3_0(), semanticObject.getComponent());
-		feeder.accept(grammarAccess.getPreDefFnExprAccess().getPropNamedElementQCLREFParserRuleCall_1_5_0_1(), semanticObject.eGet(AgreePackage.Literals.GET_PROPERTY_EXPR__PROP, false));
+		feeder.accept(grammarAccess.getPreDefFnExprAccess().getPropNamedElementQCLREFParserRuleCall_1_5_0_1(), semanticObject.getProp());
 		feeder.finish();
 	}
 	
@@ -1248,7 +1248,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.CONNECTION_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getConnNamedElementIDTerminalRuleCall_7_2_0_1(), semanticObject.eGet(AgreePackage.Literals.CONNECTION_STATEMENT__CONN, false));
+		feeder.accept(grammarAccess.getSpecStatementAccess().getConnNamedElementIDTerminalRuleCall_7_2_0_1(), semanticObject.getConn());
 		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_7_4_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
