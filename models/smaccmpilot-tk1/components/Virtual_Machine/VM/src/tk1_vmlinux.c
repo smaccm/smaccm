@@ -351,6 +351,50 @@ struct generic_forward_cfg camkes_clk_car =  {
 };
 
 #endif
+
+#define BBOX_PADDR 0xC0000000
+
+static int
+handle_bbox_fault(struct device* d, vm_t* vm, fault_t* fault)
+{
+    uint32_t offset = fault_get_address(fault) - BBOX_PADDR;
+
+    if (fault_is_write(fault)) {
+        uint32_t data = fault_get_data(fault) & 0xFFFF;
+        switch (offset) {
+        case 0x0:
+            bbox->left = data;
+            break;
+        case 0x2:
+            bbox->right = data;
+            break;
+        case 0x4:
+            bbox->top = data;
+            break;
+        case 0x6:
+            bbox->bottom = data;
+            bbox_notification_emit();
+            break;
+        default:
+            ZF_LOGE("Unhandled offset");
+            break;
+        }
+    } else {
+        fault_set_data(fault, 0);
+    }
+
+    return advance_fault(fault);
+}
+
+const struct device dev_bbox = {
+    .devid = DEV_CUSTOM,
+    .name = "Camera bounding box",
+    .pstart = BBOX_PADDR,
+    .size = PAGE_SIZE,
+    .handle_page_fault = &handle_bbox_fault,
+    .priv = NULL
+};
+
 static int
 install_linux_devices(vm_t* vm)
 {
@@ -383,6 +427,9 @@ install_linux_devices(vm_t* vm)
     err = vm_install_generic_forward_device(vm, &dev_clkcar, camkes_clk_car);
     assert(!err);
 #endif // CONFIG_TK1_DEVICE_FWD
+
+    err = vm_add_device(vm, &dev_bbox);
+    assert(!err);
 
     /* Install pass through devices */
     /* TK1 passes through all devices at the moment by using on-demand device mapping */

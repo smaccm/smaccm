@@ -28,6 +28,8 @@ component Virtual_Machine {
         export vm_obj.clkcarfwd -> clkcarfwd;
 
         connection seL4Notification restart(from vm_shim_obj.restart_event, to vm_obj.restart_event);
+        connection seL4Notification new_bbox(from vm_obj.bbox_notification, to vm_shim_obj.bbox_notification);
+        connection seL4SharedData bbox(from vm_obj.bbox, to vm_shim_obj.bbox);
     }
 
     configuration {

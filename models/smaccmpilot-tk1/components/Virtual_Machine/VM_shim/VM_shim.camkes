@@ -12,4 +12,6 @@ component VM_shim {
 
     // Internal interface
     emits restart restart_event;
+    dataport SMACCM_DATA__Camera_Bounding_Box_i bbox;
+    consumes NewBoundingBox bbox_notification;
 }
