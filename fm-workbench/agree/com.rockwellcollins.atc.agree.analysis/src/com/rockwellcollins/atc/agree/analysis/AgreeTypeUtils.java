@@ -74,7 +74,7 @@ public class AgreeTypeUtils {
         return getTypeName(finalId, typeMap, typeExpressions);
     }
 
-    public static String getTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
+    private static String getTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
             Set<Type> typeExpressions) {
 
     	if(finalId == null){
@@ -108,6 +108,7 @@ public class AgreeTypeUtils {
         if (el instanceof ComponentImplementation) {
             ComponentImplementation compImpl = (ComponentImplementation) el;
             String typeStr = null;
+            Type subType = null;
             if (compImpl.getAllSubcomponents().size() == 0) {
                 typeStr = getIDTypeStr(compImpl.getType());
                 typeMap.put(el, typeStr);
@@ -117,12 +118,12 @@ public class AgreeTypeUtils {
                 ComponentImplementation subCompImpl = subComp.getComponentImplementation();
                 if (subCompImpl == null) {
                     ComponentType subCompType = subComp.getComponentType();
-                    typeStr = getTypeName(subCompType, typeMap, typeExpressions);
+                    subType = getType(subCompType, typeMap, typeExpressions);
                 } else {
-                    typeStr = getTypeName(subCompImpl, typeMap, typeExpressions);
+                    subType = getType(subCompImpl, typeMap, typeExpressions);
                 }
-                if (typeStr != null) {
-                    subTypeMap.put(subComp.getName(), getNamedType(typeStr));
+                if (subType != null) {
+                    subTypeMap.put(subComp.getName(), subType);
                 }
             }
         } else if (el instanceof RecordDefExpr) {
@@ -131,14 +132,18 @@ public class AgreeTypeUtils {
 
                 com.rockwellcollins.atc.agree.agree.Type argType = arg.getType();
                 String typeStr = null;
+                Type subType = null;
                 if (argType instanceof PrimType) {
                     typeStr = ((PrimType) argType).getString();
                 } else {
                     NestedDotID nestId = ((RecordType) argType).getRecord();
                     NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
-                    typeStr = getTypeName(namedEl, typeMap, typeExpressions);
+                    subType = getType(namedEl, typeMap, typeExpressions);
 				}
-				subTypeMap.put(arg.getName(), getNamedType(typeStr));
+                if(typeStr != null){
+                	subType = getNamedType(typeStr);
+                }
+				subTypeMap.put(arg.getName(), subType);
 			}
 
 		} else if (el instanceof EnumStatement) {

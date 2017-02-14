@@ -927,7 +927,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		for (SpecStatement spec : specs) {
 			if (spec instanceof RecordDefExpr) {
 				// this will record them to the global types
-				AgreeTypeUtils.getTypeName((NamedElement) spec, typeMap, globalTypes);
+				AgreeTypeUtils.getType((NamedElement) spec, typeMap, globalTypes);
 			}
 		}
 		return types;
