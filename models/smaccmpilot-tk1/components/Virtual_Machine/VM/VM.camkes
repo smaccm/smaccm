@@ -18,7 +18,6 @@ component VM {
     uses gen_fwd_inf uartfwd;
     uses gen_fwd_inf clkcarfwd;
 
-    has semaphore vm_sem;
     consumes restart restart_event;
 
     attribute int base_prio;
