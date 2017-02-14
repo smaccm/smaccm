@@ -24,4 +24,8 @@ component VM {
     attribute int base_prio;
     attribute int num_extra_frame_caps;
     attribute int extra_frame_map_address;
+
+    include <tb_smaccmpilot_tk1_types.h>;
+    dataport SMACCM_DATA__Camera_Bounding_Box_i bbox;
+    emits NewBoundingBox bbox_notification;
 }

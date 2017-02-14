@@ -23,20 +23,16 @@ static void tb_server2self_reboot_callback(void *unused) {
     tb_server2self_reboot_notification_reg_callback(&tb_server2self_reboot_callback, NULL);
 }
 
+static void bbox_notification_callback(void *unused) {
+    tb_self2server_write(bbox);
+    bbox_notification_reg_callback(&bbox_notification_callback, NULL);
+}
+
 void pre_init(void) {
     tb_server2self_reboot_notification_reg_callback(&tb_server2self_reboot_callback, NULL);
+    bbox_notification_reg_callback(&bbox_notification_callback, NULL);
 }
 
 int run(void) {
-    SMACCM_DATA__Camera_Bounding_Box_i box;
-    box.left = 0;
-    box.top = 0;
-    while (0) {
-        for (int i = 0; i < 200; i++) {
-            box.right = i;
-            box.bottom = i;
-            tb_self2server_write(&box);
-        }
-    }
     return 0;
 }
