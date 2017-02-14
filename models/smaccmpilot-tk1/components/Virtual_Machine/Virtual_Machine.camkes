@@ -59,7 +59,7 @@ component Virtual_Machine {
         vm_obj.asid_pool = true;
 
         vm_obj.simple = true;
-        vm_obj.cnode_size_bits = 23;
+        vm_obj.cnode_size_bits = 21;
         vm_obj.simple_untyped24_pool = 10;
 
 	vm_obj.base_prio = 100;
