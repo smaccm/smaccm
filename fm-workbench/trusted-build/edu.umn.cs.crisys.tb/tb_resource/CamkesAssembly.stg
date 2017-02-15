@@ -181,6 +181,7 @@ import \<TimeServerTK1/TimeServer.camkes>;
 <if(model.useVmBuild)>
 // MWW: import \<TimeServer/TimeServer.camkes> included in VM import;
 <else>
+import \<VM/PIT.camkes>;
 import \<TimeServer/TimeServer.camkes>;
 <endif>
 <else>
@@ -279,8 +280,8 @@ assembly {
         pit.irq_irq_ioapic_pin = 2;
         pit.irq_irq_vector = 2;
         pit.heap_size = 0;
-        <endif>
         time_server.priority = 254;
+        <endif>
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";
