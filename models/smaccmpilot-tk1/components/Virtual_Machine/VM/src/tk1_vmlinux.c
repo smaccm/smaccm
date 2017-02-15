@@ -88,6 +88,10 @@ static const uint32_t linux_blank_paddrs[] = {
     0x70000000, // APB_MISC_GP_HIDREV_0 "Chip ID Revision Register"
     0x7000f000, // FUSE
     0x6000d000, // GPIO_INT_ENB_0
+#ifndef CONFIG_TK1_VM_HACK
+    0xd0000000,
+    0xd0001000,
+#endif
 };
 
 static const int linux_pt_irqs[] = {

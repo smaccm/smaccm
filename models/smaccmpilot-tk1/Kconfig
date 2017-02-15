@@ -16,6 +16,11 @@ config APP_SMACCMPILOT_TK1_TB_DEBUG
     help
         Enable debugging trusted build monitors
 
+config TK1_VM_HACK
+    bool "Use hacked VM configuration (requires hand modifying capdl file)"
+    default n
+    depends on APP_SMACCMPILOT_TK1
+
 config TK1_DEVICE_FWD
     bool
     default n

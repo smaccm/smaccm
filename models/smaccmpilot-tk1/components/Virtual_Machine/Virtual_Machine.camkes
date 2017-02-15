@@ -1,3 +1,5 @@
+#include <autoconf.h>
+
 import <std_connector.camkes>;
 
 import "VM_shim/VM_shim.camkes";
@@ -33,6 +35,7 @@ component Virtual_Machine {
     }
 
     configuration {
+	vm_obj.base_prio = 100;
         vm_obj.priority = 101;
         vm_shim_obj.priority = 103;
 
@@ -62,10 +65,11 @@ component Virtual_Machine {
         vm_obj.cnode_size_bits = 21;
         vm_obj.simple_untyped24_pool = 10;
 
-	vm_obj.base_prio = 100;
+#ifdef CONFIG_TK1_VM_HACK
+	vm_obj.num_extra_frame_caps = 2;
+#else
 	vm_obj.num_extra_frame_caps = 0;
-	vm_obj.extra_frame_map_address = 0;
-
-	vm_obj.sem_value = 0;
+#endif
+	vm_obj.extra_frame_map_address = 0xd0000000;
     }
 }
