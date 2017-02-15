@@ -399,10 +399,7 @@ void reset_resources(void) {
         error = seL4_CNode_Revoke(root, ut, 32);
         assert(error == seL4_NoError);
     }
-    /* delete anything from any slots that should be empty */
-    for (i = simple_last_valid_cap(&simple) + 1; i < BIT(simple_get_cnode_size_bits(&simple)); i++) {
-        seL4_CNode_Delete(root, i, 32);
-    }
+    delete_irqs(root);
     /* save some pieces of the bss that we actually don't want to zero */
     char save_sysinfo[4];
     char save_libc[34];

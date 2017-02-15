@@ -245,6 +245,8 @@ ARDPAUX                        ,
 #endif
 };
 
+static seL4_CPtr linux_pt_irq_caps[ARRAY_SIZE(linux_pt_irqs)];
+
 struct pwr_token {
     const char* linux_bin;
     const char* device_tree;
@@ -528,6 +530,7 @@ route_irqs(vm_t* vm, irq_server_t irq_server)
         if (!irq_data) {
             return -1;
         }
+        linux_pt_irq_caps[i] = irq_data->cap;
         virq = vm_virq_new(vm, irq, &do_irq_server_ack, irq_data);
         if (virq == NULL) {
             return -1;
@@ -535,6 +538,17 @@ route_irqs(vm_t* vm, irq_server_t irq_server)
         irq_data->token = (void*)virq;
     }
     return 0;
+}
+
+void delete_irqs(seL4_CPtr root) {
+    for (int i = 0; i < ARRAY_SIZE(linux_pt_irq_caps); i++) {
+        seL4_CPtr cap = linux_pt_irq_caps[i];
+        if (cap != 0) {
+            int err = seL4_CNode_Delete(root, cap, 32);
+            assert(!err);
+            linux_pt_irq_caps[i] = 0;
+        }
+    }
 }
 
 static uint32_t
