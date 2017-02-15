@@ -46,8 +46,48 @@ extern vspace_t _vspace;
 extern irq_server_t _irq_server;
 extern seL4_CPtr _fault_endpoint;
 
+const struct device dev_sdmmcs = {
+    .devid = DEV_CUSTOM,
+    .name = "Registers for SDMMC",
+    .pstart = 0x700b0000,
+    .size = PAGE_SIZE,
+    .handle_page_fault = NULL,
+    .priv = NULL
+};
+
+const struct device dev_usb1 = {
+    .devid = DEV_CUSTOM,
+    .name = "Registers for USB1",
+    .pstart = 0x7d000000,
+    .size = PAGE_SIZE,
+    .handle_page_fault = NULL,
+    .priv = NULL
+};
+
+const struct device dev_usb2 = {
+    .devid = DEV_CUSTOM,
+    .name = "Registers for USB2",
+    .pstart = 0x7d004000,
+    .size = PAGE_SIZE,
+    .handle_page_fault = NULL,
+    .priv = NULL
+};
 
 static const struct device *linux_pt_devices[] = {
+    &dev_sdmmcs,
+    &dev_usb1,
+    &dev_usb2,
+};
+
+static const uint32_t linux_blank_paddrs[] = {
+    0x7000e000, // APBDEV_PMC_SCRATCH20_0 "general purpose register storage"
+    0x40000000, // DATA MEMORY "RAM"
+    0x6000f000, // Exception Vectors
+    0x6000c000, // System Registers
+    0x60004000, // PRI_ICTRL_CPU_IER_CLR_0 "Clear interrupt enable for CPU0 register"
+    0x70000000, // APB_MISC_GP_HIDREV_0 "Chip ID Revision Register"
+    0x7000f000, // FUSE
+    0x6000d000, // GPIO_INT_ENB_0
 };
 
 static const int linux_pt_irqs[] = {
@@ -395,15 +435,6 @@ const struct device dev_bbox = {
     .priv = NULL
 };
 
-const struct device dev_sdmmcs = {
-    .devid = DEV_CUSTOM,
-    .name = "Registers for SDMMC",
-    .pstart = 0x700b0000,
-    .size = PAGE_SIZE,
-    .handle_page_fault = NULL,
-    .priv = NULL
-};
-
 static int
 install_linux_devices(vm_t* vm)
 {
@@ -440,15 +471,18 @@ install_linux_devices(vm_t* vm)
     err = vm_add_device(vm, &dev_bbox);
     assert(!err);
 
-    err = vm_install_passthrough_device(vm, &dev_sdmmcs);
-    assert(!err);
-
     /* Install pass through devices */
     /* TK1 passes through all devices at the moment by using on-demand device mapping */
-    //for (i = 0; i < sizeof(linux_pt_devices) / sizeof(*linux_pt_devices); i++) {
-    //    err = vm_install_passthrough_device(vm, linux_pt_devices[i]);
-    //    assert(!err);
-    //}
+    for (i = 0; i < sizeof(linux_pt_devices) / sizeof(*linux_pt_devices); i++) {
+       err = vm_install_passthrough_device(vm, linux_pt_devices[i]);
+       assert(!err);
+    }
+
+    /* Install blank devices that Linux tries to access, but doesn't need */
+    for (i = 0; i < sizeof(linux_blank_paddrs) / sizeof(*linux_blank_paddrs); i++) {
+        void *mapped = map_vm_ram(vm, linux_blank_paddrs[i]);
+        assert(mapped);
+    }
 
     /* hack to give access to other components
        see https://github.com/smaccm/vm_hack/blob/master/details.md for details */
