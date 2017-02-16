@@ -496,7 +496,10 @@ install_linux_devices(vm_t* vm)
     for (i = 0; i < num_extra_frame_caps; i++) {
         err = vm_map_frame(vm, start_extra_frame_caps + i,
             extra_frame_map_address + offset, PAGE_SIZE_BITS, 1, seL4_AllRights);
-        assert(!err);
+        if (err) {
+            ZF_LOGF("Failed to map in hacked page %d. "
+                    "Did you forget to hand edit the capdl file?", i);
+        }
         offset += PAGE_SIZE;
     }
 
