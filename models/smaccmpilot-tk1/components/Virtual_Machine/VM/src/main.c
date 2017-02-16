@@ -432,6 +432,17 @@ void reset_resources(void) {
         assert(error == seL4_NoError);
     }
     delete_irqs(root);
+#ifdef CONFIG_TK1_VM_HACK
+    // The vm hack requires extra cleanup
+    for (i = 0; i < num_extra_frame_caps; i++) {
+        error = seL4_ARM_Page_Unmap(start_extra_frame_caps + i);
+        assert(error == seL4_NoError);
+    }
+    for (i = simple_last_valid_cap(&simple) + 1 + num_extra_frame_caps;
+         i < BIT(simple_get_cnode_size_bits(&simple)); i++) {
+        seL4_CNode_Delete(root, i, 32);
+    }
+#endif
     /* save some pieces of the bss that we actually don't want to zero */
     char save_sysinfo[4];
     char save_libc[34];
