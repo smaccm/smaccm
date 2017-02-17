@@ -413,11 +413,11 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   }
   
   public int getReadBadgeID() {
-    return 1;
+    return 111;
   }
 
   public int getWriteBadgeID() {
-    return 2;
+    return 222;
   }
 
   @Override
