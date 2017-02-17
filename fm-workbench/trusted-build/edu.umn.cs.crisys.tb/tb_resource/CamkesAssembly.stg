@@ -163,6 +163,8 @@ import \<VM/vm.camkes>;
 import \<std_connector.camkes>;
 
 #include \<autoconf.h>
+#define TB_MONITOR_READ_ACCESS 1
+#define TB_MONITOR_WRITE_ACCESS 2
 
 <if(model.containsVM)>
 #include \<configurations/vm.h>
@@ -174,7 +176,7 @@ import \<Timer.idl4>;
 <if(model.isQemuTarget)>
 import \<TimeServerKZM/TimeServer.camkes>;
 <elseif(model.isOdroidTarget)>
-import \<TimeServerOdroid/TimeServer.camkes>;
+import \<TimeServerOdroid/TimeServer.camkes>
 <elseif(model.isTK1Target)>
 import \<TimeServerTK1/TimeServer.camkes>;
 <elseif(model.isx86Target)>

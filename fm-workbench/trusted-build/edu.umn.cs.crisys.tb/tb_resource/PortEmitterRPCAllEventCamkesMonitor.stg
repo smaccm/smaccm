@@ -243,9 +243,6 @@ monitorCamkesHWriter(mguard,port) ::= <<
 #ifndef <mguard>
 #define <mguard>
 
-#define <port.readBadgeName> <port.readBadgeID>
-#define <port.writeBadgeName> <port.writeBadgeID>
-
 #endif // <mguard>
 >>
 

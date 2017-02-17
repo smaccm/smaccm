@@ -179,9 +179,6 @@ monitorCamkesHWriter(mguard,port) ::= <<
 #ifndef <mguard>
 #define <mguard>
 
-#define <port.readBadgeName> <port.readBadgeID>
-#define <port.writeBadgeName> <port.writeBadgeID>
-
 #endif // <mguard>
 >>
 
@@ -199,6 +196,8 @@ monitorCamkesCWriter(port, str_types_include, unlock, lock) ::= <<
 #include <\u003C>camkes.h<\u003E>
 #include <\u003C><port.systemTypeHeader><\u003E>
 #include "../include/<port.monitorInputCamkesNamePrefix>.h"
+
+int mon_get_sender_id(void);
 
 static <port.type.camkesName> contents;
 

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,7 +13,6 @@ import java.util.Map;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
-import antlr.Utils;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
@@ -34,13 +32,10 @@ import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.thread.ThreadImplementation;
 import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.Type;
-import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
 public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterRPC {
 
-  static private Map<String,Integer> badgemap = new HashMap<String,Integer>();
-  static private int nextbadge = 0; 
   public String outid = "";
   public int outq = 0;
     
@@ -130,7 +125,6 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       String monitorComponentName = getMonitorInputCamkesNamePrefix();
       File componentDirectory = new File(new File(componentsDirectory, "tb_Monitors"), monitorComponentName);
       componentDirectory.mkdirs();
-      this.registerMonitorBagdes();
       // Write camkes specification for this component.
 
       {
@@ -407,7 +401,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   }
 
   private String getBadgeNamePrefix() {
-    return getMonitorAssemblyInstance().toUpperCase();
+    return "TB_MONITOR";
   }
   
   public String getReadBadgeName() {
@@ -418,40 +412,18 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
     return getBadgeNamePrefix() + "_WRITE_ACCESS";
   }
   
-  private int getBadgeID(String key) {
-    if(badgemap.containsKey(key)) {
-      return badgemap.get(key);
-    } else {
-      throw new TbException("PortEmitterRPCAllEventCamkesMonitor::getBadgeID: Failed badge id request for " + key + ".");
-    }
-  }
-  
   public int getReadBadgeID() {
-    return getBadgeID(getReadBadgeName());
+    return 1;
   }
 
   public int getWriteBadgeID() {
-    return getBadgeID(getWriteBadgeName());
+    return 2;
   }
 
-  private void registerBadgeName(String key) {
-    if(badgemap.containsKey(key)) {
-      //throw new TbException("PortEmitterRPCAllEventCamkesMonitor::registerBadgeName: badge id " + key + " already registered.");
-    } else {
-      badgemap.put(key, nextbadge++);
-    }    
-  }
-  
-  private void registerMonitorBagdes() {
-    registerBadgeName(getReadBadgeName());
-    registerBadgeName(getWriteBadgeName());
-  }
-  
   @Override
   public String getCamkesAddAssemblyFileConfigDeclarations() {
     if (port instanceof InputPort) {
       return getMonitorAssemblyInstance()+".priority = 230;\n"
-             + "#define "+ getReadBadgeName() + " " + getReadBadgeID() + "\n" 
              + getThreadImplementation().getComponentInstanceName() +"." + getName() + "_attributes = " + getReadBadgeName() + ";\n";
     } else {
       String result = "";
@@ -463,7 +435,6 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
         if(sz>1) {
           suffix += i;
         }
-        result += "#define "+ pe.getWriteBadgeName() + " " + pe.getWriteBadgeID() + "\n";
         result += getThreadImplementation().getComponentInstanceName()
         + "." + getName() + suffix + "_attributes = " + pe.getWriteBadgeName() + ";\n";
       }
