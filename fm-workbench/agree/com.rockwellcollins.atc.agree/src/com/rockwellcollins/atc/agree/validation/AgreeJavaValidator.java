@@ -1755,7 +1755,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	public static boolean isInLinearizationBody(Expr expr) {
 		boolean result = false;
-		EObject current = expr.eContainer();
+		EObject current = expr;
 		while (current != null && current instanceof Expr) {
 			EObject container = current.eContainer(); 
 			if (container instanceof LinearizationDefExpr) {
