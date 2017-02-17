@@ -43,7 +43,9 @@ client for the thread implementations.
 
 
 // user entrypoints for periodic dispatch
+
 void component_entry(const int64_t * periodic_dispatcher);
+
 
  void component_init(const int64_t *arg);
  // reader prototype for tb_vm2self
@@ -51,10 +53,10 @@ bool tb_vm2self_read(SMACCM_DATA__Camera_Bounding_Box_i * tb_vm2self);
 
  bool tb_Server_write_self2encrypt(const SMACCM_DATA__GIDL * tb_self2encrypt);
  // reader prototype for tb_decrypt2self
-bool tb_decrypt2self_dequeue(SMACCM_DATA__GIDL * tb_decrypt2self);
+bool tb_decrypt2self_dequeue(tb_SMACCM_DATA__GIDL_container * tb_decrypt2self);
  bool tb_Server_write_self2framing(const SMACCM_DATA__GIDL * tb_self2framing);
  // reader prototype for tb_framing2self
-bool tb_framing2self_dequeue(SMACCM_DATA__GIDL * tb_framing2self);
+bool tb_framing2self_dequeue(tb_SMACCM_DATA__GIDL_container * tb_framing2self);
  bool tb_Server_write_self2vm_reboot(const bool * tb_self2vm_reboot);
  
 

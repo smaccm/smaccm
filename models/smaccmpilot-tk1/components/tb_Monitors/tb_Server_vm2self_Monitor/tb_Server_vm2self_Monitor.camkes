@@ -39,12 +39,8 @@
 
  **************************************************************************/
 
-import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Read.idl4>;
-import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Write.idl4>;
+import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i.idl4>;
 component tb_Server_vm2self_Monitor {
-
-  provides tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Write dpw;
-  provides tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Read dpr;
-  emits DataportWrite dpn;
-  has mutex dp;
+  provides tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i mon;
+  emits DataportWrite monsig;
 }

@@ -104,7 +104,7 @@ bool tb_Decrypt_write_self2server
 (const SMACCM_DATA__GIDL * tb_self2server) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2server_enqueue((tb_SMACCM_DATA__GIDL_container *) tb_self2server);
+    tb_result &= tb_self2server_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2server);
 
     return tb_result;
 }
@@ -128,7 +128,7 @@ void pre_init(void) {
  *
  ************************************************************************/
 void tb_entrypoint_Decrypt_periodic_dispatcher(const int64_t * in_arg) {
-    component_entry( in_arg);
+    component_entry((int64_t *) in_arg);
 
 }
 
@@ -141,7 +141,7 @@ void tb_entrypoint_Decrypt_periodic_dispatcher(const int64_t * in_arg) {
  *
  ************************************************************************/
 void tb_entrypoint_Decrypt_Decrypt_initializer(const int64_t * in_arg) {
-    component_init( in_arg);
+    component_init((int64_t *) in_arg);
 
 }
 
@@ -164,9 +164,13 @@ void tb_entrypoint_tb_Decrypt_uart2self(const SMACCM_DATA__UART_Packet_i * in_ar
  ************************************************************************/
 
 int run(void) {
+
     // Port initialization routines
+
     // tb_timer_periodic(0, ((uint64_t)1)*NS_IN_MS);
-       CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
+    CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
+
+
     {
     int64_t tb_dummy;
     tb_entrypoint_Decrypt_Decrypt_initializer(&tb_dummy);

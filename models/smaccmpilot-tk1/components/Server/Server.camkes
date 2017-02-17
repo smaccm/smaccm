@@ -37,26 +37,24 @@ AADL thread implementation Server.
  **************************************************************************/
 
 import <Timer.idl4>;
+import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i.idl4>;
 
-import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Read.idl4>;
+import <tb_Monitor_SMACCM_DATA__GIDL_1.idl4>;
 
-import <tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__GIDL_1.idl4>;
 
-import <tb_Monitor_SMACCM_DATA__GIDL_1_Dequeue.idl4>;
+import <tb_Monitor_SMACCM_DATA__GIDL_1.idl4>;
 
-import <tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__GIDL_1.idl4>;
 
-import <tb_Monitor_SMACCM_DATA__GIDL_1_Dequeue.idl4>;
-
-import <tb_Monitor_bool_1_Enqueue.idl4>;
-
+import <tb_Monitor_bool_1.idl4>;
 
 
 import <bool_writer.idl4>;
 
-import <SMACCM_DATA__GIDL_writer.idl4>;
-
 import <SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4>;
+
+import <SMACCM_DATA__GIDL_writer.idl4>;
 
 
 
@@ -67,17 +65,17 @@ component Server {
 
     uses Timer tb_timer;
     consumes Notification tb_timer_complete;
-    uses tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Read tb_vm2self;
+    uses tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i tb_vm2self;
     consumes DataportWrite tb_vm2self_notification;
-    uses tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue tb_self2encrypt;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2encrypt;
 
-    uses tb_Monitor_SMACCM_DATA__GIDL_1_Dequeue tb_decrypt2self;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_decrypt2self;
     consumes QueuedData tb_decrypt2self_notification;
-    uses tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue tb_self2framing;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2framing;
 
-    uses tb_Monitor_SMACCM_DATA__GIDL_1_Dequeue tb_framing2self;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_framing2self;
     consumes QueuedData tb_framing2self_notification;
-    uses tb_Monitor_bool_1_Enqueue tb_self2vm_reboot;
+    uses tb_Monitor_bool_1 tb_self2vm_reboot;
 
 
 

@@ -1,6 +1,6 @@
-import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Dequeue.idl4>;
-import <tb_Monitor_bool_1_Enqueue.idl4>;
-import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1.idl4>;
+import <tb_Monitor_bool_1.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10.idl4>;
 
 import "can_shim/can_shim.camkes";
 import "can/can.camkes";
@@ -26,10 +26,10 @@ component gpiobase {
 
 component CAN_Driver {
     include <tb_smaccmpilot_tk1_types.h>;
-    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Dequeue tb_framing2self;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1 tb_framing2self;
     consumes QueuedData tb_framing2self_notification;
-    uses tb_Monitor_bool_1_Enqueue tb_self2framing_status;
-    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue tb_self2framing_frame;
+    uses tb_Monitor_bool_1 tb_self2framing_status;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_self2framing_frame;
 
     uses clkcar_inf clkcar;
     
@@ -76,6 +76,10 @@ component CAN_Driver {
     }
 
     configuration {
+        can_shim_obj.tb_framing2self_attributes <- tb_framing2self_attributes;
+        can_shim_obj.tb_self2framing_status_attributes <- tb_self2framing_status_attributes;
+        can_shim_obj.tb_self2framing_frame_attributes <- tb_self2framing_frame_attributes;
+        
         can_shim_obj.priority = 250;
         spi_obj.priority = 250;
         can_obj.priority = 250;

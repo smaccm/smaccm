@@ -44,6 +44,8 @@ AADL components as defined in the system implementation smaccmpilot_tk1.
 #include <stdint.h>
 
 #define __TB_OS_CAMKES__
+#define TB_MONITOR_READ_ACCESS 111
+#define TB_MONITOR_WRITE_ACCESS 222
 
 #define MUTEXOP(OP)\
 if((OP) != 0) {\

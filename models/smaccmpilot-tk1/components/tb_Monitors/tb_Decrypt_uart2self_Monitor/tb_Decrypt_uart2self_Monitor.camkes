@@ -39,12 +39,9 @@
 
  **************************************************************************/
 
-import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Dequeue.idl4>;
-import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100.idl4>;
 component tb_Decrypt_uart2self_Monitor {
+  provides tb_Monitor_SMACCM_DATA__UART_Packet_i_100 mon;
+  emits QueuedData monsig;
 
-  provides tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Enqueue enq;
-  provides tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Dequeue deq;
-  emits QueuedData qd;
-  has mutex q;
 }

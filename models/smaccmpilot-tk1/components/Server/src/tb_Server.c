@@ -104,7 +104,7 @@ bool tb_Server_write_self2encrypt
 (const SMACCM_DATA__GIDL * tb_self2encrypt) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2encrypt_enqueue((tb_SMACCM_DATA__GIDL_container *) tb_self2encrypt);
+    tb_result &= tb_self2encrypt_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2encrypt);
 
     return tb_result;
 }
@@ -125,7 +125,7 @@ bool tb_Server_write_self2framing
 (const SMACCM_DATA__GIDL * tb_self2framing) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2framing_enqueue((tb_SMACCM_DATA__GIDL_container *) tb_self2framing);
+    tb_result &= tb_self2framing_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2framing);
 
     return tb_result;
 }
@@ -146,7 +146,7 @@ bool tb_Server_write_self2vm_reboot
 (const bool * tb_self2vm_reboot) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2vm_reboot_enqueue(tb_self2vm_reboot);
+    tb_result &= tb_self2vm_reboot_enqueue((bool *)tb_self2vm_reboot);
 
     return tb_result;
 }
@@ -172,7 +172,7 @@ void pre_init(void) {
  *
  ************************************************************************/
 void tb_entrypoint_Server_periodic_dispatcher(const int64_t * in_arg) {
-    component_entry( in_arg);
+    component_entry((int64_t *) in_arg);
 
 }
 
@@ -185,7 +185,7 @@ void tb_entrypoint_Server_periodic_dispatcher(const int64_t * in_arg) {
  *
  ************************************************************************/
 void tb_entrypoint_Server_Server_initializer(const int64_t * in_arg) {
-    component_init( in_arg);
+    component_init((int64_t *) in_arg);
 
 }
 
@@ -219,9 +219,13 @@ void tb_entrypoint_tb_Server_framing2self(const SMACCM_DATA__GIDL * in_arg) {
  ************************************************************************/
 
 int run(void) {
+
     // Port initialization routines
+
     // tb_timer_periodic(0, ((uint64_t)5)*NS_IN_MS);
-       CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
+    CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
+
+
     {
     int64_t tb_dummy;
     tb_entrypoint_Server_Server_initializer(&tb_dummy);

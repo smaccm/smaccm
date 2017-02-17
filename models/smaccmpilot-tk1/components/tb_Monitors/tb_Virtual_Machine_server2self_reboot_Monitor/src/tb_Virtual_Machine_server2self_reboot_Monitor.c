@@ -44,6 +44,9 @@
 #include <stdbool.h>
 #include <camkes.h>
 #include <tb_smaccmpilot_tk1_types.h>
+#include "../include/tb_Virtual_Machine_server2self_reboot_Monitor.h"
+
+int mon_get_sender_id(void);
 
 bool contents[1];
 static uint32_t front = 0;
@@ -56,33 +59,43 @@ static bool is_full(void) {
 static bool is_empty(void) {
   return length == 0;
 }
-bool deq_dequeue(bool * m) {
-  MUTEXOP(q_lock())
-  if (is_empty()) {
-    MUTEXOP(q_unlock())
+bool mon_dequeue(bool * m) {
+  if (mon_get_sender_id() != TB_MONITOR_READ_ACCESS) {
+    #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    fprintf(stderr, "Monitor tb_Virtual_Machine_server2self_reboot: attempt to dequeue without permission\n");
+    #endif 
+    return false;
+  } else if (is_empty()) {
     return false;
   } else {
-    *((bool *)m) = contents[front];
+    *m = contents[front];
     front = (front + 1) % 1;
     length--;
-    MUTEXOP(q_unlock())
     return true;
   }
+  fprintf(stderr,"Executing unreadable code in %s at %d.\n",__FILE__,__LINE__);
+  *((int*)0)=0xdeadbeef;
+  return false;
 }
 
-bool enq_enqueue(const bool * m) {
-  MUTEXOP(q_lock())
-  if (is_full()) {
-    MUTEXOP(q_unlock())
+bool mon_enqueue(const bool * m) {
+  if (mon_get_sender_id() != TB_MONITOR_WRITE_ACCESS) {
+    #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    fprintf(stderr, "Monitor tb_Virtual_Machine_server2self_reboot: attempt to enqueue without permission\n");
+    #endif 
+    return false;
+  } else if (is_full()) {
     #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     fprintf(stderr,"Monitor tb_Virtual_Machine_server2self_reboot is full!\n");
     #endif 
     return false;
   } else {
-    contents[(front + length) % 1] = *((bool *)m);
+    contents[(front + length) % 1] = *m;
     length++;
-    qd_emit();
-    MUTEXOP(q_unlock())
+    monsig_emit();
     return true;
   }
+  fprintf(stderr,"Executing unreadable code in %s at %d.\n",__FILE__,__LINE__);
+  *((int*)0)=0xdeadbeef;  
+  return false;
 }

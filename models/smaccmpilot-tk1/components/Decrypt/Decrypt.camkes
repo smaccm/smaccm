@@ -37,11 +37,9 @@ AADL thread implementation Decrypt.
  **************************************************************************/
 
 import <Timer.idl4>;
+import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100.idl4>;
 
-import <tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Dequeue.idl4>;
-
-import <tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue.idl4>;
-
+import <tb_Monitor_SMACCM_DATA__GIDL_1.idl4>;
 
 
 import <SMACCM_DATA__UART_Packet_i_writer.idl4>;
@@ -57,9 +55,9 @@ component Decrypt {
 
     uses Timer tb_timer;
     consumes Notification tb_timer_complete;
-    uses tb_Monitor_SMACCM_DATA__UART_Packet_i_100_Dequeue tb_uart2self;
+    uses tb_Monitor_SMACCM_DATA__UART_Packet_i_100 tb_uart2self;
     consumes QueuedData tb_uart2self_notification;
-    uses tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue tb_self2server;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2server;
 
 
 

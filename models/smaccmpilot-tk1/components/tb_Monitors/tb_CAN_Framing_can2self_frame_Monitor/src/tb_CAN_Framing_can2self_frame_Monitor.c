@@ -44,6 +44,9 @@
 #include <stdbool.h>
 #include <camkes.h>
 #include <tb_smaccmpilot_tk1_types.h>
+#include "../include/tb_CAN_Framing_can2self_frame_Monitor.h"
+
+int mon_get_sender_id(void);
 
 SMACCM_DATA__CAN_Frame_i contents[10];
 static uint32_t front = 0;
@@ -56,33 +59,43 @@ static bool is_full(void) {
 static bool is_empty(void) {
   return length == 0;
 }
-bool deq_dequeue(SMACCM_DATA__CAN_Frame_i * m) {
-  MUTEXOP(q_lock())
-  if (is_empty()) {
-    MUTEXOP(q_unlock())
+bool mon_dequeue(SMACCM_DATA__CAN_Frame_i * m) {
+  if (mon_get_sender_id() != TB_MONITOR_READ_ACCESS) {
+    #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    fprintf(stderr, "Monitor tb_CAN_Framing_can2self_frame: attempt to dequeue without permission\n");
+    #endif 
+    return false;
+  } else if (is_empty()) {
     return false;
   } else {
-    *((SMACCM_DATA__CAN_Frame_i *)m) = contents[front];
+    *m = contents[front];
     front = (front + 1) % 10;
     length--;
-    MUTEXOP(q_unlock())
     return true;
   }
+  fprintf(stderr,"Executing unreadable code in %s at %d.\n",__FILE__,__LINE__);
+  *((int*)0)=0xdeadbeef;
+  return false;
 }
 
-bool enq_enqueue(const SMACCM_DATA__CAN_Frame_i * m) {
-  MUTEXOP(q_lock())
-  if (is_full()) {
-    MUTEXOP(q_unlock())
+bool mon_enqueue(const SMACCM_DATA__CAN_Frame_i * m) {
+  if (mon_get_sender_id() != TB_MONITOR_WRITE_ACCESS) {
+    #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    fprintf(stderr, "Monitor tb_CAN_Framing_can2self_frame: attempt to enqueue without permission\n");
+    #endif 
+    return false;
+  } else if (is_full()) {
     #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     fprintf(stderr,"Monitor tb_CAN_Framing_can2self_frame is full!\n");
     #endif 
     return false;
   } else {
-    contents[(front + length) % 10] = *((SMACCM_DATA__CAN_Frame_i *)m);
+    contents[(front + length) % 10] = *m;
     length++;
-    qd_emit();
-    MUTEXOP(q_unlock())
+    monsig_emit();
     return true;
   }
+  fprintf(stderr,"Executing unreadable code in %s at %d.\n",__FILE__,__LINE__);
+  *((int*)0)=0xdeadbeef;  
+  return false;
 }

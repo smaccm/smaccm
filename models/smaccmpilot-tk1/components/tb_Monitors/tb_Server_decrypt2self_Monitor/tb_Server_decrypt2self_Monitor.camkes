@@ -39,12 +39,9 @@
 
  **************************************************************************/
 
-import <tb_Monitor_SMACCM_DATA__GIDL_1_Dequeue.idl4>;
-import <tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__GIDL_1.idl4>;
 component tb_Server_decrypt2self_Monitor {
+  provides tb_Monitor_SMACCM_DATA__GIDL_1 mon;
+  emits QueuedData monsig;
 
-  provides tb_Monitor_SMACCM_DATA__GIDL_1_Enqueue enq;
-  provides tb_Monitor_SMACCM_DATA__GIDL_1_Dequeue deq;
-  emits QueuedData qd;
-  has mutex q;
 }

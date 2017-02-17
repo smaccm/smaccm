@@ -43,7 +43,9 @@ client for the thread implementations.
 
 
 // user entrypoints for periodic dispatch
+
 void component_entry(const int64_t * periodic_dispatcher);
+
 
  void component_init(const int64_t *arg);
  // reader prototype for tb_uart2self

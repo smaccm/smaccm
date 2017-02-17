@@ -5,15 +5,15 @@ import <std_connector.camkes>;
 import "VM_shim/VM_shim.camkes";
 import "VM/VM.camkes";
 
-import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Write.idl4>;
-import <tb_Monitor_bool_1_Dequeue.idl4>;
+import <tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i.idl4>;
+import <tb_Monitor_bool_1.idl4>;
 
 import <gen_fwd.idl4>;
 
 component Virtual_Machine {
     include <tb_smaccmpilot_tk1_types.h>;
-    uses tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i_Write tb_self2server;
-    uses tb_Monitor_bool_1_Dequeue tb_server2self_reboot;
+    uses tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i tb_self2server;
+    uses tb_Monitor_bool_1 tb_server2self_reboot;
     consumes QueuedData tb_server2self_reboot_notification;
 
     uses gen_fwd_inf uartfwd;
@@ -35,6 +35,9 @@ component Virtual_Machine {
     }
 
     configuration {
+        vm_shim_obj.tb_self2server_attributes <- tb_self2server_attributes;
+        vm_shim_obj.tb_server2self_reboot_attributes <- tb_server2self_reboot_attributes;
+
 	vm_obj.base_prio = 100;
         vm_obj.priority = 101;
         vm_shim_obj.priority = 103;
