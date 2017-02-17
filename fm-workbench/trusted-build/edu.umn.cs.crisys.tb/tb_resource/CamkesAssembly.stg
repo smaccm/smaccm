@@ -163,8 +163,8 @@ import \<VM/vm.camkes>;
 import \<std_connector.camkes>;
 
 #include \<autoconf.h>
-#define TB_MONITOR_READ_ACCESS 1
-#define TB_MONITOR_WRITE_ACCESS 2
+#define TB_MONITOR_READ_ACCESS 111
+#define TB_MONITOR_WRITE_ACCESS 222
 
 <if(model.containsVM)>
 #include \<configurations/vm.h>
