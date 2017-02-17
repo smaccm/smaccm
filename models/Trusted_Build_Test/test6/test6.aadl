@@ -25,8 +25,7 @@ end a_array.impl;
 thread sender
 	features
 		Output1: out event data port a_array.impl {
-	      TB_SYS::CommPrim_Source_Text => "ping_Output1";
-	      Queue_Size => 8;			
+	      TB_SYS::CommPrim_Source_Text => "ping_Output1";		
 		};
 	
 	properties 
@@ -46,6 +45,7 @@ thread receiver1
 	features
 		Input1: in event data port a_array.impl {
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received1");
+	      Queue_Size => 4;
 		}; 
 		
 	properties 
@@ -65,6 +65,7 @@ thread receiver2
 	features
 		Input1: in event data port a_array.impl {
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received2");
+	      Queue_Size => 2;
 		}; 
 		
 	properties 
@@ -83,6 +84,7 @@ end receiver2 ;
 thread receiver3
 	features
 		Input1: in event data port a_array.impl {
+		  Queue_Size => 1;
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received3");
 		  Source_Text => ("user_code/user_receiver3.c");
 	      TB_SYS::Sends_Events_To => "{{}}";

@@ -8,7 +8,6 @@ import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.type.ArrayType;
-import edu.umn.cs.crisys.tb.model.type.ExternalType;
 import edu.umn.cs.crisys.tb.model.type.IdType;
 import edu.umn.cs.crisys.tb.model.type.PointerType;
 import edu.umn.cs.crisys.tb.model.type.RecordType;
@@ -87,7 +86,7 @@ public class TypeNames implements NameEmitter {
    * 
    */ 
   public boolean isNativePointerArg() {
-	    return (t_structural instanceof PointerType) || (t_structural instanceof ArrayType);
+	    return (t instanceof PointerType) || (t instanceof ArrayType);
 	  }
   
   public TypeNames getAadlOutputType() { 
@@ -138,26 +137,6 @@ public class TypeNames implements NameEmitter {
   }    
 
   // TODO: MWW: This is a hack because CAmkES does not support arrays.
-  public TypeNames getCamkesOutputType() { 
-    if (t_structural instanceof ArrayType) {
-      return new TypeNames(
-          new PointerType(TypeNames.constructCamkesArrayContainerIdType((IdType)t))); 
-      // throw new TbException("Error during code generation: Array types are incorrectly implemented in CAmkES");
-    }
-    return getAadlOutputType();
-  }
-  
-  // TODO: MWW: This is a hack because CAmkES does not support arrays.
-  public TypeNames getCamkesInputType() {
-    if (t_structural instanceof ArrayType) {
-      return new TypeNames(
-          new PointerType(TypeNames.constructCamkesArrayContainerIdType((IdType)t))); 
-      // throw new TbException("Error during code generation: Array types are incorrectly implemented in CAmkES");
-    }
-    return getAadlInputType();
-  }
-
-  // TODO: MWW: This is a hack because CAmkES does not support arrays.
   public String getCamkesName() {
     if (t_structural instanceof ArrayType) {
       return TypeNames.getCamkesArrayContainerName((IdType)t);
@@ -165,21 +144,11 @@ public class TypeNames implements NameEmitter {
       return getName();
     }
   }
-
+  
   // must be called on a structural array type.
   protected String getArrayPtrCast() {
     ArrayType theArrayType = (ArrayType)t_structural;
     return "(" + theArrayType.getElemType().getCType().typeString() + " *)"; 
-  }
-  
-  // MWW: TODO HACK! necessary to get arrays working with CAmkES.
-  //               valToCamkesInput
-  public String getValToCamkesInput() {
-    if (t_structural instanceof ArrayType) {
-      String wrapperName = TypeNames.getCamkesArrayContainerName((IdType)t);
-      return "(" + wrapperName + " *)"; 
-    }
-    return getValToAadlInput();
   }
 
   public String getCamkesInputToVal() {
@@ -187,24 +156,6 @@ public class TypeNames implements NameEmitter {
       return getArrayPtrCast(); 
     }
     return getAadlInputToVal();
-  }
-
-  public String getCamkesInputToAadlInput() {
-    if (t_structural instanceof ArrayType) {
-        return getArrayPtrCast();  
-    }
-    else 
-      return ""; 
-  }
-
-  // MWW: TODO HACK! necessary to get arrays working with CAmkES.
-  public String getAadlInputToCamkesInput() {
-    if (t_structural instanceof ArrayType) {
-      String wrapperName = TypeNames.getCamkesArrayContainerName((IdType)t);
-      return "(" + wrapperName + " *) "; 
-    }
-    else 
-      return "";
   }
 
   public String getCamkesInputToPtr() {

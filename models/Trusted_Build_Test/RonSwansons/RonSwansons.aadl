@@ -46,10 +46,14 @@ thread ronswanson1
 		};
 	properties 
 		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs1/user_rs.h");
-	    Dispatch_Protocol => Aperiodic;
-	    TB_SYS::Thread_Type => Passive ;
+	    Dispatch_Protocol => Periodic;
+		Period => 100 ms;
+	   	Priority => 10;
+	    Stack_Size => 256 bytes;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("alarm");
 end ronswanson1; 
 
 thread ronswanson2
@@ -71,10 +75,14 @@ thread ronswanson2
 		};
 	properties 
 		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs2/user_rs.h");
-	    Dispatch_Protocol => Aperiodic;
-	    TB_SYS::Thread_Type => Passive ;
+	    Dispatch_Protocol => Periodic;
+		Period => 100 ms;
+	   	Priority => 10;
+	    Stack_Size => 256 bytes;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("alarm");
 end ronswanson2; 
 
 thread ronswanson3
@@ -96,10 +104,14 @@ thread ronswanson3
 		};
 	properties 
 		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs3/user_rs.h");
-	    Dispatch_Protocol => Aperiodic;
-	    TB_SYS::Thread_Type => Passive ;
+	    Dispatch_Protocol => Periodic;
+		Period => 100 ms;
+	   	Priority => 10;
+	    Stack_Size => 256 bytes;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("alarm");
 end ronswanson3; 
 
 thread ronswanson4
@@ -121,10 +133,14 @@ thread ronswanson4
 		};
 	properties 
 		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs4/user_rs.h");
-	    Dispatch_Protocol => Aperiodic;
-	    TB_SYS::Thread_Type => Passive ;
+	    Dispatch_Protocol => Periodic;
+		Period => 100 ms;
+	   	Priority => 10;
+	    Stack_Size => 256 bytes;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("alarm");
 end ronswanson4; 
 
 thread ronswanson5
@@ -146,10 +162,14 @@ thread ronswanson5
 		};
 	properties 
 		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs5/user_rs.h");
-	    Dispatch_Protocol => Aperiodic;
-	    TB_SYS::Thread_Type => Passive ;
+	    Dispatch_Protocol => Periodic;
+		Period => 100 ms;
+	   	Priority => 10;
+	    Stack_Size => 256 bytes;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("alarm");
 end ronswanson5; 
 
 thread ronswanson6
@@ -159,7 +179,7 @@ thread ronswanson6
 		};
 		
 		pollresponseport : out event data port pollresp.impl {
-		  TB_SYS::CommPrim_Source_Text => "pollresponse"; 
+		  TB_SYS::CommPrim_Source_Text => "pollresponse";
 		};
 		
 		getforkport : in event data port fork.impl {
@@ -171,10 +191,14 @@ thread ronswanson6
 		};
 	properties 
 		Source_Text => ("user_code/user_rs.c", "user_code/includes/rs6/user_rs.h");
-	    Dispatch_Protocol => Aperiodic;
-	    TB_SYS::Thread_Type => Passive ;
+	    Dispatch_Protocol => Periodic;
+		Period => 100 ms;
+	   	Priority => 10;
+	    Stack_Size => 256 bytes;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    TB_SYS::Sends_Events_To => "{{1 pollresponseport,  2 giveforkport}}";
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("alarm");
 end ronswanson6; 
 
 
@@ -235,7 +259,7 @@ thread manager
 				
 		pollresponseport : in event data port pollresp.impl {
 		  TB_SYS::Compute_Entrypoint_Source_Text => ("pollresponse");
-		  Queue_Size => 2;
+		  Queue_Size => 6;
 		};
 		
 		
@@ -310,12 +334,21 @@ end proc.Impl;
 system ronswansons
 end ronswansons;
 
+processor main
+end main;
+
+processor implementation main.camkes
+   properties
+      TB_SYS::OS => camkes;
+      TB_SYS::HW => QEMU;
+end main.camkes;
+
 system implementation ronswansons.impl
 	subcomponents
 		tl: process proc.Impl;
+		toplevel: processor main.camkes;
 	properties
-		TB_SYS::OS => CAmkES;
-		TB_SYS::HW => QEMU;
+		actual_processor_binding => (reference (toplevel)) applies to tl; 
 end ronswansons.impl;
 
 end RonSwansons;

@@ -64,7 +64,7 @@ thread ping
 	features
 		i : in event data port msg.impl {
 	      TB_SYS::Compute_Entrypoint_Source_Text => ("In");
-	      QUEUE_SIZE => 2;
+	      QUEUE_SIZE => 1;
 		};
 		o : out event data port msg.impl {
 	      TB_SYS::CommPrim_Source_Text => "Out";

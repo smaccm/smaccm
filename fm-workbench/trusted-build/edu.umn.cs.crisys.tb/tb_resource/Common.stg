@@ -64,12 +64,12 @@ stdFilePrefix(date, path, purpose) ::= <<
 stdFilePostfix(name, path) ::= <<
 >>
 
-commentIf(comment, body) ::= <%
+commentIf(comment, body) ::= <<
 <if(!trim(body).empty)>
 // <comment><\n>
 <body>
 <endif>
-%>
+>>
 
 ///////////////////////////////////////////////////////////////////////////////
 //

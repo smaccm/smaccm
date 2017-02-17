@@ -20,7 +20,7 @@ public class EChronosUtil {
       if (ty instanceof UnitType) {
          toReturn += "(void); " + System.lineSeparator();
       } else {
-         toReturn += "(const " + (EmitterFactory.type(ty)).getCamkesInputType().getName() + " arg); " + System.lineSeparator();
+         toReturn += "(const " + (EmitterFactory.type(ty)).getCamkesName() + " * arg); " + System.lineSeparator();
       }
       return toReturn;
       

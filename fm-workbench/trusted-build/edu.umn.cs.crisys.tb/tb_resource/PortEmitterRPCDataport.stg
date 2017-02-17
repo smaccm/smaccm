@@ -45,7 +45,7 @@ componentRemoteWriteFunction(port) ::= <<
  *
  ************************************************************************/
 
-bool <port.incomingWriterName>(const <port.type.camkesInputType.name> <port.name>) {
+bool <port.incomingWriterName>(const <port.type.camkesName> * <port.name>) {
     <port.lockStmt>
     <if(port.type.isBaseType)><port.readerWriterImplVar> = *<port.name>;
     <else><camkesInputToValMemcpy(port.type, port.readerWriterImplVar, port.name)>
@@ -86,7 +86,7 @@ componentLocalReaderDecl(port) ::= <<
 
 
 callRemoteWriterStmt(connection) ::= << 
-tb_result &= <connection.outgoingPortWriterName>(<connection.sourcePort.type.aadlInputToCamkesInput> <connection.sourcePort.name>);
+tb_result &= <connection.outgoingPortWriterName>((<connection.sourcePort.type.camkesName>*) <connection.sourcePort.name>);
 
 >>
 
@@ -141,7 +141,7 @@ connectReaderWriter(connection, model) ::= <<
 writerDecl(port) ::= <<
 <if(port.isIRQ)>
 <else>
-bool <incomingPortWriterName(port)>(const <port.type.camkesInputType.name> arg);
+bool <incomingPortWriterName(port)>(const <port.type.camkesName> * arg);
 <endif>
 >>
 

@@ -1,6 +1,7 @@
 #include <user_rs.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 int waiting = 0;
 int eatpolls = 0;
 int fork1 = -1;
@@ -75,3 +76,5 @@ void getfork(const RonSwansons__fork_impl * fork_data) {
 		printf("getfork: already have two forks!\n");
 	}
 }
+
+void alarm(const int64_t * periodic_100_m) {}

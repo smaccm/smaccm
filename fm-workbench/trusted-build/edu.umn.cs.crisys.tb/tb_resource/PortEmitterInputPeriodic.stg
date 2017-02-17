@@ -58,7 +58,7 @@ static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
  ************************************************************************/
 
 bool <dispatcher.incomingWriterName><\\>
-(const <dispatcher.type.camkesInputType.name> arg) {
+(const <dispatcher.type.camkesName> * arg) {
     <dispatcher.dispatchOccurredVar> = true;
     <dispatcher.periodicTimeVar> = <dispatcher.type.camkesInputToVal>arg;
     <dispatcher.threadImplementation.mainLockReleaseStmt>
@@ -179,7 +179,8 @@ void tb_timer_complete_callback(void *_ UNUSED) {
 
 camkesComponentCInitializer(port) ::= <<
 // tb_timer_periodic(0, ((uint64_t)<port.periodicDispatcherPeriod>)*NS_IN_MS);
-   CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
+CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
+
 >>
 
 camkesAssemblyPeriodicDispatcherConnections(port) ::= <<

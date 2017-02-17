@@ -13,7 +13,7 @@ import "CommonOSSpecificNames.stg"
 /////////////////////////////////////////////////////////////////////
 
 
-userEntrypointCallerInputArg(dispatcher) ::=  <<const <dispatcher.type.camkesInputType.name> in_arg >>
+userEntrypointCallerInputArg(dispatcher) ::=  <<const <dispatcher.type.camkesName> * in_arg >>
 
 userEntrypointCallerFnArgs(dispatcher) ::= <<
 <if(dispatcher.hasData)>

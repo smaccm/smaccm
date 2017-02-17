@@ -22,7 +22,7 @@ void periodic_ping3(const int64_t *the_time) {
 }
 
 
-void ping_received3(const test6__a_array_impl test_data) {
+void ping_received3(const test6__a_array_impl * test_data) {
    #ifdef __TB_OS_ECHRONOS
       debug_printf("receiver3: ping received (");
       debug_printhex32(test_data[0]);
@@ -35,7 +35,7 @@ void ping_received3(const test6__a_array_impl test_data) {
       debug_printf(", ");   
       debug_println(")");
    #else
-      printf("receiver3: ping received (%d, %d, %d, %d)\n", test_data[0], test_data[1], test_data[2], test_data[3]);
+      printf("receiver3: ping received (%d, %d, %d, %d)\n", (*test_data)[0], (*test_data)[1], (*test_data)[2], (*test_data)[3]);
    #endif
 }
 

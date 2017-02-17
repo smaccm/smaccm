@@ -29,9 +29,8 @@ inputPortCMonitorPurpose(port) ::= <<
 }>
 >>
 
-inputPortIDL4MonitorPurpose(port) ::= <<
-  Queue interface with type <port.typeName> and queue size of <port.queueSize>.
-}>
+portIDL4MonitorPurpose(port) ::= <<
+  Event/Data event monitor interface accepting data of type <port.type.name> with a queue size of <port.queueSize>.
 >>
 
 registerCallback(port) ::= <<
@@ -80,9 +79,9 @@ bool <port.commprimFnNameOpt>(void);
 writePortReaderPrototype(port) ::= <<
 // reader prototype for <port.name>
 <if(port.hasData)>
-bool <port.localReaderName>(<port.type.aadlInputType.name> <port.name>);
+bool <port.localReaderName>(<port.type.camkesName> * <port.name>);
 <if(port.commprimFnNameOpt)>
-bool <port.commprimFnNameOpt>(<port.type.aadlOutputType.name> <port.name>);
+bool <port.commprimFnNameOpt>(<port.type.name> <port.name>);
 <endif>
 <else>
 bool <port.localReaderName>(void);
@@ -96,9 +95,9 @@ bool <port.commprimFnNameOpt>(void);
 
 generateLocalReaderWrapper(port) ::= <<
 
-bool <port.commprimFnNameOpt><if(port.hasData)>(<port.type.aadlOutputType.name> <port.name>)<else>(void)<endif>
+bool <port.commprimFnNameOpt><if(port.hasData)>(<port.type.name> * <port.name>)<else>(void)<endif>
 {
-  return <port.localReaderName><if(port.hasData)>(<port.name>)<else>()<endif>;
+  return <port.localReaderName><if(port.hasData)>((<port.type.camkesName> *)<port.name>)<else>()<endif>;
 }
 
 >>
@@ -121,41 +120,13 @@ InputEventDataPortDecls(port) ::= <<
  *
  ************************************************************************/
 
-bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
+bool <port.incomingWriterName>(const <port.type.name> * arg) {
     bool result;
-    result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
+    result = <port.queueWriteName>((<port.type.name> *) arg);
     return result;
 }
 
 >>
-
-InputEventPortDecls(port) ::= <<
-
-
-/************************************************************************
- *  <port.localReaderName>:
- * Invoked from local active thread.
- *
- * This is the function invoked by the active thread to decrement the
- * input event index.
- *
- ************************************************************************/
-
-bool <port.localReaderName>() {
-    bool result;
-    <port.lockStmt>
-    if (<port.index> > 0) {
-        <port.index>--;
-        result = true;
-    } else {
-        result = false;
-    }
-    <port.unlockStmt>
-    return result;
-}
-
->>
-
 
 ///////////////////////////////////////////////////////////////
 //
@@ -164,11 +135,11 @@ bool <port.localReaderName>() {
 ///////////////////////////////////////////////////////////////
 
 
-callRemoteWriterStmt(port, dname) ::= << 
+callRemoteWriterStmt(port,var) ::= << 
 <if(port.hasData)>
-tb_result &= <dname>_enqueue(<port.type.aadlInputToCamkesInput><port.name>);
+tb_result &= <port.name>_enqueue((<port.type.camkesName> *)<var>);
 <else>
-tb_result &= <dname>_enqueue();
+tb_result &= <port.name>_enqueue();
 <endif>
 >>
 
@@ -197,7 +168,7 @@ bool <port.localWriterName>
 (void) {
 <endif>
     bool tb_result = true ; 
-    <port.outputMonitorNames:{ n | <callRemoteWriterStmt(port,n)>}>
+    <port.outputPorts:{ p | <callRemoteWriterStmt(p,port.name)>}>
     return tb_result;
 }
 
@@ -214,8 +185,8 @@ componentRemoteWriterDecl(port) ::= <<
 ///////////////////////////////////////////////////////////////
 
 eventDataDispatcher(dispatcher) ::= <<
-while (<dispatcher.localReaderName>(<dispatcher.type.valToAadlOutput><dispatcher.name>)) {
-    <dispatcher.activeThreadInternalDispatcherFnName>(<dispatcher.type.valToAadlInput><dispatcher.name>);
+while (<dispatcher.localReaderName>((<dispatcher.type.camkesName>*)&<dispatcher.name>)) {
+    <dispatcher.activeThreadInternalDispatcherFnName>(&<dispatcher.name>);
 }
 
 >>
@@ -241,18 +212,17 @@ consumes QueuedData <port.notificationName>;
 >>
 
 outputPortDeclarations(port) ::= <<
-<port.outputMonitorNames:{n | uses <port.monitorInterfaceName> <n>;<\n>}>
+<port.outputPorts:{p | uses <p.monitorInterfaceName> <p.name>;<\n>}>
 
 >>
 
-//monitorCamkesIdl4Writer(iname, str_type_name)
 camkesMonitorIdl4(str_interface_name, port) ::= <<
 procedure <str_interface_name> {
   include <\u003C>stdbool.h<\u003E>;
   <if(!port.type.isUnit)>
   include <\u003C><port.systemTypesInclude><\u003E>;
-  bool enqueue(refin <port.typeName> m);
-  bool dequeue(out <port.typeName> m);
+  bool enqueue(refin <port.type.camkesName> m);
+  bool dequeue(out <port.type.camkesName> m);
   <else>
   bool enqueue(void);
   bool dequeue(void);
@@ -263,7 +233,6 @@ procedure <str_interface_name> {
 monitorCamkesWriter(str_component_name,port) ::= <<
 import <\u003C><port.monitorInterfaceName>.idl4<\u003E>;
 component <str_component_name> {
-
   provides <port.monitorInterfaceName> mon;
   emits QueuedData monsig;
   
@@ -304,7 +273,7 @@ static bool is_empty(void) {
   return length == 0;
 }
 <if(!port.type.isUnit)>
-bool mon_dequeue(<port.typeName> * m) {
+bool mon_dequeue(<port.type.camkesName> * m) {
 <else>
 bool mon_dequeue(void) {
 <endif>
@@ -317,7 +286,7 @@ bool mon_dequeue(void) {
     return false;
   } else {
     <if(!port.type.isUnit)>
-    *((<port.type.camkesName> *)m) = contents[front];
+    *m = contents[front];
     <endif>
     front = (front + 1) % <port.queueSize>;
     length--;
@@ -329,7 +298,7 @@ bool mon_dequeue(void) {
 }
 
 <if(!port.type.isUnit)>
-bool mon_enqueue(const <port.typeName> * m) {
+bool mon_enqueue(const <port.type.camkesName> * m) {
 <else>
 bool mon_enqueue(void) {
 <endif>
@@ -345,7 +314,7 @@ bool mon_enqueue(void) {
     return false;
   } else {
     <if(!port.type.isUnit)>
-    contents[(front + length) % <port.queueSize>] = *((<port.type.camkesName> *)m);
+    contents[(front + length) % <port.queueSize>] = *m;
     <endif>
     length++;
     monsig_emit();

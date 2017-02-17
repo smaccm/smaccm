@@ -137,10 +137,10 @@ static bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.nam
  *
  ************************************************************************/
 
-bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
+bool <port.incomingWriterName>(const <port.type.name> * arg) {
     bool result;
     <port.lockStmt>
-    result = <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
+    result = <port.queueWriteName>((<port.type.camkesName>*) arg);
     <port.unlockStmt>
     <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
     return result;
@@ -245,7 +245,7 @@ bool <port.localReaderName>() {
 
 callRemoteWriterStmt(connection) ::= << 
 <if(port.hasData)>
-tb_result &= <connection.outgoingPortWriterName>(<port.type.aadlInputToCamkesInput><connection.sourcePort.name>);
+tb_result &= <connection.outgoingPortWriterName>((<port.type.camkesName> *)<connection.sourcePort.name>);
 <else>
 tb_result &= <connection.outgoingPortWriterName>();
 <endif>
@@ -337,7 +337,7 @@ connectReaderWriter(connection, model) ::= <<
 
 writerDecl(port) ::= <<
 <if(port.hasData)>
-bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg);
+bool <port.incomingWriterName>(const <port.type.camkesName> * arg);
 
 <else>
 

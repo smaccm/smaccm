@@ -12,7 +12,6 @@ import "CommonCPrototypes.stg"
  *   osSpecificThreadEntrypoint
  *   osSpecificComponentLocalCallerFunction
  *   osSpecificAssert
- *   aadlInputToExternalInput  <== currently aadlInputToCamkesInput
  *
  * Dummy declarations are provided by CommonOSSpecificNames.
  * These must be overridden by redefinition (see CamkesComponentC.stg
@@ -86,7 +85,7 @@ filePostfix(name, path) ::= <<
 
 userEntrypointCallerCall(externalHandler, dispatcher) ::= <<
 <if(dispatcher.hasData)>
-<externalHandler.handlerName>(<dispatcher.type.camkesInputToAadlInput> in_arg);
+<externalHandler.handlerName>((<dispatcher.type.name> *) in_arg);
 <else><externalHandler.handlerName>();
 <endif>
 >>

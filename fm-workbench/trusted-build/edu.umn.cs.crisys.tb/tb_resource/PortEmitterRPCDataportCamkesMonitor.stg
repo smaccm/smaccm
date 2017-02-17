@@ -21,7 +21,7 @@ inputPortCamkesMonitorPurpose(port) ::= <<
 >>
 
 inputPortCMonitorPurpose(port) ::= <<
-  Implementing a Monitor of type <port.typeName>. The input port that will be 
+  Implementing a Monitor of type <port.type.name>. The input port that will be 
   calling dequeue and receiving notifications 
   is <port.qualifiedName>. The output port set follows:
 
@@ -29,9 +29,9 @@ inputPortCMonitorPurpose(port) ::= <<
 }>
 >>
 
-inputPortIDL4MonitorPurpose(port,str_direction) ::= <<
-  <str_direction> interface with type <port.typeName>.
-}>
+portIDL4MonitorPurpose(port,str_direction) ::= <<
+  Data port monitor interface accepting data of type <port.type.name>.
+
 >>
 
 registerCallback(port) ::= <<
@@ -79,7 +79,7 @@ generateLocalReaderWrapper(port) ::= <<
 
 
 bool <port.commprimFnNameOpt>(<port.type.aadlOutputType.name> <port.name>) {
-  return <port.localReaderName>(<port.name>);
+  return <port.localReaderName>((<port.type.camkesName>*)<port.name>);
 }
 
 >>
@@ -102,8 +102,8 @@ InputEventDataPortDecls(port) ::= <<
  *
  ************************************************************************/
 
-bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
-    <port.queueWriteName>(<port.type.camkesInputToAadlInput> arg);
+bool <port.incomingWriterName>(const <port.type.camkeName> * arg) {
+    <port.queueWriteName>(<port.type.name> * arg);
 }
 
 >>
@@ -115,8 +115,8 @@ bool <port.incomingWriterName>(const <port.type.camkesInputType.name> arg) {
 ///////////////////////////////////////////////////////////////
 
 
-callRemoteWriterStmt(port, dname) ::= << 
-<dname>_write(<port.type.aadlInputToCamkesInput><port.name>);
+callRemoteWriterStmt(port,var) ::= <<
+tb_result &= <port.name>_write((<port.type.camkesName> *)<var>);
 >>
 
 remoteCallerFunction(port) ::= <<
@@ -138,8 +138,9 @@ bool <port.commprimFnNameOpt>(const <port.type.aadlInputType.name> <port.name>) 
 <else>
 bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>) {
 <endif>
-    <port.outputMonitorNames:{ n | <callRemoteWriterStmt(port,n)>}>
-    return true;
+    bool tb_result = true ; 
+    <port.outputPorts:{ p | <callRemoteWriterStmt(p,port.name)>}>
+    return tb_result;
 }
 
 >>
@@ -155,40 +156,40 @@ componentRemoteWriterDecl(port) ::= <<
 ///////////////////////////////////////////////////////////////////////////
 
 inputPortDeclarations(port) ::= <<
-uses <port.inputMonitorInterfaceName> <port.name>;
+uses <port.monitorInterfaceName> <port.name>;
 consumes DataportWrite <port.notificationName>;
 
 >>
 
 outputPortDeclarations(port) ::= <<
-<port.outputMonitorNames:{n | uses <port.outputMonitorInterfaceName> <n>;<\n>}>
+<port.outputPorts:{p | uses <p.monitorInterfaceName> <p.name>;<\n>}>
 
 >>
 
-//monitorCamkesIdl4Writer(iname, str_type_name)
-camkesMonitorWriteIdl4(str_interface_name, str_type_name, str_types_include) ::= <<
-procedure <str_interface_name>_Write {
-  include <\u003C><str_types_include><\u003E>;
-  bool write(refin <str_type_name> m);
+camkesMonitorIdl4(str_interface_name, port) ::= <<
+procedure <str_interface_name> {
+  include <\u003C>stdbool.h<\u003E>;
+  include <\u003C><port.systemTypesInclude><\u003E>;
+  bool write(refin <port.type.camkesName> m);
+  bool read(out <port.type.camkesName> m);
 };
 >>
 
-camkesMonitorReadIdl4(str_interface_name, str_type_name, str_types_include) ::= <<
-procedure <str_interface_name>_Read {
-  include <\u003C><str_types_include><\u003E>;
-  bool read(out <str_type_name> m);
-};
+monitorCamkesHWriter(mguard,port) ::= <<
+#ifndef <mguard>
+#define <mguard>
+
+#define <port.readBadgeName> <port.readBadgeID>
+#define <port.writeBadgeName> <port.writeBadgeID>
+
+#endif // <mguard>
 >>
 
 monitorCamkesWriter(str_component_name,port) ::= <<
-import <\u003C><port.inputMonitorInterfaceName>.idl4<\u003E>;
-import <\u003C><port.outputMonitorInterfaceName>.idl4<\u003E>;
+import <\u003C><port.monitorInterfaceName>.idl4<\u003E>;
 component <str_component_name> {
-
-  provides <port.outputMonitorInterfaceName> dpw;
-  provides <port.inputMonitorInterfaceName> dpr;
-  emits DataportWrite dpn;
-  has mutex dp;
+  provides <port.monitorInterfaceName> mon;
+  emits DataportWrite monsig;
 }
 >>
 
@@ -197,22 +198,33 @@ monitorCamkesCWriter(port, str_types_include, unlock, lock) ::= <<
 #include <\u003C>string.h<\u003E>
 #include <\u003C>camkes.h<\u003E>
 #include <\u003C><port.systemTypeHeader><\u003E>
+#include "../include/<port.monitorInputCamkesNamePrefix>.h"
 
 static <port.type.camkesName> contents;
 
-bool dpr_read(<port.typeName> * m) {
-  <lock>
-  *((<port.type.camkesName> *)m) = contents;
-  <unlock>
-  return true;
+bool mon_read(<port.type.camkesName> * m) {
+  if (mon_get_sender_id() != <port.readBadgeName>) {
+    #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
+    fprintf(stderr, "Monitor <port.qualifiedName>: attempt to read without permission\n");
+    #endif 
+    return false;
+  } else {
+    *m = contents;
+    return true;
+  }
 }
 
-bool dpw_write(const <port.typeName> * m) {
-  <lock>
-  contents = *((<port.type.camkesName> *)m);
-  dpn_emit();
-  <unlock>
-  return true;
+bool mon_write(const <port.type.camkesName> * m) {
+  if (mon_get_sender_id() != <port.writeBadgeName>) {
+    #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
+    fprintf(stderr, "Monitor <port.qualifiedName>: attempt to write without permission\n");
+    #endif 
+    return false;
+  } else {
+    contents = *m;
+    monsig_emit();
+    return true;
+  }
 }
 
 >>

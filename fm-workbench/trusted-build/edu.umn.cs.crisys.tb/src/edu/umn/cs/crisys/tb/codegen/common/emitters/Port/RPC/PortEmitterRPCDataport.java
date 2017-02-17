@@ -282,7 +282,7 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
       String toReturn = ""; 
       if (this.getModelElement() instanceof InputPort) {
          toReturn += "bool " + getIncomingWriterName() + 
-               "(const " + this.getType().getCamkesInputType().getName() + " arg); " + System.lineSeparator();
+               "(const " + this.getType().getCamkesName() + " * arg); " + System.lineSeparator();
       }
       return toReturn;
    }

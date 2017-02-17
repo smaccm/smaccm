@@ -7,7 +7,7 @@
 	#include <debug.h>
 #endif
 
-void ping_received1(const test6__a_array_impl test_data) {
+void ping_received1(const test6__a_array_impl  * test_data) {
    #ifdef __TB_OS_ECHRONOS
       debug_printf("receiver1: ping received (");
       debug_printhex32(test_data[0]);
@@ -20,7 +20,7 @@ void ping_received1(const test6__a_array_impl test_data) {
       debug_printf(", ");   
       debug_println(")");
    #else
-      printf("receiver1: ping received (%d, %d, %d, %d)\n", test_data[0], test_data[1], test_data[2], test_data[3]);
+      printf("receiver1: ping received (%d, %d, %d, %d)\n", (*test_data)[0], (*test_data)[1], (*test_data)[2], (*test_data)[3]);
    #endif
 }
 
