@@ -46,8 +46,9 @@ component Virtual_Machine {
             "0x50046000:12", // Interrupt Controller Virtual CPU interface (Virtual Machine view)
             "0x60004000:12", // Interrupt controller registers (ICTLR)
             "0x700b0000:12", // SDMMC-1, SDMMC-2, SDMMC-3, SDMMC-4,
-            "0x7d000000:12", // USB
-            "0x7d004000:12", // USB2
+            "0x7d000000:12", // USB on-the-go (micro)
+            "0x7d004000:12", // USB on top board
+            "0x7d008000:12", // USB on bottom board
             "0xb0000000:28", // Linux kernel memory regions
             "0xc0000000:29", // Linux kernel memory regions
             "0xe0000000:28", // Linux kernel memory regions
@@ -58,8 +59,9 @@ component Virtual_Machine {
             53, // INTERRUPT_USB2
             63, // INTERRUPT_SDMMC4
             122, // INTERRUPT_UARTD
+            129, // INTERRUPT_USB3
             ];
-        
+
         vm_obj.smmu = [10, 23];
 
         vm_obj.asid_pool = true;

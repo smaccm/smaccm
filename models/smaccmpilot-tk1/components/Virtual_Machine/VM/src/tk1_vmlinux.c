@@ -57,7 +57,7 @@ const struct device dev_sdmmcs = {
 
 const struct device dev_usb1 = {
     .devid = DEV_CUSTOM,
-    .name = "Registers for USB1",
+    .name = "Registers for micro USB",
     .pstart = 0x7d000000,
     .size = PAGE_SIZE,
     .handle_page_fault = NULL,
@@ -66,8 +66,17 @@ const struct device dev_usb1 = {
 
 const struct device dev_usb2 = {
     .devid = DEV_CUSTOM,
-    .name = "Registers for USB2",
+    .name = "Registers for USB on top board",
     .pstart = 0x7d004000,
+    .size = PAGE_SIZE,
+    .handle_page_fault = NULL,
+    .priv = NULL
+};
+
+const struct device dev_usb3 = {
+    .devid = DEV_CUSTOM,
+    .name = "Registers for USB on bottom board",
+    .pstart = 0x7d008000,
     .size = PAGE_SIZE,
     .handle_page_fault = NULL,
     .priv = NULL
@@ -77,6 +86,7 @@ static const struct device *linux_pt_devices[] = {
     &dev_sdmmcs,
     &dev_usb1,
     &dev_usb2,
+    &dev_usb3,
 };
 
 static const uint32_t linux_blank_paddrs[] = {
