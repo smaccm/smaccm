@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "tb_decls.h"
+#include "tb_toplevel_types.h"
 
 #ifdef __TB_OS_LINUX__
 

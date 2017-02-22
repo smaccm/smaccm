@@ -69,13 +69,22 @@ end proc.Impl;
 system ping_pong
 end ping_pong;
 
+processor main
+end main;
+
+processor implementation main.camkes
+   properties
+      TB_SYS::OS => camkes;
+      TB_SYS::HW => QEMU;
+end main.camkes;
+
 system implementation ping_pong.impl
 	subcomponents
 		tl: process proc.Impl;
+		toplevel: processor main.camkes;
 	properties
-		TB_SYS::OS => CAmkES; 
-		TB_SYS::HW => QEMU;
-		
+		actual_processor_binding => (reference (toplevel)) applies to tl;
 end ping_pong.impl;
+
 
 end ping_pong;
