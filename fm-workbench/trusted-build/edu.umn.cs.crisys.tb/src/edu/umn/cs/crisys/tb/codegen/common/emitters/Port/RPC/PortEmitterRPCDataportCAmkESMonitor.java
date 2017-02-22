@@ -23,6 +23,7 @@ import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
 import edu.umn.cs.crisys.tb.model.port.InputDataPort;
+import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
 import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
@@ -473,6 +474,17 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
   
   public String getSystemTypesInclude() {
     return (new ModelNames(model)).getSystemTypeHeaderName();
+  }
+
+  @Override
+  public String getCamkesAddMakeFilePortDefinitions() {
+    if (port instanceof InputDataPort) {
+      ST st = this.getTemplateST("writeMonitorMakeTargets");
+      st.add("name",getMonitorInputCamkesNamePrefix());
+      return st.render();
+    } else {
+      return "";
+    }
   }
   
   

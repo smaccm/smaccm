@@ -476,13 +476,9 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   // local reader/writer name does not have to be compatible with any CAmkES stuff.
   public String getLocalReaderWriterName(String readWrite) {
     PortFeature dp = getModelElement();
-    if (dp.getCommprimFnNameOpt() != null) {
-      return dp.getCommprimFnNameOpt();
-    } else {
-      String result = Util.getPrefix_() +
-          dp.getOwner().getNormalizedName() + "_" + readWrite + "_" + dp.getName();
-      return result;
-    }
+    String result = Util.getPrefix_() +
+        dp.getOwner().getNormalizedName() + "_" + readWrite + "_" + dp.getName();
+    return result;
   }   
 
   public String getLocalReaderName() {
@@ -534,6 +530,16 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
   public String getNotificationName() {
     return Util.getPrefix() + "_" + super.getName() + "_notification";
   }
-  
+
+  @Override
+  public String getCamkesAddMakeFilePortDefinitions() {
+    if (port instanceof InputEventPort) {
+      ST st = this.getTemplateST("writeMonitorMakeTargets");
+      st.add("name",getMonitorInputCamkesNamePrefix());
+      return st.render();
+    } else {
+      return "";
+    }
+  }
 }
 

@@ -18,5 +18,5 @@ public interface PortEmitterCamkes extends PortEmitter {
    public String getCamkesAddAssemblyFilePortDeclarations();  //
    public String getCamkesAddAssemblyFileCompositionPortConnections();
    public List<String> getCamkesAddComponentPortImports();
-   
+   public String getCamkesAddMakeFilePortDefinitions();
 }

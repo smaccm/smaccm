@@ -3,42 +3,23 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
-
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.DispatchableInputPortCommon;
-import edu.umn.cs.crisys.tb.codegen.common.names.ExternalHandlerNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.MemoryRegionNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
-import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
 import edu.umn.cs.crisys.tb.model.OSModel;
-import edu.umn.cs.crisys.tb.model.connection.PortConnection;
-import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
-import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
-import edu.umn.cs.crisys.tb.model.port.InitializerPort;
-import edu.umn.cs.crisys.tb.model.port.InputDataPort;
-import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputIrqPort;
-import edu.umn.cs.crisys.tb.model.port.InputPort;
-import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
-import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
-import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
 import edu.umn.cs.crisys.tb.model.type.ArrayType;
-import edu.umn.cs.crisys.tb.model.type.BoolType;
 import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.RecordType;
 import edu.umn.cs.crisys.tb.model.type.Type;
-import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
 
 public class PortEmitterInputIrq extends DispatchableInputPortCommon implements PortEmitterCamkes, PortEmitterEChronos, PortEmitterVxWorks {
@@ -138,7 +119,6 @@ public class PortEmitterInputIrq extends DispatchableInputPortCommon implements 
 
    @Override
    public String getWritePortEventResponder() {
-      String result = ""; 
       ST st = getTemplateST("slihIrqDispatcher");
       st.add("dispatcher", this);
       return st.render(); 
@@ -429,5 +409,11 @@ public String getCamkesAddAssemblyFileCompositionPortConnections() {
   // TODO Auto-generated method stub
   return "";
 }
+
+
+
+@Override
+public String getCamkesAddMakeFilePortDefinitions() { return ""; }
+
 
 }

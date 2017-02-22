@@ -14,7 +14,6 @@ import org.stringtemplate.v4.STGroupFile;
 import edu.umn.cs.crisys.tb.util.*;
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitter;
@@ -427,18 +426,16 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
    // middleware functions; these must be compatible with the OS.
    @Override
    public String getIncomingWriterName() {
-      PortFeature dp = getModelElement();
-      String prefix = Util.getPrefix_();
-      
-      if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
-         return dp.getName() + writeType() ;
-      } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
-         return getLpcPortWriterName();
-      } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
-         return getLpcPortWriterName();
-      } else {
-         throw new TbException("Error: getIncomingPortWriterName: OS " + model.getOsTarget() + " is not a known OS target.");
-      }
+     PortFeature dp = getModelElement();
+     if (model.getOsTarget() == OSModel.OSTarget.CAmkES) {
+       return dp.getName() + writeType() ;
+     } else if (model.getOsTarget() == OSModel.OSTarget.eChronos) {
+       return getLpcPortWriterName();
+     } else if (model.getOsTarget() == OSModel.OSTarget.VxWorks) {
+       return getLpcPortWriterName();
+     } else {
+       throw new TbException("Error: getIncomingPortWriterName: OS " + model.getOsTarget() + " is not a known OS target.");
+     }
    }
 
    // local reader/writer name does not have to be compatible with any CAmkES stuff.
@@ -530,5 +527,8 @@ public class PortEmitterRPCDataport implements PortEmitter, PortEmitterCamkes, P
     // TODO Auto-generated method stub
     return "";
   }
+
+  @Override
+  public String getCamkesAddMakeFilePortDefinitions() { return ""; }
 
 }

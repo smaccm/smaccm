@@ -308,4 +308,7 @@ public String getCamkesAddAssemblyFileCompositionPortConnections() {
   return "";
 }
 
+@Override
+public String getCamkesAddMakeFilePortDefinitions() { return ""; }
+
 }

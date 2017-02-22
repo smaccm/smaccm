@@ -365,7 +365,6 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
 
    private String addComponentOutputDataDeclarations() {
       ST st = getTemplateST("outputPortDeclarations");
-      PortConnectionEmitter x = this.getConnections().get(0);
       st.add("port", this);
       return st.render();
    }
@@ -568,5 +567,8 @@ public class PortEmitterRPCAllEvent extends DispatchableInputPortCommon implemen
     // TODO Auto-generated method stub
     return "";
   }
+
+  @Override
+  public String getCamkesAddMakeFilePortDefinitions() { return ""; }
 
 }

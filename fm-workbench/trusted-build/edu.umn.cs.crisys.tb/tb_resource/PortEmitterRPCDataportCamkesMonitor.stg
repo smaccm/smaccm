@@ -57,20 +57,20 @@ writeUdePrototype(dispatcher) ::= <<
 >>
 
 writePortWriterPrototype(port) ::= <<
-bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+bool <port.localWriterName>(const <port.type.camkesName> * <port.name>);
 
 <if(port.commprimFnNameOpt)>
-bool <port.commprimFnNameOpt>(const <port.type.aadlInputType.name> <port.name>);
+bool <port.commprimFnNameOpt>(const <port.type.name> * <port.name>);
 <endif>
 
 >>
 
 writePortReaderPrototype(port) ::= <<
 // reader prototype for <port.name>
-bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+bool <port.localReaderName>(<port.type.camkesName> * <port.name>);
 
 <if(port.commprimFnNameOpt)>
-bool <port.commprimFnNameOpt>(<port.type.aadlOutputType.name> <port.name>);
+bool <port.commprimFnNameOpt>(<port.type.name> * <port.name>);
 <endif>
 
 >>
@@ -78,7 +78,7 @@ bool <port.commprimFnNameOpt>(<port.type.aadlOutputType.name> <port.name>);
 generateLocalReaderWrapper(port) ::= <<
 
 
-bool <port.commprimFnNameOpt>(<port.type.aadlOutputType.name> <port.name>) {
+bool <port.commprimFnNameOpt>(<port.type.name> * <port.name>) {
   return <port.localReaderName>((<port.type.camkesName>*)<port.name>);
 }
 
@@ -225,5 +225,23 @@ bool mon_write(const <port.type.camkesName> * m) {
     return true;
   }
 }
+
+>>
+
+writeMonitorMakeTargets(name) ::= <<
+<name>_CFILES :=  \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/plat/${PLAT}/*.c)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/arch/${ARCH}/*.c))
+
+<name>_HFILES := \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/include/*.h)) \
+   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
+
+<name>_ASMFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/crt/arch-${ARCH}/crt0.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/arch/${ARCH}/*.S)) \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/plat/${PLAT}/*.S))
 
 >>

@@ -9,35 +9,22 @@ import org.stringtemplate.v4.STGroupFile;
 
 import edu.umn.cs.crisys.tb.TbException;
 import edu.umn.cs.crisys.tb.TbFailure;
-import edu.umn.cs.crisys.tb.codegen.VxWorks.VxWorksUtil;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.EmitterFactory;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitter;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortConnectionEmitterCamkes;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterCamkes;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterEChronos;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterLinux;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.PortEmitterVxWorks;
-import edu.umn.cs.crisys.tb.codegen.common.emitters.Port.RPC.DispatchableInputPortCommon;
-import edu.umn.cs.crisys.tb.codegen.common.names.ExternalHandlerNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.ThreadImplementationNames;
 import edu.umn.cs.crisys.tb.codegen.common.names.TypeNames;
-import edu.umn.cs.crisys.tb.codegen.eChronos.EChronosUtil;
-import edu.umn.cs.crisys.tb.codegen.linux.LinuxUtil;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
 import edu.umn.cs.crisys.tb.model.port.DispatchableInputPort;
 import edu.umn.cs.crisys.tb.model.port.ExternalHandler;
-import edu.umn.cs.crisys.tb.model.port.InputDataPort;
 import edu.umn.cs.crisys.tb.model.port.InputEventPort;
 import edu.umn.cs.crisys.tb.model.port.InputPort;
-import edu.umn.cs.crisys.tb.model.port.OutputDataPort;
 import edu.umn.cs.crisys.tb.model.port.OutputEventPort;
 import edu.umn.cs.crisys.tb.model.port.OutputPort;
 import edu.umn.cs.crisys.tb.model.port.PortFeature;
-import edu.umn.cs.crisys.tb.model.type.BoolType;
-import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.Type;
 import edu.umn.cs.crisys.tb.model.type.UnitType;
 import edu.umn.cs.crisys.tb.util.Util;
@@ -434,5 +421,8 @@ public class PortEmitterNotification implements PortEmitterCamkes {
    public List<String> getCamkesAddComponentPortImports() {
       return new ArrayList<String>();
    }
+
+  @Override
+  public String getCamkesAddMakeFilePortDefinitions() { return ""; }
 
 }

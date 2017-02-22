@@ -54,29 +54,6 @@ writeComponentName(name) ::= <<
 
 >>
 
-writeComponentPerConnection(name) ::= <<
-<name>_CFILES :=  \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/plat/${PLAT}/*.c)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/arch/${ARCH}/*.c))
-
-<name>_HFILES := \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/include/*.h)) \
-   $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
-
-<name>_ASMFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/crt/arch-${ARCH}/crt0.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/arch/${ARCH}/*.S)) \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/tb_Monitors/<name>/src/plat/${PLAT}/*.S))
-
->>
-
-writeComponentPerPort(port) ::= <<
-<if(port.monitorInputCamkesNamePrefix)>
-<writeComponentPerConnection(port.monitorInputCamkesNamePrefix)>
-<endif>
->>
 /*
 *  Silly but necessary comment because XText is confused by /* in earlier definitions.
 */
@@ -84,9 +61,7 @@ writeComponentPerPort(port) ::= <<
 writeComponent(component) ::= <<
 
 <writeComponentName(component.normalizedName)>
-<component.inputEventPortList:writeComponentPerPort()>
-<component.inputEventDataPortList:writeComponentPerPort()>
-<component.inputDataPortList:writeComponentPerPort()>
+<component.portList:{ p | <p.camkesAddMakeFilePortDefinitions>}>
 
 >>
 

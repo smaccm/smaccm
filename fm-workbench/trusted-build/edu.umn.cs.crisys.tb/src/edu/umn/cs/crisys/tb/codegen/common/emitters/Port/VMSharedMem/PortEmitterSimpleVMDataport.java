@@ -319,4 +319,7 @@ public List<String> getCamkesAddComponentPortImports() {
     // TODO Auto-generated method stub
     return "";
   }
+
+  @Override
+  public String getCamkesAddMakeFilePortDefinitions() { return ""; }
 }
