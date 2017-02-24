@@ -46,12 +46,50 @@ extern vspace_t _vspace;
 extern irq_server_t _irq_server;
 extern seL4_CPtr _fault_endpoint;
 
+#define SDMMC_PADDR 0x700b0000
+
+int handle_sdmmcs(struct device* d, vm_t* vm, fault_t* fault){
+    uint32_t data = fault_get_data(fault);
+    uint32_t addr = fault_get_address(fault);
+    uint32_t mask = fault_get_data_mask(fault);
+
+    // 0x0600-0x07ff is SDMMC-4
+    uint32_t offset = addr - SDMMC_PADDR;
+    if (offset < 0x0600 || offset > 0x07ff) {
+        fault_set_data(fault, 0);
+        return advance_fault(fault);
+    }
+
+    if (fault_is_write(fault)) {
+        switch (fault_get_width(fault)) {
+            case WIDTH_BYTE:
+                *(volatile uint8_t *) addr = (uint8_t) data;
+                break;
+            case WIDTH_HALFWORD:
+                *(volatile uint16_t *) addr = (uint16_t) data;
+                break;
+            case WIDTH_WORD:
+                *(volatile uint32_t *) addr = (uint32_t) data;
+                break;
+            case WIDTH_DOUBLEWORD:
+            default:
+                /* Should never get here... Keep the compiler happy */
+                assert(0);
+        }
+    } else {
+        addr = addr & ~0x3;
+        data = *(volatile uint32_t *) addr;
+        fault_set_data(fault, data);
+    }
+    return advance_fault(fault);
+}
+
 const struct device dev_sdmmcs = {
     .devid = DEV_CUSTOM,
     .name = "Registers for SDMMC",
-    .pstart = 0x700b0000,
+    .pstart = SDMMC_PADDR,
     .size = PAGE_SIZE,
-    .handle_page_fault = NULL,
+    .handle_page_fault = &handle_sdmmcs,
     .priv = NULL
 };
 
@@ -83,7 +121,7 @@ const struct device dev_usb3 = {
 };
 
 static const struct device *linux_pt_devices[] = {
-    &dev_sdmmcs,
+    //&dev_sdmmcs,
     &dev_usb1,
     &dev_usb2,
     &dev_usb3,
@@ -485,6 +523,13 @@ install_linux_devices(vm_t* vm)
 #endif // CONFIG_TK1_DEVICE_FWD
 
     err = vm_add_device(vm, &dev_bbox);
+    assert(!err);
+
+    void *addr;
+    addr = map_device(vm->vmm_vspace, vm->vka, vm->simple, SDMMC_PADDR, SDMMC_PADDR, seL4_AllRights);
+    assert(addr);
+
+    err = vm_add_device(vm, &dev_sdmmcs);
     assert(!err);
 
     /* Install pass through devices */
