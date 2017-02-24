@@ -320,8 +320,6 @@ vmm_init(void)
             sizeof(allocator_mempool), allocator_mempool
     );
     assert(allocman);
-    err = allocman_add_simple_untypeds(allocman, simple);
-    assert(!err);
 
     allocman_make_vka(vka, allocman);
 
@@ -330,12 +328,14 @@ vmm_init(void)
         uintptr_t paddr;
         bool device;
         seL4_CPtr cap = simple_get_nth_untyped(simple, i, &size, &paddr, &device);
-        if (device) {
-            cspacepath_t path;
-            vka_cspace_make_path(vka, cap, &path);
-            err = allocman_utspace_add_uts(allocman, 1, &path, &size, &paddr, ALLOCMAN_UT_DEV);
-            assert(!err);
+        cspacepath_t path;
+        vka_cspace_make_path(vka, cap, &path);
+        int utType = device ? ALLOCMAN_UT_DEV : ALLOCMAN_UT_KERNEL;
+        if (paddr == 0xb0000000 || paddr == 0xc0000000 || paddr == 0xe0000000) {
+            utType = ALLOCMAN_UT_DEV_MEM;
         }
+        err = allocman_utspace_add_uts(allocman, 1, &path, &size, &paddr, utType);
+        assert(!err);
     }
 
     /* Initialize the vspace */
@@ -371,38 +371,6 @@ vmm_init(void)
 
 
     return 0;
-}
-
-static void
-map_unity_ram(vm_t* vm)
-{
-    /* Dimensions of physical memory that we'll use. Note that we do not map the entirety of RAM.
-     */
-    static const uintptr_t paddr_start = LINUX_RAM_PADDR_BASE;
-    static const uintptr_t paddr_end = paddr_start + LINUX_RAM_SIZE;
-
-    int err;
-
-    uintptr_t start;
-    reservation_t res;
-    unsigned int bits = seL4_PageBits;
-    res = vspace_reserve_range_at(&vm->vm_vspace, (void*)(paddr_start - LINUX_RAM_OFFSET), paddr_end - paddr_start, seL4_AllRights, 1);
-    assert(res.res);
-    for (start = paddr_start; start < paddr_end; start += BIT(bits)) {
-        cspacepath_t frame;
-        err = vka_cspace_alloc_path(vm->vka, &frame);
-        assert(!err);
-        seL4_Word cookie;
-        err = vka_utspace_alloc_at(vm->vka, &frame, kobject_get_type(KOBJECT_FRAME, bits), bits, start, &cookie);
-        if (err) {
-            printf("Failed to map ram page 0x%x\n", start);
-            vka_cspace_free(vm->vka, frame.capPtr);
-            break;
-        }
-        uintptr_t addr = start - LINUX_RAM_OFFSET;
-        err = vspace_map_pages_at_vaddr(&vm->vm_vspace, &frame.capPtr, &bits, (void*)addr, 1, bits, res);
-        assert(!err);
-    }
 }
 
 void restart_component(void) {
@@ -513,8 +481,6 @@ main_continued(void)
         }
     }
 #endif /* CONFIG_ARM_SMMU */
-
-    map_unity_ram(&vm);
 
     /* Load system images */
     printf("Loading Linux: \'%s\' dtb: \'%s\'\n", VM_LINUX_NAME, VM_LINUX_DTB_NAME);
