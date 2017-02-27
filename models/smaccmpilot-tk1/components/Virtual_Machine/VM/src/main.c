@@ -331,7 +331,9 @@ vmm_init(void)
         cspacepath_t path;
         vka_cspace_make_path(vka, cap, &path);
         int utType = device ? ALLOCMAN_UT_DEV : ALLOCMAN_UT_KERNEL;
-        if (paddr == 0xb0000000 || paddr == 0xc0000000 || paddr == 0xe0000000) {
+        if (utType == ALLOCMAN_UT_DEV &&
+            paddr >= LINUX_RAM_PADDR_BASE &&
+            paddr <= (LINUX_RAM_PADDR_BASE + (LINUX_RAM_SIZE - 1))) {
             utType = ALLOCMAN_UT_DEV_MEM;
         }
         err = allocman_utspace_add_uts(allocman, 1, &path, &size, &paddr, utType);
