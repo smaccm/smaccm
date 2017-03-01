@@ -1,4 +1,5 @@
 import "Common.stg"
+import "PortEmitterRPCAllEventCamkesMonitorTheory.stg"
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -137,9 +138,9 @@ bool <port.incomingWriterName>(const <port.type.name> * arg) {
 
 callRemoteWriterStmt(port,var) ::= << 
 <if(port.hasData)>
-tb_result &= <port.name>_enqueue((<port.type.camkesName> *)<var>);
+tb_result &= <port.localWriterName>((<port.type.camkesName> *)<var>);
 <else>
-tb_result &= <port.name>_enqueue();
+tb_result &= <port.localWriterName>();
 <endif>
 >>
 
@@ -163,7 +164,7 @@ bool <port.commprimFnNameOpt>
 bool <port.localWriterName>
 <endif>
 <if(port.hasData)>
-(const <port.type.aadlInputType.name> <port.name>) {
+(const <port.type.name> * <port.name>) {
 <else>
 (void) {
 <endif>
@@ -247,14 +248,21 @@ monitorCamkesHWriter(mguard,port) ::= <<
 >>
 
 
-monitorCamkesCWriter(port, str_types_include) ::= <<
+monitorCamkesCWriter(port) ::= <<
+// The TB_VERIFY macro disables code that would interfere with reasoning.
+// However, uncommenting the following will prevent compilation; we are 
+// concerned with verify that they following code satisfies expected queuing 
+// properties and thus, integration with the rest of the application is
+// unnecessary.
+//#define TB_VERIFY
+#ifndef TB_VERIFY
 #include <\u003C>stdio.h<\u003E>
-#include <\u003C>stdbool.h<\u003E>
-#include <\u003C>camkes.h<\u003E>
-#include <\u003C><port.systemTypeHeader><\u003E>
+#endif // TB_VERIFY
+#include "../../../../include/<port.systemTypeHeader>"
 #include "../include/<port.monitorInputCamkesNamePrefix>.h"
 
 int mon_get_sender_id(void);
+int monsig_emit(void);
 
 <if(!port.type.isUnit)>
 <port.type.camkesName> contents[<port.queueSize>];
@@ -275,9 +283,11 @@ bool mon_dequeue(<port.type.camkesName> * m) {
 bool mon_dequeue(void) {
 <endif>
   if (mon_get_sender_id() != <port.readBadgeName>) {
+    #ifndef TB_VERIFY
     #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
     fprintf(stderr, "Monitor <port.qualifiedName>: attempt to dequeue without permission\n");
-    #endif 
+    #endif // CONFIG_APP_<port.capName>_TB_DEBUG
+    #endif // TB_VERIFY
     return false;
   } else if (is_empty()) {
     return false;
@@ -289,9 +299,6 @@ bool mon_dequeue(void) {
     length--;
     return true;
   }
-  fprintf(stderr,"Executing unreadable code in %s at %d.\\n",__FILE__,__LINE__);
-  *((int*)0)=0xdeadbeef;
-  return false;
 }
 
 <if(!port.type.isUnit)>
@@ -300,9 +307,11 @@ bool mon_enqueue(const <port.type.camkesName> * m) {
 bool mon_enqueue(void) {
 <endif>
   if (mon_get_sender_id() != <port.writeBadgeName>) {
+    #ifndef TB_VERIFY
     #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
     fprintf(stderr, "Monitor <port.qualifiedName>: attempt to enqueue without permission\n");
-    #endif 
+    #endif // CONFIG_APP_<port.capName>_TB_DEBUG
+    #endif // TB_VERIFY
     return false;
   } else if (is_full()) {
     #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
@@ -317,9 +326,6 @@ bool mon_enqueue(void) {
     monsig_emit();
     return true;
   }
-  fprintf(stderr,"Executing unreadable code in %s at %d.\\n",__FILE__,__LINE__);
-  *((int*)0)=0xdeadbeef;  
-  return false;
 }
 
 >>

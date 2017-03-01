@@ -331,20 +331,13 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
       return result;         
     } else {
       String result = "";
-      List<PortConnection> ports = port.getConnections();
-      int sz = ports.size();
-      for (int i = 0; i < sz; i++) {
-        PortEmitterRPCDataportCAmkESMonitor pe = new PortEmitterRPCDataportCAmkESMonitor(ports.get(i).getDestPort());
-        String suffix = "";
-        if(sz>1) {
-          suffix += i;
-        }
+      for (PortEmitterRPCDataportCAmkESMonitor p : getOutputPorts()) {
         result += "connection seL4RPCCall conn" + model.getGenerateConnectionNumber()
         + " (from " + getThreadImplementation().getComponentInstanceName()
-        + "." + getName() + suffix;
-        result += ", to " + pe. getMonitorAssemblyInstance()
+        + "." + p.getName() + outid;
+        result += ", to " + p. getMonitorAssemblyInstance()
         + ".mon);\n";
-        
+        outid = "";
       }
       return result;
     }
@@ -353,13 +346,10 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
   public List<PortEmitterRPCDataportCAmkESMonitor> getOutputPorts() {
     List<PortEmitterRPCDataportCAmkESMonitor> list = new LinkedList<PortEmitterRPCDataportCAmkESMonitor>();
     List<PortConnection> ports = port.getConnections();
-    int sz = ports.size();
-    for (int i = 0; i < sz; i++) {
+    for (int i = 0; i < ports.size(); i++) {
       PortFeature porti = ports.get(i).getSourcePort();
       PortEmitterRPCDataportCAmkESMonitor emitter = new PortEmitterRPCDataportCAmkESMonitor(porti);
-      if(sz > 1) {
-        emitter.outid = (new Integer(i)).toString();
-      }
+      emitter.outid = (new Integer(i)).toString();
       list.add(emitter);
     }
     return list;  
@@ -393,16 +383,9 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
              + getThreadImplementation().getComponentInstanceName() +"." + getName() + "_attributes = " + getReadBadgeName() + ";\n";
     } else {
       String result = "";
-      List<PortConnection> ports = port.getConnections();
-      int sz = ports.size();
-      for (int i = 0; i < sz; i++) {
-        PortEmitterRPCDataportCAmkESMonitor pe = new PortEmitterRPCDataportCAmkESMonitor(ports.get(i).getDestPort());
-        String suffix = "";
-        if(sz>1) {
-          suffix += i;
-        }
+      for (PortEmitterRPCDataportCAmkESMonitor p : getOutputPorts()) {
         result += getThreadImplementation().getComponentInstanceName()
-        + "." + getName() + suffix + "_attributes = " + pe.getWriteBadgeName() + ";\n";
+            + "." + p.getName() + "_attributes = " + p.getWriteBadgeName() + ";\n";
       }
       return result;
     }
@@ -418,20 +401,12 @@ public class PortEmitterRPCDataportCAmkESMonitor extends DispatchableInputPortCo
     }
   }
 
-
-  // local reader/writer name does not have to be compatible with any CAmkES stuff.
-  public String getLocalReaderWriterName(String readWrite) {
-    String result = Util.getPrefix_() +
-        port.getName() + "_" + readWrite;
-    return result;
-  }   
-
   public String getLocalReaderName() {
-    return getLocalReaderWriterName("read");
+    return this.getName()+"_read";
   }
 
   public String getLocalWriterName() {
-    return  getLocalReaderWriterName("write");
+    return this.getName()+"_write";
   }   
 
   public List<PortConnectionEmitter> getConnections() {

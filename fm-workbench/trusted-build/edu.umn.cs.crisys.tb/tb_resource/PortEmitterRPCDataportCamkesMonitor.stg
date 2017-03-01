@@ -192,12 +192,11 @@ component <str_component_name> {
 
 monitorCamkesCWriter(port, str_types_include, unlock, lock) ::= <<
 #include <\u003C>stdio.h<\u003E>
-#include <\u003C>string.h<\u003E>
-#include <\u003C>camkes.h<\u003E>
-#include <\u003C><port.systemTypeHeader><\u003E>
+#include "../../../../include/<port.systemTypeHeader>"
 #include "../include/<port.monitorInputCamkesNamePrefix>.h"
 
 int mon_get_sender_id(void);
+int monsig_emit(void);
 
 static <port.type.camkesName> contents;
 
@@ -205,7 +204,7 @@ bool mon_read(<port.type.camkesName> * m) {
   if (mon_get_sender_id() != <port.readBadgeName>) {
     #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
     fprintf(stderr, "Monitor <port.qualifiedName>: attempt to read without permission\n");
-    #endif 
+    #endif // CONFIG_APP_<port.capName>_TB_DEBUG
     return false;
   } else {
     *m = contents;
@@ -217,7 +216,7 @@ bool mon_write(const <port.type.camkesName> * m) {
   if (mon_get_sender_id() != <port.writeBadgeName>) {
     #ifdef CONFIG_APP_<port.capName>_TB_DEBUG
     fprintf(stderr, "Monitor <port.qualifiedName>: attempt to write without permission\n");
-    #endif 
+    #endif // CONFIG_APP_<port.capName>_TB_DEBUG
     return false;
   } else {
     contents = *m;
