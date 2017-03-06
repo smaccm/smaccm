@@ -67,15 +67,15 @@ component Server {
     consumes Notification tb_timer_complete;
     uses tb_Monitor_SMACCM_DATA__Camera_Bounding_Box_i tb_vm2self;
     consumes DataportWrite tb_vm2self_notification;
-    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2encrypt;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2encrypt0;
 
     uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_decrypt2self;
     consumes QueuedData tb_decrypt2self_notification;
-    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2framing;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2framing0;
 
     uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_framing2self;
     consumes QueuedData tb_framing2self_notification;
-    uses tb_Monitor_bool_1 tb_self2vm_reboot;
+    uses tb_Monitor_bool_1 tb_self2vm_reboot0;
 
 
 

@@ -88,7 +88,7 @@ void tb_timer_complete_callback(void *_ UNUSED) {
    CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
 }
 /************************************************************************
- *  tb_Server_write_self2encrypt:
+ *  tb_self2encrypt_enqueue:
  * Invoked from user code in the local thread.
  *
  * This is the function invoked by the local thread to make a
@@ -100,16 +100,16 @@ void tb_timer_complete_callback(void *_ UNUSED) {
  * enqueue attempt failed.
  *
  ************************************************************************/
-bool tb_Server_write_self2encrypt
+bool tb_self2encrypt_enqueue
 (const SMACCM_DATA__GIDL * tb_self2encrypt) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2encrypt_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2encrypt);
+    tb_result &= tb_self2encrypt0_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2encrypt);
 
     return tb_result;
 }
 /************************************************************************
- *  tb_Server_write_self2framing:
+ *  tb_self2framing_enqueue:
  * Invoked from user code in the local thread.
  *
  * This is the function invoked by the local thread to make a
@@ -121,16 +121,16 @@ bool tb_Server_write_self2encrypt
  * enqueue attempt failed.
  *
  ************************************************************************/
-bool tb_Server_write_self2framing
+bool tb_self2framing_enqueue
 (const SMACCM_DATA__GIDL * tb_self2framing) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2framing_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2framing);
+    tb_result &= tb_self2framing0_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2framing);
 
     return tb_result;
 }
 /************************************************************************
- *  tb_Server_write_self2vm_reboot:
+ *  tb_self2vm_reboot_enqueue:
  * Invoked from user code in the local thread.
  *
  * This is the function invoked by the local thread to make a
@@ -142,11 +142,11 @@ bool tb_Server_write_self2framing
  * enqueue attempt failed.
  *
  ************************************************************************/
-bool tb_Server_write_self2vm_reboot
+bool tb_self2vm_reboot_enqueue
 (const bool * tb_self2vm_reboot) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2vm_reboot_enqueue((bool *)tb_self2vm_reboot);
+    tb_result &= tb_self2vm_reboot0_enqueue((bool *)tb_self2vm_reboot);
 
     return tb_result;
 }

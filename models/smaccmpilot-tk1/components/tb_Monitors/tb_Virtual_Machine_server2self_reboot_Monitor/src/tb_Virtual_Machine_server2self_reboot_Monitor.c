@@ -40,13 +40,20 @@
 
  **************************************************************************/
 
+// The TB_VERIFY macro disables code that would interfere with reasoning.
+// However, uncommenting the following will prevent compilation; we are 
+// concerned with verify that they following code satisfies expected queuing 
+// properties and thus, integration with the rest of the application is
+// unnecessary.
+//#define TB_VERIFY
+#ifndef TB_VERIFY
 #include <stdio.h>
-#include <stdbool.h>
-#include <camkes.h>
-#include <tb_smaccmpilot_tk1_types.h>
+#endif // TB_VERIFY
+#include "../../../../include/tb_smaccmpilot_tk1_types.h"
 #include "../include/tb_Virtual_Machine_server2self_reboot_Monitor.h"
 
 int mon_get_sender_id(void);
+int monsig_emit(void);
 
 bool contents[1];
 static uint32_t front = 0;
@@ -61,9 +68,11 @@ static bool is_empty(void) {
 }
 bool mon_dequeue(bool * m) {
   if (mon_get_sender_id() != TB_MONITOR_READ_ACCESS) {
+    #ifndef TB_VERIFY
     #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     fprintf(stderr, "Monitor tb_Virtual_Machine_server2self_reboot: attempt to dequeue without permission\n");
-    #endif 
+    #endif // CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    #endif // TB_VERIFY
     return false;
   } else if (is_empty()) {
     return false;
@@ -73,16 +82,15 @@ bool mon_dequeue(bool * m) {
     length--;
     return true;
   }
-  fprintf(stderr,"Executing unreadable code in %s at %d.\n",__FILE__,__LINE__);
-  *((int*)0)=0xdeadbeef;
-  return false;
 }
 
 bool mon_enqueue(const bool * m) {
   if (mon_get_sender_id() != TB_MONITOR_WRITE_ACCESS) {
+    #ifndef TB_VERIFY
     #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     fprintf(stderr, "Monitor tb_Virtual_Machine_server2self_reboot: attempt to enqueue without permission\n");
-    #endif 
+    #endif // CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    #endif // TB_VERIFY
     return false;
   } else if (is_full()) {
     #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
@@ -95,7 +103,4 @@ bool mon_enqueue(const bool * m) {
     monsig_emit();
     return true;
   }
-  fprintf(stderr,"Executing unreadable code in %s at %d.\n",__FILE__,__LINE__);
-  *((int*)0)=0xdeadbeef;  
-  return false;
 }

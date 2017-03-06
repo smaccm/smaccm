@@ -41,12 +41,11 @@
  **************************************************************************/
 
 #include <stdio.h>
-#include <string.h>
-#include <camkes.h>
-#include <tb_smaccmpilot_tk1_types.h>
+#include "../../../../include/tb_smaccmpilot_tk1_types.h"
 #include "../include/tb_Server_vm2self_Monitor.h"
 
 int mon_get_sender_id(void);
+int monsig_emit(void);
 
 static SMACCM_DATA__Camera_Bounding_Box_i contents;
 
@@ -54,7 +53,7 @@ bool mon_read(SMACCM_DATA__Camera_Bounding_Box_i * m) {
   if (mon_get_sender_id() != TB_MONITOR_READ_ACCESS) {
     #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     fprintf(stderr, "Monitor tb_Server_vm2self: attempt to read without permission\n");
-    #endif 
+    #endif // CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     return false;
   } else {
     *m = contents;
@@ -66,7 +65,7 @@ bool mon_write(const SMACCM_DATA__Camera_Bounding_Box_i * m) {
   if (mon_get_sender_id() != TB_MONITOR_WRITE_ACCESS) {
     #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     fprintf(stderr, "Monitor tb_Server_vm2self: attempt to write without permission\n");
-    #endif 
+    #endif // CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     return false;
   } else {
     contents = *m;

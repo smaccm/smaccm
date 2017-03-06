@@ -28,8 +28,8 @@ component CAN_Driver {
     include <tb_smaccmpilot_tk1_types.h>;
     uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1 tb_framing2self;
     consumes QueuedData tb_framing2self_notification;
-    uses tb_Monitor_bool_1 tb_self2framing_status;
-    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_self2framing_frame;
+    uses tb_Monitor_bool_1 tb_self2framing_status0;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_self2framing_frame0;
 
     uses clkcar_inf clkcar;
     
@@ -47,8 +47,8 @@ component CAN_Driver {
         /* exported interfaces */
         export can_shim_obj.tb_framing2self -> tb_framing2self;
         export can_shim_obj.tb_framing2self_notification -> tb_framing2self_notification;
-        export can_shim_obj.tb_self2framing_status -> tb_self2framing_status;
-        export can_shim_obj.tb_self2framing_frame -> tb_self2framing_frame;
+        export can_shim_obj.tb_self2framing_status -> tb_self2framing_status0;
+        export can_shim_obj.tb_self2framing_frame -> tb_self2framing_frame0;
 
         export spi_obj.clkcar -> clkcar;
 
@@ -77,8 +77,8 @@ component CAN_Driver {
 
     configuration {
         can_shim_obj.tb_framing2self_attributes <- tb_framing2self_attributes;
-        can_shim_obj.tb_self2framing_status_attributes <- tb_self2framing_status_attributes;
-        can_shim_obj.tb_self2framing_frame_attributes <- tb_self2framing_frame_attributes;
+        can_shim_obj.tb_self2framing_status_attributes <- tb_self2framing_status0_attributes;
+        can_shim_obj.tb_self2framing_frame_attributes <- tb_self2framing_frame0_attributes;
         
         can_shim_obj.priority = 250;
         spi_obj.priority = 250;

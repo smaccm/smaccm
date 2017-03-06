@@ -88,7 +88,7 @@ void tb_timer_complete_callback(void *_ UNUSED) {
    CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
 }
 /************************************************************************
- *  tb_CAN_Framing_write_self2server:
+ *  tb_self2server_enqueue:
  * Invoked from user code in the local thread.
  *
  * This is the function invoked by the local thread to make a
@@ -100,16 +100,16 @@ void tb_timer_complete_callback(void *_ UNUSED) {
  * enqueue attempt failed.
  *
  ************************************************************************/
-bool tb_CAN_Framing_write_self2server
+bool tb_self2server_enqueue
 (const SMACCM_DATA__GIDL * tb_self2server) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2server_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2server);
+    tb_result &= tb_self2server0_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2server);
 
     return tb_result;
 }
 /************************************************************************
- *  tb_CAN_Framing_write_self2can:
+ *  tb_self2can_enqueue:
  * Invoked from user code in the local thread.
  *
  * This is the function invoked by the local thread to make a
@@ -121,11 +121,11 @@ bool tb_CAN_Framing_write_self2server
  * enqueue attempt failed.
  *
  ************************************************************************/
-bool tb_CAN_Framing_write_self2can
+bool tb_self2can_enqueue
 (const SMACCM_DATA__CAN_Frame_i * tb_self2can) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2can_enqueue((SMACCM_DATA__CAN_Frame_i *)tb_self2can);
+    tb_result &= tb_self2can0_enqueue((SMACCM_DATA__CAN_Frame_i *)tb_self2can);
 
     return tb_result;
 }

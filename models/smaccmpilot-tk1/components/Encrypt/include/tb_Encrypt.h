@@ -50,7 +50,7 @@ void component_entry(const int64_t * periodic_dispatcher);
  void component_init(const int64_t *arg);
  // reader prototype for tb_server2self
 bool tb_server2self_dequeue(tb_SMACCM_DATA__GIDL_container * tb_server2self);
- bool tb_Encrypt_write_self2uart(const SMACCM_DATA__UART_Packet_i * tb_self2uart);
+ bool tb_self2uart_enqueue(const SMACCM_DATA__UART_Packet_i * tb_self2uart);
  // reader prototype for tb_uart2self
 bool tb_uart2self_dequeue(bool * tb_uart2self);
  
