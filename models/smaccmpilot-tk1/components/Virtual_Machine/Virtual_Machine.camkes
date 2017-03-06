@@ -16,6 +16,8 @@ component Virtual_Machine {
     uses tb_Monitor_bool_1 tb_server2self_reboot;
     consumes QueuedData tb_server2self_reboot_notification;
 
+    uses gpio_inf gpio_usb_vbus_en1;
+
     uses gen_fwd_inf uartfwd;
     uses gen_fwd_inf clkcarfwd;
 
@@ -26,6 +28,7 @@ component Virtual_Machine {
         export vm_shim_obj.tb_self2server -> tb_self2server0;
         export vm_shim_obj.tb_server2self_reboot -> tb_server2self_reboot;
         export vm_shim_obj.tb_server2self_reboot_notification -> tb_server2self_reboot_notification;
+        export vm_obj.gpio_usb_vbus_en1 -> gpio_usb_vbus_en1;
         export vm_obj.uartfwd -> uartfwd;
         export vm_obj.clkcarfwd -> clkcarfwd;
 

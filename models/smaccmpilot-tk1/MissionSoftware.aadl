@@ -31,6 +31,7 @@ public
 	process implementation Mission_Software.i
 		subcomponents
 			clock_driver: thread Clock_Driver;
+			gpio_driver: thread GPIO_Driver;
 			uart_driver: thread UART_Driver;
 			decrypt: thread Decrypt;
 			encrypt: thread Encrypt;
@@ -62,6 +63,11 @@ public
 			
 			vm_clk_fwd: subprogram group access virtual_machine.clkcarfwd -> clock_driver.clkcarfwd;
 			vm_uart_fwd: subprogram group access virtual_machine.uartfwd -> uart_driver.uartfwd;
+			
+			gpio_spi_can1_cs: subprogram group access can_driver.gpio_spi_can1_cs -> gpio_driver.gpio_spi_can1_cs;
+			gpio_usb_vbus_en1: subprogram group access virtual_machine.gpio_usb_vbus_en1 -> gpio_driver.gpio_usb_vbus_en1;
+			can1int: port gpio_driver.CAN1Int -> can_driver.CAN1Int;
+			CANIntAck: port can_driver.CANIntAck -> gpio_driver.CANIntAck;
 	end Mission_Software.i;
 
 	thread Clock_Driver
@@ -75,6 +81,20 @@ public
 			TB_SYS::Thread_Type => Active;
 			Compute_Execution_Time => 10 us .. 100 us;
 	end Clock_Driver;
+
+	thread GPIO_Driver
+		features
+			gpio_spi_can1_cs: provides subprogram group access gpio_inf;
+			gpio_usb_vbus_en1: provides subprogram group access gpio_inf;
+			CAN1Int: out event port;
+			CANIntAck: in event port;
+		properties
+			TB_SYS::Is_External => true;
+			Priority => 253;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+	end GPIO_Driver;
 
 	thread UART_Driver
 		features
@@ -182,6 +202,10 @@ public
 			self2framing_status: out event data port Base_Types::Boolean;
 			self2framing_frame: out event data port SMACCM_DATA::CAN_Frame.i;
 			
+			gpio_spi_can1_cs: requires subprogram group access gpio_inf;
+			CAN1Int: in event port;
+			CANIntAck: out event port;
+			
 			clkcar: requires subprogram group access clkcar_inf;
 		properties
 			TB_SYS::Is_External => true;
@@ -204,6 +228,12 @@ public
 			TB_SYS::CommPrim_Source_Header => "clkcar.idl4";
 	end clkcar_inf;
 
+	subprogram group gpio_inf
+		properties
+			TB_SYS::Is_External => true;
+			TB_SYS::CommPrim_Source_Header => "gpio.idl4";
+	end gpio_inf;
+
 	thread Virtual_Machine
 		features
 			self2server: out data port SMACCM_DATA::Camera_Bounding_Box.i;
@@ -211,6 +241,8 @@ public
 			
 			clkcarfwd: requires subprogram group access gen_fwd_inf;
 			uartfwd: requires subprogram group access gen_fwd_inf;
+
+			gpio_usb_vbus_en1: requires subprogram group access gpio_inf;
 		properties
 			TB_SYS::Is_External => true;
 			Priority => 100;

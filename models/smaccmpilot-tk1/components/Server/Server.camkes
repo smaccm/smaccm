@@ -52,9 +52,9 @@ import <tb_Monitor_bool_1.idl4>;
 
 import <bool_writer.idl4>;
 
-import <SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4>;
-
 import <SMACCM_DATA__GIDL_writer.idl4>;
+
+import <SMACCM_DATA__Camera_Bounding_Box_i_writer.idl4>;
 
 
 

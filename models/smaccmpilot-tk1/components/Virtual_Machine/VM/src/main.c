@@ -25,6 +25,7 @@
 #include <simple/simple.h>
 #include <simple/simple_helpers.h>
 #include <simple-default/simple-default.h>
+#include <platsupport/delay.h>
 #include <platsupport/io.h>
 #include <sel4platsupport/platsupport.h>
 #include <sel4platsupport/io.h>
@@ -384,7 +385,8 @@ extern char __bss_end[];
 extern char __sysinfo[];
 extern char __libc[];
 extern char morecore_area[];
-extern char morecore_size[];
+extern size_t morecore_size;
+extern uintptr_t morecore_top;
 
 void reset_resources(void) {
     simple_t simple;
@@ -429,6 +431,14 @@ void reset_resources(void) {
     memcpy(__sysinfo, save_sysinfo, 4);
     memcpy(morecore_area, save_morecore_area, 4);
     memcpy(morecore_size, save_morecore_size, 4);
+
+    morecore_top = (uintptr_t) &morecore_area[morecore_size];
+}
+
+void power_cycle_usb() {
+    gpio_usb_vbus_en1_set(false);
+    ps_mdelay(500);
+    gpio_usb_vbus_en1_set(true);
 }
 
 static seL4_CPtr restart_tcb;
@@ -450,6 +460,7 @@ main_continued(void)
     /* setup for restart with a setjmp */
     while (setjmp(restart_jmp_buf) != 0) {
         reset_resources();
+        power_cycle_usb();
     }
     restart_tcb = camkes_get_tls()->tcb_cap;
     restart_event_reg_callback(restart_event, NULL);
