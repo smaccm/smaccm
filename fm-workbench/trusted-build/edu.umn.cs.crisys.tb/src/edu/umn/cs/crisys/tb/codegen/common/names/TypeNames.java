@@ -8,7 +8,9 @@ import edu.umn.cs.crisys.tb.TbFailure;
 import edu.umn.cs.crisys.tb.codegen.common.emitters.NameEmitter;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.type.ArrayType;
+import edu.umn.cs.crisys.tb.model.type.BoolType;
 import edu.umn.cs.crisys.tb.model.type.IdType;
+import edu.umn.cs.crisys.tb.model.type.IntType;
 import edu.umn.cs.crisys.tb.model.type.PointerType;
 import edu.umn.cs.crisys.tb.model.type.RecordType;
 import edu.umn.cs.crisys.tb.model.type.Type;
@@ -145,6 +147,60 @@ public class TypeNames implements NameEmitter {
     }
   }
   
+
+  public String getCamkesAutoCorresName() {
+    if(t_structural instanceof IntType) {
+      IntType it = (IntType) t_structural;
+      return (new Integer(it.getBitSize())).toString()+" word";
+    } else if(t_structural instanceof BoolType) {
+      return "8 word";
+    }
+    else {
+      return getCamkesName()+"_C";
+    }
+  }
+  
+  public String getCamkesAutoCorresValidFun() {
+    if(t_structural instanceof IntType) {
+      IntType it = (IntType) t_structural;
+      return "is_valid_w"+(new Integer(it.getBitSize())).toString();
+    } else if(t_structural instanceof BoolType) {
+      return "is_valid_w8";
+    }
+    else {
+      return "is_valid_" + getCamkesName()+"_C";
+    }
+  }
+  
+  public String getCamkesAutoCorresDerefFun() {
+    if(t_structural instanceof IntType) {
+      IntType it = (IntType) t_structural;
+      return "heap_w"+(new Integer(it.getBitSize())).toString();
+    } else if(t_structural instanceof BoolType) {
+      return "heap_w8";
+    }
+    else {
+      return "heap_" + getCamkesName()+"_C";
+    }
+  }
+  
+  public String getCamkesAutoCorresUpdateFun() {
+    if(t_structural instanceof IntType) {
+      IntType it = (IntType) t_structural;
+      return "heap_w"+(new Integer(it.getBitSize())).toString()+"_update";
+    } else if(t_structural instanceof BoolType) {
+      return "heap_w8_update";
+    } else {
+      return "update_" + getCamkesName();
+    }
+  }
+  
+  public boolean getIsWord() {
+    if(t_structural instanceof IntType || t_structural instanceof BoolType) {
+      return true;
+    }
+    return false;
+  }
   // must be called on a structural array type.
   protected String getArrayPtrCast() {
     ArrayType theArrayType = (ArrayType)t_structural;

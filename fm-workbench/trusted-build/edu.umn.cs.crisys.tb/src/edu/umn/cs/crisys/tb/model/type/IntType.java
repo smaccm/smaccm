@@ -39,7 +39,7 @@ public class IntType extends Type {
 		return true;
 	}
 
-	int getBitSize() {
+	public int getBitSize() {
 		return bitSize;
 	}
 

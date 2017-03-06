@@ -184,7 +184,12 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       // Write theory file for this component.
       {
         File sourcefile = new File(componentDirectory,monitorComponentName+".thy");
-        ST ctmplt = this.getTemplateST("writeTheoryFile");
+        ST ctmplt;
+        if(getType().getIsUnit()){
+          ctmplt = this.getTemplateST("writeEventTheoryFile");
+        } else {
+          ctmplt = this.getTemplateST("writeEventDataTheoryFile");
+        }
         ctmplt.add("port", this);
         String err = "IOException occurred during getWriteCamkesPortComponents"
             +" while writing "+sourcefile+":";
@@ -542,5 +547,7 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
       return "";
     }
   }
+  
+  
 }
 

@@ -1,12 +1,12 @@
 delimiters "%", "%"
 
-writeTheoryFile(port) ::= <<
+writeEventDataTheoryFile(port) ::= <<
 (* Verifying proper queue functionality using AutoCorress requires the following
  * two modifications:
- * 1) The AUTOCORRES_HOME text below must be replaced by the path to the 
- *    AutoCorres package for Isabelle.
- * 2) The line in "src/%port.monitorInputCamkesNamePrefix%.c" defining TB_VERIFY
+ * 1) The line in "src/%port.monitorInputCamkesNamePrefix%.c" defining TB_VERIFY
  *    must be uncommented.
+ * 2) The AUTOCORRES_HOME text below must be replaced by the path to the 
+ *    AutoCorres package for Isabelle.
  *)
 theory %port.monitorInputCamkesNamePrefix%
 imports AUTOCORRES_HOME
@@ -96,7 +96,7 @@ lemma mon_get_sender_id_wp[wp]:
 definition is_queue :: "lifted_globals \<Rightarrow> bool" where
   "is_queue s \<equiv> front_'' s < %port.queueSize% \<and> length_'' s \<le> %port.queueSize%"
 
-definition the_queue :: "lifted_globals \<Rightarrow> %port.type.camkesName%_C queue" where
+definition the_queue :: "lifted_globals \<Rightarrow> %port.type.camkesAutoCorresName% queue" where
   "the_queue s \<equiv> (list_array (contents_'' s), unat (front_'' s), unat (length_'' s))"
 
 fun queue_length :: "'a queue \<Rightarrow> nat" where
@@ -140,11 +140,11 @@ lemma enqueue_not_full:
    \<lbrace> \<lambda>s. is_queue s \<and>
          q = the_queue s \<and>
          queue_length q < %port.queueSize% \<and>
-         is_valid_%port.type.camkesName%_C s x \<and>
+         %port.type.camkesAutoCorresValidFun% s x \<and>
          P s \<rbrace>
    mon_enqueue' x
    \<lbrace> \<lambda>r s. r = 1 \<and>
-           the_queue s = enqueue q (heap_%port.type.camkesName%_C s x) \<and>
+           the_queue s = enqueue q (%port.type.camkesAutoCorresDerefFun% s x) \<and>
            is_queue s \<and>
            P s \<rbrace>!"
 apply (unfold mon_enqueue'_def)
@@ -165,23 +165,123 @@ lemma dequeue_not_empty:
   "(\<And>s f. P (s\<lparr>front_'' := f\<rparr>) = P s) \<Longrightarrow>
    (\<And>s n. P (s\<lparr>length_'' := n\<rparr>) = P s) \<Longrightarrow>
    (\<And>s v. P (s[x := v]) = P s) \<Longrightarrow>
+   %if(port.type.IsWord)%
+   (\<And>s v. front_'' (s[x := v]) = front_'' s) \<Longrightarrow>
+   (\<And>s v. front_'' (s[x := v]) = length_'' s) \<Longrightarrow>
+   %endif%
    \<lbrace> \<lambda>s. is_queue s \<and>
          q = the_queue s \<and>
          queue_length q > 0 \<and>
-         is_valid_%port.type.camkesName%_C s x \<and>
+         %port.type.camkesAutoCorresValidFun% s x \<and>
          P s \<rbrace>
    mon_dequeue' x
    \<lbrace> \<lambda>r s. r > 0 \<and>
-           dequeue q = (heap_%port.type.camkesName%_C s x, the_queue s) \<and>
+           dequeue q = (%port.type.camkesAutoCorresDerefFun% s x, the_queue s) \<and>
            is_queue s \<and>
            P s \<rbrace>!"
 apply (unfold mon_dequeue'_def)
   apply wp
-  apply (auto simp: fun_upd_def is_queue_def the_queue_def %port.monitorInputCamkesNamePrefix%.update_%port.type.camkesName%_def
+  %if(port.type.IsWord)%
+  apply (metis (mono_tags, hide_lams) fun_upd_def is_queue_def the_queue_def %port.monitorInputCamkesNamePrefix%.%port.type.camkesAutoCorresUpdateFun%_def
+                  gr0_conv_Suc list_array_nth  lifted_globals.simps(3) lifted_globals.simps(4) not_less)
+  %else%
+  apply (auto simp: fun_upd_def is_queue_def the_queue_def %port.monitorInputCamkesNamePrefix%.%port.type.camkesAutoCorresUpdateFun%_def
                   gr0_conv_Suc list_array_nth unat_arith_simps)
-
+  %endif%
 done
   
+end
+end
+
+>>
+
+writeEventTheoryFile(port) ::= <<
+(* Verifying proper queue functionality using AutoCorress requires the following
+ * two modifications:
+ * 1) The AUTOCORRES_HOME text below must be replaced by the path to the 
+ *    AutoCorres package for Isabelle.
+ * 2) The line in "src/tb_ping_i_Monitor.c" defining TB_VERIFY
+ *    must be uncommented.
+ *)
+theory %port.monitorInputCamkesNamePrefix%
+imports AUTOCORRES_HOME
+begin
+
+
+install_C_file "src/%port.monitorInputCamkesNamePrefix%.c"
+autocorres[ts_rules = nondet, heap_abs_syntax] "src/%port.monitorInputCamkesNamePrefix%.c"
+
+context %port.monitorInputCamkesNamePrefix% begin
+
+lemma monsig_emit_wp [wp]:
+  "\<lbrace> P \<rbrace>
+   monsig_emit'
+   \<lbrace> \<lambda>_. P \<rbrace>!"
+  sorry
+
+lemma mon_get_sender_id_wp[wp]:
+  "\<lbrace> \<lambda> s.  P r s \<rbrace>
+   mon_get_sender_id'
+   \<lbrace> P \<rbrace>!"
+  sorry
+
+lemma is_full_wp [wp]:
+"\<lbrace> \<lambda>s. if  (length_'' s) = %port.queueSize% then Q 1 s else Q 0 s \<rbrace>
+  is_full'
+ \<lbrace> \<lambda>r s. Q r s \<rbrace>!"
+  apply (unfold is_full'_def)
+  apply wp
+  apply (auto simp: unat_arith_simps)
+  done
+
+lemma is_empty_wp [wp]:
+"\<lbrace> \<lambda>s. if  (length_'' s) = 0 then Q 1 s else Q 0 s \<rbrace>
+  is_empty'
+ \<lbrace> \<lambda>r s. Q r s \<rbrace>!"
+  apply (unfold is_empty'_def)
+  apply wp
+  apply (auto simp: unat_arith_simps)
+  done
+
+lemma enqueue_full:
+  "\<lbrace> \<lambda>s. (length_'' s) = %port.queueSize% \<and> P s\<rbrace>
+   mon_enqueue'
+   \<lbrace> \<lambda>r s. r = 0 \<and> P s\<rbrace>!"
+  apply (rule validNF_assume_pre)
+  apply (unfold mon_enqueue'_def)
+  apply wp 
+  apply auto
+  done
+    
+lemma enqueue_not_full:
+  "(\<And>s n. P (s\<lparr>length_'' := n\<rparr>) = P s) \<Longrightarrow>
+   \<lbrace> \<lambda>s. (length_'' s) = n \<and> n < %port.queueSize% \<and> P s \<rbrace>
+   mon_enqueue'
+   \<lbrace> \<lambda>r s. r = 1  \<and> P s \<and> (length_'' s) = n + 1 \<rbrace>!"
+apply (unfold mon_enqueue'_def)
+  apply wp
+  apply auto
+done 
+
+lemma dequeue_empty:
+  "\<lbrace> \<lambda>s. (length_'' s) = 0 \<and> P s \<rbrace>
+   mon_dequeue'
+   \<lbrace> \<lambda>r s. r = 0 \<and> P s \<rbrace>!"
+apply (unfold mon_dequeue'_def)
+apply wp
+apply  auto
+done
+
+lemma dequeue_not_empty:
+  "(\<And>s n. P (s\<lparr>length_'' := n\<rparr>) = P s) \<Longrightarrow>
+   \<lbrace> \<lambda>s. (length_'' s) = n \<and> n > 0 \<and> P s \<rbrace>
+   mon_dequeue'
+   \<lbrace> \<lambda>r s. r > 0 \<and>  (length_'' s) = n - 1 \<and> P s \<rbrace>!"
+apply (unfold mon_dequeue'_def)
+  apply wp
+  apply auto
+done
+
 end
 end
 

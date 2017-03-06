@@ -64,7 +64,7 @@ writeUdePrototype(dispatcher) ::= <<
 
 writePortWriterPrototype(port) ::= <<
 <if(port.hasData)>
-bool <port.localWriterName>(const <port.type.camkesName> * <port.name>);
+bool <port.localWriterName>(const <port.type.name> * <port.name>);
 <if(port.commprimFnNameOpt)>
 bool <port.commprimFnNameOpt>(const <port.type.name> * <port.name>);
 <endif>
@@ -266,8 +266,8 @@ int monsig_emit(void);
 
 <if(!port.type.isUnit)>
 <port.type.camkesName> contents[<port.queueSize>];
-<endif>
 static uint32_t front = 0;
+<endif>
 static uint32_t length = 0;
 
 static bool is_full(void) {
@@ -294,8 +294,8 @@ bool mon_dequeue(void) {
   } else {
     <if(!port.type.isUnit)>
     *m = contents[front];
-    <endif>
     front = (front + 1) % <port.queueSize>;
+    <endif>
     length--;
     return true;
   }

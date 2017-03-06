@@ -57,7 +57,7 @@ writeUdePrototype(dispatcher) ::= <<
 >>
 
 writePortWriterPrototype(port) ::= <<
-bool <port.localWriterName>(const <port.type.camkesName> * <port.name>);
+bool <port.localWriterName>(const <port.type.name> * <port.name>);
 
 <if(port.commprimFnNameOpt)>
 bool <port.commprimFnNameOpt>(const <port.type.name> * <port.name>);
