@@ -12,7 +12,7 @@ config APP_SMACCMPILOT_TK1
 choice
     bool "boot mode selection"
     depends on APP_SMACCMPILOT_TK1
-    default VM_TK1_INITRD
+    default VM_TK1_EMMC_ROOTFS
     help
         Selects whether to load root file system off emmc or ramdisk
 
