@@ -48,7 +48,9 @@ component Virtual_Machine {
         vm_obj.untyped_mmios = [
             "0x50046000:12", // Interrupt Controller Virtual CPU interface (Virtual Machine view)
             "0x60004000:12", // Interrupt controller registers (ICTLR)
+#ifdef CONFIG_VM_TK1_EMMC_ROOTFS
             "0x700b0000:12", // SDMMC-1, SDMMC-2, SDMMC-3, SDMMC-4,
+#endif
             "0x7d000000:12", // USB on-the-go (micro)
             "0x7d004000:12", // USB on top board
             "0x7d008000:12", // USB on bottom board

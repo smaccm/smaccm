@@ -46,6 +46,7 @@ extern vspace_t _vspace;
 extern irq_server_t _irq_server;
 extern seL4_CPtr _fault_endpoint;
 
+#ifdef CONFIG_VM_TK1_EMMC_ROOTFS
 #define SDMMC_PADDR 0x700b0000
 
 int handle_sdmmcs(struct device* d, vm_t* vm, fault_t* fault){
@@ -93,6 +94,8 @@ const struct device dev_sdmmcs = {
     .priv = NULL
 };
 
+#endif //CONFIG_VM_TK1_EMMC_ROOTFS
+
 const struct device dev_usb1 = {
     .devid = DEV_CUSTOM,
     .name = "Registers for micro USB",
@@ -121,7 +124,6 @@ const struct device dev_usb3 = {
 };
 
 static const struct device *linux_pt_devices[] = {
-    //&dev_sdmmcs,
     &dev_usb1,
     &dev_usb2,
     &dev_usb3,
@@ -525,12 +527,14 @@ install_linux_devices(vm_t* vm)
     err = vm_add_device(vm, &dev_bbox);
     assert(!err);
 
+#ifdef CONFIG_VM_TK1_EMMC_ROOTFS    
     void *addr;
     addr = map_device(vm->vmm_vspace, vm->vka, vm->simple, SDMMC_PADDR, SDMMC_PADDR, seL4_AllRights);
     assert(addr);
 
     err = vm_add_device(vm, &dev_sdmmcs);
     assert(!err);
+#endif // CONFIG_VM_TK1_EMMC_ROOTFS
 
     /* Install pass through devices */
     /* TK1 passes through all devices at the moment by using on-demand device mapping */
