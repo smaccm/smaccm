@@ -65,7 +65,12 @@ include ${PWD}/tools/camkes/camkes.mk
 
 
 DEVICE_TREE_SRC := ${SOURCE_DIR}/linux/linux-tk1-dtb-secure
-TK1_LINUX_BINARY := ${SOURCE_DIR}/linux/linux-tk1-debian
+
+ifeq (${CONFIG_VM_TK1_INITRD_ROOTFS},y)
+	TK1_LINUX_BINARY := ${SOURCE_DIR}/linux/linux-tk1-initrd
+else
+	TK1_LINUX_BINARY := ${SOURCE_DIR}/linux/linux-tk1-debian
+endif
 
 $(STAGE_DIR)/linux/linux-dtb: $(DEVICE_TREE_SRC)
 	$(Q)mkdir -p $(dir $@)
