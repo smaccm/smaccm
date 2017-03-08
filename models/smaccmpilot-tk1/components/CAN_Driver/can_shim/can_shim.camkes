@@ -1,6 +1,6 @@
-import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Dequeue.idl4>;
-import <tb_Monitor_bool_1_Enqueue.idl4>;
-import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1.idl4>;
+import <tb_Monitor_bool_1.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10.idl4>;
 
 import <can_tx.idl4>;
 import <can_rx.idl4>;
@@ -10,10 +10,10 @@ component can_shim {
 
     // AADL interface
     include <tb_smaccmpilot_tk1_types.h>;
-    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1_Dequeue tb_framing2self;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1 tb_framing2self;
     consumes QueuedData tb_framing2self_notification;
-    uses tb_Monitor_bool_1_Enqueue tb_self2framing_status;
-    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue tb_self2framing_frame;
+    uses tb_Monitor_bool_1 tb_self2framing_status;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_self2framing_frame;
 
     // Internal interface
     has semaphore status_0_semaphore;

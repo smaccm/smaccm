@@ -43,12 +43,14 @@ client for the thread implementations.
 
 
 // user entrypoints for periodic dispatch
+
 void component_entry(const int64_t * periodic_dispatcher);
+
 
  void component_init(const int64_t *arg);
  // reader prototype for tb_uart2self
 bool tb_uart2self_dequeue(SMACCM_DATA__UART_Packet_i * tb_uart2self);
- bool tb_Decrypt_write_self2server(const SMACCM_DATA__GIDL * tb_self2server);
+ bool tb_self2server_enqueue(const SMACCM_DATA__GIDL * tb_self2server);
  
 
 

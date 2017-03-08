@@ -88,7 +88,7 @@ void tb_timer_complete_callback(void *_ UNUSED) {
    CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
 }
 /************************************************************************
- *  tb_Encrypt_write_self2uart:
+ *  tb_self2uart_enqueue:
  * Invoked from user code in the local thread.
  *
  * This is the function invoked by the local thread to make a
@@ -100,11 +100,11 @@ void tb_timer_complete_callback(void *_ UNUSED) {
  * enqueue attempt failed.
  *
  ************************************************************************/
-bool tb_Encrypt_write_self2uart
+bool tb_self2uart_enqueue
 (const SMACCM_DATA__UART_Packet_i * tb_self2uart) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2uart_enqueue(tb_self2uart);
+    tb_result &= tb_self2uart0_enqueue((SMACCM_DATA__UART_Packet_i *)tb_self2uart);
 
     return tb_result;
 }
@@ -129,7 +129,7 @@ void pre_init(void) {
  *
  ************************************************************************/
 void tb_entrypoint_Encrypt_periodic_dispatcher(const int64_t * in_arg) {
-    component_entry( in_arg);
+    component_entry((int64_t *) in_arg);
 
 }
 
@@ -142,7 +142,7 @@ void tb_entrypoint_Encrypt_periodic_dispatcher(const int64_t * in_arg) {
  *
  ************************************************************************/
 void tb_entrypoint_Encrypt_Encrypt_initializer(const int64_t * in_arg) {
-    component_init( in_arg);
+    component_init((int64_t *) in_arg);
 
 }
 
@@ -176,9 +176,13 @@ void tb_entrypoint_tb_Encrypt_uart2self(const bool * in_arg) {
  ************************************************************************/
 
 int run(void) {
+
     // Port initialization routines
+
     // tb_timer_periodic(0, ((uint64_t)5)*NS_IN_MS);
-       CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
+    CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
+
+
     {
     int64_t tb_dummy;
     tb_entrypoint_Encrypt_Encrypt_initializer(&tb_dummy);

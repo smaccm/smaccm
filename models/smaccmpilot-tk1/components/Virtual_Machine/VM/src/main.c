@@ -25,6 +25,7 @@
 #include <simple/simple.h>
 #include <simple/simple_helpers.h>
 #include <simple-default/simple-default.h>
+#include <platsupport/delay.h>
 #include <platsupport/io.h>
 #include <sel4platsupport/platsupport.h>
 #include <sel4platsupport/io.h>
@@ -320,8 +321,6 @@ vmm_init(void)
             sizeof(allocator_mempool), allocator_mempool
     );
     assert(allocman);
-    err = allocman_add_simple_untypeds(allocman, simple);
-    assert(!err);
 
     allocman_make_vka(vka, allocman);
 
@@ -330,12 +329,16 @@ vmm_init(void)
         uintptr_t paddr;
         bool device;
         seL4_CPtr cap = simple_get_nth_untyped(simple, i, &size, &paddr, &device);
-        if (device) {
-            cspacepath_t path;
-            vka_cspace_make_path(vka, cap, &path);
-            err = allocman_utspace_add_uts(allocman, 1, &path, &size, &paddr, ALLOCMAN_UT_DEV);
-            assert(!err);
+        cspacepath_t path;
+        vka_cspace_make_path(vka, cap, &path);
+        int utType = device ? ALLOCMAN_UT_DEV : ALLOCMAN_UT_KERNEL;
+        if (utType == ALLOCMAN_UT_DEV &&
+            paddr >= LINUX_RAM_PADDR_BASE &&
+            paddr <= (LINUX_RAM_PADDR_BASE + (LINUX_RAM_SIZE - 1))) {
+            utType = ALLOCMAN_UT_DEV_MEM;
         }
+        err = allocman_utspace_add_uts(allocman, 1, &path, &size, &paddr, utType);
+        assert(!err);
     }
 
     /* Initialize the vspace */
@@ -373,38 +376,6 @@ vmm_init(void)
     return 0;
 }
 
-static void
-map_unity_ram(vm_t* vm)
-{
-    /* Dimensions of physical memory that we'll use. Note that we do not map the entirety of RAM.
-     */
-    static const uintptr_t paddr_start = LINUX_RAM_PADDR_BASE;
-    static const uintptr_t paddr_end = paddr_start + LINUX_RAM_SIZE;
-
-    int err;
-
-    uintptr_t start;
-    reservation_t res;
-    unsigned int bits = seL4_PageBits;
-    res = vspace_reserve_range_at(&vm->vm_vspace, (void*)(paddr_start - LINUX_RAM_OFFSET), paddr_end - paddr_start, seL4_AllRights, 1);
-    assert(res.res);
-    for (start = paddr_start; start < paddr_end; start += BIT(bits)) {
-        cspacepath_t frame;
-        err = vka_cspace_alloc_path(vm->vka, &frame);
-        assert(!err);
-        seL4_Word cookie;
-        err = vka_utspace_alloc_at(vm->vka, &frame, kobject_get_type(KOBJECT_FRAME, bits), bits, start, &cookie);
-        if (err) {
-            printf("Failed to map ram page 0x%x\n", start);
-            vka_cspace_free(vm->vka, frame.capPtr);
-            break;
-        }
-        uintptr_t addr = start - LINUX_RAM_OFFSET;
-        err = vspace_map_pages_at_vaddr(&vm->vm_vspace, &frame.capPtr, &bits, (void*)addr, 1, bits, res);
-        assert(!err);
-    }
-}
-
 void restart_component(void) {
     longjmp(restart_jmp_buf, 1);
 }
@@ -414,7 +385,8 @@ extern char __bss_end[];
 extern char __sysinfo[];
 extern char __libc[];
 extern char morecore_area[];
-extern char morecore_size[];
+extern size_t morecore_size;
+extern uintptr_t morecore_top;
 
 void reset_resources(void) {
     simple_t simple;
@@ -432,6 +404,17 @@ void reset_resources(void) {
         assert(error == seL4_NoError);
     }
     delete_irqs(root);
+#ifdef CONFIG_TK1_VM_HACK
+    // The vm hack requires extra cleanup
+    for (i = 0; i < num_extra_frame_caps; i++) {
+        error = seL4_ARM_Page_Unmap(start_extra_frame_caps + i);
+        assert(error == seL4_NoError);
+    }
+    for (i = simple_last_valid_cap(&simple) + 1 + num_extra_frame_caps;
+         i < BIT(simple_get_cnode_size_bits(&simple)); i++) {
+        seL4_CNode_Delete(root, i, 32);
+    }
+#endif
     /* save some pieces of the bss that we actually don't want to zero */
     char save_sysinfo[4];
     char save_libc[34];
@@ -448,6 +431,14 @@ void reset_resources(void) {
     memcpy(__sysinfo, save_sysinfo, 4);
     memcpy(morecore_area, save_morecore_area, 4);
     memcpy(morecore_size, save_morecore_size, 4);
+
+    morecore_top = (uintptr_t) &morecore_area[morecore_size];
+}
+
+void power_cycle_usb() {
+    gpio_usb_vbus_en1_set(false);
+    ps_mdelay(500);
+    gpio_usb_vbus_en1_set(true);
 }
 
 static seL4_CPtr restart_tcb;
@@ -469,6 +460,7 @@ main_continued(void)
     /* setup for restart with a setjmp */
     while (setjmp(restart_jmp_buf) != 0) {
         reset_resources();
+        power_cycle_usb();
     }
     restart_tcb = camkes_get_tls()->tcb_cap;
     restart_event_reg_callback(restart_event, NULL);
@@ -502,8 +494,6 @@ main_continued(void)
         }
     }
 #endif /* CONFIG_ARM_SMMU */
-
-    map_unity_ram(&vm);
 
     /* Load system images */
     printf("Loading Linux: \'%s\' dtb: \'%s\'\n", VM_LINUX_NAME, VM_LINUX_DTB_NAME);
