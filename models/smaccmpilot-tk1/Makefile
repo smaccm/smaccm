@@ -64,7 +64,11 @@ include ${PWD}/projects/DARPA-tk1/components/clkcar/clkcar.mk
 include ${PWD}/tools/camkes/camkes.mk
 
 
-DEVICE_TREE_SRC := ${SOURCE_DIR}/linux/linux-tk1-dtb-secure
+ifeq (${CONFIG_VM_TK1_INITRD_ROOTFS},y)
+	DEVICE_TREE_SRC := ${SOURCE_DIR}/linux/linux-tk1-initrd-dtb-secure
+else
+	DEVICE_TREE_SRC := ${SOURCE_DIR}/linux/linux-tk1-dtb-secure
+endif
 
 ifeq (${CONFIG_VM_TK1_INITRD_ROOTFS},y)
 	TK1_LINUX_BINARY := ${SOURCE_DIR}/linux/linux-tk1-initrd
