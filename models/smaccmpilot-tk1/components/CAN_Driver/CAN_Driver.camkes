@@ -5,7 +5,6 @@ import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10.idl4>;
 import "can_shim/can_shim.camkes";
 import "can/can.camkes";
 import <spi/spi.camkes>;
-import <gpio/gpio.camkes>;
 
 import <clkcar.idl4>;
 
@@ -15,57 +14,47 @@ component spibase {
     emits DataAvailable spi1_int;
 }
 
-component gpiobase {
-    hardware;
-    dataport Buf gpio1base;
-    dataport Buf pinmuxaux;
-    dataport Buf pinmuxmisc;
-
-    emits IRQGroup5        irq_grp5_int;
-}
-
 component CAN_Driver {
     include <tb_smaccmpilot_tk1_types.h>;
     uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1 tb_framing2self;
     consumes QueuedData tb_framing2self_notification;
-    uses tb_Monitor_bool_1 tb_self2framing_status;
-    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_self2framing_frame;
+    uses tb_Monitor_bool_1 tb_self2framing_status0;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_self2framing_frame0;
 
     uses clkcar_inf clkcar;
+
+    uses gpio_inf gpio_spi_can1_cs;
+    consumes IntEvent CAN1Int;
+    emits IntEventAck CANIntAck;
     
     composition {
         /* hardware components */
         component spibase  spibase_obj;
-        component gpiobase gpiobase_obj;
 
         /* software components */
         component can_shim  can_shim_obj;
         component spi       spi_obj;
         component can       can_obj;
-        component gpio      gpio_obj;
 
         /* exported interfaces */
         export can_shim_obj.tb_framing2self -> tb_framing2self;
         export can_shim_obj.tb_framing2self_notification -> tb_framing2self_notification;
-        export can_shim_obj.tb_self2framing_status -> tb_self2framing_status;
-        export can_shim_obj.tb_self2framing_frame -> tb_self2framing_frame;
+        export can_shim_obj.tb_self2framing_status -> tb_self2framing_status0;
+        export can_shim_obj.tb_self2framing_frame -> tb_self2framing_frame0;
 
         export spi_obj.clkcar -> clkcar;
 
+        export spi_obj.gpio_spi_can1_cs -> gpio_spi_can1_cs;
+        export can_obj.Int -> CAN1Int;
+        export can_obj.IntAck -> CANIntAck;
+
         /* hardware connections */
-        connection seL4HardwareMMIO gpio_mem1(from gpio_obj.gpio1base, to gpiobase_obj.gpio1base);
-        connection seL4HardwareMMIO gpio_mem2(from gpio_obj.pinmuxmisc, to gpiobase_obj.pinmuxmisc);
-        connection seL4HardwareMMIO gpio_mem3(from gpio_obj.pinmuxaux, to gpiobase_obj.pinmuxaux);
         connection seL4HardwareMMIO spi1_mem(from spi_obj.spi1_reg, to spibase_obj.spi1_reg);
-        connection seL4HardwareInterrupt gpio_grp5_irq(from gpiobase_obj.irq_grp5_int, to gpio_obj.irq_grp5_int);
         connection seL4HardwareInterrupt spi1_irq(from spibase_obj.spi1_int, to spi_obj.spi1_int);
 
         /* CAN driver connections */
-        connection seL4RPC can_spi(from can_obj.spi, to spi_obj.spi);
+        connection seL4RPCCall can_spi(from can_obj.spi, to spi_obj.spi);
         connection seL4SharedData can_spi_channel(from can_obj.spi_can, to spi_obj.spi1_can);
-        connection seL4Notification gpio_can_int(from gpio_obj.CAN1Int, to can_obj.Int);
-        connection seL4Notification gpio_can_int_ack(from can_obj.IntAck, to gpio_obj.CANIntAck);
-        connection seL4RPC gpio_cs(from spi_obj.gpio, to gpio_obj.gpio);
 
         /* CAN shim connections */
         connection seL4RPCCall can_shim_can_tx(from can_shim_obj.can_tx, to can_obj.can_tx);
@@ -77,24 +66,15 @@ component CAN_Driver {
 
     configuration {
         can_shim_obj.tb_framing2self_attributes <- tb_framing2self_attributes;
-        can_shim_obj.tb_self2framing_status_attributes <- tb_self2framing_status_attributes;
-        can_shim_obj.tb_self2framing_frame_attributes <- tb_self2framing_frame_attributes;
+        can_shim_obj.tb_self2framing_status_attributes <- tb_self2framing_status0_attributes;
+        can_shim_obj.tb_self2framing_frame_attributes <- tb_self2framing_frame0_attributes;
         
         can_shim_obj.priority = 250;
         spi_obj.priority = 250;
         can_obj.priority = 250;
-        gpio_obj.priority = 250;
 
         spibase_obj.spi1_reg_paddr            = 0x7000d000;
         spibase_obj.spi1_reg_size             = 0x1000;
         spibase_obj.spi1_int_irq_number       = 91;  /* SPI1  interrupt */
-        
-        gpiobase_obj.pinmuxmisc_paddr         = 0x70000000;
-        gpiobase_obj.pinmuxmisc_size          = 0x1000;
-        gpiobase_obj.pinmuxaux_paddr          = 0x70006000;
-        gpiobase_obj.pinmuxaux_size           = 0x1000;
-        gpiobase_obj.gpio1base_paddr          = 0x6000D000;
-        gpiobase_obj.gpio1base_size           = 0x1000;
-        gpiobase_obj.irq_grp5_int_irq_number  = 87;
     }
 }

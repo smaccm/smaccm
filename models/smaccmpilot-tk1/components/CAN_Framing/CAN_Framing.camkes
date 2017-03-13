@@ -65,13 +65,13 @@ component CAN_Framing {
     consumes Notification tb_timer_complete;
     uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_server2self;
     consumes QueuedData tb_server2self_notification;
-    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2server;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2server0;
 
     uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_can2self_frame;
     consumes QueuedData tb_can2self_frame_notification;
     uses tb_Monitor_bool_1 tb_can2self_status;
     consumes QueuedData tb_can2self_status_notification;
-    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1 tb_self2can;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1 tb_self2can0;
 
 
 

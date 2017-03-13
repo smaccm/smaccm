@@ -61,7 +61,7 @@ component Encrypt {
     consumes Notification tb_timer_complete;
     uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_server2self;
     consumes QueuedData tb_server2self_notification;
-    uses tb_Monitor_SMACCM_DATA__UART_Packet_i_5 tb_self2uart;
+    uses tb_Monitor_SMACCM_DATA__UART_Packet_i_5 tb_self2uart0;
 
     uses tb_Monitor_bool_1 tb_uart2self;
     consumes QueuedData tb_uart2self_notification;

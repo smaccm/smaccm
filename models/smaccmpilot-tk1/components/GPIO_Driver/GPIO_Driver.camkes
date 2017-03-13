@@ -1,0 +1,48 @@
+import <gpio/gpio.camkes>;
+
+import <gpio.idl4>;
+
+component gpiobase {
+    hardware;
+
+    dataport Buf gpio1base;
+    dataport Buf pinmuxaux;
+    dataport Buf pinmuxmisc;
+
+    emits IRQGroup5 irq_grp5_int;
+}
+
+component GPIO_Driver {
+    provides gpio_inf gpio_usb_vbus_en1;
+    provides gpio_inf gpio_spi_can1_cs;
+
+    emits IntEvent CAN1Int;
+    consumes IntEventAck CANIntAck;
+
+    composition {
+        component gpiobase gpiobase_obj;
+        component gpio     gpio_obj;
+
+        export gpio_obj.gpio_spi_can1_cs -> gpio_spi_can1_cs;
+        export gpio_obj.gpio_usb_vbus_en1 -> gpio_usb_vbus_en1;
+        export gpio_obj.CAN1Int -> CAN1Int;
+        export gpio_obj.CANIntAck -> CANIntAck;
+
+        connection seL4HardwareMMIO gpio_mem1(from gpio_obj.gpio1base, to gpiobase_obj.gpio1base);
+        connection seL4HardwareMMIO gpio_mem2(from gpio_obj.pinmuxmisc, to gpiobase_obj.pinmuxmisc);
+        connection seL4HardwareMMIO gpio_mem3(from gpio_obj.pinmuxaux, to gpiobase_obj.pinmuxaux);
+        connection seL4HardwareInterrupt gpio_grp5_irq(from gpiobase_obj.irq_grp5_int, to gpio_obj.irq_grp5_int);
+    }
+
+    configuration {
+        gpio_obj.priority = 250;
+
+        gpiobase_obj.pinmuxmisc_paddr         = 0x70000000;
+        gpiobase_obj.pinmuxmisc_size          = 0x1000;
+        gpiobase_obj.pinmuxaux_paddr          = 0x70006000;
+        gpiobase_obj.pinmuxaux_size           = 0x1000;
+        gpiobase_obj.gpio1base_paddr          = 0x6000D000;
+        gpiobase_obj.gpio1base_size           = 0x1000;
+        gpiobase_obj.irq_grp5_int_irq_number  = 87;
+    }
+}

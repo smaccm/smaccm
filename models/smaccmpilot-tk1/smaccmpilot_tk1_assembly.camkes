@@ -47,6 +47,7 @@ import <Timer.idl4>;
 import <TimeServerTK1/TimeServer.camkes>;
 
 import "components/Clock_Driver/Clock_Driver.camkes";
+import "components/GPIO_Driver/GPIO_Driver.camkes";
 import "components/UART_Driver/UART_Driver.camkes";
 import "components/tb_Monitors/tb_UART_Driver_encrypt2self_Monitor/tb_UART_Driver_encrypt2self_Monitor.camkes";
 
@@ -90,6 +91,7 @@ assembly {
         // Component instances for all AADL-defined threads
 
         component Clock_Driver Clock_Driver_inst;
+        component GPIO_Driver GPIO_Driver_inst;
         component UART_Driver UART_Driver_inst;
         component Decrypt Decrypt_inst;
         component Encrypt Encrypt_inst;
@@ -101,6 +103,9 @@ assembly {
 
 
         // Port declarations for active threads
+
+        connection seL4Notification conn1 (from GPIO_Driver_inst.CAN1Int, to CAN_Driver_inst.CAN1Int);
+
 
         component tb_UART_Driver_encrypt2self_Monitor tb_uart_driver_encrypt2self_monitor;
 
@@ -136,6 +141,8 @@ assembly {
 
         component tb_CAN_Driver_framing2self_Monitor tb_can_driver_framing2self_monitor;
 
+        connection seL4Notification conn2 (from CAN_Driver_inst.CANIntAck, to GPIO_Driver_inst.CANIntAck);
+
 
         component tb_Virtual_Machine_server2self_reboot_Monitor tb_virtual_machine_server2self_reboot_monitor;
 
@@ -144,80 +151,82 @@ assembly {
 
         // Port connections for active threads
 
-        connection seL4RPCCall conn1 (from UART_Driver_inst.tb_self2decrypt, to tb_decrypt_uart2self_monitor.mon);
+        connection seL4RPCCall conn3 (from UART_Driver_inst.tb_self2decrypt0, to tb_decrypt_uart2self_monitor.mon);
 
-        connection seL4RPCCall conn2 (from UART_Driver_inst.tb_encrypt2self, to tb_uart_driver_encrypt2self_monitor.mon);
-        connection seL4Notification conn3 (from tb_uart_driver_encrypt2self_monitor.monsig, to UART_Driver_inst.tb_encrypt2self_notification);
+        connection seL4RPCCall conn4 (from UART_Driver_inst.tb_encrypt2self, to tb_uart_driver_encrypt2self_monitor.mon);
+        connection seL4Notification conn5 (from tb_uart_driver_encrypt2self_monitor.monsig, to UART_Driver_inst.tb_encrypt2self_notification);
 
-        connection seL4RPCCall conn4 (from UART_Driver_inst.tb_self2encrypt, to tb_encrypt_uart2self_monitor.mon);
-
-
-        connection seL4RPCCall conn5 (from Decrypt_inst.tb_uart2self, to tb_decrypt_uart2self_monitor.mon);
-        connection seL4Notification conn6 (from tb_decrypt_uart2self_monitor.monsig, to Decrypt_inst.tb_uart2self_notification);
-
-        connection seL4RPCCall conn7 (from Decrypt_inst.tb_self2server, to tb_server_decrypt2self_monitor.mon);
+        connection seL4RPCCall conn6 (from UART_Driver_inst.tb_self2encrypt0, to tb_encrypt_uart2self_monitor.mon);
 
 
-        connection seL4RPCCall conn8 (from Encrypt_inst.tb_server2self, to tb_encrypt_server2self_monitor.mon);
-        connection seL4Notification conn9 (from tb_encrypt_server2self_monitor.monsig, to Encrypt_inst.tb_server2self_notification);
+        connection seL4RPCCall conn7 (from Decrypt_inst.tb_uart2self, to tb_decrypt_uart2self_monitor.mon);
+        connection seL4Notification conn8 (from tb_decrypt_uart2self_monitor.monsig, to Decrypt_inst.tb_uart2self_notification);
 
-        connection seL4RPCCall conn10 (from Encrypt_inst.tb_self2uart, to tb_uart_driver_encrypt2self_monitor.mon);
-
-        connection seL4RPCCall conn11 (from Encrypt_inst.tb_uart2self, to tb_encrypt_uart2self_monitor.mon);
-        connection seL4Notification conn12 (from tb_encrypt_uart2self_monitor.monsig, to Encrypt_inst.tb_uart2self_notification);
+        connection seL4RPCCall conn9 (from Decrypt_inst.tb_self2server0, to tb_server_decrypt2self_monitor.mon);
 
 
-        connection seL4RPCCall conn13 (from Server_inst.tb_vm2self, to tb_server_vm2self_monitor.mon);
-        connection seL4Notification conn14 (from tb_server_vm2self_monitor.monsig, to Server_inst.tb_vm2self_notification);
+        connection seL4RPCCall conn10 (from Encrypt_inst.tb_server2self, to tb_encrypt_server2self_monitor.mon);
+        connection seL4Notification conn11 (from tb_encrypt_server2self_monitor.monsig, to Encrypt_inst.tb_server2self_notification);
 
-        connection seL4RPCCall conn15 (from Server_inst.tb_self2encrypt, to tb_encrypt_server2self_monitor.mon);
+        connection seL4RPCCall conn12 (from Encrypt_inst.tb_self2uart0, to tb_uart_driver_encrypt2self_monitor.mon);
 
-        connection seL4RPCCall conn16 (from Server_inst.tb_decrypt2self, to tb_server_decrypt2self_monitor.mon);
-        connection seL4Notification conn17 (from tb_server_decrypt2self_monitor.monsig, to Server_inst.tb_decrypt2self_notification);
-
-        connection seL4RPCCall conn18 (from Server_inst.tb_self2framing, to tb_can_framing_server2self_monitor.mon);
-
-        connection seL4RPCCall conn19 (from Server_inst.tb_framing2self, to tb_server_framing2self_monitor.mon);
-        connection seL4Notification conn20 (from tb_server_framing2self_monitor.monsig, to Server_inst.tb_framing2self_notification);
-
-        connection seL4RPCCall conn21 (from Server_inst.tb_self2vm_reboot, to tb_virtual_machine_server2self_reboot_monitor.mon);
+        connection seL4RPCCall conn13 (from Encrypt_inst.tb_uart2self, to tb_encrypt_uart2self_monitor.mon);
+        connection seL4Notification conn14 (from tb_encrypt_uart2self_monitor.monsig, to Encrypt_inst.tb_uart2self_notification);
 
 
-        connection seL4RPCCall conn22 (from CAN_Framing_inst.tb_server2self, to tb_can_framing_server2self_monitor.mon);
-        connection seL4Notification conn23 (from tb_can_framing_server2self_monitor.monsig, to CAN_Framing_inst.tb_server2self_notification);
+        connection seL4RPCCall conn15 (from Server_inst.tb_vm2self, to tb_server_vm2self_monitor.mon);
+        connection seL4Notification conn16 (from tb_server_vm2self_monitor.monsig, to Server_inst.tb_vm2self_notification);
 
-        connection seL4RPCCall conn24 (from CAN_Framing_inst.tb_self2server, to tb_server_framing2self_monitor.mon);
+        connection seL4RPCCall conn17 (from Server_inst.tb_self2encrypt0, to tb_encrypt_server2self_monitor.mon);
 
-        connection seL4RPCCall conn25 (from CAN_Framing_inst.tb_can2self_frame, to tb_can_framing_can2self_frame_monitor.mon);
-        connection seL4Notification conn26 (from tb_can_framing_can2self_frame_monitor.monsig, to CAN_Framing_inst.tb_can2self_frame_notification);
+        connection seL4RPCCall conn18 (from Server_inst.tb_decrypt2self, to tb_server_decrypt2self_monitor.mon);
+        connection seL4Notification conn19 (from tb_server_decrypt2self_monitor.monsig, to Server_inst.tb_decrypt2self_notification);
 
-        connection seL4RPCCall conn27 (from CAN_Framing_inst.tb_can2self_status, to tb_can_framing_can2self_status_monitor.mon);
-        connection seL4Notification conn28 (from tb_can_framing_can2self_status_monitor.monsig, to CAN_Framing_inst.tb_can2self_status_notification);
+        connection seL4RPCCall conn20 (from Server_inst.tb_self2framing0, to tb_can_framing_server2self_monitor.mon);
 
-        connection seL4RPCCall conn29 (from CAN_Framing_inst.tb_self2can, to tb_can_driver_framing2self_monitor.mon);
+        connection seL4RPCCall conn21 (from Server_inst.tb_framing2self, to tb_server_framing2self_monitor.mon);
+        connection seL4Notification conn22 (from tb_server_framing2self_monitor.monsig, to Server_inst.tb_framing2self_notification);
 
-        connection seL4RPCCall conn30 (from CAN_Driver_inst.tb_framing2self, to tb_can_driver_framing2self_monitor.mon);
-        connection seL4Notification conn31 (from tb_can_driver_framing2self_monitor.monsig, to CAN_Driver_inst.tb_framing2self_notification);
+        connection seL4RPCCall conn23 (from Server_inst.tb_self2vm_reboot0, to tb_virtual_machine_server2self_reboot_monitor.mon);
 
-        connection seL4RPCCall conn32 (from CAN_Driver_inst.tb_self2framing_status, to tb_can_framing_can2self_status_monitor.mon);
 
-        connection seL4RPCCall conn33 (from CAN_Driver_inst.tb_self2framing_frame, to tb_can_framing_can2self_frame_monitor.mon);
+        connection seL4RPCCall conn24 (from CAN_Framing_inst.tb_server2self, to tb_can_framing_server2self_monitor.mon);
+        connection seL4Notification conn25 (from tb_can_framing_server2self_monitor.monsig, to CAN_Framing_inst.tb_server2self_notification);
 
-        connection seL4RPCCall conn34 (from Virtual_Machine_inst.tb_self2server, to tb_server_vm2self_monitor.mon);
+        connection seL4RPCCall conn26 (from CAN_Framing_inst.tb_self2server0, to tb_server_framing2self_monitor.mon);
 
-        connection seL4RPCCall conn35 (from Virtual_Machine_inst.tb_server2self_reboot, to tb_virtual_machine_server2self_reboot_monitor.mon);
-        connection seL4Notification conn36 (from tb_virtual_machine_server2self_reboot_monitor.monsig, to Virtual_Machine_inst.tb_server2self_reboot_notification);
+        connection seL4RPCCall conn27 (from CAN_Framing_inst.tb_can2self_frame, to tb_can_framing_can2self_frame_monitor.mon);
+        connection seL4Notification conn28 (from tb_can_framing_can2self_frame_monitor.monsig, to CAN_Framing_inst.tb_can2self_frame_notification);
+
+        connection seL4RPCCall conn29 (from CAN_Framing_inst.tb_can2self_status, to tb_can_framing_can2self_status_monitor.mon);
+        connection seL4Notification conn30 (from tb_can_framing_can2self_status_monitor.monsig, to CAN_Framing_inst.tb_can2self_status_notification);
+
+        connection seL4RPCCall conn31 (from CAN_Framing_inst.tb_self2can0, to tb_can_driver_framing2self_monitor.mon);
+
+        connection seL4RPCCall conn32 (from CAN_Driver_inst.tb_framing2self, to tb_can_driver_framing2self_monitor.mon);
+        connection seL4Notification conn33 (from tb_can_driver_framing2self_monitor.monsig, to CAN_Driver_inst.tb_framing2self_notification);
+
+        connection seL4RPCCall conn34 (from CAN_Driver_inst.tb_self2framing_status0, to tb_can_framing_can2self_status_monitor.mon);
+
+        connection seL4RPCCall conn35 (from CAN_Driver_inst.tb_self2framing_frame0, to tb_can_framing_can2self_frame_monitor.mon);
+
+        connection seL4RPCCall conn36 (from Virtual_Machine_inst.tb_self2server0, to tb_server_vm2self_monitor.mon);
+
+        connection seL4RPCCall conn37 (from Virtual_Machine_inst.tb_server2self_reboot, to tb_virtual_machine_server2self_reboot_monitor.mon);
+        connection seL4Notification conn38 (from tb_virtual_machine_server2self_reboot_monitor.monsig, to Virtual_Machine_inst.tb_server2self_reboot_notification);
 
 
 
         // Direct RPC connections
 
-        connection seL4RPCCall conn37 (from UART_Driver_inst.clkcar, to Clock_Driver_inst.clkcar);
+        connection seL4RPCCall conn39 (from UART_Driver_inst.clkcar, to Clock_Driver_inst.clkcar);
 
-        connection seL4RPCCall conn38 (from CAN_Driver_inst.clkcar, to Clock_Driver_inst.clkcar);
+        connection seL4RPCCall conn40 (from CAN_Driver_inst.gpio_spi_can1_cs, to GPIO_Driver_inst.gpio_spi_can1_cs);
+        connection seL4RPCCall conn41 (from CAN_Driver_inst.clkcar, to Clock_Driver_inst.clkcar);
 
-        connection seL4RPCCall conn39 (from Virtual_Machine_inst.clkcarfwd, to Clock_Driver_inst.clkcarfwd);
-        connection seL4RPCCall conn40 (from Virtual_Machine_inst.uartfwd, to UART_Driver_inst.uartfwd);
+        connection seL4RPCCall conn42 (from Virtual_Machine_inst.clkcarfwd, to Clock_Driver_inst.clkcarfwd);
+        connection seL4RPCCall conn43 (from Virtual_Machine_inst.uartfwd, to UART_Driver_inst.uartfwd);
+        connection seL4RPCCall conn44 (from Virtual_Machine_inst.gpio_usb_vbus_en1, to GPIO_Driver_inst.gpio_usb_vbus_en1);
 
 
 
@@ -236,24 +245,27 @@ assembly {
 
         // Component port configuration declarations
 
-        UART_Driver_inst.tb_self2decrypt_attributes = TB_MONITOR_WRITE_ACCESS;
+        // GPIO_Driver_inst.CANIntAck = "GPIO_Driver_CANIntAck";
+        // GPIO_Driver_inst.CANIntAck_global_endpoint = "GPIO_Driver_CANIntAck";
+
+        UART_Driver_inst.tb_self2decrypt0_attributes = TB_MONITOR_WRITE_ACCESS;
 
         tb_uart_driver_encrypt2self_monitor.priority = 230;
         UART_Driver_inst.tb_encrypt2self_attributes = TB_MONITOR_READ_ACCESS;
 
-        UART_Driver_inst.tb_self2encrypt_attributes = TB_MONITOR_WRITE_ACCESS;
+        UART_Driver_inst.tb_self2encrypt0_attributes = TB_MONITOR_WRITE_ACCESS;
 
 
         tb_decrypt_uart2self_monitor.priority = 230;
         Decrypt_inst.tb_uart2self_attributes = TB_MONITOR_READ_ACCESS;
 
-        Decrypt_inst.tb_self2server_attributes = TB_MONITOR_WRITE_ACCESS;
+        Decrypt_inst.tb_self2server0_attributes = TB_MONITOR_WRITE_ACCESS;
 
 
         tb_encrypt_server2self_monitor.priority = 230;
         Encrypt_inst.tb_server2self_attributes = TB_MONITOR_READ_ACCESS;
 
-        Encrypt_inst.tb_self2uart_attributes = TB_MONITOR_WRITE_ACCESS;
+        Encrypt_inst.tb_self2uart0_attributes = TB_MONITOR_WRITE_ACCESS;
 
         tb_encrypt_uart2self_monitor.priority = 230;
         Encrypt_inst.tb_uart2self_attributes = TB_MONITOR_READ_ACCESS;
@@ -262,23 +274,23 @@ assembly {
         tb_server_vm2self_monitor.priority = 230;
         Server_inst.tb_vm2self_attributes = TB_MONITOR_READ_ACCESS;
 
-        Server_inst.tb_self2encrypt_attributes = TB_MONITOR_WRITE_ACCESS;
+        Server_inst.tb_self2encrypt0_attributes = TB_MONITOR_WRITE_ACCESS;
 
         tb_server_decrypt2self_monitor.priority = 230;
         Server_inst.tb_decrypt2self_attributes = TB_MONITOR_READ_ACCESS;
 
-        Server_inst.tb_self2framing_attributes = TB_MONITOR_WRITE_ACCESS;
+        Server_inst.tb_self2framing0_attributes = TB_MONITOR_WRITE_ACCESS;
 
         tb_server_framing2self_monitor.priority = 230;
         Server_inst.tb_framing2self_attributes = TB_MONITOR_READ_ACCESS;
 
-        Server_inst.tb_self2vm_reboot_attributes = TB_MONITOR_WRITE_ACCESS;
+        Server_inst.tb_self2vm_reboot0_attributes = TB_MONITOR_WRITE_ACCESS;
 
 
         tb_can_framing_server2self_monitor.priority = 230;
         CAN_Framing_inst.tb_server2self_attributes = TB_MONITOR_READ_ACCESS;
 
-        CAN_Framing_inst.tb_self2server_attributes = TB_MONITOR_WRITE_ACCESS;
+        CAN_Framing_inst.tb_self2server0_attributes = TB_MONITOR_WRITE_ACCESS;
 
         tb_can_framing_can2self_frame_monitor.priority = 230;
         CAN_Framing_inst.tb_can2self_frame_attributes = TB_MONITOR_READ_ACCESS;
@@ -286,16 +298,19 @@ assembly {
         tb_can_framing_can2self_status_monitor.priority = 230;
         CAN_Framing_inst.tb_can2self_status_attributes = TB_MONITOR_READ_ACCESS;
 
-        CAN_Framing_inst.tb_self2can_attributes = TB_MONITOR_WRITE_ACCESS;
+        CAN_Framing_inst.tb_self2can0_attributes = TB_MONITOR_WRITE_ACCESS;
 
         tb_can_driver_framing2self_monitor.priority = 230;
         CAN_Driver_inst.tb_framing2self_attributes = TB_MONITOR_READ_ACCESS;
 
-        CAN_Driver_inst.tb_self2framing_status_attributes = TB_MONITOR_WRITE_ACCESS;
+        CAN_Driver_inst.tb_self2framing_status0_attributes = TB_MONITOR_WRITE_ACCESS;
 
-        CAN_Driver_inst.tb_self2framing_frame_attributes = TB_MONITOR_WRITE_ACCESS;
+        CAN_Driver_inst.tb_self2framing_frame0_attributes = TB_MONITOR_WRITE_ACCESS;
 
-        Virtual_Machine_inst.tb_self2server_attributes = TB_MONITOR_WRITE_ACCESS;
+        // CAN_Driver_inst.CAN1Int = "CAN_Driver_CAN1Int";
+        // CAN_Driver_inst.CAN1Int_global_endpoint = "CAN_Driver_CAN1Int";
+
+        Virtual_Machine_inst.tb_self2server0_attributes = TB_MONITOR_WRITE_ACCESS;
 
         tb_virtual_machine_server2self_reboot_monitor.priority = 230;
         Virtual_Machine_inst.tb_server2self_reboot_attributes = TB_MONITOR_READ_ACCESS;

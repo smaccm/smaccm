@@ -57,7 +57,7 @@ component Decrypt {
     consumes Notification tb_timer_complete;
     uses tb_Monitor_SMACCM_DATA__UART_Packet_i_100 tb_uart2self;
     consumes QueuedData tb_uart2self_notification;
-    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2server;
+    uses tb_Monitor_SMACCM_DATA__GIDL_1 tb_self2server0;
 
 
 

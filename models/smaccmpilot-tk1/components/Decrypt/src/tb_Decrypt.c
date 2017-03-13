@@ -88,7 +88,7 @@ void tb_timer_complete_callback(void *_ UNUSED) {
    CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
 }
 /************************************************************************
- *  tb_Decrypt_write_self2server:
+ *  tb_self2server_enqueue:
  * Invoked from user code in the local thread.
  *
  * This is the function invoked by the local thread to make a
@@ -100,11 +100,11 @@ void tb_timer_complete_callback(void *_ UNUSED) {
  * enqueue attempt failed.
  *
  ************************************************************************/
-bool tb_Decrypt_write_self2server
+bool tb_self2server_enqueue
 (const SMACCM_DATA__GIDL * tb_self2server) {
     bool tb_result = true ; 
 
-    tb_result &= tb_self2server_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2server);
+    tb_result &= tb_self2server0_enqueue((tb_SMACCM_DATA__GIDL_container *)tb_self2server);
 
     return tb_result;
 }
