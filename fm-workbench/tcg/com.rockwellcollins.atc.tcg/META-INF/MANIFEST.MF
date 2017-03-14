@@ -24,4 +24,4 @@ Export-Package: com.rockwellcollins.atc.tcg.extensions;
    org.eclipse.core.runtime,
    jkind.results"
 Bundle-Vendor: Rockwell Collins
-Import-Package: edu.uah.rsesc.aadlsimulator.agree.ext
+Comment: Import-Package: edu.uah.rsesc.aadlsimulator.agree.ext

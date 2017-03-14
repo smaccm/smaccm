@@ -39,12 +39,9 @@
 
  **************************************************************************/
 
-import <tb_Monitor_bool_1_Dequeue.idl4>;
-import <tb_Monitor_bool_1_Enqueue.idl4>;
+import <tb_Monitor_bool_1.idl4>;
 component tb_Virtual_Machine_server2self_reboot_Monitor {
+  provides tb_Monitor_bool_1 mon;
+  emits QueuedData monsig;
 
-  provides tb_Monitor_bool_1_Enqueue enq;
-  provides tb_Monitor_bool_1_Dequeue deq;
-  emits QueuedData qd;
-  has mutex q;
 }

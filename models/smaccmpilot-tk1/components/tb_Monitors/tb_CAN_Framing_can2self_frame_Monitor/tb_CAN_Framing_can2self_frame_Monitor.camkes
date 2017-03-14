@@ -39,12 +39,9 @@
 
  **************************************************************************/
 
-import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Dequeue.idl4>;
-import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10.idl4>;
 component tb_CAN_Framing_can2self_frame_Monitor {
+  provides tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 mon;
+  emits QueuedData monsig;
 
-  provides tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Enqueue enq;
-  provides tb_Monitor_SMACCM_DATA__CAN_Frame_i_10_Dequeue deq;
-  emits QueuedData qd;
-  has mutex q;
 }

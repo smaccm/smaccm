@@ -183,5 +183,7 @@ int load_linux(vm_t* vm, const char* kernel_name, const char* dtb_name);
 
 void vusb_notify(void);
 
+void delete_irqs(seL4_CPtr root);
+
 #endif /* VMLINUX_H */
 

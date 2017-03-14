@@ -46,8 +46,102 @@ extern vspace_t _vspace;
 extern irq_server_t _irq_server;
 extern seL4_CPtr _fault_endpoint;
 
+#ifdef CONFIG_VM_TK1_EMMC_ROOTFS
+#define SDMMC_PADDR 0x700b0000
+
+int handle_sdmmcs(struct device* d, vm_t* vm, fault_t* fault){
+    uint32_t data = fault_get_data(fault);
+    uint32_t addr = fault_get_address(fault);
+    uint32_t mask = fault_get_data_mask(fault);
+
+    // 0x0600-0x07ff is SDMMC-4
+    uint32_t offset = addr - SDMMC_PADDR;
+    if (offset < 0x0600 || offset > 0x07ff) {
+        fault_set_data(fault, 0);
+        return advance_fault(fault);
+    }
+
+    if (fault_is_write(fault)) {
+        switch (fault_get_width(fault)) {
+            case WIDTH_BYTE:
+                *(volatile uint8_t *) addr = (uint8_t) data;
+                break;
+            case WIDTH_HALFWORD:
+                *(volatile uint16_t *) addr = (uint16_t) data;
+                break;
+            case WIDTH_WORD:
+                *(volatile uint32_t *) addr = (uint32_t) data;
+                break;
+            case WIDTH_DOUBLEWORD:
+            default:
+                /* Should never get here... Keep the compiler happy */
+                assert(0);
+        }
+    } else {
+        addr = addr & ~0x3;
+        data = *(volatile uint32_t *) addr;
+        fault_set_data(fault, data);
+    }
+    return advance_fault(fault);
+}
+
+const struct device dev_sdmmcs = {
+    .devid = DEV_CUSTOM,
+    .name = "Registers for SDMMC",
+    .pstart = SDMMC_PADDR,
+    .size = PAGE_SIZE,
+    .handle_page_fault = &handle_sdmmcs,
+    .priv = NULL
+};
+
+#endif //CONFIG_VM_TK1_EMMC_ROOTFS
+
+const struct device dev_usb1 = {
+    .devid = DEV_CUSTOM,
+    .name = "Registers for micro USB",
+    .pstart = 0x7d000000,
+    .size = PAGE_SIZE,
+    .handle_page_fault = NULL,
+    .priv = NULL
+};
+
+const struct device dev_usb2 = {
+    .devid = DEV_CUSTOM,
+    .name = "Registers for USB on top board",
+    .pstart = 0x7d004000,
+    .size = PAGE_SIZE,
+    .handle_page_fault = NULL,
+    .priv = NULL
+};
+
+const struct device dev_usb3 = {
+    .devid = DEV_CUSTOM,
+    .name = "Registers for USB on bottom board",
+    .pstart = 0x7d008000,
+    .size = PAGE_SIZE,
+    .handle_page_fault = NULL,
+    .priv = NULL
+};
 
 static const struct device *linux_pt_devices[] = {
+    &dev_usb1,
+    &dev_usb2,
+    &dev_usb3,
+};
+
+static const uint32_t linux_blank_paddrs[] = {
+    0x7000e000, // APBDEV_PMC_SCRATCH20_0 "general purpose register storage"
+    0x40000000, // DATA MEMORY "RAM"
+    0x6000f000, // Exception Vectors
+    0x6000c000, // System Registers
+    0x60004000, // PRI_ICTRL_CPU_IER_CLR_0 "Clear interrupt enable for CPU0 register"
+    0x70000000, // APB_MISC_GP_HIDREV_0 "Chip ID Revision Register"
+    0x7000f000, // FUSE
+    0x6000d000, // GPIO_INT_ENB_0
+#ifndef CONFIG_TK1_VM_HACK
+    0xd0000000,
+    0xd0001000,
+#endif
 };
 
 static const int linux_pt_irqs[] = {
@@ -204,6 +298,8 @@ INTERRUPT_GPU_NONSTALL         ,
 ARDPAUX                        ,
 #endif
 };
+
+static seL4_CPtr linux_pt_irq_caps[ARRAY_SIZE(linux_pt_irqs)];
 
 struct pwr_token {
     const char* linux_bin;
@@ -431,11 +527,26 @@ install_linux_devices(vm_t* vm)
     err = vm_add_device(vm, &dev_bbox);
     assert(!err);
 
+#ifdef CONFIG_VM_TK1_EMMC_ROOTFS    
+    void *addr;
+    addr = map_device(vm->vmm_vspace, vm->vka, vm->simple, SDMMC_PADDR, SDMMC_PADDR, seL4_AllRights);
+    assert(addr);
+
+    err = vm_add_device(vm, &dev_sdmmcs);
+    assert(!err);
+#endif // CONFIG_VM_TK1_EMMC_ROOTFS
+
     /* Install pass through devices */
     /* TK1 passes through all devices at the moment by using on-demand device mapping */
     for (i = 0; i < sizeof(linux_pt_devices) / sizeof(*linux_pt_devices); i++) {
-        err = vm_install_passthrough_device(vm, linux_pt_devices[i]);
-        assert(!err);
+       err = vm_install_passthrough_device(vm, linux_pt_devices[i]);
+       assert(!err);
+    }
+
+    /* Install blank devices that Linux tries to access, but doesn't need */
+    for (i = 0; i < sizeof(linux_blank_paddrs) / sizeof(*linux_blank_paddrs); i++) {
+        void *mapped = map_vm_ram(vm, linux_blank_paddrs[i]);
+        assert(mapped);
     }
 
     /* hack to give access to other components
@@ -444,7 +555,10 @@ install_linux_devices(vm_t* vm)
     for (i = 0; i < num_extra_frame_caps; i++) {
         err = vm_map_frame(vm, start_extra_frame_caps + i,
             extra_frame_map_address + offset, PAGE_SIZE_BITS, 1, seL4_AllRights);
-        assert(!err);
+        if (err) {
+            ZF_LOGF("Failed to map in hacked page %d. "
+                    "Did you forget to hand edit the capdl file?", i);
+        }
         offset += PAGE_SIZE;
     }
 
@@ -482,6 +596,7 @@ route_irqs(vm_t* vm, irq_server_t irq_server)
         if (!irq_data) {
             return -1;
         }
+        linux_pt_irq_caps[i] = irq_data->cap;
         virq = vm_virq_new(vm, irq, &do_irq_server_ack, irq_data);
         if (virq == NULL) {
             return -1;
@@ -489,6 +604,17 @@ route_irqs(vm_t* vm, irq_server_t irq_server)
         irq_data->token = (void*)virq;
     }
     return 0;
+}
+
+void delete_irqs(seL4_CPtr root) {
+    for (int i = 0; i < ARRAY_SIZE(linux_pt_irq_caps); i++) {
+        seL4_CPtr cap = linux_pt_irq_caps[i];
+        if (cap != 0) {
+            int err = seL4_CNode_Delete(root, cap, 32);
+            assert(!err);
+            linux_pt_irq_caps[i] = 0;
+        }
+    }
 }
 
 static uint32_t
