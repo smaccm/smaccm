@@ -21,7 +21,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.uah.rsesc.aadlsimulator.agree.eval;
 
 import java.util.Objects;
-
 import jkind.lustre.BinaryOp;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.values.BooleanValue;
@@ -58,6 +57,10 @@ class SymbolicValue {
 	}
 	
 	public SymbolicValue applyBinaryOp(final BinaryOp op, SymbolicValue value) {
+		final Value newCoefficient;
+		final Variable newVariable;
+		final Value newConstant;
+		
 		if(op == BinaryOp.EQUAL) {
 			// Equality comparison is only supported when the variables are the same
 			if(variable == value.variable) {
@@ -75,12 +78,10 @@ class SymbolicValue {
 				if(result instanceof BooleanValue) {
 					return new SymbolicValue(null, null, (BooleanValue)result);
 				}
-			} 			
-		} else if(op == BinaryOp.PLUS || op == BinaryOp.MINUS) {
-			final Value newCoefficient;
-			final Variable newVariable;
-			final Value newConstant;
+			}
 			
+			return null;
+		} else if(op == BinaryOp.PLUS || op == BinaryOp.MINUS) {
 			if(variable == null && value.variable == null) {
 				newCoefficient = null;
 				newVariable = null;
@@ -123,13 +124,7 @@ class SymbolicValue {
 					newConstant = constant;
 				}
 			}
-			
-			return new SymbolicValue(newCoefficient, newVariable, newConstant);
-		} else if(op == BinaryOp.MULTIPLY || op == BinaryOp.DIVIDE) {
-			final Value newCoefficient;
-			final Variable newVariable;
-			final Value newConstant;
-			
+		} else if(op == BinaryOp.MULTIPLY || op == BinaryOp.DIVIDE) {		
 			if(variable == null && value.variable == null) {
 				newCoefficient = null;
 				newVariable = null;
@@ -152,19 +147,14 @@ class SymbolicValue {
 			} else {
 				newConstant = null;
 			}
-			
-			return new SymbolicValue(newCoefficient, newVariable, newConstant);
 		} else if(op == BinaryOp.AND) {
-			final Value newCoefficient;
-			final Variable newVariable;
-			final Value newConstant;
 			if(variable == null && value.variable == null) {
 				newCoefficient = null;
 				newVariable = null;
 				newConstant = constant.applyBinaryOp(op, value.constant);
 			} else if(variable != null && value.variable != null) {
-				if(variable == value.variable) {
-					newCoefficient = coefficient.applyBinaryOp(op, value.coefficient);
+				if(variable == value.variable && coefficient.equals(value.coefficient)) {
+					newCoefficient = coefficient;
 					newVariable = variable;
 					newConstant = null;
 				} else {
@@ -194,19 +184,14 @@ class SymbolicValue {
 					}	
 				}
 			}
-			
-			return new SymbolicValue(newCoefficient, newVariable, newConstant);
 		} else if(op == BinaryOp.OR) {
-			final Value newCoefficient;
-			final Variable newVariable;
-			final Value newConstant;
 			if(variable == null && value.variable == null) {
 				newCoefficient = null;
 				newVariable = null;
 				newConstant = constant.applyBinaryOp(op, value.constant);
 			} else if(variable != null && value.variable != null) {
-				if(variable == value.variable) {
-					newCoefficient = coefficient.applyBinaryOp(op, value.coefficient);
+				if(variable == value.variable && coefficient.equals(value.coefficient)) {
+					newCoefficient = coefficient;
 					newVariable = variable;
 					newConstant = null;
 				} else {
@@ -236,11 +221,17 @@ class SymbolicValue {
 					}	
 				}
 			}
-			
-			return new SymbolicValue(newCoefficient, newVariable, newConstant);
-		} 
+		} else {
+			return null;
+		}
 		
-		return null;
+		// Don't create a new symbolic value if both the variable and coefficient are not valid.
+		// This will occur if unsupported operations are performed on the coefficient.
+		if((newCoefficient == null) != (newVariable == null)) {
+			return null;
+		}
+		
+		return new SymbolicValue(newCoefficient, newVariable, newConstant);
 	}
 	
 	public SymbolicValue applyUnaryOp(final UnaryOp op) {
@@ -258,7 +249,7 @@ class SymbolicValue {
 	
 		return null;
 	}	
-	
+		
 	@Override
 	public String toString() {
 		String str = "{SYM: ";
