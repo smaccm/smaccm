@@ -3,8 +3,10 @@
  */
 package com.rockwellcollins.atc.agree.formatting;
 
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
+import org.eclipse.xtext.util.Pair;
 
 import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
@@ -27,8 +29,60 @@ public class AgreeFormatter extends AbstractDeclarativeFormatter {
     protected void configureFormatting(FormattingConfig c) {
         // It's usually a good idea to activate the following three statements.
         // They will add and preserve newlines around comments
-        // c.setLinewrap(0, 1, 2).before(grammarAccess.getSL_COMMENTRule());
+        c.setLinewrap(0, 1, 2).before(grammarAccess.getSL_COMMENTRule());
         // c.setLinewrap(0, 1, 2).before(grammarAccess.getML_COMMENTRule());
         // c.setLinewrap(0, 1, 1).after(grammarAccess.getML_COMMENTRule());
+
+        c.setAutoLinewrap(120);
+
+        // set line wrap after semicolon
+        for (Keyword keywd : grammarAccess.findKeywords(";")) {
+            c.setLinewrap().after(keywd);
+        }
+
+        // set no space before dots, commas and semicolons, right paren
+        for (Keyword keywd : grammarAccess.findKeywords(".", ",", ";", ")")) {
+            c.setNoSpace().before(keywd);
+        }
+
+        // set no space after dots and right paren
+        for (Keyword keywd : grammarAccess.findKeywords(".", "(")) {
+            c.setNoSpace().after(keywd);
+        }
+
+        // set and line wrap before specification statements and node definitions
+        c.setLinewrap(2).before(grammarAccess.getSpecStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getNodeDefExprRule());
+
+        // set line wrap before node def, let, tel, each local var
+        c.setLinewrap().before(grammarAccess.getNodeStmtRule());
+        c.setLinewrap().before(grammarAccess.getNodeStmtRule());
+        for (Keyword keywd : grammarAccess.findKeywords("returns")) {
+            c.setLinewrap().before(keywd);
+        }
+        for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("let", "tel")) {
+            c.setIndentationIncrement().after(p.getFirst());
+            c.setIndentationDecrement().before(p.getSecond());
+            c.setLinewrap().before(p.getFirst());
+            c.setLinewrap().before(p.getSecond());
+        }
+
+        // set line indentation inside all curly brackets
+        // set line wrap after each left curly bracket
+        // set line wrap around each right curly bracket
+        for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("{", "}")) {
+            c.setIndentationIncrement().after(p.getFirst());
+            c.setIndentationDecrement().before(p.getSecond());
+            c.setLinewrap().after(p.getFirst());
+            c.setLinewrap().around(p.getSecond());
+        }
+
+        // set line indentation inside for ITE
+        c.setIndentationIncrement().before(grammarAccess.getIfThenElseExprRule());
+        c.setIndentationDecrement().after(grammarAccess.getIfThenElseExprRule());
+        for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("then", "else")) {
+            c.setLinewrap().before(p.getFirst());
+            c.setLinewrap().before(p.getSecond());
+        }
     }
 }
