@@ -50,39 +50,57 @@ public class AgreeFormatter extends AbstractDeclarativeFormatter {
             c.setNoSpace().after(keywd);
         }
 
-        // set and line wrap before specification statements and node definitions
-        c.setLinewrap(2).before(grammarAccess.getSpecStatementRule());
+        // set and blank line between specification statements
+        // But, it seems to not work for positioning with respect to 
+        // abstract base classes such as SpecStatement
+        c.setLinewrap(2).after(grammarAccess.getSpecStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getSynchStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getOrderStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getPropertyStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getConstStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getEnumStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getEqStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getAssignStatementRule());
+        c.setLinewrap(2).before(grammarAccess.getLinearizationDefExprRule());
+        c.setLinewrap(2).before(grammarAccess.getFnDefExprRule());
+        c.setLinewrap(2).before(grammarAccess.getLibraryFnDefExprRule());
         c.setLinewrap(2).before(grammarAccess.getNodeDefExprRule());
+        c.setLinewrap(2).before(grammarAccess.getRecordDefExprRule());
+        c.setLinewrap(2).before(grammarAccess.getInputStatementRule());
 
         // set line wrap before node def, let, tel, each local var
-        c.setLinewrap().before(grammarAccess.getNodeStmtRule());
-        c.setLinewrap().before(grammarAccess.getNodeStmtRule());
-        for (Keyword keywd : grammarAccess.findKeywords("returns")) {
-            c.setLinewrap().before(keywd);
-        }
-        for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("let", "tel")) {
+        c.setLinewrap().after(grammarAccess.getNodeStmtRule());
+        c.setLinewrap().after(grammarAccess.getNodeDefExprAccess().getArgsAssignment_3_1_1());
+        c.setLinewrap().after(grammarAccess.getNodeDefExprAccess().getReturnsKeyword_5());
+        c.setLinewrap().after(grammarAccess.getNodeBodyExprAccess().getLetKeyword_1());
+        c.setLinewrap().after(grammarAccess.getNodeBodyExprAccess().getTelKeyword_3());
+        c.setIndentationIncrement().after(grammarAccess.getNodeBodyExprAccess().getLetKeyword_1());
+        c.setIndentationDecrement().before(grammarAccess.getNodeBodyExprAccess().getTelKeyword_3());
+
+        // set line indentation inside for ITE
+        c.setLinewrap().before(grammarAccess.getIfThenElseExprAccess().getThenKeyword_0_3());
+        //c.setIndentationIncrement().before(grammarAccess.getIfThenElseExprAccess().getBExprParserRuleCall_0_4_0());
+        //c.setIndentationDecrement().after(grammarAccess.getIfThenElseExprAccess().getBExprParserRuleCall_0_4_0());
+        c.setLinewrap().before(grammarAccess.getIfThenElseExprAccess().getElseKeyword_0_5());
+        //c.setIndentationIncrement().before(grammarAccess.getIfThenElseExprAccess().getCExprParserRuleCall_0_6_0());
+        //c.setIndentationDecrement().after(grammarAccess.getIfThenElseExprAccess().getCExprParserRuleCall_0_6_0());
+
+        // set line indentation inside all parentheses
+        //grammarAccess.getRecordUpdateExprRule().g
+        for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("(", ")")) {
             c.setIndentationIncrement().after(p.getFirst());
             c.setIndentationDecrement().before(p.getSecond());
-            c.setLinewrap().before(p.getFirst());
-            c.setLinewrap().before(p.getSecond());
         }
 
         // set line indentation inside all curly brackets
         // set line wrap after each left curly bracket
         // set line wrap around each right curly bracket
+        //grammarAccess.getRecordUpdateExprRule().g
         for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("{", "}")) {
             c.setIndentationIncrement().after(p.getFirst());
             c.setIndentationDecrement().before(p.getSecond());
             c.setLinewrap().after(p.getFirst());
             c.setLinewrap().around(p.getSecond());
-        }
-
-        // set line indentation inside for ITE
-        c.setIndentationIncrement().before(grammarAccess.getIfThenElseExprRule());
-        c.setIndentationDecrement().after(grammarAccess.getIfThenElseExprRule());
-        for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("then", "else")) {
-            c.setLinewrap().before(p.getFirst());
-            c.setLinewrap().before(p.getSecond());
         }
     }
 }
