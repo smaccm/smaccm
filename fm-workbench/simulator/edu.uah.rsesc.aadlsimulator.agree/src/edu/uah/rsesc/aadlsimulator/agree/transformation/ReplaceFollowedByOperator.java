@@ -40,7 +40,7 @@ import jkind.lustre.visitors.AstMapVisitor;
 public class ReplaceFollowedByOperator extends AstMapVisitor {
 	private static String stepVariableId = "__SIM_STEP";
 	private static String nextStepVariableId = "__SIM_NEXT_STEP";
-	private static int firstStepValue = 0;
+	private static int firstStepValue = 0; // The step in which the AGREE model's initial conditions should be true. This corresponds to the initial step of the simulation in the non-inductive case.
 	
 	private ReplaceFollowedByOperator() {}
 	
@@ -68,7 +68,8 @@ public class ReplaceFollowedByOperator extends AstMapVisitor {
 		// Create the simulation program
 		final SimulationProgramBuilder simulationProgramBuilder = new SimulationProgramBuilder(program);
 		final Expr stepVariableExpr = new IdExpr(stepVariableId);
-		simulationProgramBuilder.addInitialConstraint(new BinaryExpr(stepVariableExpr, BinaryOp.EQUAL, new IntExpr(firstStepValue)));
+		final int initialStepValue = program.getType().isInductive() ? firstStepValue + 1 : firstStepValue; // Ensure that the initial step is greater than the first step when simulating inductive counterexamples 
+		simulationProgramBuilder.addInitialConstraint(new BinaryExpr(stepVariableExpr, BinaryOp.EQUAL, new IntExpr(initialStepValue)));
 		simulationProgramBuilder.addCarryVariable(new CarryVariable(stepVariableExpr, new IdExpr(nextStepVariableId)));
 		simulationProgramBuilder.setLustreProgram(lustreProgramBuilder.build());
 		
