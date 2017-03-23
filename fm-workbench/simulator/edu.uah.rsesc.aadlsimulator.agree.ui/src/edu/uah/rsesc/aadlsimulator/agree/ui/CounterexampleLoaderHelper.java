@@ -30,6 +30,8 @@ import jkind.lustre.values.IntegerValue;
 import jkind.lustre.values.RealValue;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
+import jkind.results.Property;
+import jkind.results.UnknownProperty;
 import jkind.util.BigFraction;
 
 import org.eclipse.core.runtime.Status;
@@ -74,22 +76,25 @@ import edu.uah.rsesc.aadlsimulator.xtext.util.ExpressionFactory;
  */
 class CounterexampleLoaderHelper {
 	public enum Mode {
-		MONOLITHIC(AGREESimulationEngine.ENGINE_TYPE_ID_MONOLITHIC),
-		SINGLE_LAYER(AGREESimulationEngine.ENGINE_TYPE_ID_SINGLE_LAYER);
+		MONOLITHIC(AGREESimulationEngine.ENGINE_TYPE_ID_MONOLITHIC, AGREESimulationEngine.ENGINE_TYPE_ID_MONOLITHIC_INDUCTIVE),
+		SINGLE_LAYER(AGREESimulationEngine.ENGINE_TYPE_ID_SINGLE_LAYER, AGREESimulationEngine.ENGINE_TYPE_ID_SINGLE_LAYER_INDUCTIVE);
 		
 		public final String engineTypeId;
+		public final String inductiveEngineTypeId;
 		
-		Mode(final String engineTypeId) {
+		Mode(final String engineTypeId, final String inductiveEngineTypeId) {
 			this.engineTypeId = engineTypeId;
+			this.inductiveEngineTypeId = inductiveEngineTypeId;
 		}
 	}
 	
-	public void receiveCex(final ComponentImplementation compImpl, final EObject property, final Counterexample cex, final Map<String, EObject> refMap, final Mode mode) {
+	public void receiveCex(final ComponentImplementation compImpl, Property property, EObject agreeProperty, final Counterexample cex, final Map<String, EObject> refMap, final Mode mode) {		
 		// Launch the simulation
 		final SimulationService simulationService = Objects.requireNonNull((SimulationService)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(SimulationService.class), "Unable to retrieve simulation service");
 		final SimulationLaunchShortcut launchShortcut = new SimulationLaunchShortcut();
 		try {
-			final ILaunch launch = launchShortcut.launch(compImpl, mode.engineTypeId, ILaunchManager.RUN_MODE);
+			final boolean isInductiveCex = property instanceof UnknownProperty;
+			final ILaunch launch = launchShortcut.launch(compImpl, isInductiveCex ? mode.inductiveEngineTypeId : mode.engineTypeId, ILaunchManager.RUN_MODE);
 			
 			// Get the simulation engine
 			final SimulationEngine simulationEngine = getSimulationEngine(launch);
