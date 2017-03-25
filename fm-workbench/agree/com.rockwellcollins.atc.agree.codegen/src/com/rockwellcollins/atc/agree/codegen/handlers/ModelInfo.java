@@ -7,6 +7,7 @@ public class ModelInfo {
 	public final String updatedModelName;
 	public final String subsystemName;
 	public final boolean exportPressed;
+	public final boolean generatePressed;
 	public final boolean updatePressed;
 	public final boolean verifyPressed;
 
@@ -16,6 +17,7 @@ public class ModelInfo {
 		this.updatedModelName = "";
 		this.subsystemName = "";
 		this.exportPressed = false;
+		this.generatePressed = false;
 		this.updatePressed = false;
 		this.verifyPressed = false;
 	}
@@ -27,18 +29,20 @@ public class ModelInfo {
 		this.updatedModelName = updatedModelName;
 		this.subsystemName = subsystemName;
 		this.exportPressed = false;
+		this.generatePressed = false;
 		this.updatePressed = false;
 		this.verifyPressed = false;
 	}
 	
 	public ModelInfo(String outputDirPath, String originalModelName,
 			String updatedModelName, String subsystemName,
-			boolean exportPressed, boolean updatePressed, boolean verifyPressed) {
+			boolean exportPressed, boolean generatePressed, boolean updatePressed, boolean verifyPressed) {
 		this.outputDirPath = outputDirPath;
 		this.originalModelName = originalModelName;
 		this.updatedModelName = updatedModelName;
 		this.subsystemName = subsystemName;
 		this.exportPressed = exportPressed;
+		this.generatePressed = generatePressed;
 		this.updatePressed = updatePressed;
 		this.verifyPressed = verifyPressed;
 	}

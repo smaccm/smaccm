@@ -21,7 +21,9 @@ import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.Feature;
 import org.osate.aadl2.ListValue;
 import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.Property;
@@ -92,6 +94,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 			// SystemType sysType = si.getSystemImplementation().getType();
 			ComponentType sysType = AgreeUtils.getInstanceType(si);
+
 			EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
 					AgreePackage.eINSTANCE.getAgreeContractSubclause());
 
@@ -120,8 +123,24 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 			}
 			
 			boolean exportPressed = info.exportPressed;
+			boolean generatePressed = info.generatePressed;
 			boolean updatePressed = info.updatePressed;
 			boolean verifyPressed = info.verifyPressed;
+			
+			if(generatePressed){
+				// Write MATLAB script to generate subsystem in the selected
+				// output folder
+				SimulinkSubsysScriptCreator modelGenerateScript = new SimulinkSubsysScriptCreator(dirStr,
+						info.updatedModelName, info.subsystemName, matlabFunction.ports);
+
+				String modelUpdateScriptName = "generate_"+ info.subsystemName+ ".m";
+				
+				Path modelGenerateScriptPath = Paths.get(dirStr,
+						modelUpdateScriptName);
+				
+				writeToFile(modelGenerateScriptPath,
+						modelGenerateScript.toString());					
+			}
 			
 			if (exportPressed || updatePressed || verifyPressed) {
 				String matlabFuncScriptName = matlabFunction.name + ".m";
@@ -130,8 +149,8 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				// Write MATLAB function code into the specified file in the
 				// selected output folder
 				writeToFile(matlabFuncScriptPath, matlabFunction.toString());
-				if (info.updatePressed || info.verifyPressed) {
-
+				
+				if (updatePressed || verifyPressed) {
 					// Create Simulink Model Update script into the output
 					// folder
 					SimulinkObserverScriptCreator modelUpdateScript = new SimulinkObserverScriptCreator(
