@@ -435,9 +435,11 @@ void reset_resources(void) {
     morecore_top = (uintptr_t) &morecore_area[morecore_size];
 }
 
+// Our ath9k wireless USB device sometimes gets into an unusable state
+// after reboot. Power cycling prevents/fixes this issue.
 void power_cycle_usb() {
     gpio_usb_vbus_en1_set(false);
-    ps_mdelay(500);
+    ps_mdelay(10);
     gpio_usb_vbus_en1_set(true);
 }
 
@@ -459,8 +461,12 @@ main_continued(void)
 
     /* setup for restart with a setjmp */
     while (setjmp(restart_jmp_buf) != 0) {
-        reset_resources();
+        err = vm_process_reboot_callbacks(&vm);
+        if (err) {
+            ZF_LOGF("vm_process_reboot_callbacks failed: %d", err);
+        }
         power_cycle_usb();
+        reset_resources();
     }
     restart_tcb = camkes_get_tls()->tcb_cap;
     restart_event_reg_callback(restart_event, NULL);
@@ -527,8 +533,6 @@ main_continued(void)
             } else {
                 printf("Unknown label (%d) for IPC badge %d\n", label, sender_badge);
             }
-        } else if (sender_badge == VUSB_NBADGE) {
-            vusb_notify();
         } else {
             assert(sender_badge == VM_BADGE);
             err = vm_event(&vm, tag);

@@ -24,7 +24,6 @@
 #include <sel4arm-vmm/plat/devices.h>
 #include <sel4arm-vmm/devices/vgic.h>
 #include <sel4arm-vmm/devices/vram.h>
-#include <sel4arm-vmm/devices/vusb.h>
 #include <sel4utils/irq_server.h>
 #include <cpio/cpio.h>
 
@@ -46,15 +45,14 @@ extern vspace_t _vspace;
 extern irq_server_t _irq_server;
 extern seL4_CPtr _fault_endpoint;
 
-#ifdef CONFIG_VM_TK1_EMMC_ROOTFS
-#define SDMMC_PADDR 0x700b0000
 
-int handle_sdmmcs(struct device* d, vm_t* vm, fault_t* fault){
+#ifdef CONFIG_VM_TK1_EMMC_ROOTFS
+int handle_sdmmc4(struct device* d, vm_t* vm, fault_t* fault){
     uint32_t data = fault_get_data(fault);
     uint32_t addr = fault_get_address(fault);
     uint32_t mask = fault_get_data_mask(fault);
 
-    // 0x0600-0x07ff is SDMMC-4
+    // 0x0600-0x07ff is SDMMC-4, ignore everything else
     uint32_t offset = addr - SDMMC_PADDR;
     if (offset < 0x0600 || offset > 0x07ff) {
         fault_set_data(fault, 0);
@@ -85,39 +83,65 @@ int handle_sdmmcs(struct device* d, vm_t* vm, fault_t* fault){
     return advance_fault(fault);
 }
 
-const struct device dev_sdmmcs = {
+const struct device dev_sdmmc4 = {
     .devid = DEV_CUSTOM,
-    .name = "Registers for SDMMC",
+    .name = "SDMMC-4",
     .pstart = SDMMC_PADDR,
     .size = PAGE_SIZE,
-    .handle_page_fault = &handle_sdmmcs,
+    .handle_page_fault = &handle_sdmmc4,
     .priv = NULL
 };
-
 #endif //CONFIG_VM_TK1_EMMC_ROOTFS
 
-const struct device dev_usb1 = {
+
+#define BBOX_PADDR 0xC0000000
+
+static int
+handle_bbox_fault(struct device* d, vm_t* vm, fault_t* fault)
+{
+    uint32_t offset = fault_get_address(fault) - BBOX_PADDR;
+
+    if (fault_is_write(fault)) {
+        uint32_t data = fault_get_data(fault) & 0xFFFF;
+        switch (offset) {
+        case 0x0:
+            bbox->left = data;
+            break;
+        case 0x2:
+            bbox->right = data;
+            break;
+        case 0x4:
+            bbox->top = data;
+            break;
+        case 0x6:
+            bbox->bottom = data;
+            bbox_notification_emit();
+            break;
+        default:
+            ZF_LOGE("Unhandled offset");
+            break;
+        }
+    } else {
+        fault_set_data(fault, 0);
+    }
+
+    return advance_fault(fault);
+}
+
+const struct device dev_bbox = {
     .devid = DEV_CUSTOM,
-    .name = "Registers for micro USB",
-    .pstart = 0x7d000000,
+    .name = "Camera bounding box",
+    .pstart = BBOX_PADDR,
     .size = PAGE_SIZE,
-    .handle_page_fault = NULL,
+    .handle_page_fault = &handle_bbox_fault,
     .priv = NULL
 };
 
+// TODO: Remove and replace with rebootable version
 const struct device dev_usb2 = {
     .devid = DEV_CUSTOM,
-    .name = "Registers for USB on top board",
+    .name = "USB2",
     .pstart = 0x7d004000,
-    .size = PAGE_SIZE,
-    .handle_page_fault = NULL,
-    .priv = NULL
-};
-
-const struct device dev_usb3 = {
-    .devid = DEV_CUSTOM,
-    .name = "Registers for USB on bottom board",
-    .pstart = 0x7d008000,
     .size = PAGE_SIZE,
     .handle_page_fault = NULL,
     .priv = NULL
@@ -125,22 +149,21 @@ const struct device dev_usb3 = {
 
 static const struct device *linux_pt_devices[] = {
     &dev_usb1,
-    &dev_usb2,
+//    &dev_usb2,
     &dev_usb3,
 };
 
-static const uint32_t linux_blank_paddrs[] = {
-    0x7000e000, // APBDEV_PMC_SCRATCH20_0 "general purpose register storage"
-    0x40000000, // DATA MEMORY "RAM"
-    0x6000f000, // Exception Vectors
-    0x6000c000, // System Registers
-    0x60004000, // PRI_ICTRL_CPU_IER_CLR_0 "Clear interrupt enable for CPU0 register"
-    0x70000000, // APB_MISC_GP_HIDREV_0 "Chip ID Revision Register"
-    0x7000f000, // FUSE
-    0x6000d000, // GPIO_INT_ENB_0
+static const struct device *linux_ram_devices[] = {
+    &dev_rtc_kbc_pmc,       // APBDEV_PMC_SCRATCH20_0 "general purpose register storage"
+    &dev_data_memory,       // DATA MEMORY "RAM"
+    &dev_exception_vectors, // Exception Vectors
+    &dev_system_registers,  // System Registers
+    &dev_ictlr,             // PRI_ICTRL_CPU_IER_CLR_0 "Clear interrupt enable for CPU0 register"
+    &dev_apb_misc,          // APB_MISC_GP_HIDREV_0 "Chip ID Revision Register"
+    &dev_fuse,              // FUSE
+    &dev_gpios,             // GPIO_INT_ENB_0
 #ifndef CONFIG_TK1_VM_HACK
-    0xd0000000,
-    0xd0001000,
+    &dev_bbox,
 #endif
 };
 
@@ -149,154 +172,7 @@ INTERRUPT_VTIMER               ,
 INTERRUPT_USB2                 ,
 INTERRUPT_SDMMC4               ,
 INTERRUPT_UARTD                ,
-#ifdef CONFIG_TK1_INSECURE
-INTERRUPT_TMR1                 ,
-INTERRUPT_TMR2                 ,
-INTERRUPT_RTC                  ,
-INTERRUPT_CEC                  ,
-INTERRUPT_SHR_SEM_INBOX_FULL   ,
-INTERRUPT_SHR_SEM_INBOX_EMPTY  ,
-INTERRUPT_SHR_SEM_OUTBOX_FULL  ,
-INTERRUPT_SHR_SEM_OUTBOX_EMPTY ,
-INTERRUPT_VDE_UCQ              ,
-INTERRUPT_VDE_SYNC_TOKEN       ,
-INTERRUPT_VDE_BSEV             ,
-INTERRUPT_VDE_BSEA             ,
-INTERRUPT_VDE_SXE              ,
-INTERRUPT_SATA_RX_STAT         ,
-INTERRUPT_SDMMC1               ,
-INTERRUPT_SDMMC2               ,
-INTERRUPT_VDE                  ,
-INTERRUPT_AVP_UCQ              ,
-INTERRUPT_SDMMC3               ,
-INTERRUPT_USB                  ,
-INTERRUPT_SATA_CTL             ,
-INTERRUPT_VCP                  ,
-INTERRUPT_APB_DMA_CPU          ,
-INTERRUPT_AHB_DMA_CPU          ,
-INTERRUPT_ARB_SEM_GNT_COP      ,
-INTERRUPT_ARB_SEM_GNT_CPU      ,
-INTERRUPT_OWR                  ,
-INTERRUPT_GPIO1                ,
-INTERRUPT_GPIO2                ,
-INTERRUPT_GPIO3                ,
-INTERRUPT_GPIO4                ,
-INTERRUPT_UARTA                ,
-INTERRUPT_UARTB                ,
-INTERRUPT_I2C                  ,
-INTERRUPT_USB3_HOST            ,
-INTERRUPT_USB3_HOST_SMI        ,
-INTERRUPT_TMR3                 ,
-INTERRUPT_TMR4                 ,
-INTERRUPT_USB3_HOST_PME        ,
-INTERRUPT_USB3_DEV_HOST        ,
-INTERRUPT_ACTMON               ,
-INTERRUPT_UARTC                ,
-INTERRUPT_HSI                  ,
-INTERRUPT_THERMAL              ,
-INTERRUPT_XUSB_PADCTL          ,
-INTERRUPT_TSEC                 ,
-INTERRUPT_EDP                  ,
-INTERRUPT_VFIR                 ,
-INTERRUPT_I2C5                 ,
-INTERRUPT_STAT_MON             ,
-INTERRUPT_GPIO5                ,
-INTERRUPT_USB3_DEV_SMI         ,
-INTERRUPT_USB3_DEV_PME         ,
-INTERRUPT_SE                   ,
-INTERRUPT_SPI1                 ,
-INTERRUPT_APB_DMA_COP          ,
-INTERRUPT_AHB_DMA_COP          ,
-INTERRUPT_CLDVFS               ,
-INTERRUPT_I2C6                 ,
-INTERRUPT_HOST1X_SYNCPT_COP    ,
-INTERRUPT_HOST1X_SYNCPT_CPU    ,
-INTERRUPT_HOST1X_GEN_COP       ,
-INTERRUPT_HOST1X_GEN_CPU       ,
-INTERRUPT_MSENC                ,
-INTERRUPT_VI                   ,
-INTERRUPT_ISPB                 ,
-INTERRUPT_ISP                  ,
-INTERRUPT_VIC                  ,
-INTERRUPT_DISPLAY              ,
-INTERRUPT_DISPLAYB             ,
-INTERRUPT_HDMI                 ,
-INTERRUPT_SOR                  ,
-INTERRUPT_EMC                  ,
-INTERRUPT_SPI6                 ,
-INTERRUPT_HDA                  ,
-INTERRUPT_SPI2                 ,
-INTERRUPT_SPI3                 ,
-INTERRUPT_I2C2                 ,
-INTERRUPT_PMU_EXT              ,
-INTERRUPT_GPIO6                ,
-INTERRUPT_GPIO7                ,
-INTERRUPT_I2C3                 ,
-INTERRUPT_SW                   ,
-INTERRUPT_SNOR                 ,
 INTERRUPT_USB3                 ,
-INTERRUPT_PCIE_INT             ,
-INTERRUPT_PCIE_MSI             ,
-INTERRUPT_PCIE_WAKE            ,
-INTERRUPT_AVP_CACHE            ,
-INTERRUPT_AUDIO_CLUSTER        ,
-INTERRUPT_APB_DMA_CH0          ,
-INTERRUPT_APB_DMA_CH1          ,
-INTERRUPT_APB_DMA_CH2          ,
-INTERRUPT_APB_DMA_CH3          ,
-INTERRUPT_APB_DMA_CH4          ,
-INTERRUPT_APB_DMA_CH5          ,
-INTERRUPT_APB_DMA_CH6          ,
-INTERRUPT_APB_DMA_CH7          ,
-INTERRUPT_APB_DMA_CH8          ,
-INTERRUPT_APB_DMA_CH9          ,
-INTERRUPT_APB_DMA_CH10         ,
-INTERRUPT_APB_DMA_CH11         ,
-INTERRUPT_APB_DMA_CH12         ,
-INTERRUPT_APB_DMA_CH13         ,
-INTERRUPT_APB_DMA_CH14         ,
-INTERRUPT_APB_DMA_CH15         ,
-INTERRUPT_I2C4                 ,
-INTERRUPT_TMR5                 ,
-INTERRUPT_HIER_GROUP1_COP      ,
-INTERRUPT_WDT_CPU              ,
-INTERRUPT_WDT_AVP              ,
-INTERRUPT_GPIO8                ,
-INTERRUPT_CAR                  ,
-INTERRUPT_HIER_GROUP1_CPU      ,
-INTERRUPT_APB_DMA_CH16         ,
-INTERRUPT_APB_DMA_CH17         ,
-INTERRUPT_APB_DMA_CH18         ,
-INTERRUPT_APB_DMA_CH19         ,
-INTERRUPT_APB_DMA_CH20         ,
-INTERRUPT_APB_DMA_CH21         ,
-INTERRUPT_APB_DMA_CH22         ,
-INTERRUPT_APB_DMA_CH23         ,
-INTERRUPT_APB_DMA_CH24         ,
-INTERRUPT_APB_DMA_CH25         ,
-INTERRUPT_APB_DMA_CH26         ,
-INTERRUPT_APB_DMA_CH27         ,
-INTERRUPT_APB_DMA_CH28         ,
-INTERRUPT_APB_DMA_CH29         ,
-INTERRUPT_APB_DMA_CH30         ,
-INTERRUPT_APB_DMA_CH31         ,
-INTERRUPT_CPU0_PMU             ,
-INTERRUPT_CPU1_PMU             ,
-INTERRUPT_CPU2_PMU             ,
-INTERRUPT_CPU3_PMU             ,
-INTERRUPT_SDMMC1_SYS           ,
-INTERRUPT_SDMMC2_SYS           ,
-INTERRUPT_SDMMC3_SYS           ,
-INTERRUPT_SDMMC4_SYS           ,
-INTERRUPT_TMR6                 ,
-INTERRUPT_TMR7                 ,
-INTERRUPT_TMR8                 ,
-INTERRUPT_TMR9                 ,
-INTERRUPT_TMR0                 ,
-INTERRUPT_GPU                  ,
-INTERRUPT_GPU_NONSTALL         ,
-ARDPAUX                        ,
-#endif
 };
 
 static seL4_CPtr linux_pt_irq_caps[ARRAY_SIZE(linux_pt_irqs)];
@@ -344,152 +220,17 @@ vm_reboot_cb(vm_t* vm, void* token)
     return 0;
 }
 
-#if defined FEATURE_VUSB
-
-static vusb_device_t* _vusb;
-static usb_host_t _hcd;
-
-static void
-usb_irq_handler(struct irq_data* irq_data)
-{
-    usb_host_t* hcd = (usb_host_t*)irq_data->token;
-    usb_hcd_handle_irq(hcd);
-    irq_data_ack_irq(irq_data);
-}
-
-static int
-install_vusb(vm_t* vm)
-{
-    irq_server_t irq_server;
-    ps_io_ops_t* io_ops;
-    vusb_device_t* vusb;
-    usb_host_t* hcd;
-    struct irq_data* irq_data;
-    seL4_CPtr vmm_ep;
-    int err;
-    irq_server = _irq_server;
-    io_ops = vm->io_ops;
-    hcd = &_hcd;
-    vmm_ep = _fault_endpoint;
-
-    /* Initialise the physical host controller */
-    err = usb_host_init(USB_HOST_DEFAULT, io_ops, hcd);
-    assert(!err);
-    if (err) {
-        return -1;
-    }
-
-    /* Route physical IRQs */
-    irq_data = irq_server_register_irq(irq_server, 103, usb_irq_handler, hcd);
-    if (!irq_data) {
-        return -1;
-    }
-    /* Install the virtual device */
-    vusb = vm_install_vusb(vm, hcd, VUSB_ADDRESS, VUSB_IRQ, vmm_ep, VUSB_NINDEX,
-                           VUSB_NBADGE);
-    assert(vusb != NULL);
-    if (vusb == NULL) {
-        return -1;
-    }
-    _vusb = vusb;
-
-    return 0;
-}
-
-void
-vusb_notify(void)
-{
-    vm_vusb_notify(_vusb);
-}
-
-#else /* FEATURE_VUSB */
-
-#include <platsupport/gpio.h>
-
-#define NRESET_GPIO              XEINT12
-#define HUBCONNECT_GPIO          XEINT6
-#define NINT_GPIO                XEINT7
-
-static int
-install_vusb(vm_t* vm)
-{
-    /* TODO for TK1 */
-    return 0;
-}
-
-void
-vusb_notify(void)
-{
-}
-
-#endif /* FEATURE_VUSB */
-
-static void
-configure_gpio(vm_t *vm)
-{
-#ifdef CONFIG_APP_LINUX_SECURE
-    /* Don't provide any access to GPIO/MUX */
-#else /* CONFIG_APP_LINUX_SECURE */
-    /* TODO for TK1 */
-#endif /* CONFIG_APP_LINUX_SECURE */
-}
-
 #ifdef CONFIG_TK1_DEVICE_FWD
-
-struct generic_forward_cfg camkes_uart_d = {
+static struct generic_forward_cfg camkes_uart_d = {
   .read_fn = uartfwd_read,
   .write_fn = uartfwd_write
 };
 
-struct generic_forward_cfg camkes_clk_car =  {
+static struct generic_forward_cfg camkes_clk_car =  {
   .read_fn = clkcarfwd_read,
   .write_fn = clkcarfwd_write
 };
-
 #endif
-
-#define BBOX_PADDR 0xC0000000
-
-static int
-handle_bbox_fault(struct device* d, vm_t* vm, fault_t* fault)
-{
-    uint32_t offset = fault_get_address(fault) - BBOX_PADDR;
-
-    if (fault_is_write(fault)) {
-        uint32_t data = fault_get_data(fault) & 0xFFFF;
-        switch (offset) {
-        case 0x0:
-            bbox->left = data;
-            break;
-        case 0x2:
-            bbox->right = data;
-            break;
-        case 0x4:
-            bbox->top = data;
-            break;
-        case 0x6:
-            bbox->bottom = data;
-            bbox_notification_emit();
-            break;
-        default:
-            ZF_LOGE("Unhandled offset");
-            break;
-        }
-    } else {
-        fault_set_data(fault, 0);
-    }
-
-    return advance_fault(fault);
-}
-
-const struct device dev_bbox = {
-    .devid = DEV_CUSTOM,
-    .name = "Camera bounding box",
-    .pstart = BBOX_PADDR,
-    .size = PAGE_SIZE,
-    .handle_page_fault = &handle_bbox_fault,
-    .priv = NULL
-};
 
 static int
 install_linux_devices(vm_t* vm)
@@ -502,18 +243,6 @@ install_linux_devices(vm_t* vm)
     err = vm_install_ram_range(vm, LINUX_RAM_BASE, LINUX_RAM_SIZE);
     assert(!err);
 
-    /* Install virtual USB */
-    err = install_vusb(vm);
-    assert(!err);
-
-#if CONFIG_APP_LINUX_SECURE
-    /* Add hooks for specific power management hooks */
-    err = vm_install_vpower(vm, &vm_shutdown_cb, &pwr_token, &vm_reboot_cb, &pwr_token);
-    assert(!err);
-#else
-#endif /* CONFIG_APP_LINUX_SECURE */
-
-    configure_gpio(vm);
 #ifdef CONFIG_TK1_DEVICE_FWD
     /* Configure UART forward device */
     err = vm_install_generic_forward_device(vm, &dev_vconsole, camkes_uart_d);
@@ -524,6 +253,7 @@ install_linux_devices(vm_t* vm)
     assert(!err);
 #endif // CONFIG_TK1_DEVICE_FWD
 
+    /* Install bounding box "device" to act as barebones vchan */
     err = vm_add_device(vm, &dev_bbox);
     assert(!err);
 
@@ -532,21 +262,24 @@ install_linux_devices(vm_t* vm)
     addr = map_device(vm->vmm_vspace, vm->vka, vm->simple, SDMMC_PADDR, SDMMC_PADDR, seL4_AllRights);
     assert(addr);
 
-    err = vm_add_device(vm, &dev_sdmmcs);
+    err = vm_add_device(vm, &dev_sdmmc4);
     assert(!err);
 #endif // CONFIG_VM_TK1_EMMC_ROOTFS
 
+    err = vm_install_tk1_usb_passthrough_device(vm);
+    assert(!err);
+
     /* Install pass through devices */
-    /* TK1 passes through all devices at the moment by using on-demand device mapping */
     for (i = 0; i < sizeof(linux_pt_devices) / sizeof(*linux_pt_devices); i++) {
        err = vm_install_passthrough_device(vm, linux_pt_devices[i]);
        assert(!err);
     }
 
-    /* Install blank devices that Linux tries to access, but doesn't need */
-    for (i = 0; i < sizeof(linux_blank_paddrs) / sizeof(*linux_blank_paddrs); i++) {
-        void *mapped = map_vm_ram(vm, linux_blank_paddrs[i]);
-        assert(mapped);
+    /* Install ram backed devices */
+    /* Devices that are just anonymous memory mappings */
+    for (i = 0; i < sizeof(linux_ram_devices) / sizeof(*linux_ram_devices); i++) {
+        err = vm_install_ram_only_device(vm, linux_ram_devices[i]);
+        assert(!err);
     }
 
     /* hack to give access to other components
