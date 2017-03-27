@@ -32,8 +32,6 @@ extern "C" {
 #include "quaternion_types.h"
 #include "sequence_numbered_gyroscope_sample_types.h"
 #include "gyroscope_sample_types.h"
-#include "sequence_numbered_xyz_calibration_types.h"
-#include "xyz_calibration_types.h"
 #include "sequence_numbered_accelerometer_sample_types.h"
 #include "accelerometer_sample_types.h"
 #include "sequence_numbered_barometer_sample_types.h"

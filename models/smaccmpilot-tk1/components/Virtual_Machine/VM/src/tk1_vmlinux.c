@@ -93,63 +93,19 @@ const struct device dev_sdmmc4 = {
 };
 #endif //CONFIG_VM_TK1_EMMC_ROOTFS
 
-
-#define BBOX_PADDR 0xC0000000
-
-static int
-handle_bbox_fault(struct device* d, vm_t* vm, fault_t* fault)
-{
-    uint32_t offset = fault_get_address(fault) - BBOX_PADDR;
-
-    if (fault_is_write(fault)) {
-        uint32_t data = fault_get_data(fault) & 0xFFFF;
-        switch (offset) {
-        case 0x0:
-            bbox->left = data;
-            break;
-        case 0x2:
-            bbox->right = data;
-            break;
-        case 0x4:
-            bbox->top = data;
-            break;
-        case 0x6:
-            bbox->bottom = data;
-            bbox_notification_emit();
-            break;
-        default:
-            ZF_LOGE("Unhandled offset");
-            break;
-        }
-    } else {
-        fault_set_data(fault, 0);
-    }
-
-    return advance_fault(fault);
-}
-
-const struct device dev_bbox = {
+#ifndef CONFIG_TK1_VM_HACK
+const struct device dev_vm_hack_blank = {
     .devid = DEV_CUSTOM,
-    .name = "Camera bounding box",
-    .pstart = BBOX_PADDR,
-    .size = PAGE_SIZE,
-    .handle_page_fault = &handle_bbox_fault,
-    .priv = NULL
-};
-
-// TODO: Remove and replace with rebootable version
-const struct device dev_usb2 = {
-    .devid = DEV_CUSTOM,
-    .name = "USB2",
-    .pstart = 0x7d004000,
-    .size = PAGE_SIZE,
+    .name = "VM Hack - empty space",
+    .pstart = 0xd0000000,
+    .size = 2*PAGE_SIZE,
     .handle_page_fault = NULL,
     .priv = NULL
 };
+#endif
 
 static const struct device *linux_pt_devices[] = {
     &dev_usb1,
-//    &dev_usb2,
     &dev_usb3,
 };
 
@@ -163,7 +119,7 @@ static const struct device *linux_ram_devices[] = {
     &dev_fuse,              // FUSE
     &dev_gpios,             // GPIO_INT_ENB_0
 #ifndef CONFIG_TK1_VM_HACK
-    &dev_bbox,
+    &dev_vm_hack_blank
 #endif
 };
 
@@ -231,6 +187,49 @@ static struct generic_forward_cfg camkes_clk_car =  {
   .write_fn = clkcarfwd_write
 };
 #endif
+
+#define BBOX_PADDR 0xC0000000
+
+static int
+handle_bbox_fault(struct device* d, vm_t* vm, fault_t* fault)
+{
+    uint32_t offset = fault_get_address(fault) - BBOX_PADDR;
+
+    if (fault_is_write(fault)) {
+        uint32_t data = fault_get_data(fault) & 0xFFFF;
+        switch (offset) {
+        case 0x0:
+            bbox->left = data;
+            break;
+        case 0x2:
+            bbox->right = data;
+            break;
+        case 0x4:
+            bbox->top = data;
+            break;
+        case 0x6:
+            bbox->bottom = data;
+            bbox_notification_emit();
+            break;
+        default:
+            ZF_LOGE("Unhandled offset");
+            break;
+        }
+    } else {
+        fault_set_data(fault, 0);
+    }
+
+    return advance_fault(fault);
+}
+
+const struct device dev_bbox = {
+    .devid = DEV_CUSTOM,
+    .name = "Camera bounding box",
+    .pstart = BBOX_PADDR,
+    .size = PAGE_SIZE,
+    .handle_page_fault = &handle_bbox_fault,
+    .priv = NULL
+};
 
 static int
 install_linux_devices(vm_t* vm)

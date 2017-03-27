@@ -847,10 +847,10 @@ void callback_packedStatusGetRespProducer(const struct sequence_numbered_packed_
     uint32_t n_local2 = (uint32_t) 0U;
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 67U) < (uint32_t) 80U);
+    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 59U) < (uint32_t) 80U);
     
     if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 4155064513U;
+        uint32_t n_local5 = (uint32_t) 1735600494U;
         uint32_t *n_ref6 = &n_local5;
         uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
         
@@ -859,12 +859,12 @@ void callback_packedStatusGetRespProducer(const struct sequence_numbered_packed_
         uint8_t *n_cse4 = (uint8_t *) n_ref1;
         
         ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 63U) <= (uint32_t) 80U));
+        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 55U) <= (uint32_t) 80U));
         sequence_numbered_packed_status_set_be(n_cse4, n_cse2, n_var0);
         
         uint32_t n_deref7 = *n_ref3;
         
-        *n_ref3 = (uint32_t) ((uint32_t) 67U + n_deref7);
+        *n_ref3 = (uint32_t) ((uint32_t) 59U + n_deref7);
     }
     if (n_cse1) {
         callback_output_tb_self2encrypt_enqueue_2(n_ref1);
@@ -995,99 +995,6 @@ void callback_sensorsOutputGetRespProducer(const struct sequence_numbered_sensor
     }
 }
 
-void callback_gyroRawOutputGetRespProducer(const struct sequence_numbered_gyroscope_sample *n_var0)
-{
-    uint8_t n_local0[80U] = {};
-    uint8_t *n_ref1 = n_local0;
-    uint32_t n_local2 = (uint32_t) 0U;
-    uint32_t *n_ref3 = &n_local2;
-    uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 35U) < (uint32_t) 80U);
-    
-    if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 3226355853U;
-        uint32_t *n_ref6 = &n_local5;
-        uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
-        
-        ASSERTS((bool) (n_cse2 <= (uint32_t) 80U));
-        
-        uint8_t *n_cse4 = (uint8_t *) n_ref1;
-        
-        ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 31U) <= (uint32_t) 80U));
-        sequence_numbered_gyroscope_sample_set_be(n_cse4, n_cse2, n_var0);
-        
-        uint32_t n_deref7 = *n_ref3;
-        
-        *n_ref3 = (uint32_t) ((uint32_t) 35U + n_deref7);
-    }
-    if (n_cse1) {
-        callback_output_tb_self2encrypt_enqueue_2(n_ref1);
-    }
-}
-
-void callback_gyroCalibrationGetRespProducer(const struct sequence_numbered_xyz_calibration *n_var0)
-{
-    uint8_t n_local0[80U] = {};
-    uint8_t *n_ref1 = n_local0;
-    uint32_t n_local2 = (uint32_t) 0U;
-    uint32_t *n_ref3 = &n_local2;
-    uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 45U) < (uint32_t) 80U);
-    
-    if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 1914812395U;
-        uint32_t *n_ref6 = &n_local5;
-        uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
-        
-        ASSERTS((bool) (n_cse2 <= (uint32_t) 80U));
-        
-        uint8_t *n_cse4 = (uint8_t *) n_ref1;
-        
-        ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 41U) <= (uint32_t) 80U));
-        sequence_numbered_xyz_calibration_set_be(n_cse4, n_cse2, n_var0);
-        
-        uint32_t n_deref7 = *n_ref3;
-        
-        *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
-    }
-    if (n_cse1) {
-        callback_output_tb_self2encrypt_enqueue_2(n_ref1);
-    }
-}
-
-void callback_gyroOutputCalibrationGetRespProducer(const struct sequence_numbered_xyz_calibration *n_var0)
-{
-    uint8_t n_local0[80U] = {};
-    uint8_t *n_ref1 = n_local0;
-    uint32_t n_local2 = (uint32_t) 0U;
-    uint32_t *n_ref3 = &n_local2;
-    uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 45U) < (uint32_t) 80U);
-    
-    if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 2127427018U;
-        uint32_t *n_ref6 = &n_local5;
-        uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
-        
-        ASSERTS((bool) (n_cse2 <= (uint32_t) 80U));
-        
-        uint8_t *n_cse4 = (uint8_t *) n_ref1;
-        
-        ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 41U) <= (uint32_t) 80U));
-        sequence_numbered_xyz_calibration_set_be(n_cse4, n_cse2, n_var0);
-        
-        uint32_t n_deref7 = *n_ref3;
-        
-        *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
-    }
-    if (n_cse1) {
-        callback_output_tb_self2encrypt_enqueue_2(n_ref1);
-    }
-}
-
 void callback_gyroOutputGetRespProducer(const struct sequence_numbered_gyroscope_sample *n_var0)
 {
     uint8_t n_local0[80U] = {};
@@ -1095,10 +1002,10 @@ void callback_gyroOutputGetRespProducer(const struct sequence_numbered_gyroscope
     uint32_t n_local2 = (uint32_t) 0U;
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 35U) < (uint32_t) 80U);
+    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 34U) < (uint32_t) 80U);
     
     if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 2247420992U;
+        uint32_t n_local5 = (uint32_t) 1997727756U;
         uint32_t *n_ref6 = &n_local5;
         uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
         
@@ -1107,12 +1014,12 @@ void callback_gyroOutputGetRespProducer(const struct sequence_numbered_gyroscope
         uint8_t *n_cse4 = (uint8_t *) n_ref1;
         
         ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 31U) <= (uint32_t) 80U));
+        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 30U) <= (uint32_t) 80U));
         sequence_numbered_gyroscope_sample_set_be(n_cse4, n_cse2, n_var0);
         
         uint32_t n_deref7 = *n_ref3;
         
-        *n_ref3 = (uint32_t) ((uint32_t) 35U + n_deref7);
+        *n_ref3 = (uint32_t) ((uint32_t) 34U + n_deref7);
     }
     if (n_cse1) {
         callback_output_tb_self2encrypt_enqueue_2(n_ref1);
@@ -1126,10 +1033,10 @@ void callback_accelOutputGetRespProducer(const struct sequence_numbered_accelero
     uint32_t n_local2 = (uint32_t) 0U;
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 35U) < (uint32_t) 80U);
+    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 34U) < (uint32_t) 80U);
     
     if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 715196814U;
+        uint32_t n_local5 = (uint32_t) 1378612854U;
         uint32_t *n_ref6 = &n_local5;
         uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
         
@@ -1138,12 +1045,12 @@ void callback_accelOutputGetRespProducer(const struct sequence_numbered_accelero
         uint8_t *n_cse4 = (uint8_t *) n_ref1;
         
         ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 31U) <= (uint32_t) 80U));
+        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 30U) <= (uint32_t) 80U));
         sequence_numbered_accelerometer_sample_set_be(n_cse4, n_cse2, n_var0);
         
         uint32_t n_deref7 = *n_ref3;
         
-        *n_ref3 = (uint32_t) ((uint32_t) 35U + n_deref7);
+        *n_ref3 = (uint32_t) ((uint32_t) 34U + n_deref7);
     }
     if (n_cse1) {
         callback_output_tb_self2encrypt_enqueue_2(n_ref1);
@@ -1212,99 +1119,6 @@ void callback_lidarliteOutputGetRespProducer(const struct sequence_numbered_lida
     }
 }
 
-void callback_magRawOutputGetRespProducer(const struct sequence_numbered_magnetometer_sample *n_var0)
-{
-    uint8_t n_local0[80U] = {};
-    uint8_t *n_ref1 = n_local0;
-    uint32_t n_local2 = (uint32_t) 0U;
-    uint32_t *n_ref3 = &n_local2;
-    uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 31U) < (uint32_t) 80U);
-    
-    if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 2030534086U;
-        uint32_t *n_ref6 = &n_local5;
-        uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
-        
-        ASSERTS((bool) (n_cse2 <= (uint32_t) 80U));
-        
-        uint8_t *n_cse4 = (uint8_t *) n_ref1;
-        
-        ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 27U) <= (uint32_t) 80U));
-        sequence_numbered_magnetometer_sample_set_be(n_cse4, n_cse2, n_var0);
-        
-        uint32_t n_deref7 = *n_ref3;
-        
-        *n_ref3 = (uint32_t) ((uint32_t) 31U + n_deref7);
-    }
-    if (n_cse1) {
-        callback_output_tb_self2encrypt_enqueue_2(n_ref1);
-    }
-}
-
-void callback_magCalibrationGetRespProducer(const struct sequence_numbered_xyz_calibration *n_var0)
-{
-    uint8_t n_local0[80U] = {};
-    uint8_t *n_ref1 = n_local0;
-    uint32_t n_local2 = (uint32_t) 0U;
-    uint32_t *n_ref3 = &n_local2;
-    uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 45U) < (uint32_t) 80U);
-    
-    if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 1418312716U;
-        uint32_t *n_ref6 = &n_local5;
-        uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
-        
-        ASSERTS((bool) (n_cse2 <= (uint32_t) 80U));
-        
-        uint8_t *n_cse4 = (uint8_t *) n_ref1;
-        
-        ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 41U) <= (uint32_t) 80U));
-        sequence_numbered_xyz_calibration_set_be(n_cse4, n_cse2, n_var0);
-        
-        uint32_t n_deref7 = *n_ref3;
-        
-        *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
-    }
-    if (n_cse1) {
-        callback_output_tb_self2encrypt_enqueue_2(n_ref1);
-    }
-}
-
-void callback_magOutputCalibrationGetRespProducer(const struct sequence_numbered_xyz_calibration *n_var0)
-{
-    uint8_t n_local0[80U] = {};
-    uint8_t *n_ref1 = n_local0;
-    uint32_t n_local2 = (uint32_t) 0U;
-    uint32_t *n_ref3 = &n_local2;
-    uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 45U) < (uint32_t) 80U);
-    
-    if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 3743942827U;
-        uint32_t *n_ref6 = &n_local5;
-        uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
-        
-        ASSERTS((bool) (n_cse2 <= (uint32_t) 80U));
-        
-        uint8_t *n_cse4 = (uint8_t *) n_ref1;
-        
-        ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 41U) <= (uint32_t) 80U));
-        sequence_numbered_xyz_calibration_set_be(n_cse4, n_cse2, n_var0);
-        
-        uint32_t n_deref7 = *n_ref3;
-        
-        *n_ref3 = (uint32_t) ((uint32_t) 45U + n_deref7);
-    }
-    if (n_cse1) {
-        callback_output_tb_self2encrypt_enqueue_2(n_ref1);
-    }
-}
-
 void callback_magOutputGetRespProducer(const struct sequence_numbered_magnetometer_sample *n_var0)
 {
     uint8_t n_local0[80U] = {};
@@ -1312,10 +1126,10 @@ void callback_magOutputGetRespProducer(const struct sequence_numbered_magnetomet
     uint32_t n_local2 = (uint32_t) 0U;
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 31U) < (uint32_t) 80U);
+    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 30U) < (uint32_t) 80U);
     
     if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 1167088339U;
+        uint32_t n_local5 = (uint32_t) 3699308949U;
         uint32_t *n_ref6 = &n_local5;
         uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
         
@@ -1324,12 +1138,12 @@ void callback_magOutputGetRespProducer(const struct sequence_numbered_magnetomet
         uint8_t *n_cse4 = (uint8_t *) n_ref1;
         
         ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 27U) <= (uint32_t) 80U));
+        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 26U) <= (uint32_t) 80U));
         sequence_numbered_magnetometer_sample_set_be(n_cse4, n_cse2, n_var0);
         
         uint32_t n_deref7 = *n_ref3;
         
-        *n_ref3 = (uint32_t) ((uint32_t) 31U + n_deref7);
+        *n_ref3 = (uint32_t) ((uint32_t) 30U + n_deref7);
     }
     if (n_cse1) {
         callback_output_tb_self2encrypt_enqueue_2(n_ref1);
@@ -1560,10 +1374,10 @@ void callback_altControlDebugGetRespProducer(const struct sequence_numbered_alt_
     uint32_t n_local2 = (uint32_t) 0U;
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 74U) < (uint32_t) 80U);
+    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 72U) < (uint32_t) 80U);
     
     if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 3357897920U;
+        uint32_t n_local5 = (uint32_t) 1833368932U;
         uint32_t *n_ref6 = &n_local5;
         uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
         
@@ -1572,12 +1386,12 @@ void callback_altControlDebugGetRespProducer(const struct sequence_numbered_alt_
         uint8_t *n_cse4 = (uint8_t *) n_ref1;
         
         ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 70U) <= (uint32_t) 80U));
+        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 68U) <= (uint32_t) 80U));
         sequence_numbered_alt_control_debug_set_be(n_cse4, n_cse2, n_var0);
         
         uint32_t n_deref7 = *n_ref3;
         
-        *n_ref3 = (uint32_t) ((uint32_t) 74U + n_deref7);
+        *n_ref3 = (uint32_t) ((uint32_t) 72U + n_deref7);
     }
     if (n_cse1) {
         callback_output_tb_self2encrypt_enqueue_2(n_ref1);
@@ -1622,10 +1436,10 @@ void callback_armingStatusGetRespProducer(const struct sequence_numbered_arming_
     uint32_t n_local2 = (uint32_t) 0U;
     uint32_t *n_ref3 = &n_local2;
     uint32_t n_deref4 = *n_ref3;
-    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 14U) < (uint32_t) 80U);
+    bool n_cse1 = (bool) ((uint32_t) (n_deref4 + (uint32_t) 12U) < (uint32_t) 80U);
     
     if (n_cse1) {
-        uint32_t n_local5 = (uint32_t) 919453263U;
+        uint32_t n_local5 = (uint32_t) 1795869700U;
         uint32_t *n_ref6 = &n_local5;
         uint32_t n_cse2 = (uint32_t) (n_deref4 + (uint32_t) 4U);
         
@@ -1634,12 +1448,12 @@ void callback_armingStatusGetRespProducer(const struct sequence_numbered_arming_
         uint8_t *n_cse4 = (uint8_t *) n_ref1;
         
         ivory_serialize_pack_uint32_be(n_cse4, n_deref4, n_ref6);
-        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 10U) <= (uint32_t) 80U));
+        ASSERTS((bool) ((uint32_t) (n_cse2 + (uint32_t) 8U) <= (uint32_t) 80U));
         sequence_numbered_arming_status_set_be(n_cse4, n_cse2, n_var0);
         
         uint32_t n_deref7 = *n_ref3;
         
-        *n_ref3 = (uint32_t) ((uint32_t) 14U + n_deref7);
+        *n_ref3 = (uint32_t) ((uint32_t) 12U + n_deref7);
     }
     if (n_cse1) {
         callback_output_tb_self2encrypt_enqueue_2(n_ref1);
