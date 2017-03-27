@@ -82,6 +82,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 		ComponentType ct = (ComponentType) classifier;
 		
+		//Allow a runnable to be executed by the UI-thread asynchronously
 		Display.getDefault().asyncExec(new Runnable() {
 			
 			@Override
@@ -106,7 +107,6 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				return;
 			}
 
-			// SystemType sysType = si.getSystemImplementation().getType();
 			ComponentType sysType = AgreeUtils.getInstanceType(si);
 
 			EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
@@ -184,8 +184,8 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 			}
 			return;
 		} catch (Throwable e) {
-			String messages = getNestedMessages(e);
 			e.printStackTrace();
+			Dialog.showError("AGREE Error", e.toString());
 			return;
 		} finally {
 			if (ci != null) {
