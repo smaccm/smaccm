@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AnnexSubclause;
@@ -80,6 +81,19 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		}
 
 		ComponentType ct = (ComponentType) classifier;
+		
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				doWork(ct);
+			}
+		});
+		
+		return Status.OK_STATUS;
+	}
+	
+	protected void doWork(ComponentType ct){
 		ComponentImplementation ci = null;
 		try {
 			ci = AgreeUtils.compImplFromType(ct);
@@ -89,7 +103,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				si = InstantiateModel.buildInstanceModelFile(ci);
 			} catch (Exception e) {
 				Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
-				return Status.CANCEL_STATUS;
+				return;
 			}
 
 			// SystemType sysType = si.getSystemImplementation().getType();
@@ -114,12 +128,12 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 			ModelInfo info = getModelInfo(ct);
 			if (info == null) {
-				return Status.CANCEL_STATUS;
+				return;
 			}
 			
 			String dirStr = info.outputDirPath;
 			if (dirStr == null || dirStr.isEmpty()) {
-				return Status.CANCEL_STATUS;
+				return;
 			}
 			
 			boolean exportPressed = info.exportPressed;
@@ -168,11 +182,11 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 							modelUpdateScript.toString());
 				}
 			}
-			return Status.OK_STATUS;
+			return;
 		} catch (Throwable e) {
 			String messages = getNestedMessages(e);
 			e.printStackTrace();
-			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
+			return;
 		} finally {
 			if (ci != null) {
 				ci.eResource().getContents().remove(ci);
