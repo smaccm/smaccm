@@ -84,9 +84,9 @@ public class SimulationLaunchConfigurationDelegate implements ILaunchConfigurati
 				final SystemInstance systemInstance = InstantiateModel.buildInstanceModelFile(ci);
 				
 				// Get the selected simulation engine type.
-				final String selectedEngineTypeId = configuration.getAttribute(SimulationLaunchConfigurationAttributes.ENGINE_TYPE_ID, (String)null);
-				final EngineType engineType = selectedEngineTypeId == null ? simulationService.getDefaultEngineType() : simulationService.getEngineTypeById(selectedEngineTypeId);
-			
+				final String selectedEngineTypeId = Objects.requireNonNull(configuration.getAttribute(SimulationLaunchConfigurationAttributes.ENGINE_TYPE_ID, (String)null), "Simulation Engine must be specified");
+				final EngineType engineType = Objects.requireNonNull(simulationService.getEngineTypeById(selectedEngineTypeId), "Unable to find specified simulation engine");
+				
 				final SimulationEngine newEngine = simulationService.createEngine(engineType, systemInstance);
 				final SimulationService simService = simulationService;
 				simulationService.addSimulationEngineChangeListener(new SimulationEngineChangeListener() {

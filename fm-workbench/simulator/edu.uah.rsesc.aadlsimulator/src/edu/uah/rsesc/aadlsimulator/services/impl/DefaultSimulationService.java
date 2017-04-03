@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 
 import edu.uah.rsesc.aadlsimulator.ExceptionHandler;
@@ -44,7 +45,7 @@ import edu.uah.rsesc.aadlsimulator.services.SimulationService;
 public class DefaultSimulationService implements SimulationService {
 	private final String engineTypesExtensionPointId = "edu.uah.rsesc.aadlsimulator.engineTypes";
 	private final MasterExceptionHandler masterExceptionHandler = new MasterExceptionHandler();
-	private final Collection<EngineType> engineTypes; 
+	private final Collection<DefaultEngineType> engineTypes; 
 	private final Collection<SimulationEngineChangeListener> simulationEngineChangeListeners = new CopyOnWriteArrayList<SimulationEngineChangeListener>();
 	
 	private static class DefaultEngineType implements EngineType {
@@ -105,7 +106,7 @@ public class DefaultSimulationService implements SimulationService {
 	}
 	
 	@Override
-	public Collection<EngineType> getEngineTypes() {
+	public Collection<DefaultEngineType> getEngineTypes() {
 		return engineTypes;
 	}
 	
@@ -123,13 +124,15 @@ public class DefaultSimulationService implements SimulationService {
 	}
 	
 	@Override
-	public EngineType getDefaultEngineType() {
-		if(engineTypes.size() == 0) {
-			throw new RuntimeException("No engine types are registered");
+	public EngineType getCompatibleEngineType(final ComponentImplementation ci) {
+		for(final DefaultEngineType engineType : engineTypes) {
+			// Check if engine type is compatible
+			if(engineType.factory.isCompatible(ci)) {
+				return engineType;
+			}
 		}
 		
-		// Return the first simulation engine type.
-		return engineTypes.iterator().next();
+		return null;
 	}
 	
 	@Override
