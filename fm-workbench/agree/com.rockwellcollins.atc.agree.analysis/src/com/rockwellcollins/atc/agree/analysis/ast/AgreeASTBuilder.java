@@ -1257,6 +1257,53 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
+	public Expr caseBinaryNonLinearExpr(com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr expr) {
+		Expr leftExpr = doSwitch(expr.getLeft());
+		Expr rightExpr = doSwitch(expr.getRight());
+		String op = expr.getOp();
+		BinaryOp binOp = null;
+		switch (op) {
+		case "pow": binOp = BinaryOp.POW; break;
+		case "arctan2" : binOp = BinaryOp.ARCTAN2; break;
+		}
+		assert (binOp != null);
+		BinaryExpr binExpr = new BinaryExpr(leftExpr, binOp, rightExpr);
+
+		return binExpr;
+	}
+
+	@Override
+	public Expr caseUnaryNonLinearExpr(com.rockwellcollins.atc.agree.agree.UnaryNonLinearExpr expr) {
+		Expr sub = doSwitch(expr.getExpr());
+		String op = expr.getOp();
+		UnaryOp unyOp = null;
+		switch (op) {
+		case "exp": unyOp = UnaryOp.EXP; break;
+		case "log": unyOp = UnaryOp.LOG; break;
+		case "sqrt": unyOp = UnaryOp.SQRT; break;
+		case "sin": unyOp = UnaryOp.SIN; break;
+		case "cos": unyOp = UnaryOp.COS; break;
+		case "tan": unyOp = UnaryOp.TAN; break;
+		case "asin": 
+		case "arcsin": unyOp = UnaryOp.ARCSIN; break;
+		case "acos":
+		case "arccos": unyOp = UnaryOp.ARCCOS; break;
+		case "atan":
+		case "arctan": unyOp = UnaryOp.ARCTAN; break;
+		case "sinh" : unyOp = UnaryOp.SINH; break;
+		case "cosh" : unyOp = UnaryOp.COSH; break;
+		case "tanh" : unyOp = UnaryOp.TANH; break;
+		case "matan":
+		case "marctan": unyOp = UnaryOp.MATAN; break;
+		}
+		assert (unyOp != null);
+		UnaryExpr unyExpr = new UnaryExpr(unyOp, sub);
+
+		return unyExpr;
+		
+	}
+	
+	@Override
 	public Expr caseBinaryExpr(com.rockwellcollins.atc.agree.agree.BinaryExpr expr) {
 
 		Expr leftExpr = doSwitch(expr.getLeft());
