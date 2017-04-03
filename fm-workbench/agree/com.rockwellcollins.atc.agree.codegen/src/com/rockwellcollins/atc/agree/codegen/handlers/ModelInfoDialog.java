@@ -142,7 +142,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		outputText = new Text(container, SWT.BORDER);
 		outputText.setText(savedInfo.outputDirPath);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gridData.widthHint = 300;
+		gridData.widthHint = 450;
 		gridData.horizontalIndent = 10;
 		outputText.setLayoutData(gridData);
 		outputText.addModifyListener(e -> validate());
@@ -167,7 +167,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		originalText = new Text(container, SWT.BORDER);
 		originalText.setText(savedInfo.originalModelName);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gridData.widthHint = 300;
+		gridData.widthHint = 450;
 		gridData.horizontalIndent = 10;
 		originalText.setLayoutData(gridData);
 		originalText.addModifyListener(e -> validate());
@@ -221,6 +221,8 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, ModelInfoDialogConstants.EXPORT_SCRIPT_ID,
 				ModelInfoDialogConstants.EXPORT_LABEL, true);
+		createButton(parent, ModelInfoDialogConstants.GENERATE_SUBSYSTEM_ID,
+				ModelInfoDialogConstants.GENERATE_LABEL, true);
 		createButton(parent, ModelInfoDialogConstants.UPDATE_MODEL_ID,
 				ModelInfoDialogConstants.UPDATE_LABEL, true);
 		createButton(parent, ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID,
@@ -239,11 +241,14 @@ public class ModelInfoDialog extends TitleAreaDialog{
 
 	protected void validate() {
 		boolean exportButtonEnabled = false;
+		boolean generateButtonEnabled = false;
 		boolean updateButtonEnabled = false;
 		boolean verifyButtonEnabled = false;		
 		boolean outputDirError = false;
 		boolean originalMdlError = false;
+		boolean originalMdlEmpty = true;
 		boolean updatedMdlError = false;
+		boolean updatedMdlEmpty = true;
 		buffer.setLength(0);
 
 		if (outputText.getText().equals("")) {
@@ -260,6 +265,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 
 		//not flagging an error if the originalText is empty
 		if(!originalText.getText().equals("")){
+			originalMdlEmpty = false;
 			if (!new File(originalText.getText()).exists()) {
 				write("Original model file does not exist");
 				newline();
@@ -273,6 +279,7 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		
 		//not flagging an error if the updatedText is empty
 		if(!updatedText.getText().equals("")){
+			updatedMdlEmpty = false;
 			if (!updatedText.getText().endsWith(".slx")) {
 				write("Updated model name must have .slx extension");
 				newline();
@@ -282,13 +289,18 @@ public class ModelInfoDialog extends TitleAreaDialog{
 
 		//not flagging an error if the subsystemText is empty
 		if (!subsystemText.getText().equals("")) {
-			if(exportButtonEnabled && !originalMdlError && !updatedMdlError){
+			if(!updatedMdlEmpty && !updatedMdlError){
+				generateButtonEnabled = true;
+			}
+			if(exportButtonEnabled && !originalMdlEmpty && !originalMdlError && 
+			   !updatedMdlEmpty && !updatedMdlError){
 				updateButtonEnabled = true;
 				verifyButtonEnabled = true;
 			}	
 		}
 
 		setExportEnabled(exportButtonEnabled);
+		setGenerateEnabled(generateButtonEnabled);
 		setUpdateEnabled(updateButtonEnabled);
 		setVerifyEnabled(verifyButtonEnabled);
 		
@@ -316,6 +328,8 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	protected void buttonPressed(int buttonId) {
 		if (ModelInfoDialogConstants.EXPORT_SCRIPT_ID == buttonId) {
 			exportPressed();
+		} else if (ModelInfoDialogConstants.GENERATE_SUBSYSTEM_ID == buttonId) {
+			generatePressed();
 		} else if (ModelInfoDialogConstants.UPDATE_MODEL_ID == buttonId) {
 			updatePressed();
 		} else if (ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID == buttonId) {
@@ -329,6 +343,13 @@ public class ModelInfoDialog extends TitleAreaDialog{
 		Button export = getButton(ModelInfoDialogConstants.EXPORT_SCRIPT_ID);
 		if (export != null) {
 			export.setEnabled(enabled);
+		}
+	}
+	
+	private void setGenerateEnabled(boolean enabled) {
+		Button generate = getButton(ModelInfoDialogConstants.GENERATE_SUBSYSTEM_ID);
+		if (generate != null) {
+			generate.setEnabled(enabled);
 		}
 	}
 	
@@ -349,21 +370,29 @@ public class ModelInfoDialog extends TitleAreaDialog{
 	protected void exportPressed() {
 		// for source text property saved in AADL, need to update the separator in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
-				subsystemText.getText(), true, false, false);
+				subsystemText.getText(), true, false, false, false);
 		super.okPressed();
 	}
+	
+	protected void generatePressed() {
+		// for source text property saved in AADL, need to update the separator in the path string
+		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
+				subsystemText.getText(), false, true, false, false);
+		super.okPressed();
+	}
+	
 	
 	protected void updatePressed() {
 		// for source text property saved in AADL, need to update the separator in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
-				subsystemText.getText(), false, true, false);
+				subsystemText.getText(), false, false, true, false);
 		super.okPressed();
 	}
 	
 	protected void verifyPressed() {
 		// for source text property saved in AADL, need to update the separator in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), originalText.getText(), updatedText.getText(),
-				subsystemText.getText(), false, false, true);
+				subsystemText.getText(), false, false, false, true);
 		super.okPressed();
 	}
 

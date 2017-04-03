@@ -28,9 +28,7 @@ typedef struct packed_status {
             uint8_t rcinput;
             uint8_t telem;
             uint8_t px4io;
-            uint8_t sens_cal;
-            float gyro_progress;
-            float mag_progress;
+            uint8_t sens_valid;
             uint8_t arming_mode;
             struct control_modes control_modes;
             float battery_voltage;

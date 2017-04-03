@@ -20,12 +20,10 @@ void packed_status_get_le(const uint8_t *n_var0, uint32_t n_var1, struct packed_
     tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 39U), &n_var2->rcinput);
     tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 40U), &n_var2->telem);
     tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 41U), &n_var2->px4io);
-    tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 42U), &n_var2->sens_cal);
-    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 43U), &n_var2->gyro_progress);
-    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 47U), &n_var2->mag_progress);
-    arming_mode_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 51U), &n_var2->arming_mode);
-    control_modes_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 52U), &n_var2->control_modes);
-    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 55U), &n_var2->battery_voltage);
+    tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 42U), &n_var2->sens_valid);
+    arming_mode_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 43U), &n_var2->arming_mode);
+    control_modes_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 44U), &n_var2->control_modes);
+    ivory_serialize_unpack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 47U), &n_var2->battery_voltage);
 }
 
 void packed_status_get_be(const uint8_t *n_var0, uint32_t n_var1, struct packed_status *n_var2)
@@ -45,12 +43,10 @@ void packed_status_get_be(const uint8_t *n_var0, uint32_t n_var1, struct packed_
     tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 39U), &n_var2->rcinput);
     tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 40U), &n_var2->telem);
     tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 41U), &n_var2->px4io);
-    tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 42U), &n_var2->sens_cal);
-    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 43U), &n_var2->gyro_progress);
-    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 47U), &n_var2->mag_progress);
-    arming_mode_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 51U), &n_var2->arming_mode);
-    control_modes_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 52U), &n_var2->control_modes);
-    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 55U), &n_var2->battery_voltage);
+    tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 42U), &n_var2->sens_valid);
+    arming_mode_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 43U), &n_var2->arming_mode);
+    control_modes_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 44U), &n_var2->control_modes);
+    ivory_serialize_unpack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 47U), &n_var2->battery_voltage);
 }
 
 void packed_status_set_le(uint8_t *n_var0, uint32_t n_var1, const struct packed_status *n_var2)
@@ -70,12 +66,10 @@ void packed_status_set_le(uint8_t *n_var0, uint32_t n_var1, const struct packed_
     tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 39U), &n_var2->rcinput);
     tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 40U), &n_var2->telem);
     tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 41U), &n_var2->px4io);
-    tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 42U), &n_var2->sens_cal);
-    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 43U), &n_var2->gyro_progress);
-    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 47U), &n_var2->mag_progress);
-    arming_mode_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 51U), &n_var2->arming_mode);
-    control_modes_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 52U), &n_var2->control_modes);
-    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 55U), &n_var2->battery_voltage);
+    tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 42U), &n_var2->sens_valid);
+    arming_mode_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 43U), &n_var2->arming_mode);
+    control_modes_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 44U), &n_var2->control_modes);
+    ivory_serialize_pack_float_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 47U), &n_var2->battery_voltage);
 }
 
 void packed_status_set_be(uint8_t *n_var0, uint32_t n_var1, const struct packed_status *n_var2)
@@ -95,10 +89,8 @@ void packed_status_set_be(uint8_t *n_var0, uint32_t n_var1, const struct packed_
     tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 39U), &n_var2->rcinput);
     tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 40U), &n_var2->telem);
     tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 41U), &n_var2->px4io);
-    tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 42U), &n_var2->sens_cal);
-    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 43U), &n_var2->gyro_progress);
-    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 47U), &n_var2->mag_progress);
-    arming_mode_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 51U), &n_var2->arming_mode);
-    control_modes_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 52U), &n_var2->control_modes);
-    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 55U), &n_var2->battery_voltage);
+    tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 42U), &n_var2->sens_valid);
+    arming_mode_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 43U), &n_var2->arming_mode);
+    control_modes_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 44U), &n_var2->control_modes);
+    ivory_serialize_pack_float_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 47U), &n_var2->battery_voltage);
 }

@@ -14,6 +14,16 @@ public interface ModelInfoDialogLabelKeys extends IDialogLabelKeys {
     public String EXPORT_LABEL_KEY = "Export Contracts"; //$NON-NLS-1$
 
     /**
+     * The key used to retrieve the label for GENERATE buttons.
+     * Clients should use the pattern
+     * <code>JFaceResources.getString(IDialogLabelKeys.GENERATE_LABEL_KEY)</code>
+     * to retrieve the label dynamically when using multiple locales.
+     * @since 3.7
+     */
+    public String GENERATE_LABEL_KEY = "Generate Subsystem"; //$NON-NLS-1$
+    
+    
+    /**
      * The key used to retrieve the label for UPDATE buttons.
      * Clients should use the pattern
      * <code>JFaceResources.getString(IDialogLabelKeys.UPDATE_LABEL_KEY)</code>

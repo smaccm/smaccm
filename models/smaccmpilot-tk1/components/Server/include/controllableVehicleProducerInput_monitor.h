@@ -32,8 +32,6 @@ extern "C" {
 #include "quaternion_types.h"
 #include "sequence_numbered_gyroscope_sample_types.h"
 #include "gyroscope_sample_types.h"
-#include "sequence_numbered_xyz_calibration_types.h"
-#include "xyz_calibration_types.h"
 #include "sequence_numbered_accelerometer_sample_types.h"
 #include "accelerometer_sample_types.h"
 #include "sequence_numbered_barometer_sample_types.h"
@@ -56,9 +54,9 @@ extern "C" {
 #include "quadcopter_motors_types.h"
 #include "sequence_numbered_att_control_debug_types.h"
 #include "att_control_debug_types.h"
+#include "pid_state_types.h"
 #include "sequence_numbered_alt_control_debug_types.h"
 #include "alt_control_debug_types.h"
-#include "pid_state_types.h"
 #include "sequence_numbered_px4io_state_types.h"
 #include "px4io_state_types.h"
 #include "px4io_status_types.h"
@@ -117,16 +115,10 @@ void callback_controlLawGetRespProducer(const struct sequence_numbered_control_l
 void callback_rcInputGetRespProducer(const struct sequence_numbered_rc_input *n_var0);
 void callback_userInputGetRespProducer(const struct sequence_numbered_user_input_result *n_var0);
 void callback_sensorsOutputGetRespProducer(const struct sequence_numbered_sensors_result *n_var0);
-void callback_gyroRawOutputGetRespProducer(const struct sequence_numbered_gyroscope_sample *n_var0);
-void callback_gyroCalibrationGetRespProducer(const struct sequence_numbered_xyz_calibration *n_var0);
-void callback_gyroOutputCalibrationGetRespProducer(const struct sequence_numbered_xyz_calibration *n_var0);
 void callback_gyroOutputGetRespProducer(const struct sequence_numbered_gyroscope_sample *n_var0);
 void callback_accelOutputGetRespProducer(const struct sequence_numbered_accelerometer_sample *n_var0);
 void callback_baroOutputGetRespProducer(const struct sequence_numbered_barometer_sample *n_var0);
 void callback_lidarliteOutputGetRespProducer(const struct sequence_numbered_lidarlite_sample *n_var0);
-void callback_magRawOutputGetRespProducer(const struct sequence_numbered_magnetometer_sample *n_var0);
-void callback_magCalibrationGetRespProducer(const struct sequence_numbered_xyz_calibration *n_var0);
-void callback_magOutputCalibrationGetRespProducer(const struct sequence_numbered_xyz_calibration *n_var0);
 void callback_magOutputGetRespProducer(const struct sequence_numbered_magnetometer_sample *n_var0);
 void callback_px4flowIntOutputGetRespProducer(const struct sequence_numbered_px4flow_integral_sample *n_var0);
 void callback_px4flowOutputGetRespProducer(const struct sequence_numbered_px4flow_sample *n_var0);

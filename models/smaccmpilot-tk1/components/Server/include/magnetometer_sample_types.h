@@ -13,7 +13,6 @@ extern "C" {
 typedef struct magnetometer_sample {
             bool initfail;
             bool samplefail;
-            bool calibrated;
             struct xyz sample;
             int64_t time;
         } magnetometer_sample;

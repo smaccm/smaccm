@@ -228,11 +228,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		boolean foundSubNode = false;
 		boolean hasDirectAnnex = false;
+		boolean hasSubcomponents = false;
 		ComponentClassifier compClass = compInst.getComponentClassifier();
 		if (compClass instanceof ComponentImplementation && (isTop || isMonolithic)) {
 			AgreeContractSubclause annex = getAgreeAnnex(compClass);
 
 			for (ComponentInstance subInst : compInst.getComponentInstances()) {
+				hasSubcomponents = true;
 				curInst = subInst;
 				AgreeNode subNode = getAgreeNode(subInst, false);
 				if (subNode != null) {
@@ -290,9 +292,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (annex != null) {
 			hasDirectAnnex = true;
 			AgreeContract contract = (AgreeContract) annex.getContract();
-			assumptions.addAll(getAssumptionStatements(contract.getSpecs()));
-			guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
-
+			//this makes files for monolithic verification a bit smaller
+			if (isTop || !hasSubcomponents) {
+				assumptions.addAll(getAssumptionStatements(contract.getSpecs()));
+				guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
+			}
 			// we count eqstatements with expressions as assertions
 			assertions.addAll(getEquationStatements(contract.getSpecs()));
 			assertions.addAll(getPropertyStatements(contract.getSpecs()));

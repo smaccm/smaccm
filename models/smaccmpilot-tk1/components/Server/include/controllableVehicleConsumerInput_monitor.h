@@ -32,8 +32,6 @@ extern "C" {
 #include "quaternion_types.h"
 #include "sequence_numbered_gyroscope_sample_types.h"
 #include "gyroscope_sample_types.h"
-#include "sequence_numbered_xyz_calibration_types.h"
-#include "xyz_calibration_types.h"
 #include "sequence_numbered_accelerometer_sample_types.h"
 #include "accelerometer_sample_types.h"
 #include "sequence_numbered_barometer_sample_types.h"
@@ -56,9 +54,9 @@ extern "C" {
 #include "quadcopter_motors_types.h"
 #include "sequence_numbered_att_control_debug_types.h"
 #include "att_control_debug_types.h"
+#include "pid_state_types.h"
 #include "sequence_numbered_alt_control_debug_types.h"
 #include "alt_control_debug_types.h"
-#include "pid_state_types.h"
 #include "sequence_numbered_px4io_state_types.h"
 #include "px4io_state_types.h"
 #include "px4io_status_types.h"
@@ -116,16 +114,10 @@ void callback_controlLawGetReqConsumer(const uint32_t *n_var0);
 void callback_rcInputGetReqConsumer(const uint32_t *n_var0);
 void callback_userInputGetReqConsumer(const uint32_t *n_var0);
 void callback_sensorsOutputGetReqConsumer(const uint32_t *n_var0);
-void callback_gyroRawOutputGetReqConsumer(const uint32_t *n_var0);
-void callback_gyroCalibrationGetReqConsumer(const uint32_t *n_var0);
-void callback_gyroOutputCalibrationGetReqConsumer(const uint32_t *n_var0);
 void callback_gyroOutputGetReqConsumer(const uint32_t *n_var0);
 void callback_accelOutputGetReqConsumer(const uint32_t *n_var0);
 void callback_baroOutputGetReqConsumer(const uint32_t *n_var0);
 void callback_lidarliteOutputGetReqConsumer(const uint32_t *n_var0);
-void callback_magRawOutputGetReqConsumer(const uint32_t *n_var0);
-void callback_magCalibrationGetReqConsumer(const uint32_t *n_var0);
-void callback_magOutputCalibrationGetReqConsumer(const uint32_t *n_var0);
 void callback_magOutputGetReqConsumer(const uint32_t *n_var0);
 void callback_px4flowIntOutputGetReqConsumer(const uint32_t *n_var0);
 void callback_px4flowOutputGetReqConsumer(const uint32_t *n_var0);

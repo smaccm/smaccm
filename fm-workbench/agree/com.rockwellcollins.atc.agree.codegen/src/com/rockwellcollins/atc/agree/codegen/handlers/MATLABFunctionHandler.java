@@ -15,13 +15,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.Feature;
 import org.osate.aadl2.ListValue;
 import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.Property;
@@ -78,6 +81,20 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		}
 
 		ComponentType ct = (ComponentType) classifier;
+		
+		//Allow a runnable to be executed by the UI-thread asynchronously
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				doWork(ct);
+			}
+		});
+		
+		return Status.OK_STATUS;
+	}
+	
+	protected void doWork(ComponentType ct){
 		ComponentImplementation ci = null;
 		try {
 			ci = AgreeUtils.compImplFromType(ct);
@@ -87,11 +104,11 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				si = InstantiateModel.buildInstanceModelFile(ci);
 			} catch (Exception e) {
 				Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
-				return Status.CANCEL_STATUS;
+				return;
 			}
 
-			// SystemType sysType = si.getSystemImplementation().getType();
 			ComponentType sysType = AgreeUtils.getInstanceType(si);
+
 			EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
 					AgreePackage.eINSTANCE.getAgreeContractSubclause());
 
@@ -111,17 +128,33 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 			ModelInfo info = getModelInfo(ct);
 			if (info == null) {
-				return Status.CANCEL_STATUS;
+				return;
 			}
 			
 			String dirStr = info.outputDirPath;
 			if (dirStr == null || dirStr.isEmpty()) {
-				return Status.CANCEL_STATUS;
+				return;
 			}
 			
 			boolean exportPressed = info.exportPressed;
+			boolean generatePressed = info.generatePressed;
 			boolean updatePressed = info.updatePressed;
 			boolean verifyPressed = info.verifyPressed;
+			
+			if(generatePressed){
+				// Write MATLAB script to generate subsystem in the selected
+				// output folder
+				SimulinkSubsysScriptCreator modelGenerateScript = new SimulinkSubsysScriptCreator(dirStr,
+						info.updatedModelName, info.subsystemName, matlabFunction.ports);
+
+				String modelUpdateScriptName = "generate_"+ info.subsystemName+ ".m";
+				
+				Path modelGenerateScriptPath = Paths.get(dirStr,
+						modelUpdateScriptName);
+				
+				writeToFile(modelGenerateScriptPath,
+						modelGenerateScript.toString());					
+			}
 			
 			if (exportPressed || updatePressed || verifyPressed) {
 				String matlabFuncScriptName = matlabFunction.name + ".m";
@@ -130,8 +163,8 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				// Write MATLAB function code into the specified file in the
 				// selected output folder
 				writeToFile(matlabFuncScriptPath, matlabFunction.toString());
-				if (info.updatePressed || info.verifyPressed) {
-
+				
+				if (updatePressed || verifyPressed) {
 					// Create Simulink Model Update script into the output
 					// folder
 					SimulinkObserverScriptCreator modelUpdateScript = new SimulinkObserverScriptCreator(
@@ -149,11 +182,11 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 							modelUpdateScript.toString());
 				}
 			}
-			return Status.OK_STATUS;
+			return;
 		} catch (Throwable e) {
-			String messages = getNestedMessages(e);
 			e.printStackTrace();
-			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
+			Dialog.showError("AGREE Error", e.toString());
+			return;
 		} finally {
 			if (ci != null) {
 				ci.eResource().getContents().remove(ci);

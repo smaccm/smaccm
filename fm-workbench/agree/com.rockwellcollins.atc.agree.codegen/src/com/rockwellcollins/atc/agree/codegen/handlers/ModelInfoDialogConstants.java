@@ -21,6 +21,11 @@ public interface ModelInfoDialogConstants extends IDialogConstants {
     public int VERIFY_SUBSYSTEM_ID = 259;
     
     /**
+     * Button id for a "Generate Subsystem" button (value 260).
+     */
+    public int GENERATE_SUBSYSTEM_ID = 260;
+    
+    /**
      * The label for export buttons.
      * Using this static label string provides optimum performance by looking
      * up the label only once when JFace is initialized.  However, clients that 
@@ -30,7 +35,16 @@ public interface ModelInfoDialogConstants extends IDialogConstants {
      */
     public String EXPORT_LABEL = JFaceResources.getString(ModelInfoDialogLabelKeys.EXPORT_LABEL_KEY);
 	
-    
+    /**
+     * The label for generate buttons.
+     * Using this static label string provides optimum performance by looking
+     * up the label only once when JFace is initialized.  However, clients that 
+     * wish to support multiple locales in one system should instead use the pattern
+     * <code>JFaceResources.getString(IDialogLabelKeys.EXPORT_LABEL_KEY)</code>
+     * so that a locale other than the default may be consulted.
+     */
+    public String GENERATE_LABEL = JFaceResources.getString(ModelInfoDialogLabelKeys.GENERATE_LABEL_KEY);
+	    
     /**
      * The label for update buttons.
      * Using this static label string provides optimum performance by looking

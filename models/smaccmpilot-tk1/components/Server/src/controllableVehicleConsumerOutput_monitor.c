@@ -776,7 +776,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                     
                                                                                                                                     *n_ref10 = n_deref227;
                                                                                                                                 } else {
-                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 611842089U)) {
+                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 82693526U)) {
                                                                                                                                         uint32_t n_deref228 = *n_ref1;
                                                                                                                                         bool n_local229 = false;
                                                                                                                                         bool *n_ref230 = &n_local229;
@@ -792,7 +792,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                             uint32_t n_deref233 = *n_ref1;
                                                                                                                                             
                                                                                                                                             *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref233);
-                                                                                                                                            callback_gyroRawOutputGetReqConsumer(n_ref232);
+                                                                                                                                            callback_gyroOutputGetReqConsumer(n_ref232);
                                                                                                                                             *n_ref230 = true;
                                                                                                                                         }
                                                                                                                                         
@@ -800,7 +800,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                         
                                                                                                                                         *n_ref10 = n_deref234;
                                                                                                                                     } else {
-                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 319924532U)) {
+                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 1941058076U)) {
                                                                                                                                             uint32_t n_deref235 = *n_ref1;
                                                                                                                                             bool n_local236 = false;
                                                                                                                                             bool *n_ref237 = &n_local236;
@@ -816,7 +816,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                 uint32_t n_deref240 = *n_ref1;
                                                                                                                                                 
                                                                                                                                                 *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref240);
-                                                                                                                                                callback_gyroCalibrationGetReqConsumer(n_ref239);
+                                                                                                                                                callback_accelOutputGetReqConsumer(n_ref239);
                                                                                                                                                 *n_ref237 = true;
                                                                                                                                             }
                                                                                                                                             
@@ -824,7 +824,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                             
                                                                                                                                             *n_ref10 = n_deref241;
                                                                                                                                         } else {
-                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 12330965U)) {
+                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 3344129961U)) {
                                                                                                                                                 uint32_t n_deref242 = *n_ref1;
                                                                                                                                                 bool n_local243 = false;
                                                                                                                                                 bool *n_ref244 = &n_local243;
@@ -840,7 +840,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                     uint32_t n_deref247 = *n_ref1;
                                                                                                                                                     
                                                                                                                                                     *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref247);
-                                                                                                                                                    callback_gyroOutputCalibrationGetReqConsumer(n_ref246);
+                                                                                                                                                    callback_baroOutputGetReqConsumer(n_ref246);
                                                                                                                                                     *n_ref244 = true;
                                                                                                                                                 }
                                                                                                                                                 
@@ -848,7 +848,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                 
                                                                                                                                                 *n_ref10 = n_deref248;
                                                                                                                                             } else {
-                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 82693526U)) {
+                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 991289502U)) {
                                                                                                                                                     uint32_t n_deref249 = *n_ref1;
                                                                                                                                                     bool n_local250 = false;
                                                                                                                                                     bool *n_ref251 = &n_local250;
@@ -864,7 +864,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                         uint32_t n_deref254 = *n_ref1;
                                                                                                                                                         
                                                                                                                                                         *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref254);
-                                                                                                                                                        callback_gyroOutputGetReqConsumer(n_ref253);
+                                                                                                                                                        callback_lidarliteOutputGetReqConsumer(n_ref253);
                                                                                                                                                         *n_ref251 = true;
                                                                                                                                                     }
                                                                                                                                                     
@@ -872,7 +872,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                     
                                                                                                                                                     *n_ref10 = n_deref255;
                                                                                                                                                 } else {
-                                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 1941058076U)) {
+                                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 143343139U)) {
                                                                                                                                                         uint32_t n_deref256 = *n_ref1;
                                                                                                                                                         bool n_local257 = false;
                                                                                                                                                         bool *n_ref258 = &n_local257;
@@ -888,7 +888,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                             uint32_t n_deref261 = *n_ref1;
                                                                                                                                                             
                                                                                                                                                             *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref261);
-                                                                                                                                                            callback_accelOutputGetReqConsumer(n_ref260);
+                                                                                                                                                            callback_magOutputGetReqConsumer(n_ref260);
                                                                                                                                                             *n_ref258 = true;
                                                                                                                                                         }
                                                                                                                                                         
@@ -896,7 +896,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                         
                                                                                                                                                         *n_ref10 = n_deref262;
                                                                                                                                                     } else {
-                                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 3344129961U)) {
+                                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 2862321756U)) {
                                                                                                                                                             uint32_t n_deref263 = *n_ref1;
                                                                                                                                                             bool n_local264 = false;
                                                                                                                                                             bool *n_ref265 = &n_local264;
@@ -912,7 +912,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                 uint32_t n_deref268 = *n_ref1;
                                                                                                                                                                 
                                                                                                                                                                 *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref268);
-                                                                                                                                                                callback_baroOutputGetReqConsumer(n_ref267);
+                                                                                                                                                                callback_px4flowIntOutputGetReqConsumer(n_ref267);
                                                                                                                                                                 *n_ref265 = true;
                                                                                                                                                             }
                                                                                                                                                             
@@ -920,7 +920,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                             
                                                                                                                                                             *n_ref10 = n_deref269;
                                                                                                                                                         } else {
-                                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 991289502U)) {
+                                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 359304658U)) {
                                                                                                                                                                 uint32_t n_deref270 = *n_ref1;
                                                                                                                                                                 bool n_local271 = false;
                                                                                                                                                                 bool *n_ref272 = &n_local271;
@@ -936,7 +936,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                     uint32_t n_deref275 = *n_ref1;
                                                                                                                                                                     
                                                                                                                                                                     *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref275);
-                                                                                                                                                                    callback_lidarliteOutputGetReqConsumer(n_ref274);
+                                                                                                                                                                    callback_px4flowOutputGetReqConsumer(n_ref274);
                                                                                                                                                                     *n_ref272 = true;
                                                                                                                                                                 }
                                                                                                                                                                 
@@ -944,7 +944,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                 
                                                                                                                                                                 *n_ref10 = n_deref276;
                                                                                                                                                             } else {
-                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 2567435972U)) {
+                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 3642047882U)) {
                                                                                                                                                                     uint32_t n_deref277 = *n_ref1;
                                                                                                                                                                     bool n_local278 = false;
                                                                                                                                                                     bool *n_ref279 = &n_local278;
@@ -960,7 +960,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                         uint32_t n_deref282 = *n_ref1;
                                                                                                                                                                         
                                                                                                                                                                         *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref282);
-                                                                                                                                                                        callback_magRawOutputGetReqConsumer(n_ref281);
+                                                                                                                                                                        callback_gpsOutputGetReqConsumer(n_ref281);
                                                                                                                                                                         *n_ref279 = true;
                                                                                                                                                                     }
                                                                                                                                                                     
@@ -968,7 +968,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                     
                                                                                                                                                                     *n_ref10 = n_deref283;
                                                                                                                                                                 } else {
-                                                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 4045311567U)) {
+                                                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 1168870388U)) {
                                                                                                                                                                         uint32_t n_deref284 = *n_ref1;
                                                                                                                                                                         bool n_local285 = false;
                                                                                                                                                                         bool *n_ref286 = &n_local285;
@@ -984,7 +984,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                             uint32_t n_deref289 = *n_ref1;
                                                                                                                                                                             
                                                                                                                                                                             *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref289);
-                                                                                                                                                                            callback_magCalibrationGetReqConsumer(n_ref288);
+                                                                                                                                                                            callback_controlSetpointGetReqConsumer(n_ref288);
                                                                                                                                                                             *n_ref286 = true;
                                                                                                                                                                         }
                                                                                                                                                                         
@@ -992,7 +992,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                         
                                                                                                                                                                         *n_ref10 = n_deref290;
                                                                                                                                                                     } else {
-                                                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 2520006892U)) {
+                                                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 2165647949U)) {
                                                                                                                                                                             uint32_t n_deref291 = *n_ref1;
                                                                                                                                                                             bool n_local292 = false;
                                                                                                                                                                             bool *n_ref293 = &n_local292;
@@ -1008,7 +1008,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                 uint32_t n_deref296 = *n_ref1;
                                                                                                                                                                                 
                                                                                                                                                                                 *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref296);
-                                                                                                                                                                                callback_magOutputCalibrationGetReqConsumer(n_ref295);
+                                                                                                                                                                                callback_controlOutputGetReqConsumer(n_ref295);
                                                                                                                                                                                 *n_ref293 = true;
                                                                                                                                                                             }
                                                                                                                                                                             
@@ -1016,7 +1016,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                             
                                                                                                                                                                             *n_ref10 = n_deref297;
                                                                                                                                                                         } else {
-                                                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 143343139U)) {
+                                                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 2700215595U)) {
                                                                                                                                                                                 uint32_t n_deref298 = *n_ref1;
                                                                                                                                                                                 bool n_local299 = false;
                                                                                                                                                                                 bool *n_ref300 = &n_local299;
@@ -1032,7 +1032,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                     uint32_t n_deref303 = *n_ref1;
                                                                                                                                                                                     
                                                                                                                                                                                     *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref303);
-                                                                                                                                                                                    callback_magOutputGetReqConsumer(n_ref302);
+                                                                                                                                                                                    callback_motorOutputGetReqConsumer(n_ref302);
                                                                                                                                                                                     *n_ref300 = true;
                                                                                                                                                                                 }
                                                                                                                                                                                 
@@ -1040,7 +1040,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                 
                                                                                                                                                                                 *n_ref10 = n_deref304;
                                                                                                                                                                             } else {
-                                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 2862321756U)) {
+                                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 1652180384U)) {
                                                                                                                                                                                     uint32_t n_deref305 = *n_ref1;
                                                                                                                                                                                     bool n_local306 = false;
                                                                                                                                                                                     bool *n_ref307 = &n_local306;
@@ -1056,7 +1056,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                         uint32_t n_deref310 = *n_ref1;
                                                                                                                                                                                         
                                                                                                                                                                                         *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref310);
-                                                                                                                                                                                        callback_px4flowIntOutputGetReqConsumer(n_ref309);
+                                                                                                                                                                                        callback_attControlDebugGetReqConsumer(n_ref309);
                                                                                                                                                                                         *n_ref307 = true;
                                                                                                                                                                                     }
                                                                                                                                                                                     
@@ -1064,7 +1064,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                     
                                                                                                                                                                                     *n_ref10 = n_deref311;
                                                                                                                                                                                 } else {
-                                                                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 359304658U)) {
+                                                                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 3488192856U)) {
                                                                                                                                                                                         uint32_t n_deref312 = *n_ref1;
                                                                                                                                                                                         bool n_local313 = false;
                                                                                                                                                                                         bool *n_ref314 = &n_local313;
@@ -1080,7 +1080,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                             uint32_t n_deref317 = *n_ref1;
                                                                                                                                                                                             
                                                                                                                                                                                             *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref317);
-                                                                                                                                                                                            callback_px4flowOutputGetReqConsumer(n_ref316);
+                                                                                                                                                                                            callback_altControlDebugGetReqConsumer(n_ref316);
                                                                                                                                                                                             *n_ref314 = true;
                                                                                                                                                                                         }
                                                                                                                                                                                         
@@ -1088,7 +1088,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                         
                                                                                                                                                                                         *n_ref10 = n_deref318;
                                                                                                                                                                                     } else {
-                                                                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 3642047882U)) {
+                                                                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 3679040117U)) {
                                                                                                                                                                                             uint32_t n_deref319 = *n_ref1;
                                                                                                                                                                                             bool n_local320 = false;
                                                                                                                                                                                             bool *n_ref321 = &n_local320;
@@ -1104,7 +1104,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                                 uint32_t n_deref324 = *n_ref1;
                                                                                                                                                                                                 
                                                                                                                                                                                                 *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref324);
-                                                                                                                                                                                                callback_gpsOutputGetReqConsumer(n_ref323);
+                                                                                                                                                                                                callback_px4ioStateGetReqConsumer(n_ref323);
                                                                                                                                                                                                 *n_ref321 = true;
                                                                                                                                                                                             }
                                                                                                                                                                                             
@@ -1112,7 +1112,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                             
                                                                                                                                                                                             *n_ref10 = n_deref325;
                                                                                                                                                                                         } else {
-                                                                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 1168870388U)) {
+                                                                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 1829088284U)) {
                                                                                                                                                                                                 uint32_t n_deref326 = *n_ref1;
                                                                                                                                                                                                 bool n_local327 = false;
                                                                                                                                                                                                 bool *n_ref328 = &n_local327;
@@ -1128,7 +1128,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                                     uint32_t n_deref331 = *n_ref1;
                                                                                                                                                                                                     
                                                                                                                                                                                                     *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref331);
-                                                                                                                                                                                                    callback_controlSetpointGetReqConsumer(n_ref330);
+                                                                                                                                                                                                    callback_armingStatusGetReqConsumer(n_ref330);
                                                                                                                                                                                                     *n_ref328 = true;
                                                                                                                                                                                                 }
                                                                                                                                                                                                 
@@ -1136,7 +1136,7 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                                 
                                                                                                                                                                                                 *n_ref10 = n_deref332;
                                                                                                                                                                                             } else {
-                                                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 2165647949U)) {
+                                                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 3999854279U)) {
                                                                                                                                                                                                     uint32_t n_deref333 = *n_ref1;
                                                                                                                                                                                                     bool n_local334 = false;
                                                                                                                                                                                                     bool *n_ref335 = &n_local334;
@@ -1152,163 +1152,13 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
                                                                                                                                                                                                         uint32_t n_deref338 = *n_ref1;
                                                                                                                                                                                                         
                                                                                                                                                                                                         *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref338);
-                                                                                                                                                                                                        callback_controlOutputGetReqConsumer(n_ref337);
+                                                                                                                                                                                                        callback_batteryVoltageGetReqConsumer(n_ref337);
                                                                                                                                                                                                         *n_ref335 = true;
                                                                                                                                                                                                     }
                                                                                                                                                                                                     
                                                                                                                                                                                                     bool n_deref339 = *n_ref335;
                                                                                                                                                                                                     
                                                                                                                                                                                                     *n_ref10 = n_deref339;
-                                                                                                                                                                                                } else {
-                                                                                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 2700215595U)) {
-                                                                                                                                                                                                        uint32_t n_deref340 = *n_ref1;
-                                                                                                                                                                                                        bool n_local341 = false;
-                                                                                                                                                                                                        bool *n_ref342 = &n_local341;
-                                                                                                                                                                                                        uint32_t n_cse241 = (uint32_t) ((uint32_t) 4U + n_deref340);
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        if ((bool) (n_cse241 < (uint32_t) 80U)) {
-                                                                                                                                                                                                            uint32_t n_local343 = (uint32_t) 0U;
-                                                                                                                                                                                                            uint32_t *n_ref344 = &n_local343;
-                                                                                                                                                                                                            
-                                                                                                                                                                                                            ASSERTS((bool) (n_cse241 <= (uint32_t) 80U));
-                                                                                                                                                                                                            sequence_num_t_get_be(n_cse3, n_deref340, n_ref344);
-                                                                                                                                                                                                            
-                                                                                                                                                                                                            uint32_t n_deref345 = *n_ref1;
-                                                                                                                                                                                                            
-                                                                                                                                                                                                            *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref345);
-                                                                                                                                                                                                            callback_motorOutputGetReqConsumer(n_ref344);
-                                                                                                                                                                                                            *n_ref342 = true;
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        bool n_deref346 = *n_ref342;
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        *n_ref10 = n_deref346;
-                                                                                                                                                                                                    } else {
-                                                                                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 1652180384U)) {
-                                                                                                                                                                                                            uint32_t n_deref347 = *n_ref1;
-                                                                                                                                                                                                            bool n_local348 = false;
-                                                                                                                                                                                                            bool *n_ref349 = &n_local348;
-                                                                                                                                                                                                            uint32_t n_cse246 = (uint32_t) ((uint32_t) 4U + n_deref347);
-                                                                                                                                                                                                            
-                                                                                                                                                                                                            if ((bool) (n_cse246 < (uint32_t) 80U)) {
-                                                                                                                                                                                                                uint32_t n_local350 = (uint32_t) 0U;
-                                                                                                                                                                                                                uint32_t *n_ref351 = &n_local350;
-                                                                                                                                                                                                                
-                                                                                                                                                                                                                ASSERTS((bool) (n_cse246 <= (uint32_t) 80U));
-                                                                                                                                                                                                                sequence_num_t_get_be(n_cse3, n_deref347, n_ref351);
-                                                                                                                                                                                                                
-                                                                                                                                                                                                                uint32_t n_deref352 = *n_ref1;
-                                                                                                                                                                                                                
-                                                                                                                                                                                                                *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref352);
-                                                                                                                                                                                                                callback_attControlDebugGetReqConsumer(n_ref351);
-                                                                                                                                                                                                                *n_ref349 = true;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                            
-                                                                                                                                                                                                            bool n_deref353 = *n_ref349;
-                                                                                                                                                                                                            
-                                                                                                                                                                                                            *n_ref10 = n_deref353;
-                                                                                                                                                                                                        } else {
-                                                                                                                                                                                                            if ((bool) (n_deref8 == (uint32_t) 3488192856U)) {
-                                                                                                                                                                                                                uint32_t n_deref354 = *n_ref1;
-                                                                                                                                                                                                                bool n_local355 = false;
-                                                                                                                                                                                                                bool *n_ref356 = &n_local355;
-                                                                                                                                                                                                                uint32_t n_cse251 = (uint32_t) ((uint32_t) 4U + n_deref354);
-                                                                                                                                                                                                                
-                                                                                                                                                                                                                if ((bool) (n_cse251 < (uint32_t) 80U)) {
-                                                                                                                                                                                                                    uint32_t n_local357 = (uint32_t) 0U;
-                                                                                                                                                                                                                    uint32_t *n_ref358 = &n_local357;
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                    ASSERTS((bool) (n_cse251 <= (uint32_t) 80U));
-                                                                                                                                                                                                                    sequence_num_t_get_be(n_cse3, n_deref354, n_ref358);
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                    uint32_t n_deref359 = *n_ref1;
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                    *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref359);
-                                                                                                                                                                                                                    callback_altControlDebugGetReqConsumer(n_ref358);
-                                                                                                                                                                                                                    *n_ref356 = true;
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                
-                                                                                                                                                                                                                bool n_deref360 = *n_ref356;
-                                                                                                                                                                                                                
-                                                                                                                                                                                                                *n_ref10 = n_deref360;
-                                                                                                                                                                                                            } else {
-                                                                                                                                                                                                                if ((bool) (n_deref8 == (uint32_t) 3679040117U)) {
-                                                                                                                                                                                                                    uint32_t n_deref361 = *n_ref1;
-                                                                                                                                                                                                                    bool n_local362 = false;
-                                                                                                                                                                                                                    bool *n_ref363 = &n_local362;
-                                                                                                                                                                                                                    uint32_t n_cse256 = (uint32_t) ((uint32_t) 4U + n_deref361);
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                    if ((bool) (n_cse256 < (uint32_t) 80U)) {
-                                                                                                                                                                                                                        uint32_t n_local364 = (uint32_t) 0U;
-                                                                                                                                                                                                                        uint32_t *n_ref365 = &n_local364;
-                                                                                                                                                                                                                        
-                                                                                                                                                                                                                        ASSERTS((bool) (n_cse256 <= (uint32_t) 80U));
-                                                                                                                                                                                                                        sequence_num_t_get_be(n_cse3, n_deref361, n_ref365);
-                                                                                                                                                                                                                        
-                                                                                                                                                                                                                        uint32_t n_deref366 = *n_ref1;
-                                                                                                                                                                                                                        
-                                                                                                                                                                                                                        *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref366);
-                                                                                                                                                                                                                        callback_px4ioStateGetReqConsumer(n_ref365);
-                                                                                                                                                                                                                        *n_ref363 = true;
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                    bool n_deref367 = *n_ref363;
-                                                                                                                                                                                                                    
-                                                                                                                                                                                                                    *n_ref10 = n_deref367;
-                                                                                                                                                                                                                } else {
-                                                                                                                                                                                                                    if ((bool) (n_deref8 == (uint32_t) 1829088284U)) {
-                                                                                                                                                                                                                        uint32_t n_deref368 = *n_ref1;
-                                                                                                                                                                                                                        bool n_local369 = false;
-                                                                                                                                                                                                                        bool *n_ref370 = &n_local369;
-                                                                                                                                                                                                                        uint32_t n_cse261 = (uint32_t) ((uint32_t) 4U + n_deref368);
-                                                                                                                                                                                                                        
-                                                                                                                                                                                                                        if ((bool) (n_cse261 < (uint32_t) 80U)) {
-                                                                                                                                                                                                                            uint32_t n_local371 = (uint32_t) 0U;
-                                                                                                                                                                                                                            uint32_t *n_ref372 = &n_local371;
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            ASSERTS((bool) (n_cse261 <= (uint32_t) 80U));
-                                                                                                                                                                                                                            sequence_num_t_get_be(n_cse3, n_deref368, n_ref372);
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            uint32_t n_deref373 = *n_ref1;
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref373);
-                                                                                                                                                                                                                            callback_armingStatusGetReqConsumer(n_ref372);
-                                                                                                                                                                                                                            *n_ref370 = true;
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                        
-                                                                                                                                                                                                                        bool n_deref374 = *n_ref370;
-                                                                                                                                                                                                                        
-                                                                                                                                                                                                                        *n_ref10 = n_deref374;
-                                                                                                                                                                                                                    } else {
-                                                                                                                                                                                                                        if ((bool) (n_deref8 == (uint32_t) 3999854279U)) {
-                                                                                                                                                                                                                            uint32_t n_deref375 = *n_ref1;
-                                                                                                                                                                                                                            bool n_local376 = false;
-                                                                                                                                                                                                                            bool *n_ref377 = &n_local376;
-                                                                                                                                                                                                                            uint32_t n_cse266 = (uint32_t) ((uint32_t) 4U + n_deref375);
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            if ((bool) (n_cse266 < (uint32_t) 80U)) {
-                                                                                                                                                                                                                                uint32_t n_local378 = (uint32_t) 0U;
-                                                                                                                                                                                                                                uint32_t *n_ref379 = &n_local378;
-                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                ASSERTS((bool) (n_cse266 <= (uint32_t) 80U));
-                                                                                                                                                                                                                                sequence_num_t_get_be(n_cse3, n_deref375, n_ref379);
-                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                uint32_t n_deref380 = *n_ref1;
-                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                *n_ref1 = (uint32_t) ((uint32_t) 4U + n_deref380);
-                                                                                                                                                                                                                                callback_batteryVoltageGetReqConsumer(n_ref379);
-                                                                                                                                                                                                                                *n_ref377 = true;
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            bool n_deref381 = *n_ref377;
-                                                                                                                                                                                                                            
-                                                                                                                                                                                                                            *n_ref10 = n_deref381;
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                    }
                                                                                                                                                                                                 }
                                                                                                                                                                                             }
                                                                                                                                                                                         }
@@ -1357,10 +1207,10 @@ void callback_parse_frame_2(const uint8_t n_var0[80U])
             }
         }
         
-        bool n_deref382 = *n_ref10;
+        bool n_deref340 = *n_ref10;
         
-        *n_ref4 = n_deref382;
+        *n_ref4 = n_deref340;
     }
     
-    bool n_deref383 = *n_ref4;
+    bool n_deref341 = *n_ref4;
 }

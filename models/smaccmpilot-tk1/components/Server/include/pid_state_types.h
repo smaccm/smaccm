@@ -10,10 +10,12 @@ extern "C" {
 #include "ivory_serialize.h"
 typedef struct pid_state {
             float i_state;
-            float d_state;
-            bool d_reset;
-            float p_last;
-            float d_last;
+            float d_term;
+            float dd_term;
+            float p_term;
+            float i_term;
+            float angle_err;
+            float rate_err;
         } pid_state;
 void pid_state_get_le(const uint8_t *n_var0, uint32_t n_var1, struct pid_state *n_var2);
 void pid_state_get_be(const uint8_t *n_var0, uint32_t n_var1, struct pid_state *n_var2);
