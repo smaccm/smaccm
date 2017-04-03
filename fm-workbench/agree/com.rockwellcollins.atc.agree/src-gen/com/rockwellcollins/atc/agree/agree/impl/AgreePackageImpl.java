@@ -16,6 +16,7 @@ import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
+import com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
@@ -81,6 +82,7 @@ import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.UnaryNonLinearExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
 import com.rockwellcollins.atc.agree.agree.WhenStatement;
@@ -604,6 +606,20 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass timeExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass binaryNonLinearExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass unaryNonLinearExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2544,6 +2560,76 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getBinaryNonLinearExpr()
+  {
+    return binaryNonLinearExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getBinaryNonLinearExpr_Op()
+  {
+    return (EAttribute)binaryNonLinearExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getBinaryNonLinearExpr_Left()
+  {
+    return (EReference)binaryNonLinearExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getBinaryNonLinearExpr_Right()
+  {
+    return (EReference)binaryNonLinearExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getUnaryNonLinearExpr()
+  {
+    return unaryNonLinearExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getUnaryNonLinearExpr_Op()
+  {
+    return (EAttribute)unaryNonLinearExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getUnaryNonLinearExpr_Expr()
+  {
+    return (EReference)unaryNonLinearExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getIntLitExpr()
   {
     return intLitExprEClass;
@@ -3127,6 +3213,15 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     timeExprEClass = createEClass(TIME_EXPR);
 
+    binaryNonLinearExprEClass = createEClass(BINARY_NON_LINEAR_EXPR);
+    createEAttribute(binaryNonLinearExprEClass, BINARY_NON_LINEAR_EXPR__OP);
+    createEReference(binaryNonLinearExprEClass, BINARY_NON_LINEAR_EXPR__LEFT);
+    createEReference(binaryNonLinearExprEClass, BINARY_NON_LINEAR_EXPR__RIGHT);
+
+    unaryNonLinearExprEClass = createEClass(UNARY_NON_LINEAR_EXPR);
+    createEAttribute(unaryNonLinearExprEClass, UNARY_NON_LINEAR_EXPR__OP);
+    createEReference(unaryNonLinearExprEClass, UNARY_NON_LINEAR_EXPR__EXPR);
+
     intLitExprEClass = createEClass(INT_LIT_EXPR);
     createEAttribute(intLitExprEClass, INT_LIT_EXPR__VAL);
 
@@ -3289,6 +3384,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     getPropertyExprEClass.getESuperTypes().add(this.getExpr());
     recordUpdateExprEClass.getESuperTypes().add(this.getExpr());
     timeExprEClass.getESuperTypes().add(this.getExpr());
+    binaryNonLinearExprEClass.getESuperTypes().add(this.getExpr());
+    unaryNonLinearExprEClass.getESuperTypes().add(this.getExpr());
     intLitExprEClass.getESuperTypes().add(this.getExpr());
     preExprEClass.getESuperTypes().add(this.getExpr());
     eventExprEClass.getESuperTypes().add(this.getExpr());
@@ -3552,6 +3649,15 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getRecordUpdateExpr_ArgExpr(), this.getExpr(), null, "argExpr", null, 0, -1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(timeExprEClass, TimeExpr.class, "TimeExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(binaryNonLinearExprEClass, BinaryNonLinearExpr.class, "BinaryNonLinearExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getBinaryNonLinearExpr_Op(), theEcorePackage.getEString(), "op", null, 0, 1, BinaryNonLinearExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getBinaryNonLinearExpr_Left(), this.getExpr(), null, "left", null, 0, 1, BinaryNonLinearExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getBinaryNonLinearExpr_Right(), this.getExpr(), null, "right", null, 0, 1, BinaryNonLinearExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(unaryNonLinearExprEClass, UnaryNonLinearExpr.class, "UnaryNonLinearExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getUnaryNonLinearExpr_Op(), theEcorePackage.getEString(), "op", null, 0, 1, UnaryNonLinearExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getUnaryNonLinearExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, UnaryNonLinearExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(intLitExprEClass, IntLitExpr.class, "IntLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getIntLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, IntLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

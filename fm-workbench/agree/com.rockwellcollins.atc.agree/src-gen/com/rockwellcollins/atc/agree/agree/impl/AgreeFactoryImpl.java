@@ -135,6 +135,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
       case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       case AgreePackage.TIME_EXPR: return createTimeExpr();
+      case AgreePackage.BINARY_NON_LINEAR_EXPR: return createBinaryNonLinearExpr();
+      case AgreePackage.UNARY_NON_LINEAR_EXPR: return createUnaryNonLinearExpr();
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
       case AgreePackage.EVENT_EXPR: return createEventExpr();
@@ -933,6 +935,28 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     TimeExprImpl timeExpr = new TimeExprImpl();
     return timeExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public BinaryNonLinearExpr createBinaryNonLinearExpr()
+  {
+    BinaryNonLinearExprImpl binaryNonLinearExpr = new BinaryNonLinearExprImpl();
+    return binaryNonLinearExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public UnaryNonLinearExpr createUnaryNonLinearExpr()
+  {
+    UnaryNonLinearExprImpl unaryNonLinearExpr = new UnaryNonLinearExprImpl();
+    return unaryNonLinearExpr;
   }
 
   /**
