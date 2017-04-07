@@ -3,8 +3,8 @@ package com.rockwellcollins.atc.agree.codegen.handlers;
 
 public class ModelInfo {
 	public final String outputDirPath;
-	public final String originalModelName;
-	public final String updatedModelName;
+	public final String implMdlPath;
+	public final String verifyMdlName;
 	public final String subsystemName;
 	public final boolean exportPressed;
 	public final boolean generatePressed;
@@ -13,8 +13,8 @@ public class ModelInfo {
 
 	public ModelInfo() {
 		this.outputDirPath = "";
-		this.originalModelName = "";
-		this.updatedModelName = "";
+		this.implMdlPath = "";
+		this.verifyMdlName = "";
 		this.subsystemName = "";
 		this.exportPressed = false;
 		this.generatePressed = false;
@@ -25,8 +25,8 @@ public class ModelInfo {
 	public ModelInfo(String outputDirPath, String originalModelName,
 			String updatedModelName, String subsystemName) {
 		this.outputDirPath = outputDirPath;
-		this.originalModelName = originalModelName;
-		this.updatedModelName = updatedModelName;
+		this.implMdlPath = originalModelName;
+		this.verifyMdlName = updatedModelName;
 		this.subsystemName = subsystemName;
 		this.exportPressed = false;
 		this.generatePressed = false;
@@ -38,8 +38,8 @@ public class ModelInfo {
 			String updatedModelName, String subsystemName,
 			boolean exportPressed, boolean generatePressed, boolean updatePressed, boolean verifyPressed) {
 		this.outputDirPath = outputDirPath;
-		this.originalModelName = originalModelName;
-		this.updatedModelName = updatedModelName;
+		this.implMdlPath = originalModelName;
+		this.verifyMdlName = updatedModelName;
 		this.subsystemName = subsystemName;
 		this.exportPressed = exportPressed;
 		this.generatePressed = generatePressed;
