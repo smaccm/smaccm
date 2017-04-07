@@ -344,13 +344,13 @@ public class ModelInfoDialog extends TitleAreaDialog {
 
 	protected void buttonPressed(int buttonId) {
 		if (ModelInfoDialogConstants.EXPORT_CONTRACTS_ID == buttonId) {
-			exportPressed();
+			exportContractsPressed();
 		} else if (ModelInfoDialogConstants.GENERATE_SUBSYSTEM_ID == buttonId) {
-			generatePressed();
+			genImplPressed();
 		} else if (ModelInfoDialogConstants.GEN_IMPL_ID == buttonId) {
-			updatePressed();
+			genVerificationPressed();
 		} else if (ModelInfoDialogConstants.VERIFY_SUBSYSTEM_ID == buttonId) {
-			verifyPressed();
+			verifySubsysPressed();
 		} else if (IDialogConstants.CANCEL_ID == buttonId) {
 			cancelPressed();
 		}
@@ -384,7 +384,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		}
 	}
 
-	protected void exportPressed() {
+	protected void exportContractsPressed() {
 		// for source text property saved in AADL, need to update the separator
 		// in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), implMdlText.getText(), verifyMdlText.getText(),
@@ -392,7 +392,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 
-	protected void generatePressed() {
+	protected void genImplPressed() {
 		// for source text property saved in AADL, need to update the separator
 		// in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), implMdlText.getText(), verifyMdlText.getText(),
@@ -400,7 +400,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 
-	protected void updatePressed() {
+	protected void genVerificationPressed() {
 		// for source text property saved in AADL, need to update the separator
 		// in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), implMdlText.getText(), verifyMdlText.getText(),
@@ -408,7 +408,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 
-	protected void verifyPressed() {
+	protected void verifySubsysPressed() {
 		// for source text property saved in AADL, need to update the separator
 		// in the path string
 		updatedInfo = new ModelInfo(outputText.getText(), implMdlText.getText(), verifyMdlText.getText(),
