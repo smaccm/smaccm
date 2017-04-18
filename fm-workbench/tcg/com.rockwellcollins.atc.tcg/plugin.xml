@@ -139,6 +139,7 @@
            class="com.rockwellcollins.atc.tcg.preferences.TcgPreferenceInitializer">
      </initializer>
   </extension>
+<!--
   <extension
         point="edu.uah.rsesc.aadlsimulator.agree.exporters">
      <exporter
@@ -146,4 +147,5 @@
            name="Export as Test Case">
      </exporter>
   </extension>
+-->
 </plugin>

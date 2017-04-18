@@ -9,6 +9,26 @@ config APP_SMACCMPILOT_TK1
     select TK1_DEVICE_FWD
     select APP_CAMKES_EXECUTIVE
 
+choice
+    bool "boot mode selection"
+    depends on APP_SMACCMPILOT_TK1
+    default VM_TK1_EMMC_ROOTFS
+    help
+        Selects whether to load root file system off emmc or ramdisk
+
+    config VM_TK1_INITRD_ROOTFS
+        bool "initrd"
+        help
+            Selects initrd as the root filesystem.
+
+    config VM_TK1_EMMC_ROOTFS
+        bool "mmcblk0p1"
+        help
+            Selects partition 1 of the emmc card as the root
+            filesystem.
+endchoice
+
+
 config APP_SMACCMPILOT_TK1_TB_DEBUG
     bool "Enable debugging trusted build monitors"
     default n

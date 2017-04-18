@@ -40,10 +40,20 @@
 
  **************************************************************************/
 
+// The TB_VERIFY macro disables code that would interfere with reasoning.
+// However, uncommenting the following will prevent compilation; we are 
+// concerned with verify that they following code satisfies expected queuing 
+// properties and thus, integration with the rest of the application is
+// unnecessary.
+//#define TB_VERIFY
+#ifndef TB_VERIFY
 #include <stdio.h>
-#include <stdbool.h>
-#include <camkes.h>
-#include <tb_smaccmpilot_tk1_types.h>
+#endif // TB_VERIFY
+#include "../../../../include/tb_smaccmpilot_tk1_types.h"
+#include "../include/tb_Server_framing2self_Monitor.h"
+
+int mon_get_sender_id(void);
+int monsig_emit(void);
 
 tb_SMACCM_DATA__GIDL_container contents[1];
 static uint32_t front = 0;
@@ -56,33 +66,41 @@ static bool is_full(void) {
 static bool is_empty(void) {
   return length == 0;
 }
-bool deq_dequeue(SMACCM_DATA__GIDL * m) {
-  MUTEXOP(q_lock())
-  if (is_empty()) {
-    MUTEXOP(q_unlock())
+bool mon_dequeue(tb_SMACCM_DATA__GIDL_container * m) {
+  if (mon_get_sender_id() != TB_MONITOR_READ_ACCESS) {
+    #ifndef TB_VERIFY
+    #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    fprintf(stderr, "Monitor tb_Server_framing2self: attempt to dequeue without permission\n");
+    #endif // CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    #endif // TB_VERIFY
+    return false;
+  } else if (is_empty()) {
     return false;
   } else {
-    *((tb_SMACCM_DATA__GIDL_container *)m) = contents[front];
+    *m = contents[front];
     front = (front + 1) % 1;
     length--;
-    MUTEXOP(q_unlock())
     return true;
   }
 }
 
-bool enq_enqueue(const SMACCM_DATA__GIDL * m) {
-  MUTEXOP(q_lock())
-  if (is_full()) {
-    MUTEXOP(q_unlock())
+bool mon_enqueue(const tb_SMACCM_DATA__GIDL_container * m) {
+  if (mon_get_sender_id() != TB_MONITOR_WRITE_ACCESS) {
+    #ifndef TB_VERIFY
+    #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    fprintf(stderr, "Monitor tb_Server_framing2self: attempt to enqueue without permission\n");
+    #endif // CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
+    #endif // TB_VERIFY
+    return false;
+  } else if (is_full()) {
     #ifdef CONFIG_APP_SMACCMPILOT_TK1_TB_DEBUG
     fprintf(stderr,"Monitor tb_Server_framing2self is full!\n");
     #endif 
     return false;
   } else {
-    contents[(front + length) % 1] = *((tb_SMACCM_DATA__GIDL_container *)m);
+    contents[(front + length) % 1] = *m;
     length++;
-    qd_emit();
-    MUTEXOP(q_unlock())
+    monsig_emit();
     return true;
   }
 }

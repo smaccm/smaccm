@@ -8,9 +8,7 @@ void arming_status_get_le(const uint8_t *n_var0, uint32_t n_var1, struct arming_
     tristate_t_get_le(n_var0, n_var1, &n_var2->rcinput);
     tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 1U), &n_var2->telem);
     tristate_t_get_le(n_var0, (uint32_t) ((uint32_t) 2U + n_var1), &n_var2->px4io);
-    tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 3U), &n_var2->gyro_cal);
-    tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 4U), &n_var2->mag_cal);
-    tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 5U), &n_var2->sens_cal);
+    tristate_t_get_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 3U), &n_var2->sens_valid);
 }
 
 void arming_status_get_be(const uint8_t *n_var0, uint32_t n_var1, struct arming_status *n_var2)
@@ -18,9 +16,7 @@ void arming_status_get_be(const uint8_t *n_var0, uint32_t n_var1, struct arming_
     tristate_t_get_be(n_var0, n_var1, &n_var2->rcinput);
     tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 1U), &n_var2->telem);
     tristate_t_get_be(n_var0, (uint32_t) ((uint32_t) 2U + n_var1), &n_var2->px4io);
-    tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 3U), &n_var2->gyro_cal);
-    tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 4U), &n_var2->mag_cal);
-    tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 5U), &n_var2->sens_cal);
+    tristate_t_get_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 3U), &n_var2->sens_valid);
 }
 
 void arming_status_set_le(uint8_t *n_var0, uint32_t n_var1, const struct arming_status *n_var2)
@@ -28,9 +24,7 @@ void arming_status_set_le(uint8_t *n_var0, uint32_t n_var1, const struct arming_
     tristate_t_set_le(n_var0, n_var1, &n_var2->rcinput);
     tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 1U), &n_var2->telem);
     tristate_t_set_le(n_var0, (uint32_t) ((uint32_t) 2U + n_var1), &n_var2->px4io);
-    tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 3U), &n_var2->gyro_cal);
-    tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 4U), &n_var2->mag_cal);
-    tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 5U), &n_var2->sens_cal);
+    tristate_t_set_le(n_var0, (uint32_t) (n_var1 + (uint32_t) 3U), &n_var2->sens_valid);
 }
 
 void arming_status_set_be(uint8_t *n_var0, uint32_t n_var1, const struct arming_status *n_var2)
@@ -38,7 +32,5 @@ void arming_status_set_be(uint8_t *n_var0, uint32_t n_var1, const struct arming_
     tristate_t_set_be(n_var0, n_var1, &n_var2->rcinput);
     tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 1U), &n_var2->telem);
     tristate_t_set_be(n_var0, (uint32_t) ((uint32_t) 2U + n_var1), &n_var2->px4io);
-    tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 3U), &n_var2->gyro_cal);
-    tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 4U), &n_var2->mag_cal);
-    tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 5U), &n_var2->sens_cal);
+    tristate_t_set_be(n_var0, (uint32_t) (n_var1 + (uint32_t) 3U), &n_var2->sens_valid);
 }

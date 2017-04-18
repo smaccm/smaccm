@@ -62,8 +62,8 @@ void pre_init(void)
         return;
     }
 
-    clkcar_uart_clk_init(TK1_UARTB_ASYNC);
-    ps_chardevice_t *result = ps_cdev_init(TK1_UARTB_ASYNC, &uart_shim_io_ops, &serial_device);
+    clkcar_uart_clk_init(NV_UARTB_ASYNC);
+    ps_chardevice_t *result = ps_cdev_init(NV_UARTB_ASYNC, &uart_shim_io_ops, &serial_device);
 
     if (result == NULL) {
         printf("UART Shim: Failed to initialize UART B.\n");

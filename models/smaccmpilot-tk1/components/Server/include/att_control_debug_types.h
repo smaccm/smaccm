@@ -8,8 +8,10 @@ extern "C" {
 #endif
 #include "ivory.h"
 #include "ivory_serialize.h"
+#include "pid_state_types.h"
 typedef struct att_control_debug {
             float head_setpt;
+            float head_rate_est;
             float head_rate_setpt;
             float head_ctl_p;
             float head_ctl_d;
@@ -17,6 +19,7 @@ typedef struct att_control_debug {
             float pitch_rate_setpt;
             float roll_setpt;
             float roll_rate_setpt;
+            struct pid_state att_pid;
         } att_control_debug;
 void att_control_debug_get_le(const uint8_t *n_var0, uint32_t n_var1, struct att_control_debug *n_var2);
 void att_control_debug_get_be(const uint8_t *n_var0, uint32_t n_var1, struct att_control_debug *n_var2);

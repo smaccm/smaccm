@@ -1140,14 +1140,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 
 		// check typing
-		for (int i = 0; i < defArgs.size(); i++) {
-			NamedElement defArg = defArgs.get(i);
-			AgreeType defType = getAgreeType(defArg);
+		Map<String, AgreeType> argNameMap = getArgNameMap(recType);
+		for (int i = 0; i < recExpr.getArgs().size(); i++) {
+			NamedElement actArg = recExpr.getArgs().get(i);
+			String actArgName = actArg.getName();
+			AgreeType defType = argNameMap.get(actArgName);
 			AgreeType exprType = getAgreeType(argExprs.get(i));
 
 			if (!matches(defType, exprType)) {
-				error(recExpr, "The expression assigned to '" + defArg.getName()
-						+ "' does not match its definition type of '" + defType);
+				error(recExpr, "The expression assigned to '" + actArgName
+						+ "' does not match its definition type of '" + defType + "'");
 			}
 		}
 	}
@@ -1172,6 +1174,28 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 
 		return names;
+	}
+
+	private Map<String, AgreeType> getArgNameMap(NestedDotID recId) {
+
+		NamedElement rec = getFinalNestId(recId);
+		Map<String, AgreeType> typeMap = new HashMap<String, AgreeType>();
+
+		if (rec instanceof RecordDefExpr) {
+			RecordDefExpr recDef = (RecordDefExpr) rec;
+			for (Arg arg : recDef.getArgs()) {
+				typeMap.put(arg.getName(), getAgreeType(arg));
+			}
+		} else if (rec instanceof DataImplementation) {
+			DataImplementation dataImpl = (DataImplementation) rec;
+			for (Subcomponent sub : dataImpl.getAllSubcomponents()) {
+				typeMap.put(sub.getName(), getAgreeType(sub));
+			}
+		} else {
+			error(recId, "Record type '" + rec.getName() + "' must be a feature group or a record type definition");
+		}
+
+		return typeMap;
 	}
 
 //    private List<AgreeType> getArgTypes(NestedDotID recId){
@@ -2401,6 +2425,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 		String qualName = data.getQualifiedName();
+		if(qualName == null){
+			return ERROR;
+		}
 		switch (qualName) {
 		case "Base_Types::Boolean":
 			return BOOL;
