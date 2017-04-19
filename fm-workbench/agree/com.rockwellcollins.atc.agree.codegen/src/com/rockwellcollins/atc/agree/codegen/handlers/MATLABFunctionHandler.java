@@ -81,20 +81,20 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		}
 
 		ComponentType ct = (ComponentType) classifier;
-		
-		//Allow a runnable to be executed by the UI-thread asynchronously
-		Display.getDefault().asyncExec(new Runnable() {
-			
-			@Override
-			public void run() {
-				doWork(ct);
-			}
-		});
-		
-		return Status.OK_STATUS;
-	}
-	
-	protected void doWork(ComponentType ct){
+//		
+//		//Allow a runnable to be executed by the UI-thread asynchronously
+//		Display.getDefault().asyncExec(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				doWork(ct);
+//			}
+//		});
+//		
+//		return Status.OK_STATUS;
+//	}
+//	
+//	protected void doWork(ComponentType ct){
 		ComponentImplementation ci = null;
 		try {
 			ci = AgreeUtils.compImplFromType(ct);
@@ -104,7 +104,8 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				si = InstantiateModel.buildInstanceModelFile(ci);
 			} catch (Exception e) {
 				Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
-				return;
+				//return;
+				return Status.CANCEL_STATUS;
 			}
 
 			ComponentType sysType = AgreeUtils.getInstanceType(si);
@@ -128,12 +129,14 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 			ModelInfo info = getModelInfo(ct);
 			if (info == null) {
-				return;
+				//return;
+				return Status.CANCEL_STATUS;
 			}
 			
 			String dirStr = info.outputDirPath;
 			if (dirStr == null || dirStr.isEmpty()) {
-				return;
+				//return;
+				return Status.CANCEL_STATUS;
 			}
 			
 			boolean exportPressed = info.exportPressed;
@@ -145,7 +148,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				// Write MATLAB script to generate subsystem in the selected
 				// output folder
 				SimulinkSubsysScriptCreator modelGenerateScript = new SimulinkSubsysScriptCreator(dirStr,
-						info.updatedModelName, info.subsystemName, matlabFunction.ports);
+						info.verifyMdlName, info.subsystemName, matlabFunction.ports);
 
 				String modelUpdateScriptName = "generate_"+ info.subsystemName+ ".m";
 				
@@ -168,7 +171,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 					// Create Simulink Model Update script into the output
 					// folder
 					SimulinkObserverScriptCreator modelUpdateScript = new SimulinkObserverScriptCreator(
-							info.originalModelName, info.updatedModelName,
+							info.implMdlPath, info.verifyMdlName,
 							info.subsystemName, matlabFuncScriptName,
 							info.verifyPressed);
 
@@ -182,11 +185,15 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 							modelUpdateScript.toString());
 				}
 			}
-			return;
+			//return;
+			return Status.OK_STATUS;
 		} catch (Throwable e) {
+			String messages = getNestedMessages(e);
 			e.printStackTrace();
 			Dialog.showError("AGREE Error", e.toString());
-			return;
+			//return;
+			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
+
 		} finally {
 			if (ci != null) {
 				ci.eResource().getContents().remove(ci);
@@ -241,10 +248,10 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		sl1.setValue(savePathToAADLProperty(info.outputDirPath));
 
 		StringLiteral sl2 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
-		sl2.setValue(savePathToAADLProperty(info.originalModelName));
+		sl2.setValue(savePathToAADLProperty(info.implMdlPath));
 
 		StringLiteral sl3 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
-		sl3.setValue(savePathToAADLProperty(info.updatedModelName));
+		sl3.setValue(savePathToAADLProperty(info.verifyMdlName));
 
 		StringLiteral sl4 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
 		sl4.setValue(savePathToAADLProperty(info.subsystemName));
@@ -269,7 +276,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 	}
 
 	protected String getJobName() {
-		return "AGREE - Generate Simulink Observer";
+		return "AGREE - Generate Simulink Models";
 	}
 
 	public void writeToFile(Path filePath, String contentStr) {
