@@ -87,7 +87,7 @@ public class TcgPreferencePage extends FieldEditorPreferencePage implements IWor
 		/* enable/disable controls based on default value of auto save checkbox */
 		IPreferenceStore prefs = getPreferenceStore();
 		Boolean doAutoSave = prefs.getDefaultBoolean(TcgPreferenceConstants.PREF_CB_AUTO_SAVE);
-
+		
 		/* enable/disable controls based on default value of auto save radio button group */
 		String cbStr = prefs.getDefaultString(TcgPreferenceConstants.PREF_RB_AUTO_SAVE_TYPE);
 		Boolean saveToNew = cbStr.equals(TcgPreferenceConstants.PREF_RB_CHOICE_NEW_FILE);
@@ -159,6 +159,16 @@ public class TcgPreferencePage extends FieldEditorPreferencePage implements IWor
 		layoutScope.spacing = PREF_INNER_SPACING;
 		groupScope.setLayout(layoutScope);
 		
+		// second-level Composite (monolithic)
+		Group groupAnalysis = new Group(groupTop, SWT.NONE);
+		groupAnalysis.setText("AGREE Analysis Settings");
+		Composite compAnalysis = new Composite(groupAnalysis, SWT.NONE);
+		FillLayout layoutAnalysis = new FillLayout(SWT.VERTICAL);
+		layoutAnalysis.marginHeight = PREF_MARGIN_HEIGHT;
+		layoutAnalysis.marginWidth = PREF_MARGIN_WIDTH;
+		layoutAnalysis.spacing = PREF_INNER_SPACING;
+		groupAnalysis.setLayout(layoutAnalysis);
+
 		// second-level Composite (file save checkbox, radio group, file choosers)
 		Group groupSave = new Group(groupTop, SWT.NONE);
 		groupSave.setText("Generated Tests");
@@ -184,6 +194,10 @@ public class TcgPreferencePage extends FieldEditorPreferencePage implements IWor
 		addField(new BooleanFieldEditor(TcgPreferenceConstants.PREF_CB_GEN_TESTS_FOR_EQUATIONS,
 				 "Generate tests for equations", compScope));
 
+		/* analysis checkbox */
+		addField(new BooleanFieldEditor(TcgPreferenceConstants.PREF_MONOLITHIC_ANALYSIS,
+				 "Perform monolithic analysis", compAnalysis));
+		
 		/* auto save checkbox */
 		autoSaveBooleanFieldEditor =
 				 new BooleanFieldEditor(TcgPreferenceConstants.PREF_CB_AUTO_SAVE,
@@ -299,6 +313,7 @@ public class TcgPreferencePage extends FieldEditorPreferencePage implements IWor
 			super.performApply();
 		}
 		
+		
 		if (event.getSource().equals(newFileFieldEditor) || radioButtonEventNew) {
 			/* changed control is the new file FileFieldEditor or the new file radio button */
 			if (newFileFieldEditor.isValid()) {
@@ -324,7 +339,7 @@ public class TcgPreferencePage extends FieldEditorPreferencePage implements IWor
 				setErrorMessage(oldFileFieldEditor.getErrorMessage());
 			}
 		}
-
+		//super.updateApplyButton();
 		super.propertyChange(event);
 	}
 	

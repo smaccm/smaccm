@@ -72,7 +72,8 @@ public class VerifyHandler extends AadlHandler {
 
 		try {
 			ComponentImplementation ci = (ComponentImplementation)root;
-			TestSuiteLinkerFactory linkerFactory = new TestSuiteLinkerFactory(ci, true); 
+			TestSuiteLinkerFactory linkerFactory = 
+					new TestSuiteLinkerFactory(ci, TcgPreferenceUtils.getUseMonolithicAnalysis()); 
 			linker = linkerFactory.constructLinker();
 			
 			System.out.println("About to perform analysis...");
