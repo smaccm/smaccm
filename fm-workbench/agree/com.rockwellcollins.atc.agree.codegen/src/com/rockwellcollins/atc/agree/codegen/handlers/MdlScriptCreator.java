@@ -1,8 +1,6 @@
 package com.rockwellcollins.atc.agree.codegen.handlers;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,7 +13,6 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPort;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABType;
 import jkind.Assert;
-import jkind.lustre.Type;
 
 public class MdlScriptCreator extends ScriptCreator{
 	
@@ -206,47 +203,6 @@ public class MdlScriptCreator extends ScriptCreator{
 	    }
 	    sc.close();	
 	}
-	
-//	BufferedReader br = new BufferedReader(new FileReader("CommonScriptImplMdl.txt"));
-//	try {
-//	    //StringBuilder sb = new StringBuilder();
-//	    String line = br.readLine();
-//
-//	    while (line != null) {
-//	    	write(line);
-//	    	newline();
-//	        //sb.append(line);
-//	        //sb.append(System.lineSeparator());
-//	        line = br.readLine();
-//	    }
-//	    //String everything = sb.toString();
-//	} finally {
-//	    br.close();
-//	}
-//	//try {
-//		//URL path = ScriptCreator.class.getResource(scriptFileName);
-//		URL path = ScriptCreator.class.getResource(scriptFileName);
-//		if(path == null){
-//			throw new Exception("File not found: "+scriptFileName);
-//		}
-//		File f = new File(path.getFile());
-//		//File f = new File(path.toURI());
-//		BufferedReader br = new BufferedReader(new FileReader(f));
-////		
-////		Path file = Paths.get(scriptFileName);
-////		InputStream is = Files.newInputStream(file);
-////		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-//		String line = br.readLine();
-//	    while (line != null) {
-//	    	writeline(line);
-//	        line = br.readLine();
-//	    }
-//	    br.close();
-//	//} 
-////	catch (Exception e) {
-////		e.printStackTrace();
-////	} 
-	
 	
 	public void invokeSLDVScript() {
 		writeline("opts = sldvoptions;");
