@@ -273,7 +273,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 			else {
 				newImplMdl = true;
 				if (!isFileNameValid(implMdlPathStr, true)) {
-					write("Model name must start with a letter, end with .slx, contain letters/numbers/underscores in between");
+					write("Model name must start with a letter, end with .slx, and contain letters/numbers/underscores in between");
 					newline();
 					implMdlError = true;
 				}
@@ -293,7 +293,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		if (!verifyMdlPathStr.equals("")) {
 			verifyMdlEmpty = false;
 			if (!isFileNameValid(verifyMdlPathStr, true)) {
-				write("Model name must start with a letter, end with .slx, contain letters/numbers/underscores in between");
+				write("Model name must start with a letter, end with .slx, and contain letters/numbers/underscores in between");
 				newline();
 				verifyMdlError = true;
 			} else if (implMdlError || newImplMdl) {

@@ -94,17 +94,24 @@ public class LustreToMATLABTranslator {
 				Type type = agreeVar.type;
 				if (type instanceof RecordType || type instanceof NamedType) {
 					MATLABType portType = (agreeVar.type).accept(typeVisitor);
+					
+					SortedMap<String, MATLABType> fields = null;	
+					
+					//get the fields if it is a RecordType
+		    		if(type instanceof RecordType){
+		    			fields = exprVisitor.recordTypeMap.get(((RecordType)type).id);
+		    		}
 
 					// if it is from AADL feature, get the feature instance
 					if (agreeVar.featInst != null) {
 						FeatureInstance featInst = agreeVar.featInst;
-						ports.add(new MATLABPort(featInst.getName(), featInst.getDirection().getName(), portType));
+						ports.add(new MATLABPort(featInst.getName(), featInst.getDirection().getName(), portType, fields));
 					}
 					// if it is not from AADL feature, but an eq variable from
 					// AGREE
 					// set them as output variables from the subsystem
 					else {
-						ports.add(new MATLABPort(inputVar.id, "out", portType));
+						ports.add(new MATLABPort(inputVar.id, "out", portType, fields));
 					}
 				}
 			}			
