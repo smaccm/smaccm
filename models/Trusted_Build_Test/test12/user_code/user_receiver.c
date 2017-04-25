@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 void periodic_ping( const int64_t * periodic_1000_ms) {
-	printf("receiver: periodic dispatch received at time: %" PRI64 " \n", *periodic_1000_ms);
+	printf("receiver: periodic dispatch received at time: %lld \n", *periodic_1000_ms);
 	
 	test12__a_array_impl test_data;
 	bool result = true; 

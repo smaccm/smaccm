@@ -1,0 +1,253 @@
+package MissionSoftware
+public
+	with TB_SYS;
+	with SMACCM_DATA;
+	with Base_Types;
+
+	system top
+	end top;
+
+	system implementation top.i
+		subcomponents
+			software: process Mission_Software.i;
+			smaccmpilot_tk1: processor tk1_som.camkes;
+		properties
+			actual_processor_binding => (reference (smaccmpilot_tk1)) applies to software;   
+	end top.i;
+
+	processor tk1_som
+	end tk1_som;
+
+	processor implementation tk1_som.camkes
+	   properties
+	      TB_SYS::OS => CAmkES;
+	      TB_SYS::HW => TK1;
+	      TB_SYS::Add_Dummy_Arg_To_Void_Fns => True;
+	end tk1_som.camkes;
+
+	process Mission_Software
+	end Mission_Software;
+
+	process implementation Mission_Software.i
+		subcomponents
+			clock_driver: thread Clock_Driver;
+			gpio_driver: thread GPIO_Driver;
+			uart_driver: thread UART_Driver;
+			decrypt: thread Decrypt;
+			encrypt: thread Encrypt;
+			server: thread Server;
+			can_framing: thread CAN_Framing;
+			can_driver: thread CAN_Driver;
+			virtual_machine: thread Virtual_Machine;
+
+		connections
+			uart2decrypt: port uart_driver.self2decrypt -> decrypt.uart2self;
+			uart2encrypt: port uart_driver.self2encrypt -> encrypt.uart2self;
+			encrypt2uart: port encrypt.self2uart -> uart_driver.encrypt2self;
+
+			decrypt2server: port decrypt.self2server -> server.decrypt2self;
+			server2encrypt: port server.self2encrypt -> encrypt.server2self;
+
+			server2framing: port server.self2framing -> can_framing.server2self;
+			framing2server: port can_framing.self2server -> server.framing2self;
+
+			framing2can_request: port can_framing.self2can -> can_driver.framing2self;
+			can2framing_status: port can_driver.self2framing_status -> can_framing.can2self_status;
+			can2framing_frame: port can_driver.self2framing_frame -> can_framing.can2self_frame;
+
+			vm2server: port virtual_machine.self2server -> server.vm2self;
+			server2vm_reboot: port server.self2vm_reboot -> virtual_machine.server2self_reboot;
+			
+			uart_clkcar: subprogram group access uart_driver.clkcar -> clock_driver.clkcar;
+			can_clkcar: subprogram group access can_driver.clkcar -> clock_driver.clkcar;
+			
+			vm_clk_fwd: subprogram group access virtual_machine.clkcarfwd -> clock_driver.clkcarfwd;
+			vm_uart_fwd: subprogram group access virtual_machine.uartfwd -> uart_driver.uartfwd;
+			
+			gpio_spi_can1_cs: subprogram group access can_driver.gpio_spi_can1_cs -> gpio_driver.gpio_spi_can1_cs;
+			gpio_usb_vbus_en1: subprogram group access virtual_machine.gpio_usb_vbus_en1 -> gpio_driver.gpio_usb_vbus_en1;
+			can1int: port gpio_driver.CAN1Int -> can_driver.CAN1Int;
+			CANIntAck: port can_driver.CANIntAck -> gpio_driver.CANIntAck;
+	end Mission_Software.i;
+
+	thread Clock_Driver
+		features
+			clkcar: provides subprogram group access clkcar_inf;
+			clkcarfwd: provides subprogram group access gen_fwd_inf;
+		properties
+			TB_SYS::Is_External => true;
+			Priority => 253;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+	end Clock_Driver;
+
+	thread GPIO_Driver
+		features
+			gpio_spi_can1_cs: provides subprogram group access gpio_inf;
+			gpio_usb_vbus_en1: provides subprogram group access gpio_inf;
+			CAN1Int: out event port;
+			CANIntAck: in event port;
+		properties
+			TB_SYS::Is_External => true;
+			Priority => 253;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+	end GPIO_Driver;
+
+	thread UART_Driver
+		features
+			self2decrypt: out event data port SMACCM_DATA::UART_Packet.i;
+			encrypt2self: in event data port SMACCM_DATA::UART_Packet.i {
+						Queue_Size => 5;
+					};
+			self2encrypt: out event data port Base_Types::Boolean;
+			
+			uartfwd: provides subprogram group access gen_fwd_inf;
+			clkcar: requires subprogram group access clkcar_inf;
+		properties
+			TB_SYS::Is_External => true;
+			Priority => 250;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+			TB_SYS::Sends_Events_To => "{{}}";
+	end UART_Driver;
+
+	thread Decrypt
+		features
+			uart2self: in event data port SMACCM_DATA::UART_Packet.i {
+						Queue_Size => 100;
+					};
+			self2server: out event data port SMACCM_DATA::GIDL;
+		properties
+			Dispatch_Protocol => Periodic;
+			TB_SYS::Thread_Type => Active;
+			Priority => 150;
+			Stack_Size => 1024 Bytes;
+			Compute_Execution_Time => 10 us .. 100 us;
+			Period => 1 ms;
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			Initialize_Entrypoint_Source_Text => "component_init";
+	end Decrypt;
+
+	thread Encrypt
+		features
+			server2self: in event data port SMACCM_DATA::GIDL;
+
+			self2uart: out event data port SMACCM_DATA::UART_Packet.i;
+			uart2self: in event data port Base_Types::Boolean;
+		properties
+			Dispatch_Protocol => Periodic;
+			TB_SYS::Thread_Type => Active;
+			Priority => 150;
+			Stack_Size => 1024 Bytes;
+			Compute_Execution_Time => 10 us .. 100 us;
+			Period => 5 ms;
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			Initialize_Entrypoint_Source_Text => "component_init";
+	end Encrypt;
+
+	thread Server
+		features
+			self2encrypt: out event data port SMACCM_DATA::GIDL;
+			decrypt2self: in event data port SMACCM_DATA::GIDL;
+
+			self2framing: out event data port SMACCM_DATA::GIDL;
+			framing2self: in event data port SMACCM_DATA::GIDL;
+
+			vm2self: in data port SMACCM_DATA::Camera_Bounding_Box.i;
+			self2vm_reboot: out event data port Base_Types::Boolean;
+		properties
+			Dispatch_Protocol => Periodic;
+			TB_SYS::Thread_Type => Active;
+			Priority => 150;
+			Stack_Size => 1024 Bytes;
+			Compute_Execution_Time => 10 us .. 100 us;
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			Initialize_Entrypoint_Source_Text => "component_init";
+			Period => 5 ms;
+	end Server;
+
+	thread CAN_Framing
+		features
+			server2self: in event data port SMACCM_DATA::GIDL;
+			self2server: out event data port SMACCM_DATA::GIDL;
+
+			can2self_frame: in event data port SMACCM_DATA::CAN_Frame.i {
+						Queue_Size => 10;
+					};
+			can2self_status: in event data port Base_Types::Boolean;
+			self2can: out event data port SMACCM_DATA::CAN_Frame.i;
+
+		properties
+			Dispatch_Protocol => Periodic;
+			TB_SYS::Thread_Type => Active;
+			Priority => 150;
+			Stack_Size => 1024 Bytes;
+			Compute_Execution_Time => 10 us .. 100 us;
+			TB_SYS::Sends_Events_To => "{{}}";
+			TB_SYS::Compute_Entrypoint_Source_Text => ("component_entry");
+			Initialize_Entrypoint_Source_Text => "component_init";
+			Period => 1 ms;
+	end CAN_Framing;
+
+	thread CAN_Driver
+		features
+			framing2self: in event data port SMACCM_DATA::CAN_Frame.i;
+			self2framing_status: out event data port Base_Types::Boolean;
+			self2framing_frame: out event data port SMACCM_DATA::CAN_Frame.i;
+			
+			gpio_spi_can1_cs: requires subprogram group access gpio_inf;
+			CAN1Int: in event port;
+			CANIntAck: out event port;
+			
+			clkcar: requires subprogram group access clkcar_inf;
+		properties
+			TB_SYS::Is_External => true;
+			Priority => 250;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+			TB_SYS::Sends_Events_To => "{{}}";
+	end CAN_Driver;
+	
+	subprogram group gen_fwd_inf
+		properties
+			TB_SYS::Is_External => true;
+			TB_SYS::CommPrim_Source_Header => "gen_fwd.idl4";
+	end gen_fwd_inf;
+	
+	subprogram group clkcar_inf
+		properties
+			TB_SYS::Is_External => true;
+			TB_SYS::CommPrim_Source_Header => "clkcar.idl4";
+	end clkcar_inf;
+
+	subprogram group gpio_inf
+		properties
+			TB_SYS::Is_External => true;
+			TB_SYS::CommPrim_Source_Header => "gpio.idl4";
+	end gpio_inf;
+
+	thread Virtual_Machine
+		features
+			self2server: out data port SMACCM_DATA::Camera_Bounding_Box.i;
+			server2self_reboot: in event data port Base_Types::Boolean;
+			
+			clkcarfwd: requires subprogram group access gen_fwd_inf;
+			uartfwd: requires subprogram group access gen_fwd_inf;
+
+			gpio_usb_vbus_en1: requires subprogram group access gpio_inf;
+		properties
+			TB_SYS::Is_External => true;
+			Priority => 100;
+			Dispatch_Protocol => Sporadic;
+			TB_SYS::Thread_Type => Active;
+			Compute_Execution_Time => 10 us .. 100 us;
+	end Virtual_Machine;
+end MissionSoftware;

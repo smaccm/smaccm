@@ -4,7 +4,7 @@
 
 void periodic_ping(const int64_t * periodic_100_ms) {
 
-   printf("sender: periodic dispatch received (%" PRI64 ").  Writing to receiver \n", * periodic_100_ms);
+   printf("sender: periodic dispatch received (%lld).  Writing to receiver \n", * periodic_100_ms);
    
    uint32_t test_data;
    test_data = *periodic_100_ms / 10;

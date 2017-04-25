@@ -14,6 +14,7 @@ package com.rockwellcollins.atc.agree.agree;
  * <ul>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getStr <em>Str</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getPattern <em>Pattern</em>}</li>
  * </ul>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getGuaranteeStatement()
@@ -73,5 +74,31 @@ public interface GuaranteeStatement extends SpecStatement
    * @generated
    */
   void setExpr(Expr value);
+
+  /**
+   * Returns the value of the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Pattern</em>' containment reference isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Pattern</em>' containment reference.
+   * @see #setPattern(PatternStatement)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getGuaranteeStatement_Pattern()
+   * @model containment="true"
+   * @generated
+   */
+  PatternStatement getPattern();
+
+  /**
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getPattern <em>Pattern</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Pattern</em>' containment reference.
+   * @see #getPattern()
+   * @generated
+   */
+  void setPattern(PatternStatement value);
 
 } // GuaranteeStatement

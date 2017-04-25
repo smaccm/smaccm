@@ -28,7 +28,7 @@ thread sender
 	properties 
 	    Dispatch_Protocol => Periodic;
 	    SMACCM_SYS::Thread_Type => Active ;
-	    Period => 1000 ms;
+	    Period => 500 ms;
 		Source_Text => ("user_code/user_sender.c");
 	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 10;
@@ -48,7 +48,7 @@ thread receiver
 	properties 
 	    Dispatch_Protocol => Periodic;
 	    SMACCM_SYS::Thread_Type => Active ;
-	    Period => 1000 ms;
+	    Period => 500 ms;
 		Source_Text => ("user_code/user_receiver.c");
 	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 8;
@@ -69,15 +69,33 @@ process implementation proc.Impl
 		s_to_r : port s.Output1 -> r.Input1;
 end proc.Impl;
 
-system test14
-end test14;
+system test
+end test;
 
-system implementation test14.impl
+system implementation test.camkes
 	subcomponents
 		tl: process proc.Impl;
 	properties
 		SMACCM_SYS::OS => CAmkES;
 		SMACCM_SYS::HW => QEMU;
-end test14.impl;
+end test.camkes;
+
+system implementation test.echronos
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => eChronos;
+		SMACCM_SYS::HW => QEMU;
+end test.echronos;
+
+system implementation test.vxworks
+	subcomponents
+		tl: process proc.Impl;
+	properties
+		SMACCM_SYS::OS => VxWorks;
+		SMACCM_SYS::VxWorks_Set_Systick_Rate => true;
+		SMACCM_SYS::VxWorks_Systick_Rate => 20 ms;
+		SMACCM_SYS::HW => QEMU;
+end test.vxworks;
 
 end test14;

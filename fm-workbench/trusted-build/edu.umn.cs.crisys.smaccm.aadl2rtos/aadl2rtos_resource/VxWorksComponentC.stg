@@ -51,8 +51,8 @@ createWatchdogs(threadImpl) ::= <<
 >>
 
 invokeWatchdog(dispatcher) ::= <<
-<if(dispatcher.isPeriodic)> <periodicClock(dispatcher)> = wdCreate();
-<periodicClockFn(dispatcher)>();
+<if(dispatcher.isPeriodic)> 
+<resetWatchdogFn(dispatcher)>();
 <endif> >>
 
 
@@ -119,13 +119,15 @@ writeDecls(threadImpl) ::= <<
 <endif>
 >>
 
-periodicClockFn(dispatcher) ::= "<dispatcher.name>_callback"
+periodicClockFn(dispatcher) ::= "<dispatcher.qualifiedName>_callback"
+resetWatchdogFn(dispatcher) ::= "<dispatcher.qualifiedName>_reset_watchdog"
 
 periodicClock(dispatcher) ::= "<dispatcher.name>_clock"
 
 
-osSpecificCreateWatchdog(dispatcher) ::= <<
-<if(dispatcher.isPeriodic)>
+
+
+dispatcherComponentPeriodicEventDecls(dispatcher) ::= <<
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -133,32 +135,61 @@ osSpecificCreateWatchdog(dispatcher) ::= <<
 //
 ///////////////////////////////////////////////////////////////////////////
 
-WDOG_ID <periodicClock(dispatcher)>;
+static WDOG_ID <periodicClock(dispatcher)>;
+static bool <dispatcher.dispatchOccurredVar>;
+static <dispatcher.type.name> <dispatcher.periodicTimeVar>;
 
-static void <periodicClockFn(dispatcher)>(void)
+/************************************************************************
+ * <resetWatchdogFn(dispatcher)>
+ * This function resets the watchdog timer for the thread.
+ *
+ ************************************************************************/
+
+void <periodicClockFn(dispatcher)>(void); 
+
+
+static void <resetWatchdogFn(dispatcher)>(void)
 {
     bool dispatcherOk;
     dispatcherOk = wdStart(<periodicClock(dispatcher)>,
-                           <dispatcher.periodicDispatcherPeriod>, (FUNCPTR)<periodicClockFn(dispatcher)>, 0 );
-    assert(dispatcherOk == OK);
-    dispatcherOk = <dispatcherMainLockReleaseStmt(dispatcher)>
+                           <dispatcher.periodicDispatcherPeriod> / <\\>
+                           <dispatcher.threadImplementation.model.threadCalendar.msPerTick>, (FUNCPTR)<periodicClockFn(dispatcher)>, 0 );
     assert(dispatcherOk == OK);
 }
-<endif>
+
+void <periodicClockFn(dispatcher)>(void)
+{
+    bool dispatcherOk;
+	<resetWatchdogFn(dispatcher)>();
+    
+    <dispatcher.dispatchOccurredVar> = true;
+       
+    // FIXME NB: This WILL roll over given a fast enough clock rate.  We need an alternate scheme
+    // over the long term.
+    <dispatcher.periodicTimeVar> = (long long)tickGet() * (long long)<dispatcher.threadImplementation.model.threadCalendar.msPerTick>;
+    
+    dispatcherOk = <dispatcherMainLockReleaseStmt(dispatcher)>
+    
+    // NB: the count overflow is a harmless error; it is possible that multiple dispatchers 
+    // could post before the thread actually dispatches.
+    assert(dispatcherOk == OK || errno == S_semLib_COUNT_OVERFLOW);
+}
+
+
 >>
 
 osSpecificIncludeFiles(threadImpl) ::= <<
 #include <\u0022>smaccm_decls.h<\u0022>
 #include <\u003C>string.h<\u003E>
 #include <\u003C>wdLib.h<\u003E>
+#include <\u003C>tickLib.h<\u003E>
+#include <\u003C>sysLib.h<\u003E>
 #include <\u003C>unistd.h<\u003E>
 #include <\u003C>assert.h<\u003E>
 
 
 <writeDecls(threadImpl)>
 
-
-<threadImpl.dispatchers:osSpecificCreateWatchdog()>
 
 >>
 

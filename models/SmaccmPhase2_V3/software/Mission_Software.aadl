@@ -20,7 +20,6 @@ system software
   	  last_mavlink_received_time = 0.0 and
   	  not mavlink_received_in_past;
   		    
-  	eq time : real;
   	eq next_time : real;
   	const MAVLINK_TO_CAN_LATENCY_BOUND : real = 150.0;
   	

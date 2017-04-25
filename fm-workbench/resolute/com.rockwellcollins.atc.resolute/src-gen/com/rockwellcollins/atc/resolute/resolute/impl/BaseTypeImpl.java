@@ -4,10 +4,13 @@ package com.rockwellcollins.atc.resolute.resolute.impl;
 
 import com.rockwellcollins.atc.resolute.resolute.BaseType;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
+import com.rockwellcollins.atc.resolute.resolute.Type;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
@@ -19,6 +22,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.BaseTypeImpl#getParamType <em>Param Type</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.BaseTypeImpl#getType <em>Type</em>}</li>
  * </ul>
  *
@@ -26,6 +30,16 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class BaseTypeImpl extends TypeImpl implements BaseType
 {
+  /**
+   * The cached value of the '{@link #getParamType() <em>Param Type</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getParamType()
+   * @generated
+   * @ordered
+   */
+  protected Type paramType;
+
   /**
    * The default value of the '{@link #getType() <em>Type</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -72,6 +86,54 @@ public class BaseTypeImpl extends TypeImpl implements BaseType
    * <!-- end-user-doc -->
    * @generated
    */
+  public Type getParamType()
+  {
+    return paramType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetParamType(Type newParamType, NotificationChain msgs)
+  {
+    Type oldParamType = paramType;
+    paramType = newParamType;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ResolutePackage.BASE_TYPE__PARAM_TYPE, oldParamType, newParamType);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setParamType(Type newParamType)
+  {
+    if (newParamType != paramType)
+    {
+      NotificationChain msgs = null;
+      if (paramType != null)
+        msgs = ((InternalEObject)paramType).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.BASE_TYPE__PARAM_TYPE, null, msgs);
+      if (newParamType != null)
+        msgs = ((InternalEObject)newParamType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.BASE_TYPE__PARAM_TYPE, null, msgs);
+      msgs = basicSetParamType(newParamType, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.BASE_TYPE__PARAM_TYPE, newParamType, newParamType));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public String getType()
   {
     return type;
@@ -96,10 +158,28 @@ public class BaseTypeImpl extends TypeImpl implements BaseType
    * @generated
    */
   @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
+    switch (featureID)
+    {
+      case ResolutePackage.BASE_TYPE__PARAM_TYPE:
+        return basicSetParamType(null, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
     {
+      case ResolutePackage.BASE_TYPE__PARAM_TYPE:
+        return getParamType();
       case ResolutePackage.BASE_TYPE__TYPE:
         return getType();
     }
@@ -116,6 +196,9 @@ public class BaseTypeImpl extends TypeImpl implements BaseType
   {
     switch (featureID)
     {
+      case ResolutePackage.BASE_TYPE__PARAM_TYPE:
+        setParamType((Type)newValue);
+        return;
       case ResolutePackage.BASE_TYPE__TYPE:
         setType((String)newValue);
         return;
@@ -133,6 +216,9 @@ public class BaseTypeImpl extends TypeImpl implements BaseType
   {
     switch (featureID)
     {
+      case ResolutePackage.BASE_TYPE__PARAM_TYPE:
+        setParamType((Type)null);
+        return;
       case ResolutePackage.BASE_TYPE__TYPE:
         setType(TYPE_EDEFAULT);
         return;
@@ -150,6 +236,8 @@ public class BaseTypeImpl extends TypeImpl implements BaseType
   {
     switch (featureID)
     {
+      case ResolutePackage.BASE_TYPE__PARAM_TYPE:
+        return paramType != null;
       case ResolutePackage.BASE_TYPE__TYPE:
         return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
     }

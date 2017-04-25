@@ -84,6 +84,7 @@ componentGlueCodeHeaderBody(threadImpl) ::= <<
 
 filePostfix(name, path) ::= <<
 #endif // <componentGlueCodeHeaderIfdef(name)>
+
 >>
 
 cStmt(stmt) ::= "<stmt>;"

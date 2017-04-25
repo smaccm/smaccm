@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis.preferences;
+package com.rockwellcollins.atc.agree.analysis.preferences; 
 
 import java.io.File;
 import java.net.URL;
@@ -91,6 +91,8 @@ public class PreferencesUtil {
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
         api.setPdrMax(prefs.getInt(PreferenceConstants.PREF_PDR_MAX));
+        //TODO set pdr invariants as preferences option
+        //api.setPdrInvariants();
         if (prefs.getBoolean(PreferenceConstants.PREF_NO_KINDUCTION)) {
             api.disableKInduction();
         }

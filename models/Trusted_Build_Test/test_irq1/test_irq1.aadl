@@ -23,7 +23,7 @@ thread sender
 		  SMACCM_SYS::Signal_Name => "irq";
 		  SMACCM_SYS::Memory_Pages => ("mem", "0x53F98000:0x1000");
 		  SMACCM_SYS::Signal_Number => 27;			
-	      SMACCM_SYS::Sends_Events_To => "{{2 Output1}}";
+	     SMACCM_SYS::Sends_Events_To =>  "{{2 Output1}}"; -- "{{}}"; -- 
 		};
 		Output1: out event data port Base_Types::Unsigned_32 {
 	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
@@ -49,8 +49,13 @@ thread receiver
 		}; 
 				
 	properties 
-	    Dispatch_Protocol => Aperiodic;
-	    SMACCM_SYS::Thread_Type => Passive ;
+--       Dispatch_Protocol => Sporadic;
+--       Period => 100 ms;
+--       Priority => 9;
+--       Stack_Size => 4096 bytes;
+--	    SMACCM_SYS::Thread_Type => Active ;
+       SMACCM_SYS::Thread_Type => Passive ;
+       Dispatch_Protocol => Aperiodic;
 	    Compute_Execution_Time => 10 us .. 50 us;
 	    SMACCM_SYS::Sends_Events_To => "{{}}";
 end receiver ; 

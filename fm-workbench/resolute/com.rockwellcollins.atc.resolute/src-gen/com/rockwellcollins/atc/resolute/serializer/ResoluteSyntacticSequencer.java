@@ -42,9 +42,9 @@ public class ResoluteSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if(match_AtomicExpr_LeftParenthesisKeyword_14_0_a.equals(syntax))
+			if (match_AtomicExpr_LeftParenthesisKeyword_14_0_a.equals(syntax))
 				emit_AtomicExpr_LeftParenthesisKeyword_14_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_AtomicExpr_LeftParenthesisKeyword_14_0_p.equals(syntax))
+			else if (match_AtomicExpr_LeftParenthesisKeyword_14_0_p.equals(syntax))
 				emit_AtomicExpr_LeftParenthesisKeyword_14_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
@@ -55,6 +55,29 @@ public class ResoluteSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     '('*
 	 *
 	 * This ambiguous syntax occurs at:
+	 *     (rule start) '{' (ambiguity) '(' type=BaseType
+	 *     (rule start) '{' (ambiguity) 'fail' '**' failmsg+=ClaimText
+	 *     (rule start) '{' (ambiguity) 'fail' val=Expr
+	 *     (rule start) '{' (ambiguity) 'if' cond=Expr
+	 *     (rule start) '{' (ambiguity) 'let' binding=LetBinding
+	 *     (rule start) '{' (ambiguity) 'this' '.' sub=NestedDotID
+	 *     (rule start) '{' (ambiguity) 'this' (rule start)
+	 *     (rule start) '{' (ambiguity) '{' '}' (rule start)
+	 *     (rule start) '{' (ambiguity) fn=BuiltInFn
+	 *     (rule start) '{' (ambiguity) fn=[FunctionDefinition|ID]
+	 *     (rule start) '{' (ambiguity) id=[NamedElement|QCREF]
+	 *     (rule start) '{' (ambiguity) op='-'
+	 *     (rule start) '{' (ambiguity) op='not'
+	 *     (rule start) '{' (ambiguity) quant='exists'
+	 *     (rule start) '{' (ambiguity) quant='forall'
+	 *     (rule start) '{' (ambiguity) val=BooleanLiteral
+	 *     (rule start) '{' (ambiguity) val=IntegerTerm
+	 *     (rule start) '{' (ambiguity) val=RealTerm
+	 *     (rule start) '{' (ambiguity) val=StringTerm
+	 *     (rule start) '{' (ambiguity) {BinaryExpr.left=}
+	 *     (rule start) '{' (ambiguity) {FilterMapExpr.map=}
+	 *     (rule start) '{' (ambiguity) {InstanceOfExpr.expr=}
+	 *     (rule start) '{' (ambiguity) {SetExpr.exprs+=}
 	 *     (rule start) (ambiguity) '(' type=BaseType
 	 *     (rule start) (ambiguity) 'fail' '**' failmsg+=ClaimText
 	 *     (rule start) (ambiguity) 'fail' val=Expr

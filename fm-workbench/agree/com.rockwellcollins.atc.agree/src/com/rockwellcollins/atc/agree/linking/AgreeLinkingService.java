@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -29,7 +30,9 @@ import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
+import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
@@ -82,24 +85,32 @@ public class AgreeLinkingService extends PropertiesLinkingService {
             Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval
                     .getAllEObjectsOfTypeInWorkspace(context, reference.getEReferenceType());
 
-            String contextProject = context.eResource().getURI().segment(1);
-            List<String> visibleProjects = getVisibleProjects(contextProject);
+			String contextProject = context.eResource().getURI().segment(1);
+			List<String> visibleProjects = getVisibleProjects(contextProject);
 
-            for (IEObjectDescription eod : allObjectTypes) {
-                if (sameName(eod, name) && isVisible(eod, visibleProjects)) {
-                    EObject res = eod.getEObjectOrProxy();
-                    res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-                    if (!Aadl2Util.isNull(res)) {
-                        return Collections.singletonList(res);
-                    }
-                }
-            }
-        }
+			for (IEObjectDescription eod : allObjectTypes) {
+				if (isVisible(eod, visibleProjects)) {
+					EObject res = eod.getEObjectOrProxy();
+					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
+						// special code for AGREE enumerated types
+						if (((NamedID) res).getName().equals(name)) {
+							return Collections.singletonList(res);
+						}
+					}
+					if (sameName(eod, name)) {
+						if (!Aadl2Util.isNull(res)) {
+							return Collections.singletonList(res);
+						}
+					}
+				}
+			}
+		}
 
-        return super.getLinkedObjects(context, reference, node);
-    }
+		return super.getLinkedObjects(context, reference, node);
+	}
 
-    private static boolean sameName(IEObjectDescription eod, String name) {
+	private static boolean sameName(IEObjectDescription eod, String name) {
         return eod.getName().toString().equalsIgnoreCase(name);
     }
 

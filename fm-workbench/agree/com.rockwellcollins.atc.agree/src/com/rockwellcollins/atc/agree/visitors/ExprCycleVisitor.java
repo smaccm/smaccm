@@ -35,6 +35,11 @@ public class ExprCycleVisitor extends AgreeSwitch<Set<EObject>> {
     }
     
     @Override
+    public Set<EObject> caseExpr(Expr expr){
+    	return new HashSet<EObject>();
+    }
+    
+    @Override
     public Set<EObject> caseBinaryExpr(BinaryExpr e){
         Set<EObject> result = new HashSet<EObject>();
         result.addAll(doSwitch(e.getLeft()));

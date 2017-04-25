@@ -6,6 +6,7 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.SystemImplementation;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
@@ -18,7 +19,9 @@ import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 
 import jkind.lustre.Node;
@@ -63,7 +66,7 @@ public class RenamingVisitor extends AstIterVisitor{
             String refStr = getReferenceStr(var);
 
             if (isMainNode && var.reference != null) {
-                if (var.reference instanceof AssumeStatement && category.equals("")) {
+                if (var.reference instanceof AssumeStatement && category != null && category.equals("")) {
                     renaming.addSupportRename(var.id, var.id);
                     renaming.addSupportRefString(var.id, refStr);
                     renaming.getRefMap().put(refStr, var.reference);
@@ -79,7 +82,7 @@ public class RenamingVisitor extends AstIterVisitor{
                 return null;
             }
 
-            if (!layout.getCategories().contains(category)) {
+            if (category != null && !layout.getCategories().contains(category)) {
                 layout.addCategory(category);
             }
             layout.addElement(category, refStr, SigType.INPUT);
@@ -100,26 +103,45 @@ public class RenamingVisitor extends AstIterVisitor{
 
         String seperator = (prefix == "" ? "" : ".");
         EObject reference = var.reference;
-        if (reference instanceof GuaranteeStatement) {
-            return ((GuaranteeStatement) reference).getStr();
-        } else if (reference instanceof AssumeStatement) {
-            return prefix + " assume: " + ((AssumeStatement) reference).getStr();
-        } else if (reference instanceof LemmaStatement) {
-            return prefix + " lemma: " + ((LemmaStatement) reference).getStr();
-        } else if (reference instanceof AssertStatement) {
-            throw new AgreeException("We really didn't expect to see an assert statement here");
-        } else if (reference instanceof Arg) {
-            return prefix + seperator + ((Arg) reference).getName();
-        } else if (reference instanceof DataPort) {
-            return prefix + seperator + ((DataPort) reference).getName();
-        } else if (reference instanceof EventDataPort) {
-            return prefix + seperator + ((EventDataPort) reference).getName()+"._EVENT_";
-        } else if (reference instanceof FeatureGroup) {
-            return prefix + seperator + ((FeatureGroup) reference).getName();
-        } else if (reference instanceof PropertyStatement) {
-            return prefix + seperator + ((PropertyStatement) reference).getName();
-        } else if (reference instanceof ComponentType || reference instanceof ComponentImplementation) {
+        String suffix = "";
+        
+        if(var.id.endsWith(AgreeASTBuilder.eventSuffix + AgreeInlineLatchedConnections.LATCHED_SUFFIX)){
+        	suffix = "._EVENT_._LATCHED_";
+        }else if(var.id.endsWith(AgreeASTBuilder.eventSuffix)){
+        	suffix = "._EVENT_";
+        }else if(var.id.endsWith(AgreeInlineLatchedConnections.LATCHED_SUFFIX)){
+        	suffix = "._LATCHED_";
+        }
+
+		if (reference instanceof GuaranteeStatement) {
+			return ((GuaranteeStatement) reference).getStr();
+		} else if (reference instanceof AssumeStatement) {
+			return prefix + " assume: " + ((AssumeStatement) reference).getStr();
+		} else if (reference instanceof LemmaStatement) {
+			return prefix + " lemma: " + ((LemmaStatement) reference).getStr();
+		} else if (reference instanceof AssertStatement) {
+			throw new AgreeException("We really didn't expect to see an assert statement here");
+		} else if (reference instanceof Arg) {
+			return prefix + seperator + ((Arg) reference).getName() + suffix;
+		} else if (reference instanceof DataPort) {
+			return prefix + seperator + ((DataPort) reference).getName() + suffix;
+		} else if (reference instanceof EventDataPort) {
+			return prefix + seperator + ((EventDataPort) reference).getName() + suffix;
+		} else if (reference instanceof FeatureGroup) {
+			String featName = ((FeatureGroup) reference).getName();
+			String varName = var.toString();
+			featName = varName.substring(varName.indexOf(featName)).replace("__", ".");
+			return prefix + seperator + featName;
+		} else if (reference instanceof PropertyStatement) {
+			return prefix + seperator + ((PropertyStatement) reference).getName();
+		} else if (reference instanceof ComponentType || reference instanceof ComponentImplementation
+				|| reference instanceof SystemImplementation) {
+        	if(var.id.equals(LustreAstBuilder.assumeHistSufix)){
+        		return "Subcomponent Assumptions";
+        	}
             return "Result";
+        } else if(reference instanceof AgreeStatement){
+            return prefix + reference.toString();
         }
         throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
     }

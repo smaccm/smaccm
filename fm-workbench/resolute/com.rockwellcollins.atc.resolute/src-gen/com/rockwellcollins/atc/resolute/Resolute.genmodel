@@ -14,6 +14,7 @@
     <genClasses ecoreClass="Resolute.ecore#//Definition"/>
     <genClasses ecoreClass="Resolute.ecore#//Type"/>
     <genClasses ecoreClass="Resolute.ecore#//BaseType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//BaseType/paramType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//BaseType/type"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//Arg">

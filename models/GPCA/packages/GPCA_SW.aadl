@@ -31,7 +31,7 @@ public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, 
 				(DEFS.Is_Infusion_below_tolerance(SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Max)) or
 				(SENSOR_IN.Flow_Rate < DB_IN.Flow_Rate_Low));
 				
-		eq timeOverMinTolerance : int = 0 ->
+		eq timeOverMinTolerance : int = 0 -> 
 			if DEFS.Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Min)
 				then pre(timeOverMinTolerance) + 1
 			else
@@ -102,17 +102,17 @@ public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, 
 	  	assume "not_inhibit_and_cancel" : not(OP_CMD_IN.Infusion_Inhibit and OP_CMD_IN.Infusion_Cancel);
 	  	assume "GPCA_SW_OUT.Max_Number_of_Patient_Bolus >= 0" : GPCA_SW_OUT.Max_Number_of_Patient_Bolus >= 0;		
 	   ---> If system is on and empty reservoir => Flow_Rate = 0  <-------
---		-- REQ 1 :  MODES RANGE
---		property mode_range =  
---					(GPCA_SW_OUT.Current_System_Mode = DEFS.OFF) or  
---					(GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE) or 
---					(GPCA_SW_OUT.Current_System_Mode = DEFS.BASAL) or 
---					(GPCA_SW_OUT.Current_System_Mode = DEFS.SQUARE_BOLUS) or 
---					(GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS) or 
---					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_NO_KVO) or 
---					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_KVO) or 
---					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_MANUAL);
---		guarantee "PROPERTY 1 : mode_range ":  mode_range; 
+		-- REQ 1 :  MODES RANGE
+		property mode_range =  
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.OFF) or  
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.BASAL) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.SQUARE_BOLUS) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_NO_KVO) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_KVO) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_MANUAL);
+		guarantee "PROPERTY 1 : mode_range ":  mode_range; 
 		-- if the system is not start => OFF, then mode is 0.
 		property not_system_start_implies_mode_0 = 
 		  not(OP_CMD_IN.System_Start) => (GPCA_SW_OUT.Current_System_Mode = DEFS.OFF);
@@ -407,7 +407,6 @@ public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, 
 			(GPCA_SW_OUT.Notification_Message = DEFS.PUMP_HOT) => SENSOR_IN.Pump_Overheated;
 		guarantee "PROPERTY 50 : pump_hot_visual_implies_error" : pump_hot_visual_implies_error;
 		
-		
 		--REQ 72
 		property alarm_3_or_4_implies_audio = true ->
 			((level_3_alarm or level_4_alarm) and (OP_CMD_IN.Disable_Audio = 0)) => (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level);
@@ -434,10 +433,6 @@ public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, 
 			> DB_IN.Number_Max_Patient_Bolus) or (PRES_IN.Flow_Rate_Intermittent_Bolus < PRES_IN.Flow_Rate_Basal) or
 			(PRES_IN.Flow_Rate_Patient_Bolus < PRES_IN.Flow_Rate_Basal)) => GPCA_SW_OUT.Request_Patient_Drug_Info;
 		guarantee "PROPERTY 54 : validate_configured_infusion_info" : validate_configured_infusion_info;
-		
-
-
---		--guarantee "Assume Consistency Check": false;		
 
 	  **};
 

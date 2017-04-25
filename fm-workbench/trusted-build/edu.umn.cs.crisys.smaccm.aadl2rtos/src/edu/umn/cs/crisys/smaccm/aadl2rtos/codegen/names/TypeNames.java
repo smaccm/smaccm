@@ -5,8 +5,8 @@ package edu.umn.cs.crisys.smaccm.aadl2rtos.codegen.names;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosFailure;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
-import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
+//import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.DispatchableInputPort;
+//import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.OutputEventPort;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.ArrayType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.IdType;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.type.PointerType;

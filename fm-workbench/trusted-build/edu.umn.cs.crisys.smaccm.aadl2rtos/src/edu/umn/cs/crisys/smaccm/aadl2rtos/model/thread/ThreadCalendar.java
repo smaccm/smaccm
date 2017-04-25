@@ -8,6 +8,7 @@ import java.util.List;
 
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
+import edu.umn.cs.crisys.smaccm.aadl2rtos.parse.Model;
 
 /**
  * @author Whalen
@@ -15,10 +16,13 @@ import edu.umn.cs.crisys.smaccm.aadl2rtos.model.port.InputPeriodicPort;
  */
 public class ThreadCalendar {
 
+  Model m; 
   List<InputPeriodicPort> periodicDispatchers = new ArrayList<InputPeriodicPort>();
+  final int NO_FIXED_RATE = -1; 
+  int fixedTickRateMS = NO_FIXED_RATE; 
   
-  public ThreadCalendar() {
-    
+  public ThreadCalendar(Model m) {
+    this.m = m;
   }
   
   public void addPeriodicPort(InputPeriodicPort d) {
@@ -27,6 +31,10 @@ public class ThreadCalendar {
   
   public List<InputPeriodicPort> getPeriodicDispatchers() {
     return periodicDispatchers;
+  }
+  
+  public Model getModel() {
+	  return m;
   }
   
   public boolean hasDispatchers() {return !periodicDispatchers.isEmpty(); }
@@ -84,6 +92,34 @@ public class ThreadCalendar {
     return (this.getLeastCommonMultipleInMilliseconds() / this.getGreatestCommonDivisorInMilliseconds());
   }
 
+  public void setFixedTickRateInMS(int rateInMS) {
+     this.fixedTickRateMS = rateInMS;
+  }
+  
+  public int getFixedTickRateInMS() {
+     return this.fixedTickRateMS;
+  }
+  
+  public boolean hasFixedTickRate() {
+     return this.fixedTickRateMS != NO_FIXED_RATE; 
+  }
+  
+  public void checkFixedTickRateForPeriods() {
+     if (this.fixedTickRateMS == NO_FIXED_RATE) {
+        for (InputPeriodicPort ipp: this.periodicDispatchers) {
+           if ((ipp.getPeriod() % fixedTickRateMS) != 0)
+              throw new Aadl2RtosException("checkFixedTickRateForPeriods: Tick Rate does not yield integer counts for task periods"); 
+        }
+     }
+  }
+  
+  public int fixedTickRateInHz() { 
+     if (1000 % this.fixedTickRateMS  != 0) {
+        throw new Aadl2RtosException("ThreadCalendar::fixedTickRateInHz: rate does not yield an integral Hz rate.");
+     }
+     return 1000 / this.fixedTickRateMS; 
+  }
+  
   @Override
   public int hashCode() {
     final int prime = 31;

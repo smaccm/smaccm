@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis.translation;
+package com.rockwellcollins.atc.agree.analysis.translation; 
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -114,7 +114,7 @@ public class AgreeNodeToLustreContract {
         
         List<Equation> eqs = new ArrayList<>();
         for(AgreeStatement statement : agreeNode.assertions){
-            if(AgreeUtils.statementIsContractEqOrProperty(statement)){
+            if(AgreeUtils.referenceIsInContract(statement.reference, agreeNode.compInst)){
                 BinaryExpr expr = (BinaryExpr) statement.expr;
                 
                 if((expr.op != BinaryOp.EQUAL)){

@@ -59,6 +59,51 @@ public interface AgreeFactory extends EFactory
   SpecStatement createSpecStatement();
 
   /**
+   * Returns a new object of class '<em>Pattern Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Pattern Statement</em>'.
+   * @generated
+   */
+  PatternStatement createPatternStatement();
+
+  /**
+   * Returns a new object of class '<em>When Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>When Statement</em>'.
+   * @generated
+   */
+  WhenStatement createWhenStatement();
+
+  /**
+   * Returns a new object of class '<em>Whenever Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Statement</em>'.
+   * @generated
+   */
+  WheneverStatement createWheneverStatement();
+
+  /**
+   * Returns a new object of class '<em>Real Time Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Real Time Statement</em>'.
+   * @generated
+   */
+  RealTimeStatement createRealTimeStatement();
+
+  /**
+   * Returns a new object of class '<em>Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Interval</em>'.
+   * @generated
+   */
+  TimeInterval createTimeInterval();
+
+  /**
    * Returns a new object of class '<em>Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -104,6 +149,15 @@ public interface AgreeFactory extends EFactory
   ConstStatement createConstStatement();
 
   /**
+   * Returns a new object of class '<em>Enum Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Enum Statement</em>'.
+   * @generated
+   */
+  EnumStatement createEnumStatement();
+
+  /**
    * Returns a new object of class '<em>Eq Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -111,6 +165,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   EqStatement createEqStatement();
+
+  /**
+   * Returns a new object of class '<em>Input Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Input Statement</em>'.
+   * @generated
+   */
+  InputStatement createInputStatement();
 
   /**
    * Returns a new object of class '<em>Assign Statement</em>'.
@@ -129,6 +192,33 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   FnDefExpr createFnDefExpr();
+
+  /**
+   * Returns a new object of class '<em>Library Fn Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Library Fn Def Expr</em>'.
+   * @generated
+   */
+  LibraryFnDefExpr createLibraryFnDefExpr();
+
+  /**
+   * Returns a new object of class '<em>Linearization Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Linearization Def Expr</em>'.
+   * @generated
+   */
+  LinearizationDefExpr createLinearizationDefExpr();
+
+  /**
+   * Returns a new object of class '<em>Linearization Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Linearization Interval</em>'.
+   * @generated
+   */
+  LinearizationInterval createLinearizationInterval();
 
   /**
    * Returns a new object of class '<em>Node Def Expr</em>'.
@@ -210,6 +300,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   NestedDotID createNestedDotID();
+
+  /**
+   * Returns a new object of class '<em>Named ID</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Named ID</em>'.
+   * @generated
+   */
+  NamedID createNamedID();
 
   /**
    * Returns a new object of class '<em>Contract Library</em>'.
@@ -309,6 +408,123 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   ConnectionStatement createConnectionStatement();
+
+  /**
+   * Returns a new object of class '<em>Always Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Always Statement</em>'.
+   * @generated
+   */
+  AlwaysStatement createAlwaysStatement();
+
+  /**
+   * Returns a new object of class '<em>When Holds Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>When Holds Statement</em>'.
+   * @generated
+   */
+  WhenHoldsStatement createWhenHoldsStatement();
+
+  /**
+   * Returns a new object of class '<em>When Occurs Statment</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>When Occurs Statment</em>'.
+   * @generated
+   */
+  WhenOccursStatment createWhenOccursStatment();
+
+  /**
+   * Returns a new object of class '<em>Whenever Occurs Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Occurs Statement</em>'.
+   * @generated
+   */
+  WheneverOccursStatement createWheneverOccursStatement();
+
+  /**
+   * Returns a new object of class '<em>Whenever Becomes True Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Becomes True Statement</em>'.
+   * @generated
+   */
+  WheneverBecomesTrueStatement createWheneverBecomesTrueStatement();
+
+  /**
+   * Returns a new object of class '<em>Whenever Holds Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Holds Statement</em>'.
+   * @generated
+   */
+  WheneverHoldsStatement createWheneverHoldsStatement();
+
+  /**
+   * Returns a new object of class '<em>Whenever Implies Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Whenever Implies Statement</em>'.
+   * @generated
+   */
+  WheneverImpliesStatement createWheneverImpliesStatement();
+
+  /**
+   * Returns a new object of class '<em>Periodic Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Periodic Statement</em>'.
+   * @generated
+   */
+  PeriodicStatement createPeriodicStatement();
+
+  /**
+   * Returns a new object of class '<em>Sporadic Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Sporadic Statement</em>'.
+   * @generated
+   */
+  SporadicStatement createSporadicStatement();
+
+  /**
+   * Returns a new object of class '<em>Closed Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Closed Time Interval</em>'.
+   * @generated
+   */
+  ClosedTimeInterval createClosedTimeInterval();
+
+  /**
+   * Returns a new object of class '<em>Open Left Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Open Left Time Interval</em>'.
+   * @generated
+   */
+  OpenLeftTimeInterval createOpenLeftTimeInterval();
+
+  /**
+   * Returns a new object of class '<em>Open Right Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Open Right Time Interval</em>'.
+   * @generated
+   */
+  OpenRightTimeInterval createOpenRightTimeInterval();
+
+  /**
+   * Returns a new object of class '<em>Open Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Open Time Interval</em>'.
+   * @generated
+   */
+  OpenTimeInterval createOpenTimeInterval();
 
   /**
    * Returns a new object of class '<em>MN Synch Statement</em>'.
@@ -437,6 +653,15 @@ public interface AgreeFactory extends EFactory
   RecordUpdateExpr createRecordUpdateExpr();
 
   /**
+   * Returns a new object of class '<em>Time Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Expr</em>'.
+   * @generated
+   */
+  TimeExpr createTimeExpr();
+
+  /**
    * Returns a new object of class '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -462,6 +687,42 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   EventExpr createEventExpr();
+
+  /**
+   * Returns a new object of class '<em>Latched Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Latched Expr</em>'.
+   * @generated
+   */
+  LatchedExpr createLatchedExpr();
+
+  /**
+   * Returns a new object of class '<em>Time Of Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Of Expr</em>'.
+   * @generated
+   */
+  TimeOfExpr createTimeOfExpr();
+
+  /**
+   * Returns a new object of class '<em>Time Rise Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Rise Expr</em>'.
+   * @generated
+   */
+  TimeRiseExpr createTimeRiseExpr();
+
+  /**
+   * Returns a new object of class '<em>Time Fall Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Fall Expr</em>'.
+   * @generated
+   */
+  TimeFallExpr createTimeFallExpr();
 
   /**
    * Returns a new object of class '<em>Real Lit Expr</em>'.

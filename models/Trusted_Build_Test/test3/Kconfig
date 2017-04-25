@@ -1,6 +1,6 @@
 config APP_TEST3
-    bool "AADL Test 3: active -> passive threads using array send"
+    bool "test3 (from AADL)"
     default n
     select APP_CAMKES_EXECUTIVE
     help
-        AADL Test 3: active -> passive threads using array send. 
+        test3 (from AADL).

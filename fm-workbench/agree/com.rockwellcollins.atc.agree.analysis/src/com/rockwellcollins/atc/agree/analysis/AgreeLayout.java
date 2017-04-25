@@ -46,15 +46,13 @@ public class AgreeLayout implements Layout {
     }
 
     @Override
-    public String getCategory(String signal) {
-        // TODO this could give false results
-        
+    public String getCategory(String signal) {        
         for (String cat : categories) {
             if (signal.startsWith(cat + ".")) {
                 return cat;
             }
         }
-        return categories.get(categories.size() - 1);
+        return "";
 
     }
 

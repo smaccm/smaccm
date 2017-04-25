@@ -160,11 +160,29 @@ public class AadlModelParser {
 		
 		// create properties related to timers.
 		try {
-		  this.model.generateSystickIRQ = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.GENERATE_SCHEDULER_SYSTICK_IRQ);
+		   this.model.generateSystemTick = true;
+		   if (this.model.getOsTarget() == Model.OSTarget.eChronos) {
+		      this.model.generateSystemTick = 
+		        (PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.GENERATE_SCHEDULER_SYSTICK_IRQ));
+		   } else if (this.model.getOsTarget() == Model.OSTarget.VxWorks) {
+		      this.model.generateSystemTick = 
+		        (PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.VXWORKS_SET_SYSTICK_RATE));
+		   }
+		   try {
+		     double timerVal = PropertyUtil.convertToMilliseconds(
+		           PropertyUtil.getIntegerLiteral(systemImplementation, 
+		                 PropertyUtil.BASE_SYSTICK_RATE));
+		     this.model.threadCalendar.setFixedTickRateInMS((int)timerVal);
+		  } catch (Exception e) {
+		     if (!this.model.generateSystemTick) {
+		         this.logger.error("If system tick rate is set externally, the VxWorks_Systick_Rate property must be set to correctly build periodic threads.");
+		         throw new Aadl2RtosException("If system tick rate is set externally, the VxWorks_Systick_Rate property must be set to correctly build periodic threads.");
+		     }
+		  }
 		  this.model.externalTimerComponent = PropertyUtils.getBooleanValue(systemImplementation, PropertyUtil.EXTERNAL_TIMER_COMPONENT);
 		} catch (Exception e) {
-      this.logger.error("Unexpected internal exception: properties [generateSystickIRQ, externalTimerComponent] should have default value in SMACCM_SYS, but were not found.");
-      throw new Aadl2RtosException("Parse failure on one of [generateSystickIRQ, externalTimerComponent] target property ");
+         this.logger.error("Unexpected internal exception: properties [generateSystickIRQ, externalTimerComponent] should have default value in SMACCM_SYS, but were not found.");
+         throw new Aadl2RtosException("Parse failure on one of [generateSystickIRQ, externalTimerComponent] target property ");
 		}
 		
 		try {
@@ -203,7 +221,19 @@ public class AadlModelParser {
       this.logger.error("If eChronosGenerateCModules is 'true', then eChronosCModulePath must be defined.");
       throw new Aadl2RtosException("Parse failure on eChronosCModulePath target property ");
     }
-		// Initialize thread implementations
+	
+	// default value is null.
+	this.model.eChronosFlashLoadAddress = 
+			Util.getStringValueOpt(systemImplementation, 
+					PropertyUtil.ECHRONOS_FLASH_LOAD_ADDRESS);
+
+    try {
+    	model.setCamkesUseMailboxDataports(
+    			(boolean)PropertyUtils.getBooleanValue(systemImplementation, 
+    					PropertyUtil.MAILBOX));
+	} catch(Exception e) {}
+	
+	// Initialize thread implementations
 		constructThreadImplMap();
 
 		// Initialize connections
@@ -284,7 +314,10 @@ public class AadlModelParser {
     try {
       List<String> entrypoints = PropertyUtil.getComputeEntrypointList(port);
       if (entrypoints == null) { 
-         throw new Aadl2RtosException("missing entrypoints");
+         throw new Aadl2RtosException("IRQ port: " + port.getName() + " is missing entrypoints");
+      }
+      if (ti.getIsPassive()) {
+         throw new Aadl2RtosException("Passive thread implementations do not support IRQ ports for port: " + port.getName() + ".");
       }
       List<String> files = Util.getSourceTextListOpt(port,PropertyUtil.SOURCE_TEXT);
       String signal_name = Util.getStringValue(port, PropertyUtil.SMACCM_SYS_SIGNAL_NAME);
@@ -795,7 +828,7 @@ public class AadlModelParser {
     
     
     // create connection object and connect to ports and thread instances.
-    PortConnection conn = new PortConnection(ci.getName(), srcThreadInstance, dstThreadInstance, sourcePort, destPort);
+    PortConnection conn = new PortConnection(Util.normalizeAadlName(ci.getName()), srcThreadInstance, dstThreadInstance, sourcePort, destPort);
     srcThreadInstance.addIsSrcOfConnection(conn);
     dstThreadInstance.addIsDstOfConnection(conn);
     sourcePort.addConnection(conn);

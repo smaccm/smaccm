@@ -18,7 +18,8 @@ uint32_t smaccm_get_time_in_ms() {
 
 void smaccm_thread_calendar() {
 	if ((smaccm_calendar_counter % (1000 / smaccm_tick_interval)) == 0) {
-		periodic_ping(smaccm_get_time_in_ms()); 
+		int64_t theTime = (int64_t)smaccm_get_time_in_ms();
+		periodic_ping(&theTime); 
 	}
 
 	smaccm_calendar_counter = (smaccm_calendar_counter + 1) % smaccm_hyperperiod_subdivisions; 
@@ -29,17 +30,17 @@ void timer_flih() {
 	epit_irq_callback(); 
 }
 
-void timer_slih() {
+void timer_slih(const int64_t * dummy) {
 	smaccm_thread_calendar(); 
 }
 
 void periodic_ping(const int64_t * periodic_100_ms) {
-   printf("sender ping received (%" PRI64 ").  Writing to receiver \n", *periodic_100_ms);
-   uint32_t newValue = periodic_100_ms + 1;
+   printf("sender ping received (%d).  Writing to receiver \n", (int32_t)*periodic_100_ms);
+   uint32_t newValue = (int32_t)*periodic_100_ms + 1;
    ping_Output1(&newValue);
 }
 
-void initialize_timer() {
+void initialize_timer(const int64_t * dummy) {
 	epit_init();
 	epit_set_interval(1000);
 	epit_start_timer();

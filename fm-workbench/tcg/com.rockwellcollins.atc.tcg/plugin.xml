@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="tcgextractor" name="Test Case Generator Extractor" schema="schema/tcgextractor.exsd"/>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="Test Case Generation Category"
+            id="tcg.commands">
+      </category>
+      <command
+            name="Generate Tests"
+            categoryId="tcg.commands"
+            id="tcg.commands.ufcTestCaseGeneratorCommand">
+      </command>
+      <command categoryId="tcg.commands"
+            description="Terminate Test Case Generation"
+            id="tcg.commands.terminate"
+            name="Terminate Test Case Generation">
+      </command>
+      <command
+            categoryId="tcg.commands"
+            defaultHandler="com.rockwellcollins.atc.tcg.handlers.SaveHandler"
+            description="Save Test Suite"
+            id="com.rockwellcollins.atc.tcg.saveTestSuite"
+            name="Save Test Suite...">
+      </command>
+      <command
+            categoryId="tcg.commands"
+            defaultHandler="com.rockwellcollins.atc.tcg.handlers.OpenHandler"
+            description="Open Test Suite"
+            id="com.rockwellcollins.atc.tcg.openTestSuite"
+            name="Open Test Suite...">
+      </command>     
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="tcg.commands.ufcTestCaseGeneratorCommand"
+            class="com.rockwellcollins.atc.tcg.handlers.VerifyHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:com.rockwellcollins.atc.agree.analysis.menus.main?after=com.rockwellcollins.atc.agree.analysis.menus.saveAllWorkspaceContracts">
+        <separator
+              name="com.rockwellcollins.atc.tcg.separator1"
+			  visible="true">
+        </separator>
+        <command
+              commandId="tcg.commands.ufcTestCaseGeneratorCommand"
+              icon="icons/microscope.png"
+              id="tcg.menus.ufcTestCaseGeneratorCommand"
+              mnemonic="G">
+        </command>
+        <separator
+              name="com.rockwellcollins.atc.tcg.separator1">
+        </separator>
+        <command
+              commandId="com.rockwellcollins.atc.tcg.openTestSuite"
+              id="tcg.menus.openTestSuite"
+              mnemonic="O"
+              style="push">
+        </command>
+        <command
+              commandId="com.rockwellcollins.atc.tcg.saveTestSuite"
+              id="tcg.menus.saveTestSuite"
+              style="push">
+        </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="tcg.toolbars.toolbar">
+            <command
+                  commandId="tcg.commands.ufcTestCaseGeneratorCommand"
+                  icon="icons/microscope.png"
+                  id="tcg.toolbars.ufcTestCaseGeneratorCommand">
+            </command>
+         </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+        <command
+                  commandId="tcg.commands.ufcTestCaseGeneratorCommand"
+                  icon="icons/microscope.png"
+                  id="tcg.popups.ufcTestCaseGeneratorCommand">
+        </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:tcg.views.testCaseGeneratorResultsView">
+         <command
+               commandId="tcg.commands.terminate"
+               icon="icons/terminate.png"
+               label="Terminate"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+  <extension point="org.eclipse.ui.views">
+      <category
+            id="tcg.views.category"
+            name="Test Case Generator">
+      </category>
+      <view
+            category="tcg.views.category"
+            class="com.rockwellcollins.atc.tcg.views.TestCaseGeneratorResultsView"
+            icon="icons/microscope.png"
+            id="tcg.views.testCaseGeneratorResultsView"
+            name="Test Case Generator Results"/>
+      <view
+            category="tcg.views.category"
+            class="com.rockwellcollins.atc.tcg.views.TestSuiteView"
+            icon="icons/microscope.png"
+            id="tcg.views.testSuiteView"
+            name="Test Suite"/>
+      <view
+            category="tcg.views.category"
+            class="com.rockwellcollins.atc.tcg.views.TestCaseGeneratorTestCaseView"
+            icon="icons/magnifier.png"
+            id="tcg.views.TestCaseGeneratorTestCaseView"
+            name="TCG Test Case">
+      </view>
+   </extension>
+  <extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+           class="com.rockwellcollins.atc.tcg.preferences.TcgPreferencePage"
+           id="com.rockwellcollins.atc.tcg.preferences.TcgPreferencePage"
+           name="Test Case Generator">
+     </page>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer
+           class="com.rockwellcollins.atc.tcg.preferences.TcgPreferenceInitializer">
+     </initializer>
+  </extension>
+<!--
+  <extension
+        point="edu.uah.rsesc.aadlsimulator.agree.exporters">
+     <exporter
+           class="com.rockwellcollins.atc.tcg.extensions.TestExporter"
+           name="Export as Test Case">
+     </exporter>
+  </extension>
+-->
+</plugin>

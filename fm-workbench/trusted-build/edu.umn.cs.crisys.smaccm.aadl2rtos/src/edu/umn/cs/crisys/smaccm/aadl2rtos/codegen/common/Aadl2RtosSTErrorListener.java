@@ -9,7 +9,6 @@ import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.misc.STMessage;
 import org.stringtemplate.v4.misc.STNoSuchPropertyException;
 
-import edu.umn.cs.crisys.smaccm.aadl2rtos.Aadl2RtosException;
 import edu.umn.cs.crisys.smaccm.aadl2rtos.Logger;
 
 /**

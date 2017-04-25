@@ -36,38 +36,31 @@
 
  **************************************************************************/
 
-import "../../interfaces/CAN_Framing_interface.idl4";
 
-// Idl files for ports
-import "../../interfaces/SMACCM_DATA__CAN_Frame_i_writer.idl4";
-import "../../interfaces/SMACCM_DATA__GIDL_writer.idl4";
 import "../../interfaces/bool_writer.idl4";
+
 import "../../interfaces/int64_t_writer.idl4";
+
+import "../../interfaces/void_writer.idl4";
+
+import "../../interfaces/SMACCM_DATA__GIDL_writer.idl4";
+
+import "../../interfaces/SMACCM_DATA__CAN_Frame_i_writer.idl4";
+
 
 
 component CAN_Framing {
-    include "smaccm_top_i_types.h";
+    include "tb_smaccmcopter_types.h";
     control;
+    has semaphore tb_dispatch_sem;
 
-    // Connection to active thread 'send' interfaces
-    uses SMACCM_DATA__GIDL_writer CAN_Framing_self2server;
-    uses SMACCM_DATA__CAN_Frame_i_writer CAN_Framing_self2can;
-
-    has semaphore smaccm_dispatch_sem;
-
-    // Provided interfaces for input event data ports
+    provides int64_t_writer periodic_dispatcher;
     provides SMACCM_DATA__GIDL_writer server2self;
-    has mutex smaccm_can_framing_server2self_mut;
-
+    has mutex tb_can_framing_server2self_mut;uses SMACCM_DATA__GIDL_writer self2server;
     provides SMACCM_DATA__CAN_Frame_i_writer can2self_frame;
-    has mutex smaccm_can_framing_can2self_frame_mut;
+    has mutex tb_can_framing_can2self_frame_mut;provides bool_writer can2self_status;
+    has mutex tb_can_framing_can2self_status_mut;uses SMACCM_DATA__CAN_Frame_i_writer self2can;
 
-    provides bool_writer can2self_status;
-    has mutex smaccm_can_framing_can2self_status_mut;
-
-
-    // Interfaces for Periodic and IRQ port dispatchers
-    provides int64_t_writer CAN_Framing_periodic_dispatcher;
 
 
 }

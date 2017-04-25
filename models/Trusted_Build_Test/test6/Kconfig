@@ -1,6 +1,6 @@
 config APP_TEST6
-    bool "AADL Test 6: active -> active threads using array send"
+    bool "test6 (from AADL)"
     default n
     select APP_CAMKES_EXECUTIVE
     help
-        AADL Test 6: active -> active threads using array send. 
+        test6 (from AADL).

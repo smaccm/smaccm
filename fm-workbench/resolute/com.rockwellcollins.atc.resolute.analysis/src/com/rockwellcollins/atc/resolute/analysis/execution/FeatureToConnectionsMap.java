@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ConnectionInstance;
 import org.osate.aadl2.instance.ConnectionReference;
@@ -18,20 +19,30 @@ public class FeatureToConnectionsMap {
     private final Map<FeatureInstance, List<NamedElementValue>> map = new HashMap<>();
 
     public FeatureToConnectionsMap(SystemInstance sysInst) {
-        for (ConnectionInstance connInst : sysInst.getAllConnectionInstances()) {
-            for (ConnectionReference conRef : connInst.getConnectionReferences()) {
-                if (conRef.getSource() instanceof FeatureInstance) {
-                    FeatureInstance fi = (FeatureInstance) conRef.getSource();
-                    add(fi, connInst);
-                    addForFeatureGroups(fi, connInst);
-                }
-                if (conRef.getDestination() instanceof FeatureInstance) {
-                    FeatureInstance fi = (FeatureInstance) conRef.getDestination();
-                    add(fi, connInst);
-                    addForFeatureGroups(fi, connInst);
-                }
-            }
-        }
+    	for(FeatureInstance featInst : sysInst.getAllFeatureInstances()){
+    		for(ConnectionInstance connInst : featInst.getSrcConnectionInstances()){
+    			add(featInst, connInst);
+    		}
+    		for(ConnectionInstance connInst : featInst.getDstConnectionInstances()){
+    			add(featInst, connInst);
+    		}
+    	}
+//    	
+//    	
+//        for (ConnectionInstance connInst : sysInst.getAllConnectionInstances()) {
+//            for (ConnectionReference conRef : connInst.getConnectionReferences()) {
+//                if (conRef.getSource() instanceof FeatureInstance) {
+//                    FeatureInstance fi = (FeatureInstance) conRef.getSource();
+//                    add(fi, connInst);
+//                    addForFeatureGroups(fi, connInst);
+//                }
+//                if (conRef.getDestination() instanceof FeatureInstance) {
+//                    FeatureInstance fi = (FeatureInstance) conRef.getDestination();
+//                    add(fi, connInst);
+//                    addForFeatureGroups(fi, connInst);
+//                }
+//            }
+//        }
     }
 
     private void addForFeatureGroups(FeatureInstance fi, ConnectionInstance connInst) {

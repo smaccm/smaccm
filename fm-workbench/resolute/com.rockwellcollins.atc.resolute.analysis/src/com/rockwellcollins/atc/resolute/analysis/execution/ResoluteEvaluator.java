@@ -365,7 +365,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	public List<ResoluteValue> getArgSet(Arg arg) {
 		if (arg instanceof QuantArg) {
 			QuantArg quantArg = (QuantArg) arg;
-			return doSwitch(quantArg.getExpr()).getSet();
+			ResoluteValue val = doSwitch(quantArg.getExpr());
+			if(val.isSet()){
+				return val.getSet();
+			}
+			List<ResoluteValue> list = new ArrayList<>();
+			list.add(val);
+			return list;
 		} else {
 			List<ResoluteValue> values = new ArrayList<ResoluteValue>();
 			BaseType type = (BaseType) arg.getType();

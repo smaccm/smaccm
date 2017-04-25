@@ -40,7 +40,7 @@ Definition:
 
 Type:
 	{SetType} '{' type=Type '}'
-|	BaseType
+|	BaseType ('<' paramType=Type '>')?
 ;
 
 BaseType:
@@ -206,6 +206,7 @@ BuiltInFn:
 |	'is_memory'
 |	'is_thread'
 |	'is_process'
+|	'is_data'
 
 |	'is_subprogram'
 |   'is_of_type'
@@ -213,6 +214,9 @@ BuiltInFn:
 |	'has_member'
 |   'features'
 |	'connections'
+
+// Primary type: property
+|   'enumerated_values'
 
 // Primary type: component
 |	'subcomponents'
