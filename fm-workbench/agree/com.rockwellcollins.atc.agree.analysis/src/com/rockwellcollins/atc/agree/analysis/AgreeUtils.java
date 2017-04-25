@@ -214,8 +214,13 @@ public class AgreeUtils {
         return null;
     }
 
-    public static boolean containsTransitiveAgreeAnnex(ComponentInstance compInst) {
-        if (containsAgreeAnnex(compInst.getSubcomponent())) {
+    public static boolean containsTransitiveAgreeAnnex(ComponentInstance compInst, boolean isMonolithic) {
+    	Subcomponent subComp = compInst.getSubcomponent();
+    	if(!isMonolithic){
+    		return typeContainsAgreeAnnex(subComp);
+    	}
+    	
+    	if (containsAgreeAnnex(subComp)) {
             return true;
         }
         EList<ComponentInstance> transitiveSubs = compInst.getAllComponentInstances();
@@ -227,8 +232,19 @@ public class AgreeUtils {
         return false;
     }
 
+    
+    public static boolean typeContainsAgreeAnnex(Subcomponent subComp) {
+        ComponentType compType = subComp.getComponentType();
+        if (compType != null) {
+            if (AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause())
+                    .size() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public static boolean containsAgreeAnnex(Subcomponent subComp) {
-
         ComponentImplementation compImpl = subComp.getComponentImplementation();
         if (compImpl != null) {
             if (AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())
