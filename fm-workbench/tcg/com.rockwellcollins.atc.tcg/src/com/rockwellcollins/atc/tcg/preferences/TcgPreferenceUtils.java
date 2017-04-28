@@ -69,6 +69,11 @@ public class TcgPreferenceUtils {
 		return prefs.getBoolean(TcgPreferenceConstants.PREF_CB_GEN_TESTS_FOR_EQUATIONS);
 	}
 	
+	public static Boolean getUseMonolithicAnalysis() {
+		IPreferenceStore prefs = getPreferenceStore();
+		return prefs.getBoolean(TcgPreferenceConstants.PREF_MONOLITHIC_ANALYSIS);
+	}
+	
 	public static AutoSaveFileInfo getAutoSaveFileInfo() {
 		AutoSaveType autoSaveType = getAutoSaveType(); 
 		String saveDest = getAutoSaveDestination();
