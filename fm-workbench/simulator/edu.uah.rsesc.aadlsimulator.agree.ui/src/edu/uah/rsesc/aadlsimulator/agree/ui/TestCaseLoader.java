@@ -34,8 +34,8 @@ import edu.uah.rsesc.aadlsimulator.agree.ui.CounterexampleLoaderHelper.Mode;
 public class TestCaseLoader implements TcgExtractor {
 
 	@Override
-	public void receiveCex(final ComponentImplementation compImpl, final EObject property, final Counterexample cex, final Map<String, EObject> refMap) {
-		new CounterexampleLoaderHelper().receiveCex(compImpl, property, cex, refMap, Mode.SINGLE_LAYER);		
+	public void receiveCex(final ComponentImplementation compImpl, final EObject agreeProperty, final Counterexample cex, final Map<String, EObject> refMap) {
+		new CounterexampleLoaderHelper().receiveCex(compImpl, null, agreeProperty, cex, refMap, Mode.SINGLE_LAYER);		
 	}
 
 	@Override
