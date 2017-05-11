@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
@@ -49,103 +51,96 @@ public class LustreCondactNodeVisitor extends ExprMapVisitor {
 	private int numStateVars = 0;
 	private Set<Equation> stateVarEqs = new HashSet<>();
 	private List<VarDecl> stateVars = new ArrayList<>();
-	//used to hash expressions so we do not make more state vars than we need
+	// used to hash expressions so we do not make more state vars than we need
 	private Map<String, IdExpr> stateVarMap = new HashMap<>();
+	private Set<String> globalLustreNodeNames = new HashSet<>();
 
 	public static Node translate(AgreeProgram agreeProgram, AgreeNode agreeNode, Node node) {
 		if (node.outputs.size() != 1) {
 			throw new AgreeException("We expect that this node only has a single output representing "
 					+ "all constraints for the contract");
 		}
-		
 
 		LustreCondactNodeVisitor visitor = new LustreCondactNodeVisitor(agreeProgram, node);
-		
+
 		NodeBuilder builder = new NodeBuilder(node);
 		builder.clearEquations();
-		
+
 		builder.addInput(new AgreeVar(clockVarName, NamedType.BOOL, null));
 		addTickedEq(builder);
 		addInitEq(builder);
 
-		
 		Expr holdExpr = new BoolExpr(true);
-		//make clock hold exprs
-		for(AgreeVar var : agreeNode.outputs){
+		// make clock hold exprs
+		for (AgreeVar var : agreeNode.outputs) {
 			Expr varId = new IdExpr(var.id);
 			Expr preVar = new UnaryExpr(UnaryOp.PRE, varId);
 			holdExpr = new BinaryExpr(holdExpr, BinaryOp.AND, new BinaryExpr(varId, BinaryOp.EQUAL, preVar));
 		}
 		holdExpr = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, holdExpr);
-		
-		for(int i = 0; i < agreeNode.assumptions.size(); i++){
-			Expr varId = new IdExpr(LustreAstBuilder.assumeSuffix+i);
+
+		for (int i = 0; i < agreeNode.assumptions.size(); i++) {
+			Expr varId = new IdExpr(LustreAstBuilder.assumeSuffix + i);
 			Expr preVar = new UnaryExpr(UnaryOp.PRE, varId);
 			preVar = new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW, preVar);
 			holdExpr = new BinaryExpr(holdExpr, BinaryOp.AND, new BinaryExpr(varId, BinaryOp.EQUAL, preVar));
 		}
-		
-		holdExpr = expr("(not clk => holdExpr)",
-				to("clk", clockVarName),
-				to("holdExpr", holdExpr));
-		
-		
+
+		holdExpr = expr("(not clk => holdExpr)", to("clk", clockVarName), to("holdExpr", holdExpr));
+
 		// make the constraint for the initial outputs
 		Expr initConstr = expr("not ticked => initExpr", to("ticked", tickedVarName),
 				to("initExpr", agreeNode.initialConstraint));
 
 		// re-write the old expression using the visitor
-		for(Equation eq : node.equations){
-			if(eq.lhs.size() != 1){
+		for (Equation eq : node.equations) {
+			if (eq.lhs.size() != 1) {
 				throw new AgreeException("we expect that all eqs have a single lhs now");
 			}
 			IdExpr var = eq.lhs.get(0);
 			boolean isLocal = false;
-			for(VarDecl local : node.locals){
-				if(local.id.equals(var.id)){
+			for (VarDecl local : node.locals) {
+				if (local.id.equals(var.id)) {
 					isLocal = true;
 					break;
 				}
 			}
-			if(isLocal){
+			if (isLocal) {
 				Expr newExpr = eq.expr.accept(visitor);
 				newExpr = new IfThenElseExpr(new IdExpr(clockVarName), newExpr, new UnaryExpr(UnaryOp.PRE, var));
 				builder.addEquation(new Equation(eq.lhs, newExpr));
-			}else{
-				//this is the only output
+			} else {
+				// this is the only output
 				Expr newExpr = eq.expr.accept(visitor);
 				newExpr = new BinaryExpr(new IdExpr(clockVarName), BinaryOp.IMPLIES, newExpr);
 				builder.addEquation(new Equation(eq.lhs,
 						new BinaryExpr(initConstr, BinaryOp.AND, new BinaryExpr(holdExpr, BinaryOp.AND, newExpr))));
 			}
 		}
-		//this var equations should be populated by the visitor call above
+		// this var equations should be populated by the visitor call above
 		builder.addEquations(visitor.stateVarEqs);
 		builder.addLocals(visitor.stateVars);
-		
 
 		return builder.build();
 	}
 
 	private static void addInitEq(NodeBuilder builder) {
 		builder.addLocal(new AgreeVar(initVarName, NamedType.BOOL, null));
-		builder.addEquation(equation("initVar = clk and (true -> not pre(ticked));", 
-				to("initVar", initVarName),
-				to("ticked", tickedVarName), 
-				to("clk", clockVarName)));
+		builder.addEquation(equation("initVar = clk and (true -> not pre(ticked));", to("initVar", initVarName),
+				to("ticked", tickedVarName), to("clk", clockVarName)));
 	}
 
 	private static void addTickedEq(NodeBuilder builder) {
 		builder.addLocal(new AgreeVar(tickedVarName, NamedType.BOOL, null));
 		builder.addEquation(
-				equation("ticked = clk -> clk or pre(ticked);", 
-						to("ticked", tickedVarName), 
-						to("clk", clockVarName)));
+				equation("ticked = clk -> clk or pre(ticked);", to("ticked", tickedVarName), to("clk", clockVarName)));
 	}
 
 	private LustreCondactNodeVisitor(AgreeProgram agreeProgram, Node node) {
 		List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
 		Program program = new Program(types, null, agreeProgram.globalLustreNodes, agreeProgram.topNode.id);
+		globalLustreNodeNames
+				.addAll(agreeProgram.globalLustreNodes.stream().map(n -> n.id).collect(Collectors.toSet()));
 		typeReconstructor = new TypeReconstructor(program);
 		typeReconstructor.setNodeContext(node);
 	}
@@ -166,24 +161,28 @@ public class LustreCondactNodeVisitor extends ExprMapVisitor {
 
 	@Override
 	public Expr visit(NodeCallExpr e) {
-		List<Expr> newArgs = new ArrayList<>();
-		newArgs.add(new IdExpr(clockVarName));
-		newArgs.add(new IdExpr(initVarName));
-		newArgs.addAll(acceptList(e.args));
-		return new NodeCallExpr(AgreeMakeClockedLustreNodes.clockedNodePrefix+e.node, newArgs);
+		if (globalLustreNodeNames.contains(e.node)) {
+			List<Expr> newArgs = new ArrayList<>();
+			newArgs.add(new IdExpr(clockVarName));
+			newArgs.add(new IdExpr(initVarName));
+			newArgs.addAll(acceptList(e.args));
+			return new NodeCallExpr(AgreeMakeClockedLustreNodes.clockedNodePrefix + e.node, newArgs);
+		} else {
+			return new NodeCallExpr(e.node, acceptList(e.args));
+		}
 	}
-	
+
 	@Override
 	public Expr visit(UnaryExpr e) {
 		if (e.op == UnaryOp.PRE) {
 			IdExpr stateVarId = stateVarMap.get(e.toString());
-			if(stateVarId != null){
+			if (stateVarId != null) {
 				return stateVarId;
 			}
-				
+
 			stateVarId = new IdExpr(statVarPrefix + numStateVars++);
 			stateVarMap.put(e.toString(), stateVarId);
-			
+
 			Expr stateVarExpr = new UnaryExpr(UnaryOp.PRE, e.expr.accept(this));
 			stateVarExpr = expr("if clk then stateVarExpr else (pre stateVar)", to("stateVar", stateVarId),
 					to("stateVarExpr", stateVarExpr), to("clk", clockVarName));

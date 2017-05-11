@@ -109,10 +109,12 @@ public class GenerateUfcObligationsVisitor implements AstVisitor<ObligationSet, 
 				}
 				// if we are in a numeric relational operator AND 
 				// generateBoundaryValueTests is true, then we add them to the set.
+				// Add tests at the boundary.
 				if (rightDelta != null) {
-					s.add(new BinaryExpr(be.left, be.op, 
+					s.add(new BinaryExpr(be.left, BinaryOp.EQUAL, 
 							new BinaryExpr(be.right, BinaryOp.PLUS, rightDelta)));
-					s.add(new BinaryExpr(be.left, be.op, 
+					s.add(new BinaryExpr(be.left, BinaryOp.EQUAL, rightDelta));  
+					s.add(new BinaryExpr(be.left, BinaryOp.EQUAL, 
 							new BinaryExpr(be.right, BinaryOp.MINUS, rightDelta)));
 				}
 			}

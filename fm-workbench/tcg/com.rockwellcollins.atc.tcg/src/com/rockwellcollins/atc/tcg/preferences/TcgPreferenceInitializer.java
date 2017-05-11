@@ -38,6 +38,7 @@ public class TcgPreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(TcgPreferenceConstants.PREF_CB_GEN_TESTS_FOR_ASSUMPTIONS,  true);
         store.setDefault(TcgPreferenceConstants.PREF_CB_GEN_TESTS_FOR_EQUATIONS,    true);
         store.setDefault(TcgPreferenceConstants.PREF_CB_AUTO_SAVE,                  true);
+        store.setDefault(TcgPreferenceConstants.PREF_MONOLITHIC_ANALYSIS,           true);
         
         store.setDefault(TcgPreferenceConstants.PREF_RB_AUTO_SAVE_TYPE,             TcgPreferenceConstants.PREF_RB_CHOICE_NEW_FILE);
         store.setDefault(TcgPreferenceConstants.PREF_AUTO_SAVE_NEW_FILENAME,        "");

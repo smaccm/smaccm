@@ -40,5 +40,5 @@ public class TcgPreferenceConstants {
 	/* file choosers */
 	public static final String PREF_AUTO_SAVE_OLD_FILENAME = "tcgNewFilename";
 	public static final String PREF_AUTO_SAVE_NEW_FILENAME = "tcgOldFilename";
-
+	public static final String PREF_MONOLITHIC_ANALYSIS = "tcgMonolithicAnalysis";
 }

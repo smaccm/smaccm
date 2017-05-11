@@ -13,7 +13,6 @@ extern "C" {
 typedef struct gyroscope_sample {
             bool initfail;
             bool samplefail;
-            bool calibrated;
             struct xyz sample;
             float temperature;
             int64_t time;

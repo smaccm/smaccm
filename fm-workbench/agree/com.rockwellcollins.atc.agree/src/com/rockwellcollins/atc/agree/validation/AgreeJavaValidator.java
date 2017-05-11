@@ -2425,6 +2425,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 		String qualName = data.getQualifiedName();
+		if(qualName == null){
+			return ERROR;
+		}
 		switch (qualName) {
 		case "Base_Types::Boolean":
 			return BOOL;

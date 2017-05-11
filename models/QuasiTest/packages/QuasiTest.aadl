@@ -247,7 +247,7 @@ system implementation Formation.impl
 	annex agree {**
 		-- This states that every subcomponent's clock ticks at most two 
 		-- times since any other subcomponent's clock ticks
-		synchrony : 1; 
+		synchrony : 3; 
 		--calendar : VA, VB, VC;
 		
 		const leader_state : int = 0;

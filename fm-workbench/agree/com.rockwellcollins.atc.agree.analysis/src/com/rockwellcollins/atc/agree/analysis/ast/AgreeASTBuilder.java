@@ -228,11 +228,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		boolean foundSubNode = false;
 		boolean hasDirectAnnex = false;
+		boolean hasSubcomponents = false;
 		ComponentClassifier compClass = compInst.getComponentClassifier();
 		if (compClass instanceof ComponentImplementation && (isTop || isMonolithic)) {
 			AgreeContractSubclause annex = getAgreeAnnex(compClass);
 
 			for (ComponentInstance subInst : compInst.getComponentInstances()) {
+				hasSubcomponents = true;
 				curInst = subInst;
 				AgreeNode subNode = getAgreeNode(subInst, false);
 				if (subNode != null) {
@@ -290,9 +292,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (annex != null) {
 			hasDirectAnnex = true;
 			AgreeContract contract = (AgreeContract) annex.getContract();
-			assumptions.addAll(getAssumptionStatements(contract.getSpecs()));
-			guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
-
+			//this makes files for monolithic verification a bit smaller
+			if (isTop || !hasSubcomponents) {
+				assumptions.addAll(getAssumptionStatements(contract.getSpecs()));
+				guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
+			}
 			// we count eqstatements with expressions as assertions
 			assertions.addAll(getEquationStatements(contract.getSpecs()));
 			assertions.addAll(getPropertyStatements(contract.getSpecs()));
@@ -485,10 +489,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				return TimingModel.LATCHED;
 			}
 			if (spec instanceof SynchStatement) {
-				int val = Integer.valueOf(((SynchStatement) spec).getVal());
-				if (val != 0) {
-					return TimingModel.ASYNC;
-				}
+//				int val = Integer.valueOf(((SynchStatement) spec).getVal());
+//				if (val != 0) {
+//					return TimingModel.ASYNC;
+//				}
+				return TimingModel.ASYNC;
 			}
 		}
 		return TimingModel.SYNC;
@@ -631,13 +636,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			// only make connections to things that have annexs
 			if (destContext != null && destContext instanceof Subcomponent) {
 				ComponentInstance subInst = compInst.findSubcomponentInstance((Subcomponent) destContext);
-				if (!AgreeUtils.containsTransitiveAgreeAnnex(subInst)) {
+				if (!AgreeUtils.containsTransitiveAgreeAnnex(subInst, isMonolithic)) {
 					continue;
 				}
 			}
 			if (sourContext != null && sourContext instanceof Subcomponent) {
 				ComponentInstance subInst = compInst.findSubcomponentInstance((Subcomponent) sourContext);
-				if (!AgreeUtils.containsTransitiveAgreeAnnex(subInst)) {
+				if (!AgreeUtils.containsTransitiveAgreeAnnex(subInst, isMonolithic)) {
 					continue;
 				}
 			}
