@@ -84,9 +84,9 @@ public
     properties
       SMACCM::Always_Sends_Message => true; 
       
-      annex resolute {**  
-      	prove execute_completeness(this)
-      **};
+--      annex resolute {**  
+--      	prove execute_completeness(this)
+--      **};
       
   end x3DR_Radio;
   

@@ -103,12 +103,12 @@ public class PreferencesUtil {
         IPreferenceStore prefs = getPreferenceStore();
         JRealizabilityApi api = new JRealizabilityApi();
         api.setJKindJar(getJKindJar());
-//		try {
-//			api.setEnvironment("Z3_HOME", Z3Plugin.getZ3Directory());
-//		} catch (NoClassDefFoundError e) {
-//			e.printStackTrace();
-//			// Z3Plugin not present
-//		}
+		try {
+			api.setEnvironment("Z3_HOME", Z3Plugin.getZ3Directory());
+		} catch (NoClassDefFoundError e) {
+			e.printStackTrace();
+			// Z3Plugin not present
+		}
 
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
