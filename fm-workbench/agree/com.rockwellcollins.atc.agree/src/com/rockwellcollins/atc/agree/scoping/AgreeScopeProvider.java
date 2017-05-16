@@ -319,17 +319,14 @@ public class AgreeScopeProvider extends
         	    }
         	    result.addAll(((NodeDefExpr)container).getArgs());
         	    if (((NodeDefExpr)container).getNodeBody() != null) {
-            	    result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
+        	        result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
         	    }
         	}
     		
     		while(!(container instanceof AadlPackage)){
         		container = container.eContainer();
         	}
-//        	result.add((AadlPackage)container);
-//        	if (((AadlPackage) container).getOwnedPublicSection() != null) {
-//        		result.addAll(((AadlPackage) container).getOwnedPublicSection().getImportedUnits());
-//        	}
+        	result.add((AadlPackage)container);
         	
         	return result;
         	
@@ -347,9 +344,9 @@ public class AgreeScopeProvider extends
                     throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
                 }
         		result.addAll(((NodeDefExpr) container).getArgs());
-        	    if (((NodeDefExpr)container).getNodeBody() != null) {
-            	    result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
-        	    }
+        		if (((NodeDefExpr)container).getNodeBody() != null) {
+        		    result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
+        		}
         	}
         	
         	while(!(container instanceof ComponentClassifier) &&

@@ -90,17 +90,16 @@ public class AgreeFormatter extends AbstractDeclarativeFormatter {
         for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("(", ")")) {
             c.setIndentationIncrement().after(p.getFirst());
             c.setIndentationDecrement().before(p.getSecond());
+            c.setLinewrap().before(p.getFirst());
+            c.setLinewrap().before(p.getSecond());
         }
 
         // set line indentation inside all curly brackets
         // set line wrap after each left curly bracket
         // set line wrap around each right curly bracket
-        //grammarAccess.getRecordUpdateExprRule().g
         for (Pair<Keyword, Keyword> p : grammarAccess.findKeywordPairs("{", "}")) {
             c.setIndentationIncrement().after(p.getFirst());
             c.setIndentationDecrement().before(p.getSecond());
-            c.setLinewrap().after(p.getFirst());
-            c.setLinewrap().around(p.getSecond());
         }
     }
 }
