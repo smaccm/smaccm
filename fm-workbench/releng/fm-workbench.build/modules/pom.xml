@@ -15,6 +15,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>..</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree.analysis</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree.codegen</module>
