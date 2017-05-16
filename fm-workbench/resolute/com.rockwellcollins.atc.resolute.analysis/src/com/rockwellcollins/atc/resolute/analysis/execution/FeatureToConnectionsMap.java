@@ -27,22 +27,21 @@ public class FeatureToConnectionsMap {
     			add(featInst, connInst);
     		}
     	}
-//    	
-//    	
-//        for (ConnectionInstance connInst : sysInst.getAllConnectionInstances()) {
-//            for (ConnectionReference conRef : connInst.getConnectionReferences()) {
-//                if (conRef.getSource() instanceof FeatureInstance) {
-//                    FeatureInstance fi = (FeatureInstance) conRef.getSource();
-//                    add(fi, connInst);
-//                    addForFeatureGroups(fi, connInst);
-//                }
-//                if (conRef.getDestination() instanceof FeatureInstance) {
-//                    FeatureInstance fi = (FeatureInstance) conRef.getDestination();
-//                    add(fi, connInst);
-//                    addForFeatureGroups(fi, connInst);
-//                }
-//            }
-//        }
+   	
+        for (ConnectionInstance connInst : sysInst.getAllConnectionInstances()) {
+            for (ConnectionReference conRef : connInst.getConnectionReferences()) {
+                if (conRef.getSource() instanceof FeatureInstance) {
+                    FeatureInstance fi = (FeatureInstance) conRef.getSource();
+                    add(fi, connInst);
+                    addForFeatureGroups(fi, connInst);
+                }
+                if (conRef.getDestination() instanceof FeatureInstance) {
+                    FeatureInstance fi = (FeatureInstance) conRef.getDestination();
+                    add(fi, connInst);
+                    addForFeatureGroups(fi, connInst);
+                }
+            }
+        }
     }
 
     private void addForFeatureGroups(FeatureInstance fi, ConnectionInstance connInst) {

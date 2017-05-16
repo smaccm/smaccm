@@ -63,7 +63,8 @@ public
       
     annex resolute {** 
     	prove only_receive_gs(this.MC)  
-    	prove schedulable(this)
+    	prove execute_completeness(this.DC)
+    	--prove schedulable(this)
     **};
   end Main_Loop.Impl;
   
