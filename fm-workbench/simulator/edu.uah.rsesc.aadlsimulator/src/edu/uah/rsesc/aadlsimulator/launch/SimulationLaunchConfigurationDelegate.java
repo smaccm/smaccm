@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.uah.rsesc.aadlsimulator.launch;
 
 import java.util.Objects;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -38,6 +39,7 @@ import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -155,8 +157,9 @@ public class SimulationLaunchConfigurationDelegate implements ILaunchConfigurati
 	
 	private ComponentImplementation refreshComponentImplementation(final ComponentImplementation ci) {
 		final URI uri = EcoreUtil.getURI(ci);
-		OsateResourceUtil.refreshResourceSet();
-		final EObject newEObject = OsateResourceUtil.getResourceSet().getEObject(uri, true);
+		ResourceSet rs = ci.eResource().getResourceSet();
+		OsateResourceUtil.refreshResourceSet(rs);
+		final EObject newEObject = rs.getEObject(uri, true);
 		if(!(newEObject instanceof ComponentImplementation)) {
 			throw new RuntimeException("Unable to refresh component implementation");
 		}		
