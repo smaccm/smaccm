@@ -318,6 +318,9 @@ public class AgreeScopeProvider extends
         	        throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
         	    }
         	    result.addAll(((NodeDefExpr)container).getArgs());
+        	    if (((NodeDefExpr)container).getNodeBody() != null) {
+        	        result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
+        	    }
         	}
     		
     		while(!(container instanceof AadlPackage)){
@@ -341,6 +344,9 @@ public class AgreeScopeProvider extends
                     throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
                 }
         		result.addAll(((NodeDefExpr) container).getArgs());
+        		if (((NodeDefExpr)container).getNodeBody() != null) {
+        		    result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
+        		}
         	}
         	
         	while(!(container instanceof ComponentClassifier) &&
