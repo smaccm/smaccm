@@ -398,6 +398,9 @@ public class AgreeScopeProvider extends
         	}
         }else if(container instanceof NodeDefExpr){
         	result.addAll(((NodeDefExpr) container).getArgs());
+        	if (((NodeDefExpr)container).getNodeBody() != null) {
+    		    result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
+    		}
         	//also add other nodes from the annex
         	while (!(container instanceof AgreeContract)) {
                 container = container.eContainer();
