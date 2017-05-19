@@ -407,36 +407,32 @@ public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, 
 			(GPCA_SW_OUT.Notification_Message = DEFS.PUMP_HOT) => SENSOR_IN.Pump_Overheated;
 		guarantee "PROPERTY 50 : pump_hot_visual_implies_error" : pump_hot_visual_implies_error;
 		
+		--REQ 72
+		property alarm_3_or_4_implies_audio = true ->
+			((level_3_alarm or level_4_alarm) and (OP_CMD_IN.Disable_Audio = 0)) => (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level);
+		guarantee "PROPERTY 51 : alarm_3_or_4_implies_audio" : alarm_3_or_4_implies_audio;
 		
---		--REQ 72
---		property alarm_3_or_4_implies_audio = true ->
---			((level_3_alarm or level_4_alarm) and (OP_CMD_IN.Disable_Audio = 0)) => (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level);
---		guarantee "PROPERTY 51 : alarm_3_or_4_implies_audio" : alarm_3_or_4_implies_audio;
---		
---		--->Configuration Requirements<---
---		
---		property configuration_type_request =
---			OP_CMD_IN.Data_Config => GPCA_SW_OUT.Request_Config_Type;
---		guarantee "PROPERTY 52 : configuration_type_request" : configuration_type_request;
---		
---		property validate_configured_patient_drug_info =
---			(GPCA_SW_OUT.Configured = 1) and ((PRES_IN.Drug_Name = 0) or ((PRES_IN.Drug_Concentration < DB_IN.Drug_Concentration_Low) or
---			(PRES_IN.Drug_Concentration > DB_IN.Drug_Concentration_High)) or (PRES_IN.Entered_Reservoir_Volume < CONST_IN.Empty_Reservoir)) => 
---			(GPCA_SW_OUT.Error_Message_ID = 5) and GPCA_SW_OUT.Request_Patient_Drug_Info;
---		guarantee "PROPERTY 53 : validate_configured_patient_drug_info" : validate_configured_patient_drug_info;
---		
---		property validate_configured_infusion_info =
---			(GPCA_SW_OUT.Configured > 0) and ((PRES_IN.VTBI_Total > DB_IN.VTBI_High) or (PRES_IN.VTBI_Total < DB_IN.VTBI_Low) or
---			(PRES_IN.Flow_Rate_Basal < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Basal > DB_IN.Flow_Rate_High) or 
---			(PRES_IN.Flow_Rate_Intermittent_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Intermittent_Bolus > DB_IN.Flow_Rate_High) or
---			(PRES_IN.Flow_Rate_Patient_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Patient_Bolus > DB_IN.Flow_Rate_High) or
---			(PRES_IN.Duration_Intermittent_Bolus > PRES_IN.Interval_Intermittent_Bolus) or (PRES_IN.Max_Number_of_Patient_Bolus 
---			> DB_IN.Number_Max_Patient_Bolus) or (PRES_IN.Flow_Rate_Intermittent_Bolus < PRES_IN.Flow_Rate_Basal) or
---			(PRES_IN.Flow_Rate_Patient_Bolus < PRES_IN.Flow_Rate_Basal)) => GPCA_SW_OUT.Request_Patient_Drug_Info;
---		guarantee "PROPERTY 54 : validate_configured_infusion_info" : validate_configured_infusion_info;
+		--->Configuration Requirements<---
 		
-
-
+		property configuration_type_request =
+			OP_CMD_IN.Data_Config => GPCA_SW_OUT.Request_Config_Type;
+		guarantee "PROPERTY 52 : configuration_type_request" : configuration_type_request;
+		
+		property validate_configured_patient_drug_info =
+			(GPCA_SW_OUT.Configured = 1) and ((PRES_IN.Drug_Name = 0) or ((PRES_IN.Drug_Concentration < DB_IN.Drug_Concentration_Low) or
+			(PRES_IN.Drug_Concentration > DB_IN.Drug_Concentration_High)) or (PRES_IN.Entered_Reservoir_Volume < CONST_IN.Empty_Reservoir)) => 
+			(GPCA_SW_OUT.Error_Message_ID = 5) and GPCA_SW_OUT.Request_Patient_Drug_Info;
+		guarantee "PROPERTY 53 : validate_configured_patient_drug_info" : validate_configured_patient_drug_info;
+		
+		property validate_configured_infusion_info =
+			(GPCA_SW_OUT.Configured > 0) and ((PRES_IN.VTBI_Total > DB_IN.VTBI_High) or (PRES_IN.VTBI_Total < DB_IN.VTBI_Low) or
+			(PRES_IN.Flow_Rate_Basal < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Basal > DB_IN.Flow_Rate_High) or 
+			(PRES_IN.Flow_Rate_Intermittent_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Intermittent_Bolus > DB_IN.Flow_Rate_High) or
+			(PRES_IN.Flow_Rate_Patient_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Patient_Bolus > DB_IN.Flow_Rate_High) or
+			(PRES_IN.Duration_Intermittent_Bolus > PRES_IN.Interval_Intermittent_Bolus) or (PRES_IN.Max_Number_of_Patient_Bolus 
+			> DB_IN.Number_Max_Patient_Bolus) or (PRES_IN.Flow_Rate_Intermittent_Bolus < PRES_IN.Flow_Rate_Basal) or
+			(PRES_IN.Flow_Rate_Patient_Bolus < PRES_IN.Flow_Rate_Basal)) => GPCA_SW_OUT.Request_Patient_Drug_Info;
+		guarantee "PROPERTY 54 : validate_configured_infusion_info" : validate_configured_infusion_info;
 
 	  **};
 

@@ -416,4 +416,12 @@
            id="com.rockwellcollins.atc.agree.ui.contentassist1">
      </contentassist>
   </extension>
+  <extension
+        point="org.osate.annexsupport.unparser">
+     <unparser
+           annexName="agree"
+           class="com.rockwellcollins.atc.agree.unparsing.AgreeAnnexUnparser"
+           id="com.rockwellcollins.atc.agree.unparser">
+     </unparser>
+  </extension>
 </plugin>

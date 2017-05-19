@@ -72,7 +72,11 @@ public class AgreeStatement implements AgreeASTElement, EObject{
 
     @Override
     public EObject eContainer() {
-        return reference.eContainer();
+		if (reference != null) {
+			return reference.eContainer();
+		} else {
+			return null;
+		}
     }
 
     @Override

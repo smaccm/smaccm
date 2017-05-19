@@ -78,5 +78,10 @@ public class AgreeNode implements AgreeASTElement{
     public <T> T accept(AgreeASTVisitor<T> visitor) {
         return visitor.visit(this);
     }
+    
+    @Override
+    public String toString(){
+    	return id;
+    }
 
 }
