@@ -723,6 +723,24 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.BINARY_NON_LINEAR_EXPR:
+      {
+        BinaryNonLinearExpr binaryNonLinearExpr = (BinaryNonLinearExpr)theEObject;
+        T result = caseBinaryNonLinearExpr(binaryNonLinearExpr);
+        if (result == null) result = caseExpr(binaryNonLinearExpr);
+        if (result == null) result = caseElement(binaryNonLinearExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.UNARY_NON_LINEAR_EXPR:
+      {
+        UnaryNonLinearExpr unaryNonLinearExpr = (UnaryNonLinearExpr)theEObject;
+        T result = caseUnaryNonLinearExpr(unaryNonLinearExpr);
+        if (result == null) result = caseExpr(unaryNonLinearExpr);
+        if (result == null) result = caseElement(unaryNonLinearExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.INT_LIT_EXPR:
       {
         IntLitExpr intLitExpr = (IntLitExpr)theEObject;
@@ -1987,6 +2005,38 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseTimeExpr(TimeExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Binary Non Linear Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Binary Non Linear Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseBinaryNonLinearExpr(BinaryNonLinearExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Unary Non Linear Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Unary Non Linear Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseUnaryNonLinearExpr(UnaryNonLinearExpr object)
   {
     return null;
   }
