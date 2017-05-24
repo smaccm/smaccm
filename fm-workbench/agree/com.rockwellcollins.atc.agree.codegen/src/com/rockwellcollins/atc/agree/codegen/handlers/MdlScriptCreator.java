@@ -199,13 +199,20 @@ public class MdlScriptCreator extends ScriptCreator{
 		writeline("[~,implMdlNameNoExtension,~] = fileparts(implMdlPathOrName);");
 		writeline("implMdlPath = fullfile(dir_path,implMdlNameNoExtension);");	
 		writeline("[~,verifMdlNameNoExtension,~] = fileparts('" + verifMdlName + "');");
-		
-		File file = new File("FixedScript.txt");
-	    Scanner sc = new Scanner(file);
-	    while(sc.hasNextLine()){
-	       writeline(sc.nextLine());
-	    }
-	    sc.close();	
+	    
+		InputStream stream = getClass().getResourceAsStream("/resources/FixedScript.txt");
+		String str = "";
+		 try {
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+	            if (stream != null) {                     
+	                while ((str = reader.readLine()) != null) {
+	                	writeline(str);
+	                }                
+	            }
+	        } finally {
+	            try { stream.close(); } catch (Throwable ignore) {}
+	        }
+	    
 	}
 	
 	public void invokeSLDVScript() {
