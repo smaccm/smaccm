@@ -662,6 +662,24 @@ public interface AgreeFactory extends EFactory
   TimeExpr createTimeExpr();
 
   /**
+   * Returns a new object of class '<em>Binary Non Linear Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Binary Non Linear Expr</em>'.
+   * @generated
+   */
+  BinaryNonLinearExpr createBinaryNonLinearExpr();
+
+  /**
+   * Returns a new object of class '<em>Unary Non Linear Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Unary Non Linear Expr</em>'.
+   * @generated
+   */
+  UnaryNonLinearExpr createUnaryNonLinearExpr();
+
+  /**
    * Returns a new object of class '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
