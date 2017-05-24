@@ -1,5 +1,8 @@
 package com.rockwellcollins.atc.agree.codegen.handlers;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +51,7 @@ public class MdlScriptCreator extends ScriptCreator{
 		this.createImplModel = createImplModel;		
 		this.invokeSLDV = invokeSLDV;		
 		preparePorts();
+		addCopyrightHeader();
 		createScript();
 		if(invokeSLDV){
 			invokeSLDVScript();
@@ -196,7 +200,7 @@ public class MdlScriptCreator extends ScriptCreator{
 		writeline("implMdlPath = fullfile(dir_path,implMdlNameNoExtension);");	
 		writeline("[~,verifMdlNameNoExtension,~] = fileparts('" + verifMdlName + "');");
 		
-		File file = new File("C:\\HOME\\git\\smaccm\\fm-workbench\\agree\\com.rockwellcollins.atc.agree.codegen\\src\\com\\rockwellcollins\\atc\\agree\\codegen\\handlers\\FixedScript.txt");
+		File file = new File("FixedScript.txt");
 	    Scanner sc = new Scanner(file);
 	    while(sc.hasNextLine()){
 	       writeline(sc.nextLine());
@@ -214,5 +218,20 @@ public class MdlScriptCreator extends ScriptCreator{
 		writeline("opts.SaveReport = 'on';");
 		writeline("opts.OutputDir = './sldv_output';");
 		writeline("[status, files] = sldvrun(verifMdlNameNoExtension, opts);");
+	}
+	
+	public void addCopyrightHeader() throws Exception {
+		InputStream stream = getClass().getResourceAsStream("/resources/CopyrightHeader.txt");
+		String str = "";
+		 try {
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+	            if (stream != null) {                     
+	                while ((str = reader.readLine()) != null) {
+	                	writeline(str);
+	                }                
+	            }
+	        } finally {
+	            try { stream.close(); } catch (Throwable ignore) {}
+	        }
 	}
 }
