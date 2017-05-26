@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.JKindResult;
@@ -100,6 +103,7 @@ public class AgreeMenuListener implements IMenuListener {
         addResultsLinkingMenu(manager, result);
         addViewSupportMenu(manager, result);
         addTraceabilityDocMenu(manager, result);
+        addTraceabilityMatrixMenu(manager, result);
     }
 
     private void addTraceabilityDocMenu(IMenuManager manager, AnalysisResult result) {
@@ -116,6 +120,51 @@ public class AgreeMenuListener implements IMenuListener {
         }
     }
 
+    private void addTraceabilityMatrixMenu(IMenuManager manager, AnalysisResult result) {
+
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER)
+                .equals(PreferenceConstants.MODEL_CHECKER_JKIND) &&
+            prefs.getBoolean(PreferenceConstants.PREF_SUPPORT) &&
+            result instanceof JKindResult) {
+        	JKindResult jresult = (JKindResult)result;
+        	
+        	Set<String> reqs = new HashSet<String>(); 
+        	for (PropertyResult pr : jresult.getPropertyResults()) {
+    			if (pr.getProperty() instanceof ValidProperty) {
+    				ValidProperty vp = (ValidProperty) pr.getProperty();
+    				Set<String> ivc = vp.getIvc();
+    				if (ivc != null && !ivc.isEmpty()) {
+    					reqs.addAll(ivc);
+    				}
+    			}
+        	}
+        	String nodeName = linker.getComponent(result).getName(); 
+        	manager.add(
+        			new Action("View traceability matrix for " + nodeName) {
+        				public void run() {
+        					viewTraceabilityMatrix(jresult, reqs);
+        				}
+        			});
+        }			
+    }
+
+    private void viewTraceabilityMatrix(
+    		JKindResult result, 
+    		Set<String> reqs) {
+
+    	System.out.println("At traceability matrix");
+    	try {
+			AgreeTraceabilityMatrixView matrix = 
+					(AgreeTraceabilityMatrixView) window.getActivePage().showView(
+							AgreeTraceabilityMatrixView.ID);
+			matrix.setInput(result, (AgreeRenaming)linker.getRenaming(result));
+	        matrix.setFocus();
+	    } catch (PartInitException e) {
+	        e.printStackTrace();
+	    }
+    }
+    
     private IAction addViewTraceabilityConsole(String text, IMenuManager manager, AnalysisResult result) {
         return new Action(text) {
             public void run() {

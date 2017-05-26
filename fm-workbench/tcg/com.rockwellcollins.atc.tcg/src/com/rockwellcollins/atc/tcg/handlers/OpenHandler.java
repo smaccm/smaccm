@@ -38,17 +38,22 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.tcg.TcgException;
 import com.rockwellcollins.atc.tcg.preferences.TcgPreferenceUtils;
 import com.rockwellcollins.atc.tcg.readers.TcgXmlReader;
 import com.rockwellcollins.atc.tcg.suite.TestSuite;
 import com.rockwellcollins.atc.tcg.util.TcgUtils;
+import com.rockwellcollins.atc.tcg.views.TcgLinkerFactory;
 import com.rockwellcollins.atc.tcg.views.TestSuiteLinker;
-import com.rockwellcollins.atc.tcg.views.TestSuiteLinkerFactory;
+// import com.rockwellcollins.atc.tcg.views.TestSuiteLinkerFactory;
 import com.rockwellcollins.atc.tcg.views.TestSuiteView;
 
+import jkind.api.results.AnalysisResult;
+import jkind.api.results.CompositeAnalysisResult;
+import jkind.api.results.JKindResult;
+
 public class OpenHandler extends NoElementHandler {
-    protected TestSuiteLinker linker;
 	protected IHandlerService handlerService;
 	protected boolean Debug = false;
 
@@ -64,23 +69,29 @@ public class OpenHandler extends NoElementHandler {
 		}
 	}
 	
-	void printClassifiers() {
-		EList<IEObjectDescription> classifiers = EMFIndexRetrieval.getAllClassifiersInWorkspace();
-		for (IEObjectDescription cl: classifiers) {
-			System.out.println("Classifier: " + cl.getName() + "; qualified name: " + cl.getQualifiedName());
+	protected JKindResult extractJKindResult(AnalysisResult result) {
+		if (result instanceof JKindResult) {
+			return (JKindResult)result;
+		} else if (result instanceof CompositeAnalysisResult) {
+			CompositeAnalysisResult comp = (CompositeAnalysisResult)result;
+			if (comp.getChildren().size() == 1) {
+				return extractJKindResult(comp.getChildren().get(0));
+			}
 		}
+		throw new TcgException("Unexpected jkind 'result' type when opening test suite");
 	}
 	
 	protected IStatus doAnalysis(final IProgressMonitor monitor) {
 		try {
-			printClassifiers();
 			System.out.println("Loading test suite...");
 			TestSuite testSuite = loadTests();
 			if (testSuite != null) {
 				ComponentImplementation ci = TcgUtils.getComponentImplFromString(testSuite.getSystemImplUnderTest());
-				TestSuiteLinkerFactory linkerFactory = new TestSuiteLinkerFactory(ci, true); 
-				linker = linkerFactory.constructLinker();
-				showSuiteView(testSuite, linker);
+				TcgLinkerFactory linkerFactory = new TcgLinkerFactory(ci, false, false); 
+				
+				showSuiteView(testSuite, 
+						linkerFactory.getLinker(), 
+						extractJKindResult(linkerFactory.getAnalysisResult()));
 			}
 		} catch (Exception e) {
 			System.out.println("Error" + e.toString());
@@ -119,12 +130,12 @@ public class OpenHandler extends NoElementHandler {
 		getWindow().getShell().getDisplay().syncExec(runnable);
 	}
 
-	private void showSuiteView(final TestSuite result, final TestSuiteLinker linker) {
+	private void showSuiteView(final TestSuite suite, final AgreeResultsLinker linker, final JKindResult result) {
 		syncExec(() -> {
 			try {
 				TestSuiteView page = (TestSuiteView) getWindow().getActivePage()
 						.showView(TestSuiteView.ID);
-				page.setInput(result, linker);
+				page.setInput(suite, linker, result);
 			} catch (PartInitException e) {
 				e.printStackTrace();
 			}

@@ -21,89 +21,25 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 
 package com.rockwellcollins.atc.tcg.views;
 
-import jkind.results.layout.Layout;
-import jkind.lustre.Program;
+import jkind.api.results.AnalysisResult;
 
-import org.osate.aadl2.ComponentImplementation;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
-import com.rockwellcollins.atc.tcg.obligations.ufc.TcgRenaming;
+import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 
-public class TestSuiteLinker {
-	
-    private AgreeProgram agreeProgram;
-	private Program program; // Lustre program associated with the result
-    private ComponentImplementation component; // AADL component implementation associated with the result
-    private AgreeSubclause contract; // AGREE contract associated with the result
-    private Layout layout; // Layout (mapping signals to categories)
-    // private Map<String, EObject> referenceMap; // Mapping from (TCG) variable names to editor references
-    private TcgRenaming renaming; 
-    private String log;  // For errors during instantiation.
-        
-    public AgreeProgram getAgreeProgram() {
-		return agreeProgram;
+public class TestSuiteLinker extends AgreeResultsLinker {
+    private Map<AnalysisResult, AgreeProgram> agreePrograms = new HashMap<>();
+
+    public Map<AnalysisResult, AgreeProgram> getAgreePrograms() { return agreePrograms; }
+
+    public AgreeProgram getAgreeProgram(AnalysisResult result) {
+		return agreePrograms.get(result);
 	}
 
-	public void setAgreeProgram(AgreeProgram agreeProgram) {
-		this.agreeProgram = agreeProgram;
+	public void setAgreeProgram(AnalysisResult result, AgreeProgram agreeProgram) {
+		agreePrograms.put(result, agreeProgram);
 	}
-
-	public void setProgram(Program program) {
-    	this.program = program;
-    }
-
-    public Program getProgram() {
-    	return program;
-    }
-
-    public void setComponent(ComponentImplementation ci) {
-        this.component = ci;
-    }
-
-    public ComponentImplementation getComponent() {
-        return component;
-    }
-
-    public void setContract(AgreeSubclause contract) {
-        this.contract = contract;
-    }
-
-    public AgreeSubclause getContract() {
-    	return contract;
-    }
-
-    public void setLayout(Layout layout) {
-        this.layout = layout;
-    }
-
-    public Layout getLayout() {
-        return layout;
-    }
-/*
-    public void setReferenceMap(Map<String, EObject> refMap) {
-        this.referenceMap = refMap;
-    }
-
-    public Map<String, EObject> getReferenceMap() {
-        return this.referenceMap;
-    }
-*/
-    public void setLog(String log) {
-        this.log = log;
-    }
-
-    public String getLog() {
-        return log;
-    }
-
-	public TcgRenaming getRenaming() {
-		return renaming;
-	}
-
-	public void setRenaming(TcgRenaming renaming) {
-		this.renaming = renaming;
-	}
-    
     
 }

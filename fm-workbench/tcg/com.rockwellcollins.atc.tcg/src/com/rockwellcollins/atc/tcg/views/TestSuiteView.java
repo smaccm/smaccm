@@ -27,7 +27,11 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.tcg.suite.TestSuite;
+
+import jkind.api.results.AnalysisResult;
+import jkind.api.results.JKindResult;
 
 import org.eclipse.ui.ISaveablePart2;
 
@@ -53,11 +57,12 @@ public class TestSuiteView extends ViewPart implements ISaveablePart2 {
 		table.getControl().setFocus();
 	}
 
-	public void setInput(TestSuite result, final TestSuiteLinker linker) {
-		suite = result;
-		table.setInput(result);
+	public void setInput(TestSuite suite, final AgreeResultsLinker linker, final JKindResult result) {
+		this.suite = suite;
+		table.setInput(suite);
         menuListener.setLinker(linker);
-        this.setPartName("Test Suite: " + result.getName() + " [" + result.getSystemImplUnderTest() + "]");
+        menuListener.setAnalysisResult(result);
+        this.setPartName("Test Suite: " + result.getName() + " [" + suite.getSystemImplUnderTest() + "]");
 	}
 
 	public TestSuite getInput() {
@@ -73,43 +78,35 @@ public class TestSuiteView extends ViewPart implements ISaveablePart2 {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		System.out.println("doSave method.");
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void doSaveAs() {
 		System.out.println("doSaveAs method.");
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
 		System.out.println("isDirty method.");
 		return false;
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
 		System.out.println("isSaveAllowed method.");
 		return false;
 	}
 
 	@Override
 	public boolean isSaveOnCloseNeeded() {
-		// TODO Auto-generated method stub
 		System.out.println("isSaveOnClose method.");
 		return true;
 	}
 
 	@Override
 	public int promptToSaveOnClose() {
-		// TODO Auto-generated method stub
 		System.out.println("Saving on close method.");
-		setInput(null, null);
+		setInput(null, null, null);
 		return 0;
 	}
 }
