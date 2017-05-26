@@ -71,12 +71,24 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 		}
 	}
 	
-	public String constructName(String raw, AgreeRenaming renaming) {
+	public String constructFullName(String raw, AgreeRenaming renaming) {
 		String name = "";
 		if (raw.contains(".")) {
 			name = raw.substring(0, raw.indexOf('.') + 1);
 		}
 		name += renaming.getSupportRefString(raw);
+		return name;
+	}
+	
+	private int index = 0;
+	
+	public String constructShortName(String raw, AgreeRenaming renaming) {
+		String name = "";
+		if (raw.contains(".")) {
+			name = raw.substring(0, raw.indexOf('.') + 1);
+		}
+		name += "R" + index;
+		index++;
 		return name;
 	}
 	
@@ -87,10 +99,8 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 		table = new Table(composite, SWT.FULL_SELECTION);
 
 		List<String> raw = candidates(result, renaming);
-		List<String> renamed = raw.stream().map(
-				elem -> constructName(elem, renaming)).collect(Collectors.toList()); 
 		
-		createColumns(renamed);
+		createColumns(raw, renaming);
 		createContent(result, raw);
 		packColumns();
 
@@ -99,15 +109,16 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 		composite.layout(true);
 	}
 
-	private void createColumns(List<String> reqs) {
+	private void createColumns(List<String> raw, AgreeRenaming renaming) {
 		TableColumn tc = new TableColumn(table, SWT.CENTER);
 		tc.setText("");
 		tc.setWidth(10);
 
-		for (String req : reqs) {
+		for (String req : raw) {
 			tc = new TableColumn(table, SWT.CENTER);
 			tc.setWidth(10);
-			tc.setText(req);
+			tc.setText(constructShortName(req, renaming));
+			tc.setToolTipText(constructFullName(req, renaming));
 		}
 	}
 
