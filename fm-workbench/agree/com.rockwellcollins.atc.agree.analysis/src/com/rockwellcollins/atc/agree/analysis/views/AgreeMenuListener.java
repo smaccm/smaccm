@@ -12,6 +12,7 @@ import jkind.api.results.AnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
 import jkind.api.results.PropertyResult;
+import jkind.api.results.Renaming;
 import jkind.api.ui.results.AnalysisResultTree;
 import jkind.interval.NumericInterval;
 import jkind.lustre.Program;
@@ -124,7 +125,7 @@ public class AgreeMenuListener implements IMenuListener {
                 }
                 final Map<String, EObject> refMap = tempRefMap;
                 final MessageConsole console = findConsole("Traceability");
-                final AgreeRenaming renaming = linker.getRenaming(result);
+                final Renaming renaming = linker.getRenaming(result);
                 showConsole(console);
                 console.clearConsole();
                 console.addPatternMatchListener(new AgreePatternListener(refMap));
@@ -142,7 +143,9 @@ public class AgreeMenuListener implements IMenuListener {
                             if (!allProperties.isEmpty()) {
                                 for (PropertyResult prop : allProperties) {
                                     if (prop.getStatus().equals(jkind.api.results.Status.VALID)) {
-                                        writeIvcResult(prop, console, renaming);
+                                        if (renaming instanceof AgreeRenaming) {
+                                        	writeIvcResult(prop, console, (AgreeRenaming)renaming);
+                                        }
                                     }
                                 }
                             }
@@ -183,7 +186,7 @@ public class AgreeMenuListener implements IMenuListener {
                 }
                 final Map<String, EObject> refMap = tempRefMap;
                 final MessageConsole console = findConsole("Support");
-                AgreeRenaming tempRenaming = linker.getRenaming(result);
+                Renaming tempRenaming = linker.getRenaming(result);
                 while(tempRenaming == null){
                     AnalysisResult parent = result.getParent();
                     if(parent == null){
@@ -191,14 +194,16 @@ public class AgreeMenuListener implements IMenuListener {
                     }
                     tempRenaming = linker.getRenaming(parent);
                 }
-                final AgreeRenaming renaming = tempRenaming;
+                final Renaming renaming = tempRenaming;
                 showConsole(console);
                 console.clearConsole();
                 console.addPatternMatchListener(new AgreePatternListener(refMap));
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        writeIvcResult(result, console, renaming);
+                        if (renaming instanceof AgreeRenaming) {
+                        	writeIvcResult(result, console, (AgreeRenaming)renaming);
+                        }
                     }
                 }).start();
             }
