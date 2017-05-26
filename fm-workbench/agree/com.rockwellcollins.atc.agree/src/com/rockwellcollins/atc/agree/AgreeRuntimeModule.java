@@ -4,8 +4,10 @@
 package com.rockwellcollins.atc.agree;
 
 import org.eclipse.xtext.generator.IGenerator;
+import org.eclipse.xtext.serializer.ISerializer;
 
 import com.rockwellcollins.atc.agree.generator.NullGenerator;
+import com.rockwellcollins.atc.agree.serializer.AgreeSerializer;
 
 /**
  * Use this class to register components to be used at runtime / without the
@@ -19,4 +21,15 @@ public class AgreeRuntimeModule extends com.rockwellcollins.atc.agree.AbstractAg
 	public Class<? extends org.eclipse.xtext.resource.EObjectAtOffsetHelper> bindEObjectAtOffsetHelper() {
 		return org.osate.xtext.aadl2.util.Aadl2EObjectAtOffsetHelper.class;
 	}
+
+	@Override
+	public Class<? extends ISerializer> bindISerializer() {
+		return AgreeSerializer.class;
+	}
+
+	@SuppressWarnings("restriction")
+	public Class<? extends org.eclipse.xtext.serializer.tokens.ICrossReferenceSerializer> bindICrossReferenceSerializer() {
+		return com.rockwellcollins.atc.agree.serializer.AgreeCrossReferenceSerializer.class;
+	}
+
 }

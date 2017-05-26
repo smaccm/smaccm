@@ -301,7 +301,7 @@ public class AgreeUtils {
             return false;
         }
         EObject container = reference;
-        while (!(container instanceof ComponentClassifier)) {
+        while (!(container instanceof ComponentClassifier) && container != null) {
             container = container.eContainer();
         }
         if (container instanceof ComponentImplementation) {
