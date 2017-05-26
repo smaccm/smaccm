@@ -23,45 +23,166 @@ package com.rockwellcollins.atc.tcg.handlers;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import jkind.JKindException;
 import jkind.api.KindApi;
+import jkind.api.results.AnalysisResult;
+import jkind.api.results.CompositeAnalysisResult;
 import jkind.api.results.JKindResult;
+import jkind.lustre.Node;
 import jkind.lustre.Program;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.xtext.EcoreUtil2;
+import org.osate.aadl2.AadlPackage;
+import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.SystemInstance;
+import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
+import org.osate.annexsupport.AnnexUtil;
+import org.osate.ui.dialogs.Dialog;
 
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
+import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
+import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.RenamingVisitor;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
+import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.tcg.TcgException;
 import com.rockwellcollins.atc.tcg.lustre.visitors.GenerateUfcObligationsVisitor;
 import com.rockwellcollins.atc.tcg.obligations.ufc.TcgRenaming;
 import com.rockwellcollins.atc.tcg.preferences.TcgPreferenceUtils;
 import com.rockwellcollins.atc.tcg.suite.TestSuite;
 import com.rockwellcollins.atc.tcg.suite.TestSuiteUtils;
-import com.rockwellcollins.atc.tcg.util.TcgUtils;
-import com.rockwellcollins.atc.tcg.views.TestSuiteLinker;
 import com.rockwellcollins.atc.tcg.views.TestCaseGeneratorResultsView;
-import com.rockwellcollins.atc.tcg.views.TestSuiteLinkerFactory;
-import com.rockwellcollins.atc.tcg.views.TestSuiteView;
 import com.rockwellcollins.atc.tcg.writers.TcgWriterUtils;
 import com.rockwellcollins.atc.tcg.writers.TcgXmlWriter;
 
 public class VerifyHandler extends AadlHandler {
-    protected TestSuiteLinker linker = new TestSuiteLinker();
+    protected Queue<JKindResult> queue = new ArrayDeque<>();
+    protected AgreeResultsLinker linker = new AgreeResultsLinker();
 	protected IHandlerService handlerService;
+    protected AtomicReference<IProgressMonitor> monitorRef = new AtomicReference<>();
 	protected boolean Debug = false;
 	private IHandlerActivation terminateActivation;
 	
+	protected SystemInstance getSysInstance(Element root) {
+		ComponentImplementation ci = getComponentImplementation(root);
+		try {
+			return InstantiateModel.buildInstanceModelFile(ci);
+		} catch (Exception e) {
+			Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
+			throw new AgreeException("Error Instantiating model");
+		}
+	}
+	
+	protected Classifier getOutermostClassifier(Element element) {
+		List<EObject> containers = new ArrayList<>();
+		EObject curr = element;
+		while (curr != null) {
+			containers.add(curr);
+			curr = curr.eContainer();
+		}
+		Collections.reverse(containers);
+		for (EObject container : containers) {
+			if (container instanceof Classifier) {
+				System.out.println(container);
+				return (Classifier) container;
+			}
+		}
+		return null;
+	}
 
+
+	private ComponentImplementation getComponentImplementation(Element root) {
+		Classifier classifier = getOutermostClassifier(root);
+
+		if (classifier instanceof ComponentImplementation) {
+			return (ComponentImplementation) classifier;
+		}
+		if (!(classifier instanceof ComponentType)) {
+			throw new AgreeException("Must select an AADL Component Type or Implementation");
+		}
+		ComponentType ct = (ComponentType) classifier;
+		List<ComponentImplementation> cis = getComponentImplementations(ct);
+		if (cis.size() == 0) {
+			throw new AgreeException("AADL Component Type has no implementation to verify");
+		} else if (cis.size() == 1) {
+			ComponentImplementation ci = cis.get(0);
+			Shell shell = getWindow().getShell();
+			String message = "User selected " + ct.getFullName() + ".\nRunning analysis on " + ci.getFullName()	+ " instead.";
+			shell.getDisplay().asyncExec(
+					() -> MessageDialog.openInformation(shell, "Analysis information", message));
+			return ci;
+		} else {
+			throw new AgreeException(
+					"AADL Component Type has multiple implementation to verify: please select just one");
+		}
+	}
+
+	private List<ComponentImplementation> getComponentImplementations(ComponentType ct) {
+		List<ComponentImplementation> result = new ArrayList<>();
+		AadlPackage pkg = AadlUtil.getContainingPackage(ct);
+		for (ComponentImplementation ci : EcoreUtil2.getAllContentsOfType(pkg, ComponentImplementation.class)) {
+			if (ci.getType().equals(ct)) {
+				result.add(ci);
+			}
+		}
+		return result;
+	}
+	
+	public boolean isRecursive() {
+		return false;
+	}
+
+    protected String getNestedMessages(Throwable e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        while (e != null) {
+            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
+                pw.println(e.getMessage());
+            }
+            e = e.getCause();
+        }
+        pw.close();
+        return sw.toString();
+    }
+	
 	@Override
 	protected final IStatus runJob(Element root, IProgressMonitor monitor) {
 		handlerService = (IHandlerService) getWindow().getService(IHandlerService.class);
@@ -69,22 +190,82 @@ public class VerifyHandler extends AadlHandler {
 		if (!(root instanceof ComponentImplementation)) {
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Must select an AADL Component Implementation");
 		}
+        
+		if (isRecursive() && AgreeUtils.usingKind2()){
+            throw new AgreeException("Kind2 only supports monolithic verification");
+        }
 
 		try {
-			ComponentImplementation ci = (ComponentImplementation)root;
-			TestSuiteLinkerFactory linkerFactory = 
-					new TestSuiteLinkerFactory(ci, TcgPreferenceUtils.getUseMonolithicAnalysis()); 
-			linker = linkerFactory.constructLinker();
-			
-			System.out.println("About to perform analysis...");
-			return doAnalysis(monitor);
-		} catch (Throwable e) {
-			String messages = TcgUtils.getNestedMessages(e);
-			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
-		}
+			// AgreeResultsLinkerFactory factory = 
+            // SystemInstance si = getSysInstance((ComponentImplementation)root);
+
+            AnalysisResult result;
+            CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
+
+            ComponentType sysType = AgreeUtils.getInstanceType(si);
+            EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
+                    AgreePackage.eINSTANCE.getAgreeContractSubclause());
+
+            if (annexSubClauses.size() == 0) {
+                throw new AgreeException(
+                        "There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
+            }
+
+            if (isRecursive()) {
+                if(AgreeUtils.usingKind2()){
+                    throw new AgreeException("Kind2 only supports monolithic verification");
+                }
+                result = buildAnalysisResult(((NamedElement)root).getName(), si);
+                wrapper.addChild(result);
+                result = wrapper;
+            } else {
+                wrapVerificationResult(si, wrapper);
+                result = wrapper;
+            }
+            showView(result, linker);
+            return doAnalysis(root, monitor);
+        } catch (Throwable e) {
+            String messages = getNestedMessages(e);
+            return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
+        }
 	}
 
-	private Program constructUfcProgram(Program program, TcgRenaming renaming) {
+    protected void showView(final AnalysisResult result, final AgreeResultsLinker linker) {
+		/*
+		 * This command is executed while the xtext document is locked. Thus it must be async
+		 * otherwise we can get a deadlock condition if the UI tries to lock the document,
+		 * e.g., to pull up hover information.
+		 */
+        getWindow().getShell().getDisplay().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    TestCaseGeneratorResultsView page =
+                            (TestCaseGeneratorResultsView) getWindow().getActivePage().showView(TestCaseGeneratorResultsView.ID);
+                    page.setInput(result, linker);
+                } catch (PartInitException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    protected void clearView() {
+        getWindow().getShell().getDisplay().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    TestCaseGeneratorResultsView page =
+                            (TestCaseGeneratorResultsView) getWindow().getActivePage().showView(TestCaseGeneratorResultsView.ID);
+                    page.setInput(new CompositeAnalysisResult("empty"), null);
+                } catch (PartInitException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private Program constructUfcProgram(Program program, TcgRenaming renaming) {
 		System.out.println("building ufc obligations...");
 		GenerateUfcObligationsVisitor ufcGenerator = new GenerateUfcObligationsVisitor(program, renaming);
 		ufcGenerator.setGenerateAssumptionObligations(TcgPreferenceUtils.getGenerateTestsForAssumptions());
@@ -128,44 +309,148 @@ public class VerifyHandler extends AadlHandler {
 			}
 		}
 	}
-	
+
+    protected boolean isMonolithic() {
+    	return TcgPreferenceUtils.getUseMonolithicAnalysis();
+    }
+
+    private void wrapVerificationResult(ComponentInstance si, CompositeAnalysisResult wrapper) {
+        AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, isMonolithic());
+        Program program;
+        program = LustreAstBuilder.getAssumeGuaranteeLustreProgram(agreeProgram);
+        wrapper.addChild(
+                createVerification("Contract Test Cases", si, program, agreeProgram));
+    }
+
+    private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram) {
+
+		AgreeRenaming agreeRenaming = new AgreeRenaming(); 
+		AgreeLayout layout = new AgreeLayout();
+		RenamingVisitor.addRenamings(lustreProgram, agreeRenaming, layout);
+		TcgRenaming renaming = new TcgRenaming(agreeRenaming, agreeRenaming.getRefMap());
+        Node mainNode = null;
+        for (Node node : lustreProgram.nodes) {
+            if (node.id.equals(lustreProgram.main)) {
+                mainNode = node;
+                break;
+            }
+        }
+        if (mainNode == null) {
+            throw new AgreeException("Could not find main lustre node after translation");
+        }
+
+        List<String> properties = new ArrayList<>();
+        
+        JKindResult result;
+        result = new JKindResult(resultName, properties, renaming);
+        queue.add(result);
+
+        ComponentImplementation compImpl = AgreeUtils.getInstanceImplementation(compInst);
+        linker.setProgram(result, lustreProgram);
+        linker.setComponent(result, compImpl);
+        linker.setContract(result, getContract(compImpl));
+        linker.setLayout(result, layout);
+        // linker.setReferenceMap(result, renaming.getRefMap());
+        linker.setLog(result, AgreeLogger.getLog());
+        linker.setRenaming(result, renaming);
+
+        // System.out.println(program);
+        return result;
+
+    }
+
+    private AgreeSubclause getContract(ComponentImplementation ci) {
+        ComponentType ct = ci.getOwnedRealization().getImplemented();
+        for (AnnexSubclause annex : ct.getOwnedAnnexSubclauses()) {
+            if (annex instanceof AgreeSubclause) {
+                return (AgreeSubclause) annex;
+            }
+        }
+        return null;
+    }
+
+    
+    private AnalysisResult buildAnalysisResult(String name, ComponentInstance ci) {
+        CompositeAnalysisResult result = new CompositeAnalysisResult("Test case generation for " + name);
+
+        if (containsAGREEAnnex(ci)) {
+            wrapVerificationResult(ci, result);
+            ComponentImplementation compImpl = AgreeUtils.getInstanceImplementation(ci);
+            for (ComponentInstance subInst : ci.getComponentInstances()) {
+                if (AgreeUtils.getInstanceImplementation(subInst) != null) {
+                    AnalysisResult buildAnalysisResult = buildAnalysisResult(subInst.getName(), subInst);
+                    if (buildAnalysisResult != null) {
+                        result.addChild(buildAnalysisResult);
+                    }
+                }
+            }
+
+            if (result.getChildren().size() != 0) {
+                linker.setComponent(result, compImpl);
+                return result;
+            }
+        }
+        return null;
+    }
+
+    private boolean containsAGREEAnnex(ComponentInstance ci) {
+        ComponentClassifier compClass = ci.getComponentClassifier();
+        if (compClass instanceof ComponentImplementation) {
+            compClass = ((ComponentImplementation) compClass).getType();
+        }
+        for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(compClass,
+                AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+            if (annex instanceof AgreeContractSubclause) {
+                return true;
+            }
+        }
+        return false;
+    }
 	
 	/* 
 	 * 
 	 * To Dos: 
 	 * 
 	 * */
-	protected IStatus doAnalysis(final IProgressMonitor monitor) {
+	protected IStatus doAnalysis(final Element root, final IProgressMonitor monitor) {
 		Thread analysisThread = new Thread() {
 			@Override
 			public void run() {
 				activateTerminateHandler(monitor);
 				KindApi api = PreferencesUtil.getKindApi();
 
-				Program ufcProgram = constructUfcProgram(linker.getProgram(), linker.getRenaming()); 
-				JKindResult result = createJKindResult(ufcProgram, linker.getRenaming());
-				writeIntermediateFiles(linker.getProgram(), ufcProgram); 
+				while (!queue.isEmpty() && !monitor.isCanceled()) {
+					JKindResult result = queue.peek();
+					NullProgressMonitor subMonitor = new NullProgressMonitor();
+                    monitorRef.set(subMonitor);
 
-				try {
-					System.out.println("Calling jkind...");
-					showGeneratorView(result, linker);
-					System.out.println("constructed view...");
-					api.execute(ufcProgram, result, monitor);
-					System.out.println("executed API...");
-					TestSuite testSuite = TestSuiteUtils.testSuiteFromJKindResult(result, linker.getComponent().getQualifiedName(), result.getName(), result.getText());
-					emitResult(testSuite);
-					showSuiteView(testSuite, linker);
-					
-				} catch (JKindException e) {
-					System.out.println(result.getText());
-					System.out.println("******** Error Occurred: HERE IS THE LUSTRE ********");
-					System.out.println(linker.getProgram());
-				} finally {
-					deactivateTerminateHandler();
-					System.out.println("UFC generation complete");
+					Program ufcProgram = constructUfcProgram(linker.getProgram(result), (TcgRenaming)linker.getRenaming(result)); 
+					ufcProgram.getMainNode().properties.forEach(p -> result.addProperty(p));
+					writeIntermediateFiles(linker.getProgram(result), ufcProgram); 
+
+					try {
+						System.out.println("Calling jkind...");
+						//showGeneratorView(result, linker);
+						System.out.println("constructed view...");
+						api.execute(ufcProgram, result, monitor);
+						System.out.println("executed API...");
+						TestSuite testSuite = TestSuiteUtils.
+							testSuiteFromJKindResult(result, 
+									linker.getComponent(result).getQualifiedName(), result.getName(), result.getText());
+						emitResult(testSuite);
+						showSuiteView(testSuite, linker);
+						
+					} catch (JKindException e) {
+						System.out.println(result.getText());
+						System.out.println("******** Error Occurred: HERE IS THE LUSTRE ********");
+						System.out.println(linker.getProgram(result));
+						break;
+					} finally {
+						deactivateTerminateHandler();
+						System.out.println("UFC generation complete");
+					}
+                    queue.remove();
 				}
-				
-				
 			}
 		};
 		analysisThread.start();
@@ -193,34 +478,24 @@ public class VerifyHandler extends AadlHandler {
 			writer.append(program.toString());
 		}
 	}
-
+/*
 	private JKindResult createJKindResult(Program ufcProgram, TcgRenaming renaming) {
 		List<String> properties = ufcProgram.getMainNode().properties;
 		return new JKindResult("Properties", properties, renaming);
 	}
-
-	private void showGeneratorView(final JKindResult result, final TestSuiteLinker linker) {
-		syncExec(() -> {
-			try {
-				TestCaseGeneratorResultsView page = (TestCaseGeneratorResultsView) getWindow().getActivePage()
-						.showView(TestCaseGeneratorResultsView.ID);
-				page.setInput(result, linker);
-			} catch (PartInitException e) {
-				e.printStackTrace();
-			}
-		});
-	}
-
+*/
 	
-	private void showSuiteView(final TestSuite result, final TestSuiteLinker linker) {
+	private void showSuiteView(final TestSuite result, final AgreeResultsLinker linker) {
 		syncExec(() -> {
-			try {
-				TestSuiteView page = (TestSuiteView) getWindow().getActivePage()
-						.showView(TestSuiteView.ID, null, org.eclipse.ui.IWorkbenchPage.VIEW_VISIBLE);
-				page.setInput(result, linker);
-			} catch (PartInitException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				TestSuiteView page = (TestSuiteView) getWindow().getActivePage()
+//					.showView(TestSuiteView.ID, null, org.eclipse.ui.IWorkbenchPage.VIEW_VISIBLE);
+//                AgreeResultsView page =
+//                        (AgreeResultsView) getWindow().getActivePage().showView(AgreeResultsView.ID);
+//				page.setInput(result, linker);
+//			} catch (PartInitException e) {
+//				e.printStackTrace();
+//			}
 		});
 	}
 	

@@ -112,21 +112,23 @@ public class TestSuiteMenuListener implements IMenuListener {
     }
 
     private void addOpenComponentMenu(IMenuManager manager, TestCase testCase) {
-        ComponentImplementation ci = linker.getComponent();
+        
+    	ComponentImplementation ci = null; // linker.getComponent();
         if (ci != null) {
             manager.add(createHyperlinkAction("Open " + ci.getName(), ci));
         }
+        
     }
 
     private void addOpenContractMenu(IMenuManager manager, TestCase testCase) {
-        AgreeSubclause contract = linker.getContract();
+        AgreeSubclause contract = null; // linker.getContract();
         if (contract != null) {
             manager.add(createHyperlinkAction("Open Contract", contract));
         }
     }
 
     private void addViewLogMenu(IMenuManager manager, TestCase testCase) {
-        String log = linker.getLog();
+        String log = null; // linker.getLog();
         if (log != null && !log.isEmpty()) {
             manager.add(createWriteConsoleAction("View Log", "Log", log));
         }
@@ -143,7 +145,7 @@ public class TestSuiteMenuListener implements IMenuListener {
         	 * TODO: getCounterexampleType?
         	 */
 //            final String cexType = getCounterexampleType(result);
-        	final String cexType = "";
+/*        	final String cexType = "";
             final Layout layout = linker.getLayout();
             final Map<String, EObject> refMap = linker.getRenaming().getTcgRefMap();
 
@@ -183,12 +185,12 @@ public class TestSuiteMenuListener implements IMenuListener {
                     }
                 });
             }
-
+*/
         }
     }
 
     private void addViewLustreMenu(IMenuManager manager, TestCase testCase) {
-        Program program = linker.getProgram();
+        Program program = null; // linker.getProgram();
         if (program != null) {
             manager.add(createWriteConsoleAction("View Lustre", "Lustre", program));
         }
@@ -197,7 +199,7 @@ public class TestSuiteMenuListener implements IMenuListener {
     private void addResultsLinkingMenu(IMenuManager manager, AnalysisResult result) {
         if (result instanceof PropertyResult) {
             PropertyResult pr = (PropertyResult) result;
-            Map<String, EObject> refMap = linker.getRenaming().getTcgRefMap();
+            Map<String, EObject> refMap = linker.getRenaming(result).getTcgRefMap();
             if (refMap != null) {
             	EObject property = refMap.get(pr.getName());
             	if (property instanceof GuaranteeStatement) {

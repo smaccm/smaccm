@@ -44,7 +44,7 @@ import com.rockwellcollins.atc.tcg.readers.TcgXmlReader;
 import com.rockwellcollins.atc.tcg.suite.TestSuite;
 import com.rockwellcollins.atc.tcg.util.TcgUtils;
 import com.rockwellcollins.atc.tcg.views.TestSuiteLinker;
-import com.rockwellcollins.atc.tcg.views.TestSuiteLinkerFactory;
+// import com.rockwellcollins.atc.tcg.views.TestSuiteLinkerFactory;
 import com.rockwellcollins.atc.tcg.views.TestSuiteView;
 
 public class OpenHandler extends NoElementHandler {
@@ -78,9 +78,9 @@ public class OpenHandler extends NoElementHandler {
 			TestSuite testSuite = loadTests();
 			if (testSuite != null) {
 				ComponentImplementation ci = TcgUtils.getComponentImplFromString(testSuite.getSystemImplUnderTest());
-				TestSuiteLinkerFactory linkerFactory = new TestSuiteLinkerFactory(ci, true); 
-				linker = linkerFactory.constructLinker();
-				showSuiteView(testSuite, linker);
+				// TestSuiteLinkerFactory linkerFactory = new TestSuiteLinkerFactory(ci, true); 
+				// linker = linkerFactory.constructLinker();
+				// showSuiteView(testSuite, linker);
 			}
 		} catch (Exception e) {
 			System.out.println("Error" + e.toString());

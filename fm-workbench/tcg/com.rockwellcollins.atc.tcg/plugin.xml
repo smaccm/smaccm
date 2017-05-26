@@ -9,9 +9,16 @@
             id="tcg.commands">
       </category>
       <command
-            name="Generate Tests"
+            name="Generate Tests for Single Layer"
+            description="Generate tests for the contract of the selected component"
             categoryId="tcg.commands"
-            id="tcg.commands.ufcTestCaseGeneratorCommand">
+            id="tcg.commands.generateTestsSingleLayer">
+      </command>
+      <command
+            name="Generate Tests for All Layers"
+            description="Generate tests for the contract of the selected component and all components below it"
+            categoryId="tcg.commands"
+            id="tcg.commands.generateTestsAllLayers">
       </command>
       <command categoryId="tcg.commands"
             description="Terminate Test Case Generation"
@@ -36,8 +43,15 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            commandId="tcg.commands.ufcTestCaseGeneratorCommand"
+            commandId="tcg.commands.generateTestsSingleLayer"
             class="com.rockwellcollins.atc.tcg.handlers.VerifyHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="tcg.commands.generateTestsAllLayers"
+            class="com.rockwellcollins.atc.tcg.handlers.VerifyAllHandler">
       </handler>
    </extension>
    <extension
@@ -49,10 +63,16 @@
 			  visible="true">
         </separator>
         <command
-              commandId="tcg.commands.ufcTestCaseGeneratorCommand"
+              commandId="tcg.commands.generateTestsSingleLayer"
               icon="icons/microscope.png"
-              id="tcg.menus.ufcTestCaseGeneratorCommand"
+              id="tcg.menus.generateTestsSingleLayer"
               mnemonic="G">
+        </command>
+        <command
+              commandId="tcg.commands.generateTestsAllLayers"
+              icon="icons/microscope.png"
+              id="tcg.menus.generateTestsAllLayers"
+              mnemonic="H">
         </command>
         <separator
               name="com.rockwellcollins.atc.tcg.separator1">
@@ -74,20 +94,32 @@
          <toolbar
                id="tcg.toolbars.toolbar">
             <command
-                  commandId="tcg.commands.ufcTestCaseGeneratorCommand"
+                  commandId="tcg.commands.generateTestsSingleLayer"
                   icon="icons/microscope.png"
-                  id="tcg.toolbars.ufcTestCaseGeneratorCommand">
+                  id="tcg.toolbars.generateTestsSingleLayer">
             </command>
          </toolbar>
       </menuContribution>
       <menuContribution
             allPopups="false"
             locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
-        <command
-                  commandId="tcg.commands.ufcTestCaseGeneratorCommand"
+         <menu
+               id="com.rockwellcollins.atc.agree.analysis.menus.main"
+               label="Test Case Generator"
+               mnemonic="g">
+           <command
+                  commandId="tcg.commands.generateTestsSingleLayer"
                   icon="icons/microscope.png"
-                  id="tcg.popups.ufcTestCaseGeneratorCommand">
-        </command>
+                  id="tcg.popups.generateTestsSingleLayer"
+                  style="push">
+           </command>
+           <command
+                  commandId="tcg.commands.generateTestsAllLayers"
+                  icon="icons/microscope.png"
+                  id="tcg.popups.generateTestsAllLayers"
+                  style="push">
+           </command>
+        </menu>
       </menuContribution>
       <menuContribution
             allPopups="false"

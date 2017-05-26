@@ -40,6 +40,8 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 
+import com.rockwellcollins.atc.tcg.util.TcgResultsUtil;
+
 public class TestCaseGeneratorResultLabelProvider extends ColumnLabelProvider {
 	private final Column column;
 	private static final String ICON_DIR = "/icons/";
@@ -111,7 +113,7 @@ public class TestCaseGeneratorResultLabelProvider extends ColumnLabelProvider {
 			case PROPERTY:
 				return result.getName();
 			case RESULT:
-				return ResultsUtil.getMultiStatus(result).toString();
+				return TcgResultsUtil.getMultiStatus(result).toString();
 			}
 		}
 
@@ -123,7 +125,7 @@ public class TestCaseGeneratorResultLabelProvider extends ColumnLabelProvider {
 			return "";
 		}
 
-		return " [true for " + pr.getBaseProgress() + " steps]";
+		return " [no test case for " + pr.getBaseProgress() + " steps]";
 	}
 
 	private String getFinalStatus(PropertyResult pr) {
@@ -161,7 +163,7 @@ public class TestCaseGeneratorResultLabelProvider extends ColumnLabelProvider {
 				return getStatusImage(pr.getStatus());
 			} else if (element instanceof AnalysisResult) {
 				AnalysisResult result = (AnalysisResult) element;
-				return getStatusImage(ResultsUtil.getMultiStatus(result).getOverallStatus());
+				return getStatusImage(TcgResultsUtil.getMultiStatus(result).getOverallStatus());
 			}
 		}
 

@@ -19,10 +19,5 @@ Require-Bundle: org.eclipse.ui,
  edu.uah.rsesc.aadlsimulator.agree;bundle-version="0.1.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: com.rockwellcollins.atc.tcg.extensions;
-  uses:="org.osate.aadl2,
-   org.eclipse.emf.ecore,
-   org.eclipse.core.runtime,
-   jkind.results"
 Bundle-Vendor: Rockwell Collins
 Comment: Import-Package: edu.uah.rsesc.aadlsimulator.agree.ext
