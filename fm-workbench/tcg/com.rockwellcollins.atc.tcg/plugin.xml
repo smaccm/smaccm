@@ -57,37 +57,42 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:com.rockwellcollins.atc.agree.analysis.menus.main?after=com.rockwellcollins.atc.agree.analysis.menus.saveAllWorkspaceContracts">
-        <separator
-              name="com.rockwellcollins.atc.tcg.separator1"
-			  visible="true">
-        </separator>
-        <command
-              commandId="tcg.commands.generateTestsSingleLayer"
-              icon="icons/microscope.png"
-              id="tcg.menus.generateTestsSingleLayer"
-              mnemonic="G">
-        </command>
-        <command
-              commandId="tcg.commands.generateTestsAllLayers"
-              icon="icons/microscope.png"
-              id="tcg.menus.generateTestsAllLayers"
-              mnemonic="H">
-        </command>
-        <separator
-              name="com.rockwellcollins.atc.tcg.separator1">
-        </separator>
-        <command
-              commandId="com.rockwellcollins.atc.tcg.openTestSuite"
-              id="tcg.menus.openTestSuite"
-              mnemonic="O"
-              style="push">
-        </command>
-        <command
-              commandId="com.rockwellcollins.atc.tcg.saveTestSuite"
-              id="tcg.menus.saveTestSuite"
-              style="push">
-        </command>
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="AGREE"
+               mnemonic="g"
+               id="com.rockwellcollins.atc.agree.analysis.menus.main">
+           <separator
+                 name="com.rockwellcollins.atc.tcg.separator1"
+   			  visible="true">
+           </separator>
+           <command
+                 commandId="tcg.commands.generateTestsSingleLayer"
+                 icon="icons/microscope.png"
+                 id="tcg.menus.generateTestsSingleLayer"
+                 mnemonic="G">
+           </command>
+           <command
+                 commandId="tcg.commands.generateTestsAllLayers"
+                 icon="icons/microscope.png"
+                 id="tcg.menus.generateTestsAllLayers"
+                 mnemonic="H">
+           </command>
+           <separator
+                 name="com.rockwellcollins.atc.tcg.separator1">
+           </separator>
+           <command
+                 commandId="com.rockwellcollins.atc.tcg.openTestSuite"
+                 id="tcg.menus.openTestSuite"
+                 mnemonic="O"
+                 style="push">
+           </command>
+           <command
+                 commandId="com.rockwellcollins.atc.tcg.saveTestSuite"
+                 id="tcg.menus.saveTestSuite"
+                 style="push">
+           </command>
+         </menu>
       </menuContribution>
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">

@@ -23,20 +23,14 @@ package com.rockwellcollins.atc.tcg.views;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
-import jkind.api.results.JRealizabilityResult;
-import jkind.api.results.PropertyResult;
 import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
-import jkind.results.InvalidProperty;
-import jkind.results.Property;
 import jkind.results.Signal;
-import jkind.results.UnknownProperty;
 import jkind.results.layout.Layout;
 
 import org.eclipse.emf.ecore.EObject;
@@ -63,14 +57,12 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
-import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
-import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
-import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.views.AgreePatternListener;
+import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.tcg.extensions.TcgExtractor;
 import com.rockwellcollins.atc.tcg.extensions.TcgExtractorRegistry;
+import com.rockwellcollins.atc.tcg.obligations.ufc.TcgRenaming;
 import com.rockwellcollins.atc.tcg.extensions.ExtensionRegistry;
 import com.rockwellcollins.atc.tcg.suite.TestCase;
 
@@ -78,19 +70,28 @@ public class TestSuiteMenuListener implements IMenuListener {
     private static final GlobalURIEditorOpener globalURIEditorOpener = AgreeUtils.getGlobalURIEditorOpener();
     private final IWorkbenchWindow window;
     private final TestSuiteTable table;
-    private TestSuiteLinker linker;
+    private AgreeResultsLinker linker;
+    private AnalysisResult result;
 
     public TestSuiteMenuListener(IWorkbenchWindow window, TestSuiteTable table) {
     	this.window = window;
     	this.table = table;
     }
 
-    public void setLinker(TestSuiteLinker linker) {
+    public void setLinker(AgreeResultsLinker linker) {
         this.linker = linker;
     }
     
-    public TestSuiteLinker getLinker() {
+    public AgreeResultsLinker getLinker() {
     	return linker;
+    }
+
+    public void setAnalysisResult(AnalysisResult result) {
+    	this.result = result;
+    }
+    
+    public AnalysisResult getAnalysisResult() {
+    	return this.result;
     }
 
     @Override
@@ -108,12 +109,11 @@ public class TestSuiteMenuListener implements IMenuListener {
         addViewLogMenu(manager, testCase);
         addViewTestCaseMenu(manager, testCase);
         addViewLustreMenu(manager, testCase);
-      //  addResultsLinkingMenu(manager, testCase);
     }
 
     private void addOpenComponentMenu(IMenuManager manager, TestCase testCase) {
         
-    	ComponentImplementation ci = null; // linker.getComponent();
+    	ComponentImplementation ci = linker.getComponent(result);
         if (ci != null) {
             manager.add(createHyperlinkAction("Open " + ci.getName(), ci));
         }
@@ -121,14 +121,14 @@ public class TestSuiteMenuListener implements IMenuListener {
     }
 
     private void addOpenContractMenu(IMenuManager manager, TestCase testCase) {
-        AgreeSubclause contract = null; // linker.getContract();
+        AgreeSubclause contract = linker.getContract(result);
         if (contract != null) {
             manager.add(createHyperlinkAction("Open Contract", contract));
         }
     }
 
     private void addViewLogMenu(IMenuManager manager, TestCase testCase) {
-        String log = null; // linker.getLog();
+        String log = linker.getLog(result);
         if (log != null && !log.isEmpty()) {
             manager.add(createWriteConsoleAction("View Log", "Log", log));
         }
@@ -145,9 +145,9 @@ public class TestSuiteMenuListener implements IMenuListener {
         	 * TODO: getCounterexampleType?
         	 */
 //            final String cexType = getCounterexampleType(result);
-/*        	final String cexType = "";
-            final Layout layout = linker.getLayout();
-            final Map<String, EObject> refMap = linker.getRenaming().getTcgRefMap();
+        	final String cexType = "";
+            final Layout layout = linker.getLayout(result);
+            final Map<String, EObject> refMap = ((TcgRenaming)linker.getRenaming(result)).getTcgRefMap();
 
             MenuManager sub = new MenuManager("View " + cexType + "Test Case in");
             manager.add(sub);
@@ -175,7 +175,7 @@ public class TestSuiteMenuListener implements IMenuListener {
             
             // send counterexamples to external plugins
             EObject property = refMap.get(testCase.getName());
-            ComponentImplementation compImpl = linker.getComponent();
+            ComponentImplementation compImpl = linker.getComponent(result);
 
             for (TcgExtractor ex : extractors) {
                 sub.add(new Action(ex.getDisplayText()) {
@@ -185,95 +185,19 @@ public class TestSuiteMenuListener implements IMenuListener {
                     }
                 });
             }
-*/
+
         }
     }
 
     private void addViewLustreMenu(IMenuManager manager, TestCase testCase) {
-        Program program = null; // linker.getProgram();
+        Program program = linker.getProgram(result);
         if (program != null) {
             manager.add(createWriteConsoleAction("View Lustre", "Lustre", program));
         }
     }
 
-    private void addResultsLinkingMenu(IMenuManager manager, AnalysisResult result) {
-        if (result instanceof PropertyResult) {
-            PropertyResult pr = (PropertyResult) result;
-            Map<String, EObject> refMap = linker.getRenaming(result).getTcgRefMap();
-            if (refMap != null) {
-            	EObject property = refMap.get(pr.getName());
-            	if (property instanceof GuaranteeStatement) {
-            		manager.add(createHyperlinkAction("Go To Guarantee", property));
-            	}
-            	if (property instanceof LemmaStatement) {
-            		manager.add(createHyperlinkAction("Go To Lemma", property));
-            	}
-            	if (property instanceof AssumeStatement) {
-            		manager.add(createHyperlinkAction("Go To Assumption", property));
-            	}
-            	if (property instanceof FnCallExpr) {
-            		manager.add(createHyperlinkAction("Go To Node Call", property));
-            	}
-            }
-        }
-    }
-   /*
-    	/*
-    	 * TODO: test instanceof PropertyResult?
-    	 * 
-    	 */
-//    	if (result instanceof PropertyResult) {
-//    		PropertyResult pr = (PropertyResult) result;
-/*    		Map<String, EObject> refMap = linker.getReferenceMap();
-    		if (refMap != null) {
-    			EObject property = refMap.get(testCase.getName());
-    			if (property instanceof GuaranteeStatement) {
-    				manager.add(createHyperlinkAction("Go To Guarantee", property));
-    			}
-    			if (property instanceof LemmaStatement) {
-    				manager.add(createHyperlinkAction("Go To Lemma", property));
-    			}
-    			if (property instanceof AssumeStatement) {
-    				manager.add(createHyperlinkAction("Go To Assumption", property));
-    			}
-    			if (property instanceof FnCallExpr) {
-    				manager.add(createHyperlinkAction("Go To Node Call", property));
-    			}
-    		}
-//    	}
-*/
-//	}
 
-    private static Counterexample getCounterexample(AnalysisResult result) {
-        if (result instanceof PropertyResult) {
-            Property prop = ((PropertyResult) result).getProperty();
-            if (prop instanceof InvalidProperty) {
-                return ((InvalidProperty) prop).getCounterexample();
-            } else if (prop instanceof UnknownProperty) {
-                return ((UnknownProperty) prop).getInductiveCounterexample();
-            }
-        } else if (result instanceof JRealizabilityResult) {
-            PropertyResult propResult = ((JRealizabilityResult) result).getPropertyResult();
-            Property prop = propResult.getProperty();
-            if (prop instanceof InvalidProperty) {
-                return ((InvalidProperty) prop).getCounterexample();
-            }
 
-        }
-
-        return null;
-    }
-
-    private static String getCounterexampleType(AnalysisResult result) {
-        if (result instanceof PropertyResult) {
-            Property prop = ((PropertyResult) result).getProperty();
-            if (prop instanceof UnknownProperty) {
-                return "Inductive ";
-            }
-        }
-
-        return " ";
-    }
 
     private IAction createHyperlinkAction(String text, final EObject eObject) {
         return new Action(text) {
@@ -367,11 +291,6 @@ public class TestSuiteMenuListener implements IMenuListener {
         }).start();
     }
 
-    private static final DecimalFormat format = new DecimalFormat("#.##");
-
-    private String formatDouble(double x) {
-        return format.format(x);
-    }
 
     private boolean isEmpty(String category, Counterexample cex, Layout layout) {
         return cex.getCategorySignals(layout, category).isEmpty();

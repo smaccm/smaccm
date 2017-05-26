@@ -23,11 +23,11 @@ package com.rockwellcollins.atc.tcg.views;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
+import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
 import jkind.api.results.PropertyResult;
 import jkind.api.results.Renaming;
@@ -74,6 +74,8 @@ import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.tcg.extensions.TcgExtractor;
 import com.rockwellcollins.atc.tcg.extensions.TcgExtractorRegistry;
 import com.rockwellcollins.atc.tcg.obligations.ufc.TcgRenaming;
+import com.rockwellcollins.atc.tcg.suite.TestSuite;
+import com.rockwellcollins.atc.tcg.suite.TestSuiteUtils;
 import com.rockwellcollins.atc.tcg.extensions.ExtensionRegistry;
 
 public class TestCaseGeneratorMenuListener implements IMenuListener {
@@ -103,6 +105,7 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
     private void addLinkedMenus(IMenuManager manager, AnalysisResult result) {
         addOpenComponentMenu(manager, result);
         addOpenContractMenu(manager, result);
+        addOpenTestSuiteViewMenu(manager, result);
         addViewLogMenu(manager, result);
         addViewTestCaseMenu(manager, result);
         addViewLustreMenu(manager, result);
@@ -122,6 +125,36 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
             manager.add(createHyperlinkAction("Open Contract", contract));
         }
     }
+
+    private void addOpenTestSuiteViewMenu(IMenuManager manager, AnalysisResult result) {
+
+    	if (result instanceof JKindResult) {
+    		JKindResult jresult = (JKindResult)result;
+	    	manager.add(new Action("View/Modify Test Suite") {
+	            @Override
+	            public void run() {
+	                viewTestSuite(jresult, linker);
+	            }
+	        });
+    	}
+    }
+
+    private void viewTestSuite(JKindResult result, AgreeResultsLinker linker) {
+		TestSuite testSuite = TestSuiteUtils.
+				testSuiteFromJKindResult(result, 
+						linker.getComponent(result).getQualifiedName(), result.getName(), result.getText());
+    	try {
+        	TestSuiteView tcView = (TestSuiteView) window.getActivePage().showView(
+        			TestSuiteView.ID);
+            tcView.setInput(testSuite, linker, result);
+            tcView.setFocus();
+        } catch (PartInitException e) {
+            e.printStackTrace();
+        }
+		
+    }
+    
+    
 
     private void addViewLogMenu(IMenuManager manager, AnalysisResult result) {
         String log = linker.getLog(result);
