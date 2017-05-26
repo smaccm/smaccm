@@ -197,7 +197,7 @@ public class VerifyHandler extends AadlHandler {
 
 		try {
 			// AgreeResultsLinkerFactory factory = 
-            // SystemInstance si = getSysInstance((ComponentImplementation)root);
+            SystemInstance si = getSysInstance((ComponentImplementation)root);
 
             AnalysisResult result;
             CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
