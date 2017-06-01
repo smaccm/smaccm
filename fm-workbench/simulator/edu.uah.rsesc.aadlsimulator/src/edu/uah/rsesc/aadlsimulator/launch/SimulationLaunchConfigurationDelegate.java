@@ -157,8 +157,7 @@ public class SimulationLaunchConfigurationDelegate implements ILaunchConfigurati
 	
 	private ComponentImplementation refreshComponentImplementation(final ComponentImplementation ci) {
 		final URI uri = EcoreUtil.getURI(ci);
-		ResourceSet rs = ci.eResource().getResourceSet();
-		OsateResourceUtil.refreshResourceSet(rs);
+		final ResourceSet rs = OsateResourceUtil.createResourceSet();		
 		final EObject newEObject = rs.getEObject(uri, true);
 		if(!(newEObject instanceof ComponentImplementation)) {
 			throw new RuntimeException("Unable to refresh component implementation");
