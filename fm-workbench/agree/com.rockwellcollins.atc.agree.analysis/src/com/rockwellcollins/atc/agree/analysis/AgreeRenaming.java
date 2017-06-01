@@ -46,6 +46,10 @@ public class AgreeRenaming extends Renaming {
         return this.supportRefStrings.get(ivc);
     }
 
+    public final Map<String, String> getSupportRefStrings() {
+    	return this.supportRefStrings;
+    }
+    
     public void addExplicitRename(String oldName, String newName) {
         this.explicitRenames.put(oldName, newName);
     }

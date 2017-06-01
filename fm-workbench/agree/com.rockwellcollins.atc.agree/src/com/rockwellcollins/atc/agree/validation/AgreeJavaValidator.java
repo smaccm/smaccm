@@ -76,6 +76,7 @@ import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
+import com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
@@ -132,6 +133,7 @@ import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
+import com.rockwellcollins.atc.agree.agree.UnaryNonLinearExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
 import com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement;
@@ -2049,6 +2051,37 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	@Check(CheckType.FAST)
+	public void checkUnaryNonLinearExpr(UnaryNonLinearExpr expr) {
+		AgreeType typeSub = getAgreeType(expr.getExpr());
+		String op = expr.getOp();
+		warning(expr, "Use of trigonometric function: '" + op
+				+ "'.  Trigonometric expressions are only allowed with dReal."
+				+ " Scalability is as yet unknown.");
+		if (!matches(REAL, typeSub)) {
+			error(expr, "argument to trigonometric function '" + op + "' is of type '" + typeSub.toString()
+					+ "' but must be of " + "type 'real'");
+		}
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkBinaryNonLinearExpr(BinaryNonLinearExpr expr) {
+		AgreeType typeLeft = getAgreeType(expr.getLeft());
+		AgreeType typeRight = getAgreeType(expr.getRight());
+		String op = expr.getOp();
+		warning(expr, "Use of trigonometric function: '" + op
+				+ "'.  Trigonometric expressions are only allowed with dReal."
+				+ " Scalability is as yet unknown.");
+		if (!matches(REAL, typeLeft)) {
+			error(expr, "argument to trigonometric function '" + op + "' is of type '" + typeLeft.toString()
+					+ "' but must be of " + "type 'real'");
+		}
+		if (!matches(REAL, typeRight)) {
+			error(expr, "argument to trigonometric function '" + op + "' is of type '" + typeRight.toString()
+					+ "' but must be of " + "type 'real'");
+		}
+	}
+	
+	@Check(CheckType.FAST)
 	public void checkBinaryExpr(BinaryExpr binExpr) {
 		AgreeType typeLeft = getAgreeType(binExpr.getLeft());
 		AgreeType typeRight = getAgreeType(binExpr.getRight());
@@ -2147,8 +2180,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			if (op.equals("*") && !isInLinearizationBodyExpr) {
 				if (!rightSideConst && !leftSideConst) {
 					warning(binExpr, "neither the right nor the left side of binary expression '" + op
-							+ "' is constant'.  Non-linear expressions are only allowed with z3."
-							+ " Even with z3 they are not recomended...");
+							+ "' is constant'.  Non-linear expressions are only allowed with z3 and dReal."
+							+ " With z3 they are not recomended.");
 				}
 			}
 			return;
@@ -2597,6 +2630,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		} else if(expr instanceof TimeOfExpr ||
 				  expr instanceof TimeRiseExpr ||
 				  expr instanceof TimeFallExpr){
+			return REAL;
+		} else if (expr instanceof UnaryNonLinearExpr || 
+				   expr instanceof BinaryNonLinearExpr) {
 			return REAL;
 		}
 

@@ -23,13 +23,14 @@ package com.rockwellcollins.atc.tcg.views;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
+import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
 import jkind.api.results.PropertyResult;
+import jkind.api.results.Renaming;
 import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
@@ -69,22 +70,26 @@ import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.views.AgreePatternListener;
+import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.tcg.extensions.TcgExtractor;
 import com.rockwellcollins.atc.tcg.extensions.TcgExtractorRegistry;
+import com.rockwellcollins.atc.tcg.obligations.ufc.TcgRenaming;
+import com.rockwellcollins.atc.tcg.suite.TestSuite;
+import com.rockwellcollins.atc.tcg.suite.TestSuiteUtils;
 import com.rockwellcollins.atc.tcg.extensions.ExtensionRegistry;
 
 public class TestCaseGeneratorMenuListener implements IMenuListener {
     private static final GlobalURIEditorOpener globalURIEditorOpener = AgreeUtils.getGlobalURIEditorOpener();
     private final IWorkbenchWindow window;
-    private final TestCaseGeneratorResultTable table;
-    private TestSuiteLinker linker;
+    private final TcgResultTree table;
+    private AgreeResultsLinker linker;
 
-    public TestCaseGeneratorMenuListener(IWorkbenchWindow window, TestCaseGeneratorResultTable table) {
+    public TestCaseGeneratorMenuListener(IWorkbenchWindow window, TcgResultTree table) {
     	this.window = window;
     	this.table = table;
     }
 
-    public void setLinker(TestSuiteLinker linker) {
+    public void setLinker(AgreeResultsLinker linker) {
         this.linker = linker;
     }
 
@@ -100,6 +105,7 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
     private void addLinkedMenus(IMenuManager manager, AnalysisResult result) {
         addOpenComponentMenu(manager, result);
         addOpenContractMenu(manager, result);
+        addOpenTestSuiteViewMenu(manager, result);
         addViewLogMenu(manager, result);
         addViewTestCaseMenu(manager, result);
         addViewLustreMenu(manager, result);
@@ -107,21 +113,51 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
     }
 
     private void addOpenComponentMenu(IMenuManager manager, AnalysisResult result) {
-        ComponentImplementation ci = linker.getComponent();
+        ComponentImplementation ci = linker.getComponent(result);
         if (ci != null) {
             manager.add(createHyperlinkAction("Open " + ci.getName(), ci));
         }
     }
 
     private void addOpenContractMenu(IMenuManager manager, AnalysisResult result) {
-        AgreeSubclause contract = linker.getContract();
+        AgreeSubclause contract = linker.getContract(result);
         if (contract != null) {
             manager.add(createHyperlinkAction("Open Contract", contract));
         }
     }
 
+    private void addOpenTestSuiteViewMenu(IMenuManager manager, AnalysisResult result) {
+
+    	if (result instanceof JKindResult) {
+    		JKindResult jresult = (JKindResult)result;
+	    	manager.add(new Action("View/Modify Test Suite") {
+	            @Override
+	            public void run() {
+	                viewTestSuite(jresult, linker);
+	            }
+	        });
+    	}
+    }
+
+    private void viewTestSuite(JKindResult result, AgreeResultsLinker linker) {
+		TestSuite testSuite = TestSuiteUtils.
+				testSuiteFromJKindResult(result, 
+						linker.getComponent(result).getQualifiedName(), result.getName(), result.getText());
+    	try {
+        	TestSuiteView tcView = (TestSuiteView) window.getActivePage().showView(
+        			TestSuiteView.ID);
+            tcView.setInput(testSuite, linker, result);
+            tcView.setFocus();
+        } catch (PartInitException e) {
+            e.printStackTrace();
+        }
+		
+    }
+    
+    
+
     private void addViewLogMenu(IMenuManager manager, AnalysisResult result) {
-        String log = linker.getLog();
+        String log = linker.getLog(result);
         if (log != null && !log.isEmpty()) {
             manager.add(createWriteConsoleAction("View Log", "Log", log));
         }
@@ -135,8 +171,10 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
 
         if (cex != null) {
             final String cexType = getCounterexampleType(result);
-            final Layout layout = linker.getLayout();
-            final Map<String, EObject> refMap = linker.getRenaming().getTcgRefMap();
+            final Layout layout = linker.getLayout(result.getParent());
+            final Renaming renaming = linker.getRenaming(result.getParent()); 
+            
+            final Map<String, EObject> refMap = ((TcgRenaming)renaming).getTcgRefMap();
 
             MenuManager sub = new MenuManager("View " + cexType + "Test Case in");
             manager.add(sub);
@@ -165,7 +203,7 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
             // send counterexamples to external plugins
             PropertyResult pr = (PropertyResult) result;
             EObject property = refMap.get(pr.getName());
-            ComponentImplementation compImpl = linker.getComponent();
+            ComponentImplementation compImpl = linker.getComponent(result.getParent());
 
             for (TcgExtractor ex : extractors) {
                 sub.add(new Action(ex.getDisplayText()) {
@@ -180,7 +218,7 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
     }
 
     private void addViewLustreMenu(IMenuManager manager, AnalysisResult result) {
-        Program program = linker.getProgram();
+        Program program = linker.getProgram(result);
         if (program != null) {
             manager.add(createWriteConsoleAction("View Lustre", "Lustre", program));
         }
@@ -189,7 +227,7 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
     private void addResultsLinkingMenu(IMenuManager manager, AnalysisResult result) {
         if (result instanceof PropertyResult) {
             PropertyResult pr = (PropertyResult) result;
-            Map<String, EObject> refMap = linker.getRenaming().getTcgRefMap();
+            Map<String, EObject> refMap = ((TcgRenaming)linker.getRenaming(result.getParent())).getTcgRefMap();
             if (refMap != null) {
             	EObject property = refMap.get(pr.getName());
             	if (property instanceof GuaranteeStatement) {

@@ -15,16 +15,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.Feature;
 import org.osate.aadl2.ListValue;
 import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.Property;
@@ -139,50 +136,58 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				return Status.CANCEL_STATUS;
 			}
 			
-			boolean exportPressed = info.exportPressed;
-			boolean generatePressed = info.generatePressed;
-			boolean updatePressed = info.updatePressed;
-			boolean verifyPressed = info.verifyPressed;
+			boolean exportContractsPressed = info.exportPressed;
+			boolean genImplPressed = info.generatePressed;
+			boolean genVerificationPressed = info.updatePressed;
+			boolean verifySubsysPressed = info.verifyPressed;
 			
-			if(generatePressed){
+			String matlabFuncScriptName = matlabFunction.name + ".m";
+			
+			if(genImplPressed){
 				// Write MATLAB script to generate subsystem in the selected
 				// output folder
-				SimulinkSubsysScriptCreator modelGenerateScript = new SimulinkSubsysScriptCreator(dirStr,
-						info.verifyMdlName, info.subsystemName, matlabFunction.ports);
+				String subsysName = "";
+				if(info.subsystemName.equals("")){
+					subsysName = sysType.getName();
+				}
+				else{
+					subsysName = info.subsystemName;
+				}
+				MdlScriptCreator implMdlScript = new MdlScriptCreator(dirStr,
+						info.implMdlPath, info.verifyMdlName, subsysName, matlabFunction.ports, matlabFuncScriptName,
+						true, info.verifyPressed);		
 
-				String modelUpdateScriptName = "generate_"+ info.subsystemName+ ".m";
+				String implMdlScriptName = "generate_"+ subsysName+ ".m";
 				
-				Path modelGenerateScriptPath = Paths.get(dirStr,
-						modelUpdateScriptName);
+				Path implMdlScriptPath = Paths.get(dirStr,
+						implMdlScriptName);
 				
-				writeToFile(modelGenerateScriptPath,
-						modelGenerateScript.toString());					
+				writeToFile(implMdlScriptPath,
+						implMdlScript.toString());					
 			}
 			
-			if (exportPressed || updatePressed || verifyPressed) {
-				String matlabFuncScriptName = matlabFunction.name + ".m";
+			if (exportContractsPressed || genVerificationPressed || verifySubsysPressed) {
 				Path matlabFuncScriptPath = Paths.get(dirStr,
 						matlabFuncScriptName);
 				// Write MATLAB function code into the specified file in the
 				// selected output folder
 				writeToFile(matlabFuncScriptPath, matlabFunction.toString());
 				
-				if (updatePressed || verifyPressed) {
+				if (genVerificationPressed || verifySubsysPressed) {
 					// Create Simulink Model Update script into the output
 					// folder
-					SimulinkObserverScriptCreator modelUpdateScript = new SimulinkObserverScriptCreator(
-							info.implMdlPath, info.verifyMdlName,
-							info.subsystemName, matlabFuncScriptName,
-							info.verifyPressed);
-
-					String modelUpdateScriptName = matlabFunction.name
+					MdlScriptCreator verifMdlScript = new MdlScriptCreator(dirStr,
+							info.implMdlPath, info.verifyMdlName, info.subsystemName, matlabFunction.ports, matlabFuncScriptName,
+							false, info.verifyPressed);						
+					
+					String verifMdlScriptName = matlabFunction.name
 							+ "_Observer.m";
 					
-					Path modelUpdateScriptPath = Paths.get(dirStr,
-							modelUpdateScriptName);
+					Path verifMdlScriptPath = Paths.get(dirStr,
+							verifMdlScriptName);
 					
-					writeToFile(modelUpdateScriptPath,
-							modelUpdateScript.toString());
+					writeToFile(verifMdlScriptPath,
+							verifMdlScript.toString());
 				}
 			}
 			//return;

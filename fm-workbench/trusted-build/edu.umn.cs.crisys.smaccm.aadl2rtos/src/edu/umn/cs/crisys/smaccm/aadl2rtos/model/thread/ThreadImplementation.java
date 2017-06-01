@@ -424,6 +424,11 @@ private String name;
     return l;
   }
 
+  public List<DispatchableInputPort> getDispatcherListWithEntrypoints() {
+	  List<DispatchableInputPort> l = getDispatcherList();
+	  l.stream().filter(e -> !e.getExternalHandlerList().isEmpty());
+	  return l;
+  }
   /**
    * @return the inputDataPortList
    */

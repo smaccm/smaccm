@@ -5,13 +5,17 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import jkind.api.results.AnalysisResult;
 import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
 import jkind.api.results.PropertyResult;
+import jkind.api.results.Renaming;
 import jkind.api.ui.results.AnalysisResultTree;
 import jkind.interval.NumericInterval;
 import jkind.lustre.Program;
@@ -99,6 +103,7 @@ public class AgreeMenuListener implements IMenuListener {
         addResultsLinkingMenu(manager, result);
         addViewSupportMenu(manager, result);
         addTraceabilityDocMenu(manager, result);
+        addTraceabilityMatrixMenu(manager, result);
     }
 
     private void addTraceabilityDocMenu(IMenuManager manager, AnalysisResult result) {
@@ -115,6 +120,51 @@ public class AgreeMenuListener implements IMenuListener {
         }
     }
 
+    private void addTraceabilityMatrixMenu(IMenuManager manager, AnalysisResult result) {
+
+        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+        if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER)
+                .equals(PreferenceConstants.MODEL_CHECKER_JKIND) &&
+            prefs.getBoolean(PreferenceConstants.PREF_SUPPORT) &&
+            result instanceof JKindResult) {
+        	JKindResult jresult = (JKindResult)result;
+        	
+        	Set<String> reqs = new HashSet<String>(); 
+        	for (PropertyResult pr : jresult.getPropertyResults()) {
+    			if (pr.getProperty() instanceof ValidProperty) {
+    				ValidProperty vp = (ValidProperty) pr.getProperty();
+    				Set<String> ivc = vp.getIvc();
+    				if (ivc != null && !ivc.isEmpty()) {
+    					reqs.addAll(ivc);
+    				}
+    			}
+        	}
+        	String nodeName = linker.getComponent(result).getName(); 
+        	manager.add(
+        			new Action("View traceability matrix for " + nodeName) {
+        				public void run() {
+        					viewTraceabilityMatrix(jresult, reqs);
+        				}
+        			});
+        }			
+    }
+
+    private void viewTraceabilityMatrix(
+    		JKindResult result, 
+    		Set<String> reqs) {
+
+    	System.out.println("At traceability matrix");
+    	try {
+			AgreeTraceabilityMatrixView matrix = 
+					(AgreeTraceabilityMatrixView) window.getActivePage().showView(
+							AgreeTraceabilityMatrixView.ID);
+			matrix.setInput(result, (AgreeRenaming)linker.getRenaming(result));
+	        matrix.setFocus();
+	    } catch (PartInitException e) {
+	        e.printStackTrace();
+	    }
+    }
+    
     private IAction addViewTraceabilityConsole(String text, IMenuManager manager, AnalysisResult result) {
         return new Action(text) {
             public void run() {
@@ -124,7 +174,7 @@ public class AgreeMenuListener implements IMenuListener {
                 }
                 final Map<String, EObject> refMap = tempRefMap;
                 final MessageConsole console = findConsole("Traceability");
-                final AgreeRenaming renaming = linker.getRenaming(result);
+                final Renaming renaming = linker.getRenaming(result);
                 showConsole(console);
                 console.clearConsole();
                 console.addPatternMatchListener(new AgreePatternListener(refMap));
@@ -142,7 +192,9 @@ public class AgreeMenuListener implements IMenuListener {
                             if (!allProperties.isEmpty()) {
                                 for (PropertyResult prop : allProperties) {
                                     if (prop.getStatus().equals(jkind.api.results.Status.VALID)) {
-                                        writeIvcResult(prop, console, renaming);
+                                        if (renaming instanceof AgreeRenaming) {
+                                        	writeIvcResult(prop, console, (AgreeRenaming)renaming);
+                                        }
                                     }
                                 }
                             }
@@ -183,7 +235,7 @@ public class AgreeMenuListener implements IMenuListener {
                 }
                 final Map<String, EObject> refMap = tempRefMap;
                 final MessageConsole console = findConsole("Support");
-                AgreeRenaming tempRenaming = linker.getRenaming(result);
+                Renaming tempRenaming = linker.getRenaming(result);
                 while(tempRenaming == null){
                     AnalysisResult parent = result.getParent();
                     if(parent == null){
@@ -191,14 +243,16 @@ public class AgreeMenuListener implements IMenuListener {
                     }
                     tempRenaming = linker.getRenaming(parent);
                 }
-                final AgreeRenaming renaming = tempRenaming;
+                final Renaming renaming = tempRenaming;
                 showConsole(console);
                 console.clearConsole();
                 console.addPatternMatchListener(new AgreePatternListener(refMap));
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        writeIvcResult(result, console, renaming);
+                        if (renaming instanceof AgreeRenaming) {
+                        	writeIvcResult(result, console, (AgreeRenaming)renaming);
+                        }
                     }
                 }).start();
             }

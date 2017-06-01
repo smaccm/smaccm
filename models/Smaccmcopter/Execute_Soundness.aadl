@@ -44,15 +44,19 @@ uav_private_key() <=
 
 -- The component x only receives messages that pass Decrypt.
 only_receive_decrypt(x : component) <=
-  ** "The component " x " only receives messages that pass Decrypt" **
+  ** "The component " x " only receives messages that pass Decrypt or from the safety radio" **
   forall (c : connection).  
     (parent(destination(c)) = x) =>
       non_command_channel(c) or only_receive_decrypt_channel(c)
     
 only_receive_decrypt_channel(c : connection) <=
-  ** "The connection " c " only carries messages that pass Decrypt" **
+  ** "The connection " c " only carries messages that pass Decrypt or from the safety radio" **
   let src : component = source_component(c); 
-  unalterable_channel(c) and (is_decrypter(src) or only_receive_decrypt(src))       
+  unalterable_channel(c) and (is_decrypter(src) or only_receive_decrypt(src) or is_safety_controller(src))       
+
+is_safety_controller(comp: component) <=
+  ** comp " is the safety controller" **
+  false --type(comp) = SOFTWARE::Radio_Control
 
 is_decrypter(comp : component) <=
   ** comp " is the decrypter" **
