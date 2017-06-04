@@ -241,12 +241,6 @@ RecordUpdateExpr returns Expr:
 TermExpr returns Expr:
 	{TimeExpr} 'time'
 	| ComplexExpr
-   | {BinaryNonLinearExpr} op=('pow' | 'arctan2') '(' left=Expr ',' right=Expr ')'
-   | {UnaryNonLinearExpr} op=('exp' | 'log' | 'sqrt' | 
-                              'sin' | 'cos' | 'tan' | 'asin' | 
-                              'arcsin' | 'acos' | 'arccos' | 'atan' |
-                              'arctan' | 'sinh' | 'cosh' | 'tanh' | 
-                              'matan' | 'marctan') '(' expr=Expr ')' 
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
 	| {EventExpr} 'event' '(' id = NestedDotID ')'

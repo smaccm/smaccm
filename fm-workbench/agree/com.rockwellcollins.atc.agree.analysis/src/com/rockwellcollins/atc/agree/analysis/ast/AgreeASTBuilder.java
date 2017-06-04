@@ -1261,7 +1261,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return castExpr;
 	}
 
-	@Override
+/*	@Override
 	public Expr caseBinaryNonLinearExpr(com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr expr) {
 		Expr leftExpr = doSwitch(expr.getLeft());
 		Expr rightExpr = doSwitch(expr.getRight());
@@ -1307,6 +1307,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return unyExpr;
 		
 	}
+*/
 	
 	@Override
 	public Expr caseBinaryExpr(com.rockwellcollins.atc.agree.agree.BinaryExpr expr) {
@@ -1390,7 +1391,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		NamedElement namedEl = AgreeUtils.getFinalNestId(dotId);
 
 		String fnName = AgreeTypeUtils.getNodeName(namedEl);
-
+		System.out.println("Function name: " + fnName);
 		boolean found = false;
 		for (Node node : globalNodes) {
 			if (node.id.equals(fnName)) {
@@ -1402,6 +1403,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (!found) {
 			NestedDotID fn = expr.getFn();
 			doSwitch(AgreeUtils.getFinalNestId(fn));
+			// for dReal integration
+			if (fnName.substring(0,7).equalsIgnoreCase("dreal__")) {
+				fnName = namedEl.getName();
+			}
 		}
 
 		List<Expr> argResults = new ArrayList<Expr>();

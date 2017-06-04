@@ -8,7 +8,7 @@ import static com.rockwellcollins.atc.agree.validation.AgreeType.ERROR;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.INT;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.REAL;
 
-import java.rmi.UnexpectedException;
+// import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,17 +18,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
+//import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
+//import org.eclipse.emf.ecore.resource.Resource;
+//import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
+//import org.eclipse.xtext.resource.IEObjectDescription;
+//import org.eclipse.xtext.resource.IResourceDescription;
+//import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
-import org.osate.aadl2.Aadl2Package;
+//import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
@@ -38,7 +38,7 @@ import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierType;
-import org.osate.aadl2.ClassifierValue;
+//import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -50,23 +50,23 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.EnumerationLiteral;
+//import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
-import org.osate.aadl2.ListValue;
+//import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
-import org.osate.aadl2.PropertyExpression;
+//import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
-import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
+//import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.annexsupport.AnnexUtil;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
-import org.osate.xtext.aadl2.properties.util.PropertyUtils;
+//import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
+//import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
-import com.google.inject.Inject;
+//import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
@@ -76,7 +76,6 @@ import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
-import com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
@@ -110,7 +109,7 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
-import com.rockwellcollins.atc.agree.agree.PatternStatement;
+//import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -133,7 +132,6 @@ import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
-import com.rockwellcollins.atc.agree.agree.UnaryNonLinearExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
 import com.rockwellcollins.atc.agree.agree.WheneverBecomesTrueStatement;
@@ -1967,7 +1965,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		} else {
 			if (fn instanceof LibraryFnDefExpr) {
-				error(fnCall, "Library functions cannot be called from the logic");
+				if (fn.getElementRoot().getName().equalsIgnoreCase("dreal")) {
+					warning(fnCall, "dReal library functions require the use of the dReal solver");
+				}
+				else {
+					error(fnCall, "Library functions cannot be called from the logic");
+				}
 			}
 		}
 		checkInputsVsActuals(fnCall);
@@ -2050,7 +2053,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return getAgreeType(expr.getB());
 	}
 
-	@Check(CheckType.FAST)
+/*	@Check(CheckType.FAST)
 	public void checkUnaryNonLinearExpr(UnaryNonLinearExpr expr) {
 		AgreeType typeSub = getAgreeType(expr.getExpr());
 		String op = expr.getOp();
@@ -2080,7 +2083,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 					+ "' but must be of " + "type 'real'");
 		}
 	}
-	
+*/	
 	@Check(CheckType.FAST)
 	public void checkBinaryExpr(BinaryExpr binExpr) {
 		AgreeType typeLeft = getAgreeType(binExpr.getLeft());
@@ -2260,7 +2263,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	// TODO: Don't we need more validation here? What if the Id of the IdExpr
-
+/*
 	private void checkScope(Expr expr, NamedElement id) {
 		if (hasCallDefParent(expr)) {
 			if (!hasCallDefParent(id) && !(id instanceof ConstStatement)) {
@@ -2270,7 +2273,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 	}
-
+*/
 	public static NamedElement getFinalNestId(NestedDotID dotId) {
 		while (dotId.getSub() != null) {
 			dotId = dotId.getSub();
@@ -2631,10 +2634,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				  expr instanceof TimeRiseExpr ||
 				  expr instanceof TimeFallExpr){
 			return REAL;
-		} else if (expr instanceof UnaryNonLinearExpr || 
+		} /* else if (expr instanceof UnaryNonLinearExpr || 
 				   expr instanceof BinaryNonLinearExpr) {
 			return REAL;
-		}
+		} */
 
 		return ERROR;
 	}

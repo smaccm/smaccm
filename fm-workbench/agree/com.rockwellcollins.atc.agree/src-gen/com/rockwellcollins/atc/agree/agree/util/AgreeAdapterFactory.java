@@ -436,16 +436,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createTimeExprAdapter();
       }
       @Override
-      public Adapter caseBinaryNonLinearExpr(BinaryNonLinearExpr object)
-      {
-        return createBinaryNonLinearExprAdapter();
-      }
-      @Override
-      public Adapter caseUnaryNonLinearExpr(UnaryNonLinearExpr object)
-      {
-        return createUnaryNonLinearExprAdapter();
-      }
-      @Override
       public Adapter caseIntLitExpr(IntLitExpr object)
       {
         return createIntLitExprAdapter();
@@ -1623,36 +1613,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createTimeExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr <em>Binary Non Linear Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr
-   * @generated
-   */
-  public Adapter createBinaryNonLinearExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.UnaryNonLinearExpr <em>Unary Non Linear Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.UnaryNonLinearExpr
-   * @generated
-   */
-  public Adapter createUnaryNonLinearExprAdapter()
   {
     return null;
   }
