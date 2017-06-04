@@ -11,9 +11,19 @@
             priority="100">
       </engineType>
       <engineType
+            factory="edu.uah.rsesc.aadlsimulator.agree.engine.AGREEMonolithicInductiveSimulationEngineFactory"
+            id="edu.uah.rsesc.aadlsimulator.agree.engine.monolithicInductive"
+            name="AGREE Simulation Engine - Monolithic Inductive">
+      </engineType>
+      <engineType
             factory="edu.uah.rsesc.aadlsimulator.agree.engine.AGREESingleLayerSimulationEngineFactory"
             id="edu.uah.rsesc.aadlsimulator.agree.engine.singleLayer"
             name="AGREE Simulation Engine - Single Layer">
+      </engineType>
+      <engineType
+            factory="edu.uah.rsesc.aadlsimulator.agree.engine.AGREESingleLayerInductiveSimulationEngineFactory"
+            id="edu.uah.rsesc.aadlsimulator.agree.engine.singleLayerInductive"
+            name="AGREE Simulation Engine - Single Layer Inductive">
       </engineType>
    </extension>
    <extension

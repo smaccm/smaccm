@@ -20,8 +20,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 */
 package edu.uah.rsesc.aadlsimulator;
 
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 
 public interface SimulationEngineFactory {
+	public boolean isCompatible(ComponentImplementation ci);
 	public SimulationEngine create(SystemInstance systemInstance, ExceptionHandler exceptionHandler);
 }

@@ -22,6 +22,7 @@ package edu.uah.rsesc.aadlsimulator.services;
 
 import java.util.Collection;
 
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 
 import edu.uah.rsesc.aadlsimulator.ExceptionHandler;
@@ -34,7 +35,7 @@ public interface SimulationService {
 	 */
 	ExceptionHandler getExceptionHandler();
 	
-	Collection<EngineType> getEngineTypes();
+	Collection<? extends EngineType> getEngineTypes();
 	
 	/**
 	 * Finds an engine type with the specified id. Throws an exception if the engine type can not be retrieved.
@@ -44,10 +45,10 @@ public interface SimulationService {
 	EngineType getEngineTypeById(String id);
 	
 	/**
-	 * Either returns an engine type or throws an exception if there are no simulation engine types available.
+	 * Returns the first compatible engine type for a component implementation or null if a compatible simulation engine is not available.
 	 * @return
 	 */
-	EngineType getDefaultEngineType();
+	EngineType getCompatibleEngineType(final ComponentImplementation ci);
 	
 	void addSimulationEngineChangeListener(final SimulationEngineChangeListener listener);
 	void removeSimulationEngineChangeListener(final SimulationEngineChangeListener listener);

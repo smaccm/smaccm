@@ -316,6 +316,7 @@ public class AgreeMenuListener implements IMenuListener {
 
     private void addViewCounterexampleMenu(IMenuManager manager, AnalysisResult result) {
         final List<Counterexample> cexs = getCounterexamples(result);
+        final Property property = getProperty(result);
         CexExtractorRegistry cexReg =
                 (CexExtractorRegistry) ExtensionRegistry.getRegistry(ExtensionRegistry.CEX_EXTRACTOR_EXT_ID);
         List<CexExtractor> extractors = cexReg.getCexExtractors();
@@ -366,14 +367,14 @@ public class AgreeMenuListener implements IMenuListener {
                 });
 
                 // send counterexamples to external plugins
-                EObject property = refMap.get(result.getName());
+                EObject agreeProperty = refMap.get(result.getName());
                 ComponentImplementation compImpl = linker.getComponent(result.getParent());
 
                 for (CexExtractor ex : extractors) {
                     sub.add(new Action(ex.getDisplayText()) {
                         @Override
                         public void run() {
-                            ex.receiveCex(compImpl, property, cex, refMap);
+                            ex.receiveCex(compImpl, property, agreeProperty, cex, refMap);
                         }
                     });
                 }
@@ -433,6 +434,17 @@ public class AgreeMenuListener implements IMenuListener {
                 return Collections.singletonList(((InvalidProperty) prop).getCounterexample());
             }
 
+        }
+
+        return null;
+    }
+    
+    private static Property getProperty(AnalysisResult result) {
+        if (result instanceof PropertyResult) {
+            return ((PropertyResult) result).getProperty();
+        } else if (result instanceof JRealizabilityResult) {
+            PropertyResult propResult = ((JRealizabilityResult) result).getPropertyResult();
+            return propResult.getProperty();
         }
 
         return null;

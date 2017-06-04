@@ -45,7 +45,6 @@ public class CreateSimulationGuarantee {
 	// the set of support from being generated when using yices.
 	public final static String SIMULATION_ASSERTIONS_ID = "__SIM_ASSERTIONS";
 	public final static String SIMULATION_GUARANTEE_ID = "__SIM_GUARANTEE";
-	private final static String dummySignalPrefix = "__SIM_DUMMY_";
 	
 	private final NodeBuilder nodeBuilder;
 	private final SimulationProgram transformedProgram;
@@ -75,9 +74,9 @@ public class CreateSimulationGuarantee {
 		// Create a property expression that ensures that variables are made available to the simulator
 		int simGuaranteePartNumber = 0;
 		simGuaranteePartNumber = createGuaranteePartExpression(simGuaranteePartNumber, new IdExpr(SIMULATION_ASSERTIONS_ID), nodeBuilder);
-		simGuaranteePartNumber = addDummyInputs(simGuaranteePartNumber,node.locals);
-		simGuaranteePartNumber = addDummyInputs(simGuaranteePartNumber,node.inputs);
-		simGuaranteePartNumber = addDummyInputs(simGuaranteePartNumber, node.outputs);
+		simGuaranteePartNumber = addDummyGuaranteeExpressions(simGuaranteePartNumber, node.locals);
+		simGuaranteePartNumber = addDummyGuaranteeExpressions(simGuaranteePartNumber, node.inputs);
+		simGuaranteePartNumber = addDummyGuaranteeExpressions(simGuaranteePartNumber, node.outputs);
 		final Expr guaranteeExpr = new UnaryExpr(UnaryOp.NOT, new IdExpr(buildSimGuaranteeId(simGuaranteePartNumber-1))); // Negate the expression so that the property is false when expression is false with the previously built expression is true.
 
 		// Create the guarantee property
@@ -106,17 +105,17 @@ public class CreateSimulationGuarantee {
 		return transformedProgram;
 	}
 	
-	private int addDummyInputs(final int guaranteePartNum, final Collection<VarDecl> varDecls) {
+	/**
+	 * Adds expressions that guarantee the variable declarations equal themselves. This is needed to ensure that JKind provies the values in the counterexample.
+	 * @param guaranteePartNum
+	 * @param varDecls
+	 * @return
+	 */
+	private int addDummyGuaranteeExpressions(final int guaranteePartNum, final Collection<VarDecl> varDecls) {
 		int nextGuaranteeNum = guaranteePartNum;
 		for(final VarDecl varDecl : varDecls) {			
 			final String prevExprId = buildSimGuaranteeId(nextGuaranteeNum-1);
-
-			// Create dummy input
-			final String dummySignalId = dummySignalPrefix + varDecl.id;
-			nodeBuilder.addInput(new VarDecl(dummySignalId, varDecl.type));
-			
-			// Update guarantee expression
-			nextGuaranteeNum = createGuaranteePartExpression(nextGuaranteeNum, new BinaryExpr(new IdExpr(prevExprId), BinaryOp.AND, new BinaryExpr(new IdExpr(varDecl.id), BinaryOp.EQUAL, new IdExpr(dummySignalId))), nodeBuilder);
+			nextGuaranteeNum = createGuaranteePartExpression(nextGuaranteeNum, new BinaryExpr(new IdExpr(prevExprId), BinaryOp.AND, new BinaryExpr(new IdExpr(varDecl.id), BinaryOp.EQUAL, new IdExpr(varDecl.id))), nodeBuilder);				
 		}
 		
 		return nextGuaranteeNum;

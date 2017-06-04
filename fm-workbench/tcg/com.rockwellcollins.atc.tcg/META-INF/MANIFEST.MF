@@ -21,3 +21,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Rockwell Collins
 Comment: Import-Package: edu.uah.rsesc.aadlsimulator.agree.ext
+Export-Package: com.rockwellcollins.atc.tcg.extensions

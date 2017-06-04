@@ -22,6 +22,7 @@ package edu.uah.rsesc.aadlsimulator.agree.engine;
 
 import java.util.Objects;
 
+import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.annexsupport.AnnexUtil;
@@ -38,13 +39,19 @@ import edu.uah.rsesc.aadlsimulator.agree.sim.Simulation;
 import edu.uah.rsesc.aadlsimulator.agree.transformation.AgreeProgramToSimulationProgram;
 
 class AGREESimulationEngineFactoryHelper {
+	public static boolean isCompatible(final ComponentImplementation ci) {
+		// Check that the component type contains an AGREE annex subclause
+		final ComponentType componentType = ci.getType();
+		return AnnexUtil.getAllAnnexSubclauses(componentType, AgreePackage.eINSTANCE.getAgreeContractSubclause()).size() > 0;
+	}
+	
 	public static SimulationEngine createSimulationEngine(final SystemInstance systemInstance, final ExceptionHandler exceptionHandler, final SimulationProgramType type) {
 		Objects.requireNonNull(systemInstance, "systemInstance must not be null");
 		Objects.requireNonNull(exceptionHandler, "exceptionHandler must not be null");
 		
-		// Check that the component type contains an AGREE annex subclause
-		final ComponentType componentType = systemInstance.getComponentClassifier().getType();
-		if(AnnexUtil.getAllAnnexSubclauses(componentType, AgreePackage.eINSTANCE.getAgreeContractSubclause()).size() == 0) {
+		// Check that the component type is compatible
+		if(!isCompatible(systemInstance.getComponentImplementation())) {
+			final ComponentType componentType = systemInstance.getComponentClassifier().getType();
 			throw new RuntimeException(componentType.getName() + " does not contain an AGREE annex subclause.");
 		}
 		

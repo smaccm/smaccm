@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis.extentions;
 import java.util.Map;
 
 import jkind.results.Counterexample;
+import jkind.results.Property;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
@@ -20,12 +21,12 @@ public class CexExtractorProxy extends ExtensionProxy implements CexExtractor {
     }
 
     @Override
-    public void receiveCex(ComponentImplementation compImpl, EObject property, Counterexample cex,
+    public void receiveCex(ComponentImplementation compImpl, Property property, EObject agreeProperty, Counterexample cex,
             Map<String, EObject> refMap) {
         CexExtractor extractor = getCexExtractor();
 
         if (extractor != null) {
-            extractor.receiveCex(compImpl, property, cex, refMap);
+            extractor.receiveCex(compImpl, property, agreeProperty, cex, refMap);
         }
     }
 
