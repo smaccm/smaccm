@@ -116,6 +116,11 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 			// Get Agree program
 			AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, false);
+			if(agreeProgram.containsRealTimePatterns){
+				throw new AgreeException("'" + sysType.getName() + "' system type contains AGREE Real Time Patterns."
+						+ " Export of AGREE Real Time Patterns NOT Supported - they are considered scheduling properties"
+						+ " of components and can be decomposed further.");
+			}
 
 			// Translate Agree Node to Lustre Node with pre-statement flatten, helper nodes inlined,
 			// and variable declarations sorted so they are declared before use
