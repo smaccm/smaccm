@@ -158,7 +158,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		browseOutputButton.addListener(SWT.Selection, new OutputDirChooserListner());
 
 		Label implMdlLabel = new Label(container, SWT.NONE);
-		implMdlLabel.setText("Implementation Model:");
+		implMdlLabel.setText("Implementation Model Path:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 200;
 		implMdlLabel.setLayoutData(gridData);
@@ -189,17 +189,21 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		gridData.widthHint = 200;
 		verifyMdlLabel.setLayoutData(gridData);
 
-		verifyMdlText = new Text(container, SWT.BORDER);
+		verifyMdlText = new Text(container, SWT.SINGLE|SWT.BORDER);
 		verifyMdlText.setText(savedInfo.verifyMdlName);
-		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gridData.horizontalSpan = 2;
+		
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalIndent = 10;
 		verifyMdlText.setLayoutData(gridData);
-		verifyMdlText.addModifyListener(e -> validate());
+		verifyMdlText.addModifyListener(e -> validate());		
 
 		updatedTextError = new ControlDecoration(verifyMdlText, SWT.TOP | SWT.LEFT);
 		updatedTextError.setImage(errorImage);
 		updatedTextError.hide();
+		
+		//end of row padding
+		new Label(container, SWT.NULL);
 
 		Label subsystemLabel = new Label(container, SWT.NONE);
 		subsystemLabel.setText("Subsystem to Verify:");
@@ -207,13 +211,17 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		gridData.widthHint = 150;
 		subsystemLabel.setLayoutData(gridData);
 
-		subsystemText = new Text(container, SWT.BORDER);
-		subsystemText.setText(savedInfo.subsystemName);
-		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gridData.horizontalSpan = 2;
+		subsystemText = new Text(container, SWT.SINGLE|SWT.BORDER);
+		subsystemText.setText(savedInfo.subsystemName);	
+		
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalIndent = 10;
 		subsystemText.setLayoutData(gridData);
-		subsystemText.addModifyListener(e -> validate());
+		subsystemText.addModifyListener(e -> validate());			
+
+		//end of row padding
+		new Label(container, SWT.NULL);
 
 		return container;
 	}
