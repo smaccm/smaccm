@@ -3,12 +3,10 @@ package com.rockwellcollins.atc.agree.codegen.handlers;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.Map.Entry;
 
@@ -106,7 +104,7 @@ public class MdlScriptCreator extends ScriptCreator{
 		writeline("% 'Output Directory'");
 		writeline("dir_path = "+"'"+outputDir+"';");		
 		writeline("% 'Model to Insert Observer'");
-		writeline("implMdlPathOrName = '"+implMdl+"';");
+		writeline("implMdlPath = '"+implMdl+"';");
 		writeline("% 'Subsystem to verify'");
 		writeline("subsysName = "+"'"+subSysName+"';");
 		newline();
@@ -196,8 +194,7 @@ public class MdlScriptCreator extends ScriptCreator{
 		writeline("%% Initialize varables based on general settings, not set by the exporter script");
 		newline();
 		writeline("% these are computed from variables above");	
-		writeline("[~,implMdlNameNoExtension,~] = fileparts(implMdlPathOrName);");
-		writeline("implMdlPath = fullfile(dir_path,implMdlNameNoExtension);");	
+		writeline("[~,implMdlNameNoExtension,~] = fileparts(implMdlPath);");
 		writeline("[~,verifMdlNameNoExtension,~] = fileparts('" + verifMdlName + "');");
 	    
 		InputStream stream = getClass().getResourceAsStream("/resources/FixedScript.txt");
