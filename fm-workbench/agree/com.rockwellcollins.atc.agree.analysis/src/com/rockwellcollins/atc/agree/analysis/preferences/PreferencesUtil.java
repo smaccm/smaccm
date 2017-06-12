@@ -32,6 +32,14 @@ public class PreferencesUtil {
         return api;
     }
 
+    public static SolverOption getSolverOption() {
+        IPreferenceStore prefs = getPreferenceStore();
+        String solverString =
+                prefs.getString(PreferenceConstants.PREF_SOLVER).toUpperCase().replaceAll(" ", "");
+        SolverOption solver = SolverOption.valueOf(solverString);
+        return solver;
+    }
+    
     private static IPreferenceStore getPreferenceStore() {
         return Activator.getDefault().getPreferenceStore();
     }

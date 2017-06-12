@@ -238,15 +238,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/argExpr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//TimeExpr"/>
-    <genClasses ecoreClass="Agree.ecore#//BinaryNonLinearExpr">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//BinaryNonLinearExpr/op"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryNonLinearExpr/left"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryNonLinearExpr/right"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//UnaryNonLinearExpr">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//UnaryNonLinearExpr/op"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//UnaryNonLinearExpr/expr"/>
-    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//IntLitExpr">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//IntLitExpr/val"/>
     </genClasses>
@@ -291,6 +282,15 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/argExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//BinaryNonLinearExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//BinaryNonLinearExpr/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryNonLinearExpr/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryNonLinearExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//UnaryNonLinearExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//UnaryNonLinearExpr/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//UnaryNonLinearExpr/expr"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

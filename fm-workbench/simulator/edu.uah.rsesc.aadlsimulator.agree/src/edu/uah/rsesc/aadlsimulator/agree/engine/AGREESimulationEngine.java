@@ -57,6 +57,10 @@ public class AGREESimulationEngine implements SimulationEngine {
 	public static final String ENGINE_TYPE_ID_MONOLITHIC = "edu.uah.rsesc.aadlsimulator.agree.engine.monolithic";
 	public static final String ENGINE_TYPE_ID_SINGLE_LAYER = "edu.uah.rsesc.aadlsimulator.agree.engine.singleLayer";
 	
+	// The following variants are intended to allow simulating inductive counterexamples. They assume that the first simulation step is not the initial state.
+	public static final String ENGINE_TYPE_ID_MONOLITHIC_INDUCTIVE = "edu.uah.rsesc.aadlsimulator.agree.engine.monolithicInductive";
+	public static final String ENGINE_TYPE_ID_SINGLE_LAYER_INDUCTIVE = "edu.uah.rsesc.aadlsimulator.agree.engine.singleLayerInductive";
+	
 	// Commands
 	private static interface Command {		
 	}

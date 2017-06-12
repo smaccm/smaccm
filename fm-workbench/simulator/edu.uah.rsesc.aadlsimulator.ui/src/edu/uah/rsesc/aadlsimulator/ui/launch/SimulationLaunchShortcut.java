@@ -30,6 +30,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -49,6 +50,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.osate.aadl2.ComponentImplementation;
@@ -57,6 +59,8 @@ import org.osgi.framework.FrameworkUtil;
 
 import edu.uah.rsesc.aadlsimulator.launch.SimulationLaunchConfigurationAttributes;
 import edu.uah.rsesc.aadlsimulator.launch.SimulationLaunchConfigurationTypeConstants;
+import edu.uah.rsesc.aadlsimulator.services.EngineType;
+import edu.uah.rsesc.aadlsimulator.services.SimulationService;
 import edu.uah.rsesc.aadlsimulator.ui.GraphicalEditorSelectionHelper;
 import edu.uah.rsesc.aadlsimulator.ui.handlers.StopHandler;
 
@@ -121,7 +125,17 @@ public class SimulationLaunchShortcut implements ILaunchShortcut2 {
 		return componentImplementation;
 	}
 	
-	public ILaunch launch(final ComponentImplementation componentImplementation, final String engineTypeId, final String mode) throws CoreException {
+	public ILaunch launch(final ComponentImplementation componentImplementation, String engineTypeId, final String mode) throws CoreException {
+		if(engineTypeId == null) {
+			final SimulationService simulationService = Objects.requireNonNull((SimulationService)PlatformUI.getWorkbench().getService(SimulationService.class), "Unable to retrieve simulation service");
+			final EngineType engineType = simulationService.getCompatibleEngineType(componentImplementation);
+			if(engineType == null ){
+				StatusManager.getManager().handle(new Status(IStatus.ERROR, FrameworkUtil.getBundle(getClass()).getSymbolicName(), "Unable to find compatible simulation engine for " + componentImplementation.getQualifiedName()), StatusManager.BLOCK);
+				return null;
+			}
+			engineTypeId = engineType.getId();
+		}
+		
 		// Stop the current simulation
 		new StopHandler().execute();
 		

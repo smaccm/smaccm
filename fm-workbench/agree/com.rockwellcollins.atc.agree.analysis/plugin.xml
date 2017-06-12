@@ -22,6 +22,11 @@
               icon="icons/counterexample.png"
               id="com.rockwellcollins.atc.agree.analysis.views.agreeCounterexampleView"
               name="AGREE Counterexample"/>
+        <view
+              category="com.rockwellcollins.atc.agree.analysis"
+              class="com.rockwellcollins.atc.agree.analysis.views.AgreeTraceabilityMatrixView"
+              id="com.rockwellcollins.atc.agree.analysis.views.AgreeTraceabilityMatrixView"
+              name="AGREE Traceability Matrix"/>
    </extension>
   
    <extension point="org.eclipse.ui.commands">

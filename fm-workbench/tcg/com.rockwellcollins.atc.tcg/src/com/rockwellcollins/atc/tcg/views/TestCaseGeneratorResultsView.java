@@ -21,36 +21,38 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 
 package com.rockwellcollins.atc.tcg.views;
 
-import jkind.api.results.JKindResult;
-import jkind.api.ui.results.AnalysisResultTable;
+import jkind.api.results.AnalysisResult;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
+
 public class TestCaseGeneratorResultsView extends ViewPart {
 	public static final String ID = "tcg.views.testCaseGeneratorResultsView";
-	private TestCaseGeneratorResultTable table;
+	private TcgResultTree tree;
     private TestCaseGeneratorMenuListener menuListener;
 
 	@Override
 	public void createPartControl(Composite parent) {
-		table = new TestCaseGeneratorResultTable(parent);
+		tree = new TcgResultTree(parent);
+        tree.getViewer().setAutoExpandLevel(2);
 
-        menuListener = new TestCaseGeneratorMenuListener(getViewSite().getWorkbenchWindow(), table);
+        menuListener = new TestCaseGeneratorMenuListener(getViewSite().getWorkbenchWindow(), tree);
         MenuManager manager = new MenuManager();
         manager.setRemoveAllWhenShown(true);
         manager.addMenuListener(menuListener);
-        table.getControl().setMenu(manager.createContextMenu(table.getViewer().getTable()));
+        tree.getControl().setMenu(manager.createContextMenu(tree.getViewer().getTree()));
 	}
 
 	@Override
 	public void setFocus() {
-		table.getControl().setFocus();
+		tree.getControl().setFocus();
 	}
 
-	public void setInput(JKindResult result, final TestSuiteLinker linker) {
-		table.setInput(result);
+	public void setInput(AnalysisResult result, final AgreeResultsLinker linker) {
+		tree.setInput(result);
         menuListener.setLinker(linker);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jkind.api.results.AnalysisResult;
+import jkind.api.results.Renaming;
 import jkind.results.layout.Layout;
 import jkind.lustre.Program;
 
@@ -20,13 +21,13 @@ public class AgreeResultsLinker {
     private Map<AnalysisResult, Layout> layouts = new HashMap<>();
     private Map<AnalysisResult, Map<String, EObject>> referenceMaps = new HashMap<>();
     private Map<AnalysisResult, String> logs = new HashMap<>();
-    private Map<AnalysisResult, AgreeRenaming> renamingMap = new HashMap<>();
+    private Map<AnalysisResult, Renaming> renamingMap = new HashMap<>();
 
-    public void setRenaming(AnalysisResult result, AgreeRenaming renaming){
+    public void setRenaming(AnalysisResult result, Renaming renaming){
         this.renamingMap.put(result, renaming);
     }
     
-    public AgreeRenaming getRenaming(AnalysisResult result){
+    public Renaming getRenaming(AnalysisResult result){
         return this.renamingMap.get(result);
     }
     

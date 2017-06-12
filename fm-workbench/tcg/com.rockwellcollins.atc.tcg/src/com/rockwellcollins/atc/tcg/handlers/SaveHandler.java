@@ -22,8 +22,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package com.rockwellcollins.atc.tcg.handlers;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
+import jkind.api.results.AnalysisResult;
 import jkind.lustre.Type;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -37,6 +39,7 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 
 import com.rockwellcollins.atc.agree.analysis.Activator;
+import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.tcg.suite.TestSuite;
 import com.rockwellcollins.atc.tcg.util.TcgUtils;
 import com.rockwellcollins.atc.tcg.views.TestSuiteLinker;
@@ -99,12 +102,13 @@ public class SaveHandler extends NoElementHandler {
 						if (filePath != null) {
 							startingFilePath = filePath;
 							System.out.println("filePath: " + filePath);
-							TestSuiteLinker linker = view.getMenuListener().getLinker();
-							List<Type> types = linker.getAgreeProgram().globalTypes;
+							TestSuiteLinker linker = (TestSuiteLinker)view.getMenuListener().getLinker();
+							AnalysisResult result = view.getMenuListener().getAnalysisResult();
+							List<Type> types = linker.getAgreeProgram(result).globalTypes;
 							try {
 								TcgXmlWriter tcgXmlWriter = new TcgXmlWriter(filePath, types, false);
 								tcgXmlWriter.writeSuite(suite);
-								System.out.println("Test suite written to " + filePath);
+								System.out.println("This would be where test suite written to " + filePath);
 							}
 							catch (FileNotFoundException fnfe){
 								fnfe.printStackTrace();

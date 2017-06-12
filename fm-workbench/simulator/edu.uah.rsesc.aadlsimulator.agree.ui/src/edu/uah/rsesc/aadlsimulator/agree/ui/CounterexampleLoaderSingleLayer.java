@@ -23,6 +23,7 @@ package edu.uah.rsesc.aadlsimulator.agree.ui;
 import java.util.Map;
 
 import jkind.results.Counterexample;
+import jkind.results.Property;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentImplementation;
@@ -33,8 +34,8 @@ import edu.uah.rsesc.aadlsimulator.agree.ui.CounterexampleLoaderHelper.Mode;
 
 public class CounterexampleLoaderSingleLayer implements CexExtractor {
 	@Override
-	public void receiveCex(final ComponentImplementation compImpl, final EObject property, final Counterexample cex, final Map<String, EObject> refMap) {
-		new CounterexampleLoaderHelper().receiveCex(compImpl, property, cex, refMap, Mode.SINGLE_LAYER);
+	public void receiveCex(final ComponentImplementation compImpl, Property property, EObject agreeProperty, final Counterexample cex, final Map<String, EObject> refMap) {
+		new CounterexampleLoaderHelper().receiveCex(compImpl, property, agreeProperty, cex, refMap, Mode.SINGLE_LAYER);
 	}
 
 	@Override

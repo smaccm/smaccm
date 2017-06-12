@@ -1,0 +1,20 @@
+package DReal
+public
+annex agree {**
+  external exp (x : real) : real;
+  external log (x : real) : real;
+  external sqrt (x : real) : real;
+  external sin (x : real) : real;
+  external cos (x : real) : real;
+  external tan (x : real) : real;
+  external asin (x : real) : real;
+  external acos (x : real) : real;
+  external atan (x : real) : real;
+  external sinh (x : real) : real;
+  external cosh (x : real) : real;
+  external tanh (x : real) : real;
+  external abs (x : real) : real;
+  external pow (x : real, y: real) : real;
+  external arctan2 (x : real, y: real) : real;
+**};
+end DReal;

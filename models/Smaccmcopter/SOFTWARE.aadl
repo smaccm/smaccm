@@ -62,8 +62,13 @@ public
       SMACCM::OS => "Breakaway-RTOS";
       
     annex resolute {** 
+<<<<<<< HEAD
+    	prove only_receive_gs(this.MC) 
+    	prove memory_safe(this) 
+=======
     	prove only_receive_gs(this.MC)  
     	prove execute_completeness(this.DC)
+>>>>>>> 5f7c1478c423274bcec3659ec37f2dd6bf06d304
     	--prove schedulable(this)
     **};
   end Main_Loop.Impl;
