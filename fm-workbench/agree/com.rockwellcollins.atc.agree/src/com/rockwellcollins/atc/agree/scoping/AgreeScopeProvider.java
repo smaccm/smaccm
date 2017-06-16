@@ -227,11 +227,6 @@ public class AgreeScopeProvider extends
     }
     
     IScope scope_NamedElement(Arg ctx, EReference ref){
-    //	
-    //	EObject container = ctx.eContainer();
-    //	while(!(container instanceof ComponentClassi)
-    //	
-     //   return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
     	return IScope.NULLSCOPE;
     }
     
@@ -289,7 +284,9 @@ public class AgreeScopeProvider extends
             		NamedElement namedEl = elID.getBase();
             		
             		if(namedEl instanceof ComponentImplementation){
-            			result.addAll(((ComponentImplementation) namedEl).getAllSubcomponents());
+            			ComponentImplementation componentImplementation = (ComponentImplementation) namedEl;
+            			EList<Subcomponent> subs = componentImplementation.getAllSubcomponents();
+						result.addAll(subs);
             		}else if(namedEl instanceof RecordDefExpr){
             			result.addAll(((RecordDefExpr) namedEl).getArgs());
             		}
@@ -425,6 +422,7 @@ public class AgreeScopeProvider extends
 
         return result;
     }
+
 
 //	private void addEnums(EObject container, Set<Element> result, EReference ref) {
 //		Type type = null;

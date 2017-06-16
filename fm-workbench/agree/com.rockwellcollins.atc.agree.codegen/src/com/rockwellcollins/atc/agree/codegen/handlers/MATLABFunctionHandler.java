@@ -1,6 +1,7 @@
 package com.rockwellcollins.atc.agree.codegen.handlers;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
@@ -116,6 +117,11 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 			// Get Agree program
 			AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, false);
+			if(agreeProgram.containsRealTimePatterns){
+				throw new AgreeException("'" + sysType.getName() + "' system type contains AGREE Real Time Patterns."
+						+ " Export of AGREE Real Time Patterns NOT Supported - they are considered scheduling properties"
+						+ " of components and can be decomposed further.");
+			}
 
 			// Translate Agree Node to Lustre Node with pre-statement flatten, helper nodes inlined,
 			// and variable declarations sorted so they are declared before use
@@ -159,11 +165,14 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 				String implMdlScriptName = "generate_"+ subsysName+ ".m";
 				
-				Path implMdlScriptPath = Paths.get(dirStr,
-						implMdlScriptName);
-				
-				writeToFile(implMdlScriptPath,
-						implMdlScript.toString());					
+				//generate the script to create the impl model file into the path specified for the model
+				File implMdlFile = new File(info.implMdlPath);
+				String implMdlDir = implMdlFile.getParent();
+				if(implMdlDir != null){
+					Path implMdlScriptPath = Paths.get(implMdlDir, implMdlScriptName);
+					writeToFile(implMdlScriptPath,
+							implMdlScript.toString());	
+				}	
 			}
 			
 			if (exportContractsPressed || genVerificationPressed || verifySubsysPressed) {

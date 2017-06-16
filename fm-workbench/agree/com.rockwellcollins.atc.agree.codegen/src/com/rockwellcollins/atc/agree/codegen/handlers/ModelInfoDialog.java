@@ -68,11 +68,14 @@ public class ModelInfoDialog extends TitleAreaDialog {
 
 	private Text implMdlText;
 	private ControlDecoration implMdlTextError;
+	private ControlDecoration implMdlTextInfo;	
 
 	private Text verifyMdlText;
-	private ControlDecoration updatedTextError;
+	private ControlDecoration verifyMdlTextError;
 
 	private Text subsystemText;
+	private ControlDecoration subsysTextError;	
+	private ControlDecoration subsysTextInfo;
 
 	private StringBuffer buffer = new StringBuffer();
 
@@ -123,9 +126,13 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 
-		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+		FieldDecoration errorFieldDecoration = FieldDecorationRegistry.getDefault()
 				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-		Image errorImage = fieldDecoration.getImage();
+		Image errorImage = errorFieldDecoration.getImage();
+		
+		FieldDecoration infoFieldDecoration = FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION);
+		Image infoImage = infoFieldDecoration.getImage();
 
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginRight = 5;
@@ -158,7 +165,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		browseOutputButton.addListener(SWT.Selection, new OutputDirChooserListner());
 
 		Label implMdlLabel = new Label(container, SWT.NONE);
-		implMdlLabel.setText("Implementation Model:");
+		implMdlLabel.setText("Implementation Model Path:");
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gridData.widthHint = 200;
 		implMdlLabel.setLayoutData(gridData);
@@ -174,6 +181,10 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		implMdlTextError = new ControlDecoration(implMdlText, SWT.TOP | SWT.LEFT);
 		implMdlTextError.setImage(errorImage);
 		implMdlTextError.hide();
+		
+		implMdlTextInfo = new ControlDecoration(implMdlText, SWT.TOP | SWT.LEFT);
+		implMdlTextInfo.setImage(infoImage);
+		implMdlTextInfo.hide();
 
 		Button browseImplButton = new Button(container, SWT.PUSH);
 		browseImplButton.setText("Browse");
@@ -189,17 +200,21 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		gridData.widthHint = 200;
 		verifyMdlLabel.setLayoutData(gridData);
 
-		verifyMdlText = new Text(container, SWT.BORDER);
+		verifyMdlText = new Text(container, SWT.SINGLE|SWT.BORDER);
 		verifyMdlText.setText(savedInfo.verifyMdlName);
-		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gridData.horizontalSpan = 2;
+		
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalIndent = 10;
 		verifyMdlText.setLayoutData(gridData);
-		verifyMdlText.addModifyListener(e -> validate());
+		verifyMdlText.addModifyListener(e -> validate());		
 
-		updatedTextError = new ControlDecoration(verifyMdlText, SWT.TOP | SWT.LEFT);
-		updatedTextError.setImage(errorImage);
-		updatedTextError.hide();
+		verifyMdlTextError = new ControlDecoration(verifyMdlText, SWT.TOP | SWT.LEFT);
+		verifyMdlTextError.setImage(errorImage);
+		verifyMdlTextError.hide();
+		
+		//end of row padding
+		new Label(container, SWT.NULL);
 
 		Label subsystemLabel = new Label(container, SWT.NONE);
 		subsystemLabel.setText("Subsystem to Verify:");
@@ -207,13 +222,25 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		gridData.widthHint = 150;
 		subsystemLabel.setLayoutData(gridData);
 
-		subsystemText = new Text(container, SWT.BORDER);
-		subsystemText.setText(savedInfo.subsystemName);
-		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gridData.horizontalSpan = 2;
+		subsystemText = new Text(container, SWT.SINGLE|SWT.BORDER);
+		subsystemText.setText(savedInfo.subsystemName);	
+		
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalIndent = 10;
 		subsystemText.setLayoutData(gridData);
-		subsystemText.addModifyListener(e -> validate());
+		subsystemText.addModifyListener(e -> validate());	
+		
+		subsysTextError = new ControlDecoration(subsystemText, SWT.TOP | SWT.LEFT);
+		subsysTextError.setImage(errorImage);
+		subsysTextError.hide();
+		
+		subsysTextInfo = new ControlDecoration(subsystemText, SWT.TOP | SWT.LEFT);
+		subsysTextInfo.setImage(infoImage);
+		subsysTextInfo.hide();
+		
+		//end of row padding
+		new Label(container, SWT.NULL);
 
 		return container;
 	}
@@ -242,9 +269,12 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		boolean outputDirError = false;
 		boolean implMdlError = false;
 		boolean implMdlEmpty = true;
+		boolean implMdlInfo = false;
 		boolean newImplMdl = false;
 		boolean verifyMdlError = false;
 		boolean verifyMdlEmpty = true;
+		boolean subsysError = false;
+		boolean subsysInfo = false;
 		buffer.setLength(0);
 
 		if (outputText.getText().equals("")) {
@@ -261,23 +291,63 @@ public class ModelInfoDialog extends TitleAreaDialog {
 
 		// not flagging an error if the implMdlText is empty
 		String implMdlPathStr = implMdlText.getText();
+	
 		if (!implMdlPathStr.equals("")) {
 			implMdlEmpty = false;
-			// if the implementation file path already exists
-			// will not enable Generate Implementation button
-			if (new File(implMdlPathStr).exists()) {
+			
+			//create the file object
+			File implMdlFile = new File(implMdlPathStr);
+			
+			//if the implementation file path already exists
+			//will not enable Generate Implementation button
+			if (implMdlFile.exists()) {
 				newImplMdl = false;
+				write("Generate Implementation button enabled only when the Implementation Model does not exist");
+				newline();		
+				implMdlInfo = true;
 			}
-			// else, expect user to enter a valid model file name ends with .slx
-			// to be generated to the output directory
+			// else, expect user to enter a model path in an existing directory with
+			// a valid model file name ends with .slx
 			else {
 				newImplMdl = true;
-				if (!isFileNameValid(implMdlPathStr, true)) {
-					write("Model name must start with a letter, end with .slx, and contain letters/numbers/underscores in between");
-					newline();
+				
+				//get the directory
+				if(implMdlFile.isDirectory()){
+					//if the file path is a directory, error
 					implMdlError = true;
+					write("Impl Model Path a directory, not a valid file path");
+					newline();					
 				}
-			}
+				else{
+					//get the parent directory
+					String implMdlDirStr = implMdlFile.getParent();
+					//if the parent directory is null, error
+					if(implMdlDirStr == null){
+						implMdlError = true;
+						write("Impl Model Path needs to locate in an existing directory");
+						newline();							
+					}
+					else{
+						File implMdlDirFile = new File(implMdlDirStr);
+						//if the directory does not already exists, error					
+						if(!implMdlDirFile.exists()){
+							implMdlError = true;
+							write("Impl Model Path needs to locate in an existing directory");
+							newline();							
+						}
+						//if the directory exists, check if the file name is well formed					
+						else{
+							//get the file name
+							String implMdlName = implMdlFile.getName();
+							if (!isFileNameValid(implMdlName, true)){
+								implMdlError = true;
+								write("Model file name must start with a letter, end with .slx, and contain letters/numbers/underscores in between");
+								newline();								
+							}
+						}						
+					}
+				}
+			}			
 		}
 
 		// enable Generate Implementation button when the model files
@@ -305,13 +375,24 @@ public class ModelInfoDialog extends TitleAreaDialog {
 
 		// not flagging an error if the subsystemText is empty
 		String subsystemName = subsystemText.getText();
-		if (!subsystemName.equals("")) {
+		
+		//if subsystemName is empty while the other fields are filled correctly
+		//display a reminder message
+		if(subsystemName.equals("")){
+			if (!outputDirError && !implMdlEmpty && !implMdlError && !newImplMdl && !verifyMdlEmpty
+					&& !verifyMdlError) {
+				write("The subsystem name must be provided to create the verification model");
+				newline();		
+				subsysInfo = true;
+			}
+		}	
+		else{
 			if (!isFileNameValid(subsystemName, false)) {
 				write("A Subsystem name must start with a letter, and contain only letters, numbers, and underscores");
 				newline();
-				verifyMdlError = true;
+				subsysError = true;
 			} else if (!outputDirError && !implMdlEmpty && !implMdlError && !newImplMdl && !verifyMdlEmpty
-					&& !verifyMdlError) {
+					&& !verifyMdlError && !subsysError) {
 				genVerificationButtonEnabled = true;
 				verifyButtonEnabled = true;
 			}
@@ -322,10 +403,17 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		setGenVerificationEnabled(genVerificationButtonEnabled);
 		setVerifyEnabled(verifyButtonEnabled);
 
-		if (!outputDirError && !implMdlError && !verifyMdlError) {
+		if (!outputDirError && !implMdlError && !verifyMdlError && !subsysError) {
 			setErrorMessage(null);
 		} else {
 			setErrorMessage(buffer.toString());
+		}
+		
+		if(!subsysInfo && !implMdlInfo){
+			setMessage(null);
+		}
+		else{
+			setMessage(buffer.toString());
 		}
 
 		if (outputDirError)
@@ -337,9 +425,21 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		else
 			implMdlTextError.hide();
 		if (verifyMdlError)
-			updatedTextError.show();
+			verifyMdlTextError.show();
 		else
-			updatedTextError.hide();
+			verifyMdlTextError.hide();
+		if (subsysError)
+			subsysTextError.show();
+		else
+			subsysTextError.hide();	
+		if (implMdlInfo)
+			implMdlTextInfo.show();
+		else
+			implMdlTextInfo.hide();		
+		if (subsysInfo)
+			subsysTextInfo.show();
+		else
+			subsysTextInfo.hide();
 	}
 
 	protected void buttonPressed(int buttonId) {

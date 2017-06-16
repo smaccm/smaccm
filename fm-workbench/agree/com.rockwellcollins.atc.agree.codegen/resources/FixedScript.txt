@@ -146,7 +146,7 @@ for i = 1:numel(outportnames)
     lh = add_line(bdroot,SubsysPortHandles.Outport(i),RootPortHandles.Inport(1));
     
     % name the signal line
-    set_param(lh,'Name',inportnames{i})    
+    set_param(lh,'Name',outportnames{i})    
 end      
 
 %% align the port blocks to the subsystem block

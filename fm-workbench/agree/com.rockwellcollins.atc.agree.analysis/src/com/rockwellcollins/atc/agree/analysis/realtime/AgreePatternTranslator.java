@@ -59,15 +59,17 @@ public class AgreePatternTranslator {
 
 	private int patternIndex = 0;
 	public static final IdExpr timeExpr = new IdExpr("time");
+	private static boolean containsRealTimePatterns = false;
 
 	public static AgreeProgram translate(AgreeProgram program) {
 		List<Node> patternLustreNodes = new ArrayList<>();
-
+		//reset the static variable before refreshing its values in translateNode call
+		containsRealTimePatterns = false;
 		AgreeNode topNode = new AgreePatternTranslator().translateNode(program.topNode, true);
 		List<AgreeNode> agreeNodes = gatherNodes(topNode);
 		patternLustreNodes.addAll(program.globalLustreNodes);
 
-		return new AgreeProgram(agreeNodes, patternLustreNodes, program.globalTypes, topNode);
+		return new AgreeProgram(agreeNodes, patternLustreNodes, program.globalTypes, topNode, containsRealTimePatterns);
 	}
 
 	private AgreeNode translateNode(AgreeNode node, boolean isTopNode) {
@@ -81,6 +83,7 @@ public class AgreePatternTranslator {
 
 		for (AgreeStatement statement : node.assertions) {
 			if (statement instanceof AgreePattern) {
+				containsRealTimePatterns = true;
 				Expr transExpr = translatePattern((AgreePattern) statement, builder, false);
 				statement = new AgreeStatement(statement.string, transExpr, statement.reference);
 			}
@@ -90,6 +93,7 @@ public class AgreePatternTranslator {
 		builder.clearGuarantees();
 		for (AgreeStatement statement : node.guarantees) {
 			if (statement instanceof AgreePattern) {
+				containsRealTimePatterns = true;
 				Expr transExpr = translatePattern((AgreePattern) statement, builder, isTopNode);
 				statement = new AgreeStatement(statement.string, transExpr, statement.reference);
 			}
@@ -99,6 +103,7 @@ public class AgreePatternTranslator {
 		builder.clearLemmas();
 		for (AgreeStatement statement : node.lemmas) {
 			if (statement instanceof AgreePattern) {
+				containsRealTimePatterns = true;
 				Expr transExpr = translatePattern((AgreePattern) statement, builder, isTopNode);
 				statement = new AgreeStatement(statement.string, transExpr, statement.reference);
 			}
@@ -108,6 +113,7 @@ public class AgreePatternTranslator {
 		builder.clearAssumptions();
 		for (AgreeStatement statement : node.assumptions) {
 			if (statement instanceof AgreePattern) {
+				containsRealTimePatterns = true;
 				Expr transExpr = translatePattern((AgreePattern) statement, builder, !isTopNode);
 				statement = new AgreeStatement(statement.string, transExpr, statement.reference);
 			}

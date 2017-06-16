@@ -158,6 +158,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private LinearizationRewriter linearizationRewriter = new LinearizationRewriter();
 
 	public AgreeProgram getAgreeProgram(ComponentInstance compInst, boolean isMonolithic) {
+		boolean containsRTPatterns = false;
 
 		this.isMonolithic = isMonolithic;
 		globalNodes = new ArrayList<>();
@@ -175,6 +176,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		// if there are any patterns in the AgreeProgram we need to inline them
 		program = AgreePatternTranslator.translate(program);
+		containsRTPatterns = program.containsRealTimePatterns;
+			
 		program = AgreeInlineLatchedConnections.translate(program);
 		program = AgreeMakeClockedLustreNodes.translate(program);
 
@@ -187,6 +190,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			program = aa.transform(program);
 		}
 
+		program.containsRealTimePatterns(containsRTPatterns);
 		return program;
 	}
 
