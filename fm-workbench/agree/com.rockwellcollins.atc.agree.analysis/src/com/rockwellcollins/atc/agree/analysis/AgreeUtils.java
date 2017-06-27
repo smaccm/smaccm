@@ -32,6 +32,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 import org.osate.aadl2.Aadl2Factory;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BusType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -236,9 +237,12 @@ public class AgreeUtils {
     public static boolean typeContainsAgreeAnnex(Subcomponent subComp) {
         ComponentType compType = subComp.getComponentType();
         if (compType != null) {
-            if (AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause())
-                    .size() > 0) {
-                return true;
+            EList<AnnexSubclause> annexes = AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause());
+            for(AnnexSubclause annex : annexes){
+            	EObject container = getClosestContainerOfType(annex, ComponentType.class);
+                if(compType.getName().equals(((ComponentType)container).getName())){
+                	return true;
+                }
             }
         }
         return false;
@@ -246,21 +250,28 @@ public class AgreeUtils {
     
     public static boolean containsAgreeAnnex(Subcomponent subComp) {
         ComponentImplementation compImpl = subComp.getComponentImplementation();
+        ComponentType compType = compImpl.getType();
         if (compImpl != null) {
-            if (AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())
-                    .size() > 0) {
-                return true;
-            }
-        }
-
-        ComponentType compType = subComp.getComponentType();
-        if (compType != null) {
-            if (AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause())
-                    .size() > 0) {
-                return true;
+        	EList<AnnexSubclause> annexes = AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause());
+            for(AnnexSubclause annex : annexes){
+            	EObject container = getClosestContainerOfType(annex, ComponentType.class);
+                if(compType.getName().equals(((ComponentType)container).getName())){
+                	return true;
+                }
+                container = getClosestContainerOfType(annex, ComponentImplementation.class);
+                if(compImpl.getName().equals(((ComponentImplementation)container).getName())){
+                	return true;
+                }
             }
         }
         return false;
+    }
+    
+    public static EObject getClosestContainerOfType(EObject obj, Class<?> c){
+    	while(!c.isInstance(obj)){
+    		obj = obj.eContainer();
+    	}
+    	return obj;
     }
     
     public static Expr getInitValueFromType(Type type){
