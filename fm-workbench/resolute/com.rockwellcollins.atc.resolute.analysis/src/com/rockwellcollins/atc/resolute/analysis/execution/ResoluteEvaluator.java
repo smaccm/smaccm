@@ -184,6 +184,23 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			if (leftValue.isReal() && rightValue.isInt()) {
 				return new RealValue(leftValue.getReal() * (double) rightValue.getInt());
 			}
+			
+		case "^":
+			if (leftValue.isInt() && rightValue.isInt()) {
+				return new IntValue((long)Math.pow(leftValue.getInt(),  rightValue.getInt()));
+			}
+
+			if (leftValue.isReal() && rightValue.isReal()) {
+				return new RealValue(Math.pow(leftValue.getReal(),  rightValue.getReal()));
+			}
+
+			if (leftValue.isInt() && rightValue.isReal()) {
+				return new RealValue(Math.pow(leftValue.getInt(), rightValue.getReal()));
+			}
+
+			if (leftValue.isReal() && rightValue.isInt()) {
+				return new RealValue(Math.pow(leftValue.getReal(), rightValue.getInt()));
+			}
 
 		case "/":
 			if (leftValue.isInt() && rightValue.isInt()) {

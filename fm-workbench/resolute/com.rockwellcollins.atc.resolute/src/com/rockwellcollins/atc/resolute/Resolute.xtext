@@ -151,7 +151,11 @@ PlusExpr returns Expr:
 ;
 
 TimesExpr returns Expr:
-	PrefixExpr (=>({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*	
+	ExpExpr (=>({BinaryExpr.left=current} op=('*' | '/' | '%')) right=ExpExpr)*	
+;
+
+ExpExpr returns Expr:
+	PrefixExpr (=>({BinaryExpr.left=current} op=('^')) right=PrefixExpr)*
 ;
 
 PrefixExpr returns Expr:

@@ -70,7 +70,7 @@ import org.osate.aadl2.StringLiteral;
 import org.osate.xtext.aadl2.properties.serializer.PropertiesSemanticSequencer;
 
 @SuppressWarnings("all")
-public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
+public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 
 	@Inject
 	private ResoluteGrammarAccess grammarAccess;
@@ -194,7 +194,7 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 				}
 				else break;
 			case ResolutePackage.BINARY_EXPR:
-				sequence_AndExpr_ImpliesExpr_OrExpr_PlusExpr_RelationalExpr_TimesExpr(context, (BinaryExpr) semanticObject); 
+				sequence_AndExpr_ExpExpr_ImpliesExpr_OrExpr_PlusExpr_RelationalExpr_TimesExpr(context, (BinaryExpr) semanticObject); 
 				return; 
 			case ResolutePackage.BOOL_EXPR:
 				sequence_AtomicExpr(context, (BoolExpr) semanticObject); 
@@ -309,6 +309,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns BinaryExpr
 	 *     TimesExpr returns BinaryExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns BinaryExpr
+	 *     ExpExpr returns BinaryExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns BinaryExpr
 	 *     PrefixExpr returns BinaryExpr
 	 *     AtomicExpr returns BinaryExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns BinaryExpr
@@ -321,10 +323,11 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *         (left=AndExpr_BinaryExpr_1_0_0_0 (op='and' | op='andthen') right=InstanceOfExpr) | 
 	 *         (left=RelationalExpr_BinaryExpr_1_0_0_0 op=RelationalOp right=PlusExpr) | 
 	 *         (left=PlusExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=TimesExpr) | 
-	 *         (left=TimesExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='%') right=PrefixExpr)
+	 *         (left=TimesExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='%') right=ExpExpr) | 
+	 *         (left=ExpExpr_BinaryExpr_1_0_0_0 op='^' right=PrefixExpr)
 	 *     )
 	 */
-	protected void sequence_AndExpr_ImpliesExpr_OrExpr_PlusExpr_RelationalExpr_TimesExpr(ISerializationContext context, BinaryExpr semanticObject) {
+	protected void sequence_AndExpr_ExpExpr_ImpliesExpr_OrExpr_PlusExpr_RelationalExpr_TimesExpr(ISerializationContext context, BinaryExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -393,6 +396,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns BoolExpr
 	 *     TimesExpr returns BoolExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns BoolExpr
+	 *     ExpExpr returns BoolExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns BoolExpr
 	 *     PrefixExpr returns BoolExpr
 	 *     AtomicExpr returns BoolExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns BoolExpr
@@ -430,6 +435,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns BuiltInFnCallExpr
 	 *     TimesExpr returns BuiltInFnCallExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns BuiltInFnCallExpr
+	 *     ExpExpr returns BuiltInFnCallExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns BuiltInFnCallExpr
 	 *     PrefixExpr returns BuiltInFnCallExpr
 	 *     AtomicExpr returns BuiltInFnCallExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns BuiltInFnCallExpr
@@ -461,6 +468,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns FailExpr
 	 *     TimesExpr returns FailExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns FailExpr
+	 *     ExpExpr returns FailExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns FailExpr
 	 *     PrefixExpr returns FailExpr
 	 *     AtomicExpr returns FailExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns FailExpr
@@ -492,6 +501,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns FilterMapExpr
 	 *     TimesExpr returns FilterMapExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns FilterMapExpr
+	 *     ExpExpr returns FilterMapExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns FilterMapExpr
 	 *     PrefixExpr returns FilterMapExpr
 	 *     AtomicExpr returns FilterMapExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns FilterMapExpr
@@ -523,6 +534,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns FnCallExpr
 	 *     TimesExpr returns FnCallExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns FnCallExpr
+	 *     ExpExpr returns FnCallExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns FnCallExpr
 	 *     PrefixExpr returns FnCallExpr
 	 *     AtomicExpr returns FnCallExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns FnCallExpr
@@ -554,6 +567,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns IdExpr
 	 *     TimesExpr returns IdExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns IdExpr
+	 *     ExpExpr returns IdExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns IdExpr
 	 *     PrefixExpr returns IdExpr
 	 *     AtomicExpr returns IdExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns IdExpr
@@ -591,6 +606,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns IfThenElseExpr
 	 *     TimesExpr returns IfThenElseExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns IfThenElseExpr
+	 *     ExpExpr returns IfThenElseExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns IfThenElseExpr
 	 *     PrefixExpr returns IfThenElseExpr
 	 *     AtomicExpr returns IfThenElseExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns IfThenElseExpr
@@ -634,6 +651,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns IntExpr
 	 *     TimesExpr returns IntExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns IntExpr
+	 *     ExpExpr returns IntExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns IntExpr
 	 *     PrefixExpr returns IntExpr
 	 *     AtomicExpr returns IntExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns IntExpr
@@ -671,6 +690,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns LetExpr
 	 *     TimesExpr returns LetExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns LetExpr
+	 *     ExpExpr returns LetExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns LetExpr
 	 *     PrefixExpr returns LetExpr
 	 *     AtomicExpr returns LetExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns LetExpr
@@ -711,6 +732,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns QuantifiedExpr
 	 *     TimesExpr returns QuantifiedExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns QuantifiedExpr
+	 *     ExpExpr returns QuantifiedExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns QuantifiedExpr
 	 *     PrefixExpr returns QuantifiedExpr
 	 *     AtomicExpr returns QuantifiedExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns QuantifiedExpr
@@ -742,6 +765,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns RealExpr
 	 *     TimesExpr returns RealExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns RealExpr
+	 *     ExpExpr returns RealExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns RealExpr
 	 *     PrefixExpr returns RealExpr
 	 *     AtomicExpr returns RealExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns RealExpr
@@ -779,6 +804,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns SetExpr
 	 *     TimesExpr returns SetExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns SetExpr
+	 *     ExpExpr returns SetExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns SetExpr
 	 *     PrefixExpr returns SetExpr
 	 *     AtomicExpr returns SetExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns SetExpr
@@ -810,6 +837,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns StringExpr
 	 *     TimesExpr returns StringExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns StringExpr
+	 *     ExpExpr returns StringExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns StringExpr
 	 *     PrefixExpr returns StringExpr
 	 *     AtomicExpr returns StringExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns StringExpr
@@ -847,6 +876,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns ThisExpr
 	 *     TimesExpr returns ThisExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns ThisExpr
+	 *     ExpExpr returns ThisExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns ThisExpr
 	 *     PrefixExpr returns ThisExpr
 	 *     AtomicExpr returns ThisExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns ThisExpr
@@ -1104,6 +1135,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns InstanceOfExpr
 	 *     TimesExpr returns InstanceOfExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns InstanceOfExpr
+	 *     ExpExpr returns InstanceOfExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns InstanceOfExpr
 	 *     PrefixExpr returns InstanceOfExpr
 	 *     AtomicExpr returns InstanceOfExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns InstanceOfExpr
@@ -1196,6 +1229,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns CastExpr
 	 *     TimesExpr returns CastExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns CastExpr
+	 *     ExpExpr returns CastExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns CastExpr
 	 *     PrefixExpr returns CastExpr
 	 *     AtomicExpr returns CastExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns CastExpr
@@ -1236,6 +1271,8 @@ public class ResoluteSemanticSequencer extends PropertiesSemanticSequencer {
 	 *     PlusExpr.BinaryExpr_1_0_0_0 returns UnaryExpr
 	 *     TimesExpr returns UnaryExpr
 	 *     TimesExpr.BinaryExpr_1_0_0_0 returns UnaryExpr
+	 *     ExpExpr returns UnaryExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns UnaryExpr
 	 *     PrefixExpr returns UnaryExpr
 	 *     AtomicExpr returns UnaryExpr
 	 *     AtomicExpr.FilterMapExpr_11_2_0_0 returns UnaryExpr

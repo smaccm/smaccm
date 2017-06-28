@@ -10,7 +10,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * Manual modifications go to {com.rockwellcollins.atc.resolute.ui.ResoluteUiModule}
  */
 @SuppressWarnings("all")
-public abstract class AbstractResoluteUiModule extends org.eclipse.xtext.common.types.ui.DefaultCommonTypesUiModule {
+public abstract class AbstractResoluteUiModule extends org.eclipse.xtext.ui.DefaultUiModule {
 	
 	public AbstractResoluteUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
@@ -22,19 +22,24 @@ public abstract class AbstractResoluteUiModule extends org.eclipse.xtext.common.
 		return org.eclipse.xtext.ui.shared.Access.getJavaProjectsState();
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.IProposalConflictHelper> bindIProposalConflictHelper() {
 		return org.eclipse.xtext.ui.editor.contentassist.antlr.AntlrProposalConflictHelper.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public void configureHighlightingLexer(com.google.inject.Binder binder) {
-		binder.bind(org.eclipse.xtext.parser.antlr.Lexer.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.ui.LexerUIBindings.HIGHLIGHTING)).to(com.rockwellcollins.atc.resolute.parser.antlr.internal.InternalResoluteLexer.class);
+		binder.bind(org.eclipse.xtext.parser.antlr.Lexer.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.ui.LexerUIBindings.HIGHLIGHTING)).to(com.rockwellcollins.atc.resolute.parser.antlr.lexer.InternalResoluteLexer.class);
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public void configureHighlightingTokenDefProvider(com.google.inject.Binder binder) {
 		binder.bind(org.eclipse.xtext.parser.antlr.ITokenDefProvider.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.ui.LexerUIBindings.HIGHLIGHTING)).to(org.eclipse.xtext.parser.antlr.AntlrTokenDefProvider.class);
+	}
+
+	// contributed by org.eclipse.xtext.generator.exporting.QualifiedNamesFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher> bindPrefixMatcher() {
+		return org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.class;
 	}
 
 	// contributed by org.eclipse.xtext.generator.exporting.QualifiedNamesFragment
@@ -97,26 +102,6 @@ public abstract class AbstractResoluteUiModule extends org.eclipse.xtext.common.
 		return com.rockwellcollins.atc.resolute.ui.contentassist.ResoluteProposalProvider.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrUiGeneratorFragment
-	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext.Factory> bindContentAssistContext$Factory() {
-		return org.eclipse.xtext.ui.editor.contentassist.antlr.ParserBasedContentAssistContextFactory.class;
-	}
-
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrUiGeneratorFragment
-	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.antlr.IContentAssistParser> bindIContentAssistParser() {
-		return com.rockwellcollins.atc.resolute.ui.contentassist.antlr.ResoluteParser.class;
-	}
-
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrUiGeneratorFragment
-	public void configureContentAssistLexerProvider(com.google.inject.Binder binder) {
-		binder.bind(com.rockwellcollins.atc.resolute.ui.contentassist.antlr.internal.InternalResoluteLexer.class).toProvider(org.eclipse.xtext.parser.antlr.LexerProvider.create(com.rockwellcollins.atc.resolute.ui.contentassist.antlr.internal.InternalResoluteLexer.class));
-	}
-
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrUiGeneratorFragment
-	public void configureContentAssistLexer(com.google.inject.Binder binder) {
-		binder.bind(org.eclipse.xtext.ui.editor.contentassist.antlr.internal.Lexer.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.ui.LexerUIBindings.CONTENT_ASSIST)).to(com.rockwellcollins.atc.resolute.ui.contentassist.antlr.internal.InternalResoluteLexer.class);
-	}
-
 	// contributed by org.eclipse.xtext.ui.generator.refactoring.RefactorElementNameFragment
 	public Class<? extends org.eclipse.xtext.ui.refactoring.IRenameStrategy> bindIRenameStrategy() {
 		return org.eclipse.xtext.ui.refactoring.impl.DefaultRenameStrategy.class;
@@ -142,14 +127,29 @@ public abstract class AbstractResoluteUiModule extends org.eclipse.xtext.common.
 		return org.eclipse.xtext.ui.refactoring.ui.DefaultRenameSupport.Factory.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
-	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher> bindPrefixMatcher() {
-		return org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.class;
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.ca.ContentAssistParserGeneratorFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext.Factory> bindContentAssistContext$Factory() {
+		return org.eclipse.xtext.ui.editor.contentassist.antlr.ParserBasedContentAssistContextFactory.class;
 	}
 
-	// contributed by org.eclipse.xtext.ui.generator.compare.CompareFragment
-	public Class<? extends org.eclipse.compare.IViewerCreator> bindIViewerCreator() {
-		return org.eclipse.xtext.ui.compare.DefaultViewerCreator.class;
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.ca.ContentAssistParserGeneratorFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.antlr.IContentAssistParser> bindIContentAssistParser() {
+		return com.rockwellcollins.atc.resolute.ui.contentassist.antlr.ResoluteParser.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.ca.ContentAssistParserGeneratorFragment
+	public void configureContentAssistLexerProvider(com.google.inject.Binder binder) {
+		binder.bind(com.rockwellcollins.atc.resolute.ui.contentassist.antlr.lexer.InternalResoluteLexer.class).toProvider(org.eclipse.xtext.parser.antlr.LexerProvider.create(com.rockwellcollins.atc.resolute.ui.contentassist.antlr.lexer.InternalResoluteLexer.class));
+	}
+
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.ca.ContentAssistParserGeneratorFragment
+	public void configureContentAssistLexer(com.google.inject.Binder binder) {
+		binder.bind(org.eclipse.xtext.ui.editor.contentassist.antlr.internal.Lexer.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.ui.LexerUIBindings.CONTENT_ASSIST)).to(com.rockwellcollins.atc.resolute.ui.contentassist.antlr.lexer.InternalResoluteLexer.class);
+	}
+
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.ca.ContentAssistParserGeneratorFragment
+	public Class<? extends org.eclipse.xtext.ui.editor.contentassist.antlr.ParserBasedContentAssistContextFactory.StatefulFactory> bindParserBasedContentAssistContextFactory$StatefulFactory() {
+		return org.eclipse.xtext.ui.editor.contentassist.antlr.ParserBasedContentAssistContextFactory.PartialStatefulFactory.class;
 	}
 
 

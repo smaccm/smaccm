@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import org.antlr.runtime.RecognitionException;
 import org.eclipse.xtext.AbstractElement;
-import org.eclipse.xtext.ui.editor.contentassist.antlr.AbstractContentAssistParser;
+import org.eclipse.xtext.ui.editor.contentassist.antlr.AbstractPartialContentAssistParser;
 import org.eclipse.xtext.ui.editor.contentassist.antlr.FollowElement;
 import org.eclipse.xtext.ui.editor.contentassist.antlr.internal.AbstractInternalContentAssistParser;
 
@@ -17,7 +17,7 @@ import com.google.inject.Inject;
 
 import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 
-public class ResoluteParser extends AbstractContentAssistParser {
+public class ResoluteParser extends AbstractPartialContentAssistParser {
 	
 	@Inject
 	private ResoluteGrammarAccess grammarAccess;
@@ -110,6 +110,10 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTimesExprAccess().getGroup_1(), "rule__TimesExpr__Group_1__0");
 					put(grammarAccess.getTimesExprAccess().getGroup_1_0(), "rule__TimesExpr__Group_1_0__0");
 					put(grammarAccess.getTimesExprAccess().getGroup_1_0_0(), "rule__TimesExpr__Group_1_0_0__0");
+					put(grammarAccess.getExpExprAccess().getGroup(), "rule__ExpExpr__Group__0");
+					put(grammarAccess.getExpExprAccess().getGroup_1(), "rule__ExpExpr__Group_1__0");
+					put(grammarAccess.getExpExprAccess().getGroup_1_0(), "rule__ExpExpr__Group_1_0__0");
+					put(grammarAccess.getExpExprAccess().getGroup_1_0_0(), "rule__ExpExpr__Group_1_0_0__0");
 					put(grammarAccess.getPrefixExprAccess().getGroup_0(), "rule__PrefixExpr__Group_0__0");
 					put(grammarAccess.getPrefixExprAccess().getGroup_1(), "rule__PrefixExpr__Group_1__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_0(), "rule__AtomicExpr__Group_0__0");
@@ -225,6 +229,8 @@ public class ResoluteParser extends AbstractContentAssistParser {
 					put(grammarAccess.getPlusExprAccess().getRightAssignment_1_1(), "rule__PlusExpr__RightAssignment_1_1");
 					put(grammarAccess.getTimesExprAccess().getOpAssignment_1_0_0_1(), "rule__TimesExpr__OpAssignment_1_0_0_1");
 					put(grammarAccess.getTimesExprAccess().getRightAssignment_1_1(), "rule__TimesExpr__RightAssignment_1_1");
+					put(grammarAccess.getExpExprAccess().getOpAssignment_1_0_0_1(), "rule__ExpExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getExpExprAccess().getRightAssignment_1_1(), "rule__ExpExpr__RightAssignment_1_1");
 					put(grammarAccess.getPrefixExprAccess().getOpAssignment_0_1(), "rule__PrefixExpr__OpAssignment_0_1");
 					put(grammarAccess.getPrefixExprAccess().getExprAssignment_0_2(), "rule__PrefixExpr__ExprAssignment_0_2");
 					put(grammarAccess.getPrefixExprAccess().getTypeAssignment_1_2(), "rule__PrefixExpr__TypeAssignment_1_2");

@@ -327,8 +327,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//('int' | 'real' | 'string' | 'bool' | 'range' | 'aadl' | 'component' | 'abstract' | 'bus' | 'data' | 'device' | 'memory'
 		//| 'processor' | 'process' | 'subprogram_group' | 'subprogram' | 'system' | 'thread_group' | 'thread' | 'virtual_bus' |
-		//'virtual_processor' | 'connection' | 'property' | 'feature' | 'port' | 'data_port' | 'event_port' | 'event_data_port' |
-		//'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' | 'data_access' |
+		//'virtual_processor' | 'connection' | 'property' | 'feature' | 'port' | 'data_port' | 'event_port' | 'event_data_port'
+		//| 'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' | 'data_access' |
 		//'provides_data_access' | 'requires_data_access' | 'subprogram_access' | 'provides_subprogram_access' |
 		//'requires_subprogram_access' | 'subprogram_group_access' | 'provides_subprogram_group_access' |
 		//'requires_subprogram_group_access' | 'flow_specification' | 'end_to_end_flow')
@@ -1177,7 +1177,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	public class TimesExprElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.resolute.Resolute.TimesExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cPrefixExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cExpExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
@@ -1188,19 +1188,19 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cOpSolidusKeyword_1_0_0_1_0_1 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(1);
 		private final Keyword cOpPercentSignKeyword_1_0_0_1_0_2 = (Keyword)cOpAlternatives_1_0_0_1_0.eContents().get(2);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cRightPrefixExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		private final RuleCall cRightExpExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//TimesExpr Expr:
-		//	PrefixExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*;
+		//	ExpExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=ExpExpr)*;
 		@Override public ParserRule getRule() { return rule; }
 
-		//PrefixExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*
+		//ExpExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=ExpExpr)*
 		public Group getGroup() { return cGroup; }
 
-		//PrefixExpr
-		public RuleCall getPrefixExprParserRuleCall_0() { return cPrefixExprParserRuleCall_0; }
+		//ExpExpr
+		public RuleCall getExpExprParserRuleCall_0() { return cExpExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*
+		//(=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=ExpExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
 		//=> ({BinaryExpr.left=current} op=('*' | '/' | '%'))
@@ -1226,6 +1226,54 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//'%'
 		public Keyword getOpPercentSignKeyword_1_0_0_1_0_2() { return cOpPercentSignKeyword_1_0_0_1_0_2; }
+
+		//right=ExpExpr
+		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
+
+		//ExpExpr
+		public RuleCall getRightExpExprParserRuleCall_1_1_0() { return cRightExpExprParserRuleCall_1_1_0; }
+	}
+
+	public class ExpExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.resolute.Resolute.ExpExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cPrefixExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
+		private final Action cBinaryExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
+		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
+		private final Keyword cOpCircumflexAccentKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
+		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cRightPrefixExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
+		
+		//ExpExpr Expr:
+		//	PrefixExpr (=> ({BinaryExpr.left=current} op='^') right=PrefixExpr)*;
+		@Override public ParserRule getRule() { return rule; }
+
+		//PrefixExpr (=> ({BinaryExpr.left=current} op='^') right=PrefixExpr)*
+		public Group getGroup() { return cGroup; }
+
+		//PrefixExpr
+		public RuleCall getPrefixExprParserRuleCall_0() { return cPrefixExprParserRuleCall_0; }
+
+		//(=> ({BinaryExpr.left=current} op='^') right=PrefixExpr)*
+		public Group getGroup_1() { return cGroup_1; }
+
+		//=> ({BinaryExpr.left=current} op='^')
+		public Group getGroup_1_0() { return cGroup_1_0; }
+
+		//{BinaryExpr.left=current} op='^'
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+
+		//{BinaryExpr.left=current}
+		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
+
+		//op='^'
+		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
+
+		//'^'
+		public Keyword getOpCircumflexAccentKeyword_1_0_0_1_0() { return cOpCircumflexAccentKeyword_1_0_0_1_0; }
 
 		//right=PrefixExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
@@ -1977,8 +2025,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//BuiltInFn: // Primary type: aadl
 		//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
 		//	'is_in_array' | 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' |
-		//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type'
-		//	| 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
+		//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' |
+		//	'is_of_type' | 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
 		//	| 'enumerated_values' // Primary type: component
 		//	| 'subcomponents' // Primary type: connection
 		//	| 'source' | 'destination' // Primary type: feature
@@ -1996,8 +2044,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//// Primary type: aadl
 		//'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' | 'is_in_array'
 		//| 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' | 'is_virtual_bus'
-		//| 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type' | 'is_bound_to' |
-		//'has_member' | 'features' | 'connections' // Primary type: property
+		//| 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type' | 'is_bound_to'
+		//| 'has_member' | 'features' | 'connections' // Primary type: property
 		//| 'enumerated_values' // Primary type: component
 		//| 'subcomponents' // Primary type: connection
 		//| 'source' | 'destination' // Primary type: feature
@@ -2389,6 +2437,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	private final RelationalExprElements pRelationalExpr;
 	private final PlusExprElements pPlusExpr;
 	private final TimesExprElements pTimesExpr;
+	private final ExpExprElements pExpExpr;
 	private final PrefixExprElements pPrefixExpr;
 	private final AtomicExprElements pAtomicExpr;
 	private final LetBindingElements pLetBinding;
@@ -2434,6 +2483,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		this.pRelationalExpr = new RelationalExprElements();
 		this.pPlusExpr = new PlusExprElements();
 		this.pTimesExpr = new TimesExprElements();
+		this.pExpExpr = new ExpExprElements();
 		this.pPrefixExpr = new PrefixExprElements();
 		this.pAtomicExpr = new AtomicExprElements();
 		this.pLetBinding = new LetBindingElements();
@@ -2757,13 +2807,23 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TimesExpr Expr:
-	//	PrefixExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*;
+	//	ExpExpr (=> ({BinaryExpr.left=current} op=('*' | '/' | '%')) right=ExpExpr)*;
 	public TimesExprElements getTimesExprAccess() {
 		return pTimesExpr;
 	}
 	
 	public ParserRule getTimesExprRule() {
 		return getTimesExprAccess().getRule();
+	}
+
+	//ExpExpr Expr:
+	//	PrefixExpr (=> ({BinaryExpr.left=current} op='^') right=PrefixExpr)*;
+	public ExpExprElements getExpExprAccess() {
+		return pExpExpr;
+	}
+	
+	public ParserRule getExpExprRule() {
+		return getExpExprAccess().getRule();
 	}
 
 	//PrefixExpr Expr:
@@ -2814,8 +2874,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//BuiltInFn: // Primary type: aadl
 	//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
 	//	'is_in_array' | 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' |
-	//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type'
-	//	| 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
+	//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' |
+	//	'is_of_type' | 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
 	//	| 'enumerated_values' // Primary type: component
 	//	| 'subcomponents' // Primary type: connection
 	//	| 'source' | 'destination' // Primary type: feature

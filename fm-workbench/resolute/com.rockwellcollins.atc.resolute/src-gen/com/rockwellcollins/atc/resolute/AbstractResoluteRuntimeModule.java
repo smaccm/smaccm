@@ -14,7 +14,7 @@ import com.google.inject.name.Names;
  * Manual modifications go to {com.rockwellcollins.atc.resolute.ResoluteRuntimeModule}
  */
 @SuppressWarnings("all")
-public abstract class AbstractResoluteRuntimeModule extends org.eclipse.xtext.common.types.DefaultCommonTypesRuntimeModule {
+public abstract class AbstractResoluteRuntimeModule extends org.eclipse.xtext.service.DefaultRuntimeModule {
 
 	protected Properties properties = null;
 
@@ -58,39 +58,49 @@ public abstract class AbstractResoluteRuntimeModule extends org.eclipse.xtext.co
 		return org.eclipse.xtext.serializer.impl.Serializer.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.IParser> bindIParser() {
 		return com.rockwellcollins.atc.resolute.parser.antlr.ResoluteParser.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.ITokenToStringConverter> bindITokenToStringConverter() {
 		return org.eclipse.xtext.parser.antlr.AntlrTokenToStringConverter.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.antlr.IAntlrTokenFileProvider> bindIAntlrTokenFileProvider() {
 		return com.rockwellcollins.atc.resolute.parser.antlr.ResoluteAntlrTokenFileProvider.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.antlr.Lexer> bindLexer() {
-		return com.rockwellcollins.atc.resolute.parser.antlr.internal.InternalResoluteLexer.class;
+		return com.rockwellcollins.atc.resolute.parser.antlr.lexer.InternalResoluteLexer.class;
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
-	public com.google.inject.Provider<com.rockwellcollins.atc.resolute.parser.antlr.internal.InternalResoluteLexer> provideInternalResoluteLexer() {
-		return org.eclipse.xtext.parser.antlr.LexerProvider.create(com.rockwellcollins.atc.resolute.parser.antlr.internal.InternalResoluteLexer.class);
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
+	public com.google.inject.Provider<com.rockwellcollins.atc.resolute.parser.antlr.lexer.InternalResoluteLexer> provideInternalResoluteLexer() {
+		return org.eclipse.xtext.parser.antlr.LexerProvider.create(com.rockwellcollins.atc.resolute.parser.antlr.lexer.InternalResoluteLexer.class);
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public void configureRuntimeLexer(com.google.inject.Binder binder) {
-		binder.bind(org.eclipse.xtext.parser.antlr.Lexer.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.parser.antlr.LexerBindings.RUNTIME)).to(com.rockwellcollins.atc.resolute.parser.antlr.internal.InternalResoluteLexer.class);
+		binder.bind(org.eclipse.xtext.parser.antlr.Lexer.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.parser.antlr.LexerBindings.RUNTIME)).to(com.rockwellcollins.atc.resolute.parser.antlr.lexer.InternalResoluteLexer.class);
 	}
 
-	// contributed by org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.antlr.ITokenDefProvider> bindITokenDefProvider() {
 		return org.eclipse.xtext.parser.antlr.AntlrTokenDefProvider.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
+	public Class<? extends org.eclipse.xtext.parsetree.reconstr.ITokenSerializer.IKeywordSerializer> bindITokenSerializer$IKeywordSerializer() {
+		return org.eclipse.xtext.parsetree.reconstr.impl.IgnoreCaseKeywordSerializer.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment
+	public Class<? extends org.eclipse.xtext.conversion.impl.AbstractIDValueConverter> bindAbstractIDValueConverter() {
+		return org.eclipse.xtext.conversion.impl.IgnoreCaseIDValueConverter.class;
 	}
 
 	// contributed by org.eclipse.xtext.generator.validation.JavaValidatorFragment
@@ -106,6 +116,11 @@ public abstract class AbstractResoluteRuntimeModule extends org.eclipse.xtext.co
 	// contributed by org.eclipse.xtext.generator.scoping.AbstractScopingFragment
 	public void configureIScopeProviderDelegate(com.google.inject.Binder binder) {
 		binder.bind(org.eclipse.xtext.scoping.IScopeProvider.class).annotatedWith(com.google.inject.name.Names.named(org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.NAMED_DELEGATE)).to(org.eclipse.xtext.scoping.impl.ImportedNamespaceAwareLocalScopeProvider.class);
+	}
+
+	// contributed by org.eclipse.xtext.generator.scoping.AbstractScopingFragment
+	public Class<? extends org.eclipse.xtext.scoping.IGlobalScopeProvider> bindIGlobalScopeProvider() {
+		return org.eclipse.xtext.scoping.impl.DefaultGlobalScopeProvider.class;
 	}
 
 	// contributed by org.eclipse.xtext.generator.scoping.AbstractScopingFragment
@@ -141,11 +156,6 @@ public abstract class AbstractResoluteRuntimeModule extends org.eclipse.xtext.co
 	// contributed by org.eclipse.xtext.generator.formatting.FormatterFragment
 	public Class<? extends org.eclipse.xtext.formatting.IFormatter> bindIFormatter() {
 		return com.rockwellcollins.atc.resolute.formatting.ResoluteFormatter.class;
-	}
-
-	// contributed by org.eclipse.xtext.generator.types.TypesGeneratorFragment
-	public Class<? extends org.eclipse.xtext.scoping.IGlobalScopeProvider> bindIGlobalScopeProvider() {
-		return org.eclipse.xtext.common.types.xtext.TypesAwareDefaultGlobalScopeProvider.class;
 	}
 
 }

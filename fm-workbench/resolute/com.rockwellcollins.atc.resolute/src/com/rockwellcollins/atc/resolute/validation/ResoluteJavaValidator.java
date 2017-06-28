@@ -195,7 +195,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		if (body instanceof FunctionBody) {
 			FunctionBody funcBody = (FunctionBody) body;
 			ResoluteType defType = typeToResoluteType(funcBody.getType());
-			if (!exprType.subtypeOf(defType)) {
+			if (!defType.subtypeOf(exprType)) {
 				error(funcBody.getType(), "Function expects type " + defType + " but has type " + exprType);
 			}
 		} else {
@@ -271,6 +271,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			}
 			break;
 
+		case "^":
 		case "+":
 		case "-":
 		case "*":
@@ -914,6 +915,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "<>":
 			return BaseType.BOOL;
 
+		case "^":
 		case "+":
 		case "-":
 		case "*":

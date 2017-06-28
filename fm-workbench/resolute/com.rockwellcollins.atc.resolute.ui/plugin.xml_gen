@@ -343,29 +343,4 @@
 	    </page>
 	</extension>
 
-  <extension point="org.eclipse.compare.contentViewers">
-    <viewer id="com.rockwellcollins.atc.resolute.Resolute.compare.contentViewers"
-            class="com.rockwellcollins.atc.resolute.ui.ResoluteExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="resolute">
-    </viewer>
-  </extension>
-  <extension point="org.eclipse.compare.contentMergeViewers">
-    <viewer id="com.rockwellcollins.atc.resolute.Resolute.compare.contentMergeViewers"
-            class="com.rockwellcollins.atc.resolute.ui.ResoluteExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="resolute" label="Resolute Compare">
-     </viewer>
-  </extension>
-  <extension point="org.eclipse.ui.editors.documentProviders">
-    <provider id="com.rockwellcollins.atc.resolute.Resolute.editors.documentProviders"
-            class="com.rockwellcollins.atc.resolute.ui.ResoluteExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="resolute">
-    </provider>
-  </extension>
-  <extension point="org.eclipse.team.core.fileTypes">
-    <fileTypes
-            extension="resolute"
-            type="text">
-    </fileTypes>
-  </extension>
-
 </plugin>
