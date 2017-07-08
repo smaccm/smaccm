@@ -1,4 +1,4 @@
-property set TB_SYS is
+9property set TB_SYS is
     -- Definitions for making threads "tower compatible"
     CommPrim_Source_Header: aadlstring applies to (port, access, data, subprogram group);
     CommPrim_Source_Text: aadlstring applies to (port, access);

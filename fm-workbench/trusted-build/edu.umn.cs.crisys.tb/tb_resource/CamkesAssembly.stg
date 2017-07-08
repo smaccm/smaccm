@@ -302,6 +302,8 @@ assembly {
         <endif>
         <model.threadImplementations:configConnectTimeServices(model)>
         <model.activeThreadImplementations:configActiveToPassiveRegionDataportId(model)>
+        
+        //ADDITIONAL_CONFIGS
     }
 }
 

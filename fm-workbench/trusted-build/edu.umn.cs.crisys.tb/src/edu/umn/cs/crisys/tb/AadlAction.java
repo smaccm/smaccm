@@ -143,7 +143,7 @@ abstract public class AadlAction implements IWorkbenchWindowActionDelegate {
 					xtextEditor.getDocument().readOnly(
 						new IUnitOfWork<IStatus, XtextResource>() {
 							public IStatus exec(XtextResource resource) throws Exception {
-								OsateResourceUtil.refreshResourceSet();
+								OsateResourceUtil.refreshResourceSet(resource.getResourceSet());
 							  EObject eobj = OsateResourceUtil.getResourceSet().getEObject(uri, true);
 								if (eobj instanceof Element) {
 									return runJob((Element) eobj, monitor, log);

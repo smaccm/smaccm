@@ -120,7 +120,11 @@ public class PortEmitterRPCAllEventCAmkESMonitor extends DispatchableInputPortCo
     if(port instanceof InputEventPort) {
       prefix = getQualifiedName();
     } else if(port instanceof OutputEventPort) {
-      prefix = EmitterFactory.port((port.getConnections().get(0).getDestPort())).getQualifiedName();
+      if(outid.isEmpty()) {
+        prefix = EmitterFactory.port((port.getConnections().get(0).getDestPort())).getQualifiedName();
+      } else {
+        prefix = EmitterFactory.port((port.getConnections().get(new Integer(outid)).getDestPort())).getQualifiedName();
+      }
     } else {
       throw new TbException("PortEmitterRPCAllEventCAmkESMonitor::getMonitorInputCamkesNamePrefix: not input/output even port " + port.getName());
     }

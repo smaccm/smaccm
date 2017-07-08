@@ -16,7 +16,7 @@ Require-Bundle: com.rockwellcollins.atc.agree;visibility:=reexport,
  org.eclipse.xtext.common.types.ui,
  org.eclipse.compare,
  org.osate.xtext.aadl2.properties;bundle-version="1.0.0",
- org.osate.xtext.aadl2.properties.ui;bundle-version="1.0.0",
+ org.osate.xtext.aadl2.properties.ui,
  org.osate.aadl2;bundle-version="1.0.0",
  org.osate.aadl2.modelsupport;bundle-version="1.0.0",
  org.osate.annexsupport;bundle-version="1.0.0"
