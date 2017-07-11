@@ -54,8 +54,8 @@ public class SimulationStateReferenceEvaluator implements ReferenceEvaluator {
 			throw new RuntimeException("Unable to retrieve value for step: " + (frameIndex+1));
 		}
 		
-		final String packageName = String.join("::", ref.getPackageSegments());
-		return simulationState.getConstantLustreValue(frameIndex, simulationState.findConstantByPath(packageName, ref.getConstantName()));
+		final String constantId = String.join("::", ref.getPackageSegments()) + "::" + ref.getConstantName();
+		return simulationState.getConstantLustreValue(frameIndex, simulationState.findConstantById(constantId));
 	}
 
 }
