@@ -26,7 +26,7 @@ MultDiv returns ScalarExpression:
 Function returns ScalarExpression: Pre | Random | Ref | ConstRef | Negative | Primary;
 	
 Pre returns ScalarExpression:
-	{PreExpression} 'pre' '(' ref=Ref ')';
+	{PreExpression} 'pre' '(' ref=ElementRef? ')';
 	
 Random returns RandomExpression:
 	RandomInteger | RandomReal | RandomElement;
@@ -36,7 +36,7 @@ RandomReal returns RandomExpression: {RandomRealExpression} interval=Interval '.
 RandomElement returns RandomExpression: {RandomElementExpression} set=Set '.' 'rand()';
 	
 Ref returns RefExpression: ElementRef | ConstRef;
-ElementRef returns RefExpression: {ElementRefExpression} ids+=ID ('.' ids+=ID)*;
+ElementRef returns ElementRefExpression: {ElementRefExpression} ids+=ID ('.' ids+=ID)*;
 ConstRef returns RefExpression: {ConstRefExpression} (packageSegments+=ID '::')+ constantName=ID;
 
 Negative returns ScalarExpression:
@@ -51,7 +51,7 @@ Primary returns ScalarExpression:
 
 // Unbounded expressions are represented with an empty left or right
 Interval returns IntervalExpression: {IntervalExpression} (leftClosed?='['|'(') left=Scalar? ',' right=Scalar? (rightClosed?=']'|')');
-Set returns SetExpression: {SetExpression} '{' members+=Scalar (',' members+=Scalar)* '}';
+Set returns SetExpression: {SetExpression} '{' (members+=Scalar (',' members+=Scalar)*)? '}';
 
 IntegerLiteral: value=BIG_INT;
 RealLiteral: value=BIGDECIMAL;
@@ -62,5 +62,7 @@ BIG_INT returns ecore::EBigInteger: INT;
 terminal BIGDECIMAL returns ecore::EBigDecimal: ('0'..'9')*'.'('0'..'9')+;
 terminal TRUE returns ecore::EBoolean: 'true';
 terminal FALSE returns ecore::EBoolean: 'false';
+
+@Override
 terminal ID : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*('[' ('0'..'9')+ ']')*;
 

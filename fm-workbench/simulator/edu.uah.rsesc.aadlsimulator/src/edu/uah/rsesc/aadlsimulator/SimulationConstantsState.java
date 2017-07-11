@@ -20,6 +20,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 */
 package edu.uah.rsesc.aadlsimulator;
 
+import java.util.stream.Stream;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -38,9 +40,11 @@ public interface SimulationConstantsState {
 	Object getConstantValue(final int frameIndex, final Object constant);
 	
 	/**
-	 * Retrieve a constant using an absolute path.
-	 * @param packageName is the AADL package name. Case insensitive. For example a::b
+	 * Retrieve a constant using an id.
+	 * @param id is the packageName is the AADL package name following by the identifier. Case insensitive. For example a::b
 	 * @return
 	 */
-	Object findConstantByPath(final String packageName, final String name);
+	Object findConstantById(final String id);
+	
+	Stream<String> getConstantIds();
 }

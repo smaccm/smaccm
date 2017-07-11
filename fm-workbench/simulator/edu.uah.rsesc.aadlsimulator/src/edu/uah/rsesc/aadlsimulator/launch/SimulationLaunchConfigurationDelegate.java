@@ -38,6 +38,7 @@ import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -155,8 +156,8 @@ public class SimulationLaunchConfigurationDelegate implements ILaunchConfigurati
 	
 	private ComponentImplementation refreshComponentImplementation(final ComponentImplementation ci) {
 		final URI uri = EcoreUtil.getURI(ci);
-		OsateResourceUtil.refreshResourceSet();
-		final EObject newEObject = OsateResourceUtil.getResourceSet().getEObject(uri, true);
+		final ResourceSet rs = OsateResourceUtil.createResourceSet();		
+		final EObject newEObject = rs.getEObject(uri, true);
 		if(!(newEObject instanceof ComponentImplementation)) {
 			throw new RuntimeException("Unable to refresh component implementation");
 		}		

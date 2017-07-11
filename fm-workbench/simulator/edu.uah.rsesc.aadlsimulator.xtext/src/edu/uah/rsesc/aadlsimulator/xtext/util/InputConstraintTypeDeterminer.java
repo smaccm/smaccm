@@ -31,7 +31,8 @@ public class InputConstraintTypeDeterminer {
 		
 		@Override
 		public ResultType caseSetExpression(final SetExpression object) {
-			return doSwitch(object.getMembers().get(0)); // Sets are guaranteed to have elements of the same type and to have at least one member
+			// Valid sets are guaranteed to have elements of the same type and to have at least one member
+			return object.getMembers().size() > 0 ? doSwitch(object.getMembers().get(0)) : null;
 		}
 
 		@Override
