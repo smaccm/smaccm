@@ -250,21 +250,16 @@ public class AgreeUtils {
     
     public static boolean containsAgreeAnnex(Subcomponent subComp) {
         ComponentImplementation compImpl = subComp.getComponentImplementation();
-        ComponentType compType = compImpl.getType();
         if (compImpl != null) {
         	EList<AnnexSubclause> annexes = AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause());
             for(AnnexSubclause annex : annexes){
-            	EObject container = getClosestContainerOfType(annex, ComponentType.class);
-                if(compType.getName().equals(((ComponentType)container).getName())){
-                	return true;
-                }
-                container = getClosestContainerOfType(annex, ComponentImplementation.class);
+                EObject container = getClosestContainerOfType(annex, ComponentImplementation.class);
                 if(compImpl.getName().equals(((ComponentImplementation)container).getName())){
                 	return true;
                 }
             }
         }
-        return false;
+        return typeContainsAgreeAnnex(subComp);
     }
     
     public static EObject getClosestContainerOfType(EObject obj, Class<?> c){
