@@ -10,8 +10,13 @@ import javax.inject.Inject;
 
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
@@ -20,7 +25,7 @@ import org.eclipse.xtext.serializer.ISerializer;
 
 import edu.uah.rsesc.aadlsimulator.xtext.inputConstraint.InputConstraint;
 import edu.uah.rsesc.aadlsimulator.xtext.inputConstraint.InputConstraintPackage;
-import edu.uah.rsesc.aadlsimulator.xtext.validation.InputConstraintJavaValidator;
+import edu.uah.rsesc.aadlsimulator.xtext.validation.InputConstraintValidator;
 
 public class InputConstraintHelper {
 	private final IParser parser;
@@ -39,11 +44,11 @@ public class InputConstraintHelper {
 		
 		public Result(final InputConstraint ic) {
 			this.errorMessage = null;
-			this.ic = Objects.requireNonNull(ic, "ic must not be null");
+			this.ic = ic;
 		}
 		
 		public boolean isValid() {
-			return ic != null;
+			return errorMessage == null;
 		}
 		
 		public InputConstraint getInputConstraint() {
@@ -61,21 +66,39 @@ public class InputConstraintHelper {
 		this.serializer = Objects.requireNonNull(serializer, "serializer must not be null");
 		this.validator = Objects.requireNonNull(validatorRegistry, "validatorRegistry must not be null").getEValidator(InputConstraintPackage.eINSTANCE);
 		Objects.requireNonNull(grammarAccess, "grammarAccess must not be null");		
-		validationContext.put(InputConstraintJavaValidator.CURRENT_LANGUAGE_NAME, grammarAccess.getGrammar().getName());
+		validationContext.put(InputConstraintValidator.CURRENT_LANGUAGE_NAME, grammarAccess.getGrammar().getName());
 	}
 	
 	public Result parseAndValidate(final String str, final ReferenceTypeResolver resolver, final ResultType expectedType, final int numberOfPreviousSteps) {
+		final Result parseResult = parse(str);
+		if(!parseResult.isValid()) {
+			return parseResult;
+		} else if(parseResult.getInputConstraint() == null) {
+			return parseResult;
+		}
+		
+		return validate(parseResult.ic, resolver, expectedType, numberOfPreviousSteps);
+	}
+	
+	/**
+	 * 
+	 * @param ic
+	 * @param resolver
+	 * @param expectedType
+	 * @param numberOfPreviousSteps
+	 * @return
+	 */
+	public Result validate(final InputConstraint ic, final ReferenceTypeResolver resolver, final ResultType expectedType, final int numberOfPreviousSteps) {
 		try {
-			validationContext.put(ReferenceTypeResolver.class, resolver);
-			validationContext.put(InputConstraintJavaValidator.CONTEXT_KEY_EXPECTED_TYPE, expectedType);
-			validationContext.put(InputConstraintJavaValidator.CONTEXT_KEY_NUMBER_OF_PREVIOUS_STEPS, numberOfPreviousSteps);
-			
-			final Result parseResult = parse(str);
-			if(!parseResult.isValid()) {
-				return parseResult;
+			// Don't try to validate a null input constraint
+			if(ic == null) {
+				return new Result(ic);
 			}
 			
-			final InputConstraint ic = parseResult.ic;
+			validationContext.put(ReferenceTypeResolver.class, resolver);
+			validationContext.put(InputConstraintValidator.CONTEXT_KEY_EXPECTED_TYPE, expectedType);
+			validationContext.put(InputConstraintValidator.CONTEXT_KEY_NUMBER_OF_PREVIOUS_STEPS, numberOfPreviousSteps);
+			
 			final BasicDiagnostic diag = new BasicDiagnostic();
 			boolean isValid = validator.validate(ic, diag, validationContext);
 			final Iterator<EObject> constraintIterator = ic.eAllContents();
@@ -92,13 +115,22 @@ public class InputConstraintHelper {
 			// Return the input constraint
 			return new Result(ic);
 		} finally {
-			validationContext.remove(InputConstraintJavaValidator.CONTEXT_KEY_NUMBER_OF_PREVIOUS_STEPS);
-			validationContext.remove(InputConstraintJavaValidator.CONTEXT_KEY_EXPECTED_TYPE);
+			validationContext.remove(InputConstraintValidator.CONTEXT_KEY_NUMBER_OF_PREVIOUS_STEPS);
+			validationContext.remove(InputConstraintValidator.CONTEXT_KEY_EXPECTED_TYPE);
 			validationContext.remove(ReferenceTypeResolver.class);
 		}
 	}
 	
+	/**
+	 * 
+	 * @param str
+	 * @return the result of parsing the input constraint string. Returns a valid result with a null input constraint if str is null or empty.
+	 */
 	public Result parse(final String str) {
+		if(str == null || str.trim().length() == 0) {
+			return new Result((InputConstraint)null);
+		}
+		
 		final IParseResult result = parser.parse(new StringReader(str));
 		
 		// Check for syntax errors
@@ -111,11 +143,39 @@ public class InputConstraintHelper {
 			return new Result(errors);
 		}
 		
-		return new Result((InputConstraint)result.getRootASTElement());
+		final InputConstraint ic = (InputConstraint)result.getRootASTElement();
+		final Resource r = createResource();
+		r.getContents().add(ic);
+
+		return new Result(ic);
+	}
+	
+	// Create a new dummy resource
+	private Resource createResource() {
+		final URI ignoredUri = URI.createHierarchicalURI("aadl_simulator_ignore",
+				null,
+				null,
+				new String[] { "internal.inputconstraint" },
+				null,
+				null);
+		
+		final ResourceSet rs = new ResourceSetImpl();
+		return rs.createResource(ignoredUri);
 	}
 	
 	public String unparse(final InputConstraint ic) {
-		return serializer.serialize(ic);
+		if(ic == null) {
+			return "";
+		}
+
+		// If the input constraint is not part of a resource, copy the constraint, add it to a temporary resource, and then unparse.
+		if(ic.eResource() == null) {
+			final InputConstraint copy = EcoreUtil.copy(ic);
+			createResource().getContents().add(copy);
+			return unparse(copy);			
+		} else {
+			return serializer.serialize(ic);
+		}
 	}	
 	
 	private static String getMessage(final Diagnostic diagnostic, final String current) {

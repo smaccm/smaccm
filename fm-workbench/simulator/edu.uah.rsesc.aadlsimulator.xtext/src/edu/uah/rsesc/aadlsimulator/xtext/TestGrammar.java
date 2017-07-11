@@ -1,9 +1,6 @@
 package edu.uah.rsesc.aadlsimulator.xtext;
 
 import java.io.IOException;
-
-import edu.uah.rsesc.aadlsimulator.xtext.inputConstraint.ConstRefExpression;
-import edu.uah.rsesc.aadlsimulator.xtext.inputConstraint.ElementRefExpression;
 import edu.uah.rsesc.aadlsimulator.xtext.util.InputConstraintHelper;
 import edu.uah.rsesc.aadlsimulator.xtext.util.ReferenceTypeResolver;
 import edu.uah.rsesc.aadlsimulator.xtext.util.ResultType;
@@ -67,31 +64,7 @@ public class TestGrammar {
 	private static void testConstraint(final String constraint, final ResultType expectedType, final int numberOfPreviousSteps, final boolean isConstraintValid) {
 		com.google.inject.Injector injector = new InputConstraintStandaloneSetup().createInjectorAndDoEMFRegistration();
 		final InputConstraintHelper parserHelper = injector.getInstance(InputConstraintHelper.class);
-		
-		// Use the starting letter of the last ID of the reference to determine type.
-		final ReferenceTypeResolver refResolver = new ReferenceTypeResolver() {						
-			@Override
-			public ResultType getElementReferenceType(final ElementRefExpression reference) {
-				return getReferenceType(reference.getIds().get(reference.getIds().size()-1));
-			}
-			
-			@Override
-			public ResultType getConstReferenceType(final ConstRefExpression reference) {
-				return getReferenceType(reference.getConstantName());
-			}
-			
-			private ResultType getReferenceType(final String last) {
-				if(last.startsWith("i")) {
-					return ResultType.INTEGER;
-				} else if(last.startsWith("r")) {
-					return ResultType.REAL;
-				} else if(last.startsWith("b")) {
-					return ResultType.BOOLEAN;
-				} else {
-					return null;
-				}
-			}
-		};
+		final ReferenceTypeResolver refResolver = new TestReferenceTypeResolver();
 
 		final InputConstraintHelper.Result parseAndValidateResult = parserHelper.parseAndValidate(constraint, refResolver, expectedType, numberOfPreviousSteps);
 		if(parseAndValidateResult.isValid()) {
