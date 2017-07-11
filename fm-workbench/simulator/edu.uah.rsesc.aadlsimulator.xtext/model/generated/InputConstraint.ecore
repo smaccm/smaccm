@@ -15,6 +15,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RandomExpression" eSuperTypes="#//ScalarExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="RefExpression" eSuperTypes="#//ScalarExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ElementRefExpression" eSuperTypes="#//RefExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ids" unique="false" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IntervalExpression" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="leftClosed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//ScalarExpression"
@@ -44,7 +48,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PreExpression" eSuperTypes="#//ScalarExpression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//RefExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//ElementRefExpression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RandomIntegerExpression" eSuperTypes="#//RandomExpression">
@@ -58,10 +62,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="RandomElementExpression" eSuperTypes="#//RandomExpression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" eType="#//SetExpression"
         containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ElementRefExpression" eSuperTypes="#//RefExpression">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ids" unique="false" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConstRefExpression" eSuperTypes="#//RefExpression">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageSegments" unique="false"

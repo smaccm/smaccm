@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IContainer;
@@ -612,9 +613,22 @@ public class AGREESimulationState implements SimulationEngineState, LustreProgra
 	 * @return
 	 */
 	@Override
-	public Object findConstantByPath(final String packageName, final String name) {
-		final Map<String, ConstStatement> constMap = packageToConstantsMap.get(packageName.toLowerCase());
-		return constMap == null ? null : constMap.get(name);
+	public Object findConstantById(String id) {
+		id = id.toLowerCase();
+		final int index = id.lastIndexOf("::");
+		if(index < 0) {
+			return null;
+		}
+		
+		final String pkgName = id.substring(0, index);
+		final String constantName = id.substring(index+2, id.length());
+		final Map<String, ConstStatement> constMap = packageToConstantsMap.get(pkgName);
+		return constMap == null ? null : constMap.get(constantName);
+	}
+	
+	@Override
+	public Stream<String> getConstantIds() {
+		return packageToConstantsMap.entrySet().stream().flatMap(e -> e.getValue().values().stream().map(c -> e.getKey() + "::" + c.getName()));
 	}
 	
 	private Evaluator createEvaluator(final Collection<Expr> constraints, final Set<SimulationProperty> disabledProperties) {
@@ -668,7 +682,7 @@ public class AGREESimulationState implements SimulationEngineState, LustreProgra
 													final ConstStatement constStatement = (ConstStatement)spec;
 													// Check that the statement is of a supported type
 													if(getType(constStatement) != null) {
-														constants.put(constStatement.getName(), constStatement);
+														constants.put(constStatement.getName().toLowerCase(), constStatement);
 													}
 												}
 											}
