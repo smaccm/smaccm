@@ -126,7 +126,9 @@ static const struct device *linux_ram_devices[] = {
 static const int linux_pt_irqs[] = {
 INTERRUPT_VTIMER               ,
 INTERRUPT_USB2                 ,
+#ifdef CONFIG_VM_TK1_EMMC_ROOTFS
 INTERRUPT_SDMMC4               ,
+#endif
 INTERRUPT_UARTD                ,
 INTERRUPT_USB3                 ,
 };
