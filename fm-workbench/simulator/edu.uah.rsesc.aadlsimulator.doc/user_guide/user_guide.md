@@ -12,7 +12,7 @@ secPrefix:
 - sections
 ---
 # Introduction
-The AADL/AGREE Simulator is an Eclipse-based tool that is designed to add simulation capabilities to the Open Source AADL Tool Environment (OSATE). It integrates with the AGREE analysis tools to simulate Architecture Analysis and Design Language (AADL) models which contains AGREE contracts. 
+The AGREE Simulator is an Eclipse-based tool that is designed to add simulation capabilities to the Open Source AADL Tool Environment (OSATE). It integrates with the AGREE analysis tools to simulate Architecture Analysis and Design Language (AADL) models which contains AGREE contracts. 
 
 This document describes the usage of the simulator.
 
