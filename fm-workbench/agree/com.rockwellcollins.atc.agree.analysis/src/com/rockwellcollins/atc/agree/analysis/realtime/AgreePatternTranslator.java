@@ -691,7 +691,7 @@ public class AgreePatternTranslator {
 		builder.addInput(effectTimeRangeVar);
 		IdExpr effectTimeRangeId = new IdExpr(effectTimeRangeVar.id);
 
-		AgreeVar timeEffectVar = new AgreeVar(TIME_WILL_PREFIX + effectId.id, NamedType.REAL, pattern);
+		AgreeVar timeEffectVar = new AgreeVar(TIME_WILL_PREFIX + patternIndex, NamedType.REAL, pattern);
 		builder.addOutput(timeEffectVar);
 		IdExpr timeEffectId = new IdExpr(timeEffectVar.id);
 
