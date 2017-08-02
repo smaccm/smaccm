@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE Simulator User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../css/pandoc.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE Simulator User Guide</h1>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#getting-started"><span class="toc-section-number">2</span> Getting Started</a><ul>
+<li><a href="#sec:ui_overview"><span class="toc-section-number">2.1</span> User Interface Overview</a><ul>
+<li><a href="#simulation-status-view"><span class="toc-section-number">2.1.1</span> Simulation Status View</a></li>
+<li><a href="#simulator-controls"><span class="toc-section-number">2.1.2</span> Simulator Controls</a></li>
+<li><a href="#graphical-display"><span class="toc-section-number">2.1.3</span> Graphical Display</a></li>
+<li><a href="#simulation-variables-view"><span class="toc-section-number">2.1.4</span> Simulation Variables View</a></li>
+<li><a href="#simulation-properties-view"><span class="toc-section-number">2.1.5</span> Simulation Properties View</a></li>
+</ul></li>
+<li><a href="#starting-the-simulator"><span class="toc-section-number">2.2</span> Starting the Simulator</a><ul>
+<li><a href="#simulating-a-single-layer"><span class="toc-section-number">2.2.1</span> Simulating a Single Layer</a></li>
+<li><a href="#simulating-monolithically"><span class="toc-section-number">2.2.2</span> Simulating Monolithically</a></li>
+</ul></li>
+<li><a href="#stepping-forward"><span class="toc-section-number">2.3</span> Stepping Forward</a></li>
+<li><a href="#stepping-forward-multiple-times"><span class="toc-section-number">2.4</span> Stepping Forward Multiple Times</a></li>
+<li><a href="#stepping-backward"><span class="toc-section-number">2.5</span> Stepping Backward</a></li>
+<li><a href="#stopping-the-simulation"><span class="toc-section-number">2.6</span> Stopping the Simulation</a></li>
+<li><a href="#specifying-input-constraints"><span class="toc-section-number">2.7</span> Specifying Input Constraints</a><ul>
+<li><a href="#textual-constraints"><span class="toc-section-number">2.7.1</span> Textual Constraints</a></li>
+<li><a href="#input-constraint-editor"><span class="toc-section-number">2.7.2</span> Input Constraint Editor</a></li>
+</ul></li>
+<li><a href="#resetting-input-constraints"><span class="toc-section-number">2.8</span> Resetting Input Constraints</a></li>
+<li><a href="#simulating-possibilities"><span class="toc-section-number">2.9</span> Simulating Possibilities</a></li>
+<li><a href="#open-variables-chart"><span class="toc-section-number">2.10</span> Open Variables Chart</a></li>
+</ul></li>
+<li><a href="#navigation"><span class="toc-section-number">3</span> Navigation</a><ul>
+<li><a href="#navigating-from-the-graphical-display-to-the-variables-view"><span class="toc-section-number">3.1</span> Navigating from the Graphical Display to the Variables View</a></li>
+<li><a href="#navigating-from-the-variables-view-to-the-graphical-display"><span class="toc-section-number">3.2</span> Navigating from the Variables View to the Graphical display</a></li>
+<li><a href="#opening-the-graphical-display"><span class="toc-section-number">3.3</span> Opening the Graphical Display</a></li>
+<li><a href="#navigating-to-property-definition"><span class="toc-section-number">3.4</span> Navigating to Property Definition</a></li>
+</ul></li>
+<li><a href="#sec:ic_format"><span class="toc-section-number">4</span> Input Constraint Format</a><ul>
+<li><a href="#examples"><span class="toc-section-number">4.1</span> Examples</a></li>
+</ul></li>
+<li><a href="#other-features"><span class="toc-section-number">5</span> Other Features</a><ul>
+<li><a href="#disabling-properties"><span class="toc-section-number">5.1</span> Disabling Properties</a></li>
+<li><a href="#simulating-agree-counterexamples"><span class="toc-section-number">5.2</span> Simulating AGREE Counterexamples</a></li>
+<li><a href="#highlighting"><span class="toc-section-number">5.3</span> Highlighting</a></li>
+<li><a href="#selecting-step-to-view-graphically"><span class="toc-section-number">5.4</span> Selecting Step to View Graphically</a></li>
+</ul></li>
+<li><a href="#status-messages"><span class="toc-section-number">6</span> Status Messages</a></li>
+</ul>
+</nav>
+<h1 id="introduction"><span class="header-section-number">1</span> Introduction</h1>
+<p>The AGREE Simulator is an Eclipse-based tool that is designed to add simulation capabilities to the Open Source AADL Tool Environment (OSATE). It integrates with the AGREE analysis tools to simulate Architecture Analysis and Design Language (AADL) models which contains AGREE contracts.</p>
+<p>This document describes the usage of the simulator.</p>
+<h1 id="getting-started"><span class="header-section-number">2</span> Getting Started</h1>
+<p>The following sections will provide an overview of how to simulate an AADL component implementation using the simulator.</p>
+<h2 id="sec:ui_overview"><span class="header-section-number">2.1</span> User Interface Overview</h2>
+<p>The simulator provides a graphical and tabular means of viewing the state of the simulation. An overview of the user interface is shown in figure <a href="#fig:ui_overview">1</a>.</p>
+<figure>
+<img src="../images/ui_overview.png" alt="Figure 1: User Interface Overview" id="fig:ui_overview" /><figcaption>Figure 1: User Interface Overview</figcaption>
+</figure>
+<h3 id="simulation-status-view"><span class="header-section-number">2.1.1</span> Simulation Status View</h3>
+<p>The <em>Simulation Status</em> view displays information about the currently active simulation. If the simulation is unable to proceed for any reason, it will be displayed in this view.</p>
+<h3 id="simulator-controls"><span class="header-section-number">2.1.2</span> Simulator Controls</h3>
+<p>The toolbar contains items for starting, stopping, stepping forward, and stepping backward. When a simulation is active, these commands are also available in the <em>Run</em> menu.</p>
+<h3 id="graphical-display"><span class="header-section-number">2.1.3</span> Graphical Display</h3>
+<p>The graphical display contains a graphical representation of the AADL model being simulated. The values of variables associated with any subcomponent or feature is displayed in a tooltip whenever the mouse cursor hovers over the appropriate shape.</p>
+<h3 id="simulation-variables-view"><span class="header-section-number">2.1.4</span> Simulation Variables View</h3>
+<p>The <em>Simulation Variables</em> view provides a tabular display for the values of simulation variables. The values from every step of the simulation are displayed in the table. It also allows selecting which simulation step is displayed in the graphical display. The selected column is indicated by an asterisk. The <em>Next Value</em> column displays the input constraints for the next step. If the simulator has pre-determined the value of a variable for the next step based on the simulation state and the currently entered input constraints, it will be displayed in the <em>Next Value</em> column using grey text.</p>
+<h3 id="simulation-properties-view"><span class="header-section-number">2.1.5</span> Simulation Properties View</h3>
+<p>The <em>Simulation Properties</em> view shows the status of properties defined in the AGREE specification. The view allows disabling properties and navigating to the property definition within the AGREE specification.</p>
+<h2 id="starting-the-simulator"><span class="header-section-number">2.2</span> Starting the Simulator</h2>
+<p>The simulator supports simulating component implementations. In order for a component implementation to be simulated, it must have an AGREE specification. Follow the following instructions to simulate a component implementation:</p>
+<ol type="1">
+<li>Open the AADL model to be simulated in the textual editor.</li>
+<li>In the <em>Outline</em> view, right-click on the component implementation to be simulated and select <em>Simulate</em> from the context menu.</li>
+</ol>
+<p>The simulation will start using the default AADL Simulation run configuration for the component implementation. If a run configuration does not exist for the component implementation, a monolithic simulation will be started. Once the simulation has started, the AADL Simulator perspective will become active and the graphical display will be shown.</p>
+<h3 id="simulating-a-single-layer"><span class="header-section-number">2.2.1</span> Simulating a Single Layer</h3>
+<p>Follow the following instructions to start a single layer simulation of a component implementation:</p>
+<ol type="1">
+<li>Open the AADL model to be simulated in the textual editor.</li>
+<li>In the <em>Outline</em> view, right-click on the component implementation to be simulated and select <em>AGREE-&gt;Simulate Single Layer</em> from the context menu.</li>
+</ol>
+<h3 id="simulating-monolithically"><span class="header-section-number">2.2.2</span> Simulating Monolithically</h3>
+<p>Follow the following instructions to start a monolithic simulation of a component implementation:</p>
+<ol type="1">
+<li>Open the AADL model to be simulated in the textual editor.</li>
+<li>In the <em>Outline</em> view, right-click on the component implementation to be simulated and select <em>AGREE-&gt;Simulate Monolithically</em> from the context menu.</li>
+</ol>
+<h2 id="stepping-forward"><span class="header-section-number">2.3</span> Stepping Forward</h2>
+<p>Once the simulation has been started, the <em>Step Forward</em> <img src="../../edu.uah.rsesc.aadlsimulator.ui/icons/step_forwards.png" /> command may be selected from the <em>Run</em> menu or the toolbar to advance the simulation one step. Once the new step has been simulated, the <em>Simulation Status</em> and <em>Simulation Variables</em> views will be updated to reflect the new state of the simulation. Any inputs specified for the new simulation step will be carried over to the next step.</p>
+<h2 id="stepping-forward-multiple-times"><span class="header-section-number">2.4</span> Stepping Forward Multiple Times</h2>
+<p>Selecting the <em>Step Forward Multiple Times</em> <img src="../../edu.uah.rsesc.aadlsimulator.ui/icons/step_forward_mult_times.png" /> command will simulate multiple steps after prompting for the number of steps to step forward.</p>
+<h2 id="stepping-backward"><span class="header-section-number">2.5</span> Stepping Backward</h2>
+<p>Selecting the <em>Step Backward</em> <img src="../../edu.uah.rsesc.aadlsimulator.ui/icons/step_backwards.png" /> command will revert the simulation to the previous simulation step.</p>
+<h2 id="stopping-the-simulation"><span class="header-section-number">2.6</span> Stopping the Simulation</h2>
+<p>Selecting the <em>Stop</em> <img src="../../edu.uah.rsesc.aadlsimulator.ui/icons/stop.png" /> command will stop the simulation and clear the simulation state. The Eclipse perspective will be reverted to the perspective that was active when the simulation was started.</p>
+<h2 id="specifying-input-constraints"><span class="header-section-number">2.7</span> Specifying Input Constraints</h2>
+<p>Input constraints can be entered into the simulator using the Simulation Variables view. Enter constraints into the <em>Next Value</em> column shown in figure <a href="#fig:ui_next_value_column">2</a> to constrain the variable's value for the next step in the simulation. Constraints may be specified textually or using the <em>Input Constraint Editor</em>.</p>
+<figure>
+<img src="../images/ui_specifying_input_constraints.png" alt="Figure 2: Specifying Input Constraints" id="fig:ui_next_value_column" /><figcaption>Figure 2: Specifying Input Constraints</figcaption>
+</figure>
+<h3 id="textual-constraints"><span class="header-section-number">2.7.1</span> Textual Constraints</h3>
+<p>Textual constraints may be entered directly into the <em>Next Value</em>. Supported expressions are described in section <a href="#sec:ui_overview">2.1</a>.</p>
+<h3 id="input-constraint-editor"><span class="header-section-number">2.7.2</span> Input Constraint Editor</h3>
+<p>Follow the following instructions to open the <em>Input Constraint Editor</em>:</p>
+<ol type="1">
+<li>Select a cell in the <em>Next Value</em> column of the <em>Simulation Variables</em> view.</li>
+<li>Select the <strong>...</strong> button.</li>
+</ol>
+<p>The <em>Input Constraint Editor</em> shown in figure <a href="#fig:ic_editor">3</a> will appear. Select the links to edit the input constraint. Constraint errors are shown below the description of the constraint.</p>
+<figure>
+<img src="../images/ui_ic_editor.png" alt="Figure 3: Input Constraint Editor" id="fig:ic_editor" /><figcaption>Figure 3: Input Constraint Editor</figcaption>
+</figure>
+<h2 id="resetting-input-constraints"><span class="header-section-number">2.8</span> Resetting Input Constraints</h2>
+<p>Input constraints can be reset by selecting <em>Reset Input Constraints</em> from the <em>Simulation Variables</em> view's view menu (<img src="../images/ui_view_menu_icon.png" alt="View Menu" />) as shown in figure <a href="#fig:resetting_ic">4</a>.</p>
+<figure>
+<img src="../images/ui_resetting_input_constraints.png" alt="Figure 4: Resetting Input Constraints" id="fig:resetting_ic" /><figcaption>Figure 4: Resetting Input Constraints</figcaption>
+</figure>
+<h2 id="simulating-possibilities"><span class="header-section-number">2.9</span> Simulating Possibilities</h2>
+<p>Selecting the <em>Simulate Possibilities</em> <img src="../../edu.uah.rsesc.aadlsimulator.ui/icons/sim_possibilities.png" /> will simulate multiple possibilities for the next step after prompting for the number of steps to simulate. The simulator uses the currently specified input constraints for each possibility. At least one input constraint which will produce a random value should be specified as described in section <a href="#sec:ic_format">4</a>. A random value is needed to add variability to the simulation to avoid each possibility from containing the same results. Once each possibility has been simulated, the <em>Simulation Possibilities Chart</em> window shown in figure <a href="#fig:ui_sim_possibilities_chart">5</a> will appear. Points will be shown after configuring the X and Y axes. Selecting a point will display the values associated with the point. Selecting <em>Step Forward</em> will advance the simulation forward using the simulation values associated with the selected data point.</p>
+<figure>
+<img src="../images/ui_sim_posibilities_chart.png" alt="Figure 5: Simulation Possibilities Chart" id="fig:ui_sim_possibilities_chart" /><figcaption>Figure 5: Simulation Possibilities Chart</figcaption>
+</figure>
+<h2 id="open-variables-chart"><span class="header-section-number">2.10</span> Open Variables Chart</h2>
+<p>A plot of simulation variable values can be viewed by selecting <em>Open Variables Chart</em> from the <em>Simulation Variables</em> view’s view menu ((<img src="../images/ui_view_menu_icon.png" alt="View Menu" />) as shown in figure <a href="#fig:open_variables_chart">6</a>.</p>
+<figure>
+<img src="../images/ui_open_variables_chart.png" alt="Figure 6: Open Variables Chart" id="fig:open_variables_chart" /><figcaption>Figure 6: Open Variables Chart</figcaption>
+</figure>
+<h1 id="navigation"><span class="header-section-number">3</span> Navigation</h1>
+<p>The simulator supports navigating between the graphical display and the <em>Variables</em> view.</p>
+<h2 id="navigating-from-the-graphical-display-to-the-variables-view"><span class="header-section-number">3.1</span> Navigating from the Graphical Display to the Variables View</h2>
+<p>When using the graphical display, the variables associated with a shape can be shown in the <em>Variables</em> view by right-clicking on the shape and selecting <em>Show in Simulation Variables View</em> from the context menu as shown in figure <a href="#fig:ui_show_in_var_view">7</a>.</p>
+<figure>
+<img src="../images/ui_show_in_sim_variables_view.png" alt="Figure 7: Navigating from the Graphical to the Variables view" id="fig:ui_show_in_var_view" /><figcaption>Figure 7: Navigating from the Graphical to the Variables view</figcaption>
+</figure>
+<h2 id="navigating-from-the-variables-view-to-the-graphical-display"><span class="header-section-number">3.2</span> Navigating from the Variables View to the Graphical display</h2>
+<p>When using the <em>Simulation Variables</em> view, the shape associated with a subcomponent or feature can be selected in the graphical display by right-clicking on item in the <em>Simulation Variables</em> view and selecting Show in Graphical View from the context menu as shown in figure <a href="#fig:ui_var_view_ctx_menu">8</a>.</p>
+<figure>
+<img src="../images/ui_variables_view_context_menu.png" alt="Figure 8: Simulation Variables View Context Menu" id="fig:ui_var_view_ctx_menu" /><figcaption>Figure 8: Simulation Variables View Context Menu</figcaption>
+</figure>
+<h2 id="opening-the-graphical-display"><span class="header-section-number">3.3</span> Opening the Graphical Display</h2>
+<p>The Graphical Display is automatically opened when a simulation is started. If closed, it can be reopened by selecting <em>Open Graphical View</em> from the Simulation Variables view’s view menu (<img src="../images/ui_view_menu_icon.png" />) as shown in figure <a href="#fig:ui_open_graphical_view">9</a>.</p>
+<figure>
+<img src="../images/ui_open_graphical_view.png" alt="Figure 9: Opening the Graphical Display" id="fig:ui_open_graphical_view" /><figcaption>Figure 9: Opening the Graphical Display</figcaption>
+</figure>
+<h2 id="navigating-to-property-definition"><span class="header-section-number">3.4</span> Navigating to Property Definition</h2>
+<p>To navigate to the AGREE definition of a property, right-click on a property in the <em>Simulation Properties</em> view and select <em>Go To Property</em> from the context menu shown in figure <a href="#fig:ui_sim_properties_view">10</a>.</p>
+<figure>
+<img src="../images/ui_sim_properties_view.png" alt="Figure 10: Simulation Properties View" id="fig:ui_sim_properties_view" /><figcaption>Figure 10: Simulation Properties View</figcaption>
+</figure>
+<h1 id="sec:ic_format"><span class="header-section-number">4</span> Input Constraint Format</h1>
+<p>The simulator supports using expressions to constrain a value of simulation variable. In simple cases, expressions may be literal values which force a simulation variable to a specific value. However, more complex cases such as a constraining a value to a range is supported.</p>
+<div id="tbl:ic_elements">
+<table>
+<caption>Table 1: Input Constraint Syntactic Elements</caption>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Integer</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Real</td>
+<td style="text-align: left;">5.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boolean</td>
+<td style="text-align: left;">true<br />
+false<br />
+</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Simulation Variable Reference</td>
+<td style="text-align: left;">x</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AGREE Constant Reference<br />
+Only referencing AGREE constants contained in AGREE Annex Libraries is supported. Referencing AGREE constants declared in classifier annex subclauses is not supported.</td>
+<td style="text-align: left;">aadl_package_name::const_x</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reference to Previous Value</td>
+<td style="text-align: left;">pre(x)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Arithmetic. Supported Operators: +, -, *, /</td>
+<td style="text-align: left;">1.0/3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Interval - Closed<br />
+Interval - Left-open and right-closed<br />
+Interval - Left-closed and right-open<br />
+Interval - Open<br />
+Interval - Left-open and right-unbounded<br />
+Interval - Left-unbounded and right-closed</td>
+<td style="text-align: left;">[0, 1]<br />
+(0, 1]<br />
+[0, 1)<br />
+(0, 1)<br />
+[0,)<br />
+(, 1]</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Set</td>
+<td style="text-align: left;">{1, 2, 4}</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Random Value - Selected by simulator. Random values selected by the simulator may not satisfy model properties.</td>
+<td style="text-align: left;">[0, 1000].rand_real()<br />
+[0, 1000].rand_int()<br />
+{1, 2, 4}.rand()</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples"><span class="header-section-number">4.1</span> Examples</h2>
+<div id="tbl:ic_examples">
+<table style="width:89%;">
+<caption>Table 2: Input Constraint Examples</caption>
+<colgroup>
+<col style="width: 66%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Description</th>
+<th>Syntax</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Constrain a value relative to a value from the previous step.</td>
+<td>pre(x) + 50.0</td>
+</tr>
+<tr class="even">
+<td>Constrain a value to be greater than 10 and less than or equal to 50.</td>
+<td>(10, 50]</td>
+</tr>
+<tr class="odd">
+<td>Constrain a value to be greater or equal to 100.</td>
+<td>[100, )</td>
+</tr>
+<tr class="even">
+<td>Constrain a value to a simulator selected random value in an interval.</td>
+<td>[0.5, 2.0].random_real()</td>
+</tr>
+<tr class="odd">
+<td>Constrain a value to be within a set.</td>
+<td>{250, 500}</td>
+</tr>
+<tr class="even">
+<td>Constrain a value to a simulator selected random member of a set.</td>
+<td>{250, 500}.rand()</td>
+</tr>
+<tr class="odd">
+<td>Constrain a value to be within ±50 of the value of x in the previous step.</td>
+<td>[pre(x)-50.0, pre(x)+50.0]</td>
+</tr>
+<tr class="even">
+<td>Constrain a value to be a random value which is within ±50 of the value of x in the previous step.</td>
+<td>[pre(x)-50.0, pre(x)+50.0].rand_real()</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="other-features"><span class="header-section-number">5</span> Other Features</h1>
+<p>The following sections will provide details on additional capabilities provided by the simulator.</p>
+<h2 id="disabling-properties"><span class="header-section-number">5.1</span> Disabling Properties</h2>
+<p>The <em>Simulation Properties</em> view allows disabling properties. Disabling a property prevents it from affecting the simulation. To disable a property, select <em>Disable Property</em> from the context menu shown in figure <a href="#fig:ui_sim_properties_view">10</a>. Once disabled, a property will not affect subsequent steps of the simulation. A disabled property may be enabled by selecting <em>Enable Property</em> from the same context menu.</p>
+<h2 id="simulating-agree-counterexamples"><span class="header-section-number">5.2</span> Simulating AGREE Counterexamples</h2>
+<p>The simulator supports simulating AGREE Counterexamples generated by an AGREE analysis. To simulate a counterexample in the simulator, right click on the guarantee in the <em>AGREE Results</em> view and select <em>View Counterexample in-&gt;Simulator – Monolithic</em> or <em>Simulator – Single Layer</em> as shown in figure <a href="#fig:sim_agree_cex">11</a>. Once selected, the simulator will start and each step found in the counterexample will be simulated. The results of the simulation will be shown in the <em>Simulation Variables</em> view and the graphical display.</p>
+<p>If the entire counterexample is not simulated due to being unable to satisfy a property, an error will be displayed as shown in figure <a href="#fig:sim_cex_dp">12</a>. To resolve the issue, disable one or more properties from the <em>Simulation Properties</em> view and select the <em>Retry</em> button.</p>
+<figure>
+<img src="../images/ui_simulation_agree_cex.png" alt="Figure 11: Simulating an AGREE Counterexample in Simulator" id="fig:sim_agree_cex" /><figcaption>Figure 11: Simulating an AGREE Counterexample in Simulator</figcaption>
+</figure>
+<figure>
+<img src="../images/ui_disabling_properties_sim_cex.png" alt="Figure 12: Disabling Properties when Simulating an AGREE Counterexample" id="fig:sim_cex_dp" /><figcaption>Figure 12: Disabling Properties when Simulating an AGREE Counterexample</figcaption>
+</figure>
+<h2 id="highlighting"><span class="header-section-number">5.3</span> Highlighting</h2>
+<p>In some cases, it may be desirable to highlight individual values within the <em>Simulation Variables</em> view. This can be done by right-clicking on a value and selecting the desired option from the context menu as shown in figure <a href="#fig:highlighting">13</a>.</p>
+<figure>
+<img src="../images/ui_highlighting.png" alt="Figure 13: Highlighting" id="fig:highlighting" /><figcaption>Figure 13: Highlighting</figcaption>
+</figure>
+<h2 id="selecting-step-to-view-graphically"><span class="header-section-number">5.4</span> Selecting Step to View Graphically</h2>
+<p>Selecting the column header for a step in the <em>Simulation Variables</em> view will select that step to be shown in the graphical display. The selected step is indicated by an asterisk at the end of the column header.</p>
+<h1 id="status-messages"><span class="header-section-number">6</span> Status Messages</h1>
+<p>The <em>Simulation Status</em> view indicates the current status of the simulator is shown in figure <a href="#fig:ui_sim_status">14</a>. More detailed descriptions of status message of status message are contained in table <a href="#tbl:status_messages">3</a>.</p>
+<figure>
+<img src="../images/ui_sim_status.png" alt="Figure 14: Simulation Status View" id="fig:ui_sim_status" /><figcaption>Figure 14: Simulation Status View</figcaption>
+</figure>
+<div id="tbl:status_messages">
+<table style="width:85%;">
+<caption>Table 3: Status Messages</caption>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Message</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Waiting for commands</td>
+<td>The simulator is waiting for a command such as Step Forward, Step Backward, or Stop.</td>
+</tr>
+<tr class="even">
+<td>Simulating</td>
+<td>The simulation step is in progress.</td>
+</tr>
+<tr class="odd">
+<td>Halted. Unable to satisfy constraints</td>
+<td>The simulator was unable to simulate the step due to not being able to satisfy one or more of the constraints. Check to ensure the input provided to the simulation step is valid. The simulation cannot proceed any further.</td>
+</tr>
+<tr class="even">
+<td>Warning. Property not satisfied</td>
+<td>A property defined in the AGREE specification is not satisfied. Simulation is allowed to continue.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</body>
+</html>
