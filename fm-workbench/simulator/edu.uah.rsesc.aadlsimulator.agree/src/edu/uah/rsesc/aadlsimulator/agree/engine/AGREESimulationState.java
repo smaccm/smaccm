@@ -671,7 +671,7 @@ public class AGREESimulationState implements SimulationEngineState, LustreProgra
 							packageToConstantsMap.put(pkg.getQualifiedName().toLowerCase(), constants);
 							for(final AnnexLibrary lib : pkg.getPublicSection().getOwnedAnnexLibraries()) {
 								// Look for AGREE annex libraries
-								if(lib instanceof DefaultAnnexLibrary && "agree".equals(lib.getName())) {
+								if(lib instanceof DefaultAnnexLibrary && "agree".equalsIgnoreCase(lib.getName())) {
 									final AnnexLibrary parsedLib = ((DefaultAnnexLibrary)lib).getParsedAnnexLibrary();
 									if(parsedLib instanceof AgreeContractLibrary) {
 										final AgreeContractLibrary agreeContractLib = (AgreeContractLibrary)parsedLib;
