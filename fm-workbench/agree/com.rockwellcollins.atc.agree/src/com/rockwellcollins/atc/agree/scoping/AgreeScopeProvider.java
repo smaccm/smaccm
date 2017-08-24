@@ -200,7 +200,7 @@ public class AgreeScopeProvider extends
     	return IScope.NULLSCOPE;
     }
     
-    IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
+    protected IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
     	Set<Element> components = getCorrespondingAadlElement(ctx, ref);
     	EObject container = ctx.eContainer();
     	
@@ -212,7 +212,8 @@ public class AgreeScopeProvider extends
     	while(!(container instanceof NestedDotID) &&
     		  !(container instanceof RecordExpr) &&
     		  !(container instanceof RecordUpdateExpr) &&
-    		  !(container instanceof AgreeContract)){
+    		  !(container instanceof AgreeContract) &&
+    		  !(container instanceof AadlPackage)){
     		container = container.eContainer();
     	}
     	

@@ -934,7 +934,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	            
 	}
 	
-	private boolean isConst(Expr expr){
+	protected boolean isConst(Expr expr){
 	    if (expr instanceof NestedDotID) {
             NestedDotID id = (NestedDotID) expr;
             NamedElement finalId = getFinalNestId(id);
@@ -2591,7 +2591,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return ERROR;
 	}
 
-	private AgreeType getAgreeType(Expr expr) {
+	protected AgreeType getAgreeType(Expr expr) {
 		if (expr instanceof BinaryExpr) {
 			return getAgreeType((BinaryExpr) expr);
 		} else if (expr instanceof FnCallExpr) {
