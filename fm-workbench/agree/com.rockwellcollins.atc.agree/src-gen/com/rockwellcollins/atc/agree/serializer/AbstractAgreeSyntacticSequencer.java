@@ -37,47 +37,9 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (ruleCall.getRule() == grammarAccess.getAppliesToKeywordsRule())
-			return getAppliesToKeywordsToken(semanticObject, ruleCall, node);
-		else if (ruleCall.getRule() == grammarAccess.getInBindingKeywordsRule())
-			return getInBindingKeywordsToken(semanticObject, ruleCall, node);
-		else if (ruleCall.getRule() == grammarAccess.getInModesKeywordsRule())
-			return getInModesKeywordsToken(semanticObject, ruleCall, node);
 		return "";
 	}
 	
-	/**
-	 * AppliesToKeywords:
-	 * 	'applies' 'to'
-	 * ;
-	 */
-	protected String getAppliesToKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (node != null)
-			return getTokenText(node);
-		return "appliesto";
-	}
-	
-	/**
-	 * InBindingKeywords:
-	 * 	'in' 'binding'
-	 * ;
-	 */
-	protected String getInBindingKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (node != null)
-			return getTokenText(node);
-		return "inbinding";
-	}
-	
-	/**
-	 * InModesKeywords:
-	 * 	'in' 'modes'
-	 * ;
-	 */
-	protected String getInModesKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (node != null)
-			return getTokenText(node);
-		return "inmodes";
-	}
 	
 	@Override
 	protected void emitUnassignedTokens(EObject semanticObject, ISynTransition transition, INode fromNode, INode toNode) {
@@ -150,7 +112,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'occurs' | 'occur'
+	 *     'occur' | 'occurs'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval
@@ -164,7 +126,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'occur' | 'occurs'
+	 *     'occurs' | 'occur'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval
