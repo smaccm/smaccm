@@ -2318,7 +2318,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return getAgreeType(getFinalNestId(nestDotIdExpr));
 	}
 
-	private AgreeType getAgreeType(NamedElement namedEl) {
+	protected AgreeType getAgreeType(NamedElement namedEl) {
 		if (namedEl instanceof Property) {
 			Property propVal = (Property) namedEl;
 			PropertyType propType = propVal.getPropertyType();
