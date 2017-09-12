@@ -3,19 +3,15 @@
  */
 package com.rockwellcollins.atc.agree.scoping;
 
-import java.io.ObjectInputStream.GetField;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.mwe2.language.mwe2.Assignment;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
-import org.eclipse.xtext.scoping.impl.SimpleScope;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
@@ -28,7 +24,6 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DefaultAnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
-import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PublicPackageSection;
 import org.osate.aadl2.Subcomponent;
@@ -42,13 +37,17 @@ import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -74,23 +73,21 @@ public class AgreeScopeProvider extends
     IScope scope_NamedElement(FnDefExpr ctx, EReference ref) {
         return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
     }
-    
+
+    IScope scope_NamedElement(LinearizationDefExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+
+    IScope scope_NamedElement(LibraryFnDefExpr ctx, EReference ref) {
+        return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+    }
+
     IScope scope_NamedElement(EventExpr ctx, EReference ref) {
-    	EObject container = ctx.eContainer();
-        Set<Element> result = getCorrespondingAadlElement(ctx.getId());
-    	
+        Set<Element> result = getCorrespondingAadlElement(ctx.getId(), ref);
 		return Scopes.scopeFor(result, getScope(ctx.eContainer(), ref));
+    }
 
-    	
-    }
-    
-    IScope scope_NamedElement(EqStatement ctx, EReference ref) {
-        return Scopes.scopeFor(ctx.getLhs(), getScope(ctx.eContainer(), ref));
-    }
-    
     IScope scope_NamedElement(RecordType ctx, EReference ref) {
-        //result = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
-
         return getScope(ctx.eContainer(), ref);
     }
 
@@ -105,15 +102,6 @@ public class AgreeScopeProvider extends
     
     IScope scope_NamedElement(RecordUpdateExpr ctx, EReference ref) {
     	Expr recordExpr = ctx.getRecord();
-//    	
-//    	Expr record = ctx.getRecord();
-//    	
-//    	getScope(record, ref);
-//    	if(record instanceof NestedDotID){
-//    		return scope_NamedElement((NestedDotID)record, ref);
-//    	}
-//    	
-//    	return Scopes.scopeFor(Collections.singleton(ctx.getRecord()), getScope(ctx.eContainer(), ref));
     	return RecordExprScoper.getScope(recordExpr);
     }
     
@@ -154,7 +142,7 @@ public class AgreeScopeProvider extends
                 }
             }
         }
-        return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
+        return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), getScope(ctx.eContainer(), ref));
                 
     }
     
@@ -165,7 +153,12 @@ public class AgreeScopeProvider extends
             if (spec instanceof EqStatement) {
                 EqStatement eq = (EqStatement) spec;
                 result.addAll(eq.getLhs());
-            } else {
+            }else if (spec instanceof InputStatement){
+                result.addAll(((InputStatement) spec).getLhs());
+            }else if (spec instanceof EnumStatement){
+            	result.addAll(((EnumStatement) spec).getEnums());
+            	result.add(spec);
+            }else{
                 result.add(spec);
             }
         }
@@ -207,8 +200,8 @@ public class AgreeScopeProvider extends
     	return IScope.NULLSCOPE;
     }
     
-    IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
-    	Set<Element> components = getCorrespondingAadlElement(ctx);
+    protected IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
+    	Set<Element> components = getCorrespondingAadlElement(ctx, ref);
     	EObject container = ctx.eContainer();
     	
     	//so this strange check make sure that we are
@@ -219,7 +212,8 @@ public class AgreeScopeProvider extends
     	while(!(container instanceof NestedDotID) &&
     		  !(container instanceof RecordExpr) &&
     		  !(container instanceof RecordUpdateExpr) &&
-    		  !(container instanceof AgreeContract)){
+    		  !(container instanceof AgreeContract) &&
+    		  !(container instanceof AadlPackage)){
     		container = container.eContainer();
     	}
     	
@@ -234,15 +228,10 @@ public class AgreeScopeProvider extends
     }
     
     IScope scope_NamedElement(Arg ctx, EReference ref){
-    //	
-    //	EObject container = ctx.eContainer();
-    //	while(!(container instanceof ComponentClassi)
-    //	
-     //   return Scopes.scopeFor(getAllElementsFromSpecs(ctx.getSpecs()), IScope.NULLSCOPE);
     	return IScope.NULLSCOPE;
     }
     
-    private Set<Element> getCorrespondingAadlElement(NestedDotID id) {
+    private Set<Element> getCorrespondingAadlElement(NestedDotID id, EReference ref) {
         EObject container = id.eContainer();
         Set<Element> result = new HashSet<>();
 
@@ -296,7 +285,9 @@ public class AgreeScopeProvider extends
             		NamedElement namedEl = elID.getBase();
             		
             		if(namedEl instanceof ComponentImplementation){
-            			result.addAll(((ComponentImplementation) namedEl).getAllSubcomponents());
+            			ComponentImplementation componentImplementation = (ComponentImplementation) namedEl;
+            			EList<Subcomponent> subs = componentImplementation.getAllSubcomponents();
+						result.addAll(subs);
             		}else if(namedEl instanceof RecordDefExpr){
             			result.addAll(((RecordDefExpr) namedEl).getArgs());
             		}
@@ -325,6 +316,9 @@ public class AgreeScopeProvider extends
         	        throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
         	    }
         	    result.addAll(((NodeDefExpr)container).getArgs());
+        	    if (((NodeDefExpr)container).getNodeBody() != null) {
+        	        result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
+        	    }
         	}
     		
     		while(!(container instanceof AadlPackage)){
@@ -348,14 +342,19 @@ public class AgreeScopeProvider extends
                     throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
                 }
         		result.addAll(((NodeDefExpr) container).getArgs());
+        		if (((NodeDefExpr)container).getNodeBody() != null) {
+        		    result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
+        		}
         	}
         	
         	while(!(container instanceof ComponentClassifier) &&
         		  !(container instanceof AadlPackage)){
         		container = container.eContainer();
-        	}
-
+        	}        	
         } else {
+        	
+         	//check if the type of this statement is enumerated. If so add enums for scope
+         	//addEnums(container, result, ref);
             // travel out of the annex and get the component
             // classifier that the annex is contained in.
             // If the annex is in a library (not a component),
@@ -397,6 +396,9 @@ public class AgreeScopeProvider extends
         	}
         }else if(container instanceof NodeDefExpr){
         	result.addAll(((NodeDefExpr) container).getArgs());
+        	if (((NodeDefExpr)container).getNodeBody() != null) {
+    		    result.addAll(((NodeDefExpr)container).getNodeBody().getLocs());
+    		}
         	//also add other nodes from the annex
         	while (!(container instanceof AgreeContract)) {
                 container = container.eContainer();
@@ -412,13 +414,52 @@ public class AgreeScopeProvider extends
                 container = ((AgreeContractLibrary) container).getContract();
             }
 
-            assert (container instanceof AgreeContract);
-            result = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
-
+            if( !(container instanceof AgreeContract)){
+            	throw new IllegalArgumentException("something went wrong in the AGREE scope provider");
+            }
+            result.addAll(getAllElementsFromSpecs(((AgreeContract) container).getSpecs()));
+            
         }
 
         return result;
     }
+
+
+//	private void addEnums(EObject container, Set<Element> result, EReference ref) {
+//		Type type = null;
+//		if (container instanceof ConstStatement || container instanceof EqStatement
+//				|| container instanceof AssignStatement || container instanceof InputStatement) {
+//			if (container instanceof ConstStatement) {
+//				type = ((ConstStatement) container).getType();
+//			} else if (container instanceof AssignStatement && ref.getName() != "base") {
+//				NestedDotID typeId = ((AssignStatement) container).getId();
+//				container = typeId.getBase();
+//			}
+//			if (container instanceof EqStatement || container instanceof InputStatement) {
+//				EList<Arg> lhs;
+//				if (container instanceof EqStatement) {
+//					lhs = ((EqStatement) container).getLhs();
+//				} else {
+//					lhs = ((InputStatement) container).getLhs();
+//				}
+//				if (lhs.size() == 1) {
+//					Arg arg = lhs.get(0);
+//					type = arg.getType();
+//				}
+//			}
+//
+//			if (type instanceof RecordType) {
+//				NestedDotID typeId = ((RecordType) type).getRecord();
+//				while (typeId.getSub() != null) {
+//					typeId = typeId.getSub();
+//				}
+//				NamedElement typeName = typeId.getBase();
+//				if (typeName instanceof EnumStatement) {
+//					result.addAll(((EnumStatement) typeName).getEnums());
+//				}
+//			}
+//		}
+//	}
 
     private void getAllAgreeElements(Set<Element> result, Classifier component) {
         for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses(component, AgreePackage.eINSTANCE.getAgreeContractSubclause())) {

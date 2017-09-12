@@ -3,5 +3,47 @@
  */
 package com.rockwellcollins.atc.agree.serializer;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.RuleCall;
+import org.eclipse.xtext.nodemodel.INode;
+
 public class AgreeSyntacticSequencer extends AbstractAgreeSyntacticSequencer {
+	/**
+	 * AppliesToKeywords:
+	 * 	'applies' 'to'
+	 * ;
+	 */
+	@Override
+	protected String getAppliesToKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null) {
+			return getTokenText(node);
+		}
+		return "applies to";
+	}
+
+	/**
+	 * InBindingKeywords:
+	 * 	'in' 'binding'
+	 * ;
+	 */
+	@Override
+	protected String getInBindingKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null) {
+			return getTokenText(node);
+		}
+		return "in binding";
+	}
+
+	/**
+	 * InModesKeywords:
+	 * 	'in' 'modes'
+	 * ;
+	 */
+	@Override
+	protected String getInModesKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null) {
+			return getTokenText(node);
+		}
+		return "in modes";
+	}
 }

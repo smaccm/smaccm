@@ -1,0 +1,26 @@
+CC     = "C:\rw_apps\matlab\R2016a_x64\sys\lcc64\lcc64\bin\lcc64.exe"
+LD     = "C:\rw_apps\matlab\R2016a_x64\sys\lcc64\lcc64\bin\lcclnk64.exe"
+LIBCMD = "C:\rw_apps\matlab\R2016a_x64\sys\lcc64\lcc64\bin\lcclib64.exe"
+CFLAGS = -dll -noregistrylookup  -c -Zp8 -DLCC_WIN64 -DMATLAB_MEX_FILE -DMX_COMPAT_32 -nodeclspec 
+LDFLAGS = -s -dll -L"C:\rw_apps\matlab\R2016a_x64\sys\lcc64\lcc64\lib64" -entry LibMain -map sfun.map 
+LIBFLAGS = 
+
+OBJECTS = \
+	"MON_sl_after_harness_sfun.obj"\
+	"c2_MON_sl_after_harness.obj"\
+	"MON_sl_after_harness_sfun_registry.obj"\
+	"lccstub.obj"\
+
+INCLUDE_PATH= -I"C:\rw_apps\matlab\R2016a_x64\sys\lcc64\lcc64\include64"  -I"C:\rw_apps\matlab\R2016a_x64\extern\include"  -I"C:\rw_apps\matlab\R2016a_x64\simulink\include"  -I"C:\rw_apps\matlab\R2016a_x64\simulink\include\sf_runtime"  -I"C:\rw_apps\matlab\R2016a_x64\stateflow\c\mex\include"  -I"C:\rw_apps\matlab\R2016a_x64\rtw\c\src"  -I"C:\Users\jdbackes\git\smaccm\models\Simulink_models\BSCU\work\slprj\_sfprj\MON_sl_after_harness\_self\sfun\src" 
+ 
+
+MON_sl_after_harness_sfun.mexw64 : $(MAKEFILE) $(OBJECTS)
+	$(LD) $(LDFLAGS) -o MON_sl_after_harness_sfun.mexw64 @MON_sl_after_harness_sfun.lmko
+MON_sl_after_harness_sfun.obj :	"MON_sl_after_harness_sfun.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "MON_sl_after_harness_sfun.c"
+c2_MON_sl_after_harness.obj :	"c2_MON_sl_after_harness.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "c2_MON_sl_after_harness.c"
+MON_sl_after_harness_sfun_registry.obj :	"MON_sl_after_harness_sfun_registry.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "MON_sl_after_harness_sfun_registry.c"
+lccstub.obj :	"C:\rw_apps\matlab\R2016a_x64\sys\lcc64\lcc64\mex\lccstub.c"
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) "C:\rw_apps\matlab\R2016a_x64\sys\lcc64\lcc64\mex\lccstub.c"

@@ -1,0 +1,29 @@
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1.idl4>;
+import <tb_Monitor_bool_1.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10.idl4>;
+
+import <can_tx.idl4>;
+import <can_rx.idl4>;
+
+component can_shim {
+    control;
+
+    // AADL interface
+    include <tb_smaccmpilot_tk1_types.h>;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1 tb_framing2self;
+    consumes QueuedData tb_framing2self_notification;
+    uses tb_Monitor_bool_1 tb_self2framing_status;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_self2framing_frame;
+
+    // Internal interface
+    has semaphore status_0_semaphore;
+    has semaphore status_1_semaphore;
+    has semaphore status_2_semaphore;
+
+    uses can_tx_inf can_tx;
+    uses can_rx_inf can_rx;
+
+    consumes txb0_ack txb0_ack;
+    consumes txb1_ack txb1_ack;
+    consumes txb2_ack txb2_ack;
+}

@@ -36,9 +36,13 @@
 
  **************************************************************************/
 
-procedure SMACCM_DATA__GIDL_writer {
-    include <smaccm_top_i_types.h>;
 
-    bool write_SMACCM_DATA__GIDL(refin smaccm_SMACCM_DATA__GIDL_container arg);
+
+procedure SMACCM_DATA__GIDL_writer {
+    include <tb_smaccmcopter_types.h>;
+
+    bool write_SMACCM_DATA__GIDL(refin tb_SMACCM_DATA__GIDL_container arg);
 }
+
+
 

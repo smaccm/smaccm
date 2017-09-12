@@ -1,0 +1,203 @@
+type Base_Types__Boolean = bool;
+type Base_Types__Unsigned = int;
+type Base_Types__Unsigned_64 = int;
+type Base_Types__Unsigned_32 = int;
+type Base_Types__Unsigned_16 = int;
+type Base_Types__Unsigned_8 = int;
+type Base_Types__Integer = int;
+type Base_Types__Integer_64 = int;
+type Base_Types__Integer_32 = int;
+type Base_Types__Integer_16 = int;
+type Base_Types__Integer_8 = int;
+type Base_Types__Float = real;
+type Base_Types__Float_32 = real;
+type Base_Types__Float_64 = real;
+
+node main(
+  ss__in1 : bool;
+  ss__in2 : bool;
+  ss___CLOCK_ : bool;
+  in1 : bool;
+  in2 : bool;
+  ss__out1 : bool;
+  ss__out2 : bool;
+  out1 : bool;
+  out2 : bool;
+  __SIM_STEP : int;
+  __SIM_PRE0 : bool;
+  __SIM_DUMMY___ASSUME0 : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT__in1 : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT__in2 : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT__out1 : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT__out2 : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT____ASSERT : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT____ASSUME__HIST : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT____ASSUME__CONJ : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT____GUARANTEE0 : bool;
+  __SIM_DUMMY__TOP__ss__TILDE__0__DOT____GUARANTEE1 : bool;
+  __SIM_DUMMY___SIM_PE___ASSUME0 : bool;
+  __SIM_DUMMY___SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE0 : bool;
+  __SIM_DUMMY___SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE1 : bool;
+  __SIM_DUMMY_ss__in1 : bool;
+  __SIM_DUMMY_ss__in2 : bool;
+  __SIM_DUMMY_ss___CLOCK_ : bool;
+  __SIM_DUMMY_in1 : bool;
+  __SIM_DUMMY_in2 : bool;
+  __SIM_DUMMY_ss__out1 : bool;
+  __SIM_DUMMY_ss__out2 : bool;
+  __SIM_DUMMY_out1 : bool;
+  __SIM_DUMMY_out2 : bool;
+  __SIM_DUMMY___SIM_STEP : int;
+  __SIM_DUMMY___SIM_PRE0 : bool;
+  __SIM_DUMMY___SIM_NEXT_STEP : int;
+  __SIM_DUMMY___SIM_NEXT_PRE0 : bool
+) returns (
+  __SIM_NEXT_STEP : int;
+  __SIM_NEXT_PRE0 : bool
+);
+var
+  __ASSUME0 : bool;
+  _TOP__ss__TILDE__0__DOT__in1 : bool;
+  _TOP__ss__TILDE__0__DOT__in2 : bool;
+  _TOP__ss__TILDE__0__DOT__out1 : bool;
+  _TOP__ss__TILDE__0__DOT__out2 : bool;
+  _TOP__ss__TILDE__0__DOT____ASSERT : bool;
+  _TOP__ss__TILDE__0__DOT____ASSUME__HIST : bool;
+  _TOP__ss__TILDE__0__DOT____ASSUME__CONJ : bool;
+  _TOP__ss__TILDE__0__DOT____GUARANTEE0 : bool;
+  _TOP__ss__TILDE__0__DOT____GUARANTEE1 : bool;
+  __SIM_PE___ASSUME0 : bool;
+  __SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE0 : bool;
+  __SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE1 : bool;
+  __SIM_GUARANTEE : bool;
+  __SIM_ASSERTIONS : bool;
+  __SIM_GUARANTEE0 : bool;
+  __SIM_GUARANTEE1 : bool;
+  __SIM_GUARANTEE2 : bool;
+  __SIM_GUARANTEE3 : bool;
+  __SIM_GUARANTEE4 : bool;
+  __SIM_GUARANTEE5 : bool;
+  __SIM_GUARANTEE6 : bool;
+  __SIM_GUARANTEE7 : bool;
+  __SIM_GUARANTEE8 : bool;
+  __SIM_GUARANTEE9 : bool;
+  __SIM_GUARANTEE10 : bool;
+  __SIM_GUARANTEE11 : bool;
+  __SIM_GUARANTEE12 : bool;
+  __SIM_GUARANTEE13 : bool;
+  __SIM_GUARANTEE14 : bool;
+  __SIM_GUARANTEE15 : bool;
+  __SIM_GUARANTEE16 : bool;
+  __SIM_GUARANTEE17 : bool;
+  __SIM_GUARANTEE18 : bool;
+  __SIM_GUARANTEE19 : bool;
+  __SIM_GUARANTEE20 : bool;
+  __SIM_GUARANTEE21 : bool;
+  __SIM_GUARANTEE22 : bool;
+  __SIM_GUARANTEE23 : bool;
+  __SIM_GUARANTEE24 : bool;
+  __SIM_GUARANTEE25 : bool;
+  __SIM_GUARANTEE26 : bool;
+  __SIM_ASSERTIONS0 : bool;
+let
+  --%MAIN;
+  _TOP__ss__TILDE__0__DOT__in1 = ss__in1;
+
+  _TOP__ss__TILDE__0__DOT__in2 = ss__in2;
+
+  _TOP__ss__TILDE__0__DOT__out1 = ss__out1;
+
+  _TOP__ss__TILDE__0__DOT__out2 = ss__out2;
+
+  _TOP__ss__TILDE__0__DOT____ASSUME__CONJ = true;
+
+  _TOP__ss__TILDE__0__DOT____ASSUME__HIST = (if (__SIM_STEP = 0) then _TOP__ss__TILDE__0__DOT____ASSUME__CONJ else (__SIM_PRE0 and _TOP__ss__TILDE__0__DOT____ASSUME__CONJ));
+
+  _TOP__ss__TILDE__0__DOT____GUARANTEE0 = (_TOP__ss__TILDE__0__DOT__in1 = _TOP__ss__TILDE__0__DOT__out1);
+
+  _TOP__ss__TILDE__0__DOT____GUARANTEE1 = ((_TOP__ss__TILDE__0__DOT__in1 and _TOP__ss__TILDE__0__DOT__in2) = (_TOP__ss__TILDE__0__DOT__out1 and _TOP__ss__TILDE__0__DOT__out2));
+
+  _TOP__ss__TILDE__0__DOT____ASSERT = (true and ((_TOP__ss__TILDE__0__DOT____ASSUME__HIST => (((not __SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE1) or _TOP__ss__TILDE__0__DOT____GUARANTEE1) and (((not __SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE0) or _TOP__ss__TILDE__0__DOT____GUARANTEE0) and true))) and true));
+
+  __ASSUME0 = true;
+
+  __SIM_NEXT_STEP = (__SIM_STEP + 1);
+
+  __SIM_NEXT_PRE0 = _TOP__ss__TILDE__0__DOT____ASSUME__HIST;
+
+  __SIM_GUARANTEE0 = __SIM_ASSERTIONS;
+
+  __SIM_GUARANTEE1 = (__SIM_GUARANTEE0 and (__ASSUME0 = __SIM_DUMMY___ASSUME0));
+
+  __SIM_GUARANTEE2 = (__SIM_GUARANTEE1 and (_TOP__ss__TILDE__0__DOT__in1 = __SIM_DUMMY__TOP__ss__TILDE__0__DOT__in1));
+
+  __SIM_GUARANTEE3 = (__SIM_GUARANTEE2 and (_TOP__ss__TILDE__0__DOT__in2 = __SIM_DUMMY__TOP__ss__TILDE__0__DOT__in2));
+
+  __SIM_GUARANTEE4 = (__SIM_GUARANTEE3 and (_TOP__ss__TILDE__0__DOT__out1 = __SIM_DUMMY__TOP__ss__TILDE__0__DOT__out1));
+
+  __SIM_GUARANTEE5 = (__SIM_GUARANTEE4 and (_TOP__ss__TILDE__0__DOT__out2 = __SIM_DUMMY__TOP__ss__TILDE__0__DOT__out2));
+
+  __SIM_GUARANTEE6 = (__SIM_GUARANTEE5 and (_TOP__ss__TILDE__0__DOT____ASSERT = __SIM_DUMMY__TOP__ss__TILDE__0__DOT____ASSERT));
+
+  __SIM_GUARANTEE7 = (__SIM_GUARANTEE6 and (_TOP__ss__TILDE__0__DOT____ASSUME__HIST = __SIM_DUMMY__TOP__ss__TILDE__0__DOT____ASSUME__HIST));
+
+  __SIM_GUARANTEE8 = (__SIM_GUARANTEE7 and (_TOP__ss__TILDE__0__DOT____ASSUME__CONJ = __SIM_DUMMY__TOP__ss__TILDE__0__DOT____ASSUME__CONJ));
+
+  __SIM_GUARANTEE9 = (__SIM_GUARANTEE8 and (_TOP__ss__TILDE__0__DOT____GUARANTEE0 = __SIM_DUMMY__TOP__ss__TILDE__0__DOT____GUARANTEE0));
+
+  __SIM_GUARANTEE10 = (__SIM_GUARANTEE9 and (_TOP__ss__TILDE__0__DOT____GUARANTEE1 = __SIM_DUMMY__TOP__ss__TILDE__0__DOT____GUARANTEE1));
+
+  __SIM_GUARANTEE11 = (__SIM_GUARANTEE10 and (__SIM_PE___ASSUME0 = __SIM_DUMMY___SIM_PE___ASSUME0));
+
+  __SIM_GUARANTEE12 = (__SIM_GUARANTEE11 and (__SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE0 = __SIM_DUMMY___SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE0));
+
+  __SIM_GUARANTEE13 = (__SIM_GUARANTEE12 and (__SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE1 = __SIM_DUMMY___SIM_PE__TOP__ss__TILDE__0__DOT____GUARANTEE1));
+
+  __SIM_GUARANTEE14 = (__SIM_GUARANTEE13 and (ss__in1 = __SIM_DUMMY_ss__in1));
+
+  __SIM_GUARANTEE15 = (__SIM_GUARANTEE14 and (ss__in2 = __SIM_DUMMY_ss__in2));
+
+  __SIM_GUARANTEE16 = (__SIM_GUARANTEE15 and (ss___CLOCK_ = __SIM_DUMMY_ss___CLOCK_));
+
+  __SIM_GUARANTEE17 = (__SIM_GUARANTEE16 and (in1 = __SIM_DUMMY_in1));
+
+  __SIM_GUARANTEE18 = (__SIM_GUARANTEE17 and (in2 = __SIM_DUMMY_in2));
+
+  __SIM_GUARANTEE19 = (__SIM_GUARANTEE18 and (ss__out1 = __SIM_DUMMY_ss__out1));
+
+  __SIM_GUARANTEE20 = (__SIM_GUARANTEE19 and (ss__out2 = __SIM_DUMMY_ss__out2));
+
+  __SIM_GUARANTEE21 = (__SIM_GUARANTEE20 and (out1 = __SIM_DUMMY_out1));
+
+  __SIM_GUARANTEE22 = (__SIM_GUARANTEE21 and (out2 = __SIM_DUMMY_out2));
+
+  __SIM_GUARANTEE23 = (__SIM_GUARANTEE22 and (__SIM_STEP = __SIM_DUMMY___SIM_STEP));
+
+  __SIM_GUARANTEE24 = (__SIM_GUARANTEE23 and (__SIM_PRE0 = __SIM_DUMMY___SIM_PRE0));
+
+  __SIM_GUARANTEE25 = (__SIM_GUARANTEE24 and (__SIM_NEXT_STEP = __SIM_DUMMY___SIM_NEXT_STEP));
+
+  __SIM_GUARANTEE26 = (__SIM_GUARANTEE25 and (__SIM_NEXT_PRE0 = __SIM_DUMMY___SIM_NEXT_PRE0));
+
+  __SIM_GUARANTEE = (not __SIM_GUARANTEE26);
+
+  __SIM_ASSERTIONS0 = (true and (__SIM_STEP = 0));
+
+  __SIM_ASSERTIONS = __SIM_ASSERTIONS0;
+  
+  assert ((not __SIM_PE___ASSUME0) or __ASSUME0);
+
+  assert _TOP__ss__TILDE__0__DOT____ASSERT;
+
+  assert (ss__out2 = out2);
+
+  assert (ss__out1 = out1);
+
+  assert (in1 = ss__in1);
+
+  assert (in2 = ss__in2);
+
+  assert true;
+
+  --%PROPERTY __SIM_GUARANTEE;
+tel;

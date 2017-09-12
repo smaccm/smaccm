@@ -9,8 +9,8 @@ public
 			Speed: in data port Types::speed.speed_impl;
 			
 	annex agree {**
-		assume "reasonable tire pitch" :
-			Agree_Nodes.abs(Target_Tire_Direction.val) <= 0.45;
+--		assume "reasonable tire pitch" :
+--			Agree_Nodes.abs(Target_Tire_Direction.val) <= 0.45;
 			
 		guarantee "roll limiter" :
 			if (Agree_Nodes.abs(Target_Tire_Direction.val) > 0.20 and Speed.val > 45.0)

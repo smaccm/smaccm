@@ -1,0 +1,46 @@
+config APP_SMACCMPILOT_TK1
+    bool "Smaccmpilot for TK1"
+    depends on LIB_SEL4 && LIB_MUSL_C && LIB_SEL4_VKA && LIB_SEL4_ALLOCMAN && LIB_SEL4_PLAT_SUPPORT && \
+               LIB_PLATSUPPORT && LIB_SEL4_VSPACE && LIB_ELF && LIB_SEL4_UTILS && LIB_SEL4_SIMPLE && \
+               LIB_UTILS && LIB_SEL4_SIMPLE_DEFAULT && LIB_CPIO && LIB_SEL4_ARM_VMM && LIB_SEL4_SYNC && LIB_SEL4_DEBUG && \
+               LIB_SEL4_DMA && LIB_USB
+
+    default n
+    select TK1_DEVICE_FWD
+    select APP_CAMKES_EXECUTIVE
+
+choice
+    bool "boot mode selection"
+    depends on APP_SMACCMPILOT_TK1
+    default VM_TK1_EMMC_ROOTFS
+    help
+        Selects whether to load root file system off emmc or ramdisk
+
+    config VM_TK1_INITRD_ROOTFS
+        bool "initrd"
+        help
+            Selects initrd as the root filesystem.
+
+    config VM_TK1_EMMC_ROOTFS
+        bool "mmcblk0p1"
+        help
+            Selects partition 1 of the emmc card as the root
+            filesystem.
+endchoice
+
+
+config APP_SMACCMPILOT_TK1_TB_DEBUG
+    bool "Enable debugging trusted build monitors"
+    default n
+    depends on APP_SMACCMPILOT_TK1 && PRINTING
+    help
+        Enable debugging trusted build monitors
+
+config TK1_VM_HACK
+    bool "Use hacked VM configuration (requires hand modifying capdl file)"
+    default n
+    depends on APP_SMACCMPILOT_TK1
+
+config TK1_DEVICE_FWD
+    bool
+    default n

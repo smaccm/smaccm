@@ -1,0 +1,80 @@
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_1.idl4>;
+import <tb_Monitor_bool_1.idl4>;
+import <tb_Monitor_SMACCM_DATA__CAN_Frame_i_10.idl4>;
+
+import "can_shim/can_shim.camkes";
+import "can/can.camkes";
+import <spi/spi.camkes>;
+
+import <clkcar.idl4>;
+
+component spibase {
+    hardware;
+    dataport Buf spi1_reg;
+    emits DataAvailable spi1_int;
+}
+
+component CAN_Driver {
+    include <tb_smaccmpilot_tk1_types.h>;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_1 tb_framing2self;
+    consumes QueuedData tb_framing2self_notification;
+    uses tb_Monitor_bool_1 tb_self2framing_status0;
+    uses tb_Monitor_SMACCM_DATA__CAN_Frame_i_10 tb_self2framing_frame0;
+
+    uses clkcar_inf clkcar;
+
+    uses gpio_inf gpio_spi_can1_cs;
+    consumes IntEvent CAN1Int;
+    emits IntEventAck CANIntAck;
+    
+    composition {
+        /* hardware components */
+        component spibase  spibase_obj;
+
+        /* software components */
+        component can_shim  can_shim_obj;
+        component spi       spi_obj;
+        component can       can_obj;
+
+        /* exported interfaces */
+        export can_shim_obj.tb_framing2self -> tb_framing2self;
+        export can_shim_obj.tb_framing2self_notification -> tb_framing2self_notification;
+        export can_shim_obj.tb_self2framing_status -> tb_self2framing_status0;
+        export can_shim_obj.tb_self2framing_frame -> tb_self2framing_frame0;
+
+        export spi_obj.clkcar -> clkcar;
+
+        export spi_obj.gpio_spi_can1_cs -> gpio_spi_can1_cs;
+        export can_obj.Int -> CAN1Int;
+        export can_obj.IntAck -> CANIntAck;
+
+        /* hardware connections */
+        connection seL4HardwareMMIO spi1_mem(from spi_obj.spi1_reg, to spibase_obj.spi1_reg);
+        connection seL4HardwareInterrupt spi1_irq(from spibase_obj.spi1_int, to spi_obj.spi1_int);
+
+        /* CAN driver connections */
+        connection seL4RPCCall can_spi(from can_obj.spi, to spi_obj.spi);
+        connection seL4SharedData can_spi_channel(from can_obj.spi_can, to spi_obj.spi1_can);
+
+        /* CAN shim connections */
+        connection seL4RPCCall can_shim_can_tx(from can_shim_obj.can_tx, to can_obj.can_tx);
+        connection seL4RPCCall can_shim_can_rx(from can_shim_obj.can_rx, to can_obj.can_rx);
+        connection seL4Notification txb0_ack(from can_obj.txb0_ack, to can_shim_obj.txb0_ack);
+        connection seL4Notification txb1_ack(from can_obj.txb1_ack, to can_shim_obj.txb1_ack);
+        connection seL4Notification txb2_ack(from can_obj.txb2_ack, to can_shim_obj.txb2_ack);
+    }
+
+    configuration {
+        can_shim_obj.tb_framing2self_attributes <- tb_framing2self_attributes;
+        can_shim_obj.tb_self2framing_status_attributes <- tb_self2framing_status0_attributes;
+        can_shim_obj.tb_self2framing_frame_attributes <- tb_self2framing_frame0_attributes;
+        
+        can_shim_obj.priority = 250;
+        spi_obj.priority = 250;
+        can_obj.priority = 250;
+
+        spibase_obj.spi1_reg_paddr            = 0x7000d000;
+        spibase_obj.spi1_reg_size             = 0x1000;
+        spibase_obj.spi1_int_irq_number       = 91;  /* SPI1  interrupt */
+    }
+}

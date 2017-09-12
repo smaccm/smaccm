@@ -1,6 +1,7 @@
 package com.rockwellcollins.atc.agree.codegen.handlers;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
@@ -78,6 +79,20 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		}
 
 		ComponentType ct = (ComponentType) classifier;
+//		
+//		//Allow a runnable to be executed by the UI-thread asynchronously
+//		Display.getDefault().asyncExec(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				doWork(ct);
+//			}
+//		});
+//		
+//		return Status.OK_STATUS;
+//	}
+//	
+//	protected void doWork(ComponentType ct){
 		ComponentImplementation ci = null;
 		try {
 			ci = AgreeUtils.compImplFromType(ct);
@@ -87,11 +102,12 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 				si = InstantiateModel.buildInstanceModelFile(ci);
 			} catch (Exception e) {
 				Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
+				//return;
 				return Status.CANCEL_STATUS;
 			}
 
-			// SystemType sysType = si.getSystemImplementation().getType();
 			ComponentType sysType = AgreeUtils.getInstanceType(si);
+
 			EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
 					AgreePackage.eINSTANCE.getAgreeContractSubclause());
 
@@ -100,7 +116,12 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 			}
 
 			// Get Agree program
-			AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si);
+			AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, false);
+			if(agreeProgram.containsRealTimePatterns){
+				throw new AgreeException("'" + sysType.getName() + "' system type contains AGREE Real Time Patterns."
+						+ " Export of AGREE Real Time Patterns NOT Supported - they are considered scheduling properties"
+						+ " of components and can be decomposed further.");
+			}
 
 			// Translate Agree Node to Lustre Node with pre-statement flatten, helper nodes inlined,
 			// and variable declarations sorted so they are declared before use
@@ -111,49 +132,82 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 
 			ModelInfo info = getModelInfo(ct);
 			if (info == null) {
+				//return;
 				return Status.CANCEL_STATUS;
 			}
 			
 			String dirStr = info.outputDirPath;
 			if (dirStr == null || dirStr.isEmpty()) {
+				//return;
 				return Status.CANCEL_STATUS;
 			}
 			
-			boolean exportPressed = info.exportPressed;
-			boolean updatePressed = info.updatePressed;
-			boolean verifyPressed = info.verifyPressed;
+			boolean exportContractsPressed = info.exportPressed;
+			boolean genImplPressed = info.generatePressed;
+			boolean genVerificationPressed = info.updatePressed;
+			boolean verifySubsysPressed = info.verifyPressed;
 			
-			if (exportPressed || updatePressed || verifyPressed) {
-				String matlabFuncScriptName = matlabFunction.name + ".m";
+			String matlabFuncScriptName = matlabFunction.name + ".m";
+			
+			if(genImplPressed){
+				// Write MATLAB script to generate subsystem in the selected
+				// output folder
+				String subsysName = "";
+				if(info.subsystemName.equals("")){
+					subsysName = sysType.getName();
+				}
+				else{
+					subsysName = info.subsystemName;
+				}
+				MdlScriptCreator implMdlScript = new MdlScriptCreator(dirStr,
+						info.implMdlPath, info.verifyMdlName, subsysName, matlabFunction.ports, matlabFuncScriptName,
+						true, info.verifyPressed);		
+
+				String implMdlScriptName = "generate_"+ subsysName+ ".m";
+				
+				//generate the script to create the impl model file into the path specified for the model
+				File implMdlFile = new File(info.implMdlPath);
+				String implMdlDir = implMdlFile.getParent();
+				if(implMdlDir != null){
+					Path implMdlScriptPath = Paths.get(implMdlDir, implMdlScriptName);
+					writeToFile(implMdlScriptPath,
+							implMdlScript.toString());	
+				}	
+			}
+			
+			if (exportContractsPressed || genVerificationPressed || verifySubsysPressed) {
 				Path matlabFuncScriptPath = Paths.get(dirStr,
 						matlabFuncScriptName);
 				// Write MATLAB function code into the specified file in the
 				// selected output folder
 				writeToFile(matlabFuncScriptPath, matlabFunction.toString());
-				if (info.updatePressed || info.verifyPressed) {
-
+				
+				if (genVerificationPressed || verifySubsysPressed) {
 					// Create Simulink Model Update script into the output
 					// folder
-					SimulinkObserverScriptCreator modelUpdateScript = new SimulinkObserverScriptCreator(
-							info.originalModelName, info.updatedModelName,
-							info.subsystemName, matlabFuncScriptName,
-							info.verifyPressed);
-
-					String modelUpdateScriptName = matlabFunction.name
+					MdlScriptCreator verifMdlScript = new MdlScriptCreator(dirStr,
+							info.implMdlPath, info.verifyMdlName, info.subsystemName, matlabFunction.ports, matlabFuncScriptName,
+							false, info.verifyPressed);						
+					
+					String verifMdlScriptName = matlabFunction.name
 							+ "_Observer.m";
 					
-					Path modelUpdateScriptPath = Paths.get(dirStr,
-							modelUpdateScriptName);
+					Path verifMdlScriptPath = Paths.get(dirStr,
+							verifMdlScriptName);
 					
-					writeToFile(modelUpdateScriptPath,
-							modelUpdateScript.toString());
+					writeToFile(verifMdlScriptPath,
+							verifMdlScript.toString());
 				}
 			}
+			//return;
 			return Status.OK_STATUS;
 		} catch (Throwable e) {
 			String messages = getNestedMessages(e);
 			e.printStackTrace();
+			Dialog.showError("AGREE Error", e.toString());
+			//return;
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
+
 		} finally {
 			if (ci != null) {
 				ci.eResource().getContents().remove(ci);
@@ -208,10 +262,10 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 		sl1.setValue(savePathToAADLProperty(info.outputDirPath));
 
 		StringLiteral sl2 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
-		sl2.setValue(savePathToAADLProperty(info.originalModelName));
+		sl2.setValue(savePathToAADLProperty(info.implMdlPath));
 
 		StringLiteral sl3 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
-		sl3.setValue(savePathToAADLProperty(info.updatedModelName));
+		sl3.setValue(savePathToAADLProperty(info.verifyMdlName));
 
 		StringLiteral sl4 = (StringLiteral) lv.createOwnedListElement(Aadl2Package.eINSTANCE.getStringLiteral());
 		sl4.setValue(savePathToAADLProperty(info.subsystemName));
@@ -236,7 +290,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 	}
 
 	protected String getJobName() {
-		return "AGREE - Generate Simulink Observer";
+		return "AGREE - Generate Simulink Models";
 	}
 
 	public void writeToFile(Path filePath, String contentStr) {

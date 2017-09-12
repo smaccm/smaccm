@@ -1,2 +1,2 @@
-apps-$(CONFIG_APP_MINITOWER) += Minitower
-Minitower: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench
+apps-$(CONFIG_APP_SMACCMCOPTER) += smaccmcopter
+smaccmcopter: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

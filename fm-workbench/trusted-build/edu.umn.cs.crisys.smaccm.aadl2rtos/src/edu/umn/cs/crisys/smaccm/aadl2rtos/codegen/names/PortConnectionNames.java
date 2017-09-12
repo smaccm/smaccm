@@ -34,6 +34,10 @@ public class PortConnectionNames {
   }
   
   public String getName() {
+	return c.getName();
+  }
+  
+  public String getFullyQualifiedName() {
 	  if (getSourcePort().getConnections().size() > 1)
 		  return getSourcePort().getQualifiedName() + "_" + getDestPort().getQualifiedName();
 	  else

@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis.preferences;
+package com.rockwellcollins.atc.agree.analysis.preferences; 
 
 import java.io.File;
 import java.net.URL;
@@ -32,6 +32,14 @@ public class PreferencesUtil {
         return api;
     }
 
+    public static SolverOption getSolverOption() {
+        IPreferenceStore prefs = getPreferenceStore();
+        String solverString =
+                prefs.getString(PreferenceConstants.PREF_SOLVER).toUpperCase().replaceAll(" ", "");
+        SolverOption solver = SolverOption.valueOf(solverString);
+        return solver;
+    }
+    
     private static IPreferenceStore getPreferenceStore() {
         return Activator.getDefault().getPreferenceStore();
     }
@@ -91,6 +99,8 @@ public class PreferencesUtil {
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));
         api.setPdrMax(prefs.getInt(PreferenceConstants.PREF_PDR_MAX));
+        //TODO set pdr invariants as preferences option
+        //api.setPdrInvariants();
         if (prefs.getBoolean(PreferenceConstants.PREF_NO_KINDUCTION)) {
             api.disableKInduction();
         }
@@ -101,12 +111,12 @@ public class PreferencesUtil {
         IPreferenceStore prefs = getPreferenceStore();
         JRealizabilityApi api = new JRealizabilityApi();
         api.setJKindJar(getJKindJar());
-//		try {
-//			api.setEnvironment("Z3_HOME", Z3Plugin.getZ3Directory());
-//		} catch (NoClassDefFoundError e) {
-//			e.printStackTrace();
-//			// Z3Plugin not present
-//		}
+		try {
+			api.setEnvironment("Z3_HOME", Z3Plugin.getZ3Directory());
+		} catch (NoClassDefFoundError e) {
+			e.printStackTrace();
+			// Z3Plugin not present
+		}
 
         api.setN(prefs.getInt(PreferenceConstants.PREF_DEPTH));
         api.setTimeout(prefs.getInt(PreferenceConstants.PREF_TIMEOUT));

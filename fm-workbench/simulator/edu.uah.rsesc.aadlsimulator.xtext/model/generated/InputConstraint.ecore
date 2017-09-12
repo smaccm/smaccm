@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="inputConstraint" nsURI="http://rsesc.uah.edu/aadlsimulator/xtext/InputConstraint"
+    nsPrefix="inputConstraint">
+  <eClassifiers xsi:type="ecore:EClass" name="InputConstraint"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Expression" eSuperTypes="#//InputConstraint"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ScalarExpression" eSuperTypes="#//Expression"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="Operator">
+    <eLiterals name="AddSubOperator" literal="AddSubOperator"/>
+    <eLiterals name="MultiDivOperator" value="1" literal="MultiDivOperator"/>
+    <eLiterals name="ADDITION" value="2" literal="+"/>
+    <eLiterals name="SUBTRACTION" value="3" literal="-"/>
+    <eLiterals name="MULTIPLICATION" value="4" literal="*"/>
+    <eLiterals name="DIVISION" value="5" literal="/"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RandomExpression" eSuperTypes="#//ScalarExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RefExpression" eSuperTypes="#//ScalarExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ElementRefExpression" eSuperTypes="#//RefExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ids" unique="false" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntervalExpression" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="leftClosed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//ScalarExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//ScalarExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rightClosed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SetExpression" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="members" upperBound="-1"
+        eType="#//ScalarExpression" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntegerLiteral" eSuperTypes="#//ScalarExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RealLiteral" eSuperTypes="#//ScalarExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanLiteral" eSuperTypes="#//ScalarExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BinaryExpression" eSuperTypes="#//ScalarExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//ScalarExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" eType="#//Operator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//ScalarExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PreExpression" eSuperTypes="#//ScalarExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//ElementRefExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RandomIntegerExpression" eSuperTypes="#//RandomExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="interval" eType="#//IntervalExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RandomRealExpression" eSuperTypes="#//RandomExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="interval" eType="#//IntervalExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RandomElementExpression" eSuperTypes="#//RandomExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="set" eType="#//SetExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstRefExpression" eSuperTypes="#//RefExpression">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageSegments" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="constantName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NegativeExpression" eSuperTypes="#//ScalarExpression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//ScalarExpression"
+        containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

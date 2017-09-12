@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import jkind.lustre.BoolExpr;
+import jkind.lustre.EnumType;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
@@ -22,6 +24,7 @@ import jkind.lustre.RealExpr;
 import jkind.lustre.RecordExpr;
 import jkind.lustre.RecordType;
 import jkind.lustre.Type;
+import jkind.lustre.TypeDef;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -29,6 +32,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 import org.osate.aadl2.Aadl2Factory;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BusType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -61,10 +65,13 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
+import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
@@ -208,8 +215,13 @@ public class AgreeUtils {
         return null;
     }
 
-    public static boolean containsTransitiveAgreeAnnex(ComponentInstance compInst) {
-        if (containsAgreeAnnex(compInst.getSubcomponent())) {
+    public static boolean containsTransitiveAgreeAnnex(ComponentInstance compInst, boolean isMonolithic) {
+    	Subcomponent subComp = compInst.getSubcomponent();
+    	if(!isMonolithic){
+    		return typeContainsAgreeAnnex(subComp);
+    	}
+    	
+    	if (containsAgreeAnnex(subComp)) {
             return true;
         }
         EList<ComponentInstance> transitiveSubs = compInst.getAllComponentInstances();
@@ -221,24 +233,40 @@ public class AgreeUtils {
         return false;
     }
 
-    public static boolean containsAgreeAnnex(Subcomponent subComp) {
-
-        ComponentImplementation compImpl = subComp.getComponentImplementation();
-        if (compImpl != null) {
-            if (AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause())
-                    .size() > 0) {
-                return true;
-            }
-        }
-
+    
+    public static boolean typeContainsAgreeAnnex(Subcomponent subComp) {
         ComponentType compType = subComp.getComponentType();
         if (compType != null) {
-            if (AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause())
-                    .size() > 0) {
-                return true;
+            EList<AnnexSubclause> annexes = AnnexUtil.getAllAnnexSubclauses(compType, AgreePackage.eINSTANCE.getAgreeContractSubclause());
+            for(AnnexSubclause annex : annexes){
+            	EObject container = getClosestContainerOfType(annex, ComponentType.class);
+                if(compType.getName().equals(((ComponentType)container).getName())){
+                	return true;
+                }
             }
         }
         return false;
+    }
+    
+    public static boolean containsAgreeAnnex(Subcomponent subComp) {
+        ComponentImplementation compImpl = subComp.getComponentImplementation();
+        if (compImpl != null) {
+        	EList<AnnexSubclause> annexes = AnnexUtil.getAllAnnexSubclauses(compImpl, AgreePackage.eINSTANCE.getAgreeContractSubclause());
+            for(AnnexSubclause annex : annexes){
+                EObject container = getClosestContainerOfType(annex, ComponentImplementation.class);
+                if(compImpl.getName().equals(((ComponentImplementation)container).getName())){
+                	return true;
+                }
+            }
+        }
+        return typeContainsAgreeAnnex(subComp);
+    }
+    
+    public static EObject getClosestContainerOfType(EObject obj, Class<?> c){
+    	while(!c.isInstance(obj)){
+    		obj = obj.eContainer();
+    	}
+    	return obj;
     }
     
     public static Expr getInitValueFromType(Type type){
@@ -269,20 +297,23 @@ public class AgreeUtils {
         }
         throw new AgreeException("Unhandled initial type for type '"+type+"'");
     }
-    
-    public static boolean statementIsContractEqOrProperty(AgreeStatement statement){
-        if (statement.reference instanceof EqStatement
-                || statement.reference instanceof PropertyStatement) {
-            EObject container = statement.reference.eContainer();
-            while (!(container instanceof ComponentClassifier)) {
-                container = container.eContainer();
-            }
-            if (container instanceof ComponentImplementation) {
-                return false;
-            }
-            return true;
+
+    public static boolean referenceIsInContract(EObject reference, ComponentInstance compInst) {
+    	ComponentClassifier compClass = compInst.getComponentClassifier();
+    	if(compClass instanceof ComponentImplementation){
+    		compClass = ((ComponentImplementation)compClass).getType();
+    	}
+        if(reference == null){
+            return false;
         }
-        return false;
+        EObject container = reference;
+        while (!(container instanceof ComponentClassifier) && container != null) {
+            container = container.eContainer();
+        }
+        if (container instanceof ComponentImplementation) {
+            return false;
+        }
+        return container == compClass;
     }
     
     public static GlobalURIEditorOpener getGlobalURIEditorOpener() {
@@ -337,6 +368,46 @@ public class AgreeUtils {
     public static boolean typeMatchesReal(NamedType type){
         return type.equals(NamedType.REAL) ||
                 type.toString().startsWith("Base_Types__Float");
+    }
+    
+    public static List<TypeDef> getLustreTypes(AgreeProgram agreeProgram) {
+        List<TypeDef> types = new ArrayList<>();
+		for (Type type : agreeProgram.globalTypes) {
+			String typeName;
+			if (type instanceof RecordType) {
+				typeName = ((RecordType) type).id;
+			} else if (type instanceof EnumType) {
+				typeName = ((EnumType) type).id;
+			}else{
+				throw new AgreeException("Unable to handle type of type '"+type.getClass()+"'");
+			}
+            types.add(new TypeDef(typeName, type));
+        }
+        
+        //add synonym types
+        types.addAll(getTypeSynonmyms());
+        return types;
+    }
+    
+    private static Collection<? extends TypeDef> getTypeSynonmyms() {
+        List<TypeDef> types = new ArrayList<>();
+        
+        types.add(new TypeDef("Base_Types__Boolean", NamedType.BOOL));
+        types.add(new TypeDef("Base_Types__Unsigned", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_64", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_32", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_16", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Unsigned_8", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_64", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_32", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_16", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Integer_8", NamedType.INT));
+        types.add(new TypeDef("Base_Types__Float", NamedType.REAL));
+        types.add(new TypeDef("Base_Types__Float_32", NamedType.REAL));
+        types.add(new TypeDef("Base_Types__Float_64", NamedType.REAL));
+        
+        return types;
     }
 
 }

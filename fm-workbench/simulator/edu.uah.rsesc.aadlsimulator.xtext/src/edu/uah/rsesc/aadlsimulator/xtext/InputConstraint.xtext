@@ -1,0 +1,68 @@
+grammar edu.uah.rsesc.aadlsimulator.xtext.InputConstraint with org.eclipse.xtext.common.Terminals
+
+generate inputConstraint "http://rsesc.uah.edu/aadlsimulator/xtext/InputConstraint"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+InputConstraint: Expr;
+	
+Expr returns Expression : Scalar | Interval | Set;
+	 
+Scalar returns ScalarExpression : AddSub;
+
+enum Operator: AddSubOperator | MultiDivOperator;
+    
+enum AddSubOperator returns Operator:
+   ADDITION='+' | SUBTRACTION='-';
+    
+enum MultDivOperator returns Operator:
+   MULTIPLICATION='*' | DIVISION='/';
+   
+AddSub returns ScalarExpression:
+  MultDiv ({BinaryExpression.left=current} (op=AddSubOperator) right=MultDiv)*;
+  
+MultDiv returns ScalarExpression:
+  Function ({BinaryExpression.left=current} (op=MultDivOperator) right=Function)*;
+  
+Function returns ScalarExpression: Pre | Random | Ref | ConstRef | Negative | Primary;
+	
+Pre returns ScalarExpression:
+	{PreExpression} 'pre' '(' ref=ElementRef? ')';
+	
+Random returns RandomExpression:
+	RandomInteger | RandomReal | RandomElement;
+	
+RandomInteger returns RandomExpression: {RandomIntegerExpression} interval=Interval '.' 'rand_int()';
+RandomReal returns RandomExpression: {RandomRealExpression} interval=Interval '.' 'rand_real()';
+RandomElement returns RandomExpression: {RandomElementExpression} set=Set '.' 'rand()';
+	
+Ref returns RefExpression: ElementRef | ConstRef;
+ElementRef returns ElementRefExpression: {ElementRefExpression} ids+=ID ('.' ids+=ID)*;
+ConstRef returns RefExpression: {ConstRefExpression} (packageSegments+=ID '::')+ constantName=ID;
+
+Negative returns ScalarExpression:
+	{NegativeExpression} '-' value=Scalar
+;
+
+Primary returns ScalarExpression:
+  IntegerLiteral |
+  RealLiteral |
+  BooleanLiteral |
+  '(' Scalar ')';
+
+// Unbounded expressions are represented with an empty left or right
+Interval returns IntervalExpression: {IntervalExpression} (leftClosed?='['|'(') left=Scalar? ',' right=Scalar? (rightClosed?=']'|')');
+Set returns SetExpression: {SetExpression} '{' (members+=Scalar (',' members+=Scalar)*)? '}';
+
+IntegerLiteral: value=BIG_INT;
+RealLiteral: value=BIGDECIMAL;
+BooleanLiteral: value=TRUE|value=FALSE;
+  
+BIG_INT returns ecore::EBigInteger: INT;
+
+terminal BIGDECIMAL returns ecore::EBigDecimal: ('0'..'9')*'.'('0'..'9')+;
+terminal TRUE returns ecore::EBoolean: 'true';
+terminal FALSE returns ecore::EBoolean: 'false';
+
+@Override
+terminal ID : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*('[' ('0'..'9')+ ']')*;
+

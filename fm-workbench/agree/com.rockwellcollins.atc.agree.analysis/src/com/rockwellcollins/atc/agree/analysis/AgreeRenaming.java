@@ -1,16 +1,12 @@
 package com.rockwellcollins.atc.agree.analysis;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 
-import jkind.JKindException;
 import jkind.api.results.Renaming;
 import jkind.results.InvalidProperty;
 import jkind.results.Property;
@@ -50,6 +46,10 @@ public class AgreeRenaming extends Renaming {
         return this.supportRefStrings.get(ivc);
     }
 
+    public final Map<String, String> getSupportRefStrings() {
+    	return this.supportRefStrings;
+    }
+    
     public void addExplicitRename(String oldName, String newName) {
         this.explicitRenames.put(oldName, newName);
     }
@@ -102,10 +102,11 @@ public class AgreeRenaming extends Renaming {
                     renamedInvalid.getRuntime());
         }else if(property instanceof UnknownProperty){
             UnknownProperty renamedUnknown = (UnknownProperty)property;
-            return new UnknownProperty(renamedUnknown.getName(), 
+            UnknownProperty newProp =  new UnknownProperty(renamedUnknown.getName(), 
                     renamedUnknown.getTrueFor(), 
                     rename(renamedUnknown.getInductiveCounterexample()), 
                     renamedUnknown.getRuntime());
+            return newProp;
         }
         if(!(property instanceof ValidProperty)){
             throw new AgreeException("Unexpected property type");
@@ -138,6 +139,8 @@ public class AgreeRenaming extends Renaming {
             } else if(newName.matches("time")){
                 return "time";
             } else if (original.endsWith(AgreeASTBuilder.clockIDSuffix)){
+                return newName;
+            } else if (original.endsWith(LustreAstBuilder.assumeHistSufix)){
                 return newName;
             }
             return null;

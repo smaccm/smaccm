@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BasicPropertyAssociation;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -17,12 +19,15 @@ import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
+import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
@@ -189,26 +194,34 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "is_of_type": {
 			NamedElement element = args.get(0).getNamedElement();
 			NamedElement type = args.get(1).getNamedElement();
+			ComponentType ct = null;
+
 			if (element instanceof ComponentInstance) {
 				ComponentInstance ci;
-				ComponentType ct;
 				ci = (ComponentInstance) element;
-
-				if ((ci == null) || (ci.getSubcomponent() == null)) {
+				ComponentClassifier classifier = ci.getComponentClassifier();
+				if(classifier instanceof ComponentImplementation){
+					ct = ((ComponentImplementation) classifier).getType();
+				}else{
+					ct = (ComponentType)classifier;
+				}
+			} else if (element instanceof FeatureInstance) {
+				FeatureInstance featInst = (FeatureInstance) element;
+				Feature feat = featInst.getFeature();
+				Classifier classifier = feat.getClassifier();
+				if(classifier == null){
 					return bool(false);
 				}
-
-				ct = ci.getSubcomponent().getComponentType();
-				// cl = (Classifier) type;
-				// return bool ((ct == cl ) || (ct.isDescendentOf(cl)));
-
-				while (ct != null) {
-					if (ct == type) {
-						return bool(true);
-					}
-					ct = ct.getExtended();
+				if(classifier instanceof ComponentImplementation){
+					classifier = ((ComponentImplementation) classifier).getType();
 				}
-
+				ct = (ComponentType)classifier;
+			}
+			while (ct != null) {
+				if (ct == type) {
+					return bool(true);
+				}
+				ct = ct.getExtended();
 			}
 			return bool(false);
 		}
@@ -283,7 +296,25 @@ public class ResoluteBuiltInFnCallEvaluator {
 						fnCallExpr);
 			}
 		}
-
+		
+		/*
+		 * Primary type: component
+		 */
+		case "enumerated_values": {
+			Property prop = (Property) args.get(0).getNamedElement();
+			if (prop.getType() instanceof EnumerationType) {
+				EnumerationType et = (EnumerationType) prop.getType();
+				List<ResoluteValue> result = new ArrayList<>();
+				for (EnumerationLiteral literal : et.getOwnedLiterals()) {
+					result.add(new StringValue(literal.getName()));
+				}
+				return new SetValue(result);
+			} else {
+				throw new IllegalArgumentException("enumerated_values called on property " + prop.getFullName()
+						+ " which does not have an enumeration type");
+			}
+		}
+		
 		/*
 		 * Primary type: component
 		 */
@@ -403,6 +434,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "is_process": {
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESS);
+		}
+		
+		case "is_data": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			return new BoolValue(ci.getCategory() == ComponentCategory.DATA);
 		}
 
 		case "is_event_port": {
@@ -741,7 +777,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return new IntValue((long) value.getScaledValue());
 		} else if (expr instanceof RealLiteral) {
 			RealLiteral value = (RealLiteral) expr;
-			return new RealValue(value.getValue());
+			return new RealValue(value.getScaledValue());
 		} else if (expr instanceof org.osate.aadl2.RangeValue) {
 			org.osate.aadl2.RangeValue value = (org.osate.aadl2.RangeValue) expr;
 			return new RangeValue(exprToValue(value.getMinimum()), exprToValue(value.getMaximum()));
@@ -783,9 +819,13 @@ public class ResoluteBuiltInFnCallEvaluator {
 			return dp.getDataFeatureClassifier();
 		} else if (ne instanceof FeatureInstance) {
 			FeatureInstance fi = (FeatureInstance) ne;
-			if (fi.getFeature() instanceof DataPort) {
-				DataPort dp = (DataPort) fi.getFeature();
+			Feature feature = fi.getFeature();
+			if (feature instanceof DataPort) {
+				DataPort dp = (DataPort) feature;
 				return dp.getDataFeatureClassifier();
+			}else if(feature instanceof FeatureGroup){
+				FeatureGroup featGroup = (FeatureGroup)feature;
+				return featGroup.getAllFeatureGroupType();
 			}
 			return (NamedElement) fi.getFeature().getFeatureClassifier();
 		} else if (ne instanceof ComponentInstance) {

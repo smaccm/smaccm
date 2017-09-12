@@ -12,22 +12,22 @@ with Base_Types;
 	
 		annex agree {**
 
-			const max_accel : real = 2.0;
+			const max_accel : real = 40.0;
 
 			assume "target speed is positive" : Target_Speed.val >= 0.0;
 			assume "reasonable target speed" : Target_Speed.val < 150.0;
 			
+--			property const_tar_speed = 
+--				Agree_Nodes.H(Target_Speed.val = prev(Target_Speed.val,0.0)); 
+				
 			property const_tar_speed = 
-				Agree_Nodes.H(Target_Speed.val = prev(Target_Speed.val,0.0)); 
+				true -> Target_Speed.val = pre(Target_Speed.val); 
 			
 			guarantee "actual speed is less than constant target speed" : 
 				const_tar_speed => (Actual_Speed.val <= Target_Speed.val);
 			
 			guarantee "acceleration is limited" : 
 				Agree_Nodes.abs(Actual_Speed.val - prev(Actual_Speed.val, 0.0)) < max_accel;
-				
-			--assume "init behavior" : State_Signal.val = 0 -> true;
-			guarantee "behavior" : State_Signal.val = prev(State_Signal.val,0);	
 				
 		**};
 		

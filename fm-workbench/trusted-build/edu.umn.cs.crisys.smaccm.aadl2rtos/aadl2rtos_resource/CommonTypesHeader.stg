@@ -48,4 +48,5 @@ externalTypeDecls(model) ::= <<
 
 filePostfix(name, path) ::= <<
 #endif // <datatypesHeaderIfdef(name)>
+
 >>

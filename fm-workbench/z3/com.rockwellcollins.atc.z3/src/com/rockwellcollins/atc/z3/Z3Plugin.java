@@ -12,10 +12,10 @@ public class Z3Plugin {
 		Bundle bundle = Platform.getBundle("com.rockwellcollins.atc.z3");
 		String archDir = getArchDir();
 		String exeName = getExecutableName();
-		URL url = bundle.getEntry("binaries/" + archDir + "/" + exeName);
 		try {
-			URL fileUrl = FileLocator.toFileURL(url);
-			File exe = new File(fileUrl.getPath());
+			// Extract entire directory so DLLs are available on windows
+			URL dirUrl = FileLocator.toFileURL(bundle.getEntry("binaries/" + archDir));
+			File exe = new File(dirUrl.getPath(), exeName);
 			exe.setExecutable(true);
 			return exe.getParent();
 		} catch (Exception e) {
@@ -26,7 +26,7 @@ public class Z3Plugin {
 	private static String getArchDir() {
 		String name = System.getProperty("os.name").toLowerCase();
 		String arch = System.getProperty("os.arch").toLowerCase();
-		
+
 		if (name.contains("windows")) {
 			if (arch.contains("64")) {
 				return "x64-win";

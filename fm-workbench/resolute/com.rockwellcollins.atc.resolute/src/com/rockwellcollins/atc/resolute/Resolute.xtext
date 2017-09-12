@@ -40,7 +40,7 @@ Definition:
 
 Type:
 	{SetType} '{' type=Type '}'
-|	BaseType
+|	BaseType ('<' paramType=Type '>')?
 ;
 
 BaseType:
@@ -151,7 +151,11 @@ PlusExpr returns Expr:
 ;
 
 TimesExpr returns Expr:
-	PrefixExpr (=>({BinaryExpr.left=current} op=('*' | '/' | '%')) right=PrefixExpr)*	
+	ExpExpr (=>({BinaryExpr.left=current} op=('*' | '/' | '%')) right=ExpExpr)*	
+;
+
+ExpExpr returns Expr:
+	PrefixExpr (=>({BinaryExpr.left=current} op=('^')) right=PrefixExpr)*
 ;
 
 PrefixExpr returns Expr:
@@ -206,6 +210,7 @@ BuiltInFn:
 |	'is_memory'
 |	'is_thread'
 |	'is_process'
+|	'is_data'
 
 |	'is_subprogram'
 |   'is_of_type'
@@ -213,6 +218,9 @@ BuiltInFn:
 |	'has_member'
 |   'features'
 |	'connections'
+
+// Primary type: property
+|   'enumerated_values'
 
 // Primary type: component
 |	'subcomponents'
@@ -260,6 +268,7 @@ BuiltInFn:
 |   'end_to_end_flows'
 ;
 
+@Override 
 RealTerm returns aadl2::RealLiteral:
 	value=UnsignedReal (unit=[aadl2::UnitLiteral|ID])?
 ;
@@ -268,6 +277,7 @@ UnsignedReal returns aadl2::Real:
 	REAL_LIT
 ;
 
+@Override 
 IntegerTerm returns aadl2::IntegerLiteral:
 	value=UnsignedInt (unit=[aadl2::UnitLiteral|ID])?
 ;

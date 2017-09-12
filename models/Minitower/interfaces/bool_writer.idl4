@@ -36,9 +36,13 @@
 
  **************************************************************************/
 
+
+
 procedure bool_writer {
-    include <smaccm_top_i_types.h>;
+    include <tb_smaccmcopter_types.h>;
 
     bool write_bool(refin bool arg);
 }
+
+
 

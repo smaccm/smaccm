@@ -225,13 +225,22 @@ public interface ResolutePackage extends EPackage
   int BASE_TYPE = 3;
 
   /**
+   * The feature id for the '<em><b>Param Type</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BASE_TYPE__PARAM_TYPE = TYPE_FEATURE_COUNT + 0;
+
+  /**
    * The feature id for the '<em><b>Type</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int BASE_TYPE__TYPE = TYPE_FEATURE_COUNT + 0;
+  int BASE_TYPE__TYPE = TYPE_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Base Type</em>' class.
@@ -240,7 +249,7 @@ public interface ResolutePackage extends EPackage
    * @generated
    * @ordered
    */
-  int BASE_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
+  int BASE_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ArgImpl <em>Arg</em>}' class.
@@ -2220,6 +2229,17 @@ public interface ResolutePackage extends EPackage
   EClass getBaseType();
 
   /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.BaseType#getParamType <em>Param Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Param Type</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.BaseType#getParamType()
+   * @see #getBaseType()
+   * @generated
+   */
+  EReference getBaseType_ParamType();
+
+  /**
    * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.resolute.resolute.BaseType#getType <em>Type</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3222,6 +3242,14 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EClass BASE_TYPE = eINSTANCE.getBaseType();
+
+    /**
+     * The meta object literal for the '<em><b>Param Type</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference BASE_TYPE__PARAM_TYPE = eINSTANCE.getBaseType_ParamType();
 
     /**
      * The meta object literal for the '<em><b>Type</b></em>' attribute feature.

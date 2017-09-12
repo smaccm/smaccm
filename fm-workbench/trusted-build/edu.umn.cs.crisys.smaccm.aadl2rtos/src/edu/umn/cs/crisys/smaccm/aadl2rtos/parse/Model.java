@@ -22,7 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
 package edu.umn.cs.crisys.smaccm.aadl2rtos.parse;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+//import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -83,15 +83,17 @@ public class Model {
 	Map<String, RemoteProcedure> remoteProcedureMap = new HashMap<>();
 	
 	// properties related to timers and dispatch
-	boolean generateSystickIRQ;
-	boolean externalTimerComponent; 
+	boolean generateSystemTick;
+	boolean externalTimerComponent;
 	
-	// CAMKES specific properties
+
+   // CAMKES specific properties
 	String camkesExternalTimerInterfacePath;
 	String camkesExternalTimerCompletePath;
 	int camkesInternalTimerTimersPerClient; 
 	int camkesTimeServerAadlThreadMinIndex; 
 	int camkesDataportRpcMinIndex;
+	boolean camkesUseMailboxDataports = false;
 	boolean useOSRealTimeExtensions; 
 	
 	/**
@@ -112,6 +114,7 @@ public class Model {
 	// eChronos-specific properties
 	boolean eChronosGenerateCModules;
 	String eChronosCModulePath;
+	String eChronosFlashLoadAddress;
 	
 	public enum CommMutualExclusionPrimitive {MUTEX, SUSPEND_INTERRUPT} ; 
 	CommMutualExclusionPrimitive commMutexPrimitive = CommMutualExclusionPrimitive.MUTEX; 
@@ -362,8 +365,8 @@ public class Model {
     return this.legacySemaphoreList;
   }
 
-  public boolean getGenerateSystickIRQ() {
-	  return this.generateSystickIRQ;
+  public boolean getGenerateSystemTick() {
+	  return this.generateSystemTick;
 	}
 
   public Map<String, Type> getAstTypes() {
@@ -444,7 +447,14 @@ public class Model {
     return camkesTimeServerAadlThreadMinIndex++; 
   }
 
-  
+  public boolean getCamkesUseMailboxDataports() {
+	    return this.camkesUseMailboxDataports;
+  }
+
+  public void setCamkesUseMailboxDataports(boolean camkesUseMailboxDataports) {
+	this.camkesUseMailboxDataports = camkesUseMailboxDataports;
+  }
+
   public boolean isEChronosGenerateCModules() {
     return eChronosGenerateCModules;
   }
@@ -461,6 +471,13 @@ public class Model {
     this.eChronosCModulePath = eChronosCModulePath;
   }
 
+  public String getEChronosFlashLoadAddress() {
+	  return this.eChronosFlashLoadAddress;
+  }
+  
+  public void setEChronosFlashLoadAddress(String eChronosFlashLoadAddress) {
+	  this.eChronosFlashLoadAddress = eChronosFlashLoadAddress;
+  }
 
   int connNumber = 0; 
   public int getGenerateConnectionNumber() {

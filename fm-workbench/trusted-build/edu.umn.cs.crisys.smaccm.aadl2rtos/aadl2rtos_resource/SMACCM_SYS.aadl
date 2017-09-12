@@ -38,6 +38,10 @@ property set SMACCM_SYS is
     External_IRQ_Handler_List: list of aadlstring applies to (system implementation);
     External_IRQ_List: list of aadlstring applies to (system implementation);
 
+    -- for VxWorks timer interactions
+    VxWorks_Set_Systick_Rate: aadlboolean => true applies to (system implementation); 
+    Base_Systick_Rate: Time applies to (system implementation);
+
     -- for eChronos timer interactions
     Generate_Scheduler_Systick_IRQ: aadlboolean => true applies to (system implementation);
 
@@ -58,11 +62,12 @@ property set SMACCM_SYS is
     Use_OS_Real_Time_Extensions : aadlboolean => true applies to (system implementation);
 
 	-- For CAmkES and ground team, specifically.
-	Mailbox : aadlboolean => false applies to (connection);
+	Mailbox : aadlboolean => false applies to (system implementation, connection);
 
     -- For eChronos, specifically.  These properties are used to set the relative module
     -- path for the generated code from the place where prj is invoked
     eChronos_Generate_C_Modules : aadlboolean => false applies to (system implementation);
     eChronos_C_Module_Path : aadlstring => "gen" applies to (system implementation);
+    eChronos_Flash_Load_Address : aadlstring applies to (system implementation);
 
 end SMACCM_SYS;

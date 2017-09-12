@@ -12,9 +12,9 @@ public
 			
 	annex agree {** 
 		
-		const P : real = 0.2;
-		const D : real = 0.1;
-		const I : real = 0.1;   
+		const P : real = 1.0;
+		const D : real = 0.0;
+		const I : real = 0.0;   
 				
 		eq e : real = Target.val - Actual.val;
 		eq e_int : real = prev(e, 0.0) + e; 

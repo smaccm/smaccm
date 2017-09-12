@@ -115,6 +115,44 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.PATTERN_STATEMENT:
+      {
+        PatternStatement patternStatement = (PatternStatement)theEObject;
+        T result = casePatternStatement(patternStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHEN_STATEMENT:
+      {
+        WhenStatement whenStatement = (WhenStatement)theEObject;
+        T result = caseWhenStatement(whenStatement);
+        if (result == null) result = casePatternStatement(whenStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_STATEMENT:
+      {
+        WheneverStatement wheneverStatement = (WheneverStatement)theEObject;
+        T result = caseWheneverStatement(wheneverStatement);
+        if (result == null) result = casePatternStatement(wheneverStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.REAL_TIME_STATEMENT:
+      {
+        RealTimeStatement realTimeStatement = (RealTimeStatement)theEObject;
+        T result = caseRealTimeStatement(realTimeStatement);
+        if (result == null) result = casePatternStatement(realTimeStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.TIME_INTERVAL:
+      {
+        TimeInterval timeInterval = (TimeInterval)theEObject;
+        T result = caseTimeInterval(timeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.SYNCH_STATEMENT:
       {
         SynchStatement synchStatement = (SynchStatement)theEObject;
@@ -162,12 +200,31 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ENUM_STATEMENT:
+      {
+        EnumStatement enumStatement = (EnumStatement)theEObject;
+        T result = caseEnumStatement(enumStatement);
+        if (result == null) result = caseNamedElement(enumStatement);
+        if (result == null) result = caseSpecStatement(enumStatement);
+        if (result == null) result = caseElement(enumStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.EQ_STATEMENT:
       {
         EqStatement eqStatement = (EqStatement)theEObject;
         T result = caseEqStatement(eqStatement);
         if (result == null) result = caseSpecStatement(eqStatement);
         if (result == null) result = caseElement(eqStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.INPUT_STATEMENT:
+      {
+        InputStatement inputStatement = (InputStatement)theEObject;
+        T result = caseInputStatement(inputStatement);
+        if (result == null) result = caseSpecStatement(inputStatement);
+        if (result == null) result = caseElement(inputStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -188,6 +245,36 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseCallDef(fnDefExpr);
         if (result == null) result = caseNamedElement(fnDefExpr);
         if (result == null) result = caseElement(fnDefExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.LIBRARY_FN_DEF_EXPR:
+      {
+        LibraryFnDefExpr libraryFnDefExpr = (LibraryFnDefExpr)theEObject;
+        T result = caseLibraryFnDefExpr(libraryFnDefExpr);
+        if (result == null) result = caseSpecStatement(libraryFnDefExpr);
+        if (result == null) result = caseCallDef(libraryFnDefExpr);
+        if (result == null) result = caseNamedElement(libraryFnDefExpr);
+        if (result == null) result = caseElement(libraryFnDefExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.LINEARIZATION_DEF_EXPR:
+      {
+        LinearizationDefExpr linearizationDefExpr = (LinearizationDefExpr)theEObject;
+        T result = caseLinearizationDefExpr(linearizationDefExpr);
+        if (result == null) result = caseSpecStatement(linearizationDefExpr);
+        if (result == null) result = caseCallDef(linearizationDefExpr);
+        if (result == null) result = caseNamedElement(linearizationDefExpr);
+        if (result == null) result = caseElement(linearizationDefExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.LINEARIZATION_INTERVAL:
+      {
+        LinearizationInterval linearizationInterval = (LinearizationInterval)theEObject;
+        T result = caseLinearizationInterval(linearizationInterval);
+        if (result == null) result = caseElement(linearizationInterval);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -269,6 +356,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseComplexExpr(nestedDotID);
         if (result == null) result = caseExpr(nestedDotID);
         if (result == null) result = caseElement(nestedDotID);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.NAMED_ID:
+      {
+        NamedID namedID = (NamedID)theEObject;
+        T result = caseNamedID(namedID);
+        if (result == null) result = caseNamedElement(namedID);
+        if (result == null) result = caseElement(namedID);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -373,6 +469,118 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseConnectionStatement(connectionStatement);
         if (result == null) result = caseSpecStatement(connectionStatement);
         if (result == null) result = caseElement(connectionStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ALWAYS_STATEMENT:
+      {
+        AlwaysStatement alwaysStatement = (AlwaysStatement)theEObject;
+        T result = caseAlwaysStatement(alwaysStatement);
+        if (result == null) result = casePatternStatement(alwaysStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHEN_HOLDS_STATEMENT:
+      {
+        WhenHoldsStatement whenHoldsStatement = (WhenHoldsStatement)theEObject;
+        T result = caseWhenHoldsStatement(whenHoldsStatement);
+        if (result == null) result = caseWhenStatement(whenHoldsStatement);
+        if (result == null) result = casePatternStatement(whenHoldsStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHEN_OCCURS_STATMENT:
+      {
+        WhenOccursStatment whenOccursStatment = (WhenOccursStatment)theEObject;
+        T result = caseWhenOccursStatment(whenOccursStatment);
+        if (result == null) result = caseWhenStatement(whenOccursStatment);
+        if (result == null) result = casePatternStatement(whenOccursStatment);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_OCCURS_STATEMENT:
+      {
+        WheneverOccursStatement wheneverOccursStatement = (WheneverOccursStatement)theEObject;
+        T result = caseWheneverOccursStatement(wheneverOccursStatement);
+        if (result == null) result = caseWheneverStatement(wheneverOccursStatement);
+        if (result == null) result = casePatternStatement(wheneverOccursStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_BECOMES_TRUE_STATEMENT:
+      {
+        WheneverBecomesTrueStatement wheneverBecomesTrueStatement = (WheneverBecomesTrueStatement)theEObject;
+        T result = caseWheneverBecomesTrueStatement(wheneverBecomesTrueStatement);
+        if (result == null) result = caseWheneverStatement(wheneverBecomesTrueStatement);
+        if (result == null) result = casePatternStatement(wheneverBecomesTrueStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_HOLDS_STATEMENT:
+      {
+        WheneverHoldsStatement wheneverHoldsStatement = (WheneverHoldsStatement)theEObject;
+        T result = caseWheneverHoldsStatement(wheneverHoldsStatement);
+        if (result == null) result = caseWheneverStatement(wheneverHoldsStatement);
+        if (result == null) result = casePatternStatement(wheneverHoldsStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.WHENEVER_IMPLIES_STATEMENT:
+      {
+        WheneverImpliesStatement wheneverImpliesStatement = (WheneverImpliesStatement)theEObject;
+        T result = caseWheneverImpliesStatement(wheneverImpliesStatement);
+        if (result == null) result = caseWheneverStatement(wheneverImpliesStatement);
+        if (result == null) result = casePatternStatement(wheneverImpliesStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.PERIODIC_STATEMENT:
+      {
+        PeriodicStatement periodicStatement = (PeriodicStatement)theEObject;
+        T result = casePeriodicStatement(periodicStatement);
+        if (result == null) result = caseRealTimeStatement(periodicStatement);
+        if (result == null) result = casePatternStatement(periodicStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.SPORADIC_STATEMENT:
+      {
+        SporadicStatement sporadicStatement = (SporadicStatement)theEObject;
+        T result = caseSporadicStatement(sporadicStatement);
+        if (result == null) result = caseRealTimeStatement(sporadicStatement);
+        if (result == null) result = casePatternStatement(sporadicStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.CLOSED_TIME_INTERVAL:
+      {
+        ClosedTimeInterval closedTimeInterval = (ClosedTimeInterval)theEObject;
+        T result = caseClosedTimeInterval(closedTimeInterval);
+        if (result == null) result = caseTimeInterval(closedTimeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.OPEN_LEFT_TIME_INTERVAL:
+      {
+        OpenLeftTimeInterval openLeftTimeInterval = (OpenLeftTimeInterval)theEObject;
+        T result = caseOpenLeftTimeInterval(openLeftTimeInterval);
+        if (result == null) result = caseTimeInterval(openLeftTimeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.OPEN_RIGHT_TIME_INTERVAL:
+      {
+        OpenRightTimeInterval openRightTimeInterval = (OpenRightTimeInterval)theEObject;
+        T result = caseOpenRightTimeInterval(openRightTimeInterval);
+        if (result == null) result = caseTimeInterval(openRightTimeInterval);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.OPEN_TIME_INTERVAL:
+      {
+        OpenTimeInterval openTimeInterval = (OpenTimeInterval)theEObject;
+        T result = caseOpenTimeInterval(openTimeInterval);
+        if (result == null) result = caseTimeInterval(openTimeInterval);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -506,6 +714,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.TIME_EXPR:
+      {
+        TimeExpr timeExpr = (TimeExpr)theEObject;
+        T result = caseTimeExpr(timeExpr);
+        if (result == null) result = caseExpr(timeExpr);
+        if (result == null) result = caseElement(timeExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.INT_LIT_EXPR:
       {
         IntLitExpr intLitExpr = (IntLitExpr)theEObject;
@@ -530,6 +747,42 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseEventExpr(eventExpr);
         if (result == null) result = caseExpr(eventExpr);
         if (result == null) result = caseElement(eventExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.LATCHED_EXPR:
+      {
+        LatchedExpr latchedExpr = (LatchedExpr)theEObject;
+        T result = caseLatchedExpr(latchedExpr);
+        if (result == null) result = caseExpr(latchedExpr);
+        if (result == null) result = caseElement(latchedExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.TIME_OF_EXPR:
+      {
+        TimeOfExpr timeOfExpr = (TimeOfExpr)theEObject;
+        T result = caseTimeOfExpr(timeOfExpr);
+        if (result == null) result = caseExpr(timeOfExpr);
+        if (result == null) result = caseElement(timeOfExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.TIME_RISE_EXPR:
+      {
+        TimeRiseExpr timeRiseExpr = (TimeRiseExpr)theEObject;
+        T result = caseTimeRiseExpr(timeRiseExpr);
+        if (result == null) result = caseExpr(timeRiseExpr);
+        if (result == null) result = caseElement(timeRiseExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.TIME_FALL_EXPR:
+      {
+        TimeFallExpr timeFallExpr = (TimeFallExpr)theEObject;
+        T result = caseTimeFallExpr(timeFallExpr);
+        if (result == null) result = caseExpr(timeFallExpr);
+        if (result == null) result = caseElement(timeFallExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -667,6 +920,86 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Pattern Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Pattern Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePatternStatement(PatternStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>When Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>When Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWhenStatement(WhenStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverStatement(WheneverStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Real Time Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Real Time Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRealTimeStatement(RealTimeStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeInterval(TimeInterval object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Synch Statement</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -747,6 +1080,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Enum Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Enum Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEnumStatement(EnumStatement object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Eq Statement</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -758,6 +1107,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseEqStatement(EqStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Input Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Input Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseInputStatement(InputStatement object)
   {
     return null;
   }
@@ -790,6 +1155,54 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseFnDefExpr(FnDefExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Library Fn Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Library Fn Def Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLibraryFnDefExpr(LibraryFnDefExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Linearization Def Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Linearization Def Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLinearizationDefExpr(LinearizationDefExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Linearization Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Linearization Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLinearizationInterval(LinearizationInterval object)
   {
     return null;
   }
@@ -934,6 +1347,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNestedDotID(NestedDotID object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Named ID</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Named ID</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNamedID(NamedID object)
   {
     return null;
   }
@@ -1110,6 +1539,214 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseConnectionStatement(ConnectionStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Always Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Always Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAlwaysStatement(AlwaysStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>When Holds Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>When Holds Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWhenHoldsStatement(WhenHoldsStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>When Occurs Statment</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>When Occurs Statment</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWhenOccursStatment(WhenOccursStatment object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Occurs Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Occurs Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverOccursStatement(WheneverOccursStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Becomes True Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Becomes True Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverBecomesTrueStatement(WheneverBecomesTrueStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Holds Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Holds Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverHoldsStatement(WheneverHoldsStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Whenever Implies Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Whenever Implies Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseWheneverImpliesStatement(WheneverImpliesStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Periodic Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Periodic Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePeriodicStatement(PeriodicStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Sporadic Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Sporadic Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSporadicStatement(SporadicStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Closed Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Closed Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClosedTimeInterval(ClosedTimeInterval object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Open Left Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Open Left Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOpenLeftTimeInterval(OpenLeftTimeInterval object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Open Right Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Open Right Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOpenRightTimeInterval(OpenRightTimeInterval object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Open Time Interval</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Open Time Interval</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOpenTimeInterval(OpenTimeInterval object)
   {
     return null;
   }
@@ -1339,6 +1976,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeExpr(TimeExpr object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Int Lit Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1382,6 +2035,70 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseEventExpr(EventExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Latched Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Latched Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLatchedExpr(LatchedExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Of Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Of Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeOfExpr(TimeOfExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Rise Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Rise Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeRiseExpr(TimeRiseExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Fall Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Fall Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeFallExpr(TimeFallExpr object)
   {
     return null;
   }

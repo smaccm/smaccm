@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AADL Simulator AGREE Components
+Bundle-SymbolicName: edu.uah.rsesc.aadlsimulator.agree;singleton:=true
+Bundle-Version: 2.1.3.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.rockwellcollins.atc.agree,
+ org.osate.aadl2,
+ com.rockwellcollins.atc.agree.analysis,
+ edu.uah.rsesc.aadlsimulator,
+ org.osate.annexsupport,
+ edu.uah.rsesc.aadlsimulator.xtext,
+ org.eclipse.core.resources,
+ org.osate.workspace,
+ org.osate.aadl2.modelsupport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: edu.uah.rsesc.aadlsimulator.agree,
+ edu.uah.rsesc.aadlsimulator.agree.engine,
+ edu.uah.rsesc.aadlsimulator.agree.ext,
+ edu.uah.rsesc.aadlsimulator.agree.services,
+ edu.uah.rsesc.aadlsimulator.agree.sim
+Bundle-Vendor: The University of Alabama in Huntsville

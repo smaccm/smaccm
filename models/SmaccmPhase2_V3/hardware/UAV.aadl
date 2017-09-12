@@ -21,7 +21,6 @@ public
     		
       const TOTAL_LANDING_TIMEOUT : real = 1500.0;
       
-      eq time : real;
   	  eq control_mode : int;
   	  
   	  eq last_mavlink_received_time : real =

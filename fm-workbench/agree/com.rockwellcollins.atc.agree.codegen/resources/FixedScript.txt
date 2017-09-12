@@ -1,0 +1,221 @@
+%% everything after this point uses the variables above
+
+% screen positioning of the generated blocks
+px = 300;       % subsystem x position
+py = 150;       % subsystem y position
+offset = 200;   % distance from the subsystem to the port blocks
+
+%% create the approriate model (based on the mode)
+if generate_mode == 1	% implementation
+	try
+		% create the new implmentation model	
+		new_system(implMdlNameNoExtension,'ErrorIfShadowed');  
+		  
+		% add the main subsystem block
+		dst = horzcat(bdroot,'/',subsysName);
+		bh = add_block('simulink/Ports & Subsystems/Subsystem',dst);    
+		    
+		% delete the default IO ports (warning: assumed implmentation
+		% of the library block here; may not work in future versions)
+		delete_line(dst,'In1/1','Out1/1');
+		delete_block(horzcat(dst,'/In1'));
+		delete_block(horzcat(dst,'/Out1'));	    
+	catch
+	    errmsg = ['The implementation model already exists; please delete the ' ...
+	              'existing model if you wish to recreate it.'];
+	    errordlg(errmsg,'Creation Error');
+	    return;
+	end
+else
+    if generate_mode == 2   % verification
+        try
+            % create the new verification model
+            new_system(verifMdlNameNoExtension,'ErrorIfShadowed');
+        catch
+            errmsg = ['The verification model already exists; please delete the ' ...
+                'existing model if you wish to recreate it.'];
+            errordlg(errmsg,'Creation Error');
+            return;
+        end
+        % add the main subsystem block
+        dst = horzcat(bdroot,'/',subsysName);
+        bh = add_block('simulink/Ports & Subsystems/Model',dst);
+        set_param(bh, 'ModelFile',implMdlNameNoExtension);
+    end
+end
+    
+% reposition and resize the subsystem based on number of ports
+set_param(bh, 'position', [px,py,px+200,py+36+max(numel(inportnames),numel(outportnames))*36]);
+    
+%% add the actual I/O specified in AADL model
+
+%% create bus objects (do this first so we can reference them when we add the ports)
+if generate_mode == 1	% implementation
+    i = 1;
+    while i < numel(busdefs)
+        % first (or next) is the name of the bus in Bus: notation; check this 
+        % and extract the name
+        s1 = strsplit(char(busdefs(i)),':');
+        s2 = strsplit(char(s1(2)));
+        busname = s2(2);
+
+        clear elems;    % reset the bus elements array
+        el = 1;         % set element index back to start
+
+        % now walk the items until we find another 'Bus:...' string
+        % these will be 'type' then 'name' strings in order
+        i = i + 1;
+        while  i < numel(busdefs) && isempty(strfind(char(busdefs(i)), ';'))
+            type = busdefs(i); % note: AGREE exporter converts AADL types to MATLAB types
+            i = i + 1;
+            name = busdefs(i);
+            i = i + 1;
+
+            % add this to the element array
+            elems(el) = Simulink.BusElement;
+            elems(el).Name = char(name);
+            elems(el).Dimensions = 1;
+            elems(el).DimensionsMode = 'Fixed';
+            elems(el).DataType = char(type);
+            elems(el).SampleTime = -1;
+            elems(el).Complexity = 'real';
+            el = el + 1;
+        end
+
+    	i = i + 1;  % consume the delimiting semicolon array element
+
+        % now create the bus object in the base workspace with these elements
+        busObj = Simulink.Bus;
+        busObj.Elements = elems;
+        assignin('base', char(busname(1)), busObj)
+        clear busObj  % destroy the temporary bus object variable
+    end
+
+    % save the bus objects in the base workspace to a data file
+    datafilename = horzcat(implMdlNameNoExtension,'_busobjs.m');
+    try
+        Simulink.Bus.save(datafilename);
+    catch e
+        errordlg(e.message,'Creation Error');
+        save_system;
+        close_system;    
+        return;
+    end
+    
+    % set the model callback to load this file when opening
+    set_param(implMdlNameNoExtension,'PreloadFcn',horzcat('run(''',datafilename,''');'));
+end
+
+%% input ports and wiring
+for i = 1:numel(inportnames)
+    % inside the subsystem (implementation model only)
+    if generate_mode == 1	% implementation
+    	add_block('simulink/Sources/In1',horzcat(dst,'/', inportnames{i}),...
+        'position', [100,100+i*50,130,114+i*50]);
+    end
+    % at the root level
+    rh = add_block('simulink/Sources/In1',horzcat(bdroot,'/', inportnames{i}));
+    
+    % set the port (signal) type
+    set_param(rh,'OutDataTypeStr', inporttypes{i});
+    % now connect them with wires
+    SubsysPortHandles = get_param(dst,'PortHandles');
+    RootPortHandles = get_param(rh, 'PortHandles');
+    lh = add_line(bdroot,RootPortHandles.Outport(1), SubsysPortHandles.Inport(i));
+
+    % name the signal line
+    set_param(lh,'Name',inportnames{i})
+end    
+    
+%% output ports and wiring
+for i = 1:numel(outportnames)
+    % inside the subsystem (implementation model only)
+    if generate_mode == 1	% implementation
+    	add_block('simulink/Sinks/Out1',horzcat(dst,'/', outportnames{i}),...
+        'position', [500,100+i*50,530,114+i*50]);
+    end
+    
+    % at the root level
+    rh = add_block('simulink/Sinks/Out1',horzcat(bdroot,'/', outportnames{i}));
+    % set the port (signal) type
+    set_param(rh,'OutDataTypeStr', outporttypes{i});
+    
+    % now connect them with wires
+    SubsysPortHandles = get_param(dst,'PortHandles');
+    RootPortHandles = get_param(rh,'PortHandles');
+    lh = add_line(bdroot,SubsysPortHandles.Outport(i),RootPortHandles.Inport(1));
+    
+    % name the signal line
+    set_param(lh,'Name',outportnames{i})    
+end      
+
+%% align the port blocks to the subsystem block
+% get the subsystem port handle positions and iterate each one
+pc = get_param(bh,'PortConnectivity');
+
+for i = 1:numel(pc)
+
+    % position of port connector
+    y = pc(i).Position(2);
+    x = pc(i).Position(1);
+
+    % port block handle and size
+    if isempty(pc(i).SrcBlock)
+        ph = pc(i).DstBlock;
+        off = -(offset-50);
+    else
+        ph = pc(i).SrcBlock;
+        off = offset;
+    end
+        
+    % port block dimmensions
+    pp = get_param(ph,'Position');
+    w = pp(3)-pp(1);
+    h = pp(4)-pp(2);
+
+    % adjust position of port block
+    set_param(ph,'Position',[x-off,y-h/2,x-off+w,y+h-h/2]);
+end
+
+%% add the observer block (verificaiton model only)
+if generate_mode == 2	% verificaiton
+	% Find Name of script with AGREE contracts as MATLAB code
+	code = fileread(scriptName);
+	name = regexp(code,'function\s+(\w+)\s*\(','tokens','once');
+	name = name{1};
+	
+	% Compose the name of the observer block, and add it to the model
+	src = 'simulink/User-Defined Functions/MATLAB Function';
+	dst = horzcat(bdroot,'/',name);
+	sysThatVerifies = add_block(src,dst,...
+	    'MakeNameUnique','on',...
+	    'MaskType','VerificationSubsystem',...
+	    'Position',[560 450 695 500]);
+	sysThatVerifies = getfullname(sysThatVerifies);
+	
+	% Add MATLAB Code to the observer block (tie them together)
+	root = sfroot;
+	chart = root.find('-isa','Stateflow.EMChart','Path',sysThatVerifies);
+	chart.Script = code;
+	
+	% Connect I/O from the observer to the implmentation model reference
+	src = get_param(bh,'LineHandles');
+	src = horzcat(src.Inport,src.Outport);
+	src = arrayfun(@(x) get_param(x,'SrcPortHandle'),src);
+	dst = get_param(sysThatVerifies,'PortHandles');
+	dst = horzcat(dst.Inport,dst.Outport);
+	for i = 1:numel(src)
+	    add_line(bdroot,src(i),dst(i),'autorouting','on');
+	end
+end
+
+%% set model parameters to desired settings
+set_param(bdroot,'Solver','FixedStepDiscrete');
+set_param(bdroot,'ShowPortDataTypes', 'on');
+set_param(bdroot,'SaveFormat','Structure');
+set_param(bdroot, 'FixedStep','10');
+
+%% all done
+%ts = Simulink.BlockDiagram.getSampleTimes(bdroot);  % updates diagram in the process
+open_system(bdroot);
+save_system;

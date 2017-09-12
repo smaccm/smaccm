@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="edu.uah.rsesc.aadlsimulator.agree.exporters" name="AGREE Simulation Exporters" schema="schema/edu.uah.rsesc.aadlsimulator.agree.exporters.exsd"/>
+   <extension
+         point="edu.uah.rsesc.aadlsimulator.engineTypes">
+      <engineType
+            factory="edu.uah.rsesc.aadlsimulator.agree.engine.AGREEMonolithicSimulationEngineFactory"
+            id="edu.uah.rsesc.aadlsimulator.agree.engine.monolithic"
+            name="AGREE Simulation Engine - Monolithic"
+            priority="100">
+      </engineType>
+      <engineType
+            factory="edu.uah.rsesc.aadlsimulator.agree.engine.AGREEMonolithicInductiveSimulationEngineFactory"
+            id="edu.uah.rsesc.aadlsimulator.agree.engine.monolithicInductive"
+            name="AGREE Simulation Engine - Monolithic Inductive">
+      </engineType>
+      <engineType
+            factory="edu.uah.rsesc.aadlsimulator.agree.engine.AGREESingleLayerSimulationEngineFactory"
+            id="edu.uah.rsesc.aadlsimulator.agree.engine.singleLayer"
+            name="AGREE Simulation Engine - Single Layer">
+      </engineType>
+      <engineType
+            factory="edu.uah.rsesc.aadlsimulator.agree.engine.AGREESingleLayerInductiveSimulationEngineFactory"
+            id="edu.uah.rsesc.aadlsimulator.agree.engine.singleLayerInductive"
+            name="AGREE Simulation Engine - Single Layer Inductive">
+      </engineType>
+   </extension>
+   <extension
+         point="org.eclipse.ui.services">
+      <serviceFactory
+            factoryClass="edu.uah.rsesc.aadlsimulator.agree.services.AGREESimulatorExtensionService$Factory">
+         <service
+               serviceClass="edu.uah.rsesc.aadlsimulator.agree.services.AGREESimulatorExtensionService">
+         </service>
+      </serviceFactory>
+   </extension>
+</plugin>

@@ -9,8 +9,11 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.osate.aadl2.instance.FeatureInstance;
+
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
+import jkind.lustre.NamedType;
 import jkind.lustre.Node;
 import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
@@ -19,6 +22,7 @@ import jkind.util.StringNaturalOrdering;
 
 import com.rockwellcollins.atc.agree.codegen.Activator;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 import com.rockwellcollins.atc.agree.codegen.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
@@ -26,6 +30,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABLocalBusVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarDecl;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPersistentVarInit;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABPort;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABPrimaryFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABProperty;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABStatement;
@@ -49,6 +54,7 @@ public class LustreToMATLABTranslator {
         List<MATLABStatement> statements = new ArrayList<>();
         List<MATLABFunction> functions = new ArrayList<>();
         List<MATLABPersistentVarDecl> persistentVarDecl = new ArrayList<>();
+    	List<MATLABPort> ports = new ArrayList<>();
         
         LustreToMATLABExprVisitor exprVisitor = new LustreToMATLABExprVisitor();
         LustreToMATLABTypeVisitor typeVisitor = new LustreToMATLABTypeVisitor();
@@ -70,14 +76,45 @@ public class LustreToMATLABTranslator {
     		}
     	}
     	
-    	//add input variables
+    	//add input variables to MATLAB function
+    	//add input and output ports for subsystem to verify
 		for (VarDecl inputVar : lustreNode.inputs){
-			//get inputs
-			inputs.add(new MATLABIdExpr(exprVisitor.updateName(inputVar.id,"")));
-			//translate the Lustre expression to MATLAB expression
-			//add input Ids to inputList of the exprVisitor 
-			//to help identify local variables
-			exprVisitor.inputSet.add(inputVar.id);
+			String varName = null;
+			if(!inputVar.id.equals("time")){
+				//update name
+				varName = exprVisitor.updateName(inputVar.id,"");
+				//add inputs
+				inputs.add(new MATLABIdExpr(varName));
+				//translate the Lustre expression to MATLAB expression
+				//add input Ids to inputList of the exprVisitor 
+				//to help identify local variables
+				exprVisitor.inputSet.add(inputVar.id);				
+				//get inputVar and type
+				AgreeVar agreeVar = (AgreeVar) inputVar;
+				Type type = agreeVar.type;
+				if (type instanceof RecordType || type instanceof NamedType) {
+					MATLABType portType = (agreeVar.type).accept(typeVisitor);
+					
+					SortedMap<String, MATLABType> fields = null;	
+					
+					//get the fields if it is a RecordType
+		    		if(type instanceof RecordType){
+		    			fields = exprVisitor.recordTypeMap.get(((RecordType)type).id);
+		    		}
+
+					// if it is from AADL feature, get the feature instance
+					if (agreeVar.featInst != null) {
+						FeatureInstance featInst = agreeVar.featInst;
+						ports.add(new MATLABPort(featInst.getName(), featInst.getDirection().getName(), portType, fields));
+					}
+					// if it is not from AADL feature, but an eq variable from
+					// AGREE
+					// set them as output variables from the subsystem
+					else {
+						ports.add(new MATLABPort(inputVar.id, "out", portType, fields));
+					}
+				}
+			}			
 		}
 		
 		//add local variable and their types
@@ -161,7 +198,7 @@ public class LustreToMATLABTranslator {
 		}
 		
 		//Create primary function AST
-    	MATLABPrimaryFunction primaryFunction = new MATLABPrimaryFunction(functionName, inputs, persistentVarDecl, statements, functions);
+    	MATLABPrimaryFunction primaryFunction = new MATLABPrimaryFunction(functionName, inputs, persistentVarDecl, statements, functions, ports);
         return primaryFunction; 	
     }
 	

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://rsesc.uah.edu/aadlsimulator/xtext/InputConstraint" 
+       class = "edu.uah.rsesc.aadlsimulator.xtext.inputConstraint.InputConstraintPackage"
+       genModel = "model/generated/InputConstraint.genmodel" /> 
+	
+  </extension>
+</plugin>
