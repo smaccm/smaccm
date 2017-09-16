@@ -146,7 +146,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public static final String eventSuffix = "___EVENT_";
 	public static final String dotChar = "__";
 
-	private static List<Node> globalNodes;
+	public static List<Node> globalNodes;
 	private static Set<Type> globalTypes;
 	private static Map<NamedElement, String> typeMap;
 	private static Map<String, AgreeVar> timeOfVarMap;
@@ -952,11 +952,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return nodes;
 	}
 
-	private List<VarDecl> agreeVarsFromArgs(EList<Arg> args, ComponentInstance compInst) {
+	public VarDecl agreeVarFromArg(Arg arg, ComponentInstance compInst) {
+		NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
+		return new AgreeVar(arg.getName(), type, arg, compInst, null);
+	}
+	// MWW: made this public.
+	public List<VarDecl> agreeVarsFromArgs(EList<Arg> args, ComponentInstance compInst) {
 		List<VarDecl> agreeVars = new ArrayList<>();
 		for (Arg arg : args) {
-			NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
-			agreeVars.add(new AgreeVar(arg.getName(), type, arg, compInst, null));
+			agreeVars.add(agreeVarFromArg(arg, compInst));
 		}
 		return agreeVars;
 	}
@@ -1458,7 +1462,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseNodeDefExpr(NodeDefExpr expr) {
-		// System.out.println("Visiting caseNodeDefExpr");
 
 		String nodeName = AgreeTypeUtils.getNodeName(expr);
 
@@ -1502,7 +1505,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		builder.addEquations(eqs);
 		builder.addProperties(props);
 
-		addToNodeList(builder.build());
+		Node n = builder.build();
+		System.out.println("Adding the node: " + n.id);
+		addToNodeList(n);
 		return null;
 	}
 
