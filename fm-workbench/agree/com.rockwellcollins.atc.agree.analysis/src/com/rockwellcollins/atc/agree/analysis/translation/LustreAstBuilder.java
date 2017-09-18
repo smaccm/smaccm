@@ -250,6 +250,8 @@ public class LustreAstBuilder {
 		equations.addAll(flatNode.localEquations);
 		assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
 
+		System.out.println("Equations: " + equations);
+		
 		NodeBuilder builder = new NodeBuilder("main");
 		builder.addInputs(inputs);
 		builder.addLocals(locals);
@@ -269,6 +271,7 @@ public class LustreAstBuilder {
 		List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
 		Program program = new Program(types, null, nodes, main.id);
 
+		System.out.println(program.toString());
 		return program;
 
 	}

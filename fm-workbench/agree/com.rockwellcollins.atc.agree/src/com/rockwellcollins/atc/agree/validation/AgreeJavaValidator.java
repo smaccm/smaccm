@@ -1348,7 +1348,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private AgreeType getAgreeType(Type type) {
+	protected AgreeType getAgreeType(Type type) {
 		String typeName = null;
 		if (type instanceof PrimType) {
 			typeName = ((PrimType) type).getString();

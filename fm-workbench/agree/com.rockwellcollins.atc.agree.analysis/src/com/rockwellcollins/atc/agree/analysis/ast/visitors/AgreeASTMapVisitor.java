@@ -24,9 +24,15 @@
  * USE OR OTHER DEALINGS IN THE DATA.
  */
 
+/*
+ * MWW (9/17/2017)
+ * NOTE: this pass only works correctly for *complete* traversals!
+ * If you short-circuit a node traversal, the pass behaves incorrectly.
+ *  
+ */
+
 package com.rockwellcollins.atc.agree.analysis.ast.visitors;
 
-import java.beans.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +43,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 
 import jkind.lustre.Expr;
+import jkind.lustre.IdExpr;
 import jkind.lustre.Node;
 import jkind.lustre.Type;
 
@@ -59,18 +66,21 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 
 	protected jkind.lustre.visitors.TypeMapVisitor lustreTypeMapVisitor;
 
-	protected Map<AgreeNode, AgreeNode> visitedNodes;
+//	protected Map<AgreeNode, AgreeNode> visitedNodes;
+	protected Map<ComponentInstance, AgreeNode> visitedNodes;
 
 	public AgreeASTMapVisitor(jkind.lustre.visitors.TypeMapVisitor lustreTypeMapVisitor) {
 		this.visitedNodes = new HashMap<>();
 		this.lustreTypeMapVisitor = lustreTypeMapVisitor;
 	}
 
+
 	@Override
 	public AgreeProgram visit(AgreeProgram e) {
+		System.out.println("Beginning top-level traversal...");
 		List<AgreeNode> agreeNodes = new ArrayList<>();
 		for (AgreeNode node : e.agreeNodes) {
-			AgreeNode visitedNode = visitedNodes.get(node);
+			AgreeNode visitedNode = visitedNodes.get(node.compInst);
 			if (visitedNode == null) {
 				visitedNode = this.visit(node);
 			}
@@ -96,10 +106,13 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 	public AgreeConnection visit(AgreeConnection e) {
 		if (e instanceof AgreeAADLConnection) {
 			AgreeAADLConnection aadlConn = (AgreeAADLConnection)e;
-			AgreeNode sourceNode = visitedNodes.get(aadlConn.sourceNode);
-
-			AgreeNode destinationNode = visitedNodes.get(aadlConn.destinationNode);
-
+			AgreeNode sourceNode = visitedNodes.get(aadlConn.sourceNode.compInst);
+			AgreeNode destinationNode = visitedNodes.get(aadlConn.destinationNode.compInst);
+			if (sourceNode == null || 
+				destinationNode == null) {
+				throw new AgreeException("Unable to look up node associated with connection: " + aadlConn.toString());
+			}
+			
 			AgreeVar sourVar = visit(aadlConn.sourVar);
 			AgreeVar destVar = visit(aadlConn.destVar);
 			ConnectionType type = aadlConn.type;
@@ -187,7 +200,7 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		AgreeVar clockVar = this.visit(e.clockVar);
 		EObject reference = e.reference;
 		TimingModel timing = e.timing;
-		ComponentInstance compinst = e.compInst;
+		// ComponentInstance compinst = e.compInst;
 		
 		AgreeNodeBuilder builder = new AgreeNodeBuilder(id);
 		builder.addInput(inputs);
@@ -212,7 +225,7 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		builder.addTimeOf(e.timeOfMap);
 
 		AgreeNode result = builder.build();
-		visitedNodes.put(e, result);
+		visitedNodes.put(e.compInst, result);
 
 		return result;
 	}
@@ -237,10 +250,24 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
         return new AgreeVar(name, type, reference, compInst, featInst);
 	}
 
+	/*
+	// MWW: WTF?
 	@Override
 	public AgreeEquation visit(AgreeEquation agreeEquation) {
+		
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	*/
+	
+	@Override
+	public AgreeEquation visit(AgreeEquation agreeEquation) {
+		EObject reference = agreeEquation.reference;
+		List<IdExpr> lhs = new ArrayList<>(); 
+		for (IdExpr e: agreeEquation.lhs) {
+			lhs.add((IdExpr)e.accept(this)); 
+		}
+		Expr rhs = agreeEquation.expr.accept(this);
+		return new AgreeEquation(lhs, rhs, reference);
+	}
 }

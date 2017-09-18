@@ -214,9 +214,11 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			write(" connection {");
 			newline();
 			write("    ");
-			write(aadl.sourceNode.id + "." + aadl.sourVar.id);
+			write(aadl.sourceNode == null ? "NULL NODE" : aadl.sourceNode.id);
+			write("." + aadl.sourVar.id);
 			write(" ->");
-			write(" " + aadl.destinationNode.id + "." + aadl.destVar.id);
+			write(aadl.destinationNode == null ? " NULL NODE" : " " + aadl.destinationNode.id);
+			write("." + aadl.destVar.id);
 			newline();
 			write("  }");
 			newline();
