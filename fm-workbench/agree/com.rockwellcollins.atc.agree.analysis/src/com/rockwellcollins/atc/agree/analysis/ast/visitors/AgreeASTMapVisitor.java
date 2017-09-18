@@ -77,7 +77,6 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 
 	@Override
 	public AgreeProgram visit(AgreeProgram e) {
-		System.out.println("Beginning top-level traversal...");
 		List<AgreeNode> agreeNodes = new ArrayList<>();
 		for (AgreeNode node : e.agreeNodes) {
 			AgreeNode visitedNode = visitedNodes.get(node.compInst);

@@ -139,7 +139,7 @@ public abstract class AadlHandler extends AbstractHandler {
 		Collections.reverse(containers);
 		for (EObject container : containers) {
 			if (container instanceof Classifier) {
-				System.out.println(container);
+				//System.out.println(container);
 				return (Classifier) container;
 			}
 		}

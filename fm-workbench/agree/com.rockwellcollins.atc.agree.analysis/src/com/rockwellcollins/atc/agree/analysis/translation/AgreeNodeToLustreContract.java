@@ -47,7 +47,6 @@ public class AgreeNodeToLustreContract {
         }
 
         Program program = new Program(types, Collections.emptyList(), nodes);
-        System.out.println(program);
         Node node = InlineNodeCalls.program(program);
         node = FlattenPres.node(node);
         node = DistributePres.node(node);

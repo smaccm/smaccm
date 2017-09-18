@@ -153,7 +153,6 @@ public class AgreeMenuListener implements IMenuListener {
     		JKindResult result, 
     		Set<String> reqs) {
 
-    	System.out.println("At traceability matrix");
     	try {
 			AgreeTraceabilityMatrixView matrix = 
 					(AgreeTraceabilityMatrixView) window.getActivePage().showView(

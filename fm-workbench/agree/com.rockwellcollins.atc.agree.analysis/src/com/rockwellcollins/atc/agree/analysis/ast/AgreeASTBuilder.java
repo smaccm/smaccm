@@ -176,32 +176,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), new ArrayList<>(globalTypes),
 				topNode);
 
-		System.out.println("Initial agree program prior to AgreePatternTranslator");
-		AgreeASTMapVisitor dummyVisitor = 
-				new AgreeASTMapVisitor(new jkind.lustre.visitors.TypeMapVisitor());
-		program = dummyVisitor.visit(program);
-		
 		// if there are any patterns in the AgreeProgram we need to inline them
 		program = AgreePatternTranslator.translate(program);
 		containsRTPatterns = program.containsRealTimePatterns;
 
-		System.out.println("after AgreePatternTranslator");
-		dummyVisitor = 
-				new AgreeASTMapVisitor(new jkind.lustre.visitors.TypeMapVisitor());
-		program = dummyVisitor.visit(program);
-
 		program = AgreeInlineLatchedConnections.translate(program);
-
-		System.out.println("after AgreeInlineLatchedConnections");
-		dummyVisitor = 
-				new AgreeASTMapVisitor(new jkind.lustre.visitors.TypeMapVisitor());
-		program = dummyVisitor.visit(program);
-
 		program = AgreeMakeClockedLustreNodes.translate(program);
-		System.out.println("after AgreeMakeClockedLustreNodes");
-		dummyVisitor = 
-				new AgreeASTMapVisitor(new jkind.lustre.visitors.TypeMapVisitor());
-		program = dummyVisitor.visit(program);
 
 		// go through the extension registries and transform the program
 		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
@@ -209,13 +189,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
 
 		for (AgreeAutomater aa : automaters) {
-			System.out.println("Prior to " + aa.toString());
 			program = aa.transform(program);
-
-			System.out.println("After " + aa.toString());
-			dummyVisitor = 
-					new AgreeASTMapVisitor(new jkind.lustre.visitors.TypeMapVisitor());
-			program = dummyVisitor.visit(program);
 		}
 
 		program.containsRealTimePatterns(containsRTPatterns);
@@ -1428,7 +1402,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		NamedElement namedEl = AgreeUtils.getFinalNestId(dotId);
 
 		String fnName = AgreeTypeUtils.getNodeName(namedEl);
-		System.out.println("Function name: " + fnName);
 		boolean found = false;
 		for (Node node : globalNodes) {
 			if (node.id.equals(fnName)) {
@@ -1535,7 +1508,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		builder.addProperties(props);
 
 		Node n = builder.build();
-		System.out.println("Adding the node: " + n.id);
 		addToNodeList(n);
 		return null;
 	}
