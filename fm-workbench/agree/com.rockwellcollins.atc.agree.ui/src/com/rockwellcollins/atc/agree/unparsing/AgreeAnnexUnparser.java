@@ -38,13 +38,12 @@ import com.rockwellcollins.atc.agree.serializer.AgreeSerializer;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
 public class AgreeAnnexUnparser implements AnnexUnparser {
-	@Inject
-	private ISerializer serializer;
+	@Inject private ISerializer serializer;
 
 	protected ISerializer getSerializer() {
 		if (serializer == null) {
-			Injector injector = AgreeActivator.getInstance()
-					.getInjector(AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
+			Injector injector = AgreeActivator.getInstance().getInjector(
+					AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
 			serializer = injector.getInstance(AgreeSerializer.class);
 		}
 		return serializer;
@@ -57,6 +56,7 @@ public class AgreeAnnexUnparser implements AnnexUnparser {
 
 	@Override
 	public String unparseAnnexSubclause(AnnexSubclause subclause, String indent) {
+		subclause.setName(null);
 		return indent + getSerializer().serialize(subclause);
 	}
 
