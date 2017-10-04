@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h2 id="sec:subclauses">Subclauses</h2>
+<p>AGREE annex subclauses can be embedded in <em>system, process</em>, and <em>thread</em> components. AGREE subclauses are of the form:</p>
+<pre><code>annex agree {**
+
+-- agree declarations here...
+
+**};</code></pre>
+<p>From within the subclause, it is possible to refer to the features and properties of the enclosing component as well as the inputs and outputs of subcomponents (if the subclause is a component implementation). A simplified description of the top-level grammar for AGREE annex is shown below.</p>
+<pre><code>AgreeSubclause ::= (SpecStatement)+ ;
+
+SpecStatement ::= &#39;assume&#39; STRING &#39;:&#39; Expr | PatternStatement &#39;;&#39;  
+| &#39;guarantee&#39; STRING &#39;:&#39; Expr | PatternStatement &#39;;&#39;  
+| &#39;assert&#39; (STRING &#39;:&#39;)? Expr | PatternStatement &#39;;&#39;  
+| EqStatement  
+| PropertyStatement  
+| ConstStatement  
+| NodeDefExpr  
+| RecordDefExpr  
+| LemmaStatement;
+
+LemmaStatement ::= &#39;lemma&#39; STRING &#39;:&#39; Expr &#39;;&#39;
+
+EqStatement ::= &#39;eq&#39; Arg (&#39;,&#39; Arg)* &#39;=&#39; Expr &#39;;&#39; ;
+
+PropertyStatement ::= &#39;property&#39; ID &#39;=&#39; Expr &#39;;&#39; ;
+
+ConstStatement ::= &#39;const&#39; ID &#39;:&#39; Type &#39;=&#39; Expr &#39;;&#39; ;
+
+NodeDefExpr ::= &#39;node&#39; ID &#39;(&#39; (Arg (&#39;,&#39; Arg)*)? &#39;)&#39; &#39;returns&#39;
+    &#39;(&#39; (Arg (&#39;,&#39; Arg)*)? &#39;)&#39; &#39;;&#39;
+    NodeBodyExpr ;
+
+RecordDefExpr ::= &#39;type&#39; ID &#39;=&#39; &#39;struct&#39; &#39;{&#39;
+    (Arg (&#39;,&#39; Arg)\*)
+    &#39;}&#39; &#39;;&#39; ;
+
+Arg ::= ID &#39;:&#39; Type ;
+
+NodeBodyExpr ::= (&#39;var&#39; (Arg &#39;;&#39;)+ )?
+    &#39;let&#39; (NodeStmt)+ &#39;tel&#39; &#39;;&#39; ;
+
+NodeStmt ::= Arg (&#39;,&#39; Arg)\* &#39;=&#39; Expr &#39;;&#39;
+
+LinearizationDefExpr ::=  
+    ‘linearization’ name=ID ‘(‘ (args+=Arg)* ’)’  
+    ‘over’ ‘[‘intervals+=LinearizationInterval
+        (‘,’ intervals+=LinearizationInterval)* ’]’  
+    (‘within’ precision=Expr)? ’.’ exprBody=Expr ’;’
+
+LinearizationInterval: start=Expr ‘..’ end=Expr;</code></pre>
+<p>An AGREE subclause consists of a sequence of statements. The different kinds of statements and their uses are described in Section <strong>¿sec:statements?</strong>.</p>
+<p>AGREE subclauses can occur either within AADL components or at the top-level of a package. Package-level subclauses are designed to provide reusable libraries of definitions for AGREE. Nodes (as described in Section 3.6.6) and constants in these subclauses can be referenced by component-level subclauses by using the dot notation: &lt;Package_Name&gt;.&lt;definition name&gt;. So, for example, the following equation uses the Counter node defined in the Agree_Common package:</p>
+<pre><code>eq x1 : int = Agree_Common.Counter(0, 1, prev(x1 = 9, false));</code></pre>
+</body>
+</html>

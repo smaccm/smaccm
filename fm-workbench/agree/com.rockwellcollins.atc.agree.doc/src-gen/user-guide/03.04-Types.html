@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h2 id="sec:types">Types</h2>
+<p>The following data types have been built into the AGREE language:</p>
+<p><strong>Primitive Types:</strong> real, bool, and int.</p>
+<p><strong>Composite Types:</strong> Record Types (as described in Section <strong>¿sec:agree_expressions?</strong>).</p>
+<p>In addition, AGREE reasons about AADL features of the following types from the &quot;Base_Types&quot; package included in the AADL Plugin Resources library:</p>
+<ol type="1">
+<li><p>Base_Types::Boolean</p></li>
+<li><p>Base_Types::Integer</p>
+<ol type="a">
+<li><p>Base_Types::Integer_8</p></li>
+<li><p>Base_Types::Integer_16</p></li>
+<li><p>Base_Types::Integer_32</p></li>
+<li><p>Base_Types::Integer_64</p></li>
+<li><p>Base_Types::Unsigned_8</p></li>
+<li><p>Base_Types::Unsigned_16</p></li>
+<li><p>Base_Types::Unsigned_32</p></li>
+<li><p>Base_Types::Unsigned_64</p></li>
+</ol></li>
+<li><p>Base_Types::Float</p>
+<ol type="a">
+<li><p>Base_Types::Float_32</p></li>
+<li><p>Base_Types::Float_64</p></li>
+</ol></li>
+</ol>
+<p><strong>Note</strong>: Currently all bit-sized integer and unsigned types are approximated by unbound integers in AGREE. Similarly, all floating point numbers are approximated by rational numbers. More precisely, Base_Types::Boolean is mapped to the AGREE primitive type 'bool,' the various sizes of integer and unsigned types in Base_Types are mapped to the AGREE primitive type 'int,' and the floating point types in Base_Types are mapped to the AGREE primitive type 'real.' <strong>This means that</strong> <strong>AGREE results are not guaranteed to be sound with respect to system implementations</strong> <strong>that use bit-level representations.</strong> We expect that future versions of JKind will support bit-level integers, as these are widely supported by solvers. On the other hand, floating point solvers are currently immature, so it is likely that reals will be used for the foreseeable future. If exact floating point behavior (including rounding and truncation) are important to your verification problem, AGREE may provide incorrect answers.</p>
+<p>AGREE reasons about AADL Data Implementations like record types. Consider the following example from a model of a medical device:</p>
+<pre><code>data Alarm_Outputs
+end Alarm_Outputs;
+
+data implementation Alarm_Outputs.Impl
+    subcomponents
+        Is_Audio_Disabled : data Base_Types::Boolean;
+        Notification_Message : data Base_Types::Integer;
+        Log_Message_ID : data Base_Types::Integer;
+end Alarm_Outputs.Impl;</code></pre>
+<p>One can reference the fields of a variable of type Alarm_Outputs.Impl by placing a dot after the variable:</p>
+<pre><code>Alarm.Is_Audio_Disabled =&gt; Alarm.Log_Message_ID &gt; 3;</code></pre>
+</body>
+</html>

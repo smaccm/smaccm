@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h1 id="sec:aadl-declarations" class="Appendix">AADL Declarations</h1>
+<p>There are two kinds of declarations that are of interest for AGREE. First, there are the AADL components that define the architecture that is reasoned about in AGREE. Second, there are local declarations within AGREE annex blocks. In this appendix, we will only provide a cursory overview of the AADL declarations; for a complete overview, we recommend the standard reference SAE Aerospace Standard AS5506B: Architecture Analysis and Design Language and the Addison Wesley book: Model-Based Engineering with AADL.</p>
+<figure>
+<img src="../../media/image30.png" alt="Figure 1: Overview of AADL Components" id="fig:overview_of_aadl_components" width="412" height="270" /><figcaption>Figure 1: Overview of AADL Components</figcaption>
+</figure>
+<p><em>Figure courtesy of Peter Feiler: SAE AADL V2: An Overview</em></p>
+<p>AADL can be used to describe both software and the physical platform on which it executes, as shown in Figure <a href="#fig:overview_of_aadl_components">1</a>. In the current version of AGREE, only the application software is directly annotated for analysis; information about the physical platform is used to structure the analysis<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, but currently is not annotated. Therefore, it is possible to create AGREE annexes in <em>thread, thread group, process,</em> and <em>system</em> components.</p>
+<p>For each component type, AADL distinguishes between <em>types, implementations,</em> and <em>instances.</em> In AGREE, we are primarily concerned with <em>types</em> and <em>implementations</em>, which are shown in Figure <a href="#fig:component_types_and_impl">2</a><em>.</em> The component <em>type</em> defines the publicly visible interface to the component: the inputs and outputs to the components (defined by <em>ports</em>) as well as input <em>parameters,</em> shared memory <em>access</em>, and publicly callable <em>subprograms</em>. For Java programmers, this is roughly analogous to an <em>interface</em>.</p>
+<figure>
+<img src="../../media/image31.png" alt="Figure 2: Component Types and Implementations in AADL" id="fig:component_types_and_impl" width="442" height="285" /><figcaption>Figure 2: Component Types and Implementations in AADL</figcaption>
+</figure>
+<p><em>Figure courtesy of Peter Feiler: SAE AADL V2: An Overview</em></p>
+<p>The type does not contain any of the internal structure of the component, however. Instead, <em>Implementations</em> of a type describe the internal structure of a component. To make this concrete, we examine a portion of our toy model from Chapter 1 in in the code segment below. The top_level <em>system</em> defines two <em>ports:</em> Input, an <strong>in</strong> <strong>data</strong> <strong>port</strong> of type Integer, and Output, an <strong>out</strong> <strong>data</strong> <strong>port</strong> of type Integer. AADL defines three different kinds of ports: <strong>data</strong> <strong>port</strong>s, <strong>event</strong> <strong>ports</strong>, and <strong>event data port</strong>s. These ports have different semantics within AADL; data ports describe data that is periodically updated by a source process and sampled by a destination process. Event and event data ports cause events to be dispatched to a receiver process, which (usually) then executes to process the event.</p>
+<p>For AGREE, since we abstract the timing model of the architecture, all of these port types are currently equivalent and all ports behave (roughly) as <strong>data</strong> <strong>port</strong>s. In future versions of AGREE, these ports will be distinguished and an accurate representation of the different behaviors will be supported.</p>
+<pre><code>system top_level
+    features
+        Input: **in** **data** **port** Base\_Types::Integer;
+        Output: **out** **data** **port** Base\_Types::Integer;
+    annex agree {**
+        assume &quot;System input range&quot; : Input &lt; 10;
+        guarantee &quot;System output range&quot; : Output &lt; 50;
+    **};
+end top_level;
+
+system implementation top_level.Impl
+    subcomponents
+        A_sub : system A ;
+        B_sub : system B ;
+        C_sub : system C ;
+    connections
+        IN_TO_A : port Input -&gt; A_sub.Input
+            {Communication_Properties::Timing =&gt; immediate;};
+        A_TO_B : port A_sub.Output -&gt; B_sub.Input
+            {Communication_Properties::Timing =&gt; immediate;};
+        A_TO_C : port A_sub.Output -&gt; C_sub.Input1
+            {Communication_Properties::Timing =&gt; immediate;};
+        B_TO_C : port B_sub.Output -&gt; C_sub.Input2
+            {Communication_Properties::Timing =&gt; immediate;};
+        C_TO_Output : port C_sub.Output -&gt; Output
+            {Communication_Properties::Timing =&gt; immediate;};
+end top_level.Impl;</code></pre>
+<p>In the system implementation, we see the decomposition of the top_level system into subsystems A, B, and C, and the connections between subcomponents and the top-level system interface. When connecting ports, AADL supports <em>properties</em> that allow aspects of the communication over the port to be further explained. In this model, each of the connections are <em>immediate</em> (that is, the data transfer occurs within the same frame); it is also possible to create a <em>delayed</em> connection, in which the output of the sender is buffered until the next frame.</p>
+<p><strong>Note 1:</strong> By default, AGREE assumes that connections are <em>immediate.</em> The best practice is to explicitly state whether each connection is <em>immediate</em> or <em>delayed.</em></p>
+<p><strong>Note 2:</strong> Currently in AGREE, the initial value of <em>delayed connections</em> is set to the &quot;zero value&quot; for the type: this is 0 for integers, 0.0 for reals, and false for Booleans. An option to change this value will be added to future versions of the tool.</p>
+<p>From a synchronous dataflow perspective, an immediate connection occurs in the same time step and induces a dataflow relationship between the sender and the receiver. For example, since A_sub has an immediate connection to B_sub, B_sub must be evaluated &quot;after&quot; A_sub within the time step. The immediate connections have to form a <em>partial order</em>; that is, if <em>X</em> sends to <em>Y</em> through an immediate connection, then if <em>Y</em> also sends to <em>X</em>, it cannot do so through an immediate connection. Intuitively, if there were immediate connections in both directions, <em>X</em> would have to be scheduled before <em>Y</em> within the frame and vice versa.</p>
+<p>Currently AGREE only supports port-based communications. In particular, it does not support remote-procedure-call (RPC-style) communication. This will be revisited in the future, but for the moment, the procedure call semantics require additional work to translate into our composition framework.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>In the current version of AGREE, the platform is assumed to be synchronous, so this isn’t really true; platforms all behave equivalently. In future releases, we will account for the system architecture in terms of timing and accounting for physical failures.<a href="#fnref1">↩</a></p></li>
+</ol>
+</section>
+</body>
+</html>

@@ -1,0 +1,40 @@
+# Introduction{#sec:introduction}
+
+The Assume Guarantee REasoning Environment (AGREE) is a *compositional,
+assume-guarantee-style* model checker for AADL models. It is
+*compositional* in that it attempts to prove properties about one layer
+of the architecture using properties allocated to subcomponents. The
+composition is performed in terms of *assumptions* and *guarantees* that
+are provided for each component. *Assumptions* describe the expectations
+the component has on the environment, while *guarantees* describe bounds
+on the behavior of the component. AGREE uses *k-induction* as the
+underlying algorithm for the model checking.
+
+The main idea is that complex systems are likely to be designed as a
+hierarchical federation of systems. As we descend the hierarchy, design
+information at some level turns into requirements for subsystems at the
+next lower level of abstraction. These hierarchical levels can be
+straightforwardly expressed in AADL. What we would like to support,
+therefore, is:
+
+-   an approach to requirements validation, architectural design, and
+    architectural verification that uses the requirements to drive the
+    architectural decomposition and the architecture to iteratively
+    validate the requirements, and
+
+-   an approach to verify and validate components prior to building
+    code-level implementations.
+
+AGREE is a first step towards realizing this vision. Components and
+their connections are specified using AADL and annotated with
+*assumptions* that components make about the environment and
+*guarantees* that the components will make about their outputs if the
+assumptions are met. Each layer of the system hierarchy is verified
+individually; AGREE attempts to prove the system-level guarantees in
+terms of the guarantees of its components. This guide explains the
+syntax of AGREE and how to use the AGREE plugin for OSATE/Eclipse.
+
+This document is organized as follows: @sec:aadl_agree_overview provides a brief
+overview of AADL and AGREE through a small example. @sec:agree_language describes
+the syntax of the AGREE language. @sec:agree_osate_tool_suite describes the installation
+information and main features of the AGREE tool suite.

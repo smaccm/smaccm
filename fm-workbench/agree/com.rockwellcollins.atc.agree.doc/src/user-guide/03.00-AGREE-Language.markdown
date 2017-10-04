@@ -1,0 +1,6 @@
+# AGREE Language{#sec:agree_language}
+
+In this chapter we present the syntax and semantics of the input
+language of AGREE. We first present an overview of the computational
+model of the language, then present the syntax of the language.
+

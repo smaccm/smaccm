@@ -1,0 +1,79 @@
+## Subclauses{#sec:subclauses}
+
+AGREE annex subclauses can be embedded in *system, process*, and
+*thread* components. AGREE subclauses are of the form:
+
+~~~~~
+annex agree {**
+
+-- agree declarations here...
+
+**};
+~~~~~
+
+From within the subclause, it is possible to refer to the features and
+properties of the enclosing component as well as the inputs and outputs
+of subcomponents (if the subclause is a component implementation). A
+simplified description of the top-level grammar for AGREE annex is shown
+below.
+
+~~~~~
+AgreeSubclause ::= (SpecStatement)+ ;
+
+SpecStatement ::= 'assume' STRING ':' Expr | PatternStatement ';'  
+| 'guarantee' STRING ':' Expr | PatternStatement ';'  
+| 'assert' (STRING ':')? Expr | PatternStatement ';'  
+| EqStatement  
+| PropertyStatement  
+| ConstStatement  
+| NodeDefExpr  
+| RecordDefExpr  
+| LemmaStatement;
+
+LemmaStatement ::= 'lemma' STRING ':' Expr ';'
+
+EqStatement ::= 'eq' Arg (',' Arg)* '=' Expr ';' ;
+
+PropertyStatement ::= 'property' ID '=' Expr ';' ;
+
+ConstStatement ::= 'const' ID ':' Type '=' Expr ';' ;
+
+NodeDefExpr ::= 'node' ID '(' (Arg (',' Arg)*)? ')' 'returns'
+    '(' (Arg (',' Arg)*)? ')' ';'
+    NodeBodyExpr ;
+
+RecordDefExpr ::= 'type' ID '=' 'struct' '{'
+    (Arg (',' Arg)\*)
+    '}' ';' ;
+
+Arg ::= ID ':' Type ;
+
+NodeBodyExpr ::= ('var' (Arg ';')+ )?
+    'let' (NodeStmt)+ 'tel' ';' ;
+
+NodeStmt ::= Arg (',' Arg)\* '=' Expr ';'
+
+LinearizationDefExpr ::=  
+    ‘linearization’ name=ID ‘(‘ (args+=Arg)* ’)’  
+    ‘over’ ‘[‘intervals+=LinearizationInterval
+        (‘,’ intervals+=LinearizationInterval)* ’]’  
+    (‘within’ precision=Expr)? ’.’ exprBody=Expr ’;’
+
+LinearizationInterval: start=Expr ‘..’ end=Expr;
+~~~~~
+
+An AGREE subclause consists of a sequence of statements. The different
+kinds of statements and their uses are described in @sec:statements.
+
+AGREE subclauses can occur either within AADL components or at the
+top-level of a package. Package-level subclauses are designed to provide
+reusable libraries of definitions for AGREE. Nodes (as described in
+Section 3.6.6) and constants in these subclauses can be referenced by
+component-level subclauses by using the dot notation:
+&lt;Package\_Name&gt;.&lt;definition name&gt;. So, for example, the
+following equation uses the Counter node defined in the Agree\_Common
+package:
+
+~~~~~
+eq x1 : int = Agree_Common.Counter(0, 1, prev(x1 = 9, false));
+~~~~~

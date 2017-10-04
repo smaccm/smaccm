@@ -19,6 +19,7 @@
 		<module>../../../agree/com.rockwellcollins.atc.agree</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree.analysis</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree.codegen</module>
+		<module>../../../agree/com.rockwellcollins.atc.agree.doc</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree.ui</module>
 		<module>../../../tcg/com.rockwellcollins.atc.tcg</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree.feature</module>

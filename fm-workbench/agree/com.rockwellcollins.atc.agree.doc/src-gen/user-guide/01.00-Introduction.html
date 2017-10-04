@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h1 id="sec:introduction">Introduction</h1>
+<p>The Assume Guarantee REasoning Environment (AGREE) is a <em>compositional, assume-guarantee-style</em> model checker for AADL models. It is <em>compositional</em> in that it attempts to prove properties about one layer of the architecture using properties allocated to subcomponents. The composition is performed in terms of <em>assumptions</em> and <em>guarantees</em> that are provided for each component. <em>Assumptions</em> describe the expectations the component has on the environment, while <em>guarantees</em> describe bounds on the behavior of the component. AGREE uses <em>k-induction</em> as the underlying algorithm for the model checking.</p>
+<p>The main idea is that complex systems are likely to be designed as a hierarchical federation of systems. As we descend the hierarchy, design information at some level turns into requirements for subsystems at the next lower level of abstraction. These hierarchical levels can be straightforwardly expressed in AADL. What we would like to support, therefore, is:</p>
+<ul>
+<li><p>an approach to requirements validation, architectural design, and architectural verification that uses the requirements to drive the architectural decomposition and the architecture to iteratively validate the requirements, and</p></li>
+<li><p>an approach to verify and validate components prior to building code-level implementations.</p></li>
+</ul>
+<p>AGREE is a first step towards realizing this vision. Components and their connections are specified using AADL and annotated with <em>assumptions</em> that components make about the environment and <em>guarantees</em> that the components will make about their outputs if the assumptions are met. Each layer of the system hierarchy is verified individually; AGREE attempts to prove the system-level guarantees in terms of the guarantees of its components. This guide explains the syntax of AGREE and how to use the AGREE plugin for OSATE/Eclipse.</p>
+<p>This document is organized as follows: Section <strong>¿sec:aadl_agree_overview?</strong> provides a brief overview of AADL and AGREE through a small example. Section <strong>¿sec:agree_language?</strong> describes the syntax of the AGREE language. Section <strong>¿sec:agree_osate_tool_suite?</strong> describes the installation information and main features of the AGREE tool suite.</p>
+</body>
+</html>
