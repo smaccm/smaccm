@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h2 id="sec:lexical_elements">Lexical Elements</h2>
+<p>Comments always start with two adjacent hyphens and span to the end of a line. Here is an example:</p>
+<pre><code>-- Here is a comment.
+
+-- a long comment may be split onto
+-- two or more consecutive lines</code></pre>
+<p>An identifier is defined as a letter followed by zero or more letters, digits, or single underscores:</p>
+<pre><code>ID ::= identifier_letter ( (&#39;_&#39;)? letter_or_digit)*
+
+letter_or_digit ::= identifier_letter | digit
+
+identifier_letter ::= (&#39;A&#39;..&#39;Z&#39; | &#39;a&#39;..&#39;z&#39;)
+
+digit ::= (0..9)</code></pre>
+<p>Some example identifiers are: Count, X, Get_Symbol, Ethelyn, Snobol_4, X1, Page_Count Store_Next_Item. <strong>Note: Identifiers are</strong> <strong>case insensitive</strong>! Thus Hello, HeLlO, and HELLO all refer to the same entity in AADL.</p>
+<p>Boolean and numeric literal values are defined as follows:</p>
+<pre><code>Literal :: = Boolean_literal | Integer_literal | Real_literal
+
+Integer_literal ::= decimal_integer_literal
+
+Real_literal ::= decimal_real_literal
+
+decimal_integer_literal ::= (&#39;–&#39;)? numeral
+
+decimal_real_literal ::= (&#39;–&#39;)? numeral &#39;.&#39; numeral
+
+numeral ::= digit*</code></pre>
+<p>Boolean_literal are: true, false.</p>
+<p>Examples of Integer_literals are: 1, 42, -1337.</p>
+<p>Examples of Real_literals are: 3.1415, 1.6180, 0.001</p>
+<p>String elements are defined with the following syntax:</p>
+<pre><code>STRING ::= &quot;(string_element)*&quot;
+
+string_element ::= &quot;&quot; | non_quotation_mark_graphic_character</code></pre>
+</body>
+</html>

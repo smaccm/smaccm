@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h1 id="sec:aadl_agree_overview">Brief Overview of AADL and AGREE</h1>
+<p>AGREE is meant to be used in the context of an AADL model. AGREE models the components and their connections as they are described in AADL. This section provides a very brief introduction to AADL and AGREE through the use of a very simple model.</p>
+<p>Suppose we have a simple architecture with three subcomponents <code>A</code>, <code>B</code>, and <code>C</code>, as shown in Figure <a href="#fig:toy_compositional">1</a>.</p>
+<figure>
+<img src="../../media/image1.png" alt="Figure 1: Toy Compositional Proof Example" id="fig:toy_compositional" /><figcaption>Figure 1: Toy Compositional Proof Example</figcaption>
+</figure>
+<p>In the model in Figure <a href="#fig:toy_compositional">1</a>, we want to show that the system level property (<code>Output &lt; 50</code>) holds, given the guarantees provided by the components and the system assumption (<code>Input &lt; 10</code>). This toy example has one interesting feature: the property is <em>true</em> if all of the signals have type integer and it is <em>false</em> if they have floating point types (can you see why?).</p>
+<p>In order to represent this model in AADL, we construct an AADL package. Packages are the structuring mechanism in AADL; they define a namespace where we can place definitions. We define the subcomponents first, then the system component. The complete AADL is shown below.</p>
+<pre><code>package Integer_Toy
+    public
+    with Base_Types;
+
+    system A
+       features
+           Input: in data port Base_Types::Integer;
+            Output: out data port Base_Types::Integer;
+        annex agree {**
+            assume &quot;A input domain&quot; : Input &lt; 20;
+            guarantee &quot;A output range&quot; : Output &lt; 2 * Input;
+        **};
+    end A ;
+
+    system B
+        features
+            Input: in data port Base_Types::Integer;
+            Output: out data port Base_Types::Integer;
+        annex agree {**
+            assume &quot;B input domain&quot; : Input &lt; 20;
+            guarantee &quot;B output range&quot; : Output &lt; Input + 15;
+        **};
+    end B ;
+
+    system C
+        features
+            Input1: in data port Base_Types::Integer;
+            Input2: in data port Base_Types::Integer;
+            Output: out data port Base_Types::Integer;
+        annex agree {**
+            guarantee &quot;C output range&quot; : Output = Input1 + Input2;
+        **};
+    end C ;
+
+    system top_level
+        features
+            Input: in data port Base_Types::Integer;
+            Output: out data port Base_Types::Integer;
+        annex agree {**
+            assume &quot;System input domain&quot; : Input &lt; 10;
+            guarantee &quot;System output range&quot; : Output &lt; 50;
+        **};
+    end top_level;
+
+    system implementation top_level.Impl
+        subcomponents
+            A_sub : system A ;
+            B_sub : system B ;
+            C_sub : system C ;
+        connections
+            IN_TO_A : port Input -&gt; A_sub.Input
+                {Communication_Properties::Timing =&gt; immediate;};
+            A_TO_B : port A_sub.Output -&gt; B_sub.Input
+                {Communication\_Properties::Timing =&gt; immediate;};
+            A_TO_C : port A_sub.Output -&gt; C_sub.Input1
+                {Communication_Properties::Timing =&gt; immediate;};
+            B_TO_C : port B_sub.Output -&gt; C_sub.Input2
+                {Communication_Properties::Timing =&gt; immediate;};
+            C_TO_Output : port C_sub.Output -&gt; Output
+                {Communication_Properties::Timing =&gt; immediate;};
+    end top_level.Impl;
+
+end Integer_Toy;</code></pre>
+<p>In the code above, <strong>system</strong>s define hierarchical &quot;units&quot; of the model. They communicate over <strong>port</strong>s<strong>,</strong> which are typed. Systems do not contain any internal structure, only the interfaces for the system.</p>
+<p>A <strong>system</strong> <strong>implementation</strong> describes an implementation of the system including its internal structure. For this example, the only system whose internal structure is known is the &quot;top level&quot; system, which contains subcomponents <code>A</code>, <code>B</code>, and <code>C</code>. We instantiate these subcomponents (using <code>A_sub</code>, <code>B_sub</code>, and <code>C_sub</code>) and then describe how they are connected together. In the connections section, we must describe whether each connection is <em>immediate</em> or <em>delayed.</em> We will explain more about timing and connection delays in Section <strong>¿sec:agree_language?</strong>. Intuitively, if a connection is <em>immediate,</em> then an output from the source component is <em>immediately</em> available to the input of the destination component (i.e., in the same frame). If they are <em>delayed</em>, then there is a one cycle delay before the output is available to the destination component (delayed frame).</p>
+<h2 id="sec:using_agree_plugin">Using the AGREE AADL Plug-in</h2>
+<p>The example project used in the rest of this section can be retrieved from the following link:</p>
+<blockquote>
+<p><a href="https://github.com/smaccm/smaccm/blob/master/models/Toy_AGREE_Models/Toy_Example.zip" class="uri">https://github.com/smaccm/smaccm/blob/master/models/Toy_AGREE_Models/Toy_Example.zip</a></p>
+</blockquote>
+<p>After unzipping the model, it can be imported by choosing File &gt; Import:</p>
+<figure>
+<img src="../../media/image2.png" alt="Figure 2: Import Menu Option" id="fig:import_menu_option" /><figcaption>Figure 2: Import Menu Option</figcaption>
+</figure>
+<p>Then choosing &quot;Existing Project into Workspace&quot;</p>
+<figure>
+<img src="../../media/image3.png" alt="Figure 3: Importing Toy_Verification Project" id="fig:importing_to_verification_project" /><figcaption>Figure 3: Importing Toy_Verification Project</figcaption>
+</figure>
+<p>and navigating to the unzipped directory after pressing the Next button. Figure <a href="#fig:environment_with_toy_example">4</a> shows what the model looks like when loaded in the AGREE/OSATE tool.</p>
+<p>Note that in the workspace in Figure <a href="#fig:environment_with_toy_example">4</a>, there are several projects, so your workspace will probably look slightly different. The project that we are working with is called Toy_Example.</p>
+<figure>
+<img src="../../media/image4.png" alt="Figure 4: AGREE/OSATE Environment" id="fig:environment_with_toy_example" /><figcaption>Figure 4: AGREE/OSATE Environment</figcaption>
+</figure>
+<p>Open the Integer_Toy.aadl model by double-clicking on the file in the AADL Navigator pane. To invoke AGREE, we select the Top_Level.Impl system implementation in the outline pane on the right. We can then either</p>
+<ol type="1">
+<li><p>right-click on the Top_Level.Impl element on the outline pane and choose &quot;AGREE &gt; Verify All Layers&quot;:</p>
+<figure>
+<img src="../../media/image5.png" alt="Figure 5: Verify All Layers Option from Right Click Menu" id="fig:verify_all_layers_from_right_click" /><figcaption>Figure 5: Verify All Layers Option from Right Click Menu</figcaption>
+</figure></li>
+<li><p>Or, Choose the &quot;Verify All Layers&quot; item from the AGREE menu:</p>
+<figure>
+<img src="../../media/image6.png" alt="Figure 6: Verify All Layers Option from AGREE Menu" id="fig:verify_all_layers_from_agree_menu" /><figcaption>Figure 6: Verify All Layers Option from AGREE Menu</figcaption>
+</figure></li>
+</ol>
+<p>As AGREE runs, you should see checks for &quot;Contract Guarantees&quot;, &quot;Contract Assumptions&quot; and &quot;Contract Consistency&quot; as shown in Figure <a href="#fig:toy_example_results">7</a>.</p>
+<figure>
+<img src="../../media/image7.png" alt="Figure 7: Example of AGREE Results" id="fig:toy_example_results" /><figcaption>Figure 7: Example of AGREE Results</figcaption>
+</figure>
+<p>Now, let's analyze the same model but with the ports instantiated to floating point numbers. Open the Real_Toy.aadl model by double clicking on the file in the AADL Navigator panel. Again select the top_level.Impl System Implementation in the outline panel on the right of OSATE, and either right-click and choose the &quot;AGREE&quot; menu or choose the &quot;AGREE&quot; menu in Eclipse. Now the top-level property fails, as shown in Figure <a href="#fig:toy_example_failed_property">8</a>.</p>
+<figure>
+<img src="../../media/image8.png" alt="Figure 8: Example of Failed Property Result" id="fig:toy_example_failed_property" /><figcaption>Figure 8: Example of Failed Property Result</figcaption>
+</figure>
+<p>When a property fails in AGREE, there is an associated counterexample that demonstrates the failure. To see the counterexample, right-click the failing property (in this case: &quot;System output range&quot;) and choose &quot;View Counterexample in Console&quot; to see the values assigned to each of the variables referenced in the model. Figure <a href="#fig:toy_example_counterexample_view">9</a> shows the counterexample that is generated by this failure in the console window.</p>
+<figure>
+<img src="../../media/image9.png" alt="Figure 9: Counterexample View in Console" id="fig:toy_example_counterexample_view" /><figcaption>Figure 9: Counterexample View in Console</figcaption>
+</figure>
+<p>For working with complex counterexamples, it is often necessary to have a richer interface. It is also possible to export the counterexample to Excel by right-clicking the failing property and choosing &quot;View Counterexample in Excel&quot;. <strong>Note: In order to use this capability, you must have Excel installed on your computer. Also, you must associate .xls files in Eclipse with Excel.</strong> To do so, the following steps can be taken:</p>
+<ol type="1">
+<li><p>choose the &quot;Preferences&quot; menu item from the Window menu, then</p></li>
+<li><p>On the left side of the dialog box, choose General &gt; Editors &gt; File Associations, then</p></li>
+<li><p>click the &quot;Add…&quot; button next to &quot;File Types&quot; and then</p></li>
+<li><p>type &quot;*.xls&quot; into the text box.</p>
+<p>The .xls file type should now be selected.</p></li>
+<li><p>Now choose the &quot;Add…&quot; button next to &quot;Associated Editors&quot;</p></li>
+<li><p>Choose the &quot;External Programs&quot; radio button</p></li>
+<li><p>Select &quot;Microsoft Excel Worksheet&quot; and click OK.</p></li>
+</ol>
+<p>The generated Excel file for the example is shown in Figure <a href="#fig:toy_example_excel">10</a>.</p>
+<figure>
+<img src="../../media/image10.png" alt="Figure 10: Excel Counterexample File" id="fig:toy_example_excel" /><figcaption>Figure 10: Excel Counterexample File</figcaption>
+</figure>
+<p>Note that this counterexample is only one step long. If it were multiple steps, these would be displayed in consecutive columns from left to right.</p>
+<p>When executed with real-valued inputs and outputs, it is possible to find a counterexample to the system-level property. In this counterexample, the system input is 9.5, so it is less than 10, but the system output is equal to 50, violating the system guarantee. Can you find the reason for the counterexample?</p>
+<p>One possible reason, in this case, is that since we are not using integer inequalities on the various components, the assumptions and guarantees are too &quot;loose&quot;. There are several ways that this can be fixed (try some out yourself before reading ahead).</p>
+<p>One possible fix is to change the system assumption to ensure that the input value is small enough (<code>Input &lt; 8.0</code> is sufficient). What is the largest range for the input that can ensure the property? Can you determine it exactly?</p>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h1 id="introduction-on-k-induction" class="Appendix">Introduction On K-Induction</h1>
+<p>The AGREE tool framework uses <em>induction</em> to try to prove the system level-guarantees from the component-level guarantees. But what does this mean? To explain, we first refresh the user’s understanding of mathematical induction performed over natural numbers. Often, one wishes to prove a mathematical fact of the following sort:</p>
+<p><span class="math inline">$\sum_{x = 1}^{n}x = \frac{\left( n + 1 \right)*n}{2}$</span></p>
+<p>We can prove this by <em>weak</em> <em>induction.</em> This involves two steps: first, a base case, where we show that the property holds for the initial value (in this case, the value 1), and an inductive case, where if we assume the property is true of <em>n</em>, we prove that it is true of <em>n+1.</em> For this example, the base case is</p>
+<p><span class="math inline">$\sum_{x = 1}^{1}x = \frac{\left( 1 + 1 \right)*1}{2}$</span></p>
+<p>Since <span class="math inline">$1 = \frac{2}{2}$</span> , we satisfy the base case. If we assume that the property is true of <em>n,</em> we can prove the inductive case over (n+1) as follows:</p>
+<p><br /><span class="math display">$$\sum_{x = 1}^{(n + 1)}x = \frac{\left( (n + 1) + 1 \right)*(n + 1)}{2}$$</span><br /></p>
+<p>= def. of summation</p>
+<p><br /><span class="math display">$$\sum_{x = 1}^{(n)}x + \left( n + 1 \right) = \frac{\left( (n + 1) + 1 \right)*(n + 1)}{2}$$</span><br /></p>
+<p>= induction hypothesis</p>
+<p><br /><span class="math display">$$\frac{\left( n + 1 \right)*n}{2} + \left( n + 1 \right) = \frac{\left( (n + 1) + 1 \right)*(n + 1)}{2}$$</span><br /></p>
+<p>= arithmetic expansion</p>
+<p><br /><span class="math display">$$\frac{n^{2} + n}{2} + \ \frac{2n + 2}{2} = \frac{n^{2} + 3n + 2}{2}$$</span><br /></p>
+<p>= arithmetic equalities</p>
+<p><br /><span class="math display">$$\frac{n^{2} + 3n + 2}{2} = \frac{n^{2} + 3n + 2}{2}$$</span><br /></p>
+<p>QED.</p>
+<p>The induction principle used by AGREE is similar. However, instead of performing induction over natural numbers, it performs induction over the <em>transition system</em> that defines the properties. Through a compilation step, any AGREE model can be turned into a complex first-order logical formula that defines how the system can evolve from one time instant to the next time instant, denoted <em>T</em>; the formula T is defined over a set of <em>pre-state</em> variables and a set of <em>post-state</em> variables, that describe the values of the variables in the model in the state before and after the transition. This idea is not entirely straightforward, but a full explanation is outside the scope of this User’s Guide. For a complete explanation please see <em>Model Checking</em> by Ed Clarke et. al or <em>Logic in Computer Science</em> by Huth and Ryan.</p>
+<p>Using this notation, and a formula <em>I</em> that defines the set of allowed initial values for variables, you can describe the evolution of the system as follows:</p>
+<p><br /><span class="math display"><em>I</em>(<em>s</em><sub>0</sub>) &amp; <em>T</em>(<em>s</em><sub>0</sub>, <em>s</em><sub>1</sub>) &amp; <em>T</em>(<em>s</em><sub>1</sub>, <em>s</em><sub>2</sub>)&amp; <em>T</em>(<em>s</em><sub>2</sub>,<em>s</em><sub>3</sub>)&amp;…</span><br /></p>
+<p>Where I defines the initial constraint on the variables and the T’s define the step-to-step evaluation of the system. This provides a structure from which you can perform induction. Suppose you define a property that you want to hold over a system state as <em>P(s).</em> Then it is possible to talk about performing induction over this structure.</p>
+</body>
+</html>

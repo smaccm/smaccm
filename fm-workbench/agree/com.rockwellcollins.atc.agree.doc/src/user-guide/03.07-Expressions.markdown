@@ -1,0 +1,270 @@
+Expressions
+-----------
+
+A simplified description of the set of expressions for AGREE is
+presented below.
+
+~~~
+RelateOp::=
+   '<' | '<=' | '>' | '>=' | '=' | '<>' | '!=';
+
+QID::= ID '::' ID ;
+
+NestedDotID ::= ID ('.' NestedDotID)? ;
+
+Literal :: = Boolean_literal | Integer_literal | Real_literal ;
+
+Expr ::= Literal
+    | ID
+    | QID
+    | NestedDotId
+    | ID '(' Expr_List ')'
+    | 'pre' '(' Expr ')'
+    | 'prev' '(' Expr ',' Expr ')'
+    | 'event' '(' NestedDotID ')'
+    | 'floor' '(' Expr ')'
+    | 'real' '(' Expr ')'
+    | 'Get_Property' '(' Expr ',' AADL_Property ')'
+    | 'this' ('.' NestedDotId)?
+    | '(' Expr ')'
+    | RecordUpdateExpr
+    | ('-' | 'not') Expr
+    | Expr ('+' | '-' | '\*' | '/' | 'div'| 'mod') Expr
+    | Expr RelateOp Expr
+    | Expr ('and' | 'or' ) Expr
+    | Expr ('->' | '=>' | '<=>' ) Expr
+    | 'if' Expr 'then' Expr 'else' Expr ;
+
+Expr_List ::= Expr ',' Expr_List | Expr ;
+~~~
+
+The order of precedence (from lowest to highest) is as follows:
+
+> -&gt;\
+> =&gt;\
+> &lt;=&gt;\
+> or\
+> and\
+> &lt; | &lt;= | &gt; | &gt;= | = | &lt;&gt; |!=\
+> + | -\
+> \* | / | div | mod\
+> unary minus | not\
+> if then else\
+> prev | next | Get\_Property\
+> ID | QID | NestedDotID | Literal | pre | this | ()
+
+Therefore, `x + if y then a else b * prev(z.f - 1, 0)` would be parsed as
+follows:
+
+~~~
+x + (if y then a else (b * (prev((z.f) – 1, 0))))
+~~~
+
+The meaning of the arithmetic, relational, and Boolean operators is
+straightforward. If/then/else is an *expression,* not a *statement*; it
+behaves like the `?` operator in Java. So, users can write:
+
+~~~
+x = if (b) then y else z ;
+~~~
+
+Expressions reason about the current state or past states of variables
+and can reference variables defined in equation statements or other
+identifiers in the AADL model. In the rest of this section, we describe
+different types of expressions in the order they are listed as
+alternatives to the grammar rule for Expr.
+
+### ID Expressions
+
+ID expressions are used to reference different AADL objects as well as
+AGREE variables and constants. Constants or variables must be defined
+locally (in the AGREE annex block or the enclosing definition), and they
+can be referred to by a single identifier ID.
+
+### NestedDotID (Field) Expressions
+
+A NestedDotID expression can have dots in between ID expressions, e.g.,
+`food.bar.biz`. It can be used to refer to record types or variables of a
+subcomponent. For example, one could use the NestedDotID expression
+foo.bar to reference the input, output, or equation variable `bar` of
+subcomponent `foo` within the implementation of some AADL component. A
+NestedDotID expression can also be used for inputs and outputs that are
+of record type: if `x` is a record type containing field `y`, then the
+notation `x.y` is used.
+
+### Node Call Expressions
+
+A node call expression is an ID of a defined node followed by
+parenthesis. If the node is defined in an AADL Package, then the ID
+should be the AADL Package name followed by a dot (.) and then the node
+name.
+
+### Linearization Call Expressions
+
+A Linearization Call Expression is an ID of a defined linearization
+expression followed by parenthesis. If the linearization expression is
+defined in an AADL Package, then the ID should be the AADL Package name
+followed by a dot (.) and then the ID for the expression. For the
+example linearization expression provided in section 3.6.11, its ID "sq"
+can be used in other expressions like a non-recursive, pure function
+call. The following lemma statement provides one such example.
+
+~~~
+eq y : real;
+
+lemma "sq() range positive" : sq(y) <= -0.10;
+~~~
+
+### Stream (Previous Value and Arrow) Expressions 
+
+**Arrow Expression**. The arrow expression evaluates to the value of the
+expression of the left hand side of the arrow on the initial step.
+Otherwise it evaluates to the value of the expression on the right hand
+side of the arrow. The arrow expression is used with the pre expression
+to reason about past values of variables. For example, we can define a
+variable in an AGREE contract that starts at zero and increments by one
+each step in time using an equation statement:
+
+~~~
+eq count: int = 0 -> pre(count) + 1;
+~~~
+
+**Previous Value Expression**. A previous value expression evaluates to
+the value of its argument on the previous time frame. It should that it
+be guarded by an arrow expressions as its value is undefined on the
+initial step.
+
+The previous value expression defines an initialized stream. So, if we
+write:
+
+~~~
+eq x : int = prev(y + 1, 0);
+~~~
+
+In the initial instant, `x` is equal to 0. In all subsequent instants, `x`
+is equal to the previous value of `y + 1`. If we examine the evolution of `x`
+and `y` over a time window of ten steps, it is relatively straightforward
+to see.
+
+  ------------------- ------- ------- ------- ------- ------- ------- ------- ------- ------- --------
+  **Time Instant **   **1**   **2**   **3**   **4**   **5**   **6**   **7**   **8**   **9**   **10**
+  **y**               4       5       8       7       3       12      6       9       1       3
+  **y+1**             5       6       9       8       4       13      7       10      2       4
+  **x**               0       5       6       9       8       4       13      7       10      2
+  ------------------- ------- ------- ------- ------- ------- ------- ------- ------- ------- --------
+
+The arrow (`->`) operator is the stream initialization operator. Given
+an expression `x -> y`, in the initial instant in time, the value is
+equal to `x`. In all subsequent instants, it is equal to `y`. So, suppose we
+have:
+
+~~~
+eq x : bool = (false -> a);
+~~~
+
+Then, in the first instant in time, `x` will be assigned "false" and in
+every other instant in time, it will be assigned "a".
+
+**Note: A common mistake is to mis-type `->` for `=>` (and
+vice-versa). This will often cause your model to return incorrect
+results. Please check for this error.**
+
+The `=>` operator is the implication operator: if you write:
+
+~~~
+a => b
+~~~
+
+then `a` and `b` are expected to be Boolean expressions and the meaning of
+the operator is equivalent to `(not a) or b`. So, writing:
+
+~~~
+x = (false => a)
+~~~
+
+Will assign `x` to true in all time instants.
+
+The pre expression is an *uninitialized* pre expression. Its value is
+*undefined* in the initial instant. This expression is expected to be
+used in combination with the arrow expression; this can yield
+expressions that are, on occasional, more terse than using the prev
+expression. However, the following equivalence always holds for
+arbitrary expressions `x` and `y`:
+
+~~~
+prev(x, y) <=> (y -> pre(x))
+~~~
+
+For novice users, we recommend using the initialized prev expression as
+it is less error prone than the `->` pre combination.
+
+### Event Expressions
+
+An event expression is a special predicate that is used to reason about
+AADL event data ports. For an input event data port, its semantics are
+such that it evaluates to true if a value is *present* on the event port
+and false otherwise. For an output event data port, its semantics are
+such that it evaluates true if data is being sent on the port and false
+otherwise.
+
+### Floor and Real Expressions
+
+A floor expression takes an expression of type *real* as an argument and
+returns an *int* equal to the floor of the number.
+
+A real expression takes an expression of type *int* as argument and
+returns a *real* equal to its value.
+
+### Get Property Expressions
+
+A get property expression allows a user to reason about values of AADL
+properties in the model. The first argument is the relative path to an
+AADL component in the instance model or 'this' if the property exists in
+the component in which get property statement lives. The second argument
+is the name of the AADL property.
+
+### Unary Minus and Not Expressions
+
+An Unary Minus expression is used to negate integer or real valued
+expressions.
+
+A Not Expression is used to negate boolean valued expressions
+
+### Record Update Expressions
+
+Record Update Expression are assignments to all or a specific field of a
+record type variable. For example, `foo {a = true; b = 1}` and
+`bar {a := true}` are valid Record Update Expressions, given
+definition for type `foo` and variable `bar` as follows:
+
+~~~
+type foo = struct {a : bool, b : int};
+
+eq bar : foo;
+~~~
+
+The record update expression expects an expression of record type on the
+left hand side of the curly braces. It returns the same record as the
+left hand side expression except with its member IDs set to the value of
+the expression on the right hand side of the `:=`;
+
+### Arithmetic Operations
+
+Arithmetic operations must be performed on expressions of the same type.
+They follow the standard order of precedence. Note that AGREE will give
+a warning if you write an expression that is not linear. Some theorem
+provers do not reason about non-linear expressions. Non-linear integer
+arithmetic is undecidable and most theorem provers do not use a
+decidable decision procedure for non-linear real arithmetic. So it is
+recommended that you only use linear expressions.
+
+### Relation Expressions
+
+Relation expressions can be performed on integers or reals, but not a
+combination of both. Equality can be used on Booleans as well.
+
+### Boolean Expressions
+
+Boolean expressions have the standard associative properties and order
+of precedence.
+

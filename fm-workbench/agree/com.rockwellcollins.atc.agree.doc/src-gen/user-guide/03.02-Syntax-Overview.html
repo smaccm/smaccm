@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h2 id="sec:syntax_overview">Syntax Overview</h2>
+<p>Before describing the details of the language, we provide a few general notes about the syntax. In the syntax notations used below, syntactic categories are indicated by typewriter font. Grammar productions enclosed in parenthesis ('( )') indicate a set of choices in which a vertical bar ('|') is used to separate alternatives in the syntax rules or ' ..' is used to describe a range (e.g. ('A'..'Z')). Any characters in single quotes describe concrete syntax: (e.g.: '+', '-', '=&gt;', '''). Note that the last example is the concrete syntax for a single quote. Examples of grammar fragments are also written in the Consolas monospace font. Sometimes one of the following characters is used at the beginning of a rule as a shorthand for choosing among several alternatives: 1) The * character indicates repetition (zero or more occurrences) and + indicates required repetition (1 or more occurrences). 2) A ? character indicates that the preceding token is optional.</p>
+<p>AGREE is built on top of the AADL 2.0 architecture description language. The AGREE formulas are found in an AADL <em>annex</em>, which extends the grammar of AADL. Generally, the annex follows the conventions of AADL in terms of lexical elements and types with some small deviations (which are noted). AGREE operates over a relatively small fragment of the AADL syntax. Thus familiarity with the entire AADL language is not required. We will build up the language starting from the smallest fragments. A cursory overview of the AADL declarations is provided in Appendix B.</p>
+<p>AADL describes the interface of a component in a <em>component type</em>. A <em>component type</em> contains a list of <em>features</em>, which are the inputs and outputs of a component, and possibly a list of AADL properties. A <em>component implementation</em> is used to describe a specific instance of a <em>component type</em>. A <em>component implementation</em> contains a list of subcomponents and list of connections that occur between its subcomponents and features.</p>
+<p>For example, one may decide to create a component type for a car which contains features describing its throttle, speed, and direction. A car component may have many implementations (like a 2006 Toyota Camry, or a McLaren 650s). Different implementations may contain different electronic components, actuators, etc.</p>
+<p>The syntax for a component's contract exists in an AGREE annex placed inside of the <em>component type</em>. AGREE syntax can also be placed inside of annexes in a <em>component implementation</em> or an AADL Package. Syntax placed in an annex in an AADL Package can be used to create libraries that can be referenced by other components.</p>
+</body>
+</html>

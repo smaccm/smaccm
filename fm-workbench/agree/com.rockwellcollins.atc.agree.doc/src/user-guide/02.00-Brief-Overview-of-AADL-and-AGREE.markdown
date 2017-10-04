@@ -1,0 +1,222 @@
+# Brief Overview of AADL and AGREE{#sec:aadl_agree_overview}
+
+AGREE is meant to be used in the context of an AADL model. AGREE models
+the components and their connections as they are described in AADL. This
+section provides a very brief introduction to AADL and AGREE through the
+use of a very simple model.
+
+Suppose we have a simple architecture with three subcomponents `A`, `B`, and
+`C`, as shown in @fig:toy_compositional.
+
+![Toy Compositional Proof Example](../../media/image1.png){#fig:toy_compositional}
+
+In the model in @fig:toy_compositional, we want to show that the system level property
+(`Output < 50`) holds, given the guarantees provided by the components
+and the system assumption (`Input < 10`). This toy example has one
+interesting feature: the property is *true* if all of the signals have
+type integer and it is *false* if they have floating point types (can
+you see why?).
+
+In order to represent this model in AADL, we construct an AADL package.
+Packages are the structuring mechanism in AADL; they define a namespace
+where we can place definitions. We define the subcomponents first, then
+the system component. The complete AADL is shown below.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+package Integer_Toy
+    public
+    with Base_Types;
+
+    system A
+       features
+           Input: in data port Base_Types::Integer;
+            Output: out data port Base_Types::Integer;
+        annex agree {**
+            assume "A input domain" : Input < 20;
+            guarantee "A output range" : Output < 2 * Input;
+        **};
+    end A ;
+
+    system B
+        features
+            Input: in data port Base_Types::Integer;
+            Output: out data port Base_Types::Integer;
+        annex agree {**
+            assume "B input domain" : Input < 20;
+            guarantee "B output range" : Output < Input + 15;
+        **};
+    end B ;
+
+    system C
+        features
+            Input1: in data port Base_Types::Integer;
+            Input2: in data port Base_Types::Integer;
+            Output: out data port Base_Types::Integer;
+        annex agree {**
+            guarantee "C output range" : Output = Input1 + Input2;
+        **};
+    end C ;
+
+    system top_level
+        features
+            Input: in data port Base_Types::Integer;
+            Output: out data port Base_Types::Integer;
+        annex agree {**
+            assume "System input domain" : Input < 10;
+            guarantee "System output range" : Output < 50;
+        **};
+    end top_level;
+
+    system implementation top_level.Impl
+        subcomponents
+            A_sub : system A ;
+            B_sub : system B ;
+            C_sub : system C ;
+        connections
+            IN_TO_A : port Input -> A_sub.Input
+                {Communication_Properties::Timing => immediate;};
+            A_TO_B : port A_sub.Output -> B_sub.Input
+                {Communication\_Properties::Timing => immediate;};
+            A_TO_C : port A_sub.Output -> C_sub.Input1
+                {Communication_Properties::Timing => immediate;};
+            B_TO_C : port B_sub.Output -> C_sub.Input2
+                {Communication_Properties::Timing => immediate;};
+            C_TO_Output : port C_sub.Output -> Output
+                {Communication_Properties::Timing => immediate;};
+    end top_level.Impl;
+
+end Integer_Toy;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the code above, **system**s define hierarchical "units" of the model. They
+communicate over **port**s**,** which are typed. Systems do not contain
+any internal structure, only the interfaces for the system.
+
+A **system** **implementation** describes an implementation of the
+system including its internal structure. For this example, the only
+system whose internal structure is known is the "top level" system,
+which contains subcomponents `A`, `B`, and `C`. We instantiate these
+subcomponents (using `A_sub`, `B_sub`, and `C_sub`) and then describe how
+they are connected together. In the connections section, we must
+describe whether each connection is *immediate* or *delayed.* We will
+explain more about timing and connection delays in @sec:agree_language.
+Intuitively, if a connection is *immediate,* then an output from the
+source component is *immediately* available to the input of the
+destination component (i.e., in the same frame). If they are *delayed*,
+then there is a one cycle delay before the output is available to the
+destination component (delayed frame).
+
+## Using the AGREE AADL Plug-in{#sec:using_agree_plugin}
+
+The example project used in the rest of this section can be retrieved
+from the following link:
+
+> <https://github.com/smaccm/smaccm/blob/master/models/Toy_AGREE_Models/Toy_Example.zip>
+
+After unzipping the model, it can be imported by choosing File &gt;
+Import:
+
+![Import Menu Option](../../media/image2.png){#fig:import_menu_option}
+
+Then choosing "Existing Project into Workspace"
+
+![Importing Toy\_Verification Project](../../media/image3.png){#fig:importing_to_verification_project}
+
+and navigating to the unzipped directory after pressing the Next button.
+@fig:environment_with_toy_example shows what the model looks like when loaded in the AGREE/OSATE
+tool.
+
+Note that in the workspace in @fig:environment_with_toy_example, there are several projects, so
+your workspace will probably look slightly different. The project that
+we are working with is called Toy\_Example.
+
+![AGREE/OSATE Environment](../../media/image4.png){#fig:environment_with_toy_example}
+
+Open the Integer\_Toy.aadl model by double-clicking on the file in the
+AADL Navigator pane. To invoke AGREE, we select the Top\_Level.Impl
+system implementation in the outline pane on the right. We can then
+either
+
+1.  right-click on the Top\_Level.Impl element on the outline pane and
+    choose "AGREE &gt; Verify All Layers":
+
+    ![Verify All Layers Option from Right Click Menu](../../media/image5.png){#fig:verify_all_layers_from_right_click}
+
+1.  Or, Choose the "Verify All Layers" item from the AGREE menu:
+
+    ![Verify All Layers Option from AGREE Menu](../../media/image6.png){#fig:verify_all_layers_from_agree_menu}
+
+As AGREE runs, you should see checks for "Contract Guarantees",
+"Contract Assumptions" and "Contract Consistency" as shown in
+@fig:toy_example_results.
+
+![Example of AGREE Results](../../media/image7.png){#fig:toy_example_results}
+
+Now, let's analyze the same model but with the ports instantiated to
+floating point numbers. Open the Real\_Toy.aadl model by double clicking
+on the file in the AADL Navigator panel. Again select the
+top\_level.Impl System Implementation in the outline panel on the right
+of OSATE, and either right-click and choose the "AGREE" menu or choose
+the "AGREE" menu in Eclipse. Now the top-level property fails, as shown
+in @fig:toy_example_failed_property.
+
+![Example of Failed Property Result](../../media/image8.png){#fig:toy_example_failed_property}
+
+When a property fails in AGREE, there is an associated counterexample
+that demonstrates the failure. To see the counterexample, right-click
+the failing property (in this case: "System output range") and choose
+"View Counterexample in Console" to see the values assigned to each of
+the variables referenced in the model. @fig:toy_example_counterexample_view shows the
+counterexample that is generated by this failure in the console window.
+
+![Counterexample View in Console](../../media/image9.png){#fig:toy_example_counterexample_view}
+
+For working with complex counterexamples, it is often necessary to have
+a richer interface. It is also possible to export the counterexample to
+Excel by right-clicking the failing property and choosing "View
+Counterexample in Excel". **Note: In order to use this capability, you
+must have Excel installed on your computer. Also, you must associate
+.xls files in Eclipse with Excel.** To do so, the following steps can be
+taken:
+
+1.  choose the "Preferences" menu item from the Window menu, then
+
+2.  On the left side of the dialog box, choose General &gt; Editors &gt;
+    File Associations, then
+
+3.  click the "Add…" button next to "File Types" and then
+
+4.  type "\*.xls" into the text box.
+
+    The .xls file type should now be selected.
+
+5.  Now choose the "Add…" button next to "Associated Editors"
+
+6.  Choose the "External Programs" radio button
+
+7.  Select "Microsoft Excel Worksheet" and click OK.
+
+The generated Excel file for the example is shown in @fig:toy_example_excel.
+
+![Excel Counterexample File](../../media/image10.png){#fig:toy_example_excel}
+
+Note that this counterexample is only one step long. If it were multiple
+steps, these would be displayed in consecutive columns from left to
+right.
+
+When executed with real-valued inputs and outputs, it is possible to
+find a counterexample to the system-level property. In this
+counterexample, the system input is 9.5, so it is less than 10, but the
+system output is equal to 50, violating the system guarantee. Can you
+find the reason for the counterexample?
+
+One possible reason, in this case, is that since we are not using
+integer inequalities on the various components, the assumptions and
+guarantees are too "loose". There are several ways that this can be
+fixed (try some out yourself before reading ahead).
+
+One possible fix is to change the system assumption to ensure that the
+input value is small enough (`Input < 8.0` is sufficient). What is the
+largest range for the input that can ensure the property? Can you
+determine it exactly?
+
