@@ -64,6 +64,9 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
+import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
+import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.RenamingVisitor;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
@@ -297,6 +300,15 @@ public abstract class VerifyHandler extends AadlHandler {
         RenamingVisitor.addRenamings(lustreProgram, renaming, layout);
         addProperties(renaming, properties, mainNode, agreeProgram);
 
+		// go through the extension registries and transform the renaming
+		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
+				.getRegistry(ExtensionRegistry.AGREE_AUTOMATER_EXT_ID);
+		List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
+
+		for (AgreeAutomater aa : automaters) {
+			renaming = aa.rename(renaming);
+		}
+        
         JKindResult result;
         switch (analysisType) {
         case Consistency:

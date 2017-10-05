@@ -2,7 +2,9 @@ package com.rockwellcollins.atc.agree.analysis.extentions;
 
 import java.util.Map;
 
+import jkind.api.results.AnalysisResult;
 import jkind.results.Counterexample;
+import jkind.results.Property;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
@@ -11,6 +13,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.annexsupport.AnnexHighlighter;
 import org.osate.annexsupport.AnnexPlugin;
 
+import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 
 public class AgreeAutomaterProxy extends ExtensionProxy implements AgreeAutomater {
@@ -44,5 +47,25 @@ public class AgreeAutomaterProxy extends ExtensionProxy implements AgreeAutomate
         }
         return extractor;
     }
+
+	@Override
+	public AgreeRenaming rename(AgreeRenaming renaming) {
+		AgreeAutomater extractor = getAgreeAutomater();
+
+        if (extractor != null) {
+            return extractor.rename(renaming);
+        }
+        return null;
+	}
+
+	@Override
+	public AnalysisResult transformResult(AnalysisResult res) {
+		AgreeAutomater extractor = getAgreeAutomater();
+
+        if (extractor != null) {
+            return extractor.transformResult(res);
+        }
+        return null;
+	}
 
 }
