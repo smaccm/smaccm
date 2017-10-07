@@ -2386,8 +2386,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//LinearizationDefExpr:
 		//	'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')'
-		//	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']' ('within' precision=Expr)? ':'
-		//	exprBody=Expr ';';
+		//	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']' ('within' precision=Expr)?
+		//	':' exprBody=Expr ';';
 		@Override public ParserRule getRule() { return rule; }
 
 		//'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')' 'over' '[' intervals+=LinearizationInterval (','
@@ -2851,8 +2851,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRecordNestedDotIDParserRuleCall_1_1_0 = (RuleCall)cRecordAssignment_1_1.eContents().get(0);
 		
 		//Type:
-		//	{PrimType} string=primTypes ('[' lowNeg='-'? rangeLow=(INTEGER_LIT | REAL_LIT) ',' highNeg='-'? rangeHigh=(INTEGER_LIT
-		//	| REAL_LIT) ']')?
+		//	{PrimType} string=primTypes ('[' lowNeg='-'? rangeLow=(INTEGER_LIT | REAL_LIT) ',' highNeg='-'?
+		//	rangeHigh=(INTEGER_LIT | REAL_LIT) ']')?
 		//	| {RecordType} record=NestedDotID;
 		@Override public ParserRule getRule() { return rule; }
 
@@ -4992,8 +4992,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//LinearizationDefExpr:
 	//	'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')'
-	//	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']' ('within' precision=Expr)? ':'
-	//	exprBody=Expr ';';
+	//	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']' ('within' precision=Expr)?
+	//	':' exprBody=Expr ';';
 	public LinearizationDefExprElements getLinearizationDefExprAccess() {
 		return pLinearizationDefExpr;
 	}
@@ -5059,8 +5059,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Type:
-	//	{PrimType} string=primTypes ('[' lowNeg='-'? rangeLow=(INTEGER_LIT | REAL_LIT) ',' highNeg='-'? rangeHigh=(INTEGER_LIT
-	//	| REAL_LIT) ']')?
+	//	{PrimType} string=primTypes ('[' lowNeg='-'? rangeLow=(INTEGER_LIT | REAL_LIT) ',' highNeg='-'?
+	//	rangeHigh=(INTEGER_LIT | REAL_LIT) ']')?
 	//	| {RecordType} record=NestedDotID;
 	public TypeElements getTypeAccess() {
 		return pType;

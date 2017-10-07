@@ -105,11 +105,13 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 	public AgreeConnection visit(AgreeConnection e) {
 		if (e instanceof AgreeAADLConnection) {
 			AgreeAADLConnection aadlConn = (AgreeAADLConnection)e;
-			AgreeNode sourceNode = visitedNodes.get(aadlConn.sourceNode.compInst);
-			AgreeNode destinationNode = visitedNodes.get(aadlConn.destinationNode.compInst);
-			if (sourceNode == null || 
-				destinationNode == null) {
-				throw new AgreeException("Unable to look up node associated with connection: " + aadlConn.toString());
+			AgreeNode sourceNode = null; 
+			if (aadlConn.sourceNode != null) { 
+				sourceNode = visitedNodes.get(aadlConn.sourceNode.compInst);
+			}
+			AgreeNode destinationNode = null;
+			if (aadlConn.destinationNode != null) {
+				destinationNode = visitedNodes.get(aadlConn.destinationNode.compInst);
 			}
 			
 			AgreeVar sourVar = visit(aadlConn.sourVar);
