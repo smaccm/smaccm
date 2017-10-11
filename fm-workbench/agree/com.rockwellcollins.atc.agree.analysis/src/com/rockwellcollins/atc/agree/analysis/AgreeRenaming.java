@@ -15,6 +15,24 @@ import jkind.results.ValidProperty;
 
 public class AgreeRenaming extends Renaming {
 
+	/*
+	 * explicitRenames:
+	 * 		key: Lustre var
+	 * 		value: AGREE var
+	 * 		example: "accumulator__pressure_output"  ->  "accumulator.pressure_output"
+	 * supportRenames: 
+	 * 		key: Lustre property
+	 *  	value: AGREE property
+	 *  	example: "__TOP_green_pump.GUARANTEE0"  ->  "green_pump.GUARANTEE0"
+	 *  supportRefStrings: 
+	 *  	key: AGREE child property
+	 *  	value: String description
+	 *  	example: "green_skid.GUARANTEE1"  ->  "Output always positive."
+	 *  refMap:
+	 *  	key: AGREE child property string description
+	 *  	value: Implementation
+	 *  	example: "Output always positive"  -> GuaranteeStatementImpl
+	 */
     private Map<String, String> explicitRenames = new HashMap<>();
     private Map<String, String> supportRenames = new HashMap<>();
     private Map<String, String> supportRefStrings = new HashMap<>();
