@@ -1,0 +1,97 @@
+import "Common.stg"
+import "CommonOSSpecificNames.stg"
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for periodic dispatcher gluecode c file
+//
+////////////////////////////////////////////////////////////////////////////
+
+periodicDispatcherCPurpose(componentName) ::= <<
+This .c file contains the CAmkES periodic dispatcher component definition.
+>>
+
+filePrefix(name, date, path, datatypesHeader) ::= <<
+<DARPALicenseComment()>
+
+<filenameBlockComment(date, path, periodicDispatcherCPurpose(name))>
+
+>>
+
+writePeriodicDispatcher(dispatcher, threadCalendar) ::= <<
+if ((aadl_calendar_counter % (<dispatcher.periodicDispatcherPeriod> / aadl_tick_interval)) == 0) {
+    <dispatcher.qualifiedName>_emit();
+}
+>>
+
+periodicComponentCDispatchers(threadCalendar) ::= <<
+
+// Declarations for managing periodic thread dispatch
+const uint32_t aadl_tick_interval = <threadCalendar.greatestCommonDivisorInMilliseconds>;
+const uint32_t aadl_hyperperiod_subdivisions = <threadCalendar.hyperperiodSubdivisions>;
+uint32_t aadl_calendar_counter = 0;
+uint32_t aadl_calendar_ticks = 0;
+
+
+void <threadCalendar.calendarFnName>() {
+    <threadCalendar.periodicDispatchers:writePeriodicDispatcher(threadCalendar)>
+
+    aadl_calendar_counter = (aadl_calendar_counter + 1) % aadl_hyperperiod_subdivisions;
+    aadl_calendar_ticks++;
+}
+
+>>
+
+filePostfix(name, path) ::= <<
+>>
+
+
+periodicComponentCBody(model, threadCalendar) ::= <<
+
+#include <\u003C>string.h<\u003E>
+#include <\u003C><model.systemTypeHeaderName><\u003E>
+#include <\u003C><threadCalendar.periodicDispatcherHFileName><\u003E>
+
+
+// prototypes for clock functions
+void clock_init();
+void clock_set_interval_in_ms(uint32_t interval);
+void clock_start_timer(void);
+void clock_irq_callback(void);
+uint64_t clock_get_time();
+
+<periodicComponentCDispatchers(threadCalendar)>
+
+// no op under the new time server scheme.
+void clock_init() { }
+
+/* Set interrupt interval, in milliseconds. */
+void clock_set_interval_in_ms(uint32_t interval)
+{
+    timer_periodic(0, ((uint64_t)interval)*NS_IN_MS);
+}
+
+// no op under the new time server scheme
+void clock_start_timer(void) { }
+
+// defer to time server
+uint64_t clock_get_time()
+{
+    return (timer_time() / NS_IN_MS);
+}
+
+void timer_complete_callback() {
+    <threadCalendar.calendarFnName>();
+}
+
+int run(void)
+{
+    clock_init();
+    clock_set_interval_in_ms(<threadCalendar.greatestCommonDivisorInMilliseconds>);
+
+    clock_start_timer();
+
+    return 0;
+}
+
+>>

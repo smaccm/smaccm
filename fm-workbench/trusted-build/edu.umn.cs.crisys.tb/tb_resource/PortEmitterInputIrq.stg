@@ -1,0 +1,199 @@
+import "Common.stg"
+import "CommonCPrototypes.stg"
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations related to IRQ Input Port gluecode header.
+//
+////////////////////////////////////////////////////////////////////////////
+
+writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
+void <externalHandler.handlerName>(void);
+>>
+
+writeUdePrototype(dispatcher) ::= <<
+// user entrypoints for IRQ dispatcher <dispatcher.name>
+<dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)>
+void <dispatcher.firstLevelInterruptHandler>(void);
+>>
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations related to IRQ Input Port gluecode C functions.
+//
+////////////////////////////////////////////////////////////////////////////
+
+slihIrqDispatcher(dispatcher) ::= <<
+if (<dispatcher.dispatchOccurredVar>) {
+    <dispatcher.dispatchOccurredVar> = false;
+    <dispatcher.userEntrypointCallerName>();
+}
+
+>>
+
+
+dispatcherComponentIRQEventDecls(dispatcher) ::= <<
+
+static bool <dispatcher.dispatchOccurredVar>;
+
+/************************************************************************
+ * <dispatcher.incomingWriterName>
+ * Invoked from IRQ: either 'managed' from CAmkES or 'raw' from 
+ * eChronos or VxWorks.  Note: currently IRQ dispatchers are 
+ * unsupported in Linux; we will have to examine this more closely
+ * at some later time.
+ *
+ * This function records an IRQ event, calls the first-level interrupt handler,
+ * and triggers the thread to dispatch (which will invoke the second-level
+ * interrupt handler).  Note that the ISR is the *only* thread that triggers
+ * a dispatch, so we do not mutex lock the function.
+ *
+ ************************************************************************/
+
+>>
+
+//////////////////////////////////////////////////////////////
+//
+// eChronos-specific port code
+//
+//////////////////////////////////////////////////////////////
+
+// void <dispatcher.firstLevelInterruptHandler>(void);
+
+
+eChronosDispatcherMainLockReleaseStmt(dispatcher) ::= <<
+rtos_interrupt_event_raise(<dispatcher.threadImplementation.eChronosInterruptSignalConst>);
+>>
+
+writeTrampoline(name, flihName) ::= <<
+
+    \<trampoline\>
+        \<name\><name>\</name\>
+        \<handler\><flihName>\</handler\>
+    \</trampoline\>
+
+>>
+
+writeDispatcherTrampoline(dispatcher) ::= <<
+<writeTrampoline(dispatcher.signalName, dispatcher.activeThreadInternalDispatcherFnName)>
+>>
+
+writeInternalInterruptHandler(signalName) ::= <<
+\<<signalName>\>exception_preempt_trampoline_<signalName>\</<signalName>\>
+>>
+
+writeExternalInterruptHandler(signalName, signalNumber) ::= <<
+\<external_irq\>
+    \<number\><signalNumber>\</number\>
+    \<handler\>exception_preempt_trampoline_<signalName>\</handler\>
+\</external_irq\>
+>>
+
+writeInternalDispatcherInterruptHandler(dispatcher) ::= <<
+<writeInternalInterruptHandler(dispatcher.signalName)>
+>>
+
+writeExternalDispatcherInterruptHandler(dispatcher) ::= <<
+<writeExternalInterruptHandler(dispatcher.signalName, dispatcher.signalNumber)>
+>>
+
+eChronosVxWorksIrqDispatcher(dispatcher) ::= <<
+bool <dispatcher.incomingWriterName>() {
+    <dispatcher.firstLevelInterruptHandler>();
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcher.threadImplementation.mainLockReleaseStmt>
+    return true;
+}
+>>
+
+
+//////////////////////////////////////////////////////////////
+//
+// CAmkES-specific port code
+//
+//////////////////////////////////////////////////////////////
+
+
+//
+// For component CAmkES files.
+//
+
+constructMemoryInterface(memoryRegion, dispatcher) ::= <<
+dataport <memoryRegion.regionTypeName> <memoryRegion.name>;
+
+>>
+
+
+camkesIrqComponentDecl(dispatcher) ::= << 
+   consumes DataAvailable <dispatcher.name>;
+   <dispatcher.memoryRegions:constructMemoryInterface(dispatcher)>
+>>
+
+camkesIrqDispatcher(dispatcher) ::= <<
+void <dispatcher.name>_handle(void) {
+    <dispatcher.firstLevelInterruptHandler>();
+    <dispatcher.dispatchOccurredVar> = true;
+    <dispatcher.threadImplementation.mainLockReleaseStmt>
+    <dispatcher.name>_acknowledge();
+}
+
+>>
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Assembly declarations for IRQ components
+//
+////////////////////////////////////////////////////////////////////////////
+
+
+irqComponentMemoryRegion(memoryRegion) ::= <<
+dataport <memoryRegion.regionTypeName> <memoryRegion.name>;
+
+>>
+
+constructIRQComponent(dispatcher) ::= <<
+component <dispatcher.irqComponent> {
+    hardware;
+    <dispatcher.memoryRegions:irqComponentMemoryRegion()>
+    emits DataAvailable irq;
+}
+
+>>
+
+instantiateIRQComponent(dispatcher) ::= <<
+component <dispatcher.irqComponent> <dispatcher.irqObject>;
+
+>>
+
+constructIRQConfig(dispatcher) ::= <<
+<dispatcher.memoryRegions:{memoryRegion |
+<dispatcher.irqObject>.<memoryRegion.name>_paddr = <memoryRegion.address>;
+<dispatcher.irqObject>.<memoryRegion.name>_size = <memoryRegion.size>;
+}>
+<dispatcher.irqObject>.irq_irq_number = <dispatcher.signalNumber> ;
+
+>>
+
+constructIRQMemoryConnection(memoryRegion, dispatcher) ::= <<
+connection seL4HardwareMMIO <dispatcher.name>_<memoryRegion.name>(from <dispatcher.threadImplementation.componentInstanceName>.<memoryRegion.name>, to <dispatcher.irqObject>.<memoryRegion.name>);
+
+>>
+
+constructIRQSignal(dispatcher) ::= <<
+connection seL4HardwareInterrupt <dispatcher.name>_irq(from <dispatcher.irqObject>.irq, to <dispatcher.threadImplementation.componentInstanceName>.<dispatcher.name>);
+
+>>
+
+constructIRQConnections(dispatcher) ::= <<
+<dispatcher.memoryRegions:constructIRQMemoryConnection(dispatcher)>
+<constructIRQSignal(dispatcher)>
+
+>>
+
+assemblyIrqComponent(dispatcher) ::= <<
+component <dispatcher.irqComponent> <dispatcher.irqObject>;
+
+>>

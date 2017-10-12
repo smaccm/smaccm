@@ -1,5 +1,4 @@
-#include <smaccm_manager.h>
-#include <manager.h>
+#include <tb_manager.h>
 
 #define FORKS 4
 #define CLIENTS 6

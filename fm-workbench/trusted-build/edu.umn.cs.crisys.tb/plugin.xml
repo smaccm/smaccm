@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="Code Generation Category"
+            id="edu.umn.cs.crisys.tb.commands.category">
+      </category>
+      <command
+            name="Generate AADL Middleware"
+            categoryId="edu.umn.cs.crisys.tb.commands.category"
+            id="edu.umn.cs.crisys.tb.commands.translateModelCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="edu.umn.cs.crisys.tb.commands.translateModelCommand"
+            class="edu.umn.cs.crisys.tb.handlers.TbHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="edu.umn.cs.crisys.tb.commands.translateModelCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="Translation"
+               mnemonic="T"
+               id="edu.umn.cs.crisys.tb.menus.translateMenu">
+            <command
+                  commandId="edu.umn.cs.crisys.tb.commands.translateModelCommand"
+                  icon="icons/brick.png"
+                  mnemonic="G"
+                  id="edu.umn.cs.crisys.tb.menus.translateModelCommand">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="edu.umn.cs.crisys.tb.toolbars.translateMenuToolbar">
+            <command
+                  commandId="edu.umn.cs.crisys.tb.commands.translateModelCommand"
+                  icon="icons/brick.png"
+                  tooltip="Generate CAmkES or eChronos system skeleton from AADL model"
+                  id="edu.umn.cs.crisys.tb.toolbars.translateModelCommand">
+            </command>
+         </toolbar>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+        <command
+                  commandId="edu.umn.cs.crisys.tb.commands.translateModelCommand"
+                  icon="icons/brick.png"
+                  tooltip="Generate CAmkES or eChronos system skeleton from AADL model"
+                  id="edu.umn.cs.crisys.tb.popups.translateModelCommand">
+        </command>
+      </menuContribution>
+   </extension>
+
+<!--
+   <extension
+         point="org.eclipse.ui.actionSets">
+		<actionSet
+			id="edu.umn.cs.crisys.tb.actionSet"
+			label="Aadl2Rtos Set"
+			visible="true">
+			<action
+				id="edu.umn.cs.crisys.tb.AadlToRtosAction.action"
+				label="Translate AADL to RTOS ..."
+				tooltip="Translate AADL to RTOS ..."
+				class="edu.umn.cs.crisys.tb.Aadl2RtosAction"
+				menubarPath="menu.analyses/bottom.grp"
+				enablesFor="1">
+				<enablement>
+					<objectClass name="org.eclipse.xtext.ui.editor.outline.impl.EObjectNode"/>
+				</enablement>
+			</action>
+		</actionSet>
+   </extension> 
+   -->
+   
+   <extension
+     point="org.osate.pluginsupport.aadlcontribution">
+     <aadlcontribution
+        file="tb_resource/TB_SYS.aadl"
+        id="com.rockwellcollins.atc.aadl2rtos.aadlcontribution1">
+     </aadlcontribution>
+   </extension>
+</plugin>

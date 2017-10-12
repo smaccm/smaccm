@@ -1,0 +1,193 @@
+import "Common.stg"
+import "CommonOSSpecificNames.stg"
+import "CommonCPrototypes.stg"
+
+/*********************************************************************
+ * OS-specific naming functions required by this file:
+ *   dispatcherMainInitializeLockStmt
+ *   dispatcherMainLockWaitStmt
+ *   dispatcherMainLockReleaseStmt
+ *   osSpecificIncludeFiles
+ *   osSpecificThreadInitializer
+ *   osSpecificThreadEntrypoint
+ *   osSpecificComponentLocalCallerFunction
+ *   osSpecificAssert
+ *
+ * Dummy declarations are provided by CommonOSSpecificNames.
+ * These must be overridden by redefinition (see CamkesComponentC.stg
+ * for an example).  For more information on template overriding,
+ * please see: www.stringtemplate.org.
+ *
+ * Removed (after refactoring for ports) 
+ *   osSpecificIrqDispatcher
+ *   portDispatcherLock
+ *   portDispatcherUnlock
+ *      portLockStmt
+ *   portUnlockStmt
+ *   incomingPortWriterName
+ *   outgoingPortWriterName
+ *   incomingActiveThreadDispatchName
+ *   outgoingActiveThreadDispatchName
+ *   incomingUserEntrypoingCallerName
+ *   outgoingUserEntrypointCallerName
+ *
+ *********************************************************************/
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations related to component gluecode C files for CAmkES/eChronos
+//
+//
+////////////////////////////////////////////////////////////////////////////
+
+componentGlueCodeCFilePurpose(name) ::= <<
+This C file contains the implementations of the AADL primitives
+used by user-level declarations for thread <name>.
+
+The user code runs in terms of "dispatchers", which cause
+dispatch user-level handlers to execute.  These handlers can
+communicate using the standard AADL primitives, which are mapped
+to C functions.
+
+The send/receive handlers are not thread safe in CAmkES; it is
+assumed that this is handled by the CAmkES sequentialized access
+to the dispatch handler.  There is only one dispatch interface
+for the component containing all of the dispatch points.
+
+They are thread safe for eChronos.
+
+The read/write handlers are thread safe because the writer comes
+through a dispatch interface but the reader is "local" on a dispatch
+interface and so contention may occur.
+>>
+
+filePrefix(name, date, path) ::=
+    "<stdFilePrefix(date, path, componentGlueCodeCFilePurpose(name))>"
+
+filePostfix(name, path) ::= <<
+>>
+
+
+/////////////////////////////////////////////////////////////////////
+//
+// UserEntrypointCaller functions
+//
+// These functions provide the "scaffolding" functions necessary to
+// set up the output event ports prior to making a call to the user
+// code.
+//
+// These are the implementations of the RPC functions for passive
+// components that are called using CAmkES/eChronos.  They are also used
+// in active components to set up local procedure calls to user code.
+//
+/////////////////////////////////////////////////////////////////////
+
+
+userEntrypointCallerCall(externalHandler, dispatcher) ::= <<
+<if(dispatcher.hasData)>
+<externalHandler.handlerName>((<dispatcher.type.name> *) in_arg);
+<else><externalHandler.handlerName>();
+<endif>
+>>
+
+userEntrypointCallerAssignGlobals(dispatchContract, dispatcher) ::= <<
+<dispatchContract.port.globalMaxDispatchSize> = <dispatchContract.maxDispatchSize>;
+<if(dispatchContract.canDispatch)><\\>
+<dispatchContract.port.globalIndex> = &(out_arg-><dispatchContract.port.index>);
+<if(dispatchContract.port.hasData)><dispatchContract.port.globalData> = out_arg-><dispatchContract.port.data>;<endif>
+*<dispatchContract.port.globalIndex> = 0;
+<endif>
+>>
+
+userEntrypointCallerFn(dispatcher) ::= <<
+/************************************************************************
+ *  <dispatcher.userEntrypointCallerName>:
+ *
+ * This is the function invoked by an active thread dispatcher to
+ * call to a user-defined entrypoint function.  It sets up the dispatch
+ * context for the user-defined entrypoint, then calls it.
+ *
+ ************************************************************************/
+<dispatcher.userEntrypointCallerPrototype> {
+    <dispatcher.threadImplementation.portList:{port | <port.writePortPreEntrypoint>}>
+    <dispatcher.externalHandlers:userEntrypointCallerCall(dispatcher)>
+    <dispatcher.threadImplementation.portList:{port | <port.writePortPostEntrypoint>}>
+}
+
+
+>>
+
+
+dispatcherComponentMainFunction(threadImpl) ::= <<
+/************************************************************************
+ * <osSpecificThreadEntrypoint(threadImpl)>
+ * Main active thread function.
+ *
+ ************************************************************************/
+
+<osSpecificThreadEntrypoint(threadImpl)> {
+    <commentIf("Port initialization routines",
+               (threadImpl.portList:{ port | <port.writePortThreadInitializer>}))><\\>
+
+    <if(threadImpl.hasInitializeEntrypoint)>
+    <if(threadImpl.initializeEntrypointOpt.hasDummyArg)>
+    {
+    int64_t tb_dummy;
+    <threadImpl.initializeEntrypointOpt.userEntrypointCallerName>(&tb_dummy);
+    }
+    <else>
+    <threadImpl.initializeEntrypointOpt.userEntrypointCallerName>();
+    <endif>
+    <endif>
+
+    <commentIf("Register interrupt handlers",
+               (osSpecificThreadPostInitializer(threadImpl)))><\\>
+
+    // Initial lock to await dispatch input.
+    <dispatcherMainInitializeLockStmt(threadImpl)>
+    for(;;) {
+        <dispatcherMainLockWaitStmt(threadImpl)>
+
+        // Drain the queues
+        <threadImpl.portList:{port|<port.writePortEventResponder>}>
+    }
+
+    // Won't ever get here, but form must be followed
+    <osSpecificThreadReturnStmt(threadImpl)>
+}
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Putting it all together...
+//
+///////////////////////////////////////////////////////////////////////////
+
+componentCFileDecls(threadImpl) ::= <<
+
+#include <\u0022><threadImpl.componentGlueCodeHFileName><\u0022>
+<osSpecificIncludeFiles(threadImpl)>
+
+<threadImpl.portList: {port|<port.writePortDeclarations>}>
+
+<threadImpl.portListEmitterCIncludes>
+
+<osSpecificThreadInitializer(threadImpl)>
+
+<if(threadImpl.isActive)><\\>
+<threadImpl.localActiveThreadConnectionFrontier:osSpecificComponentLocalCallerFunction()>
+<threadImpl.dispatchers:userEntrypointCallerFn()>
+<if(threadImpl.isExternal)><\\>
+////////////////////////////////////////////////////////////////////////////
+//
+// NOTE: External thread, so we assume the run function is externally declared.
+//
+////////////////////////////////////////////////////////////////////////////
+<else>
+<dispatcherComponentMainFunction(threadImpl)>
+<endif>
+<endif>
+
+>>

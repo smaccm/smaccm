@@ -1,0 +1,352 @@
+import "Common.stg"
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Templates for managing data port interfaces between active threads.
+//
+// RPC / LPC implementation
+// 
+// 10/26/2016 MWW
+// 
+///////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Header templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
+<if(dispatcher.hasData)>
+void <externalHandler.handlerName>(const <dispatcher.type.aadlInputType.name> <dispatcher.name>);
+<else>
+void <externalHandler.handlerName>(void);
+<endif>
+
+>>
+
+writeUdePrototype(dispatcher) ::= <<
+<commentIf({user dispatch entrypoints for port <dispatcher.name>},
+           (dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)))>
+
+>>
+
+writePortWriterPrototype(port) ::= <<
+<if(port.hasData)>
+bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+<else>
+bool <port.localWriterName>(void);
+<endif>
+
+>>
+
+writePortReaderPrototype(port) ::= <<
+// reader prototype for <port.name>
+<if(port.hasData)>
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+<else>
+bool <port.localReaderName>(void);
+<endif>
+
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// C File templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////
+//
+// Functions for event data ports: managing send/receive queues.
+// Used for active thread to active thread communications.
+//
+/////////////////////////////////////////////////////////////////////
+
+
+copyToQueueDataStmt(port) ::= <<
+<if(port.type.isBaseType)><port.queueDataName>[<port.queueBackName>] = *<port.name> ;
+<else><aadlInputToValMemcpy(port.type, {<port.queueDataName>[<port.queueBackName>]}, port.name )>
+<endif>
+>>
+
+copyFromQueueDataStmt(port) ::= <<
+<if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.queueDataName>[<port.queueFrontName>] ;
+<else><valToAadlOutputMemcpy(port.type, port.name, {<port.queueDataName>[<port.queueFrontName>]})>
+<endif>
+>>
+
+
+InputEventDataPortDecls(port) ::= <<
+
+/************************************************************************
+ *
+ * Static variables and queue management functions for event data port:
+ *     <port.name>
+ *
+ ************************************************************************/
+
+static <port.queueDataDecl>;
+static <port.queueFullDecl> = false;
+static <port.queueFrontDecl> = 0;
+static <port.queueBackDecl> = 0;
+
+static bool <port.queueIsFullName>() {
+    return (<port.queueFrontName> == <port.queueBackName>) && (<port.queueFullName>);
+}
+
+static bool <port.queueIsEmptyName>() {
+    return (<port.queueFrontName> == <port.queueBackName>) && (!<port.queueFullName>);
+}
+
+static bool <port.queueReadName>(<port.type.aadlOutputType.name> <port.name>) {
+    if (<port.queueIsEmptyName>()) {
+        return false;
+    } else {
+        <copyFromQueueDataStmt(port)>
+        <port.queueFrontName> = (<port.queueFrontName> + 1) % <port.queueSize>;
+        <port.queueFullName> = false ;
+        return true;
+    }
+}
+
+static bool <port.queueWriteName>(const <port.type.aadlInputType.name> <port.name>) {
+    if (<port.queueIsFullName>()) {
+        return false;
+    } else {
+        <copyToQueueDataStmt(port)>
+        <port.queueBackName> = (<port.queueBackName> + 1) % <port.queueSize>;
+        if (<port.queueBackName> == <port.queueFrontName>) {
+            <port.queueFullName> = true ;
+        }
+        return true;
+    }
+}
+
+/************************************************************************
+ *  <port.incomingWriterName>:
+ * Invoked by: remote interface.
+ *
+ * This is the function invoked by a remote RPC to write to an active-thread
+ * input event data port.  It queues the input message into a circular buffer.
+ *
+ ************************************************************************/
+
+bool <port.incomingWriterName>(const <port.type.name> * arg) {
+    bool result;
+    <port.lockStmt>
+    result = <port.queueWriteName>((<port.type.camkesName>*) arg);
+    <port.unlockStmt>
+    <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
+    return result;
+}
+
+
+/************************************************************************
+ *  <port.localReaderName>:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked by the active thread to read from the
+ * input event data queue circular buffer.
+ *
+ ************************************************************************/
+
+bool <port.localReaderName>(<port.type.aadlOutputType.name> arg) {
+    bool result;
+    <port.lockStmt>
+    result = <port.queueReadName>(arg);
+    <port.unlockStmt>
+    return result;
+}
+
+>>
+
+InputEventPortDecls(port) ::= <<
+
+/************************************************************************
+ *
+ * Static variables and queue management functions for event port:
+ *     <port.name>
+ *
+ ************************************************************************/
+
+static <port.indexType.name> <port.index> = 0;
+
+<!
+static bool <port.queueIsFullName>() {
+    return false;
+}
+
+static bool <port.queueIsEmptyName>() {
+    return <port.index> == 0;
+}
+!>
+
+/************************************************************************
+ *  <port.incomingWriterName>:
+ * Invoked by: remote RPC
+ *
+ * This is the function invoked by a remote RPC to write to an active-thread
+ * input event port.  It increments a count of received messages.
+ *
+ ************************************************************************/
+
+bool <port.incomingWriterName>() {
+    bool result;
+    <port.lockStmt>
+    // Note: possibility for overflow here - I have set (arbitrary) maximum.
+    if (<port.index> <\u003C> <port.indexMax>) {
+      result = true;
+      <port.index>++;
+    } else {
+      result = false;
+    }
+    <port.unlockStmt>
+    <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
+    return true;
+}
+
+/************************************************************************
+ *  <port.localReaderName>:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked by the active thread to decrement the
+ * input event index.
+ *
+ ************************************************************************/
+
+bool <port.localReaderName>() {
+    bool result;
+    <port.lockStmt>
+    if (<port.index> > 0) {
+        <port.index>--;
+        result = true;
+    } else {
+        result = false;
+    }
+    <port.unlockStmt>
+    return result;
+}
+
+>>
+
+
+///////////////////////////////////////////////////////////////
+//
+// Writer functions
+//
+///////////////////////////////////////////////////////////////
+
+
+callRemoteWriterStmt(connection) ::= << 
+<if(port.hasData)>
+tb_result &= <connection.outgoingPortWriterName>((<port.type.camkesName> *)<connection.sourcePort.name>);
+<else>
+tb_result &= <connection.outgoingPortWriterName>();
+<endif>
+>>
+
+remoteCallerFunction(srcPort) ::= <<
+/************************************************************************
+ *  <srcPort.localWriterName>:
+ * Invoked from user code in the local thread.
+ *
+ * This is the function invoked by the local thread to make a
+ * call to write to a remote data port.
+ *
+ ************************************************************************/
+
+<if(srcPort.hasData)>
+bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
+<else>
+bool <srcPort.localWriterName>(void) {
+<endif>
+    bool tb_result = true ; 
+    <srcPort.connections:callRemoteWriterStmt()>
+    return tb_result;
+}
+>>
+
+componentRemoteWriterDecl(port) ::= <<
+<remoteCallerFunction(port)>
+>>
+
+///////////////////////////////////////////////////////////////
+//
+// Dispatch functions
+//
+///////////////////////////////////////////////////////////////
+
+eventDataDispatcher(dispatcher) ::= <<
+while (!<dispatcher.queueIsEmptyName>()) {
+    <dispatcher.varDecl>;
+    <dispatcher.localReaderName>(<dispatcher.type.valToAadlOutput><dispatcher.name>);
+    <dispatcher.activeThreadInternalDispatcherFnName>(<dispatcher.type.valToAadlInput><dispatcher.name>);
+}
+
+>>
+
+eventDispatcher(dispatcher) ::= <<
+while (<dispatcher.localReaderName>()) {
+    <dispatcher.activeThreadInternalDispatcherFnName>();
+}
+
+>>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// CAmkES OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+inputPortDeclarations(port) ::= <<
+provides <port.type.readerWriterInterfaceName> <port.name>;
+has mutex <port.mutex>;
+>>
+
+outputPortDeclarations(port) ::= <<
+<port.connections:{c | uses <port.type.readerWriterInterfaceName> <c.outgoingPortName>;
+}>
+>>
+
+rpcConnection(connector, cid, from1, from2, to1, to2) ::=
+   "connection <connector> <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectReaderWriter(connection, model) ::= <<
+<rpcConnection(model.generateConnectionName,
+    connection.connector,
+    connection.sourcePort.threadImplementation.componentInstanceName,
+    connection.outgoingPortName,
+    connection.destPort.threadImplementation.componentInstanceName,
+    connection.destPort.name)>
+
+>>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// eChronos OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+writerDecl(port) ::= <<
+<if(port.hasData)>
+bool <port.incomingWriterName>(const <port.type.camkesName> * arg);
+
+<else>
+
+bool <port.incomingWriterName>(void);
+<endif>
+>>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// VxWorks OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////

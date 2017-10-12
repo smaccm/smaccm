@@ -1,0 +1,94 @@
+import "Common.stg"
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations related to component CAmkES file
+//
+////////////////////////////////////////////////////////////////////////////
+
+componentCamkesPurpose(componentName) ::= <<
+This header file contains the CAmkES component definition for the
+AADL thread implementation <componentName>.
+>>
+
+filePrefix(name, date, path) ::= "<stdFilePrefix(date, path, componentCamkesPurpose(name))>"
+
+filePostfix(name, path) ::= <<
+>>
+
+importThreadIdl(threadImpl) ::= <<
+import <\u003C><threadImpl.idlFileName><\u003E>;
+
+>>
+
+importReaderWriterIdl(type) ::= <<
+import <\u003C><type.readerWriterIdlFileName><\u003E>;
+
+>>
+
+importSharedDataAccessorIdl(sharedDataAccessor) ::= <<
+import <\u003C><sharedDataAccessor.type.sharedDataIdlFileName><\u003E>;
+
+>>
+
+importRpgIdl(remoteProcedureGroup) ::= <<
+import <\u003C><remoteProcedureGroup.idlName><\u003E>;
+
+>>
+
+
+sharedDataAccessorDecl(sharedDataAccessor) ::= <<
+dataport <sharedDataAccessor.type.name> <sharedDataAccessor.name>;
+
+>>
+
+constructMemoryInterface(memoryRegion, dispatcher) ::= <<
+dataport Buf <memoryRegion.name>;
+
+>>
+
+writeRpgInterface(endpoint) ::= <<
+<endpoint.providesOrRequires> <endpoint.remoteProcedureGroup.name> <endpoint.name>;
+
+>>
+
+camkesAddComponentPortImport(interface) ::= <<
+import <\u003C><interface><\u003E>;
+
+>>
+
+
+camkesAddComponentPortImports(port) ::= <<
+<if(port.camkesAddComponentPortImports)>
+<port.camkesAddComponentPortImports:camkesAddComponentPortImport()>
+<endif>
+>>
+
+componentCamkesBody(threadImpl) ::= <<
+
+<! import "../../interfaces/<threadImpl.idlFileName>"; !>
+import \<Timer.idl4>;
+<threadImpl.portList:camkesAddComponentPortImports()>
+<commentIf("Idl files for shared data accessors",
+  (threadImpl.sharedDataAccessorList:importSharedDataAccessorIdl()))>
+<commentIf("Idl files for RPCs", (threadImpl.usedRpgs:importRpgIdl()))>
+<threadImpl.portListEmitterCamkesComponentDeclarations>
+
+component <threadImpl.componentName> {
+    include <\u003C><threadImpl.model.systemTypeHeaderName><\u003E>;
+    <if(threadImpl.isActive)>
+    control;
+    has semaphore <threadImpl.dispatcherComponentSemaphoreName>;
+    <endif>
+
+    <threadImpl.portList:{port |<port.camkesAddComponentPortLevelDeclarations>}>
+
+    <threadImpl.externalSemaphores:{ sem | has semaphore <sem>; }; separator="\n">
+    <threadImpl.externalMutexes:{mut | has mutex <mut>; }; separator="\n">
+    <threadImpl.endpoints:writeRpgInterface()>
+
+    <commentIf("Provided interfaces for shared data",
+               (threadImpl.sharedDataAccessorList:sharedDataAccessorDecl()))><\\>
+}
+>>

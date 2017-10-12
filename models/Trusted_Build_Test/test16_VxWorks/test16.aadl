@@ -3,7 +3,7 @@
 package test16
 public 
    with Base_Types;
-   with SMACCM_SYS;   
+   with TB_SYS;   
    with Data_Model;
 
 
@@ -39,14 +39,14 @@ thread sender
 	
 	properties 
 	    Dispatch_Protocol => Periodic;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Period => 250 ms;
 		Source_Text => ("user_code/user_sender.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    TB_SYS::Sends_Events_To => "{{}}";
 end sender ; 
 
 -- Example of a periodically dispatched "Active" thread.   
@@ -59,14 +59,14 @@ thread receiver
 		
 	properties 
 	    Dispatch_Protocol => Periodic;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
 		Source_Text => ("user_code/user_receiver.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
 	    Priority => 8;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    TB_SYS::Sends_Events_To => "{{}}";
 end receiver ; 
 
 process proc
@@ -78,7 +78,7 @@ process implementation proc.Impl
 		s: thread sender;
 		r: thread receiver;
 		shared: data a_struct_wrapper.impl {
-			SMACCM_SYS::CAmkES_Owner_Thread => "sender";
+			TB_SYS::CAmkES_Owner_Thread => "sender";
 		};
 	connections
 		conn1: data access shared -> s.buff1;
@@ -92,8 +92,8 @@ system implementation test16_shared_data.impl
 	subcomponents
 		tl: process proc.Impl;
 	properties
-		SMACCM_SYS::OS => VxWorks;
-		SMACCM_SYS::HW => QEMU;
+		TB_SYS::OS => VxWorks;
+		TB_SYS::HW => QEMU;
 
 end test16_shared_data.impl;
 

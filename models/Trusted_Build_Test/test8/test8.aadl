@@ -3,7 +3,7 @@
 package test8
 public 
    with Base_Types;
-   with SMACCM_SYS;   
+   with TB_SYS;   
    with Data_Model;
 
 
@@ -19,44 +19,83 @@ data implementation a_struct.impl
 end a_struct.impl;
 
 -- Example of a periodically dispatched "Active" thread.   
-thread sender
+thread sender1
 	features
 		Output1: out data port a_struct.impl {
-	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
 		};
 	
 	properties 
 	    Dispatch_Protocol => Periodic;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
-		Source_Text => ("user_code/user_sender.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+		Source_Text => ("user_code/opt_main.c", "user_code/user_sender.c", "user_code/include/sender1/sender.h");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
-end sender ; 
+	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender1;
+
+thread sender2
+	features
+		Output1: out data port a_struct.impl {
+	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
+		};
+	
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    TB_SYS::Thread_Type => Active ;
+	    Period => 1000 ms;
+		Source_Text => ("user_code/opt_main.c", "user_code/user_sender.c", "user_code/include/sender2/sender.h");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("sender_periodic_ping");
+	    Priority => 10;
+	    Stack_Size => 256 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
+end sender2;
 
 -- Example of a periodically dispatched "Active" thread.   
-thread receiver
+thread receiver1
 	features
 		Input1: in data port a_struct.impl {
-	      SMACCM_SYS::CommPrim_Source_Text => "ping_Input1";			
-	      -- SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+	      TB_SYS::CommPrim_Source_Text => "ping_Input1";			
+	      -- TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  --Queue_Size => 8;
 		}; 
 		
 	properties 
 	    Dispatch_Protocol => Periodic;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Period => 1000 ms;
-		Source_Text => ("user_code/user_receiver.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+		Source_Text => ("user_code/user_receiver.c", "user_code/include/receiver1/receiver.h");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
 	    Priority => 8;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
-end receiver ; 
+	    TB_SYS::Sends_Events_To => "{{}}";
+end receiver1 ; 
+
+thread receiver2
+	features
+		Input1: in data port a_struct.impl {
+	      TB_SYS::CommPrim_Source_Text => "ping_Input1";			
+	      -- TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+		  --Queue_Size => 8;
+		}; 
+		
+	properties 
+	    Dispatch_Protocol => Periodic;
+	    TB_SYS::Thread_Type => Active ;
+	    Period => 1000 ms;
+		Source_Text => ("user_code/user_receiver.c", "user_code/include/receiver2/receiver.h");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("receiver_periodic_ping");
+	    Priority => 8;
+	    Stack_Size => 256 bytes;
+	    Compute_Execution_Time => 10 us .. 50 us;
+	    TB_SYS::Sends_Events_To => "{{}}";
+end receiver2 ; 
+
 
 process proc
 
@@ -64,37 +103,79 @@ end proc;
 
 process implementation proc.Impl
 	subcomponents
-		s: thread sender;
-		r: thread receiver;
+		s1: thread sender1;
+		s2: thread sender2;
+		r1: thread receiver1;
+		r2: thread receiver2;
 	connections
-		s_to_r : port s.Output1 -> r.Input1;
+		s1_to_r1 : port s1.Output1 -> r1.Input1 {TB_SYS::Mailbox => true; } ;
+		s1_to_r2 : port s1.Output1 -> r2.Input1 {TB_SYS::Mailbox => true; } ;
+		s2_to_r1 : port s2.Output1 -> r1.Input1 {TB_SYS::Mailbox => true; } ;
+		s2_to_r2 : port s2.Output1 -> r2.Input1 {TB_SYS::Mailbox => true; } ; 
+		 
 end proc.Impl;
+
+processor main     
+end main;
+
+processor implementation main.camkes
+   properties
+      TB_SYS::OS => camkes;
+      TB_SYS::HW => QEMU;
+      TB_SYS::Mailbox => true;
+end main.camkes;
+
+processor implementation main.linux
+   properties
+      TB_SYS::OS => linux;
+      TB_SYS::HW => X86;
+end main.linux;
+
+processor implementation main.vxworks
+   properties
+      TB_SYS::OS => vxworks;
+      TB_SYS::HW => x86;
+end main.vxworks;
+
+processor implementation main.echronos
+   properties
+      TB_SYS::OS => echronos;
+      TB_SYS::HW => pixhawk;
+end main.echronos;
 
 system test
 end test;
 
 system implementation test.camkes
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		SMACCM_SYS::OS => CAmkES;
-		SMACCM_SYS::HW => QEMU;
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.camkes;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.camkes;
 
 system implementation test.echronos
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		SMACCM_SYS::OS => eChronos;
-		SMACCM_SYS::HW => QEMU;
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.echronos;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.echronos;
 
 system implementation test.vxworks
-	subcomponents
-		tl: process proc.Impl;
-	properties
-		SMACCM_SYS::OS => VxWorks;
-		SMACCM_SYS::HW => QEMU;
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.vxworks;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
 end test.vxworks;
+
+system implementation test.linux
+   subcomponents
+      tl: process proc.Impl;
+      toplevel: processor main.linux;
+   properties
+      actual_processor_binding => (reference (toplevel)) applies to tl;     
+end test.linux;
 
 end test8;

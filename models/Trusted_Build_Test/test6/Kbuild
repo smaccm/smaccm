@@ -1,2 +1,0 @@
-apps-$(CONFIG_APP_TEST6) += test6
-test6: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench

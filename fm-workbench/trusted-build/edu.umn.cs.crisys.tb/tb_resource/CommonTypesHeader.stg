@@ -1,0 +1,80 @@
+import "Common.stg"
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations related to AADL datatype file.
+//
+////////////////////////////////////////////////////////////////////////////
+
+
+datatypesblockPurpose(sysInstanceName) ::= <<
+This file contains the datatypes used for communications between
+AADL components as defined in the system implementation <sysInstanceName>.
+>>
+
+
+datatypesHeaderIfdef(sysInstanceName) ::= "__TB_AADL_<sysInstanceName>_types__H"
+
+osSpecificDefine() ::= ""
+
+filePrefix(name, date, path) ::= <<
+#ifndef <datatypesHeaderIfdef(name)>
+#define <datatypesHeaderIfdef(name)>
+
+<DARPALicenseComment()>
+<filenameBlockComment(date, path, datatypesblockPurpose(name))>
+
+#include \<stdbool.h>
+#include \<stdint.h>
+#ifndef TB_VERIFY
+#include \<stddef.h>
+#endif // TB_VERIFY
+
+<osSpecificDefine()>
+
+>>
+
+writeExternal(string) ::= <<
+#include <\u003C><string><\u003E>
+
+>>
+
+externalTypeDecls(model) ::= <<
+
+<commentIf("Headers for externally declared types",
+           (model.externalTypeHeaders:writeExternal()))>
+
+
+>>
+
+filePostfix(name, path) ::= <<
+#endif // <datatypesHeaderIfdef(name)>
+
+>>
+
+
+mutexOP() ::= <<
+#ifndef TB_VERIFY
+#define MUTEXOP(OP)\
+if((OP) != 0) {\
+  fprintf(stderr,"Operation " #OP " failed in %s at %d.\\n",__FILE__,__LINE__);\
+  *((int*)0)=0xdeadbeef;\
+}
+#else 
+#define MUTEXOP(OP) OP
+#endif // TB_VERIFY
+
+>>
+
+callbackOP() ::= <<
+#ifndef TB_VERIFY
+#define CALLBACKOP(OP)\
+if((OP) != 0) {\
+  fprintf(stderr,"Operation " #OP " failed in %s at %d.\\n",__FILE__,__LINE__);\
+  *((int*)0)=0xdeadbeef;\
+}
+#else 
+#define CALLBACKOP(OP) OP
+#endif // TB_VERIFY
+
+>>

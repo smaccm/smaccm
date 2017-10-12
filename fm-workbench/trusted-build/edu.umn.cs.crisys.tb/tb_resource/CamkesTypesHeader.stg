@@ -1,0 +1,9 @@
+import "CommonTypesHeader.stg"
+
+osSpecificDefine() ::= <<
+
+#define __TB_OS_CAMKES__
+#define TB_MONITOR_READ_ACCESS 111
+#define TB_MONITOR_WRITE_ACCESS 222
+>>
+

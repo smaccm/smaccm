@@ -1,0 +1,170 @@
+import "Common.stg"
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Templates for managing data port interfaces between active threads.
+//
+// Shared memory / mutex implementation
+// 
+// 10/26/2016 MWW
+// 
+///////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Header templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// C File templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// linux OS configuration templates
+//
+// to do (for each port):
+//    declare shared memory (if necessary)
+//    initialize the mutex
+//
+///////////////////////////////////////////////////////////////////////////
+
+linuxPortInitializer(port) ::= <<
+{
+    // map to the file resource and shared memory.
+    <if(port.isInputPort)>
+    int <port.readerWriterImplVar>_file = open("dev/<port.sourcePort.qualifiedName>", O_RDONLY);
+    <else>
+    int <port.readerWriterImplVar>_file = open("dev/<port.sourcePort.qualifiedName>", O_WRONLY);
+    <endif>
+
+    <port.readerWriterImplVar> = (volatile <port.type.aadlInputType.name>)dataport_mmap(<port.readerWriterImplVar>_file);
+    assert(<port.readerWriterImplVar> != MAP_FAILED);
+
+}
+>>
+
+portDestructor(port) ::= <<
+close(<port.readerWriterImplVar>_file);
+
+>>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Camkes OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+dpConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4SharedDataWithCaps <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectCamkesSourceToVm(connection, vm) ::= <<
+<dpConnection(vm.parent.generateConnectionName,
+    connection.sourcePort.threadImplementation.componentInstanceName,
+    connection.sourcePort.name,
+    vm.vmInstanceName,
+    connection.sourcePort.qualifiedName)>
+
+>>
+
+connectVmToCamkesDest(connection, vm) ::= <<
+<dpConnection(vm.parent.generateConnectionName,
+    connection.destPort.threadImplementation.componentInstanceName,
+    connection.destPort.name,
+    vm.vmInstanceName,
+    connection.sourcePort.qualifiedName)>
+>>
+
+// Note: port direction (and therefore access rights) is backwards of expectations.
+// When we get an output port that tunnels through the VM, the access rights on
+// the other end of the port should be READONLY.
+assemblyConfigVMPort(vm, port, index, size) ::= <<
+<vm.vmInstanceName>.<port.qualifiedName>_id = <index>;
+<vm.vmInstanceName>.<port.qualifiedName>_size = <size>;
+<vm.vmInstanceName>.<port.qualifiedName>_access = <if(port.isOutputPort)>"R"<else>"W"<endif>;
+>>
+
+assemblyConfigPort(port) ::= <<
+<port.threadImplementation.componentInstanceName>.<port.name>_access = <if(port.isInputPort)>"R"<else>"W"<endif>;
+>>
+
+camkesInitBody(dpinit_pairs, event_inits) ::= <<
+#
+# Copyright 2016, Data 61 and University of Minnesota
+# Commonwealth Scientific and Industrial Research Organisation (CSIRO)
+# ABN 41 687 119 230.
+#
+# This software may be distributed and modified according to the terms of
+# the GNU General Public License version 2. Note that NO WARRANTY is provided.
+# See "LICENSE_GPLv2.txt" for details.
+#
+# @TAG(D61_GPL)
+#
+
+# Initialises linux-side of cross vm connections.
+
+# Dataport sizes must match those in the camkes spec.
+# For each argument to dataport_init, the nth pair
+# corresponds to the dataport with id n.
+# Example: dataport_init /dev/camkes_reverse_src 8192 /dev/camkes_reverse_dest 8192
+dataport_init <dpinit_pairs>
+
+# The nth argument to event_init corresponds to the
+# event with id n according to the camkes vmm.
+# Example: consumes_event_init /dev/camkes_reverse_done
+# Example: emits_event_init /dev/camkes_reverse_ready
+<event_inits>
+>>
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// VM component C files
+//
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+cross_vm_dataports_body(ports) ::= <<
+
+/*
+ * Copyright 2016, University of Minnesota
+ *
+ * This software may be distributed and modified according to the terms of
+ * the GNU General Public License version 2. Note that NO WARRANTY is provided.
+ * See "LICENSE_GPLv2.txt" for details.
+ *
+ * @TAG(D61_GPL)
+ */
+
+#include \<camkes.h>
+#include \<dataport_caps.h>
+#include \<cross_vm_dataport.h>
+#include \<vmm/vmm.h>
+
+<ports:{p |extern dataport_caps_handle_t <p.qualifiedName>_handle;
+
+}>
+
+static dataport_caps_handle_t *dataports[] = {
+    NULL, // entry 0 is NULL so ids correspond with indices
+    <ports:{p |&<p.qualifiedName>_handle
+    }; separator=", ">
+};
+
+int cross_vm_dataports_init(vmm_t *vmm) {
+    return cross_vm_dataports_init_common(vmm, dataports, sizeof(dataports)/sizeof(dataports[0]));
+}
+
+>>
