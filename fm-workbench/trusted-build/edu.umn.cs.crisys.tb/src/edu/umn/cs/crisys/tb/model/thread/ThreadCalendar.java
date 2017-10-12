@@ -110,14 +110,14 @@ public class ThreadCalendar extends ModelElementBase {
      if (this.fixedTickRateMS == NO_FIXED_RATE) {
         for (InputPeriodicPort ipp: this.periodicDispatchers) {
            if ((ipp.getPeriod() % fixedTickRateMS) != 0)
-              throw new Aadl2RtosException("checkFixedTickRateForPeriods: Tick Rate does not yield integer counts for task periods"); 
+              throw new IllegalArgumentException("checkFixedTickRateForPeriods: Tick Rate does not yield integer counts for task periods"); 
         }
      }
   }
   
   public int fixedTickRateInHz() { 
      if (1000 % this.fixedTickRateMS  != 0) {
-        throw new Aadl2RtosException("ThreadCalendar::fixedTickRateInHz: rate does not yield an integral Hz rate.");
+        throw new IllegalArgumentException("ThreadCalendar::fixedTickRateInHz: rate does not yield an integral Hz rate.");
      }
      return 1000 / this.fixedTickRateMS; 
   }
