@@ -1,10 +1,20 @@
-#include <smaccm_sender.h>
-#include <stdio.h>
+#ifdef __TB_OS_CAMKES__
+	#include <camkes.h>
+	#include <inttypes.h>
+#elif __TB_OS_ECHRONOS__
+	#include <debug.h>
+#endif
+#include <sender.h>
 #include <inttypes.h>
+#ifndef __TB_OS_ECHRONOS
+#include <stdio.h>
+#endif
 
-void periodic_ping(const int64_t * periodic_100_ms) {
+void sender_periodic_ping(const int64_t * periodic_100_ms) {
 
-   printf("sender: periodic dispatch received (%lld).  Writing to receiver \n", *periodic_100_ms);
+	#ifndef __TB_OS_ECHRONOS__
+	   printf("sender: periodic dispatch received (%d).  Writing to receiver \n", (int32_t)*periodic_100_ms);
+   #endif
    
    test8__a_struct_impl test_data;
    test_data.field1 = 1.0;

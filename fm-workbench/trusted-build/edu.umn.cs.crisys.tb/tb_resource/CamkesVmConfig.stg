@@ -1,0 +1,21 @@
+////////////////////////////////////////////////////////////////////////////
+//
+// Generic Declarations for VM Configuration (use this as a template for your own)
+//
+////////////////////////////////////////////////////////////////////////////
+
+VmConfig(model) ::= <<
+VM_PER_VM_CONFIG_DEF(<model.vmConfigNumberMin>, <model.vmConfigNumberMax>)
+<model.vmInstanceName>.simple_untyped24_pool = 12;
+<model.vmInstanceName>.heap_size = 0x10000;
+<model.vmInstanceName>.guest_ram_mb = 1536;
+// Note: VM_GUEST_CMDLINE, C162_KERNEL_IMAGE, etc. are usually defined in configurations/<model.parent.pathName>.h and are VM specific.
+<model.vmInstanceName>.kernel_cmdline = VM_GUEST_CMDLINE;
+<model.vmInstanceName>.kernel_image = C162_KERNEL_IMAGE;
+<model.vmInstanceName>.kernel_relocs = C162_KERNEL_IMAGE;
+<model.vmInstanceName>.initrd_image = C162_ROOTFS;
+<model.vmInstanceName>.iospace_domain = 0x0f;
+<model.vmInstanceName>_config.ram = [ [ 0x20800000, 23 ], [ 0x21000000, 24 ], [ 0x22000000, 25 ], [ 0x24000000, 26], [ 0x28000000, 27], [0x30000000, 28], [0x40000000, 29] , [0x60000000, 29], [0x80000000, 29], [0xa0000000, 28]];
+<model.vmInstanceName>_config.pci_devices_iospace = 1;
+
+>>

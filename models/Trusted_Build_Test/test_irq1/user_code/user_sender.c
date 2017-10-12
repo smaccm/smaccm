@@ -1,6 +1,15 @@
-#include <smaccm_sender.h>
-#include <sender.h>
+#include "tb_sender.h"
+#ifdef __TB_OS_CAMKES__
+	#include <camkes.h>
+	#include <inttypes.h>
+#elif __TB_OS_ECHRONOS__
+	#include <debug.h>
+#endif
 #include <inttypes.h>
+#ifndef __TB_OS_ECHRONOS
+#include <stdio.h>
+#endif
+
 #include "clock_driver.h"
 
 void periodic_ping(const int64_t * periodic_100_ms);
@@ -30,17 +39,17 @@ void timer_flih() {
 	epit_irq_callback(); 
 }
 
-void timer_slih(const int64_t * dummy) {
+void timer_slih(void) {
 	smaccm_thread_calendar(); 
 }
 
 void periodic_ping(const int64_t * periodic_100_ms) {
    printf("sender ping received (%d).  Writing to receiver \n", (int32_t)*periodic_100_ms);
-   uint32_t newValue = (int32_t)*periodic_100_ms + 1;
+   int64_t newValue = (int64_t)*periodic_100_ms + 1;
    ping_Output1(&newValue);
 }
 
-void initialize_timer(const int64_t * dummy) {
+void initialize_timer(void) {
 	epit_init();
 	epit_set_interval(1000);
 	epit_start_timer();

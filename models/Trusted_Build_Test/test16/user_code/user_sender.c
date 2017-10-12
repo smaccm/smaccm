@@ -1,6 +1,6 @@
-#include <smaccm_sender.h>
+#include <tb_sender.h>
 #ifdef __TB_OS_CAMKES__
-	#include <sender.h>
+	#include <camkes.h>
 	#include <inttypes.h>
 #elif __TB_OS_ECHRONOS__
 	#include <debug.h>
@@ -21,9 +21,9 @@ void sender_periodic_ping(const int64_t * the_time) {
 		debug_printhex32((uint32_t)*the_time);
 		debug_println(".  Writing to receiver.");
 	#else
-		printf("sender: periodic dispatch received at time: %lld.  Writing to receiver. \n", *the_time);
+		printf("sender: periodic dispatch received at time: %d.  Writing to receiver. \n", (int32_t)*the_time);
 	#endif	
 
-   sprintf(buff, "hello world from sender: %lld", *the_time);
+   sprintf(buff, "hello world from sender: %d", (int32_t)*the_time);
    strcpy((void*)buff1, buff);
 }

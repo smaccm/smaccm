@@ -1,7 +1,7 @@
 package camera_vm
 public
   with Base_Types;
-  with SMACCM_SYS;
+  with TB_SYS;
   with Data_Model;
 
   data bbox
@@ -20,8 +20,8 @@ public
       bbox_out: out event data port bbox.i;
      
     properties
-      SMACCM_SYS::Is_External => true;
-      SMACCM_SYS::Thread_Type => Active;
+      TB_SYS::Is_External => true;
+      TB_SYS::Thread_Type => Active;
       Priority => 0;
       Stack_Size => 1 KByte;
       Compute_Execution_Time => 0 ms .. 50 ms;
@@ -36,14 +36,14 @@ public
       bbox_in : in event data port bbox.i;
 
     properties
-      SMACCM_SYS::Thread_Type => Active;
+      TB_SYS::Thread_Type => Active;
       Priority => 200;
       Stack_Size => 1 KByte;
       Compute_Execution_Time => 0 ms .. 50 ms;
       Dispatch_Protocol => Sporadic;
       Source_Text => ("user_code/receiver.c");
 
-      --SMACCM_SYS::Sends_Events_To => "{{1 output}}";
+      --TB_SYS::Sends_Events_To => "{{1 output}}";
       Compute_Entrypoint_Source_Text => "receive" applies to bbox_in;
   end receiver;
 
@@ -67,7 +67,7 @@ public
       proc: process proc.i;
 
     properties
-      SMACCM_SYS::OS => CAmkES;
-      SMACCM_SYS::HW => ODROID;
+      TB_SYS::OS => CAmkES;
+      TB_SYS::HW => ODROID;
   end wrapper.i;
 end camera_vm;

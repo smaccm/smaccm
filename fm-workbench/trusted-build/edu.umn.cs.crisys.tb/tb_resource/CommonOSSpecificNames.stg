@@ -1,0 +1,65 @@
+/*********************************************************************
+ * OS-specific naming functions required by C files:
+ *   dispatcherMainInitializeLockStmt
+ *   dispatcherMainLockWaitStmt
+ *   dispatcherMainLockReleaseStmt
+ *   osSpecificIncludeFiles
+ *   osSpecificIrqDispatcher
+ *   osSpecificThreadInitializer
+ *   osSpecificThreadEntrypoint
+ *   osSpecificComponentLocalCallerFunction
+ *   osSpecificAssert
+ * This file just 'fails' for each of these calls.
+
+>>
+
+ */
+
+genericFailure(template) ::=
+<< INTERNAL ERROR: template: <template> not overridden for host OS. >>
+
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= <<
+<genericFailure("dispatcherMainInitializeLockStmt")>
+<threadImpl.dispatcherMainInitializeLockStmtDoesntExist>
+>>
+
+dispatcherMainLockWaitStmt(threadImpl) ::= <<
+<genericFailure("dispatcherMainLockWaitStmt")>
+<threadImpl.dispatcherMainLockWaitStmtDoesntExist>
+>>
+
+dispatcherMainLockReleaseStmt(dispatcher, threadImpl) ::= <<
+<genericFailure("dispatcherMainLockReleaseStmt")>
+<threadImpl.dispatcherMainLockReleaseStmtDoesntExist>
+>>
+
+osSpecificThreadPostInitializer(threadImpl) ::= <<
+<genericFailure("osSpecificThreadInitializer")>
+<dispatcher.osSpecificIrqDispatcherDoesntExist>
+>>
+
+osSpecificRegisterIrqs(dispatcher) ::= <<
+<genericFailure("osSpecificRegisterIrqs")>
+<dispatcher.osSpecificRegisterIrqsDoesntExist>
+>>
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+<genericFailure("osSpecificIncludeFiles")>
+<threadImpl.osSpecificIncludeFiles>
+>>
+
+osSpecificThreadEntrypoint(threadImpl) ::= <<
+<genericFailure("osSpecificThreadEntrypoint")>
+<threadImpl.osSpecificThreadEntrypoint>
+>>
+
+osSpecificComponentLocalCallerFunction(connection) ::= <<
+<genericFailure("componentLocalCallerFunction")>
+<connection.componentLocalCallerFunction>
+>>
+
+osSpecificAssert(predicate) ::= <<
+<genericFailure("osSpecificAssert")>
+<connection.osSpecificAssert>
+>>

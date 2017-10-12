@@ -1,0 +1,56 @@
+import "Common.stg"
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// CamkesComponentHeader.stg
+//
+// component gluecode header files for CAmkES
+//
+////////////////////////////////////////////////////////////////////////////
+
+componentGlueCodeHeaderPurpose() ::= <<
+This header section contains the AADL gluecode interfaces used by the
+client for the thread implementations.
+>>
+
+componentGlueCodeHeaderIfdef(sysInstanceName) ::= "__TB_AADL_<sysInstanceName>_types__H"
+
+
+filePrefix(name, date, path, datatypesHeader) ::= <<
+#ifndef <componentGlueCodeHeaderIfdef(name)>
+#define <componentGlueCodeHeaderIfdef(name)>
+
+#include <\u003C><datatypesHeader><\u003E>
+
+<DARPALicenseComment()>
+<filenameBlockComment(date, path, componentGlueCodeHeaderPurpose())>
+
+
+>>
+
+
+componentGlueCodeHeaderBodyFunctions(threadImpl) ::= <<
+
+<threadImpl.portListEmitterHPrototypes>
+
+<threadImpl.portList: {port | <port.writePortHPrototypes> } >
+
+<if(threadImpl.isExternal)>
+//////////////////////////////////////////////////////////////////////////
+//
+// Note: thread is declared EXTERNAL; user should provide run() function.
+//
+//////////////////////////////////////////////////////////////////////////
+<endif>
+>>
+
+componentGlueCodeHeaderBody(threadImpl) ::= <<
+<componentGlueCodeHeaderBodyFunctions(threadImpl)>
+>>
+
+filePostfix(name, path) ::= <<
+#endif // <componentGlueCodeHeaderIfdef(name)>
+
+>>
+

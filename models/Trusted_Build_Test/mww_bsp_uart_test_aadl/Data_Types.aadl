@@ -4,7 +4,7 @@ package Data_Types
 public
   with Base_Types;
   with Data_Model;
-  with SMACCM_SYS;
+  with TB_SYS;
 
 data array_128_Unsigned_8
 
@@ -18,8 +18,8 @@ data implementation array_128_Unsigned_8.impl
 end array_128_Unsigned_8.impl;
 data ivory_string_UARTBuffer
   properties
-    SMACCM_SYS::Is_External => true;
-    SMACCM_SYS::CommPrim_Source_Header => "uartTestTypes.h";
+    TB_SYS::Is_External => true;
+    TB_SYS::CommPrim_Source_Header => "uartTestTypes.h";
 end ivory_string_UARTBuffer;
 
 end Data_Types;

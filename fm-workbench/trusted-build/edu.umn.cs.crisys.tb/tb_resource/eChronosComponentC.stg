@@ -1,0 +1,43 @@
+import "CommonComponentC.stg"
+
+/*
+ * Overrides for OS-specific names/behavior for generated C code.
+ *
+ *   incomingActiveThreadDispatchName
+ *   outgoingActiveThreadDispatchName
+ *   incomingUserEntrypoingCallerName
+ *   outgoingUserEntrypointCallerName
+
+ */
+// import "eChronosCNames.stg"
+// import does not override declarations.  Why?
+osSpecificThreadEntrypoint(threadImpl) ::= "int <threadImpl.threadImplMainFnName>(void)"
+osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
+
+osSpecificThreadInitializer(threadImpl) ::= ""
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= " "
+
+dispatcherMainLockWaitStmt(threadImpl) ::= <<
+    rtos_signal_wait(<threadImpl.eChronosDispatchSignalConst>);
+>>
+
+dispatcherMainLockReleaseStmt(dispatcher) ::= <<
+    <if(dispatcher.isIRQ || dispatcher.isPeriodic)>
+    rtos_interrupt_event_raise(<dispatcher.threadImplementation.eChronosInterruptSignalConst>);<else>
+    rtos_signal_send(<dispatcher.threadImplementation.eChronosTaskIdConst>, <dispatcher.threadImplementation.eChronosDispatchSignalConst>);
+    <endif>
+>>
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u003C><threadImpl.prefix>_decls.h<\u003E>
+#include <\u003C>string.h<\u003E>
+
+>>
+
+osSpecificThreadPostInitializer(threadImpl) ::= ""
+
+osSpecificComponentLocalCallerFunction(connection) ::= ""
+
+// TODO: add an eChronos assert function.
+osSpecificAssert(predicate) ::= ""

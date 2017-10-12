@@ -4,7 +4,7 @@ package sys
 public
   with Base_Types;
   with Data_Model;
-  with SMACCM_SYS;
+  with TB_SYS;
   with tick_2;
 
 process sys_process
@@ -24,8 +24,8 @@ system implementation sys.impl
   subcomponents
     p0:process sys_process.impl;
   properties
-    SMACCM_SYS::OS => CAmkES;
-    SMACCM_SYS::HW => QEMU;
+    TB_SYS::OS => CAmkES;
+    TB_SYS::HW => QEMU;
 end sys.impl;
 
 end sys;

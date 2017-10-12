@@ -1,0 +1,203 @@
+import "Common.stg"
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Templates for managing data port interfaces between active threads.
+//
+// signal (notification) implementation
+// 
+// 1/31/2017 MWW
+// 
+///////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Header templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+writeExternalHandlerUdePrototype(externalHandler, dispatcher) ::= <<
+void <externalHandler.handlerName>(void);
+
+>>
+
+writeUdePrototype(dispatcher) ::= <<
+<commentIf({user dispatch entrypoints for port <dispatcher.name>},
+           (dispatcher.externalHandlers:writeExternalHandlerUdePrototype(dispatcher)))>
+
+>>
+
+writePortWriterPrototype(port) ::= <<
+bool <port.localWriterName>(void);
+
+>>
+
+writePortReaderPrototype(port) ::= <<
+bool <port.localReaderName>(void);
+
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// C File templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////
+//
+// Functions for event data ports: managing send/receive queues.
+// Used for active thread to active thread communications.
+//
+/////////////////////////////////////////////////////////////////////
+
+
+
+InputEventPortDecls(port) ::= <<
+
+/************************************************************************
+ *
+ * Static variables and queue management functions for event port:
+ *     <port.name>
+ *
+ ************************************************************************/
+
+static bool <port.index> = false;
+
+/************************************************************************
+ *  <port.incomingWriterName>:
+ * Invoked by: remote RPC
+ *
+ * This is the function invoked by a remote RPC to write to an active-thread
+ * input event port.  It increments a count of received messages.
+ *
+ ************************************************************************/
+
+bool <port.incomingWriterName>(void *_ UNUSED) {
+    <port.index> = true;
+    <if(port.hasDispatcher)><port.threadImplementation.mainLockReleaseStmt><endif>
+    CALLBACKOP(<port.name>_reg_callback(<port.incomingWriterName>, NULL));
+    return true;
+}
+
+/************************************************************************
+ *  <port.localReaderName>:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked by the active thread to decrement the
+ * input event index.
+ *
+ ************************************************************************/
+
+bool <port.localReaderName>() {
+    bool result;
+    result = <port.index>;
+    <port.index> = false;
+    return result;
+}
+
+>>
+
+
+///////////////////////////////////////////////////////////////
+//
+// Writer functions
+//
+///////////////////////////////////////////////////////////////
+
+
+callRemoteWriterStmt(connection) ::= << 
+<connection.outgoingPortName>_emit();
+>>
+
+remoteCallerFunction(srcPort) ::= <<
+/************************************************************************
+ *  <srcPort.localWriterName>:
+ * Invoked from user code in the local thread.
+ *
+ * This is the function invoked by the local thread to make a
+ * call to write to a remote data port.
+ *
+ ************************************************************************/
+
+bool <srcPort.localWriterName>(void) {
+    bool tb_result = true ; 
+    <srcPort.connections:callRemoteWriterStmt()>
+    return tb_result;
+}
+>>
+
+componentRemoteWriterDecl(port) ::= <<
+<remoteCallerFunction(port)>
+>>
+
+///////////////////////////////////////////////////////////////
+//
+// Dispatch functions
+//
+///////////////////////////////////////////////////////////////
+
+
+eventDispatcher(dispatcher) ::= <<
+if (<dispatcher.localReaderName>()) {
+    <dispatcher.activeThreadInternalDispatcherFnName>();
+}
+
+>>
+
+
+portInitializer(port) ::= <<
+CALLBACKOP(<port.name>_reg_callback(<port.incomingWriterName>, NULL));
+>>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// CAmkES OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+inputPortDeclarations(port) ::= <<
+consumes Notification <port.name>;
+>>
+
+outputPortDeclarations(port) ::= <<
+<port.connections:{c | emits Notification <c.outgoingPortName>;
+}>
+>>
+
+rpcConnection(connector, cid, from1, from2, to1, to2) ::=
+   "connection <connector> <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectReaderWriter(connection, model) ::= <<
+<rpcConnection(
+    "seL4Notification",
+    model.generateConnectionName,
+    connection.sourcePort.threadImplementation.componentInstanceName,
+    connection.outgoingPortName,
+    connection.destPort.threadImplementation.componentInstanceName,
+    connection.destPort.name)>
+
+>>
+
+assemblyConfig(port) ::= <<
+// <port.threadImplementation.componentInstanceName>.<port.name> = "<port.qualifiedName>";
+// <port.threadImplementation.componentInstanceName>.<port.name>_global_endpoint = "<port.qualifiedName>";
+
+>>
+
+///////////////////////////////////////////////////////////////////////////
+//
+// eChronos OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// VxWorks OS configuration templates
+//
+///////////////////////////////////////////////////////////////////////////

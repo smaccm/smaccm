@@ -3,7 +3,7 @@
 package test_rpc_aadl
 public 
    with Base_Types;
-   with SMACCM_SYS;   
+   with TB_SYS;   
    with Data_Model;
 
 
@@ -45,14 +45,14 @@ thread sender
 	
 	properties 
 	    Dispatch_Protocol => Periodic;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Period => 250 ms;
 		Source_Text => ("user_code/user_sender.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
 end sender ; 
 
 -- Example of a passive thread providing an RPC interface  
@@ -60,16 +60,16 @@ thread receiver
 	features
 		add_subtract: provides subprogram group access add_subtract_interface 
 --		{
---			SMACCM_SYS::Is_External => true;
+--			TB_SYS::Is_External => true;
 --		}
 		; 
 		
 	properties 
 	    Dispatch_Protocol => Aperiodic;
-	    SMACCM_SYS::Thread_Type => Passive ;
+	    TB_SYS::Thread_Type => Passive ;
 	    Source_Text => ("user_code/user_receiver.c");
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    TB_SYS::Sends_Events_To => "{{}}";
 end receiver ; 
 
 process proc
@@ -91,8 +91,8 @@ system implementation test_rpc_aadl.impl
 	subcomponents
 		tl: process proc.Impl;
 	properties
-		SMACCM_SYS::OS => CAmkES;
-		SMACCM_SYS::HW => QEMU;
+		TB_SYS::OS => CAmkES;
+		TB_SYS::HW => QEMU;
 
 end test_rpc_aadl.impl;
 

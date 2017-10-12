@@ -1,19 +1,21 @@
-#include <smaccm_sender.h>
-#include <sender.h>
+#ifdef __TB_OS_CAMKES__
+	#include <camkes.h>
+	#include <inttypes.h>
+#elif __TB_OS_ECHRONOS__
+	#include <debug.h>
+#endif
+#include "tb_sender.h"
 #include <inttypes.h>
+#ifndef __TB_OS_ECHRONOS
+#include <stdio.h>
+#endif
 
-void periodic_ping(const int64_t * periodic_100_ms) {
+bool ping_Output1(const uint32_t * Output1);
 
-   printf("sender: periodic dispatch received (%lld).  Writing to receiver \n", *periodic_100_ms);
-   
-   uint32_t test_data = ((uint32_t) *periodic_100_ms) * 2 + 1;
-
-   printf("sender: sending test data: (%d) to receiver \n", test_data);
-   
-   bool result = ping_Output1(&test_data);
-   printf("first attempt at pinging receiver was: %d. \n", result); 
-
-   result = ping_Output1(&test_data);
-   printf("second attempt at pinging receiver was: %d. \n", result); 
-
+void sender_periodic_ping(const int64_t *the_time) {
+	
+   uint32_t to_send = ((uint32_t)*the_time) + 1;
+   printf("test4: sender_periodic_ping: Sending %d\n",to_send);
+   ping_Output1(&to_send);
+	
 }

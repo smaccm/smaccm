@@ -1,0 +1,617 @@
+	HACMS:
+	-> Interesting - StringTemplate can do map lookup ; uses dot notation for keys.  This provides mechanism
+		for extension with new AADL properties.
+	
+	-> Code Gen questions: 
+		For Dan's stuff in CAmkES, need to extend the interface to allow construction of additional components.
+	
+	-> There can be no sharing across mailbox / RPC dataports.  How do we want to enforce this?
+		The only use of connections thus far is at the outgoing port boundary; perhaps connections 
+		should be created and used to enforce comm boundaries, but this is a notion, not a real plan.
+		
+	-> Connections would also be handy for possibly enforcing the active/passive split for RPC connectors.
+
+	-> EventDataPort vs. EventPort split for passive threads lead to pretty substantial changes.  It would
+	   be nice to be able to separate these two types.
+	   
+	   If we had connections as a type with some "interesting" methods, then we could do it.
+	   We could have a "write to destination" method that would implement this.
+	
+	-> Implementing RPCEventDataPorts: this is tricky because of the active/passive thread split.
+	
+		Heck with it.  For the moment, only do active threads; it is all the ground team wants.
+		The only team that wants the passive threads is Galois, and they are happy with the previous
+		release.
+		
+	! Need to add user declarations to the "common" and/or "component" header file.	
+	
+	-> Need to better factor OS aspects.  It would be nice to know where the OS-specific aspects are.
+	
+	! Have all ports but periodic port complete!  Not too bad.
+	
+	-> Some OS-specific functions are not port-specific, but thread-specific (mainThreadDispatcherMutex).  
+		They belong in the thread class.
+		
+	-> Right now I am not constructing dispatch interfaces; these are hard because they involve several 
+       ports; we need to spin up the support for PortLists.  I have disabled constructing the dispatch
+	   interfaces for the moment.
+	   
+	-> For linux, two differences for data ports: 
+		We should construct new global types that contain the mutex and the shared memory structure.
+	-> For linux, shared memory is by pointer using mmap.  For now we will leave it unsupported.
+
+
+	-> For timers, use linux timer, I suppose.  Add it to the periodic port support for linux.
+	
+	-> Holy crap: have I forgotten to set priorities for Little Bird threads?
+	
+	-> (Future work) make extensions event-based at "known" points in the emission process.
+
+	-> For linux processes:
+		FOR NOW: 
+			Need something up and running.  
+			Everything is global.
+			
+			
+		TO DO:
+		port construction & visibility:
+			Some ports span processes and others do not.
+			Note: we will only support data ports eventually.
+			
+			The way to support this is to have hooks for both global declarations and process-level declarations in
+			the linux emitter.  The port can choose whether to define itself at global scope, process scope, or 
+			thread scope.
+			
+			We still need a way of connecting processes to the global definitions, but this isn't too bad.
+			We also should have separate mechanisms for creating shared (cross proc) mutexes and in-proc mutexes.
+			
+			Then we should have a process-level header and C file.  
+	   
+To-dos: 
+	-> Switch from Kochab to <foo>, where <voo> has the different mutex ceiling protocol
+	-> Get rid of the centralized thread calendar for CAmkES
+	-> Normalize the AADL property-scraping regimen; this will require some thought, and perhaps a 
+		small reconfiguration of the Names and Emitters classes - probably not, though; we just 
+		need to be able to pass back to the original AADL classes to get a "handle" on these properties.
+	-> Change from fork() to more secure mechanism for shared memory between processes after Linux 
+	   client is up and running.
+	! Normalize the OS-specific emitters to include the OS name!
+	-> Move connection construction into the connection class!
+	-> Create connection class for dataports
+	-> For atomic datatypes it is likely that a mutex is unnecessary for shared memory dataports.  
+		This might be something to optimize later on.
+	-> Check declarations for data ports: readerWriterImplVarDecl
+	-> check on how we are wiring to periodic ports.
+	-> check whether SIGRTMIN is thread safe.
+	-> for Ast and Names classes, Lists sometimes have <typeName>s and sometimes <typeName>List.  Make it uniform.
+	
+	
+	
+	O.k., OSModel should have a mechanism to return the set of process implementations.
+		From there, we should be able to get the thread implementations.
+		getComponentClassifier() returns the process implementation
+		getComponentClassifier().getChildren() returns the thread implementations (and ports, etc.)
+		getChildren() returns the thread instances.
+	
+		! So, given that I have a map from OSATE thread instances to TB thread instances: 
+			- I can connect the process instances to the thread instances.
+			- I can construct a map from OSATE process implementations to TB process implementations
+			- I can add the newly constructed process instance to the process implementation
+			- I can add the process implementation (if not already existing) to the list of process implementations.
+			- and done.
+	
+	O.k., from here: time to add the code for the main function to fork the code.
+	
+	- Done.  Now onto testing :).
+	
+	! Need to join threads for each proc.
+	! destruct the monitor mutexes!
+	! split the mutex creation into a shared / non-shared mutex
+	! Change the name of the semaphore for the thread release.
+	! Change the name of destructSem to the linux variant.
+	! put "tb_linux_support.h" in the aadl_decls file, and 
+		use the generic TB types. 
+	! comment and add headers for wait() command.	
+	! I have an "unnecessary" call to initialize_periodic_dispatcher() for linux.  Should I get rid of it or try to standardize?  I'm getting rid of it.
+	! fix template error in CommonComponentHeader.
+	
+	! libraries: what do we need?
+		pthreadlib: compile with -pthread
+	
+	! For each shared memory thing, we need to have local writers for
+		each outgoing port.  First thing to check.
+	! Second thing to check is: do names match up?  When we have a
+		local writer, it must write to a variable that is "owned" by
+		the reading thread.  How do we ensure that such variables are unique?
+	! Where are we writing the shared data?
+	
+	-> Implement PortList functionality for Pape.
+		! currently read/write .idl4 interfaces are prebuilt for 
+			CAmkES.  We could emit them only from RPC ports, for 
+			those types that are used by ports.
+			Code lines 	86-100.
+		
+		-> File construction stuff needs to be refactored.  Yuck.
+			Very simple, really; bring in header and footer into 
+			body, then pass in all arguments; if you want to make 
+			something generic, make argument names generic and 
+			fill them in with a generic function.
+	
+	-> Should this really be in terms of threadInstances?  
+		Wait until next refactoring.
+	
+	-> Better document all PortEmitter interfaces
+
+	-> Make "tb" prefix uniform rather than "aadl" prefix.
+	
+	-> Do we care about memory/stack sizes for processes in linux?
+		-> No, but we should emit a warning.
+	
+	-> We should emit errors for multiple instances of 
+		threads in systems that do not support memory separation.
+		
+	-> Somewhere I'm defining an external type and I do not know
+		whether I have properly specified its header.
+	
+	-> Consider moving to a condition variable; this seems to be
+		"preferred" for linux.
+
+	For modeling: 
+		1. We have a processor that has virtual processors that are bound to it, one for each VM.
+		2. Under ARINC, I do not think that there are any "raw" processes, so we can't model our CAmkES environment.
+		3. Instead, I think we need to bind our virtual processor
+			to a process/thread using a new property.
+		4. A process can't contain another process, so there is
+			no good way to describe the routing through a VM boundary
+			that is visible to the user.
+		5. However, you can choose to have a system that describes 
+			the VM boundary and has the processor binding - it is 
+			just not enforced.
+	
+	I want two things: 
+		1. The ability to easily set the component attributes for a VM: memory, priority, processor budget.
+		2. The ability to easily see which signals are routed into and out of it.
+	
+	Virtual processor properties: { MIPS budget, platform, 
+		security level, safety criticality}
+	Timing_Properties => {Execution_Time, Period, Frame_Period, Slot_Time};
+	
+	=> So, thread implementations don't really belong to process 
+		implementations, and process implementations do not belong to OSModels.  These chains only occur on instances.
+		
+		Instances are always ok for CAmkES, always tricky for VxWorks and eChronos, and straightforward in Linux if they are not in the same process.
+		
+		
+	
+	To build it: 
+	Start from process instances
+		1. For each process instance, find the processor instance
+		   binding; if none, throw an error.  For now, a process 
+		   implementation can only be bound to one processor.
+		
+			We get back a ComponentInstanceImpl from the property,
+			which is the same thing when we spin through the list
+			of processors in the model.
+			
+			We can get the component classifier, which is a 
+			VirtualProcessorImplementationImpl or a 
+			ProcessorImplementationImpl
+		
+			From the ProcessorImplementationImpl, we can get access to properties: OS, HW, timing, period, priority
+		
+			So, from here: 
+			Create a list of processor bindings.
+			
+			Construct OS models from processor bindings.
+				use the standard map approach used for threads/processes.
+
+			Do hierarchy check for virtual processors.
+				If OS != linux, then error out.
+				If parent OS != CAmkES, then error out.
+			
+			Probably no way to ensure checks are in hierarchical order; perform them afterwards?
+			
+			Move all of the properties that were at the system 
+				level to the processor level.  Note that this is 
+				not quite what we really want, but it will do.
+		
+			Get rid of these property checks from the top-level.
+			
+			Also, really error checks are based on instances rather than implementations - checking at the implementation level is wrong because an instance may be embedded in multiple contexts.
+		
+		2. From the processor implementation, set the OS, the 
+			hardware, etc.  If it is a virtual processor, set the 
+			priority, execution time, and period.
+			
+			Make processor instance, rather than 
+			system instance / system implementation the root of the 
+			hierarchy.
+			
+		3. Emit each target as a separate bundle of files under a 
+			directory describing the virtual processor relationship: 
+				root
+				root_inst_a
+				root_inst_b
+		
+		4. Children of processors are virtual processors.
+		   
+	Testing:
+		-> Linux port: 
+			tested dataports
+			tested RPCs
+		-> CAmkES port
+			
+	
+Old version:
+	! Allow external configuration of timer on VxWorks.
+	! Stub debug support.
+
+Back burner	
+	
+	
+For linux: 
+	thread basics: http://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html
+	includes:
+		#include <pthread.h>
+		#include <semaphore.h>
+		
+	thread main function prototype: void *<func>(void *);	
+
+	thread creation:
+		pthread_create( &thread1, NULL, print_message_function, (void*) message1);	
+
+	
+	to set thread priority:	
+		pthread_setschedparam(pthread_t thread, SCHED_RR,
+                                 const struct sched_param *param);
+		where sched_param is defined as:
+		   struct sched_param {
+               int sched_priority;     /* Scheduling priority */
+           };
+		
+	mutexes:
+		int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *mutexattr);
+		int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int pshared); 
+			(pshared = PTHREAD_PROCESS_SHARED)
+	    int pthread_mutex_lock(pthread_mutex_t *mutex);
+		int pthread_mutex_trylock(pthread_mutex_t *mutex);
+		int pthread_mutex_unlock(pthread_mutex_t *mutex);
+		int pthread_mutex_destroy(pthread_mutex_t *mutex);
+
+		Only one thread destroys the mutex.
+		
+	semaphores:
+		sem_t sem_name;
+	{
+		sem_t semid;
+		int sem_init(sem_t *sem, int pshared, unsigned  value);
+	}
+		pshared
+			semaphore is shared between the threads of a process. If pshared is non-zero, then the semaphore is shared between processes.
+		value
+			The value with which the semaphore is to be initialized.
+	
+		int  sem_wait(sem_t *sem);
+		int  sem_post(sem_t *sem);
+		int  sem_destroy(sem_t *sem);
+
+	How do I declare shared memory?
+	
+	Two things yet to do: 
+		New dataport type for linux that uses fancy-shmancy shared memory approach.  Mutex must be built. 
+			Declare new datatypes containing shared mutexes
+			Initialize them in the main file.
+		
+		Add processes into the mix!  For now, we are still not properly dealing with instances, so we will focus on implementations.
+		
+		Add utility function to find parent process implementation for an element (or exception). 
+		
+		
+	
+	
+	How do I set access rights?
+	
+	for separate processes, I can use fork() to construct them, for now.
+	
+	I suspect the shared memory / file mapping is to piggy-back on the linux security model.
+	
+	follow same style as VxWorks - rather than an explicit join, we do a wait either with INFINITE or finite time.
+		- need the call for thread wait and INFINITE time.
+		 
+	When I fork(), child process has access to all global variables
+	
+	
+	
+	=> For shared memory:
+		Need to construct the data + sem name: getReaderWriterImplVar.
+		This variable will always be a pointer to the buffer.  Depending on whether we need 
+			shared memory, we will assign it to the address of a locally constructed buffer or to the 
+			shared memory call.
+		
+		For get_mutex, it needs to be the implementation var + .mtx
+		
+
+VMs:
+====
+	How do we build the file system?
+	
+	How do we link the dataports into the file system?
+	
+	How do we set permissions for the shared memory?
+	
+	What is this RPC stuff across the VM boundary?
+	
+	
+Example:
+
+
+component Init0 {                                         <-- InitZZ defines the structure of vmZZ
+    dataport Buf(STRING_REVERSE_BUFSIZE) dp1;
+    dataport Buf(STRING_REVERSE_BUFSIZE) dp2;
+
+    emits Ready ready;
+    consumes Done done;
+
+    has mutex cross_vm_event_mutex;
+
+    VM_INIT_DEF()                                         <-- Macro to do Camkes black magick for this component
+}
+
+import <StringReverse/StringReverse.camkes>;
+
+component VM {
+    composition {
+        VM_COMPOSITION_DEF()     <-- This means that the composition will contain VMs
+        VM_PER_VM_COMP_DEF(0)	 <-- This means we have a VM component corresponding to Init0 that will be called vm0
+
+        component StringReverse string_reverse; <-- standard Camkes component
+
+        connection seL4SharedDataWithCaps cross_vm_conn(from string_reverse.src_dp,
+                                                        to vm0.dp1);
+
+        connection seL4SharedDataWithCaps cross_vm_large_conn(from string_reverse.dest_dp,
+                                                              to vm0.dp2);
+
+        connection seL4Notification ev2_conn(from vm0.ready,
+                                             to string_reverse.ready);
+
+        connection seL4Notification ev1_conn(from string_reverse.done,
+                                             to vm0.done);
+
+        connection seL4RPCCall cross_vm_putchar(from string_reverse.putchar,
+                                                to serial.vm_putchar);
+    }
+    configuration {
+        VM_CONFIGURATION_DEF()     <-- This means that the configuration contains VMs
+        VM_PER_VM_CONFIG_DEF(0, 2) 			<-- This means...what?
+        vm0.simple_untyped24_pool = 12;  	<-- What is a simple_untyped24_pool?
+        vm0.heap_size = 0x10000; 			<-- What is the relationship between heap size and guest RAM?
+        vm0.guest_ram_mb = 1536;
+        vm0.kernel_cmdline = VM_GUEST_CMDLINE;  <-- I'm assuming I'm going to leave these alone as reasonable defaults
+        vm0.kernel_image = C162_KERNEL_IMAGE;
+        vm0.kernel_relocs = C162_KERNEL_IMAGE;
+        vm0.initrd_image = C162_ROOTFS;
+        vm0.iospace_domain = 0x0f;
+        vm0_config.ram = [ [ 0x20800000, 23 ], [ 0x21000000, 24 ], [ 0x22000000, 25 ], [ 0x24000000, 26], [ 0x28000000, 27], [0x30000000, 28], [0x40000000, 29] , [0x60000000, 29], [0x80000000, 29], [0xa0000000, 28]];   <-- Should I set these?  If so, how?
+        vm0_config.pci_devices_iospace = 1;
+
+        vm0.dp1_id = 1;                          <-- So for each data port, I will provide an ID.  Does this number matter (as long as it's unique)?
+        vm0.dp1_size = STRING_REVERSE_BUFSIZE;
+
+        vm0.dp2_id = 2;
+        vm0.dp2_size = STRING_REVERSE_BUFSIZE;
+    }
+}	
+	
+
+
+
+
+Meeting with Pape:
+==================
+
+Get desktop proper size.
+
+To discuss:
+	- Meaning of interfaces
+	- Outstanding issues: bringing in per-interface-type .c/.h files: is this something you need?
+	- 
+
+Q's for Stephen / Ihor about linux side of VM comms.
+
+For the "optiplex9020_onevm" model.  I've been through it to some degree, but it is difficult to figure out which files are "static" (meaning that they don't change when generating different VMs), which are autogenerated by the Camkes build (e.g., perhaps the "dataport_init" file?), and which are user-provided.  I'm sure that some of this would come with additional time and familiarity with the system, but I'm very short of time.  For now, I've ignored this issue and focused on building the equivalent of the string_reverse.c and the "dataport_init" file, and assuming that the rest will come along somehow.  
+
+However, now is the time when we need to figure out who is in charge of the overall build and how the linux file system will be constructed.  This is *not* my area of expertise; prior to the work with the ground team, I treated the VM as a black box that was managed by Andrew.  Any help here would be greatly appreciated.
+
+
+
+
+	-> are cross_vm_dataport.c, cross_vm_event.c autogenerated as part of the camkes build?  
+	-> Where are these files from?  Are they autogenerated? 
+		#include <cross_vm_dataport.h> 
+		include <camkes_consumes_event.h>
+		#include <camkes_emits_event.h>
+		#include <cross_vm_consumes_event.h>
+		#include <cross_vm_emits_event.h>
+		#include <camkes_mutex.h>
+	-> There are many C files in the linux distribution; I do not know which ones are to be included "as is",
+		which (if any) are generated by the VM Camkes process, and which are user code.
+
+	It appears that the main file is linux/pkg/string_reverse/string_reverse.c
+		The dataport buffers associated with this file are defined as files in the camkes_init batch file: 
+			dataport_init /dev/camkes_reverse_src 8192 /dev/camkes_reverse_dest 8192		
+		So, there must be a dataport_init process somewhere defined in the file system.
+		
+		Then to use this, we simply do a standard file open, and a dataport_mmap: 
+		
+		int ready = open(READY, O_RDWR);
+        int done = open(DONE, O_RDWR);
+        int src = open(SRC, O_RDWR);
+        int dest = open(DEST, O_RDWR);
+
+		const ssize_t src_size = dataport_get_size(src);
+
+		char *src_data = (char*)dataport_mmap(src);
+		assert(src_data != MAP_FAILED);
+
+		char *dest_data = (char*)dataport_mmap(dest);
+		assert(dest_data != MAP_FAILED);
+		
+	Document exactly what should be added: 
+	
+		A new "external" Camkes component for the VM.  This must be an AADL thread
+			Do we need a process for it? Probably, to make some of the utility functions work.  This should be 
+			straightforward, but requires an implementation, instance, etc.
+			Should be external so we do not generate standard C file associated with thread
+			It will have declarations from all ports that straddle the boundary.
+			
+		A set of declarations within the Camkes component
+			
+		For the linux side, we initialize the driver buffers with camkes_init.  The order of buffers on the command line 
+			matches the id order of buffers in the camkes config section.  The buffer size on the linux side must match the 
+			buffer size declared on the Camkes side (what about page boundaries?)
+			
+		So, when emitting linux, we need to generate a camkes_init file.  Assuming we have a specialized port with a number,
+			this will just generate the buffers in this order.  The aadl types file generated for linux will contain the pointer type necessary for access; we can cast it after grabbing it from the file (see above).
+			
+		Suppose I added (to just the Camkes interface) a "write VM" declaration?  It would reference the thread ports on 
+			the other side of the connection boundary.
+		
+		O.k., how do I want to demo this?  I need a special AADL data port that is just a region of shared memory.
+			It will not be thread safe, but that's o.k.
+		
+		So - take a look at dataports here...what is the minimal effort we can do?
+		
+		create PortConnectionVM
+			1. It creates a Camkes dataport "owned by" the sender.  
+			2. It does not support fan-in.
+			3. It works for any OS
+			
+		Q: where is file access declared?
+		
+		For access to dataport, do we want it at the top-level or per-process?  Per process, I think.
+		
+		
+		
+		O.k., 
+			Need to have ability to configure declarations per VM, but also must maintain id number.  So, I want a file
+			override of the file containing the declarations: this should be associated with the processor as a property.
+		
+		We need to find the VM-crossing *connections*
+		Once we have these connections, how do we name ports in the OS?
+			For now, use the connection name as the port name.
+			This is suckier than I thought.  Port names for components have assumed that they are unique by port name.
+			...but this is o.k., because this is the VM interface stuff I just added.
+			...How do I thread this needle?
+				It needs to be defined per connection, rather than per port; done.
+			
+		
+		For the Camkes VM component, we need to have a port for every send port that crosses the VM boundary.
+			We need to define a number for it, and we need the size associated with it to satisfy Stephen's constraints.
+			We would also like to know which side of the VM boundary the port is on for securing it.
+			
+			So, we use the extended data map (for the first time!) on the ports to store the vm:dataport combo.
+			We just return all the ports when emitting code. 
+			
+			However, we also have to emit ports in order, and mailboxes will introduce multiple dataports for a particular
+			communication.  This would be a good thing for a port list, because the ports could easily be filtered.
+			(at some point port lists will have to become port instance lists)
+		
+			Furthermore, we could sort the lists alphabetically, which would ensure ordering is preserved.
+			
+			Seems like the right place to put this.
+			
+			For VMs, connections are performed by the connection emitter.
+			
+			For linux, we need to find the cross-VM connections for a particular component, load them up and go.
+			
+			This *should* be done on a per-instance basis.  
+				For Camkes, it doesn't matter, because Camkes takes care of making the wiring uniform.
+				For linux, it does matter, because we are wiring the linux process to a specific port.
+				
+			Right now, we still assume only one instance per process / thread.
+			
+			Fuck it, code it up now, fix it later.  More technical debt, but meh.
+			
+
+Code locations for VM stuff: 
+	
+	Only necessary if you use VMs, presumably.
+	
+	/configurations/<proj_name>.h
+		#define VM_NUM_GUESTS 1
+		/* All our guests use the same kernel image, rootfs and cmdline */
+		#define C162_KERNEL_IMAGE "bzimage"
+		#define C162_ROOTFS "rootfs.cpio"
+		#define VM_GUEST_CMDLINE "earlyprintk=ttyS0,115200 console=ttyS0,115200 root=/dev/mem i8042.nokbd=y i8042.nomux=y i8042.noaux=y io_delay=udelay noisapnp pci=nomsi"
+	
+	These definitions show up in the config for the VM in the .camkes file.
+	
+	I don't see them anywhere else.
+	
+	
+	Suppose we give native support for dataport tunneling within TB to do the whole smack: 
+- Camkes VM component definitions
+- Camkes Assembly connections
+- Camkes Config definitions
+- Linux C code generation
+- Generation of camkes_init driver information on linux
+- Generation of C file for the 'Init' VM component (one per VM)
+	
+	Fuck!
+	So, what would we specify? 
+	
+	We wish to have a dataport that crosses the VM.  It has writer X and readers {Y1, Y2, Y3}, where the writer and readers are on different sides of the VM boundary.  We need to know the (threadname, dataportname) pair for each of the dataports, and the type of the dataport.  
+	
+	Makefile
+		For the makefile, we 
+
+12/29
+	Getting close the end of this f*cking year.
+	
+	Code Freeze Meeting: 
+Room Assignments for breakouts
+Food
+Reception information
+Financial walkthrough
+	Food
+	Venue
+	Speakers
+	Reception
+Forms walkthrough
+	Any alcohol release forms necessary?
+Hotel room booking (Commons full?)
+Dates for final e-mail announcements
+	Advertising with St. Thomas?
+
+	Interface (user):
+		CamkesDataport(ThreadInstance, Name, Type);
+		addDataportConnection(CamkesDataport src, List<CamkesDataport> dst);
+	
+	Interface (emitter): 
+		Write InitVM component declarations:
+			One dataport for each connection source that crosses a VM boundary (matching the VMDataPortConnection type).
+			
+		Write Camkes assembly connections
+		Write Camkes assembly configuration information
+		Write Camkes Component C file
+		Write Linux camkes_init file
+		Write Linux thread declaration connection to dataports
+		Write Camkes configuration 
+	
+	Where do we store this dataport information?  Could store it in CamkesCodeGenerator
+		Issue: how do we pass it in to the places we need it?
+		Easier if we store it in the OSModel for the VM.  
+	
+	Plan: 
+		Walk through Andrew's changes
+			Any remaining gotchas?
+			
+			
+		Run some non-VM models through to test timer performance (Andrew?)
+		Run one VM model through to check automation.
+		Report to Aleksey and push changes
+		
+		
+		
+		

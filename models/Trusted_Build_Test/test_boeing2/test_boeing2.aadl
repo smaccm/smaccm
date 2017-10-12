@@ -10,7 +10,7 @@
 package test_boeing2
 public 
    with Base_Types;
-   with SMACCM_SYS;   
+   with TB_SYS;   
    with Data_Model;
 
 
@@ -25,7 +25,7 @@ data implementation LOIConfig_Struct.impl
     vehicleSubType : data Base_Types::Unsigned_16;
     vehicleId : data Base_Types::Integer_32;
   properties 
-  	SMACCM_SYS::CommPrim_Source_Text => "LOIConfig_AADL";
+  	TB_SYS::CommPrim_Source_Text => "LOIConfig_AADL";
 end LOIConfig_Struct.impl;
 
 
@@ -48,7 +48,7 @@ thread compa
 	
 	properties 
 	    Dispatch_Protocol => Periodic;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Period => 100 ms;
 		Source_Text => ("user_skeleton_code/compa.c",
 					    "outa/common.c", 
@@ -58,11 +58,11 @@ thread compa
 		                "outa/ivory.h",
 		                "outa/ivory_asserts.h",
 		                "outa/ivory_templates.h");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_entrypoint");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("periodic_entrypoint");
 	    Priority => 10;
 	    Stack_Size => 4096 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    TB_SYS::Sends_Events_To => "{{}}";
 end compa ; 
 
 -- Example of a passive thread providing an RPC interface  
@@ -72,7 +72,7 @@ thread compb
 		
 	properties 
 	    Dispatch_Protocol => Aperiodic;
-	    SMACCM_SYS::Thread_Type => Passive ;
+	    TB_SYS::Thread_Type => Passive ;
 	    Source_Text => ("user_skeleton_code/compb.c",
 					    "outb/common.c", 
 		                "outb/common.h", 
@@ -82,7 +82,7 @@ thread compb
 		                "outb/ivory_asserts.h",
 		                "outb/ivory_templates.h");
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    TB_SYS::Sends_Events_To => "{{}}";
 end compb ; 
 
 process proc
@@ -104,8 +104,8 @@ system implementation test_boeing2.impl
 	subcomponents
 		tl: process proc.Impl;
 	properties
-		SMACCM_SYS::OS => CAmkES;
-		SMACCM_SYS::HW => QEMU;
+		TB_SYS::OS => CAmkES;
+		TB_SYS::HW => QEMU;
 
 end test_boeing2.impl;
 

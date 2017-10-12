@@ -1,0 +1,172 @@
+I have three axes of specialization:
+	Communication protocol
+	OS
+	Hardware
+	
+Hardware is small potatoes; it makes a handful of changes to the config files / build scripts.
+
+OS is huge - it affects the generated code at the macro and micro level.  Worse, some things, such as comm protocols, span OSes.
+
+Communication protocol is also big - it would be nice to split based on comm type.
+
+Finally, if we want to support comms across bindings, esp. across buses, this may span OSes.
+
+Open question: how do we extract binding information from instance model?
+
+Owner of a thread is a package section, not a process.  Owner of a package section is a package.
+
+
+AADL bindings 
+processor Real_Time
+  features
+    BA1: requires bus access Marine.Standard;
+end Real_Time;
+
+processor implementation Real_Time.one_GHz
+end Real_Time.one_GHz;
+
+...
+properties
+  Allowed_Processor_Binding => (reference(RT_1GHz))
+    applies to speed_control.speed_control_laws;
+  Allowed_Processor_Binding => (reference(RT_1GHz))
+    applies to speed_control.scale_speed_data;
+  Actual_Memory_Binding => (reference(Stand_Memory))
+    applies to speed_control;
+	
+
+First order of business: 
+	getting access to bindings.  And done.  It comes (of course) from the process instance, not the implementation, which is not bound to anything.  It is immediately available in getOwnedPropertyAssociations()
+	
+	So, the process of determining the OS starts from the process instance: 
+		1. getProperty() given the property Allowed_Processor_Binding.  This property defines a set of possible processor bindings (which we will support only one)
+		2. From the (singleton) processor, we determine its 
+			Deployment::Execution_Platform, which will either be linux or seL4.
+
+	So, each process instance has to know its execution platform.  
+	Each thread instance has to determine this by querying its parent process.
+	That way, each connection can be correctly constructed. 	
+	
+	What about VxWorks and eChronos?  These operate in a semi-vacuum, which is nice. 
+	
+	So, we say that process / process instances are ignored in CAmkES, eChronos, and VxWorks.
+	
+	For SEI's tool, the processor gets bound to a "platform" attribute, which is our HW attribute.
+	
+Second order of business:
+	get the AST figured out.  The AST should be more like the names portion of the current AST.
+
+	Main order of business here: where does the OS fit? 
+		Easiest place is in the Factory.  However, unlike a reasonable factory which changes based on platform, 
+			We will have *multiple* factories.  Systems are aggregations that have no information hiding power; 
+			they can only "flow down" properties to their subcomponents; even this I'm not sure how it works.
+	
+	We need to gather together all processes that operate on a single processor.  
+	This will allow us to build the VMs, bindings, etc. 
+	
+	When we have connections in/out of an OS, we will need to have a special factory for this (it is no longer
+	guaranteed to be OS-specific)
+	
+	So, each set of processes bound to a processor will have an associated factory type.
+	
+Third order of business: figuring out VMs.
+	They act as "virtual processors" in straight up AADL
+	So, a different binding.
+
+Currently, for the C code generation, the template files are split by OS.
+
+For C code generation for (say) CAmkES, the following files are involved:
+
+CommonComponentC.stg 
+CAmkESComponentC.stg 
+
+All of the <ComponentType>Name.java files for threads, ports, connections, etc.
+
+...and of course these are created from the AST classes that represent the "abstract" thing.
+
+Issue: dealing with signals (not that we do this now anyway)
+
+So suppose that we had Factories for constructing the ASTs.  What would they look like?
+
+Top-level classes by AADL element?
+	ThreadFactory
+		CAmkESThreadFactory
+		eChronosThreadFactory
+		VxWorksThreadFactory
+	PortFactory
+	ConnectionFactory
+
+Or, for now, just 
+
+TrustedBuildAstFactory		<-- Each one has a static "register properties" method.
+CAmkESAstFactory			
+eChronosAstFactory
+VxWorksAstFactory
+
+Then we have the AST classes
+
+Connections (always instances):
+	EventDataPC
+		EventDataLPC
+			EventDataLPCeChronos
+			EventDataLPCVxWorks
+		EventDataRPCCAmkES			
+	EventSignal
+		EventSignalCAmkES
+	EventDataSharedMemSignal	
+	DataPC
+		DataRPCCAmkES
+		DataLPC
+			DataLPCVxWorks
+			DataLPCeChronos		
+	DataMailbox
+		DataShMem
+
+Ports vs. Port Instances:
+
+
+Some strange things: 
+	I'm not sure how alarm and light factor into the model.
+	In addition, alarm and light are both defined exactly the same.
+	Finally, hysteresis doesn't mean hysteresis in the traditional sense.
+	Why not use the altitude switch?	
+	Pairwise 
+	
+	Not CNF - NNF.
+		
+0000817226	
+484-841-0200
+
+
+
+
+	
+
+/*********************************************************************
+ * OS-specific naming functions required by this file:
+ *   incomingPortWriterName
+ *   outgoingPortWriterName
+ *   incomingActiveThreadDispatchName
+ *   outgoingActiveThreadDispatchName
+ *   incomingUserEntrypoingCallerName
+ *   outgoingUserEntrypointCallerName
+ *      portLockStmt
+ *   portUnlockStmt
+ *   portDispatcherLock
+ *   portDispatcherUnlock
+ *   dispatcherMainInitializeLockStmt
+ *   dispatcherMainLockWaitStmt
+ *   dispatcherMainLockReleaseStmt
+ *   osSpecificIncludeFiles
+ *   osSpecificIrqDispatcher
+ *   osSpecificThreadInitializer
+ *   osSpecificThreadEntrypoint
+ *   osSpecificComponentLocalCallerFunction
+ *   osSpecificAssert
+ *   aadlInputToExternalInput  <== currently aadlInputToCamkesInput
+ *
+ * Dummy declarations are provided by CommonOSSpecificNames.
+ * These must be overridden by redefinition (see CamkesComponentC.stg
+ * for an example).  For more information on template overriding,
+ * please see: www.stringtemplate.org.
+ *********************************************************************/

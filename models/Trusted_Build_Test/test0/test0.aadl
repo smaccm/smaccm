@@ -7,7 +7,7 @@
 package test0
 public 
    with Base_Types;
-   with SMACCM_SYS;   
+   with TB_SYS;   
 
 -- Example of a periodically dispatched "Active" thread.   
 thread sender
@@ -15,12 +15,12 @@ thread sender
 	    Dispatch_Protocol => Periodic;
 	    Period => 100 ms;
 		Source_Text => ("user_code/user_sender.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
 end sender ; 
 
 process proc
@@ -39,9 +39,9 @@ system implementation test0.impl
 	subcomponents
 		tl: process proc.Impl;
 	properties
-		SMACCM_SYS::OS => CAmkES;
-		SMACCM_SYS::HW => QEMU;
-		SMACCM_SYS::CAmkES_Dataport_RPC_Min_Index => 5;
+		TB_SYS::OS => CAmkES;
+		TB_SYS::HW => QEMU;
+		TB_SYS::CAmkES_Dataport_RPC_Min_Index => 5;
 end test0.impl;
 
 end test0;
