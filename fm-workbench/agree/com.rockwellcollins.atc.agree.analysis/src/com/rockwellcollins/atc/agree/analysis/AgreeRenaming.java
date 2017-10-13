@@ -33,7 +33,7 @@ public class AgreeRenaming extends Renaming {
 	 *  	value: Implementation
 	 *  	example: "Output always positive"  -> GuaranteeStatementImpl
 	 */
-    protected Map<String, String> explicitRenames = new HashMap<>();
+    private Map<String, String> explicitRenames = new HashMap<>();
     private Map<String, String> supportRenames = new HashMap<>();
     private Map<String, String> supportRefStrings = new HashMap<>();
     private Map<String, EObject> refMap;
@@ -181,10 +181,6 @@ public class AgreeRenaming extends Renaming {
         }
 
         return ref;
-    }
-    
-    public Map<String, String> getExplicitRenames(){
-    	return explicitRenames;
     }
 
 }
