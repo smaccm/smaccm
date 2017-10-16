@@ -281,9 +281,11 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram,
             AnalysisType analysisType) {
-
-        AgreeRenaming renaming = new AgreeRenaming();
-        AgreeLayout layout = new AgreeLayout();
+		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
+				.getRegistry(ExtensionRegistry.AGREE_AUTOMATER_EXT_ID);
+		List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
+		AgreeRenaming renaming = new AgreeRenaming();
+		AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
         for (Node node : lustreProgram.nodes) {
             if (node.id.equals(lustreProgram.main)) {
@@ -300,13 +302,9 @@ public abstract class VerifyHandler extends AadlHandler {
         RenamingVisitor.addRenamings(lustreProgram, renaming, layout);
         addProperties(renaming, properties, mainNode, agreeProgram);
 
-		// go through the extension registries and transform the renaming
-		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
-				.getRegistry(ExtensionRegistry.AGREE_AUTOMATER_EXT_ID);
-		List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
-
 		for (AgreeAutomater aa : automaters) {
 			renaming = aa.rename(renaming);
+			layout = aa.transformLayout(layout);
 		}
         
         JKindResult result;

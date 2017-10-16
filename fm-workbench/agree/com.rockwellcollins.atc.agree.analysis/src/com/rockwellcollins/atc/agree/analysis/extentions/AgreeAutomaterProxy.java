@@ -13,6 +13,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.annexsupport.AnnexHighlighter;
 import org.osate.annexsupport.AnnexPlugin;
 
+import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 
@@ -64,6 +65,16 @@ public class AgreeAutomaterProxy extends ExtensionProxy implements AgreeAutomate
 
         if (extractor != null) {
             return extractor.transformResult(res);
+        }
+        return null;
+	}
+
+	@Override
+	public AgreeLayout transformLayout(AgreeLayout layout) {
+		AgreeAutomater extractor = getAgreeAutomater();
+
+        if (extractor != null) {
+            return extractor.transformLayout(layout);
         }
         return null;
 	}
