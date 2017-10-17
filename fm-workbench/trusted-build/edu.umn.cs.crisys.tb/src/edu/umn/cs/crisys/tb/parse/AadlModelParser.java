@@ -34,6 +34,7 @@ import org.eclipse.emf.common.util.EList;
 import org.osate.aadl2.AbstractFeature;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.DataClassifier;
 import org.osate.aadl2.DataSubcomponent;
@@ -46,6 +47,7 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Parameter;
 import org.osate.aadl2.PortCategory;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SubprogramAccess;
 // import org.osate.aadl2.SubprogramGroupAccess;
 import org.osate.aadl2.SystemImplementation;
@@ -62,6 +64,7 @@ import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.aadl2.impl.SubprogramGroupAccessImpl;
 import org.osate.aadl2.impl.SubprogramGroupTypeImpl;
 import org.osate.aadl2.impl.SubprogramTypeImpl;
+import org.osate.aadl2.impl.ThreadImplementationImpl;
 import org.osate.aadl2.impl.ThreadSubcomponentImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.impl.VirtualProcessorImplementationImpl;
@@ -110,7 +113,7 @@ public class AadlModelParser {
    private SystemInstance systemInstance;
 
    // containers for AADL AST objects
-   private ArrayList<ThreadTypeImpl> threadTypeImplList = new ArrayList<>();
+   private ArrayList<ComponentInstance> threadTypeImplList = new ArrayList<>();
 
    // Instance objects
    private ArrayList<ComponentInstance> threadInstanceList = new ArrayList<>();
@@ -119,13 +122,13 @@ public class AadlModelParser {
    private ArrayList<ComponentInstance> virtualProcessorInstanceList = new ArrayList<>(); 
    private ArrayList<ConnectionInstance> connectionInstances = new ArrayList<>();
 
-   private Map<ThreadTypeImpl, ThreadImplementation> threadImplementationMap = new HashMap<>();
-   private Map<ProcessImplementationImpl, ProcessImplementation> processImplementationMap = new HashMap<>();
+   private Map<ComponentInstance, ThreadImplementation> threadImplementationMap = new HashMap<>();
+   private Map<ComponentInstance, ProcessImplementation> processImplementationMap = new HashMap<>();
 
    private Map<DataSubcomponentImpl, SharedData> sharedDataMap = new HashMap<>();	
    private HashMap<PortImpl, PortFeature> portMap = new HashMap<PortImpl, PortFeature>();
    private Map<ComponentInstance, ThreadInstance> threadInstanceMap = new HashMap<>();
-   //private Map<ComponentInstance, ProcessInstance> processInstanceMap = new HashMap<>();  
+   private Map<ComponentInstance, ProcessInstance> processInstanceMap = new HashMap<>();  
    private Map<ComponentInstance, OSModel> osModelMap = new HashMap<>(); 
 
    private Set<DataClassifier> dataTypes = new HashSet<DataClassifier>();
@@ -148,7 +151,7 @@ public class AadlModelParser {
       // setModelProperties(sysimpl, this.model);
 
       // Parse existing AADL model
-      findThreadTypeImpls(systemImplementation);
+      findThreadTypeImpls(systemInstance);
       findTopLevelComponentInstances(systemInstance);
 
 
@@ -332,31 +335,16 @@ public class AadlModelParser {
       }
    }
 
-   private void findThreadTypeImpls(Element elem) {
-      if (elem instanceof SubcomponentImpl) {
-         SubcomponentImpl sub = (SubcomponentImpl) elem;
-         ComponentImplementation impl = sub.getComponentImplementation();
-         Classifier classifier = null;
-
-         if (sub instanceof ThreadSubcomponentImpl) {
-            ThreadSubcomponentImpl tsub = (ThreadSubcomponentImpl) sub;
-            classifier = tsub.getClassifier();
-
-            if (classifier instanceof ThreadTypeImpl) {
-               ThreadTypeImpl tti = (ThreadTypeImpl) classifier;
-               threadTypeImplList.add(tti);
-               return;
-            } else {
-               String error = "In findThreads: classifier for ThreadSubcomponentImpl is not a ThreadTypeImpl.n";
-               System.out.println(error);
-            }
-         } else if (impl != null) {
-            findThreadTypeImpls(impl);
-         }
-      }
-      for (Element child : elem.getChildren()) {
-         findThreadTypeImpls(child);
-      }
+   private void findThreadTypeImpls(SystemInstance si) {
+		EList<ComponentInstance> insts = si.getAllComponentInstances();
+		for(ComponentInstance compInst : insts) {
+			ComponentClassifier classifier = compInst.getComponentClassifier();
+			if(classifier instanceof ThreadImplementationImpl ||
+					classifier instanceof ThreadTypeImpl) {
+				
+				threadTypeImplList.add(compInst);
+			}
+		}
    }
 
    /***************************************************************************
@@ -499,7 +487,7 @@ public class AadlModelParser {
     ***************************************************************************/
 
 
-   private void setDispatchProtocol(ThreadTypeImpl tti, ThreadImplementation ti, boolean isPassive) {
+   private void setDispatchProtocol(ComponentInstance tti, ThreadImplementation ti, boolean isPassive) {
       EnumerationLiteral dispatchProtocol;  
       try {
          dispatchProtocol = PropertyUtil.getDispatchProtocol(tti);
@@ -541,7 +529,7 @@ public class AadlModelParser {
       ti.setDispatchProtocol(dispatchProtocol.getName());
    }
 
-   private void createOptPeriodicHandler(ThreadTypeImpl tti, ThreadImplementation ti) {
+   private void createOptPeriodicHandler(ComponentInstance tti, ThreadImplementation ti) {
       String dpName = ti.getDispatchProtocol();
       if ((dpName.equalsIgnoreCase("Periodic") || 
             dpName.equalsIgnoreCase("Hybrid"))) {
@@ -630,7 +618,7 @@ public class AadlModelParser {
       return surrogate;
    }
 
-   private void constructDispatchLimits(ThreadTypeImpl tti, ThreadImplementation ti) {
+   private void constructDispatchLimits(ComponentInstance tti, ThreadImplementation ti) {
       try {
          String sendsEventsTo = Util.getStringValueOpt(tti, PropertyUtil.TB_SYS_SENDS_EVENTS_TO);
          List<OutputEventPort> outputs = ti.getAllOutputEventPorts();
@@ -663,7 +651,7 @@ public class AadlModelParser {
       }
    }
 
-   private void createOptInitializeEntrypoint(ThreadTypeImpl tti, ThreadImplementation ti) {
+   private void createOptInitializeEntrypoint(ComponentInstance tti, ThreadImplementation ti) {
       String initializer = Util.getStringValueOpt(tti, PropertyUtil.INITIALIZE_ENTRYPOINT_SOURCE_TEXT);
       if (initializer != null) {
          ExternalHandler handler = new ExternalHandler(initializer);
@@ -676,7 +664,7 @@ public class AadlModelParser {
       }
    }
 
-   private ThreadImplementation constructThreadImplementation(ThreadTypeImpl tti, OSModel model) {
+   private ThreadImplementation constructThreadImplementation(ComponentInstance tti, OSModel model) {
       String name = tti.getName();
       boolean isPassive = PropertyUtil.getThreadType(tti);
       boolean isExternal = PropertyUtil.getIsExternal(tti);
@@ -739,8 +727,9 @@ public class AadlModelParser {
       /* This is WRONG, but it is how I'm going to leave it until 
        * we add better support for instances */
       
+      ComponentClassifier classifier = tti.getComponentClassifier();
       
-      for (Feature f: tti.getAllFeatures()) {
+      for (Feature f: classifier.getAllFeatures()) {
          if (f instanceof PortImpl) {
             addPort((PortImpl)f, ti); 
          } 
@@ -824,46 +813,46 @@ public class AadlModelParser {
     * Process constructors - must be called after threads are constructed.
     * 
     ***************************************************************************/
-   public ThreadTypeImpl optFindThreadImplementation(Element elem) {
-      if (elem instanceof ThreadSubcomponentImpl) {
-         ThreadSubcomponentImpl tsub = (ThreadSubcomponentImpl) elem;
-         Element classifier = tsub.getClassifier();
-         if (classifier instanceof ThreadTypeImpl) {
-            ThreadTypeImpl tti = (ThreadTypeImpl) classifier;
-            return tti;
-         } else {
-            throw new TbException("optFindThreadImplementation: unexpected behavior.");
-         }
-      } else if (elem instanceof ThreadTypeImpl) {
-         return (ThreadTypeImpl)elem;
-      } 
-      return null;
-   }
+//   public ThreadTypeImpl optFindThreadImplementation(Element elem) {
+//      if (elem instanceof ThreadSubcomponentImpl) {
+//         ThreadSubcomponentImpl tsub = (ThreadSubcomponentImpl) elem;
+//         Element classifier = tsub.getClassifier();
+//         if (classifier instanceof ThreadTypeImpl) {
+//            ThreadTypeImpl tti = (ThreadTypeImpl) classifier;
+//            return tti;
+//         } else {
+//            throw new TbException("optFindThreadImplementation: unexpected behavior.");
+//         }
+//      } else if (elem instanceof ThreadTypeImpl) {
+//         return (ThreadTypeImpl)elem;
+//      } 
+//      return null;
+//   }
 
-   public ProcessImplementation constructProcessImplementation(ProcessImplementationImpl pti) {
-      ProcessImplementation procImpl = 
-            new ProcessImplementation(pti.getName());
-      for (Element elem: pti.getChildren()) {
-         ThreadTypeImpl tti = optFindThreadImplementation(elem);
-         if (tti != null) {
-            if (this.threadImplementationMap.containsKey(tti)) {
-               ThreadImplementation ti = this.threadImplementationMap.get(tti);
-               procImpl.addThreadImplementation(ti);
-               ti.setParentProcess(procImpl);
-            } else {
-               throw new TbException("Error: unable to find thread implementation " + elem.toString() + 
-                     " in the thread implementation map.");
-            }
-         }
-      }
+	public ProcessImplementation constructProcessImplementation(ComponentInstance pti) {
+		ProcessImplementation procImpl = new ProcessImplementation(pti.getName());
+
+		for (ComponentInstance subInst : pti.getAllComponentInstances()) {
+			if (subInst.getCategory() == ComponentCategory.THREAD) {
+				if (this.threadImplementationMap.containsKey(subInst)) {
+					ThreadImplementation ti = this.threadImplementationMap.get(subInst);
+					procImpl.addThreadImplementation(ti);
+					ti.setParentProcess(procImpl);
+				} else {
+					throw new TbException("Error: unable to find thread implementation " + subInst.getName()
+							+ " in the thread implementation map.");
+				}
+			}
+		}
       return procImpl; 
    }
 
    public ProcessInstance constructProcessInstance(ComponentInstance c, ProcessImplementation impl) {
       ProcessInstance pi = new ProcessInstance(c.getName(), impl);
-      for (Element elem: c.getChildren()) {
-         if (this.threadInstanceMap.containsKey(elem)) {
-            ThreadInstance ti = this.threadInstanceMap.get(elem);
+      
+      for(ComponentInstance subInst : c.getAllComponentInstances()) {
+         if (this.threadInstanceMap.containsKey(subInst)) {
+            ThreadInstance ti = this.threadInstanceMap.get(subInst);
             pi.addThreadInstance(ti);
             ti.setProcessInstance(pi);
          }
@@ -882,17 +871,16 @@ public class AadlModelParser {
    }
 
    public void constructProcessImplMap() {
-      Map<ProcessImplementationImpl, ProcessImplementation> processMap = 
+      Map<ComponentInstance, ProcessImplementation> processMap = 
             this.processImplementationMap;
       for (ComponentInstance c: this.processInstanceList) {
-         ProcessImplementationImpl pti = (ProcessImplementationImpl) c.getComponentClassifier(); 
          ProcessImplementation procImpl; 
          OSModel model = findOsModel(c);
 
-         if (processMap.containsKey(pti)) {
-            procImpl = processMap.get(pti); 
+         if (processMap.containsKey(c)) {
+            procImpl = processMap.get(c); 
          } else {
-            procImpl = constructProcessImplementation(pti);
+            procImpl = constructProcessImplementation(c);
             model.getProcessImplementationList().add(procImpl);
             procImpl.setModel(model);
          }
@@ -903,67 +891,37 @@ public class AadlModelParser {
       }
    }
 
-   /***************************************************************************
-    * 
-    * Thread map constructors
-    * 
-    ***************************************************************************/
 
-   private Map<ThreadTypeImpl, List<ComponentInstance>> 
-   constructThreadImplToInstanceMap() {
+	private void constructThreadImplMap() {
+		threadImplementationMap = new HashMap<>(threadTypeImplList.size());
+		OSModel model;
 
-      // map component instances to implementations.
-      HashMap<ThreadTypeImpl, List<ComponentInstance>> 
-      threadImplToInstanceMap = new HashMap<ThreadTypeImpl, List<ComponentInstance>>(); 
-      for (ComponentInstance co : threadInstanceList) {
-         ThreadTypeImpl threadType = (ThreadTypeImpl)co.getComponentClassifier(); 
-         if (!threadImplToInstanceMap.containsKey(threadType)) {
-            threadImplToInstanceMap.put(threadType, new ArrayList<ComponentInstance>());
-         } 
-         threadImplToInstanceMap.get(threadType).add(co);
-      }
+		for (ComponentInstance tti : threadTypeImplList) {
 
-      return threadImplToInstanceMap;
-   }
+			// TODO: in reality, a thread implementation is *not* associated
+			// with a given OS model (processor). We are calling the binding
+			// of the first thread instance the thread implementation binding.
+			// This is of course, very sketchy. Once we support multiple
+			// instances, we will need to fix this, but this will break all
+			// kinds of stuff, so I'm holding off until we can make this
+			// larger change.
 
-   private void constructThreadImplMap() {
-      threadImplementationMap = new HashMap<ThreadTypeImpl, ThreadImplementation>(threadTypeImplList.size());
+			model = findOsModel(tti);
+			assert (model != null);
 
-      // map component instances to implementations.
-      Map<ThreadTypeImpl, List<ComponentInstance>> threadImplToInstanceMap = 
-            constructThreadImplToInstanceMap();
+			ThreadImplementation threadImplementation = constructThreadImplementation(tti, model);
+			ThreadInstance instance = new ThreadInstance(threadImplementation);
+			threadImplementation.addThreadInstance(instance);
+			// TODO: why do I need the thread instance map?
+			this.threadInstanceMap.put(tti, instance);
 
-      OSModel model; 
+			threadImplementationMap.put(tti, threadImplementation);
+			model.getLegacyMutexList().addAll(threadImplementation.getExternalMutexList());
+			model.getLegacySemaphoreList().addAll(threadImplementation.getExternalSemaphoreList());
+		}
+	}
 
-      
-      for (ThreadTypeImpl tti : threadTypeImplList) {
-         
-         // TODO: in reality, a thread implementation is *not* associated
-         // with a given OS model (processor).  We are calling the binding 
-         // of the first thread instance the thread implementation binding.
-         // This is of course, very sketchy.  Once we support multiple 
-         // instances, we will need to fix this, but this will break all
-         // kinds of stuff, so I'm holding off until we can make this 
-         // larger change.
-         
-         List<ComponentInstance> instances = threadImplToInstanceMap.get(tti);
-         model = findOsModel(instances.get(0));
-         assert(model != null); 
-
-         ThreadImplementation threadImplementation = constructThreadImplementation(tti, model); 
-         for (ComponentInstance co: instances) {
-            ThreadInstance instance = new ThreadInstance(threadImplementation);
-            threadImplementation.addThreadInstance(instance);
-            // TODO: why do I need the thread instance map?
-            this.threadInstanceMap.put(co, instance);
-         }
-         threadImplementationMap.put(tti, threadImplementation);
-         model.getLegacyMutexList().addAll(threadImplementation.getExternalMutexList());
-         model.getLegacySemaphoreList().addAll(threadImplementation.getExternalSemaphoreList());
-      }
-   }
-
-   public Map<ThreadTypeImpl, ThreadImplementation> getThreadImplementationMap() {
+   public Map<ComponentInstance, ThreadImplementation> getThreadImplementationMap() {
       return threadImplementationMap;
    }
 
@@ -1061,7 +1019,7 @@ public class AadlModelParser {
    }
 
    private ThreadImplementation findThreadImplementationForName(String name) {
-      for (Map.Entry<ThreadTypeImpl, ThreadImplementation> entry : 
+      for (Map.Entry<ComponentInstance, ThreadImplementation> entry : 
          this.threadImplementationMap.entrySet()) {
          if (entry.getKey().getName().equals(name)) {
             return entry.getValue(); 
@@ -1268,7 +1226,7 @@ public class AadlModelParser {
 
    public void harvestModelTypeData() {
       // Collect thread data types
-      for (ThreadTypeImpl t : this.threadTypeImplList) {
+      for (ComponentInstance t : this.threadTypeImplList) {
          collectDataTypes(t);
       }
 
@@ -1339,7 +1297,7 @@ public class AadlModelParser {
       }
 
       // base types defined by the data modeling annex
-      if ("Base_Types::Boolean".equals(qualifiedName)) {
+	if ("Base_Types::Boolean".equals(qualifiedName)) {
          return new BoolType();
       } else if ("Base_Types::Integer_8".equals(qualifiedName)) {
          return new IntType(8, true);
@@ -1386,60 +1344,44 @@ public class AadlModelParser {
             //logger.error("Error: Property " + ThreadUtil.TB_SYS_COMMPRIM_SOURCE_HEADER_NAME + " must be provided for external types");
             throw new TbException("Error: Property " + PropertyUtil.TB_SYS_COMMPRIM_SOURCE_HEADER_NAME + " must be provided for external types");
          }
-      } else if (dc instanceof DataTypeImpl) {
-         DataTypeImpl dti = (DataTypeImpl)dc;
-         EnumerationLiteral el = PropertyUtil.getDataRepresentationName(dti);
-         DataClassifier childDc = PropertyUtil.getBaseType(dti);
-         int size = PropertyUtil.getDimension(dti);
-         Type childElem = createAstType(childDc); 
-         if ((el.getName()).equalsIgnoreCase("Array")) {
-            Type at = new ArrayType(childElem, size);
-            this.tlm.getAstTypes().put(normalizedName, at);
-            // return new ArrayType(childElem, size);
-            return new IdType(normalizedName, at);
-         } else {
-            throw new TbException("Examining type: " + dc.getFullName() + 
-                  " found unexpected representation type: '"+ el.getName() + "'; expecting 'Array'.");
-         }
-      } else if (dc instanceof DataImplementationImpl) {
-         DataImplementationImpl dii = (DataImplementationImpl) dc;
-         EList<DataSubcomponent> subcomponents = dii.getOwnedDataSubcomponents();
-         if (subcomponents.isEmpty()) {
+		} else if (dc instanceof DataTypeImpl || dc instanceof DataImplementationImpl) {
 
-            // check if array type.
-            EnumerationLiteral el = PropertyUtil.getDataRepresentationName(dii);
-            DataClassifier childDc = PropertyUtil.getBaseType(dii);
-            int size = PropertyUtil.getDimension(dii);
-            Type childElem = createAstType(childDc); 
-            if ((el.getName()).equalsIgnoreCase("Array")) {
-               ArrayType at = new ArrayType(childElem, size); 
-               this.tlm.getAstTypes().put(normalizedName, at);
-               // return at;
-               return new IdType(normalizedName, at);
-            } else {
-               throw new TbException("Examining type: " + dc.getFullName() + 
-                     " found unexpected representation type: '"+ dc.getName() + "'; expecting 'Array'.");
-            }
-         }
-         else {
-            RecordType rt = new RecordType();
-            for (DataSubcomponent c : subcomponents) {
-               Classifier subClass = c.getClassifier();
-               if (subClass instanceof DataClassifier) {
-                  Type subType = createAstType((DataClassifier) subClass);
-                  // this.logger.info("The name of the field is: " + c.getName());
-                  rt.addField(c.getName(), subType);
-               } else {
-                  throw new TbException(
-                        "In createAstType: Subcomponent is not a data classifier");
-               }
-            }
-            this.tlm.getAstTypes().put(normalizedName, rt);
-            // return rt;
-            return new IdType(normalizedName, rt);
-         }
-      } else {
-         throw new TbException(
+			EList<Subcomponent> subcomponents = null;
+			if (dc instanceof DataImplementationImpl) {
+				DataImplementationImpl dataImpl = (DataImplementationImpl) dc;
+				subcomponents = dataImpl.getAllSubcomponents();
+			}
+			if (subcomponents == null) {
+				EnumerationLiteral el = PropertyUtil.getDataRepresentationName(dc);
+				DataClassifier childDc = PropertyUtil.getBaseType(dc);
+				if ((el.getName()).equalsIgnoreCase("Array")) {
+					int size = PropertyUtil.getDimension(dc);
+					Type childElem = createAstType(childDc);
+					Type at = new ArrayType(childElem, size);
+					this.tlm.getAstTypes().put(normalizedName, at);
+					// return new ArrayType(childElem, size);
+					return new IdType(normalizedName, at);
+				} else {
+					return createAstType(childDc);
+				}
+			} else {
+				RecordType rt = new RecordType();
+				for (Subcomponent c : subcomponents) {
+					Classifier subClass = c.getClassifier();
+					if (subClass instanceof DataClassifier) {
+						Type subType = createAstType((DataClassifier) subClass);
+						// this.logger.info("The name of the field is: " + c.getName());
+						rt.addField(c.getName(), subType);
+					} else {
+						throw new TbException("In createAstType: Subcomponent is not a data classifier");
+					}
+				}
+				this.tlm.getAstTypes().put(normalizedName, rt);
+				// return rt;
+				return new IdType(normalizedName, rt);
+			}
+		} else {
+			throw new TbException(
                "In createAstType: data classifier is not data type or data implementation");
       }
    }
@@ -1515,11 +1457,11 @@ public class AadlModelParser {
       }
    }
 
-   public Map<ProcessImplementationImpl, ProcessImplementation> getProcessImplementationMap() {
+   public Map<ComponentInstance, ProcessImplementation> getProcessImplementationMap() {
       return processImplementationMap;
    }
 
-   public void setProcessImplementationMap(Map<ProcessImplementationImpl, ProcessImplementation> processImplementationMap) {
+   public void setProcessImplementationMap(Map<ComponentInstance, ProcessImplementation> processImplementationMap) {
       this.processImplementationMap = processImplementationMap;
    }
 

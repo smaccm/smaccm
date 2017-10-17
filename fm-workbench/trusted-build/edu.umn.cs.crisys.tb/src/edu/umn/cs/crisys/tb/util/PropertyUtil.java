@@ -12,7 +12,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataClassifier;
+import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.IntegerLiteral;
@@ -24,6 +26,8 @@ import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.impl.ClassifierValueImpl;
+import org.osate.aadl2.impl.DataImplementationImpl;
+import org.osate.aadl2.impl.DataTypeImpl;
 import org.osate.aadl2.impl.ListValueImpl;
 import org.osate.aadl2.impl.StringLiteralImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
@@ -128,7 +132,7 @@ public abstract class PropertyUtil {
    final public static Property ACTUAL_PROCESSOR_BINDING = Util
          .getPropertyDefinitionInWorkspace("Actual_Processor_Binding");
 
-   public static int getPriority(ThreadTypeImpl tti) {
+   public static int getPriority(NamedElement tti) {
       int priority = 0;
 
       try {
@@ -281,7 +285,7 @@ public abstract class PropertyUtil {
       throw new TbException("Required property 'Stack_Size' not found or in incorrect format for thread: " + thread.getName());
    }
 
-   public static EnumerationLiteral getDispatchProtocol(ThreadTypeImpl tti) {
+   public static EnumerationLiteral getDispatchProtocol(NamedElement tti) {
       try {
          return PropertyUtils.getEnumLiteral(tti, PropertyUtil.DISPATCH_PROTOCOL);
       } catch (Exception e) {
@@ -380,13 +384,21 @@ public abstract class PropertyUtil {
 
 
    public static DataClassifier getBaseType(NamedElement tti) {
-      PropertyExpression value ;
-      try {
-         value = PropertyUtils
-               .getSimplePropertyListValue(tti, DATA_MODEL_BASE_TYPE);
-      } catch (Exception e) {
-         throw new TbException("Required property 'Base_Type' not found for type: " + tti.getName());      
-      }
+		PropertyExpression value;
+		try {
+			value = PropertyUtils.getSimplePropertyListValue(tti, DATA_MODEL_BASE_TYPE);
+		} catch (Exception e) {
+			ComponentType type = null;
+			if (tti instanceof DataImplementationImpl) {
+				type = ((DataImplementationImpl) tti).getType();
+			}else {
+				type = (DataType)tti;
+			}
+			while(type.getExtended() != null) {
+				type = type.getExtended();
+			}
+			return (DataClassifier) type;
+	  }
       if (value instanceof ListValueImpl) {
          ListValueImpl listValue = (ListValueImpl) value;
          if (listValue.getOwnedListElements().size() != 1) {
