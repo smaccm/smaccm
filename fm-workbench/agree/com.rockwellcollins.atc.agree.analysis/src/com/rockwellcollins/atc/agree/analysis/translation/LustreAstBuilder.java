@@ -249,7 +249,7 @@ public class LustreAstBuilder {
 
 		equations.addAll(flatNode.localEquations);
 		assertions.add(AgreeRealtimeCalendarBuilder.getTimeConstraint(flatNode.eventTimes));
-
+		
 		NodeBuilder builder = new NodeBuilder("main");
 		builder.addInputs(inputs);
 		builder.addLocals(locals);

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h2 id="sec:tool_suite_overview">Tool Suite Overview</h2>
+<p>Figure <a href="#fig:agree_osate_tool_suite">1</a> shows an overview of the AGREE/OSATE tool suite. As presented in the figure, OSATE is installed as an Eclipse plugin that serves as the IDE for creating AADL models. AGREE runs as a plugin inside OSATE that provides both a language (AADL annex to annotate the models with assume-guarantee behavioral contracts) and a tool (for compositional verification of the contracts reside in AADL models). AGREE translates an AADL model and its contract annotations into Lustre and then queries the JKind model checker to perform the verification. JKind invokes a backend Satisfiability Modulo Theories (SMT) solver (e.g., Yices or Z3) to validate if the guarantees are valid in the compositional setting.</p>
+<figure>
+<img src="../../media/image14.png" alt="Figure 1: Overview of AGREE/OSATE Tool Suite" id="fig:agree_osate_tool_suite" /><figcaption>Figure 1: Overview of AGREE/OSATE Tool Suite</figcaption>
+</figure>
+</body>
+</html>

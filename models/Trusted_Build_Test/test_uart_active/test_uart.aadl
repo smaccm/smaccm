@@ -17,7 +17,7 @@ package test_uart
 public 
    with Base_Types;
    with Data_Model;
-   with SMACCM_SYS;   
+   with TB_SYS;   
 
 data a_array
   
@@ -63,20 +63,20 @@ thread uart
 	features
 		send : in event data port uart_packet.impl {
 			Compute_Entrypoint_Source_Text => "send_handler";
-		    SMACCM_SYS::Sends_Events_To => "{{}}";
+		    TB_SYS::Sends_Events_To => "{{}}";
 		}; 
 		
 		recv: out event data port uart_packet.impl {
-	      SMACCM_SYS::CommPrim_Source_Text => "recv_data";			
+	      TB_SYS::CommPrim_Source_Text => "recv_data";			
 		};
 		
 	properties 
-	    SMACCM_SYS::Is_External => true;
+	    TB_SYS::Is_External => true;
 	    Dispatch_Protocol => Sporadic;
 	    -- Source_Text => ("user_code/user_sender.c");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
 end uart ; 
 
@@ -85,35 +85,35 @@ end uart ;
 thread receiver
 	features
 		Input1: in event data port uart_packet.impl {
-	      SMACCM_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
+	      TB_SYS::Compute_Entrypoint_Source_Text => ("ping_received");
 		  Source_Text => ("user_code/user_receiver.c");
 		}; 
 				
 	properties 
 	    Dispatch_Protocol => Sporadic;
 	    Priority => 12;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Stack_Size => 256 bytes;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    TB_SYS::Sends_Events_To => "{{}}";
 end receiver ; 
 
 thread sender
 	features
 		Output1: out event data port uart_packet.impl {
-	      SMACCM_SYS::CommPrim_Source_Text => "ping_Output1";			
+	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
 		};
 	
 	properties 
 	    Dispatch_Protocol => Periodic;
 	    Period => 100 ms;
 		Source_Text => ("user_code/user_sender.c");
-	    SMACCM_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
+	    TB_SYS::Compute_Entrypoint_Source_Text => ("periodic_ping");
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{1 Output1}}";
+	    TB_SYS::Sends_Events_To => "{{1 Output1}}";
 end sender ; 
 
 
@@ -138,8 +138,8 @@ system implementation test_uart.impl
 	subcomponents
 		tl: process proc.Impl;
 	properties
-		SMACCM_SYS::OS => CAmkES; 
-		SMACCM_SYS::HW => ODROID;
+		TB_SYS::OS => CAmkES; 
+		TB_SYS::HW => ODROID;
 		
 end test_uart.impl;
 

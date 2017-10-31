@@ -136,4 +136,11 @@
          </with>
       </definition>
    </extension>
+   <extension
+         point="org.osate.pluginsupport.aadlcontribution">
+      <aadlcontribution
+            file="resources/Resolute_Stdlib.aadl"
+            id="com.rockwellcollins.atc.resolute.analysis.aadlcontribution4">
+      </aadlcontribution>
+   </extension>
 </plugin>

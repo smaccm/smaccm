@@ -1,0 +1,66 @@
+import "CommonComponentC.stg"
+
+/*
+ * Overrides for OS-specific names/behavior for generated C code.
+ *
+ */
+// Import does not override earlier definitions!  Why?
+// import "CamkesCNames.stg"
+
+osSpecificThreadInitializer(threadImpl) ::= <<
+void pre_init(void) {
+
+<threadImpl.inputPortList:{ port | 
+    // Pre-initialization statements for <port.name>
+<port.camkesAddPreInitStatements>
+}>
+}
+>>
+osSpecificThreadEntrypoint(threadImpl) ::= "int run(void)"
+osSpecificThreadReturnStmt(threadImpl) ::= "return 0;"
+
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"
+
+dispatcherMainLockWaitStmt(threadImpl) ::= "<threadImpl.camkesDispatcherLockStmt>"
+
+dispatcherMainLockReleaseStmt(dispatcher) ::= "<dispatcher.threadImplementation.camkesDispatcherUnlockStmt>"
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u003C>string.h<\u003E>
+#include <\u003C><threadImpl.componentCamkesHFileName><\u003E>
+>>
+
+
+
+osSpecificThreadPostInitializer(threadImpl) ::= <<
+
+>>
+
+// MWW to Pape: uncomment and fill in the code here for the mailbox implementation.
+// componentRemoteWriterDecl(srcPort) ::= <<
+// Mike was here, writing something for <srcPort.name>
+// >>
+
+// MWW to Pape: uncomment and fill in the code here for the mailbox implementation
+// componentLocalReaderDecl(port) ::= <<
+// Mike was here, writing something for <port.name>
+//
+
+osSpecificComponentLocalCallerFunction(connection) ::= <<
+/************************************************************************
+ * <outgoingPortWriterName(connection)>:
+ * Invoked from user code in the local thread.
+ *
+ * This function is necessary to mimic a remote call by a passive
+ * thread to a remote active thread, but redirects to the local
+ * active thread.
+ *
+ ************************************************************************/
+
+bool <outgoingPortWriterName(connection)>(const <connection.sourcePort.type.aadlInputType.name> <connection.sourcePort.name>) {
+    return <incomingPortWriterName(connection.destPort)>(<connection.sourcePort.name>);
+}
+>>
+
+osSpecificAssert(predicate) ::= "assert(<predicate>) "

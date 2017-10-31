@@ -8,12 +8,5 @@
        class = "com.rockwellcollins.atc.resolute.resolute.ResolutePackage"
        genModel = "src-gen/com/rockwellcollins/atc/resolute/Resolute.genmodel" /> 	
   </extension>
-  <extension
-    point="org.osate.pluginsupport.aadlcontribution">
-    <aadlcontribution
-        file="resources/Resolute_Stdlib.aadl"
-        id="com.rockwellcollins.atc.resolute.aadlcontribution1">
-      </aadlcontribution>
-   </extension>
 
 </plugin>

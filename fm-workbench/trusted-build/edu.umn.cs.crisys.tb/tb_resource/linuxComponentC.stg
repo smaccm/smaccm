@@ -1,0 +1,96 @@
+import "CommonComponentC.stg"
+
+/*
+ * Overrides for OS-specific names/behavior for generated C code.
+ *
+ */
+
+osSpecificThreadEntrypoint(threadImpl) ::= "void *<threadImpl.threadImplMainFnName>(void *__unused)"
+osSpecificThreadReturnStmt(threadImpl) ::= "return NULL;"
+
+
+dispatcherMainInitializeLockStmt(threadImpl) ::= <<
+tb_sem_wait(&<threadImpl.threadDispatcherMutex>);
+>>
+
+osSpecificThreadInitializer(threadImpl) ::= ""
+
+osSpecificThreadPostInitializer(threadImpl) ::= <<
+>>
+
+
+dispatcherMainLockWaitStmt(threadImpl) ::= <<
+tb_sem_wait(&<threadImpl.threadDispatcherMutex>);
+>>
+
+dispatcherMainLockReleaseStmt(dispatcher) ::= <<
+tb_sem_post(&<dispatcher.threadImplementation.threadDispatcherMutex>);
+>>
+
+
+activeThreadDecls(threadImpl) ::= <<
+// task id for the thread - do I need this in linux?
+int <threadImpl.normalizedName>;
+>>
+
+passiveThreadDecls(threadImpl) ::= << >>
+
+sharedDataDecl(sharedDataAccessor) ::= <<
+<sharedDataAccessor.sharedDataAccessorsAreNotYetSupportedOnLinux>
+extern <sharedDataAccessor.type.name> *<sharedDataAccessor.sharedData.varName>;
+<sharedDataAccessor.type.name> *<sharedDataAccessor.name> = <sharedDataAccessor.sharedData.varName>;
+>>
+
+writeActiveThreadMutexes(threadImpl) ::= <<
+/* dispatcher, input port, and external mutexes for active thread <threadImpl.normalizedName> */
+TB_SEM_TYPE <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m |TB_SEM_TYPE <m>;
+}>
+>>
+
+writePassiveThreadMutexes(threadImpl) ::= <<
+/* dispatcher and external mutex for passive thread (monitor) <threadImpl.normalizedName> */
+sem_t <threadImpl.threadDispatcherMutex>;
+<threadImpl.externalMutexes:{ m |TB_SEM_TYPE <m>;
+}>
+>>
+
+writeDecls(threadImpl) ::= <<
+<if(threadImpl.isActive)>
+<activeThreadDecls(threadImpl)>
+<writeActiveThreadMutexes(threadImpl)>
+<else>
+<passiveThreadDecls(threadImpl)>
+<writePassiveThreadMutexes(threadImpl)>
+<endif>
+<if(threadImpl.sharedDataAccessorList)>
+
+// shared data declarations
+<threadImpl.sharedDataAccessorList:sharedDataDecl()>
+<endif>
+>>
+
+
+osSpecificIncludeFiles(threadImpl) ::= <<
+#include <\u0022><threadImpl.prefix>_decls.h<\u0022>
+#include "<threadImpl.parentProcess.headerName>"
+#include <\u003C>string.h<\u003E>
+#include \<assert.h>
+#include \<fcntl.h>
+#include \<sys/mman.h>
+#include "tb_linux_support.h"
+#include "dataport.h"
+
+<writeDecls(threadImpl)>
+
+
+>>
+
+// <osSpecificCreateWatchdog(threadImpl.dispatchers)>;
+
+osSpecificRegisterIrqs(dispatcher) ::= ""
+
+osSpecificComponentLocalCallerFunction(connection) ::= ""
+
+// TODO: add an eChronos assert function.
+osSpecificAssert(predicate) ::= ""

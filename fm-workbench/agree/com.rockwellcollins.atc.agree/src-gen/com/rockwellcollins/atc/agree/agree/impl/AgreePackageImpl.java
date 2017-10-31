@@ -752,6 +752,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     isInited = true;
 
     // Initialize simple dependencies
+    EcorePackage.eINSTANCE.eClass();
     Aadl2Package.eINSTANCE.eClass();
 
     // Create package meta-data objects

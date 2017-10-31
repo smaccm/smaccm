@@ -63,6 +63,8 @@ import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
+import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractor;
 import com.rockwellcollins.atc.agree.analysis.extentions.CexExtractorRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
@@ -153,7 +155,6 @@ public class AgreeMenuListener implements IMenuListener {
     		JKindResult result, 
     		Set<String> reqs) {
 
-    	System.out.println("At traceability matrix");
     	try {
 			AgreeTraceabilityMatrixView matrix = 
 					(AgreeTraceabilityMatrixView) window.getActivePage().showView(
@@ -315,6 +316,9 @@ public class AgreeMenuListener implements IMenuListener {
     }
 
     private void addViewCounterexampleMenu(IMenuManager manager, AnalysisResult result) {
+    	
+		result = transformResult(result);
+    	
         final List<Counterexample> cexs = getCounterexamples(result);
         final Property property = getProperty(result);
         CexExtractorRegistry cexReg =
@@ -381,6 +385,18 @@ public class AgreeMenuListener implements IMenuListener {
             }
         }
     }
+
+    //calls other agreeautomators to transform results as they see fit
+	private AnalysisResult transformResult(AnalysisResult result) {
+		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
+				.getRegistry(ExtensionRegistry.AGREE_AUTOMATER_EXT_ID);
+		List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
+
+		for (AgreeAutomater aa : automaters) {
+			result  = aa.transformResult(result);
+		}
+		return result;
+	}
 
     private void addViewLustreMenu(IMenuManager manager, AnalysisResult result) {
         Program program = linker.getProgram(result);

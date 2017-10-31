@@ -1,0 +1,18 @@
+* Monitor implementation issues 
+- Imports are outputted as relative imports rather than system imports.
+- I thought I had implemented the code generation such that container
+  types would be completely hidden within the dequeue and enqueue
+  functions. This is not the case.
+- Comments are not uniformly generated before all generated components
+  of importance.
+- Some of the generated code has spacing issues.
+- I should not output properties of the form "._".
+* CAmkES Issues
+- Suppose we have a connection between two components A and B with
+  identical interfaces. Furthermore, suppose that A provides this
+  interface and B uses this interface. If B exports this another,
+  internal component to this interface with a different type it seems
+  as though CAmkES will report an error with an incorrect
+  message. Specifically, it will report that A and B have a interface
+  mismatch when it is actually B and it's internal component that has
+  the interface mismatch.

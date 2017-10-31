@@ -1,0 +1,44 @@
+import "Common.stg"
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for periodic dispatcher camkes component
+//
+////////////////////////////////////////////////////////////////////////////
+componentCamkesPurpose(componentName) ::= <<
+This header file contains the CAmkES component definition for the
+AADL thread implementation <componentName>.
+>>
+
+filePrefix(name, date, path, datatypesHeader) ::= <<
+<DARPALicenseComment()>
+<filenameBlockComment(date, path, componentCamkesPurpose(name))>
+
+
+>>
+
+filePostfix(name, path) ::= <<
+>>
+
+
+writePeriodicSender(dispatcher) ::= <<
+emits Notification <dispatcher.qualifiedName>;
+>>
+
+writePeriodicSenders(threadImpl) ::= <<
+<threadImpl.periodicDispatchers:writePeriodicSender()>
+>>
+
+periodicDispatcherCamkesBody(model, type) ::= <<
+
+// import <\u003C><type.readerWriterIdlFileName><\u003E>;
+import <\u003C>Timer.idl4<\u003E>;
+
+component <model.threadCalendar.periodicDispatcherComponentName> {
+    control;
+    uses Timer timer;
+    consumes Notification timer_complete;
+    <model.activeThreadImplementations:writePeriodicSenders()>
+}
+
+>>

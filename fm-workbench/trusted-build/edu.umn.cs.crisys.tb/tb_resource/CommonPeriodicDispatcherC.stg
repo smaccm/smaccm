@@ -1,0 +1,48 @@
+import "Common.stg"
+import "CommonOSSpecificNames.stg"
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for periodic dispatcher gluecode c file
+//
+////////////////////////////////////////////////////////////////////////////
+
+periodicDispatcherCPurpose(componentName) ::= <<
+This .c file contains the CAmkES periodic dispatcher component definition.
+>>
+
+filePrefix(name, date, path, datatypesHeader) ::= <<
+<DARPALicenseComment()>
+
+<filenameBlockComment(date, path, periodicDispatcherCPurpose(name))>
+
+>>
+
+writePeriodicDispatcher(dispatcher, threadCalendar) ::= <<
+if ((aadl_calendar_counter % (<dispatcher.periodicDispatcherPeriod> / aadl_tick_interval)) == 0) {
+    // MWW: modification of time type to match Ivory/Tower (our stuff uses uint64_t in milliseconds and Tower expects int64_t * in microseconds)
+    int64_t the_time = ((int64_t)clock_get_time())*1000;
+    <outgoingActiveThreadDispatchName(dispatcher)>(&the_time);
+}
+>>
+
+periodicComponentCDispatchers(threadCalendar) ::= <<
+
+// Declarations for managing periodic thread dispatch
+const uint32_t aadl_tick_interval = <threadCalendar.greatestCommonDivisorInMilliseconds>;
+const uint32_t aadl_hyperperiod_subdivisions = <threadCalendar.hyperperiodSubdivisions>;
+uint32_t aadl_calendar_counter = 0;
+uint32_t aadl_calendar_ticks = 0;
+
+
+void <threadCalendar.calendarFnName>() {
+    <threadCalendar.periodicDispatchers:writePeriodicDispatcher(threadCalendar)>
+
+    aadl_calendar_counter = (aadl_calendar_counter + 1) % aadl_hyperperiod_subdivisions;
+    aadl_calendar_ticks++;
+}
+
+>>
+
+filePostfix(name, path) ::= <<
+>>

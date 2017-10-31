@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AGREE User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">AGREE User Guide</h1>
+</header>
+<h2 id="sec:statements">Statements</h2>
+<p>In this section, we present the various types of AGREE statements and their uses. <strong>Note:</strong> <strong>Assume Statements (Section <a href="#sec:assume_statements">1.1.1</a>) and Guarantee Statements (Section <a href="#sec:guarantee_statements">1.1.2</a>) exclusively live in <em>component type</em>s; while Assert Statements (Section <a href="#sec:assert_statements">1.1.9</a>) and Lemma Statements (Section <a href="#sec:lemma_statements">1.1.10</a>) exclusively live in <em>component implementation</em>s.</strong></p>
+<h3 id="sec:assume_statements">Assume Statements</h3>
+<p>Assume statements specify constraints about a component that are assumed to be true. An example of an assume statement is:</p>
+<pre><code>assume &quot;System input domain&quot; : Input &lt; 10;</code></pre>
+<p>The string &quot;System input domain&quot; is used to identify the assumption when performing verification. The expression <code>Input &lt; 10</code> expresses the condition that is assumed to hold. When verifying a component implementation, the component’s assumptions are assumed to be true. However, the assumptions of the component implementation’s subcomponents must be proved to hold based on the assumptions of the component and the guarantees of other subcomponents.</p>
+<h3 id="sec:guarantee_statements">Guarantee Statements</h3>
+<p>Guarantee statements specify constraints that the component maintains as long as the assumptions have always held. An example of a guarantee statement is:</p>
+<pre><code>guarantee &quot;System output range&quot; : Output &lt; 50;</code></pre>
+<p>The string &quot;System output range&quot; is used to identify the guarantee when performing verification. The expression <code>Output &lt; 50</code> expresses the condition that is guaranteed to hold.</p>
+<p>When verifying a component implementation, guarantee statements are proven by the component assumptions and the guarantees present in subcomponent contracts.</p>
+<h3 id="sec:equation_statements">Equation Statements</h3>
+<p>Equation statements can be used to create local variable declarations within the body of an AGREE subclause. An example of an equation statement is:</p>
+<pre><code>eq ctr : int = prev(ctr + 1, 0);</code></pre>
+<p>In this example, we create a variable that counts up from zero. Variables defined with equation statements can be thought of as ''intermediate'' variables or variables that are not meant to be visible in the architectural model (unlike component outputs or inputs). Equation statements can define variables explicitly by setting the equation equal to an expression immediately after it is defined. Equation statements can also define variables implicitly by not setting them equal to anything, but constraining them with assumption, assertion, or guarantee statements. Equation statements can define more than one variable at once by writing them in a comma delimited list. One might do this to constrain a list of variables to the results of a node statement that has multiple return values or to more cleanly list a set of implicitly defined variables.</p>
+<h3 id="sec:property_statements">Property Statements</h3>
+<p>Property statements allow specification of named Boolean expressions. An example property statement is:</p>
+<pre><code>property not_system_start_implies_mode_0 =
+not(OP_CMD_IN.System_Start) &gt; (GPCA_SW_OUT.Current_System_Mode = 0);</code></pre>
+<p>Property statements are syntactic sugar (they are equivalent to defining an equation of type <strong>bool</strong>).</p>
+<h3 id="sec:constant_statements">Constant Statements</h3>
+<p>Constant statements allow definition of named constants. An example constant statement is:</p>
+<pre><code>const ADS_MAX_PITCH_DELTA: real = 1.0 ;</code></pre>
+<p>Identifiers defined by constant statements are used just like equation variables.</p>
+<h3 id="sec:node_definitions">Node Definitions</h3>
+<p>Node statements are used to define stateful ''functions'' that might be used frequently in a component type or implementation. Nodes can have multiple return values. If this is the cause, they must be referenced by an equation statement that has multiple arguments. Nodes can also be defined in an AADL Package. If so, they can be referenced in any expression anywhere in the model. This way one can make a library of certain types of nodes that are useful for different tasks.</p>
+<p>Node definitions in AGREE allow specification of <em>stateful</em> definitions; that is, definitions that can maintain internal state. An example node for maintaining a generalized counter would be:</p>
+<pre><code>node Counter(init: int, incr: int, reset: bool)  
+returns (count: int);  
+let  
+    count = if reset then init  
+        else prev(count, init) + incr;  
+tel;</code></pre>
+<p>In this example, if reset is true, the counter is reset back to the init value. Otherwise, it increments by incr. The node maintains state (the value of count changes from time step to time step). It is then possible to instantiate this node in other expressions. For example:</p>
+<pre><code>eq x1 : int = Counter(0, 1, prev(x1 = 9, false));
+
+eq x2 : int = Counter(1, prev(x2, 0),false);</code></pre>
+<p>Given these equations, <code>x1</code> is a counter that repeatedly counts up to 9 then resets to zero, and <code>x2</code> computes the Fibonacci series.</p>
+<p>An example of a more complex node with multiple nodes, multiple outputs and local variables would be a 4-bit adder:</p>
+<pre><code>node ADD1(a : bool, b : bool, carry_in : bool)
+returns (out : bool, carry_out : bool);
+let
+    out = (a &lt;&gt; b) &lt;&gt; carry\in;
+    carry_out = (a and b) or (a and carry_in) or (b and carry_in);
+tel;
+
+node ADD4 (a0 : bool, a1 : bool, a2 : bool, a3 : bool,
+           b0 : bool, b1 : bool, b2 : bool, b3 : bool)
+returns (s0 : bool, s1 : bool, s2 : bool, s3 : bool, carry_out : bool);
+var c0 : bool;
+    c1 : bool;
+    c2 : bool;
+    c3 : bool;
+let
+    s0,c0 = ADD1(a0, b0, false);
+    s1,c1 = ADD1(a1, b1, c0);
+    s2,c2 = ADD1(a2, b2, c1);
+    s3,c3 = ADD1(a3, b3, c2);
+    carry_out = c3;
+tel;</code></pre>
+<p>The ADD1 node takes two single bit inputs and a carry input bit and computes an output and a carry bit. We can use this to create a four-bit adder <code>ADD4</code> by &quot;stringing together&quot; four of the one-bit adders. Note that all local variables (defined with <strong>var</strong>) and all output variables (defined in the <strong>returns</strong> section) must be assigned exactly one time within the <strong>let</strong> block.</p>
+<p><strong>Note</strong>: Nodes cannot be recursive or mutually recursive.</p>
+<h3 id="sec:record_definitions">Record Definitions</h3>
+<p>Record definitions are used to define record types. Like a struct type in C programming language, a record is a collection of fields, each of its own data type. An example record definition is as follows:</p>
+<pre><code>type foo = struct {a : bool, b : int};</code></pre>
+<h3 id="sec:real_time_patterns">Real-time Patterns</h3>
+<p>AGREE also supports the specifications of real-time patterns. These patterns were adopted from the Requirements Specification Language adopted under the CESAR project. Patterns can be used instead of expressions in Assume, Guarantee, or Assert statements. The grammar for the patterns that we support is shown below:</p>
+<pre><code>PatternStatement:
+  WheneverStatement
+  | WhenStatement
+  | RealTimeStatement
+  ;
+
+WhenStatement:
+  &#39;when&#39; Expr &#39;holds&#39; &#39;during&#39; TimeInterval Expr
+  (&#39;exclusively&#39;)? &#39;occurs&#39; &#39;during&#39; TimeInterval
+  ;
+
+WheneverStatement:
+  &#39;whenever&#39; Expr &#39;occurs&#39; Expr
+    (&#39;exclusively&#39;)? (&#39;occur&#39; | &#39;occurs&#39;)) &#39;during&#39; TimeInterval
+  | &#39;whenever&#39; Expr &#39;occurs&#39; Expr
+    (&#39;exclusively&#39;)? (&#39;holds&#39;) &#39;during&#39; TimeInterval
+  | &#39;whenever&#39; Expr &#39;occurs&#39; Expr &#39;implies&#39; Expr
+    (&#39;exclusively&#39;)? &#39;during&#39; TimeInterval
+  ;
+
+RealTimeStatement:
+  &#39;condition&#39; Expr &#39;occurs&#39; &#39;each&#39; Expr (&#39;with&#39; &#39;jitter&#39; jitter=Expr)?
+  | &#39;condition&#39; Expr &#39;occurs&#39; &#39;sporadic&#39; &#39;with&#39; &#39;IAT&#39; Expr
+    (&#39;with&#39; &#39;*jitter*&#39; jitter=Expr)?
+  ;
+
+TimeInterval:
+  &#39;\[ | (&#39; Expr &#39;,&#39; Expr &#39;\] | )&#39;)
+  ;</code></pre>
+<p>The expressions in each of the patterns must be an IDExpr (a variable without any dots) of Boolean type. Details about the semantics of these patterns, how they are implemented, and how they may be used can be found in the Final Documentation and Technical Report for the Requirements Patterns for Formal Contracts in AADL program.</p>
+<p>The time intervals specified by these patterns reference values for a reserved variable named “time”. This variable is present in any counterexamples or inductive counterexamples that the tool produces. Additionally, AGREE contains three special functions that take a single IDExpr as an argument and produce a value of type real. These functions are:</p>
+<ol type="1">
+<li><p>timeof(id) – returns the the last value of the variable time in which id was true. If id has never been true then the function returns the value -1.0.</p></li>
+<li><p>timerise(id) – returns the last value of the variable time in which id transitioned to true. If id has never been true then the function returns the value -1.0.</p></li>
+<li><p>timefall(id) – returns the last value of the variable time in which id transitioned to false. If id has never been false then the function returns the value -1.0.</p></li>
+</ol>
+<h3 id="sec:assert_statements">Advanced Topic: Assert statements</h3>
+<p>Assert statements allow definition of axioms within the model. Axioms are &quot;facts&quot; about the behavior of the system or the environment that are added to the model to support proofs. An example assertion is of the form:</p>
+<pre><code>assert (FGS_L.LSO.Valid and FGS_R.LSO.Valid) &gt; FGS_L.LSO.Leader = FGS_R.LSO.Leader;</code></pre>
+<p>Assertions are sometimes used for <em>architectural</em> <em>patterns</em> whose correctness is established in a separate phase of analysis. The assertion above is from a pattern called <em>leader selection</em> that ensures that one of a set of redundant components is the leader.</p>
+<p>Assert statements make unchecked statements about how the component behaves. These are also used to reference variables from a subcomponent in the component contract. For the purpose of analysis assertions are treated just like the system assumptions. However, AGREE never verifies that the assertions actually hold. That is to say, the assertions of a subcomponent are never proven to hold like subcomponent assumptions. Assert statements can refer to equations or features defined in the component type. They are often used to refer to subcomponent variables in contracts higher up in the model hierarchy.</p>
+<p><strong>Note: Assert statements are assumed to be true and are not validated in any way by AGREE. Any use of this statement should be exercised with great caution. All assert statements should be examined by a domain expert and formal verification expert.</strong></p>
+<h3 id="sec:lemma_statements">Advanced Topic: Lemma Statements</h3>
+<p>Assert statements are used to introduce lemmas to assist the model checker when performing verification. AGREE uses <em>k-induction over the transition relation</em> to try to prove properties – see Appendix A for a high-level description of the procedure. For many systems and properties, this works very well and is able to prove interesting properties about the system without assistance. However, sometimes a property is <em>true</em> but not <em>provable</em> using this technique. The reason that this happens is the property to be proved is too weak to be inductively provable. Lemma statements are additional properties that are added to an AGREE model in order to <em>strengthen</em> the property to be proved.</p>
+<p>An example lemma would be:</p>
+<pre><code>lemma &quot;drug flow lemma&quot; :
+    (not drug_flow_stopped) =&gt; spo2_never_below_thresh;</code></pre>
+<p>From the perspective of proof, lemmas behave the same as guarantees; they must be proven by AGREE. These are used to help the model checker learn facts to improve its ability to prove other properties. However, unlike guarantees, lemmas are not made visible when trying to prove properties at the next level of abstraction. Subcomponent lemmas are not used to prove other subcomponent guarantees or system guarantees.</p>
+<h3 id="sec:linearization_definitions">Advanced Topic: Linearization Definitions</h3>
+<p>The linearization definition provides the declaration of a linear approximation of a non-linear expression over segment(s) of its input domain, resulting in a new expression that bounds the non-linear expression with piecewise linear segment(s). The non-linear expression supports a small core of mathematical functions found on a calculator (i.e., '+', '-', '*', '/', '^') as seen in Figure 14. <strong>Note</strong>: The non-linear expression can contain references to only the input variable (no other AGREE identifiers). Figure 15 demonstrates a linear approximation bounding the output values within the upper and lower bounds.</p>
+<figure>
+<img src="../../media/image13.png" alt="Figure 1: Bound Non-linear Expression with Piecewise Linear Segments" id="fig:linearization_definition" /><figcaption>Figure 1: Bound Non-linear Expression with Piecewise Linear Segments</figcaption>
+</figure>
+<p>The following linearization definition example provides the linear approximation for the square operation with a real type input over input interval between -1.0 and 1.0, and input precision of 0.01.</p>
+<pre><code>linearization sq (y : real) over [-1.0 .. 1.0] within 0.01 : y^2.0;</code></pre>
+<p><strong>Note: Currently linearization definition with single input of real type is supported. </strong></p>
+<p>The following function calls are allowed within the linearization body expression:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">abs (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">acos (x : real) : real;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">asin (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">atan (x : real) : real;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cbrt (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cos (x : real) : real;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cosh (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">exp (x : real) : real;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">expml (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log (x : real) : real;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log10 (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log1p (x : real) : real;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">signum (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sin (x : real) : real;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sinh (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sqrt (x : real) : real;</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tan (x : real) : real;</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tanh (x : real) : real;</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

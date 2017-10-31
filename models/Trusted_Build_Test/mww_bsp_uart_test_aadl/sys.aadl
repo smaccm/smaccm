@@ -5,7 +5,7 @@ public
   with Base_Types;
   with Data_Model;
   with Data_Types;
-  with SMACCM_SYS;
+  with TB_SYS;
   with thread_period_1ms;
   with thread_period_10ms;
   with uart5_driver;
@@ -44,8 +44,8 @@ system implementation sys.impl
   subcomponents
     p0:process sys_process.impl;
   properties
-    SMACCM_SYS::OS => EChronos;
-    SMACCM_SYS::HW => PIXHAWK;
+    TB_SYS::OS => EChronos;
+    TB_SYS::HW => PIXHAWK;
 end sys.impl;
 
 end sys;

@@ -1,0 +1,70 @@
+import "CommonPeriodicDispatcherC.stg"
+
+// Copied from "eChronosComponentC.stg"
+incomingPortWriterName(port) ::= "<port.incomingWriterName>"
+outgoingPortWriterName(connection) ::= "<incomingPortWriterName(connection.destPort)>"
+incomingActiveThreadDispatchName(dispatcher) ::= "<incomingPortWriterName(dispatcher)>"
+outgoingActiveThreadDispatchName(dispatcher) ::= "<incomingActiveThreadDispatchName(dispatcher)>"
+
+periodicComponentCBody(model, threadCalendar) ::= <<
+
+//#include <\u003C>string.h<\u003E>
+#include <\u003C><model.systemTypeHeaderName><\u003E>
+#include <\u003C><model.prefix>_decls.h<\u003E>
+// #include <\u003C><threadCalendar.periodicDispatcherHFileName><\u003E>
+
+
+// clock function prototypes
+void clock_init();
+void clock_set_interval_in_ms(uint32_t interval);
+void clock_start_timer(void);
+void clock_irq_callback(void);
+uint64_t clock_get_time();
+
+
+
+<periodicComponentCDispatchers(threadCalendar)>
+
+bool initialize_periodic_dispatcher() {
+    clock_init();
+    clock_set_interval_in_ms(1);
+    clock_start_timer();
+    return true;
+}
+
+/*
+ *
+ * MWW Note: we currently do not use the timer functionality in eChronos to have
+ * more similarity to the CAmkES-generated code.  However, it would be fairly
+ * trivial to change.  On the other hand, we *support* timers running at a base rate
+ * of 1 ms, if client code wishes to use them.
+ *
+ */
+bool
+<model.prefix>_tick_irq(void)
+{
+    static uint32_t count = 0;
+
+    clock_irq_callback();
+    rtos_timer_tick();
+    if (count == 0) {
+        <model.prefix>_thread_calendar();
+    }
+
+    count = (count + 1) % <threadCalendar.greatestCommonDivisorInMilliseconds>;
+    return true;
+}
+
+>>
+
+/*
+int run(void)
+{
+    clock_init();
+    clock_set_interval_in_ms(<threadCalendar.greatestCommonDivisorInMilliseconds>);
+
+    clock_start_timer();
+
+    return 0;
+}
+*/

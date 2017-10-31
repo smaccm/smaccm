@@ -1,0 +1,335 @@
+package AGREE_Stdlib
+public
+annex agree {**
+	----------------------------------------------------------------------------
+	-- Find the absolute value (magnitude) of an integer value.
+	--
+	-- Inputs:
+	--  i - the given value from which to compute the absolute value.
+	--
+	-- Outputs:
+	--  o - the resulting absolute value computed from the given input value
+	--      by the following rule: if the given input value is negative the
+	--      result is the additive inverse of given input value.  Otherwise the
+	--      result is ths given input value.
+	----------------------------------------------------------------------------
+	node AbsoluteValueInt(i: int) returns (o: int);
+	let
+		o = if (i >= 0) then i else -i;
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Find the absolute value (magnitude) of a real value.
+	--
+	-- Inputs:
+	--  i - the given value from which to compute the absolute value.
+	--
+	-- Outputs:
+	--  o - the resulting absolute value computed from the given input value
+	--      by the following rule: if the given input value is negative the
+	--      result is the additive inverse of given input value.  Otherwise the
+	--      result is ths given input value.
+	----------------------------------------------------------------------------
+	node AbsoluteValueReal(i: real) returns (o: real);
+	let
+		o = if (i >= 0.0) then i else -i;
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Find the larger of two integers.
+	--
+	-- Inputs:
+	--   i1, i2 - the two integers from which to find the larger value.
+	--
+	-- Returns:
+	--   r - the integer value of the larger of the two inputs.
+	----------------------------------------------------------------------------
+	node MaxInt(i1: int, i2: int) returns (r: int);
+	let
+		r = if (i1 < i2) then i2 else i1;
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Find the smaller of two integers.
+	--
+	-- Inputs:
+	--   i1, i2 - the two integers from which to find the smaller value.
+	--
+	-- Returns:
+	--   r - the integer value of the smaller of the two inputs.
+	----------------------------------------------------------------------------
+	node MinInt(i1: int, i2: int) returns (r: int);
+	let
+		r = if (i1 < i2) then i1 else i2;
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Bound an integer value within min and max values.
+	--
+	-- Inputs:
+	--   i - the integer value to constrain within the given minimum and maximum
+	--       values.
+	--   min - the lower end of the range within which to constrain the given
+	--       input value.
+	--   max - the upper end of the range within which to constrain the given
+	--       input value.
+	--
+	-- Returns:
+	--   r - the integer value bounded within the range specified by the given
+	--       lower and upper range values.  That is, if the given input value
+	--       is less than the lower range value the result is the lower range
+	--       value.  Or, if the given input value is greated than the upper
+	--       range value the upper range value is returned.  Otherwise (the
+	--       given input is within the given range), the given input is
+	--       returned.
+	----------------------------------------------------------------------------
+	node BoundInt(min: int, max: int, i: int) returns (r: int);
+	let
+		r = MaxInt(min, MinInt(max, i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Find the larger of two real values.
+	--
+	-- Inputs:
+	--   i1, i2 - the two real valuess from which to find the larger value.
+	--
+	-- Returns:
+	--   r - the real value of the larger of the two inputs.
+	----------------------------------------------------------------------------
+	node MaxReal(i1: real, i2: real) returns (r: real);
+	let
+		r = if (i1 < i2) then i2 else i1;
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Find the smaller of two real values.
+	--
+	-- Inputs:
+	--   i1, i2 - the two real values from which to find the smaller value.
+	--
+	-- Returns:
+	--   r - the real value of the smaller of the two inputs.
+	----------------------------------------------------------------------------
+	node MinReal(i1: real, i2: real) returns (r: real);
+	let
+		r = if (i1 < i2) then i1 else i2;
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Bound a real value within min and max values.
+	--
+	-- Inputs:
+	--   i - the real value to constrain within the given minimum and maximum
+	--       values.
+	--   min - the lower end of the range within which to constrain the given
+	--       input value.
+	--   max - the upper end of the range within which to constrain the given
+	--       input value.
+	--
+	-- Returns:
+	--   r - the real value bounded within the range specified by the given
+	--       lower and upper range values.  That is, if the given input value
+	--       is less than the lower range value the result is the lower range
+	--       value.  Or, if the given input value is greated than the upper
+	--       range value the upper range value is returned.  Otherwise (the
+	--       given input is within the given range), the given input is
+	--       returned.
+	----------------------------------------------------------------------------
+	node BoundReal(min: real, max: real, i: real) returns (r: real);
+	let
+		r = MaxReal(min, MinReal(max, i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Convert a boolean value to an integer value.
+	--
+	-- Inputs:
+	--  b - the boolean value to be mapped to an integral value.
+	--
+	-- Returns:
+	--  i - the integral value resulting from mapping the given boolean value
+	--      using the following rule:  if the given input is true the resulting
+	--      integral value is one (1), otherwise zero (0).
+	----------------------------------------------------------------------------
+	node BoolToInt(b: bool) returns (i: int);
+	let
+		i = if b then 1 else 0;
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Detect a rising edge in a boolean stream.
+	--
+	-- Inputs:
+	--   i - the stream to be examined for the presence of a rising edge.
+	--   init - determines whether the rising edge is asserted in the initial
+	--       state.
+	--
+	-- Returns:
+	--   o - True if a rising edge is detected.  That is, the result is true
+	--       where the input signal 'i' is false in the previous state and
+	--       true in the current state.
+	----------------------------------------------------------------------------
+	node RisingEdge(i: bool, init: bool) returns (o: bool);
+	let
+		o = init -> i and (not pre(i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Detect a falling edge in a boolean stream.
+	--
+	-- Inputs:
+	--   i - the stream to be examined for the presence of a falling edge.
+	--   init - determines whether the falling edge is asserted in the initial
+	--       state.
+	--
+	-- Returns:
+	--   o - True if a falling edge is detected.  That is, the result is false
+	--       where the input signal 'i' is true in the previous state and
+	--       false in the current state.
+	----------------------------------------------------------------------------
+	node FallingEdge(i: bool, init: bool) returns (o: bool);
+	let
+		o = init -> (not i) and pre(i);
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Detect an increase in an integer value.
+	--
+	-- Inputs:
+	--   i - the stream to be examined for the presence of an increasing value.
+	--   init - determines whether the result is asserted in the initial state.
+	--
+	-- Returns:
+	--   o - True if an increase in value is detected.  That is, the result is
+	--       true where the input signal 'i' is has greater value in the current
+	--       state than in the previous state.
+	----------------------------------------------------------------------------
+	node IncreasedInt(i: int, init: bool) returns (o: bool);
+	let
+		o = init -> (i > pre(i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Detect a decrease in an integer value.
+	--
+	-- Inputs:
+	--   i - the stream to be examined for the presence of a decreasing value.
+	--   init - determines whether the result is asserted in the initial state.
+	--
+	-- Returns:
+	--   o - True if a decrease in value is detected.  That is, the result is
+	--       true where the input signal 'i' is has lesser value in the current
+	--       state than in the previous state.
+	----------------------------------------------------------------------------
+	node DecreasedInt(i: int, init: bool) returns (o: bool);
+	let
+		o = init -> (i < pre(i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Detect a change in an integer value.
+	--
+	-- Inputs:
+	--   i - the stream to be examined for the presence of a changing value.
+	--   init - determines whether the result is asserted in the initial state.
+	--
+	-- Returns:
+	--   o - True if a change in value is detected.  That is, the result is
+	--       true where the input signal 'i' is has same value in the current
+	--       state than in the previous state.
+	----------------------------------------------------------------------------
+	node ChangedInt(i: int, init: bool) returns (o: bool);
+	let
+		o = init -> (i != pre(i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Compute the change in an integer value.
+	--
+	-- Inputs:
+	--   i - the stream of values to from which to compute the difference in
+	--       value of the current value relative to the previous value.
+	--   init - the initial value to assume for computing the difference in the
+	--       initial state.
+	--
+	-- Returns:
+	--   o - The difference in value between the given value in the current
+	--       state relative to its value in the previous state.
+	----------------------------------------------------------------------------
+	node DeltaInt(i: int, init: int) returns (o: int);
+	let
+		o = i - (init -> pre(i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Detect an increase in a real value.
+	--
+	-- Inputs:
+	--   i - the stream to be examined for the presence of an increasing value.
+	--   init - determines whether the result is asserted in the initial state.
+	--
+	-- Returns:
+	--   o - True if an increase in value is detected.  That is, the result is
+	--       true where the input signal 'i' is has greater value in the current
+	--       state than in the previous state.
+	----------------------------------------------------------------------------
+	node IncreasedReal(i: real, init: bool) returns (o: bool);
+	let
+		o = init -> (i > pre(i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Detect a decrease in a real value.
+	--
+	-- Inputs:
+	--   i - the stream to be examined for the presence of a decreasing value.
+	--   init - determines whether the result is asserted in the initial state.
+	--
+	-- Returns:
+	--   o - True if a decrease in value is detected.  That is, the result is
+	--       true where the input signal 'i' is has lesser value in the current
+	--       state than in the previous state.
+	----------------------------------------------------------------------------
+	node DecreasedReal(i: real, init: bool) returns (o: bool);
+	let
+		o = init -> (i < pre(i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Detect a change in a real value.
+	--
+	-- Inputs:
+	--   i - the stream to be examined for the presence of a changing value.
+	--   init - determines whether the result is asserted in the initial state.
+	--
+	-- Returns:
+	--   o - True if a change in value is detected.  That is, the result is
+	--       true where the input signal 'i' is has same value in the current
+	--       state than in the previous state.
+	----------------------------------------------------------------------------
+	node ChangedReal(i: real, init: bool) returns (o: bool);
+	let
+		o = init -> (i != pre(i));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Compute the change in a real value.
+	--
+	-- Inputs:
+	--   i - the stream of values to from which to compute the difference in
+	--       value of the current value relative to the previous value.
+	--   init - the initial value to assume for computing the difference in the
+	--       initial state.
+	--
+	-- Returns:
+	--   o - The difference in value between the given value in the current
+	--       state relative to its value in the previous state.
+	----------------------------------------------------------------------------
+	node DeltaReal(i: real, init: real) returns (o: real);
+	let
+		o = i - (init -> pre(i));
+	tel;
+
+**};
+end AGREE_Stdlib;

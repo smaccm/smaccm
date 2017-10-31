@@ -215,7 +215,7 @@ public class LinearizationAgreeASTVisitor extends AgreeASTMapVisitor {
 		builder.setClockVar(clockVar);
 		
 		AgreeNode result = builder.build();
-		visitedNodes.put(e, result);
+		visitedNodes.put(e.compInst, result);
 
 		return result;
 	}

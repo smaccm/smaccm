@@ -1,0 +1,75 @@
+## Types{#sec:types}
+
+The following data types have been built into the AGREE language:
+
+**Primitive Types:** real, bool, and int.
+
+**Composite Types:** Record Types (as described in @sec:agree_expressions).
+
+In addition, AGREE reasons about AADL features of the following types
+from the "Base\_Types" package included in the AADL Plugin Resources
+library:
+
+1.  Base\_Types::Boolean
+
+2.  Base\_Types::Integer
+
+    a.  Base\_Types::Integer\_8
+
+    b.  Base\_Types::Integer\_16
+
+    c.  Base\_Types::Integer\_32
+
+    d.  Base\_Types::Integer\_64
+
+    e.  Base\_Types::Unsigned\_8
+
+    f.  Base\_Types::Unsigned\_16
+
+    g.  Base\_Types::Unsigned\_32
+
+    h.  Base\_Types::Unsigned\_64
+
+3.  Base\_Types::Float
+
+    a.  Base\_Types::Float\_32
+
+    b.  Base\_Types::Float\_64
+
+**Note**: Currently all bit-sized integer and unsigned types are
+approximated by unbound integers in AGREE. Similarly, all floating point
+numbers are approximated by rational numbers. More precisely,
+Base\_Types::Boolean is mapped to the AGREE primitive type 'bool,' the
+various sizes of integer and unsigned types in Base\_Types are mapped to
+the AGREE primitive type 'int,' and the floating point types in
+Base\_Types are mapped to the AGREE primitive type 'real.' **This means
+that** **AGREE results are not guaranteed to be sound with respect to
+system implementations** **that use bit-level representations.** We
+expect that future versions of JKind will support bit-level integers, as
+these are widely supported by solvers. On the other hand, floating point
+solvers are currently immature, so it is likely that reals will be used
+for the foreseeable future. If exact floating point behavior (including
+rounding and truncation) are important to your verification problem,
+AGREE may provide incorrect answers.
+
+AGREE reasons about AADL
+Data Implementations like record types. Consider the following example
+from a model of a medical device:
+
+~~~~~
+data Alarm_Outputs
+end Alarm_Outputs;
+
+data implementation Alarm_Outputs.Impl
+    subcomponents
+        Is_Audio_Disabled : data Base_Types::Boolean;
+        Notification_Message : data Base_Types::Integer;
+        Log_Message_ID : data Base_Types::Integer;
+end Alarm_Outputs.Impl;
+~~~~~
+
+One can reference the fields of a variable of type Alarm\_Outputs.Impl
+by placing a dot after the variable:
+
+    Alarm.Is_Audio_Disabled => Alarm.Log_Message_ID > 3;
+

@@ -1,0 +1,349 @@
+## Statements{#sec:statements}
+
+In this section, we present the various types of AGREE statements and
+their uses. **Note:** **Assume Statements (@sec:assume_statements) and Guarantee
+Statements (@sec:guarantee_statements) exclusively live in *component type*s; while
+Assert Statements (@sec:assert_statements) and Lemma Statements (@sec:lemma_statements)
+exclusively live in *component implementation*s.**
+
+### Assume Statements{#sec:assume_statements}
+
+Assume
+statements specify constraints about a component that are assumed to be
+true. An example of an assume statement is:
+
+~~~
+assume "System input domain" : Input < 10;
+~~~
+
+The string "System input domain" is used to identify the assumption when
+performing verification. The expression `Input < 10` expresses the
+condition that is assumed to hold. When verifying a component
+implementation, the component’s assumptions are assumed to be true.
+However, the assumptions of the component implementation’s subcomponents
+must be proved to hold based on the assumptions of the component and the
+guarantees of other subcomponents.
+
+### Guarantee Statements{#sec:guarantee_statements}
+
+Guarantee statements specify constraints that the component maintains as
+long as the assumptions have always held. An example of a guarantee
+statement is:
+
+~~~
+guarantee "System output range" : Output < 50;
+~~~
+
+The string "System output range" is used to identify the guarantee when
+performing verification. The expression `Output < 50` expresses the
+condition that is guaranteed to hold.
+
+When verifying a component implementation, guarantee statements are
+proven by the component assumptions and the guarantees present in
+subcomponent contracts.
+
+### Equation Statements{#sec:equation_statements}
+
+Equation statements can be used to create local variable declarations
+within the body of an AGREE subclause. An example of an equation
+statement is:
+
+~~~
+eq ctr : int = prev(ctr + 1, 0);
+~~~
+
+In this example, we create a variable that counts up from zero.
+Variables defined with equation statements can be thought of as
+''intermediate'' variables or variables that are not meant to be visible
+in the architectural model (unlike component outputs or inputs).
+Equation statements can define variables explicitly by setting the
+equation equal to an expression immediately after it is defined.
+Equation statements can also define variables implicitly by not setting
+them equal to anything, but constraining them with assumption,
+assertion, or guarantee statements. Equation statements can define more
+than one variable at once by writing them in a comma delimited list. One
+might do this to constrain a list of variables to the results of a node
+statement that has multiple return values or to more cleanly list a set
+of implicitly defined variables.
+
+### Property Statements{#sec:property_statements}
+
+Property statements allow specification of named Boolean expressions. An
+example property statement is:
+
+~~~
+property not_system_start_implies_mode_0 =
+not(OP_CMD_IN.System_Start) > (GPCA_SW_OUT.Current_System_Mode = 0);
+~~~
+
+Property statements are syntactic sugar (they are equivalent to defining
+an equation of type **bool**).
+
+### Constant Statements{#sec:constant_statements}
+
+Constant statements allow definition of named constants. An example
+constant statement is:
+
+~~~
+const ADS_MAX_PITCH_DELTA: real = 1.0 ;
+~~~
+
+Identifiers defined by constant statements are used just like equation
+variables.
+
+### Node Definitions{#sec:node_definitions}
+
+Node statements are used to define stateful ''functions'' that might be
+used frequently in a component type or implementation. Nodes can have
+multiple return values. If this is the cause, they must be referenced by
+an equation statement that has multiple arguments. Nodes can also be
+defined in an AADL Package. If so, they can be referenced in any
+expression anywhere in the model. This way one can make a library of
+certain types of nodes that are useful for different tasks.
+
+Node definitions in AGREE allow specification of *stateful* definitions;
+that is, definitions that can maintain internal state. An example node
+for maintaining a generalized counter would be:
+
+~~~
+node Counter(init: int, incr: int, reset: bool)  
+returns (count: int);  
+let  
+    count = if reset then init  
+        else prev(count, init) + incr;  
+tel;
+~~~
+
+In this example, if reset is true, the counter is reset back to the init
+value. Otherwise, it increments by incr. The node maintains state (the
+value of count changes from time step to time step). It is then possible
+to instantiate this node in other expressions. For example:
+
+~~~
+eq x1 : int = Counter(0, 1, prev(x1 = 9, false));
+
+eq x2 : int = Counter(1, prev(x2, 0),false);
+~~~
+
+Given these equations, `x1` is a counter that repeatedly counts up to 9
+then resets to zero, and `x2` computes the Fibonacci series.
+
+An example of a more complex node with multiple nodes, multiple outputs
+and local variables would be a 4-bit adder:
+
+~~~
+node ADD1(a : bool, b : bool, carry_in : bool)
+returns (out : bool, carry_out : bool);
+let
+    out = (a <> b) <> carry\in;
+    carry_out = (a and b) or (a and carry_in) or (b and carry_in);
+tel;
+
+node ADD4 (a0 : bool, a1 : bool, a2 : bool, a3 : bool,
+           b0 : bool, b1 : bool, b2 : bool, b3 : bool)
+returns (s0 : bool, s1 : bool, s2 : bool, s3 : bool, carry_out : bool);
+var c0 : bool;
+    c1 : bool;
+    c2 : bool;
+    c3 : bool;
+let
+    s0,c0 = ADD1(a0, b0, false);
+    s1,c1 = ADD1(a1, b1, c0);
+    s2,c2 = ADD1(a2, b2, c1);
+    s3,c3 = ADD1(a3, b3, c2);
+    carry_out = c3;
+tel;
+~~~
+
+The ADD1 node takes two single bit inputs and a carry input bit and
+computes an output and a carry bit. We can use this to create a four-bit
+adder `ADD4` by "stringing together" four of the one-bit adders. Note that
+all local variables (defined with **var**) and all output variables
+(defined in the **returns** section) must be assigned exactly one time
+within the **let** block.
+
+**Note**: Nodes cannot be recursive or mutually recursive.
+
+### Record Definitions{#sec:record_definitions}
+
+Record definitions are used to define record types. Like a struct type
+in C programming language, a record is a collection of fields, each of
+its own data type. An example record definition is as follows:
+
+~~~
+type foo = struct {a : bool, b : int};
+~~~
+
+### Real-time Patterns{#sec:real_time_patterns}
+
+AGREE also supports the specifications of real-time patterns. These
+patterns were adopted from the Requirements Specification Language
+adopted under the CESAR project. Patterns can be used instead of
+expressions in Assume, Guarantee, or Assert statements. The grammar for
+the patterns that we support is shown below:
+
+~~~~~
+PatternStatement:
+  WheneverStatement
+  | WhenStatement
+  | RealTimeStatement
+  ;
+
+WhenStatement:
+  'when' Expr 'holds' 'during' TimeInterval Expr
+  ('exclusively')? 'occurs' 'during' TimeInterval
+  ;
+
+WheneverStatement:
+  'whenever' Expr 'occurs' Expr
+    ('exclusively')? ('occur' | 'occurs')) 'during' TimeInterval
+  | 'whenever' Expr 'occurs' Expr
+    ('exclusively')? ('holds') 'during' TimeInterval
+  | 'whenever' Expr 'occurs' Expr 'implies' Expr
+    ('exclusively')? 'during' TimeInterval
+  ;
+
+RealTimeStatement:
+  'condition' Expr 'occurs' 'each' Expr ('with' 'jitter' jitter=Expr)?
+  | 'condition' Expr 'occurs' 'sporadic' 'with' 'IAT' Expr
+    ('with' '*jitter*' jitter=Expr)?
+  ;
+
+TimeInterval:
+  '\[ | (' Expr ',' Expr '\] | )')
+  ;
+~~~~~
+
+The expressions in each of the patterns must be an IDExpr (a variable
+without any dots) of Boolean type. Details about the semantics of these
+patterns, how they are implemented, and how they may be used can be
+found in the Final Documentation and Technical Report for the
+Requirements Patterns for Formal Contracts in AADL program.
+
+The time intervals specified by these patterns reference values for a
+reserved variable named “time”. This variable is present in any
+counterexamples or inductive counterexamples that the tool produces.
+Additionally, AGREE contains three special functions that take a single
+IDExpr as an argument and produce a value of type real. These functions
+are:
+
+1.  timeof(id) – returns the the last value of the variable time in
+    which id was true. If id has never been true then the function
+    returns the value -1.0.
+
+2.  timerise(id) – returns the last value of the variable time in which
+    id transitioned to true. If id has never been true then the function
+    returns the value -1.0.
+
+3.  timefall(id) – returns the last value of the variable time in which
+    id transitioned to false. If id has never been false then the
+    function returns the value -1.0.
+
+### Advanced Topic: Assert statements{#sec:assert_statements}
+
+Assert statements allow definition of axioms within the model. Axioms
+are "facts" about the behavior of the system or the environment that are
+added to the model to support proofs. An example assertion is of the
+form:
+
+~~~
+assert (FGS_L.LSO.Valid and FGS_R.LSO.Valid) > FGS_L.LSO.Leader = FGS_R.LSO.Leader;
+~~~
+
+Assertions are sometimes used for *architectural* *patterns* whose
+correctness is established in a separate phase of analysis. The
+assertion above is from a pattern called *leader selection* that ensures
+that one of a set of redundant components is the leader.
+
+Assert statements make unchecked statements about how the component
+behaves. These are also used to reference variables from a subcomponent
+in the component contract. For the purpose of analysis assertions are
+treated just like the system assumptions. However, AGREE never verifies
+that the assertions actually hold. That is to say, the assertions of a
+subcomponent are never proven to hold like subcomponent assumptions.
+Assert statements can refer to equations or features defined in the
+component type. They are often used to refer to subcomponent variables
+in contracts higher up in the model hierarchy.
+
+**Note: Assert statements are assumed to be true and are not validated
+in any way by AGREE. Any use of this statement should be exercised with
+great caution. All assert statements should be examined by a domain
+expert and formal verification expert.**
+
+### Advanced Topic: Lemma Statements{#sec:lemma_statements}
+
+Assert statements are used to introduce lemmas to assist the model
+checker when performing verification. AGREE uses *k-induction over the
+transition relation* to try to prove properties – see Appendix A for a
+high-level description of the procedure. For many systems and
+properties, this works very well and is able to prove interesting
+properties about the system without assistance. However, sometimes a
+property is *true* but not *provable* using this technique. The reason
+that this happens is the property to be proved is too weak to be
+inductively provable. Lemma statements are additional properties that
+are added to an AGREE model in order to *strengthen* the property to be
+proved.
+
+An example lemma would be:
+
+~~~
+lemma "drug flow lemma" :
+    (not drug_flow_stopped) => spo2_never_below_thresh;
+~~~
+
+From the perspective of proof, lemmas behave the same as guarantees;
+they must be proven by AGREE. These are used to help the model checker
+learn facts to improve its ability to prove other properties. However,
+unlike guarantees, lemmas are not made visible when trying to prove
+properties at the next level of abstraction. Subcomponent lemmas are not
+used to prove other subcomponent guarantees or system guarantees.
+
+### Advanced Topic: Linearization Definitions{#sec:linearization_definitions}
+
+The linearization definition provides the declaration of a linear
+approximation of a non-linear expression over segment(s) of its input
+domain, resulting in a new expression that bounds the non-linear
+expression with piecewise linear segment(s). The non-linear expression
+supports a small core of mathematical functions found on a calculator
+(i.e., '+', '-', '\*', '/', '\^') as seen in Figure 14. **Note**: The
+non-linear expression can contain references to only the input variable
+(no other AGREE identifiers). Figure 15 demonstrates a linear
+approximation bounding the output values within the upper and lower
+bounds.
+
+![Bound Non-linear Expression with Piecewise Linear Segments](../../media/image13.png){#fig:linearization_definition}
+
+The following linearization definition example provides the linear
+approximation for the square operation with a real type input over input
+interval between -1.0 and 1.0, and input precision of 0.01.
+
+~~~
+linearization sq (y : real) over [-1.0 .. 1.0] within 0.01 : y^2.0;
+~~~
+
+**Note: Currently linearization definition with single input of real type is supported. **
+
+The following function calls are allowed within the linearization body
+expression:
+
+  ------------------------
+  abs (x : real) : real;
+  acos (x : real) : real;
+  asin (x : real) : real;
+  atan (x : real) : real;
+  cbrt (x : real) : real;
+  cos (x : real) : real;
+  cosh (x : real) : real;
+  exp (x : real) : real;
+  expml (x : real) : real;
+  log (x : real) : real;
+  log10 (x : real) : real;
+  log1p (x : real) : real;
+  signum (x : real) : real;
+  sin (x : real) : real;
+  sinh (x : real) : real;
+  sqrt (x : real) : real;
+  tan (x : real) : real;
+  tanh (x : real) : real;
+  ------------------------
+

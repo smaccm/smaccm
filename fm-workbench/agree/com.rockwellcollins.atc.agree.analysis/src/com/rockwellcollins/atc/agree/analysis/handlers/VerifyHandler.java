@@ -64,6 +64,9 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
+import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
+import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.RenamingVisitor;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
@@ -278,9 +281,11 @@ public abstract class VerifyHandler extends AadlHandler {
 
     private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram, AgreeProgram agreeProgram,
             AnalysisType analysisType) {
-
-        AgreeRenaming renaming = new AgreeRenaming();
-        AgreeLayout layout = new AgreeLayout();
+		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
+				.getRegistry(ExtensionRegistry.AGREE_AUTOMATER_EXT_ID);
+		List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
+		AgreeRenaming renaming = new AgreeRenaming();
+		AgreeLayout layout = new AgreeLayout();
         Node mainNode = null;
         for (Node node : lustreProgram.nodes) {
             if (node.id.equals(lustreProgram.main)) {
@@ -297,6 +302,11 @@ public abstract class VerifyHandler extends AadlHandler {
         RenamingVisitor.addRenamings(lustreProgram, renaming, layout);
         addProperties(renaming, properties, mainNode, agreeProgram);
 
+		for (AgreeAutomater aa : automaters) {
+			renaming = aa.rename(renaming);
+			layout = aa.transformLayout(layout);
+		}
+        
         JKindResult result;
         switch (analysisType) {
         case Consistency:

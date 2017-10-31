@@ -2,26 +2,26 @@ package vChan_demo
 public 
    with Base_Types;
    with Data_Model;
-   with SMACCM_SYS;   
+   with TB_SYS;   
 
 
 
 data vchan_connect_t
 	properties
-		SMACCM_SYS::Is_External => true;
-		SMACCM_SYS::CommPrim_Source_Header => "vmm/vchan_copy.h";
+		TB_SYS::Is_External => true;
+		TB_SYS::CommPrim_Source_Header => "vmm/vchan_copy.h";
 end vchan_connect_t;
 
 data vchan_ctrl_t
 	properties
-		SMACCM_SYS::Is_External => true;
-		SMACCM_SYS::CommPrim_Source_Header => "vmm/vchan_copy.h";
+		TB_SYS::Is_External => true;
+		TB_SYS::CommPrim_Source_Header => "vmm/vchan_copy.h";
 end vchan_ctrl_t;
 
 data vchan_headers_t
 	properties
-		SMACCM_SYS::Is_External => true;
-		SMACCM_SYS::CommPrim_Source_Header => "vmm/vchan_sharemem.h";
+		TB_SYS::Is_External => true;
+		TB_SYS::CommPrim_Source_Header => "vmm/vchan_sharemem.h";
 end vchan_headers_t;
 	
 
@@ -89,13 +89,13 @@ thread vchan_wrapper
 		
 	
 	properties 
-		SMACCM_SYS::Is_External => true; 
+		TB_SYS::Is_External => true; 
 	    Dispatch_Protocol => Sporadic;
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
+	    TB_SYS::Sends_Events_To => "{{}}";
 end vchan_wrapper; 
 
 -- Local AADL thread that talks to proxy  
@@ -112,13 +112,13 @@ thread server
 	properties 
 		Initialize_Entrypoint_Source_Text => "init_vchan";
 	    Dispatch_Protocol => Sporadic;
-	    SMACCM_SYS::Thread_Type => Active ;
+	    TB_SYS::Thread_Type => Active ;
 	    Priority => 10;
 	    Stack_Size => 256 bytes;
 	    Source_Text => ("user_code/vchan-shim.c", "user_code/vchan-shim.h", "user_code/user_server.c");
 	    Compute_Execution_Time => 10 us .. 50 us;
-	    SMACCM_SYS::Sends_Events_To => "{{}}";
-	    SMACCM_SYS::External_Semaphore_List => ("vevent_sem");
+	    TB_SYS::Sends_Events_To => "{{}}";
+	    TB_SYS::External_Semaphore_List => ("vevent_sem");
 end server ; 
 
 
@@ -131,7 +131,7 @@ process implementation proc.Impl
 		s: thread vchan_wrapper;
 		r: thread server;
 		shared: data vchan_headers_t {
-			SMACCM_SYS::Camkes_Owner_Thread => "server";
+			TB_SYS::Camkes_Owner_Thread => "server";
 		};
 	connections
 		conn1: data access shared -> s.buff1;
@@ -147,8 +147,8 @@ system implementation vChan_demo.impl
 	subcomponents
 		tl: process proc.Impl;
 	properties
-		SMACCM_SYS::OS => CAmkES; 
-		SMACCM_SYS::HW => QEMU;
+		TB_SYS::OS => CAmkES; 
+		TB_SYS::HW => QEMU;
 		
 end vChan_demo.impl;
 

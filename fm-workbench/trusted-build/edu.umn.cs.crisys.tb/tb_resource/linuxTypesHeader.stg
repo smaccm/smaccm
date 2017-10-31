@@ -1,0 +1,25 @@
+import "CommonTypesHeader.stg"
+
+osSpecificDefine() ::= "#define  __TB_OS_LINUX__  1"
+
+filePrefix(name, date, path) ::= <<
+#ifndef <datatypesHeaderIfdef(name)>
+#define <datatypesHeaderIfdef(name)>
+
+<DARPALicenseComment()>
+
+<filenameBlockComment(date, path, datatypesblockPurpose(name))>
+
+#include \<stdbool.h>
+#include \<stddef.h>
+#include \<stdint.h>
+#include "tb_linux_support.h"
+
+<osSpecificDefine()>
+
+>>
+
+writeExternal(string) ::= <<
+#include "<string>"
+
+>>

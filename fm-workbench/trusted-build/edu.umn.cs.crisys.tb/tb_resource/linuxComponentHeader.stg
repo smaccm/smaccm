@@ -1,0 +1,18 @@
+import "CommonComponentHeader.stg"
+import "linuxAssemblyHeader.stg"
+
+sharedDataDecl(sharedDataAccessor) ::= <<
+extern <sharedDataAccessor.type.name> *<sharedDataAccessor.name>;
+>>
+
+
+componentGlueCodeHeaderBody(threadImpl) ::= <<
+
+<componentGlueCodeHeaderBodyFunctions(threadImpl)>
+<if(threadImpl.sharedDataAccessorList)>
+// declarations for shared data.
+<threadImpl.sharedDataAccessorList:sharedDataDecl()>
+<endif>
+
+<writeModelMutexes(threadImpl.model, "extern")>
+>>

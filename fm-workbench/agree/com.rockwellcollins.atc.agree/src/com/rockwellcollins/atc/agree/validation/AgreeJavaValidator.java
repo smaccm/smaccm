@@ -934,7 +934,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	            
 	}
 	
-	private boolean isConst(Expr expr){
+	protected boolean isConst(Expr expr){
 	    if (expr instanceof NestedDotID) {
             NestedDotID id = (NestedDotID) expr;
             NamedElement finalId = getFinalNestId(id);
@@ -1348,7 +1348,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private AgreeType getAgreeType(Type type) {
+	protected AgreeType getAgreeType(Type type) {
 		String typeName = null;
 		if (type instanceof PrimType) {
 			typeName = ((PrimType) type).getString();
@@ -2318,7 +2318,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return getAgreeType(getFinalNestId(nestDotIdExpr));
 	}
 
-	private AgreeType getAgreeType(NamedElement namedEl) {
+	protected AgreeType getAgreeType(NamedElement namedEl) {
 		if (namedEl instanceof Property) {
 			Property propVal = (Property) namedEl;
 			PropertyType propType = propVal.getPropertyType();
@@ -2591,7 +2591,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return ERROR;
 	}
 
-	private AgreeType getAgreeType(Expr expr) {
+	protected AgreeType getAgreeType(Expr expr) {
 		if (expr instanceof BinaryExpr) {
 			return getAgreeType((BinaryExpr) expr);
 		} else if (expr instanceof FnCallExpr) {

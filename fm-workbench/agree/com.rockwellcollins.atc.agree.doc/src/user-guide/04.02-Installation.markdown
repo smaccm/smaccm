@@ -1,0 +1,167 @@
+## Installation{#sec:agree_osate_installation}
+
+Installing the AGREE/OSATE Tool Suite consists of four steps, described
+in each of the following sections.
+
+### Install OSATE
+
+Binary releases of the OSATE tool suite for different platforms are
+available at: <http://www.aadl.info/aadl/osate/stable/>. Choose the most
+recent version of OSATE that is appropriate for your platform. For
+example, at the time of writing this document, the most current release
+of OSATE is 2.2.0, available for download from
+<http://www.aadl.info/aadl/osate/stable/2.2.0/products/>. There are two
+binary versions for Windows: osate2-2.2.0--win32.win32.x86.zip and
+[osate2-2.2.0--win32.win32.x86\_64.zip](http://www.aadl.info/aadl/osate/stable/2.2.0/products/osate2-2.2.0--win32.win32.x86_64.zip);
+the first is for 32-bit Windows and the second is for 64-bit Windows.
+
+Once the .zip file is downloaded, all that is required is to unzip it
+into a location in the file system. One candidate location for Windows
+is C:\\apps\\osate, but any location in the file system that is
+write-accessible is fine. After expanding the .zip file, navigate to the
+osate.exe file and double-click it. The splash screen shown in @fig:osate_splash_screen
+should appear, and OSATE should begin loading:
+
+![OSATE Splash Screen](../../media/image15.png){#fig:osate_splash_screen}
+
+If OSATE loads successfully, continue to the next step in the
+installation process. If not, and you are running Windows, the most
+likely culprit involves mismatches between the 32-bit and 64-bit version
+of OSATE and the bit-level of the Windows OS. Please check to see
+whether the version of OSATE matches the bit-level of your version of
+Windows OS. If running Windows 7, this information can be found in the
+System Control Panel as shown below in @fig:windows_version_information. Note that this
+information is also required for downloading the correct version of the
+SMT Solver in the next installation step.
+
+![Windows OS Version and Bit size information](../../media/image16.png){#fig:windows_version_information width="5.780590551181103in" height="3.8055555555555554in"}
+
+### Install the SMT Solver
+
+Either one of the following SMT solvers can be used as the underlying
+symbolic solver invoked by the JKind model checker: Yices from SRI, or
+Z3 from Microsoft, Inc.
+
+To download Yices, navigate to the Yices install page at:
+<http://yices.csl.sri.com/> and download the version of Yices
+appropriate for your platform.
+
+To download Z3, navigate to the z3 install page at:
+<https://github.com/Z3Prover/z3/releases> and download the version of Z3
+appropriate for your platform.
+
+Either tool must be unzipped and placed in a directory somewhere in the
+file system. Then this directory must be added to the system path. For
+directions on how to add directories to your path, please see
+<http://stackoverflow.com/questions/14637979/how-to-permanently-set-path-on-linux>
+for Linux, and see
+<http://architectryan.com/2012/10/02/add-to-the-path-on-mac-os-x-mountain-lion/#.VszAv_krJph>
+for Mac OS. In Linux, you must add the path to your config file, usually
+.bashrc.
+
+To add directories to your system path in Windows, first navigate to the
+System Control Panel and choose the "Advanced system settings" button on
+the left side of the panel. The system properties dialog will appear.
+Choose the "Advanced" tab in the dialog as shown in @fig:system_properties_dialog, then
+click "Environment variables".
+
+![System Properties Dialog Box](../../media/image17.png){#fig:system_properties_dialog width="3.4791666666666665in"
+height="3.578218503937008in"}
+
+The environment variables dialog box is shown in @fig:environment_variables_dialog.
+
+![Environment Variables Dialog Box](../../media/image18.png){#fig:environment_variables_dialog width="3.4270833333333335in" height="3.858772965879265in"}
+
+In order to make the application available to all user accounts choose
+the PATH environment variable in the "System variables" section and
+click "Edit…". This will bring up a text edit box, as seen in @fig:system_variable_edit_dialog.
+If the existing path string in the text edit box does not end with a
+semicolon (‘;’), add a semicolon first, then append the path to the SMT
+solver’s "bin" directory, and click "OK" on the dialogs. The bin
+directory for the Yices tool is underneath the main Yices directory,
+e.g., C:\\Apps\\
+yices-2.4.2-x86\_64-pc-mingw32-static-gmp\\yices-2.4.2\\bin. The bin
+directory for the Z3 tool is underneath the main z3 directory, e.g.,
+C:\\Apps\\z3-4.4.1-x64-win\\z3-4.4.1-x64-win\\bin.
+
+![System Variable Text Edit Box](../../media/image19.png){#fig:system_variable_edit_dialog width="3.4586329833770777in" height="1.5584689413823272in"}
+
+To test whether Yices has been correctly installed on either Windows or
+Linux, open up a command prompt window and type: yices --version. A
+version number for Yices matching the installed version should be
+displayed.
+
+To test whether z3 has been correctly installed on either Windows or
+Linux, open up a command prompt window and type: z3 -version. A version
+number for Z3 matching the installed version should be displayed.
+
+### Install the JKind Model Checker
+
+Download the latest release of jKind at:
+<https://github.com/agacek/jkind/releases> and unzip it into a location
+in the file system. Place the directory containing jkind.jar on your
+path using the same technique that was described for installing yices.
+
+To test whether JKind has been successfully installed, open a new
+command window and type "jkind". You should see something like the
+following:
+
+~~~
+usage: jkind [options] <input>
+-excel generate results in Excel format
+-help print this message
+-induct_cex generate inductive counterexamples
+-interval generalize counterexamples using interval analysis
+-n <arg> maximum depth for bmc and k-induction (default: 200)
+-no_bmc disable bounded model checking
+-no_inv_gen disable invariant generation
+-no_k_induction disable k-induction
+-pdr_max <arg> maximum number of PDR parallel instances (0 to disable PDR)
+-read_advice <arg> read advice from specified file
+-scratch produce files for debugging purposes
+-smooth smooth counterexamples (minimal changes in input values)
+-solver <arg> SMT solver (default: yices, alternatives: cvc4, z3,
+yices2, mathsat, smtinterpol)
+-support find a set of support and reduce invariants used
+-timeout <arg> maximum runtime in seconds (default: 100)
+-version display version information
+-write_advice <arg> write advice to specified file
+-xml generate results in XML format
+-xml_to_stdout generate results in XML format on standard out
+
+C:\apps >
+~~~
+
+### Install AGREE
+
+Download the latest release of AGREE at:
+<https://github.com/smaccm/smaccm/releases> and unzip it into a location
+in the file system. Unzipping the file should create a directory called
+"plugins" containing a set of .jar files. Then start OSATE if haven’t
+already, go to Help-&gt;Installation Details, and in the "Installed
+Software" click on AGREE and uninstall the plugin. After uninstall the
+default AGREE that comes with OSATE, go in to the OSATE/plugins folder
+and delete the three .jar files that start with
+"com.rockwellcollins.atc.agree". Then copy all the .jar files from the
+plugin folder of the AGREE’s latest release into OSATE/plugins folder.
+@fig:osate_plugins_directory shows a screen capture of the OSATE/plugins folder after
+copying the .jar files that come with AGREE release v2.2.0.0.
+
+![OSATE/plugins Directory with .jar Files Replaced](../../media/image20.png){#fig:osate_plugins_directory width="5.260416666666667in" height="3.827290026246719in"}
+
+To test whether AGREE has been correctly installed, start OSATE. If it
+has been correctly installed, an AGREE menu should appear in OSATE, as
+shown in @fig:agree_install_test.
+
+**Note**: If Yices version 2.X.X (e.g., 2.4.2) is used, select "Yices 2"
+in OSATE "Window" menu -&gt; "Preferences" -&gt; "Agree" -&gt;
+"Analysis" -&gt; SMT Solver, as shown in @fig:smt_solver_selection. Users can also
+adjust the timeout and maximum depth for k-induction to use in the
+"Analysis" configuration dialog.
+
+![AGREE Install Test](../../media/image21.png){#fig:agree_install_test width="4.666666666666667in"
+height="3.4925207786526684in"}
+
+![SMT Solver Selection](../../media/image22.png){#fig:smt_solver_selection width="4.916666666666667in"
+height="4.07222987751531in"}
+

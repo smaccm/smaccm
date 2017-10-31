@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<project name="build Eclipse Help" default="build-help">
+
+	<description>
+		Used to transform DocBook XML to Eclipse help output
+	</description>
+
+	<!-- Define base properties -->
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="user_guide.dir" value="${basedir}/src/user-guide" />
+	<property name="user_guide_output.dir" value="${basedir}/src-gen/user-guide" />
+
+	<!-- - target: usage -->
+	<target name="usage" description="Prints help">
+		<echo message="Use -projecthelp to get a list of the available targets." />
+	</target>
+
+	<!-- - target: clean -->
+	<target name="clean" description="Cleans up generated files.">
+		<delete dir="${dev_guide_output.dir}" />
+		<delete dir="${user_guide_output.dir}" />
+	</target>
+
+	<target name="build-help" depends="clean, build_user_guide_eclipse, build_user_guide_pdf, build_user_guide_docx">
+	</target>
+
+	<target name="build_user_guide_eclipse" description="Build the user guide">
+		<mkdir dir="${user_guide_output.dir}" />
+
+		<fileset id="markdown-files" dir="${user_guide.dir}" includes="*.markdown"/>
+		<pathconvert refid="markdown-files" pathsep=" " property="markdown-file-list"/>
+
+		<apply executable="pandoc" dir="${user_guide.dir}" dest="${user_guide_output.dir}" parallel="false">
+			<arg value="-o"/>
+			<targetfile/>
+			<arg value="-s"/>
+			<arg value="--filter"/>
+			<arg value="pandoc-crossref"/>
+			<arg value="-f"/>
+			<arg value="markdown"/>
+			<arg value="-t"/>
+			<arg value="html5"/>
+			<arg value="${user_guide.dir}/00.00-preamble.md"/>
+			<srcfile/>
+
+			<fileset dir="${user_guide.dir}" includes="*.markdown"/>
+			<mapper type="glob"
+				from="*.markdown"
+				to="*.html"/>
+		</apply>
+
+		<exec executable="cp">
+			<arg value="${user_guide.dir}${file.separator}user_guide_toc.xml"/>
+			<arg value="${user_guide_output.dir}${file.separator}user_guide_toc.xml"/>
+		</exec>
+	</target>
+
+	<target name="build_user_guide_pdf" description="Build the user guide PDF">
+		<mkdir dir="../../../documentation/agree/" />
+
+		<fileset id="markdown-files" dir="${user_guide.dir}" includes="*.markdown"/>
+		<pathconvert refid="markdown-files" pathsep=" " property="markdown-file-list"/>
+
+		<exec executable="pandoc" dir="${user_guide.dir}">
+			<arg value="-o"/>
+			<arg value="../../../../../documentation/agree/AGREE Users Guide.pdf"/>
+			<arg value="--toc"/>
+			<arg value="--number-sections"/>
+			<arg value="-s"/>
+			<arg value="--filter"/>
+			<arg value="pandoc-crossref"/>
+			<arg value="-f"/>
+			<arg value="markdown"/>
+			<arg value="--latex-engine=xelatex"/>
+			<arg value="-V"/>
+			<arg value="lof"/>
+			<arg value="-V"/>
+			<arg value="lot"/>
+			<arg value="-V"/>
+			<arg value="documentclass=report"/>
+			<arg value="${user_guide.dir}/00.00-preamble.md"/>
+			<arg line="${markdown-file-list}"/>
+		</exec>
+	</target>
+
+	<target name="build_user_guide_docx" description="Build the user guide DOCX">
+		<mkdir dir="../../../documentation/agree/" />
+
+		<fileset id="markdown-files" dir="${user_guide.dir}" includes="*.markdown"/>
+		<pathconvert refid="markdown-files" pathsep=" " property="markdown-file-list"/>
+
+		<exec executable="pandoc" dir="${user_guide.dir}">
+			<arg value="-o"/>
+			<arg value="../../../../../documentation/agree/AGREE Users Guide.docx"/>
+			<arg value="--toc"/>
+			<arg value="--number-sections"/>
+			<arg value="-s"/>
+			<arg value="--reference-docx=${user_guide.dir}${file.separator}agree_user_guide.dotx"/>
+			<arg value="--filter"/>
+			<arg value="pandoc-crossref"/>
+			<arg value="-f"/>
+			<arg value="markdown"/>
+			<arg value="${user_guide.dir}/00.00-preamble.md"/>
+			<arg value="${user_guide.dir}/00.01-Generated-Doc-Caution.md"/>
+			<arg line="${markdown-file-list}"/>
+		</exec>
+	</target>
+</project>

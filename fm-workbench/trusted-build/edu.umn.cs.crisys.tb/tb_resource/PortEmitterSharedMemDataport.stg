@@ -1,0 +1,181 @@
+import "Common.stg"
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Templates for managing data port interfaces between active threads.
+//
+// Shared memory / mutex implementation
+// 
+// 10/26/2016 MWW
+// 
+///////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// Header templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+writePortWriterPrototype(port) ::= <<
+bool <port.localWriterName>(const <port.type.aadlInputType.name> <port.name>);
+>>
+
+writePortReaderPrototype(port) ::= <<
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>);
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// C File templates
+//
+///////////////////////////////////////////////////////////////////////////
+
+
+componentLocalWriteFunction(port) ::= <<
+
+/************************************************************************
+ *  <port.localWriterName>:
+ * Invoked by local thread.
+ *
+ * This is the function that is invoked to write to a data port.
+ *
+ ************************************************************************/
+
+bool <port.localWriterName>(<port.type.aadlOutputType.name> <port.name>) {
+    <port.lockStmt>
+    <if(port.type.isBaseType)><port.dataExpr> = *<port.name>;
+    <else><camkesInputToValMemcpy(port.type, port.dataExpr, port.name)>
+    <endif>
+    <port.unlockStmt>
+    return true;
+}
+
+>>
+
+componentLocalReadFunction(port) ::= <<
+/************************************************************************
+ *  <port.localReaderName>:
+ * Invoked from local active thread.
+ *
+ * This is the function invoked to read from a data port.
+ *
+ ************************************************************************/
+
+bool <port.localReaderName>(<port.type.aadlOutputType.name> <port.name>) {
+    <port.lockStmt>
+    <if(port.type.isBaseType)><port.type.aadlOutputToVal><port.name> = <port.dataExpr>;
+    <else><valToAadlOutputMemcpy(port.type, port.name, port.dataExpr)>
+    <endif>
+    <port.unlockStmt>
+    return true;
+}
+
+>>
+
+
+componentRemoteWriteFunction(port, name) ::= <<
+
+/************************************************************************
+ *  <name>:
+ * Invoked by local thread to write to remote data port.
+ *
+ ************************************************************************/
+
+bool <name>(const <port.type.aadlOutputType.name> <port.name>) {
+    <port.lockStmt>
+    <if(port.type.isBaseType)><port.dataExpr> = *<port.name>;
+    <else><camkesInputToValMemcpy(port.type, port.dataExpr, port.name)>
+    <endif>
+    <port.unlockStmt>
+    return true;
+}
+
+>>
+
+writeConnectionDecl(connection) ::= <<
+<componentRemoteWriteFunction(connection.destPort, connection.fullyQualifiedName)>
+>>
+
+componentLocalReaderDecl(port) ::= <<
+
+<if(port.isInProc)>
+<port.sharedMemoryDataType> <port.backingStoreVar>;
+<port.sharedMemoryDataType> *<port.readerWriterImplVar> = &<port.backingStoreVar>;
+<else>
+<port.sharedMemoryDataType> *<port.readerWriterImplVar>;
+<endif>
+<componentLocalReadFunction(port)>
+
+>>
+
+writeToRemote(connection) ::= <<
+<connection.fullyQualifiedName>(<connection.sourcePort.name>);
+
+>>
+
+localCallerFunction(srcPort) ::= <<
+/************************************************************************
+ *  <srcPort.localWriterName>:
+ * Invoked from user code in the local thread.
+ *
+ * This is the function invoked by the local thread to make a
+ * call to write to a remote data port.
+ *
+ ************************************************************************/
+
+bool <srcPort.localWriterName>(const <srcPort.type.aadlInputType.name> <srcPort.name>) {
+   <srcPort.connections:writeToRemote()>
+    bool tb_result = true ; 
+    return tb_result;
+}
+>>
+
+componentLocalWriterDecl(port) ::= <<
+
+<port.connections:writeConnectionDecl()>
+<localCallerFunction(port)>
+>>
+
+
+
+///////////////////////////////////////////////////////////////////////////
+//
+// linux OS configuration templates
+//
+// to do (for each port):
+//    declare shared memory (if necessary)
+//    initialize the mutex
+//
+///////////////////////////////////////////////////////////////////////////
+
+portInitializer(port) ::= <<
+{
+    int tb_result;
+    <if(!port.isInProc)>
+    <port.readerWriterImplVar> = (<port.sharedMemoryDataType> *)mmap(
+        NULL, sizeof(<port.sharedMemoryDataType>), PROT_READ | PROT_WRITE,
+        MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    assert((void *)<port.readerWriterImplVar> != MAP_FAILED);
+    tb_interproc_mutex_create(&<port.mutex>);
+    <else>
+    tb_intraproc_mutex_create(&<port.mutex>);
+    <endif>
+}
+>>
+
+portDestructor(port) ::= <<
+{
+    int tb_result;
+    tb_mutex_destroy(&<port.mutex>);
+    <if(!port.isInProc)>
+    tb_result = munmap(<port.readerWriterImplVar>, sizeof(<port.sharedMemoryDataType>));
+    assert(tb_result == 0);
+    <endif>
+}
+>>
+

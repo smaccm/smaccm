@@ -1,0 +1,312 @@
+import "Common.stg"
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations for camkes assembly
+//
+////////////////////////////////////////////////////////////////////////////
+
+
+camkesAssemblyPurpose(sysInstanceName) ::= <<
+This file contains the main CAmkES assembly for the
+AADL system instance rooted at <sysInstanceName>.
+>>
+
+filePrefix(name, date, path) ::= "<stdFilePrefix(date, path, camkesAssemblyPurpose(name))>"
+
+filePostfix(name, path) ::= <<
+>>
+
+createVMInit(vm) ::= <<
+component <vm.vmComponentName> {
+    <vm.vmComponentDefs>
+    VM_INIT_DEF()
+}
+
+>>
+
+constructPeriodicComponent(calendar) ::= <<
+<if(calendar.hasDispatchers)>
+component <calendar.periodicDispatcherComponentName> <calendar.periodicDispatcherInstanceName>;
+<endif>
+>>
+
+
+assemblyThreadImplementationImports(threadImpl) ::= <<
+import "<threadImpl.rootToCamkesComponentFilePath>";
+<threadImpl.portList: {port | <port.camkesAddAssemblyFilePortDeclarations>} >
+
+>>
+
+assemblyThreadComponent(threadImpl) ::= <<
+component <threadImpl.componentName> <threadImpl.componentInstanceName>;
+
+>>
+
+
+assemblyConnectActiveToPassiveThreads(threadImpl, model) ::= <<
+<threadImpl.passiveThreadRegion:connectPassiveToActive(threadImpl, model)>
+>>
+
+
+rpcConnection(connector, cid, from1, from2, to1, to2) ::=
+   "connection <connector> <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+connectRpg(endpointConnection, srcThreadImpl, model) ::= <<
+<rpcConnection(endpointConnection.connector,
+    model.generateConnectionName,
+    srcThreadImpl.componentInstanceName,
+    endpointConnection.requiresEndpoint.name,
+    endpointConnection.providesThreadImplementation.componentInstanceName,
+    endpointConnection.providesEndpoint.name)>
+
+>>
+
+assemblyConnectRpgs(threadImpl, model) ::= <<
+<threadImpl.isRequiresOfConnectionList:connectRpg(threadImpl, model)>
+
+>>
+
+sdaConnection(cid, from1, from2, to1, to2) ::=
+   "connection seL4SharedData <cid> (from <from1>.<from2>, to <to1>.<to2>);"
+
+assemblyConnectAccessor(sharedDataAccessor, otherSda, model) ::= <<
+<sdaConnection(model.generateConnectionName,
+               sharedDataAccessor.owner.componentInstanceName,
+               sharedDataAccessor.name,
+               otherSda.owner.componentInstanceName,
+               otherSda.name)>
+>>
+
+assemblyConnectSharedData(sharedData, model) ::= <<
+<sharedData.nonChosenAccessList:assemblyConnectAccessor(sharedData.chosenAccess, model)>
+>>
+
+assemblySetPriorities(threadImpl) ::= <<
+<if(!threadImpl.isExternal)>
+<threadImpl.componentInstanceName>.priority = <threadImpl.priority>;
+<endif>
+>>
+
+assemblySetStackSize(threadImpl) ::= <<
+<if(!threadImpl.isExternal)>
+<threadImpl.componentInstanceName>._control_stack_size = <threadImpl.osSpecificStackSize>;
+<endif>
+>>
+
+assemblySetSchedulingContext(threadImpl) ::= <<
+// MWW: todo: set scheduling contexts for interfaces for thread <threadImpl.componentInstanceName>.
+
+>>
+
+assemblySetTiming(threadImpl) ::= <<
+<threadImpl.componentInstanceName>._period = <threadImpl.periodInMicroseconds>;
+<threadImpl.componentInstanceName>._budget = <threadImpl.maxExecutionTimeInMicroseconds>;
+
+>>
+
+
+configActiveToPassiveDataportId(passiveThreadImpl, activeThreadImpl, model) ::= <<
+<if(passiveThreadImpl.containsDispatchers)><\\>
+<activeThreadImpl.componentInstanceName>.<passiveThreadImpl.componentInstanceName>_attributes = "<model.generateCamkesDataportRpcMinIndex>";
+<endif>
+>>
+
+configActiveToPassiveRegionDataportId(threadImpl, model) ::= <<
+<threadImpl.passiveThreadRegion:configActiveToPassiveDataportId(threadImpl, model)>
+
+>>
+
+configConnectTimeServices(threadImpl, model) ::= <<
+<if(threadImpl.requiresTimeServices)>
+<threadImpl.componentInstanceName>.tb_timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
+<threadImpl.componentInstanceName>.tb_timer_global_endpoint = "<threadImpl.timeServicesConnectionName>";
+<! <threadImpl.componentInstanceName>.tb_timer_complete_global_endpoint = "<threadImpl.timeServicesConnectionName>"; !>
+<endif>
+>>
+
+portDeclarations(threadImpl) ::= <<
+<threadImpl.portList:{port | <port.camkesAddAssemblyFileCompositionPortDeclarations>
+}>
+>>
+
+portConnections(threadImpl) ::= <<
+<threadImpl.portList:{port | <port.camkesAddAssemblyFileCompositionPortConnections>
+}>
+>>
+
+configurePorts(threadImpl) ::= <<
+<threadImpl.portList:{port | <port.camkesAddAssemblyFileConfigDeclarations>
+}>
+>>
+
+composeVms(model) ::= <<
+<model.virtualMachineList: {vm |
+VM_PER_VM_COMP_DEF(<vm.vmNumber>)
+<vm.perVmConnections>
+}>
+
+>>
+
+configVms(model) ::= <<
+<model.virtualMachineList: {vm |
+<vm.perVmConfigDefs>
+
+}>
+
+>>
+
+camkesAssemblyBody(model) ::= <<
+<if(model.isx86Target && model.useVmBuild)>
+import \<VM/vm.camkes>;
+<endif>
+import \<std_connector.camkes>;
+
+#include \<autoconf.h>
+#define TB_MONITOR_READ_ACCESS 111
+#define TB_MONITOR_WRITE_ACCESS 222
+
+<if(model.containsVM)>
+#include \<configurations/vm.h>
+<endif>
+<if(model.threadCalendar.hasDispatchers)>
+import "<model.threadCalendar.periodicDispatcherPathName>";
+import \<Timer.idl4>;
+<if(!model.externalTimerComponent)>
+<if(model.isQemuTarget)>
+import \<TimeServerKZM/TimeServer.camkes>;
+<elseif(model.isOdroidTarget)>
+import \<TimeServerOdroid/TimeServer.camkes>
+<elseif(model.isTK1Target)>
+import \<TimeServerTK1/TimeServer.camkes>;
+<elseif(model.isx86Target)>
+<if(model.useVmBuild)>
+// MWW: import \<TimeServer/TimeServer.camkes> included in VM import;
+<else>
+import \<VM/PIT.camkes>;
+import \<TimeServer/TimeServer.camkes>;
+<endif>
+<else>
+// TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU and ODROID time server.
+<endif>
+<else>
+// TODO: MWW: not sure what (if anything) needs to be imported for external timer component.
+<endif>
+<endif>
+
+<model.portListEmitterAssemblyIdlImports>
+
+<model.threadImplementations:assemblyThreadImplementationImports()>
+
+<\\>
+
+// 12/12 MWW modified for CaMKes-next
+connector seL4RPCCallDataport {
+    from Procedure template "seL4RPCCallDataport-from.template.c";
+    to Procedure template "seL4RPCCallDataport-to.template.c";
+}
+
+<if(model.containsVM)>
+<model.virtualMachineList:createVMInit()>
+<endif>
+
+assembly {
+    composition {
+        <if(model.containsVM)>
+        VM_COMPOSITION_DEF()
+        <composeVms(model)>
+        <endif>
+
+        <constructPeriodicComponent(model.threadCalendar)><\\>
+
+        <if(model.threadCalendar.hasDispatchers && !model.externalTimerComponent)>
+        <if(model.isQemuTarget)>
+        component TimeServerKZM time_server;
+        <elseif(model.isOdroidTarget)>
+        component TimeServerOdroid time_server;
+        <elseif(model.isTK1Target)>
+        component TimeServerTK1 time_server;
+        <elseif(model.isx86Target)>
+        <if(!model.containsVM)>
+        component TimeServer time_server;
+        component PIT pit;
+        connection seL4HardwareIOPort pit_command(from time_server.pit_command, to pit.command);
+        connection seL4HardwareIOPort pit_channel0(from time_server.pit_channel0, to pit.channel0);
+        connection seL4HardwareInterrupt pit_irq(from pit.irq, to time_server.irq);
+        <endif>
+        <else>
+        // MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
+        <endif>
+        <endif>
+
+        <commentIf("Component instances for all AADL-defined threads",
+                   (model.threadImplementations:assemblyThreadComponent()))><\\>
+
+        <commentIf("Port declarations for active threads",
+                   (model.activeThreadImplementations:portDeclarations()))><\\>
+                   
+        <commentIf("Port connections for active threads",
+                   (model.activeThreadImplementations:portConnections()))><\\>
+                   
+        <commentIf("Direct RPC connections",
+                   (model.threadImplementations:assemblyConnectRpgs(model)))><\\>
+
+        <commentIf("Shared memory connections",
+                   (model.sharedData:assemblyConnectSharedData(model)))>
+
+        <if(model.threadCalendar.hasDispatchers)>
+        <if(!model.externalTimerComponent)>
+        connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to time_server.the_timer);
+        connection seL4GlobalAsynchCallback echo_int(from time_server.timer_notification, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
+        <else>
+        connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to <model.camkesExternalTimerInterfacePath>);
+        connection seL4GlobalAsynchCallback echo_int(from <model.camkesExternalTimerCompletePath>, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
+        <endif>
+        <endif>
+    }
+
+    configuration {
+        <if(model.containsVM)>
+        VM_CONFIGURATION_DEF()
+        <configVms(model)>
+        <endif>
+        <if(model.threadCalendar.hasDispatchers)>
+        <if(model.isx86Target && !model.containsVM && !model.externalTimerComponent)>
+        time_server.putchar_attributes = "0";
+        time_server.timers_per_client = 9;
+        time_server.heap_size = 8192;
+        pit.command_attributes = "0x43:0x43";
+        pit.channel0_attributes = "0x40:0x40";
+        pit.irq_irq_type = "isa";
+        pit.irq_irq_ioapic = 0;
+        pit.irq_irq_ioapic_pin = 2;
+        pit.irq_irq_vector = 2;
+        pit.heap_size = 0;
+        time_server.priority = 254;
+        <endif>
+        <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
+        <model.threadCalendar.periodicDispatcherInstanceName>.timer_global_endpoint = "periodic_dispatcher_timer";
+        <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete_global_endpoint = "periodic_dispatcher_timer";
+        <model.threadCalendar.periodicDispatcherInstanceName>.priority = 201;
+        <endif>
+        
+        
+        <commentIf("Component port configuration declarations",
+                   (model.threadImplementations:configurePorts()))><\\>
+        
+        <model.threadImplementations:assemblySetPriorities()>
+        <model.threadImplementations:assemblySetStackSize()>
+        <if(model.useOSRealTimeExtensions)>
+        <model.threadImplementations:assemblySetSchedulingContext()>
+        <model.activeThreadImplementations:assemblySetTiming()>
+        <endif>
+        <model.threadImplementations:configConnectTimeServices(model)>
+        <model.activeThreadImplementations:configActiveToPassiveRegionDataportId(model)>
+        
+        //ADDITIONAL_CONFIGS
+    }
+}
+
+
+>>
+

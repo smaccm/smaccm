@@ -1,0 +1,48 @@
+import "Common.stg"
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+// Declarations related to .idl4 files for dispatch interfaces
+//
+////////////////////////////////////////////////////////////////////////////
+
+
+dispatchInterfaceIdlPurpose(componentName) ::= <<
+This .idl4 file contains the dispatcher interface used for dispatching
+the thread implementation <componentName>.
+>>
+
+filePrefix(name, date, path) ::= "<stdFilePrefix(date, path, dispatchInterfaceIdlPurpose(name))>"
+
+filePostfix(name, path) ::= <<
+>>
+
+dispatcher(dispatcher) ::= <<
+<if(dispatcher.hasData)>
+void <dispatcher.idlDispatcherName>(<[{refin <dispatcher.type.camkesName> tb_in},
+      {    out <dispatcher.dispatchStructTypeName> tb_out}]; separator=",\n">);
+<else>
+void <dispatcher.idlDispatcherName>(out <dispatcher.dispatchStructTypeName> tb_out);
+<endif>
+>>
+
+dispatcherProc(threadImpl, datatypesHeader) ::= <<
+
+procedure <threadImpl.idlName> {
+    include \<<datatypesHeader>\>;
+    
+    <threadImpl.dispatchers:dispatcher(); separator="\n"><\\>
+}
+
+>>
+
+
+//dispatcherInputArg(arg) ::= "refin <arg.type> <arg.name>"
+//
+//
+//dispatcherDeclaration(dispatcher, arg) ::= << void <dispatcher.idlDispatcherName>(<arg; separator=",\n   ">) >>
+//
+//dispatcherPrototype(dispatcher, arg) ::= <<
+//<dispatcherDeclaration(dispatcher, arg)>;
+//>>

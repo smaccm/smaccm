@@ -1,0 +1,168 @@
+package AGREE_PLTL
+public
+annex agree {**
+	----------------------------------------------------------------------------
+	-- The Proposition Linear Temporal Logic (PLTL) AGREE library collects the
+	-- canonical PLTL operators as AGREE nodes.  Since AGREE has Lustre-like
+	-- semantics including direct access to temporal state operations 'followed
+	-- by' ('->') and 'previous value' ('pre'), the PLTL operators 'Y' and 'Z'
+	-- have been omitted.  These appear in comment form below.
+	----------------------------------------------------------------------------
+	
+	----------------------------------------------------------------------------
+	-- Check whether a condition was true in the previous instant.
+	--
+	-- Note: 'Yesterday' is the DeMorgan dual of 'Zyesterday' and is related
+	-- by the identity Yesterday(i) = not Zyesterday(not i).
+	--
+	-- Inputs:
+	--   i - the stream to be examined for truth in the previous time instant.
+	--
+	-- Returns:
+	--   o - True if not the initial state and the input was true at the
+	--       previous state.  Otherwise, false.
+	----------------------------------------------------------------------------
+--	node Yesterday(i: bool) returns (o: bool);
+--	let
+--		o = false -> pre(i);
+--	tel;
+
+	----------------------------------------------------------------------------
+	-- Check whether a condition was true in the previous instant.
+	--
+	-- Note: 'Zyesterday' is the DeMorgan dual of 'Yesterday' and is related
+	-- by the identity Zyesterday(i) = not Yesterday(not i).
+	--
+	-- Inputs:
+	--   i - the stream to be examined for truth in the previous time instant.
+	--
+	-- Returns:
+	--   o - True if the initial state or the input was true at the previous
+	--       state.  Otherwise, false.
+	----------------------------------------------------------------------------
+--	node Zyesterday(i: bool) returns (o: bool);
+--	let
+--		o = true -> pre(i);
+--	tel;
+
+	----------------------------------------------------------------------------
+	-- Check whether a condition has been true over the history of the analysis.
+	--
+	-- Note: 'Historically' is the DeMorgan dual of 'Once' and is related
+	-- by the identity Historically(i) = not Once(not i).
+	--
+	-- Inputs:
+	--   i - the stream to be examined for consistent true value over the
+	--       history.
+	--
+	-- Returns:
+	--   o - True if the input has been true at the initial state and for all
+	--       subsequent states up to the current state.  Otherwise, false.
+	----------------------------------------------------------------------------
+	node Historically(i: bool) returns (o: bool);
+	let
+		o = i and (true -> pre(o));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Check whether a condition has ever been true over the history of the
+	-- analysis.
+	--
+	-- Note: 'Once' is the DeMorgan dual of 'Historically' and is related
+	-- by the identity Once(i) = not Historically(not i).
+	--
+	-- Inputs:
+	--   i - the stream to be examined for consistent true value over the
+	--       history.
+	--
+	-- Returns:
+	--   o - True if the input has been true in at least one state (including
+	--       the initial state) up to the current state.  Otherwise, false.
+	----------------------------------------------------------------------------
+	node Once(i: bool) returns (o: bool);
+	let
+		o = i or (false -> pre(o));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Check whether a condition has ever been consistently true since a another
+	-- condition became true.
+	--
+	-- The 'Since' operator allows resetting of the state.  That is, if input
+	-- 'a' becomes false after input 'b' became true, the output will again
+	-- be made true if input 'b' again becomes true.  More precisely, the output
+	-- is true if and only if the input 'a' has been true in all states since
+	-- since input 'b' most recently became false.
+	--
+	-- Note: 'Since' is the DeMorgan dual of 'Trigger' and is related
+	-- by the identity Since(a, b) = not Trigger(not a, not b).
+	--
+	-- Inputs:
+	--   a - the stream to be examined for consistent truth after the condition
+	--       'b' became true.
+	--   b - the stream after which it first becomes true that stream 'a' is
+	--       examined for truth.
+	--
+	-- Returns:
+	--   o - True if the input 'b' has been true in at least one state in the
+	--       past and input 'a' has been consistently true in all states
+	--       subsequent to the state in which 'b' became true.  Otherwise,
+	--       false.
+	----------------------------------------------------------------------------
+	node Since(a : bool, b: bool) returns (o: bool);
+	let
+		o = b or (a and (false -> pre(o)));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Check whether a condition has ever been consistently true since the
+	-- initial state or another condition was true.
+	--
+	-- The 'Trigger' operator allows resetting of the state.  That is, if input
+	-- 'b' becomes false after input 'a' became false, the output will again
+	-- be made true if input 'b' again becomes true.  More precisely, the output
+	-- is true if and only if the input 'b' has been true in all states since
+	-- since input 'a' most recently became true.
+	--
+	-- Note: 'Trigger' is the DeMorgan dual of 'Since' and is related
+	-- by the identity Trigger(a, b) = not Since(not a, not b).
+	--
+	-- Inputs:
+	--   a - the stream after which it first becomes true that stream 'b' is
+	--       examined for truth.
+	--   b - the stream to be examined for consistent truth after the initial
+	--       state or condition 'b' became true.
+	--
+	-- Returns:
+	--   o - True if the input 'b' is consistently true starting from the initial
+	--       state or at any state where input 'a' was true.  Otherwise false.
+	----------------------------------------------------------------------------
+	node Trigger(a : bool, b: bool) returns (o: bool);
+	let
+		o = b and (a or (true -> pre(o)));
+	tel;
+
+	----------------------------------------------------------------------------
+	-- Check that in input is true for all states prior to another input
+	-- becoming true.
+	--
+	-- Note: 'Until' is weak in the sense that it may never be true.  That is,
+	-- input 'b' does not ever have to become true.
+	--
+	-- Inputs:
+	--   a - the stream which must be consistently true in all states prior to
+	--       input 'b' becoming true.
+	--   b - the stream to be which once it becomes true, the state of input 'a'
+	--       no longer needs to be consistently true.
+	--
+	-- Returns:
+	--   o - True if and only if input 'a' has been true in all states prior to
+	--       input 'b' becoming true.  Otherwise, false. 
+	----------------------------------------------------------------------------
+	node WeakUntil(a : bool, b: bool) returns (o: bool);
+	let
+		o = Historically(a) or Once(b);
+	tel;
+
+**};
+end AGREE_PLTL;
