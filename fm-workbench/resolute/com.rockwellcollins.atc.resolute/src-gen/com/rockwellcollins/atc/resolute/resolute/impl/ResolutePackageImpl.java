@@ -384,6 +384,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     isInited = true;
 
     // Initialize simple dependencies
+    EcorePackage.eINSTANCE.eClass();
     Aadl2Package.eINSTANCE.eClass();
 
     // Create package meta-data objects
