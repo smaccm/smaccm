@@ -1,9 +1,14 @@
 ## Statements{#sec:statements}
 
 In this section, we present the various types of AGREE statements and
-their uses. **Note:** **Assume Statements (@sec:assume_statements) and Guarantee
-Statements (@sec:guarantee_statements) exclusively live in *component type*s; while
-Assert Statements (@sec:assert_statements) and Lemma Statements (@sec:lemma_statements)
+their uses. **Note:** **Assume Statements
+([Assume Statements](#sec:assume_statements))
+and Guarantee Statements
+([Guarantee Statements](#sec:guarantee_statements))
+exclusively live in *component type*s; while Assert Statements
+([Assert Statements](#sec:assert_statements))
+and Lemma Statements
+([Lemma Statements](#sec:lemma_statements))
 exclusively live in *component implementation*s.**
 
 ### Assume Statements{#sec:assume_statements}

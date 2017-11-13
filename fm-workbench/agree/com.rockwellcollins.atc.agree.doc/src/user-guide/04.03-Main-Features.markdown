@@ -125,7 +125,8 @@ component contracts.
 **Note 2**: Component contracts at the lowest level of the architecture
 are assumed to be true by AGREE. Verification of these component
 contracts must be performed outside of the AADL/AGREE environment, as
-demonstrated in @sec:agree_to_simulink_exporter.
+demonstrated in
+[AGREE to Simulink Exporter](#sec:agree_to_simulink_exporter).
 
 When the verification starts, a results view appears at the bottom of
 the screen with the status of all the contracts being checked. Results

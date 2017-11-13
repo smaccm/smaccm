@@ -34,7 +34,11 @@ individually; AGREE attempts to prove the system-level guarantees in
 terms of the guarantees of its components. This guide explains the
 syntax of AGREE and how to use the AGREE plugin for OSATE/Eclipse.
 
-This document is organized as follows: @sec:aadl_agree_overview provides a brief
-overview of AADL and AGREE through a small example. @sec:agree_language describes
-the syntax of the AGREE language. @sec:agree_osate_tool_suite describes the installation
-information and main features of the AGREE tool suite.
+This document is organized as follows:
+[Brief Overview of AADL and AGREE](02.00-Brief-Overview-of-AADL-and-AGREE.html#sec:aadl_agree_overview)
+provides a brief overview of AADL and AGREE through a small example.
+[AGREE Language](03.00-AGREE-Language.html#sec:agree_language)
+describes the syntax of the AGREE language.
+[AGREE OSATE Tool Suite](04.00-AGREE-OSATE-Tool-Suite.html#sec:agree_osate_tool_suite)
+describes the installation information and main features of the AGREE
+tool suite.
