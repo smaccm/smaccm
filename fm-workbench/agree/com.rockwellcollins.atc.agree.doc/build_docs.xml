@@ -68,8 +68,6 @@
 			<arg value="--number-sections"/>
 			<arg value="-s"/>
 			<arg value="--filter"/>
-			<arg value="${basedir}/link-to-ref.py"/>
-			<arg value="--filter"/>
 			<arg value="pandoc-crossref"/>
 			<arg value="-f"/>
 			<arg value="markdown"/>

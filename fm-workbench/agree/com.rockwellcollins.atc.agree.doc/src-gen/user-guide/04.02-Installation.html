@@ -16,7 +16,7 @@
 </header>
 <h2 id="sec:agree_osate_installation">Installation</h2>
 <p>Installing the AGREE/OSATE Tool Suite consists of four steps, described in each of the following sections.</p>
-<h3 id="sec:install-osate">Install OSATE</h3>
+<h3 id="install-osate">Install OSATE</h3>
 <p>Binary releases of the OSATE tool suite for different platforms are available at: <a href="http://www.aadl.info/aadl/osate/stable/" class="uri">http://www.aadl.info/aadl/osate/stable/</a>. Choose the most recent version of OSATE that is appropriate for your platform. For example, at the time of writing this document, the most current release of OSATE is 2.2.0, available for download from <a href="http://www.aadl.info/aadl/osate/stable/2.2.0/products/" class="uri">http://www.aadl.info/aadl/osate/stable/2.2.0/products/</a>. There are two binary versions for Windows: osate2-2.2.0--win32.win32.x86.zip and <a href="http://www.aadl.info/aadl/osate/stable/2.2.0/products/osate2-2.2.0--win32.win32.x86_64.zip">osate2-2.2.0--win32.win32.x86_64.zip</a>; the first is for 32-bit Windows and the second is for 64-bit Windows.</p>
 <p>Once the .zip file is downloaded, all that is required is to unzip it into a location in the file system. One candidate location for Windows is C:\apps\osate, but any location in the file system that is write-accessible is fine. After expanding the .zip file, navigate to the osate.exe file and double-click it. The splash screen shown in Figure <a href="#fig:osate_splash_screen">1</a> should appear, and OSATE should begin loading:</p>
 <figure>
@@ -26,7 +26,7 @@
 <figure>
 <img src="../../media/image16.png" alt="Figure 2: Windows OS Version and Bit size information" id="fig:windows_version_information" width="554" height="365" /><figcaption>Figure 2: Windows OS Version and Bit size information</figcaption>
 </figure>
-<h3 id="sec:install-the-smt-solver">Install the SMT Solver</h3>
+<h3 id="install-the-smt-solver">Install the SMT Solver</h3>
 <p>Either one of the following SMT solvers can be used as the underlying symbolic solver invoked by the JKind model checker: Yices from SRI, or Z3 from Microsoft, Inc.</p>
 <p>To download Yices, navigate to the Yices install page at: <a href="http://yices.csl.sri.com/" class="uri">http://yices.csl.sri.com/</a> and download the version of Yices appropriate for your platform.</p>
 <p>To download Z3, navigate to the z3 install page at: <a href="https://github.com/Z3Prover/z3/releases" class="uri">https://github.com/Z3Prover/z3/releases</a> and download the version of Z3 appropriate for your platform.</p>
@@ -45,7 +45,7 @@
 </figure>
 <p>To test whether Yices has been correctly installed on either Windows or Linux, open up a command prompt window and type: yices --version. A version number for Yices matching the installed version should be displayed.</p>
 <p>To test whether z3 has been correctly installed on either Windows or Linux, open up a command prompt window and type: z3 -version. A version number for Z3 matching the installed version should be displayed.</p>
-<h3 id="sec:install-the-jkind-model-checker">Install the JKind Model Checker</h3>
+<h3 id="install-the-jkind-model-checker">Install the JKind Model Checker</h3>
 <p>Download the latest release of jKind at: <a href="https://github.com/agacek/jkind/releases" class="uri">https://github.com/agacek/jkind/releases</a> and unzip it into a location in the file system. Place the directory containing jkind.jar on your path using the same technique that was described for installing yices.</p>
 <p>To test whether JKind has been successfully installed, open a new command window and type &quot;jkind&quot;. You should see something like the following:</p>
 <pre><code>usage: jkind [options] &lt;input&gt;
@@ -71,7 +71,7 @@ yices2, mathsat, smtinterpol)
 -xml_to_stdout generate results in XML format on standard out
 
 C:\apps &gt;</code></pre>
-<h3 id="sec:install-agree">Install AGREE</h3>
+<h3 id="install-agree">Install AGREE</h3>
 <p>Download the latest release of AGREE at: <a href="https://github.com/smaccm/smaccm/releases" class="uri">https://github.com/smaccm/smaccm/releases</a> and unzip it into a location in the file system. Unzipping the file should create a directory called &quot;plugins&quot; containing a set of .jar files. Then start OSATE if haven’t already, go to Help-&gt;Installation Details, and in the &quot;Installed Software&quot; click on AGREE and uninstall the plugin. After uninstall the default AGREE that comes with OSATE, go in to the OSATE/plugins folder and delete the three .jar files that start with &quot;com.rockwellcollins.atc.agree&quot;. Then copy all the .jar files from the plugin folder of the AGREE’s latest release into OSATE/plugins folder. Figure <a href="#fig:osate_plugins_directory">6</a> shows a screen capture of the OSATE/plugins folder after copying the .jar files that come with AGREE release v2.2.0.0.</p>
 <figure>
 <img src="../../media/image20.png" alt="Figure 6: OSATE/plugins Directory with .jar Files Replaced" id="fig:osate_plugins_directory" width="505" height="367" /><figcaption>Figure 6: OSATE/plugins Directory with .jar Files Replaced</figcaption>

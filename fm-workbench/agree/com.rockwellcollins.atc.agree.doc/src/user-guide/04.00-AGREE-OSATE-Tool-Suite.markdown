@@ -4,6 +4,3 @@ In this chapter we present an overview of the AGREE/OSATE tool suite,
 followed by installation instructions for the tool suite, and a
 description of the main features of the tool suite.
 
-* [Tool Suite Overview](04.01-Tool-Suite-Overview.html#sec:tool_suite_overview)
-* [Installation](04.02-Installation.html#sec:agree_osate_installation)
-* [Main Features](04.03-Main-Features.html#sec:agree_osate_main_features)

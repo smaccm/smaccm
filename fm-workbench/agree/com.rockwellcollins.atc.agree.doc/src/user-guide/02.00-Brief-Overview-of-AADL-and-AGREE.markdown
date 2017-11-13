@@ -99,8 +99,7 @@ which contains subcomponents `A`, `B`, and `C`. We instantiate these
 subcomponents (using `A_sub`, `B_sub`, and `C_sub`) and then describe how
 they are connected together. In the connections section, we must
 describe whether each connection is *immediate* or *delayed.* We will
-explain more about timing and connection delays in
-[AGREE Language](03.00-AGREE-Language.html#sec:agree_language).
+explain more about timing and connection delays in @sec:agree_language.
 Intuitively, if a connection is *immediate,* then an output from the
 source component is *immediately* available to the input of the
 destination component (i.e., in the same frame). If they are *delayed*,

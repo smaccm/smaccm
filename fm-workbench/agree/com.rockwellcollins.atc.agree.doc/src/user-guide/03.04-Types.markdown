@@ -4,7 +4,7 @@ The following data types have been built into the AGREE language:
 
 **Primitive Types:** real, bool, and int.
 
-**Composite Types:** Record Types (as described in [Expressions](03.07-Expressions.html#sec:expressions)).
+**Composite Types:** Record Types (as described in @sec:agree_expressions).
 
 In addition, AGREE reasons about AADL features of the following types
 from the "Base\_Types" package included in the AADL Plugin Resources

@@ -1,4 +1,4 @@
-Expressions{#sec:expressions}
+Expressions
 -----------
 
 A simplified description of the set of expressions for AGREE is
@@ -105,10 +105,9 @@ A Linearization Call Expression is an ID of a defined linearization
 expression followed by parenthesis. If the linearization expression is
 defined in an AADL Package, then the ID should be the AADL Package name
 followed by a dot (.) and then the ID for the expression. For the
-example linearization expression provided in
-[Linearization Definitions](03.06-Statements.html#sec:linearization_definitions),
-its ID "sq" can be used in other expressions like a non-recursive, pure
-function call. The following lemma statement provides one such example.
+example linearization expression provided in section 3.6.11, its ID "sq"
+can be used in other expressions like a non-recursive, pure function
+call. The following lemma statement provides one such example.
 
 ~~~
 eq y : real;
@@ -234,7 +233,7 @@ A Not Expression is used to negate boolean valued expressions
 ### Record Update Expressions
 
 Record Update Expression are assignments to all or a specific field of a
-record type variable. For example, `foo {a := true; b := 1}` and
+record type variable. For example, `foo {a = true; b = 1}` and
 `bar {a := true}` are valid Record Update Expressions, given
 definition for type `foo` and variable `bar` as follows:
 

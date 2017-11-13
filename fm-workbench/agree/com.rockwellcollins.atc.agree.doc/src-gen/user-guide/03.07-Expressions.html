@@ -14,7 +14,7 @@
 <header>
 <h1 class="title">AGREE User Guide</h1>
 </header>
-<h2 id="sec:expressions">Expressions</h2>
+<h2 id="expressions">Expressions</h2>
 <p>A simplified description of the set of expressions for AGREE is presented below.</p>
 <pre><code>RelateOp::=
    &#39;&lt;&#39; | &#39;&lt;=&#39; | &#39;&gt;&#39; | &#39;&gt;=&#39; | &#39;=&#39; | &#39;&lt;&gt;&#39; | &#39;!=&#39;;
@@ -67,18 +67,18 @@ ID | QID | NestedDotID | Literal | pre | this | ()</p>
 <p>The meaning of the arithmetic, relational, and Boolean operators is straightforward. If/then/else is an <em>expression,</em> not a <em>statement</em>; it behaves like the <code>?</code> operator in Java. So, users can write:</p>
 <pre><code>x = if (b) then y else z ;</code></pre>
 <p>Expressions reason about the current state or past states of variables and can reference variables defined in equation statements or other identifiers in the AADL model. In the rest of this section, we describe different types of expressions in the order they are listed as alternatives to the grammar rule for Expr.</p>
-<h3 id="sec:id-expressions">ID Expressions</h3>
+<h3 id="id-expressions">ID Expressions</h3>
 <p>ID expressions are used to reference different AADL objects as well as AGREE variables and constants. Constants or variables must be defined locally (in the AGREE annex block or the enclosing definition), and they can be referred to by a single identifier ID.</p>
-<h3 id="sec:nesteddotid-field-expressions">NestedDotID (Field) Expressions</h3>
+<h3 id="nesteddotid-field-expressions">NestedDotID (Field) Expressions</h3>
 <p>A NestedDotID expression can have dots in between ID expressions, e.g., <code>food.bar.biz</code>. It can be used to refer to record types or variables of a subcomponent. For example, one could use the NestedDotID expression foo.bar to reference the input, output, or equation variable <code>bar</code> of subcomponent <code>foo</code> within the implementation of some AADL component. A NestedDotID expression can also be used for inputs and outputs that are of record type: if <code>x</code> is a record type containing field <code>y</code>, then the notation <code>x.y</code> is used.</p>
-<h3 id="sec:node-call-expressions">Node Call Expressions</h3>
+<h3 id="node-call-expressions">Node Call Expressions</h3>
 <p>A node call expression is an ID of a defined node followed by parenthesis. If the node is defined in an AADL Package, then the ID should be the AADL Package name followed by a dot (.) and then the node name.</p>
-<h3 id="sec:linearization-call-expressions">Linearization Call Expressions</h3>
-<p>A Linearization Call Expression is an ID of a defined linearization expression followed by parenthesis. If the linearization expression is defined in an AADL Package, then the ID should be the AADL Package name followed by a dot (.) and then the ID for the expression. For the example linearization expression provided in <a href="03.06-Statements.html#sec:linearization_definitions">Linearization Definitions</a>, its ID &quot;sq&quot; can be used in other expressions like a non-recursive, pure function call. The following lemma statement provides one such example.</p>
+<h3 id="linearization-call-expressions">Linearization Call Expressions</h3>
+<p>A Linearization Call Expression is an ID of a defined linearization expression followed by parenthesis. If the linearization expression is defined in an AADL Package, then the ID should be the AADL Package name followed by a dot (.) and then the ID for the expression. For the example linearization expression provided in section 3.6.11, its ID &quot;sq&quot; can be used in other expressions like a non-recursive, pure function call. The following lemma statement provides one such example.</p>
 <pre><code>eq y : real;
 
 lemma &quot;sq() range positive&quot; : sq(y) &lt;= -0.10;</code></pre>
-<h3 id="sec:stream-previous-value-and-arrow-expressions">Stream (Previous Value and Arrow) Expressions</h3>
+<h3 id="stream-previous-value-and-arrow-expressions">Stream (Previous Value and Arrow) Expressions</h3>
 <p><strong>Arrow Expression</strong>. The arrow expression evaluates to the value of the expression of the left hand side of the arrow on the initial step. Otherwise it evaluates to the value of the expression on the right hand side of the arrow. The arrow expression is used with the pre expression to reason about past values of variables. For example, we can define a variable in an AGREE contract that starts at zero and increments by one each step in time using an equation statement:</p>
 <pre><code>eq count: int = 0 -&gt; pre(count) + 1;</code></pre>
 <p><strong>Previous Value Expression</strong>. A previous value expression evaluates to the value of its argument on the previous time frame. It should that it be guarded by an arrow expressions as its value is undefined on the initial step.</p>
@@ -153,27 +153,27 @@ lemma &quot;sq() range positive&quot; : sq(y) &lt;= -0.10;</code></pre>
 <p>The pre expression is an <em>uninitialized</em> pre expression. Its value is <em>undefined</em> in the initial instant. This expression is expected to be used in combination with the arrow expression; this can yield expressions that are, on occasional, more terse than using the prev expression. However, the following equivalence always holds for arbitrary expressions <code>x</code> and <code>y</code>:</p>
 <pre><code>prev(x, y) &lt;=&gt; (y -&gt; pre(x))</code></pre>
 <p>For novice users, we recommend using the initialized prev expression as it is less error prone than the <code>-&gt;</code> pre combination.</p>
-<h3 id="sec:event-expressions">Event Expressions</h3>
+<h3 id="event-expressions">Event Expressions</h3>
 <p>An event expression is a special predicate that is used to reason about AADL event data ports. For an input event data port, its semantics are such that it evaluates to true if a value is <em>present</em> on the event port and false otherwise. For an output event data port, its semantics are such that it evaluates true if data is being sent on the port and false otherwise.</p>
-<h3 id="sec:floor-and-real-expressions">Floor and Real Expressions</h3>
+<h3 id="floor-and-real-expressions">Floor and Real Expressions</h3>
 <p>A floor expression takes an expression of type <em>real</em> as an argument and returns an <em>int</em> equal to the floor of the number.</p>
 <p>A real expression takes an expression of type <em>int</em> as argument and returns a <em>real</em> equal to its value.</p>
-<h3 id="sec:get-property-expressions">Get Property Expressions</h3>
+<h3 id="get-property-expressions">Get Property Expressions</h3>
 <p>A get property expression allows a user to reason about values of AADL properties in the model. The first argument is the relative path to an AADL component in the instance model or 'this' if the property exists in the component in which get property statement lives. The second argument is the name of the AADL property.</p>
-<h3 id="sec:unary-minus-and-not-expressions">Unary Minus and Not Expressions</h3>
+<h3 id="unary-minus-and-not-expressions">Unary Minus and Not Expressions</h3>
 <p>An Unary Minus expression is used to negate integer or real valued expressions.</p>
 <p>A Not Expression is used to negate boolean valued expressions</p>
-<h3 id="sec:record-update-expressions">Record Update Expressions</h3>
-<p>Record Update Expression are assignments to all or a specific field of a record type variable. For example, <code>foo {a := true; b := 1}</code> and <code>bar {a := true}</code> are valid Record Update Expressions, given definition for type <code>foo</code> and variable <code>bar</code> as follows:</p>
+<h3 id="record-update-expressions">Record Update Expressions</h3>
+<p>Record Update Expression are assignments to all or a specific field of a record type variable. For example, <code>foo {a = true; b = 1}</code> and <code>bar {a := true}</code> are valid Record Update Expressions, given definition for type <code>foo</code> and variable <code>bar</code> as follows:</p>
 <pre><code>type foo = struct {a : bool, b : int};
 
 eq bar : foo;</code></pre>
 <p>The record update expression expects an expression of record type on the left hand side of the curly braces. It returns the same record as the left hand side expression except with its member IDs set to the value of the expression on the right hand side of the <code>:=</code>;</p>
-<h3 id="sec:arithmetic-operations">Arithmetic Operations</h3>
+<h3 id="arithmetic-operations">Arithmetic Operations</h3>
 <p>Arithmetic operations must be performed on expressions of the same type. They follow the standard order of precedence. Note that AGREE will give a warning if you write an expression that is not linear. Some theorem provers do not reason about non-linear expressions. Non-linear integer arithmetic is undecidable and most theorem provers do not use a decidable decision procedure for non-linear real arithmetic. So it is recommended that you only use linear expressions.</p>
-<h3 id="sec:relation-expressions">Relation Expressions</h3>
+<h3 id="relation-expressions">Relation Expressions</h3>
 <p>Relation expressions can be performed on integers or reals, but not a combination of both. Equality can be used on Booleans as well.</p>
-<h3 id="sec:boolean-expressions">Boolean Expressions</h3>
+<h3 id="boolean-expressions">Boolean Expressions</h3>
 <p>Boolean expressions have the standard associative properties and order of precedence.</p>
 </body>
 </html>
