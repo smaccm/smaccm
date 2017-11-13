@@ -4,3 +4,11 @@ In this chapter we present the syntax and semantics of the input
 language of AGREE. We first present an overview of the computational
 model of the language, then present the syntax of the language.
 
+* [Dataflow Language](03.01-Dataflow-Language.html#sec:dataflow_language)
+* [Syntax Overview](03.02-Syntax-Overview.html#sec:syntax_overview)
+* [Lexical Elements](03.03-Lexical-Elements.html#sec:lexical_elements)
+* [Types](03.04-Types.html#sec:types)
+* [Subclauses](03.05-Subclauses.html#sec:subclauses)
+* [Statements](03.06-Statements.html#sec:statements)
+* [Expressions](03.07-Expressions.html#sec:expressions)
+
