@@ -42,23 +42,26 @@ a local repository that contains the projects, and explore to the
 specific project folder to import.
 
 **Note**: Example projects with AGREE contracts in the AADL models can
-be obtained from the following link:
-<https://github.com/smaccm/smaccm/tree/master/models>. These files are
+be obtained from the
+[SMACCM Git repository](https://github.com/smaccm/smaccm/tree/master/models).
+These files are
 from GitHub and could be retrieved via the Git configuration control
 tool. More information about the Git tool and the download information
-can be found in <https://git-scm.com/>.
+can be found at [Git-SCM](https://git-scm.com/).
 
 ### Create New Projects
 
-After started OSATE, the AADL perspective (see the "AADL" text on the
-upper right corner of @fig:agree_install_test should come up by default; if not,
-please switch to it via selecting the "Window" menu -&gt; "Perspective"
--&gt; "Open Perspective" -&gt; "Other…" -&gt; "AADL". Create a new AADL
-project by selecting the "File" menu -&gt; "New" -&gt; "Project…", and
-select "AADL Project" under the "AADL" category. An example is shown in
-@fig:create_new_aadl_project_dialog. More detailed information about creating AADL models in a
-project can be found in:
-<https://wiki.sei.cmu.edu/aadl/index.php/Editing_a_first_AADL_model>.
+After started OSATE, the AADL perspective should be the default.
+If not, the AADL perspective can be selected via selecting the "Window" menu -&gt; "Perspective"
+-&gt; "Open Perspective" -&gt; "Other…" -&gt; "AADL". (See the "AADL" text on the
+upper right corner of the OSATE window as shown in
+[Agree Install Test](04.02-Installation.html#fig:agree_install_test).)
+
+Create a new AADL project by selecting the "File" menu -&gt; "New" -&gt;
+"Project…", and select "AADL Project" under the "AADL" category. An example
+is shown in @fig:create_new_aadl_project_dialog. More detailed information
+about creating AADL models in a project can be found at
+[Editing a First AADL Model](https://wiki.sei.cmu.edu/aadl/index.php/Editing_a_first_AADL_model).
 
 ![Create a New AADL Project](../../media/image27.png){#fig:create_new_aadl_project_dialog width="4.78125in" height="4.430501968503937in"}
 
@@ -77,8 +80,12 @@ described by their respective contracts. Users can start the
 verification by selecting a system implementation of a component in the
 outline pane on the right side of OSATE, and select either the "Verify
 Single Layer" or the "Verify All Layers" option from the right-click
-menu (shown in @fig:verify_all_layers_from_right_click) or the AGREE menu
-(shown in @fig:verify_all_layers_from_agree_menu). As the
+menu (shown in
+[Verify All Layers from Right Click](02.00-Brief-Overview-of-AADL-and-AGREE.html#fig:verify_all_layers_from_right_click))
+or the AGREE menu
+(shown in
+[Verify All Layers from AGREE Menu](02.00-Brief-Overview-of-AADL-and-AGREE.html#fig:verify_all_layers_from_agree_menu)).
+As the
 names suggest, "Verify Single Layer" performs verification at the
 current layer of the architecture hierarchy, while "Verify All Layers"
 performs verification at the current layer and each layer below. For a
@@ -102,8 +109,9 @@ consider the picture in @fig:a_hierarchical_model. In this Figure, the blocks re
 AADL system implementations for different components. In compositional
 verification ("Verify Single Layer" and "Verify All Layers"), AGREE will
 only use the Assumptions and Guarantees of component 2 and 3 as evidence
-(A~2~, G~2~, A~3~, and G~4~) to prove the Assumptions and Guarantees of
-component 1 (A~1~ and G~1~); the tool ignore any of the constraints
+(`A`~`2`~, `G`~`2`~, `A`~`3`~, and `G`~`4`~) to prove the Assumptions and
+Guarantees of
+component 1 (`A`~`1`~ and `G`~`1`~); the tool ignore any of the constraints
 posed by components 4 through 7. Monolithical verification, on the other
 hand, will use Assumptions and Guarantees of components 2 through 7 to
 prove the Assumptions and Guarantees of component 1.
@@ -115,7 +123,7 @@ checker by explicitly hiding information that may be unnecessary to
 prove top level claims. Compositional verification should be used as the
 default verification option with AGREE.
 
-![A Hierarchical Model](../../media/image28.png){#fig:a_hierarchical_model}
+![A Hierarchical Model](../../media/image28.png){#fig:a_hierarchical_model .class width=80%}
 
 **Note 1**: Details of lower level components (e.g., implementation
 details besides the assumptions and guarantees on the interface of the
@@ -145,7 +153,8 @@ the console, in a spreadsheet, or in a collapsible menu.
 produce a "Valid" or "Invalid" result. In such a case, users may extend
 the timeout time (e.g., from 100 seconds to 1000 seconds) and/or enlarge
 the maximum depth for k-induction to use, in OSATE "Window" menu -&gt;
-"Preferences" -&gt; "Agree" -&gt; "Analysis", as shown in @fig:smt_solver_selection.
+"Preferences" -&gt; "Agree" -&gt; "Analysis", as shown in
+[SMT Solver Selection](04.02-Installation.html#fig:smt_solver_selection).
 
 ### Check Realizability
 
@@ -169,8 +178,11 @@ Realizability checking determines whether or not the component works in
 all input environments that satisfy the component assumptions. It can be
 invoked by selecting the system implementation of a component in the
 outline pane on the right side of OSATE, and select either the "Check
-Realizability" from the right-click menu (shown in @fig:verify_all_layers_from_right_click) or the
-AGREE menu (shown in @fig:verify_all_layers_from_agee_menu).
+Realizability" from the right-click menu (shown in
+[Verify All Layers from Right Click](02.00-Brief-Overview-of-AADL-and-AGREE.html#fig:verify_all_layers_from_right_click))
+or the AGREE menu
+(shown in
+[Verify All Layers from AGREE Menu](02.00-Brief-Overview-of-AADL-and-AGREE.html#fig:verify_all_layers_from_agree_menu)).
 
 ### AGREE/AADL to Simulink Exporter{#sec:agree_to_simulink_exporter}
 
@@ -219,7 +231,9 @@ This associates the information of the component implementation in the
 design model, and allows users to proceed directly to action selection
 in subsequent exports, if no changes to the saved information.
 
-Note that Real-time patterns (as seen in @sec:real_time_patterns) in AGREE cannot
+Note that Real-time patterns (as seen in
+[Real Time Patterna](03.06-Statements.html#sec:real_time_patterns))
+in AGREE cannot
 be exported to MATLAB functions, and should not be. These patterns refer
 to the scheduling and performance of the component, rather than its
 specific behavior. Thus, the model will need to be decomposed further
@@ -241,15 +255,18 @@ type;
 
 2\. Select the system implementation of the component whose contracts are
 to be exported, and select the "Generate Simulink Models" option in
-either the right-click menu (shown in @fig:verify_all_layers_from_right_click)
-or the AGREE menu (shown in @fig:verify_all_layers_from_agree_menu).
+either the right-click menu (shown in
+[Verify All Layers from Right Click](02.00-Brief-Overview-of-AADL-and-AGREE.html#fig:verify_all_layers_from_right_click))
+or the AGREE menu
+(shown in
+[Verify All Layers from AGREE Menu](02.00-Brief-Overview-of-AADL-and-AGREE.html#fig:verify_all_layers_from_agree_menu)).
 
 3\. The dialog box shown in @fig:general_simulink_models_dialog will be
 presented. After completing the data
 fields, select the activity to be performed by clicking on one of the
 action buttons. The fields and actions are described in detail below.
 
-![General Simulink Models Dialog](../../media/image29.png){#fig:general_simulink_models_dialog width="6.491666666666666in" height="3.05in"}
+![General Simulink Models Dialog](../../media/image29.png){#fig:general_simulink_models_dialog .class width=90%}
 
 ***Output Directory Path***: This is the location of the exported MATLAB
 scripts that, when executed, will actually generate the Simulink models

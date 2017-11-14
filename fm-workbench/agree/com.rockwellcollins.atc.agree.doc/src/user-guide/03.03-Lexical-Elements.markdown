@@ -23,10 +23,10 @@ identifier_letter ::= ('A'..'Z' | 'a'..'z')
 digit ::= (0..9)
 ~~~~~
 
-Some example identifiers are: Count, X, Get\_Symbol, Ethelyn, Snobol\_4,
-X1, Page\_Count Store\_Next\_Item. **Note: Identifiers are** **case
-insensitive**! Thus Hello, HeLlO, and HELLO all refer to the same entity
-in AADL.
+Some example identifiers include `Count`, `X`, `Get_Symbol`, `Ethelyn`,
+`Snobol_4`, `X1`, `Page_Count`, and `Store_Next_Item`.
+**Note: Identifiers are case insensitive**! Thus `Hello`, `HeLlO`, and `HELLO`
+all refer to the same entity in AADL.
 
 Boolean and numeric literal values are defined as follows:
 
@@ -44,11 +44,11 @@ decimal_real_literal ::= ('–')? numeral '.' numeral
 numeral ::= digit*
 ~~~~~
 
-Boolean\_literal are: true, false.
+Boolean\_literal are `true` and `false`.
 
-Examples of Integer\_literals are: 1, 42, -1337.
+Examples of Integer\_literals include `1`, `42`, and `-1337`.
 
-Examples of Real\_literals are: 3.1415, 1.6180, 0.001
+Examples of Real\_literals include `3.1415`, `1.6180`, and `0.001`.
 
 String elements are defined with the following syntax:
 

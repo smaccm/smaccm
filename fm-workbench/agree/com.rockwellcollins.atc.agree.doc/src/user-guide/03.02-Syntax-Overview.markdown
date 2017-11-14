@@ -2,18 +2,18 @@
 
 Before describing the details of the language, we provide a few general
 notes about the syntax. In the syntax notations used below, syntactic
-categories are indicated by typewriter font. Grammar productions
+categories are indicated by monospace font. Grammar productions
 enclosed in parenthesis ('( )') indicate a set of choices in which a
 vertical bar ('|') is used to separate alternatives in the syntax rules
 or ' ..' is used to describe a range (e.g. ('A'..'Z')). Any characters
 in single quotes describe concrete syntax: (e.g.: '+', '-', '=&gt;',
 '''). Note that the last example is the concrete syntax for a single
-quote. Examples of grammar fragments are also written in the Consolas
-monospace font. Sometimes one of the following characters is used at the
+quote. Examples of grammar fragments are also written in the monospace
+font. Sometimes one of the following characters is used at the
 beginning of a rule as a shorthand for choosing among several
-alternatives: 1) The \* character indicates repetition (zero or more
-occurrences) and + indicates required repetition (1 or more
-occurrences). 2) A ? character indicates that the preceding token is
+alternatives: 1) The '\*' character indicates repetition (zero or more
+occurrences) and '+' indicates required repetition (1 or more
+occurrences). 2) A '?' character indicates that the preceding token is
 optional.
 
 AGREE is built on top of the AADL 2.0 architecture description language.

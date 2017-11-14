@@ -88,10 +88,7 @@ end Integer_Toy;</code></pre>
 <p>In the code above, <strong>system</strong>s define hierarchical &quot;units&quot; of the model. They communicate over <strong>port</strong>s<strong>,</strong> which are typed. Systems do not contain any internal structure, only the interfaces for the system.</p>
 <p>A <strong>system</strong> <strong>implementation</strong> describes an implementation of the system including its internal structure. For this example, the only system whose internal structure is known is the &quot;top level&quot; system, which contains subcomponents <code>A</code>, <code>B</code>, and <code>C</code>. We instantiate these subcomponents (using <code>A_sub</code>, <code>B_sub</code>, and <code>C_sub</code>) and then describe how they are connected together. In the connections section, we must describe whether each connection is <em>immediate</em> or <em>delayed.</em> We will explain more about timing and connection delays in <a href="03.00-AGREE-Language.html#sec:agree_language">AGREE Language</a>. Intuitively, if a connection is <em>immediate,</em> then an output from the source component is <em>immediately</em> available to the input of the destination component (i.e., in the same frame). If they are <em>delayed</em>, then there is a one cycle delay before the output is available to the destination component (delayed frame).</p>
 <h2 id="sec:using_agree_plugin">Using the AGREE AADL Plug-in</h2>
-<p>The example project used in the rest of this section can be retrieved from the following link:</p>
-<blockquote>
-<p><a href="https://github.com/smaccm/smaccm/blob/master/models/Toy_AGREE_Models/Toy_Example.zip" class="uri">https://github.com/smaccm/smaccm/blob/master/models/Toy_AGREE_Models/Toy_Example.zip</a></p>
-</blockquote>
+<p>The example project used in the rest of this section can be retrieved from <a href="https://github.com/smaccm/smaccm/blob/master/models/Toy_AGREE_Models/Toy_Example.zip">AGREE Toy Example</a>.</p>
 <p>After unzipping the model, it can be imported by choosing File &gt; Import:</p>
 <figure>
 <img src="../../media/image2.png" alt="Figure 2: Import Menu Option" id="fig:import_menu_option" /><figcaption>Figure 2: Import Menu Option</figcaption>
@@ -103,30 +100,30 @@ end Integer_Toy;</code></pre>
 <p>and navigating to the unzipped directory after pressing the Next button. Figure <a href="#fig:environment_with_toy_example">4</a> shows what the model looks like when loaded in the AGREE/OSATE tool.</p>
 <p>Note that in the workspace in Figure <a href="#fig:environment_with_toy_example">4</a>, there are several projects, so your workspace will probably look slightly different. The project that we are working with is called Toy_Example.</p>
 <figure>
-<img src="../../media/image4.png" alt="Figure 4: AGREE/OSATE Environment" id="fig:environment_with_toy_example" /><figcaption>Figure 4: AGREE/OSATE Environment</figcaption>
+<img src="../../media/image4.png" alt="Figure 4: AGREE/OSATE Environment with toy example" id="fig:environment_with_toy_example" class="class" style="width:90.0%" /><figcaption>Figure 4: AGREE/OSATE Environment with toy example</figcaption>
 </figure>
 <p>Open the Integer_Toy.aadl model by double-clicking on the file in the AADL Navigator pane. To invoke AGREE, we select the Top_Level.Impl system implementation in the outline pane on the right. We can then either</p>
 <ol type="1">
 <li><p>right-click on the Top_Level.Impl element on the outline pane and choose &quot;AGREE &gt; Verify All Layers&quot;:</p>
 <figure>
-<img src="../../media/image5.png" alt="Figure 5: Verify All Layers Option from Right Click Menu" id="fig:verify_all_layers_from_right_click" /><figcaption>Figure 5: Verify All Layers Option from Right Click Menu</figcaption>
+<img src="../../media/image5.png" alt="Figure 5: Verify All Layers Option from Right Click Menu" id="fig:verify_all_layers_from_right_click" class="class" style="width:90.0%" /><figcaption>Figure 5: Verify All Layers Option from Right Click Menu</figcaption>
 </figure></li>
 <li><p>Or, Choose the &quot;Verify All Layers&quot; item from the AGREE menu:</p>
 <figure>
-<img src="../../media/image6.png" alt="Figure 6: Verify All Layers Option from AGREE Menu" id="fig:verify_all_layers_from_agree_menu" /><figcaption>Figure 6: Verify All Layers Option from AGREE Menu</figcaption>
+<img src="../../media/image6.png" alt="Figure 6: Verify All Layers Option from AGREE Menu" id="fig:verify_all_layers_from_agree_menu" class="class" style="width:90.0%" /><figcaption>Figure 6: Verify All Layers Option from AGREE Menu</figcaption>
 </figure></li>
 </ol>
 <p>As AGREE runs, you should see checks for &quot;Contract Guarantees&quot;, &quot;Contract Assumptions&quot; and &quot;Contract Consistency&quot; as shown in Figure <a href="#fig:toy_example_results">7</a>.</p>
 <figure>
-<img src="../../media/image7.png" alt="Figure 7: Example of AGREE Results" id="fig:toy_example_results" /><figcaption>Figure 7: Example of AGREE Results</figcaption>
+<img src="../../media/image7.png" alt="Figure 7: Example of AGREE Results" id="fig:toy_example_results" class="class" style="width:90.0%" /><figcaption>Figure 7: Example of AGREE Results</figcaption>
 </figure>
 <p>Now, let's analyze the same model but with the ports instantiated to floating point numbers. Open the Real_Toy.aadl model by double clicking on the file in the AADL Navigator panel. Again select the top_level.Impl System Implementation in the outline panel on the right of OSATE, and either right-click and choose the &quot;AGREE&quot; menu or choose the &quot;AGREE&quot; menu in Eclipse. Now the top-level property fails, as shown in Figure <a href="#fig:toy_example_failed_property">8</a>.</p>
 <figure>
-<img src="../../media/image8.png" alt="Figure 8: Example of Failed Property Result" id="fig:toy_example_failed_property" /><figcaption>Figure 8: Example of Failed Property Result</figcaption>
+<img src="../../media/image8.png" alt="Figure 8: Example of Failed Property Result" id="fig:toy_example_failed_property" class="class" style="width:90.0%" /><figcaption>Figure 8: Example of Failed Property Result</figcaption>
 </figure>
 <p>When a property fails in AGREE, there is an associated counterexample that demonstrates the failure. To see the counterexample, right-click the failing property (in this case: &quot;System output range&quot;) and choose &quot;View Counterexample in Console&quot; to see the values assigned to each of the variables referenced in the model. Figure <a href="#fig:toy_example_counterexample_view">9</a> shows the counterexample that is generated by this failure in the console window.</p>
 <figure>
-<img src="../../media/image9.png" alt="Figure 9: Counterexample View in Console" id="fig:toy_example_counterexample_view" /><figcaption>Figure 9: Counterexample View in Console</figcaption>
+<img src="../../media/image9.png" alt="Figure 9: Counterexample View in Console" id="fig:toy_example_counterexample_view" class="class" style="width:90.0%" /><figcaption>Figure 9: Counterexample View in Console</figcaption>
 </figure>
 <p>For working with complex counterexamples, it is often necessary to have a richer interface. It is also possible to export the counterexample to Excel by right-clicking the failing property and choosing &quot;View Counterexample in Excel&quot;. <strong>Note: In order to use this capability, you must have Excel installed on your computer. Also, you must associate .xls files in Eclipse with Excel.</strong> To do so, the following steps can be taken:</p>
 <ol type="1">
@@ -141,7 +138,7 @@ end Integer_Toy;</code></pre>
 </ol>
 <p>The generated Excel file for the example is shown in Figure <a href="#fig:toy_example_excel">10</a>.</p>
 <figure>
-<img src="../../media/image10.png" alt="Figure 10: Excel Counterexample File" id="fig:toy_example_excel" /><figcaption>Figure 10: Excel Counterexample File</figcaption>
+<img src="../../media/image10.png" alt="Figure 10: Excel Counterexample File" id="fig:toy_example_excel" class="class" style="width:90.0%" /><figcaption>Figure 10: Excel Counterexample File</figcaption>
 </figure>
 <p>Note that this counterexample is only one step long. If it were multiple steps, these would be displayed in consecutive columns from left to right.</p>
 <p>When executed with real-valued inputs and outputs, it is possible to find a counterexample to the system-level property. In this counterexample, the system input is 9.5, so it is less than 10, but the system output is equal to 50, violating the system guarantee. Can you find the reason for the counterexample?</p>

@@ -6,7 +6,7 @@ mean? To explain, we first refresh the user’s understanding of
 mathematical induction performed over natural numbers. Often, one wishes
 to prove a mathematical fact of the following sort:
 
-$\sum_{x = 1}^{n}x = \frac{\left( n + 1 \right)*n}{2}$
+$$\sum_{x = 1}^{n}x = \frac{\left( n + 1 \right)*n}{2}$$
 
 We can prove this by *weak* *induction.* This involves two steps: first,
 a base case, where we show that the property holds for the initial value
@@ -14,7 +14,7 @@ a base case, where we show that the property holds for the initial value
 the property is true of *n*, we prove that it is true of *n+1.* For this
 example, the base case is
 
-$\sum_{x = 1}^{1}x = \frac{\left( 1 + 1 \right)*1}{2}$
+$$\sum_{x = 1}^{1}x = \frac{\left( 1 + 1 \right)*1}{2}$$
 
 Since $1 = \frac{2}{2}$ , we satisfy the base case. If we assume that
 the property is true of *n,* we can prove the inductive case over (n+1)

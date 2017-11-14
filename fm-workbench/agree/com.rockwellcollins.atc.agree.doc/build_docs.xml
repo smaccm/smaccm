@@ -38,6 +38,7 @@
 			<arg value="pandoc-crossref"/>
 			<arg value="-f"/>
 			<arg value="markdown"/>
+			<arg value="--mathml"/>
 			<arg value="-t"/>
 			<arg value="html5"/>
 			<arg value="${user_guide.dir}/00.00-preamble.md"/>

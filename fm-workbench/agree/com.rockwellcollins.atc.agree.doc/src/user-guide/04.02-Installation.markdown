@@ -6,14 +6,13 @@ in each of the following sections.
 ### Install OSATE
 
 Binary releases of the OSATE tool suite for different platforms are
-available at: <http://www.aadl.info/aadl/osate/stable/>. Choose the most
-recent version of OSATE that is appropriate for your platform. For
-example, at the time of writing this document, the most current release
-of OSATE is 2.2.0, available for download from
-<http://www.aadl.info/aadl/osate/stable/2.2.0/products/>. There are two
-binary versions for Windows: osate2-2.2.0--win32.win32.x86.zip and
-[osate2-2.2.0--win32.win32.x86\_64.zip](http://www.aadl.info/aadl/osate/stable/2.2.0/products/osate2-2.2.0--win32.win32.x86_64.zip);
-the first is for 32-bit Windows and the second is for 64-bit Windows.
+available at
+[OSATE Releases](http://osate.org/osate-releases.html).
+Choose the most
+recent version of OSATE that is appropriate for your platform.
+At the time of writing this document, there are binary tar ball
+installations for 64-bit Linux and Apple MAC OSX and
+binary ZIP installations for 32-bit and 64-bit Microsoft Windows.
 
 Once the .zip file is downloaded, all that is required is to unzip it
 into a location in the file system. One candidate location for Windows
@@ -34,7 +33,7 @@ System Control Panel as shown below in @fig:windows_version_information. Note th
 information is also required for downloading the correct version of the
 SMT Solver in the next installation step.
 
-![Windows OS Version and Bit size information](../../media/image16.png){#fig:windows_version_information width="5.780590551181103in" height="3.8055555555555554in"}
+![Windows OS Version and Bit size information](../../media/image16.png){#fig:windows_version_information .class width=90%}
 
 ### Install the SMT Solver
 
@@ -42,22 +41,21 @@ Either one of the following SMT solvers can be used as the underlying
 symbolic solver invoked by the JKind model checker: Yices from SRI, or
 Z3 from Microsoft, Inc.
 
-To download Yices, navigate to the Yices install page at:
-<http://yices.csl.sri.com/> and download the version of Yices
-appropriate for your platform.
+To download Yices, navigate to
+[Yices Install](http://yices.csl.sri.com/)
+and download the version of Yices appropriate for your platform.
 
-To download Z3, navigate to the z3 install page at:
-<https://github.com/Z3Prover/z3/releases> and download the version of Z3
-appropriate for your platform.
+To download Z3, navigate to
+[Z3 Releases](https://github.com/Z3Prover/z3/releases)
+and download the version of Z3 appropriate for your platform.
 
 Either tool must be unzipped and placed in a directory somewhere in the
 file system. Then this directory must be added to the system path. For
 directions on how to add directories to your path, please see
-<http://stackoverflow.com/questions/14637979/how-to-permanently-set-path-on-linux>
-for Linux, and see
-<http://architectryan.com/2012/10/02/add-to-the-path-on-mac-os-x-mountain-lion/#.VszAv_krJph>
-for Mac OS. In Linux, you must add the path to your config file, usually
-.bashrc.
+[How to permanently set $PATH on Linux/Unix?](http://stackoverflow.com/questions/14637979/how-to-permanently-set-path-on-linux),
+or see
+[Add to the PATH on Mac OS X 10.8 Mountain Lion](http://architectryan.com/2012/10/02/add-to-the-path-on-mac-os-x-mountain-lion/#.VszAv_krJph)
+for Mac OS.
 
 To add directories to your system path in Windows, first navigate to the
 System Control Panel and choose the "Advanced system settings" button on
@@ -65,12 +63,11 @@ the left side of the panel. The system properties dialog will appear.
 Choose the "Advanced" tab in the dialog as shown in @fig:system_properties_dialog, then
 click "Environment variables".
 
-![System Properties Dialog Box](../../media/image17.png){#fig:system_properties_dialog width="3.4791666666666665in"
-height="3.578218503937008in"}
+![System Properties Dialog Box](../../media/image17.png){#fig:system_properties_dialog width=60%}
 
 The environment variables dialog box is shown in @fig:environment_variables_dialog.
 
-![Environment Variables Dialog Box](../../media/image18.png){#fig:environment_variables_dialog width="3.4270833333333335in" height="3.858772965879265in"}
+![Environment Variables Dialog Box](../../media/image18.png){#fig:environment_variables_dialog width=60%}
 
 In order to make the application available to all user accounts choose
 the PATH environment variable in the "System variables" section and
@@ -134,8 +131,9 @@ C:\apps >
 
 ### Install AGREE
 
-Download the latest release of AGREE at:
-<https://github.com/smaccm/smaccm/releases> and unzip it into a location
+Download the latest release of AGREE from
+[SMACCM Releases](https://github.com/smaccm/smaccm/releases)
+and unzip it into a location
 in the file system. Unzipping the file should create a directory called
 "plugins" containing a set of .jar files. Then start OSATE if haven’t
 already, go to Help-&gt;Installation Details, and in the "Installed
@@ -147,7 +145,7 @@ plugin folder of the AGREE’s latest release into OSATE/plugins folder.
 @fig:osate_plugins_directory shows a screen capture of the OSATE/plugins folder after
 copying the .jar files that come with AGREE release v2.2.0.0.
 
-![OSATE/plugins Directory with .jar Files Replaced](../../media/image20.png){#fig:osate_plugins_directory width="5.260416666666667in" height="3.827290026246719in"}
+![OSATE/plugins Directory with .jar Files Replaced](../../media/image20.png){#fig:osate_plugins_directory .class width=90%}
 
 To test whether AGREE has been correctly installed, start OSATE. If it
 has been correctly installed, an AGREE menu should appear in OSATE, as
@@ -159,9 +157,7 @@ in OSATE "Window" menu -&gt; "Preferences" -&gt; "Agree" -&gt;
 adjust the timeout and maximum depth for k-induction to use in the
 "Analysis" configuration dialog.
 
-![AGREE Install Test](../../media/image21.png){#fig:agree_install_test width="4.666666666666667in"
-height="3.4925207786526684in"}
+![AGREE Install Test](../../media/image21.png){#fig:agree_install_test .class width=90%}
 
-![SMT Solver Selection](../../media/image22.png){#fig:smt_solver_selection width="4.916666666666667in"
-height="4.07222987751531in"}
+![SMT Solver Selection](../../media/image22.png){#fig:smt_solver_selection .class width=90%}
 

@@ -132,69 +132,14 @@ TimeInterval:
 <h3 id="sec:linearization_definitions">Advanced Topic: Linearization Definitions</h3>
 <p>The linearization definition provides the declaration of a linear approximation of a non-linear expression over segment(s) of its input domain, resulting in a new expression that bounds the non-linear expression with piecewise linear segment(s). The non-linear expression supports a small core of mathematical functions found on a calculator (i.e., '+', '-', '*', '/', '^') as seen in Figure 14. <strong>Note</strong>: The non-linear expression can contain references to only the input variable (no other AGREE identifiers). Figure 15 demonstrates a linear approximation bounding the output values within the upper and lower bounds.</p>
 <figure>
-<img src="../../media/image13.png" alt="Figure 1: Bound Non-linear Expression with Piecewise Linear Segments" id="fig:linearization_definition" /><figcaption>Figure 1: Bound Non-linear Expression with Piecewise Linear Segments</figcaption>
+<img src="../../media/image13.png" alt="Figure 1: Bound Non-linear Expression with Piecewise Linear Segments" id="fig:linearization_definition" class="class" style="width:90.0%" /><figcaption>Figure 1: Bound Non-linear Expression with Piecewise Linear Segments</figcaption>
 </figure>
 <p>The following linearization definition example provides the linear approximation for the square operation with a real type input over input interval between -1.0 and 1.0, and input precision of 0.01.</p>
 <pre><code>linearization sq (y : real) over [-1.0 .. 1.0] within 0.01 : y^2.0;</code></pre>
 <p><strong>Note: Currently linearization definition with single input of real type is supported. </strong></p>
 <p>The following function calls are allowed within the linearization body expression:</p>
-<table>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">abs (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">acos (x : real) : real;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">asin (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">atan (x : real) : real;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">cbrt (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">cos (x : real) : real;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">cosh (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">exp (x : real) : real;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">expml (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">log (x : real) : real;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">log10 (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">log1p (x : real) : real;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">signum (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">sin (x : real) : real;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">sinh (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">sqrt (x : real) : real;</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">tan (x : real) : real;</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">tanh (x : real) : real;</td>
-</tr>
-</tbody>
-</table>
+<blockquote>
+<p>abs, acos, asin, atan, cbrt, cos, cosh, exp, expml, log, log10, log1p, signum, sin, sinh, sqrt, tan, and tanh.</p>
+</blockquote>
 </body>
 </html>

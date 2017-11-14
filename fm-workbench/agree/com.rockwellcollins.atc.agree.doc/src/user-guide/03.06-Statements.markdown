@@ -316,7 +316,7 @@ non-linear expression can contain references to only the input variable
 approximation bounding the output values within the upper and lower
 bounds.
 
-![Bound Non-linear Expression with Piecewise Linear Segments](../../media/image13.png){#fig:linearization_definition}
+![Bound Non-linear Expression with Piecewise Linear Segments](../../media/image13.png){#fig:linearization_definition .class width=90%}
 
 The following linearization definition example provides the linear
 approximation for the square operation with a real type input over input
@@ -331,24 +331,22 @@ linearization sq (y : real) over [-1.0 .. 1.0] within 0.01 : y^2.0;
 The following function calls are allowed within the linearization body
 expression:
 
-  ------------------------
-  abs (x : real) : real;
-  acos (x : real) : real;
-  asin (x : real) : real;
-  atan (x : real) : real;
-  cbrt (x : real) : real;
-  cos (x : real) : real;
-  cosh (x : real) : real;
-  exp (x : real) : real;
-  expml (x : real) : real;
-  log (x : real) : real;
-  log10 (x : real) : real;
-  log1p (x : real) : real;
-  signum (x : real) : real;
-  sin (x : real) : real;
-  sinh (x : real) : real;
-  sqrt (x : real) : real;
-  tan (x : real) : real;
-  tanh (x : real) : real;
-  ------------------------
+>  abs,
+>  acos,
+>  asin,
+>  atan,
+>  cbrt,
+>  cos,
+>  cosh,
+>  exp,
+>  expml,
+>  log,
+>  log10,
+>  log1p,
+>  signum,
+>  sin,
+>  sinh,
+>  sqrt,
+>  tan, and
+>  tanh.
 

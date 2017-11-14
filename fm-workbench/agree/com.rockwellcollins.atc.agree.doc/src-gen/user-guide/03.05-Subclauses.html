@@ -64,8 +64,8 @@ LinearizationDefExpr ::=
     (‘within’ precision=Expr)? ’.’ exprBody=Expr ’;’
 
 LinearizationInterval: start=Expr ‘..’ end=Expr;</code></pre>
-<p>An AGREE subclause consists of a sequence of statements. The different kinds of statements and their uses are described in Section <strong>¿sec:statements?</strong>.</p>
-<p>AGREE subclauses can occur either within AADL components or at the top-level of a package. Package-level subclauses are designed to provide reusable libraries of definitions for AGREE. Nodes (as described in Section 3.6.6) and constants in these subclauses can be referenced by component-level subclauses by using the dot notation: &lt;Package_Name&gt;.&lt;definition name&gt;. So, for example, the following equation uses the Counter node defined in the Agree_Common package:</p>
+<p>An AGREE subclause consists of a sequence of statements. The different kinds of statements and their uses are described in <a href="03.06-Statements.html#sec:statements">Statements</a>.</p>
+<p>AGREE subclauses can occur either within AADL components or at the top-level of a package. Package-level subclauses are designed to provide reusable libraries of definitions for AGREE. Nodes (as described in <a href="03.06-Statements.html#sec:node_definitions">Node Definitions</a>) and constants in these subclauses can be referenced by component-level subclauses by using the dot notation: &lt;Package_Name&gt;.&lt;definition name&gt;. So, for example, the following equation uses the Counter node defined in the Agree_Common package:</p>
 <pre><code>eq x1 : int = Agree_Common.Counter(0, 1, prev(x1 = 9, false));</code></pre>
 </body>
 </html>
