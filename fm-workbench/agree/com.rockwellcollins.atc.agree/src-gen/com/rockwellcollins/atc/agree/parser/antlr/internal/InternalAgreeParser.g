@@ -6489,9 +6489,9 @@ ruleTermExpr returns [EObject current=null]
             $current);
     }
 )
-	otherlv_54=Enumerator
+	otherlv_54=Enum
     {
-    	newLeafNode(otherlv_54, grammarAccess.getTermExprAccess().getEnumeratorKeyword_14_1());
+    	newLeafNode(otherlv_54, grammarAccess.getTermExprAccess().getEnumKeyword_14_1());
     }
 
 	otherlv_55=LeftParenthesis

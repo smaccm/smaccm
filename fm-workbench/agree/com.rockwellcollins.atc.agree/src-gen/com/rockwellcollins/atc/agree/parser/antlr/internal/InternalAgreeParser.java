@@ -22,138 +22,137 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalAgreeParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Linearization", "Get_Property", "Asynchronous", "Agree_input", "Exclusively", "Classifier", "Connection", "Enumerator", "Condition", "Guarantee", "Initially", "No_simult", "Parameter", "Reference", "Synchrony", "Calendar", "Constant", "External", "Ordering", "Property", "Sporadic", "Timefall", "Timerise", "Whenever", "KW__INSERT", "KW__REMOVE", "Applies", "Becomes", "Binding", "Compute", "Implies", "Latched", "Returns", "KW__COUNT", "Always", "Assert", "Assign", "Assume", "During", "Jitter", "Occurs", "Raises", "Simult", "Struct", "Timeof", "Within", "Const", "Delta", "Event", "False", "Floor", "Holds", "Lemma", "Modes", "Occur", "Times", "KW__CLK", "Bool", "Each", "Else", "Enum", "Lift", "Node", "Over", "Prev", "Real", "Then", "This", "Time", "True", "Type", "When", "With", "PlusSignEqualsSignGreaterThanSign", "LessThanSignEqualsSignGreaterThanSign", "IAT", "And", "Div", "Fun", "Int", "Let", "Mod", "Not", "Pre", "Tel", "Var", "ExclamationMarkEqualsSign", "HyphenMinusGreaterThanSign", "FullStopFullStop", "ColonColon", "ColonEqualsSign", "LessThanSignEqualsSign", "LessThanSignGreaterThanSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "Eq", "If", "In", "Or", "To", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "RightCurlyBracket", "RULE_SL_COMMENT", "RULE_DIGIT", "RULE_EXPONENT", "RULE_INT_EXPONENT", "RULE_REAL_LIT", "RULE_BASED_INTEGER", "RULE_INTEGER_LIT", "RULE_EXTENDED_DIGIT", "RULE_STRING", "RULE_ID", "RULE_WS"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Linearization", "Get_Property", "Asynchronous", "Agree_input", "Exclusively", "Classifier", "Connection", "Condition", "Guarantee", "Initially", "No_simult", "Parameter", "Reference", "Synchrony", "Calendar", "Constant", "External", "Ordering", "Property", "Sporadic", "Timefall", "Timerise", "Whenever", "KW__INSERT", "KW__REMOVE", "Applies", "Becomes", "Binding", "Compute", "Implies", "Latched", "Returns", "KW__COUNT", "Always", "Assert", "Assign", "Assume", "During", "Jitter", "Occurs", "Raises", "Simult", "Struct", "Timeof", "Within", "Const", "Delta", "Event", "False", "Floor", "Holds", "Lemma", "Modes", "Occur", "Times", "KW__CLK", "Bool", "Each", "Else", "Enum", "Lift", "Node", "Over", "Prev", "Real", "Then", "This", "Time", "True", "Type", "When", "With", "PlusSignEqualsSignGreaterThanSign", "LessThanSignEqualsSignGreaterThanSign", "IAT", "And", "Div", "Fun", "Int", "Let", "Mod", "Not", "Pre", "Tel", "Var", "ExclamationMarkEqualsSign", "HyphenMinusGreaterThanSign", "FullStopFullStop", "ColonColon", "ColonEqualsSign", "LessThanSignEqualsSign", "LessThanSignGreaterThanSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "Eq", "If", "In", "Or", "To", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "RightCurlyBracket", "RULE_SL_COMMENT", "RULE_DIGIT", "RULE_EXPONENT", "RULE_INT_EXPONENT", "RULE_REAL_LIT", "RULE_BASED_INTEGER", "RULE_INTEGER_LIT", "RULE_EXTENDED_DIGIT", "RULE_STRING", "RULE_ID", "RULE_WS"
     };
-    public static final int Enum=64;
-    public static final int Each=62;
-    public static final int LessThanSignGreaterThanSign=96;
+    public static final int Enum=63;
+    public static final int Each=61;
+    public static final int LessThanSignGreaterThanSign=95;
     public static final int Asynchronous=6;
-    public static final int Or=102;
-    public static final int Sporadic=24;
-    public static final int EqualsSignGreaterThanSign=97;
-    public static final int Var=89;
-    public static final int Node=66;
+    public static final int Or=101;
+    public static final int Sporadic=23;
+    public static final int EqualsSignGreaterThanSign=96;
+    public static final int Var=88;
+    public static final int Node=65;
     public static final int Get_Property=5;
-    public static final int False=53;
-    public static final int LessThanSign=114;
-    public static final int Lift=65;
-    public static final int Assert=39;
-    public static final int PlusSignEqualsSignGreaterThanSign=77;
-    public static final int LeftParenthesis=104;
-    public static final int Enumerator=11;
-    public static final int Bool=61;
-    public static final int Then=70;
+    public static final int False=52;
+    public static final int LessThanSign=113;
+    public static final int Lift=64;
+    public static final int Assert=38;
+    public static final int PlusSignEqualsSignGreaterThanSign=76;
+    public static final int LeftParenthesis=103;
+    public static final int Bool=60;
+    public static final int Then=69;
     public static final int Linearization=4;
-    public static final int GreaterThanSign=116;
-    public static final int Timerise=26;
-    public static final int RULE_ID=131;
-    public static final int RULE_DIGIT=123;
-    public static final int Initially=14;
-    public static final int GreaterThanSignEqualsSign=98;
-    public static final int ColonColon=93;
-    public static final int PlusSign=107;
-    public static final int Becomes=31;
-    public static final int LeftSquareBracket=117;
-    public static final int Always=38;
-    public static final int Simult=46;
-    public static final int IAT=79;
-    public static final int If=100;
-    public static final int Synchrony=18;
-    public static final int In=101;
-    public static final int RULE_REAL_LIT=126;
-    public static final int Jitter=43;
-    public static final int LessThanSignEqualsSignGreaterThanSign=78;
+    public static final int GreaterThanSign=115;
+    public static final int Timerise=25;
+    public static final int RULE_ID=130;
+    public static final int RULE_DIGIT=122;
+    public static final int Initially=13;
+    public static final int GreaterThanSignEqualsSign=97;
+    public static final int ColonColon=92;
+    public static final int PlusSign=106;
+    public static final int Becomes=30;
+    public static final int LeftSquareBracket=116;
+    public static final int Always=37;
+    public static final int Simult=45;
+    public static final int IAT=78;
+    public static final int If=99;
+    public static final int Synchrony=17;
+    public static final int In=100;
+    public static final int RULE_REAL_LIT=125;
+    public static final int Jitter=42;
+    public static final int LessThanSignEqualsSignGreaterThanSign=77;
     public static final int Classifier=9;
-    public static final int Occur=58;
-    public static final int Comma=108;
-    public static final int Raises=45;
-    public static final int HyphenMinus=109;
-    public static final int Occurs=44;
-    public static final int Guarantee=13;
-    public static final int LessThanSignEqualsSign=95;
-    public static final int Solidus=111;
-    public static final int RightCurlyBracket=121;
-    public static final int Property=23;
-    public static final int Holds=55;
-    public static final int Fun=82;
-    public static final int Modes=57;
-    public static final int FullStop=110;
-    public static final int Reference=17;
-    public static final int Calendar=19;
+    public static final int Occur=57;
+    public static final int Comma=107;
+    public static final int Raises=44;
+    public static final int HyphenMinus=108;
+    public static final int Occurs=43;
+    public static final int Guarantee=12;
+    public static final int LessThanSignEqualsSign=94;
+    public static final int Solidus=110;
+    public static final int RightCurlyBracket=120;
+    public static final int Property=22;
+    public static final int Holds=54;
+    public static final int Fun=81;
+    public static final int Modes=56;
+    public static final int FullStop=109;
+    public static final int Reference=16;
+    public static final int Calendar=18;
     public static final int Connection=10;
-    public static final int Div=81;
-    public static final int Semicolon=113;
-    public static final int Type=74;
-    public static final int RULE_EXPONENT=124;
-    public static final int KW__REMOVE=29;
-    public static final int When=75;
-    public static final int Delta=51;
-    public static final int Prev=68;
+    public static final int Div=80;
+    public static final int Semicolon=112;
+    public static final int Type=73;
+    public static final int RULE_EXPONENT=123;
+    public static final int KW__REMOVE=28;
+    public static final int When=74;
+    public static final int Delta=50;
+    public static final int Prev=67;
     public static final int Exclusively=8;
-    public static final int Else=63;
-    public static final int RULE_EXTENDED_DIGIT=129;
-    public static final int Parameter=16;
-    public static final int Event=52;
-    public static final int KW__CLK=60;
-    public static final int Assign=40;
-    public static final int ExclamationMarkEqualsSign=90;
-    public static final int HyphenMinusGreaterThanSign=91;
-    public static final int No_simult=15;
-    public static final int Pre=87;
-    public static final int True=73;
+    public static final int Else=62;
+    public static final int RULE_EXTENDED_DIGIT=128;
+    public static final int Parameter=15;
+    public static final int Event=51;
+    public static final int KW__CLK=59;
+    public static final int Assign=39;
+    public static final int ExclamationMarkEqualsSign=89;
+    public static final int HyphenMinusGreaterThanSign=90;
+    public static final int No_simult=14;
+    public static final int Pre=86;
+    public static final int True=72;
     public static final int Agree_input=7;
-    public static final int RULE_INT_EXPONENT=125;
-    public static final int Returns=36;
-    public static final int Implies=34;
-    public static final int FullStopFullStop=92;
-    public static final int Ordering=22;
-    public static final int Real=69;
-    public static final int This=71;
-    public static final int To=103;
-    public static final int Applies=30;
-    public static final int RULE_BASED_INTEGER=127;
-    public static final int RightSquareBracket=118;
-    public static final int Binding=32;
-    public static final int Const=50;
-    public static final int RightParenthesis=105;
-    public static final int ColonEqualsSign=94;
-    public static final int Not=86;
-    public static final int Latched=35;
-    public static final int And=80;
-    public static final int External=21;
-    public static final int Assume=41;
-    public static final int RULE_INTEGER_LIT=128;
-    public static final int Constant=20;
-    public static final int Time=72;
-    public static final int RULE_STRING=130;
-    public static final int KW__INSERT=28;
-    public static final int Eq=99;
-    public static final int During=42;
-    public static final int Int=83;
-    public static final int Struct=47;
-    public static final int With=76;
-    public static final int RULE_SL_COMMENT=122;
-    public static final int Over=67;
-    public static final int EqualsSign=115;
-    public static final int Timeof=48;
-    public static final int Lemma=56;
-    public static final int KW__COUNT=37;
-    public static final int Colon=112;
+    public static final int RULE_INT_EXPONENT=124;
+    public static final int Returns=35;
+    public static final int Implies=33;
+    public static final int FullStopFullStop=91;
+    public static final int Ordering=21;
+    public static final int Real=68;
+    public static final int This=70;
+    public static final int To=102;
+    public static final int Applies=29;
+    public static final int RULE_BASED_INTEGER=126;
+    public static final int RightSquareBracket=117;
+    public static final int Binding=31;
+    public static final int Const=49;
+    public static final int RightParenthesis=104;
+    public static final int ColonEqualsSign=93;
+    public static final int Not=85;
+    public static final int Latched=34;
+    public static final int And=79;
+    public static final int External=20;
+    public static final int Assume=40;
+    public static final int RULE_INTEGER_LIT=127;
+    public static final int Constant=19;
+    public static final int Time=71;
+    public static final int RULE_STRING=129;
+    public static final int KW__INSERT=27;
+    public static final int Eq=98;
+    public static final int During=41;
+    public static final int Int=82;
+    public static final int Struct=46;
+    public static final int With=75;
+    public static final int RULE_SL_COMMENT=121;
+    public static final int Over=66;
+    public static final int EqualsSign=114;
+    public static final int Timeof=47;
+    public static final int Lemma=55;
+    public static final int KW__COUNT=36;
+    public static final int Colon=111;
     public static final int EOF=-1;
-    public static final int Whenever=27;
-    public static final int Asterisk=106;
-    public static final int Condition=12;
-    public static final int Floor=54;
-    public static final int Mod=85;
-    public static final int RULE_WS=132;
-    public static final int LeftCurlyBracket=120;
-    public static final int CircumflexAccent=119;
-    public static final int Compute=33;
-    public static final int Times=59;
-    public static final int Timefall=25;
-    public static final int Within=49;
-    public static final int Let=84;
-    public static final int Tel=88;
+    public static final int Whenever=26;
+    public static final int Asterisk=105;
+    public static final int Condition=11;
+    public static final int Floor=53;
+    public static final int Mod=84;
+    public static final int RULE_WS=131;
+    public static final int LeftCurlyBracket=119;
+    public static final int CircumflexAccent=118;
+    public static final int Compute=32;
+    public static final int Times=58;
+    public static final int Timefall=24;
+    public static final int Within=48;
+    public static final int Let=83;
+    public static final int Tel=87;
 
     // delegates
     // delegators
@@ -1226,7 +1225,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt3=2;
                     int LA3_0 = input.LA(1);
 
-                    if ( (LA3_0==Get_Property||LA3_0==Enumerator||(LA3_0>=Timefall && LA3_0<=Timerise)||LA3_0==Latched||LA3_0==Timeof||(LA3_0>=Event && LA3_0<=Floor)||(LA3_0>=Prev && LA3_0<=Real)||(LA3_0>=This && LA3_0<=True)||(LA3_0>=Not && LA3_0<=Pre)||LA3_0==If||LA3_0==LeftParenthesis||LA3_0==HyphenMinus||LA3_0==RULE_REAL_LIT||LA3_0==RULE_INTEGER_LIT||LA3_0==RULE_ID) ) {
+                    if ( (LA3_0==Get_Property||(LA3_0>=Timefall && LA3_0<=Timerise)||LA3_0==Latched||LA3_0==Timeof||(LA3_0>=Event && LA3_0<=Floor)||LA3_0==Enum||(LA3_0>=Prev && LA3_0<=Real)||(LA3_0>=This && LA3_0<=True)||(LA3_0>=Not && LA3_0<=Pre)||LA3_0==If||LA3_0==LeftParenthesis||LA3_0==HyphenMinus||LA3_0==RULE_REAL_LIT||LA3_0==RULE_INTEGER_LIT||LA3_0==RULE_ID) ) {
                         alt3=1;
                     }
                     else if ( (LA3_0==Condition||LA3_0==Whenever||LA3_0==Always||LA3_0==When) ) {
@@ -1402,7 +1401,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt4=2;
                     int LA4_0 = input.LA(1);
 
-                    if ( (LA4_0==Get_Property||LA4_0==Enumerator||(LA4_0>=Timefall && LA4_0<=Timerise)||LA4_0==Latched||LA4_0==Timeof||(LA4_0>=Event && LA4_0<=Floor)||(LA4_0>=Prev && LA4_0<=Real)||(LA4_0>=This && LA4_0<=True)||(LA4_0>=Not && LA4_0<=Pre)||LA4_0==If||LA4_0==LeftParenthesis||LA4_0==HyphenMinus||LA4_0==RULE_REAL_LIT||LA4_0==RULE_INTEGER_LIT||LA4_0==RULE_ID) ) {
+                    if ( (LA4_0==Get_Property||(LA4_0>=Timefall && LA4_0<=Timerise)||LA4_0==Latched||LA4_0==Timeof||(LA4_0>=Event && LA4_0<=Floor)||LA4_0==Enum||(LA4_0>=Prev && LA4_0<=Real)||(LA4_0>=This && LA4_0<=True)||(LA4_0>=Not && LA4_0<=Pre)||LA4_0==If||LA4_0==LeftParenthesis||LA4_0==HyphenMinus||LA4_0==RULE_REAL_LIT||LA4_0==RULE_INTEGER_LIT||LA4_0==RULE_ID) ) {
                         alt4=1;
                     }
                     else if ( (LA4_0==Condition||LA4_0==Whenever||LA4_0==Always||LA4_0==When) ) {
@@ -1595,7 +1594,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt6=2;
                     int LA6_0 = input.LA(1);
 
-                    if ( (LA6_0==Get_Property||LA6_0==Enumerator||(LA6_0>=Timefall && LA6_0<=Timerise)||LA6_0==Latched||LA6_0==Timeof||(LA6_0>=Event && LA6_0<=Floor)||(LA6_0>=Prev && LA6_0<=Real)||(LA6_0>=This && LA6_0<=True)||(LA6_0>=Not && LA6_0<=Pre)||LA6_0==If||LA6_0==LeftParenthesis||LA6_0==HyphenMinus||LA6_0==RULE_REAL_LIT||LA6_0==RULE_INTEGER_LIT||LA6_0==RULE_ID) ) {
+                    if ( (LA6_0==Get_Property||(LA6_0>=Timefall && LA6_0<=Timerise)||LA6_0==Latched||LA6_0==Timeof||(LA6_0>=Event && LA6_0<=Floor)||LA6_0==Enum||(LA6_0>=Prev && LA6_0<=Real)||(LA6_0>=This && LA6_0<=True)||(LA6_0>=Not && LA6_0<=Pre)||LA6_0==If||LA6_0==LeftParenthesis||LA6_0==HyphenMinus||LA6_0==RULE_REAL_LIT||LA6_0==RULE_INTEGER_LIT||LA6_0==RULE_ID) ) {
                         alt6=1;
                     }
                     else if ( (LA6_0==Condition||LA6_0==Whenever||LA6_0==Always||LA6_0==When) ) {
@@ -1962,7 +1961,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt7=2;
                     int LA7_0 = input.LA(1);
 
-                    if ( (LA7_0==Get_Property||LA7_0==Enumerator||(LA7_0>=Timefall && LA7_0<=Timerise)||LA7_0==Latched||LA7_0==Timeof||(LA7_0>=Event && LA7_0<=Floor)||(LA7_0>=Prev && LA7_0<=Real)||(LA7_0>=This && LA7_0<=True)||(LA7_0>=Not && LA7_0<=Pre)||LA7_0==If||LA7_0==LeftParenthesis||LA7_0==HyphenMinus||LA7_0==RULE_REAL_LIT||LA7_0==RULE_INTEGER_LIT||LA7_0==RULE_ID) ) {
+                    if ( (LA7_0==Get_Property||(LA7_0>=Timefall && LA7_0<=Timerise)||LA7_0==Latched||LA7_0==Timeof||(LA7_0>=Event && LA7_0<=Floor)||LA7_0==Enum||(LA7_0>=Prev && LA7_0<=Real)||(LA7_0>=This && LA7_0<=True)||(LA7_0>=Not && LA7_0<=Pre)||LA7_0==If||LA7_0==LeftParenthesis||LA7_0==HyphenMinus||LA7_0==RULE_REAL_LIT||LA7_0==RULE_INTEGER_LIT||LA7_0==RULE_ID) ) {
                         alt7=1;
                     }
                     else if ( (LA7_0==Condition||LA7_0==Whenever||LA7_0==Always||LA7_0==When) ) {
@@ -13994,7 +13993,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( (LA76_0==Not||LA76_0==HyphenMinus) ) {
                 alt76=1;
             }
-            else if ( (LA76_0==Get_Property||LA76_0==Enumerator||(LA76_0>=Timefall && LA76_0<=Timerise)||LA76_0==Latched||LA76_0==Timeof||(LA76_0>=Event && LA76_0<=Floor)||(LA76_0>=Prev && LA76_0<=Real)||(LA76_0>=This && LA76_0<=True)||LA76_0==Pre||LA76_0==If||LA76_0==LeftParenthesis||LA76_0==RULE_REAL_LIT||LA76_0==RULE_INTEGER_LIT||LA76_0==RULE_ID) ) {
+            else if ( (LA76_0==Get_Property||(LA76_0>=Timefall && LA76_0<=Timerise)||LA76_0==Latched||LA76_0==Timeof||(LA76_0>=Event && LA76_0<=Floor)||LA76_0==Enum||(LA76_0>=Prev && LA76_0<=Real)||(LA76_0>=This && LA76_0<=True)||LA76_0==Pre||LA76_0==If||LA76_0==LeftParenthesis||LA76_0==RULE_REAL_LIT||LA76_0==RULE_INTEGER_LIT||LA76_0==RULE_ID) ) {
                 alt76=2;
             }
             else {
@@ -14252,7 +14251,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( (LA77_0==If) ) {
                 alt77=1;
             }
-            else if ( (LA77_0==Get_Property||LA77_0==Enumerator||(LA77_0>=Timefall && LA77_0<=Timerise)||LA77_0==Latched||LA77_0==Timeof||(LA77_0>=Event && LA77_0<=Floor)||(LA77_0>=Prev && LA77_0<=Real)||(LA77_0>=This && LA77_0<=True)||LA77_0==Pre||LA77_0==LeftParenthesis||LA77_0==RULE_REAL_LIT||LA77_0==RULE_INTEGER_LIT||LA77_0==RULE_ID) ) {
+            else if ( (LA77_0==Get_Property||(LA77_0>=Timefall && LA77_0<=Timerise)||LA77_0==Latched||LA77_0==Timeof||(LA77_0>=Event && LA77_0<=Floor)||LA77_0==Enum||(LA77_0>=Prev && LA77_0<=Real)||(LA77_0>=This && LA77_0<=True)||LA77_0==Pre||LA77_0==LeftParenthesis||LA77_0==RULE_REAL_LIT||LA77_0==RULE_INTEGER_LIT||LA77_0==RULE_ID) ) {
                 alt77=2;
             }
             else {
@@ -14536,7 +14535,6 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                 alt78=2;
                 }
                 break;
-            case Enumerator:
             case Timefall:
             case Timerise:
             case Latched:
@@ -14544,6 +14542,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             case Event:
             case False:
             case Floor:
+            case Enum:
             case Real:
             case This:
             case Time:
@@ -15133,7 +15132,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleTermExpr"
-    // InternalAgreeParser.g:6029:1: ruleTermExpr returns [EObject current=null] : ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enumerator otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) ) ;
+    // InternalAgreeParser.g:6029:1: ruleTermExpr returns [EObject current=null] : ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enum otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) ) ;
     public final EObject ruleTermExpr() throws RecognitionException {
         EObject current = null;
 
@@ -15203,10 +15202,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // InternalAgreeParser.g:6032:28: ( ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enumerator otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) ) )
-            // InternalAgreeParser.g:6033:1: ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enumerator otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) )
+            // InternalAgreeParser.g:6032:28: ( ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enum otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) ) )
+            // InternalAgreeParser.g:6033:1: ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enum otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) )
             {
-            // InternalAgreeParser.g:6033:1: ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enumerator otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) )
+            // InternalAgreeParser.g:6033:1: ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enum otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) )
             int alt82=16;
             alt82 = dfa82.predict(input);
             switch (alt82) {
@@ -16147,10 +16146,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 15 :
-                    // InternalAgreeParser.g:6485:6: ( () otherlv_54= Enumerator otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis )
+                    // InternalAgreeParser.g:6485:6: ( () otherlv_54= Enum otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis )
                     {
-                    // InternalAgreeParser.g:6485:6: ( () otherlv_54= Enumerator otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis )
-                    // InternalAgreeParser.g:6485:7: () otherlv_54= Enumerator otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis
+                    // InternalAgreeParser.g:6485:6: ( () otherlv_54= Enum otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis )
+                    // InternalAgreeParser.g:6485:7: () otherlv_54= Enum otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis
                     {
                     // InternalAgreeParser.g:6485:7: ()
                     // InternalAgreeParser.g:6486:5: 
@@ -16165,10 +16164,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    otherlv_54=(Token)match(input,Enumerator,FollowSets000.FOLLOW_48); if (state.failed) return current;
+                    otherlv_54=(Token)match(input,Enum,FollowSets000.FOLLOW_48); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                          	newLeafNode(otherlv_54, grammarAccess.getTermExprAccess().getEnumeratorKeyword_14_1());
+                          	newLeafNode(otherlv_54, grammarAccess.getTermExprAccess().getEnumKeyword_14_1());
                           
                     }
                     otherlv_55=(Token)match(input,LeftParenthesis,FollowSets000.FOLLOW_11); if (state.failed) return current;
@@ -16473,7 +16472,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt84=2;
                     int LA84_0 = input.LA(1);
 
-                    if ( (LA84_0==Get_Property||LA84_0==Enumerator||(LA84_0>=Timefall && LA84_0<=Timerise)||LA84_0==Latched||LA84_0==Timeof||(LA84_0>=Event && LA84_0<=Floor)||(LA84_0>=Prev && LA84_0<=Real)||(LA84_0>=This && LA84_0<=True)||(LA84_0>=Not && LA84_0<=Pre)||LA84_0==If||LA84_0==LeftParenthesis||LA84_0==HyphenMinus||LA84_0==RULE_REAL_LIT||LA84_0==RULE_INTEGER_LIT||LA84_0==RULE_ID) ) {
+                    if ( (LA84_0==Get_Property||(LA84_0>=Timefall && LA84_0<=Timerise)||LA84_0==Latched||LA84_0==Timeof||(LA84_0>=Event && LA84_0<=Floor)||LA84_0==Enum||(LA84_0>=Prev && LA84_0<=Real)||(LA84_0>=This && LA84_0<=True)||(LA84_0>=Not && LA84_0<=Pre)||LA84_0==If||LA84_0==LeftParenthesis||LA84_0==HyphenMinus||LA84_0==RULE_REAL_LIT||LA84_0==RULE_INTEGER_LIT||LA84_0==RULE_ID) ) {
                         alt84=1;
                     }
                     switch (alt84) {
@@ -24697,12 +24696,12 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     protected DFA100 dfa100 = new DFA100(this);
     static final String dfa_1s = "\14\uffff";
     static final String dfa_2s = "\1\uffff\1\12\12\uffff";
-    static final String dfa_3s = "\1\4\1\160\12\uffff";
-    static final String dfa_4s = "\1\u0083\1\160\12\uffff";
+    static final String dfa_3s = "\1\4\1\157\12\uffff";
+    static final String dfa_4s = "\1\u0082\1\157\12\uffff";
     static final String dfa_5s = "\2\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\1";
     static final String dfa_6s = "\14\uffff}>";
     static final String[] dfa_7s = {
-            "\1\7\20\uffff\1\10\1\uffff\1\3\32\uffff\1\4\15\uffff\1\5\1\uffff\1\6\7\uffff\1\11\7\uffff\1\2\60\uffff\1\1",
+            "\1\7\17\uffff\1\10\1\uffff\1\3\32\uffff\1\4\15\uffff\1\5\1\uffff\1\6\7\uffff\1\11\7\uffff\1\2\60\uffff\1\1",
             "\1\13",
             "",
             "",
@@ -24744,11 +24743,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     static final String dfa_8s = "\12\uffff";
     static final String dfa_9s = "\1\10\11\uffff";
     static final String dfa_10s = "\1\10\7\0\2\uffff";
-    static final String dfa_11s = "\1\171\7\0\2\uffff";
+    static final String dfa_11s = "\1\170\7\0\2\uffff";
     static final String dfa_12s = "\10\uffff\1\2\1\1";
     static final String dfa_13s = "\1\uffff\1\0\1\1\1\2\1\3\1\4\1\5\1\6\2\uffff}>";
     static final String[] dfa_14s = {
-            "\1\10\26\uffff\1\10\2\uffff\1\10\7\uffff\1\10\1\uffff\1\10\12\uffff\1\10\2\uffff\2\10\3\uffff\1\10\6\uffff\1\10\5\uffff\1\10\1\uffff\1\10\1\uffff\2\10\3\uffff\1\10\4\uffff\1\7\2\10\2\uffff\1\2\1\6\1\10\1\4\3\uffff\1\10\2\uffff\5\10\1\uffff\3\10\1\1\1\5\1\3\1\uffff\2\10\1\uffff\1\10",
+            "\1\10\25\uffff\1\10\2\uffff\1\10\7\uffff\1\10\1\uffff\1\10\12\uffff\1\10\2\uffff\2\10\3\uffff\1\10\6\uffff\1\10\5\uffff\1\10\1\uffff\1\10\1\uffff\2\10\3\uffff\1\10\4\uffff\1\7\2\10\2\uffff\1\2\1\6\1\10\1\4\3\uffff\1\10\2\uffff\5\10\1\uffff\3\10\1\1\1\5\1\3\1\uffff\2\10\1\uffff\1\10",
             "\1\uffff",
             "\1\uffff",
             "\1\uffff",
@@ -24902,12 +24901,12 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         }
     }
     static final String dfa_15s = "\21\uffff";
-    static final String dfa_16s = "\1\13\20\uffff";
-    static final String dfa_17s = "\1\u0083\20\uffff";
+    static final String dfa_16s = "\1\30\20\uffff";
+    static final String dfa_17s = "\1\u0082\20\uffff";
     static final String dfa_18s = "\1\uffff\1\1\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20";
     static final String dfa_19s = "\21\uffff}>";
     static final String[] dfa_20s = {
-            "\1\17\15\uffff\1\11\1\10\10\uffff\1\6\14\uffff\1\7\3\uffff\1\5\1\13\1\15\16\uffff\1\16\1\uffff\1\14\1\1\1\13\15\uffff\1\4\20\uffff\1\20\25\uffff\1\12\1\uffff\1\3\2\uffff\1\2",
+            "\1\11\1\10\10\uffff\1\6\14\uffff\1\7\3\uffff\1\5\1\13\1\15\11\uffff\1\17\4\uffff\1\16\1\uffff\1\14\1\1\1\13\15\uffff\1\4\20\uffff\1\20\25\uffff\1\12\1\uffff\1\3\2\uffff\1\2",
             "",
             "",
             "",
@@ -24947,17 +24946,17 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             this.transition = dfa_20;
         }
         public String getDescription() {
-            return "6033:1: ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enumerator otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) )";
+            return "6033:1: ( ( () otherlv_1= Time ) | this_ComplexExpr_2= ruleComplexExpr | ( () ( (lv_val_4_0= RULE_INTEGER_LIT ) ) ) | ( () otherlv_6= Pre otherlv_7= LeftParenthesis ( (lv_expr_8_0= ruleExpr ) ) otherlv_9= RightParenthesis ) | ( () otherlv_11= Event otherlv_12= LeftParenthesis ( (lv_id_13_0= ruleNestedDotID ) ) otherlv_14= RightParenthesis ) | ( () otherlv_16= Latched otherlv_17= LeftParenthesis ( (lv_expr_18_0= ruleExpr ) ) otherlv_19= RightParenthesis ) | ( () otherlv_21= Timeof otherlv_22= LeftParenthesis ( (lv_id_23_0= ruleNestedDotID ) ) otherlv_24= RightParenthesis ) | ( () otherlv_26= Timerise otherlv_27= LeftParenthesis ( (lv_id_28_0= ruleNestedDotID ) ) otherlv_29= RightParenthesis ) | ( () otherlv_31= Timefall otherlv_32= LeftParenthesis ( (lv_id_33_0= ruleNestedDotID ) ) otherlv_34= RightParenthesis ) | ( () ( (lv_val_36_0= RULE_REAL_LIT ) ) ) | ( () ( (lv_val_38_0= ruleBooleanLiteral ) ) ) | ( () otherlv_40= This (otherlv_41= FullStop ( (lv_subThis_42_0= ruleNestedDotID ) ) )? ) | ( () otherlv_44= Floor otherlv_45= LeftParenthesis ( (lv_expr_46_0= ruleExpr ) ) otherlv_47= RightParenthesis ) | ( () otherlv_49= Real otherlv_50= LeftParenthesis ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= RightParenthesis ) | ( () otherlv_54= Enum otherlv_55= LeftParenthesis ( (lv_enumType_56_0= ruleNestedDotID ) ) otherlv_57= Comma ( (lv_value_58_0= RULE_ID ) ) otherlv_59= RightParenthesis ) | (otherlv_60= LeftParenthesis this_Expr_61= ruleExpr otherlv_62= RightParenthesis ) )";
         }
     }
     static final String dfa_21s = "\25\uffff";
     static final String dfa_22s = "\10\uffff\1\17\1\21\1\23\3\uffff\1\17\1\uffff\1\21\3\uffff\1\23";
-    static final String dfa_23s = "\1\11\5\uffff\2\176\3\36\3\uffff\1\36\1\uffff\1\36\1\uffff\1\u0083\1\uffff\1\36";
-    static final String dfa_24s = "\1\u0083\5\uffff\4\u0083\1\161\3\uffff\1\161\1\uffff\1\161\1\uffff\1\u0083\1\uffff\1\161";
+    static final String dfa_23s = "\1\11\5\uffff\2\175\3\35\3\uffff\1\35\1\uffff\1\35\1\uffff\1\u0082\1\uffff\1\35";
+    static final String dfa_24s = "\1\u0082\5\uffff\4\u0082\1\160\3\uffff\1\160\1\uffff\1\160\1\uffff\1\u0082\1\uffff\1\160";
     static final String dfa_25s = "\1\uffff\1\1\1\2\1\3\1\4\1\5\5\uffff\1\11\1\12\1\6\1\uffff\1\7\1\uffff\1\10\1\uffff\1\13\1\uffff";
     static final String dfa_26s = "\25\uffff}>";
     static final String[] dfa_27s = {
-            "\1\3\7\uffff\1\2\17\uffff\1\4\23\uffff\1\14\23\uffff\1\14\36\uffff\1\13\2\uffff\1\6\1\uffff\1\7\7\uffff\1\1\10\uffff\1\10\1\uffff\1\11\1\uffff\1\5\1\12",
+            "\1\3\6\uffff\1\2\17\uffff\1\4\23\uffff\1\14\23\uffff\1\14\36\uffff\1\13\2\uffff\1\6\1\uffff\1\7\7\uffff\1\1\10\uffff\1\10\1\uffff\1\11\1\uffff\1\5\1\12",
             "",
             "",
             "",
@@ -25011,107 +25010,107 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     private static class FollowSets000 {
         public static final BitSet FOLLOW_1 = new BitSet(new long[]{0x0000000000000000L});
         public static final BitSet FOLLOW_2 = new BitSet(new long[]{0x0000000000000002L});
-        public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x0104038000ED6492L,0x0000000800040407L});
-        public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000004L});
-        public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000000000000L,0x0001000000000000L});
-        public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x007100480E001820L,0x4000211000C00BB0L,0x0000000000000009L});
-        public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000000000000L,0x0002000000000000L});
-        public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x007100480E001820L,0x4000211000C00BB0L,0x000000000000000DL});
-        public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x0071000806000820L,0x4000211000C003B0L,0x0000000000000009L});
-        public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x2000000000000000L,0x0000000000080020L,0x0000000000000008L});
-        public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0080000000000000L});
-        public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000040000000000L});
-        public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000000000000000L,0x0020010000000000L});
-        public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000100000000100L});
-        public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0000100000000000L});
-        public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000040000000002L});
-        public static final BitSet FOLLOW_18 = new BitSet(new long[]{0x0800000000000000L});
-        public static final BitSet FOLLOW_19 = new BitSet(new long[]{0x0000200000000100L});
-        public static final BitSet FOLLOW_20 = new BitSet(new long[]{0x0000200000000000L});
-        public static final BitSet FOLLOW_21 = new BitSet(new long[]{0x0400100000000100L});
-        public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x0400100000000000L});
-        public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0000000080000000L});
-        public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000200L});
-        public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0080000000000100L});
-        public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0000000400000000L});
-        public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0000040000000102L});
-        public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x4000000000000000L});
-        public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x0000000000000002L,0x0000000000001000L});
-        public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x0000080000000000L});
-        public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x0000000001000000L});
-        public static final BitSet FOLLOW_32 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
-        public static final BitSet FOLLOW_33 = new BitSet(new long[]{0x0000000000000000L,0x0000000000008000L});
-        public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x0000000000000000L,0x0000100000000000L});
-        public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x0000000000000000L,0x0040000000000000L});
-        public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0000000000000000L,0x0000020000000000L});
-        public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000001L});
-        public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x0000400000008000L,0x0002100000000000L});
-        public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x0000400000008000L,0x0002000000000000L});
-        public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x0000000000000000L,0x0002000000000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x0000000000000000L,0x0002100000000000L});
+        public static final BitSet FOLLOW_3 = new BitSet(new long[]{0x808201C00076B492L,0x0000000400020203L});
+        public static final BitSet FOLLOW_4 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000002L});
+        public static final BitSet FOLLOW_5 = new BitSet(new long[]{0x0000000000000000L,0x0000800000000000L});
+        public static final BitSet FOLLOW_6 = new BitSet(new long[]{0x8038802407000820L,0xA0001088006005D8L,0x0000000000000004L});
+        public static final BitSet FOLLOW_7 = new BitSet(new long[]{0x0000000000000000L,0x0001000000000000L});
+        public static final BitSet FOLLOW_8 = new BitSet(new long[]{0x8038802407000820L,0xA0001088006005D8L,0x0000000000000006L});
+        public static final BitSet FOLLOW_9 = new BitSet(new long[]{0x8038800403000020L,0xA0001088006001D8L,0x0000000000000004L});
+        public static final BitSet FOLLOW_10 = new BitSet(new long[]{0x1000000000000000L,0x0000000000040010L,0x0000000000000004L});
+        public static final BitSet FOLLOW_11 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_12 = new BitSet(new long[]{0x0040000000000000L});
+        public static final BitSet FOLLOW_13 = new BitSet(new long[]{0x0000020000000000L});
+        public static final BitSet FOLLOW_14 = new BitSet(new long[]{0x0000000000000000L,0x0010008000000000L});
+        public static final BitSet FOLLOW_15 = new BitSet(new long[]{0x0000080000000100L});
+        public static final BitSet FOLLOW_16 = new BitSet(new long[]{0x0000080000000000L});
+        public static final BitSet FOLLOW_17 = new BitSet(new long[]{0x0000020000000002L});
+        public static final BitSet FOLLOW_18 = new BitSet(new long[]{0x0400000000000000L});
+        public static final BitSet FOLLOW_19 = new BitSet(new long[]{0x0000100000000100L});
+        public static final BitSet FOLLOW_20 = new BitSet(new long[]{0x0000100000000000L});
+        public static final BitSet FOLLOW_21 = new BitSet(new long[]{0x0200080000000100L});
+        public static final BitSet FOLLOW_22 = new BitSet(new long[]{0x0200080000000000L});
+        public static final BitSet FOLLOW_23 = new BitSet(new long[]{0x0000000040000000L});
+        public static final BitSet FOLLOW_24 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000100L});
+        public static final BitSet FOLLOW_25 = new BitSet(new long[]{0x0040000000000100L});
+        public static final BitSet FOLLOW_26 = new BitSet(new long[]{0x0000000200000000L});
+        public static final BitSet FOLLOW_27 = new BitSet(new long[]{0x0000020000000102L});
+        public static final BitSet FOLLOW_28 = new BitSet(new long[]{0x2000000000000000L});
+        public static final BitSet FOLLOW_29 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000800L});
+        public static final BitSet FOLLOW_30 = new BitSet(new long[]{0x0000040000000000L});
+        public static final BitSet FOLLOW_31 = new BitSet(new long[]{0x0000000000800000L});
+        public static final BitSet FOLLOW_32 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000800L});
+        public static final BitSet FOLLOW_33 = new BitSet(new long[]{0x0000000000000000L,0x0000000000004000L});
+        public static final BitSet FOLLOW_34 = new BitSet(new long[]{0x0000000000000000L,0x0000080000000000L});
+        public static final BitSet FOLLOW_35 = new BitSet(new long[]{0x0000000000000000L,0x0020000000000000L});
+        public static final BitSet FOLLOW_36 = new BitSet(new long[]{0x0000000000000000L,0x0000010000000000L});
+        public static final BitSet FOLLOW_37 = new BitSet(new long[]{0x0000000000000000L,0x8000000000000000L});
+        public static final BitSet FOLLOW_38 = new BitSet(new long[]{0x0000200000004000L,0x0001080000000000L});
+        public static final BitSet FOLLOW_39 = new BitSet(new long[]{0x0000200000004000L,0x0001000000000000L});
+        public static final BitSet FOLLOW_40 = new BitSet(new long[]{0x0000000000000000L,0x0001000000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_41 = new BitSet(new long[]{0x0000000000000000L,0x0001080000000000L});
         public static final BitSet FOLLOW_42 = new BitSet(new long[]{0x0000000000000040L});
-        public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x0000000800000000L});
-        public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0000000000000000L,0x0008000000000000L});
-        public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0000000000000000L,0x0100000000000000L});
-        public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0000000000000000L,0x0200100000000000L});
-        public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0000000000000000L,0x000A100000000000L});
-        public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x0000000000000000L,0x0000010000000000L});
-        public static final BitSet FOLLOW_49 = new BitSet(new long[]{0x0000000000000000L,0x0000120000000000L});
-        public static final BitSet FOLLOW_50 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x0000000000000000L,0x0020000000000000L});
-        public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x0000000000000000L,0x0040100000000000L});
-        public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x0002000000000000L,0x0001000000000000L});
-        public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L});
-        public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x0000000000000000L,0x0000020000000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x0000001000000000L});
-        public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x0000000000000000L,0x0000000002100000L});
-        public static final BitSet FOLLOW_58 = new BitSet(new long[]{0x0000000000000000L,0x0000000000100000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_59 = new BitSet(new long[]{0x0100000000000000L,0x0000000000000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_60 = new BitSet(new long[]{0x0100000000000000L,0x0000000001000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_61 = new BitSet(new long[]{0x0000000000000000L,0x0008100000000000L});
-        public static final BitSet FOLLOW_62 = new BitSet(new long[]{0x0000000000000002L,0x0020000000000000L});
-        public static final BitSet FOLLOW_63 = new BitSet(new long[]{0x0000000000000000L,0x4000200000000000L,0x0000000000000001L});
-        public static final BitSet FOLLOW_64 = new BitSet(new long[]{0x0000000000000000L,0x4000000000000000L,0x0000000000000001L});
-        public static final BitSet FOLLOW_65 = new BitSet(new long[]{0x0000800000000000L});
-        public static final BitSet FOLLOW_66 = new BitSet(new long[]{0x0000000000000002L,0x0000000008000000L});
-        public static final BitSet FOLLOW_67 = new BitSet(new long[]{0x0000000000000002L,0x0000000200000000L});
-        public static final BitSet FOLLOW_68 = new BitSet(new long[]{0x0000000000000002L,0x0000000000004000L});
-        public static final BitSet FOLLOW_69 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
-        public static final BitSet FOLLOW_70 = new BitSet(new long[]{0x0000000000000002L,0x0000000000010000L});
-        public static final BitSet FOLLOW_71 = new BitSet(new long[]{0x0000000000000002L,0x001C000584000000L});
-        public static final BitSet FOLLOW_72 = new BitSet(new long[]{0x0000000000000002L,0x0000280000000000L});
-        public static final BitSet FOLLOW_73 = new BitSet(new long[]{0x0000000000000002L,0x0000840000220000L});
-        public static final BitSet FOLLOW_74 = new BitSet(new long[]{0x0000000000000002L,0x0080000000000000L});
-        public static final BitSet FOLLOW_75 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000040L});
-        public static final BitSet FOLLOW_76 = new BitSet(new long[]{0x8000000000000000L});
-        public static final BitSet FOLLOW_77 = new BitSet(new long[]{0x0000000000000002L,0x0100000000000000L});
-        public static final BitSet FOLLOW_78 = new BitSet(new long[]{0x0000000000000000L,0x0000000040000000L});
-        public static final BitSet FOLLOW_79 = new BitSet(new long[]{0x0000000000000000L,0x0200000000000000L});
-        public static final BitSet FOLLOW_80 = new BitSet(new long[]{0x0000000000000002L,0x0000400000000000L});
-        public static final BitSet FOLLOW_81 = new BitSet(new long[]{0x0000000000000002L,0x0100010000000000L});
-        public static final BitSet FOLLOW_82 = new BitSet(new long[]{0x0071000806000820L,0x4000231000C003B0L,0x0000000000000009L});
-        public static final BitSet FOLLOW_83 = new BitSet(new long[]{0x0000000000000000L,0x0202000000000000L});
-        public static final BitSet FOLLOW_84 = new BitSet(new long[]{0x1000002030000000L,0x0000000000000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_85 = new BitSet(new long[]{0x0000000000000000L,0x0000000020000000L});
-        public static final BitSet FOLLOW_86 = new BitSet(new long[]{0x0000000000000000L,0x0000000200002000L});
-        public static final BitSet FOLLOW_87 = new BitSet(new long[]{0x0020000200120200L,0x4020290000000200L,0x000000000000000DL});
-        public static final BitSet FOLLOW_88 = new BitSet(new long[]{0x0000000040000000L,0x0002102000000000L});
-        public static final BitSet FOLLOW_89 = new BitSet(new long[]{0x0000000000000000L,0x0002102000000000L});
-        public static final BitSet FOLLOW_90 = new BitSet(new long[]{0x0000000000000002L,0x0000002000000000L});
-        public static final BitSet FOLLOW_91 = new BitSet(new long[]{0x0000000000000000L,0x0040000000000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_92 = new BitSet(new long[]{0x0020000200120200L,0x40202B0000000200L,0x000000000000000DL});
-        public static final BitSet FOLLOW_93 = new BitSet(new long[]{0x0000000000000000L,0x0000000200000000L});
-        public static final BitSet FOLLOW_94 = new BitSet(new long[]{0x0000000000000002L,0x0020400000000000L});
-        public static final BitSet FOLLOW_95 = new BitSet(new long[]{0x0000000000000000L,0x0040000010000000L});
-        public static final BitSet FOLLOW_96 = new BitSet(new long[]{0x0000000000000000L,0x4000280000000000L,0x0000000000000009L});
-        public static final BitSet FOLLOW_97 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000000L,0x0000000000000008L});
-        public static final BitSet FOLLOW_98 = new BitSet(new long[]{0x0000000000000000L,0x4000000000000000L});
-        public static final BitSet FOLLOW_99 = new BitSet(new long[]{0x0008000000000002L});
-        public static final BitSet FOLLOW_100 = new BitSet(new long[]{0x0000000000000000L,0x0000008000000000L});
-        public static final BitSet FOLLOW_101 = new BitSet(new long[]{0x0000000100000000L});
-        public static final BitSet FOLLOW_102 = new BitSet(new long[]{0x0200000000000000L});
-        public static final BitSet FOLLOW_103 = new BitSet(new long[]{0x0000000000000002L,0x0000000020000000L});
+        public static final BitSet FOLLOW_43 = new BitSet(new long[]{0x0000000400000000L});
+        public static final BitSet FOLLOW_44 = new BitSet(new long[]{0x0000000000000000L,0x0004000000000000L});
+        public static final BitSet FOLLOW_45 = new BitSet(new long[]{0x0000000000000000L,0x0080000000000000L});
+        public static final BitSet FOLLOW_46 = new BitSet(new long[]{0x0000000000000000L,0x0100080000000000L});
+        public static final BitSet FOLLOW_47 = new BitSet(new long[]{0x0000000000000000L,0x0005080000000000L});
+        public static final BitSet FOLLOW_48 = new BitSet(new long[]{0x0000000000000000L,0x0000008000000000L});
+        public static final BitSet FOLLOW_49 = new BitSet(new long[]{0x0000000000000000L,0x0000090000000000L});
+        public static final BitSet FOLLOW_50 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_51 = new BitSet(new long[]{0x0000000000000000L,0x0010000000000000L});
+        public static final BitSet FOLLOW_52 = new BitSet(new long[]{0x0000000000000000L,0x0020080000000000L});
+        public static final BitSet FOLLOW_53 = new BitSet(new long[]{0x0001000000000000L,0x0000800000000000L});
+        public static final BitSet FOLLOW_54 = new BitSet(new long[]{0x0000000000000000L,0x0000000008000000L});
+        public static final BitSet FOLLOW_55 = new BitSet(new long[]{0x0000000000000000L,0x0000010000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_56 = new BitSet(new long[]{0x0000000800000000L});
+        public static final BitSet FOLLOW_57 = new BitSet(new long[]{0x0000000000000000L,0x0000000001080000L});
+        public static final BitSet FOLLOW_58 = new BitSet(new long[]{0x0000000000000000L,0x0000000000080000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_59 = new BitSet(new long[]{0x0080000000000000L,0x0000000000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_60 = new BitSet(new long[]{0x0080000000000000L,0x0000000000800000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_61 = new BitSet(new long[]{0x0000000000000000L,0x0004080000000000L});
+        public static final BitSet FOLLOW_62 = new BitSet(new long[]{0x0000000000000002L,0x0010000000000000L});
+        public static final BitSet FOLLOW_63 = new BitSet(new long[]{0x0000000000000000L,0xA000100000000000L});
+        public static final BitSet FOLLOW_64 = new BitSet(new long[]{0x0000000000000000L,0xA000000000000000L});
+        public static final BitSet FOLLOW_65 = new BitSet(new long[]{0x0000400000000000L});
+        public static final BitSet FOLLOW_66 = new BitSet(new long[]{0x0000000000000002L,0x0000000004000000L});
+        public static final BitSet FOLLOW_67 = new BitSet(new long[]{0x0000000000000002L,0x0000000100000000L});
+        public static final BitSet FOLLOW_68 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002000L});
+        public static final BitSet FOLLOW_69 = new BitSet(new long[]{0x0000000000000002L,0x0000002000000000L});
+        public static final BitSet FOLLOW_70 = new BitSet(new long[]{0x0000000000000002L,0x0000000000008000L});
+        public static final BitSet FOLLOW_71 = new BitSet(new long[]{0x0000000000000002L,0x000E0002C2000000L});
+        public static final BitSet FOLLOW_72 = new BitSet(new long[]{0x0000000000000002L,0x0000140000000000L});
+        public static final BitSet FOLLOW_73 = new BitSet(new long[]{0x0000000000000002L,0x0000420000110000L});
+        public static final BitSet FOLLOW_74 = new BitSet(new long[]{0x0000000000000002L,0x0040000000000000L});
+        public static final BitSet FOLLOW_75 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000020L});
+        public static final BitSet FOLLOW_76 = new BitSet(new long[]{0x4000000000000000L});
+        public static final BitSet FOLLOW_77 = new BitSet(new long[]{0x0000000000000002L,0x0080000000000000L});
+        public static final BitSet FOLLOW_78 = new BitSet(new long[]{0x0000000000000000L,0x0000000020000000L});
+        public static final BitSet FOLLOW_79 = new BitSet(new long[]{0x0000000000000000L,0x0100000000000000L});
+        public static final BitSet FOLLOW_80 = new BitSet(new long[]{0x0000000000000002L,0x0000200000000000L});
+        public static final BitSet FOLLOW_81 = new BitSet(new long[]{0x0000000000000002L,0x0080008000000000L});
+        public static final BitSet FOLLOW_82 = new BitSet(new long[]{0x8038800403000020L,0xA0001188006001D8L,0x0000000000000004L});
+        public static final BitSet FOLLOW_83 = new BitSet(new long[]{0x0000000000000000L,0x0101000000000000L});
+        public static final BitSet FOLLOW_84 = new BitSet(new long[]{0x0800001018000000L,0x0000000000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_85 = new BitSet(new long[]{0x0000000000000000L,0x0000000010000000L});
+        public static final BitSet FOLLOW_86 = new BitSet(new long[]{0x0000000000000000L,0x0000000100001000L});
+        public static final BitSet FOLLOW_87 = new BitSet(new long[]{0x0010000100090200L,0xA010148000000100L,0x0000000000000006L});
+        public static final BitSet FOLLOW_88 = new BitSet(new long[]{0x0000000020000000L,0x0001081000000000L});
+        public static final BitSet FOLLOW_89 = new BitSet(new long[]{0x0000000000000000L,0x0001081000000000L});
+        public static final BitSet FOLLOW_90 = new BitSet(new long[]{0x0000000000000002L,0x0000001000000000L});
+        public static final BitSet FOLLOW_91 = new BitSet(new long[]{0x0000000000000000L,0x0020000000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_92 = new BitSet(new long[]{0x0010000100090200L,0xA010158000000100L,0x0000000000000006L});
+        public static final BitSet FOLLOW_93 = new BitSet(new long[]{0x0000000000000000L,0x0000000100000000L});
+        public static final BitSet FOLLOW_94 = new BitSet(new long[]{0x0000000000000002L,0x0010200000000000L});
+        public static final BitSet FOLLOW_95 = new BitSet(new long[]{0x0000000000000000L,0x0020000008000000L});
+        public static final BitSet FOLLOW_96 = new BitSet(new long[]{0x0000000000000000L,0xA000140000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_97 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000000L,0x0000000000000004L});
+        public static final BitSet FOLLOW_98 = new BitSet(new long[]{0x0000000000000000L,0x2000000000000000L});
+        public static final BitSet FOLLOW_99 = new BitSet(new long[]{0x0004000000000002L});
+        public static final BitSet FOLLOW_100 = new BitSet(new long[]{0x0000000000000000L,0x0000004000000000L});
+        public static final BitSet FOLLOW_101 = new BitSet(new long[]{0x0000000080000000L});
+        public static final BitSet FOLLOW_102 = new BitSet(new long[]{0x0100000000000000L});
+        public static final BitSet FOLLOW_103 = new BitSet(new long[]{0x0000000000000002L,0x0000000010000000L});
     }
 
 

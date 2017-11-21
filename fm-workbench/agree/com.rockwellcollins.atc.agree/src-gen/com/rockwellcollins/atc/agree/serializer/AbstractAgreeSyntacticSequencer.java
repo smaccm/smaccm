@@ -103,7 +103,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) 'Get_Property' '(' component=Expr
-	 *     (rule start) (ambiguity) 'enumerator' '(' enumType=NestedDotID
+	 *     (rule start) (ambiguity) 'enum' '(' enumType=NestedDotID
 	 *     (rule start) (ambiguity) 'event' '(' id=NestedDotID
 	 *     (rule start) (ambiguity) 'floor' '(' expr=Expr
 	 *     (rule start) (ambiguity) 'if' a=Expr

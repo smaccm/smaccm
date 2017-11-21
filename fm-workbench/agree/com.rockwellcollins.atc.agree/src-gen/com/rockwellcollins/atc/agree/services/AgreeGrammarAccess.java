@@ -3901,7 +3901,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_13_4 = (Keyword)cGroup_13.eContents().get(4);
 		private final Group cGroup_14 = (Group)cAlternatives.eContents().get(14);
 		private final Action cAADLEnumeratorAction_14_0 = (Action)cGroup_14.eContents().get(0);
-		private final Keyword cEnumeratorKeyword_14_1 = (Keyword)cGroup_14.eContents().get(1);
+		private final Keyword cEnumKeyword_14_1 = (Keyword)cGroup_14.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_14_2 = (Keyword)cGroup_14.eContents().get(2);
 		private final Assignment cEnumTypeAssignment_14_3 = (Assignment)cGroup_14.eContents().get(3);
 		private final RuleCall cEnumTypeNestedDotIDParserRuleCall_14_3_0 = (RuleCall)cEnumTypeAssignment_14_3.eContents().get(0);
@@ -3929,7 +3929,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
 		//	| {FloorCast} 'floor' '(' expr=Expr ')'
 		//	| {RealCast} 'real' '(' expr=Expr ')'
-		//	| {AADLEnumerator} 'enumerator' '(' enumType=NestedDotID ',' value=ID ')'
+		//	| {AADLEnumerator} 'enum' '(' enumType=NestedDotID ',' value=ID ')'
+		//	//	| {AADLEnumerator} "##" enumType=NestedDotID '##' value=ID '##'
 		//	| '(' Expr ')';
 		@Override public ParserRule getRule() { return rule; }
 
@@ -3937,8 +3938,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'(' id=NestedDotID ')' | {LatchedExpr} 'latched' '(' expr=Expr ')' | {TimeOfExpr} 'timeof' '(' id=NestedDotID ')' |
 		//{TimeRiseExpr} 'timerise' '(' id=NestedDotID ')' | {TimeFallExpr} 'timefall' '(' id=NestedDotID ')' | {RealLitExpr}
 		//val=REAL_LIT | {BoolLitExpr} val=BooleanLiteral | {ThisExpr} 'this' ('.' subThis=NestedDotID)? | {FloorCast} 'floor'
-		//'(' expr=Expr ')' | {RealCast} 'real' '(' expr=Expr ')' | {AADLEnumerator} 'enumerator' '(' enumType=NestedDotID ','
-		//value=ID ')' | '(' Expr ')'
+		//'(' expr=Expr ')' | {RealCast} 'real' '(' expr=Expr ')' | {AADLEnumerator} 'enum' '(' enumType=NestedDotID ',' value=ID
+		//')' //	| {AADLEnumerator} "##" enumType=NestedDotID '##' value=ID '##'
+		//| '(' Expr ')'
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{TimeExpr} 'time'
@@ -4178,14 +4180,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//')'
 		public Keyword getRightParenthesisKeyword_13_4() { return cRightParenthesisKeyword_13_4; }
 
-		//{AADLEnumerator} 'enumerator' '(' enumType=NestedDotID ',' value=ID ')'
+		//{AADLEnumerator} 'enum' '(' enumType=NestedDotID ',' value=ID ')'
 		public Group getGroup_14() { return cGroup_14; }
 
 		//{AADLEnumerator}
 		public Action getAADLEnumeratorAction_14_0() { return cAADLEnumeratorAction_14_0; }
 
-		//'enumerator'
-		public Keyword getEnumeratorKeyword_14_1() { return cEnumeratorKeyword_14_1; }
+		//'enum'
+		public Keyword getEnumKeyword_14_1() { return cEnumKeyword_14_1; }
 
 		//'('
 		public Keyword getLeftParenthesisKeyword_14_2() { return cLeftParenthesisKeyword_14_2; }
@@ -5303,7 +5305,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
 	//	| {FloorCast} 'floor' '(' expr=Expr ')'
 	//	| {RealCast} 'real' '(' expr=Expr ')'
-	//	| {AADLEnumerator} 'enumerator' '(' enumType=NestedDotID ',' value=ID ')'
+	//	| {AADLEnumerator} 'enum' '(' enumType=NestedDotID ',' value=ID ')'
+	//	//	| {AADLEnumerator} "##" enumType=NestedDotID '##' value=ID '##'
 	//	| '(' Expr ')';
 	public TermExprElements getTermExprAccess() {
 		return pTermExpr;

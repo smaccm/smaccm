@@ -253,7 +253,8 @@ TermExpr returns Expr:
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
 	| {FloorCast} 'floor' '(' expr=Expr ')'
 	| {RealCast}  'real' '(' expr=Expr ')'
-	| {AADLEnumerator} 'enumerator' '(' enumType=NestedDotID ',' value=ID ')'
+	| {AADLEnumerator} 'enum' '(' enumType=NestedDotID ',' value=ID ')'
+//	| {AADLEnumerator} "##" enumType=NestedDotID '##' value=ID '##'
 	| '(' Expr ')';
 	
 

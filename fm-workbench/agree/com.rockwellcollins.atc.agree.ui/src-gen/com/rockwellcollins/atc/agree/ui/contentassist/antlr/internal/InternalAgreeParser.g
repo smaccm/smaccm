@@ -149,7 +149,6 @@ import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 		tokenNameToValue.put("Synchrony", "'synchrony'");
 		tokenNameToValue.put("Classifier", "'classifier'");
 		tokenNameToValue.put("Connection", "'connection'");
-		tokenNameToValue.put("Enumerator", "'enumerator'");
 		tokenNameToValue.put("Agree_input", "'agree_input'");
 		tokenNameToValue.put("Exclusively", "'exclusively'");
 		tokenNameToValue.put("Get_Property", "'Get_Property'");
@@ -21325,11 +21324,11 @@ rule__TermExpr__Group_14__1__Impl
     }
 :
 (
-{ before(grammarAccess.getTermExprAccess().getEnumeratorKeyword_14_1()); }
+{ before(grammarAccess.getTermExprAccess().getEnumKeyword_14_1()); }
 
-	Enumerator 
+	Enum 
 
-{ after(grammarAccess.getTermExprAccess().getEnumeratorKeyword_14_1()); }
+{ after(grammarAccess.getTermExprAccess().getEnumKeyword_14_1()); }
 )
 
 ;
