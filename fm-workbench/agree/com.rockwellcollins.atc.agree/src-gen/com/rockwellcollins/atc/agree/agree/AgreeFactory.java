@@ -770,6 +770,15 @@ public interface AgreeFactory extends EFactory
   RealCast createRealCast();
 
   /**
+   * Returns a new object of class '<em>AADL Enumerator</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>AADL Enumerator</em>'.
+   * @generated
+   */
+  AADLEnumerator createAADLEnumerator();
+
+  /**
    * Returns a new object of class '<em>Fn Call Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

@@ -2,6 +2,7 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
+import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -688,6 +689,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass realCastEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass aadlEnumeratorEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2785,6 +2793,36 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getAADLEnumerator()
+  {
+    return aadlEnumeratorEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAADLEnumerator_EnumType()
+  {
+    return (EReference)aadlEnumeratorEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAADLEnumerator_Value()
+  {
+    return (EAttribute)aadlEnumeratorEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getFnCallExpr()
   {
     return fnCallExprEClass;
@@ -3164,6 +3202,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     realCastEClass = createEClass(REAL_CAST);
     createEReference(realCastEClass, REAL_CAST__EXPR);
 
+    aadlEnumeratorEClass = createEClass(AADL_ENUMERATOR);
+    createEReference(aadlEnumeratorEClass, AADL_ENUMERATOR__ENUM_TYPE);
+    createEAttribute(aadlEnumeratorEClass, AADL_ENUMERATOR__VALUE);
+
     fnCallExprEClass = createEClass(FN_CALL_EXPR);
     createEReference(fnCallExprEClass, FN_CALL_EXPR__FN);
     createEReference(fnCallExprEClass, FN_CALL_EXPR__ARGS);
@@ -3302,6 +3344,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     thisExprEClass.getESuperTypes().add(this.getExpr());
     floorCastEClass.getESuperTypes().add(this.getExpr());
     realCastEClass.getESuperTypes().add(this.getExpr());
+    aadlEnumeratorEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getComplexExpr());
     recordExprEClass.getESuperTypes().add(this.getComplexExpr());
 
@@ -3589,6 +3632,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(realCastEClass, RealCast.class, "RealCast", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRealCast_Expr(), this.getExpr(), null, "expr", null, 0, 1, RealCast.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(aadlEnumeratorEClass, AADLEnumerator.class, "AADLEnumerator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getAADLEnumerator_EnumType(), this.getNestedDotID(), null, "enumType", null, 0, 1, AADLEnumerator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAADLEnumerator_Value(), theEcorePackage.getEString(), "value", null, 0, 1, AADLEnumerator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fnCallExprEClass, FnCallExpr.class, "FnCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFnCallExpr_Fn(), this.getNestedDotID(), null, "fn", null, 0, 1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

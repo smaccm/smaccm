@@ -6,8 +6,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.AadlPackage;
+import org.osate.aadl2.ComponentClassifier;
+import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.ComponentType;
+import org.osate.aadl2.DataPort;
+import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.StringLiteral;
+import org.osate.aadl2.Subcomponent;
+import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.FeatureInstance;
+
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
+import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.EnumStatement;
+import com.rockwellcollins.atc.agree.agree.NamedID;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.PrimType;
+import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
 import jkind.lustre.BoolExpr;
 import jkind.lustre.EnumType;
@@ -18,31 +45,6 @@ import jkind.lustre.RealExpr;
 import jkind.lustre.RecordExpr;
 import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
-
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.AadlPackage;
-import org.osate.aadl2.ComponentClassifier;
-import org.osate.aadl2.ComponentImplementation;
-import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DataPort;
-import org.osate.aadl2.DataType;
-import org.osate.aadl2.Feature;
-import org.osate.aadl2.FeatureGroup;
-import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.FeatureInstance;
-
-import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.EnumStatement;
-import com.rockwellcollins.atc.agree.agree.NamedID;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
-import com.rockwellcollins.atc.agree.agree.ThisExpr;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
 public class AgreeTypeUtils {
 
@@ -153,6 +155,13 @@ public class AgreeTypeUtils {
 			typeMap.put(el, typeStr);
 			typeExpressions.add(new EnumType(typeStr, vals));
 			return;
+		} else if (AgreeAADLEnumerationUtils.isAADLEnumeration(el)) {
+			String typeStr = getIDTypeStr(el);
+			List<String> vals = AgreeAADLEnumerationUtils.getEnumerators((ComponentClassifier) el).stream()
+					.map(val -> typeStr.replace("__", "_") + "_" + ((StringLiteral) val).getValue())
+					.collect(Collectors.toList());
+			typeMap.put(el, typeStr);
+			typeExpressions.add(new EnumType(typeStr, vals));
 		} else if (el instanceof ComponentType) {
 			String typeStr = getIDTypeStr(el);
 			typeMap.put(el, typeStr);
@@ -206,7 +215,7 @@ public class AgreeTypeUtils {
 		String typeStr = null;
 		EObject container = record.eContainer();
 
-		if (record instanceof ComponentType) {
+		if (record instanceof ComponentType && !AgreeAADLEnumerationUtils.isAADLEnumeration(record)) {
 			ComponentType type = (ComponentType) record;
 			do {
 				String name = type.getQualifiedName();
@@ -227,7 +236,7 @@ public class AgreeTypeUtils {
 				case "Base_Types::Float_64":
 					return name.replace("::", "__");
 				}
-				type = (DataType) type.getExtended();
+				type = type.getExtended();
 
 			} while (type != null);
 			AgreeLogger.logWarning("Reference to component type '" + record.getName()

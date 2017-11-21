@@ -4,6 +4,7 @@
 package com.rockwellcollins.atc.agree.serializer;
 
 import com.google.inject.Inject;
+import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -218,6 +219,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			}
 		else if (epackage == AgreePackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
+			case AgreePackage.AADL_ENUMERATOR:
+				sequence_TermExpr(context, (AADLEnumerator) semanticObject); 
+				return; 
 			case AgreePackage.AGREE_CONTRACT:
 				sequence_AgreeContract(context, (AgreeContract) semanticObject); 
 				return; 
@@ -1407,6 +1411,52 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_SynchStatement(ISerializationContext context, SynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Element returns AADLEnumerator
+	 *     Expr returns AADLEnumerator
+	 *     ArrowExpr returns AADLEnumerator
+	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     ImpliesExpr returns AADLEnumerator
+	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     EquivExpr returns AADLEnumerator
+	 *     EquivExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     OrExpr returns AADLEnumerator
+	 *     OrExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     AndExpr returns AADLEnumerator
+	 *     AndExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     RelateExpr returns AADLEnumerator
+	 *     RelateExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     AddSubExpr returns AADLEnumerator
+	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     MultDivExpr returns AADLEnumerator
+	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     PowerExpr returns AADLEnumerator
+	 *     PowerExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
+	 *     UnaryExpr returns AADLEnumerator
+	 *     IfThenElseExpr returns AADLEnumerator
+	 *     PreDefFnExpr returns AADLEnumerator
+	 *     RecordUpdateExpr returns AADLEnumerator
+	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns AADLEnumerator
+	 *     TermExpr returns AADLEnumerator
+	 *
+	 * Constraint:
+	 *     (enumType=NestedDotID value=ID)
+	 */
+	protected void sequence_TermExpr(ISerializationContext context, AADLEnumerator semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__ENUM_TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__ENUM_TYPE));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getTermExprAccess().getEnumTypeNestedDotIDParserRuleCall_14_3_0(), semanticObject.getEnumType());
+		feeder.accept(grammarAccess.getTermExprAccess().getValueIDTerminalRuleCall_14_5_0(), semanticObject.getValue());
+		feeder.finish();
 	}
 	
 	
