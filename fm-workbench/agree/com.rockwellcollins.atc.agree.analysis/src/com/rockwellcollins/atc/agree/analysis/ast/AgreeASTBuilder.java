@@ -47,6 +47,7 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -106,8 +107,6 @@ import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
-import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTMapVisitor;
-import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter;
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeMakeClockedLustreNodes;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
@@ -155,6 +154,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private static Map<String, AgreeVar> timeRiseVarMap;
 	private static Map<String, AgreeVar> timeFallVarMap;
 
+	// TODO: a number of the maps in this class are static but appear to more
+	// appropriately and more safely be instance variables.
+	private static Map<String, String> renamings;
+	private static Map<String, EObject> refMap;
+
 	private ComponentInstance curInst; // used for Get_Property Expressions
 	private boolean isMonolithic = false;
 	private LinearizationRewriter linearizationRewriter = new LinearizationRewriter();
@@ -166,6 +170,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		globalNodes = new ArrayList<>();
 		globalTypes = new HashSet<>();
 		typeMap = new HashMap<>();
+		renamings = new HashMap<>();
+		refMap = new HashMap<>();
 
 		AgreeNode topNode = getAgreeNode(compInst, true);
 		List<AgreeNode> agreeNodes = gatherNodes(topNode);
@@ -193,7 +199,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		program.containsRealTimePatterns(containsRTPatterns);
-		
+
 		return program;
 	}
 
@@ -347,6 +353,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		builder.addTimeFall(timeFallVarMap);
 
 		AgreeNode result = builder.build();
+
+		renamings.put(id, compInst.getName());
+		refMap.put(id, compInst);
 
 		return linearizationRewriter.visit(result);
 	}
@@ -1635,6 +1644,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		return result;
+	}
+
+	@Override
+	public Expr caseAADLEnumerator(AADLEnumerator aadlEnum) {
+		String typeStr = AgreeTypeUtils.getIDTypeStr(
+				com.rockwellcollins.atc.agree.validation.AgreeJavaValidator.getFinalNestId(aadlEnum.getEnumType()));
+		return new IdExpr(typeStr.replace("__", "_") + "_" + aadlEnum.getValue());
 	}
 
 	@Override

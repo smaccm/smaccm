@@ -2,9 +2,11 @@
 
 The following data types have been built into the AGREE language:
 
-**Primitive Types:** real, bool, and int.
+**Primitive Types:** real, bool, int, and enumeration types (as described in
+[Enumeration Types](03.04-Types.html#sec:enumeration_types).
 
-**Composite Types:** Record Types (as described in [Expressions](03.07-Expressions.html#sec:expressions)).
+**Composite Types:** Record Types (as described in
+[Record Expressions](03.07-Expressions.html#sec:record_expressions)).
 
 In addition, AGREE reasons about AADL features of the following types
 from the "Base\_Types" package included in the AADL Plugin Resources
@@ -71,5 +73,41 @@ end Alarm_Outputs.Impl;
 One can reference the fields of a variable of type Alarm\_Outputs.Impl
 by placing a dot after the variable:
 
-    Alarm.Is_Audio_Disabled => Alarm.Log_Message_ID > 3;
+~~~
+Alarm.Is_Audio_Disabled => Alarm.Log_Message_ID > 3;
+~~~
 
+### Enumeration Types{#sec:enumeration_types}
+
+Enumeration types may be specified either directly in AGREE annexes or
+specified in AADL.  An AADL enumeration type is specified in the AADL
+data model by associating the property value `Enum` to the
+`Data_Representation` property and a property value list of enumerator
+strings to the `Enumerators` property.  For example:
+
+~~~
+data Primary_Color
+    properties
+        Data_Model::Data_Representation => Enum;
+        Data_Model::Enumerators => ("Red", "Green", "Blue");
+end Primary_Color;
+
+data Pixel
+end Pixel;
+
+data implementation Pixel.Impl
+    subcomponents
+        color : data Primary_Color;
+        x_pos : data Base_Types::Integer;
+        y_pos : data Base_Types::Integer;
+end Pixel.Impl;
+~~~
+
+In AGREE annexes enumeration types may be defined using the keyword `enum`
+and a comma-separated list of enumerator identifiers.  For example:
+
+~~~
+type card_suit = enum { spade, heart, club, diamond };
+
+eq color : card_suit;
+~~~

@@ -16,8 +16,8 @@
 </header>
 <h2 id="sec:types">Types</h2>
 <p>The following data types have been built into the AGREE language:</p>
-<p><strong>Primitive Types:</strong> real, bool, and int.</p>
-<p><strong>Composite Types:</strong> Record Types (as described in <a href="03.07-Expressions.html#sec:expressions">Expressions</a>).</p>
+<p><strong>Primitive Types:</strong> real, bool, int, and enumeration types (as described in <a href="03.04-Types.html#sec:enumeration_types">Enumeration Types</a>.</p>
+<p><strong>Composite Types:</strong> Record Types (as described in <a href="03.07-Expressions.html#sec:record_expressions">Record Expressions</a>).</p>
 <p>In addition, AGREE reasons about AADL features of the following types from the &quot;Base_Types&quot; package included in the AADL Plugin Resources library:</p>
 <ol type="1">
 <li><p>Base_Types::Boolean</p></li>
@@ -51,5 +51,26 @@ data implementation Alarm_Outputs.Impl
 end Alarm_Outputs.Impl;</code></pre>
 <p>One can reference the fields of a variable of type Alarm_Outputs.Impl by placing a dot after the variable:</p>
 <pre><code>Alarm.Is_Audio_Disabled =&gt; Alarm.Log_Message_ID &gt; 3;</code></pre>
+<h3 id="sec:enumeration_types">Enumeration Types</h3>
+<p>Enumeration types may be specified either directly in AGREE annexes or specified in AADL. An AADL enumeration type is specified in the AADL data model by associating the property value <code>Enum</code> to the <code>Data_Representation</code> property and a property value list of enumerator strings to the <code>Enumerators</code> property. For example:</p>
+<pre><code>data Primary_Color
+    properties
+        Data_Model::Data_Representation =&gt; Enum;
+        Data_Model::Enumerators =&gt; (&quot;Red&quot;, &quot;Green&quot;, &quot;Blue&quot;);
+end Primary_Color;
+
+data Pixel
+end Pixel;
+
+data implementation Pixel.Impl
+    subcomponents
+        color : data Primary_Color;
+        x_pos : data Base_Types::Integer;
+        y_pos : data Base_Types::Integer;
+end Pixel.Impl;</code></pre>
+<p>In AGREE annexes enumeration types may be defined using the keyword <code>enum</code> and a comma-separated list of enumerator identifiers. For example:</p>
+<pre><code>type card_suit = enum { spade, heart, club, diamond };
+
+eq color : card_suit;</code></pre>
 </body>
 </html>

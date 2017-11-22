@@ -69,6 +69,10 @@ ID | QID | NestedDotID | Literal | pre | this | ()</p>
 <p>Expressions reason about the current state or past states of variables and can reference variables defined in equation statements or other identifiers in the AADL model. In the rest of this section, we describe different types of expressions in the order they are listed as alternatives to the grammar rule for Expr.</p>
 <h3 id="sec:id-expressions">ID Expressions</h3>
 <p>ID expressions are used to reference different AADL objects as well as AGREE variables and constants. Constants or variables must be defined locally (in the AGREE annex block or the enclosing definition), and they can be referred to by a single identifier ID.</p>
+<h3 id="sec:enumerator_expressions">Enumerator Expressions</h3>
+<p>Enumerator expressions are ID expressions referencing an enumerator literal. However, the syntax differs between enumerations defined in AADL and enumerations defined in AGREE. For AGREE enumerations, enumerator expressions are merely ID expressions naming enumerator values. Using the types defined in <a href="03.04-Types.html#sec:enumeration_types">Enumeration Types</a> the use of <code>spade</code>, <code>heart</code>, <code>club</code>, and <code>diamond</code> as identifiers are all valid AGREE enumeration expressions.</p>
+<p>For AADL enumerations a special syntax is required. The <code>enum</code> keyword followed by the enumeration type and enumerator name is used as follows:</p>
+<pre><code>enum(Package::Color, Red)</code></pre>
 <h3 id="sec:nesteddotid-field-expressions">NestedDotID (Field) Expressions</h3>
 <p>A NestedDotID expression can have dots in between ID expressions, e.g., <code>food.bar.biz</code>. It can be used to refer to record types or variables of a subcomponent. For example, one could use the NestedDotID expression foo.bar to reference the input, output, or equation variable <code>bar</code> of subcomponent <code>foo</code> within the implementation of some AADL component. A NestedDotID expression can also be used for inputs and outputs that are of record type: if <code>x</code> is a record type containing field <code>y</code>, then the notation <code>x.y</code> is used.</p>
 <h3 id="sec:node-call-expressions">Node Call Expressions</h3>
@@ -162,12 +166,15 @@ lemma &quot;sq() range positive&quot; : sq(y) &lt;= -0.10;</code></pre>
 <p>A get property expression allows a user to reason about values of AADL properties in the model. The first argument is the relative path to an AADL component in the instance model or 'this' if the property exists in the component in which get property statement lives. The second argument is the name of the AADL property.</p>
 <h3 id="sec:unary-minus-and-not-expressions">Unary Minus and Not Expressions</h3>
 <p>An Unary Minus expression is used to negate integer or real valued expressions.</p>
-<p>A Not Expression is used to negate boolean valued expressions</p>
-<h3 id="sec:record-update-expressions">Record Update Expressions</h3>
-<p>Record Update Expression are assignments to all or a specific field of a record type variable. For example, <code>foo {a := true; b := 1}</code> and <code>bar {a := true}</code> are valid Record Update Expressions, given definition for type <code>foo</code> and variable <code>bar</code> as follows:</p>
+<p>A Not Expression is used to negate boolean valued expressions.</p>
+<h3 id="sec:record_expressions">Record Expressions</h3>
+<p>In AGREE a record type is either an AADL Data Type Implementation containing Data subcomponents or may be defined directly in the AGREE annex as follows:</p>
 <pre><code>type foo = struct {a : bool, b : int};
 
 eq bar : foo;</code></pre>
+<p>A record expression constructs a value that may be assigned to a variable of record type.</p>
+<pre><code>eq bar2 : foo = foo { a = true; b = 6 };</code></pre>
+<p>Record Update Expression are assignments to all or a specific field of a record type variable. For example, <code>bar2 {a := false}</code> is a valid Record Update Expression, given definition for type <code>foo</code> and variable <code>bar2</code> as above.</p>
 <p>The record update expression expects an expression of record type on the left hand side of the curly braces. It returns the same record as the left hand side expression except with its member IDs set to the value of the expression on the right hand side of the <code>:=</code>;</p>
 <h3 id="sec:arithmetic-operations">Arithmetic Operations</h3>
 <p>Arithmetic operations must be performed on expressions of the same type. They follow the standard order of precedence. Note that AGREE will give a warning if you write an expression that is not linear. Some theorem provers do not reason about non-linear expressions. Non-linear integer arithmetic is undecidable and most theorem provers do not use a decidable decision procedure for non-linear real arithmetic. So it is recommended that you only use linear expressions.</p>

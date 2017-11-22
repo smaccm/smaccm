@@ -160,7 +160,7 @@ public class RenamingVisitor extends AstIterVisitor{
         throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
     }
     
-    private String getCategory(AgreeVar var) {
+    public static String getCategory(AgreeVar var) {
         if (var.compInst == null || var.reference == null) {
             return null;
         }
