@@ -3,7 +3,6 @@ package com.rockwellcollins.atc.agree.analysis.views;
 import java.util.Map;
 import java.util.Stack;
 
-import jkind.api.ui.counterexample.CounterexampleTreeViewer;
 import jkind.api.ui.counterexample.SignalGroup;
 import jkind.results.Counterexample;
 import jkind.results.layout.Layout;
@@ -23,12 +22,12 @@ public class AgreeCounterexampleView extends ViewPart {
     public static final String ID = "com.rockwellcollins.atc.agree.analysis.views.agreeCounterexampleView";
     private static final GlobalURIEditorOpener globalURIEditorOpener = AgreeUtils.getGlobalURIEditorOpener();
 
-    private CounterexampleTreeViewer tree;
+    private AgreeCounterexampleTreeViewer tree;
     private Map<String, EObject> refMap;
 
     @Override
     public void createPartControl(Composite parent) {
-        tree = new CounterexampleTreeViewer(parent);
+        tree = new AgreeCounterexampleTreeViewer(parent);
     }
 
     @Override

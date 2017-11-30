@@ -10,6 +10,8 @@ public class PreferenceConstants {
 
     public static final String PREF_SMOOTH_CEX = "smoothCounterexamples";
 
+    public static final String PREF_DISPLAY_DECIMAL_CEX = "displayCounterexamplesAsDecimal";
+
     public static final String PREF_BLAME_CEX = "blameCounterexamples";
 
     public static final String PREF_NO_KINDUCTION = "disableKInduction";
