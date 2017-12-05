@@ -63,6 +63,7 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
     private BooleanFieldEditor inductiveCounterexampleFieldEditor;
     private BooleanFieldEditor noKInductionEditor;
     private BooleanFieldEditor smoothingFieldEditor;
+    private BooleanFieldEditor displayCounterexampleDecimalFormEditor;
     private BooleanFieldEditor generalizeFieldEditor;
     private NonNegativeIntegerFieldEditor depthFieldEditor;
     private NonNegativeIntegerFieldEditor timeoutFieldEditor;
@@ -102,6 +103,11 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
                 "Generate smooth counterexamples (minimal number of input value changes)",
                 getFieldEditorParent());
         addField(smoothingFieldEditor);
+
+        displayCounterexampleDecimalFormEditor = new BooleanFieldEditor(PreferenceConstants.PREF_DISPLAY_DECIMAL_CEX,
+                "Display real values as decimal in counterexamples",
+                getFieldEditorParent());
+        addField(displayCounterexampleDecimalFormEditor);
 
         generalizeFieldEditor = new BooleanFieldEditor(PreferenceConstants.PREF_BLAME_CEX,
                 "Generate blamed counterexamples (generalized counter examples)", getFieldEditorParent());
