@@ -16,8 +16,8 @@ import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
-import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
+import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
@@ -47,7 +47,21 @@ public class RenamingVisitor extends AstIterVisitor{
         this.layout = layout;
         this.program = program;
     }
-    
+
+    @Override
+    public Void visit(Program program) {
+        super.visit(program);
+		for (jkind.lustre.TypeDef typeDef : program.types) {
+			if (typeDef.type instanceof jkind.lustre.EnumType) {
+				jkind.lustre.EnumType enumType = (jkind.lustre.EnumType) typeDef.type;
+				for (String enumerator : enumType.values) {
+					renaming.addExplicitRename(enumerator, enumerator);
+				}
+			}
+		}
+        return null;
+    }
+
     @Override
     public Void visit(Node node){
         isMainNode = node.id.equals(program.main);
@@ -146,7 +160,7 @@ public class RenamingVisitor extends AstIterVisitor{
         throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
     }
     
-    private String getCategory(AgreeVar var) {
+    public static String getCategory(AgreeVar var) {
         if (var.compInst == null || var.reference == null) {
             return null;
         }

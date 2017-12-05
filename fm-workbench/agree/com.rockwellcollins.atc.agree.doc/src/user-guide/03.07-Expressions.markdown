@@ -81,6 +81,24 @@ AGREE variables and constants. Constants or variables must be defined
 locally (in the AGREE annex block or the enclosing definition), and they
 can be referred to by a single identifier ID.
 
+### Enumerator Expressions{#sec:enumerator_expressions}
+
+Enumerator expressions are ID expressions referencing an enumerator
+literal.  However, the syntax differs between enumerations defined in AADL
+and enumerations defined in AGREE.  For AGREE enumerations, enumerator
+expressions are merely ID expressions naming enumerator values.  Using the
+types defined in [Enumeration Types](03.04-Types.html#sec:enumeration_types)
+the use of `spade`, `heart`, `club`, and `diamond` as identifiers are
+all valid AGREE enumeration expressions.
+
+For AADL enumerations a special syntax is required.  The `enum`
+keyword followed by the enumeration type and enumerator name is used as
+follows:
+
+~~~
+enum(Package::Color, Red)
+~~~
+
 ### NestedDotID (Field) Expressions
 
 A NestedDotID expression can have dots in between ID expressions, e.g.,
@@ -229,20 +247,31 @@ is the name of the AADL property.
 An Unary Minus expression is used to negate integer or real valued
 expressions.
 
-A Not Expression is used to negate boolean valued expressions
+A Not Expression is used to negate boolean valued expressions.
 
-### Record Update Expressions
+### Record Expressions{#sec:record_expressions}
 
-Record Update Expression are assignments to all or a specific field of a
-record type variable. For example, `foo {a := true; b := 1}` and
-`bar {a := true}` are valid Record Update Expressions, given
-definition for type `foo` and variable `bar` as follows:
+In AGREE a record type is either an AADL Data Type
+Implementation containing Data subcomponents or may be defined directly
+in the AGREE annex as follows:
 
 ~~~
 type foo = struct {a : bool, b : int};
 
 eq bar : foo;
 ~~~
+
+A record expression constructs a value that may be assigned to a variable
+of record type.
+
+~~~
+eq bar2 : foo = foo { a = true; b = 6 };
+~~~
+
+Record Update Expression are assignments to all or a specific field of a
+record type variable. For example, `bar2 {a := false}` is a valid Record
+Update Expression, given
+definition for type `foo` and variable `bar2` as above.
 
 The record update expression expects an expression of record type on the
 left hand side of the curly braces. It returns the same record as the

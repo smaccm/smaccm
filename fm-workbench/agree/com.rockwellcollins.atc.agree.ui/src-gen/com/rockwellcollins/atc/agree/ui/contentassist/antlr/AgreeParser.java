@@ -239,6 +239,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getGroup_12(), "rule__TermExpr__Group_12__0");
 					put(grammarAccess.getTermExprAccess().getGroup_13(), "rule__TermExpr__Group_13__0");
 					put(grammarAccess.getTermExprAccess().getGroup_14(), "rule__TermExpr__Group_14__0");
+					put(grammarAccess.getTermExprAccess().getGroup_15(), "rule__TermExpr__Group_15__0");
 					put(grammarAccess.getComplexExprAccess().getGroup(), "rule__ComplexExpr__Group__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_0(), "rule__ComplexExpr__Group_1_0__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_0_0(), "rule__ComplexExpr__Group_1_0_0__0");
@@ -479,6 +480,8 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getSubThisAssignment_11_2_1(), "rule__TermExpr__SubThisAssignment_11_2_1");
 					put(grammarAccess.getTermExprAccess().getExprAssignment_12_3(), "rule__TermExpr__ExprAssignment_12_3");
 					put(grammarAccess.getTermExprAccess().getExprAssignment_13_3(), "rule__TermExpr__ExprAssignment_13_3");
+					put(grammarAccess.getTermExprAccess().getEnumTypeAssignment_14_3(), "rule__TermExpr__EnumTypeAssignment_14_3");
+					put(grammarAccess.getTermExprAccess().getValueAssignment_14_5(), "rule__TermExpr__ValueAssignment_14_5");
 					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_0_1_0(), "rule__ComplexExpr__ArgsAssignment_1_0_1_0");
 					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_0_1_1_1(), "rule__ComplexExpr__ArgsAssignment_1_0_1_1_1");
 					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_1_0_0_2(), "rule__ComplexExpr__ArgsAssignment_1_1_0_0_2");

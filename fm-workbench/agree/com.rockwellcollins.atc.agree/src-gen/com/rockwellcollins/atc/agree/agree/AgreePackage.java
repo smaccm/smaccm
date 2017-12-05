@@ -4687,6 +4687,61 @@ public interface AgreePackage extends EPackage
   int REAL_CAST_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.AADLEnumeratorImpl <em>AADL Enumerator</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.AADLEnumeratorImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAADLEnumerator()
+   * @generated
+   */
+  int AADL_ENUMERATOR = 83;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AADL_ENUMERATOR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AADL_ENUMERATOR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Enum Type</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AADL_ENUMERATOR__ENUM_TYPE = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Value</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AADL_ENUMERATOR__VALUE = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>AADL Enumerator</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AADL_ENUMERATOR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl <em>Fn Call Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4694,7 +4749,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 83;
+  int FN_CALL_EXPR = 84;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4749,7 +4804,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordExpr()
    * @generated
    */
-  int RECORD_EXPR = 84;
+  int RECORD_EXPR = 85;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -6935,6 +6990,38 @@ public interface AgreePackage extends EPackage
   EReference getRealCast_Expr();
 
   /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AADLEnumerator <em>AADL Enumerator</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>AADL Enumerator</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AADLEnumerator
+   * @generated
+   */
+  EClass getAADLEnumerator();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.AADLEnumerator#getEnumType <em>Enum Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Enum Type</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AADLEnumerator#getEnumType()
+   * @see #getAADLEnumerator()
+   * @generated
+   */
+  EReference getAADLEnumerator_EnumType();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AADLEnumerator#getValue <em>Value</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Value</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AADLEnumerator#getValue()
+   * @see #getAADLEnumerator()
+   * @generated
+   */
+  EAttribute getAADLEnumerator_Value();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr <em>Fn Call Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -8805,6 +8892,32 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference REAL_CAST__EXPR = eINSTANCE.getRealCast_Expr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AADLEnumeratorImpl <em>AADL Enumerator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.AADLEnumeratorImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAADLEnumerator()
+     * @generated
+     */
+    EClass AADL_ENUMERATOR = eINSTANCE.getAADLEnumerator();
+
+    /**
+     * The meta object literal for the '<em><b>Enum Type</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference AADL_ENUMERATOR__ENUM_TYPE = eINSTANCE.getAADLEnumerator_EnumType();
+
+    /**
+     * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute AADL_ENUMERATOR__VALUE = eINSTANCE.getAADLEnumerator_Value();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl <em>Fn Call Expr</em>}' class.

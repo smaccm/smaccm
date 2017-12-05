@@ -147,6 +147,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.THIS_EXPR: return createThisExpr();
       case AgreePackage.FLOOR_CAST: return createFloorCast();
       case AgreePackage.REAL_CAST: return createRealCast();
+      case AgreePackage.AADL_ENUMERATOR: return createAADLEnumerator();
       case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       case AgreePackage.RECORD_EXPR: return createRecordExpr();
       default:
@@ -1065,6 +1066,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     RealCastImpl realCast = new RealCastImpl();
     return realCast;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AADLEnumerator createAADLEnumerator()
+  {
+    AADLEnumeratorImpl aadlEnumerator = new AADLEnumeratorImpl();
+    return aadlEnumerator;
   }
 
   /**

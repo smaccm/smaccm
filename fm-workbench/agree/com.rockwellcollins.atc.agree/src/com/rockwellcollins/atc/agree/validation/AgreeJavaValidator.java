@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 //import org.eclipse.emf.common.util.TreeIterator;
@@ -66,6 +67,8 @@ import org.osate.annexsupport.AnnexUtil;
 //import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 //import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
+import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 //import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -651,6 +654,25 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (sub != null) {
 			if (sub.getBase() instanceof Property) {
 				error(sub, "You cannot reference AADL properties this way." + " Use a \"Get_Property\" statement.");
+			}
+		}
+	}
+
+	@Check(CheckType.FAST)
+	public void checkAADLEnumerator(AADLEnumerator aadlEnum) {
+		NestedDotID enumType = aadlEnum.getEnumType();
+		NamedElement enumTypeNamedElement = getFinalNestId(enumType);
+		if (!AgreeAADLEnumerationUtils.isAADLEnumeration(enumTypeNamedElement)) {
+			error(enumType, "AADL Enumerations must refer to a Data Type with \"Enum\" data representation "
+					+ "property and have an \"Enumerators\' property value list.");
+		} else {
+			String enumVal = aadlEnum.getValue();
+			List<String> enumerators = AgreeAADLEnumerationUtils
+					.getEnumerators((ComponentClassifier) enumTypeNamedElement).stream()
+					.map(pe -> ((org.osate.aadl2.StringLiteral) pe).getValue()).collect(Collectors.toList());
+			if (!enumerators.stream().anyMatch(ev -> ev.equalsIgnoreCase(enumVal))) {
+				error(aadlEnum, "AADL Enumeration " + enumTypeNamedElement.getQualifiedName()
+						+ " does not have an enumeration value " + enumVal);
 			}
 		}
 	}
@@ -2425,6 +2447,21 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				return REAL;
 			}
 
+			boolean is_aadl_enum = AgreeAADLEnumerationUtils.isAADLEnumeration(dataClass);
+			if (is_aadl_enum) {
+				String name = dataClass.getName();
+				EObject container = dataClass.eContainer();
+
+				while (!(container instanceof AadlPackage)) {
+					if (container instanceof ComponentClassifier) {
+						name = ((ComponentClassifier) container).getName() + "::" + name;
+					}
+					container = container.eContainer();
+				}
+				name = ((AadlPackage) container).getName() + "::" + name;
+				return new AgreeType(name);
+			}
+
 			DataType dataType = (DataType) dataClass;
 			dataClass = dataType.getExtended();
 		}
@@ -2628,6 +2665,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return BOOL;
 		} else if (expr instanceof TimeExpr) {
 		    return REAL;
+		} else if (expr instanceof AADLEnumerator) {
+			return getAgreeType((AADLEnumerator) expr);
 		} else if (expr instanceof LatchedExpr){
 		    return getAgreeType(((LatchedExpr) expr).getExpr());
 		} else if(expr instanceof TimeOfExpr ||
@@ -2640,6 +2679,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		} */
 
 		return ERROR;
+	}
+
+	private AgreeType getAgreeType(AADLEnumerator enumExpr) {
+		return getAgreeType(enumExpr.getEnumType());
 	}
 
 	private AgreeType getAgreeType(RecordUpdateExpr upExpr) {
