@@ -15,6 +15,7 @@ import org.osate.aadl2.impl.EventDataPortImpl;
 import org.eclipse.xtext.util.Pair;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
@@ -355,7 +356,7 @@ public class LustreAstBuilder {
 		int stuffAssumptionIndex = 0;
 		for (AgreeStatement assumption : agreeNode.assumptions) {
 			AgreeVar stuffAssumptionVar = new AgreeVar(stuffPrefix + assumeSuffix + stuffAssumptionIndex++,
-					NamedType.BOOL, assumption, null, null);
+					NamedType.BOOL, assumption.reference, agreeNode.compInst, null);
 			locals.add(stuffAssumptionVar);
 			ivcs.add(stuffAssumptionVar.id);
 			IdExpr stuffAssumptionId = new IdExpr(stuffAssumptionVar.id);
@@ -367,7 +368,7 @@ public class LustreAstBuilder {
 		int stuffGuaranteeIndex = 0;
 		for (AgreeStatement guarantee : agreeNode.guarantees) {
 			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++,
-					NamedType.BOOL, guarantee, null, null);
+					NamedType.BOOL, guarantee.reference, agreeNode.compInst, null);
 			locals.add(stuffGuaranteeVar);
 			ivcs.add(stuffGuaranteeVar.id);
 			IdExpr stuffGuaranteeId = new IdExpr(stuffGuaranteeVar.id);
@@ -394,9 +395,8 @@ public class LustreAstBuilder {
 		if (withAssertions) {
 			for (AgreeStatement assertion : agreeNode.assertions) {
 				AgreeVar stuffAssertionVar = new AgreeVar(stuffPrefix + assertSuffix + stuffAssertionIndex++,
-						NamedType.BOOL, assertion, null, null);
+						NamedType.BOOL, assertion.reference, null, null);
 				locals.add(stuffAssertionVar);
-				ivcs.add(stuffAssertionVar.id);
 				IdExpr stuffAssertionId = new IdExpr(stuffAssertionVar.id);
 				equations.add(new Equation(stuffAssertionId, assertion.expr));
 
@@ -408,9 +408,8 @@ public class LustreAstBuilder {
 			for (AgreeStatement assertion : agreeNode.assertions) {
 				if (AgreeUtils.referenceIsInContract(assertion.reference, agreeNode.compInst)) {
 					AgreeVar stuffAssertionVar = new AgreeVar(stuffPrefix + assertSuffix + stuffAssertionIndex++,
-							NamedType.BOOL, assertion, null, null);
+							NamedType.BOOL, assertion.reference, null, null);
 					locals.add(stuffAssertionVar);
-					ivcs.add(stuffAssertionVar.id);
 					IdExpr stuffAssertionId = new IdExpr(stuffAssertionVar.id);
 					equations.add(new Equation(stuffAssertionId, assertion.expr));
 

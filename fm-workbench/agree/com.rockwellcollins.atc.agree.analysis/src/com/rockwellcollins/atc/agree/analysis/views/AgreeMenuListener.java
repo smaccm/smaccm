@@ -208,7 +208,6 @@ public class AgreeMenuListener implements IMenuListener {
         };
     }
 
-    // Anitha added this displaying view support menu
     private void addViewSupportMenu(IMenuManager manager, AnalysisResult result) {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER)
@@ -216,17 +215,14 @@ public class AgreeMenuListener implements IMenuListener {
                 && prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
             if (!(result instanceof ConsistencyResult || result instanceof JRealizabilityResult)) {
                 if (result instanceof PropertyResult) {
-                    if (((PropertyResult) result).getStatus().equals(jkind.api.results.Status.VALID)) {
-                        if (!((PropertyResult) result).getParent().getName().contains("consistent")) {
-                            manager.add(addViewSupportConsole("Set of Support", manager, result));
-                        }
+                    if (((PropertyResult) result).getProperty() instanceof ValidProperty) {
+                        manager.add(addViewSupportConsole("Set of Support", manager, result));
                     }
                 }
             }
         }
     }
 
-    // Anitha added this displaying support in console
     private IAction addViewSupportConsole(String text, IMenuManager manager, AnalysisResult result) {
         return new Action(text) {
             public void run() {
