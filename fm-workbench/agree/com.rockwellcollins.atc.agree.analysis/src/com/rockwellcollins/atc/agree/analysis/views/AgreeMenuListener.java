@@ -77,6 +77,7 @@ public class AgreeMenuListener implements IMenuListener {
     private final IWorkbenchWindow window;
     private final AnalysisResultTree tree;
     private AgreeResultsLinker linker;
+    private AgreePatternListener patternListener = null;
 
     public AgreeMenuListener(IWorkbenchWindow window, AnalysisResultTree tree) {
         this.window = window;
@@ -243,7 +244,11 @@ public class AgreeMenuListener implements IMenuListener {
                 final Renaming renaming = tempRenaming;
                 showConsole(console);
                 console.clearConsole();
-                console.addPatternMatchListener(new AgreePatternListener(refMap));
+                if (patternListener != null) {
+                    console.removePatternMatchListener(patternListener);
+                }
+                patternListener = new AgreePatternListener(refMap);
+                console.addPatternMatchListener(patternListener);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
