@@ -80,7 +80,10 @@ public class RenamingVisitor extends AstIterVisitor{
             String refStr = getReferenceStr(var);
 
             if (isMainNode && var.reference != null) {
-                if (var.reference instanceof AssumeStatement && category != null && category.equals("")) {
+                // TODO: the means of detecting whether this is a consistency analysis is a hack. Fix it.
+                if ((var.reference instanceof AssumeStatement
+                        || (nodeName.contains("consistency") && var.reference instanceof GuaranteeStatement))
+                        && category != null && category.equals("")) {
                     renaming.addSupportRename(var.id, var.id);
                     renaming.addSupportRefString(var.id, refStr);
                     renaming.getRefMap().put(refStr, var.reference);
