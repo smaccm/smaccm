@@ -39,7 +39,6 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 			.getInjector(AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
 
 	private PropertiesProposalProvider propPropProv;
-	private AgreeAnnexParser parser;
 	private EObjectAtOffsetHelper offsetHelper;
 
 	protected PropertiesProposalProvider getLinkingService() {
