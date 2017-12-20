@@ -114,7 +114,6 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 	private java.lang.reflect.Method lookupMethod(com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr nativeDef) {
 		java.lang.reflect.Method result = nativeCallMap.get(nativeDef);
 		final String containingClassName = "java.lang.Math";
-		final String dotChar = ".";
 
 		if (result == null) {
 			String methodName = nativeDef.getName();

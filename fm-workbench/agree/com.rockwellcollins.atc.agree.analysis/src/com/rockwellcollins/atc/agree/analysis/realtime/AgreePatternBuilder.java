@@ -25,8 +25,6 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern.TriggerType;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternInterval.IntervalType;
 
-import jkind.lustre.BinaryExpr;
-import jkind.lustre.BinaryOp;
 import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IntExpr;
@@ -89,16 +87,16 @@ public class AgreePatternBuilder extends AgreeSwitch<AgreeStatement> {
 
 	@Override
 	public AgreeStatement caseWheneverImpliesStatement(WheneverImpliesStatement object) {
-		IdExpr cause = (IdExpr) builder.doSwitch(object.getCause());
-		IdExpr lhs = (IdExpr) builder.doSwitch(object.getLhs());
-		IdExpr rhs = (IdExpr) builder.doSwitch(object.getRhs());
-		boolean exclusive = object.getExcl() != null;
-		AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
-
-		Expr effect = new BinaryExpr(lhs, BinaryOp.IMPLIES, rhs);
 		throw new AgreeException("We do not support this pattern currently");
-//        return new AgreeCauseEffectPattern(str, ref, exclusive, cause, effect, null, effectInterval, TriggerType.EVENT,
-//                TriggerType.CONDITION);
+		// IdExpr cause = (IdExpr) builder.doSwitch(object.getCause());
+		// IdExpr lhs = (IdExpr) builder.doSwitch(object.getLhs());
+		// IdExpr rhs = (IdExpr) builder.doSwitch(object.getRhs());
+		// boolean exclusive = object.getExcl() != null;
+		// AgreePatternInterval effectInterval = getIntervalType(object.getInterval());
+
+		// Expr effect = new BinaryExpr(lhs, BinaryOp.IMPLIES, rhs);
+		// return new AgreeCauseEffectPattern(str, ref, exclusive, cause, effect, null, effectInterval, TriggerType.EVENT,
+		// TriggerType.CONDITION);
 	}
 
 	@Override

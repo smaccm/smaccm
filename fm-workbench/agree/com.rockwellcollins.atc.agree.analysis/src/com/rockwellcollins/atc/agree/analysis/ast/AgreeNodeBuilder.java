@@ -27,7 +27,6 @@ public class AgreeNodeBuilder {
 	private List<AgreeStatement> assumptions = new ArrayList<>();
 	private List<AgreeStatement> guarantees = new ArrayList<>();
 	private List<AgreeStatement> lemmas = new ArrayList<>();
-	private List<AgreeEquation> localEquations = new ArrayList<>();
 	private List<AgreeStatement> patternProps = new ArrayList<>();
 	private Expr clockConstraint;
 	private Expr initialConstraint;
@@ -56,7 +55,6 @@ public class AgreeNodeBuilder {
 		assumptions = new ArrayList<>(node.assumptions);
 		guarantees = new ArrayList<>(node.guarantees);
 		lemmas = new ArrayList<>(node.lemmas);
-		localEquations = new ArrayList<>(node.localEquations);
 		patternProps = new ArrayList<>(node.patternProps);
 		eventTimes = new HashSet<>(node.eventTimes);
 		timeOfMap = new HashMap<>(node.timeOfMap);

@@ -26,8 +26,6 @@ import jkind.lustre.builders.NodeBuilder;
 
 public class AgreeCalendarUtils {
 
-	static private String dfaName = null;
-
 	static public Node getMNCalendar(String nodeName, int max, int min) {
 		if (max < min || max < 1 || min < 1) {
 			throw new AgreeException("Malformed quasi-synchronous constraint");
