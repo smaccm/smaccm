@@ -11,7 +11,6 @@
      <command categoryId="com.rockwellcollins.atc.agree.codegen.commands"
            description="Generate Simulink Models for the contracts and interface of the selected component"
            id="com.rockwellcollins.atc.agree.codegen.commands.genCodeSingle"
-           label = "Generate Simulink Models"
            name="Generate Simulink Models">
      </command>    
    </extension>
