@@ -1,10 +1,5 @@
 package com.rockwellcollins.atc.agree.analysis.views;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.ViewPart;
-
-import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,9 +15,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 
+import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
+
 import jkind.api.results.JKindResult;
 import jkind.api.results.PropertyResult;
-import jkind.api.results.Renaming;
 import jkind.results.ValidProperty;
 
 public class AgreeTraceabilityMatrixView extends ViewPart {
@@ -32,13 +28,14 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 	protected Composite composite;
 	protected Table table;
 	protected boolean showUnused = true;
-	
+
 	@Override
 	public void createPartControl(Composite parent) {
-		this.composite = new Composite(parent, SWT.None);
-		this.composite.setLayout(new FillLayout());
+		composite = new Composite(parent, SWT.None);
+		composite.setLayout(new FillLayout());
 	}
 
+	@Override
 	public void setFocus() {
 		if (table != null) {
 			table.setFocus();
@@ -48,9 +45,9 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 	public void setShowUnused(boolean b) {
 		showUnused = b;
 	}
-	
+
 	public List<String> usedCandidates(JKindResult result) {
-    	Set<String> reqs = new HashSet<String>();
+		Set<String> reqs = new HashSet<>();
 		for (PropertyResult pr : result.getPropertyResults()) {
 			if (pr.getProperty() instanceof ValidProperty) {
 				ValidProperty vp = (ValidProperty) pr.getProperty();
@@ -59,18 +56,18 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 					reqs.addAll(ivc);
 				}
 			}
-    	}
-		return reqs.stream().collect(Collectors.toList()); 
+		}
+		return reqs.stream().collect(Collectors.toList());
 	}
-	
+
 	public List<String> candidates(JKindResult result, AgreeRenaming renaming) {
 		if (showUnused) {
 			return renaming.getSupportRefStrings().keySet().stream().collect(Collectors.toList());
 		} else {
-			return usedCandidates(result); 
+			return usedCandidates(result);
 		}
 	}
-	
+
 	public String constructFullName(String raw, AgreeRenaming renaming) {
 		String name = "";
 		if (raw.contains(".")) {
@@ -79,9 +76,9 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 		name += renaming.getSupportRefString(raw);
 		return name;
 	}
-	
+
 	private int index = 0;
-	
+
 	public String constructShortName(String raw, AgreeRenaming renaming) {
 		String name = "";
 		if (raw.contains(".")) {
@@ -91,7 +88,7 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 		index++;
 		return name;
 	}
-	
+
 	public void setInput(JKindResult result, AgreeRenaming renaming) {
 		for (Control control : composite.getChildren()) {
 			control.dispose();
@@ -99,7 +96,7 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 		table = new Table(composite, SWT.FULL_SELECTION);
 
 		List<String> raw = candidates(result, renaming);
-		
+
 		createColumns(raw, renaming);
 		createContent(result, raw);
 		packColumns();
@@ -155,4 +152,3 @@ public class AgreeTraceabilityMatrixView extends ViewPart {
 		}
 	}
 }
-

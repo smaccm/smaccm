@@ -3,6 +3,20 @@ package com.rockwellcollins.atc.agree.analysis.translation;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.analysis.AgreeException;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
+import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriter;
+
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
@@ -22,141 +36,126 @@ import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 
-import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.analysis.AgreeException;
-import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
-import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriteVisitor;
-import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdRewriter;
-
 public class LustreContractAstBuilder extends LustreAstBuilder {
 
-    public static Program getContractLustreProgram(AgreeProgram agreeProgram) {
+	public static Program getContractLustreProgram(AgreeProgram agreeProgram) {
 
-        nodes = new ArrayList<>();
-        List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
+		nodes = new ArrayList<>();
+		List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
 
-        AgreeNode flatNode = flattenAgreeNodeKindContract(agreeProgram.topNode, "_TOP__");
-        List<Expr> assertions = new ArrayList<>();
-        List<VarDecl> locals = new ArrayList<>();
-        List<VarDecl> inputs = new ArrayList<>();
-        List<VarDecl> outputs = new ArrayList<>();
-        List<Equation> equations = new ArrayList<>();
-        List<String> properties = new ArrayList<>();
-        List<Expr> requires = new ArrayList<>();
-        List<Expr> ensures = new ArrayList<>();
+		AgreeNode flatNode = flattenAgreeNodeKindContract(agreeProgram.topNode, "_TOP__");
+		List<Expr> assertions = new ArrayList<>();
+		List<VarDecl> locals = new ArrayList<>();
+		List<VarDecl> inputs = new ArrayList<>();
+		List<VarDecl> outputs = new ArrayList<>();
+		List<Equation> equations = new ArrayList<>();
+		List<String> properties = new ArrayList<>();
+		List<Expr> requires = new ArrayList<>();
+		List<Expr> ensures = new ArrayList<>();
 
-        for (AgreeStatement assertion : flatNode.assertions) {
-            assertions.add(assertion.expr);
-        }
-        
-        for (AgreeStatement assumption : flatNode.assumptions) {
-            requires.add(assumption.expr);
-        }
+		for (AgreeStatement assertion : flatNode.assertions) {
+			assertions.add(assertion.expr);
+		}
 
-        for (AgreeStatement guarantee : flatNode.lemmas) {
-            ensures.add(guarantee.expr);
-        }
+		for (AgreeStatement assumption : flatNode.assumptions) {
+			requires.add(assumption.expr);
+		}
 
-        for (AgreeStatement guarantee : flatNode.guarantees) {
-            ensures.add(guarantee.expr);
-        }
+		for (AgreeStatement guarantee : flatNode.lemmas) {
+			ensures.add(guarantee.expr);
+		}
 
-        for (AgreeVar var : flatNode.inputs) {
-            inputs.add(var);
-        }
+		for (AgreeStatement guarantee : flatNode.guarantees) {
+			ensures.add(guarantee.expr);
+		}
 
-        for (AgreeVar var : flatNode.outputs) {
-            outputs.add(var);
-        }
+		for (AgreeVar var : flatNode.inputs) {
+			inputs.add(var);
+		}
 
-        for (AgreeVar var : flatNode.outputs) {
-            if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
-                throw new AgreeException("This shouldn't happen");
-            }
-        }
+		for (AgreeVar var : flatNode.outputs) {
+			outputs.add(var);
+		}
 
-        Contract contract = new Contract(requires, ensures);
+		for (AgreeVar var : flatNode.outputs) {
+			if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
+				throw new AgreeException("This shouldn't happen");
+			}
+		}
 
-        NodeBuilder builder = new NodeBuilder("_TOP");
-        builder.addInputs(inputs);
-        builder.addOutputs(outputs);
-        builder.addLocals(locals);
-        builder.addEquations(equations);
-        builder.addProperties(properties);
-        builder.addAssertions(assertions);
-        builder.setContract(contract);
-        
-        Node main = builder.build();
-        
-        nodes.addAll(agreeProgram.globalLustreNodes);
-        nodes.add(main);
-        
-        Program program = new Program(types, null, nodes, main.id);
+		Contract contract = new Contract(requires, ensures);
 
-        return program;
+		NodeBuilder builder = new NodeBuilder("_TOP");
+		builder.addInputs(inputs);
+		builder.addOutputs(outputs);
+		builder.addLocals(locals);
+		builder.addEquations(equations);
+		builder.addProperties(properties);
+		builder.addAssertions(assertions);
+		builder.setContract(contract);
 
-    }
+		Node main = builder.build();
 
-    protected static AgreeNode flattenAgreeNodeKindContract(AgreeNode agreeNode, String nodePrefix) {
+		nodes.addAll(agreeProgram.globalLustreNodes);
+		nodes.add(main);
 
-        List<AgreeVar> inputs = new ArrayList<>();
-        List<AgreeVar> outputs = new ArrayList<>();
-        List<AgreeVar> locals = new ArrayList<>();
-        List<AgreeStatement> assertions = new ArrayList<>();
+		Program program = new Program(types, null, nodes, main.id);
 
-        Expr someoneTicks = null;
-        for (AgreeNode subAgreeNode : agreeNode.subNodes) {
-            String prefix = subAgreeNode.id + AgreeASTBuilder.dotChar;
-            Expr clockExpr = getClockExpr(agreeNode, subAgreeNode);
+		return program;
 
-            if (someoneTicks == null) {
-                someoneTicks = clockExpr;
-            } else {
-                someoneTicks = new BinaryExpr(someoneTicks, BinaryOp.OR, clockExpr);
-            }
+	}
 
-            AgreeNode flatNode = flattenAgreeNodeKindContract(subAgreeNode,
-                    nodePrefix + subAgreeNode.id + AgreeASTBuilder.dotChar);
+	protected static AgreeNode flattenAgreeNodeKindContract(AgreeNode agreeNode, String nodePrefix) {
 
-            Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode);
+		List<AgreeVar> inputs = new ArrayList<>();
+		List<AgreeVar> outputs = new ArrayList<>();
+		List<AgreeVar> locals = new ArrayList<>();
+		List<AgreeStatement> assertions = new ArrayList<>();
 
-            addInputsAndOutputs(inputs, outputs, flatNode, lustreNode, prefix);
+		Expr someoneTicks = null;
+		for (AgreeNode subAgreeNode : agreeNode.subNodes) {
+			String prefix = subAgreeNode.id + AgreeASTBuilder.dotChar;
+			Expr clockExpr = getClockExpr(agreeNode, subAgreeNode);
 
-            addCondactCall(agreeNode, nodePrefix, inputs, assertions, flatNode, prefix, clockExpr,
-                    lustreNode);
+			if (someoneTicks == null) {
+				someoneTicks = clockExpr;
+			} else {
+				someoneTicks = new BinaryExpr(someoneTicks, BinaryOp.OR, clockExpr);
+			}
 
-            // addClockHolds(agreeNode, assertions, flatNode, clockExpr, prefix,
-            // lustreNode);
+			AgreeNode flatNode = flattenAgreeNodeKindContract(subAgreeNode,
+					nodePrefix + subAgreeNode.id + AgreeASTBuilder.dotChar);
 
-            addInitConstraint(agreeNode, outputs, assertions, flatNode, prefix, clockExpr, lustreNode);
+			Node lustreNode = addSubNodeLustre(agreeNode, nodePrefix, flatNode);
 
-        }
+			addInputsAndOutputs(inputs, outputs, flatNode, lustreNode, prefix);
 
-        if (agreeNode.timing == TimingModel.ASYNC) {
-            if (someoneTicks == null) {
-                throw new AgreeException("Somehow we generated a clock constraint without any clocks");
-            }
-            assertions.add(new AgreeStatement("someone ticks", someoneTicks, null));
-        }
+			addCondactCall(agreeNode, nodePrefix, inputs, assertions, flatNode, prefix, clockExpr, lustreNode);
 
-        addConnectionConstraints(agreeNode, assertions);
+			// addClockHolds(agreeNode, assertions, flatNode, clockExpr, prefix,
+			// lustreNode);
 
-        // add any clock constraints
-        assertions.addAll(agreeNode.assertions);
-        assertions.add(new AgreeStatement("", agreeNode.clockConstraint, null));
-        inputs.addAll(agreeNode.inputs);
-        outputs.addAll(agreeNode.outputs);
-        locals.addAll(agreeNode.locals);
+			addInitConstraint(agreeNode, outputs, assertions, flatNode, prefix, clockExpr, lustreNode);
 
-        AgreeNodeBuilder builder = new AgreeNodeBuilder(agreeNode.id);
+		}
+
+		if (agreeNode.timing == TimingModel.ASYNC) {
+			if (someoneTicks == null) {
+				throw new AgreeException("Somehow we generated a clock constraint without any clocks");
+			}
+			assertions.add(new AgreeStatement("someone ticks", someoneTicks, null));
+		}
+
+		addConnectionConstraints(agreeNode, assertions);
+
+		// add any clock constraints
+		assertions.addAll(agreeNode.assertions);
+		assertions.add(new AgreeStatement("", agreeNode.clockConstraint, null));
+		inputs.addAll(agreeNode.inputs);
+		outputs.addAll(agreeNode.outputs);
+		locals.addAll(agreeNode.locals);
+
+		AgreeNodeBuilder builder = new AgreeNodeBuilder(agreeNode.id);
 		builder.addInput(inputs);
 		builder.addOutput(outputs);
 		builder.addLocal(locals);
@@ -177,10 +176,9 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
 		return builder.build();
 
-    }
+	}
 
-    
-    protected static void addInitConstraint(AgreeNode agreeNode, List<AgreeVar> outputs,
+	protected static void addInitConstraint(AgreeNode agreeNode, List<AgreeVar> outputs,
 			List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, Expr clockExpr, Node lustreNode) {
 		if (agreeNode.timing != TimingModel.SYNC) {
 			String tickedName = subAgreeNode.id + "___TICKED";
@@ -221,78 +219,77 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 
 		}
 	}
-    
-    protected static Node addSubNodeLustre(AgreeNode agreeNode, String nodePrefix, AgreeNode flatNode) {
 
-        Node lustreNode = getLustreNode(flatNode, nodePrefix);
-        addToNodes(lustreNode);
-        return lustreNode;
-    }
+	protected static Node addSubNodeLustre(AgreeNode agreeNode, String nodePrefix, AgreeNode flatNode) {
 
-    protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix) {
+		Node lustreNode = getLustreNode(flatNode, nodePrefix);
+		addToNodes(lustreNode);
+		return lustreNode;
+	}
 
-        List<VarDecl> inputs = new ArrayList<>();
-        List<VarDecl> outputs = new ArrayList<>();
-        List<VarDecl> locals = new ArrayList<>();
-        List<Equation> equations = new ArrayList<>();
-        List<Expr> assertions = new ArrayList<>();
-        List<Expr> requires = new ArrayList<>();
-        List<Expr> ensures = new ArrayList<>();
+	protected static Node getLustreNode(AgreeNode agreeNode, String nodePrefix) {
 
-        for (AgreeStatement statement : agreeNode.assumptions) {
-            requires.add(statement.expr);
-        }
+		List<VarDecl> inputs = new ArrayList<>();
+		List<VarDecl> outputs = new ArrayList<>();
+		List<VarDecl> locals = new ArrayList<>();
+		List<Equation> equations = new ArrayList<>();
+		List<Expr> assertions = new ArrayList<>();
+		List<Expr> requires = new ArrayList<>();
+		List<Expr> ensures = new ArrayList<>();
 
-        for (AgreeStatement statement : agreeNode.lemmas) {
-            ensures.add(statement.expr);
-        }
+		for (AgreeStatement statement : agreeNode.assumptions) {
+			requires.add(statement.expr);
+		}
 
-        for (AgreeStatement statement : agreeNode.guarantees) {
-            ensures.add(statement.expr);
-        }
+		for (AgreeStatement statement : agreeNode.lemmas) {
+			ensures.add(statement.expr);
+		}
 
-        for (AgreeStatement statement : agreeNode.assertions) {
-            assertions.add(statement.expr);
-            if(AgreeUtils.referenceIsInContract(statement.reference, agreeNode.compInst)){
-                ensures.add(statement.expr);
-            }
-        }
+		for (AgreeStatement statement : agreeNode.guarantees) {
+			ensures.add(statement.expr);
+		}
 
-        // gather the remaining inputs
-        for (AgreeVar var : agreeNode.inputs) {
-            inputs.add(var);
-        }
-        for (AgreeVar var : agreeNode.outputs) {
-            outputs.add(var);
-        }
-        //Contract contract = new Contract(nodePrefix + agreeNode.id, requires, ensures);
-        Contract contract = new Contract(requires, ensures);
+		for (AgreeStatement statement : agreeNode.assertions) {
+			assertions.add(statement.expr);
+			if (AgreeUtils.referenceIsInContract(statement.reference, agreeNode.compInst)) {
+				ensures.add(statement.expr);
+			}
+		}
 
-        
-        NodeBuilder builder = new NodeBuilder(nodePrefix + agreeNode.id);
-        builder.addInputs(inputs);
-        builder.addOutputs(outputs);
-        builder.addLocals(locals);
-        builder.addEquations(equations);
-        builder.addAssertions(assertions);
-        builder.setContract(contract);
-        
-        return builder.build();
-    }
+		// gather the remaining inputs
+		for (AgreeVar var : agreeNode.inputs) {
+			inputs.add(var);
+		}
+		for (AgreeVar var : agreeNode.outputs) {
+			outputs.add(var);
+		}
+		// Contract contract = new Contract(nodePrefix + agreeNode.id, requires, ensures);
+		Contract contract = new Contract(requires, ensures);
 
-    protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs,
-            AgreeNode subAgreeNode, Node lustreNode, String prefix) {
-        for (AgreeVar var : subAgreeNode.inputs) {
-            AgreeVar input = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
-            inputs.add(input);
-        }
+		NodeBuilder builder = new NodeBuilder(nodePrefix + agreeNode.id);
+		builder.addInputs(inputs);
+		builder.addOutputs(outputs);
+		builder.addLocals(locals);
+		builder.addEquations(equations);
+		builder.addAssertions(assertions);
+		builder.setContract(contract);
 
-        for (AgreeVar var : subAgreeNode.outputs) {
-            AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
-            outputs.add(output);
-        }
+		return builder.build();
+	}
 
-        // right now we do not support local variables in our translation
+	protected static void addInputsAndOutputs(List<AgreeVar> inputs, List<AgreeVar> outputs, AgreeNode subAgreeNode,
+			Node lustreNode, String prefix) {
+		for (AgreeVar var : subAgreeNode.inputs) {
+			AgreeVar input = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
+			inputs.add(input);
+		}
+
+		for (AgreeVar var : subAgreeNode.outputs) {
+			AgreeVar output = new AgreeVar(prefix + var.id, var.type, var.reference, var.compInst, var.featInst);
+			outputs.add(output);
+		}
+
+		// right now we do not support local variables in our translation
 //        for (AgreeVar var : subAgreeNode.locals) {
 //            throw new AgreeException("What is an example of this?");
 //            // varCount++;
@@ -300,55 +297,53 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 //            // var.reference, var.compInst);
 //            // outputs.add(local);
 //        }
-        if (!subAgreeNode.locals.isEmpty()) {
-            throw new AgreeException("What is an example of this?");
-        }
+		if (!subAgreeNode.locals.isEmpty()) {
+			throw new AgreeException("What is an example of this?");
+		}
 
-        inputs.add(subAgreeNode.clockVar);
+		inputs.add(subAgreeNode.clockVar);
 
-    }
+	}
 
-    protected static void addCondactCall(AgreeNode agreeNode, String nodePrefix, List<AgreeVar> inputs,
-            List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, Expr clockExpr,
-            Node lustreNode) {
-        List<Expr> inputIds = new ArrayList<>();
-        List<Expr> initOutputsVals = new ArrayList<>();
-        List<IdExpr> nodeOutputIds = new ArrayList<>();
-        for (VarDecl var : lustreNode.inputs) {
-            inputIds.add(new IdExpr(prefix + var.id));
-        }
+	protected static void addCondactCall(AgreeNode agreeNode, String nodePrefix, List<AgreeVar> inputs,
+			List<AgreeStatement> assertions, AgreeNode subAgreeNode, String prefix, Expr clockExpr, Node lustreNode) {
+		List<Expr> inputIds = new ArrayList<>();
+		List<Expr> initOutputsVals = new ArrayList<>();
+		List<IdExpr> nodeOutputIds = new ArrayList<>();
+		for (VarDecl var : lustreNode.inputs) {
+			inputIds.add(new IdExpr(prefix + var.id));
+		}
 
-        for (VarDecl var : lustreNode.outputs) {
-            AgreeVar outputVar = (AgreeVar) var;
-            String dummyName = prefix + var.id + "__DUMMY";
-            AgreeVar dummyVar = new AgreeVar(dummyName, outputVar.type, outputVar.reference, outputVar.compInst,
-                    outputVar.featInst);
-            
-            if (!inputs.contains(dummyVar)) {
-                inputs.add(dummyVar);
-            }
+		for (VarDecl var : lustreNode.outputs) {
+			AgreeVar outputVar = (AgreeVar) var;
+			String dummyName = prefix + var.id + "__DUMMY";
+			AgreeVar dummyVar = new AgreeVar(dummyName, outputVar.type, outputVar.reference, outputVar.compInst,
+					outputVar.featInst);
 
-            initOutputsVals.add(new IdExpr(dummyName));
-            nodeOutputIds.add(new IdExpr(prefix + var.id));
-        }
+			if (!inputs.contains(dummyVar)) {
+				inputs.add(dummyVar);
+			}
 
-        if (agreeNode.timing == TimingModel.LATCHED) {
-            throw new AgreeException("check how we do this in the generic lustre translation now"
-            		+ " to make sure that it is correct");
-        }
+			initOutputsVals.add(new IdExpr(dummyName));
+			nodeOutputIds.add(new IdExpr(prefix + var.id));
+		}
 
-        Expr condactExpr =
-                new CondactExpr(clockExpr, new NodeCallExpr(lustreNode.id, inputIds), initOutputsVals);
+		if (agreeNode.timing == TimingModel.LATCHED) {
+			throw new AgreeException(
+					"check how we do this in the generic lustre translation now" + " to make sure that it is correct");
+		}
 
-        Expr condactOutput;
-        if(nodeOutputIds.size() > 1){
-            condactOutput = new TupleExpr(nodeOutputIds);
-        }else{
-            condactOutput = nodeOutputIds.get(0);
-        }
-        
-        Expr condactCall = new BinaryExpr(condactOutput, BinaryOp.EQUAL, condactExpr);
-        assertions.add(new AgreeStatement("", condactCall, null));
-    }
+		Expr condactExpr = new CondactExpr(clockExpr, new NodeCallExpr(lustreNode.id, inputIds), initOutputsVals);
+
+		Expr condactOutput;
+		if (nodeOutputIds.size() > 1) {
+			condactOutput = new TupleExpr(nodeOutputIds);
+		} else {
+			condactOutput = nodeOutputIds.get(0);
+		}
+
+		Expr condactCall = new BinaryExpr(condactOutput, BinaryOp.EQUAL, condactExpr);
+		assertions.add(new AgreeStatement("", condactCall, null));
+	}
 
 }

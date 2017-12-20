@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -21,7 +22,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -81,19 +81,16 @@ public abstract class AadlHandler extends AbstractHandler {
 	}
 
 	protected IUnitOfWork<IStatus, XtextResource> getUnitOfWork(URI uri, IProgressMonitor monitor) {
-		return new IUnitOfWork<IStatus, XtextResource>() {
-			@Override
-			public IStatus exec(XtextResource resource) throws Exception {
-				EObject eobj = resource.getResourceSet().getEObject(uri, true);
-				if (eobj instanceof Element) {
-					return runJob((Element) eobj, monitor);
-				} else {
-					return Status.CANCEL_STATUS;
-				}
+		return resource -> {
+			EObject eobj = resource.getResourceSet().getEObject(uri, true);
+			if (eobj instanceof Element) {
+				return runJob((Element) eobj, monitor);
+			} else {
+				return Status.CANCEL_STATUS;
 			}
 		};
 	}
-	
+
 	private boolean saveChanges(IEditorPart[] dirtyEditors) {
 		if (dirtyEditors.length == 0) {
 			return true;
@@ -123,7 +120,7 @@ public abstract class AadlHandler extends AbstractHandler {
 			TextSelection ts = (TextSelection) xtextEditor.getSelectionProvider().getSelection();
 			return xtextEditor.getDocument().readOnly(resource -> {
 				EObject e = new EObjectAtOffsetHelper().resolveContainedElementAt(resource, ts.getOffset());
-				return EcoreUtil2.getURI(e);
+				return EcoreUtil.getURI(e);
 			});
 		}
 		return null;
@@ -139,7 +136,7 @@ public abstract class AadlHandler extends AbstractHandler {
 		Collections.reverse(containers);
 		for (EObject container : containers) {
 			if (container instanceof Classifier) {
-				//System.out.println(container);
+				// System.out.println(container);
 				return (Classifier) container;
 			}
 		}

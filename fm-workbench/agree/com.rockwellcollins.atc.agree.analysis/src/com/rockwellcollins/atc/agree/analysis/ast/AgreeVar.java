@@ -5,6 +5,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTVisitor;
+
 import jkind.lustre.Type;
 import jkind.lustre.VarDecl;
 
@@ -12,7 +13,7 @@ public class AgreeVar extends VarDecl implements AgreeASTElement {
 
 	public final EObject reference;
 	public final ComponentInstance compInst;
-    public final FeatureInstance featInst;
+	public final FeatureInstance featInst;
 
 	public AgreeVar(String name, Type type, EObject reference, ComponentInstance compInst, FeatureInstance featInst) {
 		super(name, type);
@@ -20,11 +21,11 @@ public class AgreeVar extends VarDecl implements AgreeASTElement {
 		this.compInst = compInst;
 		this.featInst = featInst;
 	}
-	
+
 	public AgreeVar(String name, Type type, EObject reference, ComponentInstance compInst) {
 		this(name, type, reference, compInst, null);
 	}
-	
+
 	public AgreeVar(String name, Type type, EObject reference) {
 		this(name, type, reference, null, null);
 	}
@@ -37,7 +38,7 @@ public class AgreeVar extends VarDecl implements AgreeASTElement {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof String) {
-			return this.id.equals((String) obj);
+			return id.equals(obj);
 		}
 
 		if (!(obj instanceof AgreeVar)) {
@@ -51,10 +52,10 @@ public class AgreeVar extends VarDecl implements AgreeASTElement {
 	public <T> T accept(AgreeASTVisitor<T> visitor) {
 		return visitor.visit(this);
 	}
-	
+
 	@Override
-	public String toString(){
-		if(compInst != null){
+	public String toString() {
+		if (compInst != null) {
 			return compInst.getInstanceObjectPath() + "." + id;
 		}
 		return id;

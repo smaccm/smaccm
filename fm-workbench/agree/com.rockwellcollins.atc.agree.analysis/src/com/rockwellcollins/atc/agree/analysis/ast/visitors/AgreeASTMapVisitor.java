@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2016, Rockwell Collins.
- * 
+ *
  * Developed with the sponsorship of Defense Advanced Research Projects Agency
  * (DARPA).
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this data, including any software or models in source or binary form, as
  * well as any drawings, specifications, and documentation (collectively
@@ -11,7 +11,7 @@
  * limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Data, and to permit persons to whom the
  * Data is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Data.
  *
@@ -28,7 +28,7 @@
  * MWW (9/17/2017)
  * NOTE: this pass only works correctly for *complete* traversals!
  * If you short-circuit a node traversal, the pass behaves incorrectly.
- *  
+ *
  */
 
 package com.rockwellcollins.atc.agree.analysis.ast.visitors;
@@ -42,11 +42,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureInstance;
 
-import jkind.lustre.Expr;
-import jkind.lustre.IdExpr;
-import jkind.lustre.Node;
-import jkind.lustre.Type;
-
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
@@ -54,12 +49,17 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTElement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeOverriddenConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
+
+import jkind.lustre.Expr;
+import jkind.lustre.IdExpr;
+import jkind.lustre.Node;
+import jkind.lustre.Type;
 
 public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		implements AgreeASTVisitor<AgreeASTElement> {
@@ -70,10 +70,9 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 	protected Map<ComponentInstance, AgreeNode> visitedNodes;
 
 	public AgreeASTMapVisitor(jkind.lustre.visitors.TypeMapVisitor lustreTypeMapVisitor) {
-		this.visitedNodes = new HashMap<>();
+		visitedNodes = new HashMap<>();
 		this.lustreTypeMapVisitor = lustreTypeMapVisitor;
 	}
-
 
 	@Override
 	public AgreeProgram visit(AgreeProgram e) {
@@ -104,31 +103,31 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 	@Override
 	public AgreeConnection visit(AgreeConnection e) {
 		if (e instanceof AgreeAADLConnection) {
-			AgreeAADLConnection aadlConn = (AgreeAADLConnection)e;
-			AgreeNode sourceNode = null; 
-			if (aadlConn.sourceNode != null) { 
+			AgreeAADLConnection aadlConn = (AgreeAADLConnection) e;
+			AgreeNode sourceNode = null;
+			if (aadlConn.sourceNode != null) {
 				sourceNode = visitedNodes.get(aadlConn.sourceNode.compInst);
 			}
 			AgreeNode destinationNode = null;
 			if (aadlConn.destinationNode != null) {
 				destinationNode = visitedNodes.get(aadlConn.destinationNode.compInst);
 			}
-			
-			AgreeVar sourVar = visit(aadlConn.sourVar);
-			AgreeVar destVar = visit(aadlConn.destVar);
+
+			AgreeVar sourVar = visit(aadlConn.sourceVarName);
+			AgreeVar destVar = visit(aadlConn.destinationVarName);
 			ConnectionType type = aadlConn.type;
 			boolean latched = aadlConn.latched;
 			boolean delayed = aadlConn.delayed;
 			EObject reference = aadlConn.reference;
 
-			return new AgreeAADLConnection(sourceNode, destinationNode, sourVar, destVar, type, latched,
-					delayed, reference);
-		}else if(e instanceof AgreeOverriddenConnection){
-			AgreeOverriddenConnection overriddenCon = (AgreeOverriddenConnection)e;
+			return new AgreeAADLConnection(sourceNode, destinationNode, sourVar, destVar, type, latched, delayed,
+					reference);
+		} else if (e instanceof AgreeOverriddenConnection) {
+			AgreeOverriddenConnection overriddenCon = (AgreeOverriddenConnection) e;
 			AgreeStatement statement = visit(overriddenCon.statement);
 			return new AgreeOverriddenConnection(statement, overriddenCon.aadlConn);
 		}
-		throw new AgreeException("Unhandled Agree connection type "+e.getClass());
+		throw new AgreeException("Unhandled Agree connection type " + e.getClass());
 	}
 
 	@Override
@@ -185,14 +184,14 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		for (AgreeStatement stmt : e.lemmas) {
 			lemmas.add(this.visit(stmt));
 		}
-		
+
 		List<AgreeStatement> patternProps = new ArrayList<>();
-		for(AgreeStatement stmt : e.patternProps){
+		for (AgreeStatement stmt : e.patternProps) {
 			patternProps.add(this.visit(stmt));
 		}
-		
+
 		List<AgreeEquation> localEqs = new ArrayList<>();
-		for(AgreeEquation eq : e.localEquations){
+		for (AgreeEquation eq : e.localEquations) {
 			localEqs.add(this.visit(eq));
 		}
 
@@ -202,7 +201,7 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		EObject reference = e.reference;
 		TimingModel timing = e.timing;
 		// ComponentInstance compinst = e.compInst;
-		
+
 		AgreeNodeBuilder builder = new AgreeNodeBuilder(id);
 		builder.addInput(inputs);
 		builder.addOutput(outputs);
@@ -246,27 +245,17 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		Type type = e.type.accept(lustreTypeMapVisitor);
 		EObject reference = e.reference;
 		ComponentInstance compInst = e.compInst;
-        FeatureInstance featInst = e.featInst;
+		FeatureInstance featInst = e.featInst;
 
-        return new AgreeVar(name, type, reference, compInst, featInst);
+		return new AgreeVar(name, type, reference, compInst, featInst);
 	}
 
-	/*
-	// MWW: WTF?
-	@Override
-	public AgreeEquation visit(AgreeEquation agreeEquation) {
-		
-		// TODO Auto-generated method stub
-		return null;
-	}
-	*/
-	
 	@Override
 	public AgreeEquation visit(AgreeEquation agreeEquation) {
 		EObject reference = agreeEquation.reference;
-		List<IdExpr> lhs = new ArrayList<>(); 
-		for (IdExpr e: agreeEquation.lhs) {
-			lhs.add((IdExpr)e.accept(this)); 
+		List<IdExpr> lhs = new ArrayList<>();
+		for (IdExpr e : agreeEquation.lhs) {
+			lhs.add((IdExpr) e.accept(this));
 		}
 		Expr rhs = agreeEquation.expr.accept(this);
 		return new AgreeEquation(lhs, rhs, reference);

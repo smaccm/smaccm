@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2016, Rockwell Collins.
- * 
+ *
  * Developed with the sponsorship of Defense Advanced Research Projects Agency
  * (DARPA).
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this data, including any software or models in source or binary form, as
  * well as any drawings, specifications, and documentation (collectively
@@ -11,7 +11,7 @@
  * limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Data, and to permit persons to whom the
  * Data is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Data.
  *

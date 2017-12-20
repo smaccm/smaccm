@@ -1,10 +1,5 @@
 package com.rockwellcollins.atc.agree.analysis.views;
 
-import jkind.api.ui.counterexample.CounterexampleContentProvider;
-import jkind.api.ui.counterexample.CounterexampleNameLabelProvider;
-import jkind.results.Counterexample;
-import jkind.results.layout.Layout;
-
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -13,14 +8,19 @@ import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import jkind.api.ui.counterexample.CounterexampleContentProvider;
+import jkind.api.ui.counterexample.CounterexampleNameLabelProvider;
+import jkind.results.Counterexample;
+import jkind.results.layout.Layout;
+
 public class AgreeCounterexampleTreeViewer {
 
 	protected TreeViewer treeViewer;
 	protected final Composite composite;
 
 	public AgreeCounterexampleTreeViewer(Composite parent) {
-			this.composite = new Composite(parent, SWT.None);
-		}
+		composite = new Composite(parent, SWT.None);
+	}
 
 	public void setFocus() {
 		if (treeViewer != null) {

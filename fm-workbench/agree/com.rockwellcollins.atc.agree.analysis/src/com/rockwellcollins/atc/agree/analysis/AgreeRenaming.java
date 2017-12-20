@@ -2,6 +2,7 @@ package com.rockwellcollins.atc.agree.analysis;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
@@ -17,170 +18,166 @@ public class AgreeRenaming extends Renaming {
 
 	/*
 	 * explicitRenames:
-	 * 		key: Lustre var
-	 * 		value: AGREE var
-	 * 		example: "accumulator__pressure_output"  ->  "accumulator.pressure_output"
-	 * supportRenames: 
-	 * 		key: Lustre property
-	 *  	value: AGREE property
-	 *  	example: "__TOP_green_pump.GUARANTEE0"  ->  "green_pump.GUARANTEE0"
-	 *  supportRefStrings: 
-	 *  	key: AGREE child property
-	 *  	value: String description
-	 *  	example: "green_skid.GUARANTEE1"  ->  "Output always positive."
-	 *  refMap:
-	 *  	key: AGREE child property string description
-	 *  	value: Implementation
-	 *  	example: "Output always positive"  -> GuaranteeStatementImpl
+	 * key: Lustre var
+	 * value: AGREE var
+	 * example: "accumulator__pressure_output" -> "accumulator.pressure_output"
+	 * supportRenames:
+	 * key: Lustre property
+	 * value: AGREE property
+	 * example: "__TOP_green_pump.GUARANTEE0" -> "green_pump.GUARANTEE0"
+	 * supportRefStrings:
+	 * key: AGREE child property
+	 * value: String description
+	 * example: "green_skid.GUARANTEE1" -> "Output always positive."
+	 * refMap:
+	 * key: AGREE child property string description
+	 * value: Implementation
+	 * example: "Output always positive" -> GuaranteeStatementImpl
 	 */
-    private Map<String, String> explicitRenames = new HashMap<>();
-    private Map<String, String> supportRenames = new HashMap<>();
-    private Map<String, String> supportRefStrings = new HashMap<>();
-    private Map<String, EObject> refMap;
+	private Map<String, String> explicitRenames = new HashMap<>();
+	private Map<String, String> supportRenames = new HashMap<>();
+	private Map<String, String> supportRefStrings = new HashMap<>();
+	private Map<String, EObject> refMap;
 
-    public AgreeRenaming() {
-        this.refMap = new HashMap<String, EObject>();
-    }
+	public AgreeRenaming() {
+		refMap = new HashMap<>();
+	}
 
-    public void addRenamings(AgreeRenaming renaming) {
-        this.explicitRenames.putAll(renaming.explicitRenames);
-        this.refMap.putAll(renaming.refMap);
-    }
-    
-    public void addSupportRename(String from, String to){
-        this.supportRenames.put(from, to);
-    }
-    
-    public void addSupportRefString(String from, String refStr){
-        this.supportRefStrings.put(renameIVC(from), refStr);
-    }
-    
-    @Override
-    public String renameIVC(String ivc){
-        return this.supportRenames.get(ivc);
-    }
-    
-    public String getSupportRefString(String ivc){
-        return this.supportRefStrings.get(ivc);
-    }
+	public void addRenamings(AgreeRenaming renaming) {
+		explicitRenames.putAll(renaming.explicitRenames);
+		refMap.putAll(renaming.refMap);
+	}
 
-    public final Map<String, String> getSupportRefStrings() {
-    	return this.supportRefStrings;
-    }
-    
-    public void addExplicitRename(String oldName, String newName) {
-        this.explicitRenames.put(oldName, newName);
-    }
-    
-    public void addToRefMap(String str, EObject ref) {
-        if (str != null) {
-            str = rename(str);
-            if (str != null) {
-                refMap.put(str, ref);
-            }
-        }
-    }
-    
-    public Map<String, EObject> getRefMap(){
-        return refMap;
-    }
+	public void addSupportRename(String from, String to) {
+		supportRenames.put(from, to);
+	}
 
-    public String forceRename(String original) {
+	public void addSupportRefString(String from, String refStr) {
+		supportRefStrings.put(renameIVC(from), refStr);
+	}
 
-        // magic to remove the prefix
-        String newName;
-        newName = original.replaceAll("___Nod([^_]_?)*_", "");
-        newName = newName.replace("~condact", "");
-        newName = newName.replaceAll("~[0-9]*", "");
-        //the following is special for kind 2 contracts
-        newName = newName.replaceAll("guarantee\\[.*?\\]", "");
-        newName = newName.replace("__", ".");
+	@Override
+	public String renameIVC(String ivc) {
+		return supportRenames.get(ivc);
+	}
 
-        return newName;
+	public String getSupportRefString(String ivc) {
+		return supportRefStrings.get(ivc);
+	}
 
-    }
+	public final Map<String, String> getSupportRefStrings() {
+		return supportRefStrings;
+	}
 
-    @Override
-    public Property rename(Property property) {
-        //another hack for kind2
-       if(property.getName().matches("guarantee\\[.*?\\]")){
-           return renameKind2Prop(property);
-           //return property;
-       }
-       return super.rename(property);
-    }
-    
-    private Property renameKind2Prop(Property property){
-        if(property instanceof InvalidProperty){
-            InvalidProperty renamedInvalid = (InvalidProperty)property;
-            return new InvalidProperty(renamedInvalid.getName(), 
-                    renamedInvalid.getSource(), 
-                    rename(renamedInvalid.getCounterexample()), 
-                    renamedInvalid.getConflicts(), 
-                    renamedInvalid.getRuntime());
-        }else if(property instanceof UnknownProperty){
-            UnknownProperty renamedUnknown = (UnknownProperty)property;
-            UnknownProperty newProp =  new UnknownProperty(renamedUnknown.getName(), 
-                    renamedUnknown.getTrueFor(), 
-                    rename(renamedUnknown.getInductiveCounterexample()), 
-                    renamedUnknown.getRuntime());
-            return newProp;
-        }
-        if(!(property instanceof ValidProperty)){
-            throw new AgreeException("Unexpected property type");
-        }
-        return property;
-    }
-    
-    @Override
-    public String rename(String original) {
+	public void addExplicitRename(String oldName, String newName) {
+		explicitRenames.put(oldName, newName);
+	}
 
-        String newName = this.explicitRenames.get(original);
-        if (newName != null) {
-            return newName;
-        }
-        
-        newName = forceRename(original);
+	public void addToRefMap(String str, EObject ref) {
+		if (str != null) {
+			str = rename(str);
+			if (str != null) {
+				refMap.put(str, ref);
+			}
+		}
+	}
 
-        if (findBestReference(newName) == null) {
-            if (original.equals("%REALIZABLE")) {
-                return "Realizability Result";
-            } else if (original.contains("__nodeLemma")) {
-                return newName;
-            } else if(newName.matches(".*\\[[0-9]*\\]")){
-                //kind2 hacks
-               newName = this.explicitRenames.get(newName);
+	public Map<String, EObject> getRefMap() {
+		return refMap;
+	}
+
+	public String forceRename(String original) {
+
+		// magic to remove the prefix
+		String newName;
+		newName = original.replaceAll("___Nod([^_]_?)*_", "");
+		newName = newName.replace("~condact", "");
+		newName = newName.replaceAll("~[0-9]*", "");
+		// the following is special for kind 2 contracts
+		newName = newName.replaceAll("guarantee\\[.*?\\]", "");
+		newName = newName.replace("__", ".");
+
+		return newName;
+
+	}
+
+	@Override
+	public Property rename(Property property) {
+		// another hack for kind2
+		if (property.getName().matches("guarantee\\[.*?\\]")) {
+			return renameKind2Prop(property);
+			// return property;
+		}
+		return super.rename(property);
+	}
+
+	private Property renameKind2Prop(Property property) {
+		if (property instanceof InvalidProperty) {
+			InvalidProperty renamedInvalid = (InvalidProperty) property;
+			return new InvalidProperty(renamedInvalid.getName(), renamedInvalid.getSource(),
+					rename(renamedInvalid.getCounterexample()), renamedInvalid.getConflicts(),
+					renamedInvalid.getRuntime());
+		} else if (property instanceof UnknownProperty) {
+			UnknownProperty renamedUnknown = (UnknownProperty) property;
+			UnknownProperty newProp = new UnknownProperty(renamedUnknown.getName(), renamedUnknown.getTrueFor(),
+					rename(renamedUnknown.getInductiveCounterexample()), renamedUnknown.getRuntime());
+			return newProp;
+		}
+		if (!(property instanceof ValidProperty)) {
+			throw new AgreeException("Unexpected property type");
+		}
+		return property;
+	}
+
+	@Override
+	public String rename(String original) {
+
+		String newName = explicitRenames.get(original);
+		if (newName != null) {
+			return newName;
+		}
+
+		newName = forceRename(original);
+
+		if (findBestReference(newName) == null) {
+			if (original.equals("%REALIZABLE")) {
+				return "Realizability Result";
+			} else if (original.contains("__nodeLemma")) {
+				return newName;
+			} else if (newName.matches(".*\\[[0-9]*\\]")) {
+				// kind2 hacks
+				newName = explicitRenames.get(newName);
 //               if(newName == null){
 //                   return original;
 //               }
-               return newName;
-            } else if(newName.matches("time")){
-                return "time";
-            } else if (original.endsWith(AgreeASTBuilder.clockIDSuffix)){
-                return newName;
-            } else if (original.endsWith(LustreAstBuilder.assumeHistSufix)){
-                return newName;
-            }
-            return null;
-        }
+				return newName;
+			} else if (newName.matches("time")) {
+				return "time";
+			} else if (original.endsWith(AgreeASTBuilder.clockIDSuffix)) {
+				return newName;
+			} else if (original.endsWith(LustreAstBuilder.assumeHistSufix)) {
+				return newName;
+			}
+			return null;
+		}
 
-        return newName;
+		return newName;
 
-    }
+	}
 
-    private EObject findBestReference(String refStr) {
+	private EObject findBestReference(String refStr) {
 
-        EObject ref = null;
-        while (ref == null && refStr != null && !refStr.equals("")) {
-            ref = refMap.get(refStr);
-            int index = refStr.lastIndexOf(".");
-            if (index == -1) {
-                break;
-            }
-            refStr = refStr.substring(0, index);
-        }
+		EObject ref = null;
+		while (ref == null && refStr != null && !refStr.equals("")) {
+			ref = refMap.get(refStr);
+			int index = refStr.lastIndexOf(".");
+			if (index == -1) {
+				break;
+			}
+			refStr = refStr.substring(0, index);
+		}
 
-        return ref;
-    }
+		return ref;
+	}
 
 }

@@ -7,7 +7,7 @@ import jkind.lustre.IdExpr;
 
 public class AgreeSporadicPattern extends AgreeRealtimePattern {
 
-    public AgreeSporadicPattern(String string, EObject reference, IdExpr event, Expr period, Expr jitter) {
-        super(string, reference, event, period, jitter);
-    }
+	public AgreeSporadicPattern(String string, EObject reference, IdExpr event, Expr period, Expr jitter) {
+		super(string, reference, event, period, jitter);
+	}
 }

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2016, Rockwell Collins.
- * 
+ *
  * Developed with the sponsorship of Defense Advanced Research Projects Agency
  * (DARPA).
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this data, including any software or models in source or binary form, as
  * well as any drawings, specifications, and documentation (collectively
@@ -11,7 +11,7 @@
  * limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Data, and to permit persons to whom the
  * Data is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Data.
  *
@@ -26,12 +26,12 @@
 
 package com.rockwellcollins.atc.agree.analysis.linearization;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.function.Function;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
 
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
@@ -47,24 +47,24 @@ public class Linearize {
 	BoundingSegments segments;
 
 	public Linearize(LinearizationDefExpr linDef) {
-		this.fn = linDef.getName();
+		fn = linDef.getName();
 		// TODO: For now, linearizations are over one variable only
 		assert (linDef.getArgs().size() == 1);
 		String varName = linDef.getArgs().get(0).getName();
-		this.f = Util.translateNonlinearExpr(linDef.getExprBody(), varName);
+		f = Util.translateNonlinearExpr(linDef.getExprBody(), varName);
 		if (linDef.getArgs().size() != 1) {
 			throw new AgreeException("Linearization of supported for functions of one variable only.");
 		}
 		if (linDef.getIntervals().size() != 1) {
 			throw new AgreeException("Number of linearization intervals does not match number of args.");
 		}
-		this.start = Util.getDoubleValue(linDef.getIntervals().get(0).getStart());
-		this.stop = Util.getDoubleValue(linDef.getIntervals().get(0).getEnd());
-		this.bound = 0.1;
+		start = Util.getDoubleValue(linDef.getIntervals().get(0).getStart());
+		stop = Util.getDoubleValue(linDef.getIntervals().get(0).getEnd());
+		bound = 0.1;
 		if (linDef.getPrecision() != null) {
-			this.bound = Util.getDoubleValue(linDef.getPrecision());
+			bound = Util.getDoubleValue(linDef.getPrecision());
 		}
-		this.ml = Util.translateNonlinearExprToMatlab(linDef.getExprBody());
+		ml = Util.translateNonlinearExprToMatlab(linDef.getExprBody());
 		segments = linearize(f, start, stop, bound);
 	}
 
@@ -73,8 +73,8 @@ public class Linearize {
 		this.f = f;
 		this.start = start;
 		this.stop = stop;
-		this.bound = bounds;
-		this.ml = matlab;
+		bound = bounds;
+		ml = matlab;
 		segments = linearize(f, start, stop, bound);
 	}
 
@@ -82,7 +82,7 @@ public class Linearize {
 	@SuppressWarnings("unused")
 	private Linearize(String fnm) {
 		if (fnm.equals("sqr")) {
-			this.fn = fnm;
+			fn = fnm;
 			f = (x) -> {
 				return x * x;
 			};
@@ -91,7 +91,7 @@ public class Linearize {
 			bound = 1.0;
 			ml = "x.^2";
 		} else if (fnm.equals("cube")) {
-			this.fn = fnm;
+			fn = fnm;
 			f = (x) -> {
 				return x * x * x;
 			};
@@ -100,7 +100,7 @@ public class Linearize {
 			bound = 1.0;
 			ml = "x.^3";
 		} else if (fnm.equals("power1_5")) {
-			this.fn = fnm;
+			fn = fnm;
 			f = (x) -> {
 				return Math.pow(x, 1.5);
 			};
@@ -109,7 +109,7 @@ public class Linearize {
 			bound = 1.0;
 			ml = "x.^1.5";
 		} else if (fnm.equals("reciprocal")) {
-			this.fn = fnm;
+			fn = fnm;
 			f = (x) -> {
 				return 1 / x;
 			};
@@ -118,28 +118,28 @@ public class Linearize {
 			bound = 1.0;
 			ml = "1 ./ x";
 		} else if (fnm.equals("arctan")) {
-			this.fn = fnm;
+			fn = fnm;
 			f = Math::atan;
 			start = -10.0;
 			stop = 10.0;
 			bound = 0.01;
 			ml = "atan(x)";
 		} else if (fnm.equals("cos")) {
-			this.fn = fnm;
+			fn = fnm;
 			f = Math::cos;
 			start = 0.0;
 			stop = 2.0 * Math.PI;
 			bound = 0.01;
 			ml = "cos(x)";
 		} else if (fnm.equals("tan")) {
-			this.fn = fnm;
+			fn = fnm;
 			f = Math::tan;
 			start = 0.0;
 			stop = 0.50 * Math.PI;
 			bound = 0.01;
 			ml = "tan(x)";
 		} else { // default to sin(x)
-			this.fn = "sin";
+			fn = "sin";
 			f = Math::sin;
 			start = 0.0;
 			stop = 2.0 * Math.PI;
@@ -189,8 +189,8 @@ public class Linearize {
 		public LinkedList<Segment> upper;
 
 		public BoundingSegments() {
-			this.lower = new LinkedList<Segment>();
-			this.upper = new LinkedList<Segment>();
+			lower = new LinkedList<>();
+			upper = new LinkedList<>();
 		}
 
 		public BoundingSegments(LinkedList<Segment> lower, LinkedList<Segment> upper) {
@@ -199,9 +199,9 @@ public class Linearize {
 		}
 
 		public BoundingSegments(Segment lower, Segment upper) {
-			this.lower = new LinkedList<Segment>();
+			this.lower = new LinkedList<>();
 			this.lower.add(lower);
-			this.upper = new LinkedList<Segment>();
+			this.upper = new LinkedList<>();
 			this.upper.add(upper);
 		}
 	}
@@ -253,10 +253,12 @@ public class Linearize {
 		double slope = (f.apply(stop) - f.apply(start)) / (stop - start);
 		while (x < stop) {
 			dist = f.apply(x) - (y + slope * (x - start));
-			if (dist > distAbove)
+			if (dist > distAbove) {
 				distAbove = dist;
-			if (dist < distBelow)
+			}
+			if (dist < distBelow) {
 				distBelow = dist;
+			}
 			x = x + step;
 		}
 		return new Distance(distBelow, distAbove);
@@ -314,10 +316,11 @@ public class Linearize {
 		double slope = 0.0;
 		boolean firstLine = true;
 		for (Segment seg : b) {
-			if (firstLine)
+			if (firstLine) {
 				out.print("    ( ");
-			else
+			} else {
 				out.print(" and \n      ");
+			}
 			firstLine = false;
 
 			slope = (seg.stopY - seg.startY) / (seg.stopX - seg.startX);

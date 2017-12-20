@@ -305,7 +305,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (annex != null) {
 			hasDirectAnnex = true;
 			AgreeContract contract = (AgreeContract) annex.getContract();
-			//this makes files for monolithic verification a bit smaller
+			// this makes files for monolithic verification a bit smaller
 			if (isTop || !hasSubcomponents) {
 				assumptions.addAll(getAssumptionStatements(contract.getSpecs()));
 				guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
@@ -378,14 +378,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			conns.add(replacementConn);
 		}
 
-		//throw errors for non-override connections with multiple fanin
+		// throw errors for non-override connections with multiple fanin
 		Set<AgreeVar> destinations = new HashSet<>();
 
-		for(AgreeConnection conn : conns){
-			if(conn instanceof AgreeAADLConnection){
-				AgreeAADLConnection aadlConn = (AgreeAADLConnection)conn;
-				if(!destinations.add(aadlConn.destVar)){
-					String message = "Multiple connections to feature '" + aadlConn.destVar + "'. Remove "
+		for (AgreeConnection conn : conns) {
+			if (conn instanceof AgreeAADLConnection) {
+				AgreeAADLConnection aadlConn = (AgreeAADLConnection) conn;
+				if (!destinations.add(aadlConn.destinationVarName)) {
+					String message = "Multiple connections to feature '" + aadlConn.destinationVarName + "'. Remove "
 							+ "the additional AADL connections or override them with a connection statement "
 							+ "in the AGREE annex.";
 					throw new AgreeException(message);
@@ -465,7 +465,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		} else if (statement instanceof AgreePeriodicPattern) {
 			AgreePeriodicPattern pattern = (AgreePeriodicPattern) statement;
 			ids.addAll(pattern.event.accept(visitor));
-		} else if (statement instanceof AgreeSporadicPattern){
+		} else if (statement instanceof AgreeSporadicPattern) {
 			AgreeSporadicPattern pattern = (AgreeSporadicPattern) statement;
 			ids.addAll(pattern.event.accept(visitor));
 		} else {
@@ -608,8 +608,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		Type type = AgreeTypeUtils.getType(dataClass, typeMap, typeExpressions);
-		if(type == null){
-			//we do not reason about this type
+		if (type == null) {
+			// we do not reason about this type
 			return;
 		}
 
@@ -669,48 +669,53 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			ConnectionEnd destPort = absConnDest.getConnectionEnd();
 			ConnectionEnd sourPort = absConnSour.getConnectionEnd();
 
-			if(sourPort instanceof DataSubcomponent || destPort instanceof DataSubcomponent){
-				AgreeLogger.logWarning("unable to reason about connection '"+ conn.getName() +"' because it connects to a data subcomponent");
+			if (sourPort instanceof DataSubcomponent || destPort instanceof DataSubcomponent) {
+				AgreeLogger.logWarning("unable to reason about connection '" + conn.getName()
+						+ "' because it connects to a data subcomponent");
 				continue;
 			}
 
-			//weirdness with feature groups
+			// weirdness with feature groups
 			String sourPrefix = null;
-			if(sourContext instanceof FeatureGroup){
+			if (sourContext instanceof FeatureGroup) {
 				sourPrefix = sourContext.getName();
 			}
 			String destPrefix = null;
-			if(destContext instanceof FeatureGroup){
+			if (destContext instanceof FeatureGroup) {
 				destPrefix = destContext.getName();
 			}
 
-			List<AgreeVar> sourVars = getAgreePortNames(sourPort, sourPrefix,  sourceNode == null ? null : sourceNode.compInst);
-			List<AgreeVar> destVars = getAgreePortNames(destPort, destPrefix, destNode == null ? null : destNode.compInst);
+			List<AgreeVar> sourVars = getAgreePortNames(sourPort, sourPrefix,
+					sourceNode == null ? null : sourceNode.compInst);
+			List<AgreeVar> destVars = getAgreePortNames(destPort, destPrefix,
+					destNode == null ? null : destNode.compInst);
 
-			if(sourVars.size() != destVars.size()){
-				throw new AgreeException("The number of AGREE variables differ for connection '" + conn.getQualifiedName() +
-						"'. Do the types of the source and destination differ? Perhaps one is an implementation and the other is a type?");
+			if (sourVars.size() != destVars.size()) {
+				throw new AgreeException("The number of AGREE variables differ for connection '"
+						+ conn.getQualifiedName()
+						+ "'. Do the types of the source and destination differ? Perhaps one is an implementation and the other is a type?");
 			}
 
-			for(int i = 0; i < sourVars.size(); i++){
+			for (int i = 0; i < sourVars.size(); i++) {
 				AgreeVar sourVar = sourVars.get(i);
 				AgreeVar destVar = destVars.get(i);
 
-				if (!matches((ConnectionEnd)sourVar.reference, (ConnectionEnd)destVar.reference)) {
-					AgreeLogger.logWarning("Connection '" + conn.getName() + "' has ports '" + sourVar.id.replace(dotChar, ".")
-					+ "' and '" + destVar.id.replace(dotChar, ".") + "' of differing type");
+				if (!matches((ConnectionEnd) sourVar.reference, (ConnectionEnd) destVar.reference)) {
+					AgreeLogger.logWarning(
+							"Connection '" + conn.getName() + "' has ports '" + sourVar.id.replace(dotChar, ".")
+									+ "' and '" + destVar.id.replace(dotChar, ".") + "' of differing type");
 					continue;
 				}
 
-				if(!sourVar.type.equals(destVar.type)){
+				if (!sourVar.type.equals(destVar.type)) {
 					throw new AgreeException("Type mismatch during connection generation");
 				}
 
 				ConnectionType connType;
 
-				if(sourVar.id.endsWith(eventSuffix)){
+				if (sourVar.id.endsWith(eventSuffix)) {
 					connType = ConnectionType.EVENT;
-				}else{
+				} else {
 					connType = ConnectionType.DATA;
 				}
 
@@ -720,14 +725,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				agreeConns.add(agreeConnection);
 			}
 
-
 		}
 		return agreeConns;
 	}
 
-	private Type getConnectionEndType(ConnectionEnd port){
+	private Type getConnectionEndType(ConnectionEnd port) {
 		DataSubcomponentType dataClass = getConnectionEndDataClass(port);
-		if(dataClass == null){
+		if (dataClass == null) {
 			return null;
 		}
 		return AgreeTypeUtils.getType(dataClass, typeMap, globalTypes);
@@ -737,47 +741,46 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		String portName = port.getName();
 		List<AgreeVar> subVars = new ArrayList<>();
 
-		//if the port is a datasubcomponent then it is a member
-		//of a record type. Otherwise it is the first member of a feature group
-		if(prefix == null){
+		// if the port is a datasubcomponent then it is a member
+		// of a record type. Otherwise it is the first member of a feature group
+		if (prefix == null) {
 			prefix = "";
-		}else if(port instanceof DataSubcomponent){
+		} else if (port instanceof DataSubcomponent) {
 			prefix = prefix + ".";
-		}else{
+		} else {
 			prefix = prefix + dotChar;
 		}
 
-		if(port instanceof FeatureGroup){
-			FeatureGroup featGroup = (FeatureGroup)port;
+		if (port instanceof FeatureGroup) {
+			FeatureGroup featGroup = (FeatureGroup) port;
 			FeatureGroupType featType = featGroup.getFeatureGroupType();
-			for(FeatureGroup subFeatGroup : featType.getOwnedFeatureGroups()){
+			for (FeatureGroup subFeatGroup : featType.getOwnedFeatureGroups()) {
 				subVars.addAll(getAgreePortNames(subFeatGroup, null, compInst));
 			}
-			for(DataPort subPort : featType.getOwnedDataPorts()){
+			for (DataPort subPort : featType.getOwnedDataPorts()) {
 				subVars.addAll(getAgreePortNames(subPort, null, compInst));
 			}
-			for(EventDataPort subPort : featType.getOwnedEventDataPorts()){
+			for (EventDataPort subPort : featType.getOwnedEventDataPorts()) {
 				subVars.addAll(getAgreePortNames(subPort, null, compInst));
 			}
-			for(EventPort subPort : featType.getOwnedEventPorts()){
+			for (EventPort subPort : featType.getOwnedEventPorts()) {
 				subVars.addAll(getAgreePortNames(subPort, null, compInst));
 			}
 
 			List<AgreeVar> prefixedStrs = new ArrayList<>();
-			for(AgreeVar subVar : subVars){
-				prefixedStrs.add(new AgreeVar(prefix + portName + dotChar + subVar.id, subVar.type, subVar.reference, compInst));
+			for (AgreeVar subVar : subVars) {
+				prefixedStrs.add(
+						new AgreeVar(prefix + portName + dotChar + subVar.id, subVar.type, subVar.reference, compInst));
 			}
 			subVars = prefixedStrs;
 		}
-		if(port instanceof DataPort ||
-				port instanceof EventDataPort ||
-				port instanceof DataSubcomponent){
+		if (port instanceof DataPort || port instanceof EventDataPort || port instanceof DataSubcomponent) {
 			Type type = getConnectionEndType(port);
 			if (type != null) {
 				subVars.add(new AgreeVar(prefix + portName, type, port, compInst));
 			}
 		}
-		if(port instanceof EventDataPort || port instanceof EventPort){
+		if (port instanceof EventDataPort || port instanceof EventPort) {
 			subVars.add(new AgreeVar(prefix + portName + eventSuffix, NamedType.BOOL, port, compInst));
 		}
 
@@ -968,6 +971,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
 		return new AgreeVar(arg.getName(), type, arg, compInst, null);
 	}
+
 	// MWW: made this public.
 	public List<VarDecl> agreeVarsFromArgs(EList<Arg> args, ComponentInstance compInst) {
 		List<VarDecl> agreeVars = new ArrayList<>();
@@ -1245,7 +1249,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		EList<NamedElement> agreeArgs = recExpr.getArgs();
 		EList<com.rockwellcollins.atc.agree.agree.Expr> agreeArgExprs = recExpr.getArgExpr();
-		Map<String, Expr> argExprMap = new HashMap<String, Expr>();
+		Map<String, Expr> argExprMap = new HashMap<>();
 
 		for (int i = 0; i < agreeArgs.size(); i++) {
 			NamedElement agreeArg = agreeArgs.get(i);
@@ -1281,52 +1285,53 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return castExpr;
 	}
 
-	/*	@Override
-	public Expr caseBinaryNonLinearExpr(com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr expr) {
-		Expr leftExpr = doSwitch(expr.getLeft());
-		Expr rightExpr = doSwitch(expr.getRight());
-		String op = expr.getOp();
-		BinaryOp binOp = null;
-		switch (op) {
-		case "pow": binOp = BinaryOp.POW; break;
-		case "arctan2" : binOp = BinaryOp.ARCTAN2; break;
-		}
-		assert (binOp != null);
-		BinaryExpr binExpr = new BinaryExpr(leftExpr, binOp, rightExpr);
-
-		return binExpr;
-	}
-
-	@Override
-	public Expr caseUnaryNonLinearExpr(com.rockwellcollins.atc.agree.agree.UnaryNonLinearExpr expr) {
-		Expr sub = doSwitch(expr.getExpr());
-		String op = expr.getOp();
-		UnaryOp unyOp = null;
-		switch (op) {
-		case "exp": unyOp = UnaryOp.EXP; break;
-		case "log": unyOp = UnaryOp.LOG; break;
-		case "sqrt": unyOp = UnaryOp.SQRT; break;
-		case "sin": unyOp = UnaryOp.SIN; break;
-		case "cos": unyOp = UnaryOp.COS; break;
-		case "tan": unyOp = UnaryOp.TAN; break;
-		case "asin":
-		case "arcsin": unyOp = UnaryOp.ARCSIN; break;
-		case "acos":
-		case "arccos": unyOp = UnaryOp.ARCCOS; break;
-		case "atan":
-		case "arctan": unyOp = UnaryOp.ARCTAN; break;
-		case "sinh" : unyOp = UnaryOp.SINH; break;
-		case "cosh" : unyOp = UnaryOp.COSH; break;
-		case "tanh" : unyOp = UnaryOp.TANH; break;
-		case "matan":
-		case "marctan": unyOp = UnaryOp.MATAN; break;
-		}
-		assert (unyOp != null);
-		UnaryExpr unyExpr = new UnaryExpr(unyOp, sub);
-
-		return unyExpr;
-
-	}
+	/*
+	 * @Override
+	 * public Expr caseBinaryNonLinearExpr(com.rockwellcollins.atc.agree.agree.BinaryNonLinearExpr expr) {
+	 * Expr leftExpr = doSwitch(expr.getLeft());
+	 * Expr rightExpr = doSwitch(expr.getRight());
+	 * String op = expr.getOp();
+	 * BinaryOp binOp = null;
+	 * switch (op) {
+	 * case "pow": binOp = BinaryOp.POW; break;
+	 * case "arctan2" : binOp = BinaryOp.ARCTAN2; break;
+	 * }
+	 * assert (binOp != null);
+	 * BinaryExpr binExpr = new BinaryExpr(leftExpr, binOp, rightExpr);
+	 *
+	 * return binExpr;
+	 * }
+	 *
+	 * @Override
+	 * public Expr caseUnaryNonLinearExpr(com.rockwellcollins.atc.agree.agree.UnaryNonLinearExpr expr) {
+	 * Expr sub = doSwitch(expr.getExpr());
+	 * String op = expr.getOp();
+	 * UnaryOp unyOp = null;
+	 * switch (op) {
+	 * case "exp": unyOp = UnaryOp.EXP; break;
+	 * case "log": unyOp = UnaryOp.LOG; break;
+	 * case "sqrt": unyOp = UnaryOp.SQRT; break;
+	 * case "sin": unyOp = UnaryOp.SIN; break;
+	 * case "cos": unyOp = UnaryOp.COS; break;
+	 * case "tan": unyOp = UnaryOp.TAN; break;
+	 * case "asin":
+	 * case "arcsin": unyOp = UnaryOp.ARCSIN; break;
+	 * case "acos":
+	 * case "arccos": unyOp = UnaryOp.ARCCOS; break;
+	 * case "atan":
+	 * case "arctan": unyOp = UnaryOp.ARCTAN; break;
+	 * case "sinh" : unyOp = UnaryOp.SINH; break;
+	 * case "cosh" : unyOp = UnaryOp.COSH; break;
+	 * case "tanh" : unyOp = UnaryOp.TANH; break;
+	 * case "matan":
+	 * case "marctan": unyOp = UnaryOp.MATAN; break;
+	 * }
+	 * assert (unyOp != null);
+	 * UnaryExpr unyExpr = new UnaryExpr(unyOp, sub);
+	 *
+	 * return unyExpr;
+	 *
+	 * }
 	 */
 
 	@Override
@@ -1423,12 +1428,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			NestedDotID fn = expr.getFn();
 			doSwitch(AgreeUtils.getFinalNestId(fn));
 			// for dReal integration
-			if (fnName.substring(0,7).equalsIgnoreCase("dreal__")) {
+			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
 				fnName = namedEl.getName();
 			}
 		}
 
-		List<Expr> argResults = new ArrayList<Expr>();
+		List<Expr> argResults = new ArrayList<>();
 
 		for (com.rockwellcollins.atc.agree.agree.Expr argExpr : expr.getArgs()) {
 			argResults.add(doSwitch(argExpr));
@@ -1486,8 +1491,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		List<VarDecl> outputs = agreeVarsFromArgs(expr.getRets(), null);
 		NodeBodyExpr body = expr.getNodeBody();
 		List<VarDecl> internals = agreeVarsFromArgs(body.getLocs(), null);
-		List<Equation> eqs = new ArrayList<Equation>();
-		List<String> props = new ArrayList<String>();
+		List<Equation> eqs = new ArrayList<>();
+		List<String> props = new ArrayList<>();
 
 		// TODO are node lemmas depricated?
 		String lemmaName = "__nodeLemma";
@@ -1524,7 +1529,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	// helper method for above
 	private Equation nodeEqToEq(NodeEq nodeEq) {
 		Expr expr = doSwitch(nodeEq.getExpr());
-		List<IdExpr> ids = new ArrayList<IdExpr>();
+		List<IdExpr> ids = new ArrayList<>();
 		for (Arg arg : nodeEq.getLhs()) {
 			ids.add(new IdExpr(arg.getName()));
 		}

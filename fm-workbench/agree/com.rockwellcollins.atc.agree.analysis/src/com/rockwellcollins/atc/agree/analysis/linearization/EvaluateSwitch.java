@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2016, Rockwell Collins.
- * 
+ *
  * Developed with the sponsorship of Defense Advanced Research Projects Agency
  * (DARPA).
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this data, including any software or models in source or binary form, as
  * well as any drawings, specifications, and documentation (collectively
@@ -11,7 +11,7 @@
  * limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Data, and to permit persons to whom the
  * Data is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Data.
  *
@@ -105,8 +105,7 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 			return (double) method.invoke(null, args);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
-			throw new AgreeException(
-					"Cannot invoke method '" + method.getName() + "': " + e.getMessage());
+			throw new AgreeException("Cannot invoke method '" + method.getName() + "': " + e.getMessage());
 		}
 	}
 
@@ -123,7 +122,7 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 			try {
 				Class<?> containingClass = java.lang.Class.forName(containingClassName);
 				// Class<?> returnClass = double.class;
-				Class<?>[] parameterTypes = new Class<?>[]{ double.class };
+				Class<?>[] parameterTypes = new Class<?>[] { double.class };
 				result = containingClass.getMethod(methodName, parameterTypes);
 				if (Modifier.isStatic(result.getModifiers())) {
 					nativeCallMap.put(nativeDef, result);
@@ -133,16 +132,13 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 			} catch (SecurityException e) {
 				e.printStackTrace();
 				throw new AgreeException(
-						"Cannot resolve method '" + methodName + "' due to security violation: "
-								+ e.getMessage());
+						"Cannot resolve method '" + methodName + "' due to security violation: " + e.getMessage());
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-				throw new AgreeException(
-						"Cannot resolve class '" + containingClassName + "': " + e.getMessage());
+				throw new AgreeException("Cannot resolve class '" + containingClassName + "': " + e.getMessage());
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
-				throw new AgreeException(
-						"Cannot resolve method '" + methodName + "': " + e.getMessage());
+				throw new AgreeException("Cannot resolve method '" + methodName + "': " + e.getMessage());
 			}
 		}
 

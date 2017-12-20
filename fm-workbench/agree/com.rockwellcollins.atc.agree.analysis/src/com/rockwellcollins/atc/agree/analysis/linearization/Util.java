@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2016, Rockwell Collins.
- * 
+ *
  * Developed with the sponsorship of Defense Advanced Research Projects Agency
  * (DARPA).
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this data, including any software or models in source or binary form, as
  * well as any drawings, specifications, and documentation (collectively
@@ -11,7 +11,7 @@
  * limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Data, and to permit persons to whom the
  * Data is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Data.
  *
@@ -46,86 +46,86 @@ import com.rockwellcollins.atc.agree.validation.AgreeJavaValidator;
 
 public class Util {
 
-    public static Function<Double, Double> translateNonlinearExpr(Expr fctx, String varName) {
-        Function<Map<String, Double>, Double> fun = new EvaluateSwitch(varName).doSwitch(fctx);
-        return x -> fun.apply(map(varName, x));
-    }
+	public static Function<Double, Double> translateNonlinearExpr(Expr fctx, String varName) {
+		Function<Map<String, Double>, Double> fun = new EvaluateSwitch(varName).doSwitch(fctx);
+		return x -> fun.apply(map(varName, x));
+	}
 
-    public static BiFunction<Double, Double, Double> translateNonlinearExpr(Expr fctx,
-            String varName1, String varName2) {
-        Function<Map<String, Double>, Double> fun = new EvaluateSwitch(varName1, varName2).doSwitch(fctx);
-        return (x, y) -> fun.apply(map(varName1, x, varName2, y));
-    }
+	public static BiFunction<Double, Double, Double> translateNonlinearExpr(Expr fctx, String varName1,
+			String varName2) {
+		Function<Map<String, Double>, Double> fun = new EvaluateSwitch(varName1, varName2).doSwitch(fctx);
+		return (x, y) -> fun.apply(map(varName1, x, varName2, y));
+	}
 
-    public static String translateNonlinearExprToMatlab(Expr fctx) {
-        return new MatlabPrintSwitch().doSwitch(fctx);
-    }
+	public static String translateNonlinearExprToMatlab(Expr fctx) {
+		return new MatlabPrintSwitch().doSwitch(fctx);
+	}
 
-    private static Map<String, Double> map(String k, Double v) {
-        return Collections.singletonMap(k, v);
-    }
+	private static Map<String, Double> map(String k, Double v) {
+		return Collections.singletonMap(k, v);
+	}
 
-    private static Map<String, Double> map(String k1, Double v1, String k2, Double v2) {
-        HashMap<String, Double> result = new HashMap<String, Double>();
-        result.put(k1, v1);
-        result.put(k2, v2);
-        return result;
-    }
+	private static Map<String, Double> map(String k1, Double v1, String k2, Double v2) {
+		HashMap<String, Double> result = new HashMap<>();
+		result.put(k1, v1);
+		result.put(k2, v2);
+		return result;
+	}
 
-    public static Double getDoubleValue(Expr expr) {
-        Double result = Double.valueOf(0.0);
-        assert (AgreeJavaValidator.exprIsConst(expr));
-        if (expr instanceof NamedElement) {
-            if (expr instanceof ConstStatement) {
-                result = getDoubleValue(((ConstStatement) expr).getExpr());
-            }
-        } else if (expr instanceof NestedDotID) {
-            NamedElement finalId = AgreeJavaValidator.getFinalNestId((NestedDotID) expr);
-            if (finalId instanceof ConstStatement) {
-                result = getDoubleValue(((ConstStatement) finalId).getExpr());
-            }
-        } else if (expr instanceof RealLitExpr) {
-            result = Double.valueOf(((RealLitExpr) expr).getVal());
-        } else if (expr instanceof IntLitExpr) {
-            result = Double.valueOf(((IntLitExpr) expr).getVal());
-        } else if (expr instanceof BinaryExpr) {
-            BinaryExpr binExpr = (BinaryExpr) expr;
-            Double left = getDoubleValue(binExpr.getLeft());
-            Double right = getDoubleValue(binExpr.getRight());
-            switch (binExpr.getOp()) {
-            case "+":
-                result = left + right;
-                break;
-            case "-":
-                result = left - right;
-                break;
-            case "*":
-                result = left * right;
-                break;
-            case "/":
-                result = left / right;
-                break;
-            case "^":
-                result = Math.pow(left, right);
-                break;
-            default:
-                throw new AgreeException("binary expression is not evaluable as integer constant");
-            }
-            return result;
-        } else if (expr instanceof UnaryExpr) {
-            UnaryExpr unExpr = (UnaryExpr) expr;
-            Double right = getDoubleValue(unExpr.getExpr());
-            switch (unExpr.getOp()) {
-            case "-":
-                result = -right;
-                break;
-            default:
-                throw new AgreeException("unary expression is not evaluable as integer constant");
-            }
-        } else {
-            throw new AgreeException("expression is not evaluable as integer constant");
-        }
-        return result;
-    }
+	public static Double getDoubleValue(Expr expr) {
+		Double result = Double.valueOf(0.0);
+		assert (AgreeJavaValidator.exprIsConst(expr));
+		if (expr instanceof NamedElement) {
+			if (expr instanceof ConstStatement) {
+				result = getDoubleValue(((ConstStatement) expr).getExpr());
+			}
+		} else if (expr instanceof NestedDotID) {
+			NamedElement finalId = AgreeJavaValidator.getFinalNestId((NestedDotID) expr);
+			if (finalId instanceof ConstStatement) {
+				result = getDoubleValue(((ConstStatement) finalId).getExpr());
+			}
+		} else if (expr instanceof RealLitExpr) {
+			result = Double.valueOf(((RealLitExpr) expr).getVal());
+		} else if (expr instanceof IntLitExpr) {
+			result = Double.valueOf(((IntLitExpr) expr).getVal());
+		} else if (expr instanceof BinaryExpr) {
+			BinaryExpr binExpr = (BinaryExpr) expr;
+			Double left = getDoubleValue(binExpr.getLeft());
+			Double right = getDoubleValue(binExpr.getRight());
+			switch (binExpr.getOp()) {
+			case "+":
+				result = left + right;
+				break;
+			case "-":
+				result = left - right;
+				break;
+			case "*":
+				result = left * right;
+				break;
+			case "/":
+				result = left / right;
+				break;
+			case "^":
+				result = Math.pow(left, right);
+				break;
+			default:
+				throw new AgreeException("binary expression is not evaluable as integer constant");
+			}
+			return result;
+		} else if (expr instanceof UnaryExpr) {
+			UnaryExpr unExpr = (UnaryExpr) expr;
+			Double right = getDoubleValue(unExpr.getExpr());
+			switch (unExpr.getOp()) {
+			case "-":
+				result = -right;
+				break;
+			default:
+				throw new AgreeException("unary expression is not evaluable as integer constant");
+			}
+		} else {
+			throw new AgreeException("expression is not evaluable as integer constant");
+		}
+		return result;
+	}
 
 }

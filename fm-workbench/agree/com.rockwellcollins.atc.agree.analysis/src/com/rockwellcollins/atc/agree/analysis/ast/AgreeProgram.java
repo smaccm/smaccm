@@ -20,9 +20,9 @@ public class AgreeProgram implements AgreeASTElement {
 		this.globalLustreNodes = jkind.util.Util.safeList(globalLustreNodes);
 		this.globalTypes = jkind.util.Util.safeList(globalTypes);
 		this.topNode = topNode;
-		this.containsRealTimePatterns = false;
+		containsRealTimePatterns = false;
 	}
-	
+
 	public AgreeProgram(List<AgreeNode> agreeNodes, List<Node> globalLustreNodes, List<Type> globalTypes,
 			AgreeNode topNode, boolean containsRealTimePatterns) {
 		this.agreeNodes = jkind.util.Util.safeList(agreeNodes);
@@ -31,13 +31,13 @@ public class AgreeProgram implements AgreeASTElement {
 		this.topNode = topNode;
 		this.containsRealTimePatterns = containsRealTimePatterns;
 	}
-	
+
 	@Override
 	public <T> T accept(AgreeASTVisitor<T> visitor) {
 		return visitor.visit(this);
 	}
 
-	public void containsRealTimePatterns(boolean containsRTPatterns){
+	public void containsRealTimePatterns(boolean containsRTPatterns) {
 		containsRealTimePatterns = containsRTPatterns;
 	}
 

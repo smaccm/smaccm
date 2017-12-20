@@ -9,18 +9,18 @@ import jkind.lustre.IdExpr;
 import jkind.lustre.RealExpr;
 
 public class AgreeRealtimePattern extends AgreePattern {
-    public final IdExpr event;
-    public final Expr period;
-    public final Expr jitter;
-    
-    public AgreeRealtimePattern(String string, EObject reference, IdExpr event, Expr period, Expr jitter) {
-        super(string, null, reference);
-        this.event = event;
-        this.period = period;
-        if (jitter != null) {
-            this.jitter = jitter;
-        } else {
-            this.jitter = new RealExpr(BigDecimal.ZERO);
-        }
-    }
+	public final IdExpr event;
+	public final Expr period;
+	public final Expr jitter;
+
+	public AgreeRealtimePattern(String string, EObject reference, IdExpr event, Expr period, Expr jitter) {
+		super(string, null, reference);
+		this.event = event;
+		this.period = period;
+		if (jitter != null) {
+			this.jitter = jitter;
+		} else {
+			this.jitter = new RealExpr(BigDecimal.ZERO);
+		}
+	}
 }

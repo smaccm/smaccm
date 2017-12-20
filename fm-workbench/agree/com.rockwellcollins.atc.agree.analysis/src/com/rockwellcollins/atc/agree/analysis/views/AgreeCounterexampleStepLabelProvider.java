@@ -17,7 +17,7 @@ public class AgreeCounterexampleStepLabelProvider extends CounterexampleStepLabe
 	public AgreeCounterexampleStepLabelProvider(int step) {
 		super(step);
 		this.step = step;
-		this.displayAsDecimal = Activator.getDefault().getPreferenceStore()
+		displayAsDecimal = Activator.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.PREF_DISPLAY_DECIMAL_CEX);
 	}
 

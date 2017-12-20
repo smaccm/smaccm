@@ -1,4 +1,4 @@
-package com.rockwellcollins.atc.agree.analysis.translation; 
+package com.rockwellcollins.atc.agree.analysis.translation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,120 +31,119 @@ import jkind.translation.OrderEquations;
 
 public class AgreeNodeToLustreContract {
 
-    public static Node translate(AgreeNode agreeNode, AgreeProgram agreeProgram){
-        
-        List<Node> nodes = new ArrayList<>();
-        
-        nodes.addAll(agreeProgram.globalLustreNodes);
-        //this node needs to be the last in the list
-        //so that it is set as the main node in the program
-        nodes.add(translateNode(agreeNode));
-        
-        List<TypeDef> types = new ArrayList<>();
-        for (Type type : agreeProgram.globalTypes) {
-            RecordType recType = (RecordType) type;
-            types.add(new TypeDef(recType.id, type));
-        }
+	public static Node translate(AgreeNode agreeNode, AgreeProgram agreeProgram) {
 
-        Program program = new Program(types, Collections.emptyList(), nodes);
-        Node node = InlineNodeCalls.program(program);
-        node = FlattenPres.node(node);
-        node = DistributePres.node(node);
-        node = OrderEquations.node(node);
-        
-        return node;
-    }
-    
-    
-    private static Node translateNode(AgreeNode agreeNode){
-        
-        List<VarDecl> inputs = new ArrayList<>();
-        List<VarDecl> locals = new ArrayList<>();
-        List<Equation> eqs = new ArrayList<>();
-        List<Expr> assertions = new ArrayList<>();
-        List<String> properties = new ArrayList<>();
-        
-        inputs.addAll(agreeNode.inputs);
-        inputs.addAll(agreeNode.outputs);
-        inputs.addAll(agreeNode.locals);
-        
-        eqs.addAll(nodeAssertsToEqs(agreeNode));
-        
-        //right now the AGREE AST just has assertions over input variables
-        //this step allows us to inline some of these as local variables
-        //to the node
-        List<IdExpr> ids = gatherIds(eqs);
-        List<VarDecl> inlinedVars = new ArrayList<>();
-        for(VarDecl var : inputs){
-            for(IdExpr id : ids){
-                if(id.id.equals(var.id)){
-                    inlinedVars.add(var);
-                }
-            }
-        }
-        
-        inputs.removeAll(inlinedVars);
-        locals.addAll(inlinedVars);
-        
-        for(AgreeStatement statement : agreeNode.assumptions){
-            assertions.add(statement.expr);
-        }
-        
-        int i = 0;
-        for(AgreeStatement statement : agreeNode.guarantees){
-            String guarName = "__GUARANTEE"+i++;
-            properties.add(guarName);
-            locals.add(new VarDecl(guarName, NamedType.BOOL));
-            eqs.add(new Equation(new IdExpr(guarName), statement.expr));
-        }
-        
-        NodeBuilder builder = new NodeBuilder(agreeNode.id);
-        builder.addInputs(inputs);
-        builder.addLocals(locals);
-        builder.addEquations(eqs);
-        builder.addProperties(properties);
-        builder.addAssertions(assertions);
-        
-        return builder.build();
-        
-    }
+		List<Node> nodes = new ArrayList<>();
 
-    private static List<Equation> nodeAssertsToEqs(AgreeNode agreeNode) {
-        
-        List<Equation> eqs = new ArrayList<>();
-        for(AgreeStatement statement : agreeNode.assertions){
-            if(AgreeUtils.referenceIsInContract(statement.reference, agreeNode.compInst)){
-                BinaryExpr expr = (BinaryExpr) statement.expr;
-                
-                if((expr.op != BinaryOp.EQUAL)){
-                    throw new AgreeException("Unexpected expression type in AGREE AST asssertion");
-                }
-                
-                Expr leftExpr = expr.left;
-                Expr rightExpr = expr.right;
-                List<IdExpr> ids = new ArrayList<>();
-                if(leftExpr instanceof TupleExpr){
-                    TupleExpr tuple = (TupleExpr)leftExpr;
-                    for(Expr element : tuple.elements){
-                        ids.add((IdExpr)element);
-                    }
-                }else{
-                    ids.add((IdExpr)leftExpr);
-                }
-                
-                eqs.add(new Equation(ids, rightExpr));
-            }
-        }
-        
-        return eqs;
-    }
+		nodes.addAll(agreeProgram.globalLustreNodes);
+		// this node needs to be the last in the list
+		// so that it is set as the main node in the program
+		nodes.add(translateNode(agreeNode));
 
-    private static List<IdExpr> gatherIds(List<Equation> eqs){
-        List<IdExpr> ids = new ArrayList<>();
-        for(Equation eq : eqs){
-            ids.addAll(eq.lhs);
-        }
-        return ids;
-    }
-    
+		List<TypeDef> types = new ArrayList<>();
+		for (Type type : agreeProgram.globalTypes) {
+			RecordType recType = (RecordType) type;
+			types.add(new TypeDef(recType.id, type));
+		}
+
+		Program program = new Program(types, Collections.emptyList(), nodes);
+		Node node = InlineNodeCalls.program(program);
+		node = FlattenPres.node(node);
+		node = DistributePres.node(node);
+		node = OrderEquations.node(node);
+
+		return node;
+	}
+
+	private static Node translateNode(AgreeNode agreeNode) {
+
+		List<VarDecl> inputs = new ArrayList<>();
+		List<VarDecl> locals = new ArrayList<>();
+		List<Equation> eqs = new ArrayList<>();
+		List<Expr> assertions = new ArrayList<>();
+		List<String> properties = new ArrayList<>();
+
+		inputs.addAll(agreeNode.inputs);
+		inputs.addAll(agreeNode.outputs);
+		inputs.addAll(agreeNode.locals);
+
+		eqs.addAll(nodeAssertsToEqs(agreeNode));
+
+		// right now the AGREE AST just has assertions over input variables
+		// this step allows us to inline some of these as local variables
+		// to the node
+		List<IdExpr> ids = gatherIds(eqs);
+		List<VarDecl> inlinedVars = new ArrayList<>();
+		for (VarDecl var : inputs) {
+			for (IdExpr id : ids) {
+				if (id.id.equals(var.id)) {
+					inlinedVars.add(var);
+				}
+			}
+		}
+
+		inputs.removeAll(inlinedVars);
+		locals.addAll(inlinedVars);
+
+		for (AgreeStatement statement : agreeNode.assumptions) {
+			assertions.add(statement.expr);
+		}
+
+		int i = 0;
+		for (AgreeStatement statement : agreeNode.guarantees) {
+			String guarName = "__GUARANTEE" + i++;
+			properties.add(guarName);
+			locals.add(new VarDecl(guarName, NamedType.BOOL));
+			eqs.add(new Equation(new IdExpr(guarName), statement.expr));
+		}
+
+		NodeBuilder builder = new NodeBuilder(agreeNode.id);
+		builder.addInputs(inputs);
+		builder.addLocals(locals);
+		builder.addEquations(eqs);
+		builder.addProperties(properties);
+		builder.addAssertions(assertions);
+
+		return builder.build();
+
+	}
+
+	private static List<Equation> nodeAssertsToEqs(AgreeNode agreeNode) {
+
+		List<Equation> eqs = new ArrayList<>();
+		for (AgreeStatement statement : agreeNode.assertions) {
+			if (AgreeUtils.referenceIsInContract(statement.reference, agreeNode.compInst)) {
+				BinaryExpr expr = (BinaryExpr) statement.expr;
+
+				if ((expr.op != BinaryOp.EQUAL)) {
+					throw new AgreeException("Unexpected expression type in AGREE AST asssertion");
+				}
+
+				Expr leftExpr = expr.left;
+				Expr rightExpr = expr.right;
+				List<IdExpr> ids = new ArrayList<>();
+				if (leftExpr instanceof TupleExpr) {
+					TupleExpr tuple = (TupleExpr) leftExpr;
+					for (Expr element : tuple.elements) {
+						ids.add((IdExpr) element);
+					}
+				} else {
+					ids.add((IdExpr) leftExpr);
+				}
+
+				eqs.add(new Equation(ids, rightExpr));
+			}
+		}
+
+		return eqs;
+	}
+
+	private static List<IdExpr> gatherIds(List<Equation> eqs) {
+		List<IdExpr> ids = new ArrayList<>();
+		for (Equation eq : eqs) {
+			ids.addAll(eq.lhs);
+		}
+		return ids;
+	}
+
 }

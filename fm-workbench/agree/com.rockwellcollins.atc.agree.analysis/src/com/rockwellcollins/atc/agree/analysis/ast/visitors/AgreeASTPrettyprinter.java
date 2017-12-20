@@ -1,7 +1,5 @@
 package com.rockwellcollins.atc.agree.analysis.ast.visitors;
 
-import static java.util.stream.Collectors.joining;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,14 +12,10 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 
-import jkind.lustre.Equation;
-import jkind.lustre.Expr;
 import jkind.lustre.Location;
 import jkind.lustre.Node;
 import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
-import jkind.lustre.VarDecl;
-import jkind.lustre.visitors.AstVisitor;
 import jkind.lustre.visitors.PrettyPrintVisitor;
 
 public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeASTVisitor<Void> {
@@ -33,6 +27,7 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 		return sb.toString();
 	}
 
+	@Override
 	protected void write(Object o) {
 		sb.append(o);
 	}
@@ -42,7 +37,7 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 	private void newline() {
 		write(seperator);
 	}
-	
+
 	@Override
 	public Void visit(AgreeProgram program) {
 		if (program.containsRealTimePatterns) {
@@ -50,11 +45,11 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			newline();
 			newline();
 		}
-		
+
 		write("-- Program top-level node is: " + program.topNode.id);
 		newline();
 		newline();
-		
+
 		if (!program.globalTypes.isEmpty()) {
 			for (Type type : program.globalTypes) {
 				TypeDef typeDef = new TypeDef(Location.NULL, "dummy", type);
@@ -74,7 +69,7 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 				}
 			}
 			newline();
-		}			
+		}
 
 		Iterator<AgreeNode> iterator = program.agreeNodes.iterator();
 		while (iterator.hasNext()) {
@@ -85,7 +80,7 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			}
 		}
 		newline();
-		
+
 		return null;
 	}
 
@@ -117,7 +112,7 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			write(";");
 			newline();
 		}
-		
+
 		if (node.id.equals(main)) {
 			write("  --%MAIN;");
 			newline();
@@ -125,16 +120,16 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 
 		write("let");
 		newline();
-		
+
 		if (!node.connections.isEmpty()) {
-			for (AgreeConnection connection: node.connections) {
+			for (AgreeConnection connection : node.connections) {
 				connection(connection);
 			}
 			newline();
 		}
-		
+
 		write("  children {");
-		for (AgreeNode subNode: node.subNodes) {
+		for (AgreeNode subNode : node.subNodes) {
 			write(subNode.id);
 			write(" ");
 		}
@@ -147,7 +142,7 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 		statementList("guarantees", node.guarantees);
 		statementList("lemmas", node.lemmas);
 		statementList("pattern props", node.patternProps);
-		
+
 		for (AgreeEquation equation : node.localEquations) {
 			write("  ");
 			visit(equation);
@@ -160,26 +155,26 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			node.clockConstraint.accept(this);
 			newline();
 		}
-		
+
 		if (node.initialConstraint != null) {
 			write("  initial constraint: ");
 			node.initialConstraint.accept(this);
 			newline();
 		}
-		
+
 		if (node.clockVar != null) {
 			write("  clock variable: ");
 			visit(node.clockVar);
 			newline();
 		}
-		
+
 		write("  timing model: " + node.timing);
 		newline();
-		
+
 		write("  -- TBD: event models to go along with timing model");
 		newline();
 		newline();
-		
+
 		write("tel;");
 		return null;
 	}
@@ -201,12 +196,12 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			newline();
 		}
 	}
+
 	// Note: this method (and the fact that I'm using instanceof)
 	// means that the AGREE Ast visitor is broken
 	private void connection(AgreeConnection conn) {
 		if (conn instanceof AgreeAADLConnection) {
-			AgreeAADLConnection aadl = 
-					(AgreeAADLConnection)conn;
+			AgreeAADLConnection aadl = (AgreeAADLConnection) conn;
 			write("  ");
 			write(aadl.type);
 			write(aadl.delayed ? " delayed" : "");
@@ -215,19 +210,18 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			newline();
 			write("    ");
 			write(aadl.sourceNode == null ? "NULL NODE" : aadl.sourceNode.id);
-			write("." + aadl.sourVar.id);
+			write("." + aadl.sourceVarName.id);
 			write(" ->");
 			write(aadl.destinationNode == null ? " NULL NODE" : " " + aadl.destinationNode.id);
-			write("." + aadl.destVar.id);
+			write("." + aadl.destinationVarName.id);
 			newline();
 			write("  }");
 			newline();
 		} else if (conn instanceof AgreeOverriddenConnection) {
-			AgreeOverriddenConnection aadl = 
-					(AgreeOverriddenConnection)conn;
+			AgreeOverriddenConnection aadl = (AgreeOverriddenConnection) conn;
 			write("  connection {");
 			newline();
-			write("    "); 
+			write("    ");
 			aadl.statement.accept(this);
 			newline();
 			write("    aadl: " + aadl.aadlConn.toString());
@@ -236,7 +230,7 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			newline();
 		}
 	}
-	
+
 	private void agreeVarDecls(List<AgreeVar> varDecls) {
 		Iterator<AgreeVar> iterator = varDecls.iterator();
 		while (iterator.hasNext()) {
@@ -248,7 +242,7 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			}
 		}
 	}
-	
+
 	@Override
 	public Void visit(AgreeStatement e) {
 		write("    ");
@@ -256,19 +250,19 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 			write("\"" + e.string + "\" : ");
 		}
 		e.expr.accept(this);
-		
+
 		return null;
 	}
 
 	@Override
 	public Void visit(AgreeVar e) {
-		super.visit((VarDecl)e);
+		super.visit(e);
 		return null;
 	}
 
 	@Override
 	public Void visit(AgreeEquation agreeEquation) {
-		super.visit((Equation)agreeEquation);
+		super.visit(agreeEquation);
 		return null;
 	}
 

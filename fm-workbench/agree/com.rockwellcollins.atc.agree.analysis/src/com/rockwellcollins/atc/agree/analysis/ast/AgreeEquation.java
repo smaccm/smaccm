@@ -11,27 +11,27 @@ import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.Location;
 
-public class AgreeEquation extends Equation implements AgreeASTElement{ 
-    
-    public final EObject reference;
+public class AgreeEquation extends Equation implements AgreeASTElement {
 
-    public AgreeEquation(List<IdExpr> lhs, Expr expr, EObject reference) {
-        super(Location.NULL, lhs, expr);
-        this.reference = reference;
-    }
+	public final EObject reference;
 
-    public AgreeEquation(IdExpr id, Expr expr, EObject reference) {
-        super(Location.NULL, id, expr);
-        this.reference = reference;
-    }
-    
-    public AgreeEquation(Equation eq, EObject reference){
-        this(eq.lhs, eq.expr, reference);
-    }
+	public AgreeEquation(List<IdExpr> lhs, Expr expr, EObject reference) {
+		super(Location.NULL, lhs, expr);
+		this.reference = reference;
+	}
 
-    @Override
-    public <T> T accept(AgreeASTVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
+	public AgreeEquation(IdExpr id, Expr expr, EObject reference) {
+		super(Location.NULL, id, expr);
+		this.reference = reference;
+	}
+
+	public AgreeEquation(Equation eq, EObject reference) {
+		this(eq.lhs, eq.expr, reference);
+	}
+
+	@Override
+	public <T> T accept(AgreeASTVisitor<T> visitor) {
+		return visitor.visit(this);
+	}
 
 }

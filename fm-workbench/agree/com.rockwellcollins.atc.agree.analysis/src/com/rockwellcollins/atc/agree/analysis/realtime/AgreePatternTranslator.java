@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentClassifier;
+
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeEquation;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
@@ -63,7 +64,7 @@ public class AgreePatternTranslator {
 
 	public static AgreeProgram translate(AgreeProgram program) {
 		List<Node> patternLustreNodes = new ArrayList<>();
-		//reset the static variable before refreshing its values in translateNode call
+		// reset the static variable before refreshing its values in translateNode call
 		containsRealTimePatterns = false;
 		AgreeNode topNode = new AgreePatternTranslator().translateNode(program.topNode, true);
 		List<AgreeNode> agreeNodes = gatherNodes(topNode);
@@ -276,7 +277,7 @@ public class AgreePatternTranslator {
 
 	private Expr translatePatternProperty(AgreePeriodicPattern pattern, AgreeNodeBuilder builder,
 			EObject varReference) {
-		
+
 		AgreeVar periodVar = new AgreeVar(PERIOD_PREFIX + patternIndex, NamedType.REAL, null);
 		builder.addLocal(periodVar);
 
@@ -286,7 +287,8 @@ public class AgreePatternTranslator {
 
 		builder.addLocalEquation(eq);
 		Expr prop = expr("true -> (time >= P + j => event => (pre period) - j <= time and time <= (pre period) + j)",
-				to("time", timeExpr), to("period", periodVar), to("P", pattern.period), to("j", pattern.jitter), to("event", pattern.event));
+				to("time", timeExpr), to("period", periodVar), to("P", pattern.period), to("j", pattern.jitter),
+				to("event", pattern.event));
 
 		return prop;
 	}
@@ -563,14 +565,12 @@ public class AgreePatternTranslator {
 		// to("timeOfEffect", timeOfEffect),
 		// to("low", pattern.effectInterval.low));
 
-		Expr expr = expr(
-				"(timer > 0.0 => timeOfCause >= 0.0) and " + "(timer <= time) and"
-						+ "(timeOfEffect >= timeOfCause and timer <= high and timeOfEffect >= time - timer + low => not run) and"
-						+ "(true -> (pre(timeOfEffect >= timeOfCause + low and timeOfEffect <= timeOfCause + high and timer <= high) => timer = 0.0)) and"
-						+ "(timer = 0.0 or timer >= time - timeOfCause)",
-				to("timer", timerVar), to("timeOfCause", timeOfCause), to("timeOfEffect", timeOfEffect),
-				to("time", timeExpr), to("low", pattern.effectInterval.low), to("high", pattern.effectInterval.high),
-				to("run", runVar));
+		Expr expr = expr("(timer > 0.0 => timeOfCause >= 0.0) and " + "(timer <= time) and"
+				+ "(timeOfEffect >= timeOfCause and timer <= high and timeOfEffect >= time - timer + low => not run) and"
+				+ "(true -> (pre(timeOfEffect >= timeOfCause + low and timeOfEffect <= timeOfCause + high and timer <= high) => timer = 0.0)) and"
+				+ "(timer = 0.0 or timer >= time - timeOfCause)", to("timer", timerVar), to("timeOfCause", timeOfCause),
+				to("timeOfEffect", timeOfEffect), to("time", timeExpr), to("low", pattern.effectInterval.low),
+				to("high", pattern.effectInterval.high), to("run", runVar));
 		builder.addPatternProp(new AgreeStatement("Timer Lemma for Pattern " + patternIndex, expr, pattern));
 
 		// timer <= h

@@ -103,7 +103,7 @@ public class AgreeTypeUtils {
 	}
 
 	private static void recordType(NamedElement el, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
-		Map<String, Type> subTypeMap = new HashMap<String, Type>();
+		Map<String, Type> subTypeMap = new HashMap<>();
 		if (el instanceof ComponentImplementation) {
 			ComponentImplementation compImpl = (ComponentImplementation) el;
 			String typeStr = null;
@@ -313,7 +313,7 @@ public class AgreeTypeUtils {
 
 	public static List<VarDecl> argsToVarDeclList(EList<Arg> args, Map<NamedElement, String> typeMap,
 			Set<Type> typeExpressions) {
-		List<VarDecl> varList = new ArrayList<VarDecl>();
+		List<VarDecl> varList = new ArrayList<>();
 		for (Arg arg : args) {
 			Type type = getNamedType(getTypeName(arg.getType(), typeMap, typeExpressions));
 			VarDecl varDecl = new VarDecl(arg.getName(), type);

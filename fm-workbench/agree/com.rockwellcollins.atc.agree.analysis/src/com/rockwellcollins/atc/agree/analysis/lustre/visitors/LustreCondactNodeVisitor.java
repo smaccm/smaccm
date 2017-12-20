@@ -1,5 +1,9 @@
 package com.rockwellcollins.atc.agree.analysis.lustre.visitors;
 
+import static jkind.lustre.parsing.LustreParseUtil.equation;
+import static jkind.lustre.parsing.LustreParseUtil.expr;
+import static jkind.lustre.parsing.LustreParseUtil.to;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,10 +39,6 @@ import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 import jkind.lustre.visitors.ExprMapVisitor;
 import jkind.lustre.visitors.TypeReconstructor;
-
-import static jkind.lustre.parsing.LustreParseUtil.equation;
-import static jkind.lustre.parsing.LustreParseUtil.expr;
-import static jkind.lustre.parsing.LustreParseUtil.to;
 
 public class LustreCondactNodeVisitor extends ExprMapVisitor {
 

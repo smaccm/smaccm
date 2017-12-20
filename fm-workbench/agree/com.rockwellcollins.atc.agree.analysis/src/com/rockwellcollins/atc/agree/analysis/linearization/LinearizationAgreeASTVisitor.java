@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2016, Rockwell Collins.
- * 
+ *
  * Developed with the sponsorship of Defense Advanced Research Projects Agency
  * (DARPA).
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this data, including any software or models in source or binary form, as
  * well as any drawings, specifications, and documentation (collectively
@@ -11,7 +11,7 @@
  * limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Data, and to permit persons to whom the
  * Data is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Data.
  *
@@ -32,19 +32,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.instance.ComponentInstance;
-
-import jkind.lustre.Expr;
-import jkind.lustre.NodeCallExpr;
 
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeConnection;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNodeBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
-import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTMapVisitor;
+
+import jkind.lustre.Expr;
+import jkind.lustre.NodeCallExpr;
 
 public class LinearizationAgreeASTVisitor extends AgreeASTMapVisitor {
 
@@ -213,7 +211,7 @@ public class LinearizationAgreeASTVisitor extends AgreeASTMapVisitor {
 		builder.setClockConstraint(clockConstraint);
 		builder.setInitialConstraint(initialConstraint);
 		builder.setClockVar(clockVar);
-		
+
 		AgreeNode result = builder.build();
 		visitedNodes.put(e.compInst, result);
 

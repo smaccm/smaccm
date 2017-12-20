@@ -4,22 +4,20 @@ import java.math.BigInteger;
 
 import org.eclipse.emf.ecore.EObject;
 
-import com.rockwellcollins.atc.agree.agree.TimeInterval;
-
-import jkind.lustre.Expr;
 import jkind.lustre.IdExpr;
 
-public class AgreeTimesPattern extends AgreeCauseEffectPattern{
+public class AgreeTimesPattern extends AgreeCauseEffectPattern {
 
-    public final BigInteger causeTimes;
-    public final BigInteger effectTimes;
+	public final BigInteger causeTimes;
+	public final BigInteger effectTimes;
 
-    public AgreeTimesPattern(String string, EObject reference, boolean effectIsExclusive, IdExpr cause, IdExpr effect,
-            AgreePatternInterval causeInterval, AgreePatternInterval effectInterval, TriggerType causeType,
-            TriggerType effectType, BigInteger causeTimes, BigInteger effectTimes) {
-        super(string, reference, effectIsExclusive, cause, effect, causeInterval, effectInterval, causeType, effectType);
-        this.causeTimes = causeTimes;
-        this.effectTimes = effectTimes;
-    }
+	public AgreeTimesPattern(String string, EObject reference, boolean effectIsExclusive, IdExpr cause, IdExpr effect,
+			AgreePatternInterval causeInterval, AgreePatternInterval effectInterval, TriggerType causeType,
+			TriggerType effectType, BigInteger causeTimes, BigInteger effectTimes) {
+		super(string, reference, effectIsExclusive, cause, effect, causeInterval, effectInterval, causeType,
+				effectType);
+		this.causeTimes = causeTimes;
+		this.effectTimes = effectTimes;
+	}
 
 }

@@ -29,28 +29,28 @@ import jkind.lustre.Program;
 import jkind.lustre.VarDecl;
 import jkind.lustre.visitors.AstIterVisitor;
 
-public class RenamingVisitor extends AstIterVisitor{
+public class RenamingVisitor extends AstIterVisitor {
 
-    private final AgreeRenaming renaming;
-    private final AgreeLayout layout;
-    private final Program program;
-    private boolean isMainNode;
-    private String nodeName;
-    
-    public static void addRenamings(Program program, AgreeRenaming renaming, AgreeLayout layout){
-        RenamingVisitor visitor = new RenamingVisitor(program, renaming, layout);
-        visitor.visit(program);
-    }
-    
-    private RenamingVisitor(Program program, AgreeRenaming renaming, AgreeLayout layout){
-        this.renaming = renaming;
-        this.layout = layout;
-        this.program = program;
-    }
+	private final AgreeRenaming renaming;
+	private final AgreeLayout layout;
+	private final Program program;
+	private boolean isMainNode;
+	private String nodeName;
 
-    @Override
-    public Void visit(Program program) {
-        super.visit(program);
+	public static void addRenamings(Program program, AgreeRenaming renaming, AgreeLayout layout) {
+		RenamingVisitor visitor = new RenamingVisitor(program, renaming, layout);
+		visitor.visit(program);
+	}
+
+	private RenamingVisitor(Program program, AgreeRenaming renaming, AgreeLayout layout) {
+		this.renaming = renaming;
+		this.layout = layout;
+		this.program = program;
+	}
+
+	@Override
+	public Void visit(Program program) {
+		super.visit(program);
 		for (jkind.lustre.TypeDef typeDef : program.types) {
 			if (typeDef.type instanceof jkind.lustre.EnumType) {
 				jkind.lustre.EnumType enumType = (jkind.lustre.EnumType) typeDef.type;
@@ -59,73 +59,73 @@ public class RenamingVisitor extends AstIterVisitor{
 				}
 			}
 		}
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    public Void visit(Node node){
-        isMainNode = node.id.equals(program.main);
-        nodeName = node.id;
-        visitVarDecls(node.inputs);
-        visitVarDecls(node.outputs);
-        visitVarDecls(node.locals);
-        return null;
-    }
+	@Override
+	public Void visit(Node node) {
+		isMainNode = node.id.equals(program.main);
+		nodeName = node.id;
+		visitVarDecls(node.inputs);
+		visitVarDecls(node.outputs);
+		visitVarDecls(node.locals);
+		return null;
+	}
 
-    @Override
-    public Void visit(VarDecl e) {
-        if (e instanceof AgreeVar) {
-            AgreeVar var = (AgreeVar) e;
-            String category = getCategory(var);
-            String refStr = getReferenceStr(var);
+	@Override
+	public Void visit(VarDecl e) {
+		if (e instanceof AgreeVar) {
+			AgreeVar var = (AgreeVar) e;
+			String category = getCategory(var);
+			String refStr = getReferenceStr(var);
 
-            if (isMainNode && var.reference != null) {
-                if (var.reference instanceof AssumeStatement && category != null && category.equals("")) {
-                    renaming.addSupportRename(var.id, var.id);
-                    renaming.addSupportRefString(var.id, refStr);
-                    renaming.getRefMap().put(refStr, var.reference);
-                } else {
-                    renaming.addExplicitRename(var.id, refStr);
-                    renaming.addToRefMap(var.id, var.reference);
-                }
-            } else if (var.reference instanceof GuaranteeStatement) {
-                renaming.addSupportRename(nodeName + "." + var.id, category + "." + var.id);
-                renaming.addSupportRefString(nodeName + "." + var.id, refStr);
-                renaming.getRefMap().put(refStr, var.reference);
-            } else {
-                return null;
-            }
+			if (isMainNode && var.reference != null) {
+				if (var.reference instanceof AssumeStatement && category != null && category.equals("")) {
+					renaming.addSupportRename(var.id, var.id);
+					renaming.addSupportRefString(var.id, refStr);
+					renaming.getRefMap().put(refStr, var.reference);
+				} else {
+					renaming.addExplicitRename(var.id, refStr);
+					renaming.addToRefMap(var.id, var.reference);
+				}
+			} else if (var.reference instanceof GuaranteeStatement) {
+				renaming.addSupportRename(nodeName + "." + var.id, category + "." + var.id);
+				renaming.addSupportRefString(nodeName + "." + var.id, refStr);
+				renaming.getRefMap().put(refStr, var.reference);
+			} else {
+				return null;
+			}
 
-            if (category != null && !layout.getCategories().contains(category)) {
-                layout.addCategory(category);
-            }
-            layout.addElement(category, refStr, SigType.INPUT);
+			if (category != null && !layout.getCategories().contains(category)) {
+				layout.addCategory(category);
+			}
+			layout.addElement(category, refStr, SigType.INPUT);
 
-        }
-        return null;
-    }
+		}
+		return null;
+	}
 
-    private String getReferenceStr(AgreeVar var) {
+	private String getReferenceStr(AgreeVar var) {
 
-        String prefix = getCategory(var);
-        if (prefix == null) {
-            return null;
-        }
-        if (var.id.endsWith(AgreeASTBuilder.clockIDSuffix)) {
-            return null;
-        }
+		String prefix = getCategory(var);
+		if (prefix == null) {
+			return null;
+		}
+		if (var.id.endsWith(AgreeASTBuilder.clockIDSuffix)) {
+			return null;
+		}
 
-        String seperator = (prefix == "" ? "" : ".");
-        EObject reference = var.reference;
-        String suffix = "";
-        
-        if(var.id.endsWith(AgreeASTBuilder.eventSuffix + AgreeInlineLatchedConnections.LATCHED_SUFFIX)){
-        	suffix = "._EVENT_._LATCHED_";
-        }else if(var.id.endsWith(AgreeASTBuilder.eventSuffix)){
-        	suffix = "._EVENT_";
-        }else if(var.id.endsWith(AgreeInlineLatchedConnections.LATCHED_SUFFIX)){
-        	suffix = "._LATCHED_";
-        }
+		String seperator = (prefix == "" ? "" : ".");
+		EObject reference = var.reference;
+		String suffix = "";
+
+		if (var.id.endsWith(AgreeASTBuilder.eventSuffix + AgreeInlineLatchedConnections.LATCHED_SUFFIX)) {
+			suffix = "._EVENT_._LATCHED_";
+		} else if (var.id.endsWith(AgreeASTBuilder.eventSuffix)) {
+			suffix = "._EVENT_";
+		} else if (var.id.endsWith(AgreeInlineLatchedConnections.LATCHED_SUFFIX)) {
+			suffix = "._LATCHED_";
+		}
 
 		if (reference instanceof GuaranteeStatement) {
 			return ((GuaranteeStatement) reference).getStr();
@@ -150,21 +150,21 @@ public class RenamingVisitor extends AstIterVisitor{
 			return prefix + seperator + ((PropertyStatement) reference).getName();
 		} else if (reference instanceof ComponentType || reference instanceof ComponentImplementation
 				|| reference instanceof SystemImplementation) {
-        	if(var.id.equals(LustreAstBuilder.assumeHistSufix)){
-        		return "Subcomponent Assumptions";
-        	}
-            return "Result";
-        } else if(reference instanceof AgreeStatement){
-            return prefix + reference.toString();
-        }
-        throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
-    }
-    
-    public static String getCategory(AgreeVar var) {
-        if (var.compInst == null || var.reference == null) {
-            return null;
-        }
-        return LustreAstBuilder.getRelativeLocation(var.compInst.getInstanceObjectPath());
-    }
-    
+			if (var.id.equals(LustreAstBuilder.assumeHistSufix)) {
+				return "Subcomponent Assumptions";
+			}
+			return "Result";
+		} else if (reference instanceof AgreeStatement) {
+			return prefix + reference.toString();
+		}
+		throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
+	}
+
+	public static String getCategory(AgreeVar var) {
+		if (var.compInst == null || var.reference == null) {
+			return null;
+		}
+		return LustreAstBuilder.getRelativeLocation(var.compInst.getInstanceObjectPath());
+	}
+
 }
