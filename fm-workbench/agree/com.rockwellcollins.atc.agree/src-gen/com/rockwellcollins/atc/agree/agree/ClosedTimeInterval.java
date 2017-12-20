@@ -2,7 +2,6 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Closed Time Interval</b></em>'.
@@ -13,6 +12,5 @@ package com.rockwellcollins.atc.agree.agree;
  * @model
  * @generated
  */
-public interface ClosedTimeInterval extends TimeInterval
-{
+public interface ClosedTimeInterval extends TimeInterval {
 } // ClosedTimeInterval

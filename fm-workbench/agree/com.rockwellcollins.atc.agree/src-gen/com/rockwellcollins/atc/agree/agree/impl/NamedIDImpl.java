@@ -2,12 +2,11 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.osate.aadl2.impl.NamedElementImpl;
+
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.NamedID;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.osate.aadl2.impl.NamedElementImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -16,27 +15,24 @@ import org.osate.aadl2.impl.NamedElementImpl;
  *
  * @generated
  */
-public class NamedIDImpl extends NamedElementImpl implements NamedID
-{
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  protected NamedIDImpl()
-  {
-    super();
-  }
+public class NamedIDImpl extends NamedElementImpl implements NamedID {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected NamedIDImpl() {
+		super();
+	}
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  protected EClass eStaticClass()
-  {
-    return AgreePackage.Literals.NAMED_ID;
-  }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return AgreePackage.Literals.NAMED_ID;
+	}
 
-} //NamedIDImpl
+} // NamedIDImpl

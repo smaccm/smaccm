@@ -3,7 +3,6 @@
 package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.osate.aadl2.NamedElement;
 
 /**
@@ -22,22 +21,21 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface CalenStatement extends SynchStatement
-{
-  /**
-   * Returns the value of the '<em><b>Els</b></em>' reference list.
-   * The list contents are of type {@link org.osate.aadl2.NamedElement}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Els</em>' reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Els</em>' reference list.
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getCalenStatement_Els()
-   * @model
-   * @generated
-   */
-  EList<NamedElement> getEls();
+public interface CalenStatement extends SynchStatement {
+	/**
+	 * Returns the value of the '<em><b>Els</b></em>' reference list.
+	 * The list contents are of type {@link org.osate.aadl2.NamedElement}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Els</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Els</em>' reference list.
+	 * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getCalenStatement_Els()
+	 * @model
+	 * @generated
+	 */
+	EList<NamedElement> getEls();
 
 } // CalenStatement

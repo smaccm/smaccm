@@ -2,7 +2,6 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Time Expr</b></em>'.
@@ -13,6 +12,5 @@ package com.rockwellcollins.atc.agree.agree;
  * @model
  * @generated
  */
-public interface TimeExpr extends Expr
-{
+public interface TimeExpr extends Expr {
 } // TimeExpr

@@ -2,12 +2,11 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.osate.aadl2.impl.AnnexLibraryImpl;
+
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.osate.aadl2.impl.AnnexLibraryImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -16,27 +15,24 @@ import org.osate.aadl2.impl.AnnexLibraryImpl;
  *
  * @generated
  */
-public class AgreeLibraryImpl extends AnnexLibraryImpl implements AgreeLibrary
-{
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  protected AgreeLibraryImpl()
-  {
-    super();
-  }
+public class AgreeLibraryImpl extends AnnexLibraryImpl implements AgreeLibrary {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected AgreeLibraryImpl() {
+		super();
+	}
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  protected EClass eStaticClass()
-  {
-    return AgreePackage.Literals.AGREE_LIBRARY;
-  }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return AgreePackage.Literals.AGREE_LIBRARY;
+	}
 
-} //AgreeLibraryImpl
+} // AgreeLibraryImpl

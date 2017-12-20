@@ -7,7 +7,6 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 import org.osate.xtext.aadl2.serializer.Aadl2CrossReferenceSerializer;
 
-import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
@@ -29,10 +28,10 @@ public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer
 				return base.getQualifiedName();
 			}
 //		} else if (semanticObject instanceof Arg) {
-//			return 
+//			return
 		} else if (semanticObject instanceof NodeEq) {
 			NodeEq nodeEq = (NodeEq) semanticObject;
-			assert(nodeEq.getLhs().size() == 1);
+			assert (nodeEq.getLhs().size() == 1);
 			return nodeEq.getLhs().get(0).getName();
 		} else if (semanticObject instanceof RecordExpr) {
 			// RecordExpr recordExpr = (RecordExpr) semanticObject;

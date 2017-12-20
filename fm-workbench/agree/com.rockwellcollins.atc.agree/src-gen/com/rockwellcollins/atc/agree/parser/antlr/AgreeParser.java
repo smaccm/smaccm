@@ -3,37 +3,38 @@
  */
 package com.rockwellcollins.atc.agree.parser.antlr;
 
-import com.google.inject.Inject;
-
 import org.eclipse.xtext.parser.antlr.XtextTokenStream;
+
+import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 
 public class AgreeParser extends org.eclipse.xtext.parser.antlr.AbstractAntlrParser {
-	
+
 	@Inject
 	private AgreeGrammarAccess grammarAccess;
-	
+
 	@Override
 	protected void setInitialHiddenTokens(XtextTokenStream tokenStream) {
 		tokenStream.setInitialHiddenTokens("RULE_WS", "RULE_SL_COMMENT");
 	}
-	
+
 	@Override
-	protected com.rockwellcollins.atc.agree.parser.antlr.internal.InternalAgreeParser createParser(XtextTokenStream stream) {
+	protected com.rockwellcollins.atc.agree.parser.antlr.internal.InternalAgreeParser createParser(
+			XtextTokenStream stream) {
 		return new com.rockwellcollins.atc.agree.parser.antlr.internal.InternalAgreeParser(stream, getGrammarAccess());
 	}
-	
-	@Override 
+
+	@Override
 	protected String getDefaultRuleName() {
 		return "NamedElement";
 	}
-	
+
 	public AgreeGrammarAccess getGrammarAccess() {
-		return this.grammarAccess;
+		return grammarAccess;
 	}
-	
+
 	public void setGrammarAccess(AgreeGrammarAccess grammarAccess) {
 		this.grammarAccess = grammarAccess;
 	}
-	
+
 }

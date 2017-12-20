@@ -20,22 +20,21 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface AgreeContract extends Contract
-{
-  /**
-   * Returns the value of the '<em><b>Specs</b></em>' containment reference list.
-   * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.SpecStatement}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Specs</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Specs</em>' containment reference list.
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getAgreeContract_Specs()
-   * @model containment="true"
-   * @generated
-   */
-  EList<SpecStatement> getSpecs();
+public interface AgreeContract extends Contract {
+	/**
+	 * Returns the value of the '<em><b>Specs</b></em>' containment reference list.
+	 * The list contents are of type {@link com.rockwellcollins.atc.agree.agree.SpecStatement}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Specs</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Specs</em>' containment reference list.
+	 * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getAgreeContract_Specs()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<SpecStatement> getSpecs();
 
 } // AgreeContract

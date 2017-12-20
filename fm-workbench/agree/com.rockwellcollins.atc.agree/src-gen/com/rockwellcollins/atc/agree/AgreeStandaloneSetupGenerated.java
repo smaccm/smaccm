@@ -24,23 +24,24 @@ public class AgreeStandaloneSetupGenerated implements ISetup {
 		register(injector);
 		return injector;
 	}
-	
+
 	public Injector createInjector() {
 		return Guice.createInjector(new com.rockwellcollins.atc.agree.AgreeRuntimeModule());
 	}
-	
+
 	public void register(Injector injector) {
-	if (!EPackage.Registry.INSTANCE.containsKey("http://www.rockwellcollins.com/atc/agree/Agree")) {
-		EPackage.Registry.INSTANCE.put("http://www.rockwellcollins.com/atc/agree/Agree", com.rockwellcollins.atc.agree.agree.AgreePackage.eINSTANCE);
-	}
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.rockwellcollins.com/atc/agree/Agree")) {
+			EPackage.Registry.INSTANCE.put("http://www.rockwellcollins.com/atc/agree/Agree",
+					com.rockwellcollins.atc.agree.agree.AgreePackage.eINSTANCE);
+		}
 
-		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
-		org.eclipse.xtext.resource.IResourceServiceProvider serviceProvider = injector.getInstance(org.eclipse.xtext.resource.IResourceServiceProvider.class);
+		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector
+				.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
+		org.eclipse.xtext.resource.IResourceServiceProvider serviceProvider = injector
+				.getInstance(org.eclipse.xtext.resource.IResourceServiceProvider.class);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("agree", resourceFactory);
-		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("agree", serviceProvider);
-		
-
-
+		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("agree",
+				serviceProvider);
 
 	}
 }

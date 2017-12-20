@@ -2,7 +2,6 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Latched Statement</b></em>'.
@@ -13,6 +12,5 @@ package com.rockwellcollins.atc.agree.agree;
  * @model
  * @generated
  */
-public interface LatchedStatement extends SynchStatement
-{
+public interface LatchedStatement extends SynchStatement {
 } // LatchedStatement

@@ -3,7 +3,6 @@
 package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.osate.aadl2.AnnexSubclause;
 
 /**
@@ -16,6 +15,5 @@ import org.osate.aadl2.AnnexSubclause;
  * @model
  * @generated
  */
-public interface AgreeSubclause extends EObject, AnnexSubclause
-{
+public interface AgreeSubclause extends EObject, AnnexSubclause {
 } // AgreeSubclause

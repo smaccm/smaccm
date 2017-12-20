@@ -9,7 +9,7 @@ package com.rockwellcollins.atc.agree;
  */
 public class AgreeStandaloneSetup extends AgreeStandaloneSetupGenerated {
 
-    public static void doSetup() {
-        new AgreeStandaloneSetup().createInjectorAndDoEMFRegistration();
-    }
+	public static void doSetup() {
+		new AgreeStandaloneSetup().createInjectorAndDoEMFRegistration();
+	}
 }

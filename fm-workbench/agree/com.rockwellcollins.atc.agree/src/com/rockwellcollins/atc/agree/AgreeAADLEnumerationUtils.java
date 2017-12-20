@@ -70,8 +70,8 @@ public class AgreeAADLEnumerationUtils {
 								&& (((NamedValue) pv.getOwnedValue())
 										.getNamedValue() instanceof org.osate.aadl2.EnumerationLiteral)
 								&& "Enum"
-								.equals(((EnumerationLiteral) ((NamedValue) pv.getOwnedValue()).getNamedValue())
-										.getName())));
+										.equals(((EnumerationLiteral) ((NamedValue) pv.getOwnedValue()).getNamedValue())
+												.getName())));
 	}
 
 //	public static List<NamedID> getMatchingEnumIDAsList(ComponentClassifier enumerationType, String qualifiedName) {

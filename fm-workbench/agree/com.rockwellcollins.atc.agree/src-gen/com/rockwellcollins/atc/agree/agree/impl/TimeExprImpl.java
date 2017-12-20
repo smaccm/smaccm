@@ -2,10 +2,10 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
@@ -14,27 +14,24 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class TimeExprImpl extends ExprImpl implements TimeExpr
-{
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  protected TimeExprImpl()
-  {
-    super();
-  }
+public class TimeExprImpl extends ExprImpl implements TimeExpr {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected TimeExprImpl() {
+		super();
+	}
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  protected EClass eStaticClass()
-  {
-    return AgreePackage.Literals.TIME_EXPR;
-  }
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return AgreePackage.Literals.TIME_EXPR;
+	}
 
-} //TimeExprImpl
+} // TimeExprImpl

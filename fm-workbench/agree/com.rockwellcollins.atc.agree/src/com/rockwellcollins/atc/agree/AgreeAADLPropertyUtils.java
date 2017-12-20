@@ -14,23 +14,23 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 public class AgreeAADLPropertyUtils {
 
-    public static String getPropertyEnumString(NamedElement namedEl, String property){
-        Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-                OsateResourceUtil.getResourceSet(), property);
-        EnumerationLiteral lit = PropertyUtils.getEnumLiteral(namedEl, prop);
-        return lit.getName();
-    }
-    
-    public static List<PropertyExpression> getPropertyList(NamedElement namedEl, String property){
+	public static String getPropertyEnumString(NamedElement namedEl, String property) {
+		Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(OsateResourceUtil.getResourceSet(),
+				property);
+		EnumerationLiteral lit = PropertyUtils.getEnumLiteral(namedEl, prop);
+		return lit.getName();
+	}
 
-        List<PropertyExpression> els = new ArrayList<>();
-        Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-                OsateResourceUtil.getResourceSet(), property);
-        ListValue listExpr = (ListValue) PropertyUtils.getSimplePropertyListValue(namedEl, prop);
-        for(PropertyExpression propExpr : listExpr.getOwnedListElements()){
-            els.add(propExpr);
-        }
-        return els;
-    }
-    
+	public static List<PropertyExpression> getPropertyList(NamedElement namedEl, String property) {
+
+		List<PropertyExpression> els = new ArrayList<>();
+		Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(OsateResourceUtil.getResourceSet(),
+				property);
+		ListValue listExpr = (ListValue) PropertyUtils.getSimplePropertyListValue(namedEl, prop);
+		for (PropertyExpression propExpr : listExpr.getOwnedListElements()) {
+			els.add(propExpr);
+		}
+		return els;
+	}
+
 }

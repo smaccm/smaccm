@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2016, Rockwell Collins.
- * 
+ *
  * Developed with the sponsorship of Defense Advanced Research Projects Agency
  * (DARPA).
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this data, including any software or models in source or binary form, as
  * well as any drawings, specifications, and documentation (collectively
@@ -11,7 +11,7 @@
  * limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Data, and to permit persons to whom the
  * Data is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Data.
  *
@@ -23,18 +23,16 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE
  * USE OR OTHER DEALINGS IN THE DATA.
  */
- 
+
 package com.rockwellcollins.atc.agree.serializer;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.xtext.serializer.impl.Serializer;
 
 //import com.google.inject.Guice;
 //import com.google.inject.Injector;
 import com.google.inject.Inject;
 //import com.google.inject.Provider;
-
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
@@ -63,17 +61,17 @@ public class AgreeSerializer extends Serializer {
 	@Inject
 	private AgreeGrammarAccess grammarAccess;
 
-    @Override
-    protected EObject getContext(EObject semanticObject) {
-    	EObject result = null;
-    	if (semanticObject instanceof AgreeContractLibrary) {
-    		result = grammarAccess.getAgreeLibraryRule();
-    	} else if (semanticObject instanceof AgreeContractSubclause) {
-    		result = grammarAccess.getAgreeSubclauseRule();
-    	} else {
-    		result = super.getContext(semanticObject);
-    	}
-    	return result;
-    }
+	@Override
+	protected EObject getContext(EObject semanticObject) {
+		EObject result = null;
+		if (semanticObject instanceof AgreeContractLibrary) {
+			result = grammarAccess.getAgreeLibraryRule();
+		} else if (semanticObject instanceof AgreeContractSubclause) {
+			result = grammarAccess.getAgreeSubclauseRule();
+		} else {
+			result = super.getContext(semanticObject);
+		}
+		return result;
+	}
 
 }

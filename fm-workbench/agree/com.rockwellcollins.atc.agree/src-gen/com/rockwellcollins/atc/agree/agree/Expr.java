@@ -3,7 +3,6 @@
 package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.osate.aadl2.Element;
 
 /**
@@ -16,6 +15,5 @@ import org.osate.aadl2.Element;
  * @model
  * @generated
  */
-public interface Expr extends EObject, Element
-{
+public interface Expr extends EObject, Element {
 } // Expr
