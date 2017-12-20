@@ -13,15 +13,14 @@ import org.osate.xtext.aadl2.ui.containers.Aadl2ProjectsStateHelper;
  * Use this class to register components to be used within the IDE.
  */
 public class AgreeUiModule extends com.rockwellcollins.atc.agree.ui.AbstractAgreeUiModule {
-    public AgreeUiModule(AbstractUIPlugin plugin) {
-        super(plugin);
-    }
+	public AgreeUiModule(AbstractUIPlugin plugin) {
+		super(plugin);
+	}
 
-    // public Class<? extends IEObjectHoverProvider> bindIEObjectHoverProvider()
-    // {
-    // return AgreeHoverProvider.class;
-    // }
-
+	// public Class<? extends IEObjectHoverProvider> bindIEObjectHoverProvider()
+	// {
+	// return AgreeHoverProvider.class;
+	// }
 
 	@Override
 	public com.google.inject.Provider<org.eclipse.xtext.resource.containers.IAllContainersState> provideIAllContainersState() {

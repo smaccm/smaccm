@@ -13,31 +13,33 @@ import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
 // Based on EMV2AnnexParser from Error Model annex
 public class AgreeAnnexParser implements AnnexParser {
-    private AgreeParser parser;
+	private AgreeParser parser;
 
-    protected AgreeParser getParser() {
-        if (parser == null) {
-            Injector injector = AgreeActivator.getInstance().getInjector(
-                    AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
-            parser = injector.getInstance(AgreeParser.class);
-        }
-        return parser;
-    }
+	protected AgreeParser getParser() {
+		if (parser == null) {
+			Injector injector = AgreeActivator.getInstance()
+					.getInjector(AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
+			parser = injector.getInstance(AgreeParser.class);
+		}
+		return parser;
+	}
 
-    protected AgreeGrammarAccess getGrammarAccess() {
-        return getParser().getGrammarAccess();
-    }
+	protected AgreeGrammarAccess getGrammarAccess() {
+		return getParser().getGrammarAccess();
+	}
 
-    public AnnexLibrary parseAnnexLibrary(String annexName, String source, String filename,
-            int line, int column, ParseErrorReporter errReporter) {
-        return (AnnexLibrary) AnnexParseUtil.parse(getParser(),source, getGrammarAccess().getAgreeLibraryRule(), filename, line,
-                column, errReporter);
-    }
+	@Override
+	public AnnexLibrary parseAnnexLibrary(String annexName, String source, String filename, int line, int column,
+			ParseErrorReporter errReporter) {
+		return (AnnexLibrary) AnnexParseUtil.parse(getParser(), source, getGrammarAccess().getAgreeLibraryRule(),
+				filename, line, column, errReporter);
+	}
 
-    public AnnexSubclause parseAnnexSubclause(String annexName, String source, String filename,
-            int line, int column, ParseErrorReporter errReporter) {
-        return (AnnexSubclause) AnnexParseUtil.parse(getParser(),source,getGrammarAccess().getAgreeSubclauseRule(),filename,line,column, errReporter);
-    }
-
+	@Override
+	public AnnexSubclause parseAnnexSubclause(String annexName, String source, String filename, int line, int column,
+			ParseErrorReporter errReporter) {
+		return (AnnexSubclause) AnnexParseUtil.parse(getParser(), source, getGrammarAccess().getAgreeSubclauseRule(),
+				filename, line, column, errReporter);
+	}
 
 }

@@ -5,10 +5,9 @@ package com.rockwellcollins.atc.agree.ui.outline;
 
 /**
  * Customization of the default outline structure.
- * 
+ *
  * see http://www.eclipse.org/Xtext/documentation.html#outline
  */
-public class AgreeOutlineTreeProvider extends
-        org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider {
+public class AgreeOutlineTreeProvider extends org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider {
 
 }
