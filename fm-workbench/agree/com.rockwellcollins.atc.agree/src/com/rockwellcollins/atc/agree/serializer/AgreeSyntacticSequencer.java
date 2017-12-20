@@ -16,7 +16,7 @@ public class AgreeSyntacticSequencer extends AbstractAgreeSyntacticSequencer {
 	@Override
 	protected String getAppliesToKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (node != null) {
-			return getTokenText(node);
+			return super.getAppliesToKeywordsToken(semanticObject, ruleCall, node);
 		}
 		return "applies to";
 	}
@@ -29,7 +29,7 @@ public class AgreeSyntacticSequencer extends AbstractAgreeSyntacticSequencer {
 	@Override
 	protected String getInBindingKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (node != null) {
-			return getTokenText(node);
+			return super.getInBindingKeywordsToken(semanticObject, ruleCall, node);
 		}
 		return "in binding";
 	}
@@ -42,7 +42,7 @@ public class AgreeSyntacticSequencer extends AbstractAgreeSyntacticSequencer {
 	@Override
 	protected String getInModesKeywordsToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (node != null) {
-			return getTokenText(node);
+			return super.getInModesKeywordsToken(semanticObject, ruleCall, node);
 		}
 		return "in modes";
 	}

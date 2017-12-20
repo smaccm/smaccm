@@ -50,7 +50,6 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
-import org.osate.aadl2.Element;
 //import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
@@ -569,7 +568,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			AgreeType exprType = getAgreeType(expr);
 			if (!matches(BOOL, exprType)) {
 				error(assume, "Expression for assume statement is of type '" + exprType.toString()
-						+ "' but must be of type 'bool'");
+				+ "' but must be of type 'bool'");
 			}
 		}
 	}
@@ -584,7 +583,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		AgreeType exprType = getAgreeType(statement.getExpr());
 		if (!matches(BOOL, exprType)) {
 			error(statement, "Expression for 'initially' statement is of type '" + exprType.toString()
-					+ "' but must be of type 'bool'");
+			+ "' but must be of type 'bool'");
 		}
 	}
 
@@ -602,7 +601,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (namedEl != null) {
 			if (!(namedEl instanceof SubcomponentImpl)) {
 				error(lift, "Lift statements must apply to subcomponent implementations. '" + namedEl.getName()
-						+ "' is not a subcomponent.");
+				+ "' is not a subcomponent.");
 			}
 //            } else {
 //                SubcomponentImpl subImpl = (SubcomponentImpl) namedEl;
@@ -628,7 +627,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			AgreeType exprType = getAgreeType(expr);
 			if (!matches(BOOL, exprType)) {
 				error(asser, "Expression for assert statement is of type '" + exprType.toString()
-						+ "' but must be of type 'bool'");
+				+ "' but must be of type 'bool'");
 			}
 		}
 
@@ -664,7 +663,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 					.map(pe -> ((org.osate.aadl2.StringLiteral) pe).getValue()).collect(Collectors.toList());
 			if (!enumerators.stream().anyMatch(ev -> ev.equalsIgnoreCase(enumVal))) {
 				error(aadlEnum, "AADL Enumeration " + enumTypeNamedElement.getQualifiedName()
-						+ " does not have an enumeration value " + enumVal);
+				+ " does not have an enumeration value " + enumVal);
 			}
 		}
 	}
@@ -682,7 +681,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			AgreeType exprType = getAgreeType(expr);
 			if (!matches(BOOL, exprType)) {
 				error(guar, "Expression for guarantee statement is of type '" + exprType.toString()
-						+ "' but must be of type 'bool'");
+				+ "' but must be of type 'bool'");
 			}
 		}
 	}
@@ -997,7 +996,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			AgreeType exprType = getAgreeType(expr);
 			if (!matches(BOOL, exprType)) {
 				error(lemma, "Expression for lemma statement is of type '" + exprType.toString()
-						+ "' but must be of type 'bool'");
+				+ "' but must be of type 'bool'");
 			}
 		}
 	}
@@ -1245,7 +1244,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			for (DataImplementation subImpl : prevClosure) {
 				if (subImpl == dataImpl) {
 					error(dataID, "The component implementation '" + dataImpl.getName()
-							+ "' has a cyclic definition.  This cannot be reasoned about by AGREE.");
+					+ "' has a cyclic definition.  This cannot be reasoned about by AGREE.");
 					break;
 				}
 				for (Subcomponent subSub : subImpl.getAllSubcomponents()) {
@@ -1338,7 +1337,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 							ConstStatement closConst = (ConstStatement) base;
 							if (closConst.equals(constStat)) {
 								error(constStat, "The expression for constant statment '" + constStat.getName()
-										+ "' is part of a cyclic definition");
+								+ "' is part of a cyclic definition");
 								break;
 							}
 							constClosure.add(closConst);
@@ -1765,7 +1764,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 					Integer value = assignMap.get(arg);
 					if (value == null) {
 						error("Equation attempting to assign '" + arg.getName()
-								+ "', which is not an assignable value within the node");
+						+ "', which is not an assignable value within the node");
 						return;
 					} else {
 						assignMap.put(arg, value + 1);
@@ -1949,7 +1948,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		if (inDefTypes.size() != argCallTypes.size()) {
 			error(fnCall, "Function definition '" + callName + "' requires " + inDefTypes.size()
-					+ " arguments, but this function call provides " + argCallTypes.size() + " arguments");
+			+ " arguments, but this function call provides " + argCallTypes.size() + " arguments");
 			return;
 		}
 
@@ -1994,7 +1993,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		AgreeType exprType = getAgreeType(fnDef.getExpr());
 		if (!exprType.equals(fnType)) {
 			error(fnDef, "Function '" + fnDef.getName() + "' is of type '" + fnType.toString()
-					+ "' but its expression is of type '" + exprType + "'");
+			+ "' but its expression is of type '" + exprType + "'");
 		}
 
 	}
@@ -2126,11 +2125,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			} else {
 				if (!matches(BOOL, typeLeft)) {
 					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft.toString()
-							+ "' but must be of " + "type 'bool'");
+					+ "' but must be of " + "type 'bool'");
 				}
 				if (!matches(BOOL, typeRight)) {
 					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight.toString()
-							+ "' but must be of" + " type 'bool'");
+					+ "' but must be of" + " type 'bool'");
 				}
 			}
 			return;
@@ -2192,8 +2191,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				if (!rightSideConst && !leftSideConst) {
 					warning(binExpr,
 							"neither the right nor the left side of binary expression '" + op
-									+ "' is constant'.  Non-linear expressions are only allowed with z3 and dReal."
-									+ " With z3 they are not recomended.");
+							+ "' is constant'.  Non-linear expressions are only allowed with z3 and dReal."
+							+ " With z3 they are not recomended.");
 				}
 			}
 			return;
@@ -2263,28 +2262,26 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return false;
 	}
 
-	private Boolean hasCallDefParent(Element e) {
-		while (e != null) {
-			if (e instanceof CallDef) {
-				return true;
-			}
-			e = e.getOwner();
-		}
-		return false;
-	}
+//	// TODO: Don't we need more validation here? What if the Id of the IdExpr
+//	private Boolean hasCallDefParent(Element e) {
+//		while (e != null) {
+//			if (e instanceof CallDef) {
+//				return true;
+//			}
+//			e = e.getOwner();
+//		}
+//		return false;
+//	}
+//
+//	private void checkScope(Expr expr, NamedElement id) {
+//		if (hasCallDefParent(expr)) {
+//			if (!hasCallDefParent(id) && !(id instanceof ConstStatement)) {
+//				error("Unknown identifier Id: '" + id
+//						+ "' (Note that nodes can only refer to inputs, outputs, and local variables and global constants).");
+//			}
+//		}
+//	}
 
-	// TODO: Don't we need more validation here? What if the Id of the IdExpr
-	/*
-	 * private void checkScope(Expr expr, NamedElement id) {
-	 * if (hasCallDefParent(expr)) {
-	 * if (!hasCallDefParent(id) && !(id instanceof ConstStatement)) {
-	 * error("Unknown identifier Id: '"
-	 * + id
-	 * + "' (Note that nodes can only refer to inputs, outputs, and local variables and global constants).");
-	 * }
-	 * }
-	 * }
-	 */
 	public static NamedElement getFinalNestId(NestedDotID dotId) {
 		while (dotId.getSub() != null) {
 			dotId = dotId.getSub();
@@ -2659,11 +2656,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		} else if (expr instanceof TimeOfExpr || expr instanceof TimeRiseExpr || expr instanceof TimeFallExpr) {
 			return REAL;
 		} /*
-			 * else if (expr instanceof UnaryNonLinearExpr ||
-			 * expr instanceof BinaryNonLinearExpr) {
-			 * return REAL;
-			 * }
-			 */
+		 * else if (expr instanceof UnaryNonLinearExpr ||
+		 * expr instanceof BinaryNonLinearExpr) {
+		 * return REAL;
+		 * }
+		 */
 
 		return ERROR;
 	}

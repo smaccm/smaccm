@@ -62,6 +62,7 @@ public class AgreeSerializer extends Serializer {
 	private AgreeGrammarAccess grammarAccess;
 
 	@Override
+	@Deprecated
 	protected EObject getContext(EObject semanticObject) {
 		EObject result = null;
 		if (semanticObject instanceof AgreeContractLibrary) {
