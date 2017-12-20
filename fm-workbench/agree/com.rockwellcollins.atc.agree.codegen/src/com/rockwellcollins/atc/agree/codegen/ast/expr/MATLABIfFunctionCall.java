@@ -1,19 +1,19 @@
 package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
-import jkind.Assert;
-
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
 
+import jkind.Assert;
+
 public class MATLABIfFunctionCall extends MATLABFunctionCall {
-	
+
 	public String name = "ifFunction";
-	
-	public MATLABExpr cond; 
-	
+
+	public MATLABExpr cond;
+
 	public MATLABExpr ifExpr;
-	
+
 	public MATLABExpr elseExpr;
-	
+
 	public MATLABIfFunctionCall(MATLABExpr cond, MATLABExpr ifExpr, MATLABExpr elseExpr) {
 		Assert.isNotNull(cond);
 		Assert.isNotNull(ifExpr);

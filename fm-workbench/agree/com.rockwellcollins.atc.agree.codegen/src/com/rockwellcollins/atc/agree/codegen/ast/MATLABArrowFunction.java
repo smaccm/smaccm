@@ -2,7 +2,6 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
-
 /**
  * %At the beginning of the primary function
  * persistent first_time
@@ -12,18 +11,18 @@ import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
  * else
  *    output = right;
  * end
- * %At the end of the primary function 
+ * %At the end of the primary function
  * first_time = false;
  */
 
 public class MATLABArrowFunction extends MATLABSubFunction {
-	
+
 	public String firstTimeVar = "first_time";
-	
+
 	public MATLABArrowFunction() {
-		this.name = "arrowFunction";
+		name = "arrowFunction";
 	}
-	
+
 	@Override
 	public <T, S extends T> T accept(MATLABAstVisitor<T, S> visitor) {
 		return visitor.visit(this);

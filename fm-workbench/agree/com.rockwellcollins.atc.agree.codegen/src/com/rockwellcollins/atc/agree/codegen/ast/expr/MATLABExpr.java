@@ -11,7 +11,7 @@ public abstract class MATLABExpr extends MATLABAst {
 	public <T, S extends T> S accept(MATLABAstVisitor<T, S> visitor) {
 		return accept((MATLABExprVisitor<S>) visitor);
 	}
-	
+
 	public abstract <T> T accept(MATLABExprVisitor<T> visitor);
 
 }

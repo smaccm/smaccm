@@ -11,11 +11,11 @@ import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
  */
 
 public class MATLABIfFunction extends MATLABSubFunction {
-	
+
 	public MATLABIfFunction() {
-		this.name = "ifFunction";
+		name = "ifFunction";
 	}
-	
+
 	@Override
 	public <T, S extends T> T accept(MATLABAstVisitor<T, S> visitor) {
 		return visitor.visit(this);

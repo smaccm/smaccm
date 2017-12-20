@@ -13,10 +13,10 @@ public class MATLABIntExpr extends MATLABExpr {
 		Assert.isNotNull(value);
 		this.value = value;
 	}
-	
+
 	@Override
 	public <T> T accept(MATLABExprVisitor<T> visitor) {
 		return visitor.visit(this);
 	}
-	
+
 }

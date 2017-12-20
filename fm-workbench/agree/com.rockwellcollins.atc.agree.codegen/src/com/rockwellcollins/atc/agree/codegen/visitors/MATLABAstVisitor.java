@@ -1,8 +1,8 @@
 package com.rockwellcollins.atc.agree.codegen.visitors;
 
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABFirstTimeVarInit;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABIfFunction;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABImpliesFunction;
@@ -37,6 +37,5 @@ public interface MATLABAstVisitor<T, S extends T> extends MATLABExprVisitor<S> {
 	public T visit(MATLABPreLocalVarInit matlabPreLocalVarInit);
 
 	public T visit(MATLABLocalBusVarInit matlabLocalBusVarInit);
-
 
 }

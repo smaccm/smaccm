@@ -1,12 +1,11 @@
 package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
-import jkind.Assert;
-
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
+
+import jkind.Assert;
 
 public class MATLABBusElementUpdateExpr extends MATLABExpr {
 
-	
 	public final MATLABExpr busExpr;
 	public final MATLABIdExpr element;
 	public MATLABExpr value;

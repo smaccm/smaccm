@@ -24,5 +24,3 @@ public class MATLABBinaryExpr extends MATLABExpr {
 	}
 
 }
-
-

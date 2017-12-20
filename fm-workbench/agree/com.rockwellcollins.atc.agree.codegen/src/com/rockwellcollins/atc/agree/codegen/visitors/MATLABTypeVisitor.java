@@ -13,7 +13,6 @@ import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt32Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt64Type;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABUInt8Type;
 
-
 public interface MATLABTypeVisitor<T> {
 
 	public T visit(MATLABInt32Type matlabInt32Type);

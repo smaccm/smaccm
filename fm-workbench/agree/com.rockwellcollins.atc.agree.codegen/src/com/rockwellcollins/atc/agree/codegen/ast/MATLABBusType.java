@@ -1,13 +1,13 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import jkind.Assert;
-
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
+import jkind.Assert;
+
 public class MATLABBusType extends MATLABType {
-	
+
 	public final String name;
-	
+
 	public MATLABBusType(String name) {
 		Assert.isNotNull(name);
 		this.name = name;
@@ -22,9 +22,10 @@ public class MATLABBusType extends MATLABType {
 	public String getValueStr() {
 		return null;
 	}
-	
+
+	@Override
 	public String toString() {
 		return name;
 	}
-	
+
 }

@@ -20,4 +20,3 @@ public class MATLABUnaryExpr extends MATLABExpr {
 		return visitor.visit(this);
 	}
 }
-

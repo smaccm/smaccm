@@ -1,6 +1,7 @@
 package com.rockwellcollins.atc.agree.codegen.handlers;
 
 import java.io.File;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 
 public class ModelInfoDialog extends TitleAreaDialog {
 	private final class OutputDirChooserListner implements Listener {
+		@Override
 		public void handleEvent(Event event) {
 			// Get saved or entered output directory
 			String existingDir = outputText.getText();
@@ -40,6 +42,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 	}
 
 	private final class ImplMdlChooserListner implements Listener {
+		@Override
 		public void handleEvent(Event event) {
 			// Get saved or entered file path
 			String defaultPath = implMdlText.getText();
@@ -68,13 +71,13 @@ public class ModelInfoDialog extends TitleAreaDialog {
 
 	private Text implMdlText;
 	private ControlDecoration implMdlTextError;
-	private ControlDecoration implMdlTextInfo;	
+	private ControlDecoration implMdlTextInfo;
 
 	private Text verifyMdlText;
 	private ControlDecoration verifyMdlTextError;
 
 	private Text subsystemText;
-	private ControlDecoration subsysTextError;	
+	private ControlDecoration subsysTextError;
 	private ControlDecoration subsysTextInfo;
 
 	private StringBuffer buffer = new StringBuffer();
@@ -129,7 +132,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		FieldDecoration errorFieldDecoration = FieldDecorationRegistry.getDefault()
 				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 		Image errorImage = errorFieldDecoration.getImage();
-		
+
 		FieldDecoration infoFieldDecoration = FieldDecorationRegistry.getDefault()
 				.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION);
 		Image infoImage = infoFieldDecoration.getImage();
@@ -181,7 +184,7 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		implMdlTextError = new ControlDecoration(implMdlText, SWT.TOP | SWT.LEFT);
 		implMdlTextError.setImage(errorImage);
 		implMdlTextError.hide();
-		
+
 		implMdlTextInfo = new ControlDecoration(implMdlText, SWT.TOP | SWT.LEFT);
 		implMdlTextInfo.setImage(infoImage);
 		implMdlTextInfo.hide();
@@ -200,20 +203,20 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		gridData.widthHint = 200;
 		verifyMdlLabel.setLayoutData(gridData);
 
-		verifyMdlText = new Text(container, SWT.SINGLE|SWT.BORDER);
+		verifyMdlText = new Text(container, SWT.SINGLE | SWT.BORDER);
 		verifyMdlText.setText(savedInfo.verifyMdlName);
-		
+
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalIndent = 10;
 		verifyMdlText.setLayoutData(gridData);
-		verifyMdlText.addModifyListener(e -> validate());		
+		verifyMdlText.addModifyListener(e -> validate());
 
 		verifyMdlTextError = new ControlDecoration(verifyMdlText, SWT.TOP | SWT.LEFT);
 		verifyMdlTextError.setImage(errorImage);
 		verifyMdlTextError.hide();
-		
-		//end of row padding
+
+		// end of row padding
 		new Label(container, SWT.NULL);
 
 		Label subsystemLabel = new Label(container, SWT.NONE);
@@ -222,29 +225,30 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		gridData.widthHint = 150;
 		subsystemLabel.setLayoutData(gridData);
 
-		subsystemText = new Text(container, SWT.SINGLE|SWT.BORDER);
-		subsystemText.setText(savedInfo.subsystemName);	
-		
+		subsystemText = new Text(container, SWT.SINGLE | SWT.BORDER);
+		subsystemText.setText(savedInfo.subsystemName);
+
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalIndent = 10;
 		subsystemText.setLayoutData(gridData);
-		subsystemText.addModifyListener(e -> validate());	
-		
+		subsystemText.addModifyListener(e -> validate());
+
 		subsysTextError = new ControlDecoration(subsystemText, SWT.TOP | SWT.LEFT);
 		subsysTextError.setImage(errorImage);
 		subsysTextError.hide();
-		
+
 		subsysTextInfo = new ControlDecoration(subsystemText, SWT.TOP | SWT.LEFT);
 		subsysTextInfo.setImage(infoImage);
 		subsysTextInfo.hide();
-		
-		//end of row padding
+
+		// end of row padding
 		new Label(container, SWT.NULL);
 
 		return container;
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, ModelInfoDialogConstants.EXPORT_CONTRACTS_ID, ModelInfoDialogConstants.EXPORT_LABEL, true);
 		createButton(parent, ModelInfoDialogConstants.GENERATE_SUBSYSTEM_ID, ModelInfoDialogConstants.GEN_IMPL_LABEL,
@@ -291,63 +295,61 @@ public class ModelInfoDialog extends TitleAreaDialog {
 
 		// not flagging an error if the implMdlText is empty
 		String implMdlPathStr = implMdlText.getText();
-	
+
 		if (!implMdlPathStr.equals("")) {
 			implMdlEmpty = false;
-			
-			//create the file object
+
+			// create the file object
 			File implMdlFile = new File(implMdlPathStr);
-			
-			//if the implementation file path already exists
-			//will not enable Generate Implementation button
+
+			// if the implementation file path already exists
+			// will not enable Generate Implementation button
 			if (implMdlFile.exists()) {
 				newImplMdl = false;
 				write("Generate Implementation button enabled only when the Implementation Model does not exist");
-				newline();		
+				newline();
 				implMdlInfo = true;
 			}
 			// else, expect user to enter a model path in an existing directory with
 			// a valid model file name ends with .slx
 			else {
 				newImplMdl = true;
-				
-				//get the directory
-				if(implMdlFile.isDirectory()){
-					//if the file path is a directory, error
+
+				// get the directory
+				if (implMdlFile.isDirectory()) {
+					// if the file path is a directory, error
 					implMdlError = true;
 					write("Impl Model Path a directory, not a valid file path");
-					newline();					
-				}
-				else{
-					//get the parent directory
+					newline();
+				} else {
+					// get the parent directory
 					String implMdlDirStr = implMdlFile.getParent();
-					//if the parent directory is null, error
-					if(implMdlDirStr == null){
+					// if the parent directory is null, error
+					if (implMdlDirStr == null) {
 						implMdlError = true;
 						write("Impl Model Path needs to locate in an existing directory");
-						newline();							
-					}
-					else{
+						newline();
+					} else {
 						File implMdlDirFile = new File(implMdlDirStr);
-						//if the directory does not already exists, error					
-						if(!implMdlDirFile.exists()){
+						// if the directory does not already exists, error
+						if (!implMdlDirFile.exists()) {
 							implMdlError = true;
 							write("Impl Model Path needs to locate in an existing directory");
-							newline();							
+							newline();
 						}
-						//if the directory exists, check if the file name is well formed					
-						else{
-							//get the file name
+						// if the directory exists, check if the file name is well formed
+						else {
+							// get the file name
 							String implMdlName = implMdlFile.getName();
-							if (!isFileNameValid(implMdlName, true)){
+							if (!isFileNameValid(implMdlName, true)) {
 								implMdlError = true;
 								write("Model file name must start with a letter, end with .slx, and contain letters/numbers/underscores in between");
-								newline();								
+								newline();
 							}
-						}						
+						}
 					}
 				}
-			}			
+			}
 		}
 
 		// enable Generate Implementation button when the model files
@@ -375,18 +377,17 @@ public class ModelInfoDialog extends TitleAreaDialog {
 
 		// not flagging an error if the subsystemText is empty
 		String subsystemName = subsystemText.getText();
-		
-		//if subsystemName is empty while the other fields are filled correctly
-		//display a reminder message
-		if(subsystemName.equals("")){
+
+		// if subsystemName is empty while the other fields are filled correctly
+		// display a reminder message
+		if (subsystemName.equals("")) {
 			if (!outputDirError && !implMdlEmpty && !implMdlError && !newImplMdl && !verifyMdlEmpty
 					&& !verifyMdlError) {
 				write("The subsystem name must be provided to create the verification model");
-				newline();		
+				newline();
 				subsysInfo = true;
 			}
-		}	
-		else{
+		} else {
 			if (!isFileNameValid(subsystemName, false)) {
 				write("A Subsystem name must start with a letter, and contain only letters, numbers, and underscores");
 				newline();
@@ -408,40 +409,46 @@ public class ModelInfoDialog extends TitleAreaDialog {
 		} else {
 			setErrorMessage(buffer.toString());
 		}
-		
-		if(!subsysInfo && !implMdlInfo){
+
+		if (!subsysInfo && !implMdlInfo) {
 			setMessage(null);
-		}
-		else{
+		} else {
 			setMessage(buffer.toString());
 		}
 
-		if (outputDirError)
+		if (outputDirError) {
 			outputTextError.show();
-		else
+		} else {
 			outputTextError.hide();
-		if (implMdlError)
+		}
+		if (implMdlError) {
 			implMdlTextError.show();
-		else
+		} else {
 			implMdlTextError.hide();
-		if (verifyMdlError)
+		}
+		if (verifyMdlError) {
 			verifyMdlTextError.show();
-		else
+		} else {
 			verifyMdlTextError.hide();
-		if (subsysError)
+		}
+		if (subsysError) {
 			subsysTextError.show();
-		else
-			subsysTextError.hide();	
-		if (implMdlInfo)
+		} else {
+			subsysTextError.hide();
+		}
+		if (implMdlInfo) {
 			implMdlTextInfo.show();
-		else
-			implMdlTextInfo.hide();		
-		if (subsysInfo)
+		} else {
+			implMdlTextInfo.hide();
+		}
+		if (subsysInfo) {
 			subsysTextInfo.show();
-		else
+		} else {
 			subsysTextInfo.hide();
+		}
 	}
 
+	@Override
 	protected void buttonPressed(int buttonId) {
 		if (ModelInfoDialogConstants.EXPORT_CONTRACTS_ID == buttonId) {
 			exportContractsPressed();
@@ -524,9 +531,10 @@ public class ModelInfoDialog extends TitleAreaDialog {
 			// The name must end with .slx
 			if (!name.endsWith(".slx")) {
 				valid = false;
-			} else
+			} else {
 				// extract the file name sans ".slx"
 				nameToCheck = name.substring(0, name.lastIndexOf('.'));
+			}
 		}
 		// The name must start with a letter and only contains letters, numbers,
 		// and underscores

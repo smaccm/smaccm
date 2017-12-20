@@ -6,9 +6,9 @@ public class MATLABSingleType extends MATLABType {
 
 	public final float defaultValue;
 	public final String name = "single";
-	
+
 	public MATLABSingleType() {
-		this.defaultValue = 0;
+		defaultValue = 0;
 	}
 
 	@Override
@@ -20,7 +20,8 @@ public class MATLABSingleType extends MATLABType {
 	public String getValueStr() {
 		return Float.toString(defaultValue);
 	}
-	
+
+	@Override
 	public String toString() {
 		return name;
 	}

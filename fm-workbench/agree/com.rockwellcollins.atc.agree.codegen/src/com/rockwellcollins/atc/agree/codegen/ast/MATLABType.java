@@ -2,11 +2,10 @@ package com.rockwellcollins.atc.agree.codegen.ast;
 
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABTypeVisitor;
 
-
 public abstract class MATLABType {
-	
+
 	public abstract String getValueStr();
-	
+
 	/**
 	 * Accept.
 	 *

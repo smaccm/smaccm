@@ -3,13 +3,9 @@ package com.rockwellcollins.atc.agree.codegen.visitors;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-
-
-
-
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABArrowFunction;
-import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssignment;
+import com.rockwellcollins.atc.agree.codegen.ast.MATLABAssumption;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBoolType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABBusType;
 import com.rockwellcollins.atc.agree.codegen.ast.MATLABDoubleType;
@@ -50,7 +46,7 @@ import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeCastExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABTypeInitExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABUnaryExpr;
 
-public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLABAstVisitor<Void, Void>  {
+public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLABAstVisitor<Void, Void> {
 
 	private StringBuilder sb = new StringBuilder();
 
@@ -68,13 +64,13 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 	private void newline() {
 		write(seperator);
 	}
-	
+
 	@Override
 	public Void visit(MATLABPrimaryFunction primaryFunction) {
-		//write function header
-		write("function "+primaryFunction.name);
+		// write function header
+		write("function " + primaryFunction.name);
 		write("(");
-		//write inputs, separated by ","
+		// write inputs, separated by ","
 		Iterator<MATLABIdExpr> iterator = primaryFunction.inputs.iterator();
 		while (iterator.hasNext()) {
 			iterator.next().accept(this);
@@ -85,33 +81,33 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		write(")");
 		newline();
 		newline();
-		
-		//write preVar declarations and initializations
-		for(MATLABPersistentVarDecl persistentVarDecl: primaryFunction.persistentVarDecl){
+
+		// write preVar declarations and initializations
+		for (MATLABPersistentVarDecl persistentVarDecl : primaryFunction.persistentVarDecl) {
 			persistentVarDecl.accept(this);
 		}
-		
+
 		newline();
-		
-		//write statements
-		for(MATLABStatement statement: primaryFunction.statements){
+
+		// write statements
+		for (MATLABStatement statement : primaryFunction.statements) {
 			statement.accept(this);
 		}
-		
+
 		newline();
-		
+
 		write("end");
-		
+
 		newline();
 		newline();
-		//write function definitions
-		for(MATLABFunction function: primaryFunction.functions){
+		// write function definitions
+		for (MATLABFunction function : primaryFunction.functions) {
 			function.accept(this);
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public Void visit(MATLABAssignment assignment) {
 		assignment.varToAssign.accept(this);
@@ -121,15 +117,15 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		newline();
 		return null;
 	}
-	
+
 	public void expr(MATLABExpr e) {
 		e.accept(this);
 	}
-	
+
 	public void type(MATLABType t) {
 		t.accept(this);
 	}
-	
+
 	@Override
 	public Void visit(MATLABBinaryExpr e) {
 		write("(");
@@ -152,7 +148,7 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		write(")");
 		return null;
 	}
-	
+
 	@Override
 	public Void visit(MATLABBoolExpr e) {
 		write(Boolean.toString(e.value));
@@ -177,7 +173,7 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		write(")");
 		return null;
 	}
-	
+
 	@Override
 	public Void visit(MATLABIntExpr e) {
 		write(e.value);
@@ -187,12 +183,12 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 	@Override
 	public Void visit(MATLABUnaryExpr e) {
 		write(e.op);
-	    write("(");
+		write("(");
 		expr(e.expr);
 		write(")");
 		return null;
 	}
-	
+
 	/**function output = arrowFunction(first_time, left, right)
 	 * if isempty(first_time)
 	 *    output = left;
@@ -251,7 +247,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		return null;
 	}
 
-	
 	/**function output = impliesFunction(left, right)
 	 * 		output = (not(left) || right);
 	 * end
@@ -270,11 +265,10 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		return null;
 	}
 
-	
 	/**
 	 * persistent preVar
 	 */
-	@Override 
+	@Override
 	public Void visit(MATLABPersistentVarDecl varDecl) {
 		write("persistent ");
 		write(varDecl.var);
@@ -282,7 +276,6 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		return null;
 	}
 
-	
 	@Override
 	public Void visit(MATLABPreInputVarInit preVarInit) {
 		newline();
@@ -292,11 +285,11 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		newline();
 		write("\t");
 		write(preVarInit.preVar);
-		write (" = ");
-		//write(" = coder.nullcopy(");
+		write(" = ");
+		// write(" = coder.nullcopy(");
 		write(preVarInit.var);
-		//write(");");
-		write (";");
+		// write(");");
+		write(";");
 		newline();
 		write("end");
 		newline();
@@ -378,9 +371,9 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		write("\t");
 		write(preVarInit.preVar);
 		write(" = ");
-		//write(" = coder.nullcopy(");
+		// write(" = coder.nullcopy(");
 		preVarInit.typeInitExpr.accept(this);
-		//write(");");
+		// write(");");
 		write(";");
 		newline();
 		write("end");
@@ -418,13 +411,13 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		write(type.name);
 		return null;
 	}
-	
+
 	@Override
 	public Void visit(MATLABUInt32Type type) {
 		write(type.name);
 		return null;
 	}
-	
+
 	@Override
 	public Void visit(MATLABUInt64Type type) {
 		write(type.name);
@@ -436,8 +429,7 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		write(type.name);
 		return null;
 	}
-	
-	
+
 	@Override
 	public Void visit(MATLABSingleType type) {
 		write(type.name);
@@ -452,11 +444,11 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 
 	@Override
 	public Void visit(MATLABBoolType type) {
-		//no need to typecast Boolean 
-		//also Boolean() is illegal
+		// no need to typecast Boolean
+		// also Boolean() is illegal
 		return null;
 	}
-	
+
 	@Override
 	public Void visit(MATLABBusType type) {
 		write(type.name);
@@ -501,15 +493,14 @@ public class MATLABPrettyPrintVisitor implements MATLABTypeVisitor<Void>, MATLAB
 		Iterator<Entry<String, MATLABExpr>> iterator = busVarInit.fields.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, MATLABExpr> entry = iterator.next();
-			if(busVarInit.newVar != null){
+			if (busVarInit.newVar != null) {
 				write(busVarInit.newVar);
 				write("=");
 				write(busVarInit.originalVar);
 				write(";");
 				newline();
 				write(busVarInit.newVar);
-			}
-			else{
+			} else {
 				write(busVarInit.originalVar);
 			}
 			write(".");

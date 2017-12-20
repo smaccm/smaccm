@@ -1,8 +1,8 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import jkind.Assert;
-
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
+
+import jkind.Assert;
 
 public class MATLABFirstTimeVarInit extends MATLABPersistentVarInit {
 
@@ -12,7 +12,7 @@ public class MATLABFirstTimeVarInit extends MATLABPersistentVarInit {
 		Assert.isNotNull(firstTimeVar);
 		this.firstTimeVar = firstTimeVar;
 	}
-	
+
 	@Override
 	public <T, S extends T> T accept(MATLABAstVisitor<T, S> visitor) {
 		return visitor.visit(this);

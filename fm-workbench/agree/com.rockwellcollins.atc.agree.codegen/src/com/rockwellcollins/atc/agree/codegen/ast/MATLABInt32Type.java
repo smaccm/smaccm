@@ -6,7 +6,7 @@ public class MATLABInt32Type extends MATLABType {
 
 	public final int defaultValue = 0;
 	public final String name = "int32";
-	
+
 	@Override
 	public <T> T accept(MATLABTypeVisitor<T> visitor) {
 		return visitor.visit(this);
@@ -16,9 +16,10 @@ public class MATLABInt32Type extends MATLABType {
 	public String getValueStr() {
 		return Integer.toString(defaultValue);
 	}
-	
+
+	@Override
 	public String toString() {
 		return name;
 	}
-	
+
 }

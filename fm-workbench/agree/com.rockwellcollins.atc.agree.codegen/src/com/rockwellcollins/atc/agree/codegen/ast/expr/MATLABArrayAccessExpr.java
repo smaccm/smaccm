@@ -1,18 +1,17 @@
 package com.rockwellcollins.atc.agree.codegen.ast.expr;
 
-import jkind.Assert;
-
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABExprVisitor;
+
+import jkind.Assert;
 
 public class MATLABArrayAccessExpr extends MATLABExpr {
 
-	
 	/** The array. */
 	public MATLABExpr array;
-	
+
 	/** The index. */
 	public MATLABExpr index;
-	
+
 	/**
 	 * Instantiates a new array access expr.
 	 *
@@ -26,7 +25,7 @@ public class MATLABArrayAccessExpr extends MATLABExpr {
 		this.array = array;
 		this.index = index;
 	}
-	
+
 	@Override
 	public <T> T accept(MATLABExprVisitor<T> visitor) {
 		return visitor.visit(this);

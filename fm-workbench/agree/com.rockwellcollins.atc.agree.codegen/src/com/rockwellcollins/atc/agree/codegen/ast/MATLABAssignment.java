@@ -1,19 +1,19 @@
 package com.rockwellcollins.atc.agree.codegen.ast;
 
-import jkind.Assert;
-
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABExpr;
 import com.rockwellcollins.atc.agree.codegen.ast.expr.MATLABIdExpr;
 import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
 
+import jkind.Assert;
+
 public class MATLABAssignment extends MATLABStatement {
 	public final MATLABIdExpr varToAssign;
-	public final MATLABExpr expr; 
-	
+	public final MATLABExpr expr;
+
 	public MATLABAssignment(MATLABIdExpr varExpr, MATLABExpr expr) {
 		Assert.isNotNull(varExpr);
 		Assert.isNotNull(expr);
-		this.varToAssign = varExpr;
+		varToAssign = varExpr;
 		this.expr = expr;
 	}
 

@@ -30,16 +30,16 @@ import com.rockwellcollins.atc.agree.codegen.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.codegen.translation.LustreToMATLABTranslator;
 
 public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> {
-	
+
 	MATLABType type = null;
-	
+
 	public MATLABTypeCastExprVisitor() {
-	} 
-	
+	}
+
 	public MATLABTypeCastExprVisitor(MATLABType type) {
 		this.type = type;
-	} 
-	
+	}
+
 	@Override
 	public MATLABExpr visit(MATLABBinaryExpr e) {
 		e.left = e.left.accept(this);
@@ -93,10 +93,9 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 			case PreferenceConstants.INT_INT64:
 				return new MATLABTypeCastExpr(new MATLABInt64Type(), e);
 			case PreferenceConstants.INT_UINT64:
-				return new MATLABTypeCastExpr(new MATLABUInt64Type(), e);				
+				return new MATLABTypeCastExpr(new MATLABUInt64Type(), e);
 			default:
-				throw new IllegalArgumentException("Unknown int type: "
-						+ LustreToMATLABTranslator.intTypeStr);
+				throw new IllegalArgumentException("Unknown int type: " + LustreToMATLABTranslator.intTypeStr);
 			}
 		}
 	}
@@ -125,8 +124,7 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 			case PreferenceConstants.REAL_DOUBLE:
 				return new MATLABTypeCastExpr(new MATLABDoubleType(), e);
 			default:
-				throw new IllegalArgumentException("Unknown real type: "
-						+ LustreToMATLABTranslator.realTypeStr);
+				throw new IllegalArgumentException("Unknown real type: " + LustreToMATLABTranslator.realTypeStr);
 			}
 		}
 	}
@@ -145,7 +143,7 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 	public MATLABExpr visit(MATLABTypeInitExpr e) {
 		return e;
 	}
-	
+
 	public MATLABExpr visit(MATLABExpr e) {
 		return e.accept(this);
 	}
@@ -158,8 +156,7 @@ public class MATLABTypeCastExprVisitor implements MATLABExprVisitor<MATLABExpr> 
 	}
 
 	@Override
-	public MATLABExpr visit(
-			MATLABBusElementUpdateExpr e) {
+	public MATLABExpr visit(MATLABBusElementUpdateExpr e) {
 		e.value = e.value.accept(this);
 		return e;
 	}

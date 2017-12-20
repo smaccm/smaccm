@@ -7,11 +7,11 @@ import com.rockwellcollins.atc.agree.codegen.visitors.MATLABAstVisitor;
  * end
  */
 public class MATLABImpliesFunction extends MATLABSubFunction {
-	
+
 	public MATLABImpliesFunction() {
-		this.name = "impliesFunction";
+		name = "impliesFunction";
 	}
-	
+
 	@Override
 	public <T, S extends T> T accept(MATLABAstVisitor<T, S> visitor) {
 		return visitor.visit(this);

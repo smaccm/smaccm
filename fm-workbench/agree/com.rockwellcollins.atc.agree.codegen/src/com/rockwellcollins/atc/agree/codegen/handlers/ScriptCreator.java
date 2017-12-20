@@ -6,7 +6,7 @@ import java.io.FileReader;
 public abstract class ScriptCreator {
 	protected StringBuilder sb = new StringBuilder();
 
-
+	@Override
 	public String toString() {
 		return sb.toString();
 	}
@@ -20,27 +20,27 @@ public abstract class ScriptCreator {
 	protected void newline() {
 		write(seperator);
 	}
-	
-	protected void writeline(Object o){
+
+	protected void writeline(Object o) {
 		write(o);
 		newline();
 	}
-	
+
 	protected abstract void createScript() throws Exception;
-	
-	//copy script text from an existing file
-	protected void copyScript(String scriptFileName) throws Exception{
+
+	// copy script text from an existing file
+	protected void copyScript(String scriptFileName) throws Exception {
 		BufferedReader br = new BufferedReader(new FileReader("CommonScriptImplMdl.txt"));
 		try {
-		    String line = br.readLine();
+			String line = br.readLine();
 
-		    while (line != null) {
-		    	write(line);
-		    	newline();
-		        line = br.readLine();
-		    }
+			while (line != null) {
+				write(line);
+				newline();
+				line = br.readLine();
+			}
 		} finally {
-		    br.close();
+			br.close();
 		}
 	}
 }
