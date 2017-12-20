@@ -75,6 +75,7 @@ public class AgreeMenuListener implements IMenuListener {
 	private final IWorkbenchWindow window;
 	private final AnalysisResultTree tree;
 	private AgreeResultsLinker linker;
+	private AgreePatternListener patternListener = null;
 
 	public AgreeMenuListener(IWorkbenchWindow window, AnalysisResultTree tree) {
 		this.window = window;
@@ -126,7 +127,7 @@ public class AgreeMenuListener implements IMenuListener {
 				&& prefs.getBoolean(PreferenceConstants.PREF_SUPPORT) && result instanceof JKindResult) {
 			JKindResult jresult = (JKindResult) result;
 
-			Set<String> reqs = new HashSet<>();
+			Set<String> reqs = new HashSet<String>();
 			for (PropertyResult pr : jresult.getPropertyResults()) {
 				if (pr.getProperty() instanceof ValidProperty) {
 					ValidProperty vp = (ValidProperty) pr.getProperty();
@@ -138,7 +139,6 @@ public class AgreeMenuListener implements IMenuListener {
 			}
 			String nodeName = linker.getComponent(result).getName();
 			manager.add(new Action("View traceability matrix for " + nodeName) {
-				@Override
 				public void run() {
 					viewTraceabilityMatrix(jresult, reqs);
 				}
@@ -160,7 +160,6 @@ public class AgreeMenuListener implements IMenuListener {
 
 	private IAction addViewTraceabilityConsole(String text, IMenuManager manager, AnalysisResult result) {
 		return new Action(text) {
-			@Override
 			public void run() {
 				Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
 				if (tempRefMap == null) {
@@ -181,7 +180,7 @@ public class AgreeMenuListener implements IMenuListener {
 							out.println("Traceability for Valid Contract Guarantees");
 							printHLine(out, 2);
 							out.println("");
-							List<PropertyResult> allProperties = new ArrayList<>(
+							List<PropertyResult> allProperties = new ArrayList<PropertyResult>(
 									((JKindResult) result).getPropertyResults());
 							if (!allProperties.isEmpty()) {
 								for (PropertyResult prop : allProperties) {
@@ -201,27 +200,22 @@ public class AgreeMenuListener implements IMenuListener {
 		};
 	}
 
-	// Anitha added this displaying view support menu
 	private void addViewSupportMenu(IMenuManager manager, AnalysisResult result) {
 		IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
 		if (prefs.getString(PreferenceConstants.PREF_MODEL_CHECKER).equals(PreferenceConstants.MODEL_CHECKER_JKIND)
 				&& prefs.getBoolean(PreferenceConstants.PREF_SUPPORT)) {
 			if (!(result instanceof ConsistencyResult || result instanceof JRealizabilityResult)) {
 				if (result instanceof PropertyResult) {
-					if (((PropertyResult) result).getStatus().equals(jkind.api.results.Status.VALID)) {
-						if (!((PropertyResult) result).getParent().getName().contains("consistent")) {
-							manager.add(addViewSupportConsole("Set of Support", manager, result));
-						}
+					if (((PropertyResult) result).getProperty() instanceof ValidProperty) {
+						manager.add(addViewSupportConsole("Set of Support", manager, result));
 					}
 				}
 			}
 		}
 	}
 
-	// Anitha added this displaying support in console
 	private IAction addViewSupportConsole(String text, IMenuManager manager, AnalysisResult result) {
 		return new Action(text) {
-			@Override
 			public void run() {
 				Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
 				if (tempRefMap == null) {
@@ -240,7 +234,11 @@ public class AgreeMenuListener implements IMenuListener {
 				final Renaming renaming = tempRenaming;
 				showConsole(console);
 				console.clearConsole();
-				console.addPatternMatchListener(new AgreePatternListener(refMap));
+				if (patternListener != null) {
+					console.removePatternMatchListener(patternListener);
+				}
+				patternListener = new AgreePatternListener(refMap);
+				console.addPatternMatchListener(patternListener);
 				new Thread(new Runnable() {
 					@Override
 					public void run() {

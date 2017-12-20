@@ -14,6 +14,7 @@ import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.EventDataPortImpl;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -60,6 +61,7 @@ public class LustreAstBuilder {
 	protected static final String guarSuffix = "__GUARANTEE";
 	public static final String assumeSuffix = "__ASSUME";
 	protected static final String lemmaSuffix = "__LEMMA";
+	protected static final String assertSuffix = "__ASSERT";
 	protected static final String historyNodeName = "__HIST";
 	public static final String assumeHistSufix = assumeSuffix + historyNodeName;
 	protected static final String patternPropSuffix = "__PATTERN";
@@ -335,21 +337,39 @@ public class LustreAstBuilder {
 	}
 
 	protected static Node getConsistencyLustreNode(AgreeNode agreeNode, boolean withAssertions) {
+		final String stuffPrefix = "__STUFF";
 
 		List<Expr> assertions = new ArrayList<>();
 		List<VarDecl> locals = new ArrayList<>();
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
+		List<String> ivcs = new ArrayList<>();
 
 		Expr stuffConj = new BoolExpr(true);
 
+		int stuffAssumptionIndex = 0;
 		for (AgreeStatement assumption : agreeNode.assumptions) {
-			stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assumption.expr);
+			AgreeVar stuffAssumptionVar = new AgreeVar(stuffPrefix + assumeSuffix + stuffAssumptionIndex++,
+					NamedType.BOOL, assumption.reference, agreeNode.compInst, null);
+			locals.add(stuffAssumptionVar);
+			ivcs.add(stuffAssumptionVar.id);
+			IdExpr stuffAssumptionId = new IdExpr(stuffAssumptionVar.id);
+			equations.add(new Equation(stuffAssumptionId, assumption.expr));
+
+			stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, stuffAssumptionId);
 		}
 
+		int stuffGuaranteeIndex = 0;
 		for (AgreeStatement guarantee : agreeNode.guarantees) {
-			stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, guarantee.expr);
+			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++,
+					NamedType.BOOL, guarantee.reference, agreeNode.compInst, null);
+			locals.add(stuffGuaranteeVar);
+			ivcs.add(stuffGuaranteeVar.id);
+			IdExpr stuffGuaranteeId = new IdExpr(stuffGuaranteeVar.id);
+			equations.add(new Equation(stuffGuaranteeId, guarantee.expr));
+
+			stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, stuffGuaranteeId);
 		}
 
 		if (withAssertions) {
@@ -366,17 +386,29 @@ public class LustreAstBuilder {
 		// histConj = new BinaryExpr(histConj, BinaryOp.AND, guarantee.expr);
 		// }
 
+		int stuffAssertionIndex = 0;
 		if (withAssertions) {
 			for (AgreeStatement assertion : agreeNode.assertions) {
-				stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
+				AgreeVar stuffAssertionVar = new AgreeVar(stuffPrefix + assertSuffix + stuffAssertionIndex++,
+						NamedType.BOOL, assertion.reference, null, null);
+				locals.add(stuffAssertionVar);
+				IdExpr stuffAssertionId = new IdExpr(stuffAssertionVar.id);
+				equations.add(new Equation(stuffAssertionId, assertion.expr));
+
+				stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, stuffAssertionId);
 			}
 		} else {
 			// perhaps we should break out eq statements into implementation
-			// equations
-			// and type equations. This would clear this up
+			// equations  and type equations. That would clear this up.
 			for (AgreeStatement assertion : agreeNode.assertions) {
 				if (AgreeUtils.referenceIsInContract(assertion.reference, agreeNode.compInst)) {
-					stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, assertion.expr);
+					AgreeVar stuffAssertionVar = new AgreeVar(stuffPrefix + assertSuffix + stuffAssertionIndex++,
+							NamedType.BOOL, assertion.reference, null, null);
+					locals.add(stuffAssertionVar);
+					IdExpr stuffAssertionId = new IdExpr(stuffAssertionVar.id);
+					equations.add(new Equation(stuffAssertionId, assertion.expr));
+
+					stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, stuffAssertionId);
 				}
 			}
 		}
@@ -415,7 +447,7 @@ public class LustreAstBuilder {
 		EObject classifier = agreeNode.compInst.getComponentClassifier();
 
 		AgreeVar countVar = new AgreeVar("__COUNT", NamedType.INT, null, null, null);
-		AgreeVar stuffVar = new AgreeVar("__STUFF", NamedType.BOOL, null, null, null);
+		AgreeVar stuffVar = new AgreeVar(stuffPrefix, NamedType.BOOL, null, null, null);
 		AgreeVar histVar = new AgreeVar("__HIST", NamedType.BOOL, null, null, null);
 		AgreeVar propVar = new AgreeVar("__PROP", NamedType.BOOL, classifier, agreeNode.compInst, null);
 
@@ -455,6 +487,7 @@ public class LustreAstBuilder {
 		builder.addEquations(equations);
 		builder.addProperties(properties);
 		builder.addAssertions(assertions);
+		builder.addIvcs(ivcs);
 
 		Node node = builder.build();
 
