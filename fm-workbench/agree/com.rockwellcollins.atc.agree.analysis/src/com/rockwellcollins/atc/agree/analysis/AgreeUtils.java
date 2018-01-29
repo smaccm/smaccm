@@ -56,6 +56,7 @@ import jkind.lustre.IdExpr;
 import jkind.lustre.IntExpr;
 import jkind.lustre.NamedType;
 import jkind.lustre.RealExpr;
+import jkind.lustre.RecordAccessExpr;
 import jkind.lustre.RecordExpr;
 import jkind.lustre.RecordType;
 import jkind.lustre.Type;
@@ -120,6 +121,18 @@ public class AgreeUtils {
 			return ((ComponentImplementation) compInst.getComponentClassifier()).getType();
 		} catch (ClassCastException e) {
 			return (ComponentType) compInst.getComponentClassifier();
+		}
+	}
+
+	public static IdExpr getExprRoot(Expr expr) {
+
+		if (expr instanceof IdExpr) {
+			return (IdExpr) expr;
+		} else if (expr instanceof RecordAccessExpr) {
+			RecordAccessExpr exprRec = (RecordAccessExpr) expr;
+			return (IdExpr) exprRec.record;
+		} else {
+			throw new AgreeException("Cannot access root of expression.");
 		}
 	}
 
