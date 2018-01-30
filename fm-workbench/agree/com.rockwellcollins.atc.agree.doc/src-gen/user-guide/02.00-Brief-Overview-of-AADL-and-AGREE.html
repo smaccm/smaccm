@@ -22,7 +22,7 @@
 </figure>
 <p>In the model in Figure <a href="#fig:toy_compositional">1</a>, we want to show that the system level property (<code>Output &lt; 50</code>) holds, given the guarantees provided by the components and the system assumption (<code>Input &lt; 10</code>). This toy example has one interesting feature: the property is <em>true</em> if all of the signals have type integer and it is <em>false</em> if they have floating point types (can you see why?).</p>
 <p>In order to represent this model in AADL, we construct an AADL package. Packages are the structuring mechanism in AADL; they define a namespace where we can place definitions. We define the subcomponents first, then the system component. The complete AADL is shown below.</p>
-<pre><code>package Integer_Toy
+<pre numbers="left"><code>package Integer_Toy
     public
     with Base_Types;
 

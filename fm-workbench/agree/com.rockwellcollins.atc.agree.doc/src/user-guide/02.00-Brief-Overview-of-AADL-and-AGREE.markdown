@@ -22,7 +22,7 @@ Packages are the structuring mechanism in AADL; they define a namespace
 where we can place definitions. We define the subcomponents first, then
 the system component. The complete AADL is shown below.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{numbers=left}
 package Integer_Toy
     public
     with Base_Types;

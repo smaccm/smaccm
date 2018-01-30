@@ -74,6 +74,9 @@
 			<arg value="pandoc-crossref"/>
 			<arg value="-f"/>
 			<arg value="markdown"/>
+			<arg value="--listings"/>
+			<arg value="-H"/>
+			<arg value="../../listings-setup.tex"/>
 			<arg value="--latex-engine=xelatex"/>
 			<arg value="-V"/>
 			<arg value="lof"/>
