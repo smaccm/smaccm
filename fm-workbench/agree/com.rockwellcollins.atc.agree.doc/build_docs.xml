@@ -76,7 +76,7 @@
 			<arg value="markdown"/>
 			<arg value="--listings"/>
 			<arg value="-H"/>
-			<arg value="../../listings-setup.tex"/>
+			<arg value="../../tex-listings-setup.txt"/>
 			<arg value="--latex-engine=xelatex"/>
 			<arg value="-V"/>
 			<arg value="lof"/>
