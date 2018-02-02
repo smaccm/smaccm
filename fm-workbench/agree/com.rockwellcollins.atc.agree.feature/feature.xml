@@ -121,4 +121,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          version="2.1.3.qualifier"
          unpack="false"/>
 
+   <plugin
+         id="com.rockwellcollins.atc.agree.doc"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"/>
+
 </feature>
