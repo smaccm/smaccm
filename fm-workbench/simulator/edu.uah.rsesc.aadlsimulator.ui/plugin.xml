@@ -158,6 +158,10 @@
           id="edu.uah.rsesc.aadlsimulator.ui.commands.simulatePossibilities"
           name="Simulate Possibilities...">
     </command>
+    <command
+          id="edu.uah.rsesc.aadlsimulator.ui.commands.showInSimulationVariablesView"
+          name="Show in Simulation Variables View">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -258,6 +262,10 @@
                 property="edu.uah.rsesc.aadlsimulator.ui.canStepForward">
           </test>
        </enabledWhen>
+    </handler>
+    <handler
+          class="edu.uah.rsesc.aadlsimulator.ui.handlers.ShowInSimulationVariablesViewHandler"
+          commandId="edu.uah.rsesc.aadlsimulator.ui.commands.showInSimulationVariablesView">
     </handler>
  </extension>
  <extension
@@ -494,6 +502,17 @@
              style="toggle">
        </command>
     </menuContribution>
+    <menuContribution
+          allPopups="false"
+          locationURI="popup:org.osate.ge.editor.AgeDiagramEditor?after=third_party">
+       <command
+             commandId="edu.uah.rsesc.aadlsimulator.ui.commands.showInSimulationVariablesView"
+             style="push">
+          <visibleWhen
+                checkEnabled="true">
+          </visibleWhen>
+       </command>
+    </menuContribution>
  </extension>
  <extension
        point="org.eclipse.ui.perspectiveExtensions">
@@ -510,12 +529,6 @@
           class="edu.uah.rsesc.aadlsimulator.ui.SimulatorTooltipContributor"
           priority="50">
     </tooltipContributor>
- </extension>
- <extension
-       point="org.osate.ge.commands">
-    <command
-          class="edu.uah.rsesc.aadlsimulator.ui.ShowInSimulationVariablesViewCommand">
-    </command>
  </extension>
  <extension
        point="org.eclipse.ui.services">
