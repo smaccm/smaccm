@@ -3,6 +3,7 @@ package com.rockwellcollins.atc.agree.analysis;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,35 +35,59 @@ import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
 public class EphemeralImplementationUtil {
 
+	/**
+	 * The {@link IProgressMonitor} to inform regarding steps completed during the execution of the commands for
+	 * creation and deletion of the ephemeral implementation packages.
+	 */
 	protected final IProgressMonitor monitor;
 
+	/**
+	 * List of {@link Resource} (AADL files) created to contain the packages containing the ephemeral implementations.
+	 * <p>
+	 * Resources are accumulated as ephemeral implementations are created and deleted at cleanup.
+	 */
 	private List<Resource> ephemeralResources = new ArrayList<>();
 
+	/**
+	 * Create an instance of the utility.
+	 *
+	 * @param monitor The {@link IProgressMonitor} used for informing the user interface of progress on the commands.
+	 * The monitor is assumed to have lifecycle encompassing that of this utility instance.
+	 */
 	public EphemeralImplementationUtil(IProgressMonitor monitor) {
 		this.monitor = monitor;
 	}
 
-	/*
-	 * An error message that is filled by potential methods that
-	 * instantiate the system and raises an error. This message
-	 * is then show in the error dialog when an instantiation error
-	 * is raised.
+	/**
+	 * An error message that is filled by potential methods that instantiate the system and raises an error. This
+	 * message is then show in the error dialog when an instantiation error is raised.
 	 */
 	private static String errorMessage = null;
 
-	/*
-	 * To keep under control the error messages and ease
-	 * debug, we encapsulate the error message string
-	 * and access it only through methods (setters and getters).
+	/**
+	 * To keep under control the error messages and ease debug, we encapsulate the error message string and access it
+	 * only through methods (setters and getters).
 	 */
 	public static void setErrorMessage(String s) {
 		errorMessage = s;
 	}
 
+	/**
+	 * Fetch the current error message.
+	 *
+	 * @return The current error message string.
+	 */
 	public static String getErrorMessage() {
 		return errorMessage;
 	}
 
+	/**
+	 * Generate a unique {@link URI} for a resource to contain the ephemeral implementation.
+	 *
+	 * @param ct The {@link ComponentType} whose name to use as a basis for naming the resource to contain an
+	 *     ephemeral implementation of component type ct.
+	 * @return A URI guaranteed to be unique in the workspace.
+	 */
 	private static URI getEphemeralImplURI(ComponentType ct) {
 		URI ctURI = ct.eResource().getURI();
 		String extension = ctURI.fileExtension();
@@ -76,6 +101,16 @@ public class EphemeralImplementationUtil {
 		return implURI;
 	}
 
+	/**
+	 * Generate an ephemeral {@link ComponentImplementation} matching the subtype of the given {@link ComponentType}.
+	 * <p>
+	 * Ephemerally generated component implementations are placed it in an ephemeral {@link Resource}.  The ephemeral
+	 * resources are intended to have short lifecycles and deleted by the {@link cleanup} method.
+	 *
+	 * @param ct The component type for which to create an ephemeral implementation.
+	 * @return A component implementation for the given component type.
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unchecked")
 	public ComponentImplementation generateEphemeralCompImplFromType(ComponentType ct)
 			throws Exception {
@@ -127,6 +162,18 @@ public class EphemeralImplementationUtil {
 		return result;
 	}
 
+	/**
+	 * Internal method to actually create the ephemeral component implementation and containing resource.
+	 * <p>
+	 * This method is intended to by invoked only from the command stack so that editing permissions are managed
+	 * through the transactional editing domain.
+	 *
+	 * @param ct The {@link ComponentType} for which to create an ephemeral implementation.
+	 * @param aadlResource The {@link Resource} in which to place the ephemeral implementation and it containing
+	 *     {@link AadlPackage}.
+	 * @return A {@link ComponentImplementation} matching the given component type.
+	 * @throws InterruptedException
+	 */
 	private ComponentImplementation createComponentImplementationInternal(ComponentType ct, Resource aadlResource)
 			throws InterruptedException {
 		// Create a package and public section to contain the created
@@ -177,7 +224,7 @@ public class EphemeralImplementationUtil {
 		compImpl.setType(ct);
 		compImpl.setName(ct.getName() + ".wrapper");
 
-		// aadlResource.getContents().add(compImpl);
+		// Add the package and its contents to the resource
 		aadlResource.getContents().add(aadlPackage);
 
 		// Needed to save the root object because we may attach warnings to the
@@ -206,6 +253,13 @@ public class EphemeralImplementationUtil {
 		return compImpl;
 	}
 
+	/**
+	 * Delete the accumulated ephemeral component implementations by deleting their containing {@link Resource}.
+	 * <p>
+	 * This method is intended to be called immediately prior to the instance of this utility going out of scope.
+	 * However, it may be called multiple times, deleting the ephemeral implementations and resource accumulated to
+	 * that point.
+	 */
 	public void cleanup() {
 		final TransactionalEditingDomain domain = TransactionalEditingDomain.Registry.INSTANCE
 				.getEditingDomain("org.osate.aadl2.ModelEditingDomain");
@@ -215,8 +269,11 @@ public class EphemeralImplementationUtil {
 			@Override
 			protected void doExecute() {
 				try {
-					for (Resource res : ephemeralResources) {
+					Iterator<Resource> iter = ephemeralResources.iterator();
+					while (iter.hasNext()) {
+						Resource res = iter.next();
 						res.delete(Collections.EMPTY_MAP);
+						iter.remove();
 					}
 				} catch (IOException e) {
 					setErrorMessage(e.getMessage());
