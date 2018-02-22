@@ -252,8 +252,10 @@ public class AgreeUtils {
 					AgreePackage.eINSTANCE.getAgreeContractSubclause());
 			for (AnnexSubclause annex : annexes) {
 				EObject container = getClosestContainerOfType(annex, ComponentImplementation.class);
-				if (compImpl.getName().equals(((ComponentImplementation) container).getName())) {
-					return true;
+				if (container instanceof ComponentImplementation) {
+					if (compImpl.getName().equals(((ComponentImplementation) container).getName())) {
+						return true;
+					}
 				}
 			}
 		}
@@ -261,7 +263,7 @@ public class AgreeUtils {
 	}
 
 	public static EObject getClosestContainerOfType(EObject obj, Class<?> c) {
-		while (!c.isInstance(obj)) {
+		while (!c.isInstance(obj) && obj.eContainer() != null) {
 			obj = obj.eContainer();
 		}
 		return obj;

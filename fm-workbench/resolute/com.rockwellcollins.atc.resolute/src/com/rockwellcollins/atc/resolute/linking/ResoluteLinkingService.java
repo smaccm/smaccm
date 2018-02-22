@@ -1,14 +1,8 @@
 package com.rockwellcollins.atc.resolute.linking;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -45,14 +39,12 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     }
 
     private EObject getLinkedObject(EObject context, EReference reference, String name) {
-//		name = name.replaceAll("::", ".");
-        
         if (context instanceof PropertyValue) {
             return getUnitLiteral(context, name);
         }
 
         if (context instanceof FnCallExpr) {
-            return getFunctionDefinition(context, name);
+        		return getFromScope(context, reference, name);
         }
 
         if (context instanceof ClaimArg) {
@@ -90,12 +82,7 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
                 }
             }
             
-           // e = EMFIndexRetrieval.getEObjectOfType(context, reference.getEReferenceType(), name);
-           // if (e != null) {
-           //     return e;
-           // }
-
-            e = getConstantDefinition(context, name);
+            e = getFromScope(context, reference, name);
             if (e != null) {
                 return e;
             }
@@ -118,63 +105,13 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 		}
 	}
 
-    private static EObject getFunctionDefinition(EObject context, String name) {
-        return getNamedElementByType(context, name, ResolutePackage.Literals.FUNCTION_DEFINITION);
-    }
-
-    private static EObject getConstantDefinition(EObject context, String name) {
-        return getNamedElementByType(context, name, ResolutePackage.Literals.CONSTANT_DEFINITION);
-    }
-
-    private static EObject getNamedElementByType(EObject context, String name, EClass eclass) {
-        // This code will only link to objects in the projects visible from the current project
-		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
-				eclass);
-
-        String contextProject = context.eResource().getURI().segment(1);
-        List<String> visibleProjects = getVisibleProjects(contextProject);
-
-        for (IEObjectDescription eod : allObjectTypes) {
-            if (sameName(eod, name) && isVisible(eod, visibleProjects)) {
-                EObject res = eod.getEObjectOrProxy();
-                res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-                if (!Aadl2Util.isNull(res)) {
-                    return res;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private static boolean sameName(IEObjectDescription eod, String name) {
-        return eod.getName().getLastSegment().equalsIgnoreCase(name);
-    }
-
-    private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {
-        URI uri = eod.getEObjectURI();
-        String project = uri.segment(1);
-        return visibleProjects.contains(project);
-    }
-
-    private static List<String> getVisibleProjects(String contextProjectName) {
-        List<String> result = new ArrayList<>();
-        result.add(contextProjectName);
-
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject contextProject = root.getProject(URI.decode(contextProjectName));
-		if (!contextProject.exists() || !contextProject.isAccessible() || !contextProject.isOpen())
-			return result;
-        try {
-            IProjectDescription description = contextProject.getDescription();
-            for (IProject referencedProject : description.getReferencedProjects()) {
-                result.add(URI.encodeSegment(referencedProject.getName(), false));
-            }
-        } catch (CoreException ex) {
-            ex.printStackTrace();
-        }
-
-        return result;
+    private EObject getFromScope(EObject context, EReference reference, String name) {
+		for (IEObjectDescription description : getScope(context, reference).getAllElements()) {
+			if (!description.getName().isEmpty() && description.getName().getLastSegment().equals(name)) {
+				return description.getEObjectOrProxy();
+			}
+		}
+		return null;
     }
 
     final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
