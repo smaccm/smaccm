@@ -107,7 +107,7 @@ In AGREE annexes enumeration types may be defined using the keyword `enum`
 and a comma-separated list of enumerator identifiers.  For example:
 
 ~~~
-type card_suit = enum { spade, heart, club, diamond };
+enum card_suit = { spade, heart, club, diamond };
 
 eq color : card_suit;
 ~~~
