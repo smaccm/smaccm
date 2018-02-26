@@ -50,6 +50,7 @@ import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
+import com.rockwellcollins.atc.agree.analysis.EphemeralImplementationUtil;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
@@ -99,8 +100,8 @@ public abstract class VerifyHandler extends AadlHandler {
 
 	protected abstract boolean isRealizability();
 
-	protected SystemInstance getSysInstance(Element root) {
-		ComponentImplementation ci = getComponentImplementation(root);
+	protected SystemInstance getSysInstance(Element root, EphemeralImplementationUtil implUtil) {
+		ComponentImplementation ci = getComponentImplementation(root, implUtil);
 		try {
 			return InstantiateModel.buildInstanceModelFile(ci);
 		} catch (Exception e) {
@@ -109,13 +110,20 @@ public abstract class VerifyHandler extends AadlHandler {
 		}
 	}
 
-	private ComponentImplementation getComponentImplementation(Element root) {
+	private ComponentImplementation getComponentImplementation(Element root, EphemeralImplementationUtil implUtil) {
 		Classifier classifier = getOutermostClassifier(root);
 		if (isRealizability()) {
 			if (!(classifier instanceof ComponentType)) {
 				throw new AgreeException("Must select an AADL Component Type");
 			}
-			return AgreeUtils.compImplFromType((ComponentType) classifier);
+			ComponentImplementation result;
+			try {
+				result = implUtil.generateEphemeralCompImplFromType((ComponentType) classifier);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new AgreeException("Error creating component implementation.");
+			}
+			return result;
 		} else {
 			if (classifier instanceof ComponentImplementation) {
 				return (ComponentImplementation) classifier;
@@ -131,9 +139,9 @@ public abstract class VerifyHandler extends AadlHandler {
 				ComponentImplementation ci = cis.get(0);
 				Shell shell = getWindow().getShell();
 				String message = "User selected " + ct.getFullName() + ".\nRunning analysis on " + ci.getFullName()
-						+ " instead.";
+				+ " instead.";
 				shell.getDisplay()
-						.asyncExec(() -> MessageDialog.openInformation(shell, "Analysis information", message));
+				.asyncExec(() -> MessageDialog.openInformation(shell, "Analysis information", message));
 				return ci;
 			} else {
 				throw new AgreeException(
@@ -155,6 +163,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
 	@Override
 	protected IStatus runJob(Element root, IProgressMonitor monitor) {
+		EphemeralImplementationUtil implUtil = new EphemeralImplementationUtil(monitor);
 		// this flag is set by the rerun handler to prevent clearing the advice map
 		if (!calledFromRerun) {
 			rerunAdviceMap.clear();
@@ -165,7 +174,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		handlerService = getWindow().getService(IHandlerService.class);
 
 		try {
-			SystemInstance si = getSysInstance(root);
+			SystemInstance si = getSysInstance(root, implUtil);
 
 			AnalysisResult result;
 			CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
@@ -201,6 +210,8 @@ public abstract class VerifyHandler extends AadlHandler {
 		} catch (Throwable e) {
 			String messages = getNestedMessages(e);
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
+		} finally {
+			implUtil.cleanup();
 		}
 	}
 
@@ -394,31 +405,25 @@ public abstract class VerifyHandler extends AadlHandler {
 		 * otherwise we can get a deadlock condition if the UI tries to lock the document,
 		 * e.g., to pull up hover information.
 		 */
-		getWindow().getShell().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
-							.showView(AgreeResultsView.ID);
-					page.setInput(result, linker);
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
+		getWindow().getShell().getDisplay().asyncExec(() -> {
+			try {
+				AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
+						.showView(AgreeResultsView.ID);
+				page.setInput(result, linker);
+			} catch (PartInitException e) {
+				e.printStackTrace();
 			}
 		});
 	}
 
 	protected void clearView() {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
-							.showView(AgreeResultsView.ID);
-					page.setInput(new CompositeAnalysisResult("empty"), null);
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			try {
+				AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
+						.showView(AgreeResultsView.ID);
+				page.setInput(new CompositeAnalysisResult("empty"), null);
+			} catch (PartInitException e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -487,45 +492,33 @@ public abstract class VerifyHandler extends AadlHandler {
 	}
 
 	private void activateTerminateHandlers(final IProgressMonitor globalMonitor) {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				terminateActivation = handlerService.activateHandler(TERMINATE_ID, new TerminateHandler(monitorRef));
-				terminateAllActivation = handlerService.activateHandler(TERMINATE_ALL_ID,
-						new TerminateHandler(monitorRef, globalMonitor));
-			}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			terminateActivation = handlerService.activateHandler(TERMINATE_ID, new TerminateHandler(monitorRef));
+			terminateAllActivation = handlerService.activateHandler(TERMINATE_ALL_ID,
+					new TerminateHandler(monitorRef, globalMonitor));
 		});
 	}
 
 	private void deactivateTerminateHandlers() {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				handlerService.deactivateHandler(terminateActivation);
-				handlerService.deactivateHandler(terminateAllActivation);
-			}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			handlerService.deactivateHandler(terminateActivation);
+			handlerService.deactivateHandler(terminateAllActivation);
 		});
 	}
 
 	private void enableRerunHandler(final Element root) {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				IHandlerService handlerService = getHandlerService();
-				rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, VerifyHandler.this));
-			}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			IHandlerService handlerService = getHandlerService();
+			rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, VerifyHandler.this));
 		});
 	}
 
 	protected void disableRerunHandler() {
 		if (rerunActivation != null) {
-			getWindow().getShell().getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					IHandlerService handlerService = getHandlerService();
-					handlerService.deactivateHandler(rerunActivation);
-					rerunActivation = null;
-				}
+			getWindow().getShell().getDisplay().syncExec(() -> {
+				IHandlerService handlerService = getHandlerService();
+				handlerService.deactivateHandler(rerunActivation);
+				rerunActivation = null;
 			});
 		}
 	}
