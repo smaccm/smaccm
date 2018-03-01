@@ -1,7 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis.translation;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
@@ -24,6 +23,7 @@ import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
+import jkind.lustre.builders.ProgramBuilder;
 import jkind.translation.DistributePres;
 import jkind.translation.FlattenPres;
 import jkind.translation.InlineNodeCalls;
@@ -46,13 +46,15 @@ public class AgreeNodeToLustreContract {
 			types.add(new TypeDef(recType.id, type));
 		}
 
-		Program program = new Program(types, Collections.emptyList(), nodes);
-		Node node = InlineNodeCalls.program(program);
-		node = FlattenPres.node(node);
-		node = DistributePres.node(node);
-		node = OrderEquations.node(node);
+		Program program = new ProgramBuilder().addTypes(types).addNodes(nodes).build();
 
-		return node;
+		program = InlineNodeCalls.program(program);
+		program = FlattenPres.program(program);
+
+		Node main = DistributePres.node(program.getMainNode());
+		main = OrderEquations.node(main);
+
+		return main;
 	}
 
 	private static Node translateNode(AgreeNode agreeNode) {
