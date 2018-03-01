@@ -127,4 +127,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          install-size="0"
          version="2.1.3.qualifier"/>
 
+   <plugin
+         id="edu.uah.rsesc.agree.ge"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"/>
+         
+   <plugin
+         id="edu.uah.rsesc.agree.ge.ui"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"/>
 </feature>

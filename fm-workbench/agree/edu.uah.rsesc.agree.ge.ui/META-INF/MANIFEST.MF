@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AGREE UI extensions to the OSATE Graphical Editor
+Bundle-SymbolicName: edu.uah.rsesc.agree.ge.ui;singleton:=true
+Bundle-Version: 2.1.3.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.views.properties.tabbed,
+ org.eclipse.xtext.ui,
+ com.rockwellcollins.atc.agree,
+ org.osate.aadl2,
+ org.osate.ge,
+ org.osate.aadl2.edit,
+ org.osate.ui,
+ org.osate.annexsupport,
+ edu.uah.rsesc.agree.ge,
+ com.rockwellcollins.atc.agree.ui,
+ org.osate.xtext.aadl2.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
