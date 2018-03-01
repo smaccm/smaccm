@@ -24,6 +24,7 @@ package com.rockwellcollins.atc.tcg.lustre.visitors;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -215,7 +216,7 @@ public class GenerateUfcObligationsVisitor implements AstVisitor<ObligationSet, 
 
 		Program newProgram =
 				new Program(initialProgram.location, initialProgram.types,
-						initialProgram.constants, nodes, initialProgram.main);
+						initialProgram.constants, Collections.emptyList(), nodes, initialProgram.main);
 
 		return newProgram;
 	}
