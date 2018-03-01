@@ -53,13 +53,13 @@ public class AgreeAnnexUnparser implements AnnexUnparser {
 	@Override
 	public String unparseAnnexLibrary(AnnexLibrary library, String indent) {
 		library.setName(null);
-		return indent + getSerializer().serialize(library, SaveOptions.newBuilder().format().getOptions());
+		return indent + getSerializer().serialize(library);
 	}
 
 	@Override
 	public String unparseAnnexSubclause(AnnexSubclause subclause, String indent) {
 		subclause.setName(null);
-		return indent + getSerializer().serialize(subclause, SaveOptions.newBuilder().format().getOptions());
+		return indent + getSerializer().serialize(subclause);
 	}
 
 	public String unparseContract(AgreeContract agreeContract, String indent) {
