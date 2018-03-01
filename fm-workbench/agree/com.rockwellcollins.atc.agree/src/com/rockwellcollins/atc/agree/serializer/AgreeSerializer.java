@@ -27,6 +27,7 @@
 package com.rockwellcollins.atc.agree.serializer;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.serializer.ISerializationContext;
 import org.eclipse.xtext.serializer.impl.Serializer;
 
 //import com.google.inject.Guice;
@@ -62,15 +63,24 @@ public class AgreeSerializer extends Serializer {
 	private AgreeGrammarAccess grammarAccess;
 
 	@Override
-	@Deprecated
-	protected EObject getContext(EObject semanticObject) {
-		EObject result = null;
+	protected ISerializationContext getIContext(EObject semanticObject) {
+		ISerializationContext result = null;
 		if (semanticObject instanceof AgreeContractLibrary) {
-			result = grammarAccess.getAgreeLibraryRule();
+			for (final ISerializationContext o : contextFinder.findByContents(semanticObject, null)) {
+				if (o.getParserRule() == grammarAccess.getAgreeLibraryRule()) {
+					result = o;
+					break;
+				}
+			}
 		} else if (semanticObject instanceof AgreeContractSubclause) {
-			result = grammarAccess.getAgreeSubclauseRule();
+			for (final ISerializationContext o : contextFinder.findByContents(semanticObject, null)) {
+				if (o.getParserRule() == grammarAccess.getAgreeSubclauseRule()) {
+					result = o;
+					break;
+				}
+			}
 		} else {
-			result = super.getContext(semanticObject);
+			result = super.getIContext(semanticObject);
 		}
 		return result;
 	}

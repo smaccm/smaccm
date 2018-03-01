@@ -26,6 +26,7 @@
 
 package com.rockwellcollins.atc.agree.unparsing;
 
+import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
@@ -38,13 +39,12 @@ import com.rockwellcollins.atc.agree.serializer.AgreeSerializer;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
 public class AgreeAnnexUnparser implements AnnexUnparser {
-	@Inject
-	private ISerializer serializer;
+	@Inject private ISerializer serializer;
 
 	protected ISerializer getSerializer() {
 		if (serializer == null) {
-			Injector injector = AgreeActivator.getInstance()
-					.getInjector(AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
+			Injector injector = AgreeActivator.getInstance().getInjector(
+					AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
 			serializer = injector.getInstance(AgreeSerializer.class);
 		}
 		return serializer;
@@ -52,11 +52,13 @@ public class AgreeAnnexUnparser implements AnnexUnparser {
 
 	@Override
 	public String unparseAnnexLibrary(AnnexLibrary library, String indent) {
+		library.setName(null);
 		return indent + getSerializer().serialize(library);
 	}
 
 	@Override
 	public String unparseAnnexSubclause(AnnexSubclause subclause, String indent) {
+		subclause.setName(null);
 		return indent + getSerializer().serialize(subclause);
 	}
 
