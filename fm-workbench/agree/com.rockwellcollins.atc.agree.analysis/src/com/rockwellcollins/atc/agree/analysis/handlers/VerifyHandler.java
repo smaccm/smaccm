@@ -131,9 +131,9 @@ public abstract class VerifyHandler extends AadlHandler {
 				ComponentImplementation ci = cis.get(0);
 				Shell shell = getWindow().getShell();
 				String message = "User selected " + ct.getFullName() + ".\nRunning analysis on " + ci.getFullName()
-						+ " instead.";
+				+ " instead.";
 				shell.getDisplay()
-						.asyncExec(() -> MessageDialog.openInformation(shell, "Analysis information", message));
+				.asyncExec(() -> MessageDialog.openInformation(shell, "Analysis information", message));
 				return ci;
 			} else {
 				throw new AgreeException(
@@ -299,7 +299,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
 		List<String> properties = new ArrayList<>();
 
-		RenamingVisitor.addRenamings(lustreProgram, renaming, layout);
+		RenamingVisitor.addRenamings(lustreProgram, renaming, compInst, layout);
 		addProperties(renaming, properties, mainNode, agreeProgram);
 
 		for (AgreeAutomater aa : automaters) {
@@ -394,31 +394,25 @@ public abstract class VerifyHandler extends AadlHandler {
 		 * otherwise we can get a deadlock condition if the UI tries to lock the document,
 		 * e.g., to pull up hover information.
 		 */
-		getWindow().getShell().getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
-							.showView(AgreeResultsView.ID);
-					page.setInput(result, linker);
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
+		getWindow().getShell().getDisplay().asyncExec(() -> {
+			try {
+				AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
+						.showView(AgreeResultsView.ID);
+				page.setInput(result, linker);
+			} catch (PartInitException e) {
+				e.printStackTrace();
 			}
 		});
 	}
 
 	protected void clearView() {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
-							.showView(AgreeResultsView.ID);
-					page.setInput(new CompositeAnalysisResult("empty"), null);
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			try {
+				AgreeResultsView page = (AgreeResultsView) getWindow().getActivePage()
+						.showView(AgreeResultsView.ID);
+				page.setInput(new CompositeAnalysisResult("empty"), null);
+			} catch (PartInitException e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -487,45 +481,33 @@ public abstract class VerifyHandler extends AadlHandler {
 	}
 
 	private void activateTerminateHandlers(final IProgressMonitor globalMonitor) {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				terminateActivation = handlerService.activateHandler(TERMINATE_ID, new TerminateHandler(monitorRef));
-				terminateAllActivation = handlerService.activateHandler(TERMINATE_ALL_ID,
-						new TerminateHandler(monitorRef, globalMonitor));
-			}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			terminateActivation = handlerService.activateHandler(TERMINATE_ID, new TerminateHandler(monitorRef));
+			terminateAllActivation = handlerService.activateHandler(TERMINATE_ALL_ID,
+					new TerminateHandler(monitorRef, globalMonitor));
 		});
 	}
 
 	private void deactivateTerminateHandlers() {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				handlerService.deactivateHandler(terminateActivation);
-				handlerService.deactivateHandler(terminateAllActivation);
-			}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			handlerService.deactivateHandler(terminateActivation);
+			handlerService.deactivateHandler(terminateAllActivation);
 		});
 	}
 
 	private void enableRerunHandler(final Element root) {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				IHandlerService handlerService = getHandlerService();
-				rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, VerifyHandler.this));
-			}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			IHandlerService handlerService = getHandlerService();
+			rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, VerifyHandler.this));
 		});
 	}
 
 	protected void disableRerunHandler() {
 		if (rerunActivation != null) {
-			getWindow().getShell().getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					IHandlerService handlerService = getHandlerService();
-					handlerService.deactivateHandler(rerunActivation);
-					rerunActivation = null;
-				}
+			getWindow().getShell().getDisplay().syncExec(() -> {
+				IHandlerService handlerService = getHandlerService();
+				handlerService.deactivateHandler(rerunActivation);
+				rerunActivation = null;
 			});
 		}
 	}

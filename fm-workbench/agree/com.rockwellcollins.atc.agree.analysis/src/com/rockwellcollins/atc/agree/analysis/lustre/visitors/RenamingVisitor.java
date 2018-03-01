@@ -7,6 +7,7 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.SystemImplementation;
+import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
@@ -32,18 +33,22 @@ import jkind.lustre.visitors.AstIterVisitor;
 public class RenamingVisitor extends AstIterVisitor {
 
 	private final AgreeRenaming renaming;
+	private final ComponentInstance rootInstance;
 	private final AgreeLayout layout;
 	private final Program program;
 	private boolean isMainNode;
 	private String nodeName;
 
-	public static void addRenamings(Program program, AgreeRenaming renaming, AgreeLayout layout) {
-		RenamingVisitor visitor = new RenamingVisitor(program, renaming, layout);
+	public static void addRenamings(Program program, AgreeRenaming renaming, ComponentInstance rootInstance,
+			AgreeLayout layout) {
+		RenamingVisitor visitor = new RenamingVisitor(program, renaming, rootInstance, layout);
 		visitor.visit(program);
 	}
 
-	private RenamingVisitor(Program program, AgreeRenaming renaming, AgreeLayout layout) {
+	private RenamingVisitor(Program program, AgreeRenaming renaming, ComponentInstance rootInstance,
+			AgreeLayout layout) {
 		this.renaming = renaming;
+		this.rootInstance = rootInstance;
 		this.layout = layout;
 		this.program = program;
 	}
@@ -76,7 +81,7 @@ public class RenamingVisitor extends AstIterVisitor {
 	public Void visit(VarDecl e) {
 		if (e instanceof AgreeVar) {
 			AgreeVar var = (AgreeVar) e;
-			String category = getCategory(var);
+			String category = getCategory(rootInstance, var);
 			String refStr = getReferenceStr(var);
 
 			if (isMainNode && var.reference != null) {
@@ -110,7 +115,7 @@ public class RenamingVisitor extends AstIterVisitor {
 
 	private String getReferenceStr(AgreeVar var) {
 
-		String prefix = getCategory(var);
+		String prefix = getCategory(rootInstance, var);
 		if (prefix == null) {
 			return null;
 		}
@@ -163,11 +168,12 @@ public class RenamingVisitor extends AstIterVisitor {
 		throw new AgreeException("Unhandled reference type: '" + reference.getClass().getName() + "'");
 	}
 
-	public static String getCategory(AgreeVar var) {
+	public static String getCategory(ComponentInstance rootInstance, AgreeVar var) {
 		if (var.compInst == null || var.reference == null) {
 			return null;
 		}
-		return LustreAstBuilder.getRelativeLocation(var.compInst.getInstanceObjectPath());
+		return LustreAstBuilder.getRelativeLocation(rootInstance.getInstanceObjectPath(),
+				var.compInst.getInstanceObjectPath());
 	}
 
 }

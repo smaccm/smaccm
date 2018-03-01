@@ -494,12 +494,14 @@ public class LustreAstBuilder {
 
 	}
 
-	public static String getRelativeLocation(String location) {
-		int dotIndex = location.indexOf(".");
-		if (dotIndex < 0) {
+	public static String getRelativeLocation(String rootLocation, String location) {
+		if (!location.contains(".") || location.equalsIgnoreCase(rootLocation)) {
 			return "";
 		}
-		return location.substring(dotIndex + 1);
+		if (location.toUpperCase().startsWith(rootLocation.toUpperCase())) {
+			return location.substring(rootLocation.length() + 1);
+		}
+		return "";
 	}
 
 	protected static Equation getHist(IdExpr histId, Expr expr) {
