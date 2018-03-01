@@ -15,6 +15,7 @@ import jkind.lustre.BoolExpr;
 import jkind.lustre.CastExpr;
 import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
+import jkind.lustre.FunctionCallExpr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
@@ -92,6 +93,15 @@ public class IdGatherer implements ExprVisitor<Set<String>> {
 	@Override
 	public Set<String> visit(IntExpr e) {
 		return Collections.emptySet();
+	}
+
+	@Override
+	public Set<String> visit(FunctionCallExpr e) {
+		Set<String> ids = new HashSet<>();
+		for (Expr expr : e.args) {
+			ids.addAll(expr.accept(this));
+		}
+		return ids;
 	}
 
 	@Override
