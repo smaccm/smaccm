@@ -93,7 +93,7 @@ public class GenerateUfcObligationsVisitor implements AstVisitor<ObligationSet, 
 	public static final String TRAP_PROP_PREFIX = "TCG_TRAP_PROP_";
 	public static final String GUARANTEE_PREFIX = "__GUARANTEE";
 
-	private TypeReconstructor typeReconstructor = new TypeReconstructor();
+	private TypeReconstructor typeReconstructor;
 	private Node currentNode;
 	boolean generateForMainNodeObligationsOnly = true;
 	boolean generateGuaranteeObligations = true;
@@ -244,6 +244,7 @@ public class GenerateUfcObligationsVisitor implements AstVisitor<ObligationSet, 
 
 	@Override
 	public ObligationSet visit(Node node) {
+		typeReconstructor.setNodeContext(node);
 		if (node.id.equals(initialProgram.main) ||
 				!this.generateForMainNodeObligationsOnly) {
 			typeReconstructor.setNodeContext(node);
