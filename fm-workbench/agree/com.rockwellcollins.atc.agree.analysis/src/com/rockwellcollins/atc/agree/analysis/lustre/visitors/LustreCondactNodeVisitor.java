@@ -37,6 +37,7 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
+import jkind.lustre.builders.ProgramBuilder;
 import jkind.lustre.visitors.ExprMapVisitor;
 import jkind.lustre.visitors.TypeReconstructor;
 
@@ -138,9 +139,10 @@ public class LustreCondactNodeVisitor extends ExprMapVisitor {
 
 	private LustreCondactNodeVisitor(AgreeProgram agreeProgram, Node node) {
 		List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
-		Program program = new Program(types, null, agreeProgram.globalLustreNodes, agreeProgram.topNode.id);
+		Program program = new ProgramBuilder().addTypes(types).addNodes(agreeProgram.globalLustreNodes)
+				.setMain(agreeProgram.topNode.id).build();
 		globalLustreNodeNames
-				.addAll(agreeProgram.globalLustreNodes.stream().map(n -> n.id).collect(Collectors.toSet()));
+		.addAll(agreeProgram.globalLustreNodes.stream().map(n -> n.id).collect(Collectors.toSet()));
 		typeReconstructor = new TypeReconstructor(program);
 		typeReconstructor.setNodeContext(node);
 	}
