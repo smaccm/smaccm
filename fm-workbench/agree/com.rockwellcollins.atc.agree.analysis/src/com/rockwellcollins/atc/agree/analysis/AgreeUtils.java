@@ -17,23 +17,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
-import org.osate.aadl2.Aadl2Factory;
 import org.osate.aadl2.AnnexSubclause;
-import org.osate.aadl2.BusType;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DeviceType;
 import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.ProcessType;
-import org.osate.aadl2.ProcessorType;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SubprogramType;
-import org.osate.aadl2.SystemType;
-import org.osate.aadl2.ThreadGroupType;
-import org.osate.aadl2.ThreadType;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
@@ -252,8 +243,10 @@ public class AgreeUtils {
 					AgreePackage.eINSTANCE.getAgreeContractSubclause());
 			for (AnnexSubclause annex : annexes) {
 				EObject container = getClosestContainerOfType(annex, ComponentImplementation.class);
-				if (compImpl.getName().equals(((ComponentImplementation) container).getName())) {
-					return true;
+				if (container instanceof ComponentImplementation) {
+					if (compImpl.getName().equals(((ComponentImplementation) container).getName())) {
+						return true;
+					}
 				}
 			}
 		}
@@ -261,7 +254,7 @@ public class AgreeUtils {
 	}
 
 	public static EObject getClosestContainerOfType(EObject obj, Class<?> c) {
-		while (!c.isInstance(obj)) {
+		while (!c.isInstance(obj) && obj.eContainer() != null) {
 			obj = obj.eContainer();
 		}
 		return obj;
@@ -322,34 +315,6 @@ public class AgreeUtils {
 			globalURIEditorOpener = injector.getInstance(GlobalURIEditorOpener.class);
 		}
 		return globalURIEditorOpener;
-	}
-
-	public static ComponentImplementation compImplFromType(ComponentType ct) {
-		ComponentImplementation ci;
-		if (ct instanceof ThreadType) {
-			ci = Aadl2Factory.eINSTANCE.createThreadImplementation();
-		} else if (ct instanceof ThreadGroupType) {
-			ci = Aadl2Factory.eINSTANCE.createThreadGroupImplementation();
-		} else if (ct instanceof ProcessType) {
-			ci = Aadl2Factory.eINSTANCE.createProcessImplementation();
-		} else if (ct instanceof SubprogramType) {
-			ci = Aadl2Factory.eINSTANCE.createSubprogramImplementation();
-		} else if (ct instanceof ProcessorType) {
-			ci = Aadl2Factory.eINSTANCE.createProcessorImplementation();
-		} else if (ct instanceof BusType) {
-			ci = Aadl2Factory.eINSTANCE.createBusImplementation();
-		} else if (ct instanceof DeviceType) {
-			ci = Aadl2Factory.eINSTANCE.createDeviceImplementation();
-		} else if (ct instanceof SystemType) {
-			ci = Aadl2Factory.eINSTANCE.createSystemImplementation();
-		} else {
-			throw new AgreeException("Unhandled component type: " + ct.getClass().toString());
-		}
-		ci.setName(ct.getName() + ".wrapper");
-		ci.setType(ct);
-		ct.eResource().getContents().add(ci);
-
-		return ci;
 	}
 
 	public static boolean typeMatchesBool(NamedType type) {

@@ -75,6 +75,7 @@ import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -671,7 +672,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 			if (sourPort instanceof DataSubcomponent || destPort instanceof DataSubcomponent) {
 				AgreeLogger.logWarning("unable to reason about connection '" + conn.getName()
-						+ "' because it connects to a data subcomponent");
+				+ "' because it connects to a data subcomponent");
 				continue;
 			}
 
@@ -703,7 +704,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				if (!matches((ConnectionEnd) sourVar.reference, (ConnectionEnd) destVar.reference)) {
 					AgreeLogger.logWarning(
 							"Connection '" + conn.getName() + "' has ports '" + sourVar.id.replace(dotChar, ".")
-									+ "' and '" + destVar.id.replace(dotChar, ".") + "' of differing type");
+							+ "' and '" + destVar.id.replace(dotChar, ".") + "' of differing type");
 					continue;
 				}
 
@@ -1636,6 +1637,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (namedEl instanceof ConstStatement) {
 			// evaluate the constant
 			result = doSwitch(((ConstStatement) namedEl).getExpr());
+		} else if (namedEl instanceof NamedID) {
+			// Enumeration types get lifted to Lustre global types; accordingly
+			// lift the enumerators to global
+			jKindVar = namedEl.getName();
+			result = new IdExpr(jKindVar);
 		} else {
 			jKindVar = jKindVar + namedEl.getName();
 			result = new IdExpr(jKindVar);

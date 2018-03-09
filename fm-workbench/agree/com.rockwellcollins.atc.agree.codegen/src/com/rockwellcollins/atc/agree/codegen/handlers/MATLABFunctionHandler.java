@@ -37,6 +37,7 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
+import com.rockwellcollins.atc.agree.analysis.EphemeralImplementationUtil;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.handlers.ModifyingAadlHandler;
@@ -95,8 +96,10 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 //
 //	protected void doWork(ComponentType ct){
 		ComponentImplementation ci = null;
+		EphemeralImplementationUtil implUtil = new EphemeralImplementationUtil(monitor);
 		try {
-			ci = AgreeUtils.compImplFromType(ct);
+			// ci = AgreeUtils.generateEphemeralCompImplFromType(ct);
+			ci = implUtil.generateEphemeralCompImplFromType(ct);
 
 			SystemInstance si = null;
 			try {
@@ -205,6 +208,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 			if (ci != null) {
 				ci.eResource().getContents().remove(ci);
 			}
+			implUtil.cleanup();
 		}
 	}
 

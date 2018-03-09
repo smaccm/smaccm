@@ -950,6 +950,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			NestedDotID id = (NestedDotID) expr;
 			NamedElement finalId = getFinalNestId(id);
 			return (finalId instanceof ConstStatement);
+		} else if (expr instanceof AADLEnumerator) {
+			return true;
 		}
 		return false;
 	}
@@ -1429,6 +1431,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 					|| base instanceof DataSubcomponent) {
 				return true;
 			}
+
+			if (base instanceof DataType && e.eContainer() instanceof AADLEnumerator) {
+				return true;
+			}
+
 			return false;
 		}
 
