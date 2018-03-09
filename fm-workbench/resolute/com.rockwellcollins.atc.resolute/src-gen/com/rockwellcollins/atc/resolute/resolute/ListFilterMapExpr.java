@@ -6,23 +6,23 @@ import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Filter Map Expr</b></em>'.
+ * A representation of the model object '<em><b>List Filter Map Expr</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getMap <em>Map</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getArgs <em>Args</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getFilter <em>Filter</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getMap <em>Map</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getArgs <em>Args</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getFilter <em>Filter</em>}</li>
  * </ul>
  *
- * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getFilterMapExpr()
+ * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getListFilterMapExpr()
  * @model
  * @generated
  */
-public interface FilterMapExpr extends Expr
+public interface ListFilterMapExpr extends Expr
 {
   /**
    * Returns the value of the '<em><b>Map</b></em>' containment reference.
@@ -34,14 +34,14 @@ public interface FilterMapExpr extends Expr
    * <!-- end-user-doc -->
    * @return the value of the '<em>Map</em>' containment reference.
    * @see #setMap(Expr)
-   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getFilterMapExpr_Map()
+   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getListFilterMapExpr_Map()
    * @model containment="true"
    * @generated
    */
   Expr getMap();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getMap <em>Map</em>}' containment reference.
+   * Sets the value of the '{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getMap <em>Map</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Map</em>' containment reference.
@@ -60,7 +60,7 @@ public interface FilterMapExpr extends Expr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Args</em>' containment reference list.
-   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getFilterMapExpr_Args()
+   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getListFilterMapExpr_Args()
    * @model containment="true"
    * @generated
    */
@@ -76,14 +76,14 @@ public interface FilterMapExpr extends Expr
    * <!-- end-user-doc -->
    * @return the value of the '<em>Filter</em>' containment reference.
    * @see #setFilter(Expr)
-   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getFilterMapExpr_Filter()
+   * @see com.rockwellcollins.atc.resolute.resolute.ResolutePackage#getListFilterMapExpr_Filter()
    * @model containment="true"
    * @generated
    */
   Expr getFilter();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getFilter <em>Filter</em>}' containment reference.
+   * Sets the value of the '{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getFilter <em>Filter</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Filter</em>' containment reference.
@@ -92,4 +92,4 @@ public interface FilterMapExpr extends Expr
    */
   void setFilter(Expr value);
 
-} // FilterMapExpr
+} // ListFilterMapExpr

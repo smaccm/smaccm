@@ -157,6 +157,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createProveStatementAdapter();
       }
       @Override
+      public Adapter caseListType(ListType object)
+      {
+        return createListTypeAdapter();
+      }
+      @Override
       public Adapter caseSetType(SetType object)
       {
         return createSetTypeAdapter();
@@ -262,9 +267,19 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createFnCallExprAdapter();
       }
       @Override
-      public Adapter caseFilterMapExpr(FilterMapExpr object)
+      public Adapter caseListFilterMapExpr(ListFilterMapExpr object)
       {
-        return createFilterMapExprAdapter();
+        return createListFilterMapExprAdapter();
+      }
+      @Override
+      public Adapter caseListExpr(ListExpr object)
+      {
+        return createListExprAdapter();
+      }
+      @Override
+      public Adapter caseSetFilterMapExpr(SetFilterMapExpr object)
+      {
+        return createSetFilterMapExprAdapter();
       }
       @Override
       public Adapter caseSetExpr(SetExpr object)
@@ -549,6 +564,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createProveStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ListType <em>List Type</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.ListType
+   * @generated
+   */
+  public Adapter createListTypeAdapter()
   {
     return null;
   }
@@ -869,16 +899,46 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr <em>Filter Map Expr</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr <em>List Filter Map Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.resolute.resolute.FilterMapExpr
+   * @see com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr
    * @generated
    */
-  public Adapter createFilterMapExprAdapter()
+  public Adapter createListFilterMapExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.ListExpr <em>List Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.ListExpr
+   * @generated
+   */
+  public Adapter createListExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr <em>Set Filter Map Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr
+   * @generated
+   */
+  public Adapter createSetFilterMapExprAdapter()
   {
     return null;
   }

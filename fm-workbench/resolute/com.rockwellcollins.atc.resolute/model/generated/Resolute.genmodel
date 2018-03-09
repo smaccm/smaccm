@@ -48,6 +48,9 @@
     <genClasses ecoreClass="Resolute.ecore#//ProveStatement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ProveStatement/expr"/>
     </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//ListType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ListType/type"/>
+    </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//SetType">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetType/type"/>
     </genClasses>
@@ -124,10 +127,18 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Resolute.ecore#//FnCallExpr/fn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FnCallExpr/args"/>
     </genClasses>
-    <genClasses ecoreClass="Resolute.ecore#//FilterMapExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/map"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/args"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/filter"/>
+    <genClasses ecoreClass="Resolute.ecore#//ListFilterMapExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ListFilterMapExpr/map"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ListFilterMapExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ListFilterMapExpr/filter"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//ListExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//ListExpr/exprs"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//SetFilterMapExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetFilterMapExpr/map"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetFilterMapExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetFilterMapExpr/filter"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//SetExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetExpr/exprs"/>
@@ -135,6 +146,11 @@
     <genClasses ecoreClass="Resolute.ecore#//LetExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//LetExpr/binding"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//LetExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//FilterMapExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/map"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/filter"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

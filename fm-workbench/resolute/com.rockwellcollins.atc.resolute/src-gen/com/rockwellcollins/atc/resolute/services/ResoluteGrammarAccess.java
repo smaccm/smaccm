@@ -159,35 +159,42 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.resolute.Resolute.Type");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Action cSetTypeAction_0_0 = (Action)cGroup_0.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Action cListTypeAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cTypeAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
 		private final RuleCall cTypeTypeParserRuleCall_0_2_0 = (RuleCall)cTypeAssignment_0_2.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
+		private final Keyword cRightSquareBracketKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final RuleCall cBaseTypeParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
-		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
-		private final Keyword cLessThanSignKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
-		private final Assignment cParamTypeAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
-		private final RuleCall cParamTypeTypeParserRuleCall_1_1_1_0 = (RuleCall)cParamTypeAssignment_1_1_1.eContents().get(0);
-		private final Keyword cGreaterThanSignKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
+		private final Action cSetTypeAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cTypeAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cTypeTypeParserRuleCall_1_2_0 = (RuleCall)cTypeAssignment_1_2.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
+		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
+		private final RuleCall cBaseTypeParserRuleCall_2_0 = (RuleCall)cGroup_2.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Keyword cLessThanSignKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
+		private final Assignment cParamTypeAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
+		private final RuleCall cParamTypeTypeParserRuleCall_2_1_1_0 = (RuleCall)cParamTypeAssignment_2_1_1.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_2_1_2 = (Keyword)cGroup_2_1.eContents().get(2);
 		
 		//Type:
-		//	{SetType} '{' type=Type '}'
+		//	{ListType} '[' type=Type ']'
+		//	| {SetType} '{' type=Type '}'
 		//	| BaseType ('<' paramType=Type '>')?;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{SetType} '{' type=Type '}' | BaseType ('<' paramType=Type '>')?
+		//{ListType} '[' type=Type ']' | {SetType} '{' type=Type '}' | BaseType ('<' paramType=Type '>')?
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{SetType} '{' type=Type '}'
+		//{ListType} '[' type=Type ']'
 		public Group getGroup_0() { return cGroup_0; }
 
-		//{SetType}
-		public Action getSetTypeAction_0_0() { return cSetTypeAction_0_0; }
+		//{ListType}
+		public Action getListTypeAction_0_0() { return cListTypeAction_0_0; }
 
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_0_1() { return cLeftCurlyBracketKeyword_0_1; }
+		//'['
+		public Keyword getLeftSquareBracketKeyword_0_1() { return cLeftSquareBracketKeyword_0_1; }
 
 		//type=Type
 		public Assignment getTypeAssignment_0_2() { return cTypeAssignment_0_2; }
@@ -195,29 +202,47 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//Type
 		public RuleCall getTypeTypeParserRuleCall_0_2_0() { return cTypeTypeParserRuleCall_0_2_0; }
 
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_0_3() { return cRightCurlyBracketKeyword_0_3; }
+		//']'
+		public Keyword getRightSquareBracketKeyword_0_3() { return cRightSquareBracketKeyword_0_3; }
 
-		//BaseType ('<' paramType=Type '>')?
+		//{SetType} '{' type=Type '}'
 		public Group getGroup_1() { return cGroup_1; }
 
-		//BaseType
-		public RuleCall getBaseTypeParserRuleCall_1_0() { return cBaseTypeParserRuleCall_1_0; }
+		//{SetType}
+		public Action getSetTypeAction_1_0() { return cSetTypeAction_1_0; }
 
-		//('<' paramType=Type '>')?
-		public Group getGroup_1_1() { return cGroup_1_1; }
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_1_1() { return cLeftCurlyBracketKeyword_1_1; }
 
-		//'<'
-		public Keyword getLessThanSignKeyword_1_1_0() { return cLessThanSignKeyword_1_1_0; }
-
-		//paramType=Type
-		public Assignment getParamTypeAssignment_1_1_1() { return cParamTypeAssignment_1_1_1; }
+		//type=Type
+		public Assignment getTypeAssignment_1_2() { return cTypeAssignment_1_2; }
 
 		//Type
-		public RuleCall getParamTypeTypeParserRuleCall_1_1_1_0() { return cParamTypeTypeParserRuleCall_1_1_1_0; }
+		public RuleCall getTypeTypeParserRuleCall_1_2_0() { return cTypeTypeParserRuleCall_1_2_0; }
+
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_1_3() { return cRightCurlyBracketKeyword_1_3; }
+
+		//BaseType ('<' paramType=Type '>')?
+		public Group getGroup_2() { return cGroup_2; }
+
+		//BaseType
+		public RuleCall getBaseTypeParserRuleCall_2_0() { return cBaseTypeParserRuleCall_2_0; }
+
+		//('<' paramType=Type '>')?
+		public Group getGroup_2_1() { return cGroup_2_1; }
+
+		//'<'
+		public Keyword getLessThanSignKeyword_2_1_0() { return cLessThanSignKeyword_2_1_0; }
+
+		//paramType=Type
+		public Assignment getParamTypeAssignment_2_1_1() { return cParamTypeAssignment_2_1_1; }
+
+		//Type
+		public RuleCall getParamTypeTypeParserRuleCall_2_1_1_0() { return cParamTypeTypeParserRuleCall_2_1_1_0; }
 
 		//'>'
-		public Keyword getGreaterThanSignKeyword_1_1_2() { return cGreaterThanSignKeyword_1_1_2; }
+		public Keyword getGreaterThanSignKeyword_2_1_2() { return cGreaterThanSignKeyword_2_1_2; }
 	}
 
 	public class BaseTypeElements extends AbstractParserRuleElementFinder {
@@ -1459,11 +1484,11 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cArgsExprParserRuleCall_10_3_1_1_0 = (RuleCall)cArgsAssignment_10_3_1_1.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_10_4 = (Keyword)cGroup_10.eContents().get(4);
 		private final Group cGroup_11 = (Group)cAlternatives.eContents().get(11);
-		private final Keyword cLeftCurlyBracketKeyword_11_0 = (Keyword)cGroup_11.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_11_0 = (Keyword)cGroup_11.eContents().get(0);
 		private final RuleCall cExprParserRuleCall_11_1 = (RuleCall)cGroup_11.eContents().get(1);
 		private final Alternatives cAlternatives_11_2 = (Alternatives)cGroup_11.eContents().get(2);
 		private final Group cGroup_11_2_0 = (Group)cAlternatives_11_2.eContents().get(0);
-		private final Action cFilterMapExprMapAction_11_2_0_0 = (Action)cGroup_11_2_0.eContents().get(0);
+		private final Action cListFilterMapExprMapAction_11_2_0_0 = (Action)cGroup_11_2_0.eContents().get(0);
 		private final Keyword cForKeyword_11_2_0_1 = (Keyword)cGroup_11_2_0.eContents().get(1);
 		private final Group cGroup_11_2_0_2 = (Group)cGroup_11_2_0.eContents().get(2);
 		private final Keyword cLeftParenthesisKeyword_11_2_0_2_0 = (Keyword)cGroup_11_2_0_2.eContents().get(0);
@@ -1475,28 +1500,55 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cFilterAssignment_11_2_0_3_1 = (Assignment)cGroup_11_2_0_3.eContents().get(1);
 		private final RuleCall cFilterExprParserRuleCall_11_2_0_3_1_0 = (RuleCall)cFilterAssignment_11_2_0_3_1.eContents().get(0);
 		private final Group cGroup_11_2_1 = (Group)cAlternatives_11_2.eContents().get(1);
-		private final Action cSetExprExprsAction_11_2_1_0 = (Action)cGroup_11_2_1.eContents().get(0);
+		private final Action cListExprExprsAction_11_2_1_0 = (Action)cGroup_11_2_1.eContents().get(0);
 		private final Group cGroup_11_2_1_1 = (Group)cGroup_11_2_1.eContents().get(1);
 		private final Keyword cCommaKeyword_11_2_1_1_0 = (Keyword)cGroup_11_2_1_1.eContents().get(0);
 		private final Assignment cExprsAssignment_11_2_1_1_1 = (Assignment)cGroup_11_2_1_1.eContents().get(1);
 		private final RuleCall cExprsExprParserRuleCall_11_2_1_1_1_0 = (RuleCall)cExprsAssignment_11_2_1_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_11_3 = (Keyword)cGroup_11.eContents().get(3);
+		private final Keyword cRightSquareBracketKeyword_11_3 = (Keyword)cGroup_11.eContents().get(3);
 		private final Group cGroup_12 = (Group)cAlternatives.eContents().get(12);
-		private final Action cSetExprAction_12_0 = (Action)cGroup_12.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_12_1 = (Keyword)cGroup_12.eContents().get(1);
-		private final Keyword cRightCurlyBracketKeyword_12_2 = (Keyword)cGroup_12.eContents().get(2);
+		private final Keyword cLeftCurlyBracketKeyword_12_0 = (Keyword)cGroup_12.eContents().get(0);
+		private final RuleCall cExprParserRuleCall_12_1 = (RuleCall)cGroup_12.eContents().get(1);
+		private final Alternatives cAlternatives_12_2 = (Alternatives)cGroup_12.eContents().get(2);
+		private final Group cGroup_12_2_0 = (Group)cAlternatives_12_2.eContents().get(0);
+		private final Action cSetFilterMapExprMapAction_12_2_0_0 = (Action)cGroup_12_2_0.eContents().get(0);
+		private final Keyword cForKeyword_12_2_0_1 = (Keyword)cGroup_12_2_0.eContents().get(1);
+		private final Group cGroup_12_2_0_2 = (Group)cGroup_12_2_0.eContents().get(2);
+		private final Keyword cLeftParenthesisKeyword_12_2_0_2_0 = (Keyword)cGroup_12_2_0_2.eContents().get(0);
+		private final Assignment cArgsAssignment_12_2_0_2_1 = (Assignment)cGroup_12_2_0_2.eContents().get(1);
+		private final RuleCall cArgsArgParserRuleCall_12_2_0_2_1_0 = (RuleCall)cArgsAssignment_12_2_0_2_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_12_2_0_2_2 = (Keyword)cGroup_12_2_0_2.eContents().get(2);
+		private final Group cGroup_12_2_0_3 = (Group)cGroup_12_2_0.eContents().get(3);
+		private final Keyword cVerticalLineKeyword_12_2_0_3_0 = (Keyword)cGroup_12_2_0_3.eContents().get(0);
+		private final Assignment cFilterAssignment_12_2_0_3_1 = (Assignment)cGroup_12_2_0_3.eContents().get(1);
+		private final RuleCall cFilterExprParserRuleCall_12_2_0_3_1_0 = (RuleCall)cFilterAssignment_12_2_0_3_1.eContents().get(0);
+		private final Group cGroup_12_2_1 = (Group)cAlternatives_12_2.eContents().get(1);
+		private final Action cSetExprExprsAction_12_2_1_0 = (Action)cGroup_12_2_1.eContents().get(0);
+		private final Group cGroup_12_2_1_1 = (Group)cGroup_12_2_1.eContents().get(1);
+		private final Keyword cCommaKeyword_12_2_1_1_0 = (Keyword)cGroup_12_2_1_1.eContents().get(0);
+		private final Assignment cExprsAssignment_12_2_1_1_1 = (Assignment)cGroup_12_2_1_1.eContents().get(1);
+		private final RuleCall cExprsExprParserRuleCall_12_2_1_1_1_0 = (RuleCall)cExprsAssignment_12_2_1_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_12_3 = (Keyword)cGroup_12.eContents().get(3);
 		private final Group cGroup_13 = (Group)cAlternatives.eContents().get(13);
-		private final Action cLetExprAction_13_0 = (Action)cGroup_13.eContents().get(0);
-		private final Keyword cLetKeyword_13_1 = (Keyword)cGroup_13.eContents().get(1);
-		private final Assignment cBindingAssignment_13_2 = (Assignment)cGroup_13.eContents().get(2);
-		private final RuleCall cBindingLetBindingParserRuleCall_13_2_0 = (RuleCall)cBindingAssignment_13_2.eContents().get(0);
-		private final Keyword cSemicolonKeyword_13_3 = (Keyword)cGroup_13.eContents().get(3);
-		private final Assignment cExprAssignment_13_4 = (Assignment)cGroup_13.eContents().get(4);
-		private final RuleCall cExprExprParserRuleCall_13_4_0 = (RuleCall)cExprAssignment_13_4.eContents().get(0);
+		private final Action cListExprAction_13_0 = (Action)cGroup_13.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_13_1 = (Keyword)cGroup_13.eContents().get(1);
+		private final Keyword cRightSquareBracketKeyword_13_2 = (Keyword)cGroup_13.eContents().get(2);
 		private final Group cGroup_14 = (Group)cAlternatives.eContents().get(14);
-		private final Keyword cLeftParenthesisKeyword_14_0 = (Keyword)cGroup_14.eContents().get(0);
-		private final RuleCall cExprParserRuleCall_14_1 = (RuleCall)cGroup_14.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_14_2 = (Keyword)cGroup_14.eContents().get(2);
+		private final Action cSetExprAction_14_0 = (Action)cGroup_14.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_14_1 = (Keyword)cGroup_14.eContents().get(1);
+		private final Keyword cRightCurlyBracketKeyword_14_2 = (Keyword)cGroup_14.eContents().get(2);
+		private final Group cGroup_15 = (Group)cAlternatives.eContents().get(15);
+		private final Action cLetExprAction_15_0 = (Action)cGroup_15.eContents().get(0);
+		private final Keyword cLetKeyword_15_1 = (Keyword)cGroup_15.eContents().get(1);
+		private final Assignment cBindingAssignment_15_2 = (Assignment)cGroup_15.eContents().get(2);
+		private final RuleCall cBindingLetBindingParserRuleCall_15_2_0 = (RuleCall)cBindingAssignment_15_2.eContents().get(0);
+		private final Keyword cSemicolonKeyword_15_3 = (Keyword)cGroup_15.eContents().get(3);
+		private final Assignment cExprAssignment_15_4 = (Assignment)cGroup_15.eContents().get(4);
+		private final RuleCall cExprExprParserRuleCall_15_4_0 = (RuleCall)cExprAssignment_15_4.eContents().get(0);
+		private final Group cGroup_16 = (Group)cAlternatives.eContents().get(16);
+		private final Keyword cLeftParenthesisKeyword_16_0 = (Keyword)cGroup_16.eContents().get(0);
+		private final RuleCall cExprParserRuleCall_16_1 = (RuleCall)cGroup_16.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_16_2 = (Keyword)cGroup_16.eContents().get(2);
 		
 		//AtomicExpr Expr:
 		//	{IdExpr} id=[aadl2::NamedElement|QCREF] | {ThisExpr} 'this' ('.' sub=NestedDotID)?
@@ -1508,8 +1560,11 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	| {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=Arg ')')+ '.' expr=Expr
 		//	| {BuiltInFnCallExpr} fn=BuiltInFn '(' (args+=Expr (',' args+=Expr)*)? ')'
 		//	| {FnCallExpr} fn=[FunctionDefinition] '(' (args+=Expr (',' args+=Expr)*)? ')'
-		//	| '{' Expr ({FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (','
-		//	exprs+=Expr)*) '}'
+		//	| '[' Expr ({ListFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {ListExpr.exprs+=current}
+		//	(',' exprs+=Expr)*) ']'
+		//	| '{' Expr ({SetFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current}
+		//	(',' exprs+=Expr)*) '}'
+		//	| {ListExpr} '[' ']'
 		//	| {SetExpr} '{' '}'
 		//	| {LetExpr} 'let' binding=LetBinding ';' expr=Expr
 		//	| '(' Expr ')';
@@ -1519,9 +1574,11 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//failmsg+=ClaimText+ '**') | {IntExpr} val=IntegerTerm | {RealExpr} val=RealTerm | {BoolExpr} val=BooleanLiteral |
 		//{StringExpr} val=StringTerm | {IfThenElseExpr} 'if' cond=Expr 'then' then=Expr 'else' else=Expr | {QuantifiedExpr}
 		//quant=('forall' | 'exists') ('(' args+=Arg ')')+ '.' expr=Expr | {BuiltInFnCallExpr} fn=BuiltInFn '(' (args+=Expr (','
-		//args+=Expr)*)? ')' | {FnCallExpr} fn=[FunctionDefinition] '(' (args+=Expr (',' args+=Expr)*)? ')' | '{' Expr
-		//({FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (','
-		//exprs+=Expr)*) '}' | {SetExpr} '{' '}' | {LetExpr} 'let' binding=LetBinding ';' expr=Expr | '(' Expr ')'
+		//args+=Expr)*)? ')' | {FnCallExpr} fn=[FunctionDefinition] '(' (args+=Expr (',' args+=Expr)*)? ')' | '[' Expr
+		//({ListFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {ListExpr.exprs+=current} (','
+		//exprs+=Expr)*) ']' | '{' Expr ({SetFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? |
+		//{SetExpr.exprs+=current} (',' exprs+=Expr)*) '}' | {ListExpr} '[' ']' | {SetExpr} '{' '}' | {LetExpr} 'let'
+		//binding=LetBinding ';' expr=Expr | '(' Expr ')'
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{IdExpr} id=[aadl2::NamedElement|QCREF]
@@ -1797,24 +1854,25 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//')'
 		public Keyword getRightParenthesisKeyword_10_4() { return cRightParenthesisKeyword_10_4; }
 
-		//'{' Expr ({FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (','
-		//exprs+=Expr)*) '}'
+		//'[' Expr ({ListFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {ListExpr.exprs+=current} (','
+		//exprs+=Expr)*) ']'
 		public Group getGroup_11() { return cGroup_11; }
 
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_11_0() { return cLeftCurlyBracketKeyword_11_0; }
+		//'['
+		public Keyword getLeftSquareBracketKeyword_11_0() { return cLeftSquareBracketKeyword_11_0; }
 
 		//Expr
 		public RuleCall getExprParserRuleCall_11_1() { return cExprParserRuleCall_11_1; }
 
-		//{FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (',' exprs+=Expr)*
+		//{ListFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {ListExpr.exprs+=current} (','
+		//exprs+=Expr)*
 		public Alternatives getAlternatives_11_2() { return cAlternatives_11_2; }
 
-		//{FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)?
+		//{ListFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)?
 		public Group getGroup_11_2_0() { return cGroup_11_2_0; }
 
-		//{FilterMapExpr.map=current}
-		public Action getFilterMapExprMapAction_11_2_0_0() { return cFilterMapExprMapAction_11_2_0_0; }
+		//{ListFilterMapExpr.map=current}
+		public Action getListFilterMapExprMapAction_11_2_0_0() { return cListFilterMapExprMapAction_11_2_0_0; }
 
 		//'for'
 		public Keyword getForKeyword_11_2_0_1() { return cForKeyword_11_2_0_1; }
@@ -1846,11 +1904,11 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr
 		public RuleCall getFilterExprParserRuleCall_11_2_0_3_1_0() { return cFilterExprParserRuleCall_11_2_0_3_1_0; }
 
-		//{SetExpr.exprs+=current} (',' exprs+=Expr)*
+		//{ListExpr.exprs+=current} (',' exprs+=Expr)*
 		public Group getGroup_11_2_1() { return cGroup_11_2_1; }
 
-		//{SetExpr.exprs+=current}
-		public Action getSetExprExprsAction_11_2_1_0() { return cSetExprExprsAction_11_2_1_0; }
+		//{ListExpr.exprs+=current}
+		public Action getListExprExprsAction_11_2_1_0() { return cListExprExprsAction_11_2_1_0; }
 
 		//(',' exprs+=Expr)*
 		public Group getGroup_11_2_1_1() { return cGroup_11_2_1_1; }
@@ -1864,56 +1922,139 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr
 		public RuleCall getExprsExprParserRuleCall_11_2_1_1_1_0() { return cExprsExprParserRuleCall_11_2_1_1_1_0; }
 
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_11_3() { return cRightCurlyBracketKeyword_11_3; }
+		//']'
+		public Keyword getRightSquareBracketKeyword_11_3() { return cRightSquareBracketKeyword_11_3; }
 
-		//{SetExpr} '{' '}'
+		//'{' Expr ({SetFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (','
+		//exprs+=Expr)*) '}'
 		public Group getGroup_12() { return cGroup_12; }
 
-		//{SetExpr}
-		public Action getSetExprAction_12_0() { return cSetExprAction_12_0; }
-
 		//'{'
-		public Keyword getLeftCurlyBracketKeyword_12_1() { return cLeftCurlyBracketKeyword_12_1; }
-
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_12_2() { return cRightCurlyBracketKeyword_12_2; }
-
-		//{LetExpr} 'let' binding=LetBinding ';' expr=Expr
-		public Group getGroup_13() { return cGroup_13; }
-
-		//{LetExpr}
-		public Action getLetExprAction_13_0() { return cLetExprAction_13_0; }
-
-		//'let'
-		public Keyword getLetKeyword_13_1() { return cLetKeyword_13_1; }
-
-		//binding=LetBinding
-		public Assignment getBindingAssignment_13_2() { return cBindingAssignment_13_2; }
-
-		//LetBinding
-		public RuleCall getBindingLetBindingParserRuleCall_13_2_0() { return cBindingLetBindingParserRuleCall_13_2_0; }
-
-		//';'
-		public Keyword getSemicolonKeyword_13_3() { return cSemicolonKeyword_13_3; }
-
-		//expr=Expr
-		public Assignment getExprAssignment_13_4() { return cExprAssignment_13_4; }
+		public Keyword getLeftCurlyBracketKeyword_12_0() { return cLeftCurlyBracketKeyword_12_0; }
 
 		//Expr
-		public RuleCall getExprExprParserRuleCall_13_4_0() { return cExprExprParserRuleCall_13_4_0; }
+		public RuleCall getExprParserRuleCall_12_1() { return cExprParserRuleCall_12_1; }
 
-		//'(' Expr ')'
-		public Group getGroup_14() { return cGroup_14; }
+		//{SetFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (','
+		//exprs+=Expr)*
+		public Alternatives getAlternatives_12_2() { return cAlternatives_12_2; }
+
+		//{SetFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)?
+		public Group getGroup_12_2_0() { return cGroup_12_2_0; }
+
+		//{SetFilterMapExpr.map=current}
+		public Action getSetFilterMapExprMapAction_12_2_0_0() { return cSetFilterMapExprMapAction_12_2_0_0; }
+
+		//'for'
+		public Keyword getForKeyword_12_2_0_1() { return cForKeyword_12_2_0_1; }
+
+		//('(' args+=Arg ')')+
+		public Group getGroup_12_2_0_2() { return cGroup_12_2_0_2; }
 
 		//'('
-		public Keyword getLeftParenthesisKeyword_14_0() { return cLeftParenthesisKeyword_14_0; }
+		public Keyword getLeftParenthesisKeyword_12_2_0_2_0() { return cLeftParenthesisKeyword_12_2_0_2_0; }
 
-		//Expr
-		public RuleCall getExprParserRuleCall_14_1() { return cExprParserRuleCall_14_1; }
+		//args+=Arg
+		public Assignment getArgsAssignment_12_2_0_2_1() { return cArgsAssignment_12_2_0_2_1; }
+
+		//Arg
+		public RuleCall getArgsArgParserRuleCall_12_2_0_2_1_0() { return cArgsArgParserRuleCall_12_2_0_2_1_0; }
 
 		//')'
-		public Keyword getRightParenthesisKeyword_14_2() { return cRightParenthesisKeyword_14_2; }
+		public Keyword getRightParenthesisKeyword_12_2_0_2_2() { return cRightParenthesisKeyword_12_2_0_2_2; }
+
+		//('|' filter=Expr)?
+		public Group getGroup_12_2_0_3() { return cGroup_12_2_0_3; }
+
+		//'|'
+		public Keyword getVerticalLineKeyword_12_2_0_3_0() { return cVerticalLineKeyword_12_2_0_3_0; }
+
+		//filter=Expr
+		public Assignment getFilterAssignment_12_2_0_3_1() { return cFilterAssignment_12_2_0_3_1; }
+
+		//Expr
+		public RuleCall getFilterExprParserRuleCall_12_2_0_3_1_0() { return cFilterExprParserRuleCall_12_2_0_3_1_0; }
+
+		//{SetExpr.exprs+=current} (',' exprs+=Expr)*
+		public Group getGroup_12_2_1() { return cGroup_12_2_1; }
+
+		//{SetExpr.exprs+=current}
+		public Action getSetExprExprsAction_12_2_1_0() { return cSetExprExprsAction_12_2_1_0; }
+
+		//(',' exprs+=Expr)*
+		public Group getGroup_12_2_1_1() { return cGroup_12_2_1_1; }
+
+		//','
+		public Keyword getCommaKeyword_12_2_1_1_0() { return cCommaKeyword_12_2_1_1_0; }
+
+		//exprs+=Expr
+		public Assignment getExprsAssignment_12_2_1_1_1() { return cExprsAssignment_12_2_1_1_1; }
+
+		//Expr
+		public RuleCall getExprsExprParserRuleCall_12_2_1_1_1_0() { return cExprsExprParserRuleCall_12_2_1_1_1_0; }
+
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_12_3() { return cRightCurlyBracketKeyword_12_3; }
+
+		//{ListExpr} '[' ']'
+		public Group getGroup_13() { return cGroup_13; }
+
+		//{ListExpr}
+		public Action getListExprAction_13_0() { return cListExprAction_13_0; }
+
+		//'['
+		public Keyword getLeftSquareBracketKeyword_13_1() { return cLeftSquareBracketKeyword_13_1; }
+
+		//']'
+		public Keyword getRightSquareBracketKeyword_13_2() { return cRightSquareBracketKeyword_13_2; }
+
+		//{SetExpr} '{' '}'
+		public Group getGroup_14() { return cGroup_14; }
+
+		//{SetExpr}
+		public Action getSetExprAction_14_0() { return cSetExprAction_14_0; }
+
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_14_1() { return cLeftCurlyBracketKeyword_14_1; }
+
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_14_2() { return cRightCurlyBracketKeyword_14_2; }
+
+		//{LetExpr} 'let' binding=LetBinding ';' expr=Expr
+		public Group getGroup_15() { return cGroup_15; }
+
+		//{LetExpr}
+		public Action getLetExprAction_15_0() { return cLetExprAction_15_0; }
+
+		//'let'
+		public Keyword getLetKeyword_15_1() { return cLetKeyword_15_1; }
+
+		//binding=LetBinding
+		public Assignment getBindingAssignment_15_2() { return cBindingAssignment_15_2; }
+
+		//LetBinding
+		public RuleCall getBindingLetBindingParserRuleCall_15_2_0() { return cBindingLetBindingParserRuleCall_15_2_0; }
+
+		//';'
+		public Keyword getSemicolonKeyword_15_3() { return cSemicolonKeyword_15_3; }
+
+		//expr=Expr
+		public Assignment getExprAssignment_15_4() { return cExprAssignment_15_4; }
+
+		//Expr
+		public RuleCall getExprExprParserRuleCall_15_4_0() { return cExprExprParserRuleCall_15_4_0; }
+
+		//'(' Expr ')'
+		public Group getGroup_16() { return cGroup_16; }
+
+		//'('
+		public Keyword getLeftParenthesisKeyword_16_0() { return cLeftParenthesisKeyword_16_0; }
+
+		//Expr
+		public RuleCall getExprParserRuleCall_16_1() { return cExprParserRuleCall_16_1; }
+
+		//')'
+		public Keyword getRightParenthesisKeyword_16_2() { return cRightParenthesisKeyword_16_2; }
 	}
 
 	public class LetBindingElements extends AbstractParserRuleElementFinder {
@@ -2003,24 +2144,29 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cLower_boundKeyword_37 = (Keyword)cAlternatives.eContents().get(37);
 		private final Keyword cUpper_boundKeyword_38 = (Keyword)cAlternatives.eContents().get(38);
 		private final Keyword cMemberKeyword_39 = (Keyword)cAlternatives.eContents().get(39);
-		private final Keyword cSumKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
-		private final Keyword cUnionKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
-		private final Keyword cLengthKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
-		private final Keyword cSizeKeyword_43 = (Keyword)cAlternatives.eContents().get(43);
-		private final Keyword cIntersectKeyword_44 = (Keyword)cAlternatives.eContents().get(44);
-		private final Keyword cInstanceKeyword_45 = (Keyword)cAlternatives.eContents().get(45);
-		private final Keyword cInstancesKeyword_46 = (Keyword)cAlternatives.eContents().get(46);
-		private final Keyword cDebugKeyword_47 = (Keyword)cAlternatives.eContents().get(47);
-		private final Keyword cAnalysisKeyword_48 = (Keyword)cAlternatives.eContents().get(48);
-		private final Keyword cReceive_errorKeyword_49 = (Keyword)cAlternatives.eContents().get(49);
-		private final Keyword cContain_errorKeyword_50 = (Keyword)cAlternatives.eContents().get(50);
-		private final Keyword cPropagate_errorKeyword_51 = (Keyword)cAlternatives.eContents().get(51);
-		private final Keyword cError_state_reachableKeyword_52 = (Keyword)cAlternatives.eContents().get(52);
-		private final Keyword cFlow_sourceKeyword_53 = (Keyword)cAlternatives.eContents().get(53);
-		private final Keyword cFlow_destinationKeyword_54 = (Keyword)cAlternatives.eContents().get(54);
-		private final Keyword cFlow_elementsKeyword_55 = (Keyword)cAlternatives.eContents().get(55);
-		private final Keyword cFlow_specificationsKeyword_56 = (Keyword)cAlternatives.eContents().get(56);
-		private final Keyword cEnd_to_end_flowsKeyword_57 = (Keyword)cAlternatives.eContents().get(57);
+		private final Keyword cLengthKeyword_40 = (Keyword)cAlternatives.eContents().get(40);
+		private final Keyword cSizeKeyword_41 = (Keyword)cAlternatives.eContents().get(41);
+		private final Keyword cSumKeyword_42 = (Keyword)cAlternatives.eContents().get(42);
+		private final Keyword cAppendKeyword_43 = (Keyword)cAlternatives.eContents().get(43);
+		private final Keyword cHeadKeyword_44 = (Keyword)cAlternatives.eContents().get(44);
+		private final Keyword cTailKeyword_45 = (Keyword)cAlternatives.eContents().get(45);
+		private final Keyword cAs_setKeyword_46 = (Keyword)cAlternatives.eContents().get(46);
+		private final Keyword cUnionKeyword_47 = (Keyword)cAlternatives.eContents().get(47);
+		private final Keyword cIntersectKeyword_48 = (Keyword)cAlternatives.eContents().get(48);
+		private final Keyword cAs_listKeyword_49 = (Keyword)cAlternatives.eContents().get(49);
+		private final Keyword cInstanceKeyword_50 = (Keyword)cAlternatives.eContents().get(50);
+		private final Keyword cInstancesKeyword_51 = (Keyword)cAlternatives.eContents().get(51);
+		private final Keyword cDebugKeyword_52 = (Keyword)cAlternatives.eContents().get(52);
+		private final Keyword cAnalysisKeyword_53 = (Keyword)cAlternatives.eContents().get(53);
+		private final Keyword cReceive_errorKeyword_54 = (Keyword)cAlternatives.eContents().get(54);
+		private final Keyword cContain_errorKeyword_55 = (Keyword)cAlternatives.eContents().get(55);
+		private final Keyword cPropagate_errorKeyword_56 = (Keyword)cAlternatives.eContents().get(56);
+		private final Keyword cError_state_reachableKeyword_57 = (Keyword)cAlternatives.eContents().get(57);
+		private final Keyword cFlow_sourceKeyword_58 = (Keyword)cAlternatives.eContents().get(58);
+		private final Keyword cFlow_destinationKeyword_59 = (Keyword)cAlternatives.eContents().get(59);
+		private final Keyword cFlow_elementsKeyword_60 = (Keyword)cAlternatives.eContents().get(60);
+		private final Keyword cFlow_specificationsKeyword_61 = (Keyword)cAlternatives.eContents().get(61);
+		private final Keyword cEnd_to_end_flowsKeyword_62 = (Keyword)cAlternatives.eContents().get(62);
 		
 		//BuiltInFn: // Primary type: aadl
 		//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
@@ -2031,8 +2177,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	| 'subcomponents' // Primary type: connection
 		//	| 'source' | 'destination' // Primary type: feature
 		//	| 'direction' | 'is_event_port' | 'is_abstract_feature' | 'is_data_port' | 'is_port' | 'is_data_access' // Primary type: range
-		//	| 'lower_bound' | 'upper_bound' // Primary type: set
-		//	| 'member' | 'sum' | 'union' | 'length' | 'size' | 'intersect' // Other
+		//	| 'lower_bound' | 'upper_bound' // Primary type: set or list
+		//	| 'member' | 'length' | 'size' // Primary type: list
+		//	| 'sum' | 'append' | 'head' | 'tail' | 'as_set' // Primary type: set
+		//	| 'union' | 'intersect' | 'as_list' // Other
 		//	| 'instance' | 'instances' | 'debug' | 'analysis' // Error Annex
 		//	| 'receive_error' // the component can receive an incoming error
 		//	| 'contain_error' // the component contain the error
@@ -2050,8 +2198,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//| 'subcomponents' // Primary type: connection
 		//| 'source' | 'destination' // Primary type: feature
 		//| 'direction' | 'is_event_port' | 'is_abstract_feature' | 'is_data_port' | 'is_port' | 'is_data_access' // Primary type: range
-		//| 'lower_bound' | 'upper_bound' // Primary type: set
-		//| 'member' | 'sum' | 'union' | 'length' | 'size' | 'intersect' // Other
+		//| 'lower_bound' | 'upper_bound' // Primary type: set or list
+		//| 'member' | 'length' | 'size' // Primary type: list
+		//| 'sum' | 'append' | 'head' | 'tail' | 'as_set' // Primary type: set
+		//| 'union' | 'intersect' | 'as_list' // Other
 		//| 'instance' | 'instances' | 'debug' | 'analysis' // Error Annex
 		//| 'receive_error' // the component can receive an incoming error
 		//| 'contain_error' // the component contain the error
@@ -2181,59 +2331,74 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//'member'
 		public Keyword getMemberKeyword_39() { return cMemberKeyword_39; }
 
-		//'sum'
-		public Keyword getSumKeyword_40() { return cSumKeyword_40; }
-
-		//'union'
-		public Keyword getUnionKeyword_41() { return cUnionKeyword_41; }
-
 		//'length'
-		public Keyword getLengthKeyword_42() { return cLengthKeyword_42; }
+		public Keyword getLengthKeyword_40() { return cLengthKeyword_40; }
 
 		//'size'
-		public Keyword getSizeKeyword_43() { return cSizeKeyword_43; }
+		public Keyword getSizeKeyword_41() { return cSizeKeyword_41; }
+
+		//'sum'
+		public Keyword getSumKeyword_42() { return cSumKeyword_42; }
+
+		//'append'
+		public Keyword getAppendKeyword_43() { return cAppendKeyword_43; }
+
+		//'head'
+		public Keyword getHeadKeyword_44() { return cHeadKeyword_44; }
+
+		//'tail'
+		public Keyword getTailKeyword_45() { return cTailKeyword_45; }
+
+		//'as_set'
+		public Keyword getAs_setKeyword_46() { return cAs_setKeyword_46; }
+
+		//'union'
+		public Keyword getUnionKeyword_47() { return cUnionKeyword_47; }
 
 		//'intersect'
-		public Keyword getIntersectKeyword_44() { return cIntersectKeyword_44; }
+		public Keyword getIntersectKeyword_48() { return cIntersectKeyword_48; }
+
+		//'as_list'
+		public Keyword getAs_listKeyword_49() { return cAs_listKeyword_49; }
 
 		//'instance'
-		public Keyword getInstanceKeyword_45() { return cInstanceKeyword_45; }
+		public Keyword getInstanceKeyword_50() { return cInstanceKeyword_50; }
 
 		//'instances'
-		public Keyword getInstancesKeyword_46() { return cInstancesKeyword_46; }
+		public Keyword getInstancesKeyword_51() { return cInstancesKeyword_51; }
 
 		//'debug'
-		public Keyword getDebugKeyword_47() { return cDebugKeyword_47; }
+		public Keyword getDebugKeyword_52() { return cDebugKeyword_52; }
 
 		//'analysis'
-		public Keyword getAnalysisKeyword_48() { return cAnalysisKeyword_48; }
+		public Keyword getAnalysisKeyword_53() { return cAnalysisKeyword_53; }
 
 		//'receive_error'
-		public Keyword getReceive_errorKeyword_49() { return cReceive_errorKeyword_49; }
+		public Keyword getReceive_errorKeyword_54() { return cReceive_errorKeyword_54; }
 
 		//'contain_error'
-		public Keyword getContain_errorKeyword_50() { return cContain_errorKeyword_50; }
+		public Keyword getContain_errorKeyword_55() { return cContain_errorKeyword_55; }
 
 		//'propagate_error'
-		public Keyword getPropagate_errorKeyword_51() { return cPropagate_errorKeyword_51; }
+		public Keyword getPropagate_errorKeyword_56() { return cPropagate_errorKeyword_56; }
 
 		//'error_state_reachable'
-		public Keyword getError_state_reachableKeyword_52() { return cError_state_reachableKeyword_52; }
+		public Keyword getError_state_reachableKeyword_57() { return cError_state_reachableKeyword_57; }
 
 		//'flow_source'
-		public Keyword getFlow_sourceKeyword_53() { return cFlow_sourceKeyword_53; }
+		public Keyword getFlow_sourceKeyword_58() { return cFlow_sourceKeyword_58; }
 
 		//'flow_destination'
-		public Keyword getFlow_destinationKeyword_54() { return cFlow_destinationKeyword_54; }
+		public Keyword getFlow_destinationKeyword_59() { return cFlow_destinationKeyword_59; }
 
 		//'flow_elements'
-		public Keyword getFlow_elementsKeyword_55() { return cFlow_elementsKeyword_55; }
+		public Keyword getFlow_elementsKeyword_60() { return cFlow_elementsKeyword_60; }
 
 		//'flow_specifications'
-		public Keyword getFlow_specificationsKeyword_56() { return cFlow_specificationsKeyword_56; }
+		public Keyword getFlow_specificationsKeyword_61() { return cFlow_specificationsKeyword_61; }
 
 		//'end_to_end_flows'
-		public Keyword getEnd_to_end_flowsKeyword_57() { return cEnd_to_end_flowsKeyword_57; }
+		public Keyword getEnd_to_end_flowsKeyword_62() { return cEnd_to_end_flowsKeyword_62; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2600,7 +2765,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Type:
-	//	{SetType} '{' type=Type '}'
+	//	{ListType} '[' type=Type ']'
+	//	| {SetType} '{' type=Type '}'
 	//	| BaseType ('<' paramType=Type '>')?;
 	public TypeElements getTypeAccess() {
 		return pType;
@@ -2848,8 +3014,11 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	| {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=Arg ')')+ '.' expr=Expr
 	//	| {BuiltInFnCallExpr} fn=BuiltInFn '(' (args+=Expr (',' args+=Expr)*)? ')'
 	//	| {FnCallExpr} fn=[FunctionDefinition] '(' (args+=Expr (',' args+=Expr)*)? ')'
-	//	| '{' Expr ({FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current} (','
-	//	exprs+=Expr)*) '}'
+	//	| '[' Expr ({ListFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {ListExpr.exprs+=current}
+	//	(',' exprs+=Expr)*) ']'
+	//	| '{' Expr ({SetFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)? | {SetExpr.exprs+=current}
+	//	(',' exprs+=Expr)*) '}'
+	//	| {ListExpr} '[' ']'
 	//	| {SetExpr} '{' '}'
 	//	| {LetExpr} 'let' binding=LetBinding ';' expr=Expr
 	//	| '(' Expr ')';
@@ -2880,8 +3049,10 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	| 'subcomponents' // Primary type: connection
 	//	| 'source' | 'destination' // Primary type: feature
 	//	| 'direction' | 'is_event_port' | 'is_abstract_feature' | 'is_data_port' | 'is_port' | 'is_data_access' // Primary type: range
-	//	| 'lower_bound' | 'upper_bound' // Primary type: set
-	//	| 'member' | 'sum' | 'union' | 'length' | 'size' | 'intersect' // Other
+	//	| 'lower_bound' | 'upper_bound' // Primary type: set or list
+	//	| 'member' | 'length' | 'size' // Primary type: list
+	//	| 'sum' | 'append' | 'head' | 'tail' | 'as_set' // Primary type: set
+	//	| 'union' | 'intersect' | 'as_list' // Other
 	//	| 'instance' | 'instances' | 'debug' | 'analysis' // Error Annex
 	//	| 'receive_error' // the component can receive an incoming error
 	//	| 'contain_error' // the component contain the error

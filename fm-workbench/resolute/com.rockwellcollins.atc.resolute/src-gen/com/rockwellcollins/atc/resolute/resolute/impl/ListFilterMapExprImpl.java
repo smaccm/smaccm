@@ -4,7 +4,7 @@ package com.rockwellcollins.atc.resolute.resolute.impl;
 
 import com.rockwellcollins.atc.resolute.resolute.Arg;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
-import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
+import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 
 import java.util.Collection;
@@ -24,20 +24,20 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Filter Map Expr</b></em>'.
+ * An implementation of the model object '<em><b>List Filter Map Expr</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl#getMap <em>Map</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl#getArgs <em>Args</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl#getFilter <em>Filter</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ListFilterMapExprImpl#getMap <em>Map</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ListFilterMapExprImpl#getArgs <em>Args</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.resolute.resolute.impl.ListFilterMapExprImpl#getFilter <em>Filter</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
+public class ListFilterMapExprImpl extends ExprImpl implements ListFilterMapExpr
 {
   /**
    * The cached value of the '{@link #getMap() <em>Map</em>}' containment reference.
@@ -74,7 +74,7 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  protected FilterMapExprImpl()
+  protected ListFilterMapExprImpl()
   {
     super();
   }
@@ -87,7 +87,7 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
   @Override
   protected EClass eStaticClass()
   {
-    return ResolutePackage.Literals.FILTER_MAP_EXPR;
+    return ResolutePackage.Literals.LIST_FILTER_MAP_EXPR;
   }
 
   /**
@@ -111,7 +111,7 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
     map = newMap;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ResolutePackage.FILTER_MAP_EXPR__MAP, oldMap, newMap);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ResolutePackage.LIST_FILTER_MAP_EXPR__MAP, oldMap, newMap);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -128,14 +128,14 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
     {
       NotificationChain msgs = null;
       if (map != null)
-        msgs = ((InternalEObject)map).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.FILTER_MAP_EXPR__MAP, null, msgs);
+        msgs = ((InternalEObject)map).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.LIST_FILTER_MAP_EXPR__MAP, null, msgs);
       if (newMap != null)
-        msgs = ((InternalEObject)newMap).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.FILTER_MAP_EXPR__MAP, null, msgs);
+        msgs = ((InternalEObject)newMap).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.LIST_FILTER_MAP_EXPR__MAP, null, msgs);
       msgs = basicSetMap(newMap, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.FILTER_MAP_EXPR__MAP, newMap, newMap));
+      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.LIST_FILTER_MAP_EXPR__MAP, newMap, newMap));
   }
 
   /**
@@ -147,7 +147,7 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
   {
     if (args == null)
     {
-      args = new EObjectContainmentEList<Arg>(Arg.class, this, ResolutePackage.FILTER_MAP_EXPR__ARGS);
+      args = new EObjectContainmentEList<Arg>(Arg.class, this, ResolutePackage.LIST_FILTER_MAP_EXPR__ARGS);
     }
     return args;
   }
@@ -173,7 +173,7 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
     filter = newFilter;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ResolutePackage.FILTER_MAP_EXPR__FILTER, oldFilter, newFilter);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER, oldFilter, newFilter);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -190,14 +190,14 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
     {
       NotificationChain msgs = null;
       if (filter != null)
-        msgs = ((InternalEObject)filter).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.FILTER_MAP_EXPR__FILTER, null, msgs);
+        msgs = ((InternalEObject)filter).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER, null, msgs);
       if (newFilter != null)
-        msgs = ((InternalEObject)newFilter).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.FILTER_MAP_EXPR__FILTER, null, msgs);
+        msgs = ((InternalEObject)newFilter).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER, null, msgs);
       msgs = basicSetFilter(newFilter, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.FILTER_MAP_EXPR__FILTER, newFilter, newFilter));
+      eNotify(new ENotificationImpl(this, Notification.SET, ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER, newFilter, newFilter));
   }
 
   /**
@@ -210,11 +210,11 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
   {
     switch (featureID)
     {
-      case ResolutePackage.FILTER_MAP_EXPR__MAP:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__MAP:
         return basicSetMap(null, msgs);
-      case ResolutePackage.FILTER_MAP_EXPR__ARGS:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__ARGS:
         return ((InternalEList<?>)getArgs()).basicRemove(otherEnd, msgs);
-      case ResolutePackage.FILTER_MAP_EXPR__FILTER:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER:
         return basicSetFilter(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -230,11 +230,11 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
   {
     switch (featureID)
     {
-      case ResolutePackage.FILTER_MAP_EXPR__MAP:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__MAP:
         return getMap();
-      case ResolutePackage.FILTER_MAP_EXPR__ARGS:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__ARGS:
         return getArgs();
-      case ResolutePackage.FILTER_MAP_EXPR__FILTER:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER:
         return getFilter();
     }
     return super.eGet(featureID, resolve, coreType);
@@ -251,14 +251,14 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
   {
     switch (featureID)
     {
-      case ResolutePackage.FILTER_MAP_EXPR__MAP:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__MAP:
         setMap((Expr)newValue);
         return;
-      case ResolutePackage.FILTER_MAP_EXPR__ARGS:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__ARGS:
         getArgs().clear();
         getArgs().addAll((Collection<? extends Arg>)newValue);
         return;
-      case ResolutePackage.FILTER_MAP_EXPR__FILTER:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER:
         setFilter((Expr)newValue);
         return;
     }
@@ -275,13 +275,13 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
   {
     switch (featureID)
     {
-      case ResolutePackage.FILTER_MAP_EXPR__MAP:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__MAP:
         setMap((Expr)null);
         return;
-      case ResolutePackage.FILTER_MAP_EXPR__ARGS:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__ARGS:
         getArgs().clear();
         return;
-      case ResolutePackage.FILTER_MAP_EXPR__FILTER:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER:
         setFilter((Expr)null);
         return;
     }
@@ -298,14 +298,14 @@ public class FilterMapExprImpl extends ExprImpl implements FilterMapExpr
   {
     switch (featureID)
     {
-      case ResolutePackage.FILTER_MAP_EXPR__MAP:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__MAP:
         return map != null;
-      case ResolutePackage.FILTER_MAP_EXPR__ARGS:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__ARGS:
         return args != null && !args.isEmpty();
-      case ResolutePackage.FILTER_MAP_EXPR__FILTER:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR__FILTER:
         return filter != null;
     }
     return super.eIsSet(featureID);
   }
 
-} //FilterMapExprImpl
+} //ListFilterMapExprImpl

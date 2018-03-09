@@ -2,10 +2,11 @@ package com.rockwellcollins.atc.resolute.validation;
 
 import com.rockwellcollins.atc.resolute.resolute.Type;
 
-public class SetType extends ResoluteType {
+public class ListType extends ResoluteType {
+
 	final public ResoluteType elementType;
 
-	public SetType(ResoluteType elementType) {
+	public ListType(ResoluteType elementType) {
 		if (elementType == null) {
 			throw new IllegalArgumentException();
 		}
@@ -24,9 +25,9 @@ public class SetType extends ResoluteType {
 			return true;
 		}
 
-		if (otherType instanceof SetType) {
-			SetType st = (SetType) otherType;
-			return elementType.subtypeOf(st.elementType);
+		if (otherType instanceof ListType) {
+			ListType lt = (ListType) otherType;
+			return elementType.subtypeOf(lt.elementType);
 		}
 
 		return false;
@@ -42,9 +43,9 @@ public class SetType extends ResoluteType {
 			return this;
 		}
 
-		if (otherType instanceof SetType) {
-			SetType st = (SetType) otherType;
-			return elementType.join(st.elementType);
+		if (otherType instanceof ListType) {
+			ListType lt = (ListType) otherType;
+			return elementType.join(lt.elementType);
 		}
 
 		return null;
@@ -52,14 +53,14 @@ public class SetType extends ResoluteType {
 
 	@Override
 	public int hashCode() {
-		return (37 * SetType.class.hashCode()) + elementType.hashCode();
+		return (37 * ListType.class.hashCode()) + elementType.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof SetType) {
-			SetType st = (SetType) obj;
-			return st.elementType.equals(elementType);
+		if (obj instanceof ListType) {
+			ListType lt = (ListType) obj;
+			return lt.elementType.equals(elementType);
 		}
 
 		return false;
@@ -67,9 +68,10 @@ public class SetType extends ResoluteType {
 
 	@Override
 	public boolean similar(Type otherType) {
-		if (otherType instanceof com.rockwellcollins.atc.resolute.resolute.SetType) {
+		if (otherType instanceof com.rockwellcollins.atc.resolute.resolute.ListType) {
 			return true;
 		}
 		return false;
 	}
+
 }

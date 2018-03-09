@@ -1,6 +1,7 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
 import java.util.List;
+import java.util.Set;
 
 import org.osate.aadl2.NamedElement;
 
@@ -12,6 +13,10 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
 	}
 
 	public boolean isInt() {
+		return false;
+	}
+
+	public boolean isList() {
 		return false;
 	}
 
@@ -51,7 +56,11 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
 		throw new IllegalArgumentException();
 	}
 
-	public List<ResoluteValue> getSet() {
+	public List<ResoluteValue> getListValues() {
+		throw new IllegalArgumentException();
+	}
+
+	public Set<ResoluteValue> getSetValues() {
 		throw new IllegalArgumentException();
 	}
 
@@ -79,7 +88,7 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
 			return String.CASE_INSENSITIVE_ORDER
 					.compare(getNamedElement().getName(), other.getNamedElement().getName());
 		} else if (isSet() && other.isSet()) {
-			return Integer.compare(getSet().hashCode(), other.getSet().hashCode());
+			return Integer.compare(getSetValues().hashCode(), other.getSetValues().hashCode());
 		} else if (isRange() && other.isRange()) {
 			RangeValue a = getRange();
 			RangeValue b = other.getRange();

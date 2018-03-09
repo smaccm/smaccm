@@ -1,33 +1,32 @@
 package com.rockwellcollins.atc.resolute.analysis.values;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.List;
 
+import com.rockwellcollins.atc.resolute.validation.ListType;
 import com.rockwellcollins.atc.resolute.validation.ResoluteType;
-import com.rockwellcollins.atc.resolute.validation.SetType;
 
-public class SetValue extends ResoluteValue {
+public class ListValue extends ResoluteValue {
 
-	final private SortedSet<ResoluteValue> values;
+	final private List<ResoluteValue> values;
 
-	public SetValue(Set<? extends ResoluteValue> values) {
+	public ListValue(List<? extends ResoluteValue> values) {
 		if (values == null) {
-			throw new IllegalArgumentException("Cannot create null SetValue");
+			throw new IllegalArgumentException("Cannot create null ListValue");
 		}
 
-		this.values = Collections.unmodifiableSortedSet(new TreeSet<ResoluteValue>(values));
+		this.values = Collections.unmodifiableList(new ArrayList<ResoluteValue>(values));
 	}
 
 	@Override
-	public boolean isSet() {
+	public boolean isList() {
 		return true;
 	}
 
 	@Override
-	public Set<ResoluteValue> getSetValues() {
+	public List<ResoluteValue> getListValues() {
 		return values;
 	}
 
@@ -36,14 +35,14 @@ public class SetValue extends ResoluteValue {
 		if (values.isEmpty()) {
 			throw new UnsupportedOperationException();
 		} else {
-			return new SetType(values.iterator().next().getType());
+			return new ListType(values.iterator().next().getType());
 		}
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder text = new StringBuilder();
-		text.append("{");
+		text.append("[");
 
 		Iterator<ResoluteValue> iterator = values.iterator();
 		while (iterator.hasNext()) {
@@ -54,22 +53,23 @@ public class SetValue extends ResoluteValue {
 			}
 		}
 
-		text.append("}");
+		text.append("]");
 		return text.toString();
 	}
 
 	@Override
 	public int hashCode() {
-		return (37 * SetValue.class.hashCode()) + values.hashCode();
+		return (37 * ListValue.class.hashCode()) + values.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof SetValue) {
-			SetValue sv = (SetValue) obj;
-			return sv.values.equals(values);
+		if (obj instanceof ListValue) {
+			ListValue lv = (ListValue) obj;
+			return lv.values.equals(values);
 		}
 
 		return false;
 	}
+
 }
