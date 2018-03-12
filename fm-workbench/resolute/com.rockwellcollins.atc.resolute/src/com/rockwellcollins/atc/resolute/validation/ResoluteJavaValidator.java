@@ -557,16 +557,22 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return;
 		}
 
-		if (!(actualTypes.get(0) instanceof ListType || actualTypes.get(1) instanceof SetType)) {
+		if (!(actualTypes.get(1) instanceof ListType || actualTypes.get(1) instanceof SetType)) {
 			error(funCall.getArgs().get(1), "Expected list or set type but found type " + actualTypes.get(1));
-			return;
-		}
-
-		ResoluteType elementType = actualTypes.get(0);
-		SetType setType = (SetType) actualTypes.get(1);
-		if (elementType.join(setType.elementType) == null) {
-			error(funCall, "function 'member' not defined on arguments of type " + elementType + ", " + setType);
-			return;
+		} else {
+			ResoluteType elementType = actualTypes.get(0);
+			ResoluteType aggregateElementType;
+			if (actualTypes.get(1) instanceof ListType) {
+				aggregateElementType = ((ListType) actualTypes.get(1)).elementType;
+			} else if (actualTypes.get(1) instanceof SetType) {
+				aggregateElementType = ((SetType) actualTypes.get(1)).elementType;
+			} else {
+				aggregateElementType = BaseType.FAIL;
+			}
+			if (elementType.join(aggregateElementType) == null) {
+				error(funCall, "function 'member' not defined on arguments of type " + elementType + ", "
+						+ aggregateElementType);
+			}
 		}
 
 		return;
