@@ -16,7 +16,7 @@ public class ListType extends ResoluteType {
 
 	@Override
 	public String toString() {
-		return "{" + elementType + "}";
+		return "[" + elementType + "]";
 	}
 
 	@Override
