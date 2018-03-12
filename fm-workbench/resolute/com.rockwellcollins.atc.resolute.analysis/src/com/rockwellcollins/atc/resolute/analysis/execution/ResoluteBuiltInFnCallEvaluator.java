@@ -620,9 +620,8 @@ public class ResoluteBuiltInFnCallEvaluator {
 		}
 
 		case "as_list": {
-			List<ResoluteValue> result = new ArrayList<>();
-			args.get(0).getListValues().stream().forEachOrdered(elem -> result.add(elem));
-			return new ListValue(Collections.unmodifiableList(result));
+			return new ListValue(
+					Collections.unmodifiableList(args.get(0).getSetValues().stream().collect(Collectors.toList())));
 		}
 
 		/*
