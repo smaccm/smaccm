@@ -574,12 +574,21 @@ public class ResoluteBuiltInFnCallEvaluator {
 		}
 
 		case "head": {
-			return args.get(0);
+			List<ResoluteValue> values = args.get(0).getListValues();
+			if (!values.isEmpty()) {
+				return values.get(0);
+			} else {
+				throw new IllegalArgumentException("Attempt to get head of empty list: " + args.get(0));
+			}
 		}
 
 		case "tail": {
 			List<ResoluteValue> values = args.get(0).getListValues();
-			return new ListValue(Collections.unmodifiableList(values.subList(1, values.size())));
+			if (values.size() > 0) {
+				return new ListValue(Collections.unmodifiableList(values.subList(1, values.size())));
+			} else {
+				return new ListValue(Collections.emptyList());
+			}
 		}
 
 		case "as_set": {
