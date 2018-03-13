@@ -1106,7 +1106,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 				ResoluteType argType = getExprType(((QuantArg) arg).getExpr());
 
-				if (argType instanceof SetType) {
+				if (argType instanceof ListType) {
+					return ((ListType) argType).elementType;
+				} else if (argType instanceof SetType) {
 					return ((SetType) argType).elementType;
 				} else {
 					return argType;
@@ -1335,8 +1337,12 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			return BaseType.FAIL;
 		}
 
-		SetType set = (SetType) getExprType(funCall.getArgs().get(0));
-		return set.elementType;
+		if (funCall.getArgs().get(0) instanceof SetType) {
+			SetType set = (SetType) getExprType(funCall.getArgs().get(0));
+			return set.elementType;
+		} else {
+			return BaseType.FAIL;
+		}
 	}
 
 	private ResoluteType getBinarySetOpType(BuiltInFnCallExpr funCall) {
