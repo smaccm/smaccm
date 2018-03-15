@@ -40,6 +40,7 @@
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.schedule.analysis</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.ui</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.feature</module>
+		<module>../../../resolute/org.osate.resolute.help</module>
 	</modules>
 
 </project>
