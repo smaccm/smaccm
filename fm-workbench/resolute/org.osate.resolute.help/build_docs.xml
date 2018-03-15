@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<project name="build Eclipse Help" default="build-help">
+
+	<description>
+		Used to transform DocBook XML to Eclipse help output
+	</description>
+
+	<!-- Define base properties -->
+	<property name="user_guide.dir" value="src/guide" />
+	<property name="user_guide_output.dir" value="doc-gen/html" />
+	<property name="reference.dir" value="src/reference" />
+	<property name="reference_output.dir" value="doc-gen/html" />
+
+	<!-- - target: usage -->
+	<target name="usage" description="Prints help">
+		<echo message="Use -projecthelp to get a list of the available targets." />
+	</target>
+
+	<!-- - target: clean -->
+	<target name="clean" description="Cleans up generated files.">
+		<delete dir="${user_guide_output.dir}" />
+		<delete dir="${reference_output.dir}" />
+	</target>
+
+	<target name="build-help" depends="clean, build_user_guide_eclipse, build_user_guide_pdf, build_reference_eclipse, build_reference_pdf">
+	</target>
+
+	<target name="build_user_guide_eclipse" description="Build the user guide">
+		<mkdir dir="${user_guide_output.dir}" />
+
+		<exec executable="pandoc" dir="${user_guide.dir}">
+			<arg value="user_guide.md"/>
+			<arg value="--toc"/>
+			<arg value="--number-sections"/>
+			<arg value="-s"/>
+			<arg value="--filter"/>
+			<arg value="pandoc-crossref"/>
+			<arg value="-f"/>
+			<arg value="markdown"/>
+			<arg value="--mathml"/>
+			<arg value="-t"/>
+			<arg value="html5"/>
+			<arg value="--css=${basedir}/css/pandoc.css"/>
+			<arg value="-o"/>
+			<arg value="${basedir}/${user_guide_output.dir}/user_guide.html"/>
+		</exec>
+
+		<exec executable="pandoc" dir="${user_guide.dir}">
+			<env key="HTML_FILEPATH" value="${user_guide_output.dir}/user_guide.html"/>
+			<arg value="user_guide.md"/>
+			<arg value="-t"/>
+			<arg value="${basedir}/create_toc.lua"/>
+			<arg value="-o"/>
+			<arg value="${basedir}/${user_guide_output.dir}/user_guide_toc.xml"/>
+		</exec>
+
+		<exec executable="mkdir">
+			<arg value="-p" />
+			<arg value="${basedir}/${user_guide_output.dir}/images" />
+		</exec>
+
+		<apply executable="cp">
+			<srcfile/>
+			<targetfile/>
+
+			<fileset dir="${user_guide.dir}/images" includes="*"/>
+			<mapper type="glob"
+				from="*"
+				to="${user_guide_output.dir}/images/*"/>
+		</apply>
+
+	</target>
+
+	<target name="build_user_guide_pdf" description="Build the user guide PDF">
+		<mkdir dir="../../../documentation/resolute/" />
+
+		<exec executable="pandoc" dir="${user_guide.dir}">
+			<arg value="user_guide.md"/>
+			<arg value="--toc"/>
+			<arg value="--number-sections"/>
+			<arg value="-s"/>
+			<arg value="--filter"/>
+			<arg value="${basedir}/link-to-ref.py"/>
+			<arg value="--filter"/>
+			<arg value="pandoc-crossref"/>
+			<arg value="-f"/>
+			<arg value="markdown"/>
+			<arg value="--listings"/>
+			<arg value="-H"/>
+			<arg value="../../tex-listings-setup.txt"/>
+			<arg value="--latex-engine=xelatex"/>
+			<arg value="-V"/>
+			<arg value="links-as-notes"/>
+			<arg value="-V"/>
+			<arg value="documentclass=report"/>
+			<arg value="-o"/>
+			<arg value="${basedir}/../../../documentation/resolute/user_guide.pdf"/>
+		</exec>
+	</target>
+
+	<target name="build_reference_eclipse" description="Build the reference">
+		<mkdir dir="${reference_output.dir}" />
+
+		<exec executable="pandoc" dir="${reference.dir}">
+			<arg value="reference.md" />
+			<arg value="--toc" />
+			<arg value="--number-sections" />
+			<arg value="-s" />
+			<arg value="--filter" />
+			<arg value="pandoc-crossref" />
+			<arg value="-f" />
+			<arg value="markdown" />
+			<arg value="--mathml" />
+			<arg value="-t" />
+			<arg value="html5" />
+			<arg value="--css=${basedir}/css/pandoc.css" />
+			<arg value="-o" />
+			<arg value="${basedir}/${reference_output.dir}/reference.html" />
+		</exec>
+
+		<exec executable="pandoc" dir="${reference.dir}">
+			<env key="HTML_FILEPATH" value="${reference_output.dir}/reference.html" />
+			<arg value="reference.md" />
+			<arg value="-t" />
+			<arg value="${basedir}/create_toc.lua" />
+			<arg value="-o" />
+			<arg value="${basedir}/${reference_output.dir}/reference_toc.xml" />
+		</exec>
+
+		<exec executable="mkdir">
+			<arg value="-p" />
+			<arg value="${basedir}/${reference_output.dir}/images" />
+		</exec>
+
+		<apply executable="cp">
+			<srcfile/>
+			<targetfile/>
+
+			<fileset dir="${reference.dir}/images" includes="*"/>
+			<mapper type="glob"
+				from="*"
+				to="${reference_output.dir}/images/*"/>
+		</apply>
+
+	</target>
+
+	<target name="build_reference_pdf" description="Build the reference PDF">
+		<mkdir dir="${basedir}/../../../documentation/resolute/" />
+
+		<exec executable="pandoc" dir="${reference.dir}">
+			<arg value="reference.md" />
+			<arg value="--toc" />
+			<arg value="--number-sections" />
+			<arg value="-s" />
+			<arg value="--filter" />
+			<arg value="${basedir}/link-to-ref.py" />
+			<arg value="--filter" />
+			<arg value="pandoc-crossref" />
+			<arg value="-f" />
+			<arg value="markdown" />
+			<arg value="--listings" />
+			<arg value="-H" />
+			<arg value="../../tex-listings-setup.txt" />
+			<arg value="--latex-engine=xelatex" />
+			<arg value="-V"/>
+			<arg value="links-as-notes"/>
+			<arg value="-V" />
+			<arg value="documentclass=report" />
+			<arg value="-o" />
+			<arg value="${basedir}/../../../documentation/resolute/reference.pdf" />
+		</exec>
+	</target>
+</project>

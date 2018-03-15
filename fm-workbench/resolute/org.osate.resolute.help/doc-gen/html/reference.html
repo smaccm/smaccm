@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="Peter Feiler">
+  <meta name="author" content="Julien Delange">
+  <title>Resolute Reference Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="/home/kfhoech/git/smaccm/fm-workbench/resolute/org.osate.resolute.help/css/pandoc.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Resolute Reference Guide</h1>
+<p class="author">Peter Feiler</p>
+<p class="author">Julien Delange</p>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#sec:introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#sec:claim-functions"><span class="toc-section-number">2</span> Claim Functions</a><ul>
+<li><a href="#sec:application-of-claim-functions"><span class="toc-section-number">2.1</span> Application of Claim Functions</a></li>
+<li><a href="#sec:uses-of-claim-functions"><span class="toc-section-number">2.2</span> Uses of Claim Functions</a></li>
+</ul></li>
+<li><a href="#sec:computational-functions-and-constants-final-variables"><span class="toc-section-number">3</span> Computational Functions and Constants (Final Variables)</a><ul>
+<li><a href="#sec:computational-functions"><span class="toc-section-number">3.1</span> Computational Functions</a></li>
+<li><a href="#sec:globalconstants"><span class="toc-section-number">3.2</span> <span id="GlobalConstants">Global</span>Constants</a></li>
+<li><a href="#sec:local-constants"><span class="toc-section-number">3.3</span> Local Constants</a></li>
+</ul></li>
+<li><a href="#sec:predicate-expressions-and-computational-expressions"><span class="toc-section-number">4</span> Predicate Expressions and Computational Expressions</a><ul>
+<li><a href="#sec:predicate-expressions"><span class="toc-section-number">4.1</span> Predicate Expressions</a></li>
+<li><a href="#sec:computational-expressions"><span class="toc-section-number">4.2</span> Computational Expressions</a><ul>
+<li><a href="#sec:type-related-operators"><span class="toc-section-number">4.2.1</span> Type-related operators</a></li>
+<li><a href="#sec:atomic-expressions"><span class="toc-section-number">4.2.2</span> Atomic expressions</a></li>
+<li><a href="#sec:exception-operators"><span class="toc-section-number">4.2.3</span> Exception operators</a></li>
+<li><a href="#sec:collection-related-operators"><span class="toc-section-number">4.2.4</span> Collection-related operators</a></li>
+<li><a href="#sec:the-fail-expression"><span class="toc-section-number">4.2.5</span> The <code>fail</code> expression</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#sec:resolute-type-system"><span class="toc-section-number">5</span> Resolute Type System</a><ul>
+<li><a href="#sec:built-in-base-types"><span class="toc-section-number">5.1</span> Built-in Base Types</a></li>
+<li><a href="#sec:arithmetic-with-integers-and-reals"><span class="toc-section-number">5.2</span> Arithmetic with Integers and Reals</a></li>
+<li><a href="#sec:aadl-model-element-types"><span class="toc-section-number">5.3</span> AADL Model Element Types</a></li>
+</ul></li>
+<li><a href="#sec:built-in-functions"><span class="toc-section-number">6</span> Built-in Functions</a><ul>
+<li><a href="#sec:built-in-functions-for-collections"><span class="toc-section-number">6.1</span> Built-in Functions for Collections</a></li>
+<li><a href="#sec:built-in-functions-for-ranges"><span class="toc-section-number">6.2</span> Built-in Functions for Ranges</a></li>
+<li><a href="#sec:built-in-functions-on-any-model-element-of-the-instance-model"><span class="toc-section-number">6.3</span> Built-in Functions on Any Model Element (of the instance model):</a></li>
+<li><a href="#sec:model-element-collections"><span class="toc-section-number">6.4</span> Model Element Collections</a></li>
+<li><a href="#sec:external-functions"><span class="toc-section-number">6.5</span> External Functions</a></li>
+<li><a href="#sec:error-model-functions"><span class="toc-section-number">6.6</span> Error Model Functions</a></li>
+</ul></li>
+<li><a href="#sec:pre-declared-resolute-computational-function-library"><span class="toc-section-number">7</span> Pre-declared Resolute Computational Function Library</a><ul>
+<li><a href="#sec:binding-related-predicate-functions"><span class="toc-section-number">7.1</span> Binding-Related Predicate Functions</a></li>
+<li><a href="#sec:connection-related-functions"><span class="toc-section-number">7.2</span> Connection-Related Functions</a></li>
+<li><a href="#sec:model-element-containment"><span class="toc-section-number">7.3</span> Model Element Containment</a></li>
+<li><a href="#sec:handling-of-feature-groups"><span class="toc-section-number">7.4</span> Handling of Feature Groups</a></li>
+</ul></li>
+<li><a href="#sec:resolute-examples"><span class="toc-section-number">8</span> Resolute Examples</a><ul>
+<li><a href="#sec:debugging-models-with-resolute"><span class="toc-section-number">8.1</span> Debugging Models with Resolute</a></li>
+<li><a href="#sec:reachable-collections-of-model-elements"><span class="toc-section-number">8.2</span> Reachable Collections of Model Elements</a></li>
+</ul></li>
+<li><a href="#sec:copyright"><span class="toc-section-number">9</span> Copyright</a></li>
+</ul>
+</nav>
+<p><span id="introduction"></span></p>
+<h1 id="sec:introduction"><span class="header-section-number">1</span> Introduction</h1>
+<p>Resolute claim functions, computational functions, and global constants are defined in Resolute annex libraries, <em>i.e.</em>, Resolute annex clauses placed directly in an AADL package.</p>
+<pre caption="Resolute Claim Functions"><code>package BudgetCase
+public
+
+annex Resolute {**
+    MaximumWeight : real = 1.2kg
+
+    SCSReq1(self : component) &lt;=
+    ** &quot;R1&quot; SCS shall be no heavier than &quot; MaximumWeight%kg **
+    SCSReq1VA1(self, MaximumWeight) or SCSReq1VA2(self, MaximumWeight)
+
+    AddBudgets(self : component) : real =
+    sum([WeightBudgett) for (t: subcomponents(self))])</code></pre>
+<p>A claim function can be associated with component types or implementations by <code>prove</code> statements declared in a Resolute annex subclause. The example shows the <code>prove</code> statement for a claim function <code>SCSReq1</code> with the component itself passed in as a parameter.</p>
+<pre caption="Prove Statement for a Claim Function"><code>system implementation SCS.Phys
+    subcomponents
+        sensor1: device sensor;
+        sensor2: device sensor;
+        actuator: device actuator;
+    annex Resolute {**
+        prove (SCSReq1(this))</code></pre>
+<p>Invoke the <em>Resolute</em> command on a component implementation. This results in an instantiation of the component implementation and the application of all claim functions associated with all of the components in the instance model via the <code>prove</code> statements.</p>
+<figure>
+<img src="images/PackagePublic.png" alt="Instantiation" /><figcaption>Instantiation</figcaption>
+</figure>
+<p>The verification results are then displayed in a view labeled <em>Assurance Case.</em></p>
+<p><img src="images/AssuranceCaseView.png" alt="Assurance Case View" /> <span id="claim-functions"></span></p>
+<h1 id="sec:claim-functions"><span class="header-section-number">2</span> Claim Functions</h1>
+<p>The syntax of a claim function is as follows:</p>
+<pre class="bnf" caption="Claim Function Syntax"><code>&lt;Claim_Function&gt; ::=
+
+    &lt;name&gt; &quot;(&quot; (&lt;parameter&gt; (&quot;,&quot; &lt;paramter) )* )? &quot;)&quot; &quot;&lt;=&quot;
+    &quot;**&quot; &lt;description&gt; &quot;**&quot; &lt;claim_function_expression&gt;
+
+&lt;parameter&gt; ::= &lt;name&gt; &quot;:&quot; &lt;type&gt;
+
+&lt;description&gt; ::= &lt;text&gt; ( &lt;parameter_reference&gt; | &lt;text&gt;)*</code></pre>
+<p>The parameter declaration consists of a name and a type (see Resolute Type System).</p>
+<p>The description for a claim function consists of a sequence of strings and references to claim function parameters, global constants, or local constants (defined by <code>let</code> statements). If your values are numerical with a unit, you can specify the unit to be used for display by indicating the desired unit after a <code>%</code>, <em>e.g.</em>, WeightLimit%kg. The units are those defined by Units property types in property sets and do not have to be qualified by the Units type.</p>
+<p>The claim function expression is assumed to be a logical expression (<code>and</code>, <code>forall</code>, <code>or</code>, <code>exists</code>, implies (<code>=&gt;</code>)) to represent a predicate. In the case of <code>and</code> and <code>forall</code>, all expression elements are executed and then the result is evaluated and returns true only if all claim functions return true. Executing all claim functions allows Resolute to inform the user of all failing claim functions rather than one at a time by not executing the remaining elements in the <code>and</code> or <code>forall</code> expression.</p>
+<p>A Resolute annex library is declared directly in a package through the <code>annex</code> Resolute <code>{**</code> <em>&lt;library content&gt;</em> <code>**};</code> statement. Such a statement can be placed in a package by itself, combined with library declarations for other annexes, or combined with classifier declarations in the same package. A package cannot contain multiple Resolute annex library declarations; <em>i.e.</em>, each library must be placed in a separate package.</p>
+<p>Resolute assumes that there is a global name space for the names of claim functions and computational functions. Therefore, their names must be globally unique. They can be referenced in <code>prove</code> statements, other claim functions, or computational functions without qualification by a package name.</p>
+<p><span id="application-claim-functions"></span></p>
+<h2 id="sec:application-of-claim-functions"><span class="header-section-number">2.1</span> Application of Claim Functions</h2>
+<p>Claim functions are invoked on a component by specifying a <code>prove</code> statement in a Resolute annex subclause of the component implementation. This claim function is then executed on every instance of this component implementation when the <em>Resolute</em> command is invoked.</p>
+<p>A component implementation can contain multiple <code>prove</code> statements.</p>
+<pre class="bnf" caption="Multiple Prove Statements"><code>&lt;Resolute_subclause&gt; :== &quot;annex&quot; &quot;resolute&quot; &quot;{**&quot; &lt;prove_statement&gt; ( &lt;prove_statement&gt; )* &quot;**}&quot; &quot;;&quot;
+
+&lt;prove_statement&gt; ::= &quot;prove&quot; &quot;(&quot; &lt;claim_function_invocations&gt; &quot;)&quot;
+
+&lt;claim_function_invocation&gt; ::= &lt;claim_function_name&gt; &quot;(&quot;
+    ( &lt;parameter_value&gt; (&quot;,&quot; &lt;parameter_value&gt;)* )? &quot;)&quot;</code></pre>
+<p>The parameter values can be integers, real numbers, strings, Boolean literals, model elements, references to global constants, and collections of these types. They must match the specified type for the parameter.</p>
+<p>One special model element reference is expressed by the keyword <code>this</code>. It refers to the instance model object of the model element that contains the <code>prove</code> statement. The keyword <code>this</code> can only be used in the <code>prove</code> statement --- not in verification action expressions. This constraint means that <code>this</code> must be passed to a claim function for it to know what model element it operates on --- unless we have a global claim function (see Global Constants).</p>
+<pre><code>prove ( Memory_safe ( this ))</code></pre>
+<p>You can also identify a subcomponent of <code>this</code>; <em>i.e.</em>, associate the verification action with a component down a path of the architecture hierarchy. This allows you to specify a verification action for a specific component instance. This example shows how a <code>prove</code> statement is applied to a subcomponent called subsystem1:</p>
+<pre><code>prove (Fully_Connected ( this.subsystem1 ))</code></pre>
+<p>The <code>prove</code> statement can be associated with the component classifier of the subcomponent. In that case, it applies to all instances of that component. We recommend that you associate <code>prove</code> statements with a path only if the <code>prove</code> is intended for that particular instance of a subcomponent.</p>
+<p><span id="uses-claim-functions"></span></p>
+<h2 id="sec:uses-of-claim-functions"><span class="header-section-number">2.2</span> Uses of Claim Functions</h2>
+<p>The compiler does enforce that claim functions can be invoked only in <code>prove</code> statements, and as operands in <code>and</code>, <code>or</code>, <code>&gt;</code> (implies), <code>exists</code>, and <code>forall</code> operations, and cannot be invoked in computational functions.</p>
+<p><span id="comp-functions-constants"></span></p>
+<h1 id="sec:computational-functions-and-constants-final-variables"><span class="header-section-number">3</span> Computational Functions and Constants (Final Variables)</h1>
+<p><span id="comp-functions"></span></p>
+<h2 id="sec:computational-functions"><span class="header-section-number">3.1</span> Computational Functions</h2>
+<p>Computational functions are used to calculate a value of any type. The result can be Boolean, numeric, model elements, or collections of items of a specific type. Computational functions take parameters that are typed. Computational functions have a single expression that can be preceded by a local constant declaration.</p>
+<pre class="bnf" caption="Computational Functions"><code>&lt;computational_function&gt; ::=
+    &lt;function_name&gt; &quot;(&quot; &lt;parameter&gt; (&quot;.&quot; &lt;parameter&gt;)* &quot;)&quot; &quot;:&quot; &lt;return_type&gt; &quot;=&quot;
+    &lt;computational_expression&gt;</code></pre>
+<ul>
+<li>Computational functions are defined in Resolute libraries.</li>
+<li>Computational functions can be invoked in expressions of claim functions. Typically they are invoked in claim functions that represent verification actions or assumptions.</li>
+</ul>
+<p><span id="global-constants"></span></p>
+<h2 id="sec:globalconstants"><span class="header-section-number">3.2</span> <span id="GlobalConstants">Global</span>Constants</h2>
+<p>Global constants represent parameters to the verification whose value is set once and can be used in any computational expression, including parameters to claim function calls. Global constants can also hold the result of a computational function or a set constructor whose value can be determined at startup time of a Resolute command. For example, a global constant may be used to precompute various sets of model element instances, <em>e.g.</em>, all elements that are reachable from a component of a certain component type.</p>
+<pre class="bnf" caption="Global Constants"><code>&lt;global_constant&gt; ::=
+    &lt;constant_name&gt; &quot;:&quot; &lt;type&gt; &quot;=&quot; &lt;computational_expression&gt;</code></pre>
+<ul>
+<li>Global constants are defined in Resolute libraries.</li>
+<li>Global constants can precompute any expression.</li>
+</ul>
+<p><span id="local-constants"></span></p>
+<h2 id="sec:local-constants"><span class="header-section-number">3.3</span> Local Constants</h2>
+<p>Resolute also supports precomputation of local constants, which are used inside a claim function or computational function. One or more local constants can be defined before any expression. Typically, they are used in a verification action or computational function before the logical or computational expression. However, they can also be used before any subexpression, <em>e.g.</em>, before the right-hand subexpression of an <code>and</code> or <code>+</code> operator.</p>
+<pre class="bnf" caption="Local Constants"><code>&lt;local_constant&gt; ::=
+    &quot;let&quot; &lt;constant_name&gt; &quot;:&quot; &lt;type&gt; &quot;=&quot; &lt;computational_expression&gt; &quot;;&quot;</code></pre>
+<ul>
+<li>The scope of a local constant is the expression; <em>i.e.</em>, they can be referenced only from within the succeeding expression.</li>
+<li>Local constants are used to precompute values that may be referenced multiple times in the succeeding expression.</li>
+</ul>
+<p><span id="expressions"></span></p>
+<h1 id="sec:predicate-expressions-and-computational-expressions"><span class="header-section-number">4</span> Predicate Expressions and Computational Expressions</h1>
+<p>A constraint expression results in a Boolean value.</p>
+<p><span id="predicate-expressions"></span></p>
+<h2 id="sec:predicate-expressions"><span class="header-section-number">4.1</span> Predicate Expressions</h2>
+<p>Predicate expressions support the following operators in increasing precedence order:</p>
+<p>Logical operators (the operands a, b are expressions of type Boolean):</p>
+<ul>
+<li>Implies: a <code>=&gt;</code> b</li>
+<li>Disjunction: a <code>or</code> b</li>
+<li>Conjunction: a <code>and</code> b</li>
+<li>Negation: <code>not</code> a</li>
+<li>Quantified logical expressions: ( <code>forall</code> | <code>exists</code> ) <code>(</code> &lt;variablename&gt; <code>:</code> &lt;collection_constructor&gt; <code>)</code> <code>.</code> &lt;logical_expression&gt;</li>
+</ul>
+<p><span id="comp-expressions"></span></p>
+<h2 id="sec:computational-expressions"><span class="header-section-number">4.2</span> Computational Expressions</h2>
+<p>Computational expressions are used in computational functions and must return a value of the specified type. Computational expressions include constraint expressions, arithmetic expressions, and operations on collections of values and model elements.</p>
+<p>Relational operators (the operands are of type <code>real</code> or <code>int</code>):</p>
+<ul>
+<li><code>&lt;</code> | <code>&lt;=</code> | <code>&gt;</code> | <code>&gt;=</code> | <code>=</code> | <code>&lt;&gt;</code></li>
+</ul>
+<p>Arithmetic operators (the operands are of type <code>real</code> or <code>int</code> and may include a unit):</p>
+<ul>
+<li><code>+</code> | <code>-</code></li>
+<li><code>\</code> | <code>/</code></li>
+<li>Negation: <code>-</code> a</li>
+<li>Precedence brackets: <code>(</code> a <code>)</code></li>
+</ul>
+<h3 id="sec:type-related-operators"><span class="header-section-number">4.2.1</span> Type-related operators</h3>
+<ul>
+<li>Type test: ( a <code>instanceof</code> &lt;type&gt; )</li>
+<li>Type cast: <code>(</code> &lt;type&gt; <code>)</code> a</li>
+</ul>
+<h3 id="sec:atomic-expressions"><span class="header-section-number">4.2.2</span> Atomic expressions</h3>
+<p>Atomic expressions can be used as operands of all the operators listed above.</p>
+<ul>
+<li><p>Base type values: integer value, real value, string value, and Boolean value. Integer and real values can be annotated with a unit. Any unit defined by a Unit property type in any of the property sets is acceptable.</p></li>
+<li><p>Global or local constant reference and variable reference by its identifier</p></li>
+<li><p>Computational function invocation:<br />
+function_name <code>(</code> (&lt;parameter_value&gt; ( <code>,</code> &lt;parameter_value&gt; )* )? <code>)</code></p></li>
+<li><p>Conditional value: <code>if</code> condition <code>then</code> expression <code>else</code> expression</p></li>
+<li><p>Qualified classifier or property definition: ( &lt;ID&gt; <code>::</code> ) *&lt;ID&gt; ( <code>.</code> &lt;ID&gt; )?</p>
+<ul>
+<li>Classifier used only as a parameter to <code>instance</code> or <code>instances</code> and property definition only in <code>property</code> built-in function</li>
+</ul></li>
+<li><p>Instance model reference: <code>this</code> ( <code>.</code> &lt;ID&gt; ) *</p>
+<ul>
+<li>Used only as parameter in <code>prove</code> statement</li>
+</ul></li>
+</ul>
+<h3 id="sec:exception-operators"><span class="header-section-number">4.2.3</span> Exception operators</h3>
+<p>Exception operators are equivalent to exception throws with the enclosing claim function representing an implicit catch.</p>
+<ul>
+<li>Exception: <code>fail</code> &lt;string value&gt; or <code>fail **</code> &lt;description&gt; <code>**</code> with the description syntax the same as for claim functions</li>
+</ul>
+<h3 id="sec:collection-related-operators"><span class="header-section-number">4.2.4</span> Collection-related operators</h3>
+<ul>
+<li><p>Basic collection: <code>{</code> &lt;expression&gt; ( <code>,</code> &lt;expression&gt; )* <code>}</code> | <code>{ }</code></p></li>
+<li>Filtered collection: <code>{</code> &lt;filtered_element&gt; <code>for</code> ( <code>(</code> &lt;element_name&gt; <code>:</code> &lt;collection_constructor&gt; <code>)</code> ) + <code>}</code> | &lt;filter_expression&gt;
+<ul>
+<li>Note: &lt;filtered_element&gt; refers to one of the set element names</li>
+<li>Note: &lt;filter_expression&gt; is of type Boolean</li>
+</ul></li>
+</ul>
+<pre class="bnf" caption="Collection-Related Operators"><code>&lt;collection_constructor&gt; ::=
+    &lt;basic_collection&gt; | &lt;filtered_collection&gt; | &lt;AADL_model_element_type&gt; |
+    &lt;global_constant&gt; | &lt;local_constant&gt; | &lt;computational_function_invocation&gt;</code></pre>
+<p>Note: The constants must have collections as their values, and the invoked function must return a collection. Function invocations returning a collection can be a user-defined computational function or a built-in function (see Built-in Base Types). The <em>constant reference</em> has to be of a collection type.</p>
+<p>The following examples illustrate the use of collections. The first example uses the built-in <code>subcomponents</code> function to get a collection of subcomponents. The <code>forall</code> then iterates over the collection and executes the built-in <code>has_property</code> constraint function on each element.</p>
+<p>In the second example, we precompute the collection of subcomponents and hold on to them with a local constant. We then construct a collection of real values of value 1.0 for each subcomponent that satisfies the <code>has_property</code> constraint function, then perform the summation of the resulting <code>real</code> collection, and divide it by the size of the subcomponent collection.</p>
+<pre class="resolute" caption="Subcomponent Weight Coverage Example"><code>HasSubcomponentWeightBudget(self:component) : bool =
+    forall (sub: subcomponents(self)) . has_property(sub,SEI::GrossWeight)
+
+SubcomponentWeightBudgetCoverage(self:component) : bool =
+    (sum({ 1.0 for (sub : subs) | has_property(sub,SEI::GrossWeight)}) / length(subs))</code></pre>
+<p>Collections can also be precomputed in global constants. This is useful when you want to make use of certain collections of instance model objects repeatedly. In this example, the global constant declaration <code>MOTORS</code> represents the set of instances of a particular component type.</p>
+<pre><code>MOTORS : {component} = instances(PX4IOAR::Motor)</code></pre>
+<h3 id="sec:the-fail-expression"><span class="header-section-number">4.2.5</span> The <code>fail</code> expression</h3>
+<p>The <code>fail</code> expression can be used in any computational function and can be viewed like an exception that is thrown. It is automatically caught by the closest enclosing claim function, interpreted as a fail of the claim, and reported as a sub-result to the claim function. That is, the <code>fail</code> expression is shown as a failure, and the provided text explains the failure.</p>
+<p><span id="resolute-type-system"></span></p>
+<h1 id="sec:resolute-type-system"><span class="header-section-number">5</span> Resolute Type System</h1>
+<pre class="bnf" caption="Resolute Type System"><code>&lt;type&gt; ::=
+    &lt;collection_type&gt; | &lt;base_type&gt; | &lt;AADL_model_element_type&gt;
+
+&lt;collection_type&gt; ::= &quot;{&quot; &lt;type&gt; &quot;}</code></pre>
+<p>The collection concept allows multiple elements of the same value. In the <em>SubcomponentWeightCoverage</em> example, the collection concept has multiple instances of the value 1.0, and each is counted in the summation.</p>
+<p><span id="base-types"></span></p>
+<h2 id="sec:built-in-base-types"><span class="header-section-number">5.1</span> Built-in Base Types</h2>
+<p>Base type:</p>
+<ul>
+<li><code>int</code></li>
+<li><code>real</code></li>
+<li><code>string</code></li>
+<li><code>bool</code></li>
+<li><code>range</code></li>
+</ul>
+<p><span id="arithmetic"></span></p>
+<h2 id="sec:arithmetic-with-integers-and-reals"><span class="header-section-number">5.2</span> Arithmetic with Integers and Reals</h2>
+<p><code>int</code> and <code>real</code> --- as well as the min and max of a <code>range</code> --- can be values specified with a measurement unit. Any of the unit literals defined in AADL2 Units property types are acceptable. The Units property type definition specifies the ratios to be used to perform conversion between the units. For <code>int</code> and <code>real</code> values with units, Resolute converts the value to a value relative to the base unit (the first unit defined in the Units type). All arithmetic is performed based on those values. To present results in the description of a claim function of a <code>fail</code> operation, the value is converted to the unit specified in the description specification.</p>
+<p>Resolute can retrieve property values with built-in functions. The property values for <code>aadlinteger</code> are mapped into <code>int</code>, <code>aadlreal</code> into <code>real</code>, and <code>range of</code> into <code>range</code>.</p>
+<p><span id="aadl"></span></p>
+<h2 id="sec:aadl-model-element-types"><span class="header-section-number">5.3</span> AADL Model Element Types</h2>
+<p>AADL model element types have an implied type hierarchy. The nesting level indicates this type hierarchy.</p>
+<ul>
+<li><code>aadl</code> [any AADL model element]
+<ul>
+<li><code>component</code> [any category of AADL component]
+<ul>
+<li><code>abstract</code> [AADL abstract component]</li>
+<li><code>bus</code></li>
+<li><code>data</code></li>
+<li><code>device</code></li>
+<li><code>memory</code></li>
+<li><code>processor</code></li>
+<li><code>process</code></li>
+<li><code>subprogram</code></li>
+<li><code>subprogram_group</code></li>
+<li><code>system</code></li>
+<li><code>thread</code></li>
+<li><code>thread_group</code></li>
+<li><code>virtual_bus</code></li>
+<li><code>virtual_processor</code></li>
+</ul></li>
+<li><code>connection</code> [AADL connection instance]</li>
+<li><code>property</code> [AADL property definition]</li>
+<li><code>feature</code> [any AADL feature]
+<ul>
+<li><code>port</code> [any AADL port]
+<ul>
+<li><code>data_port</code></li>
+<li><code>event_port</code></li>
+<li><code>event_data_port</code></li>
+<li><code>feature_group</code></li>
+</ul></li>
+<li><code>access</code> [any AADL access feature]
+<ul>
+<li><code>bus_access</code>
+<ul>
+<li><code>provides_bus_access</code></li>
+<li><code>requires_bus_access</code></li>
+</ul></li>
+<li><code>data_access</code>
+<ul>
+<li><code>provides_data_access</code></li>
+<li><code>requires_data_access</code></li>
+</ul></li>
+<li><code>subprogram_access</code>
+<ul>
+<li><code>provides_subprogram_access</code></li>
+<li><code>requires_subprorgam_access</code></li>
+</ul></li>
+<li><code>subprogram_group_access</code>
+<ul>
+<li><code>provides_subprogram_group_access</code></li>
+<li><code>requires_subprogram_group_access</code></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Resolute operates on the instance model; <em>i.e.</em>, the model elements represent instances. Built-in collection functions operate on instance model elements or retrieve the set of instances for a given classifier (see Built-in Functions).</p>
+<p><span id="functions"></span></p>
+<h1 id="sec:built-in-functions"><span class="header-section-number">6</span> Built-in Functions</h1>
+<p><span id="functions-collections"></span></p>
+<h2 id="sec:built-in-functions-for-collections"><span class="header-section-number">6.1</span> Built-in Functions for Collections</h2>
+<p><code>union</code>(&lt;collection&gt;, &lt;collection&gt;): collection - returns a collection that is the union of the two inputs</p>
+<p><code>intersect</code>(&lt;collection&gt;, &lt;collection&gt;): collection - returns a collection that is the intersection of the two inputs</p>
+<p><code>length</code>(&lt;collection&gt;): int - returns the size of the collection</p>
+<p><code>member</code>(&lt;element&gt;, &lt;collection&gt;): Boolean - returns true if the element is a member of the collection</p>
+<p><code>sum</code>(&lt;numeric_collection&gt;): numeric - calculates the sum of a collection of integers or a collection of real</p>
+<p><span id="functions-ranges"></span></p>
+<h2 id="sec:built-in-functions-for-ranges"><span class="header-section-number">6.2</span> Built-in Functions for Ranges</h2>
+<p><code>upper_bound</code>(&lt;range&gt;): numeric - returns the upper bound of the range</p>
+<p><code>lower_bound</code>(&lt;range&gt;): numeric - returns the lower bound of the range</p>
+<p><span id="functions-model"></span></p>
+<h2 id="sec:built-in-functions-on-any-model-element-of-the-instance-model"><span class="header-section-number">6.3</span> Built-in Functions on Any Model Element (of the instance model):</h2>
+<p><code>has_property</code>(&lt;named_element&gt;, &lt;property&gt;): Boolean - the named element has the property.</p>
+<p><code>property</code>(&lt;named_element&gt;, &lt;property&gt;, &lt;default value&gt;*): value - returns the value of the property. If a default value is supplied, then it is returned if the element does not have the property value. If no default is supplied and the value does not exist, a resolute failure exception is thrown.</p>
+<p><code>has_parent</code>(&lt;named_element&gt;): Boolean - returns true if the component has an enclosing model element</p>
+<p><code>parent</code>(&lt;named_element&gt;): named_element - returns the parent of the named element. The parent must exist.</p>
+<p><code>name</code>(&lt;named_element&gt;): string - returns the name of the named element</p>
+<p><code>has_type</code> (named_element): Boolean - returns true if the named element has a classifier. The named element can be a component, feature, or connection instance. In the case of a connection, the type of the feature is the connection end.</p>
+<p><code>type</code>(&lt;named_element&gt;): Classifier - returns the classifier of a component, feature, or connection. In the case of a connection, the type of the feature is the connection end. The named element must have a type.</p>
+<p><code>is_of_type</code>(&lt;named_element&gt;, &lt;classifier&gt;): Boolean - true if the named element has the classifier or one of its type extensions. The named element must have a type. The named element can be a component, feature, or connection instance. In the case of a connection, the type of the feature is the connection end.</p>
+<p><code>has_member</code>(&lt;component&gt;, &lt;string&gt;): Boolean - true if the component has a member with the specified name (string). Members are features, subcomponents, etc. The component can be a component instance or a component classifier.</p>
+<ul>
+<li>Note: Feature instances representing feature groups can have feature instances as members, but they are not handled by this function.</li>
+</ul>
+<p><code>source</code>(&lt;connection&gt;): connection_endpoint - returns the component or feature instance that is the source of the connection instance</p>
+<p><code>destination</code>(&lt;connection&gt;): connection_endpoint - returns the component or feature instance that is the destination of the connection instance</p>
+<p><code>direction</code>(&lt;feature&gt;): string - returns the direction of a feature instance as string (<code>in</code>, <code>out</code>, <code>inout</code>/<code>in_out</code>?)</p>
+<p><code>is_event_port</code>(&lt;feature&gt;): Boolean - true if the feature instance is an event port</p>
+<p><code>is_bound_to</code>(&lt;component&gt;, &lt;binding_target&gt;): Boolean - true if the component instance is bound to the binding target</p>
+<ul>
+<li>Note: Connection bindings are not handled. The <code>is_bound_to</code> function is the same as library function <code>bound</code>.</li>
+</ul>
+<p><span id="functions-model-collections"></span></p>
+<h2 id="sec:model-element-collections"><span class="header-section-number">6.4</span> Model Element Collections</h2>
+<p>Resolute operates on the instance model; this means that the collections are of instance model elements.</p>
+<p><code>features</code>(&lt;named_element&gt;): {feature} - returns a collection containing the features of the named element</p>
+<p><code>subcomponents</code>(&lt;named_element&gt;): {component} - returns a collection containing the subcomponents (component instances) of the named element</p>
+<p><code>connections</code>(&lt;named_element&gt;): {connection} - returns a collection of connection instances for which the named element is an end point (source or destination). The named element can be a component instance or a feature instance.</p>
+<p><code>instances</code> (&lt;component_classifier&gt;): {component} - returns the collection of instances in the instance model for a given component classifier</p>
+<p><code>instance</code> (&lt;component_classifier&gt;): component - returns the component instance for a given component classifier. The method assumes that there is only one instance.</p>
+<p><span id="functions-external"></span></p>
+<h2 id="sec:external-functions"><span class="header-section-number">6.5</span> External Functions</h2>
+<p><code>analysis</code> (&lt;function: string&gt;, &lt;args&gt;): Boolean - invocation of a Java function registered as an external function extension point. The function is specified as string identifier of the extension point. The arguments are additional parameters of the analysis function.</p>
+<p><span id="functions-error-model"></span></p>
+<h2 id="sec:error-model-functions"><span class="header-section-number">6.6</span> Error Model Functions</h2>
+<p><code>propagate_error</code> (&lt;named_element&gt;, &lt;error_type: string&gt;): Boolean - true if the component or feature instance propagates the error type</p>
+<p><code>error_state_reachable</code> (&lt;component&gt;, &lt;state: string&gt;): Boolean - true if the error state of the component instance is reachable</p>
+<p><span id="resolute-functions"></span></p>
+<h1 id="sec:pre-declared-resolute-computational-function-library"><span class="header-section-number">7</span> Pre-declared Resolute Computational Function Library</h1>
+<p><span id="binding-functions"></span></p>
+<h2 id="sec:binding-related-predicate-functions"><span class="header-section-number">7.1</span> Binding-Related Predicate Functions</h2>
+<p><code>bound</code>(&lt;component, binding_target&gt;): Boolean - true if the component instance is bound to the binding target by actual processor, memory, or connection binding. Note: <code>bound</code> is the same as the built-in <code>is_bound_to</code> function.</p>
+<p><code>processor_bound</code>(&lt;component&gt;, &lt;binding_target&gt;): Boolean - true if the component instance is bound to the binding target by actual processor binding</p>
+<p><code>memory_bound</code>(&lt;component&gt;, &lt;binding_target&gt;): Boolean - true if the component instance is bound to the binding target by actual memory binding</p>
+<p><code>connection_bound</code>(&lt;component&gt;, &lt;binding_target&gt;): Boolean - true if the component instance is bound to the binding target by actual connection binding.</p>
+<p><span id="connection-functions"></span></p>
+<h2 id="sec:connection-related-functions"><span class="header-section-number">7.2</span> Connection-Related Functions</h2>
+<p><code>source_component</code>(&lt;connection&gt;): component - returns the component that is the source of the connection instance. This component contains the feature instance as a connection end point.</p>
+<p><code>destination_component</code>(&lt;connection&gt;): component - returns the component that is the destination of the connection instance. This component contains the feature instance as a connection end point.</p>
+<p><code>is_port_connection</code>(&lt;connection&gt;): Boolean - true if the connection is a connection between ports</p>
+<p><code>is_data_port_connection</code>(&lt;connection&gt;): Boolean - true if one of the connection end points is a data port. Note: should be determined by the destination.</p>
+<p><code>is_event_port_connection</code>({connection&gt;): Boolean - true if one of the connection end points is an event port. Note: should be determined by the destination.</p>
+<p><code>is_event_data_port_connection</code>(&lt;connection&gt;): Boolean - true if one of the connection end points is an event data port. Note: should be determined by the destination.</p>
+<p><code>is_data_access_connection</code>(&lt;connection&gt;): Boolean - true if one of the connection end points is a data access feature. Note: should be determined by the destination.</p>
+<p><span id="model-element-containment"></span></p>
+<h2 id="sec:model-element-containment"><span class="header-section-number">7.3</span> Model Element Containment</h2>
+<p><code>contained</code>(&lt;named_element&gt;, &lt;container_component&gt;): Boolean - true if the named element is contained in the container component. The named element can be a component or feature instance. Note: also works for connection instance.</p>
+<p><code>containing_component</code>(&lt;named_element&gt;): component - returns the directly containing component instance. The named element can be a component or feature instance. Note: also works for connection instance.</p>
+<p><span id="handling-feature-groups"></span></p>
+<h2 id="sec:handling-of-feature-groups"><span class="header-section-number">7.4</span> Handling of Feature Groups</h2>
+<p>Feature groups are represented in the instance model as a hierarchy of feature instances reflecting the nesting of the feature group.</p>
+<p><code>flatten_feature</code>(&lt;feature&gt;): {feature} - returns a set of feature instances that are the leaf elements of a given feature instance. If no elements are contained in the feature instance, the feature instance itself is returned as a set.</p>
+<p><code>flatten_features</code>( &lt;{feature}&gt; ) : {feature} - returns a set of feature instances that are the leaf elements of a given feature instance set.</p>
+<p><span id="resolute-examples"></span></p>
+<h1 id="sec:resolute-examples"><span class="header-section-number">8</span> Resolute Examples</h1>
+<p><span id="debugging"></span></p>
+<h2 id="sec:debugging-models-with-resolute"><span class="header-section-number">8.1</span> Debugging Models with Resolute</h2>
+<p>Get a model element trace in the assurance case view:</p>
+<pre class="resolute" caption="Model Element Trace in the Assurance View"><code>print_aadl(a : aadl) &lt;=
+    ** a **
+    true
+
+print_set(s : {aadl}) &lt;=
+    ** s **
+    true</code></pre>
+<h2 id="sec:reachable-collections-of-model-elements"><span class="header-section-number">8.2</span> Reachable Collections of Model Elements</h2>
+<p>This is a snippet from the Smaccmcopter example on <a href="https://github.com/smaccm/smaccm/tree/master/models" class="uri">https://github.com/smaccm/smaccm/tree/master/models</a>.</p>
+<pre class="resolute" caption="Smaccmcopter Example"><code>reach(c : component) : {component} =
+    recusive_reach({c})
+
+recusive_reach(curr: {component}) : {component} =
+    let next : {component} = union(curr, next_reach(curr));
+    if next = curr then
+        curr
+    else
+        recursive_reach(next)
+
+next_reach(curr : {component) : {component} =
+    {y for (x : curr) (y : reachable_components(x)) | not is_decrypt(x)}
+
+reachable_components(comp : component) : {component} =
+    {c for (conn : connections(comp))
+        (c : reachable_components_via_connection(comp, conn))}
+
+-- What components (either a single one or none) can &#39;comp&#39; reach directly via &#39;conn&#39;
+--
+-- This is complicated due to data access connections which seem to ignore
+-- normal aadl directionality, and instead use an access rights property
+reachable_components_via_connection(comp : component, conn : connection) : {component} =
+  -- a direct port connection
+  if is_port_connection(conn) then
+    if source_component(conn) = comp then {destination_component(conn)} else {}
+  -- a component reading from &#39;comp&#39; as a data component via read access on &#39;conn&#39;
+  else if comp instanceof data then
+    if comp = source(conn) and has_read_access(destination(conn)) then
+      {destination_component(conn)}
+    else if comp = destination(conn) and has_read_access(source(conn)) then
+      {source_component(conn)}
+    else
+      {}
+  -- &#39;comp&#39; writing to a data component via write access on &#39;conn&#39;  
+  else if destination(conn) instanceof data and has_write_access(source(conn)) then
+    {destination_component(conn)}
+  else if source(conn) instanceof data and has_write_access(destination(conn)) then
+    {source_component(conn)}
+  -- Other connections unsupported at this time
+  else
+    {}</code></pre>
+<p><span id="copyright"></span></p>
+<h1 id="sec:copyright"><span class="header-section-number">9</span> Copyright</h1>
+<p>Copyright 2015 Carnegie Mellon University</p>
+<p>This material is based upon work funded and supported by the Department of Defense under Contract No. FA8721-05-C-0003 with Carnegie Mellon University for the operation of the Software Engineering Institute, a federally funded research and development center.</p>
+<p>Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the United States Department of Defense.</p>
+<p>NO WARRANTY. THIS CARNEGIE MELLON UNIVERSITY AND SOFTWARE ENGINEERING INSTITUTE MATERIAL IS FURNISHED ON AN &quot;AS-IS&quot; BASIS. CARNEGIE MELLON UNIVERSITY MAKES NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED, AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF THE MATERIAL. CARNEGIE MELLON UNIVERSITY DOES NOT MAKE ANY WARRANTY OF ANY KIND WITH RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.</p>
+<p>This material has been approved for public release and unlimited distribution.</p>
+<p>DM-0002203</p>
+</body>
+</html>
