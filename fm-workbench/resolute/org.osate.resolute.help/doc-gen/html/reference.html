@@ -28,7 +28,7 @@
 </ul></li>
 <li><a href="#sec:computational-functions-and-constants-final-variables"><span class="toc-section-number">3</span> Computational Functions and Constants (Final Variables)</a><ul>
 <li><a href="#sec:computational-functions"><span class="toc-section-number">3.1</span> Computational Functions</a></li>
-<li><a href="#sec:globalconstants"><span class="toc-section-number">3.2</span> <span id="GlobalConstants">Global</span>Constants</a></li>
+<li><a href="#sec:global-constants"><span class="toc-section-number">3.2</span> Global Constants</a></li>
 <li><a href="#sec:local-constants"><span class="toc-section-number">3.3</span> Local Constants</a></li>
 </ul></li>
 <li><a href="#sec:predicate-expressions-and-computational-expressions"><span class="toc-section-number">4</span> Predicate Expressions and Computational Expressions</a><ul>
@@ -81,7 +81,7 @@ annex Resolute {**
     SCSReq1VA1(self, MaximumWeight) or SCSReq1VA2(self, MaximumWeight)
 
     AddBudgets(self : component) : real =
-    sum([WeightBudgett) for (t: subcomponents(self))])</code></pre>
+    sum([WeightBudget(t) for (t: subcomponents(self))])</code></pre>
 <p>A claim function can be associated with component types or implementations by <code>prove</code> statements declared in a Resolute annex subclause. The example shows the <code>prove</code> statement for a claim function <code>SCSReq1</code> with the component itself passed in as a parameter.</p>
 <pre caption="Prove Statement for a Claim Function"><code>system implementation SCS.Phys
     subcomponents
@@ -92,15 +92,18 @@ annex Resolute {**
         prove (SCSReq1(this))</code></pre>
 <p>Invoke the <em>Resolute</em> command on a component implementation. This results in an instantiation of the component implementation and the application of all claim functions associated with all of the components in the instance model via the <code>prove</code> statements.</p>
 <figure>
-<img src="images/PackagePublic.png" alt="Instantiation" /><figcaption>Instantiation</figcaption>
+<img src="images/PackagePublic.png" alt="Instantiation from OSATE menu" /><figcaption>Instantiation from OSATE menu</figcaption>
 </figure>
 <p>The verification results are then displayed in a view labeled <em>Assurance Case.</em></p>
-<p><img src="images/AssuranceCaseView.png" alt="Assurance Case View" /> <span id="claim-functions"></span></p>
+<figure>
+<img src="images/AssuranceCaseView.png" alt="Assurance Case Tree View" /><figcaption>Assurance Case Tree View</figcaption>
+</figure>
+<p><span id="claim-functions"></span></p>
 <h1 id="sec:claim-functions"><span class="header-section-number">2</span> Claim Functions</h1>
 <p>The syntax of a claim function is as follows:</p>
 <pre class="bnf" caption="Claim Function Syntax"><code>&lt;Claim_Function&gt; ::=
 
-    &lt;name&gt; &quot;(&quot; (&lt;parameter&gt; (&quot;,&quot; &lt;paramter) )* )? &quot;)&quot; &quot;&lt;=&quot;
+    &lt;name&gt; &quot;(&quot; (&lt;parameter&gt; (&quot;,&quot; &lt;parameter) )* )? &quot;)&quot; &quot;&lt;=&quot;
     &quot;**&quot; &lt;description&gt; &quot;**&quot; &lt;claim_function_expression&gt;
 
 &lt;parameter&gt; ::= &lt;name&gt; &quot;:&quot; &lt;type&gt;
@@ -143,7 +146,7 @@ annex Resolute {**
 <li>Computational functions can be invoked in expressions of claim functions. Typically they are invoked in claim functions that represent verification actions or assumptions.</li>
 </ul>
 <p><span id="global-constants"></span></p>
-<h2 id="sec:globalconstants"><span class="header-section-number">3.2</span> <span id="GlobalConstants">Global</span>Constants</h2>
+<h2 id="sec:global-constants"><span class="header-section-number">3.2</span> Global Constants</h2>
 <p>Global constants represent parameters to the verification whose value is set once and can be used in any computational expression, including parameters to claim function calls. Global constants can also hold the result of a computational function or a set constructor whose value can be determined at startup time of a Resolute command. For example, a global constant may be used to precompute various sets of model element instances, <em>e.g.</em>, all elements that are reachable from a component of a certain component type.</p>
 <pre class="bnf" caption="Global Constants"><code>&lt;global_constant&gt; ::=
     &lt;constant_name&gt; &quot;:&quot; &lt;type&gt; &quot;=&quot; &lt;computational_expression&gt;</code></pre>
@@ -216,9 +219,14 @@ function_name <code>(</code> (&lt;parameter_value&gt; ( <code>,</code> &lt;param
 <li>Exception: <code>fail</code> &lt;string value&gt; or <code>fail **</code> &lt;description&gt; <code>**</code> with the description syntax the same as for claim functions</li>
 </ul>
 <h3 id="sec:collection-related-operators"><span class="header-section-number">4.2.4</span> Collection-related operators</h3>
+<p>Collections in Resolute can be either lists or sets. Lists can contain multiple identical elements, preserve insertion order, and support <code>head</code> and <code>tail</code> accessors for defining recursive processing. By contrast sets can contain no more than one element of a given value, do not necessarily support insertion order, and support set <code>intersect</code> and <code>union</code> operators. Both lists and sets support quantifiers <code>forall</code> and <code>exists</code> and filtered collections. Operators exist to convert a list into a set (collapsing duplicated elements) and a set into a list.</p>
 <ul>
-<li><p>Basic collection: <code>{</code> &lt;expression&gt; ( <code>,</code> &lt;expression&gt; )* <code>}</code> | <code>{ }</code></p></li>
-<li>Filtered collection: <code>{</code> &lt;filtered_element&gt; <code>for</code> ( <code>(</code> &lt;element_name&gt; <code>:</code> &lt;collection_constructor&gt; <code>)</code> ) + <code>}</code> | &lt;filter_expression&gt;
+<li><p>Basic collection: &lt;Basic_list&gt; | &lt;Basic_set&gt;</p></li>
+<li><p>Basic list: <code>[</code> &lt;expression&gt; ( <code>,</code> &lt;expression&gt; )* <code>]</code> | <code>[ ]</code></p></li>
+<li><p>Basic set: <code>{</code> &lt;expression&gt; ( <code>,</code> &lt;expression&gt; )* <code>}</code> | <code>{ }</code></p></li>
+<li><p>Filtered collection: &lt;Filterd list&gt; | &lt;Filtered set&gt;</p></li>
+<li><p>Filtered list: <code>[</code> &lt;filtered_element&gt; <code>for</code> ( <code>(</code> &lt;element_name&gt; <code>:</code> &lt;collection_constructor&gt; <code>)</code> + ) ( <code>|</code> &lt;filter_expression&gt; )? <code>]</code></p></li>
+<li>Filtered set: <code>{</code> &lt;filtered_element&gt; <code>for</code> ( <code>(</code> &lt;element_name&gt; <code>:</code> &lt;collection_constructor&gt; <code>)</code> + ) ( <code>|</code> &lt;filter_expression&gt; )? <code>}</code>
 <ul>
 <li>Note: &lt;filtered_element&gt; refers to one of the set element names</li>
 <li>Note: &lt;filter_expression&gt; is of type Boolean</li>
@@ -228,13 +236,13 @@ function_name <code>(</code> (&lt;parameter_value&gt; ( <code>,</code> &lt;param
     &lt;basic_collection&gt; | &lt;filtered_collection&gt; | &lt;AADL_model_element_type&gt; |
     &lt;global_constant&gt; | &lt;local_constant&gt; | &lt;computational_function_invocation&gt;</code></pre>
 <p>Note: The constants must have collections as their values, and the invoked function must return a collection. Function invocations returning a collection can be a user-defined computational function or a built-in function (see Built-in Base Types). The <em>constant reference</em> has to be of a collection type.</p>
-<p>The following examples illustrate the use of collections. The first example uses the built-in <code>subcomponents</code> function to get a collection of subcomponents. The <code>forall</code> then iterates over the collection and executes the built-in <code>has_property</code> constraint function on each element.</p>
-<p>In the second example, we precompute the collection of subcomponents and hold on to them with a local constant. We then construct a collection of real values of value 1.0 for each subcomponent that satisfies the <code>has_property</code> constraint function, then perform the summation of the resulting <code>real</code> collection, and divide it by the size of the subcomponent collection.</p>
+<p>The following examples illustrate the use of collections. The first example uses the built-in <code>subcomponents</code> function to get a collection of subcomponents. The <code>forall</code> then iterates over the (set) collection and executes the built-in <code>has_property</code> constraint function on each element.</p>
+<p>In the second example, we precompute the collection of subcomponents and hold on to them with a local constant. We then construct a collection of real values of value 1.0 for each subcomponent that satisfies the <code>has_property</code> constraint function, then perform the summation of the resulting <code>real</code> (list) collection, and divide it by the size of the subcomponent collection.</p>
 <pre class="resolute" caption="Subcomponent Weight Coverage Example"><code>HasSubcomponentWeightBudget(self:component) : bool =
     forall (sub: subcomponents(self)) . has_property(sub,SEI::GrossWeight)
 
 SubcomponentWeightBudgetCoverage(self:component) : bool =
-    (sum({ 1.0 for (sub : subs) | has_property(sub,SEI::GrossWeight)}) / length(subs))</code></pre>
+    (sum([ 1.0 for (sub : subs) | has_property(sub,SEI::GrossWeight)]) / length(subs))</code></pre>
 <p>Collections can also be precomputed in global constants. This is useful when you want to make use of certain collections of instance model objects repeatedly. In this example, the global constant declaration <code>MOTORS</code> represents the set of instances of a particular component type.</p>
 <pre><code>MOTORS : {component} = instances(PX4IOAR::Motor)</code></pre>
 <h3 id="sec:the-fail-expression"><span class="header-section-number">4.2.5</span> The <code>fail</code> expression</h3>
@@ -242,10 +250,12 @@ SubcomponentWeightBudgetCoverage(self:component) : bool =
 <p><span id="resolute-type-system"></span></p>
 <h1 id="sec:resolute-type-system"><span class="header-section-number">5</span> Resolute Type System</h1>
 <pre class="bnf" caption="Resolute Type System"><code>&lt;type&gt; ::=
-    &lt;collection_type&gt; | &lt;base_type&gt; | &lt;AADL_model_element_type&gt;
+    &lt;list_type&gt; | &lt;set_type&gt; | &lt;base_type&gt; | &lt;AADL_model_element_type&gt;
 
-&lt;collection_type&gt; ::= &quot;{&quot; &lt;type&gt; &quot;}</code></pre>
-<p>The collection concept allows multiple elements of the same value. In the <em>SubcomponentWeightCoverage</em> example, the collection concept has multiple instances of the value 1.0, and each is counted in the summation.</p>
+&lt;list_type&gt; ::= &quot;[&quot; &lt;type&gt; &quot;]
+
+&lt;set_type&gt; ::= &quot;{&quot; &lt;type&gt; &quot;}</code></pre>
+<p>The list and set collections allow multiple elements of the same value. In the <em>SubcomponentWeightCoverage</em> example, the collection concept has multiple instances of the value 1.0, and each is counted in the summation.</p>
 <p><span id="base-types"></span></p>
 <h2 id="sec:built-in-base-types"><span class="header-section-number">5.1</span> Built-in Base Types</h2>
 <p>Base type:</p>
@@ -325,11 +335,16 @@ SubcomponentWeightBudgetCoverage(self:component) : bool =
 <h1 id="sec:built-in-functions"><span class="header-section-number">6</span> Built-in Functions</h1>
 <p><span id="functions-collections"></span></p>
 <h2 id="sec:built-in-functions-for-collections"><span class="header-section-number">6.1</span> Built-in Functions for Collections</h2>
-<p><code>union</code>(&lt;collection&gt;, &lt;collection&gt;): collection - returns a collection that is the union of the two inputs</p>
-<p><code>intersect</code>(&lt;collection&gt;, &lt;collection&gt;): collection - returns a collection that is the intersection of the two inputs</p>
-<p><code>length</code>(&lt;collection&gt;): int - returns the size of the collection</p>
-<p><code>member</code>(&lt;element&gt;, &lt;collection&gt;): Boolean - returns true if the element is a member of the collection</p>
-<p><code>sum</code>(&lt;numeric_collection&gt;): numeric - calculates the sum of a collection of integers or a collection of real</p>
+<p><code>union</code>(&lt;set&gt;, &lt;set&gt;): set - returns a set collection that is the union of the two inputs</p>
+<p><code>intersect</code>(&lt;set&gt;, &lt;set&gt;): set - returns a set collection that is the intersection of the two inputs</p>
+<p><code>length</code>(&lt;collection&gt;): int - returns the size of the given set or list collection</p>
+<p><code>member</code>(&lt;element&gt;, &lt;collection&gt;): Boolean - returns true if the element is a member of the set or list collection</p>
+<p><code>sum</code>(&lt;numeric_list&gt;): numeric - calculates the sum of a list collection of integers or a list collection of real</p>
+<p><code>head</code>(&lt;list&gt;): type - returns the first element of the list collection</p>
+<p><code>tail</code>(&lt;list&gt;): list - returns all but the first element of the list collection</p>
+<p><code>append</code>(&lt;list&gt;, &lt;list&gt;): list - returns a list collection that is the concatenation of the two given list collections</p>
+<p><code>as_set</code>(&lt;list&gt;): set - returns a set collection containing all of the unique elements contained in the given list collection</p>
+<p><code>as_list</code>(&lt;set&gt;): list - returns a list collection containing all of the elements contained in the given set collection</p>
 <p><span id="functions-ranges"></span></p>
 <h2 id="sec:built-in-functions-for-ranges"><span class="header-section-number">6.2</span> Built-in Functions for Ranges</h2>
 <p><code>upper_bound</code>(&lt;range&gt;): numeric - returns the upper bound of the range</p>
@@ -410,7 +425,7 @@ print_set(s : {aadl}) &lt;=
     ** s **
     true</code></pre>
 <h2 id="sec:reachable-collections-of-model-elements"><span class="header-section-number">8.2</span> Reachable Collections of Model Elements</h2>
-<p>This is a snippet from the Smaccmcopter example on <a href="https://github.com/smaccm/smaccm/tree/master/models" class="uri">https://github.com/smaccm/smaccm/tree/master/models</a>.</p>
+<p>This is a snippet from the Smaccmcopter example on <a href="https://github.com/smaccm/smaccm/tree/master/models">SMACCM models</a>.</p>
 <pre class="resolute" caption="Smaccmcopter Example"><code>reach(c : component) : {component} =
     recusive_reach({c})
 

@@ -38,7 +38,7 @@ annex Resolute {**
     SCSReq1VA1(self, MaximumWeight) or SCSReq1VA2(self, MaximumWeight)
 
     AddBudgets(self : component) : real =
-    sum([WeightBudgett) for (t: subcomponents(self))])
+    sum([WeightBudget(t) for (t: subcomponents(self))])
 ~~~
 
 A claim function can be associated with component types or
@@ -61,12 +61,13 @@ results in an instantiation of the component implementation and the
 application of all claim functions associated with all of the components
 in the instance model via the `prove` statements.
 
-![Instantiation](images/PackagePublic.png)
+![Instantiation from OSATE menu](images/PackagePublic.png)
 
 The verification results are then displayed in a view labeled *Assurance
 Case.*
 
-![Assurance Case View](images/AssuranceCaseView.png)
+![Assurance Case Tree View](images/AssuranceCaseView.png)
+
 []{#claim-functions}
 
 Claim Functions
@@ -77,7 +78,7 @@ The syntax of a claim function is as follows:
 ~~~ {.bnf caption="Claim Function Syntax"}
 <Claim_Function> ::=
 
-    <name> "(" (<parameter> ("," <paramter) )* )? ")" "<="
+    <name> "(" (<parameter> ("," <parameter) )* )? ")" "<="
     "**" <description> "**" <claim_function_expression>
 
 <parameter> ::= <name> ":" <type>
@@ -212,8 +213,8 @@ preceded by a local constant declaration.
 
 []{#global-constants}
 
-[Global]{#GlobalConstants}Constants
------------------------------------
+Global Constants
+----------------
 
 Global constants represent parameters to the verification whose value is
 set once and can be used in any computational expression, including
@@ -345,12 +346,30 @@ enclosing claim function representing an implicit catch.
 
 ### Collection-related operators
 
--   Basic collection: `{` \<expression\> ( `,` \<expression\> )\* `}` |
-    `{ }`
+Collections in Resolute can be either lists or sets.  Lists can contain
+multiple identical elements, preserve insertion order, and support `head` and
+`tail` accessors for defining recursive processing. By contrast sets can
+contain no more than one element of a given value, do not necessarily support
+insertion order, and support set `intersect` and `union` operators.  Both
+lists and sets support quantifiers `forall` and `exists` and filtered 
+collections.  Operators exist to convert a list into a set (collapsing
+duplicated elements) and a set into a list.
 
--   Filtered collection: `{` \<filtered_element\> `for` (
-    `(` \<element_name\> `:` \<collection_constructor\> `)` ) + `}`
-     | \<filter\_expression\>
+-   Basic collection: \<Basic_list\>  | \<Basic_set\>
+
+-   Basic list: `[` \<expression\> ( `,` \<expression\> )\* `]` | `[ ]`
+
+-   Basic set: `{` \<expression\> ( `,` \<expression\> )\* `}` | `{ }`
+
+-   Filtered collection: \<Filterd list\> | \<Filtered set\> 
+
+-   Filtered list: `[` \<filtered_element\> `for` (
+    `(` \<element_name\> `:` \<collection_constructor\> `)` + )
+     ( `|` \<filter\_expression\> )? `]`
+
+-   Filtered set: `{` \<filtered_element\> `for` (
+    `(` \<element_name\> `:` \<collection_constructor\> `)` + )
+     ( `|` \<filter\_expression\> )? `}`
     -   Note: \<filtered_element\> refers to one of the set element names
     -   Note: \<filter_expression\> is of type Boolean
 
@@ -368,7 +387,7 @@ has to be of a collection type.
 
 The following examples illustrate the use of collections. The first
 example uses the built-in `subcomponents` function to get a collection
-of subcomponents. The `forall` then iterates over the collection and
+of subcomponents. The `forall` then iterates over the (set) collection and
 executes the built-in `has_property` constraint function on each
 element.
 
@@ -376,7 +395,7 @@ In the second example, we precompute the collection of subcomponents and
 hold on to them with a local constant. We then construct a collection of
 real values of value 1.0 for each subcomponent that satisfies the
 `has_property` constraint function, then perform the summation of the
-resulting `real` collection, and divide it by the size of the
+resulting `real` (list) collection, and divide it by the size of the
 subcomponent collection.
 
 ~~~ {.resolute caption="Subcomponent Weight Coverage Example"}
@@ -384,7 +403,7 @@ HasSubcomponentWeightBudget(self:component) : bool =
     forall (sub: subcomponents(self)) . has_property(sub,SEI::GrossWeight)
 
 SubcomponentWeightBudgetCoverage(self:component) : bool =
-    (sum({ 1.0 for (sub : subs) | has_property(sub,SEI::GrossWeight)}) / length(subs))
+    (sum([ 1.0 for (sub : subs) | has_property(sub,SEI::GrossWeight)]) / length(subs))
 ~~~
 
 Collections can also be precomputed in global constants. This is useful
@@ -412,12 +431,14 @@ Resolute Type System
 
 ~~~ {.bnf caption="Resolute Type System"}
 <type> ::=
-    <collection_type> | <base_type> | <AADL_model_element_type>
+    <list_type> | <set_type> | <base_type> | <AADL_model_element_type>
 
-<collection_type> ::= "{" <type> "}
+<list_type> ::= "[" <type> "]
+
+<set_type> ::= "{" <type> "}
 ~~~
 
-The collection concept allows multiple elements of the same value. In
+The list and set collections allow multiple elements of the same value. In
 the *SubcomponentWeightCoverage* example, the collection concept has
 multiple instances of the value 1.0, and each is counted in the
 summation.
@@ -516,19 +537,33 @@ Built-in Functions
 Built-in Functions for Collections
 ----------------------------------
 
-`union`(\<collection\>, \<collection\>): collection - returns a collection
+`union`(\<set\>, \<set\>): set - returns a set collection
 that is the union of the two inputs
 
-`intersect`(\<collection\>, \<collection\>): collection - returns a collection
+`intersect`(\<set\>, \<set\>): set - returns a set collection
 that is the intersection of the two inputs
 
-`length`(\<collection\>): int - returns the size of the collection
+`length`(\<collection\>): int - returns the size of the given set or list
+collection
 
 `member`(\<element\>, \<collection\>): Boolean - returns true if the element
-is a member of the collection
+is a member of the set or list collection
 
-`sum`(\<numeric\_collection\>): numeric - calculates the sum of a
-collection of integers or a collection of real
+`sum`(\<numeric\_list\>): numeric - calculates the sum of a
+list collection of integers or a list collection of real
+
+`head`(\<list\>): type - returns the first element of the list collection
+
+`tail`(\<list\>): list - returns all but the first element of the list collection
+
+`append`(\<list\>, \<list\>): list - returns a list collection
+that is the concatenation of the two given list collections
+
+`as_set`(\<list\>): set - returns a set collection containing all of the
+unique elements contained in the given list collection
+
+`as_list`(\<set\>): list - returns a list collection containing all of the
+elements contained in the given set collection
 
 []{#functions-ranges}
 
@@ -768,7 +803,7 @@ Reachable Collections of Model Elements
 ---------------------------------------
 
 This is a snippet from the Smaccmcopter example on
-<https://github.com/smaccm/smaccm/tree/master/models>.
+[SMACCM models](https://github.com/smaccm/smaccm/tree/master/models).
 
 ~~~ {.resolute caption="Smaccmcopter Example"}
 reach(c : component) : {component} =

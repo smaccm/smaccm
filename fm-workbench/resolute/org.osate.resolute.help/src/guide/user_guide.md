@@ -62,7 +62,7 @@ annex Resolute {**
     SCSReq1VA1(self, MaximumWeight) or SCSReq1VA2(self, MaximumWeight)
 
     AddBudgets(self : component) : real =
-    sum([WeightBudgett) for (t: subcomponents(self))])
+    sum([WeightBudget(t) for (t: subcomponents(self))])
 ~~~
 
 Users then associate the claim functions representing requirements with
@@ -85,7 +85,7 @@ results in an instantiation of the component implementation and the
 application of all claim functions associated with all of the components
 in the instance model via the `prove` statements.
 
-![](images/image3.png)
+![Instantiation from OSATE menu](images/image3.png)
 
 The verification results are then displayed in a view labeled *Assurance
 Case.* For each claim function invoked by a `prove` statement,
@@ -97,7 +97,7 @@ Assurance Case view. This is the case for different `prove` statements
 of the top-level component as well as any subcomponent that has
 `prove` statements.
 
-![](images/image4.png)
+![Assurance Case Tree View](images/image4.png)
 
 Claim Functions
 ===============
@@ -115,7 +115,7 @@ of a claim function is as follows:
 ~~~ {.bnf caption="Claim Function Syntax"}
 <Claim_Function> ::=
 
-    <name> "(" (<parameter> ("," <paramter) )* )? ")" "<="
+    <name> "(" (<parameter> ("," <parameter) )* )? ")" "<="
     "**" <description> "**" <claim_function_expression>
 
 <parameter> ::= <name> ":" <type>
@@ -310,8 +310,8 @@ The `and` and `forall` expressions indicate that all operands are
 evaluated; the claim is then true if all operands return `true`. This
 means that all claim functions or Boolean computational functions are
 executed independently of whether they return true or false. Once all
-have been executed, the expression returns **true** only if all operands
-are **true**. This allows Resolute to report to the user all failing
+have been executed, the expression returns `true` only if all operands
+are `true`. This allows Resolute to report to the user all failing
 operands rather than aborting after the first failing one and requiring
 the user to correct it before finding out that others fail as well.
 
@@ -373,7 +373,7 @@ then associated with the enclosing claim function.
 SCSReq1VA1VerifySubcomponentTotals(self : component, max : real) <=
 ** "VA1: sum of direct subcomponent weights " actuals%kg " within budget " max%kg **
 let actuals : real = AddSubcomponentWeightBudgets(self);
-(actuals <= max) or fail ** self "weight sum " acutals%kg "over budget " maxkg **
+(actuals <= max) or fail ** self " weight sum " acutals%kg "over budget " maxkg **
 ~~~
 
 ### Verification Assumptions and Preconditions

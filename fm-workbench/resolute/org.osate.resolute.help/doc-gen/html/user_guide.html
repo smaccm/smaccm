@@ -50,7 +50,7 @@ annex Resolute {**
     SCSReq1VA1(self, MaximumWeight) or SCSReq1VA2(self, MaximumWeight)
 
     AddBudgets(self : component) : real =
-    sum([WeightBudgett) for (t: subcomponents(self))])</code></pre>
+    sum([WeightBudget(t) for (t: subcomponents(self))])</code></pre>
 <p>Users then associate the claim functions representing requirements with component types or implementations by <code>prove</code> statements declared in Resolute annex subclauses. The example shows the <code>prove</code> statement for <code>SCSReq1</code> with the component itself passed in as a parameter.</p>
 <pre class="aadl" caption="Prove Statement for a Claim Function"><code>system implementation SCS.Phys
     subcomponents
@@ -61,19 +61,19 @@ annex Resolute {**
         prove (SCSReq1(this))</code></pre>
 <p>Users invoke the <em>Resolute</em> command on a component implementation. This results in an instantiation of the component implementation and the application of all claim functions associated with all of the components in the instance model via the <code>prove</code> statements.</p>
 <figure>
-<img src="images/image3.png" />
+<img src="images/image3.png" alt="Instantiation from OSATE menu" /><figcaption>Instantiation from OSATE menu</figcaption>
 </figure>
 <p>The verification results are then displayed in a view labeled <em>Assurance Case.</em> For each claim function invoked by a <code>prove</code> statement, Resolute evaluates any claim function called by the claim function expression.</p>
 <p>Currently, each <code>prove</code> statement is shown at the top level of the Assurance Case view. This is the case for different <code>prove</code> statements of the top-level component as well as any subcomponent that has <code>prove</code> statements.</p>
 <figure>
-<img src="images/image4.png" />
+<img src="images/image4.png" alt="Assurance Case Tree View" /><figcaption>Assurance Case Tree View</figcaption>
 </figure>
 <h1 id="sec:claim-functions"><span class="header-section-number">2</span> Claim Functions</h1>
 <p>Claim functions can represent requirements, verification actions, and assumptions. There is currently no syntactic distinction in their use. This section describes conventions that users should follow to distinguish the different uses.</p>
 <p>Claim functions have a name, zero or more parameters, a description, and a predicate expression. The claim function has a return type of Boolean (true to represent success and false to represent failure). The syntax of a claim function is as follows:</p>
 <pre class="bnf" caption="Claim Function Syntax"><code>&lt;Claim_Function&gt; ::=
 
-    &lt;name&gt; &quot;(&quot; (&lt;parameter&gt; (&quot;,&quot; &lt;paramter) )* )? &quot;)&quot; &quot;&lt;=&quot;
+    &lt;name&gt; &quot;(&quot; (&lt;parameter&gt; (&quot;,&quot; &lt;parameter) )* )? &quot;)&quot; &quot;&lt;=&quot;
     &quot;**&quot; &lt;description&gt; &quot;**&quot; &lt;claim_function_expression&gt;
 
 &lt;parameter&gt; ::= &lt;name&gt; &quot;:&quot; &lt;type&gt;
@@ -115,7 +115,7 @@ SCSReq1(self : component) &lt;=
 <pre><code>    SCSReq1AssureWeightLimitProperty(self, property(self, SEI::WeightLimit), MaximumWeight)</code></pre>
 <p>A requirement may be specified vaguely such that it cannot be verified. In this case, you may need to refine the requirement into subrequirements that are verifiable. Do this by listing claim functions representing the subclaims in the claim function expression of the original requirement.</p>
 <p>The claim function expression in a &quot;requirement&quot; claim function may contain <code>and</code>, <code>forall</code>, <code>andthen</code>, <code>or</code>, or <code>exists</code>.</p>
-<p>The <code>and</code> and <code>forall</code> expressions indicate that all operands are evaluated; the claim is then true if all operands return <code>true</code>. This means that all claim functions or Boolean computational functions are executed independently of whether they return true or false. Once all have been executed, the expression returns <strong>true</strong> only if all operands are <strong>true</strong>. This allows Resolute to report to the user all failing operands rather than aborting after the first failing one and requiring the user to correct it before finding out that others fail as well.</p>
+<p>The <code>and</code> and <code>forall</code> expressions indicate that all operands are evaluated; the claim is then true if all operands return <code>true</code>. This means that all claim functions or Boolean computational functions are executed independently of whether they return true or false. Once all have been executed, the expression returns <code>true</code> only if all operands are <code>true</code>. This allows Resolute to report to the user all failing operands rather than aborting after the first failing one and requiring the user to correct it before finding out that others fail as well.</p>
 <ul>
 <li><p>The <code>or</code> and <code>exists</code> indicate alternative sets of verification actions. The operands are executed and the results are evaluated in order; the first returning <code>true</code> determines true for the claim. Effectively the user specifies that the right-hand operand is executed only if the left-hand operand fails. This allows you to specify an alternative way of verifying a claim if one verification action is not successful. You can also use it to specify a <code>fail</code> statement as the right-hand operand to provide a special message for a failing left-hand operand.</p></li>
 <li><p>The <code>andthen</code> expression executes the left-hand operand first. If it fails, the whole expression is considered as failing (returns <code>false</code>). If the left returns <code>true</code>, the right-hand side is executed and its result value becomes the value of the <code>andthen</code> expression. This allows users to specify that certain claim functions, such as verification actions, should be executed only if preceding verification actions pass.</p></li>
@@ -129,7 +129,7 @@ SCSReq1(self : component) &lt;=
 <pre class="resolute" caption="Fail statement example"><code>SCSReq1VA1VerifySubcomponentTotals(self : component, max : real) &lt;=
 ** &quot;VA1: sum of direct subcomponent weights &quot; actuals%kg &quot; within budget &quot; max%kg **
 let actuals : real = AddSubcomponentWeightBudgets(self);
-(actuals &lt;= max) or fail ** self &quot;weight sum &quot; acutals%kg &quot;over budget &quot; maxkg **</code></pre>
+(actuals &lt;= max) or fail ** self &quot; weight sum &quot; acutals%kg &quot;over budget &quot; maxkg **</code></pre>
 <h3 id="sec:verification-assumptions-and-preconditions"><span class="header-section-number">2.3.3</span> Verification Assumptions and Preconditions</h3>
 <p>Verification actions may make</p>
 <ul>

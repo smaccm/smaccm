@@ -33,5 +33,5 @@
 \setlist[itemize]{label=$\cdot$}
 % customize the first 3 levels
 \setlist[itemize,1]{label=\textbullet}
-\setlist[itemize,2]{label=--}
-\setlist[itemize,3]{label=*}
+\setlist[itemize,2]{label=$\circ$}
+\setlist[itemize,3]{label=\textbullet}
