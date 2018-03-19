@@ -34,6 +34,7 @@ import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
@@ -1542,30 +1543,39 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public Expr caseGetPropertyExpr(GetPropertyExpr expr) {
 
 		NamedElement propName = expr.getProp();
-		NamedElement compName = AgreeTypeUtils.namedElFromId(expr.getComponent(), curInst);
+		PropertyExpression propVal;
+		if (propName instanceof Property) {
+			NamedElement compName = AgreeTypeUtils.namedElFromId(expr.getComponent(), curInst);
+			Property prop = (Property) propName;
+			propVal = AgreeUtils.getPropExpression(compName, prop);
 
-		Property prop = (Property) propName;
+			if (propVal == null) {
+				throw new AgreeException("Could not locate property value '" + prop.getFullName() + "' in component '"
+						+ compName.getName() + "'.  Is it possible "
+						+ "that a 'this' statement is used in a context in which it wasn't supposed to?");
+			}
+		} else {
+			propVal = AgreeUtils.getPropExpression((PropertyConstant) propName);
 
-		PropertyExpression propVal = AgreeUtils.getPropExpression(compName, prop);
-
-		if (propVal == null) {
-			throw new AgreeException("Could not locate property value '" + prop.getFullName() + "' in component '"
-					+ compName.getName() + "'.  Is it possible "
-					+ "that a 'this' statement is used in a context in which it wasn't supposed to?");
+			if (propVal == null) {
+				throw new AgreeException("Could not locate property value '" + propName.getFullName());
+			}
 		}
+
 		Expr res = null;
 		if (propVal != null) {
 			if (propVal instanceof StringLiteral) {
 				// StringLiteral value = (StringLiteral) propVal;
 				// nodeStr += value.getValue() + ")";
-				throw new AgreeException("Property value for '" + prop.getFullName() + "' cannot be of string type");
+				throw new AgreeException(
+						"Property value for '" + propName.getFullName() + "' cannot be of string type");
 			} else if (propVal instanceof NamedValue) {
 				// NamedValue namedVal = (NamedValue) propVal;
 				// AbstractNamedValue absVal = namedVal.getNamedValue();
 				// assert (absVal instanceof EnumerationLiteral);
 				// EnumerationLiteral enVal = (EnumerationLiteral) absVal;
 				throw new AgreeException(
-						"Property value for '" + prop.getFullName() + "' cannot be of enumeration type");
+						"Property value for '" + propName.getFullName() + "' cannot be of enumeration type");
 			} else if (propVal instanceof BooleanLiteral) {
 				BooleanLiteral value = (BooleanLiteral) propVal;
 				res = new BoolExpr(value.getValue());
