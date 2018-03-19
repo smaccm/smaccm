@@ -57,6 +57,7 @@ import org.osate.aadl2.Feature;
 //import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
 //import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
@@ -1886,8 +1887,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(getPropExpr.getComponent(), "Expected type component, but found type " + compType);
 		}
 
-		if (!(prop instanceof Property)) {
-			error(getPropExpr.getProp(), "Expected AADL property");
+		if (!(prop instanceof Property || prop instanceof PropertyConstant)) {
+			error(getPropExpr.getProp(), "Expected AADL property or property constant");
 		}
 	}
 
@@ -2334,9 +2335,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	protected AgreeType getAgreeType(NamedElement namedEl) {
-		if (namedEl instanceof Property) {
-			Property propVal = (Property) namedEl;
-			PropertyType propType = propVal.getPropertyType();
+		if ((namedEl instanceof Property) || namedEl instanceof PropertyConstant) {
+			PropertyType propType;
+			if (namedEl instanceof Property) {
+				propType = ((Property) namedEl).getPropertyType();
+			} else {
+				propType = ((PropertyConstant) namedEl).getPropertyType();
+			}
 
 			if (propType instanceof AadlBoolean) {
 				return BOOL;
