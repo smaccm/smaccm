@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toc label="Resolute Reference Guide" topic="doc-gen/html/reference.html">
+	<topic label="Introduction" href="doc-gen/html/reference.html#introduction">
+	</topic>
+	<topic label="Claim Functions" href="doc-gen/html/reference.html#claim-functions">
+		<topic label="Application of Claim Functions" href="doc-gen/html/reference.html#application-of-claim-functions">
+		</topic>
+		<topic label="Uses of Claim Functions" href="doc-gen/html/reference.html#uses-of-claim-functions">
+		</topic>
+	</topic>
+	<topic label="Computational Functions and Constants (Final Variables)" href="doc-gen/html/reference.html#computational-functions-and-constants-final-variables">
+		<topic label="Computational Functions" href="doc-gen/html/reference.html#computational-functions">
+		</topic>
+		<topic label="Global Constants" href="doc-gen/html/reference.html#global-constants">
+		</topic>
+		<topic label="Local Constants" href="doc-gen/html/reference.html#local-constants">
+		</topic>
+	</topic>
+	<topic label="Predicate Expressions and Computational Expressions" href="doc-gen/html/reference.html#predicate-expressions-and-computational-expressions">
+		<topic label="Predicate Expressions" href="doc-gen/html/reference.html#predicate-expressions">
+		</topic>
+		<topic label="Computational Expressions" href="doc-gen/html/reference.html#computational-expressions">
+			<topic label="Type-related operators" href="doc-gen/html/reference.html#type-related-operators">
+			</topic>
+			<topic label="Atomic expressions" href="doc-gen/html/reference.html#atomic-expressions">
+			</topic>
+			<topic label="Exception operators" href="doc-gen/html/reference.html#exception-operators">
+			</topic>
+			<topic label="Collection-related operators" href="doc-gen/html/reference.html#collection-related-operators">
+			</topic>
+			<topic label="The  expression" href="doc-gen/html/reference.html#the-fail-expression">
+			</topic>
+		</topic>
+	</topic>
+	<topic label="Resolute Type System" href="doc-gen/html/reference.html#resolute-type-system">
+		<topic label="Built-in Base Types" href="doc-gen/html/reference.html#built-in-base-types">
+		</topic>
+		<topic label="Arithmetic with Integers and Reals" href="doc-gen/html/reference.html#arithmetic-with-integers-and-reals">
+		</topic>
+		<topic label="AADL Model Element Types" href="doc-gen/html/reference.html#aadl-model-element-types">
+		</topic>
+	</topic>
+	<topic label="Built-in Functions" href="doc-gen/html/reference.html#built-in-functions">
+		<topic label="Built-in Functions for Collections" href="doc-gen/html/reference.html#built-in-functions-for-collections">
+		</topic>
+		<topic label="Built-in Functions for Ranges" href="doc-gen/html/reference.html#built-in-functions-for-ranges">
+		</topic>
+		<topic label="Built-in Functions on Any Model Element (of the instance model):" href="doc-gen/html/reference.html#built-in-functions-on-any-model-element-of-the-instance-model">
+		</topic>
+		<topic label="Model Element Collections" href="doc-gen/html/reference.html#model-element-collections">
+		</topic>
+		<topic label="External Functions" href="doc-gen/html/reference.html#external-functions">
+		</topic>
+		<topic label="Error Model Functions" href="doc-gen/html/reference.html#error-model-functions">
+		</topic>
+	</topic>
+	<topic label="Pre-declared Resolute Computational Function Library" href="doc-gen/html/reference.html#pre-declared-resolute-computational-function-library">
+		<topic label="Binding-Related Predicate Functions" href="doc-gen/html/reference.html#binding-related-predicate-functions">
+		</topic>
+		<topic label="Connection-Related Functions" href="doc-gen/html/reference.html#connection-related-functions">
+		</topic>
+		<topic label="Model Element Containment" href="doc-gen/html/reference.html#model-element-containment">
+		</topic>
+		<topic label="Handling of Feature Groups" href="doc-gen/html/reference.html#handling-of-feature-groups">
+		</topic>
+	</topic>
+	<topic label="Resolute Examples" href="doc-gen/html/reference.html#resolute-examples">
+		<topic label="Debugging Models with Resolute" href="doc-gen/html/reference.html#debugging-models-with-resolute">
+		</topic>
+		<topic label="Reachable Collections of Model Elements" href="doc-gen/html/reference.html#reachable-collections-of-model-elements">
+		</topic>
+	</topic>
+	<topic label="Copyright" href="doc-gen/html/reference.html#copyright">
+	</topic>
+</toc>

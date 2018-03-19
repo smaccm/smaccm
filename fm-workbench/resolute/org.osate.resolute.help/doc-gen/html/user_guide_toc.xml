@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toc label="Resolute User Guide" topic="doc-gen/html/user_guide.html">
+	<topic label="Introduction" href="doc-gen/html/user_guide.html#introduction">
+	</topic>
+	<topic label="Claim Functions" href="doc-gen/html/user_guide.html#claim-functions">
+		<topic label="Resolute Libraries of Claim Functions" href="doc-gen/html/user_guide.html#resolute-libraries-of-claim-functions">
+		</topic>
+		<topic label="Application of Claim Functions" href="doc-gen/html/user_guide.html#application-of-claim-functions">
+		</topic>
+		<topic label="Uses of Claim Functions" href="doc-gen/html/user_guide.html#uses-of-claim-functions">
+			<topic label="Claim Functions as Requirements to Be Satisfied" href="doc-gen/html/user_guide.html#claim-functions-as-requirements-to-be-satisfied">
+			</topic>
+			<topic label="Claim Functions as Verification Actions" href="doc-gen/html/user_guide.html#claim-functions-as-verification-actions">
+			</topic>
+			<topic label="Verification Assumptions and Preconditions" href="doc-gen/html/user_guide.html#verification-assumptions-and-preconditions">
+			</topic>
+		</topic>
+		<topic label="Global Claim Functions" href="doc-gen/html/user_guide.html#global-claim-functions">
+		</topic>
+	</topic>
+	<topic label="Copyright" href="doc-gen/html/user_guide.html#copyright">
+	</topic>
+</toc>

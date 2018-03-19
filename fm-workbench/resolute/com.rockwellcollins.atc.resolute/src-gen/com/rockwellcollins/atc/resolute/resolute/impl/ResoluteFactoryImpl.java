@@ -79,6 +79,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.RESOLUTE_SUBCLAUSE: return createResoluteSubclause();
       case ResolutePackage.NESTED_DOT_ID: return createNestedDotID();
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
+      case ResolutePackage.LIST_TYPE: return createListType();
       case ResolutePackage.SET_TYPE: return createSetType();
       case ResolutePackage.QUANT_ARG: return createQuantArg();
       case ResolutePackage.FUNCTION_BODY: return createFunctionBody();
@@ -100,7 +101,9 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.QUANTIFIED_EXPR: return createQuantifiedExpr();
       case ResolutePackage.BUILT_IN_FN_CALL_EXPR: return createBuiltInFnCallExpr();
       case ResolutePackage.FN_CALL_EXPR: return createFnCallExpr();
-      case ResolutePackage.FILTER_MAP_EXPR: return createFilterMapExpr();
+      case ResolutePackage.LIST_FILTER_MAP_EXPR: return createListFilterMapExpr();
+      case ResolutePackage.LIST_EXPR: return createListExpr();
+      case ResolutePackage.SET_FILTER_MAP_EXPR: return createSetFilterMapExpr();
       case ResolutePackage.SET_EXPR: return createSetExpr();
       case ResolutePackage.LET_EXPR: return createLetExpr();
       default:
@@ -271,6 +274,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     ProveStatementImpl proveStatement = new ProveStatementImpl();
     return proveStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ListType createListType()
+  {
+    ListTypeImpl listType = new ListTypeImpl();
+    return listType;
   }
 
   /**
@@ -509,10 +523,32 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public FilterMapExpr createFilterMapExpr()
+  public ListFilterMapExpr createListFilterMapExpr()
   {
-    FilterMapExprImpl filterMapExpr = new FilterMapExprImpl();
-    return filterMapExpr;
+    ListFilterMapExprImpl listFilterMapExpr = new ListFilterMapExprImpl();
+    return listFilterMapExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ListExpr createListExpr()
+  {
+    ListExprImpl listExpr = new ListExprImpl();
+    return listExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SetFilterMapExpr createSetFilterMapExpr()
+  {
+    SetFilterMapExprImpl setFilterMapExpr = new SetFilterMapExprImpl();
+    return setFilterMapExpr;
   }
 
   /**

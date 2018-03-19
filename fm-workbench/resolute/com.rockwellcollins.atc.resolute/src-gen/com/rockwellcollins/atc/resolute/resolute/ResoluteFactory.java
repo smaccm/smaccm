@@ -158,6 +158,15 @@ public interface ResoluteFactory extends EFactory
   ProveStatement createProveStatement();
 
   /**
+   * Returns a new object of class '<em>List Type</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>List Type</em>'.
+   * @generated
+   */
+  ListType createListType();
+
+  /**
    * Returns a new object of class '<em>Set Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -347,13 +356,31 @@ public interface ResoluteFactory extends EFactory
   FnCallExpr createFnCallExpr();
 
   /**
-   * Returns a new object of class '<em>Filter Map Expr</em>'.
+   * Returns a new object of class '<em>List Filter Map Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Filter Map Expr</em>'.
+   * @return a new object of class '<em>List Filter Map Expr</em>'.
    * @generated
    */
-  FilterMapExpr createFilterMapExpr();
+  ListFilterMapExpr createListFilterMapExpr();
+
+  /**
+   * Returns a new object of class '<em>List Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>List Expr</em>'.
+   * @generated
+   */
+  ListExpr createListExpr();
+
+  /**
+   * Returns a new object of class '<em>Set Filter Map Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Set Filter Map Expr</em>'.
+   * @generated
+   */
+  SetFilterMapExpr createSetFilterMapExpr();
 
   /**
    * Returns a new object of class '<em>Set Expr</em>'.

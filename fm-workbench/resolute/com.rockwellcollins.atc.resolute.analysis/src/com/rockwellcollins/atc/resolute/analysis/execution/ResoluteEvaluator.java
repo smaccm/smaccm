@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.Classifier;
@@ -16,6 +17,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
+import com.rockwellcollins.atc.resolute.analysis.values.ListValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
@@ -31,7 +33,6 @@ import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
-import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionBody;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
@@ -41,11 +42,14 @@ import com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
+import com.rockwellcollins.atc.resolute.resolute.ListExpr;
+import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.QuantArg;
 import com.rockwellcollins.atc.resolute.resolute.QuantifiedExpr;
 import com.rockwellcollins.atc.resolute.resolute.RealExpr;
 import com.rockwellcollins.atc.resolute.resolute.SetExpr;
+import com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.StringExpr;
 import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
 import com.rockwellcollins.atc.resolute.resolute.UnaryExpr;
@@ -99,13 +103,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		ResoluteValue leftValue = doSwitch(object.getLeft());
 		switch (op) {
 
-			
+
 		case "and":
 			if (leftValue.getBool()) {
 				return doSwitch(object.getRight());
 			} else {
 				return FALSE;
-			}			
+			}
 
 		case "or":
 			if (leftValue.getBool()) {
@@ -140,7 +144,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			}
 
 			if (leftValue.isInt() && rightValue.isReal()) {
-				return new RealValue((double) leftValue.getInt() + rightValue.getReal());
+				return new RealValue(leftValue.getInt() + rightValue.getReal());
 			}
 
 			if (leftValue.isReal() && rightValue.isInt()) {
@@ -150,6 +154,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			if (leftValue.isString()) {
 				return new StringValue(leftValue.getString() + rightValue.getString());
 			}
+			break;
 
 		case "-":
 			if (leftValue.isInt() && rightValue.isInt()) {
@@ -161,12 +166,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			}
 
 			if (leftValue.isInt() && rightValue.isReal()) {
-				return new RealValue((double) leftValue.getInt() - rightValue.getReal());
+				return new RealValue(leftValue.getInt() - rightValue.getReal());
 			}
 
 			if (leftValue.isReal() && rightValue.isInt()) {
 				return new RealValue(leftValue.getInt() - (double) rightValue.getInt());
 			}
+			break;
 
 		case "*":
 			if (leftValue.isInt() && rightValue.isInt()) {
@@ -178,13 +184,14 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			}
 
 			if (leftValue.isInt() && rightValue.isReal()) {
-				return new RealValue(((double) leftValue.getInt()) * rightValue.getReal());
+				return new RealValue((leftValue.getInt()) * rightValue.getReal());
 			}
 
 			if (leftValue.isReal() && rightValue.isInt()) {
-				return new RealValue(leftValue.getReal() * (double) rightValue.getInt());
+				return new RealValue(leftValue.getReal() * rightValue.getInt());
 			}
-			
+			break;
+
 		case "^":
 			if (leftValue.isInt() && rightValue.isInt()) {
 				return new IntValue((long)Math.pow(leftValue.getInt(),  rightValue.getInt()));
@@ -201,6 +208,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			if (leftValue.isReal() && rightValue.isInt()) {
 				return new RealValue(Math.pow(leftValue.getReal(), rightValue.getInt()));
 			}
+			break;
 
 		case "/":
 			if (leftValue.isInt() && rightValue.isInt()) {
@@ -212,12 +220,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			}
 
 			if (leftValue.isInt() && rightValue.isReal()) {
-				return new RealValue((double) leftValue.getInt() / rightValue.getReal());
+				return new RealValue(leftValue.getInt() / rightValue.getReal());
 			}
 
 			if (leftValue.isReal() && rightValue.isInt()) {
-				return new RealValue(leftValue.getReal() / (double) rightValue.getInt());
+				return new RealValue(leftValue.getReal() / rightValue.getInt());
 			}
+			break;
 
 		case "%":
 			if (leftValue.isInt() && rightValue.isInt()) {
@@ -229,12 +238,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 			}
 
 			if (leftValue.isInt() && rightValue.isReal()) {
-				return new RealValue((double) leftValue.getInt() % rightValue.getReal());
+				return new RealValue(leftValue.getInt() % rightValue.getReal());
 			}
 
 			if (leftValue.isReal() && rightValue.isInt()) {
-				return new RealValue(leftValue.getReal() % (double) rightValue.getInt());
+				return new RealValue(leftValue.getReal() % rightValue.getInt());
 			}
+			break;
 
 		case "<":
 			return new BoolValue(leftValue.compareTo(rightValue) < 0);
@@ -248,9 +258,9 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		case ">=":
 			return new BoolValue(leftValue.compareTo(rightValue) >= 0);
 
-		default:
-			throw new IllegalArgumentException("Unknown binary operator: " + op);
 		}
+
+		throw new IllegalArgumentException("Unknown binary operator: " + op);
 	}
 
 	@Override
@@ -383,8 +393,10 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 		if (arg instanceof QuantArg) {
 			QuantArg quantArg = (QuantArg) arg;
 			ResoluteValue val = doSwitch(quantArg.getExpr());
-			if(val.isSet()){
-				return val.getSet();
+			if (val.isSet()) {
+				return Collections.unmodifiableList(new ArrayList<>(val.getSetValues()));
+			} else if (val.isList()) {
+				return val.getListValues();
 			}
 			List<ResoluteValue> list = new ArrayList<>();
 			list.add(val);
@@ -429,8 +441,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	}
 
 	@Override
-	public ResoluteValue caseFilterMapExpr(FilterMapExpr object) {
-		return new SetValue(filterMap(object.getArgs(), object.getMap(), object.getFilter()));
+	public ResoluteValue caseListFilterMapExpr(ListFilterMapExpr object) {
+		return new ListValue(filterMap(object.getArgs(), object.getMap(), object.getFilter()));
+	}
+
+	@Override
+	public ResoluteValue caseSetFilterMapExpr(SetFilterMapExpr object) {
+		return new SetValue(new TreeSet<>(filterMap(object.getArgs(), object.getMap(), object.getFilter())));
 	}
 
 	private List<ResoluteValue> filterMap(List<Arg> args, Expr map, Expr filter) {
@@ -457,8 +474,13 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	}
 
 	@Override
+	public ResoluteValue caseListExpr(ListExpr object) {
+		return new ListValue(doSwitchList(object.getExprs()));
+	}
+
+	@Override
 	public ResoluteValue caseSetExpr(SetExpr object) {
-		return new SetValue(doSwitchList(object.getExprs()));
+		return new SetValue(new TreeSet<>(doSwitchList(object.getExprs())));
 	}
 
 	@Override
