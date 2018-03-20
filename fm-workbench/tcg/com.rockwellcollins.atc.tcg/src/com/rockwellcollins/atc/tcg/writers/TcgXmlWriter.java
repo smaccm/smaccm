@@ -1,23 +1,23 @@
 /*
-Copyright (c) 2016, Rockwell Collins.
+Copyright (c) 2018, Rockwell Collins.
 Developed with the sponsorship of Defense Advanced Research Projects Agency (DARPA).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this data, 
-including any software or models in source or binary form, as well as any drawings, specifications, 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this data,
+including any software or models in source or binary form, as well as any drawings, specifications,
 and documentation (collectively "the Data"), to deal in the Data without restriction, including
-without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, 
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so,
 subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or 
+The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Data.
 
-THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
-*/
+ */
 
 package com.rockwellcollins.atc.tcg.writers;
 
@@ -50,7 +50,6 @@ import jkind.lustre.values.RealValue;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
 import jkind.results.Signal;
-import jkind.util.Util;
 
 public class TcgXmlWriter extends TcgWriter {
 
@@ -68,7 +67,7 @@ public class TcgXmlWriter extends TcgWriter {
 		transformer.transform(source, result);
 		return writer.toString();
 	}
-	
+
 	public TcgXmlWriter(String filename, List<Type> types, boolean useStdout)
 			throws FileNotFoundException {
 		if (useStdout) {
@@ -78,12 +77,12 @@ public class TcgXmlWriter extends TcgWriter {
 		}
 		this.types = types;
 	}
-	
+
 	private void begin(String name, String description, String implUnderTest) {
 		try {
 			out.println("<?xml version=\"1.0\"?>");
 			out.println("<TestSuite xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
-			out.println("  <SuiteName>" + escapeXml(name) + "</SuiteName>"); 
+			out.println("  <SuiteName>" + escapeXml(name) + "</SuiteName>");
 			out.println("  <SuiteDescription>" + escapeXml(description) + "</SuiteDescription>");
 			out.println("  <ImplementationUnderTest>" + escapeXml(implUnderTest) + "</ImplementationUnderTest>");
 			out.println("  <Tests>");
@@ -97,18 +96,20 @@ public class TcgXmlWriter extends TcgWriter {
 		out.println("</TestSuite>");
 	}
 
+	@Override
 	public void writeSuite(TestSuite ts) {
 		begin(ts.getName(), ts.getDescription(), ts.getSystemImplUnderTest());
 		for (TestCase test : ts.getTestCases()) {
-			writeTest(test); 
+			writeTest(test);
 		}
 		end();
 	}
-	
+
+	@Override
 	public void writeTest(TestCase tc) {
 		writeTest(tc.getName(), tc.getDescription(), tc.getCex());
 	}
-	
+
 	private void writeTest(String name, String description, Counterexample cex) {
 		try {
 			out.println("    <Test name=\"" + escapeXml(name) + "\">");
@@ -132,7 +133,7 @@ public class TcgXmlWriter extends TcgWriter {
 	private void writeSignal(int k, Signal<Value> signal) throws Exception {
 		String name = escapeXml(signal.getName());
 		// TODO: fix this with the type map!
-		Type type; 
+		Type type;
 		if (signal.getValues().isEmpty()) {
 			throw new TcgException("Unable to assertain signal type in XmlWriter");
 		} else {
@@ -150,10 +151,7 @@ public class TcgXmlWriter extends TcgWriter {
 		}
 		out.println("      <Signal name=\"" + name + "\" type=\"" + type + "\">");
 		for (int i = 0; i < k; i++) {
-			Value value = signal.getValue(i);
-			if (!Util.isArbitrary(value)) {
-				out.println("        <Value time=\"" + i + "\">" + formatValue(value) + "</Value>");
-			}
+			out.println("        <Value time=\"" + i + "\">" + formatValue(signal.getValue(i)) + "</Value>");
 		}
 		out.println("      </Signal>");
 	}

@@ -35,6 +35,7 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
+import jkind.lustre.builders.ProgramBuilder;
 
 public class LustreContractAstBuilder extends LustreAstBuilder {
 
@@ -99,7 +100,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 		nodes.addAll(agreeProgram.globalLustreNodes);
 		nodes.add(main);
 
-		Program program = new Program(types, null, nodes, main.id);
+		Program program = new ProgramBuilder().addTypes(types).addNodes(nodes).setMain(main.id).build();
 
 		return program;
 
@@ -192,14 +193,7 @@ public class LustreContractAstBuilder extends LustreAstBuilder {
 			assertions.add(new AgreeStatement("", tickedEq, null));
 
 			// we have two re-write the ids in the initial expressions
-			IdRewriter rewriter = new IdRewriter() {
-
-				@Override
-				public IdExpr rewrite(IdExpr id) {
-					// TODO Auto-generated method stub
-					return new IdExpr(prefix + id.id);
-				}
-			};
+			IdRewriter rewriter = id -> new IdExpr(prefix + id.id);
 			Expr newInit = subAgreeNode.initialConstraint.accept(new IdRewriteVisitor(rewriter));
 
 			Expr initConstr = new BinaryExpr(new UnaryExpr(UnaryOp.NOT, tickedId), BinaryOp.IMPLIES, newInit);
