@@ -187,12 +187,14 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			Arg arg = args.get(0);
 			List<Arg> rest = args.subList(1, args.size());
 			List<ResoluteResult> children = new ArrayList<>();
+			@SuppressWarnings("unused")
 			boolean claimCall = false;
 			if (body instanceof FnCallExpr) {
 				FunctionDefinition fn = ((FnCallExpr) body).getFn();
 				DefinitionBody bod = fn.getBody();
-				if (bod instanceof ClaimBody)
+				if (bod instanceof ClaimBody) {
 					claimCall = true;
+				}
 			}
 			for (ResoluteValue value : getArgSet(arg)) {
 				varStack.peek().put(arg, value);
@@ -211,12 +213,15 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private boolean containsClaim(ResoluteResult result) {
-		if (result instanceof ClaimResult)
+		if (result instanceof ClaimResult) {
 			return true;
+		}
 		for (ResoluteResult cres : result.getChildren()) {
-			if (containsClaim(cres))
+			if (containsClaim(cres)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -298,6 +303,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
 				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
 				// text.append("'");
+				@SuppressWarnings("unlikely-arg-type")
 				ResoluteValue val = varStack.peek().get(claimArg);
 				if (val == null) {
 					if (claimArg instanceof ConstantDefinition) {
@@ -339,6 +345,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		for (ClaimText claim : body.getClaim()) {
 			if (claim instanceof ClaimArg) {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
+				@SuppressWarnings("unlikely-arg-type")
 				ResoluteValue argVal = varStack.peek().get(claimArg);
 				if (argVal != null && argVal.isNamedElement()) {
 					EObject modelElement = getModelElement(argVal.getNamedElement());

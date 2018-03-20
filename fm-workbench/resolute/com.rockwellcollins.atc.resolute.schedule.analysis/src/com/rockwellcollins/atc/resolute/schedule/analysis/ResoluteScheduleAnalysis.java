@@ -10,7 +10,6 @@ import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
-import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteEvaluator;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteFailException;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
