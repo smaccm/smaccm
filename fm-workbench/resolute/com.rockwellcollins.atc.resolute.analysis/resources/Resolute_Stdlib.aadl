@@ -26,7 +26,7 @@ processor_bound(logical : aadl, physical : component) : bool =
 -- Connections
 ----------------
 connected(a : component, conn : connection, b : component) : bool =
-  parent(source(conn)) = a and parent(destination(conn)) = b
+  contained(source(conn), a) and contained(destination(conn), b)
 
 source_component(c : connection) : component =
   containing_component(source(c))
