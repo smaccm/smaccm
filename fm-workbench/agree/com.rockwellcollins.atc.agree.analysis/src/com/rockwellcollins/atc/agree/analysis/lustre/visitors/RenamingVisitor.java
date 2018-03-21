@@ -17,7 +17,10 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
@@ -116,6 +119,34 @@ public class RenamingVisitor extends AstIterVisitor {
 		return null;
 	}
 
+	private String nestedDotIdToString(NestedDotID id) {
+		String result = id.getBase().getName();
+		if (id.getSub() != null) {
+			result += "." + nestedDotIdToString(id.getSub());
+		}
+		if (id.getTag() != null) {
+			result += "." + id.getTag();
+		}
+		return result;
+	}
+
+	private String argToString(Arg arg) {
+		String result = arg.getName() + " : ";
+		if (arg.getType() instanceof PrimType) {
+			PrimType primType = (PrimType) arg.getType();
+			result += primType.getString();
+			String lowLit = (primType.getLowNeg() != null) ? primType.getLowNeg() : "";
+			String highLit = (primType.getHighNeg() != null) ? primType.getHighNeg() : "";
+			if (primType.getRangeLow() != null) {
+				result += " [" + lowLit + primType.getRangeLow() + ", " + highLit
+						+ primType.getRangeHigh() + "]";
+			}
+		} else {
+			result += nestedDotIdToString(((RecordType) arg.getType()).getRecord());
+		}
+		return result;
+	}
+
 	private String getReferenceStr(AgreeVar var) {
 
 		String prefix = getCategory(rootInstance, var);
@@ -149,9 +180,9 @@ public class RenamingVisitor extends AstIterVisitor {
 		} else if (reference instanceof Arg) {
 			return prefix + seperator + ((Arg) reference).getName() + suffix;
 		} else if (reference instanceof EqStatement) {
-			return prefix + "eq: " + String.join(", ",
-					((EqStatement) reference).getLhs().stream().map(lhs -> lhs.getName()).collect(Collectors.toList()))
-			+ suffix;
+			return prefix + "eq " + String.join(", ",
+					((EqStatement) reference).getLhs().stream().map(lhs -> argToString(lhs))
+					.collect(Collectors.toList()));
 		} else if (reference instanceof DataPort) {
 			return prefix + seperator + ((DataPort) reference).getName() + suffix;
 		} else if (reference instanceof EventDataPort) {
