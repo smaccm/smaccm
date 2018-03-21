@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.agree.analysis.lustre.visitors;
 
+import java.util.stream.Collectors;
+
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -12,6 +14,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
@@ -145,6 +148,10 @@ public class RenamingVisitor extends AstIterVisitor {
 			throw new AgreeException("We really didn't expect to see an assert statement here");
 		} else if (reference instanceof Arg) {
 			return prefix + seperator + ((Arg) reference).getName() + suffix;
+		} else if (reference instanceof EqStatement) {
+			return prefix + "eq: " + String.join(", ",
+					((EqStatement) reference).getLhs().stream().map(lhs -> lhs.getName()).collect(Collectors.toList()))
+			+ suffix;
 		} else if (reference instanceof DataPort) {
 			return prefix + seperator + ((DataPort) reference).getName() + suffix;
 		} else if (reference instanceof EventDataPort) {

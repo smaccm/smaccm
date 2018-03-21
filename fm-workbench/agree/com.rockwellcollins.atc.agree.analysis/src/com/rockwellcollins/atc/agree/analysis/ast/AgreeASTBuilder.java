@@ -165,6 +165,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private boolean isMonolithic = false;
 	private LinearizationRewriter linearizationRewriter = new LinearizationRewriter();
 
+	static class GatheredConstraints {
+		public List<AgreeStatement> assertions = new ArrayList<>();
+		public List<AgreeStatement> obligations = new ArrayList<>();
+
+		public void addAllTo(List<AgreeStatement> assertions, List<AgreeStatement> obligations) {
+			assertions.addAll(this.assertions);
+			obligations.addAll(this.obligations);
+		}
+	}
+
 	public AgreeProgram getAgreeProgram(ComponentInstance compInst, boolean isMonolithic) {
 		boolean containsRTPatterns = false;
 
@@ -264,7 +274,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 				curInst = compInst;
 				assertions.addAll(getAssertionStatements(contract.getSpecs()));
-				assertions.addAll(getEquationStatements(contract.getSpecs()));
+				getEquationStatements(contract.getSpecs()).addAllTo(assertions, guarantees);
 				assertions.addAll(getPropertyStatements(contract.getSpecs()));
 				assertions.addAll(getAssignmentStatements(contract.getSpecs()));
 				userDefinedConections.addAll(getConnectionStatements(contract.getSpecs()));
@@ -313,7 +323,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
 			}
 			// we count eqstatements with expressions as assertions
-			assertions.addAll(getEquationStatements(contract.getSpecs()));
+			getEquationStatements(contract.getSpecs()).addAllTo(assertions, guarantees);
 			assertions.addAll(getPropertyStatements(contract.getSpecs()));
 			outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
 			inputs.addAll(getAgreeInputVars(contract.getSpecs(), compInst));
@@ -1040,8 +1050,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return props;
 	}
 
-	private List<AgreeStatement> getEquationStatements(EList<SpecStatement> specs) {
-		List<AgreeStatement> eqs = new ArrayList<>();
+	private GatheredConstraints getEquationStatements(EList<SpecStatement> specs) {
+		GatheredConstraints result = new GatheredConstraints();
 		for (SpecStatement spec : specs) {
 			if (spec instanceof EqStatement) {
 				EqStatement eq = (EqStatement) spec;
@@ -1059,12 +1069,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					} else {
 						expr = new BinaryExpr(new IdExpr(lhs.get(0).getName()), BinaryOp.EQUAL, expr);
 					}
-					eqs.add(new AgreeStatement("", expr, spec));
+					result.assertions.add(new AgreeStatement("", expr, spec));
 				}
-				eqs.addAll(getVariableRangeConstraints(lhs, eq));
+				result.obligations.addAll(getVariableRangeConstraints(lhs, eq));
 			}
 		}
-		return eqs;
+		return result;
 	}
 
 	private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EqStatement eq) {
@@ -1103,7 +1113,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
 					// must have reference to eq statement so we don't throw
 					// them away later
-					constraints.add(new AgreeStatement("", bound, eq));
+					constraints.add(new AgreeStatement("Type predicate on '" + arg.getName() + "'", bound, eq));
 				}
 			}
 		}
