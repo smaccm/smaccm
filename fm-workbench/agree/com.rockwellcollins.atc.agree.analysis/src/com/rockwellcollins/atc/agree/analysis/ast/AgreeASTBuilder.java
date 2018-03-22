@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -31,11 +32,14 @@ import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.IntegerLiteral;
+import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
+import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
@@ -92,6 +96,7 @@ import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -1115,10 +1120,81 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					// them away later
 					constraints.add(new AgreeStatement("Type predicate on '" + arg.getName() + "'", bound, eq));
 				}
+			} else if (arg.getType() instanceof RecordType) {
+				RecordType recType  = (RecordType) arg.getType();
+				NamedElement recordTypeName = AgreeUtils.getFinalNestId(recType.getRecord());
+				if (recordTypeName instanceof ComponentClassifier
+						&& hasIntegerRangeProperty((ComponentClassifier) recordTypeName)) {
+					for (PropertyAssociation pa : getIntegerRangePropertyAssociations(
+							(ComponentClassifier) recordTypeName)) {
+						for (ModalPropertyValue pv : pa.getOwnedValues()) {
+							PropertyExpression propExpr = pv.getOwnedValue();
+							if (propExpr instanceof RangeValue) {
+								RangeValue rangeValue = (RangeValue) propExpr;
+								double min = rangeValue.getMinimumValue().getScaledValue();
+								double max = rangeValue.getMaximumValue().getScaledValue();
+								IdExpr id = new IdExpr(arg.getName());
+								Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
+								Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
+								Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+								Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+								Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+								// must have reference to eq statement so we don't throw
+								// them away later
+								constraints.add(
+										new AgreeStatement("Type predicate on '" + arg.getName() + "'", bound, eq));
+							}
+						}
+					}
+				} else if (recordTypeName instanceof ComponentClassifier
+						&& hasRealRangeProperty((ComponentClassifier) recordTypeName)) {
+					for (PropertyAssociation pa : getRealRangePropertyAssociations(
+							(ComponentClassifier) recordTypeName)) {
+						for (ModalPropertyValue pv : pa.getOwnedValues()) {
+							PropertyExpression propExpr = pv.getOwnedValue();
+							if (propExpr instanceof RangeValue) {
+								RangeValue rangeValue = (RangeValue) propExpr;
+								double min = rangeValue.getMinimumValue().getScaledValue();
+								double max = rangeValue.getMaximumValue().getScaledValue();
+								IdExpr id = new IdExpr(arg.getName());
+								Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
+								Expr highVal = new RealExpr(BigDecimal.valueOf(max));
+								Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+								Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+								Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+								// must have reference to eq statement so we don't throw
+								// them away later
+								constraints.add(
+										new AgreeStatement("Type predicate on '" + arg.getName() + "'", bound, eq));
+							}
+						}
+					}
+				}
 			}
 		}
 
 		return constraints;
+	}
+
+	private static boolean hasIntegerRangeProperty(ComponentClassifier componentClassifier) {
+		return componentClassifier.getAllPropertyAssociations().stream()
+				.anyMatch(pa -> "Integer_Range".equals(pa.getProperty().getName()));
+	}
+
+	private static boolean hasRealRangeProperty(ComponentClassifier componentClassifier) {
+		return componentClassifier.getAllPropertyAssociations().stream()
+				.anyMatch(pa -> "Real_Range".equals(pa.getProperty().getName()));
+	}
+
+	private static List<PropertyAssociation> getIntegerRangePropertyAssociations(
+			ComponentClassifier componentClassifier) {
+		return componentClassifier.getAllPropertyAssociations().stream()
+				.filter(pa -> "Integer_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
+	}
+
+	private static List<PropertyAssociation> getRealRangePropertyAssociations(ComponentClassifier componentClassifier) {
+		return componentClassifier.getAllPropertyAssociations().stream()
+				.filter(pa -> "Real_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
 	}
 
 	private List<AgreeStatement> getAssumptionStatements(EList<SpecStatement> specs) {
