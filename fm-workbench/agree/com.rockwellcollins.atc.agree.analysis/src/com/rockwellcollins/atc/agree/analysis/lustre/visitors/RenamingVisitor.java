@@ -16,6 +16,7 @@ import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -183,6 +184,9 @@ public class RenamingVisitor extends AstIterVisitor {
 			return prefix + "eq " + String.join(", ",
 					((EqStatement) reference).getLhs().stream().map(lhs -> argToString(lhs))
 					.collect(Collectors.toList()));
+		} else if (reference instanceof InputStatement) {
+			return prefix + "agree_input " + String.join(", ", ((InputStatement) reference).getLhs().stream()
+					.map(lhs -> argToString(lhs)).collect(Collectors.toList()));
 		} else if (reference instanceof DataPort) {
 			return prefix + seperator + ((DataPort) reference).getName() + suffix;
 		} else if (reference instanceof EventDataPort) {
