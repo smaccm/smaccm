@@ -23,6 +23,8 @@ import org.osate.aadl2.ConnectedElement;
 import org.osate.aadl2.Connection;
 import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.Context;
+import org.osate.aadl2.DataClassifier;
+import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
@@ -639,22 +641,24 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			// we do not reason about this type
 			return;
 		}
-		DataType dt;
-//		NamedType agreeType = getNamedType(AgreeTypeUtils.getTypeName(type, typeMap, globalTypes));
 
 		AgreeVar agreeVar = new AgreeVar(name, type, feature.getFeature(), feature.getComponentInstance(), feature);
 
 		switch (feature.getDirection()) {
 		case IN:
 			inputs.add(agreeVar);
-			if (dataClass instanceof DataType) {
-				assumptions.addAll(getDataTypeRangeConstraint(feature.getName(), (DataType) dataClass, dataFeature));
+			if (dataClass instanceof DataClassifier) {
+				assumptions
+				.addAll(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						dataFeature));
 			}
 			break;
 		case OUT:
 			outputs.add(agreeVar);
-			if (dataClass instanceof DataType) {
-				guarantees.addAll(getDataTypeRangeConstraint(feature.getName(), (DataType) dataClass, dataFeature));
+			if (dataClass instanceof DataClassifier) {
+				guarantees
+				.addAll(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						dataFeature));
 			}
 			break;
 		default:
@@ -1100,99 +1104,62 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return result;
 	}
 
-//	private List<AgreeStatement> getFeatureRangeConstraint(DataSubcomponentType dataSubcomponentType) {
-//		List<AgreeStatement> constraints = new ArrayList<>();
-//
-//		// TODO: Need to make this recursively descend into the subcomponents
-//		if (hasIntegerRangeProperty((ComponentClassifier) recordTypeName)) {
-//			for (PropertyAssociation pa : getIntegerRangePropertyAssociations(dataSubcomponentType)) {
-//				for (ModalPropertyValue pv : pa.getOwnedValues()) {
-//					PropertyExpression propExpr = pv.getOwnedValue();
-//					if (propExpr instanceof RangeValue) {
-//						RangeValue rangeValue = (RangeValue) propExpr;
-//						double min = rangeValue.getMinimumValue().getScaledValue();
-//						double max = rangeValue.getMaximumValue().getScaledValue();
-//						IdExpr id = new IdExpr(name);
-//						Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
-//						Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
-//						Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-//						Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-//						Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-//						// must have reference to reference so we don't throw
-//						// them away later
-//						constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
-//					}
-//				}
-//			}
-//		} else if (hasRealRangeProperty(dataSubcomponentType)) {
-//			for (PropertyAssociation pa : getRealRangePropertyAssociations((ComponentClassifier) recordTypeName)) {
-//				for (ModalPropertyValue pv : pa.getOwnedValues()) {
-//					PropertyExpression propExpr = pv.getOwnedValue();
-//					if (propExpr instanceof RangeValue) {
-//						RangeValue rangeValue = (RangeValue) propExpr;
-//						double min = rangeValue.getMinimumValue().getScaledValue();
-//						double max = rangeValue.getMaximumValue().getScaledValue();
-//						IdExpr id = new IdExpr(name);
-//						Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
-//						Expr highVal = new RealExpr(BigDecimal.valueOf(max));
-//						Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-//						Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-//						Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-//						// must have reference to reference so we don't throw
-//						// them away later
-//						constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
-//					}
-//				}
-//			}
-//		}
-//
-//		return constraints;
-//	}
-
-	private List<AgreeStatement> getDataTypeRangeConstraint(String name, DataType dataType, EObject reference) {
+	private List<AgreeStatement> getDataClassifierRangeConstraint(String name, DataClassifier dataClassifier,
+			EObject reference) {
 		List<AgreeStatement> constraints = new ArrayList<>();
-		// TODO: Need to make this recursively descend into the record subcomponents
-		if (hasIntegerRangeProperty(dataType)) {
-			for (PropertyAssociation pa : getIntegerRangePropertyAssociations(dataType)) {
-				for (ModalPropertyValue pv : pa.getOwnedValues()) {
-					PropertyExpression propExpr = pv.getOwnedValue();
-					if (propExpr instanceof RangeValue) {
-						RangeValue rangeValue = (RangeValue) propExpr;
-						double min = rangeValue.getMinimumValue().getScaledValue();
-						double max = rangeValue.getMaximumValue().getScaledValue();
-						IdExpr id = new IdExpr(name);
-						Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
-						Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
-						Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-						Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-						Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-						// must have reference to reference so we don't throw
-						// them away later
-						constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+
+		if (dataClassifier instanceof DataType) {
+			if (hasIntegerRangeProperty(dataClassifier)) {
+				for (PropertyAssociation pa : getIntegerRangePropertyAssociations(dataClassifier)) {
+					for (ModalPropertyValue pv : pa.getOwnedValues()) {
+						PropertyExpression propExpr = pv.getOwnedValue();
+						if (propExpr instanceof RangeValue) {
+							RangeValue rangeValue = (RangeValue) propExpr;
+							double min = rangeValue.getMinimumValue().getScaledValue();
+							double max = rangeValue.getMaximumValue().getScaledValue();
+							IdExpr id = new IdExpr(name);
+							Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
+							Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
+							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+							// must have reference to reference so we don't throw
+							// them away later
+							constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+						}
+					}
+				}
+			} else if (hasRealRangeProperty(dataClassifier)) {
+				for (PropertyAssociation pa : getRealRangePropertyAssociations(dataClassifier)) {
+					for (ModalPropertyValue pv : pa.getOwnedValues()) {
+						PropertyExpression propExpr = pv.getOwnedValue();
+						if (propExpr instanceof RangeValue) {
+							RangeValue rangeValue = (RangeValue) propExpr;
+							double min = rangeValue.getMinimumValue().getScaledValue();
+							double max = rangeValue.getMaximumValue().getScaledValue();
+							IdExpr id = new IdExpr(name);
+							Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
+							Expr highVal = new RealExpr(BigDecimal.valueOf(max));
+							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+							// must have reference to reference so we don't throw
+							// them away later
+							constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+						}
 					}
 				}
 			}
-		} else if (hasRealRangeProperty(dataType)) {
-			for (PropertyAssociation pa : getRealRangePropertyAssociations(dataType)) {
-				for (ModalPropertyValue pv : pa.getOwnedValues()) {
-					PropertyExpression propExpr = pv.getOwnedValue();
-					if (propExpr instanceof RangeValue) {
-						RangeValue rangeValue = (RangeValue) propExpr;
-						double min = rangeValue.getMinimumValue().getScaledValue();
-						double max = rangeValue.getMaximumValue().getScaledValue();
-						IdExpr id = new IdExpr(name);
-						Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
-						Expr highVal = new RealExpr(BigDecimal.valueOf(max));
-						Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-						Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-						Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-						// must have reference to reference so we don't throw
-						// them away later
-						constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
-					}
-				}
-			}
+
+		} else if (dataClassifier instanceof DataImplementation) {
+			constraints.addAll(((DataImplementation) dataClassifier).getAllSubcomponents().stream()
+					.filter(sub -> sub.getSubcomponentType() instanceof DataClassifier)
+					.map(sub -> getDataClassifierRangeConstraint(name + "." + sub.getName(),
+							(DataClassifier) sub.getSubcomponentType(),
+							reference))
+					.flatMap(List::stream).collect(Collectors.toList()));
 		}
+
 		return constraints;
 	}
 
@@ -1237,8 +1204,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		} else if (type instanceof RecordType) {
 			RecordType recType = (RecordType) type;
 			NamedElement recordTypeName = AgreeUtils.getFinalNestId(recType.getRecord());
-			if (recordTypeName instanceof DataType) {
-				constraints.addAll(getDataTypeRangeConstraint(name, (DataType) recordTypeName, reference));
+			if (recordTypeName instanceof DataClassifier) {
+				constraints.addAll(getDataClassifierRangeConstraint(name, (DataClassifier) recordTypeName, reference));
 			}
 		}
 		return constraints;
