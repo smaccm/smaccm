@@ -1029,6 +1029,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkPropertyStatement(PropertyStatement propStat) {
+		AnnexLibrary library = EcoreUtil2.getContainerOfType(propStat, AnnexLibrary.class);
+		if (library != null) {
+			error(propStat, "Property statments are allowed only in component annexes");
+		}
+
 		AgreeType exprType = getAgreeType(propStat.getExpr());
 		if (!matches(BOOL, exprType)) {
 			error(propStat, "Property statement '" + propStat.getName() + "' is of type '" + exprType
@@ -1639,7 +1644,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkEqStatement(EqStatement eqStat) {
 		AnnexLibrary library = EcoreUtil2.getContainerOfType(eqStat, AnnexLibrary.class);
 		if (library != null) {
-			error(eqStat, "Equation statments are only allowed in component annexes");
+			error(eqStat, "Equation statments are allowed only in component annexes");
 		}
 		checkMultiAssignEq(eqStat, eqStat.getLhs(), eqStat.getExpr());
 	}
