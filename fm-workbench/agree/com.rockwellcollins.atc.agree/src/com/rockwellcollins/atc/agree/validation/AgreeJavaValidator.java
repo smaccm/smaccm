@@ -323,6 +323,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(dotId, "The Id on the left hand side of an assignment statement " + "must not contain a \".\"");
 		}
 
+		if (namedEl.eContainer() instanceof InputStatement) {
+			error(dotId, "Assignment to agree_input variables is illegal.");
+		}
+
 		AgreeType lhsType = getAgreeType(namedEl);
 		AgreeType rhsType = getAgreeType(expr);
 
