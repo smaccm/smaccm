@@ -323,6 +323,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(dotId, "The Id on the left hand side of an assignment statement " + "must not contain a \".\"");
 		}
 
+		if (namedEl.eContainer() instanceof InputStatement) {
+			error(dotId, "Assignment to agree_input variables is illegal.");
+		}
+
 		AgreeType lhsType = getAgreeType(namedEl);
 		AgreeType rhsType = getAgreeType(expr);
 
@@ -356,8 +360,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 				// this is a ranged argument. It can only show up in an equation statement
 				EObject container = arg.eContainer();
-				if (!(container instanceof EqStatement)) {
-					error(arg, "Ranged arguments can only appear in equation statements");
+				if (!(container instanceof EqStatement || container instanceof InputStatement)) {
+					error(arg, "Ranged arguments can only appear in equation statements or agree_input statements");
 				}
 
 				boolean rangeLowDot = rangeLow.contains(".");

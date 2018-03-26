@@ -9,21 +9,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ConnectedElement;
 import org.osate.aadl2.Connection;
 import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.Context;
+import org.osate.aadl2.DataClassifier;
+import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
+import org.osate.aadl2.DataType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.EventPort;
@@ -31,11 +36,14 @@ import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.IntegerLiteral;
+import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
+import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
@@ -92,6 +100,7 @@ import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -165,11 +174,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private boolean isMonolithic = false;
 	private LinearizationRewriter linearizationRewriter = new LinearizationRewriter();
 
-	static class GatheredConstraints {
+	static class GatheredVariablesAndConstraints {
+		public List<AgreeVar> variables = new ArrayList<>();
 		public List<AgreeStatement> assertions = new ArrayList<>();
 		public List<AgreeStatement> obligations = new ArrayList<>();
 
-		public void addAllTo(List<AgreeStatement> assertions, List<AgreeStatement> obligations) {
+		public void addAllTo(List<AgreeVar> variables, List<AgreeStatement> assertions,
+				List<AgreeStatement> obligations) {
+			variables.addAll(this.variables);
 			assertions.addAll(this.assertions);
 			obligations.addAll(this.obligations);
 		}
@@ -274,7 +286,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 				curInst = compInst;
 				assertions.addAll(getAssertionStatements(contract.getSpecs()));
-				getEquationStatements(contract.getSpecs()).addAllTo(assertions, guarantees);
+				getEquationStatements(contract.getSpecs()).addAllTo(locals, assertions, guarantees);
 				assertions.addAll(getPropertyStatements(contract.getSpecs()));
 				assertions.addAll(getAssignmentStatements(contract.getSpecs()));
 				userDefinedConections.addAll(getConnectionStatements(contract.getSpecs()));
@@ -323,10 +335,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				guarantees.addAll(getGuaranteeStatements(contract.getSpecs()));
 			}
 			// we count eqstatements with expressions as assertions
-			getEquationStatements(contract.getSpecs()).addAllTo(assertions, guarantees);
+			getEquationStatements(contract.getSpecs()).addAllTo(locals, assertions, guarantees);
 			assertions.addAll(getPropertyStatements(contract.getSpecs()));
 			outputs.addAll(getEquationVars(contract.getSpecs(), compInst));
-			inputs.addAll(getAgreeInputVars(contract.getSpecs(), compInst));
+			getAgreeInputVars(contract.getSpecs(), compInst).addAllTo(inputs, assumptions, guarantees);
 			initialConstraint = getInitialConstraint(contract.getSpecs());
 
 			addLustreNodes(contract.getSpecs());
@@ -336,7 +348,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (!(foundSubNode || hasDirectAnnex)) {
 			return null;
 		}
-		gatherOutputsInputsTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes);
+		gatherOutputsInputsAndTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes, assumptions, guarantees);
 
 		// verify that every variable that is reasoned about is
 		// in a component containing an annex
@@ -409,18 +421,19 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return conns;
 	}
 
-	private List<AgreeVar> getAgreeInputVars(EList<SpecStatement> specs, ComponentInstance compInst) {
-		List<AgreeVar> agreeVars = new ArrayList<>();
+	private GatheredVariablesAndConstraints getAgreeInputVars(List<SpecStatement> specs, ComponentInstance compInst) {
+		GatheredVariablesAndConstraints result = new GatheredVariablesAndConstraints();
 		for (SpecStatement spec : specs) {
 			if (spec instanceof InputStatement) {
 				EList<Arg> args = ((InputStatement) spec).getLhs();
 				List<VarDecl> vars = agreeVarsFromArgs(args, compInst);
 				for (VarDecl var : vars) {
-					agreeVars.add((AgreeVar) var);
+					result.variables.add((AgreeVar) var);
 				}
+				result.assertions.addAll(getVariableRangeConstraints(args, spec));
 			}
 		}
-		return agreeVars;
+		return result;
 	}
 
 	private void assertReferencedSubcomponentHasAnnex(ComponentInstance compInst, List<AgreeVar> inputs,
@@ -543,22 +556,25 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return agreeVars;
 	}
 
-	private void gatherOutputsInputsTypes(List<AgreeVar> outputs, List<AgreeVar> inputs,
-			EList<FeatureInstance> features, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
+	private void gatherOutputsInputsAndTypes(List<AgreeVar> outputs, List<AgreeVar> inputs,
+			EList<FeatureInstance> features, Map<NamedElement, String> typeMap, Set<Type> typeExpressions,
+			List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
 		for (FeatureInstance feature : features) {
-			featureToAgreeVars(outputs, inputs, feature, typeMap, typeExpressions);
+			featureToAgreeVars(outputs, inputs, feature, typeMap, typeExpressions, assumptions, guarantees);
 		}
 
 	}
 
 	private void featureToAgreeVars(List<AgreeVar> outputs, List<AgreeVar> inputs, FeatureInstance feature,
-			Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
+			Map<NamedElement, String> typeMap, Set<Type> typeExpressions, List<AgreeStatement> assumptions,
+			List<AgreeStatement> guarantees) {
 
 		switch (feature.getCategory()) {
 		case FEATURE_GROUP:
 			List<AgreeVar> newInputs = new ArrayList<>();
 			List<AgreeVar> newOutputs = new ArrayList<>();
-			gatherOutputsInputsTypes(newOutputs, newInputs, feature.getFeatureInstances(), typeMap, typeExpressions);
+			gatherOutputsInputsAndTypes(newOutputs, newInputs, feature.getFeatureInstances(), typeMap, typeExpressions,
+					assumptions, guarantees);
 			for (AgreeVar agreeVar : newInputs) {
 				String newName = feature.getName() + dotChar + agreeVar.id;
 				inputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature(), feature.getComponentInstance(),
@@ -572,7 +588,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			return;
 		case DATA_PORT:
 		case EVENT_DATA_PORT:
-			portToAgreeVar(outputs, inputs, feature, typeMap, typeExpressions);
+			portToAgreeVar(outputs, inputs, feature, typeMap, typeExpressions, assumptions, guarantees);
 			return;
 		case DATA_ACCESS:
 			break;
@@ -584,7 +600,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private void portToAgreeVar(List<AgreeVar> outputs, List<AgreeVar> inputs, FeatureInstance feature,
-			Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
+			Map<NamedElement, String> typeMap, Set<Type> typeExpressions, List<AgreeStatement> assumptions,
+			List<AgreeStatement> guarantees) {
 
 		DataSubcomponentType dataClass;
 		Feature dataFeature = feature.getFeature();
@@ -630,9 +647,19 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		switch (feature.getDirection()) {
 		case IN:
 			inputs.add(agreeVar);
+			if (dataClass instanceof DataClassifier) {
+				assumptions
+				.addAll(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						dataFeature));
+			}
 			break;
 		case OUT:
 			outputs.add(agreeVar);
+			if (dataClass instanceof DataClassifier) {
+				guarantees
+				.addAll(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						dataFeature));
+			}
 			break;
 		default:
 			throw new AgreeException(
@@ -1050,8 +1077,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return props;
 	}
 
-	private GatheredConstraints getEquationStatements(EList<SpecStatement> specs) {
-		GatheredConstraints result = new GatheredConstraints();
+	private GatheredVariablesAndConstraints getEquationStatements(EList<SpecStatement> specs) {
+		GatheredVariablesAndConstraints result = new GatheredVariablesAndConstraints();
 		for (SpecStatement spec : specs) {
 			if (spec instanceof EqStatement) {
 				EqStatement eq = (EqStatement) spec;
@@ -1077,48 +1104,140 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return result;
 	}
 
-	private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EqStatement eq) {
+	private List<AgreeStatement> getDataClassifierRangeConstraint(String name, DataClassifier dataClassifier,
+			EObject reference) {
 		List<AgreeStatement> constraints = new ArrayList<>();
-		for (Arg arg : args) {
-			if (arg.getType() instanceof PrimType) {
-				PrimType primType = (PrimType) arg.getType();
-				String lowStr = primType.getRangeLow();
-				String highStr = primType.getRangeHigh();
 
-				if (lowStr != null && highStr != null) {
-					IdExpr id = new IdExpr(arg.getName());
-					int lowSign = primType.getLowNeg() == null ? 1 : -1;
-					int highSign = primType.getHighNeg() == null ? 1 : -1;
-					Expr lowVal = null;
-					Expr highVal = null;
-
-					switch (primType.getString()) {
-					case "int":
-						long lowl = Long.valueOf(lowStr) * lowSign;
-						long highl = Long.valueOf(highStr) * highSign;
-						lowVal = new IntExpr(BigInteger.valueOf(lowl));
-						highVal = new IntExpr(BigInteger.valueOf(highl));
-						break;
-					case "real":
-						double lowd = Double.valueOf(lowStr) * lowSign;
-						double highd = Double.valueOf(highStr) * highSign;
-						lowVal = new RealExpr(BigDecimal.valueOf(lowd));
-						highVal = new RealExpr(BigDecimal.valueOf(highd));
-						break;
-					default:
-						throw new AgreeException("Unhandled type '" + primType.getString() + "' in ranged type");
+		if (dataClassifier instanceof DataType) {
+			if (hasIntegerRangeProperty(dataClassifier)) {
+				for (PropertyAssociation pa : getIntegerRangePropertyAssociations(dataClassifier)) {
+					for (ModalPropertyValue pv : pa.getOwnedValues()) {
+						PropertyExpression propExpr = pv.getOwnedValue();
+						if (propExpr instanceof RangeValue) {
+							RangeValue rangeValue = (RangeValue) propExpr;
+							double min = rangeValue.getMinimumValue().getScaledValue();
+							double max = rangeValue.getMaximumValue().getScaledValue();
+							IdExpr id = new IdExpr(name);
+							Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
+							Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
+							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+							// must have reference to reference so we don't throw
+							// them away later
+							constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+						}
 					}
-					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-					Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-					Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-					// must have reference to eq statement so we don't throw
-					// them away later
-					constraints.add(new AgreeStatement("Type predicate on '" + arg.getName() + "'", bound, eq));
+				}
+			} else if (hasRealRangeProperty(dataClassifier)) {
+				for (PropertyAssociation pa : getRealRangePropertyAssociations(dataClassifier)) {
+					for (ModalPropertyValue pv : pa.getOwnedValues()) {
+						PropertyExpression propExpr = pv.getOwnedValue();
+						if (propExpr instanceof RangeValue) {
+							RangeValue rangeValue = (RangeValue) propExpr;
+							double min = rangeValue.getMinimumValue().getScaledValue();
+							double max = rangeValue.getMaximumValue().getScaledValue();
+							IdExpr id = new IdExpr(name);
+							Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
+							Expr highVal = new RealExpr(BigDecimal.valueOf(max));
+							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+							// must have reference to reference so we don't throw
+							// them away later
+							constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+						}
+					}
 				}
 			}
+
+		} else if (dataClassifier instanceof DataImplementation) {
+			constraints.addAll(((DataImplementation) dataClassifier).getAllSubcomponents().stream()
+					.filter(sub -> sub.getSubcomponentType() instanceof DataClassifier)
+					.map(sub -> getDataClassifierRangeConstraint(name + "." + sub.getName(),
+							(DataClassifier) sub.getSubcomponentType(),
+							reference))
+					.flatMap(List::stream).collect(Collectors.toList()));
 		}
 
 		return constraints;
+	}
+
+	private List<AgreeStatement> getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
+			EObject reference) {
+		List<AgreeStatement> constraints = new ArrayList<>();
+		if (type instanceof PrimType) {
+			PrimType primType = (PrimType) type;
+			String lowStr = primType.getRangeLow();
+			String highStr = primType.getRangeHigh();
+
+			if (lowStr != null && highStr != null) {
+				IdExpr id = new IdExpr(name);
+				int lowSign = primType.getLowNeg() == null ? 1 : -1;
+				int highSign = primType.getHighNeg() == null ? 1 : -1;
+				Expr lowVal = null;
+				Expr highVal = null;
+
+				switch (primType.getString()) {
+				case "int":
+					long lowl = Long.valueOf(lowStr) * lowSign;
+					long highl = Long.valueOf(highStr) * highSign;
+					lowVal = new IntExpr(BigInteger.valueOf(lowl));
+					highVal = new IntExpr(BigInteger.valueOf(highl));
+					break;
+				case "real":
+					double lowd = Double.valueOf(lowStr) * lowSign;
+					double highd = Double.valueOf(highStr) * highSign;
+					lowVal = new RealExpr(BigDecimal.valueOf(lowd));
+					highVal = new RealExpr(BigDecimal.valueOf(highd));
+					break;
+				default:
+					throw new AgreeException("Unhandled type '" + primType.getString() + "' in ranged type");
+				}
+				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+				Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+				// must have reference to reference so we don't throw
+				// them away later
+				constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+			}
+		} else if (type instanceof RecordType) {
+			RecordType recType = (RecordType) type;
+			NamedElement recordTypeName = AgreeUtils.getFinalNestId(recType.getRecord());
+			if (recordTypeName instanceof DataClassifier) {
+				constraints.addAll(getDataClassifierRangeConstraint(name, (DataClassifier) recordTypeName, reference));
+			}
+		}
+		return constraints;
+	}
+
+	private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EObject reference) {
+		List<AgreeStatement> constraints = new ArrayList<>();
+		for (Arg arg : args) {
+			constraints.addAll(getVariableRangeConstraint(arg.getName(), arg.getType(), reference));
+		}
+		return constraints;
+	}
+
+	private static boolean hasIntegerRangeProperty(Classifier classifier) {
+		return classifier.getAllPropertyAssociations().stream()
+				.anyMatch(pa -> "Integer_Range".equals(pa.getProperty().getName()));
+	}
+
+	private static boolean hasRealRangeProperty(Classifier classifier) {
+		return classifier.getAllPropertyAssociations().stream()
+				.anyMatch(pa -> "Real_Range".equals(pa.getProperty().getName()));
+	}
+
+	private static List<PropertyAssociation> getIntegerRangePropertyAssociations(
+			Classifier classifier) {
+		return classifier.getAllPropertyAssociations().stream()
+				.filter(pa -> "Integer_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
+	}
+
+	private static List<PropertyAssociation> getRealRangePropertyAssociations(Classifier classifier) {
+		return classifier.getAllPropertyAssociations().stream()
+				.filter(pa -> "Real_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
 	}
 
 	private List<AgreeStatement> getAssumptionStatements(EList<SpecStatement> specs) {
