@@ -1725,7 +1725,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		for (AgreeSubclause subclause : EcoreUtil2.getAllContentsOfType(ct, AgreeSubclause.class)) {
 			List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
 			for (NamedElement e : es) {
-				if (!(e.eContainer() instanceof NodeDefExpr)) {
+				if (!(e.eContainer() instanceof NodeDefExpr || e.eContainer() instanceof LinearizationDefExpr
+						|| e.eContainer() instanceof RecordDefExpr)) {
 					result.add(e.getName());
 				}
 			}
