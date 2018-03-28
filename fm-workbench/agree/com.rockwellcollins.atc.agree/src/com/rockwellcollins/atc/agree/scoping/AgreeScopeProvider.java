@@ -11,6 +11,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.scoping.impl.FilteringScope;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
@@ -119,7 +121,12 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		components.addAll(ctx.getArgs());
 		components.addAll(ctx.getRets());
 		components.addAll(ctx.getNodeBody().getLocs());
-		return Scopes.scopeFor(components, IScope.NULLSCOPE);
+		IScope outer = new FilteringScope(getScope(ctx.eContainer(), ref),
+				input -> (AgreePackage.eINSTANCE.getNodeDefExpr().isSuperTypeOf(input.getEClass())
+						|| AgreePackage.eINSTANCE.getRecordDefExpr().isSuperTypeOf(input.getEClass())
+						|| Aadl2Package.eINSTANCE.getAadlPackage().isSuperTypeOf(input.getEClass())
+						|| Aadl2Package.eINSTANCE.getComponentClassifier().isSuperTypeOf(input.getEClass())));
+		return Scopes.scopeFor(components, outer);
 	}
 
 	IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
@@ -235,8 +242,8 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 				return new HashSet<>(); // this will throw a parsing error
 			}
 			container = refs.get(0); // figure out what this type this portion
-										// of the nest id is so we can figure out
-										// what we could possibly link to
+			// of the nest id is so we can figure out
+			// what we could possibly link to
 
 			if (container instanceof ThreadSubcomponent) {
 				container = ((ThreadSubcomponent) container).getComponentType();
@@ -295,21 +302,22 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 		} else if (container instanceof RecordType || container instanceof RecordExpr) {
 
-			while (!(container instanceof AgreeContract) && !(container instanceof NodeDefExpr)) {
+//			while (!(container instanceof AgreeContract) && !(container instanceof NodeDefExpr)) {
+			while (!(container instanceof AgreeContract)) {
 				container = container.eContainer();
 			}
 
 			if (container instanceof AgreeContract) {
 				Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
 				result.addAll(specs);
-			} else {
-				if (!(container instanceof NodeDefExpr)) {
-					throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
-				}
-				result.addAll(((NodeDefExpr) container).getArgs());
-				if (((NodeDefExpr) container).getNodeBody() != null) {
-					result.addAll(((NodeDefExpr) container).getNodeBody().getLocs());
-				}
+//			} else {
+//				if (!(container instanceof NodeDefExpr)) {
+//					throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
+//				}
+//				result.addAll(((NodeDefExpr) container).getArgs());
+//				if (((NodeDefExpr) container).getNodeBody() != null) {
+//					result.addAll(((NodeDefExpr) container).getNodeBody().getLocs());
+//				}
 			}
 
 			while (!(container instanceof AadlPackage)) {
@@ -321,20 +329,21 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 		} else if (container instanceof RecordUpdateExpr) {
 
-			while (!(container instanceof AgreeContract) && !(container instanceof NodeDefExpr)) {
+//			while (!(container instanceof AgreeContract) && !(container instanceof NodeDefExpr)) {
+			while (!(container instanceof AgreeContract)) {
 				container = container.eContainer();
 			}
 			if (container instanceof AgreeContract) {
 				Set<Element> specs = getAllElementsFromSpecs(((AgreeContract) container).getSpecs());
 				result.addAll(specs);
-			} else {
-				if (!(container instanceof NodeDefExpr)) {
-					throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
-				}
-				result.addAll(((NodeDefExpr) container).getArgs());
-				if (((NodeDefExpr) container).getNodeBody() != null) {
-					result.addAll(((NodeDefExpr) container).getNodeBody().getLocs());
-				}
+//			} else {
+//				if (!(container instanceof NodeDefExpr)) {
+//					throw new AgreeScopingException("container should be an AgreeContract or a NodeDefExpr");
+//				}
+//				result.addAll(((NodeDefExpr) container).getArgs());
+//				if (((NodeDefExpr) container).getNodeBody() != null) {
+//					result.addAll(((NodeDefExpr) container).getNodeBody().getLocs());
+//				}
 			}
 
 			while (!(container instanceof ComponentClassifier) && !(container instanceof AadlPackage)) {
@@ -382,20 +391,20 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 					result.add(el);
 				}
 			}
-		} else if (container instanceof NodeDefExpr) {
-			result.addAll(((NodeDefExpr) container).getArgs());
-			if (((NodeDefExpr) container).getNodeBody() != null) {
-				result.addAll(((NodeDefExpr) container).getNodeBody().getLocs());
-			}
-			// also add other nodes from the annex
-			while (!(container instanceof AgreeContract)) {
-				container = container.eContainer();
-			}
-			for (SpecStatement spec : ((AgreeContract) container).getSpecs()) {
-				if (spec instanceof NodeDefExpr) {
-					result.add(spec);
-				}
-			}
+//		} else if (container instanceof NodeDefExpr) {
+//			result.addAll(((NodeDefExpr) container).getArgs());
+//			if (((NodeDefExpr) container).getNodeBody() != null) {
+//				result.addAll(((NodeDefExpr) container).getNodeBody().getLocs());
+//			}
+//			// also add other nodes from the annex
+//			while (!(container instanceof AgreeContract)) {
+//				container = container.eContainer();
+//			}
+//			for (SpecStatement spec : ((AgreeContract) container).getSpecs()) {
+//				if (spec instanceof NodeDefExpr) {
+//					result.add(spec);
+//				}
+//			}
 		} else {
 
 			if (container instanceof AgreeContractLibrary) {
