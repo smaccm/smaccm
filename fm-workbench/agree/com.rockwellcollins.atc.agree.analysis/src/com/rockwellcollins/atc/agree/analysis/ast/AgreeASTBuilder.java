@@ -649,7 +649,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			inputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
 				assumptions
-				.addAll(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
 						dataFeature));
 			}
 			break;
@@ -657,7 +657,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			outputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
 				guarantees
-				.addAll(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
 						dataFeature));
 			}
 			break;
@@ -1104,9 +1104,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return result;
 	}
 
-	private List<AgreeStatement> getDataClassifierRangeConstraint(String name, DataClassifier dataClassifier,
+	private AgreeStatement getDataClassifierRangeConstraint(String name, DataClassifier dataClassifier,
 			EObject reference) {
-		List<AgreeStatement> constraints = new ArrayList<>();
+		// must have reference so we don't throw them away later
+		return new AgreeStatement("Type predicate on '" + name + "'",
+				getDataClassifierRangeConstraintExpr(name, dataClassifier), reference);
+	}
+
+	private Expr getDataClassifierRangeConstraintExpr(String name, DataClassifier dataClassifier) {
+		List<Expr> constraints = new ArrayList<>();
 
 		if (dataClassifier instanceof DataType) {
 			if (hasIntegerRangeProperty(dataClassifier)) {
@@ -1123,9 +1129,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
 							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
 							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-							// must have reference to reference so we don't throw
-							// them away later
-							constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+							constraints.add(bound);
 						}
 					}
 				}
@@ -1143,9 +1147,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
 							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
 							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-							// must have reference to reference so we don't throw
-							// them away later
-							constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+							constraints.add(bound);
 						}
 					}
 				}
@@ -1154,18 +1156,23 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		} else if (dataClassifier instanceof DataImplementation) {
 			constraints.addAll(((DataImplementation) dataClassifier).getAllSubcomponents().stream()
 					.filter(sub -> sub.getSubcomponentType() instanceof DataClassifier)
-					.map(sub -> getDataClassifierRangeConstraint(name + "." + sub.getName(),
-							(DataClassifier) sub.getSubcomponentType(),
-							reference))
-					.flatMap(List::stream).collect(Collectors.toList()));
+					.map(sub -> getDataClassifierRangeConstraintExpr(name + "." + sub.getName(),
+							(DataClassifier) sub.getSubcomponentType()))
+					.collect(Collectors.toList()));
 		}
 
-		return constraints;
+		return constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
 	}
 
-	private List<AgreeStatement> getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
+	private AgreeStatement getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
 			EObject reference) {
-		List<AgreeStatement> constraints = new ArrayList<>();
+		// must have reference so we don't throw them away later
+		return new AgreeStatement("Type predicate on '" + name + "'", getVariableRangeConstraintExpr(name, type),
+				reference);
+	}
+
+	private Expr getVariableRangeConstraintExpr(String name, com.rockwellcollins.atc.agree.agree.Type type) {
+		Expr result = new BoolExpr(true);
 		if (type instanceof PrimType) {
 			PrimType primType = (PrimType) type;
 			String lowStr = primType.getRangeLow();
@@ -1196,25 +1203,22 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				}
 				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
 				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-				Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-				// must have reference to reference so we don't throw
-				// them away later
-				constraints.add(new AgreeStatement("Type predicate on '" + name + "'", bound, reference));
+				result = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
 			}
 		} else if (type instanceof RecordType) {
 			RecordType recType = (RecordType) type;
 			NamedElement recordTypeName = AgreeUtils.getFinalNestId(recType.getRecord());
 			if (recordTypeName instanceof DataClassifier) {
-				constraints.addAll(getDataClassifierRangeConstraint(name, (DataClassifier) recordTypeName, reference));
+				result = getDataClassifierRangeConstraintExpr(name, (DataClassifier) recordTypeName);
 			}
 		}
-		return constraints;
+		return result;
 	}
 
 	private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EObject reference) {
 		List<AgreeStatement> constraints = new ArrayList<>();
 		for (Arg arg : args) {
-			constraints.addAll(getVariableRangeConstraint(arg.getName(), arg.getType(), reference));
+			constraints.add(getVariableRangeConstraint(arg.getName(), arg.getType(), reference));
 		}
 		return constraints;
 	}
