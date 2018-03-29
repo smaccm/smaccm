@@ -1753,18 +1753,40 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			String propInputName = entry.getKey();
 			GetPropertyExpr expr = entry.getValue();
 			Property prop = (Property) expr.getProp();
+			Expr propInputIdExpr = new IdExpr(propInputName);
 
 			Type type;
+			Expr bound = null;
 			if (prop.getReferencedPropertyType() instanceof AadlBoolean) {
 				type = NamedType.BOOL;
 			} else if (prop.getReferencedPropertyType() instanceof AadlInteger) {
+				AadlInteger aadlInteger = (AadlInteger) prop.getReferencedPropertyType();
 				type = NamedType.INT;
-				// TODO: need to consider extended types...
-//				if (hasIntegerRangeProperty(prop)) {
-				//
-//				}
+
+				if (aadlInteger.getRange() != null) {
+					PropertyExpression lowerBound = aadlInteger.getRange().getLowerBound();
+					PropertyExpression upperBound = aadlInteger.getRange().getUpperBound();
+
+					Expr lowVal = new IntExpr(BigInteger.valueOf(((IntegerLiteral) lowerBound).getValue()));
+					Expr highVal = new IntExpr(BigInteger.valueOf(((IntegerLiteral) upperBound).getValue()));
+					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
+					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
+					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+				}
 			} else if (prop.getReferencedPropertyType() instanceof AadlReal) {
+				AadlReal aadlReal = (AadlReal) prop.getReferencedPropertyType();
 				type = NamedType.REAL;
+
+				if (aadlReal.getRange() != null) {
+					PropertyExpression lowerBound = aadlReal.getRange().getLowerBound();
+					PropertyExpression upperBound = aadlReal.getRange().getUpperBound();
+
+					Expr lowVal = new RealExpr(BigDecimal.valueOf(((RealLiteral) lowerBound).getValue()));
+					Expr highVal = new RealExpr(BigDecimal.valueOf(((RealLiteral) upperBound).getValue()));
+					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
+					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
+					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+				}
 			} else {
 				throw new AgreeException(
 						"Could not locate property value '\" + prop.getFullName() + \"' in component '\"\n"
@@ -1774,15 +1796,20 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			// NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
 
 			AgreeVar propInputVar = new AgreeVar(propInputName, type, prop, curInst, null);
-			AgreeStatement constraint = getUnchangingConstraint(new IdExpr(propInputName), expr);
+
+			Expr constraint = getUnchangingConstraintExpr(propInputIdExpr);
+			if (bound != null) {
+				constraint = new BinaryExpr(constraint, BinaryOp.AND, bound);
+			}
+
 			inputs.add(propInputVar);
-			assumptions.add(constraint);
+			assumptions.add(new AgreeStatement("", constraint, expr));
 		}
 	}
 
-	private static AgreeStatement getUnchangingConstraint(Expr expr, EObject reference) {
-		return new AgreeStatement("", new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW,
-				new BinaryExpr(expr, BinaryOp.EQUAL, new UnaryExpr(UnaryOp.PRE, expr))), reference);
+	private static Expr getUnchangingConstraintExpr(Expr expr) {
+		return new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW,
+				new BinaryExpr(expr, BinaryOp.EQUAL, new UnaryExpr(UnaryOp.PRE, expr)));
 	}
 
 	@Override
