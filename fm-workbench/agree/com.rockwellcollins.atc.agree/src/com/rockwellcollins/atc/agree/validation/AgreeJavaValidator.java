@@ -53,6 +53,7 @@ import org.osate.aadl2.DataType;
 //import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
+import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 //import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
@@ -443,8 +444,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		NestedDotID nestId = event.getId();
 		NamedElement namedEl = getFinalNestId(nestId);
-		if (!(namedEl instanceof EventDataPort)) {
-			error(event, "Argument of event expression must be an event data port");
+		if (!(namedEl instanceof EventPort || namedEl instanceof EventDataPort)) {
+			error(event, "Argument of event expression must be an event port or event data port");
 		}
 	}
 

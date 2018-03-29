@@ -7,6 +7,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EventDataPort;
+import org.osate.aadl2.EventPort;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.ComponentInstance;
@@ -189,6 +190,8 @@ public class RenamingVisitor extends AstIterVisitor {
 					.map(lhs -> argToString(lhs)).collect(Collectors.toList()));
 		} else if (reference instanceof DataPort) {
 			return prefix + seperator + ((DataPort) reference).getName() + suffix;
+		} else if (reference instanceof EventPort) {
+			return prefix + seperator + ((EventPort) reference).getName() + suffix;
 		} else if (reference instanceof EventDataPort) {
 			return prefix + seperator + ((EventDataPort) reference).getName() + suffix;
 		} else if (reference instanceof FeatureGroup) {
