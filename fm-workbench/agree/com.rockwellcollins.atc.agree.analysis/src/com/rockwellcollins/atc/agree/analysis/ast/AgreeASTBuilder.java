@@ -8,12 +8,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.AadlBoolean;
+import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
+import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.Classifier;
@@ -157,6 +161,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public static final String clockIDSuffix = "___CLOCK_";
 	public static final String eventSuffix = "___EVENT_";
 	public static final String dotChar = "__";
+	public static final String unspecifiedAadlPropertyPrefix = "_unspec_property_";
 
 	public static List<Node> globalNodes;
 	private static Set<Type> globalTypes;
@@ -169,6 +174,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	// appropriately and more safely be instance variables.
 	private static Map<String, String> renamings;
 	private static Map<String, EObject> refMap;
+	private static Map<String, GetPropertyExpr> unspecifiedAadlProperties;
 
 	private ComponentInstance curInst; // used for Get_Property Expressions
 	private boolean isMonolithic = false;
@@ -254,6 +260,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		timeOfVarMap = new HashMap<>();
 		timeRiseVarMap = new HashMap<>();
 		timeFallVarMap = new HashMap<>();
+		unspecifiedAadlProperties = new HashMap<>();
 
 		Expr clockConstraint = new BoolExpr(true);
 		Expr initialConstraint = new BoolExpr(true);
@@ -344,6 +351,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			addLustreNodes(contract.getSpecs());
 			gatherLustreTypes(contract.getSpecs());
 		}
+
+		gatherUnspecifiedAadlProperties(unspecifiedAadlProperties, typeMap, globalTypes, inputs, assumptions,
+				guarantees);
 
 		if (!(foundSubNode || hasDirectAnnex)) {
 			return null;
@@ -1687,10 +1697,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			propVal = AgreeUtils.getPropExpression(compName, prop);
 
 			if (propVal == null) {
-				throw new AgreeException("Could not locate property value '" + prop.getFullName() + "' in component '"
-						+ compName.getName() + "'.  Is it possible "
-						+ "that a 'this' statement is used in a context in which it wasn't supposed to?");
+//				throw new AgreeException("Could not locate property value '" + prop.getFullName() + "' in component '"
+//						+ compName.getName() + "'.  Is it possible "
+//						+ "that a 'this' statement is used in a context in which it wasn't supposed to?");
+				String propInputName = unspecifiedAadlPropertyPrefix + compName.getName() + dotChar + prop.getName();
+				unspecifiedAadlProperties.put(propInputName, expr);
+				return new IdExpr(propInputName);
 			}
+
 		} else {
 			propVal = AgreeUtils.getPropExpression((PropertyConstant) propName);
 
@@ -1728,6 +1742,47 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		assert (res != null);
 
 		return res;
+	}
+
+	private void gatherUnspecifiedAadlProperties(Map<String, GetPropertyExpr> unspecifiedAadlProperties,
+			Map<NamedElement, String> typeMap, Set<Type> globalTypes, List<AgreeVar> inputs,
+			List<AgreeStatement> assumptions,
+			List<AgreeStatement> guarantees) {
+
+		for (Entry<String, GetPropertyExpr> entry : unspecifiedAadlProperties.entrySet()) {
+			String propInputName = entry.getKey();
+			GetPropertyExpr expr = entry.getValue();
+			Property prop = (Property) expr.getProp();
+
+			Type type;
+			if (prop.getReferencedPropertyType() instanceof AadlBoolean) {
+				type = NamedType.BOOL;
+			} else if (prop.getReferencedPropertyType() instanceof AadlInteger) {
+				type = NamedType.INT;
+				// TODO: need to consider extended types...
+//				if (hasIntegerRangeProperty(prop)) {
+				//
+//				}
+			} else if (prop.getReferencedPropertyType() instanceof AadlReal) {
+				type = NamedType.REAL;
+			} else {
+				throw new AgreeException(
+						"Could not locate property value '\" + prop.getFullName() + \"' in component '\"\n"
+								+ "//						+ compName.getName() + \"'.   Analysis on abstract values not supported for "
+								+ "AADL property type " + prop.getReferencedPropertyType() + ".");
+			}
+			// NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
+
+			AgreeVar propInputVar = new AgreeVar(propInputName, type, prop, curInst, null);
+			AgreeStatement constraint = getUnchangingConstraint(new IdExpr(propInputName), expr);
+			inputs.add(propInputVar);
+			assumptions.add(constraint);
+		}
+	}
+
+	private static AgreeStatement getUnchangingConstraint(Expr expr, EObject reference) {
+		return new AgreeStatement("", new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW,
+				new BinaryExpr(expr, BinaryOp.EQUAL, new UnaryExpr(UnaryOp.PRE, expr))), reference);
 	}
 
 	@Override
