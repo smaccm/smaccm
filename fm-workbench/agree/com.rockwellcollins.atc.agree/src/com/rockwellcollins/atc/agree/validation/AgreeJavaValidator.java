@@ -2346,26 +2346,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	protected AgreeType getAgreeType(NamedElement namedEl) {
-		if ((namedEl instanceof Property) || namedEl instanceof PropertyConstant) {
-			PropertyType propType;
-			if (namedEl instanceof Property) {
-				propType = ((Property) namedEl).getPropertyType();
-			} else {
-				propType = ((PropertyConstant) namedEl).getPropertyType();
-			}
-
-			if (propType instanceof AadlBoolean) {
-				return BOOL;
-			} else if (propType instanceof AadlString || propType instanceof EnumerationType) {
-				return new AgreeType("string");
-			} else if (propType instanceof AadlInteger) {
-				return INT;
-			} else if (propType instanceof AadlReal) {
-				return REAL;
-			} else if (propType instanceof ClassifierType) {
-				return new AgreeType("component");
-			}
-		} else if (namedEl instanceof DataSubcomponent) {
+		if (namedEl instanceof DataSubcomponent) {
 			// this is for checking "Base_Types::Boolean" etc...
 			ComponentClassifier compClass = ((DataSubcomponent) namedEl).getAllClassifier();
 			if (compClass instanceof DataImplementation) {
@@ -2529,7 +2510,28 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	private AgreeType getAgreeType(GetPropertyExpr getPropExpr) {
-		return getAgreeType(getPropExpr.getProp());
+		NamedElement namedEl = getPropExpr.getProp();
+		if ((namedEl instanceof Property) || namedEl instanceof PropertyConstant) {
+			PropertyType propType;
+			if (namedEl instanceof Property) {
+				propType = ((Property) namedEl).getPropertyType();
+			} else {
+				propType = ((PropertyConstant) namedEl).getPropertyType();
+			}
+
+			if (propType instanceof AadlBoolean) {
+				return BOOL;
+			} else if (propType instanceof AadlString || propType instanceof EnumerationType) {
+				return new AgreeType("string");
+			} else if (propType instanceof AadlInteger) {
+				return INT;
+			} else if (propType instanceof AadlReal) {
+				return REAL;
+			} else if (propType instanceof ClassifierType) {
+				return new AgreeType("component");
+			}
+		}
+		return ERROR;
 	}
 
 	private AgreeType getAgreeType(PrevExpr prevExpr) {
