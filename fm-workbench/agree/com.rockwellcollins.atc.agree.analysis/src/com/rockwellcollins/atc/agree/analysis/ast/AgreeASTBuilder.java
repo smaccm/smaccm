@@ -587,6 +587,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 			return;
 		case DATA_PORT:
+		case EVENT_PORT:
 		case EVENT_DATA_PORT:
 			portToAgreeVar(outputs, inputs, feature, typeMap, typeExpressions, assumptions, guarantees);
 			return;
@@ -608,13 +609,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (dataFeature instanceof DataPort) {
 			DataPort dataPort = (DataPort) dataFeature;
 			dataClass = dataPort.getDataFeatureClassifier();
-		} else {
+		} else if (dataFeature instanceof EventDataPort) {
 			EventDataPort eventDataPort = (EventDataPort) dataFeature;
 			dataClass = eventDataPort.getDataFeatureClassifier();
+		} else {
+			dataClass = null;
 		}
 
 		String name = feature.getName();
-		boolean isEvent = feature.getCategory() == FeatureCategory.EVENT_DATA_PORT;
+		boolean isEvent = feature.getCategory() == FeatureCategory.EVENT_DATA_PORT
+				|| feature.getCategory() == FeatureCategory.EVENT_PORT;
 		if (isEvent) {
 			AgreeVar var = new AgreeVar(name + eventSuffix, NamedType.BOOL, feature.getFeature(),
 					feature.getComponentInstance(), feature);
@@ -649,7 +653,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			inputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
 				assumptions
-						.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+				.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
 						dataFeature));
 			}
 			break;
@@ -657,7 +661,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			outputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
 				guarantees
-						.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+				.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
 						dataFeature));
 			}
 			break;
