@@ -1767,8 +1767,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					PropertyExpression lowerBound = aadlInteger.getRange().getLowerBound();
 					PropertyExpression upperBound = aadlInteger.getRange().getUpperBound();
 
-					Expr lowVal = new IntExpr(BigInteger.valueOf(((IntegerLiteral) lowerBound).getValue()));
-					Expr highVal = new IntExpr(BigInteger.valueOf(((IntegerLiteral) upperBound).getValue()));
+					Expr lowVal = new IntExpr(
+							BigDecimal.valueOf(((IntegerLiteral) lowerBound).getScaledValue()).toBigInteger());
+					Expr highVal = new IntExpr(
+							BigDecimal.valueOf(((IntegerLiteral) upperBound).getScaledValue()).toBigInteger());
 					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
 					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
 					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
