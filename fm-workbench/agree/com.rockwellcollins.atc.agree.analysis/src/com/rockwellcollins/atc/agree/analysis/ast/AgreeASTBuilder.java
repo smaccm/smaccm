@@ -114,6 +114,7 @@ import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
+import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
@@ -129,6 +130,7 @@ import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.linearization.LinearizationRewriter;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
@@ -1697,12 +1699,18 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			propVal = AgreeUtils.getPropExpression(compName, prop);
 
 			if (propVal == null) {
-//				throw new AgreeException("Could not locate property value '" + prop.getFullName() + "' in component '"
-//						+ compName.getName() + "'.  Is it possible "
-//						+ "that a 'this' statement is used in a context in which it wasn't supposed to?");
-				String propInputName = unspecifiedAadlPropertyPrefix + compName.getName() + dotChar + prop.getName();
-				unspecifiedAadlProperties.put(propInputName, expr);
-				return new IdExpr(propInputName);
+				if (Activator.getDefault().getPreferenceStore()
+						.getBoolean(PreferenceConstants.PREF_UNSPECIFIED_AADL_PROPERTIES)) {
+					String propInputName = unspecifiedAadlPropertyPrefix + compName.getName() + dotChar
+							+ prop.getName();
+					unspecifiedAadlProperties.put(propInputName, expr);
+					return new IdExpr(propInputName);
+				} else {
+					throw new AgreeException("Could not locate property value '" + prop.getFullName()
+					+ "' in component '" + compName.getName() + "'.  Is it possible "
+					+ "that a 'this' statement is used in a context in which it wasn't supposed to?"
+					+ "  Analysis of unspecified AADL properties as inputs may be enabled in the AGREE preferences.");
+				}
 			}
 
 		} else {
