@@ -1797,7 +1797,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 			// NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
 
-			AgreeVar propInputVar = new AgreeVar(propInputName, type, prop, curInst, null);
+			AgreeVar propInputVar = new AgreeVar(propInputName, type, expr, curInst, null);
 
 			Expr constraint = getUnchangingConstraintExpr(propInputIdExpr);
 			if (bound != null) {
@@ -1805,7 +1805,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 
 			inputs.add(propInputVar);
-			assumptions.add(new AgreeStatement("", constraint, expr));
+			assumptions.add(new AgreeStatement("", constraint, prop));
 		}
 	}
 

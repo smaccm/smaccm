@@ -204,9 +204,10 @@ public class RenamingVisitor extends AstIterVisitor {
 		} else if (reference instanceof PropertyStatement) {
 			return prefix + seperator + ((PropertyStatement) reference).getName();
 		} else if (reference instanceof Property) {
-			return "abstract property " + ((Property) reference).getName();
+			return "AADL property " + ((Property) reference).getName();
 		} else if (reference instanceof GetPropertyExpr) {
-			return "abstract property " + ((Property) ((GetPropertyExpr) reference).getProp()).getName();
+			return "Get_Property(" + ((GetPropertyExpr) reference).getContainingClassifier().getName() + ", "
+					+ ((Property) ((GetPropertyExpr) reference).getProp()).getName() + ")";
 		} else if (reference instanceof ComponentType || reference instanceof ComponentImplementation
 				|| reference instanceof SystemImplementation) {
 			if (var.id.equals(LustreAstBuilder.assumeHistSufix)) {
