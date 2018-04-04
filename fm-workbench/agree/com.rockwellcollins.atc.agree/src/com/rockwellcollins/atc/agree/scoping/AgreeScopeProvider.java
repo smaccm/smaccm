@@ -23,6 +23,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
+import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.NamedElement;
@@ -284,7 +285,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		} else if (ctx instanceof AadlPackage) {
 			PublicPackageSection pubSec = ((AadlPackage) ctx).getPublicSection();
 			for (Element el : pubSec.getOwnedElements()) {
-				if (el instanceof DataImplementation) {
+				if (el instanceof DataImplementation || el instanceof DataType) {
 					components.add(el);
 				}
 			}
