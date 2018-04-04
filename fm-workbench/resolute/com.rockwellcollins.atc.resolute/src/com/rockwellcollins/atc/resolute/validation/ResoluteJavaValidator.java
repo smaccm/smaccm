@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
@@ -206,6 +207,18 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			}
 		}
 
+	}
+
+	@Check
+	public void checkQuantArg(QuantArg quantArg) {
+		// The definition of a quantifier arg expression must not reference
+		// the quantified arg being defined.
+		for (IdExpr idExpr : EcoreUtil2.getAllContentsOfType(quantArg.getExpr(), IdExpr.class)) {
+			if (quantArg.equals(idExpr.getId())) {
+				error(idExpr,
+						"Quantifier argument '" + idExpr.getId().getName() + "' referenced in its own definition.");
+			}
+		}
 	}
 
 	@Check
