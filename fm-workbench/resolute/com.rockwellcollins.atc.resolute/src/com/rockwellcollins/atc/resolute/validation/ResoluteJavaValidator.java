@@ -215,8 +215,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		// the quantified arg being defined.
 		for (IdExpr idExpr : EcoreUtil2.getAllContentsOfType(quantArg.getExpr(), IdExpr.class)) {
 			if (quantArg.equals(idExpr.getId())) {
-				error(idExpr,
-						"Quantifier argument '" + idExpr.getId().getName() + "' referenced in its own definition.");
+				error(quantArg, "Quantifier argument '" + idExpr.getId().getName()
+						+ "' cannot be referenced in its own definition.");
 			}
 		}
 	}
