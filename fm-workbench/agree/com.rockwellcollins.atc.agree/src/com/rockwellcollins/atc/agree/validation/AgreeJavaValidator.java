@@ -108,6 +108,7 @@ import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
@@ -263,14 +264,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkOrderStatement(OrderStatement order) {
-		for (NamedElement el : order.getComps()) {
-			if (!(el instanceof Subcomponent)) {
-				error(el, "Only elements of subcomponent type are allowed in ordering statements");
-			}
-		}
 		Classifier container = order.getContainingClassifier();
 		if (container instanceof ComponentImplementation) {
 			ComponentImplementation compImpl = (ComponentImplementation) container;
+
+			for (int index = 0; index < order.getComps().size(); ++index) {
+				NamedElement comp = order.getComps().get(index);
+				if (!(comp instanceof Subcomponent)
+						|| !((Subcomponent) comp).getContainingComponentImpl().equals(container)) {
+					error("Element '" + comp.getName() + "' is not a subcomponent of '" + container.getName() + "'",
+							AgreePackage.Literals.ORDER_STATEMENT__COMPS, index);
+				}
+			}
+
 			List<NamedElement> notPresent = new ArrayList<>();
 			for (Subcomponent subcomp : compImpl.getAllSubcomponents()) {
 				boolean found = false;
@@ -396,14 +402,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkCalenStatement(CalenStatement calen) {
-		for (NamedElement el : calen.getEls()) {
-			if (!(el instanceof Subcomponent)) {
-				error(calen, "Element '" + el.getName() + "' is not a subcomponent");
-			}
-		}
 		Classifier container = calen.getContainingClassifier();
 		if (!(container instanceof ComponentImplementation)) {
-			error(calen, "Calendar statements can only appear in component implementations");
+			error(calen, "Calendar statements can appear only in component implementations");
+			return;
+		}
+
+		for (int index = 0; index < calen.getEls().size(); ++index) {
+			NamedElement el = calen.getEls().get(index);
+			if (!(el instanceof Subcomponent) || !((Subcomponent) el).getContainingComponentImpl().equals(container)) {
+				error("Element '" + el.getName() + "' is not a subcomponent of '" + container.getName() + "'",
+						AgreePackage.Literals.CALEN_STATEMENT__ELS, index);
+			}
 		}
 	}
 
@@ -538,15 +548,42 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkMNSynchStatement(MNSynchStatement sync) {
+		ComponentImplementation compImpl = sync.getContainingComponentImpl();
+		if (compImpl == null) {
+			// This should already be checked by checkSynchStatement
+			return;
+		}
+		compImpl.getAllSubcomponents();
 
-		if (sync.getMax().size() != sync.getMin().size() && sync.getMax().size() != sync.getComp1().size()
-				&& sync.getMax().size() != sync.getComp2().size()) {
-			return; // this should throw a parser error
+		// this should be enforced by the parser, but we check to avoid an
+		// index out of bounds exception whilst the user is editing...
+		int expectedSize = sync.getMax().size();
+		if (expectedSize != sync.getMin().size() || expectedSize != sync.getComp1().size()
+				|| expectedSize != sync.getComp2().size()) {
+			error(sync,
+					"Mismatched number of subcomponents and timing ranges: " + sync.getComp1().size()
+					+ " left subcomponents, " + sync.getComp2().size() + " right subcomponents, "
+					+ sync.getMin().size() + " time minima, and " + sync.getMax().size() + " time maxima.");
+			return;
 		}
 
-		for (int i = 0; i < sync.getMax().size(); i++) {
+		for (int i = 0; i < expectedSize; i++) {
+			NamedElement comp1 = sync.getComp1().get(i);
+			NamedElement comp2 = sync.getComp2().get(i);
 			String maxStr = sync.getMax().get(i);
 			String minStr = sync.getMin().get(i);
+
+			if (!(comp1 instanceof Subcomponent)
+					|| !((Subcomponent) comp1).getContainingComponentImpl().equals(compImpl)) {
+				error("Element '" + comp1.getName() + "' is not a subcomponent of '" + compImpl.getName() + "'",
+						AgreePackage.Literals.MN_SYNCH_STATEMENT__COMP1, i);
+			}
+
+			if (!(comp2 instanceof Subcomponent)
+					|| !((Subcomponent) comp2).getContainingComponentImpl().equals(compImpl)) {
+				error("Element '" + comp2.getName() + "' is not a subcomponent of '" + compImpl.getName() + "'",
+						AgreePackage.Literals.MN_SYNCH_STATEMENT__COMP2, i);
+			}
 
 			int max = Integer.valueOf(maxStr);
 			int min = Integer.valueOf(minStr);
@@ -1064,11 +1101,64 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return;
 		}
 
+		// The parser should enforce this. but we do this to avoid exceptions
+		// running the check whilst the user is editing...
+		if (upExpr.getArgs().isEmpty()) {
+			error(upExpr, "Record update expression must contain at least one arg-expr pair.");
+			return;
+		}
+
 		EList<NamedElement> args = upExpr.getArgs();
 		EList<Expr> argExprs = upExpr.getArgExpr();
 
-		// this should be enforced by the parser
-		assert (args.size() == argExprs.size());
+		// Figure out the type of the record being updated
+		// It should be either a subcomponent of a DataImplementation or a
+		// field of a record.
+		// TODO: can it be a feature of a FeatureGroup?
+		// Note: This message looks to be somewhat strange in that it uses
+		// the arguments to the update expression to determine the type of the
+		// record to be updated. However, this should be enforced by the way
+		// that the scoping works.
+		NamedElement arg0 = upExpr.getArgs().get(0);
+		EObject arg0Container = arg0.eContainer();
+		if (arg0Container instanceof DataImplementation) {
+			DataImplementation dataImpl = (DataImplementation) arg0Container;
+			dataImplCycleCheck(dataImpl, upExpr);
+			int argIndex = 0;
+			for (NamedElement arg : args) {
+				if (!dataImpl.getAllSubcomponents().contains(arg)) {
+					error("Argument '" + arg.getName() + "' is not a subcomponent of '" + dataImpl.getQualifiedName()
+					+ "'", AgreePackage.Literals.RECORD_UPDATE_EXPR__ARGS, argIndex);
+				}
+				++argIndex;
+			}
+
+		} else if (arg0Container instanceof RecordDefExpr) {
+			RecordDefExpr recordDef = (RecordDefExpr) arg0Container;
+			int argIndex = 0;
+			for (NamedElement arg : args) {
+				if (!recordDef.getArgs().contains(arg)) {
+					error("Argument '" + arg.getName() + "' is not a subcomponent of '" + recordDef.getQualifiedName()
+					+ "'", AgreePackage.Literals.RECORD_UPDATE_EXPR__ARGS, argIndex);
+				}
+				++argIndex;
+			}
+
+		} else {
+			if (!arg0.eIsProxy()) {
+				error("Record to be updated must be a data implementation or AGREE record type.  " + "Found type '"
+						+ getAgreeType(upExpr.getRecord()).toString() + "'.",
+						AgreePackage.Literals.RECORD_UPDATE_EXPR__RECORD, -1);
+			}
+			return;
+		}
+
+		// this should be enforced by the parser, but we check to avoid an
+		// index out of bounds exception whilst the user is editing...
+		if (args.size() != argExprs.size()) {
+			error(upExpr, "Mismatched count of arguments and expressions.");
+			return;
+		}
 
 		for (int i = 0; i < args.size(); i++) {
 			NamedElement arg = args.get(i);
@@ -1242,6 +1332,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	private void dataImplCycleCheck(NestedDotID dataID) {
 		NamedElement finalId = getFinalNestId(dataID);
 		DataImplementation dataImpl = (DataImplementation) finalId;
+		dataImplCycleCheck(dataImpl, dataID);
+	}
+
+	private void dataImplCycleCheck(DataImplementation dataImpl, EObject errorSource) {
 		Set<DataImplementation> dataClosure = new HashSet<>();
 		Set<DataImplementation> prevClosure = null;
 
@@ -1256,7 +1350,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			prevClosure = new HashSet<>(dataClosure);
 			for (DataImplementation subImpl : prevClosure) {
 				if (subImpl == dataImpl) {
-					error(dataID, "The component implementation '" + dataImpl.getName()
+					error(errorSource, "The component implementation '" + dataImpl.getName()
 					+ "' has a cyclic definition.  This cannot be reasoned about by AGREE.");
 					break;
 				}
@@ -1737,6 +1831,38 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkNodeEq(NodeEq nodeEq) {
+		EObject container = nodeEq.eContainer();
+		NodeBodyExpr containingNodeBodyExpr;
+		NodeDefExpr containingNodeDefExpr;
+
+		if (container instanceof NodeBodyExpr) {
+			containingNodeBodyExpr = (NodeBodyExpr) container;
+		} else {
+			error(nodeEq, "Node equation must be contained in a node body.");
+			return;
+		}
+
+		if (container != null) {
+			container = container.eContainer();
+		}
+		if (container instanceof NodeDefExpr) {
+			containingNodeDefExpr = (NodeDefExpr) container;
+		} else {
+			error(nodeEq, "Node equation must be contained in a node definition.");
+			return;
+		}
+
+		List<Arg> locals = containingNodeBodyExpr.getLocs();
+		List<Arg> returns = containingNodeDefExpr.getRets();
+		int lhsIndex = 0;
+		for (Arg lhs : nodeEq.getLhs()) {
+			if (!locals.contains(lhs) && !returns.contains(lhs)) {
+				error("LHS '" + lhs.getName() + "' of node equation must be a node return variable or local variable.",
+						AgreePackage.Literals.NODE_EQ__LHS, lhsIndex);
+			}
+			++lhsIndex;
+		}
+
 		checkMultiAssignEq(nodeEq, nodeEq.getLhs(), nodeEq.getExpr());
 	}
 
