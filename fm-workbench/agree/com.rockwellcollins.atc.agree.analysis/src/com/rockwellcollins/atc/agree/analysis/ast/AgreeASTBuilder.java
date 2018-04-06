@@ -8,12 +8,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.AadlBoolean;
+import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
+import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.Classifier;
@@ -110,6 +114,7 @@ import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
+import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
@@ -125,6 +130,7 @@ import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.linearization.LinearizationRewriter;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.IdGatherer;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeCauseEffectPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
@@ -157,6 +163,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public static final String clockIDSuffix = "___CLOCK_";
 	public static final String eventSuffix = "___EVENT_";
 	public static final String dotChar = "__";
+	public static final String unspecifiedAadlPropertyPrefix = "_unspec_property_";
 
 	public static List<Node> globalNodes;
 	private static Set<Type> globalTypes;
@@ -169,6 +176,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	// appropriately and more safely be instance variables.
 	private static Map<String, String> renamings;
 	private static Map<String, EObject> refMap;
+	private static Map<String, GetPropertyExpr> unspecifiedAadlProperties;
 
 	private ComponentInstance curInst; // used for Get_Property Expressions
 	private boolean isMonolithic = false;
@@ -254,6 +262,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		timeOfVarMap = new HashMap<>();
 		timeRiseVarMap = new HashMap<>();
 		timeFallVarMap = new HashMap<>();
+		unspecifiedAadlProperties = new HashMap<>();
 
 		Expr clockConstraint = new BoolExpr(true);
 		Expr initialConstraint = new BoolExpr(true);
@@ -344,6 +353,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			addLustreNodes(contract.getSpecs());
 			gatherLustreTypes(contract.getSpecs());
 		}
+
+		gatherUnspecifiedAadlProperties(unspecifiedAadlProperties, typeMap, globalTypes, inputs, assumptions,
+				guarantees);
 
 		if (!(foundSubNode || hasDirectAnnex)) {
 			return null;
@@ -1687,10 +1699,20 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			propVal = AgreeUtils.getPropExpression(compName, prop);
 
 			if (propVal == null) {
-				throw new AgreeException("Could not locate property value '" + prop.getFullName() + "' in component '"
-						+ compName.getName() + "'.  Is it possible "
-						+ "that a 'this' statement is used in a context in which it wasn't supposed to?");
+				if (Activator.getDefault().getPreferenceStore()
+						.getBoolean(PreferenceConstants.PREF_UNSPECIFIED_AADL_PROPERTIES)) {
+					String propInputName = unspecifiedAadlPropertyPrefix + compName.getName() + dotChar
+							+ prop.getName();
+					unspecifiedAadlProperties.put(propInputName, expr);
+					return new IdExpr(propInputName);
+				} else {
+					throw new AgreeException("Could not locate property value '" + prop.getFullName()
+					+ "' in component '" + compName.getName() + "'.  Is it possible "
+					+ "that a 'this' statement is used in a context in which it wasn't supposed to?"
+					+ "  Analysis of unspecified AADL properties as inputs may be enabled in the AGREE preferences.");
+				}
 			}
+
 		} else {
 			propVal = AgreeUtils.getPropExpression((PropertyConstant) propName);
 
@@ -1728,6 +1750,76 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		assert (res != null);
 
 		return res;
+	}
+
+	private void gatherUnspecifiedAadlProperties(Map<String, GetPropertyExpr> unspecifiedAadlProperties,
+			Map<NamedElement, String> typeMap, Set<Type> globalTypes, List<AgreeVar> inputs,
+			List<AgreeStatement> assumptions,
+			List<AgreeStatement> guarantees) {
+
+		for (Entry<String, GetPropertyExpr> entry : unspecifiedAadlProperties.entrySet()) {
+			String propInputName = entry.getKey();
+			GetPropertyExpr expr = entry.getValue();
+			Property prop = (Property) expr.getProp();
+			Expr propInputIdExpr = new IdExpr(propInputName);
+
+			Type type;
+			Expr bound = null;
+			if (prop.getReferencedPropertyType() instanceof AadlBoolean) {
+				type = NamedType.BOOL;
+			} else if (prop.getReferencedPropertyType() instanceof AadlInteger) {
+				AadlInteger aadlInteger = (AadlInteger) prop.getReferencedPropertyType();
+				type = NamedType.INT;
+
+				if (aadlInteger.getRange() != null) {
+					PropertyExpression lowerBound = aadlInteger.getRange().getLowerBound();
+					PropertyExpression upperBound = aadlInteger.getRange().getUpperBound();
+
+					Expr lowVal = new IntExpr(
+							BigDecimal.valueOf(((IntegerLiteral) lowerBound).getScaledValue()).toBigInteger());
+					Expr highVal = new IntExpr(
+							BigDecimal.valueOf(((IntegerLiteral) upperBound).getScaledValue()).toBigInteger());
+					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
+					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
+					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+				}
+			} else if (prop.getReferencedPropertyType() instanceof AadlReal) {
+				AadlReal aadlReal = (AadlReal) prop.getReferencedPropertyType();
+				type = NamedType.REAL;
+
+				if (aadlReal.getRange() != null) {
+					PropertyExpression lowerBound = aadlReal.getRange().getLowerBound();
+					PropertyExpression upperBound = aadlReal.getRange().getUpperBound();
+
+					Expr lowVal = new RealExpr(BigDecimal.valueOf(((RealLiteral) lowerBound).getValue()));
+					Expr highVal = new RealExpr(BigDecimal.valueOf(((RealLiteral) upperBound).getValue()));
+					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
+					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
+					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+				}
+			} else {
+				throw new AgreeException(
+						"Could not locate property value '\" + prop.getFullName() + \"' in component '\"\n"
+								+ "//						+ compName.getName() + \"'.   Analysis on abstract values not supported for "
+								+ "AADL property type " + prop.getReferencedPropertyType() + ".");
+			}
+			// NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
+
+			AgreeVar propInputVar = new AgreeVar(propInputName, type, expr, curInst, null);
+
+			Expr constraint = getUnchangingConstraintExpr(propInputIdExpr);
+			if (bound != null) {
+				constraint = new BinaryExpr(constraint, BinaryOp.AND, bound);
+			}
+
+			inputs.add(propInputVar);
+			assumptions.add(new AgreeStatement("", constraint, prop));
+		}
+	}
+
+	private static Expr getUnchangingConstraintExpr(Expr expr) {
+		return new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW,
+				new BinaryExpr(expr, BinaryOp.EQUAL, new UnaryExpr(UnaryOp.PRE, expr)));
 	}
 
 	@Override

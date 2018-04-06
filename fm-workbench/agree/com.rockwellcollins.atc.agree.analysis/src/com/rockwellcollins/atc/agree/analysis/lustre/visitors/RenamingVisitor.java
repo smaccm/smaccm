@@ -9,6 +9,7 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.EventPort;
 import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.Property;
 import org.osate.aadl2.SystemImplementation;
 import org.osate.aadl2.instance.ComponentInstance;
 
@@ -16,6 +17,7 @@ import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
@@ -201,6 +203,11 @@ public class RenamingVisitor extends AstIterVisitor {
 			return prefix + seperator + featName;
 		} else if (reference instanceof PropertyStatement) {
 			return prefix + seperator + ((PropertyStatement) reference).getName();
+		} else if (reference instanceof Property) {
+			return "AADL property " + ((Property) reference).getName();
+		} else if (reference instanceof GetPropertyExpr) {
+			return "Get_Property(" + ((GetPropertyExpr) reference).getContainingClassifier().getName() + ", "
+					+ ((Property) ((GetPropertyExpr) reference).getProp()).getName() + ")";
 		} else if (reference instanceof ComponentType || reference instanceof ComponentImplementation
 				|| reference instanceof SystemImplementation) {
 			if (var.id.equals(LustreAstBuilder.assumeHistSufix)) {

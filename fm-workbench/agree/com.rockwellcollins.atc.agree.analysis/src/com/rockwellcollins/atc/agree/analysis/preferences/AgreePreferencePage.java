@@ -14,8 +14,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -63,6 +61,7 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
 	private BooleanFieldEditor inductiveCounterexampleFieldEditor;
 	private BooleanFieldEditor noKInductionEditor;
 	private BooleanFieldEditor smoothingFieldEditor;
+	private BooleanFieldEditor analyzeUnspecifiedAadlProperties;
 	private BooleanFieldEditor displayCounterexampleDecimalFormEditor;
 	private BooleanFieldEditor generalizeFieldEditor;
 	private NonNegativeIntegerFieldEditor depthFieldEditor;
@@ -103,6 +102,10 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
 				"Generate smooth counterexamples (minimal number of input value changes)", getFieldEditorParent());
 		addField(smoothingFieldEditor);
 
+		analyzeUnspecifiedAadlProperties = new BooleanFieldEditor(PreferenceConstants.PREF_UNSPECIFIED_AADL_PROPERTIES,
+				"Analyze unspecified AADL properties as inputs", getFieldEditorParent());
+		addField(analyzeUnspecifiedAadlProperties);
+
 		displayCounterexampleDecimalFormEditor = new BooleanFieldEditor(PreferenceConstants.PREF_DISPLAY_DECIMAL_CEX,
 				"Display real values as decimal in counterexamples", getFieldEditorParent());
 		addField(displayCounterexampleDecimalFormEditor);
@@ -133,12 +136,7 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
 
 		Button checkAvailableButton = new Button(getFieldEditorParent(), SWT.PUSH);
 		checkAvailableButton.setText("Check if available");
-		checkAvailableButton.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				checkAvailable();
-			}
-		});
+		checkAvailableButton.addListener(SWT.Selection, event -> checkAvailable());
 	}
 
 	private void openTemporaryFolder() {
