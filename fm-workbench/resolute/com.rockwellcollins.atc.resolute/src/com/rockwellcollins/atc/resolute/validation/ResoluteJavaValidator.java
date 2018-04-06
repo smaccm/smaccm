@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
@@ -205,6 +207,18 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			}
 		}
 
+	}
+
+	@Check
+	public void checkQuantArg(QuantArg quantArg) {
+		// The definition of a quantifier arg expression must not reference
+		// the quantified arg being defined.
+		for (IdExpr idExpr : EcoreUtil2.getAllContentsOfType(quantArg.getExpr(), IdExpr.class)) {
+			if (quantArg.equals(idExpr.getId())) {
+				error(quantArg, "Quantifier argument '" + idExpr.getId().getName()
+						+ "' cannot be referenced in its own definition.");
+			}
+		}
 	}
 
 	@Check
@@ -900,158 +914,169 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 	/************* Begin helper functions ***************/
 
+	private Stack<EObject> typeEvalContext = new Stack<>();
+
 	private ResoluteType getExprType(Expr expr) {
-		if (expr instanceof ListFilterMapExpr) {
-			ListFilterMapExpr filterMapExpr = (ListFilterMapExpr) expr;
-			return new ListType(getExprType(filterMapExpr.getMap()));
-		}
-
-		if (expr instanceof SetFilterMapExpr) {
-			SetFilterMapExpr filterMapExpr = (SetFilterMapExpr) expr;
-			return new SetType(getExprType(filterMapExpr.getMap()));
-		}
-
-		if (expr instanceof IfThenElseExpr) {
-			IfThenElseExpr iteExpr = (IfThenElseExpr) expr;
-			return getExprType(iteExpr.getThen());
-		}
-
-		if (expr instanceof UnaryExpr) {
-			UnaryExpr unaryExpr = (UnaryExpr) expr;
-			return getExprType(unaryExpr.getExpr());
-		}
-
-		if (expr instanceof LetExpr) {
-			LetExpr letExpr = (LetExpr) expr;
-			return getExprType(letExpr.getExpr());
-		}
-
-		if (expr instanceof ThisExpr) {
-			Classifier parent = expr.getContainingClassifier();
-			// A 'this' expression should always have a containing
-			// classifier that is of component type. This may not
-			// be the case if a 'this' statement appears in a ResoluteLibrary
-			// rather than a ResoluteSubclause. In this case an error
-			// will be thrown by the type checking function for 'this'
-			// statements above
-			if (parent instanceof ComponentImplementation) {
-				ComponentImplementation ci = (ComponentImplementation) parent;
-				ResoluteType type = getComponentType(ci.getType());
-				if (type != null) {
-					return type;
-				}
-			} else if (parent instanceof ComponentType) {
-				ResoluteType type = getComponentType((ComponentType) parent);
-				if (type != null) {
-					return type;
-				}
-			}
-
-			return BaseType.COMPONENT;
-		}
-
-		if (expr instanceof FailExpr) {
+		if (typeEvalContext.contains(expr)) {
+			error(expr, "Cyclic type definition");
 			return BaseType.FAIL;
 		}
+		try {
+			typeEvalContext.push(expr);
+			if (expr instanceof ListFilterMapExpr) {
+				ListFilterMapExpr filterMapExpr = (ListFilterMapExpr) expr;
+				return new ListType(getExprType(filterMapExpr.getMap()));
+			}
 
-		if (expr instanceof BinaryExpr) {
-			BinaryExpr binExpr = (BinaryExpr) expr;
-			return getBinaryExprType(binExpr);
-		}
+			if (expr instanceof SetFilterMapExpr) {
+				SetFilterMapExpr filterMapExpr = (SetFilterMapExpr) expr;
+				return new SetType(getExprType(filterMapExpr.getMap()));
+			}
 
-		if (expr instanceof BoolExpr) {
-			return BaseType.BOOL;
-		}
+			if (expr instanceof IfThenElseExpr) {
+				IfThenElseExpr iteExpr = (IfThenElseExpr) expr;
+				return getExprType(iteExpr.getThen());
+			}
 
-		if (expr instanceof QuantifiedExpr) {
-			QuantifiedExpr quantExpr = (QuantifiedExpr) expr;
-			return getExprType(quantExpr.getExpr());
-		}
+			if (expr instanceof UnaryExpr) {
+				UnaryExpr unaryExpr = (UnaryExpr) expr;
+				return getExprType(unaryExpr.getExpr());
+			}
 
-		if (expr instanceof FnCallExpr) {
-			FnCallExpr funCall = (FnCallExpr) expr;
-			DefinitionBody body = funCall.getFn().getBody();
-			if (body instanceof FunctionBody) {
-				FunctionBody funcBody = (FunctionBody) body;
-				return typeToResoluteType(funcBody.getType());
-			} else if (body instanceof ClaimBody) {
+			if (expr instanceof LetExpr) {
+				LetExpr letExpr = (LetExpr) expr;
+				return getExprType(letExpr.getExpr());
+			}
+
+			if (expr instanceof ThisExpr) {
+				Classifier parent = expr.getContainingClassifier();
+				// A 'this' expression should always have a containing
+				// classifier that is of component type. This may not
+				// be the case if a 'this' statement appears in a ResoluteLibrary
+				// rather than a ResoluteSubclause. In this case an error
+				// will be thrown by the type checking function for 'this'
+				// statements above
+				if (parent instanceof ComponentImplementation) {
+					ComponentImplementation ci = (ComponentImplementation) parent;
+					ResoluteType type = getComponentType(ci.getType());
+					if (type != null) {
+						return type;
+					}
+				} else if (parent instanceof ComponentType) {
+					ResoluteType type = getComponentType((ComponentType) parent);
+					if (type != null) {
+						return type;
+					}
+				}
+
+				return BaseType.COMPONENT;
+			}
+
+			if (expr instanceof FailExpr) {
+				return BaseType.FAIL;
+			}
+
+			if (expr instanceof BinaryExpr) {
+				BinaryExpr binExpr = (BinaryExpr) expr;
+				return getBinaryExprType(binExpr);
+			}
+
+			if (expr instanceof BoolExpr) {
 				return BaseType.BOOL;
-			} else {
-				// Prevent cascading errors when function is not found
-				return BaseType.FAIL;
-			}
-		}
-
-		if (expr instanceof IntExpr) {
-			return BaseType.INT;
-		}
-
-		if (expr instanceof RealExpr) {
-			return BaseType.REAL;
-		}
-
-		if (expr instanceof StringExpr) {
-			return BaseType.STRING;
-		}
-
-		if (expr instanceof IdExpr) {
-			IdExpr id = (IdExpr) expr;
-			return getIdExprType(id);
-		}
-
-		if (expr instanceof BuiltInFnCallExpr) {
-			return getBuiltInFnCallType((BuiltInFnCallExpr) expr);
-		}
-
-		if (expr instanceof ListExpr) {
-			ListExpr listExpr = (ListExpr) expr;
-			if (listExpr.getExprs().isEmpty()) {
-				return BaseType.FAIL;
 			}
 
-			Iterator<Expr> iterator = listExpr.getExprs().iterator();
-			ResoluteType common = getExprType(iterator.next());
-			while (iterator.hasNext()) {
-				Expr e = iterator.next();
-				ResoluteType type = getExprType(e);
-				common = common.join(type);
-				if (common == null) {
+			if (expr instanceof QuantifiedExpr) {
+				QuantifiedExpr quantExpr = (QuantifiedExpr) expr;
+				return getExprType(quantExpr.getExpr());
+			}
+
+			if (expr instanceof FnCallExpr) {
+				FnCallExpr funCall = (FnCallExpr) expr;
+				DefinitionBody body = funCall.getFn().getBody();
+				if (body instanceof FunctionBody) {
+					FunctionBody funcBody = (FunctionBody) body;
+					return typeToResoluteType(funcBody.getType());
+				} else if (body instanceof ClaimBody) {
+					return BaseType.BOOL;
+				} else {
+					// Prevent cascading errors when function is not found
 					return BaseType.FAIL;
 				}
 			}
-			return new ListType(common);
-		}
 
-		if (expr instanceof SetExpr) {
-			SetExpr setExpr = (SetExpr) expr;
-			if (setExpr.getExprs().isEmpty()) {
-				return BaseType.FAIL;
+			if (expr instanceof IntExpr) {
+				return BaseType.INT;
 			}
 
-			Iterator<Expr> iterator = setExpr.getExprs().iterator();
-			ResoluteType common = getExprType(iterator.next());
-			while (iterator.hasNext()) {
-				Expr e = iterator.next();
-				ResoluteType type = getExprType(e);
-				common = common.join(type);
-				if (common == null) {
+			if (expr instanceof RealExpr) {
+				return BaseType.REAL;
+			}
+
+			if (expr instanceof StringExpr) {
+				return BaseType.STRING;
+			}
+
+			if (expr instanceof IdExpr) {
+				IdExpr id = (IdExpr) expr;
+				return getIdExprType(id);
+			}
+
+			if (expr instanceof BuiltInFnCallExpr) {
+				return getBuiltInFnCallType((BuiltInFnCallExpr) expr);
+			}
+
+			if (expr instanceof ListExpr) {
+				ListExpr listExpr = (ListExpr) expr;
+				if (listExpr.getExprs().isEmpty()) {
 					return BaseType.FAIL;
 				}
+
+				Iterator<Expr> iterator = listExpr.getExprs().iterator();
+				ResoluteType common = getExprType(iterator.next());
+				while (iterator.hasNext()) {
+					Expr e = iterator.next();
+					ResoluteType type = getExprType(e);
+					common = common.join(type);
+					if (common == null) {
+						return BaseType.FAIL;
+					}
+				}
+				return new ListType(common);
 			}
-			return new SetType(common);
-		}
 
-		if (expr instanceof CastExpr) {
-			CastExpr castExpr = (CastExpr) expr;
-			return typeToResoluteType(castExpr.getType());
-		}
+			if (expr instanceof SetExpr) {
+				SetExpr setExpr = (SetExpr) expr;
+				if (setExpr.getExprs().isEmpty()) {
+					return BaseType.FAIL;
+				}
 
-		if (expr instanceof InstanceOfExpr) {
-			return BaseType.BOOL;
-		}
+				Iterator<Expr> iterator = setExpr.getExprs().iterator();
+				ResoluteType common = getExprType(iterator.next());
+				while (iterator.hasNext()) {
+					Expr e = iterator.next();
+					ResoluteType type = getExprType(e);
+					common = common.join(type);
+					if (common == null) {
+						return BaseType.FAIL;
+					}
+				}
+				return new SetType(common);
+			}
 
-		error(expr, "Unable to get type for expression");
-		return BaseType.FAIL;
+			if (expr instanceof CastExpr) {
+				CastExpr castExpr = (CastExpr) expr;
+				return typeToResoluteType(castExpr.getType());
+			}
+
+			if (expr instanceof InstanceOfExpr) {
+				return BaseType.BOOL;
+			}
+
+			error(expr, "Unable to get type for expression");
+			return BaseType.FAIL;
+		} finally {
+			typeEvalContext.pop();
+		}
 	}
 
 	public ResoluteType getBinaryExprType(BinaryExpr binExpr) {
