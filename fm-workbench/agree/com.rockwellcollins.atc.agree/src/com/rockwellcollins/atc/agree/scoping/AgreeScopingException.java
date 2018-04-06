@@ -7,4 +7,5 @@ public class AgreeScopingException extends RuntimeException {
 	public AgreeScopingException(String message) {
 		super(message);
 	}
+
 }
