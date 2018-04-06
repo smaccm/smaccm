@@ -10,6 +10,7 @@ import static com.rockwellcollins.atc.agree.validation.AgreeType.REAL;
 
 // import java.rmi.UnexpectedException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -50,13 +51,17 @@ import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
+import org.osate.aadl2.DirectionType;
 //import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureGroup;
+import org.osate.aadl2.FeatureGroupType;
 //import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyConstant;
 //import org.osate.aadl2.PropertyExpression;
@@ -273,7 +278,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				if (!(comp instanceof Subcomponent)
 						|| !((Subcomponent) comp).getContainingComponentImpl().equals(container)) {
 					error("Element '" + comp.getName() + "' is not a subcomponent of '" + container.getName() + "'",
-							AgreePackage.Literals.ORDER_STATEMENT__COMPS, index);
+							order, AgreePackage.Literals.ORDER_STATEMENT__COMPS, index);
 				}
 			}
 
@@ -309,6 +314,23 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	}
 
+	private static List<Feature> flattenFeatureGroups(List<? extends Feature> complexFeatures) {
+		List<Feature> result = new ArrayList<>();
+		for (Feature feature : complexFeatures) {
+			if (feature instanceof FeatureGroup) {
+				FeatureGroup featureGroup = (FeatureGroup) feature;
+				FeatureGroupType featType = featureGroup.getFeatureGroupType();
+				result.addAll(flattenFeatureGroups(featType.getOwnedFeatureGroups()));
+				result.addAll(flattenFeatureGroups(featType.getOwnedDataPorts()));
+				result.addAll(flattenFeatureGroups(featType.getOwnedEventDataPorts()));
+				result.addAll(flattenFeatureGroups(featType.getOwnedEventPorts()));
+			} else {
+				result.add(feature);
+			}
+		}
+		return result;
+	}
+
 	@Check(CheckType.FAST)
 	public void checkAssign(AssignStatement assign) {
 		NestedDotID dotId = assign.getId();
@@ -320,18 +342,46 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 
 		ComponentImplementation compImpl = EcoreUtil2.getContainerOfType(assign, ComponentImplementation.class);
-		AgreeContract contract = EcoreUtil2.getContainerOfType(assign, AgreeContract.class);
 
 		if (compImpl == null) {
 			error(assign, "Assignment statements are only allowed in component implementations");
+			return;
 		}
 
 		if (dotId.getSub() != null) {
 			error(dotId, "The Id on the left hand side of an assignment statement " + "must not contain a \".\"");
+			return;
 		}
 
 		if (namedEl.eContainer() instanceof InputStatement) {
 			error(dotId, "Assignment to agree_input variables is illegal.");
+			return;
+		}
+
+		if (compImpl != null) {
+			List<EObject> assignableElements = new ArrayList<>();
+			List<AgreeContract> implContracts = EcoreUtil2.getAllContentsOfType(compImpl, AgreeContract.class);
+			for (AgreeContract ac : implContracts) {
+				assignableElements.addAll(EcoreUtil2.getAllContentsOfType(ac, EqStatement.class).stream()
+						.map(eq -> eq.getLhs()).flatMap(List::stream).collect(Collectors.toList()));
+			}
+			ComponentType compType = compImpl.getType();
+			if (compType != null) {
+				List<AgreeContract> typeContracts = EcoreUtil2.getAllContentsOfType(compType, AgreeContract.class);
+				for (AgreeContract ac : typeContracts) {
+					assignableElements.addAll(EcoreUtil2.getAllContentsOfType(ac, EqStatement.class).stream()
+							.map(eq -> eq.getLhs()).flatMap(List::stream).collect(Collectors.toList()));
+				}
+			}
+			assignableElements.addAll(compImpl.getAllFeatures().stream()
+					.map(cf -> flattenFeatureGroups(Collections.singletonList(cf))).flatMap(List::stream)
+					.filter(feat -> feat instanceof EventDataPort || feat instanceof DataPort)
+					.filter(feat -> DirectionType.OUT.equals(((Port) feat).getDirection()))
+					.collect(Collectors.toList()));
+			if (!assignableElements.contains(namedEl)) {
+				error("LHS of assignment must be an AGREE 'eq' variable or an output port of this component", assign,
+						AgreePackage.Literals.ASSIGN_STATEMENT__ID);
+			}
 		}
 
 		AgreeType lhsType = getAgreeType(namedEl);
@@ -342,12 +392,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 					+ "' but the right hand side is of type '" + rhsType + "'");
 		}
 
-		for (SpecStatement spec : contract.getSpecs()) {
-			if (spec instanceof AssignStatement && spec != assign) {
-				NamedElement otherEl = ((AssignStatement) spec).getId().getBase();
-				if (otherEl.equals(namedEl)) {
-					error(spec, "Mulitiple assignments to variable '" + namedEl.getName() + "'");
-					error(assign, "Mulitiple assignments to variable '" + namedEl.getName() + "'");
+		AgreeContract contract = EcoreUtil2.getContainerOfType(assign, AgreeContract.class);
+		if (contract != null) {
+			for (SpecStatement spec : contract.getSpecs()) {
+				if (spec instanceof AssignStatement && spec != assign) {
+					NamedElement otherEl = ((AssignStatement) spec).getId().getBase();
+					if (otherEl.equals(namedEl)) {
+						error(spec, "Mulitiple assignments to variable '" + namedEl.getName() + "'");
+						error(assign, "Mulitiple assignments to variable '" + namedEl.getName() + "'");
+					}
 				}
 			}
 		}
@@ -412,7 +465,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			NamedElement el = calen.getEls().get(index);
 			if (!(el instanceof Subcomponent) || !((Subcomponent) el).getContainingComponentImpl().equals(container)) {
 				error("Element '" + el.getName() + "' is not a subcomponent of '" + container.getName() + "'",
-						AgreePackage.Literals.CALEN_STATEMENT__ELS, index);
+						calen, AgreePackage.Literals.CALEN_STATEMENT__ELS, index);
 			}
 		}
 	}
@@ -576,13 +629,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			if (!(comp1 instanceof Subcomponent)
 					|| !((Subcomponent) comp1).getContainingComponentImpl().equals(compImpl)) {
 				error("Element '" + comp1.getName() + "' is not a subcomponent of '" + compImpl.getName() + "'",
-						AgreePackage.Literals.MN_SYNCH_STATEMENT__COMP1, i);
+						sync, AgreePackage.Literals.MN_SYNCH_STATEMENT__COMP1, i);
 			}
 
 			if (!(comp2 instanceof Subcomponent)
 					|| !((Subcomponent) comp2).getContainingComponentImpl().equals(compImpl)) {
 				error("Element '" + comp2.getName() + "' is not a subcomponent of '" + compImpl.getName() + "'",
-						AgreePackage.Literals.MN_SYNCH_STATEMENT__COMP2, i);
+						sync, AgreePackage.Literals.MN_SYNCH_STATEMENT__COMP2, i);
 			}
 
 			int max = Integer.valueOf(maxStr);
@@ -1128,7 +1181,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			for (NamedElement arg : args) {
 				if (!dataImpl.getAllSubcomponents().contains(arg)) {
 					error("Argument '" + arg.getName() + "' is not a subcomponent of '" + dataImpl.getQualifiedName()
-					+ "'", AgreePackage.Literals.RECORD_UPDATE_EXPR__ARGS, argIndex);
+					+ "'", upExpr, AgreePackage.Literals.RECORD_UPDATE_EXPR__ARGS, argIndex);
 				}
 				++argIndex;
 			}
@@ -1139,7 +1192,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			for (NamedElement arg : args) {
 				if (!recordDef.getArgs().contains(arg)) {
 					error("Argument '" + arg.getName() + "' is not a subcomponent of '" + recordDef.getQualifiedName()
-					+ "'", AgreePackage.Literals.RECORD_UPDATE_EXPR__ARGS, argIndex);
+					+ "'", upExpr, AgreePackage.Literals.RECORD_UPDATE_EXPR__ARGS, argIndex);
 				}
 				++argIndex;
 			}
@@ -1148,7 +1201,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			if (!arg0.eIsProxy()) {
 				error("Record to be updated must be a data implementation or AGREE record type.  " + "Found type '"
 						+ getAgreeType(upExpr.getRecord()).toString() + "'.",
-						AgreePackage.Literals.RECORD_UPDATE_EXPR__RECORD, -1);
+						upExpr, AgreePackage.Literals.RECORD_UPDATE_EXPR__RECORD, -1);
 			}
 			return;
 		}
@@ -1858,7 +1911,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		for (Arg lhs : nodeEq.getLhs()) {
 			if (!locals.contains(lhs) && !returns.contains(lhs)) {
 				error("LHS '" + lhs.getName() + "' of node equation must be a node return variable or local variable.",
-						AgreePackage.Literals.NODE_EQ__LHS, lhsIndex);
+						nodeEq, AgreePackage.Literals.NODE_EQ__LHS, lhsIndex);
 			}
 			++lhsIndex;
 		}
@@ -2014,11 +2067,51 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	}
 
+	private static NamedElement namedElementFromIdExpr(Expr expr) {
+		if (expr instanceof NestedDotID) {
+			return getFinalNestId((NestedDotID) expr);
+		} else {
+			assert (expr instanceof ThisExpr);
+			NamedElement component = EcoreUtil2.getContainerOfType(expr, ComponentClassifier.class);
+
+			NestedDotID nestId = ((ThisExpr) expr).getSubThis();
+			while (nestId != null) {
+				NamedElement base = nestId.getBase();
+
+				if (base instanceof Subcomponent) {
+					component = ((Subcomponent) base).getSubcomponentType();
+					nestId = nestId.getSub();
+				} else if (base instanceof FeatureGroup) {
+					while (nestId.getSub() != null) {
+						nestId = nestId.getSub();
+						assert (nestId.getBase() instanceof Feature);
+						Feature subFeat = (Feature) nestId.getBase();
+						component = subFeat;
+					}
+					return component;
+				} else {
+					assert (base instanceof DataPort);
+					component = base;
+					return component;
+				}
+
+			}
+			return component;
+		}
+
+	}
+
 	@Check(CheckType.FAST)
 	public void checkGetPropertyExpr(GetPropertyExpr getPropExpr) {
-		AgreeType compType = getAgreeType(getPropExpr.getComponent());
+		Expr component = getPropExpr.getComponent();
+		AgreeType compType = getAgreeType(component);
 		// AgreeType propType = getAgreeType(propExpr.getName());
 		NamedElement prop = getPropExpr.getProp();
+
+		if (!(component instanceof NestedDotID) && !(component instanceof ThisExpr)) {
+			error("Component must be qualified id or 'this' expression", getPropExpr,
+					AgreePackage.Literals.GET_PROPERTY_EXPR__COMPONENT);
+		}
 
 		if (!compType.equals(new AgreeType("component"))) {
 			error(getPropExpr.getComponent(), "Expected type component, but found type " + compType);
@@ -2026,6 +2119,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		if (!(prop instanceof Property || prop instanceof PropertyConstant)) {
 			error(getPropExpr.getProp(), "Expected AADL property or property constant");
+		}
+
+		if (prop instanceof Property) {
+			NamedElement element = namedElementFromIdExpr(component);
+			final boolean applies = element.acceptsProperty((Property) prop);
+			if (!applies) {
+				error("Property " + ((Property) prop).getQualifiedName() + " does not apply to "
+						+ element.getQualifiedName() + ".", getPropExpr,
+						AgreePackage.Literals.GET_PROPERTY_EXPR__PROP);
+			}
 		}
 	}
 
