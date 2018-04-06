@@ -8,7 +8,6 @@ import static com.rockwellcollins.atc.agree.validation.AgreeType.ERROR;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.INT;
 import static com.rockwellcollins.atc.agree.validation.AgreeType.REAL;
 
-// import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,17 +19,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
-//import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
-//import org.eclipse.emf.ecore.resource.Resource;
-//import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.EcoreUtil2;
-//import org.eclipse.xtext.resource.IEObjectDescription;
-//import org.eclipse.xtext.resource.IResourceDescription;
-//import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
-//import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
@@ -40,7 +32,6 @@ import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierType;
-//import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -52,30 +43,23 @@ import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.DirectionType;
-//import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
-//import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyConstant;
-//import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
-//import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.annexsupport.AnnexUtil;
-//import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
-//import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
-//import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
@@ -119,7 +103,6 @@ import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
-//import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -234,7 +217,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			container = container.eContainer();
 		}
 		if (!(container instanceof AadlPackage)) {
-			error(statement, "Enumerations can only be defined in AADL packages");
+			error(statement, "Enumerations can be defined only in AADL packages");
 		}
 
 	}
@@ -263,7 +246,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 
 		} else {
-			error(conn, "Connection statements are only allowed in component implementations.");
+			error(conn, "Connection statements are allowed only in component implementations.");
 		}
 	}
 
@@ -309,7 +292,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 
 		} else {
-			error(order, "Ordering statements can only appear in component implementations");
+			error(order, "Ordering statements can appear only in component implementations");
 		}
 
 	}
@@ -344,7 +327,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		ComponentImplementation compImpl = EcoreUtil2.getContainerOfType(assign, ComponentImplementation.class);
 
 		if (compImpl == null) {
-			error(assign, "Assignment statements are only allowed in component implementations");
+			error(assign, "Assignment statements are allowed only in component implementations");
 			return;
 		}
 
@@ -418,10 +401,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 			if (rangeLow != null && rangeHigh != null) {
 
-				// this is a ranged argument. It can only show up in an equation statement
+				// this is a ranged argument. It can show up only in an equation statement
 				EObject container = arg.eContainer();
 				if (!(container instanceof EqStatement || container instanceof InputStatement)) {
-					error(arg, "Ranged arguments can only appear in equation statements or agree_input statements");
+					error(arg, "Ranged arguments can appear only in equation statements or agree_input statements");
 				}
 
 				boolean rangeLowDot = rangeLow.contains(".");
@@ -534,11 +517,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				}
 			}
 			if (!foundLatchedStatement) {
-				error(latched, "Latched expressions can only appear in component implementations "
+				error(latched, "Latched expressions can appear only in component implementations "
 						+ "that contain a latched synchrony statement");
 			}
 		} else {
-			error(latched, "Latched expressions can only appear in component implementations");
+			error(latched, "Latched expressions can appear only in component implementations");
 		}
 
 		Expr expr = latched.getExpr();
@@ -566,7 +549,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 
 		error(latched,
-				"Latched expressions are only valid for input data ports or event expressions over input event data ports");
+				"Latched expressions are valid only for input data ports or event expressions over input event data ports");
 	}
 
 	@Check(CheckType.FAST)
@@ -574,7 +557,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		Classifier container = sync.getContainingClassifier();
 		if (!(container instanceof ComponentImplementation)) {
-			error(sync, "Synchrony statements can only appear in component implementations");
+			error(sync, "Synchrony statements can appear only in component implementations");
 		}
 
 		if (sync instanceof CalenStatement || sync instanceof MNSynchStatement || sync instanceof AsynchStatement
@@ -655,7 +638,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkAssume(AssumeStatement assume) {
 		Classifier comp = assume.getContainingClassifier();
 		if (!(comp instanceof ComponentType)) {
-			error(assume, "Assume statements are only allowed in component types");
+			error(assume, "Assume statements are allowed only in component types");
 		}
 
 		// the expression could be null if a pattern is used
@@ -673,7 +656,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkInitialStatement(InitialStatement statement) {
 		Classifier comp = statement.getContainingClassifier();
 		if (!(comp instanceof ComponentType)) {
-			error(statement, "Initial statements are only allowed in component types");
+			error(statement, "Initial statements are allowed only in component types");
 		}
 
 		AgreeType exprType = getAgreeType(statement.getExpr());
@@ -688,7 +671,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		NestedDotID dotId = lift.getSubcomp();
 
 		if (dotId.getSub() != null) {
-			error(lift, "Lift statements can only be applied to direct subcomponents."
+			error(lift, "Lift statements can be applied only to direct subcomponents."
 					+ "Place a lift statement in the subcomponents contract for heavy lifting");
 		}
 
@@ -714,7 +697,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkAssert(AssertStatement asser) {
 		Classifier comp = asser.getContainingClassifier();
 		if (!(comp instanceof ComponentImplementation)) {
-			error(asser, "Assert statements are only allowed in component implementations.");
+			error(asser, "Assert statements are allowed only in component implementations.");
 		}
 
 		// the expression could be null if a pattern is used
@@ -768,7 +751,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkGuarantee(GuaranteeStatement guar) {
 		Classifier comp = guar.getContainingClassifier();
 		if (!(comp instanceof ComponentType)) {
-			error(guar, "Guarantee statements are only allowed in component types");
+			error(guar, "Guarantee statements are allowed only in component types");
 		}
 
 		// the expression could be null if a pattern is used
@@ -784,10 +767,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	public void checkExprIsIdentifier(Expr expr) {
 		if (!(expr instanceof NestedDotID)) {
-			error(expr, "Patterns can only contain identifiers (not general expressions)");
+			error(expr, "Patterns can contain only identifiers (not general expressions)");
 		} else {
 			if (((NestedDotID) expr).getSub() != null) {
-				error(expr, "Patterns can only contain identifiers (not general expressions)");
+				error(expr, "Patterns can contain only identifiers (not general expressions)");
 			}
 		}
 	}
@@ -1074,11 +1057,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		AgreeType type = getAgreeType(id);
 
 		if (!matches(type, BOOL)) {
-			error(expr, "Time functions can only be applied Boolean identifiers");
+			error(expr, "Time functions can be applied only to Boolean identifiers");
 		}
 
 		if (id.getSub() != null) {
-			error(expr, "Time functions can only be applied to identifiers");
+			error(expr, "Time functions can be applied only to identifiers");
 		}
 	}
 
@@ -1086,7 +1069,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkLemma(LemmaStatement lemma) {
 		Classifier comp = lemma.getContainingClassifier();
 		if (!(comp instanceof ComponentImplementation)) {
-			error(lemma, "Lemma statements are only allowed in component implementations and nodes");
+			error(lemma, "Lemma statements are allowed only in component implementations and nodes");
 		}
 
 		Expr expr = lemma.getExpr();
@@ -1141,7 +1124,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkInputStatement(InputStatement input) {
 		ComponentType comp = EcoreUtil2.getContainerOfType(input, ComponentType.class);
 		if (comp == null) {
-			error(input, "Input statements are only allowed in component types");
+			error(input, "Input statements are allowed only in component types");
 		}
 
 	}
@@ -2059,10 +2042,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkThisExpr(ThisExpr thisExpr) {
-		// these should only appear in Get_Property expressions
+		// these should appear only in Get_Property expressions
 
 		if (!(thisExpr.eContainer() instanceof GetPropertyExpr)) {
-			error(thisExpr, "'this' expressions can only be used in 'Get_Property' expressions.");
+			error(thisExpr, "'this' expressions can be used only in 'Get_Property' expressions.");
 		}
 
 	}
@@ -2313,7 +2296,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	 * AgreeType typeSub = getAgreeType(expr.getExpr());
 	 * String op = expr.getOp();
 	 * warning(expr, "Use of trigonometric function: '" + op
-	 * + "'.  Trigonometric expressions are only allowed with dReal."
+	 * + "'.  Trigonometric expressions are allowed only with dReal."
 	 * + " Scalability is as yet unknown.");
 	 * if (!matches(REAL, typeSub)) {
 	 * error(expr, "argument to trigonometric function '" + op + "' is of type '" + typeSub.toString()
@@ -2327,7 +2310,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	 * AgreeType typeRight = getAgreeType(expr.getRight());
 	 * String op = expr.getOp();
 	 * warning(expr, "Use of trigonometric function: '" + op
-	 * + "'.  Trigonometric expressions are only allowed with dReal."
+	 * + "'.  Trigonometric expressions are allowed only with dReal."
 	 * + " Scalability is as yet unknown.");
 	 * if (!matches(REAL, typeLeft)) {
 	 * error(expr, "argument to trigonometric function '" + op + "' is of type '" + typeLeft.toString()
@@ -2439,7 +2422,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				if (!rightSideConst && !leftSideConst) {
 					warning(binExpr,
 							"neither the right nor the left side of binary expression '" + op
-							+ "' is constant'.  Non-linear expressions are only allowed with z3 and dReal."
+									+ "' is constant'.  Non-linear expressions are allowed only with z3 and dReal."
 							+ " With z3 they are not recomended.");
 				}
 			}
@@ -2462,7 +2445,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				if (!rightSideConst) {
 					warning(binExpr,
 							"right side of binary expression '" + op + "' is not constant."
-									+ " Non-linear expressions are only allowed with z3."
+									+ " Non-linear expressions are allowed only with z3."
 									+ " Even with z3 they are not recomended...");
 				}
 			}
@@ -2481,7 +2464,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			if (!rightSideConst && !isInLinearizationBodyExpr) {
 				warning(binExpr,
 						"right side of binary expression '" + op + "' is not constant."
-								+ " Non-linear expressions are only allowed with z3."
+								+ " Non-linear expressions are allowed only with z3."
 								+ " Even with z3 they are not recomended...");
 			}
 
@@ -2525,7 +2508,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //		if (hasCallDefParent(expr)) {
 //			if (!hasCallDefParent(id) && !(id instanceof ConstStatement)) {
 //				error("Unknown identifier Id: '" + id
-//						+ "' (Note that nodes can only refer to inputs, outputs, and local variables and global constants).");
+//						+ "' (Note that nodes can refer only to inputs, outputs, and local variables and global constants).");
 //			}
 //		}
 //	}
@@ -2612,7 +2595,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	private AgreeType getAgreeType(NamedID id) {
 		EObject container = id.eContainer();
 		if (!(container instanceof EnumStatement)) {
-			throw new IllegalArgumentException("we expect that NamedIDs only live in enum statements");
+			throw new IllegalArgumentException("NamedIDs allowed only in enum statements.");
 		}
 		return getAgreeType((EnumStatement) container);
 	}
