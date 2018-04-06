@@ -119,6 +119,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		IScope outer = new FilteringScope(getScope(ctx.eContainer(), ref),
 				input -> (AgreePackage.eINSTANCE.getNodeDefExpr().isSuperTypeOf(input.getEClass())
 						|| AgreePackage.eINSTANCE.getRecordDefExpr().isSuperTypeOf(input.getEClass())
+						|| AgreePackage.eINSTANCE.getConstStatement().isSuperTypeOf(input.getEClass())
 						|| Aadl2Package.eINSTANCE.getAadlPackage().isSuperTypeOf(input.getEClass())
 						|| Aadl2Package.eINSTANCE.getComponentClassifier().isSuperTypeOf(input.getEClass())));
 		return Scopes.scopeFor(components, outer);
