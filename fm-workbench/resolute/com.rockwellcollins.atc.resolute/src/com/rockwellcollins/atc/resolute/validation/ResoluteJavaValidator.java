@@ -256,8 +256,9 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		letType = letExpr.getBinding().getType();
 		ResoluteType resLetType = typeToResoluteType(letType);
 		if (!exprType.subtypeOf(resLetType)) {
-			error(letExpr, "types mismatch in let expression for variable '"+letExpr.getBinding().getName()+"'. "
-					+ "The binding is of type '"+resLetType+"' but the expression is of type '"+exprType+"'");
+			error("types mismatch in let expression for variable '" + letExpr.getBinding().getName() + "'. "
+					+ "The binding is of type '" + resLetType + "' but the expression is of type '" + exprType + "'",
+					letExpr, ResolutePackage.Literals.LET_EXPR__BINDING);
 		}
 
 		// System.out.println("binding=" + letExpr.getBinding());
@@ -1249,19 +1250,19 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			// Primary type: List
 		case "sum":
 		case "head":
-			return getListFnElementType(funCall);
+			return getCollectionFnElementType(funCall);
 		case "append":
 		case "tail":
-			return new ListType(getListFnElementType(funCall));
+			return new ListType(getCollectionFnElementType(funCall));
 		case "as_set":
-			return new SetType(getListFnElementType(funCall));
+			return new SetType(getCollectionFnElementType(funCall));
 
 			// Primary type: set
 		case "union":
 		case "intersect":
 			return getBinarySetOpType(funCall);
 		case "as_list":
-			return new ListType(getSetFnElementType(funCall));
+			return new ListType(getCollectionFnElementType(funCall));
 
 			// Other
 		case "instance":
@@ -1348,22 +1349,17 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		return type;
 	}
 
-	private ResoluteType getListFnElementType(BuiltInFnCallExpr funCall) {
+	private ResoluteType getCollectionFnElementType(BuiltInFnCallExpr funCall) {
 		if (funCall.getArgs().size() != 1) {
 			return BaseType.FAIL;
 		}
 
-		ListType list = (ListType) getExprType(funCall.getArgs().get(0));
-		return list.elementType;
-	}
-
-	private ResoluteType getSetFnElementType(BuiltInFnCallExpr funCall) {
-		if (funCall.getArgs().size() != 1) {
-			return BaseType.FAIL;
-		}
-
-		if (funCall.getArgs().get(0) instanceof SetType) {
-			SetType set = (SetType) getExprType(funCall.getArgs().get(0));
+		ResoluteType collectionType = getExprType(funCall.getArgs().get(0));
+		if (collectionType instanceof ListType) {
+			ListType list = (ListType) collectionType;
+			return list.elementType;
+		} else if (collectionType instanceof SetType) {
+			SetType set = (SetType) collectionType;
 			return set.elementType;
 		} else {
 			return BaseType.FAIL;
