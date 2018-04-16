@@ -2422,7 +2422,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				if (!rightSideConst && !leftSideConst) {
 					warning(binExpr,
 							"neither the right nor the left side of binary expression '" + op
-									+ "' is constant'.  Non-linear expressions are allowed only with z3 and dReal."
+							+ "' is constant'.  Non-linear expressions are allowed only with z3 and dReal."
 							+ " With z3 they are not recomended.");
 				}
 			}
@@ -2694,7 +2694,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	private AgreeType getAgreeType(DataSubcomponentType data) {
 		if (data instanceof DataType) {
 			ComponentType compType = ((DataType) data).getExtended();
-			if (compType != null) {
+			if (compType != null && !AgreeAADLEnumerationUtils.isAADLEnumeration(data)) {
 				return getAgreeType(compType);
 			}
 		}
