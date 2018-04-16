@@ -915,38 +915,50 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
 		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
 		private final Action cBinaryExprLeftAction_1_0_0_0 = (Action)cGroup_1_0_0.eContents().get(0);
-		private final Assignment cOpAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
-		private final Keyword cOpOrKeyword_1_0_0_1_0 = (Keyword)cOpAssignment_1_0_0_1.eContents().get(0);
+		private final Alternatives cAlternatives_1_0_0_1 = (Alternatives)cGroup_1_0_0.eContents().get(1);
+		private final Assignment cOpAssignment_1_0_0_1_0 = (Assignment)cAlternatives_1_0_0_1.eContents().get(0);
+		private final Keyword cOpOrKeyword_1_0_0_1_0_0 = (Keyword)cOpAssignment_1_0_0_1_0.eContents().get(0);
+		private final Assignment cOpAssignment_1_0_0_1_1 = (Assignment)cAlternatives_1_0_0_1.eContents().get(1);
+		private final Keyword cOpOrelseKeyword_1_0_0_1_1_0 = (Keyword)cOpAssignment_1_0_0_1_1.eContents().get(0);
 		private final Assignment cRightAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cRightAndExprParserRuleCall_1_1_0 = (RuleCall)cRightAssignment_1_1.eContents().get(0);
 		
 		//OrExpr Expr:
-		//	AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*;
+		//	AndExpr (=> ({BinaryExpr.left=current} (op='or' | op='orelse')) right=AndExpr)*;
 		@Override public ParserRule getRule() { return rule; }
 
-		//AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*
+		//AndExpr (=> ({BinaryExpr.left=current} (op='or' | op='orelse')) right=AndExpr)*
 		public Group getGroup() { return cGroup; }
 
 		//AndExpr
 		public RuleCall getAndExprParserRuleCall_0() { return cAndExprParserRuleCall_0; }
 
-		//(=> ({BinaryExpr.left=current} op='or') right=AndExpr)*
+		//(=> ({BinaryExpr.left=current} (op='or' | op='orelse')) right=AndExpr)*
 		public Group getGroup_1() { return cGroup_1; }
 
-		//=> ({BinaryExpr.left=current} op='or')
+		//=> ({BinaryExpr.left=current} (op='or' | op='orelse'))
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//{BinaryExpr.left=current} op='or'
+		//{BinaryExpr.left=current} (op='or' | op='orelse')
 		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
 
 		//{BinaryExpr.left=current}
 		public Action getBinaryExprLeftAction_1_0_0_0() { return cBinaryExprLeftAction_1_0_0_0; }
 
+		//op='or' | op='orelse'
+		public Alternatives getAlternatives_1_0_0_1() { return cAlternatives_1_0_0_1; }
+
 		//op='or'
-		public Assignment getOpAssignment_1_0_0_1() { return cOpAssignment_1_0_0_1; }
+		public Assignment getOpAssignment_1_0_0_1_0() { return cOpAssignment_1_0_0_1_0; }
 
 		//'or'
-		public Keyword getOpOrKeyword_1_0_0_1_0() { return cOpOrKeyword_1_0_0_1_0; }
+		public Keyword getOpOrKeyword_1_0_0_1_0_0() { return cOpOrKeyword_1_0_0_1_0_0; }
+
+		//op='orelse'
+		public Assignment getOpAssignment_1_0_0_1_1() { return cOpAssignment_1_0_0_1_1; }
+
+		//'orelse'
+		public Keyword getOpOrelseKeyword_1_0_0_1_1_0() { return cOpOrelseKeyword_1_0_0_1_1_0; }
 
 		//right=AndExpr
 		public Assignment getRightAssignment_1_1() { return cRightAssignment_1_1; }
@@ -2410,7 +2422,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final CrossReference cUnitUnitLiteralCrossReference_1_0 = (CrossReference)cUnitAssignment_1.eContents().get(0);
 		private final RuleCall cUnitUnitLiteralIDTerminalRuleCall_1_0_1 = (RuleCall)cUnitUnitLiteralCrossReference_1_0.eContents().get(1);
 		
-		//RealTerm aadl2::RealLiteral:
+		//@ Override RealTerm aadl2::RealLiteral:
 		//	value=UnsignedReal unit=[aadl2::UnitLiteral]?;
 		@Override public ParserRule getRule() { return rule; }
 
@@ -2454,7 +2466,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final CrossReference cUnitUnitLiteralCrossReference_1_0 = (CrossReference)cUnitAssignment_1.eContents().get(0);
 		private final RuleCall cUnitUnitLiteralIDTerminalRuleCall_1_0_1 = (RuleCall)cUnitUnitLiteralCrossReference_1_0.eContents().get(1);
 		
-		//IntegerTerm aadl2::IntegerLiteral:
+		//@ Override IntegerTerm aadl2::IntegerLiteral:
 		//	value=UnsignedInt unit=[aadl2::UnitLiteral]?;
 		@Override public ParserRule getRule() { return rule; }
 
@@ -2913,7 +2925,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//OrExpr Expr:
-	//	AndExpr (=> ({BinaryExpr.left=current} op='or') right=AndExpr)*;
+	//	AndExpr (=> ({BinaryExpr.left=current} (op='or' | op='orelse')) right=AndExpr)*;
 	public OrExprElements getOrExprAccess() {
 		return pOrExpr;
 	}
@@ -3067,7 +3079,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getBuiltInFnAccess().getRule();
 	}
 
-	//RealTerm aadl2::RealLiteral:
+	//@ Override RealTerm aadl2::RealLiteral:
 	//	value=UnsignedReal unit=[aadl2::UnitLiteral]?;
 	public RealTermElements getRealTermAccess() {
 		return pRealTerm;
@@ -3087,7 +3099,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		return getUnsignedRealAccess().getRule();
 	}
 
-	//IntegerTerm aadl2::IntegerLiteral:
+	//@ Override IntegerTerm aadl2::IntegerLiteral:
 	//	value=UnsignedInt unit=[aadl2::UnitLiteral]?;
 	public IntegerTermElements getIntegerTermAccess() {
 		return pIntegerTerm;

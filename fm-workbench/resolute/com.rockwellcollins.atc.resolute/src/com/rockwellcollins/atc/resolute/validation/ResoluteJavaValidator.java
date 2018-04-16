@@ -280,6 +280,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		switch (op) {
 		case "=>":
 		case "or":
+		case "orelse":
 		case "and":
 		case "andthen":
 			if (typeLeft.subtypeOf(BaseType.BOOL) && typeRight.subtypeOf(BaseType.BOOL)) {
@@ -369,7 +370,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (be.getOp().equals("=>")) {
 				return be.getRight().equals(obj);
 			}
-			if (be.getOp().equals("and") || be.getOp().equals("or") || (be.getOp().equals("andthen"))) {
+			if (be.getOp().equals("and") || be.getOp().equals("or") || (be.getOp().equals("andthen"))
+					|| (be.getOp().equals("orelse"))) {
 				return inClaimContext(be);
 			}
 		}
@@ -1087,6 +1089,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		switch (binExpr.getOp()) {
 		case "=>":
 		case "or":
+		case "orelse":
 		case "and":
 		case "andthen":
 		case "<":

@@ -1569,25 +1569,33 @@ ruleOrExpr returns [EObject current=null]
         afterParserOrEnumRuleCall();
     }
 (((((
-)(
+)((
 (
 
 Or
 
 
 )
-)))=>((
+)
+    |(
+(
+
+Orelse
+
+
+)
+))))=>((
     {
         $current = forceCreateModelElementAndSet(
             grammarAccess.getOrExprAccess().getBinaryExprLeftAction_1_0_0_0(),
             $current);
     }
-)(
+)((
 (
 		lv_op_2_0=
 	Or
     {
-        newLeafNode(lv_op_2_0, grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0());
+        newLeafNode(lv_op_2_0, grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0_0());
     }
 
 	    {
@@ -1598,19 +1606,36 @@ Or
 	    }
 
 )
-)))(
+)
+    |(
+(
+		lv_op_3_0=
+	Orelse
+    {
+        newLeafNode(lv_op_3_0, grammarAccess.getOrExprAccess().getOpOrelseKeyword_1_0_0_1_1_0());
+    }
+
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getOrExprRule());
+	        }
+       		setWithLastConsumed($current, "op", lv_op_3_0, "orelse");
+	    }
+
+)
+))))(
 (
 		{ 
 	        newCompositeNode(grammarAccess.getOrExprAccess().getRightAndExprParserRuleCall_1_1_0()); 
 	    }
-		lv_right_3_0=ruleAndExpr		{
+		lv_right_4_0=ruleAndExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getOrExprRule());
 	        }
        		set(
        			$current, 
        			"right",
-        		lv_right_3_0, 
+        		lv_right_4_0, 
         		"com.rockwellcollins.atc.resolute.Resolute.AndExpr");
 	        afterParserOrEnumRuleCall();
 	    }

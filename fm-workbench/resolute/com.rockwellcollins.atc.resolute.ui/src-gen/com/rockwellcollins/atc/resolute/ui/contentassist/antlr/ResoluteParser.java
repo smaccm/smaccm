@@ -46,6 +46,7 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getDefinitionBodyAccess().getAlternatives(), "rule__DefinitionBody__Alternatives");
 					put(grammarAccess.getClaimTextAccess().getAlternatives(), "rule__ClaimText__Alternatives");
 					put(grammarAccess.getClaimTextVarAccess().getAlternatives(), "rule__ClaimTextVar__Alternatives");
+					put(grammarAccess.getOrExprAccess().getAlternatives_1_0_0_1(), "rule__OrExpr__Alternatives_1_0_0_1");
 					put(grammarAccess.getAndExprAccess().getAlternatives_1_0_0_1(), "rule__AndExpr__Alternatives_1_0_0_1");
 					put(grammarAccess.getRelationalOpAccess().getAlternatives(), "rule__RelationalOp__Alternatives");
 					put(grammarAccess.getPlusExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__PlusExpr__OpAlternatives_1_0_0_1_0");
@@ -230,7 +231,8 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getClaimTextAccess().getUnitAssignment_1_2_1(), "rule__ClaimText__UnitAssignment_1_2_1");
 					put(grammarAccess.getImpliesExprAccess().getOpAssignment_1_0_0_1(), "rule__ImpliesExpr__OpAssignment_1_0_0_1");
 					put(grammarAccess.getImpliesExprAccess().getRightAssignment_1_1(), "rule__ImpliesExpr__RightAssignment_1_1");
-					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1(), "rule__OrExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1_0(), "rule__OrExpr__OpAssignment_1_0_0_1_0");
+					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1_1(), "rule__OrExpr__OpAssignment_1_0_0_1_1");
 					put(grammarAccess.getOrExprAccess().getRightAssignment_1_1(), "rule__OrExpr__RightAssignment_1_1");
 					put(grammarAccess.getAndExprAccess().getOpAssignment_1_0_0_1_0(), "rule__AndExpr__OpAssignment_1_0_0_1_0");
 					put(grammarAccess.getAndExprAccess().getOpAssignment_1_0_0_1_1(), "rule__AndExpr__OpAssignment_1_0_0_1_1");
