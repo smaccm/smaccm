@@ -114,21 +114,30 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				if (!leftResult.isValid()) {
 					return new ResoluteResult(leftResult);
 				} else {
-					return doSwitch(object.getRight());
+					ResoluteResult rightResult = doSwitch(object.getRight());
+					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+					result.setValid(rightResult.isValid());
+					return result;
 				}
 
 			case "orelse":
 				if (leftResult.isValid()) {
 					return new ResoluteResult(leftResult);
 				} else {
-					return doSwitch(object.getRight());
+					ResoluteResult rightResult = doSwitch(object.getRight());
+					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+					result.setValid(rightResult.isValid());
+					return result;
 				}
 
 			case "=>":
 				if (!leftResult.isValid()) {
 					return new ResoluteResult(true, leftResult);
 				} else {
-					return doSwitch(object.getRight());
+					ResoluteResult rightResult = doSwitch(object.getRight());
+					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+					result.setValid(rightResult.isValid());
+					return result;
 				}
 
 			default:
