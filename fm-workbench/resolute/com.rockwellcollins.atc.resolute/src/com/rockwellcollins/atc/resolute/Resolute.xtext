@@ -128,7 +128,7 @@ ImpliesExpr returns Expr:
 ;
 
 OrExpr returns Expr:
-	AndExpr (=>({BinaryExpr.left=current} op='or') right=AndExpr)*
+	AndExpr (=>({BinaryExpr.left=current} (op='or'|op='orelse')) right=AndExpr)*
 ;
 
 AndExpr returns Expr:
