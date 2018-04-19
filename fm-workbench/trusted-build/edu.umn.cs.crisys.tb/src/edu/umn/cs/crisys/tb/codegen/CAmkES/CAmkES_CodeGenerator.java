@@ -154,9 +154,11 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
          File componentDirectory, 
          File srcDirectory, File includeDirectory) throws TbFailure {
       //createDispatchInterface(ti);
+      if (includesRustSource) {
+         createComponentRustCargoToml(componentDirectory, ti);
+      }
       createComponentCamkesFile(componentDirectory, ti);
    }
-
 
    public Set<Type> getSharedVariableTypes() {
       // write dispatcher types
@@ -205,6 +207,15 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
       writeGeneric(componentDirectory, "ComponentCamkes.stg", "componentCamkesBody", 
             "threadImpl", tin, 
             tin.getComponentName(), false, fname);
+   }
+
+   private static boolean includesRustSource = true;
+
+   private void createComponentRustCargoToml(File componentDirectory, ThreadImplementation ti) throws TbFailure {
+      ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
+      writeGeneric(componentDirectory, "RustCargoToml.stg", "rustCargoToml", 
+         "threadImpl", tin, 
+         tin.getComponentName(), false, "Cargo.toml");
    }
 
    public void createClockDriver(File srcDirectory, File includeDirectory) throws TbFailure {

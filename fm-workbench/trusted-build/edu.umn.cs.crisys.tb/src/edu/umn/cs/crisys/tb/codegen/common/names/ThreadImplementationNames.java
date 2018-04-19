@@ -461,6 +461,10 @@ public class ThreadImplementationNames implements NameEmitter {
     return ti.getNormalizedName() + "_tb_timer"; 
   }
   
+  public List<String> getSourceFileList() {
+    return ti.getSourceFileList();
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // Function names
@@ -515,6 +519,10 @@ public class ThreadImplementationNames implements NameEmitter {
   public String getDispatcherComponentGlueCodeCFileName() {
     return getPrefix() + "_dispatch_" + ti.getNormalizedName() + ".c";
   }    
+
+  public String getComponentRustLibName() {
+    return getComponentName() + "_rslib";
+  }
 
   /*****************************************************
    * 
