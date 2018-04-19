@@ -465,6 +465,10 @@ public class ThreadImplementationNames implements NameEmitter {
     return ti.getSourceFileList();
   }
   
+  public List<String> getRustSourceFileList() {
+    return ti.getRustSourceFileList();
+  }
+  
   //////////////////////////////////////////////////////////
   //
   // Function names

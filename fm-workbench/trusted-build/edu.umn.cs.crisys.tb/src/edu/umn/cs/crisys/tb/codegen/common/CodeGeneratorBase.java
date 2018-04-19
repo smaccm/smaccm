@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,8 @@ public abstract class CodeGeneratorBase {
    protected String commonPrefix;
 
    public List<ThreadImplementation> allThreads;
+
+   protected Map<File, File> renamedFiles = new HashMap<>();
 
    // so write threadName_write_portName for each port.
 
@@ -239,6 +242,7 @@ public abstract class CodeGeneratorBase {
          srcFiles.addAll(d.getImplementationFileList());
       }
       srcFiles.addAll(ti.getSourceFileList());
+      srcFiles.addAll(ti.getRustSourceFileList());
 
       for (String s : srcFiles) {
          File srcFilePath = new File(aadlDirectory, s); 
@@ -250,9 +254,11 @@ public abstract class CodeGeneratorBase {
                if (extension.equalsIgnoreCase(".h") || extension.equalsIgnoreCase(".hpp")) {
                   File dstPath = new File(includeDirectory, srcFileName);
                   this.copyFile(new FileInputStream(srcFilePath), new FileOutputStream(dstPath));
+                  renamedFiles.put(srcFilePath, dstPath);
                } else {
                   File dstPath = new File(srcDirectory, srcFileName);
                   this.copyFile(new FileInputStream(srcFilePath), new FileOutputStream(dstPath));
+                  renamedFiles.put(srcFilePath, dstPath);
                }
             } else {
                log.warn("For thread: " + ti.getNormalizedName() + ", File: [" + s + "] does not exist as a relative path from the " + 

@@ -128,6 +128,9 @@ public abstract class PropertyUtil {
    final public static Property ACTUAL_PROCESSOR_BINDING = Util
          .getPropertyDefinitionInWorkspace("Actual_Processor_Binding");
 
+   final public static Property RUST_SOURCE_TEXT = Util
+	         .getPropertyDefinitionInWorkspace("TB_SYS::Rust_Source_Text");
+
    public static int getPriority(ThreadTypeImpl tti) {
       int priority = 0;
 

@@ -73,4 +73,8 @@ property set TB_SYS is
     eChronos_C_Module_Path : aadlstring => "gen" applies to (processor, virtual processor, system implementation);
     eChronos_Flash_Load_Address : aadlstring applies to (system implementation);
 
+	-- for Rust support
+	Rust_Source_Text: inherit list of aadlstring
+		applies to (data, port, subprogram, thread, thread group, process, system, virtual bus, virtual processor,
+			memory, bus, device, processor, parameter, feature group, aadl package);
 end TB_SYS;

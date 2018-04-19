@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroupFile;
@@ -154,8 +155,8 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
          File componentDirectory, 
          File srcDirectory, File includeDirectory) throws TbFailure {
       //createDispatchInterface(ti);
-      if (includesRustSource) {
-         createComponentRustCargoToml(componentDirectory, ti);
+      if (!ti.getRustSourceFileList().isEmpty()) {
+         createComponentRustCargoToml(componentDirectory, srcDirectory, ti);
       }
       createComponentCamkesFile(componentDirectory, ti);
    }
@@ -209,13 +210,17 @@ public class CAmkES_CodeGenerator extends CodeGeneratorBase {
             tin.getComponentName(), false, fname);
    }
 
-   private static boolean includesRustSource = true;
-
-   private void createComponentRustCargoToml(File componentDirectory, ThreadImplementation ti) throws TbFailure {
-      ThreadImplementationNames tin = new ThreadImplementationNames(ti); 
+   private void createComponentRustCargoToml(File componentDirectory, File srcDirectory, ThreadImplementation ti) throws TbFailure {
+      ThreadImplementationNames tin = new ThreadImplementationNames(ti);
+      String argList[] = new String [] { "rustLibName", "rustSourceFileList" };
+      Object classList[] = new Object [] { tin.getComponentRustLibName(),
+         tin.getRustSourceFileList().stream()
+            .map(f -> renamedFiles.get(new File(aadlDirectory, f)))
+            .filter(f -> f != null)
+            .map(f -> componentDirectory.toURI().relativize(f.toURI()).getPath())
+            .collect(Collectors.toList()), };
       writeGeneric(componentDirectory, "RustCargoToml.stg", "rustCargoToml", 
-         "threadImpl", tin, 
-         tin.getComponentName(), false, "Cargo.toml");
+         argList, classList, tin.getComponentName(), false, "Cargo.toml");
    }
 
    public void createClockDriver(File srcDirectory, File includeDirectory) throws TbFailure {

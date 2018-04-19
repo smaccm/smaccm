@@ -68,6 +68,7 @@ public class ThreadImplementation extends ModelElementBase {
    private List<String> externalSemaphoreList = new ArrayList<String>();
    private List<String> externalReferencedFiles = new ArrayList<String>(); 
    private List<String> sourceFileList = new ArrayList<String>(); 
+   private List<String> rustSourceFileList = new ArrayList<String>(); 
 
    // Outgoing dispatch contract (limits on dispatch)
    private ArrayList<OutgoingDispatchContract> dispatchLimits = new ArrayList<OutgoingDispatchContract>();
@@ -541,6 +542,22 @@ public class ThreadImplementation extends ModelElementBase {
    public void setSourceFileList(List<String> sourceFileList) {
       if (sourceFileList != null) {
          this.sourceFileList = sourceFileList;
+      }
+   }
+
+   /**
+    * @return the sourceFileList
+    */
+   public List<String> getRustSourceFileList() {
+      return rustSourceFileList;
+   }
+
+   /**
+    * @param sourceFileList the sourceFileList to set
+    */
+   public void setRustSourceFileList(List<String> rustSourceFileList) {
+      if (rustSourceFileList != null) {
+         this.rustSourceFileList = rustSourceFileList;
       }
    }
 

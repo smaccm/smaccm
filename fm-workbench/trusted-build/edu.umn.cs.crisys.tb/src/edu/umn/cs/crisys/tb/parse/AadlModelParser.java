@@ -736,6 +736,9 @@ public class AadlModelParser {
       List<String> fileNames = Util.getSourceTextListOpt(tti, PropertyUtil.SOURCE_TEXT);
       ti.setSourceFileList(fileNames);
 
+      List<String> rustFileNames = Util.getSourceTextListOpt(tti, PropertyUtil.RUST_SOURCE_TEXT);
+      ti.setRustSourceFileList(rustFileNames);
+
       /* This is WRONG, but it is how I'm going to leave it until 
        * we add better support for instances */
       
