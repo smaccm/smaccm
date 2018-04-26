@@ -173,21 +173,10 @@ import \<std_connector.camkes>;
 import "<model.threadCalendar.periodicDispatcherPathName>";
 import \<Timer.idl4>;
 <if(!model.externalTimerComponent)>
-<if(model.isQemuTarget)>
-import \<TimeServerKZM/TimeServer.camkes>;
-<elseif(model.isOdroidTarget)>
-import \<TimeServerOdroid/TimeServer.camkes>
-<elseif(model.isTK1Target)>
-import \<TimeServerTK1/TimeServer.camkes>;
-<elseif(model.isx86Target)>
 <if(model.useVmBuild)>
 // MWW: import \<TimeServer/TimeServer.camkes> included in VM import;
 <else>
-import \<VM/PIT.camkes>;
 import \<TimeServer/TimeServer.camkes>;
-<endif>
-<else>
-// TODO: MWW: Add import for platform time server .camkes file HERE.  Only know ARM-QEMU and ODROID time server.
 <endif>
 <else>
 // TODO: MWW: not sure what (if anything) needs to be imported for external timer component.
@@ -220,23 +209,7 @@ assembly {
         <constructPeriodicComponent(model.threadCalendar)><\\>
 
         <if(model.threadCalendar.hasDispatchers && !model.externalTimerComponent)>
-        <if(model.isQemuTarget)>
-        component TimeServerKZM time_server;
-        <elseif(model.isOdroidTarget)>
-        component TimeServerOdroid time_server;
-        <elseif(model.isTK1Target)>
-        component TimeServerTK1 time_server;
-        <elseif(model.isx86Target)>
-        <if(!model.containsVM)>
         component TimeServer time_server;
-        component PIT pit;
-        connection seL4HardwareIOPort pit_command(from time_server.pit_command, to pit.command);
-        connection seL4HardwareIOPort pit_channel0(from time_server.pit_channel0, to pit.channel0);
-        connection seL4HardwareInterrupt pit_irq(from pit.irq, to time_server.irq);
-        <endif>
-        <else>
-        // MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
-        <endif>
         <endif>
 
         <commentIf("Component instances for all AADL-defined threads",
@@ -256,11 +229,11 @@ assembly {
 
         <if(model.threadCalendar.hasDispatchers)>
         <if(!model.externalTimerComponent)>
-        connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to time_server.the_timer);
-        connection seL4GlobalAsynchCallback echo_int(from time_server.timer_notification, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
+        connection seL4RPCCall periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to time_server.the_timer);
+        connection seL4Notification echo_int(from time_server.timer_notification, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
         <else>
-        connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to <model.camkesExternalTimerInterfacePath>);
-        connection seL4GlobalAsynchCallback echo_int(from <model.camkesExternalTimerCompletePath>, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
+        connection seL4RPCCall periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to <model.camkesExternalTimerInterfacePath>);
+        connection seL4Notification echo_int(from <model.camkesExternalTimerCompletePath>, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
         <endif>
         <endif>
     }
@@ -271,17 +244,10 @@ assembly {
         <configVms(model)>
         <endif>
         <if(model.threadCalendar.hasDispatchers)>
-        <if(model.isx86Target && !model.containsVM && !model.externalTimerComponent)>
+        <if(!model.externalTimerComponent)>
         time_server.putchar_attributes = "0";
         time_server.timers_per_client = 9;
         time_server.heap_size = 8192;
-        pit.command_attributes = "0x43:0x43";
-        pit.channel0_attributes = "0x40:0x40";
-        pit.irq_irq_type = "isa";
-        pit.irq_irq_ioapic = 0;
-        pit.irq_irq_ioapic_pin = 2;
-        pit.irq_irq_vector = 2;
-        pit.heap_size = 0;
         time_server.priority = 254;
         <endif>
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = <model.generateCamkesTimeServerThreadIndex>;

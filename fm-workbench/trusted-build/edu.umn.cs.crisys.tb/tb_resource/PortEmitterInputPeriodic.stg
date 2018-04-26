@@ -185,7 +185,7 @@ CALLBACKOP(tb_timer_complete_reg_callback(tb_timer_complete_callback, NULL));
 
 camkesAssemblyPeriodicDispatcherConnections(port) ::= <<
 
-connection seL4TimeServer tb_<port.qualifiedName>_timer(from <port.threadImplementation.componentInstanceName>.tb_timer, to time_server.the_timer);
+connection seL4RPCCall tb_<port.qualifiedName>_timer(from <port.threadImplementation.componentInstanceName>.tb_timer, to time_server.the_timer);
 connection seL4Notification tb_<port.qualifiedName>_echo_int(from <port.model.threadCalendar.periodicDispatcherInstanceName>.<port.qualifiedName>, to <port.threadImplementation.componentInstanceName>.tb_timer_complete);
 
 >>
