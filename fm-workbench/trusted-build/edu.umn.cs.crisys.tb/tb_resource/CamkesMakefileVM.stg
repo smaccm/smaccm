@@ -159,15 +159,7 @@ include PCIConfigIO/PCIConfigIO.mk
 include FileServer/FileServer.mk
 include Init/Init.mk
 
-<if(model.isQemuTarget)>
-include TimeServerKZM/TimeServer.mk
-<elseif(model.isOdroidTarget)>
-include TimeServerOdroid/TimeServer.mk
-<elseif(model.isx86Target)>
 include TimeServer/TimeServer.mk
-<else>
-# MWW TODO: Fill in time server component HERE.  Need to determine time server for Intel platforms.
-<endif>
 
 
 <model.threadImplementations:writeComponent()>
