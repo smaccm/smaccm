@@ -108,6 +108,7 @@ import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 		tokenNameToValue.put("Length", "'length'");
 		tokenNameToValue.put("Member", "'member'");
 		tokenNameToValue.put("Memory", "'memory'");
+		tokenNameToValue.put("Orelse", "'orelse'");
 		tokenNameToValue.put("Parent", "'parent'");
 		tokenNameToValue.put("Source", "'source'");
 		tokenNameToValue.put("String", "'string'");
@@ -2412,6 +2413,28 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+
+rule__OrExpr__Alternatives_1_0_0_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1_0()); }
+(rule__OrExpr__OpAssignment_1_0_0_1_0)
+{ after(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1_0()); }
+)
+
+    |(
+{ before(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1_1()); }
+(rule__OrExpr__OpAssignment_1_0_0_1_1)
+{ after(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1_1()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
 
 rule__AndExpr__Alternatives_1_0_0_1
     @init {
@@ -5708,9 +5731,9 @@ rule__OrExpr__Group_1_0_0__1__Impl
     }
 :
 (
-{ before(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1()); }
-(rule__OrExpr__OpAssignment_1_0_0_1)
-{ after(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1()); }
+{ before(grammarAccess.getOrExprAccess().getAlternatives_1_0_0_1()); }
+(rule__OrExpr__Alternatives_1_0_0_1)
+{ after(grammarAccess.getOrExprAccess().getAlternatives_1_0_0_1()); }
 )
 
 ;
@@ -14507,22 +14530,45 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__OrExpr__OpAssignment_1_0_0_1
+rule__OrExpr__OpAssignment_1_0_0_1_0
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0()); }
+{ before(grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0_0()); }
 (
-{ before(grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0()); }
+{ before(grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0_0()); }
 
 	Or 
 
-{ after(grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0()); }
+{ after(grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0_0()); }
 )
 
-{ after(grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0()); }
+{ after(grammarAccess.getOrExprAccess().getOpOrKeyword_1_0_0_1_0_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__OrExpr__OpAssignment_1_0_0_1_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getOrExprAccess().getOpOrelseKeyword_1_0_0_1_1_0()); }
+(
+{ before(grammarAccess.getOrExprAccess().getOpOrelseKeyword_1_0_0_1_1_0()); }
+
+	Orelse 
+
+{ after(grammarAccess.getOrExprAccess().getOpOrelseKeyword_1_0_0_1_1_0()); }
+)
+
+{ after(grammarAccess.getOrExprAccess().getOpOrelseKeyword_1_0_0_1_1_0()); }
 )
 
 ;
