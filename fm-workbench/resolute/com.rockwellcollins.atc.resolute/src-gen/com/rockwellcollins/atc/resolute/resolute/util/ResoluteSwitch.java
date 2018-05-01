@@ -212,6 +212,14 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.LIST_TYPE:
+      {
+        ListType listType = (ListType)theEObject;
+        T result = caseListType(listType);
+        if (result == null) result = caseType(listType);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ResolutePackage.SET_TYPE:
       {
         SetType setType = (SetType)theEObject;
@@ -402,12 +410,30 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ResolutePackage.FILTER_MAP_EXPR:
+      case ResolutePackage.LIST_FILTER_MAP_EXPR:
       {
-        FilterMapExpr filterMapExpr = (FilterMapExpr)theEObject;
-        T result = caseFilterMapExpr(filterMapExpr);
-        if (result == null) result = caseExpr(filterMapExpr);
-        if (result == null) result = caseElement(filterMapExpr);
+        ListFilterMapExpr listFilterMapExpr = (ListFilterMapExpr)theEObject;
+        T result = caseListFilterMapExpr(listFilterMapExpr);
+        if (result == null) result = caseExpr(listFilterMapExpr);
+        if (result == null) result = caseElement(listFilterMapExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ResolutePackage.LIST_EXPR:
+      {
+        ListExpr listExpr = (ListExpr)theEObject;
+        T result = caseListExpr(listExpr);
+        if (result == null) result = caseExpr(listExpr);
+        if (result == null) result = caseElement(listExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ResolutePackage.SET_FILTER_MAP_EXPR:
+      {
+        SetFilterMapExpr setFilterMapExpr = (SetFilterMapExpr)theEObject;
+        T result = caseSetFilterMapExpr(setFilterMapExpr);
+        if (result == null) result = caseExpr(setFilterMapExpr);
+        if (result == null) result = caseElement(setFilterMapExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -669,6 +695,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseProveStatement(ProveStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>List Type</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>List Type</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseListType(ListType object)
   {
     return null;
   }
@@ -1010,17 +1052,49 @@ public class ResoluteSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Filter Map Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>List Filter Map Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Filter Map Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>List Filter Map Expr</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseFilterMapExpr(FilterMapExpr object)
+  public T caseListFilterMapExpr(ListFilterMapExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>List Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>List Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseListExpr(ListExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Set Filter Map Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Set Filter Map Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSetFilterMapExpr(SetFilterMapExpr object)
   {
     return null;
   }

@@ -16,6 +16,7 @@ import jkind.lustre.BoolExpr;
 import jkind.lustre.CastExpr;
 import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
+import jkind.lustre.FunctionCallExpr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
@@ -87,6 +88,11 @@ public class IdRewriteVisitor implements ExprVisitor<Expr> {
 	}
 
 	@Override
+	public Expr visit(FunctionCallExpr e) {
+		return new FunctionCallExpr(e.function, acceptList(e.args));
+	}
+
+	@Override
 	public Expr visit(NodeCallExpr e) {
 		return new NodeCallExpr(e.node, acceptList(e.args));
 	}
@@ -134,4 +140,5 @@ public class IdRewriteVisitor implements ExprVisitor<Expr> {
 
 		return result;
 	}
+
 }

@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.util.List;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
-import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteEvaluator;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;

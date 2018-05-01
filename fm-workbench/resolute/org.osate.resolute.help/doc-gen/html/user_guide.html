@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="Peter Feiler">
+  <meta name="author" content="Julien Delange">
+  <title>Resolute User Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="/home/kfhoech/git/smaccm/fm-workbench/resolute/org.osate.resolute.help/css/pandoc.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Resolute User Guide</h1>
+<p class="author">Peter Feiler</p>
+<p class="author">Julien Delange</p>
+</header>
+<nav id="TOC">
+<ul>
+<li><a href="#sec:introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#sec:claim-functions"><span class="toc-section-number">2</span> Claim Functions</a><ul>
+<li><a href="#sec:resolute-libraries-of-claim-functions"><span class="toc-section-number">2.1</span> Resolute Libraries of Claim Functions</a></li>
+<li><a href="#sec:application-of-claim-functions"><span class="toc-section-number">2.2</span> Application of Claim Functions</a></li>
+<li><a href="#sec:uses-of-claim-functions"><span class="toc-section-number">2.3</span> Uses of Claim Functions</a><ul>
+<li><a href="#sec:claim-functions-as-requirements-to-be-satisfied"><span class="toc-section-number">2.3.1</span> Claim Functions as Requirements to Be Satisfied</a></li>
+<li><a href="#sec:claim-functions-as-verification-actions"><span class="toc-section-number">2.3.2</span> Claim Functions as Verification Actions</a></li>
+<li><a href="#sec:verification-assumptions-and-preconditions"><span class="toc-section-number">2.3.3</span> Verification Assumptions and Preconditions</a></li>
+</ul></li>
+<li><a href="#sec:global-claim-functions"><span class="toc-section-number">2.4</span> Global Claim Functions</a></li>
+</ul></li>
+<li><a href="#sec:copyright"><span class="toc-section-number">3</span> Copyright</a></li>
+</ul>
+</nav>
+<h1 id="sec:introduction"><span class="header-section-number">1</span> Introduction</h1>
+<p>Resolute allows users to define a set of claim functions and associate them with an AADL model. You can use these claim functions to represent the requirements to be satisfied, the verification actions used to verify them, and assumptions made by a verification action in order to produce a valid result. You will express the requirements as predicates on subrequirements and verification actions. Verification actions invoke Boolean computational functions to represent predicates to be evaluated and general computational functions to compute values to be compared in predicates. The computational function notation has its roots in Lute and REAL. You can organize claim functions into a hierarchy where a claim function is satisfied only if its subclaim functions are satisfied according to the specified predicate logic.</p>
+<p>Throughout this document, we use an example of resource budget analysis, in particular, an analysis of weight. The full example is available on the <a href="https://github.com/osate/examples/tree/master/core-examples/resolute">OSATE pages at GitHub</a>.</p>
+<p>With the Resolute tool, users define claim functions and computational functions in Resolute annex libraries, <em>i.e.</em>, Resolute annex clauses placed directly in an AADL package. The example below shows a claim function called <code>SCSReq1</code> that represents a requirement and consists of two verification actions. At least one of them must be satisfied for the requirement to be satisfied (expressed by <code>or</code>). The example also shows a computational function that calculates the sum of budgets of all direct subcomponents. Finally, the example shows a global constant definition that a user can reference in a Resolute library or Resolute subclause. Here, we use it to specify the maximum weight, against which the verification actions will compare the total.</p>
+<pre class="aadl" caption="BudgetCase Example"><code>package BudgetCase
+public
+
+annex Resolute {**
+    MaximumWeight : real = 1.2kg
+
+    SCSReq1(self : component) &lt;=
+    ** &quot;R1&quot; SCS shall be no heavier than &quot; MaximumWeight%kg **
+    SCSReq1VA1(self, MaximumWeight) or SCSReq1VA2(self, MaximumWeight)
+
+    AddBudgets(self : component) : real =
+    sum([WeightBudget(t) for (t: subcomponents(self))])</code></pre>
+<p>Users then associate the claim functions representing requirements with component types or implementations by <code>prove</code> statements declared in Resolute annex subclauses. The example shows the <code>prove</code> statement for <code>SCSReq1</code> with the component itself passed in as a parameter.</p>
+<pre class="aadl" caption="Prove Statement for a Claim Function"><code>system implementation SCS.Phys
+    subcomponents
+        sensor1: device sensor;
+        sensor2: device sensor;
+        actuator: device actuator;
+    annex Resolute {**
+        prove (SCSReq1(this))</code></pre>
+<p>Users invoke the <em>Resolute</em> command on a component implementation. This results in an instantiation of the component implementation and the application of all claim functions associated with all of the components in the instance model via the <code>prove</code> statements.</p>
+<figure>
+<img src="images/image3.png" alt="Instantiation from OSATE menu" /><figcaption>Instantiation from OSATE menu</figcaption>
+</figure>
+<p>The verification results are then displayed in a view labeled <em>Assurance Case.</em> For each claim function invoked by a <code>prove</code> statement, Resolute evaluates any claim function called by the claim function expression.</p>
+<p>Currently, each <code>prove</code> statement is shown at the top level of the Assurance Case view. This is the case for different <code>prove</code> statements of the top-level component as well as any subcomponent that has <code>prove</code> statements.</p>
+<figure>
+<img src="images/image4.png" alt="Assurance Case Tree View" /><figcaption>Assurance Case Tree View</figcaption>
+</figure>
+<h1 id="sec:claim-functions"><span class="header-section-number">2</span> Claim Functions</h1>
+<p>Claim functions can represent requirements, verification actions, and assumptions. There is currently no syntactic distinction in their use. This section describes conventions that users should follow to distinguish the different uses.</p>
+<p>Claim functions have a name, zero or more parameters, a description, and a predicate expression. The claim function has a return type of Boolean (true to represent success and false to represent failure). The syntax of a claim function is as follows:</p>
+<pre class="bnf" caption="Claim Function Syntax"><code>&lt;Claim_Function&gt; ::=
+
+    &lt;name&gt; &quot;(&quot; (&lt;parameter&gt; (&quot;,&quot; &lt;parameter) )* )? &quot;)&quot; &quot;&lt;=&quot;
+    &quot;**&quot; &lt;description&gt; &quot;**&quot; &lt;claim_function_expression&gt;
+
+&lt;parameter&gt; ::= &lt;name&gt; &quot;:&quot; &lt;type&gt;
+
+&lt;description&gt; ::= &lt;text&gt; ( &lt;parameter_reference&gt; | &lt;text&gt;)*</code></pre>
+<p>Parameters typically represent the model elements to which the claim function applies and values used in the predicate expression to determine whether the predicate is satisfied. The parameter declaration consists of a name and a type (for more information, see the Resolute Type System section in the <em>Resolute Language Reference</em>).</p>
+<p>The description can be a combination of strings and parameter references; it explains the role of the claim function and is displayed as part of the result in the Assurance Case view. The description for a claim function consists of a sequence of strings and references to claim function parameters, global constants, or local constants (defined by <code>let</code> statements). If the values are numerical with a unit, you can specify the unit to be used for display by indicating the desired unit after a <code>%</code>, <em>e.g.</em>, <code>WeightLimit%kg</code>. The units are those defined by Units property types in AADL property sets and do not have to be qualified by the Units type.</p>
+<p>The evaluation of the predicate determines the success (true return value) or failure (false return value) of the claim function. The claim function expression is assumed to be a logical expression (<code>and</code>, <code>forall</code>, <code>or</code>, <code>exists</code>, <code>andthen</code>) to represent a predicate. In the case of <code>and</code> and <code>forall</code>, all expression elements are executed and then the result is evaluated and returns true only if all claim functions return true. Executing all claim functions allows Resolute to inform the user of all failing claim functions rather than one at a time by not executing the remaining elements in the <code>and</code> or <code>forall</code> expression. The <code>andthen</code> operator allows users to specify that the right-hand claim function should only be executed if the left-hand claim function returns true.</p>
+<h2 id="sec:resolute-libraries-of-claim-functions"><span class="header-section-number">2.1</span> Resolute Libraries of Claim Functions</h2>
+<p>Users define claim functions in Resolute annex libraries. Declare a Resolute annex library directly in a package through the <code>annex</code> Resolute <code>{**</code> &lt;library content&gt; <code>**};</code> statement. You can place this statement in a package by itself, combine it with library declarations for other annexes, or combine it with classifier declarations in the same package. A package cannot contain multiple Resolute annex library declarations; each library must be placed in a separate package.</p>
+<p>Note: Resolute assumes a global name space for the names of claim functions and computational functions. Therefore, their names must be globally unique. You can reference them in <code>prove</code> statements, other claim functions, or computational functions without qualification by a package name.</p>
+<h2 id="sec:application-of-claim-functions"><span class="header-section-number">2.2</span> Application of Claim Functions</h2>
+<p>Invoke a claim function on a component by specifying a <code>prove</code> statement in a Resolute annex subclause of the component implementation. The Resolute subclause of a component implementation can contain multiple <code>prove</code> statements. This claim function is then executed on every instance of this component implementation when the <em>Resolute</em> command is invoked.</p>
+<p>When you have a system with subsystems, you can associate claim functions with each component implementation in the system hierarchy. The verification of this claim will then be performed for each instance of the component implementations with a <code>prove</code> statement. Typically, you have <code>prove</code> statements for the top-level system that involve verifying the system across multiple layers, <em>e.g.</em>, performing resource budget analysis across the whole system. You may also perform compositional verification by verifying a component with respect to its direct subcomponents. In this case, you place a <code>prove</code> statement at each layer, <em>i.e.</em>, with each component implementation of components involved in the system. We illustrate this capability with our resource budget analysis, by analyzing budgets of direct subcomponents against the specified budget limit for each layer of the architecture.</p>
+<p>Note: A <code>prove</code> statement cannot be declared for a component type. A declaration with the component type would mean that it applies to all instances of all implementations.</p>
+<p>The parameter values can be integers, real numbers, strings, Boolean literals, model elements, references to global constants, and collections of these types. They must match the specified type for the parameter.</p>
+<p>One special model element reference is expressed by the keyword <code>this</code>. It refers to the instance model object of the model element that contains the <code>prove</code> statement. The keyword <code>this</code> can only be used in the <code>prove</code> statement --- not in verification action expressions. This constraint means that <code>this</code> must be passed to a claim function for it to know what model element it operates on --- unless you have a global claim function (see Global Constants).</p>
+<pre><code>    prove ( Memory_safe ( this ))</code></pre>
+<p>You can also identify a subcomponent of <code>this</code>; <em>i.e.</em>, associate the verification action with a component down a path of the architecture hierarchy. This allows you to specify a verification action for a specific component instance. This example shows how a <code>prove</code> statement is applied to a subcomponent called subsystem1:</p>
+<pre><code>    prove ( Fully_Connected ( this.subsystem1 ))</code></pre>
+<p>The <code>prove</code> statement can be associated with the component classifier of the subcomponent. In this case, it applies to all instances of that component. We recommend that you associate <code>prove</code> statements with a path only if the <code>prove</code> is intended for that particular instance of a subcomponent.</p>
+<h2 id="sec:uses-of-claim-functions"><span class="header-section-number">2.3</span> Uses of Claim Functions</h2>
+<p>The compiler does enforce that claim functions can be invoked only in <code>prove</code> statements, and as operands in <code>and</code>, <code>or</code>, <code>andthen</code>, <code>exists</code>, and <code>forall</code> operations, and cannot be invoked in computational functions.</p>
+<h3 id="sec:claim-functions-as-requirements-to-be-satisfied"><span class="header-section-number">2.3.1</span> Claim Functions as Requirements to Be Satisfied</h3>
+<p>Users can represent a requirement with a claim function and associated it with an implementation of a system using the <code>prove</code> statement, as shown in this example for a system called <code>SCS</code>.</p>
+<pre><code>    prove (SCSReq1(this))</code></pre>
+<p>The description of the claim function representing the requirement may include a requirement identifier as part of the text, as shown in the next example.</p>
+<p>Global constants specify values in requirements that users tend to change. This allows you to localize the change to a single location. In our example, we reference a Resolute global constant <code>MaximumWeight</code> to indicate the desired limit in the descriptive text, as parameters to other claim functions and computational functions, and in predicate expressions.</p>
+<p>The expression specifies the verification actions whose results are used as evidence that the requirement has been met. In the example below, we show a verification action that assures the subcomponent weight budget totals are within the limit and a verification action that recursively adds the actual weights.</p>
+<p>The first verification action illustrates compositional verification of weights in terms of the budgets at the next lower level, while the second always takes into account all actuals. Note that the first analysis is not affected by a lower level change as long as the budget of its enclosing component is not exceeded, while the second analysis is affected by every change in weights throughout the whole system.</p>
+<pre class="resolute" caption="MaximumWeight Claim Function Example"><code>-- requirement expressed in terms of the Maximum weight constant
+SCSReq1(self : component) &lt;=
+** &quot;R1: SVS shall be no heavier than &quot; MaximumWeight%kg **
+    SCSReq1AssureSubcomponentSubtotals(self, MaximumWeight)
+    and SCSReq1AssureRecursiveTotals(self, MaximumWeight)</code></pre>
+<p>Because we have already specified the weight limit as a property in the AADL model, we can reference it to be supplied as a value to the verification action, as shown below.</p>
+<pre><code>    SCSReq1AssureSubcomponentTotal(self, property(self, SEI::WeightLimit))</code></pre>
+<p>In addition, we can add a verification action to verify that the property and the global constant have the same value.</p>
+<pre><code>    SCSReq1AssureWeightLimitProperty(self, property(self, SEI::WeightLimit), MaximumWeight)</code></pre>
+<p>A requirement may be specified vaguely such that it cannot be verified. In this case, you may need to refine the requirement into subrequirements that are verifiable. Do this by listing claim functions representing the subclaims in the claim function expression of the original requirement.</p>
+<p>The claim function expression in a &quot;requirement&quot; claim function may contain <code>and</code>, <code>forall</code>, <code>andthen</code>, <code>or</code>, or <code>exists</code>.</p>
+<p>The <code>and</code> and <code>forall</code> expressions indicate that all operands are evaluated; the claim is then true if all operands return <code>true</code>. This means that all claim functions or Boolean computational functions are executed independently of whether they return true or false. Once all have been executed, the expression returns <code>true</code> only if all operands are <code>true</code>. This allows Resolute to report to the user all failing operands rather than aborting after the first failing one and requiring the user to correct it before finding out that others fail as well.</p>
+<ul>
+<li><p>The <code>or</code> and <code>exists</code> indicate alternative sets of verification actions. The operands are executed and the results are evaluated in order; the first returning <code>true</code> determines true for the claim. Effectively the user specifies that the right-hand operand is executed only if the left-hand operand fails. This allows you to specify an alternative way of verifying a claim if one verification action is not successful. You can also use it to specify a <code>fail</code> statement as the right-hand operand to provide a special message for a failing left-hand operand.</p></li>
+<li><p>The <code>andthen</code> expression executes the left-hand operand first. If it fails, the whole expression is considered as failing (returns <code>false</code>). If the left returns <code>true</code>, the right-hand side is executed and its result value becomes the value of the <code>andthen</code> expression. This allows users to specify that certain claim functions, such as verification actions, should be executed only if preceding verification actions pass.</p></li>
+</ul>
+<p>Note: Resolute allows computational expressions to be mixed with subclaim functions in a claim function expression. Unfortunately, the results of their evaluation are not shown in the Assurance Case view. This leads to the scenario where all subclaims are shown as satisfied (<code>true</code>), but the claim itself is shown as failed because the computational constraint expression evaluates to <code>false</code>. Therefore, we recommend that users not mix subclaims and computational expressions.</p>
+<h3 id="sec:claim-functions-as-verification-actions"><span class="header-section-number">2.3.2</span> Claim Functions as Verification Actions</h3>
+<p>Claim functions also represent verification actions, whose execution produces a verification result as evidence. You can associate verification actions with a requirement by calling them in the claim function expression of the claim function representing the requirement, as shown earlier.</p>
+<p>For a claim function that represents a verification action, the expression represents the predicate to be evaluated in order for the verification action to pass. One of the elements of the predicate typically is a constraint value to be met, and the other is a computational function call or reference to a computational result to compare. In the next example, the verification action computes the sum of the subcomponent budgets and compares them to the maximum. <code>AddSubcomponentWeightBudgets</code> is a computational function that returns a <code>real</code> value.</p>
+<p>Note: The identifier <code>VA1</code> is added into the description text by convention.</p>
+<p>If we want to produce a special error message for a failing verification condition, we can use the <code>or</code> operation with a <code>fail</code> statement as the right-hand side. Failure of the left-hand side results in the execution of the right-hand side; <em>i.e.</em>, this operation effectively throws a fail exception with the specified description text, which is then associated with the enclosing claim function.</p>
+<pre class="resolute" caption="Fail statement example"><code>SCSReq1VA1VerifySubcomponentTotals(self : component, max : real) &lt;=
+** &quot;VA1: sum of direct subcomponent weights &quot; actuals%kg &quot; within budget &quot; max%kg **
+let actuals : real = AddSubcomponentWeightBudgets(self);
+(actuals &lt;= max) or fail ** self &quot; weight sum &quot; acutals%kg &quot;over budget &quot; maxkg **</code></pre>
+<h3 id="sec:verification-assumptions-and-preconditions"><span class="header-section-number">2.3.3</span> Verification Assumptions and Preconditions</h3>
+<p>Verification actions may make</p>
+<ul>
+<li><p>assumptions that must hold for the verification action result to be accurate</p></li>
+<li><p>preconditions that must hold in order for the verification action to be executed</p></li>
+</ul>
+<p>A use case for a verification action assumption is that the calculation of the weight totals can be performed even though some components may not yet have a weight budget. However, it is still useful to evaluate the partial weight total result as it may already be close to or exceed the limit. This allows Resolute to inform the user without first requiring the user to complete the model with missing weight budget properties. The <code>assumption</code> function will determine how many components have a weight budget and report the percentage of components with a weight budget.</p>
+<p>The following example illustrates a verification action with an assumption. We have a claim function that models the assumption to be evaluated, called <code>SCSReq1SubcomponentsHaveWeight</code>. It counts the number of components and those with a <code>GrossWeight</code> property and generates a fail message with the percentage of components with a weight property.</p>
+<p>We then use this claim function in a new claim function that executes both the assumption claim function and the claim function representing the actual verification by adding the subcomponent weight budgets that we defined earlier (<code>SCSReq1VA1VerifySubcomponentTotals</code>). The <code>and</code> operator allows both assumption and verification action claim functions to be evaluated.</p>
+<pre class="resolute"><code>SCSReq1AssureSubcomponentTotals(self : component, max : real) &lt;=
+** &quot;AVA1: assured sum of subcomponent budgets within budget&quot; **
+-- we only evaluate the weight total if subcomponents have weight budget
+SCSReq1VA1SubcomponentsHaveWeight(self) and SCSReq1VA1VerifySubcomponentTotals(self, max)</code></pre>
+<pre class="resolute"><code>SCSReq1VA1SubcomponentsHaveWeight(self : component) &lt;=
+** &quot;Ass1: All subcomponents have gross weight&quot; **
+let ratio : int = SubcomponentWeightBudgetCoveragePercent(self);
+forall (sub : subcomponents(self)) . has_property(sub, SEI::GrossWeight)
+or fail ** &quot;Percentage of subcomponents with weight &quot; ratio &quot; percent&quot; **</code></pre>
+<p>A use case for a verification action precondition is that the verification action cannot perform the analysis until all the data is present; <em>i.e.</em>, all components involved in the computation have appropriate property values. In this case, we use the <code>andthen</code> operator instead of <code>and</code>.</p>
+<h2 id="sec:global-claim-functions"><span class="header-section-number">2.4</span> Global Claim Functions</h2>
+<p>Claim functions can be defined without parameter. In this case, the claim function first queries the instance model for objects and then applies a claim function to each element of the query. The query is accomplished by identifying a collection of model elements and then applying a claim function to each element of the collection using <code>forall</code> or <code>exists</code>. Model element collections can be identified by category, <em>e.g.</em>, by <code>threads</code> for all threads in the instance model or by set constructors such as <code>instances</code>(classifier), which returns all component instances of the specified classifier. Collections and their operations are discussed in detail in the <em>Resolute Language Reference</em>.</p>
+<p>The example shows a global constraint that all threads must have a period property value.</p>
+<pre class="resolute"><code>SystemWideReq1() &lt;= ** &quot;All threads have a period&quot; **
+forall (t : thread) . HasPeriod(t)
+
+HasPeriod(t : thread) &lt;= **Thread &quot; t &quot; has a period&quot; **
+has_property(t, Timing_Properties::Period)</code></pre>
+<p>You can include global claim functions as <code>prove</code> statements on any model element, since they query the whole model independently of a specific model element. However, you should place them in the top-level component implementation to which the <em>Resolute</em> command is applied; otherwise, they may be invoked multiple times.</p>
+<p><span id="copyright"></span></p>
+<h1 id="sec:copyright"><span class="header-section-number">3</span> Copyright</h1>
+<p>Copyright 2015 Carnegie Mellon University</p>
+<p>This material is based upon work funded and supported by the Department of Defense under Contract No. FA8721-05-C-0003 with Carnegie Mellon University for the operation of the Software Engineering Institute, a federally funded research and development center.</p>
+<p>Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the United States Department of Defense.</p>
+<p>NO WARRANTY. THIS CARNEGIE MELLON UNIVERSITY AND SOFTWARE ENGINEERING INSTITUTE MATERIAL IS FURNISHED ON AN &quot;AS-IS&quot; BASIS. CARNEGIE MELLON UNIVERSITY MAKES NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED, AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF THE MATERIAL. CARNEGIE MELLON UNIVERSITY DOES NOT MAKE ANY WARRANTY OF ANY KIND WITH RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.</p>
+<p>This material has been approved for public release and unlimited distribution.</p>
+<p>DM-0003006</p>
+</body>
+</html>

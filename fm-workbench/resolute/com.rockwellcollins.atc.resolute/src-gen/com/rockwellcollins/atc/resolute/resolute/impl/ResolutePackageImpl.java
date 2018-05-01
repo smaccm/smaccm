@@ -18,7 +18,6 @@ import com.rockwellcollins.atc.resolute.resolute.Definition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
 import com.rockwellcollins.atc.resolute.resolute.FailExpr;
-import com.rockwellcollins.atc.resolute.resolute.FilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.FunctionBody;
 import com.rockwellcollins.atc.resolute.resolute.FunctionDefinition;
@@ -28,6 +27,9 @@ import com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
+import com.rockwellcollins.atc.resolute.resolute.ListExpr;
+import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
+import com.rockwellcollins.atc.resolute.resolute.ListType;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
 import com.rockwellcollins.atc.resolute.resolute.ProveStatement;
 import com.rockwellcollins.atc.resolute.resolute.QuantArg;
@@ -38,6 +40,7 @@ import com.rockwellcollins.atc.resolute.resolute.ResoluteLibrary;
 import com.rockwellcollins.atc.resolute.resolute.ResolutePackage;
 import com.rockwellcollins.atc.resolute.resolute.ResoluteSubclause;
 import com.rockwellcollins.atc.resolute.resolute.SetExpr;
+import com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.SetType;
 import com.rockwellcollins.atc.resolute.resolute.StringExpr;
 import com.rockwellcollins.atc.resolute.resolute.ThisExpr;
@@ -166,6 +169,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass proveStatementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass listTypeEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -319,7 +329,21 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass filterMapExprEClass = null;
+  private EClass listFilterMapExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass listExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass setFilterMapExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -700,6 +724,26 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getProveStatement_Expr()
   {
     return (EReference)proveStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getListType()
+  {
+    return listTypeEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getListType_Type()
+  {
+    return (EReference)listTypeEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1257,9 +1301,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getFilterMapExpr()
+  public EClass getListFilterMapExpr()
   {
-    return filterMapExprEClass;
+    return listFilterMapExprEClass;
   }
 
   /**
@@ -1267,9 +1311,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFilterMapExpr_Map()
+  public EReference getListFilterMapExpr_Map()
   {
-    return (EReference)filterMapExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)listFilterMapExprEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1277,9 +1321,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFilterMapExpr_Args()
+  public EReference getListFilterMapExpr_Args()
   {
-    return (EReference)filterMapExprEClass.getEStructuralFeatures().get(1);
+    return (EReference)listFilterMapExprEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1287,9 +1331,69 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFilterMapExpr_Filter()
+  public EReference getListFilterMapExpr_Filter()
   {
-    return (EReference)filterMapExprEClass.getEStructuralFeatures().get(2);
+    return (EReference)listFilterMapExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getListExpr()
+  {
+    return listExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getListExpr_Exprs()
+  {
+    return (EReference)listExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getSetFilterMapExpr()
+  {
+    return setFilterMapExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSetFilterMapExpr_Map()
+  {
+    return (EReference)setFilterMapExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSetFilterMapExpr_Args()
+  {
+    return (EReference)setFilterMapExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSetFilterMapExpr_Filter()
+  {
+    return (EReference)setFilterMapExprEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1417,6 +1521,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     proveStatementEClass = createEClass(PROVE_STATEMENT);
     createEReference(proveStatementEClass, PROVE_STATEMENT__EXPR);
 
+    listTypeEClass = createEClass(LIST_TYPE);
+    createEReference(listTypeEClass, LIST_TYPE__TYPE);
+
     setTypeEClass = createEClass(SET_TYPE);
     createEReference(setTypeEClass, SET_TYPE__TYPE);
 
@@ -1493,10 +1600,18 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(fnCallExprEClass, FN_CALL_EXPR__FN);
     createEReference(fnCallExprEClass, FN_CALL_EXPR__ARGS);
 
-    filterMapExprEClass = createEClass(FILTER_MAP_EXPR);
-    createEReference(filterMapExprEClass, FILTER_MAP_EXPR__MAP);
-    createEReference(filterMapExprEClass, FILTER_MAP_EXPR__ARGS);
-    createEReference(filterMapExprEClass, FILTER_MAP_EXPR__FILTER);
+    listFilterMapExprEClass = createEClass(LIST_FILTER_MAP_EXPR);
+    createEReference(listFilterMapExprEClass, LIST_FILTER_MAP_EXPR__MAP);
+    createEReference(listFilterMapExprEClass, LIST_FILTER_MAP_EXPR__ARGS);
+    createEReference(listFilterMapExprEClass, LIST_FILTER_MAP_EXPR__FILTER);
+
+    listExprEClass = createEClass(LIST_EXPR);
+    createEReference(listExprEClass, LIST_EXPR__EXPRS);
+
+    setFilterMapExprEClass = createEClass(SET_FILTER_MAP_EXPR);
+    createEReference(setFilterMapExprEClass, SET_FILTER_MAP_EXPR__MAP);
+    createEReference(setFilterMapExprEClass, SET_FILTER_MAP_EXPR__ARGS);
+    createEReference(setFilterMapExprEClass, SET_FILTER_MAP_EXPR__FILTER);
 
     setExprEClass = createEClass(SET_EXPR);
     createEReference(setExprEClass, SET_EXPR__EXPRS);
@@ -1555,6 +1670,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     letBindingEClass.getESuperTypes().add(this.getClaimTextVar());
     resoluteSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
     proveStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
+    listTypeEClass.getESuperTypes().add(this.getType());
     setTypeEClass.getESuperTypes().add(this.getType());
     quantArgEClass.getESuperTypes().add(this.getArg());
     functionBodyEClass.getESuperTypes().add(this.getDefinitionBody());
@@ -1576,7 +1692,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     quantifiedExprEClass.getESuperTypes().add(this.getExpr());
     builtInFnCallExprEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getExpr());
-    filterMapExprEClass.getESuperTypes().add(this.getExpr());
+    listFilterMapExprEClass.getESuperTypes().add(this.getExpr());
+    listExprEClass.getESuperTypes().add(this.getExpr());
+    setFilterMapExprEClass.getESuperTypes().add(this.getExpr());
     setExprEClass.getESuperTypes().add(this.getExpr());
     letExprEClass.getESuperTypes().add(this.getExpr());
 
@@ -1625,6 +1743,9 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     initEClass(proveStatementEClass, ProveStatement.class, "ProveStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getProveStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ProveStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(listTypeEClass, ListType.class, "ListType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getListType_Type(), this.getType(), null, "type", null, 0, 1, ListType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(setTypeEClass, SetType.class, "SetType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSetType_Type(), this.getType(), null, "type", null, 0, 1, SetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1702,10 +1823,18 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEReference(getFnCallExpr_Fn(), this.getFunctionDefinition(), null, "fn", null, 0, 1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFnCallExpr_Args(), this.getExpr(), null, "args", null, 0, -1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(filterMapExprEClass, FilterMapExpr.class, "FilterMapExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getFilterMapExpr_Map(), this.getExpr(), null, "map", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFilterMapExpr_Args(), this.getArg(), null, "args", null, 0, -1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFilterMapExpr_Filter(), this.getExpr(), null, "filter", null, 0, 1, FilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(listFilterMapExprEClass, ListFilterMapExpr.class, "ListFilterMapExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getListFilterMapExpr_Map(), this.getExpr(), null, "map", null, 0, 1, ListFilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getListFilterMapExpr_Args(), this.getArg(), null, "args", null, 0, -1, ListFilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getListFilterMapExpr_Filter(), this.getExpr(), null, "filter", null, 0, 1, ListFilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(listExprEClass, ListExpr.class, "ListExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getListExpr_Exprs(), this.getExpr(), null, "exprs", null, 0, -1, ListExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(setFilterMapExprEClass, SetFilterMapExpr.class, "SetFilterMapExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getSetFilterMapExpr_Map(), this.getExpr(), null, "map", null, 0, 1, SetFilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSetFilterMapExpr_Args(), this.getArg(), null, "args", null, 0, -1, SetFilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSetFilterMapExpr_Filter(), this.getExpr(), null, "filter", null, 0, 1, SetFilterMapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(setExprEClass, SetExpr.class, "SetExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSetExpr_Exprs(), this.getExpr(), null, "exprs", null, 0, -1, SetExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

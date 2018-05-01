@@ -310,11 +310,11 @@ approximation of a non-linear expression over segment(s) of its input
 domain, resulting in a new expression that bounds the non-linear
 expression with piecewise linear segment(s). The non-linear expression
 supports a small core of mathematical functions found on a calculator
-(i.e., '+', '-', '\*', '/', '\^') as seen in Figure 14. **Note**: The
-non-linear expression can contain references to only the input variable
-(no other AGREE identifiers). Figure 15 demonstrates a linear
-approximation bounding the output values within the upper and lower
-bounds.
+(i.e., '+', '-', '\*', '/', '\^') and a collection of transcendental
+mathematical functions. **Note**: The non-linear expression can contain
+references to only the input variable (no other AGREE identifiers).
+@fig:linearization_definition demonstrates a linear approximation bounding
+the output values within the upper and lower bounds.
 
 ![Bound Non-linear Expression with Piecewise Linear Segments](../../media/image13.png){#fig:linearization_definition .class width=90%}
 

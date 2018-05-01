@@ -62,4 +62,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          version="1.0.0.qualifier"
          unpack="false"/>
 
+   <plugin
+         id="org.osate.resolute.help"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>

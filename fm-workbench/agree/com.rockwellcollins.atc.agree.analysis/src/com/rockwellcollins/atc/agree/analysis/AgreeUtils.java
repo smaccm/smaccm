@@ -23,6 +23,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
@@ -73,6 +74,16 @@ public class AgreeUtils {
 			// property is associated
 			expr = PropertyUtils.getSimplePropertyValue(comp, prop);
 			return expr;
+		} catch (PropertyDoesNotApplyToHolderException propException) {
+			return null;
+		} catch (PropertyNotPresentException propNotPresentException) {
+			return null;
+		}
+	}
+
+	static public PropertyExpression getPropExpression(PropertyConstant prop) {
+		try {
+			return prop.getConstantValue();
 		} catch (PropertyDoesNotApplyToHolderException propException) {
 			return null;
 		} catch (PropertyNotPresentException propNotPresentException) {

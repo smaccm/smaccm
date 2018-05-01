@@ -55,6 +55,7 @@ import jkind.lustre.BoolExpr;
 import jkind.lustre.CastExpr;
 import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
+import jkind.lustre.FunctionCallExpr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
@@ -207,6 +208,11 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 	}
 
 	@Override
+	public MATLABExpr visit(FunctionCallExpr e) {
+		throw new IllegalArgumentException();
+	}
+
+	@Override
 	public MATLABExpr visit(NodeCallExpr e) {
 		throw new IllegalArgumentException();
 	}
@@ -327,7 +333,7 @@ public class LustreToMATLABExprVisitor implements ExprVisitor<MATLABExpr> {
 							if (localVarTypeMap.containsKey(varName)) {
 								MATLABType type = localVarTypeMap.get(varName);
 								persistentVarInits
-										.add(new MATLABPreLocalVarInit(preVarName, new MATLABTypeInitExpr(type)));
+								.add(new MATLABPreLocalVarInit(preVarName, new MATLABTypeInitExpr(type)));
 								persistentVarMap.put(preVarName, new MATLABIdExpr(varName));
 							} else {
 								throw new IllegalArgumentException();

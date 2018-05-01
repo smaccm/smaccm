@@ -29,6 +29,7 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
+import jkind.lustre.builders.ProgramBuilder;
 import jkind.lustre.visitors.ExprMapVisitor;
 import jkind.lustre.visitors.TypeReconstructor;
 
@@ -67,7 +68,8 @@ public class AgreeMakeClockedLustreNodes extends ExprMapVisitor {
 	private AgreeMakeClockedLustreNodes(AgreeMakeClockedLustreNodes visitor, Node node) {
 		origProgram = visitor.origProgram;
 		List<TypeDef> types = AgreeUtils.getLustreTypes(origProgram);
-		Program lustreProgram = new Program(types, null, origProgram.globalLustreNodes, origProgram.topNode.id);
+		Program lustreProgram = new ProgramBuilder().addTypes(types).addNodes(origProgram.globalLustreNodes)
+				.setMain(origProgram.topNode.id).build();
 		typeReconstructor = new TypeReconstructor(lustreProgram);
 		typeReconstructor.setNodeContext(node);
 		clockedNodeMap.putAll(visitor.clockedNodeMap);

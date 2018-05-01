@@ -93,44 +93,51 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 	public ResoluteResult caseBinaryExpr(BinaryExpr object) {
 		String op = object.getOp();
 
-		if (op.equals("and") || op.equals("or") || op.equals("andthen") || op.equals("=>")) {
+		if (op.equals("and") || op.equals("or") || op.equals("andthen") || op.equals("orelse") || op.equals("=>")) {
 			ResoluteResult leftResult = doSwitch(object.getLeft());
 			switch (op) {
 			case "and": {
-				if(!leftResult.isValid()){
-					return leftResult;
-				}
 				ResoluteResult rightResult = doSwitch(object.getRight());
-
 				ResoluteResult result = new ResoluteResult(leftResult, rightResult);
-
 				result.setValid(leftResult.isValid() && rightResult.isValid());
 				return result;
 			}
-			case "or":
-				if (leftResult.isValid()) {
-					return leftResult;
-				} else {
-					ResoluteResult rightResult = doSwitch(object.getRight());
-					if(rightResult.isValid()){
-						return rightResult;
-					}
-					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
-					result.setValid(false);
-					return result;
-				}
+
+			case "or": {
+				ResoluteResult rightResult = doSwitch(object.getRight());
+				ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+				result.setValid(leftResult.isValid() || rightResult.isValid());
+				return result;
+			}
+
 			case "andthen":
 				if (!leftResult.isValid()) {
-					return new ResoluteResult(false);
+					return new ResoluteResult(leftResult);
 				} else {
-					return doSwitch(object.getRight());
+					ResoluteResult rightResult = doSwitch(object.getRight());
+					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+					result.setValid(rightResult.isValid());
+					return result;
+				}
+
+			case "orelse":
+				if (leftResult.isValid()) {
+					return new ResoluteResult(leftResult);
+				} else {
+					ResoluteResult rightResult = doSwitch(object.getRight());
+					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+					result.setValid(rightResult.isValid());
+					return result;
 				}
 
 			case "=>":
 				if (!leftResult.isValid()) {
-					return new ResoluteResult(true);
+					return new ResoluteResult(true, leftResult);
 				} else {
-					return doSwitch(object.getRight());
+					ResoluteResult rightResult = doSwitch(object.getRight());
+					ResoluteResult result = new ResoluteResult(leftResult, rightResult);
+					result.setValid(rightResult.isValid());
+					return result;
 				}
 
 			default:
@@ -169,14 +176,24 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		} else {
 			Arg arg = args.get(0);
 			List<Arg> rest = args.subList(1, args.size());
+			List<ResoluteResult> children = new ArrayList<>();
+			boolean claimCall = false;
+			if (body instanceof FnCallExpr) {
+				FunctionDefinition fn = ((FnCallExpr) body).getFn();
+				DefinitionBody bod = fn.getBody();
+				if (bod instanceof ClaimBody) {
+					claimCall = true;
+				}
+			}
 			for (ResoluteValue value : getArgSet(arg)) {
 				varStack.peek().put(arg, value);
 				ResoluteResult subResult = exists(rest, body);
-				if (subResult.isValid()) {
+				children.add(subResult);
+				if (subResult.isValid() && !claimCall && !containsClaim(subResult)) {
 					return subResult;
 				}
 			}
-			return new ResoluteResult(false);
+			return new ResoluteResult(!children.stream().allMatch(child -> !child.isValid()), children);
 		}
 	}
 
@@ -191,20 +208,16 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 			if (body instanceof FnCallExpr) {
 				FunctionDefinition fn = ((FnCallExpr) body).getFn();
 				DefinitionBody bod = fn.getBody();
-				if (bod instanceof ClaimBody)
+				if (bod instanceof ClaimBody) {
 					claimCall = true;
+				}
 			}
 			for (ResoluteValue value : getArgSet(arg)) {
 				varStack.peek().put(arg, value);
 				ResoluteResult subResult = forall(rest, body);
 				children.add(subResult);
-				// We used to continue producing false claims rather than short circuit.
-				// We no longer do this.
-//				if (!subResult.isValid() && !claimCall && !containsClaim(subResult)) {
-//					break;
-//				}
-				if(!subResult.isValid()){
-					break;
+				if (!subResult.isValid() && !claimCall && !containsClaim(subResult)) {
+					return subResult;
 				}
 			}
 			return new ResoluteResult(children);
@@ -212,11 +225,13 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 	}
 
 	private boolean containsClaim(ResoluteResult result) {
-		if (result instanceof ClaimResult)
+		if (result instanceof ClaimResult) {
 			return true;
+		}
 		for (ResoluteResult cres : result.getChildren()) {
-			if (containsClaim(cres))
+			if (containsClaim(cres)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -298,6 +313,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
 				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
 				// text.append("'");
+				@SuppressWarnings("unlikely-arg-type")
 				ResoluteValue val = varStack.peek().get(claimArg);
 				if (val == null) {
 					if (claimArg instanceof ConstantDefinition) {
@@ -339,6 +355,7 @@ public class ResoluteProver extends ResoluteSwitch<ResoluteResult> {
 		for (ClaimText claim : body.getClaim()) {
 			if (claim instanceof ClaimArg) {
 				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
+				@SuppressWarnings("unlikely-arg-type")
 				ResoluteValue argVal = varStack.peek().get(claimArg);
 				if (argVal != null && argVal.isNamedElement()) {
 					EObject modelElement = getModelElement(argVal.getNamedElement());

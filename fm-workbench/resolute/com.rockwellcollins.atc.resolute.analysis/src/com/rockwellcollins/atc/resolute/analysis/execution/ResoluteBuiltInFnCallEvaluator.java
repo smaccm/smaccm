@@ -1,12 +1,14 @@
 package com.rockwellcollins.atc.resolute.analysis.execution;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BasicPropertyAssociation;
@@ -23,11 +25,9 @@ import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
-import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
-import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.RealLiteral;
@@ -56,6 +56,7 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
+import com.rockwellcollins.atc.resolute.analysis.values.ListValue;
 import com.rockwellcollins.atc.resolute.analysis.values.NamedElementValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RangeValue;
 import com.rockwellcollins.atc.resolute.analysis.values.RealValue;
@@ -278,25 +279,25 @@ public class ResoluteBuiltInFnCallEvaluator {
 			NamedElement e = args.get(0).getNamedElement();
 			if (e instanceof FeatureInstance) {
 				FeatureInstance feat = (FeatureInstance) e;
-				return new SetValue(context.getConnectionsForFeature(feat));
+				return new ListValue(context.getConnectionsForFeature(feat));
 			} else if (e instanceof ComponentInstance) {
 				ComponentInstance ci = (ComponentInstance) e;
-				List<ResoluteValue> result = new ArrayList<>();
+				SortedSet<ResoluteValue> result = new TreeSet<>();
 				// Include connections for all features on the component
 				for (FeatureInstance feat : ci.getFeatureInstances()) {
 					result.addAll(context.getConnectionsForFeature(feat));
 				}
 				// Include connections originating or terminating with the
 				// component
-				result.addAll(createSetValue(ci.getSrcConnectionInstances()).getSet());
-				result.addAll(createSetValue(ci.getDstConnectionInstances()).getSet());
-				return new SetValue(result);
+				result.addAll(createSetValue(ci.getSrcConnectionInstances()).getSetValues());
+				result.addAll(createSetValue(ci.getDstConnectionInstances()).getSetValues());
+				return new SetValue(Collections.unmodifiableSortedSet(result));
 			} else {
 				throw new ResoluteFailException("connections not defined on object of type: " + args.get(0).getType(),
 						fnCallExpr);
 			}
 		}
-		
+
 		/*
 		 * Primary type: component
 		 */
@@ -304,17 +305,17 @@ public class ResoluteBuiltInFnCallEvaluator {
 			Property prop = (Property) args.get(0).getNamedElement();
 			if (prop.getType() instanceof EnumerationType) {
 				EnumerationType et = (EnumerationType) prop.getType();
-				List<ResoluteValue> result = new ArrayList<>();
+				SortedSet<ResoluteValue> result = new TreeSet<>();
 				for (EnumerationLiteral literal : et.getOwnedLiterals()) {
 					result.add(new StringValue(literal.getName()));
 				}
-				return new SetValue(result);
+				return new SetValue(Collections.unmodifiableSortedSet(result));
 			} else {
 				throw new IllegalArgumentException("enumerated_values called on property " + prop.getFullName()
-						+ " which does not have an enumeration type");
+				+ " which does not have an enumeration type");
 			}
 		}
-		
+
 		/*
 		 * Primary type: component
 		 */
@@ -435,7 +436,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.PROCESS);
 		}
-		
+
 		case "is_data": {
 			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
 			return new BoolValue(ci.getCategory() == ComponentCategory.DATA);
@@ -519,58 +520,108 @@ public class ResoluteBuiltInFnCallEvaluator {
 		}
 
 		/*
-		 * Primary type: set
+		 * Primary type: list or set
 		 */
 		case "member": {
-			return bool(args.get(1).getSet().contains(args.get(0)));
+			if (args.get(1) instanceof ListValue) {
+				return bool(args.get(1).getListValues().contains(args.get(0)));
+			} else {
+				return bool(args.get(1).getSetValues().contains(args.get(0)));
+			}
 		}
 
 		case "size":
 		case "length": {
-			List<ResoluteValue> set = args.get(0).getSet();
-			int setsize = set.size();
-			return new IntValue(setsize);
+			int result;
+			if (args.get(0) instanceof ListValue) {
+				result = args.get(0).getListValues().size();
+			} else {
+				result = args.get(0).getSetValues().size();
+			}
+			return new IntValue(result);
 		}
 
+		/*
+		 * Primary type: list
+		 */
 		case "sum": {
-			List<ResoluteValue> set = args.get(0).getSet();
-			if (set.isEmpty()) {
+			List<ResoluteValue> list = args.get(0).getListValues();
+			if (list.isEmpty()) {
 				return new IntValue(0);
 			}
 
-			ResoluteValue first = set.iterator().next();
+			ResoluteValue first = list.iterator().next();
 			if (first.isInt()) {
 				long sum = 0;
-				for (ResoluteValue item : set) {
+				for (ResoluteValue item : list) {
 					sum += item.getInt();
 				}
 				return new IntValue(sum);
 			} else {
 				double sum = 0;
-				for (ResoluteValue item : set) {
+				for (ResoluteValue item : list) {
 					sum += item.getReal();
 				}
 				return new RealValue(sum);
 			}
 		}
 
+		case "append": {
+			List<ResoluteValue> result = new ArrayList<>();
+			result.addAll(args.get(0).getListValues());
+			result.addAll(args.get(1).getListValues());
+			return new ListValue(Collections.unmodifiableList(result));
+		}
+
+		case "head": {
+			List<ResoluteValue> values = args.get(0).getListValues();
+			if (!values.isEmpty()) {
+				return values.get(0);
+			} else {
+				throw new IllegalArgumentException("Attempt to get head of empty list: " + args.get(0));
+			}
+		}
+
+		case "tail": {
+			List<ResoluteValue> values = args.get(0).getListValues();
+			if (values.size() > 0) {
+				return new ListValue(Collections.unmodifiableList(values.subList(1, values.size())));
+			} else {
+				return new ListValue(Collections.emptyList());
+			}
+		}
+
+		case "as_set": {
+			SortedSet<ResoluteValue> result = new TreeSet<>();
+			args.get(0).getListValues().stream().forEachOrdered(elem -> result.add(elem));
+			return new SetValue(Collections.unmodifiableSortedSet(result));
+		}
+
+		/*
+		 * Primary type: set
+		 */
 		case "union": {
-			List<ResoluteValue> set = new ArrayList<>();
-			set.addAll(args.get(0).getSet());
-			set.addAll(args.get(1).getSet());
-			return new SetValue(set);
+			SortedSet<ResoluteValue> set = new TreeSet<>();
+			set.addAll(args.get(0).getSetValues());
+			set.addAll(args.get(1).getSetValues());
+			return new SetValue(Collections.unmodifiableSortedSet(set));
 		}
 
 		case "intersect": {
-			List<ResoluteValue> set = new ArrayList<>();
-			for (ResoluteValue val1 : args.get(0).getSet()) {
-				for (ResoluteValue val2 : args.get(1).getSet()) {
+			SortedSet<ResoluteValue> set = new TreeSet<>();
+			for (ResoluteValue val1 : args.get(0).getSetValues()) {
+				for (ResoluteValue val2 : args.get(1).getSetValues()) {
 					if (val1.equals(val2)) {
 						set.add(val1);
 					}
 				}
 			}
-			return new SetValue(set);
+			return new SetValue(Collections.unmodifiableSortedSet(set));
+		}
+
+		case "as_list": {
+			return new ListValue(
+					Collections.unmodifiableList(args.get(0).getSetValues().stream().collect(Collectors.toList())));
 		}
 
 		/*
@@ -651,13 +702,13 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "instances": {
 			NamedElement decl = args.get(0).getNamedElement();
 			SystemInstance top = context.getThisInstance().getSystemInstance();
-			List<NamedElementValue> result = new ArrayList<>();
+			SortedSet<NamedElementValue> result = new TreeSet<>();
 			for (ComponentInstance ci : top.getAllComponentInstances()) {
 				if (isInstanceOf(ci, decl)) {
 					result.add(new NamedElementValue(ci));
 				}
 			}
-			return new SetValue(result);
+			return new SetValue(Collections.unmodifiableSortedSet(result));
 		}
 
 		/*
@@ -728,11 +779,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 	}
 
 	private static SetValue createSetValue(Iterable<? extends NamedElement> iterable) {
-		List<ResoluteValue> result = new ArrayList<ResoluteValue>();
+		SortedSet<ResoluteValue> result = new TreeSet<ResoluteValue>();
 		for (NamedElement ne : iterable) {
 			result.add(new NamedElementValue(ne));
 		}
-		return new SetValue(result);
+		return new SetValue(Collections.unmodifiableSortedSet(result));
 	}
 
 	private static boolean isInstanceOf(ComponentInstance instance, NamedElement declarative) {
@@ -784,13 +835,13 @@ public class ResoluteBuiltInFnCallEvaluator {
 		} else if (expr instanceof InstanceReferenceValue) {
 			InstanceReferenceValue value = (InstanceReferenceValue) expr;
 			return new NamedElementValue(value.getReferencedInstanceObject());
-		} else if (expr instanceof ListValue) {
-			ListValue value = (ListValue) expr;
+		} else if (expr instanceof org.osate.aadl2.ListValue) {
+			org.osate.aadl2.ListValue value = (org.osate.aadl2.ListValue) expr;
 			List<ResoluteValue> result = new ArrayList<>();
 			for (PropertyExpression element : value.getOwnedListElements()) {
 				result.add(exprToValue(element));
 			}
-			return new SetValue(result);
+			return new ListValue(result);
 		} else if (expr instanceof RecordValue) {
 			Stream<BasicPropertyAssociation> fieldsStream = ((RecordValue) expr).getOwnedFieldValues().stream();
 			Map<String, ResoluteValue> fieldsMap = fieldsStream.collect(Collectors.toMap(field -> {
@@ -853,7 +904,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 		try {
 			comp.getPropertyValue(prop); // this just checks to see if the
-											// property is associated
+			// property is associated
 			result = PropertyUtils.getSimplePropertyValue(comp, prop);
 		} catch (PropertyDoesNotApplyToHolderException propException) {
 			return null;

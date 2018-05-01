@@ -53,6 +53,7 @@ import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
+import jkind.lustre.builders.ProgramBuilder;
 
 public class LustreAstBuilder {
 
@@ -161,7 +162,8 @@ public class LustreAstBuilder {
 		List<Node> nodes = new ArrayList<>();
 		nodes.add(main);
 		nodes.addAll(agreeProgram.globalLustreNodes);
-		Program program = new Program(types, null, nodes, main.id);
+
+		Program program = new ProgramBuilder().addTypes(types).addNodes(nodes).setMain(main.id).build();
 
 		return program;
 
@@ -263,7 +265,8 @@ public class LustreAstBuilder {
 		// add realtime constraint nodes
 		nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
 		List<TypeDef> types = AgreeUtils.getLustreTypes(agreeProgram);
-		Program program = new Program(types, null, nodes, main.id);
+
+		Program program = new ProgramBuilder().addTypes(types).addNodes(nodes).setMain(main.id).build();
 
 		return program;
 
@@ -285,7 +288,7 @@ public class LustreAstBuilder {
 		nodes.add(getHistNode());
 		nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
 
-		Program topConsistProg = new Program(types, null, nodes, topConsist.id);
+		Program topConsistProg = new ProgramBuilder().addTypes(types).addNodes(nodes).setMain(topConsist.id).build();
 
 		programs.add(Tuples.create("This component consistent", topConsistProg));
 
@@ -300,7 +303,8 @@ public class LustreAstBuilder {
 			nodes.add(getHistNode());
 			nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
 
-			Program subConsistProg = new Program(types, null, nodes, subConsistNode.id);
+			Program subConsistProg = new ProgramBuilder().addTypes(types).addNodes(nodes).setMain(subConsistNode.id)
+					.build();
 
 			programs.add(Tuples.create(subNode.id + " consistent", subConsistProg));
 		}
@@ -318,7 +322,8 @@ public class LustreAstBuilder {
 		nodes.add(getHistNode());
 		nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
 
-		Program topCompositConsistProg = new Program(types, null, nodes, topCompositionConsist.id);
+		Program topCompositConsistProg = new ProgramBuilder().addTypes(types).addNodes(nodes)
+				.setMain(topCompositionConsist.id).build();
 
 		programs.add(Tuples.create("Component composition consistent", topCompositConsistProg));
 
@@ -494,12 +499,14 @@ public class LustreAstBuilder {
 
 	}
 
-	public static String getRelativeLocation(String location) {
-		int dotIndex = location.indexOf(".");
-		if (dotIndex < 0) {
+	public static String getRelativeLocation(String rootLocation, String location) {
+		if (!location.contains(".") || location.equalsIgnoreCase(rootLocation)) {
 			return "";
 		}
-		return location.substring(dotIndex + 1);
+		if (location.toUpperCase().startsWith(rootLocation.toUpperCase())) {
+			return location.substring(rootLocation.length() + 1);
+		}
+		return "";
 	}
 
 	protected static Equation getHist(IdExpr histId, Expr expr) {

@@ -25,11 +25,12 @@ public class CertWareExport {
 	}
 
 	public static void export(ClaimResult cr) throws IOException {
-		CertWareExport export = new CertWareExport();
+		// CertWareExport export = new CertWareExport();
 		// export.export(null, cr);
 		// export.save(getURI(cr));
 	}
 
+	@SuppressWarnings("unused")
 	private static URI getURI(ClaimResult cr) {
 		IFile file = ResourceUtil.getFile(cr.getLocation().eResource());
 		IPath path = file.getFullPath();
@@ -41,7 +42,7 @@ public class CertWareExport {
 	// ArgumentationFactory.eINSTANCE;
 
 	// private AssuranceCase assuranceCase = sf.createAssuranceCase();
-	private int id = 0;
+	// private int id = 0;
 	//
 	// public void export(Argumentation parent, ResoluteResult result) {
 	// if (result instanceof ClaimResult) {

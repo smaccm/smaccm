@@ -3,17 +3,20 @@ package com.rockwellcollins.atc.agree.analysis.handlers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.TextSelection;
@@ -30,6 +33,8 @@ import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
+import org.osate.ge.BusinessObjectSelection;
 
 public abstract class AadlHandler extends AbstractHandler {
 	protected static final String TERMINATE_ID = "com.rockwellcollins.atc.agree.analysis.commands.terminate";
@@ -56,18 +61,16 @@ public abstract class AadlHandler extends AbstractHandler {
 	}
 
 	public Object executeURI(final URI uri) {
-		final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
-		if (xtextEditor == null) {
-			return null;
-		}
-
 		if (!saveChanges(window.getActivePage().getDirtyEditors())) {
 			return null;
 		}
 
-		WorkspaceJob job = getWorkspaceJob(xtextEditor, uri);
+		final WorkspaceJob job;
+		final XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
+		job = getWorkspaceJob(xtextEditor, uri);
 		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
 		job.schedule();
+
 		return null;
 	}
 
@@ -75,14 +78,30 @@ public abstract class AadlHandler extends AbstractHandler {
 		return new WorkspaceJob(getJobName()) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) {
-				return xtextEditor.getDocument().readOnly(getUnitOfWork(uri, monitor));
+				if (xtextEditor == null) {
+					return getWorker(uri, monitor).apply(OsateResourceUtil.getResourceSet());
+				} else {
+					return xtextEditor.getDocument().readOnly(getUnitOfWork(uri, monitor));
+				}
 			}
 		};
 	}
 
 	protected IUnitOfWork<IStatus, XtextResource> getUnitOfWork(URI uri, IProgressMonitor monitor) {
 		return resource -> {
-			EObject eobj = resource.getResourceSet().getEObject(uri, true);
+			return getWorker(uri, monitor).apply(resource.getResourceSet());
+		};
+	}
+
+	/**
+	 * Returns a function which performs the actual work when provided with a resource set. Shared between Xtext editor and non xtext editor code paths.
+	 * @param uri
+	 * @param monitor
+	 * @return
+	 */
+	protected Function<ResourceSet, IStatus> getWorker(final URI uri, final IProgressMonitor monitor) {
+		return resourceSet -> {
+			final EObject eobj = resourceSet.getEObject(uri, true);
 			if (eobj instanceof Element) {
 				return runJob((Element) eobj, monitor);
 			} else {
@@ -110,9 +129,17 @@ public abstract class AadlHandler extends AbstractHandler {
 	private URI getSelectionURI(ISelection currentSelection) {
 		if (currentSelection instanceof IStructuredSelection) {
 			IStructuredSelection iss = (IStructuredSelection) currentSelection;
-			if (iss.size() == 1) {
+			if (iss.size() == 1 && iss.getFirstElement() instanceof EObjectNode) {
 				EObjectNode node = (EObjectNode) iss.getFirstElement();
 				return node.getEObjectURI();
+			} else {
+				final BusinessObjectSelection bos = Adapters.adapt(currentSelection, BusinessObjectSelection.class);
+				if (bos != null) {
+					if (bos.boStream(EObject.class).count() == 1) {
+						return bos.boStream(EObject.class).findFirst()
+								.map(e -> EcoreUtil.getURI(e)).orElse(null);
+					}
+				}
 			}
 		} else if (currentSelection instanceof TextSelection) {
 			// Selection may be stale, get latest from editor

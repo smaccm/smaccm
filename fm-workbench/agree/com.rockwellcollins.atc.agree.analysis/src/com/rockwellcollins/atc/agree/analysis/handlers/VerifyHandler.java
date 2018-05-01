@@ -310,7 +310,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
 		List<String> properties = new ArrayList<>();
 
-		RenamingVisitor.addRenamings(lustreProgram, renaming, layout);
+		RenamingVisitor.addRenamings(lustreProgram, renaming, compInst, layout);
 		addProperties(renaming, properties, mainNode, agreeProgram);
 
 		for (AgreeAutomater aa : automaters) {

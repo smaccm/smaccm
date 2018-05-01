@@ -893,6 +893,34 @@ public interface ResolutePackage extends EPackage
   int PROVE_STATEMENT_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 1;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ListTypeImpl <em>List Type</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ListTypeImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getListType()
+   * @generated
+   */
+  int LIST_TYPE = 15;
+
+  /**
+   * The feature id for the '<em><b>Type</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIST_TYPE__TYPE = TYPE_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>List Type</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIST_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.SetTypeImpl <em>Set Type</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -900,7 +928,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getSetType()
    * @generated
    */
-  int SET_TYPE = 15;
+  int SET_TYPE = 16;
 
   /**
    * The feature id for the '<em><b>Type</b></em>' containment reference.
@@ -928,7 +956,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getQuantArg()
    * @generated
    */
-  int QUANT_ARG = 16;
+  int QUANT_ARG = 17;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1010,7 +1038,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFunctionBody()
    * @generated
    */
-  int FUNCTION_BODY = 17;
+  int FUNCTION_BODY = 18;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1065,7 +1093,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getClaimBody()
    * @generated
    */
-  int CLAIM_BODY = 18;
+  int CLAIM_BODY = 19;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1120,7 +1148,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getClaimString()
    * @generated
    */
-  int CLAIM_STRING = 19;
+  int CLAIM_STRING = 20;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1166,7 +1194,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getClaimArg()
    * @generated
    */
-  int CLAIM_ARG = 20;
+  int CLAIM_ARG = 21;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1221,7 +1249,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getBinaryExpr()
    * @generated
    */
-  int BINARY_EXPR = 21;
+  int BINARY_EXPR = 22;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1285,7 +1313,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getInstanceOfExpr()
    * @generated
    */
-  int INSTANCE_OF_EXPR = 22;
+  int INSTANCE_OF_EXPR = 23;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1340,7 +1368,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getUnaryExpr()
    * @generated
    */
-  int UNARY_EXPR = 23;
+  int UNARY_EXPR = 24;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1395,7 +1423,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getCastExpr()
    * @generated
    */
-  int CAST_EXPR = 24;
+  int CAST_EXPR = 25;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1450,7 +1478,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getIdExpr()
    * @generated
    */
-  int ID_EXPR = 25;
+  int ID_EXPR = 26;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1496,7 +1524,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 26;
+  int THIS_EXPR = 27;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1542,7 +1570,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFailExpr()
    * @generated
    */
-  int FAIL_EXPR = 27;
+  int FAIL_EXPR = 28;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1597,7 +1625,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getIntExpr()
    * @generated
    */
-  int INT_EXPR = 28;
+  int INT_EXPR = 29;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1643,7 +1671,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getRealExpr()
    * @generated
    */
-  int REAL_EXPR = 29;
+  int REAL_EXPR = 30;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1689,7 +1717,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getBoolExpr()
    * @generated
    */
-  int BOOL_EXPR = 30;
+  int BOOL_EXPR = 31;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1735,7 +1763,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getStringExpr()
    * @generated
    */
-  int STRING_EXPR = 31;
+  int STRING_EXPR = 32;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1781,7 +1809,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getIfThenElseExpr()
    * @generated
    */
-  int IF_THEN_ELSE_EXPR = 32;
+  int IF_THEN_ELSE_EXPR = 33;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1845,7 +1873,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getQuantifiedExpr()
    * @generated
    */
-  int QUANTIFIED_EXPR = 33;
+  int QUANTIFIED_EXPR = 34;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1909,7 +1937,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getBuiltInFnCallExpr()
    * @generated
    */
-  int BUILT_IN_FN_CALL_EXPR = 34;
+  int BUILT_IN_FN_CALL_EXPR = 35;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1964,7 +1992,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 35;
+  int FN_CALL_EXPR = 36;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2012,14 +2040,14 @@ public interface ResolutePackage extends EPackage
   int FN_CALL_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl <em>Filter Map Expr</em>}' class.
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ListFilterMapExprImpl <em>List Filter Map Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl
-   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFilterMapExpr()
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ListFilterMapExprImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getListFilterMapExpr()
    * @generated
    */
-  int FILTER_MAP_EXPR = 36;
+  int LIST_FILTER_MAP_EXPR = 37;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2028,7 +2056,7 @@ public interface ResolutePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FILTER_MAP_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+  int LIST_FILTER_MAP_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -2037,7 +2065,7 @@ public interface ResolutePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FILTER_MAP_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+  int LIST_FILTER_MAP_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
 
   /**
    * The feature id for the '<em><b>Map</b></em>' containment reference.
@@ -2046,7 +2074,7 @@ public interface ResolutePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FILTER_MAP_EXPR__MAP = EXPR_FEATURE_COUNT + 0;
+  int LIST_FILTER_MAP_EXPR__MAP = EXPR_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Args</b></em>' containment reference list.
@@ -2055,7 +2083,7 @@ public interface ResolutePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FILTER_MAP_EXPR__ARGS = EXPR_FEATURE_COUNT + 1;
+  int LIST_FILTER_MAP_EXPR__ARGS = EXPR_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Filter</b></em>' containment reference.
@@ -2064,16 +2092,126 @@ public interface ResolutePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FILTER_MAP_EXPR__FILTER = EXPR_FEATURE_COUNT + 2;
+  int LIST_FILTER_MAP_EXPR__FILTER = EXPR_FEATURE_COUNT + 2;
 
   /**
-   * The number of structural features of the '<em>Filter Map Expr</em>' class.
+   * The number of structural features of the '<em>List Filter Map Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FILTER_MAP_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
+  int LIST_FILTER_MAP_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ListExprImpl <em>List Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ListExprImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getListExpr()
+   * @generated
+   */
+  int LIST_EXPR = 38;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIST_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIST_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Exprs</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIST_EXPR__EXPRS = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>List Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIST_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.SetFilterMapExprImpl <em>Set Filter Map Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.SetFilterMapExprImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getSetFilterMapExpr()
+   * @generated
+   */
+  int SET_FILTER_MAP_EXPR = 39;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SET_FILTER_MAP_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SET_FILTER_MAP_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Map</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SET_FILTER_MAP_EXPR__MAP = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SET_FILTER_MAP_EXPR__ARGS = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Filter</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SET_FILTER_MAP_EXPR__FILTER = EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The number of structural features of the '<em>Set Filter Map Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SET_FILTER_MAP_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.SetExprImpl <em>Set Expr</em>}' class.
@@ -2083,7 +2221,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getSetExpr()
    * @generated
    */
-  int SET_EXPR = 37;
+  int SET_EXPR = 40;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2129,7 +2267,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getLetExpr()
    * @generated
    */
-  int LET_EXPR = 38;
+  int LET_EXPR = 41;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2491,6 +2629,27 @@ public interface ResolutePackage extends EPackage
    * @generated
    */
   EReference getProveStatement_Expr();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ListType <em>List Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>List Type</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.ListType
+   * @generated
+   */
+  EClass getListType();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.ListType#getType <em>Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Type</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.ListType#getType()
+   * @see #getListType()
+   * @generated
+   */
+  EReference getListType_Type();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.SetType <em>Set Type</em>}'.
@@ -3077,47 +3236,111 @@ public interface ResolutePackage extends EPackage
   EReference getFnCallExpr_Args();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr <em>Filter Map Expr</em>}'.
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr <em>List Filter Map Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Filter Map Expr</em>'.
-   * @see com.rockwellcollins.atc.resolute.resolute.FilterMapExpr
+   * @return the meta object for class '<em>List Filter Map Expr</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr
    * @generated
    */
-  EClass getFilterMapExpr();
+  EClass getListFilterMapExpr();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getMap <em>Map</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getMap <em>Map</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Map</em>'.
-   * @see com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getMap()
-   * @see #getFilterMapExpr()
+   * @see com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getMap()
+   * @see #getListFilterMapExpr()
    * @generated
    */
-  EReference getFilterMapExpr_Map();
+  EReference getListFilterMapExpr_Map();
 
   /**
-   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getArgs <em>Args</em>}'.
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getArgs <em>Args</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference list '<em>Args</em>'.
-   * @see com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getArgs()
-   * @see #getFilterMapExpr()
+   * @see com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getArgs()
+   * @see #getListFilterMapExpr()
    * @generated
    */
-  EReference getFilterMapExpr_Args();
+  EReference getListFilterMapExpr_Args();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getFilter <em>Filter</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getFilter <em>Filter</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Filter</em>'.
-   * @see com.rockwellcollins.atc.resolute.resolute.FilterMapExpr#getFilter()
-   * @see #getFilterMapExpr()
+   * @see com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr#getFilter()
+   * @see #getListFilterMapExpr()
    * @generated
    */
-  EReference getFilterMapExpr_Filter();
+  EReference getListFilterMapExpr_Filter();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.ListExpr <em>List Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>List Expr</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.ListExpr
+   * @generated
+   */
+  EClass getListExpr();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.resolute.resolute.ListExpr#getExprs <em>Exprs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Exprs</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.ListExpr#getExprs()
+   * @see #getListExpr()
+   * @generated
+   */
+  EReference getListExpr_Exprs();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr <em>Set Filter Map Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Set Filter Map Expr</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr
+   * @generated
+   */
+  EClass getSetFilterMapExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr#getMap <em>Map</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Map</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr#getMap()
+   * @see #getSetFilterMapExpr()
+   * @generated
+   */
+  EReference getSetFilterMapExpr_Map();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr#getArgs()
+   * @see #getSetFilterMapExpr()
+   * @generated
+   */
+  EReference getSetFilterMapExpr_Args();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr#getFilter <em>Filter</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Filter</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.SetFilterMapExpr#getFilter()
+   * @see #getSetFilterMapExpr()
+   * @generated
+   */
+  EReference getSetFilterMapExpr_Filter();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.SetExpr <em>Set Expr</em>}'.
@@ -3464,6 +3687,24 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EReference PROVE_STATEMENT__EXPR = eINSTANCE.getProveStatement_Expr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ListTypeImpl <em>List Type</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ListTypeImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getListType()
+     * @generated
+     */
+    EClass LIST_TYPE = eINSTANCE.getListType();
+
+    /**
+     * The meta object literal for the '<em><b>Type</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LIST_TYPE__TYPE = eINSTANCE.getListType_Type();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.SetTypeImpl <em>Set Type</em>}' class.
@@ -3948,14 +4189,14 @@ public interface ResolutePackage extends EPackage
     EReference FN_CALL_EXPR__ARGS = eINSTANCE.getFnCallExpr_Args();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl <em>Filter Map Expr</em>}' class.
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ListFilterMapExprImpl <em>List Filter Map Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.resolute.resolute.impl.FilterMapExprImpl
-     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFilterMapExpr()
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ListFilterMapExprImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getListFilterMapExpr()
      * @generated
      */
-    EClass FILTER_MAP_EXPR = eINSTANCE.getFilterMapExpr();
+    EClass LIST_FILTER_MAP_EXPR = eINSTANCE.getListFilterMapExpr();
 
     /**
      * The meta object literal for the '<em><b>Map</b></em>' containment reference feature.
@@ -3963,7 +4204,7 @@ public interface ResolutePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference FILTER_MAP_EXPR__MAP = eINSTANCE.getFilterMapExpr_Map();
+    EReference LIST_FILTER_MAP_EXPR__MAP = eINSTANCE.getListFilterMapExpr_Map();
 
     /**
      * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
@@ -3971,7 +4212,7 @@ public interface ResolutePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference FILTER_MAP_EXPR__ARGS = eINSTANCE.getFilterMapExpr_Args();
+    EReference LIST_FILTER_MAP_EXPR__ARGS = eINSTANCE.getListFilterMapExpr_Args();
 
     /**
      * The meta object literal for the '<em><b>Filter</b></em>' containment reference feature.
@@ -3979,7 +4220,59 @@ public interface ResolutePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference FILTER_MAP_EXPR__FILTER = eINSTANCE.getFilterMapExpr_Filter();
+    EReference LIST_FILTER_MAP_EXPR__FILTER = eINSTANCE.getListFilterMapExpr_Filter();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.ListExprImpl <em>List Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ListExprImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getListExpr()
+     * @generated
+     */
+    EClass LIST_EXPR = eINSTANCE.getListExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Exprs</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LIST_EXPR__EXPRS = eINSTANCE.getListExpr_Exprs();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.SetFilterMapExprImpl <em>Set Filter Map Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.SetFilterMapExprImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getSetFilterMapExpr()
+     * @generated
+     */
+    EClass SET_FILTER_MAP_EXPR = eINSTANCE.getSetFilterMapExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Map</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SET_FILTER_MAP_EXPR__MAP = eINSTANCE.getSetFilterMapExpr_Map();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SET_FILTER_MAP_EXPR__ARGS = eINSTANCE.getSetFilterMapExpr_Args();
+
+    /**
+     * The meta object literal for the '<em><b>Filter</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SET_FILTER_MAP_EXPR__FILTER = eINSTANCE.getSetFilterMapExpr_Filter();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.SetExprImpl <em>Set Expr</em>}' class.

@@ -16,7 +16,9 @@ Require-Bundle: org.eclipse.ui,
  org.osate.xtext.aadl2.properties;bundle-version="1.0.0",
  com.rockwellcollins.atc.agree;bundle-version="1.0.0",
  com.rockwellcollins.atc.agree.ui;bundle-version="1.0.0",
- com.rockwellcollins.atc.z3;resolution:=optional
+ com.rockwellcollins.atc.z3;resolution:=optional,
+ org.osate.ge,
+ org.eclipse.emf.ecore
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

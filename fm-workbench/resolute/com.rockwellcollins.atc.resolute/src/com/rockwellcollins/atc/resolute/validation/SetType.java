@@ -52,7 +52,7 @@ public class SetType extends ResoluteType {
 
 	@Override
 	public int hashCode() {
-		return elementType.hashCode();
+		return (37 * SetType.class.hashCode()) + elementType.hashCode();
 	}
 
 	@Override
@@ -65,6 +65,7 @@ public class SetType extends ResoluteType {
 		return false;
 	}
 
+	@Override
 	public boolean similar(Type otherType) {
 		if (otherType instanceof com.rockwellcollins.atc.resolute.resolute.SetType) {
 			return true;

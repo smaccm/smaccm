@@ -46,6 +46,7 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getDefinitionBodyAccess().getAlternatives(), "rule__DefinitionBody__Alternatives");
 					put(grammarAccess.getClaimTextAccess().getAlternatives(), "rule__ClaimText__Alternatives");
 					put(grammarAccess.getClaimTextVarAccess().getAlternatives(), "rule__ClaimTextVar__Alternatives");
+					put(grammarAccess.getOrExprAccess().getAlternatives_1_0_0_1(), "rule__OrExpr__Alternatives_1_0_0_1");
 					put(grammarAccess.getAndExprAccess().getAlternatives_1_0_0_1(), "rule__AndExpr__Alternatives_1_0_0_1");
 					put(grammarAccess.getRelationalOpAccess().getAlternatives(), "rule__RelationalOp__Alternatives");
 					put(grammarAccess.getPlusExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__PlusExpr__OpAlternatives_1_0_0_1_0");
@@ -56,6 +57,7 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getAtomicExprAccess().getAlternatives_2_2(), "rule__AtomicExpr__Alternatives_2_2");
 					put(grammarAccess.getAtomicExprAccess().getQuantAlternatives_8_1_0(), "rule__AtomicExpr__QuantAlternatives_8_1_0");
 					put(grammarAccess.getAtomicExprAccess().getAlternatives_11_2(), "rule__AtomicExpr__Alternatives_11_2");
+					put(grammarAccess.getAtomicExprAccess().getAlternatives_12_2(), "rule__AtomicExpr__Alternatives_12_2");
 					put(grammarAccess.getBuiltInFnAccess().getAlternatives(), "rule__BuiltInFn__Alternatives");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getAlternatives_1(), "rule__ContainedPropertyAssociation__Alternatives_1");
 					put(grammarAccess.getPropertyAssociationAccess().getAlternatives_1(), "rule__PropertyAssociation__Alternatives_1");
@@ -68,7 +70,8 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getResoluteLibraryAccess().getGroup(), "rule__ResoluteLibrary__Group__0");
 					put(grammarAccess.getTypeAccess().getGroup_0(), "rule__Type__Group_0__0");
 					put(grammarAccess.getTypeAccess().getGroup_1(), "rule__Type__Group_1__0");
-					put(grammarAccess.getTypeAccess().getGroup_1_1(), "rule__Type__Group_1_1__0");
+					put(grammarAccess.getTypeAccess().getGroup_2(), "rule__Type__Group_2__0");
+					put(grammarAccess.getTypeAccess().getGroup_2_1(), "rule__Type__Group_2_1__0");
 					put(grammarAccess.getArgAccess().getGroup_0(), "rule__Arg__Group_0__0");
 					put(grammarAccess.getArgAccess().getGroup_0_0(), "rule__Arg__Group_0_0__0");
 					put(grammarAccess.getArgAccess().getGroup_1(), "rule__Arg__Group_1__0");
@@ -141,8 +144,15 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getAtomicExprAccess().getGroup_11_2_1(), "rule__AtomicExpr__Group_11_2_1__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_11_2_1_1(), "rule__AtomicExpr__Group_11_2_1_1__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_12(), "rule__AtomicExpr__Group_12__0");
+					put(grammarAccess.getAtomicExprAccess().getGroup_12_2_0(), "rule__AtomicExpr__Group_12_2_0__0");
+					put(grammarAccess.getAtomicExprAccess().getGroup_12_2_0_2(), "rule__AtomicExpr__Group_12_2_0_2__0");
+					put(grammarAccess.getAtomicExprAccess().getGroup_12_2_0_3(), "rule__AtomicExpr__Group_12_2_0_3__0");
+					put(grammarAccess.getAtomicExprAccess().getGroup_12_2_1(), "rule__AtomicExpr__Group_12_2_1__0");
+					put(grammarAccess.getAtomicExprAccess().getGroup_12_2_1_1(), "rule__AtomicExpr__Group_12_2_1_1__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_13(), "rule__AtomicExpr__Group_13__0");
 					put(grammarAccess.getAtomicExprAccess().getGroup_14(), "rule__AtomicExpr__Group_14__0");
+					put(grammarAccess.getAtomicExprAccess().getGroup_15(), "rule__AtomicExpr__Group_15__0");
+					put(grammarAccess.getAtomicExprAccess().getGroup_16(), "rule__AtomicExpr__Group_16__0");
 					put(grammarAccess.getLetBindingAccess().getGroup(), "rule__LetBinding__Group__0");
 					put(grammarAccess.getRealTermAccess().getGroup(), "rule__RealTerm__Group__0");
 					put(grammarAccess.getIntegerTermAccess().getGroup(), "rule__IntegerTerm__Group__0");
@@ -198,7 +208,8 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getQCREFAccess().getGroup_2(), "rule__QCREF__Group_2__0");
 					put(grammarAccess.getResoluteLibraryAccess().getDefinitionsAssignment_1(), "rule__ResoluteLibrary__DefinitionsAssignment_1");
 					put(grammarAccess.getTypeAccess().getTypeAssignment_0_2(), "rule__Type__TypeAssignment_0_2");
-					put(grammarAccess.getTypeAccess().getParamTypeAssignment_1_1_1(), "rule__Type__ParamTypeAssignment_1_1_1");
+					put(grammarAccess.getTypeAccess().getTypeAssignment_1_2(), "rule__Type__TypeAssignment_1_2");
+					put(grammarAccess.getTypeAccess().getParamTypeAssignment_2_1_1(), "rule__Type__ParamTypeAssignment_2_1_1");
 					put(grammarAccess.getBaseTypeAccess().getTypeAssignment(), "rule__BaseType__TypeAssignment");
 					put(grammarAccess.getArgAccess().getNameAssignment_0_0_0(), "rule__Arg__NameAssignment_0_0_0");
 					put(grammarAccess.getArgAccess().getTypeAssignment_0_0_2(), "rule__Arg__TypeAssignment_0_0_2");
@@ -220,7 +231,8 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getClaimTextAccess().getUnitAssignment_1_2_1(), "rule__ClaimText__UnitAssignment_1_2_1");
 					put(grammarAccess.getImpliesExprAccess().getOpAssignment_1_0_0_1(), "rule__ImpliesExpr__OpAssignment_1_0_0_1");
 					put(grammarAccess.getImpliesExprAccess().getRightAssignment_1_1(), "rule__ImpliesExpr__RightAssignment_1_1");
-					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1(), "rule__OrExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1_0(), "rule__OrExpr__OpAssignment_1_0_0_1_0");
+					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1_1(), "rule__OrExpr__OpAssignment_1_0_0_1_1");
 					put(grammarAccess.getOrExprAccess().getRightAssignment_1_1(), "rule__OrExpr__RightAssignment_1_1");
 					put(grammarAccess.getAndExprAccess().getOpAssignment_1_0_0_1_0(), "rule__AndExpr__OpAssignment_1_0_0_1_0");
 					put(grammarAccess.getAndExprAccess().getOpAssignment_1_0_0_1_1(), "rule__AndExpr__OpAssignment_1_0_0_1_1");
@@ -261,8 +273,11 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getAtomicExprAccess().getArgsAssignment_11_2_0_2_1(), "rule__AtomicExpr__ArgsAssignment_11_2_0_2_1");
 					put(grammarAccess.getAtomicExprAccess().getFilterAssignment_11_2_0_3_1(), "rule__AtomicExpr__FilterAssignment_11_2_0_3_1");
 					put(grammarAccess.getAtomicExprAccess().getExprsAssignment_11_2_1_1_1(), "rule__AtomicExpr__ExprsAssignment_11_2_1_1_1");
-					put(grammarAccess.getAtomicExprAccess().getBindingAssignment_13_2(), "rule__AtomicExpr__BindingAssignment_13_2");
-					put(grammarAccess.getAtomicExprAccess().getExprAssignment_13_4(), "rule__AtomicExpr__ExprAssignment_13_4");
+					put(grammarAccess.getAtomicExprAccess().getArgsAssignment_12_2_0_2_1(), "rule__AtomicExpr__ArgsAssignment_12_2_0_2_1");
+					put(grammarAccess.getAtomicExprAccess().getFilterAssignment_12_2_0_3_1(), "rule__AtomicExpr__FilterAssignment_12_2_0_3_1");
+					put(grammarAccess.getAtomicExprAccess().getExprsAssignment_12_2_1_1_1(), "rule__AtomicExpr__ExprsAssignment_12_2_1_1_1");
+					put(grammarAccess.getAtomicExprAccess().getBindingAssignment_15_2(), "rule__AtomicExpr__BindingAssignment_15_2");
+					put(grammarAccess.getAtomicExprAccess().getExprAssignment_15_4(), "rule__AtomicExpr__ExprAssignment_15_4");
 					put(grammarAccess.getLetBindingAccess().getNameAssignment_0(), "rule__LetBinding__NameAssignment_0");
 					put(grammarAccess.getLetBindingAccess().getTypeAssignment_2(), "rule__LetBinding__TypeAssignment_2");
 					put(grammarAccess.getLetBindingAccess().getExprAssignment_4(), "rule__LetBinding__ExprAssignment_4");

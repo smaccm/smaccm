@@ -2,7 +2,6 @@ package com.rockwellcollins.atc.agree.analysis.views;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -59,7 +58,6 @@ import jkind.api.results.JRealizabilityResult;
 import jkind.api.results.PropertyResult;
 import jkind.api.results.Renaming;
 import jkind.api.ui.results.AnalysisResultTree;
-import jkind.interval.NumericInterval;
 import jkind.lustre.Program;
 import jkind.lustre.values.Value;
 import jkind.results.Counterexample;
@@ -139,6 +137,7 @@ public class AgreeMenuListener implements IMenuListener {
 			}
 			String nodeName = linker.getComponent(result).getName();
 			manager.add(new Action("View traceability matrix for " + nodeName) {
+				@Override
 				public void run() {
 					viewTraceabilityMatrix(jresult, reqs);
 				}
@@ -160,6 +159,7 @@ public class AgreeMenuListener implements IMenuListener {
 
 	private IAction addViewTraceabilityConsole(String text, IMenuManager manager, AnalysisResult result) {
 		return new Action(text) {
+			@Override
 			public void run() {
 				Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
 				if (tempRefMap == null) {
@@ -171,29 +171,26 @@ public class AgreeMenuListener implements IMenuListener {
 				showConsole(console);
 				console.clearConsole();
 				console.addPatternMatchListener(new AgreePatternListener(refMap));
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							MessageConsoleStream out = console.newMessageStream();
-							printHLine(out, 2);
-							out.println("Traceability for Valid Contract Guarantees");
-							printHLine(out, 2);
-							out.println("");
-							List<PropertyResult> allProperties = new ArrayList<PropertyResult>(
-									((JKindResult) result).getPropertyResults());
-							if (!allProperties.isEmpty()) {
-								for (PropertyResult prop : allProperties) {
-									if (prop.getStatus().equals(jkind.api.results.Status.VALID)) {
-										if (renaming instanceof AgreeRenaming) {
-											writeIvcResult(prop, console, (AgreeRenaming) renaming);
-										}
+				new Thread(() -> {
+					try {
+						MessageConsoleStream out = console.newMessageStream();
+						printHLine(out, 2);
+						out.println("Traceability for Valid Contract Guarantees");
+						printHLine(out, 2);
+						out.println("");
+						List<PropertyResult> allProperties = new ArrayList<PropertyResult>(
+								((JKindResult) result).getPropertyResults());
+						if (!allProperties.isEmpty()) {
+							for (PropertyResult prop : allProperties) {
+								if (prop.getStatus().equals(jkind.api.results.Status.VALID)) {
+									if (renaming instanceof AgreeRenaming) {
+										writeIvcResult(prop, console, (AgreeRenaming) renaming);
 									}
 								}
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}).start();
 			}
@@ -216,6 +213,7 @@ public class AgreeMenuListener implements IMenuListener {
 
 	private IAction addViewSupportConsole(String text, IMenuManager manager, AnalysisResult result) {
 		return new Action(text) {
+			@Override
 			public void run() {
 				Map<String, EObject> tempRefMap = linker.getReferenceMap(result.getParent());
 				if (tempRefMap == null) {
@@ -239,12 +237,9 @@ public class AgreeMenuListener implements IMenuListener {
 				}
 				patternListener = new AgreePatternListener(refMap);
 				console.addPatternMatchListener(patternListener);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						if (renaming instanceof AgreeRenaming) {
-							writeIvcResult(result, console, (AgreeRenaming) renaming);
-						}
+				new Thread(() -> {
+					if (renaming instanceof AgreeRenaming) {
+						writeIvcResult(result, console, (AgreeRenaming) renaming);
 					}
 				}).start();
 			}
@@ -491,12 +486,7 @@ public class AgreeMenuListener implements IMenuListener {
 				 * the client hogs the UI thread writing output to the console,
 				 * the console will not be able to process the output."
 				 */
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						console.newMessageStream().println(content.toString());
-					}
-				}).start();
+				new Thread(() -> console.newMessageStream().println(content.toString())).start();
 			}
 		};
 	}
@@ -514,84 +504,46 @@ public class AgreeMenuListener implements IMenuListener {
 		 * writing output to the console, the console will not be able to
 		 * process the output."
 		 */
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try (MessageConsoleStream out = console.newMessageStream()) {
-					for (String category : layout.getCategories()) {
-						if (isEmpty(category, cex, layout)) {
+		new Thread(() -> {
+			try (MessageConsoleStream out = console.newMessageStream()) {
+				for (String category : layout.getCategories()) {
+					if (isEmpty(category, cex, layout)) {
+						continue;
+					}
+
+					printHLine(out, cex.getLength());
+					if (category == "") {
+						out.println("Variables for the selected component implementation");
+
+					} else {
+						out.println("Variables for " + category);
+					}
+					printHLine(out, cex.getLength());
+
+					out.print(String.format("%-60s", "Variable Name"));
+					for (int k1 = 0; k1 < cex.getLength(); k1++) {
+						out.print(String.format("%-15s", k1));
+					}
+					out.println();
+					printHLine(out, cex.getLength());
+
+					for (Signal<Value> signal : cex.getCategorySignals(layout, category)) {
+						// dont' print out values for properties
+						if (signal.getName().contains(":")) {
 							continue;
 						}
-
-						printHLine(out, cex.getLength());
-						if (category == "") {
-							out.println("Variables for the selected component implementation");
-
-						} else {
-							out.println("Variables for " + category);
-						}
-						printHLine(out, cex.getLength());
-
-						out.print(String.format("%-60s", "Variable Name"));
-						for (int k = 0; k < cex.getLength(); k++) {
-							out.print(String.format("%-15s", k));
-						}
-						out.println();
-						printHLine(out, cex.getLength());
-
-						for (Signal<Value> signal : cex.getCategorySignals(layout, category)) {
-							// dont' print out values for properties
-							if (signal.getName().contains(":")) {
-								continue;
-							}
-							out.print(String.format("%-60s", "{" + signal.getName() + "}"));
-							for (int k = 0; k < cex.getLength(); k++) {
-								Value val = signal.getValue(k);
-								if (jkind.util.Util.isArbitrary(val)) {
-									out.print(String.format("%-15s", "-"));
-								} else if (val instanceof NumericInterval) {
-									out.print(String.format("%-15s", formatInterval((NumericInterval) val)));
-								} else {
-									out.print(String.format("%-15s", val.toString()));
-								}
-							}
-							out.println();
+						out.print(String.format("%-60s", "{" + signal.getName() + "}"));
+						for (int k2 = 0; k2 < cex.getLength(); k2++) {
+							out.print(String.format("%-15s", signal.getValue(k2).toString()));
 						}
 						out.println();
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
+					out.println();
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}).start();
-	}
-
-	private String formatInterval(NumericInterval ni) {
-		if (ni.isExact()) {
-			return formatDouble(ni.getLow().toDouble());
-		}
-
-		String low;
-		if (ni.getLow().isFinite()) {
-			low = formatDouble(ni.getLow().toDouble());
-		} else {
-			low = "-inf";
-		}
-
-		String high;
-		if (ni.getHigh().isFinite()) {
-			high = formatDouble(ni.getHigh().toDouble());
-		} else {
-			high = "inf";
-		}
-
-		return "[" + low + ", " + high + "]";
-	}
-
-	private static final DecimalFormat format = new DecimalFormat("#.##");
-
-	private String formatDouble(double x) {
-		return format.format(x);
 	}
 
 	private boolean isEmpty(String category, Counterexample cex, Layout layout) {

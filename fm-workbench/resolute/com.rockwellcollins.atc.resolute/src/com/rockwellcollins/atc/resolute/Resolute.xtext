@@ -39,7 +39,8 @@ Definition:
 ;
 
 Type:
-	{SetType} '{' type=Type '}'
+	{ListType} '[' type=Type ']'
+|	{SetType} '{' type=Type '}'
 |	BaseType ('<' paramType=Type '>')?
 ;
 
@@ -127,7 +128,7 @@ ImpliesExpr returns Expr:
 ;
 
 OrExpr returns Expr:
-	AndExpr (=>({BinaryExpr.left=current} op='or') right=AndExpr)*
+	AndExpr (=>({BinaryExpr.left=current} (op='or'|op='orelse')) right=AndExpr)*
 ;
 
 AndExpr returns Expr:
@@ -176,8 +177,11 @@ AtomicExpr returns Expr:
 |   {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=Arg ')')+ '.' expr=Expr
 |   {BuiltInFnCallExpr} fn=BuiltInFn '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |	{FnCallExpr} fn=[FunctionDefinition] '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
-|   '{' Expr ( ({FilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)?)
+|   '[' Expr ( ({ListFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)?)
+             | ({ListExpr.exprs+=current} (',' exprs+=Expr)*)) ']'
+|   '{' Expr ( ({SetFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)?)
              | ({SetExpr.exprs+=current} (',' exprs+=Expr)*)) '}'
+|   {ListExpr} '[' ']'
 |   {SetExpr} '{' '}'
 |   {LetExpr} 'let' binding=LetBinding ';' expr=Expr
 |	'(' Expr ')'
@@ -241,13 +245,22 @@ BuiltInFn:
 |	'lower_bound'
 |	'upper_bound'
 
-// Primary type: set
+// Primary type: set or list
 |	'member'
-|	'sum'
-|	'union'
 |   'length'
 | 	'size'
+
+// Primary type: list
+|	'sum'
+|	'append'
+|	'head'
+|	'tail'
+|	'as_set'
+
+// Primary type: set
+|	'union'
 |	'intersect'
+|	'as_list'
 
 // Other
 |	'instance'
@@ -268,6 +281,7 @@ BuiltInFn:
 |   'end_to_end_flows'
 ;
 
+@Override
 RealTerm returns aadl2::RealLiteral:
 	value=UnsignedReal (unit=[aadl2::UnitLiteral|ID])?
 ;
@@ -276,6 +290,7 @@ UnsignedReal returns aadl2::Real:
 	REAL_LIT
 ;
 
+@Override
 IntegerTerm returns aadl2::IntegerLiteral:
 	value=UnsignedInt (unit=[aadl2::UnitLiteral|ID])?
 ;
