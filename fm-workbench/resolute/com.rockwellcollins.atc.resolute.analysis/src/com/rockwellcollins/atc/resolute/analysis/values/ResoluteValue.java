@@ -85,8 +85,7 @@ public abstract class ResoluteValue implements Comparable<ResoluteValue> {
 		} else if (isString() && other.isString()) {
 			return String.CASE_INSENSITIVE_ORDER.compare(getString(), other.getString());
 		} else if (isNamedElement() && other.isNamedElement()) {
-			return String.CASE_INSENSITIVE_ORDER
-					.compare(getNamedElement().getName(), other.getNamedElement().getName());
+			return String.CASE_INSENSITIVE_ORDER.compare(toString(), other.toString());
 		} else if (isSet() && other.isSet()) {
 			return Integer.compare(getSetValues().hashCode(), other.getSetValues().hashCode());
 		} else if (isRange() && other.isRange()) {
