@@ -224,8 +224,8 @@ assembly {
 
         <if(model.threadCalendar.hasDispatchers)>
         <if(!model.externalTimerComponent)>
-        connection seL4RPCCall periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to time_server.the_timer);
-        connection seL4Notification echo_int(from time_server.timer_notification, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
+        connection seL4TimeServer periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to time_server.the_timer);
+        connection seL4GlobalAsynchCallback echo_int(from time_server.timer_notification, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
         <else>
         connection seL4RPCCall periodic_dispatch_timer(from <model.threadCalendar.periodicDispatcherInstanceName>.timer, to <model.camkesExternalTimerInterfacePath>);
         connection seL4Notification echo_int(from <model.camkesExternalTimerCompletePath>, to <model.threadCalendar.periodicDispatcherInstanceName>.timer_complete);
