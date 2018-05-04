@@ -176,6 +176,7 @@ import \<Timer.idl4>;
 <if(model.useVmBuild)>
 // MWW: import \<TimeServer/TimeServer.camkes> included in VM import;
 <else>
+import \<global-connectors.camkes>;
 import \<TimeServer/TimeServer.camkes>;
 <endif>
 <else>
@@ -188,12 +189,6 @@ import \<TimeServer/TimeServer.camkes>;
 <model.threadImplementations:assemblyThreadImplementationImports()>
 
 <\\>
-
-// 12/12 MWW modified for CaMKes-next
-connector seL4RPCCallDataport {
-    from Procedure template "seL4RPCCallDataport-from.template.c";
-    to Procedure template "seL4RPCCallDataport-to.template.c";
-}
 
 <if(model.containsVM)>
 <model.virtualMachineList:createVMInit()>
