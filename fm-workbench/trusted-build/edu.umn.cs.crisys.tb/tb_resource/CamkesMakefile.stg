@@ -36,7 +36,7 @@ filePrefix(name, date, path) ::= <<
 
 >>
 
-writeComponentName(name, rustLibrary) ::= <<
+writeComponentName(name) ::= <<
 <name>_CFILES :=  \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/<name>/src/*.c)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/<name>/src/plat/${PLAT}/*.c)) \
@@ -52,6 +52,9 @@ writeComponentName(name, rustLibrary) ::= <<
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/<name>/src/arch/${ARCH}/*.S)) \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/<name>/src/plat/${PLAT}/*.S))
 
+>>
+
+writeRustLibName(name, rustLibrary) ::= <<
 <if(rustLibrary)>
 <name>_RUST := <rustLibrary>
 <endif>
@@ -64,7 +67,8 @@ writeComponentName(name, rustLibrary) ::= <<
 
 writeComponent(component) ::= <<
 
-<writeComponentName(component.normalizedName, component.ComponentRustLibName)>
+<writeComponentName(component.normalizedName)>
+<writeRustLibName(component.normalizedName, component.componentRustLibName)>
 <component.portList:{ p | <p.camkesAddMakeFilePortDefinitions>}>
 
 >>
@@ -83,7 +87,7 @@ include TimeServer/TimeServer.mk
 <model.threadImplementations:writeComponent()>
 
 <if(model.threadCalendar.hasDispatchers)>
-<writeComponentName(model.threadCalendar.periodicDispatcherComponentName, "")>
+<writeComponentName(model.threadCalendar.periodicDispatcherComponentName)>
 <endif>
 
 include ${PWD}/tools/camkes/camkes.mk
