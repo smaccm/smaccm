@@ -51,7 +51,13 @@ crate-type = ["staticlib"]
 
 rustCargoTomlDependenciesSection() ::= <<
 [dependencies]
-sel4-sys = { path = "../../../../robigalia/sel4-sys" }
+# for the sel4-specific liblibc definitions
+libc = { optional = true, git = "https://github.com/GaloisInc/rs_liblibc.git" }
+lazy_static = "1.0"
+spin = "0.4.8"
+
+[replace]
+"libc:0.2.40" = { git = 'https://github.com/GaloisInc/rs_liblibc.git' }
 >>
 
 filePostfix(name, path) ::= <<
