@@ -13,6 +13,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BasicPropertyAssociation;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.BusAccess;
+import org.osate.aadl2.BusClassifier;
+import org.osate.aadl2.BusFeatureClassifier;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
@@ -880,18 +883,33 @@ public class ResoluteBuiltInFnCallEvaluator {
 		} else if (ne instanceof DataAccess) {
 			DataAccess dp = (DataAccess) ne;
 			return dp.getDataFeatureClassifier();
+		} else if (ne instanceof BusAccess) {
+			BusAccess dp = (BusAccess) ne;
+			BusFeatureClassifier val = dp.getBusFeatureClassifier();
+			if (val instanceof BusClassifier) {
+				return (BusClassifier) val;
+			}
+		} else if (ne instanceof FeatureGroup) {
+			FeatureGroup featGroup = (FeatureGroup) ne;
+			return featGroup.getAllFeatureGroupType();
 		} else if (ne instanceof FeatureInstance) {
 			FeatureInstance fi = (FeatureInstance) ne;
 			Feature feature = fi.getFeature();
 			if (feature instanceof DataPort) {
 				DataPort dp = (DataPort) feature;
 				return dp.getDataFeatureClassifier();
-			} else if (ne instanceof EventDataPort) {
+			} else if (feature instanceof EventDataPort) {
 				EventDataPort dp = (EventDataPort) ne;
 				return dp.getDataFeatureClassifier();
-			} else if (ne instanceof DataAccess) {
+			} else if (feature instanceof DataAccess) {
 				DataAccess dp = (DataAccess) ne;
 				return dp.getDataFeatureClassifier();
+			} else if (feature instanceof BusAccess) {
+				BusAccess dp = (BusAccess) ne;
+				BusFeatureClassifier val = dp.getBusFeatureClassifier();
+				if (val instanceof BusClassifier) {
+					return (BusClassifier) val;
+				}
 			}else if(feature instanceof FeatureGroup){
 				FeatureGroup featGroup = (FeatureGroup)feature;
 				return featGroup.getAllFeatureGroupType();
