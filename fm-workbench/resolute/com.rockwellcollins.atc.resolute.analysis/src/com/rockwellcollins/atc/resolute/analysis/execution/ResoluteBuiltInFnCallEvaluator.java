@@ -27,6 +27,7 @@ import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureClassifier;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
@@ -889,6 +890,12 @@ public class ResoluteBuiltInFnCallEvaluator {
 			if (val instanceof BusClassifier) {
 				return (BusClassifier) val;
 			}
+		} else if (ne instanceof Feature) {
+			Feature dp = (Feature) ne;
+			FeatureClassifier val = dp.getFeatureClassifier();
+			if (val instanceof ComponentClassifier) {
+				return (ComponentClassifier) val;
+			}
 		} else if (ne instanceof FeatureGroup) {
 			FeatureGroup featGroup = (FeatureGroup) ne;
 			return featGroup.getAllFeatureGroupType();
@@ -909,6 +916,12 @@ public class ResoluteBuiltInFnCallEvaluator {
 				BusFeatureClassifier val = dp.getBusFeatureClassifier();
 				if (val instanceof BusClassifier) {
 					return (BusClassifier) val;
+				}
+			} else if (ne instanceof Feature) {
+				Feature dp = (Feature) ne;
+				FeatureClassifier val = dp.getFeatureClassifier();
+				if (val instanceof ComponentClassifier) {
+					return (ComponentClassifier) val;
 				}
 			}else if(feature instanceof FeatureGroup){
 				FeatureGroup featGroup = (FeatureGroup)feature;
