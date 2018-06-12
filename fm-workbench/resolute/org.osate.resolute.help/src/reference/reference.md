@@ -41,7 +41,7 @@ annex Resolute {**
     sum([WeightBudget(t) for (t: subcomponents(self))])
 ~~~
 
-A claim function can be associated with component types or
+A claim function can be associated with component 
 implementations by `prove` statements declared in a Resolute annex
 subclause. The example shows the `prove` statement for a claim
 function `SCSReq1` with the component itself passed in as a parameter.
@@ -98,27 +98,37 @@ units are those defined by Units property types in property sets and do
 not have to be qualified by the Units type.
 
 The claim function expression is assumed to be a logical expression
-(`and`, `forall`, `or`, `exists`, implies (`=>`)) to
-represent a predicate. In the case of `and` and `forall`, all
+(`and`,  `or`, `andthen`,  `orelse`, implies (`=>`)) or quantified expressions (`forall`,`exists`) to
+represent a predicate. You can also and `let` expressions to compute local variables.
+
+In the case of `and`,  `or` and `forall`, all
 expression elements are executed and then the result is evaluated and
 returns true only if all claim functions return true. Executing all
 claim functions allows Resolute to inform the user of all failing claim
-functions rather than one at a time by not executing the remaining
-elements in the `and` or `forall` expression.
+functions rather than not executing the remaining
+claim function calls after a failing claim in the case of `and` and `forall` and after a successful claim in the case of `or`.
+
+`andthen` conditionally executes the second operand if the first one is true, i.e., the first operand acts as a precondition to the second one. This is useful when checking that a property exists (`has_property`) before retrieving it (`property`) as `property` throws an exception when the value is not found. 
+
+`orelse` conditionally executes the second operand as an alternative if the first one is false. For example, this is useful when a predicate is evaluated in a compute function and if it returns false we want to provide an explanatory message using `fail`. 
+
+`exists` will execute elements in the provided collection until one evaluates to true. Note that provided collections are not always in the order you expect, e.g., `subcomponents(c)` returns a collection that is ordered by component name, not the declaration order.
+
+`=>` only executes the second operand if the first one is true. Note, however that if the left operand is false the result of `=>` is true without execute the right operand. 
 
 A Resolute annex library is declared directly in a package through the
 `annex` Resolute `{**` *\<library content\>* `**};`
-statement. Such a statement can be placed in a package by itself,
-combined with library declarations for other annexes, or combined with
-classifier declarations in the same package. A package cannot contain
-multiple Resolute annex library declarations; *i.e.*, each library must be
-placed in a separate package.
+statement. Typically you want to place a Resolute library in a package by itself - separate from component declarations. 
 
 Resolute assumes that there is a global name space for the names of
 claim functions and computational functions. Therefore, their names must
-be globally unique. They can be referenced in `prove` statements,
+be globally unique. Claim and computational functions can be referenced in `prove` statements,
 other claim functions, or computational functions without qualification
 by a package name.
+
+
+> You may have two claim functions with the same name in different packages. Resolute will not complain and will use the first one it encounters when resolving references.
+
 
 []{#application-claim-functions}
 
@@ -135,7 +145,7 @@ A component implementation can contain multiple `prove` statements.
 ~~~ {.bnf caption="Multiple Prove Statements"}
 <Resolute_subclause> :== "annex" "resolute" "{**" <prove_statement> ( <prove_statement> )* "**}" ";"
 
-<prove_statement> ::= "prove" "(" <claim_function_invocations> ")"
+<prove_statement> ::= "prove" "(" <claim_function_invocation> ")"
 
 <claim_function_invocation> ::= <claim_function_name> "("
     ( <parameter_value> ("," <parameter_value>)* )? ")"
@@ -148,11 +158,7 @@ parameter.
 
 One special model element reference is expressed by the keyword
 `this`. It refers to the instance model object of the model element
-that contains the `prove` statement. The keyword `this` can only be
-used in the `prove` statement --- not in verification action expressions.
-This constraint means that `this` must be passed to a claim function
-for it to know what model element it operates on --- unless we have a global
-claim function (see Global Constants).
+that contains the `prove` statement. This is the root object of an instance model as Resolute create a separate instance model every time it encounters a prove statement.
 
 ~~~
 prove ( Memory_safe ( this ))
@@ -168,6 +174,10 @@ statement is applied to a subcomponent called subsystem1:
 prove (Fully_Connected ( this.subsystem1 ))
 ~~~
 
+> The keyword `this` can only be
+used in the `prove` statement --- not in claim functions or compute functions. Inside claim or compute function you can access elements of the instance model through set constructors such as `component` or `thread`.
+
+
 The `prove` statement can be associated with the component classifier
 of the subcomponent. In that case, it applies to all instances of that
 component. We recommend that you associate `prove` statements with a
@@ -180,8 +190,7 @@ Uses of Claim Functions
 -----------------------
 
 The compiler does enforce that claim functions can be invoked only in
-`prove` statements, and as operands in `and`, `or`, `>`
-(implies), `exists`, and `forall` operations, and cannot be invoked
+`prove` statements, and in other claim functions, and cannot be invoked
 in computational functions.
 
 []{#comp-functions-constants}
@@ -273,9 +282,9 @@ precedence order:
 
 Logical operators (the operands a, b are expressions of type Boolean):
 
--   Implies: a `=>` b
--   Disjunction: a `or` b
--   Conjunction: a `and` b
+-    a `=>` b
+-   a `or` b *and* a `orelse` b
+-   a `and` b *and* a `andthen` b
 -   Negation: `not` a
 -   Quantified logical expressions: ( `forall` | `exists` ) `(`
     \<variablename\> `:` \<collection_constructor\> `)` `.`
@@ -299,26 +308,30 @@ Arithmetic operators (the operands are of type `real` or `int` and
 may include a unit):
 
 -   `+` | `-`
--   `\` | `/`
+-   `*` | `/`
+-   exponent: `^` 
+
 -   Negation: `-` a
 -   Precedence brackets: `(` a `)`
 
+> The precedence order is Relational operators (low) to Arithmetic in increasing order. They are higher than `and` *and* `andthen`.
+
 ### Type-related operators
 
--   Type test: ( a `instanceof` \<type\> )
 -   Type cast: `(` \<type\> `)` a
+
+> Type cast is the same precedence as `not` *and* \<negations\>.
 
 ### Atomic expressions
 
-Atomic expressions can be used as operands of all the operators listed
-above.
+Atomic expressions can be used as operands and have highest precedence.
 
 -   Base type values: integer value, real value, string value, and Boolean
     value. Integer and real values can be annotated with a unit. Any unit
     defined by a Unit property type in any of the property sets is
     acceptable.
 
--   Global or local constant reference and variable reference by its
+-   Global and local constant reference and parameter reference by their
     identifier
 
 -   Computational function invocation:\
@@ -326,7 +339,7 @@ above.
 
 -   Conditional value: `if` condition `then` expression `else` expression
 
--   Qualified classifier or property definition: ( \<ID\> `::` ) \*\<ID\>
+-   Qualified AADL classifier or property definition: ( \<ID\> `::` ) \*\<ID\>
     ( `.` \<ID\> )?
 
     +   Classifier used only as a parameter to `instance` or `instances`
@@ -336,13 +349,6 @@ above.
 
     +   Used only as parameter in `prove` statement
 
-### Exception operators
-
-Exception operators are equivalent to exception throws with the
-enclosing claim function representing an implicit catch.
-
--   Exception: `fail` \<string value\> or `fail **` \<description\>
-    `**` with the description syntax the same as for claim functions
 
 ### Collection-related operators
 
@@ -392,7 +398,7 @@ executes the built-in `has_property` constraint function on each
 element.
 
 In the second example, we precompute the collection of subcomponents and
-hold on to them with a local constant. We then construct a collection of
+hold on to them with a local constant. We then construct a list of
 real values of value 1.0 for each subcomponent that satisfies the
 `has_property` constraint function, then perform the summation of the
 resulting `real` (list) collection, and divide it by the size of the
@@ -403,6 +409,7 @@ HasSubcomponentWeightBudget(self:component) : bool =
     forall (sub: subcomponents(self)) . has_property(sub,SEI::GrossWeight)
 
 SubcomponentWeightBudgetCoverage(self:component) : bool =
+    let subs : {component} = subcomponents(self);
     (sum([ 1.0 for (sub : subs) | has_property(sub,SEI::GrossWeight)]) / length(subs))
 ~~~
 
@@ -423,6 +430,10 @@ caught by the closest enclosing claim function, interpreted as a fail of
 the claim, and reported as a sub-result to the claim function. That is,
 the `fail` expression is shown as a failure, and the provided text
 explains the failure.
+
+-   Exception: `fail` \<string value\> or `fail **` \<description\>
+    `**` with the description syntax the same as for claim functions
+
 
 []{#resolute-type-system}
 
@@ -546,6 +557,9 @@ that is the intersection of the two inputs
 `length`(\<collection\>): int - returns the size of the given set or list
 collection
 
+`size`(\<collection\>): int - returns the size of the given set or list
+collection (same as length)
+
 `member`(\<element\>, \<collection\>): Boolean - returns true if the element
 is a member of the set or list collection
 
@@ -574,10 +588,10 @@ Built-in Functions for Ranges
 
 `lower_bound`(\<range\>): numeric - returns the lower bound of the range
 
-[]{#functions-model}
+[]{#functions-properties}
 
-Built-in Functions on Any Model Element (of the instance model):
-----------------------------------------------------------------
+Built-in Functions Related to Properties
+-----------------------------------------
 
 `has_property`(\<named\_element\>, \<property\>): Boolean - the named element
 has the property.
@@ -586,13 +600,16 @@ has the property.
 value - returns the value of the property. If a default value is
 supplied, then it is returned if the element does not have the
 property value. If no default is supplied and the value does not
-exist, a resolute failure exception is thrown.
+exist, a resolute failure exception is thrown, which is caught by the closest enclosing claim function and interpreted as a fail.
 
-`has_parent`(\<named\_element\>): Boolean - returns true if the component
-has an enclosing model element
+`property_member`(\<record\_property\_value\>, \<field name\>): Boolean - return the value of the record field.
 
-`parent`(\<named\_element\>): named\_element - returns the parent of the
-named element. The parent must exist.
+`enumerated_values`(\<property\>): [ \<string\> ] - return the an ordered set of string values.
+
+[]{#functions-model}
+
+Built-in Functions on Any Model Element (of the instance model)
+----------------------------------------------------------------
 
 `name`(\<named\_element\>): string - returns the name of the named element
 
@@ -603,8 +620,8 @@ feature is the connection end.
 
 `type`(\<named\_element\>): Classifier - returns the classifier of a
 component, feature, or connection. In the case of a connection, the type
-of the feature is the connection end. The named element must have a
-type.
+is that of the connection source (if not present the destination) feature. The named element must have a
+type, otherwise a resolute failure exception is thrown and caught by the closest enclosing claim function.
 
 `is_of_type`(\<named\_element\>, \<classifier\>): Boolean - true if the
 named element has the classifier or one of its type extensions. The
@@ -612,13 +629,61 @@ named element must have a type. The named element can be a component,
 feature, or connection instance. In the case of a connection, the type
 of the feature is the connection end.
 
+`has_parent`(\<named\_element\>): Boolean - returns true if the component
+has an enclosing model element
+
+`parent`(\<named\_element\>): named\_element - returns the parent of the
+named element. The parent must exist.
+
 `has_member`(\<component\>, \<string\>): Boolean - true if the component has
 a member with the specified name (string). Members are features,
 subcomponents, etc. The component can be a component instance or a
 component classifier.
 
--   Note: Feature instances representing feature groups can have feature
-    instances as members, but they are not handled by this function.
+>  Note: Feature instances representing feature groups can have feature
+    instances as members, but they are not handled by this function. See pre-declared library below for flattening feature instances in feature groups.
+
+`is_in_array`(\<component\>): Boolean - returns true if the component instance in in an array, i.e., has an index into the array.
+
+`has_prototypes`(\<component\>): Boolean - returns true if component classifier contains prototype declarations.
+
+`has_modes`(\<component\>): Boolean - returns true if component directly contains mode instances.
+
+`is_procesor`(\<component\>): Boolean - true if the component instance is
+a processor
+
+Other built-in component category tests are: `is_virtual_procesor`, `is_system`, `is_bus`, `is_virtual_bus`, `is_device`,
+`is_memory`, `is_thread`, `is_process`, `is_data`, `is_subprogram`. 
+
+> Missing tests (`abstract`, `thread_group`, `subprogram_group`) can be tested by `\<object\> instanceof \<aadl model element type\>`
+
+[]{#functions-feature}
+
+Built-in Functions on Features
+------------------------------
+
+`direction`(\<feature\>): string - returns the direction of a feature
+instance as string (`in`, `out`, `in out`/`in_out`). Access features do not have direction.
+
+`is_event_port`(\<feature\>): Boolean - true if the feature instance is
+an event port or event data port
+
+`is_data_port`(\<feature\>): Boolean - true if the feature instance is
+an data port or event data port
+
+`is_port`(\<feature\>): Boolean - true if the feature instance is
+a port
+
+`is_abstract_feature`(\<feature\>): Boolean - true if the feature instance is
+an abstract feature
+
+> Note that you can test any feature or component by writing `\<object\> instanceof \<aadl model element type\>`
+
+
+[]{#functions-connection}
+
+Built-in Functions on Connections
+---------------------------------
 
 `source`(\<connection\>): connection\_endpoint - returns the component or
 feature instance that is the source of the connection instance
@@ -627,16 +692,18 @@ feature instance that is the source of the connection instance
 component or feature instance that is the destination of the connection
 instance
 
-`direction`(\<feature\>): string - returns the direction of a feature
-instance as string (`in`, `out`, `inout`/`in_out`?)
+`is_data_access`(\<connection\>): Boolean - true if one end of a connection is a data component
 
-`is_event_port`(\<feature\>): Boolean - true if the feature instance is
-an event port
+[]{#functions-binding}
 
-`is_bound_to`(\<component\>, \<binding_target\>): Boolean - true if the
-component instance is bound to the binding target
+Built-in Functions on Any Model Element (of the instance model)
+----------------------------------------------------------------
 
--   Note: Connection bindings are not handled. The `is_bound_to`
+`is_bound_to`(\<binding_source\>, \<binding_target\>): Boolean - true if the
+binding source (a component or connection instance) is bound to the binding target (a component).
+It handles processor bindings, memory bindings, connection bindings, and function bindings.
+
+-   Note: The `is_bound_to`
     function is the same as library function `bound`.
 
 []{#functions-model-collections}
@@ -666,26 +733,61 @@ classifier
 instance for a given component classifier. The method assumes that there
 is only one instance.
 
-[]{#functions-external}
+[]{#functions-flow}
 
-External Functions
+Flow Related Functions
 ------------------
 
-`analysis` (\<function: string\>, \<args\>): Boolean - invocation of a Java
-function registered as an external function extension point. The
-function is specified as string identifier of the extension point. The
-arguments are additional parameters of the analysis function.
+`end_to_end_flows` (\<component\>): { \<end\_to\_end\_flow\> } - returns set of end to end flows contained in component instance.
+
+`flow_elements` (\<end\_to\_end\_flow\>): { \<flow\_element\> } - returns set of flow elements, which are connection instances, flow spec instances, or components instances.
+
+`flow_specifications` (\<component\>): { \<flow\_spec\> } - returns set of flow specification instances of a component.
+
+
+`flow_source` (\<flow\_spec\>): feature - returns the source of a flow specification.
+
+`flow_destination` (\<flow\_spec\>): feature - returns the destination of a flow specification.
+
+
 
 []{#functions-error-model}
 
 Error Model Functions
 ---------------------
 
-`propagate_error` (\<named\_element\>, \<error\_type: string\>): Boolean -
-true if the component or feature instance propagates the error type
-
 `error_state_reachable` (\<component\>, \<state: string\>): Boolean - true
-if the error state of the component instance is reachable
+
+`propagate_error` (\<component\>, \<error\_type: string\>): Boolean -
+true if the component instance propagates out the error type on any of its features
+if the error state of the component instance is reachable by an incoming transition
+
+`receive_error` (\<component\>, \<error\_type: string\>): Boolean - true
+true if the component instance receives the error type of a propagated error on any of its features
+
+`contain_error` (\<component\>, \<error\_type: string\>): Boolean - true
+if the the component instance has an error event with the specified error type
+
+[]{#functions-external}
+
+External Functions
+------------------
+
+`analysis` (\<function: string\>, \<args\>): \<ResoluteValue\> - invocation of a Java
+function registered as an external function extension point. The
+function is specified as string identifier of the extension point. The
+arguments are additional parameters of the analysis function. 
+
+The return value must be one of the ResoluteValue subclasses: Boolvalue, IntValue, ListValue, NamedElementValue, RangeValue, RealValue, ResoluteRecordValue, SetValue, StringValue.
+
+[]{#functions-debug}
+
+Debug Functions
+------------------
+
+`debug` (\<args\>): true - writes the set of argument objects (converted to strings) to the console.   
+
+> You might want to write wrapper maethods that allow you to turn such debug logging on and off. See debuggin with Resolute below.
 
 []{#resolute-functions}
 
@@ -714,10 +816,14 @@ binding
 component instance is bound to the binding target by actual connection
 binding.
 
+> Note: You may want to implement a `function_bound` function.
+
 []{#connection-functions}
 
 Connection-Related Functions
 ----------------------------
+
+`connected`(\<source component\>, \<connection\>, \<destination component\>): Boolean - returns true if the components are the soruce and destination components of the connection..
 
 `source_component`(\<connection\>): component - returns the component
 that is the source of the connection instance. This component contains
@@ -743,8 +849,7 @@ of the connection end points is an event data port. Note: should be
 determined by the destination.
 
 `is_data_access_connection`(\<connection\>): Boolean - true if one of
-the connection end points is a data access feature. Note: should be
-determined by the destination.
+the connection end points is a data access feature. 
 
 []{#model-element-containment}
 
@@ -787,16 +892,41 @@ Resolute Examples
 Debugging Models with Resolute
 ------------------------------
 
+Get a model element trace on the console:
+
+~~~ {.resolute caption="Model Element Trace in the Assurance View"}
+  	log_set(s : {aadl}, msg : string) : bool = 
+   		 log_to_console andthen debug( ": ",s)
+
+  	-- log a set of model elements to the console
+  	log_list(s : [aadl], msg: string) : bool =
+    	log_to_console andthen debug( ": ",s)
+
+  	-- log a model elements to the console
+  	log_element(s : aadl, msg: string) : bool =
+    	log_to_console andthen debug( ": ",s)
+    	
+   -- log_to_console is a global constant that the user can set to true or false.
+~~~
+
 Get a model element trace in the assurance case view:
 
 ~~~ {.resolute caption="Model Element Trace in the Assurance View"}
-print_aadl(a : aadl) <=
+
+-- record a model element in the result structure
+record_aadl(a : aadl) <=
     ** a **
     true
 
-print_set(s : {aadl}) <=
+-- record a set of model elements in the result structure
+record_set(s : {aadl}) <=
     ** s **
     true
+
+-- record a list of model elements in the result structure
+record_list(s : [aadl], msg: string) <=
+	 ** msg ": "s **
+	 true
 ~~~
 
 Reachable Collections of Model Elements
@@ -855,7 +985,7 @@ reachable_components_via_connection(comp : component, conn : connection) : {comp
 Copyright
 =========
 
-Copyright 2015 Carnegie Mellon University
+Copyright 2015-18 Carnegie Mellon University
 
 This material is based upon work funded and supported by the Department
 of Defense under Contract No. FA8721-05-C-0003 with Carnegie Mellon
