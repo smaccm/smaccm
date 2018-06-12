@@ -130,7 +130,7 @@ by a package name.
 > You may have two claim functions with the same name in different packages. Resolute will not complain and will use the first one it encounters when resolving references.
 
 
-[]{#application-claim-functions}
+[]{#application-of-claim-functions}
 
 Application of Claim Functions
 ------------------------------
@@ -184,7 +184,7 @@ component. We recommend that you associate `prove` statements with a
 path only if the `prove` is intended for that particular instance of a
 subcomponent.
 
-[]{#uses-claim-functions}
+[]{#uses-of-claim-functions}
 
 Uses of Claim Functions
 -----------------------
@@ -193,12 +193,12 @@ The compiler does enforce that claim functions can be invoked only in
 `prove` statements, and in other claim functions, and cannot be invoked
 in computational functions.
 
-[]{#comp-functions-constants}
+[]{#computational-functions-and-constants}
 
-Computational Functions and Constants (Final Variables)
-=======================================================
+Computational Functions and Constants
+=====================================
 
-[]{#comp-functions}
+[]{#computational-functions}
 
 Computational Functions
 -----------------------
@@ -265,7 +265,7 @@ or `+` operator.
 -   Local constants are used to precompute values that may be referenced
     multiple times in the succeeding expression.
 
-[]{#expressions}
+[]{#predicate-expressions-and-computational-expressions}
 
 Predicate Expressions and Computational Expressions
 ===================================================
@@ -290,7 +290,7 @@ Logical operators (the operands a, b are expressions of type Boolean):
     \<variablename\> `:` \<collection_constructor\> `)` `.`
     \<logical_expression\>
 
-[]{#comp-expressions}
+[]{#computational-expressions}
 
 Computational Expressions
 -------------------------
@@ -454,7 +454,7 @@ the *SubcomponentWeightCoverage* example, the collection concept has
 multiple instances of the value 1.0, and each is counted in the
 summation.
 
-[]{#base-types}
+[]{#built-inbase-types}
 
 Built-in Base Types
 -------------------
@@ -467,7 +467,7 @@ Base type:
 -   `bool`
 -   `range`
 
-[]{#arithmetic}
+[]{#arithmetic-with-integers-and-reals}
 
 Arithmetic with Integers and Reals
 ----------------------------------
@@ -487,7 +487,7 @@ Resolute can retrieve property values with built-in functions. The
 property values for `aadlinteger` are mapped into `int`,
 `aadlreal` into `real`, and `range of` into `range`.
 
-[]{#aadl}
+[]{#aadl-model-element-types}
 
 AADL Model Element Types
 ------------------------
@@ -538,12 +538,12 @@ represent instances. Built-in collection functions operate on instance
 model elements or retrieve the set of instances for a given classifier
 (see Built-in Functions).
 
-[]{#functions}
+[]{#built-in-functions}
 
 Built-in Functions
 ==================
 
-[]{#functions-collections}
+[]{#built-in-functions-for-collections}
 
 Built-in Functions for Collections
 ----------------------------------
@@ -579,7 +579,7 @@ unique elements contained in the given list collection
 `as_list`(\<set\>): list - returns a list collection containing all of the
 elements contained in the given set collection
 
-[]{#functions-ranges}
+[]{#built-in-functions-for-ranges}
 
 Built-in Functions for Ranges
 -----------------------------
@@ -588,9 +588,9 @@ Built-in Functions for Ranges
 
 `lower_bound`(\<range\>): numeric - returns the lower bound of the range
 
-[]{#functions-properties}
+[]{#built-in-functions-for-properties}
 
-Built-in Functions on Properties
+Built-in Functions for Properties
 -----------------------------------------
 
 `has_property`(\<named\_element\>, \<property\>): Boolean - the named element
@@ -608,9 +608,9 @@ exist, a resolute failure exception is thrown, which is caught by the closest en
 
 `enumerated_values`(\<property\>): [ \<string\> ] - return the an ordered set of string values.
 
-[]{#functions-model}
+[]{#built-in-functions-for-any-model-element-and-components}
 
-Built-in Functions on Any Model Element and Components
+Built-in Functions for Any Model Element and Components
 ------------------------------------------------------
 
 `name`(\<named\_element\>): string - returns the name of the named element
@@ -659,9 +659,9 @@ Other built-in component category tests are: `is_virtual_procesor`, `is_system`,
 
 > Missing tests (`abstract`, `thread_group`, `subprogram_group`) can be tested by `\<object\> instanceof \<aadl model element type\>`
 
-[]{#functions-feature}
+[]{#built-in-functions-for-features}
 
-Built-in Functions on Features
+Built-in Functions for Features
 ------------------------------
 
 `direction`(\<feature\>): string - returns the direction of a feature
@@ -682,9 +682,9 @@ an abstract feature
 > Note that you can test any feature or component by writing `\<object\> instanceof \<aadl model element type\>`
 
 
-[]{#functions-connection}
+[]{#built-in-functions-for-connections}
 
-Built-in Functions on Connections
+Built-in Functions for Connections
 ---------------------------------
 
 `source`(\<connection\>): connection\_endpoint - returns the component or
@@ -696,9 +696,9 @@ instance
 
 `is_data_access`(\<connection\>): Boolean - true if one end of a connection is a data component
 
-[]{#functions-binding}
+[]{#built-in-functions-for-bindings}
 
-Built-in Functions on Bindings
+Built-in Functions for Bindings
 -----------------------------
 
 `is_bound_to`(\<binding_source\>, \<binding_target\>): Boolean - true if the
@@ -709,10 +709,10 @@ It handles processor bindings, memory bindings, and connection bindings.
 
 >   Note: The `is_bound_to` function does not consider function_bindings. See *Resolute_Stdlib.aadl* for how this can be done by mirroring *processor_bound*.
 
-[]{#functions-model-collections}
+[]{#built-in-functions-for-sets-and-lists}
 
-Built-in Functions on Model Element Sets and Lists
--------------------------
+Built-in Functions for Sets and Lists
+-------------------------------------
 
 Resolute operates on the instance model; this means that the collections
 are of instance model elements.
@@ -736,9 +736,9 @@ classifier
 instance for a given component classifier. The method assumes that there
 is only one instance.
 
-[]{#functions-flow}
+[]{#built-in-functions-for-flows}
 
-Built-in Functions on Flows
+Built-in Functions for Flows
 ----------------------
 
 `end_to_end_flows` (\<component\>): { \<end\_to\_end\_flow\> } - returns set of end to end flows contained in component instance.
@@ -754,9 +754,9 @@ Built-in Functions on Flows
 
 
 
-[]{#functions-error-model}
+[]{#built-in-functions-for-error-models}
 
-Built-in Functions on Error Models
+Built-in Functions for Error Models
 ---------------------
 
 `error_state_reachable` (\<component\>, \<state: string\>): Boolean - true
@@ -771,7 +771,7 @@ true if the component instance receives the error type of a propagated error on 
 `contain_error` (\<component\>, \<error\_type: string\>): Boolean - true
 if the the component instance has an error event with the specified error type. Not supported yet.
 
-[]{#functions-external}
+[]{#external-functions}
 
 External Functions
 ------------------
@@ -783,7 +783,7 @@ arguments are additional parameters of the analysis function.
 
 The return value must be one of the ResoluteValue subclasses: Boolvalue, IntValue, ListValue, NamedElementValue, RangeValue, RealValue, ResoluteRecordValue, SetValue, StringValue.
 
-[]{#functions-debug}
+[]{#debug-functions}
 
 Debug Functions
 ------------------
@@ -792,14 +792,14 @@ Debug Functions
 
 > You might want to write wrapper maethods that allow you to turn such debug logging on and off. See debuggin with Resolute below.
 
-[]{#resolute-functions}
+[]{#common-resolute-function-library}
 
-Pre-declared Resolute Computational Function Library
-====================================================
+Common Resolute Function Library
+================================
 
-[]{#binding-functions}
+[]{#binding-related-functions}
 
-Binding-Related Predicate Functions
+Binding Related Functions
 -----------------------------------
 
 `bound`(\<component, binding\_target\>): Boolean - true if the component
@@ -822,9 +822,9 @@ binding.
 > Note: You may want to implement a `function_bound` function. See *Resolute_Stdlib.aadl* for how this can be done by mirroring *processor_bound*.
 
 
-[]{#connection-functions}
+[]{#connection-related-functions}
 
-Connection-Related Functions
+Connection Related Functions
 ----------------------------
 
 `connected`(\<source component\>, \<connection\>, \<destination component\>): Boolean - returns true if the components are the soruce and destination components of the connection..
@@ -869,7 +869,7 @@ connection instance.
 directly containing component instance. The named element can be a
 component or feature instance. Note: also works for connection instance.
 
-[]{#handling-feature-groups}
+[]{#handling-of-feature-groups}
 
 Handling of Feature Groups
 --------------------------
@@ -891,7 +891,7 @@ set.
 Resolute Examples
 =================
 
-[]{#debugging}
+[]{#debugging-models-with-resolute}
 
 Debugging Models with Resolute
 ------------------------------
@@ -932,8 +932,10 @@ record_list(s : [aadl], msg: string) <=
 	 ** msg ": "s **
 	 true
 ~~~
+[]{#reachable-model-elements}
 
-Reachable Collections of Model Elements
+
+Reachable Model Elements
 ---------------------------------------
 
 This is a snippet from the Smaccmcopter example on
