@@ -506,9 +506,6 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		if(actualTypes.size() == 3){
 			ResoluteType type1 = actualTypes.get(1);
 			ResoluteType type2 = actualTypes.get(2);
-			if (type1.equals(type2)) {
-				return;
-			}
 			if (type1 instanceof ParametricType) {
 				ParametricType paramType = (ParametricType) type1;
 				if(paramType.getParamType().equals(type2)){
