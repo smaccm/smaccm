@@ -590,7 +590,7 @@ Built-in Functions for Ranges
 
 []{#functions-properties}
 
-Built-in Functions Related to Properties
+Built-in Functions on Properties
 -----------------------------------------
 
 `has_property`(\<named\_element\>, \<property\>): Boolean - the named element
@@ -604,12 +604,14 @@ exist, a resolute failure exception is thrown, which is caught by the closest en
 
 `property_member`(\<record\_property\_value\>, \<field name\>): Boolean - return the value of the record field.
 
+> Note: There is no constructor for record values. To compare a property record value to some actual record value you have to write a function that compares each of the fields. `=` can be used to compare two property record values.
+
 `enumerated_values`(\<property\>): [ \<string\> ] - return the an ordered set of string values.
 
 []{#functions-model}
 
-Built-in Functions on Any Model Element (of the instance model)
-----------------------------------------------------------------
+Built-in Functions on Any Model Element and Components
+------------------------------------------------------
 
 `name`(\<named\_element\>): string - returns the name of the named element
 
@@ -696,15 +698,16 @@ instance
 
 []{#functions-binding}
 
-Built-in Functions on Any Model Element (of the instance model)
-----------------------------------------------------------------
+Built-in Functions on Binding
+-----------------------------
 
 `is_bound_to`(\<binding_source\>, \<binding_target\>): Boolean - true if the
 binding source (a component or connection instance) is bound to the binding target (a component).
-It handles processor bindings, memory bindings, connection bindings, and function bindings.
+It handles processor bindings, memory bindings, and connection bindings.
 
--   Note: The `is_bound_to`
-    function is the same as library function `bound`.
+>   Note: The `is_bound_to` function is the same as library function `bound`.
+
+>   Note: The `is_bound_to` function does not consider function_bindings. See *Resolute_Stdlib.aadl* for how this can be done by mirroring *processor_bound*.
 
 []{#functions-model-collections}
 
@@ -736,7 +739,7 @@ is only one instance.
 []{#functions-flow}
 
 Flow Related Functions
-------------------
+----------------------
 
 `end_to_end_flows` (\<component\>): { \<end\_to\_end\_flow\> } - returns set of end to end flows contained in component instance.
 
@@ -816,7 +819,8 @@ binding
 component instance is bound to the binding target by actual connection
 binding.
 
-> Note: You may want to implement a `function_bound` function.
+> Note: You may want to implement a `function_bound` function. See *Resolute_Stdlib.aadl* for how this can be done by mirroring *processor_bound*.
+
 
 []{#connection-functions}
 
