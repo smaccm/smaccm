@@ -698,7 +698,7 @@ instance
 
 []{#functions-binding}
 
-Built-in Functions on Binding
+Built-in Functions on Bindings
 -----------------------------
 
 `is_bound_to`(\<binding_source\>, \<binding_target\>): Boolean - true if the
@@ -711,7 +711,7 @@ It handles processor bindings, memory bindings, and connection bindings.
 
 []{#functions-model-collections}
 
-Model Element Collections
+Built-in Functions on Model Element Sets and Lists
 -------------------------
 
 Resolute operates on the instance model; this means that the collections
@@ -738,7 +738,7 @@ is only one instance.
 
 []{#functions-flow}
 
-Flow Related Functions
+Built-in Functions on Flows
 ----------------------
 
 `end_to_end_flows` (\<component\>): { \<end\_to\_end\_flow\> } - returns set of end to end flows contained in component instance.
@@ -756,7 +756,7 @@ Flow Related Functions
 
 []{#functions-error-model}
 
-Error Model Functions
+Built-in Functions on Error Models
 ---------------------
 
 `error_state_reachable` (\<component\>, \<state: string\>): Boolean - true
@@ -766,10 +766,10 @@ true if the component instance propagates out the error type on any of its featu
 if the error state of the component instance is reachable by an incoming transition
 
 `receive_error` (\<component\>, \<error\_type: string\>): Boolean - true
-true if the component instance receives the error type of a propagated error on any of its features
+true if the component instance receives the error type of a propagated error on any of its features. Not supported yet.
 
 `contain_error` (\<component\>, \<error\_type: string\>): Boolean - true
-if the the component instance has an error event with the specified error type
+if the the component instance has an error event with the specified error type. Not supported yet.
 
 []{#functions-external}
 
