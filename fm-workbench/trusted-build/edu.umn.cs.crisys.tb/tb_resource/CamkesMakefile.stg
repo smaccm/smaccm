@@ -54,9 +54,9 @@ writeComponentName(name) ::= <<
 
 >>
 
-writeRustLibDir(name) ::= <<
+writeRustLibDir(name, rustLibrary) ::= <<
 <if(rustLibrary)>
-<name>_RUST := ${SOURCE_DIR}/components/<name>
+<name>_RUST := ${SOURCE_DIR}/components/<rustLibrary>
 <endif>
 
 >>
@@ -68,7 +68,7 @@ writeRustLibDir(name) ::= <<
 writeComponent(component) ::= <<
 
 <writeComponentName(component.normalizedName)>
-<writeRustLibDir(component.normalizedName)>
+<writeRustLibDir(component.normalizedName, component.componentRustLibName)>
 <component.portList:{ p | <p.camkesAddMakeFilePortDefinitions>}>
 
 >>

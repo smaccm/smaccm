@@ -528,7 +528,7 @@ public class ThreadImplementationNames implements NameEmitter {
   public String getComponentRustLibName() {
     List<String> rustSourceFileList = getRustSourceFileList();
     if (rustSourceFileList != null && !rustSourceFileList.isEmpty()) {
-      return getComponentName() + "_rslib";
+      return getComponentName();
     } else {
       return null;
     }
