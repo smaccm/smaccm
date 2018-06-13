@@ -688,10 +688,11 @@ public class ResoluteBuiltInFnCallEvaluator {
 			int i = 0;
 			String s = "";
 			for (ResoluteValue arg : args) {
-				if (i > 0) {
-					s += ",";
-				}
-				s += "#" + i + ": " + arg.toString();
+//				if (i > 0) {
+//					s += ",";
+//				}
+				s += // "#" + i + ": " +
+						arg.toString();
 				i++;
 			}
 			AssuranceCaseView.writeToConsole(s);
