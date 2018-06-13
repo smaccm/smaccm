@@ -898,24 +898,16 @@ Resolute Examples
 Debugging Models with Resolute
 ------------------------------
 
-Get a model element trace on the console:
+Get a model element trace on the Console View.  You enable and disable console logging through a command in the context menu of the Assurance Case View of Resolute. Once enabled the built-in function **debug** will write to the console when executed. 
+
+The built-in function **debug** takes one or more parameters and writes them out. It can handle any Resolute base tpye, lists and sets, as well as AADL model elements.
 
 ~~~ {.resolute caption="Model Element Trace in the Assurance View"}
-  	log_set(s : {aadl}, msg : string) : bool = 
-   		 log_to_console and debug( ": ",s)
-
-  	-- log a set of model elements to the console
-  	log_list(s : [aadl], msg: string) : bool =
-    	log_to_console and debug( ": ",s)
-
-  	-- log a model elements to the console
-  	log_element(s : aadl, msg: string) : bool =
-    	log_to_console and debug( ": ",s)
-    	
-   -- log_to_console is a global constant that the user can set to true or false.
+  	let conns : {connection} = connections;
+  	debug( "Set of connections ",conns)
 ~~~
 
-Get a model element trace in the assurance case view:
+Get a trace recorded as a result object in the Assurance Case View of Resolute we use claims functions as the examples shown below :
 
 ~~~ {.resolute caption="Model Element Trace in the Assurance View"}
 
