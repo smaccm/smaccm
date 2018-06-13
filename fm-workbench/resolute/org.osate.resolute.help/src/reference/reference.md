@@ -900,7 +900,7 @@ Debugging Models with Resolute
 
 Get a model element trace on the Console View.  You enable and disable console logging through a command in the context menu of the Assurance Case View of Resolute. Once enabled the built-in function **debug** will write to the console when executed. 
 
-The built-in function **debug** takes one or more parameters and writes them out. It can handle any Resolute base tpye, lists and sets, as well as AADL model elements.
+The built-in function **debug** takes one or more parameters and writes them out. It can handle any Resolute base type, lists and sets, as well as AADL model elements.
 
 ~~~ {.resolute caption="Model Element Trace in the Assurance View"}
   	let conns : {connection} = connections;
