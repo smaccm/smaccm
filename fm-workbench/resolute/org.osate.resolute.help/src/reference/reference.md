@@ -588,6 +588,9 @@ supplied, then it is returned if the element does not have the
 property value. If no default is supplied and the value does not
 exist, a resolute failure exception is thrown.
 
+`property`(\<property\>) value - 
+returns the value of the property constant.
+
 `has_parent`(\<named\_element\>): Boolean - returns true if the component
 has an enclosing model element
 
