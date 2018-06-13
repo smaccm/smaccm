@@ -790,7 +790,9 @@ Debug Functions
 
 `debug` (\<args\>): true - writes the set of argument objects (converted to strings) to the console.   
 
-> You might want to write wrapper maethods that allow you to turn such debug logging on and off. See debuggin with Resolute below.
+> Currently debug writes to the console using System.out.println calls. This results in the output going to the console of the Eclipse development environment from which OSATE got started. It should be able to write to the console in OSATE.
+
+> You might want to write wrapper methods that allow you to turn such debug logging on and off. See debugging with Resolute below.
 
 []{#common-resolute-function-library}
 
@@ -900,15 +902,15 @@ Get a model element trace on the console:
 
 ~~~ {.resolute caption="Model Element Trace in the Assurance View"}
   	log_set(s : {aadl}, msg : string) : bool = 
-   		 log_to_console andthen debug( ": ",s)
+   		 log_to_console and debug( ": ",s)
 
   	-- log a set of model elements to the console
   	log_list(s : [aadl], msg: string) : bool =
-    	log_to_console andthen debug( ": ",s)
+    	log_to_console and debug( ": ",s)
 
   	-- log a model elements to the console
   	log_element(s : aadl, msg: string) : bool =
-    	log_to_console andthen debug( ": ",s)
+    	log_to_console and debug( ": ",s)
     	
    -- log_to_console is a global constant that the user can set to true or false.
 ~~~
@@ -938,51 +940,67 @@ record_list(s : [aadl], msg: string) <=
 Reachable Model Elements
 ---------------------------------------
 
-This is a snippet from the Smaccmcopter example on
-[SMACCM models](https://github.com/smaccm/smaccm/tree/master/models).
+This is a set of functions that collect AADL components that are directly or indirectly reachable via connections.
 
-~~~ {.resolute caption="Smaccmcopter Example"}
-reach(c : component) : {component} =
+~~~ {.resolute caption="Reachability Example"}
+-- return set of reachable components that have no outgoing connections. 
+reachable_endpoints(c : component) : {component} =
+	  let outconns: {connection} = outgoing_component_connections(c);
+	  if  outconns = {}
+	  then {c} 
+ 	  else  
+  		{c2 for (conn : outconns) (c2 : reachable_endpoints(destination_component(conn)))}
+
+
+-- all components that are reachable via port or data access connections from the given component
+-- we consider direct and indirect reachability
+-- the use of a set ensures that we do not recurse forever
+all_reachable_components(c : component) : {component} =
     recusive_reach({c})
 
+-- support method to expand on a set of reachable components by the next directly rachable components
+-- the use of a set ensures that we do not recurse forever
 recusive_reach(curr: {component}) : {component} =
-    let next : {component} = union(curr, next_reach(curr));
-    if next = curr then
-        curr
-    else
-        recursive_reach(next)
+	let next_ones : {component} = {y for (x : curr) (y : directly_reachable_components(x))};
+    let next_new_ones : {component} = {ele for (ele : next_ones)| not(member(ele,curr))};
+    if (next_new_ones = {} ) then
+    	curr
+    else 
+    	union(curr, recusive_reach(next_new_ones))
 
-next_reach(curr : {component) : {component} =
-    {y for (x : curr) (y : reachable_components(x)) | not is_decrypt(x)}
 
-reachable_components(comp : component) : {component} =
-    {c for (conn : connections(comp))
-        (c : reachable_components_via_connection(comp, conn))}
+	-- return set of components that are directly reachable via outgoing connections.
+	directly_reachable_components(comp: component):{component} =
+	let outconns : {connection} = outgoing_component_connections(comp);
+	{otherend for (conn: outconns) (otherend: other_connection_end(conn,comp))}
 
--- What components (either a single one or none) can 'comp' reach directly via 'conn'
---
--- This is complicated due to data access connections which seem to ignore
--- normal aadl directionality, and instead use an access rights property
-reachable_components_via_connection(comp : component, conn : connection) : {component} =
-  -- a direct port connection
-  if is_port_connection(conn) then
-    if source_component(conn) = comp then {destination_component(conn)} else {}
-  -- a component reading from 'comp' as a data component via read access on 'conn'
-  else if comp instanceof data then
-    if comp = source(conn) and has_read_access(destination(conn)) then
-      {destination_component(conn)}
-    else if comp = destination(conn) and has_read_access(source(conn)) then
-      {source_component(conn)}
-    else
-      {}
-  -- 'comp' writing to a data component via write access on 'conn'  
-  else if destination(conn) instanceof data and has_write_access(source(conn)) then
-    {destination_component(conn)}
-  else if source(conn) instanceof data and has_write_access(destination(conn)) then
-    {source_component(conn)}
-  -- Other connections unsupported at this time
-  else
-    {}
+	  
+	-- return all outgoing connections
+	-- in the case of data access conneciton we need to consider acces rights to determine the direction
+	-- in the case of port connecitons we need to filter out in/out ports with incoming connections.
+	outgoing_component_connections(comp: component): {connection} =
+	{ conn for (conn: connections(comp)) | 
+		if (is_access_connection(conn)) then
+		-- access feature has write access
+			source(conn) instanceof access and has_write_access(source(conn)) or 
+			destination(conn) instanceof access and has_write_access(destination(conn)) 
+		else
+		-- we have a directed feature connection
+		-- it is not an incoming connection with the source an out only feature
+			not(destination_component(conn) = comp 
+			and direction((feature)source(conn)) = "out"
+		)}
+
+   -- For a given connection and a given component return the component on the other end of the connection
+   -- This funciton is useful to deal with access connections or bi-directional port connections
+   -- where the source could be either end.
+   other_connection_end(conn: connection,comp: component): component =
+   		if (destination_component(conn) = comp) 
+		then
+			source_component(conn)
+   		else
+   			destination_component(conn)
+
 ~~~
 
 
