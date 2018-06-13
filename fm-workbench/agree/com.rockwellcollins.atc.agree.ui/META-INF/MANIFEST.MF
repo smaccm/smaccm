@@ -30,3 +30,4 @@ Export-Package: com.rockwellcollins.atc.agree.ui.contentassist,
  com.rockwellcollins.atc.agree.ui.quickfix,
  com.rockwellcollins.atc.agree.unparsing
 Bundle-Activator: com.rockwellcollins.atc.agree.ui.internal.AgreeActivator
+Automatic-Module-Name: com.rockwellcollins.atc.agree.ui

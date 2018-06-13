@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="5">
+  <element id="0" manual="true">
+    <element id="14">
+      <element id="15" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>input</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element id="16" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>output</seg>
+        </bo>
+        <position x="155.0" y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>component_instance</seg>
+        <seg>a_sub</seg>
+      </bo>
+      <position x="312.0" y="38.0"/>
+      <size width="215.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>connections</filter>
+      </contentFilters>
+    </element>
+    <element id="2">
+      <element id="4" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>input</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element id="5" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>output</seg>
+        </bo>
+        <position x="170.0" y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>component_instance</seg>
+        <seg>top_sub</seg>
+      </bo>
+      <position x="62.0" y="38.0"/>
+      <size width="230.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>connections</filter>
+      </contentFilters>
+    </element>
+    <element id="13">
+      <element id="24">
+        <bo>
+          <seg>pvg</seg>
+          <seg>communication_properties::timing</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>a_to_out : above_top_impl_instance.a_sub.output -> above_top_impl_instance.output</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="12">
+      <element id="23">
+        <bo>
+          <seg>pvg</seg>
+          <seg>communication_properties::timing</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>in_to_top : above_top_impl_instance.input -> above_top_impl_instance.top_sub.input</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="8">
+      <element id="21">
+        <bo>
+          <seg>pvg</seg>
+          <seg>communication_properties::timing</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>top_to_a : above_top_impl_instance.top_sub.output -> above_top_impl_instance.a_sub.input</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="9" dockArea="left">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>feature_instance</seg>
+        <seg>input</seg>
+      </bo>
+      <position y="48.0"/>
+      <contentFilters/>
+    </element>
+    <element id="11" dockArea="right">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>feature_instance</seg>
+        <seg>output</seg>
+      </bo>
+      <position x="539.0" y="48.0"/>
+      <contentFilters/>
+    </element>
+    <bo>
+      <seg>org.osate.ge.diagrams.instance</seg>
+      <seg>system_instance</seg>
+      <seg>/toy_example/instances/integer_toy_extended_above_top_impl_instance.aaxl2</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="599.0" height="110.0"/>
+    <contentFilters>
+      <filter>features</filter>
+      <filter>connections</filter>
+      <filter>subcomponents</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>org.osate.ge.diagrams.instance</seg>
+      <seg>system_instance</seg>
+      <seg>/toy_example/instances/integer_toy_extended_above_top_impl_instance.aaxl2</seg>
+    </context>
+  </config>
+</diagram:Diagram>

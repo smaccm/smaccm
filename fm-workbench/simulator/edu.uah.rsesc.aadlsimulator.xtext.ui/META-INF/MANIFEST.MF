@@ -17,3 +17,4 @@ Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: edu.uah.rsesc.aadlsimulator.xtext.ui.internal.XtextActivator
 Export-Package: edu.uah.rsesc.aadlsimulator.xtext.ui
+Automatic-Module-Name: edu.uah.rsesc.aadlsimulator.xtext.ui

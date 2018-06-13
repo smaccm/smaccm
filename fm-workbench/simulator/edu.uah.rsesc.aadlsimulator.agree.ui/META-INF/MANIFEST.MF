@@ -25,3 +25,4 @@ Require-Bundle: edu.uah.rsesc.aadlsimulator.ui,
  org.eclipse.xtext.ui,
  edu.uah.rsesc.aadlsimulator.xtext
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: edu.uah.rsesc.aadlsimulator.agree.ui

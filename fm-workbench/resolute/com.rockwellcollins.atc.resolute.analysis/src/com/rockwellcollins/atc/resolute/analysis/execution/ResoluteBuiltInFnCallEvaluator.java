@@ -13,6 +13,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.BasicPropertyAssociation;
 import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.BusAccess;
+import org.osate.aadl2.BusClassifier;
+import org.osate.aadl2.BusFeatureClassifier;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentCategory;
 import org.osate.aadl2.ComponentClassifier;
@@ -22,7 +25,9 @@ import org.osate.aadl2.DataAccess;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EnumerationType;
+import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.FeatureClassifier;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
@@ -89,8 +94,13 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 		case "property": {
 			NamedElement element = args.get(0).getNamedElement();
-			Property prop = (Property) args.get(1).getNamedElement();
-
+			if (element instanceof PropertyConstant) {
+				PropertyConstant propConstant = (PropertyConstant) element;
+				PropertyExpression expr = propConstant.getConstantValue();
+				return exprToValue(expr);
+			}
+			NamedElement propDefOrConstant = args.get(1).getNamedElement();
+			Property prop = (Property) propDefOrConstant;
 			PropertyExpression expr = getPropertyExpression(element, prop);
 			if (expr == null) {
 				if (args.size() > 2) {
@@ -100,7 +110,6 @@ public class ResoluteBuiltInFnCallEvaluator {
 				throw new ResoluteFailException("Property " + prop.getName() + " not defined on " + element.getName(),
 						fnCallExpr);
 			}
-
 			return exprToValue(expr);
 		}
 
@@ -201,22 +210,22 @@ public class ResoluteBuiltInFnCallEvaluator {
 				ComponentInstance ci;
 				ci = (ComponentInstance) element;
 				ComponentClassifier classifier = ci.getComponentClassifier();
-				if(classifier instanceof ComponentImplementation){
+				if (classifier instanceof ComponentImplementation) {
 					ct = ((ComponentImplementation) classifier).getType();
-				}else{
-					ct = (ComponentType)classifier;
+				} else {
+					ct = (ComponentType) classifier;
 				}
 			} else if (element instanceof FeatureInstance) {
 				FeatureInstance featInst = (FeatureInstance) element;
 				Feature feat = featInst.getFeature();
 				Classifier classifier = feat.getClassifier();
-				if(classifier == null){
+				if (classifier == null) {
 					return bool(false);
 				}
-				if(classifier instanceof ComponentImplementation){
+				if (classifier instanceof ComponentImplementation) {
 					classifier = ((ComponentImplementation) classifier).getType();
 				}
-				ct = (ComponentType)classifier;
+				ct = (ComponentType) classifier;
 			}
 			while (ct != null) {
 				if (ct == type) {
@@ -312,7 +321,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 				return new SetValue(Collections.unmodifiableSortedSet(result));
 			} else {
 				throw new IllegalArgumentException("enumerated_values called on property " + prop.getFullName()
-				+ " which does not have an enumeration type");
+						+ " which does not have an enumeration type");
 			}
 		}
 
@@ -868,12 +877,51 @@ public class ResoluteBuiltInFnCallEvaluator {
 		} else if (ne instanceof DataPort) {
 			DataPort dp = (DataPort) ne;
 			return dp.getDataFeatureClassifier();
+		} else if (ne instanceof EventDataPort) {
+			EventDataPort dp = (EventDataPort) ne;
+			return dp.getDataFeatureClassifier();
+		} else if (ne instanceof DataAccess) {
+			DataAccess dp = (DataAccess) ne;
+			return dp.getDataFeatureClassifier();
+		} else if (ne instanceof BusAccess) {
+			BusAccess dp = (BusAccess) ne;
+			BusFeatureClassifier val = dp.getBusFeatureClassifier();
+			if (val instanceof BusClassifier) {
+				return (BusClassifier) val;
+			}
+		} else if (ne instanceof Feature) {
+			Feature dp = (Feature) ne;
+			FeatureClassifier val = dp.getFeatureClassifier();
+			if (val instanceof ComponentClassifier) {
+				return (ComponentClassifier) val;
+			}
+		} else if (ne instanceof FeatureGroup) {
+			FeatureGroup featGroup = (FeatureGroup) ne;
+			return featGroup.getAllFeatureGroupType();
 		} else if (ne instanceof FeatureInstance) {
 			FeatureInstance fi = (FeatureInstance) ne;
 			Feature feature = fi.getFeature();
 			if (feature instanceof DataPort) {
 				DataPort dp = (DataPort) feature;
 				return dp.getDataFeatureClassifier();
+			} else if (feature instanceof EventDataPort) {
+				EventDataPort dp = (EventDataPort) ne;
+				return dp.getDataFeatureClassifier();
+			} else if (feature instanceof DataAccess) {
+				DataAccess dp = (DataAccess) ne;
+				return dp.getDataFeatureClassifier();
+			} else if (feature instanceof BusAccess) {
+				BusAccess dp = (BusAccess) ne;
+				BusFeatureClassifier val = dp.getBusFeatureClassifier();
+				if (val instanceof BusClassifier) {
+					return (BusClassifier) val;
+				}
+			} else if (ne instanceof Feature) {
+				Feature dp = (Feature) ne;
+				FeatureClassifier val = dp.getFeatureClassifier();
+				if (val instanceof ComponentClassifier) {
+					return (ComponentClassifier) val;
+				}
 			}else if(feature instanceof FeatureGroup){
 				FeatureGroup featGroup = (FeatureGroup)feature;
 				return featGroup.getAllFeatureGroupType();
