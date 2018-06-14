@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -12,8 +13,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -30,6 +29,7 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
 
@@ -57,40 +57,42 @@ public class AssuranceCaseView extends ViewPart {
         MenuManager manager = new MenuManager();
         manager.setRemoveAllWhenShown(true);
 
-        manager.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
-                if (!selection.isEmpty()) {
-                    final ClaimResult claim = (ClaimResult) selection.getFirstElement();
+        manager.addMenuListener(manager1 -> {
+		    IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
+		    if (!selection.isEmpty()) {
+		        final ClaimResult claim = (ClaimResult) selection.getFirstElement();
 
-                    EObject location = claim.getLocation();
-                    if (claim instanceof FailResult) {
-                        manager.add(createHyperlinkAction("Open Failure Location", location));
-                    } else if (location instanceof ProveStatement) {
-                        manager.add(createHyperlinkAction("Open Prove Statement", location));
-                        manager.add(createExportSubmenu(claim));
-                    } else {
-                        manager.add(createHyperlinkAction("Open Claim Definition", location));
-                    }
+		        EObject location = claim.getLocation();
+		        if (claim instanceof FailResult) {
+		            manager1.add(createHyperlinkAction("Open Failure Location", location));
+		        } else if (location instanceof ProveStatement) {
+		            manager1.add(createHyperlinkAction("Open Prove Statement", location));
+		            manager1.add(createExportSubmenu(claim));
+		        } else {
+		            manager1.add(createHyperlinkAction("Open Claim Definition", location));
+		        }
 
-                    Map<String, EObject> references = claim.getReferences();
-                    for (String name : new TreeSet<String>(references.keySet())) {
-                        manager.add(createHyperlinkAction("Go to '" + name + "'",
-                                references.get(name)));
-                    }
+		        Map<String, EObject> references = claim.getReferences();
+		        for (String name : new TreeSet<String>(references.keySet())) {
+		            manager1.add(createHyperlinkAction("Go to '" + name + "'",
+		                    references.get(name)));
+		        }
 
-                    manager.add(new Action("Copy Claim Text") {
-                        @Override
-                        public void run() {
-                            Transferable text = new StringSelection(claim.getText());
-                            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                            clipboard.setContents(text, null);
-                        }
-                    });
-                }
-            }
-        });
+		        manager1.add(new Action("Copy Claim Text") {
+		            @Override
+		            public void run() {
+		                Transferable text = new StringSelection(claim.getText());
+		                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		                clipboard.setContents(text, null);
+		            }
+		        });
+			}
+			if (doResoluteDebug) {
+				manager.add(createDisableResoluteConsoleAction());
+			} else {
+				manager.add(createEnableResoluteConsoleAction());
+			}
+		});
         treeViewer.getControl().setMenu(manager.createContextMenu(treeViewer.getTree()));
     }
 
@@ -101,7 +103,7 @@ public class AssuranceCaseView extends ViewPart {
         manager.add(createExportCAZAction(claim));
         return manager;
     }
- 
+
     private IAction createHyperlinkAction(String text, final EObject eObject) {
         return new Action(text) {
             @Override
@@ -110,7 +112,7 @@ public class AssuranceCaseView extends ViewPart {
             }
         };
     }
-    
+
     private static boolean CERTWARE_INSTALLED;
     static {
         try {
@@ -120,15 +122,15 @@ public class AssuranceCaseView extends ViewPart {
             CERTWARE_INSTALLED = false;
         }
     }
-    
-   
+
+
 
     private IAction createExportCAZAction(final ClaimResult claim) {
         String name = "Export to CertWare";
         if (!CERTWARE_INSTALLED) {
             name += " [CertWare plug-ins not installed]";
         }
-        
+
         return new Action(name) {
             @Override
             public void run() {
@@ -140,7 +142,7 @@ public class AssuranceCaseView extends ViewPart {
                     t.printStackTrace();
                 }
             }
-            
+
             @Override
             public boolean isEnabled() {
                 return CERTWARE_INSTALLED;
@@ -148,7 +150,7 @@ public class AssuranceCaseView extends ViewPart {
         };
     }
 
-  
+
     private Action createExportDOTAction(final ClaimResult claim) {
         return new Action("Show DOT Text in Console") {
             @Override
@@ -161,7 +163,46 @@ public class AssuranceCaseView extends ViewPart {
         };
     }
 
-    private static MessageConsole findConsole(String name) {
+	private static boolean doResoluteDebug = false;
+	private static MessageConsoleStream consoleStream = null;
+
+	private Action createEnableResoluteConsoleAction() {
+		return new Action("Enable Resolute Debug Console") {
+			@Override
+			public void run() {
+				MessageConsole console = findConsole("Resolute Console");
+				showConsole(console);
+				console.clearConsole();
+				doResoluteDebug = true;
+				consoleStream = console.newMessageStream();
+				consoleStream.println("Resolute debug tracing enabled");
+			}
+		};
+	}
+
+	private Action createDisableResoluteConsoleAction() {
+		return new Action("Disable Resolute Debug Console") {
+			@Override
+			public void run() {
+				MessageConsole console = findConsole("Resolute Console");
+				showConsole(console);
+				doResoluteDebug = false;
+				consoleStream.println("Resolute debug tracing disabled");
+			}
+		};
+	}
+
+	public static void writeToConsole(String msg) {
+		if (doResoluteDebug) {
+			consoleStream.println(msg);
+			try {
+				consoleStream.flush();
+			} catch (IOException e) {
+			}
+		}
+	}
+
+	private static MessageConsole findConsole(String name) {
         ConsolePlugin plugin = ConsolePlugin.getDefault();
         IConsoleManager conMan = plugin.getConsoleManager();
         IConsole[] existing = conMan.getConsoles();
@@ -176,8 +217,8 @@ public class AssuranceCaseView extends ViewPart {
         return myConsole;
     }
 
-    private void showConsole(IConsole console) {
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+	private void showConsole(IConsole console) {
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         try {
             IConsoleView view = (IConsoleView) page.showView(IConsoleConstants.ID_CONSOLE_VIEW);
             view.display(console);
