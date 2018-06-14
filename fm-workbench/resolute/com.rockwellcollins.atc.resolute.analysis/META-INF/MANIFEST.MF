@@ -46,5 +46,4 @@ Import-Package: org.eclipse.emf.transaction,
  org.eclipse.gmf.runtime.emf.commands.core.command,
  org.eclipse.gmf.runtime.emf.core,
  org.eclipse.gmf.runtime.notation
-Automatic-Module-Name: com.rockwellcollins.atc.resolute.analysis
 

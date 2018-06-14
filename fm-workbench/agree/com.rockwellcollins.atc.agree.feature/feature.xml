@@ -73,6 +73,55 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          unpack="false"/>
 
    <plugin
+         id="edu.uah.rsesc.aadlsimulator"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="edu.uah.rsesc.aadlsimulator.ui"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="edu.uah.rsesc.aadlsimulator.agree"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="edu.uah.rsesc.aadlsimulator.agree.ui"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="edu.uah.rsesc.aadlsimulator.doc"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="edu.uah.rsesc.aadlsimulator.xtext"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="edu.uah.rsesc.aadlsimulator.xtext.ui"
+         download-size="0"
+         install-size="0"
+         version="2.1.3.qualifier"
+         unpack="false"/>
+
+   <plugin
          id="com.rockwellcollins.atc.agree.doc"
          download-size="0"
          install-size="0"

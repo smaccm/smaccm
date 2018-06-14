@@ -49,4 +49,3 @@ Export-Package: com.rockwellcollins.atc.agree.analysis,
  jkind.results.layout,
  jkind.translation,
  jkind.util
-Automatic-Module-Name: com.rockwellcollins.atc.agree.analysis
