@@ -41,7 +41,7 @@ annex Resolute {**
     sum([WeightBudget(t) for (t: subcomponents(self))])
 ~~~
 
-A claim function can be associated with component 
+A claim function can be associated with component types or
 implementations by `prove` statements declared in a Resolute annex
 subclause. The example shows the `prove` statement for a claim
 function `SCSReq1` with the component itself passed in as a parameter.
@@ -98,39 +98,29 @@ units are those defined by Units property types in property sets and do
 not have to be qualified by the Units type.
 
 The claim function expression is assumed to be a logical expression
-(`and`,  `or`, `andthen`,  `orelse`, implies (`=>`)) or quantified expressions (`forall`,`exists`) to
-represent a predicate. You can also and `let` expressions to compute local variables.
-
-In the case of `and`,  `or` and `forall`, all
+(`and`, `forall`, `or`, `exists`, implies (`=>`)) to
+represent a predicate. In the case of `and` and `forall`, all
 expression elements are executed and then the result is evaluated and
 returns true only if all claim functions return true. Executing all
 claim functions allows Resolute to inform the user of all failing claim
-functions rather than not executing the remaining
-claim function calls after a failing claim in the case of `and` and `forall` and after a successful claim in the case of `or`.
-
-`andthen` conditionally executes the second operand if the first one is true, i.e., the first operand acts as a precondition to the second one. This is useful when checking that a property exists (`has_property`) before retrieving it (`property`) as `property` throws an exception when the value is not found. 
-
-`orelse` conditionally executes the second operand as an alternative if the first one is false. For example, this is useful when a predicate is evaluated in a compute function and if it returns false we want to provide an explanatory message using `fail`. 
-
-`exists` will execute elements in the provided collection until one evaluates to true. Note that provided collections are not always in the order you expect, e.g., `subcomponents(c)` returns a collection that is ordered by component name, not the declaration order.
-
-`=>` only executes the second operand if the first one is true. Note, however that if the left operand is false the result of `=>` is true without execute the right operand. 
+functions rather than one at a time by not executing the remaining
+elements in the `and` or `forall` expression.
 
 A Resolute annex library is declared directly in a package through the
 `annex` Resolute `{**` *\<library content\>* `**};`
-statement. Typically you want to place a Resolute library in a package by itself - separate from component declarations. 
+statement. Such a statement can be placed in a package by itself,
+combined with library declarations for other annexes, or combined with
+classifier declarations in the same package. A package cannot contain
+multiple Resolute annex library declarations; *i.e.*, each library must be
+placed in a separate package.
 
 Resolute assumes that there is a global name space for the names of
 claim functions and computational functions. Therefore, their names must
-be globally unique. Claim and computational functions can be referenced in `prove` statements,
+be globally unique. They can be referenced in `prove` statements,
 other claim functions, or computational functions without qualification
 by a package name.
 
-
-> You may have two claim functions with the same name in different packages. Resolute will not complain and will use the first one it encounters when resolving references.
-
-
-[]{#application-of-claim-functions}
+[]{#application-claim-functions}
 
 Application of Claim Functions
 ------------------------------
@@ -145,7 +135,7 @@ A component implementation can contain multiple `prove` statements.
 ~~~ {.bnf caption="Multiple Prove Statements"}
 <Resolute_subclause> :== "annex" "resolute" "{**" <prove_statement> ( <prove_statement> )* "**}" ";"
 
-<prove_statement> ::= "prove" "(" <claim_function_invocation> ")"
+<prove_statement> ::= "prove" "(" <claim_function_invocations> ")"
 
 <claim_function_invocation> ::= <claim_function_name> "("
     ( <parameter_value> ("," <parameter_value>)* )? ")"
@@ -158,7 +148,11 @@ parameter.
 
 One special model element reference is expressed by the keyword
 `this`. It refers to the instance model object of the model element
-that contains the `prove` statement. This is the root object of an instance model as Resolute create a separate instance model every time it encounters a prove statement.
+that contains the `prove` statement. The keyword `this` can only be
+used in the `prove` statement --- not in verification action expressions.
+This constraint means that `this` must be passed to a claim function
+for it to know what model element it operates on --- unless we have a global
+claim function (see Global Constants).
 
 ~~~
 prove ( Memory_safe ( this ))
@@ -174,31 +168,28 @@ statement is applied to a subcomponent called subsystem1:
 prove (Fully_Connected ( this.subsystem1 ))
 ~~~
 
-> The keyword `this` can only be
-used in the `prove` statement --- not in claim functions or compute functions. Inside claim or compute function you can access elements of the instance model through set constructors such as `component` or `thread`.
-
-
 The `prove` statement can be associated with the component classifier
 of the subcomponent. In that case, it applies to all instances of that
 component. We recommend that you associate `prove` statements with a
 path only if the `prove` is intended for that particular instance of a
 subcomponent.
 
-[]{#uses-of-claim-functions}
+[]{#uses-claim-functions}
 
 Uses of Claim Functions
 -----------------------
 
 The compiler does enforce that claim functions can be invoked only in
-`prove` statements, and in other claim functions, and cannot be invoked
+`prove` statements, and as operands in `and`, `or`, `>`
+(implies), `exists`, and `forall` operations, and cannot be invoked
 in computational functions.
 
-[]{#computational-functions-and-constants}
+[]{#comp-functions-constants}
 
-Computational Functions and Constants
-=====================================
+Computational Functions and Constants (Final Variables)
+=======================================================
 
-[]{#computational-functions}
+[]{#comp-functions}
 
 Computational Functions
 -----------------------
@@ -265,7 +256,7 @@ or `+` operator.
 -   Local constants are used to precompute values that may be referenced
     multiple times in the succeeding expression.
 
-[]{#predicate-expressions-and-computational-expressions}
+[]{#expressions}
 
 Predicate Expressions and Computational Expressions
 ===================================================
@@ -282,15 +273,15 @@ precedence order:
 
 Logical operators (the operands a, b are expressions of type Boolean):
 
--    a `=>` b
--   a `or` b *and* a `orelse` b
--   a `and` b *and* a `andthen` b
+-   Implies: a `=>` b
+-   Disjunction: a `or` b
+-   Conjunction: a `and` b
 -   Negation: `not` a
 -   Quantified logical expressions: ( `forall` | `exists` ) `(`
     \<variablename\> `:` \<collection_constructor\> `)` `.`
     \<logical_expression\>
 
-[]{#computational-expressions}
+[]{#comp-expressions}
 
 Computational Expressions
 -------------------------
@@ -308,30 +299,26 @@ Arithmetic operators (the operands are of type `real` or `int` and
 may include a unit):
 
 -   `+` | `-`
--   `*` | `/`
--   exponent: `^` 
-
+-   `\` | `/`
 -   Negation: `-` a
 -   Precedence brackets: `(` a `)`
 
-> The precedence order is Relational operators (low) to Arithmetic in increasing order. They are higher than `and` *and* `andthen`.
-
 ### Type-related operators
 
+-   Type test: ( a `instanceof` \<type\> )
 -   Type cast: `(` \<type\> `)` a
-
-> Type cast is the same precedence as `not` *and* \<negations\>.
 
 ### Atomic expressions
 
-Atomic expressions can be used as operands and have highest precedence.
+Atomic expressions can be used as operands of all the operators listed
+above.
 
 -   Base type values: integer value, real value, string value, and Boolean
     value. Integer and real values can be annotated with a unit. Any unit
     defined by a Unit property type in any of the property sets is
     acceptable.
 
--   Global and local constant reference and parameter reference by their
+-   Global or local constant reference and variable reference by its
     identifier
 
 -   Computational function invocation:\
@@ -339,7 +326,7 @@ Atomic expressions can be used as operands and have highest precedence.
 
 -   Conditional value: `if` condition `then` expression `else` expression
 
--   Qualified AADL classifier or property definition: ( \<ID\> `::` ) \*\<ID\>
+-   Qualified classifier or property definition: ( \<ID\> `::` ) \*\<ID\>
     ( `.` \<ID\> )?
 
     +   Classifier used only as a parameter to `instance` or `instances`
@@ -349,6 +336,13 @@ Atomic expressions can be used as operands and have highest precedence.
 
     +   Used only as parameter in `prove` statement
 
+### Exception operators
+
+Exception operators are equivalent to exception throws with the
+enclosing claim function representing an implicit catch.
+
+-   Exception: `fail` \<string value\> or `fail **` \<description\>
+    `**` with the description syntax the same as for claim functions
 
 ### Collection-related operators
 
@@ -398,7 +392,7 @@ executes the built-in `has_property` constraint function on each
 element.
 
 In the second example, we precompute the collection of subcomponents and
-hold on to them with a local constant. We then construct a list of
+hold on to them with a local constant. We then construct a collection of
 real values of value 1.0 for each subcomponent that satisfies the
 `has_property` constraint function, then perform the summation of the
 resulting `real` (list) collection, and divide it by the size of the
@@ -409,7 +403,6 @@ HasSubcomponentWeightBudget(self:component) : bool =
     forall (sub: subcomponents(self)) . has_property(sub,SEI::GrossWeight)
 
 SubcomponentWeightBudgetCoverage(self:component) : bool =
-    let subs : {component} = subcomponents(self);
     (sum([ 1.0 for (sub : subs) | has_property(sub,SEI::GrossWeight)]) / length(subs))
 ~~~
 
@@ -431,10 +424,6 @@ the claim, and reported as a sub-result to the claim function. That is,
 the `fail` expression is shown as a failure, and the provided text
 explains the failure.
 
--   Exception: `fail` \<string value\> or `fail **` \<description\>
-    `**` with the description syntax the same as for claim functions
-
-
 []{#resolute-type-system}
 
 Resolute Type System
@@ -454,7 +443,7 @@ the *SubcomponentWeightCoverage* example, the collection concept has
 multiple instances of the value 1.0, and each is counted in the
 summation.
 
-[]{#built-inbase-types}
+[]{#base-types}
 
 Built-in Base Types
 -------------------
@@ -467,7 +456,7 @@ Base type:
 -   `bool`
 -   `range`
 
-[]{#arithmetic-with-integers-and-reals}
+[]{#arithmetic}
 
 Arithmetic with Integers and Reals
 ----------------------------------
@@ -487,7 +476,7 @@ Resolute can retrieve property values with built-in functions. The
 property values for `aadlinteger` are mapped into `int`,
 `aadlreal` into `real`, and `range of` into `range`.
 
-[]{#aadl-model-element-types}
+[]{#aadl}
 
 AADL Model Element Types
 ------------------------
@@ -538,12 +527,12 @@ represent instances. Built-in collection functions operate on instance
 model elements or retrieve the set of instances for a given classifier
 (see Built-in Functions).
 
-[]{#built-in-functions}
+[]{#functions}
 
 Built-in Functions
 ==================
 
-[]{#built-in-functions-for-collections}
+[]{#functions-collections}
 
 Built-in Functions for Collections
 ----------------------------------
@@ -556,9 +545,6 @@ that is the intersection of the two inputs
 
 `length`(\<collection\>): int - returns the size of the given set or list
 collection
-
-`size`(\<collection\>): int - returns the size of the given set or list
-collection (same as length)
 
 `member`(\<element\>, \<collection\>): Boolean - returns true if the element
 is a member of the set or list collection
@@ -579,7 +565,7 @@ unique elements contained in the given list collection
 `as_list`(\<set\>): list - returns a list collection containing all of the
 elements contained in the given set collection
 
-[]{#built-in-functions-for-ranges}
+[]{#functions-ranges}
 
 Built-in Functions for Ranges
 -----------------------------
@@ -588,10 +574,10 @@ Built-in Functions for Ranges
 
 `lower_bound`(\<range\>): numeric - returns the lower bound of the range
 
-[]{#built-in-functions-for-properties}
+[]{#functions-model}
 
-Built-in Functions for Properties
------------------------------------------
+Built-in Functions on Any Model Element (of the instance model):
+----------------------------------------------------------------
 
 `has_property`(\<named\_element\>, \<property\>): Boolean - the named element
 has the property.
@@ -600,18 +586,13 @@ has the property.
 value - returns the value of the property. If a default value is
 supplied, then it is returned if the element does not have the
 property value. If no default is supplied and the value does not
-exist, a resolute failure exception is thrown, which is caught by the closest enclosing claim function and interpreted as a fail.
+exist, a resolute failure exception is thrown.
 
-`property_member`(\<record\_property\_value\>, \<field name\>): Boolean - return the value of the record field.
+`has_parent`(\<named\_element\>): Boolean - returns true if the component
+has an enclosing model element
 
-> Note: There is no constructor for record values. To compare a property record value to some actual record value you have to write a function that compares each of the fields. `=` can be used to compare two property record values.
-
-`enumerated_values`(\<property\>): [ \<string\> ] - return the an ordered set of string values.
-
-[]{#built-in-functions-for-any-model-element-and-components}
-
-Built-in Functions for Any Model Element and Components
-------------------------------------------------------
+`parent`(\<named\_element\>): named\_element - returns the parent of the
+named element. The parent must exist.
 
 `name`(\<named\_element\>): string - returns the name of the named element
 
@@ -622,8 +603,8 @@ feature is the connection end.
 
 `type`(\<named\_element\>): Classifier - returns the classifier of a
 component, feature, or connection. In the case of a connection, the type
-is that of the connection source (if not present the destination) feature. The named element must have a
-type, otherwise a resolute failure exception is thrown and caught by the closest enclosing claim function.
+of the feature is the connection end. The named element must have a
+type.
 
 `is_of_type`(\<named\_element\>, \<classifier\>): Boolean - true if the
 named element has the classifier or one of its type extensions. The
@@ -631,61 +612,13 @@ named element must have a type. The named element can be a component,
 feature, or connection instance. In the case of a connection, the type
 of the feature is the connection end.
 
-`has_parent`(\<named\_element\>): Boolean - returns true if the component
-has an enclosing model element
-
-`parent`(\<named\_element\>): named\_element - returns the parent of the
-named element. The parent must exist.
-
 `has_member`(\<component\>, \<string\>): Boolean - true if the component has
 a member with the specified name (string). Members are features,
 subcomponents, etc. The component can be a component instance or a
 component classifier.
 
->  Note: Feature instances representing feature groups can have feature
-    instances as members, but they are not handled by this function. See pre-declared library below for flattening feature instances in feature groups.
-
-`is_in_array`(\<component\>): Boolean - returns true if the component instance in in an array, i.e., has an index into the array.
-
-`has_prototypes`(\<component\>): Boolean - returns true if component classifier contains prototype declarations.
-
-`has_modes`(\<component\>): Boolean - returns true if component directly contains mode instances.
-
-`is_procesor`(\<component\>): Boolean - true if the component instance is
-a processor
-
-Other built-in component category tests are: `is_virtual_procesor`, `is_system`, `is_bus`, `is_virtual_bus`, `is_device`,
-`is_memory`, `is_thread`, `is_process`, `is_data`, `is_subprogram`. 
-
-> Missing tests (`abstract`, `thread_group`, `subprogram_group`) can be tested by `\<object\> instanceof \<aadl model element type\>`
-
-[]{#built-in-functions-for-features}
-
-Built-in Functions for Features
-------------------------------
-
-`direction`(\<feature\>): string - returns the direction of a feature
-instance as string (`in`, `out`, `in out`/`in_out`). Access features do not have direction.
-
-`is_event_port`(\<feature\>): Boolean - true if the feature instance is
-an event port or event data port
-
-`is_data_port`(\<feature\>): Boolean - true if the feature instance is
-an data port or event data port
-
-`is_port`(\<feature\>): Boolean - true if the feature instance is
-a port
-
-`is_abstract_feature`(\<feature\>): Boolean - true if the feature instance is
-an abstract feature
-
-> Note that you can test any feature or component by writing `\<object\> instanceof \<aadl model element type\>`
-
-
-[]{#built-in-functions-for-connections}
-
-Built-in Functions for Connections
----------------------------------
+-   Note: Feature instances representing feature groups can have feature
+    instances as members, but they are not handled by this function.
 
 `source`(\<connection\>): connection\_endpoint - returns the component or
 feature instance that is the source of the connection instance
@@ -694,25 +627,22 @@ feature instance that is the source of the connection instance
 component or feature instance that is the destination of the connection
 instance
 
-`is_data_access`(\<connection\>): Boolean - true if one end of a connection is a data component
+`direction`(\<feature\>): string - returns the direction of a feature
+instance as string (`in`, `out`, `inout`/`in_out`?)
 
-[]{#built-in-functions-for-bindings}
+`is_event_port`(\<feature\>): Boolean - true if the feature instance is
+an event port
 
-Built-in Functions for Bindings
------------------------------
+`is_bound_to`(\<component\>, \<binding_target\>): Boolean - true if the
+component instance is bound to the binding target
 
-`is_bound_to`(\<binding_source\>, \<binding_target\>): Boolean - true if the
-binding source (a component or connection instance) is bound to the binding target (a component).
-It handles processor bindings, memory bindings, and connection bindings.
+-   Note: Connection bindings are not handled. The `is_bound_to`
+    function is the same as library function `bound`.
 
->   Note: The `is_bound_to` function is the same as library function `bound`.
+[]{#functions-model-collections}
 
->   Note: The `is_bound_to` function does not consider function_bindings. See *Resolute_Stdlib.aadl* for how this can be done by mirroring *processor_bound*.
-
-[]{#built-in-functions-for-sets-and-lists}
-
-Built-in Functions for Sets and Lists
--------------------------------------
+Model Element Collections
+-------------------------
 
 Resolute operates on the instance model; this means that the collections
 are of instance model elements.
@@ -736,72 +666,35 @@ classifier
 instance for a given component classifier. The method assumes that there
 is only one instance.
 
-[]{#built-in-functions-for-flows}
-
-Built-in Functions for Flows
-----------------------
-
-`end_to_end_flows` (\<component\>): { \<end\_to\_end\_flow\> } - returns set of end to end flows contained in component instance.
-
-`flow_elements` (\<end\_to\_end\_flow\>): { \<flow\_element\> } - returns set of flow elements, which are connection instances, flow spec instances, or components instances.
-
-`flow_specifications` (\<component\>): { \<flow\_spec\> } - returns set of flow specification instances of a component.
-
-
-`flow_source` (\<flow\_spec\>): feature - returns the source of a flow specification.
-
-`flow_destination` (\<flow\_spec\>): feature - returns the destination of a flow specification.
-
-
-
-[]{#built-in-functions-for-error-models}
-
-Built-in Functions for Error Models
----------------------
-
-`error_state_reachable` (\<component\>, \<state: string\>): Boolean - true
-
-`propagate_error` (\<component\>, \<error\_type: string\>): Boolean -
-true if the component instance propagates out the error type on any of its features
-if the error state of the component instance is reachable by an incoming transition
-
-`receive_error` (\<component\>, \<error\_type: string\>): Boolean - true
-true if the component instance receives the error type of a propagated error on any of its features. Not supported yet.
-
-`contain_error` (\<component\>, \<error\_type: string\>): Boolean - true
-if the the component instance has an error event with the specified error type. Not supported yet.
-
-[]{#external-functions}
+[]{#functions-external}
 
 External Functions
 ------------------
 
-`analysis` (\<function: string\>, \<args\>): \<ResoluteValue\> - invocation of a Java
+`analysis` (\<function: string\>, \<args\>): Boolean - invocation of a Java
 function registered as an external function extension point. The
 function is specified as string identifier of the extension point. The
-arguments are additional parameters of the analysis function. 
+arguments are additional parameters of the analysis function.
 
-The return value must be one of the ResoluteValue subclasses: Boolvalue, IntValue, ListValue, NamedElementValue, RangeValue, RealValue, ResoluteRecordValue, SetValue, StringValue.
+[]{#functions-error-model}
 
-[]{#debug-functions}
+Error Model Functions
+---------------------
 
-Debug Functions
-------------------
+`propagate_error` (\<named\_element\>, \<error\_type: string\>): Boolean -
+true if the component or feature instance propagates the error type
 
-`debug` (\<args\>): true - writes the set of argument objects (converted to strings) to the console.   
+`error_state_reachable` (\<component\>, \<state: string\>): Boolean - true
+if the error state of the component instance is reachable
 
-> Currently debug writes to the console using System.out.println calls. This results in the output going to the console of the Eclipse development environment from which OSATE got started. It should be able to write to the console in OSATE.
+[]{#resolute-functions}
 
-> You might want to write wrapper methods that allow you to turn such debug logging on and off. See debugging with Resolute below.
+Pre-declared Resolute Computational Function Library
+====================================================
 
-[]{#common-resolute-function-library}
+[]{#binding-functions}
 
-Common Resolute Function Library
-================================
-
-[]{#binding-related-functions}
-
-Binding Related Functions
+Binding-Related Predicate Functions
 -----------------------------------
 
 `bound`(\<component, binding\_target\>): Boolean - true if the component
@@ -821,15 +714,10 @@ binding
 component instance is bound to the binding target by actual connection
 binding.
 
-> Note: You may want to implement a `function_bound` function. See *Resolute_Stdlib.aadl* for how this can be done by mirroring *processor_bound*.
+[]{#connection-functions}
 
-
-[]{#connection-related-functions}
-
-Connection Related Functions
+Connection-Related Functions
 ----------------------------
-
-`connected`(\<source component\>, \<connection\>, \<destination component\>): Boolean - returns true if the components are the soruce and destination components of the connection..
 
 `source_component`(\<connection\>): component - returns the component
 that is the source of the connection instance. This component contains
@@ -855,7 +743,8 @@ of the connection end points is an event data port. Note: should be
 determined by the destination.
 
 `is_data_access_connection`(\<connection\>): Boolean - true if one of
-the connection end points is a data access feature. 
+the connection end points is a data access feature. Note: should be
+determined by the destination.
 
 []{#model-element-containment}
 
@@ -871,7 +760,7 @@ connection instance.
 directly containing component instance. The named element can be a
 component or feature instance. Note: also works for connection instance.
 
-[]{#handling-of-feature-groups}
+[]{#handling-feature-groups}
 
 Handling of Feature Groups
 --------------------------
@@ -893,106 +782,71 @@ set.
 Resolute Examples
 =================
 
-[]{#debugging-models-with-resolute}
+[]{#debugging}
 
 Debugging Models with Resolute
 ------------------------------
 
-Get a model element trace on the Console View.  You enable and disable console logging through a command in the context menu of the Assurance Case View of Resolute. Once enabled the built-in function **debug** will write to the console when executed. 
-
-The built-in function **debug** takes one or more parameters and writes them out. It can handle any Resolute base tpye, lists and sets, as well as AADL model elements.
+Get a model element trace in the assurance case view:
 
 ~~~ {.resolute caption="Model Element Trace in the Assurance View"}
-  	let conns : {connection} = connections;
-  	debug( "Set of connections ",conns)
-~~~
-
-Get a trace recorded as a result object in the Assurance Case View of Resolute we use claims functions as the examples shown below :
-
-~~~ {.resolute caption="Model Element Trace in the Assurance View"}
-
--- record a model element in the result structure
-record_aadl(a : aadl) <=
+print_aadl(a : aadl) <=
     ** a **
     true
 
--- record a set of model elements in the result structure
-record_set(s : {aadl}) <=
+print_set(s : {aadl}) <=
     ** s **
     true
-
--- record a list of model elements in the result structure
-record_list(s : [aadl], msg: string) <=
-	 ** msg ": "s **
-	 true
 ~~~
-[]{#reachable-model-elements}
 
-
-Reachable Model Elements
+Reachable Collections of Model Elements
 ---------------------------------------
 
-This is a set of functions that collect AADL components that are directly or indirectly reachable via connections.
+This is a snippet from the Smaccmcopter example on
+[SMACCM models](https://github.com/smaccm/smaccm/tree/master/models).
 
-~~~ {.resolute caption="Reachability Example"}
--- return set of reachable components that have no outgoing connections. 
-reachable_endpoints(c : component) : {component} =
-	  let outconns: {connection} = outgoing_component_connections(c);
-	  if  outconns = {}
-	  then {c} 
- 	  else  
-  		{c2 for (conn : outconns) (c2 : reachable_endpoints(destination_component(conn)))}
-
-
--- all components that are reachable via port or data access connections from the given component
--- we consider direct and indirect reachability
--- the use of a set ensures that we do not recurse forever
-all_reachable_components(c : component) : {component} =
+~~~ {.resolute caption="Smaccmcopter Example"}
+reach(c : component) : {component} =
     recusive_reach({c})
 
--- support method to expand on a set of reachable components by the next directly rachable components
--- the use of a set ensures that we do not recurse forever
 recusive_reach(curr: {component}) : {component} =
-	let next_ones : {component} = {y for (x : curr) (y : directly_reachable_components(x))};
-    let next_new_ones : {component} = {ele for (ele : next_ones)| not(member(ele,curr))};
-    if (next_new_ones = {} ) then
-    	curr
-    else 
-    	union(curr, recusive_reach(next_new_ones))
+    let next : {component} = union(curr, next_reach(curr));
+    if next = curr then
+        curr
+    else
+        recursive_reach(next)
 
+next_reach(curr : {component) : {component} =
+    {y for (x : curr) (y : reachable_components(x)) | not is_decrypt(x)}
 
-	-- return set of components that are directly reachable via outgoing connections.
-	directly_reachable_components(comp: component):{component} =
-	let outconns : {connection} = outgoing_component_connections(comp);
-	{otherend for (conn: outconns) (otherend: other_connection_end(conn,comp))}
+reachable_components(comp : component) : {component} =
+    {c for (conn : connections(comp))
+        (c : reachable_components_via_connection(comp, conn))}
 
-	  
-	-- return all outgoing connections
-	-- in the case of data access conneciton we need to consider acces rights to determine the direction
-	-- in the case of port connecitons we need to filter out in/out ports with incoming connections.
-	outgoing_component_connections(comp: component): {connection} =
-	{ conn for (conn: connections(comp)) | 
-		if (is_access_connection(conn)) then
-		-- access feature has write access
-			source(conn) instanceof access and has_write_access(source(conn)) or 
-			destination(conn) instanceof access and has_write_access(destination(conn)) 
-		else
-		-- we have a directed feature connection
-		-- it is not an incoming connection with the source an out only feature
-			not(destination_component(conn) = comp 
-			and direction((feature)source(conn)) = "out"
-		)}
-
-   -- For a given connection and a given component return the component on the other end of the connection
-   -- This funciton is useful to deal with access connections or bi-directional port connections
-   -- where the source could be either end.
-   other_connection_end(conn: connection,comp: component): component =
-   		if (destination_component(conn) = comp) 
-		then
-			source_component(conn)
-   		else
-   			destination_component(conn)
-
+-- What components (either a single one or none) can 'comp' reach directly via 'conn'
+--
+-- This is complicated due to data access connections which seem to ignore
+-- normal aadl directionality, and instead use an access rights property
+reachable_components_via_connection(comp : component, conn : connection) : {component} =
+  -- a direct port connection
+  if is_port_connection(conn) then
+    if source_component(conn) = comp then {destination_component(conn)} else {}
+  -- a component reading from 'comp' as a data component via read access on 'conn'
+  else if comp instanceof data then
+    if comp = source(conn) and has_read_access(destination(conn)) then
+      {destination_component(conn)}
+    else if comp = destination(conn) and has_read_access(source(conn)) then
+      {source_component(conn)}
+    else
+      {}
+  -- 'comp' writing to a data component via write access on 'conn'  
+  else if destination(conn) instanceof data and has_write_access(source(conn)) then
+    {destination_component(conn)}
+  else if source(conn) instanceof data and has_write_access(destination(conn)) then
+    {source_component(conn)}
+  -- Other connections unsupported at this time
+  else
+    {}
 ~~~
 
 
@@ -1001,7 +855,7 @@ recusive_reach(curr: {component}) : {component} =
 Copyright
 =========
 
-Copyright 2015-18 Carnegie Mellon University
+Copyright 2015 Carnegie Mellon University
 
 This material is based upon work funded and supported by the Department
 of Defense under Contract No. FA8721-05-C-0003 with Carnegie Mellon
