@@ -15,7 +15,7 @@ public class SetType extends ResoluteType {
 
 	@Override
 	public String toString() {
-		return "{" + (elementType == BaseType.ANY ? "" : elementType) + "}";
+		return "{" + elementType + "}";
 	}
 
 	@Override
@@ -59,8 +59,7 @@ public class SetType extends ResoluteType {
 	public boolean equals(Object obj) {
 		if (obj instanceof SetType) {
 			SetType st = (SetType) obj;
-			return elementType.equals(BaseType.ANY) || st.elementType.equals(BaseType.ANY)
-					|| st.elementType.equals(elementType);
+			return st.elementType.equals(elementType);
 		}
 
 		return false;
