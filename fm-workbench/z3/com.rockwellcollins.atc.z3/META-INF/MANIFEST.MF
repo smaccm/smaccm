@@ -9,4 +9,3 @@ Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.rockwellcollins.atc.z3
-Automatic-Module-Name: com.rockwellcollins.atc.z3

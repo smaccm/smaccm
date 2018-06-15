@@ -22,4 +22,3 @@ Import-Package: com.rockwellcollins.atc.agree.analysis.handlers,
  org.osate.aadl2,
  org.osate.aadl2.instantiation,
  org.osate.ui.dialogs
-Automatic-Module-Name: com.rockwellcollins.atc.agree.codegen

@@ -44,4 +44,3 @@ Export-Package: edu.uah.rsesc.aadlsimulator.ui,
 Bundle-Activator: edu.uah.rsesc.aadlsimulator.ui.Activator
 Import-Package: org.apache.log4j;version="1.2.15",
  org.osgi.service.event
-Automatic-Module-Name: edu.uah.rsesc.aadlsimulator.ui

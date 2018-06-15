@@ -22,4 +22,3 @@ Export-Package: edu.uah.rsesc.aadlsimulator.agree,
  edu.uah.rsesc.aadlsimulator.agree.services,
  edu.uah.rsesc.aadlsimulator.agree.sim
 Bundle-Vendor: The University of Alabama in Huntsville
-Automatic-Module-Name: edu.uah.rsesc.aadlsimulator.agree

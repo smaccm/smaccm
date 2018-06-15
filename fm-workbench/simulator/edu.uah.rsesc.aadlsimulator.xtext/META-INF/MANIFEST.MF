@@ -31,5 +31,4 @@ Export-Package: edu.uah.rsesc.aadlsimulator.xtext,
  edu.uah.rsesc.aadlsimulator.xtext.formatting,
  edu.uah.rsesc.aadlsimulator.xtext.ide.contentassist.antlr,
  edu.uah.rsesc.aadlsimulator.xtext.ide.contentassist.antlr.internal
-Automatic-Module-Name: edu.uah.rsesc.aadlsimulator.xtext
 

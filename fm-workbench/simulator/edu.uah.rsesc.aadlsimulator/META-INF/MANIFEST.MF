@@ -23,4 +23,3 @@ Export-Package: edu.uah.rsesc.aadlsimulator,
  edu.uah.rsesc.aadlsimulator.launch,
  edu.uah.rsesc.aadlsimulator.services
 Service-Component: components/DefaultSimulationService.xml
-Automatic-Module-Name: edu.uah.rsesc.aadlsimulator
