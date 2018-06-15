@@ -16,7 +16,7 @@ public class ListType extends ResoluteType {
 
 	@Override
 	public String toString() {
-		return "[" + elementType + "]";
+		return "[" + (elementType == BaseType.ANY ? "" : elementType) + "]";
 	}
 
 	@Override
@@ -60,7 +60,8 @@ public class ListType extends ResoluteType {
 	public boolean equals(Object obj) {
 		if (obj instanceof ListType) {
 			ListType lt = (ListType) obj;
-			return lt.elementType.equals(elementType);
+			return elementType.equals(BaseType.ANY) || lt.elementType.equals(BaseType.ANY)
+					|| lt.elementType.equals(elementType);
 		}
 
 		return false;
