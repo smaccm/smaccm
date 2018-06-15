@@ -94,8 +94,13 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 		case "property": {
 			NamedElement element = args.get(0).getNamedElement();
-			Property prop = (Property) args.get(1).getNamedElement();
-
+			if (element instanceof PropertyConstant) {
+				PropertyConstant propConstant = (PropertyConstant) element;
+				PropertyExpression expr = propConstant.getConstantValue();
+				return exprToValue(expr);
+			}
+			NamedElement propDefOrConstant = args.get(1).getNamedElement();
+			Property prop = (Property) propDefOrConstant;
 			PropertyExpression expr = getPropertyExpression(element, prop);
 			if (expr == null) {
 				if (args.size() > 2) {
@@ -105,7 +110,6 @@ public class ResoluteBuiltInFnCallEvaluator {
 				throw new ResoluteFailException("Property " + prop.getName() + " not defined on " + element.getName(),
 						fnCallExpr);
 			}
-
 			return exprToValue(expr);
 		}
 
@@ -206,22 +210,22 @@ public class ResoluteBuiltInFnCallEvaluator {
 				ComponentInstance ci;
 				ci = (ComponentInstance) element;
 				ComponentClassifier classifier = ci.getComponentClassifier();
-				if(classifier instanceof ComponentImplementation){
+				if (classifier instanceof ComponentImplementation) {
 					ct = ((ComponentImplementation) classifier).getType();
-				}else{
-					ct = (ComponentType)classifier;
+				} else {
+					ct = (ComponentType) classifier;
 				}
 			} else if (element instanceof FeatureInstance) {
 				FeatureInstance featInst = (FeatureInstance) element;
 				Feature feat = featInst.getFeature();
 				Classifier classifier = feat.getClassifier();
-				if(classifier == null){
+				if (classifier == null) {
 					return bool(false);
 				}
-				if(classifier instanceof ComponentImplementation){
+				if (classifier instanceof ComponentImplementation) {
 					classifier = ((ComponentImplementation) classifier).getType();
 				}
-				ct = (ComponentType)classifier;
+				ct = (ComponentType) classifier;
 			}
 			while (ct != null) {
 				if (ct == type) {
@@ -317,7 +321,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 				return new SetValue(Collections.unmodifiableSortedSet(result));
 			} else {
 				throw new IllegalArgumentException("enumerated_values called on property " + prop.getFullName()
-				+ " which does not have an enumeration type");
+						+ " which does not have an enumeration type");
 			}
 		}
 

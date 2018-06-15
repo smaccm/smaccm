@@ -602,6 +602,9 @@ supplied, then it is returned if the element does not have the
 property value. If no default is supplied and the value does not
 exist, a resolute failure exception is thrown, which is caught by the closest enclosing claim function and interpreted as a fail.
 
+`property`(\<property\>) value - 
+returns the value of the property constant.
+
 `property_member`(\<record\_property\_value\>, \<field name\>): Boolean - return the value of the record field.
 
 > Note: There is no constructor for record values. To compare a property record value to some actual record value you have to write a function that compares each of the fields. `=` can be used to compare two property record values.

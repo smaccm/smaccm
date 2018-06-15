@@ -15,6 +15,7 @@ import org.osate.aadl2.Classifier;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
 
@@ -360,7 +361,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	@Override
 	public ResoluteValue caseIdExpr(IdExpr object) {
 		NamedElement ref = object.getId();
-		if (ref instanceof Classifier || ref instanceof Property) {
+		if (ref instanceof Classifier || ref instanceof Property || ref instanceof PropertyConstant) {
 			return new NamedElementValue(ref);
 		} else {
 			return doSwitch(ref);
