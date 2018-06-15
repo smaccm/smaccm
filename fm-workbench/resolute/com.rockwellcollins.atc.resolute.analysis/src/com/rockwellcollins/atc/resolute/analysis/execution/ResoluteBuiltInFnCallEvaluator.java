@@ -50,7 +50,6 @@ import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
-import org.osate.aadl2.util.OsateDebug;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
@@ -69,6 +68,7 @@ import com.rockwellcollins.atc.resolute.analysis.values.ResoluteRecordValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 import com.rockwellcollins.atc.resolute.analysis.values.SetValue;
 import com.rockwellcollins.atc.resolute.analysis.values.StringValue;
+import com.rockwellcollins.atc.resolute.analysis.views.AssuranceCaseView;
 import com.rockwellcollins.atc.resolute.resolute.BuiltInFnCallExpr;
 
 public class ResoluteBuiltInFnCallEvaluator {
@@ -697,13 +697,14 @@ public class ResoluteBuiltInFnCallEvaluator {
 			int i = 0;
 			String s = "";
 			for (ResoluteValue arg : args) {
-				if (i > 0) {
-					s += ",";
-				}
-				s += "#" + i + ": " + arg.toString();
+//				if (i > 0) {
+//					s += ",";
+//				}
+				s += // "#" + i + ": " +
+						arg.toString();
 				i++;
 			}
-			OsateDebug.osateDebug(s);
+			AssuranceCaseView.writeToConsole(s);
 
 			return TRUE;
 		}

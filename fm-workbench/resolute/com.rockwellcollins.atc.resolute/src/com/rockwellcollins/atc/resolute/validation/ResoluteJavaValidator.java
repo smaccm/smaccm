@@ -512,9 +512,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 					return;
 				}
 			}
-			error(funCall, "If the second argument of a \"propery\" statement is a "
-					+ "parametric type is parameter must be the same type as the third argument. "
-					+ "The second argument is of type '"+type1+"' and the third argument is of type '"+type2+"'");
+			error(funCall,
+					"The second argument is of type '" + type1 + "' and the third argument is of type '" + type2 + "'");
 		}
 
 	}
@@ -1043,7 +1042,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (expr instanceof ListExpr) {
 				ListExpr listExpr = (ListExpr) expr;
 				if (listExpr.getExprs().isEmpty()) {
-					return BaseType.FAIL;
+					return new ListType(BaseType.ANY);
 				}
 
 				Iterator<Expr> iterator = listExpr.getExprs().iterator();
@@ -1062,7 +1061,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (expr instanceof SetExpr) {
 				SetExpr setExpr = (SetExpr) expr;
 				if (setExpr.getExprs().isEmpty()) {
-					return BaseType.FAIL;
+					return new SetType(BaseType.ANY);
 				}
 
 				Iterator<Expr> iterator = setExpr.getExprs().iterator();

@@ -791,11 +791,11 @@ The return value must be one of the ResoluteValue subclasses: Boolvalue, IntValu
 Debug Functions
 ------------------
 
-`debug` (\<args\>): true - writes the set of argument objects (converted to strings) to the console.   
+`debug` (\<args\>): true - writes one or more arguments (strings and other base types, sets, lists, model elements as names) to the console.   
 
-> Currently debug writes to the console using System.out.println calls. This results in the output going to the console of the Eclipse development environment from which OSATE got started. It should be able to write to the console in OSATE.
+> The debug trace is written to a console in OSATE.
 
-> You might want to write wrapper methods that allow you to turn such debug logging on and off. See debugging with Resolute below.
+> You can enable and disable debug tracing through commands in the context menu of the Assurance Case View that comes with Resolute.
 
 []{#common-resolute-function-library}
 
@@ -903,7 +903,7 @@ Debugging Models with Resolute
 
 Get a model element trace on the Console View.  You enable and disable console logging through a command in the context menu of the Assurance Case View of Resolute. Once enabled the built-in function **debug** will write to the console when executed. 
 
-The built-in function **debug** takes one or more parameters and writes them out. It can handle any Resolute base tpye, lists and sets, as well as AADL model elements.
+The built-in function **debug** takes one or more parameters and writes them out. It can handle any Resolute base type, lists and sets, as well as AADL model elements.
 
 ~~~ {.resolute caption="Model Element Trace in the Assurance View"}
   	let conns : {connection} = connections;
