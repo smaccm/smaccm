@@ -24,6 +24,9 @@
 		<module>../../../tcg/com.rockwellcollins.atc.tcg</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree.feature</module>
 		
+		<module>../../../agree/edu.uah.rsesc.agree.ge</module>
+		<module>../../../agree/edu.uah.rsesc.agree.ge.ui</module>
+		
 		<module>../../../z3/com.rockwellcollins.atc.z3</module>
 		<module>../../../z3/com.rockwellcollins.atc.z3.feature</module>
 
