@@ -179,7 +179,7 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
-		List<String> ivcs = new ArrayList<>();
+		List<String> ivcs = flatNode.ivcElements;
 
 		int j = 0;
 		for (AgreeStatement assumption : flatNode.assumptions) {
@@ -188,7 +188,11 @@ public class LustreAstBuilder {
 			IdExpr assumId = new IdExpr(assumName);
 			equations.add(new Equation(assumId, assumption.expr));
 			assertions.add(assumId);
-			ivcs.add(assumId.id);
+			// If ivc elements is empty, add ivcs from assumptions and guarantees.
+			// Else add the defined ivc list.
+			if (ivcs.isEmpty()) {
+				ivcs.add(assumId.id);
+			}
 		}
 
 		for (AgreeStatement assertion : flatNode.assertions) {
@@ -348,7 +352,7 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
-		List<String> ivcs = new ArrayList<>();
+		List<String> ivcs = agreeNode.ivcElements;
 
 		Expr stuffConj = new BoolExpr(true);
 
@@ -357,7 +361,9 @@ public class LustreAstBuilder {
 			AgreeVar stuffAssumptionVar = new AgreeVar(stuffPrefix + assumeSuffix + stuffAssumptionIndex++,
 					NamedType.BOOL, assumption.reference, agreeNode.compInst, null);
 			locals.add(stuffAssumptionVar);
-			ivcs.add(stuffAssumptionVar.id);
+			if (ivcs.isEmpty()) {
+				ivcs.add(stuffAssumptionVar.id);
+			}
 			IdExpr stuffAssumptionId = new IdExpr(stuffAssumptionVar.id);
 			equations.add(new Equation(stuffAssumptionId, assumption.expr));
 
@@ -369,7 +375,9 @@ public class LustreAstBuilder {
 			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++,
 					NamedType.BOOL, guarantee.reference, agreeNode.compInst, null);
 			locals.add(stuffGuaranteeVar);
-			ivcs.add(stuffGuaranteeVar.id);
+			if (ivcs.isEmpty()) {
+				ivcs.add(stuffGuaranteeVar.id);
+			}
 			IdExpr stuffGuaranteeId = new IdExpr(stuffGuaranteeVar.id);
 			equations.add(new Equation(stuffGuaranteeId, guarantee.expr));
 
@@ -521,7 +529,7 @@ public class LustreAstBuilder {
 		List<VarDecl> locals = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<Expr> assertions = new ArrayList<>();
-		List<String> ivcs = new ArrayList<>();
+		List<String> ivcs = agreeNode.ivcElements;
 
 		// add assumption history variable
 		IdExpr assumHist = new IdExpr(assumeHistSufix);
@@ -550,7 +558,9 @@ public class LustreAstBuilder {
 			locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst, null));
 			IdExpr guarId = new IdExpr(inputName);
 			equations.add(new Equation(guarId, statement.expr));
-			ivcs.add(guarId.id);
+			if (ivcs.isEmpty()) {
+				ivcs.add(guarId.id);
+			}
 			guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
 		}
 		for (AgreeStatement statement : agreeNode.lemmas) {
