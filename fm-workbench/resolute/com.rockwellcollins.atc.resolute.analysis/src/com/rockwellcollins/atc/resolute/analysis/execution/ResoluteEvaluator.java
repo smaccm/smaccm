@@ -9,10 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.Classifier;
+import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
+import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
@@ -29,6 +33,10 @@ import com.rockwellcollins.atc.resolute.resolute.BinaryExpr;
 import com.rockwellcollins.atc.resolute.resolute.BoolExpr;
 import com.rockwellcollins.atc.resolute.resolute.BuiltInFnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.CastExpr;
+import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
+import com.rockwellcollins.atc.resolute.resolute.ClaimString;
+import com.rockwellcollins.atc.resolute.resolute.ClaimText;
+import com.rockwellcollins.atc.resolute.resolute.ClaimTextVar;
 import com.rockwellcollins.atc.resolute.resolute.ConstantDefinition;
 import com.rockwellcollins.atc.resolute.resolute.DefinitionBody;
 import com.rockwellcollins.atc.resolute.resolute.Expr;
@@ -82,7 +90,74 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 
 	@Override
 	public ResoluteValue caseFailExpr(FailExpr object) {
-		throw new ResoluteFailException("Failure: ", object);
+		throw new ResoluteFailException(createFailMsg(object), null);
+	}
+
+	private String createFailMsg(FailExpr object) {
+		String str = "unknown failure";
+
+		if (object.getVal() instanceof BinaryExpr) {
+			BinaryExpr binExpr = (BinaryExpr) object.getVal();
+			Object val = doSwitch(binExpr);
+			StringValue strVal = (StringValue) val;
+			str = strVal.getString();
+		}
+
+		if (object.getVal() instanceof StringExpr) {
+			StringExpr stringExpr = (StringExpr) object.getVal();
+			str = stringExpr.getVal().getValue();
+		}
+
+		if (!object.getFailmsg().isEmpty()) {
+			str = createClaimText(object.getFailmsg());
+		}
+
+		return "Failure: " + str.replaceAll("\"", "");
+	}
+
+	private String createClaimText(EList<ClaimText> claimBody) {
+		StringBuilder text = new StringBuilder();
+
+		for (Element claim : claimBody) {
+			if (claim instanceof ClaimArg) {
+				ClaimTextVar claimArg = ((ClaimArg) claim).getArg();
+				UnitLiteral claimArgUnit = ((ClaimArg) claim).getUnit();
+				// text.append("'");
+				@SuppressWarnings("unlikely-arg-type")
+				ResoluteValue val = varStack.peek().get(claimArg);
+				if (val == null) {
+					if (claimArg instanceof ConstantDefinition) {
+						val = doSwitch(((ConstantDefinition) claimArg).getExpr());
+					} else if (claimArg instanceof LetBinding) {
+						val = doSwitch(((LetBinding) claimArg).getExpr());
+					}
+				}
+				if (claimArgUnit != null) {
+					if (val instanceof IntValue) {
+						IntValue ival = (IntValue) val;
+						long sval = ival.getScaledInt(claimArgUnit);
+						if (sval != 0 && ival.getInt() != 0) {
+							val = new IntValue(sval);
+						} else {
+							val = new RealValue(ival.getScaledIntAsDouble(claimArgUnit));
+						}
+					} else if (val instanceof RealValue) {
+						val = new RealValue(((RealValue) val).getScaledReal(claimArgUnit));
+					}
+				}
+				text.append(val);
+				if (claimArgUnit != null) {
+					text.append(" " + claimArgUnit.getName());
+				}
+				// text.append("'");
+			} else if (claim instanceof ClaimString) {
+				text.append(((ClaimString) claim).getStr());
+			} else {
+				throw new IllegalArgumentException("Unknown claim type: " + claim.getClass());
+			}
+		}
+
+		return text.toString();
 	}
 
 	@Override
@@ -286,7 +361,7 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	@Override
 	public ResoluteValue caseIdExpr(IdExpr object) {
 		NamedElement ref = object.getId();
-		if (ref instanceof Classifier || ref instanceof Property) {
+		if (ref instanceof Classifier || ref instanceof Property || ref instanceof PropertyConstant) {
 			return new NamedElementValue(ref);
 		} else {
 			return doSwitch(ref);

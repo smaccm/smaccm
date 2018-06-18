@@ -236,7 +236,7 @@ Uses of Claim Functions
 -----------------------
 
 The compiler does enforce that claim functions can be invoked only in
-`prove` statements, and as operands in `and`, `or`, `andthen`,
+`prove` statements, and as operands in `and`, `or`, `andthen`, `orelse`,
 `exists`, and `forall` operations, and cannot be invoked in
 computational functions.
 
@@ -304,7 +304,7 @@ representing the subclaims in the claim function expression of the
 original requirement.
 
 The claim function expression in a "requirement" claim function may
-contain `and`, `forall`, `andthen`, `or`, or `exists`.
+contain `and`, `forall`, `andthen`, `or`, `orelse`, or `exists`.
 
 The `and` and `forall` expressions indicate that all operands are
 evaluated; the claim is then true if all operands return `true`. This
@@ -327,11 +327,17 @@ the user to correct it before finding out that others fail as well.
 
 -   The `andthen` expression executes the left-hand operand first. If
     it fails, the whole expression is considered as failing (returns
-    `false`). If the left returns `true`, the right-hand side is
+    `false`), i.e., the right hand is not executed. If the left returns `true`, the right-hand side is
     executed and its result value becomes the value of the `andthen`
     expression. This allows users to specify that certain claim
     functions, such as verification actions, should be executed only if
     preceding verification actions pass.
+
+-   The `orelse` expression executes the left-hand operand first. If
+    it evaluates to `true`, the whole expression is considered as passing (returns
+    `true`), i.e., the right-hand is not executed. If the left returns `false`, the right-hand side is
+    executed and its result value becomes the value of the `orelse`
+    expression. This allows users to specify that the right operand should be executed as alternative, e.g., to execute the `fail` construct or the built-in `debug` function.
 
 Note: Resolute allows computational expressions to be mixed with
 subclaim functions in a claim function expression. Unfortunately, the
@@ -363,7 +369,7 @@ Note: The identifier `VA1` is added into the description text by
 convention.
 
 If we want to produce a special error message for a failing verification
-condition, we can use the `or` operation with a `fail` statement as
+condition, we can use the `orelse` operation with a `fail` statement as
 the right-hand side. Failure of the left-hand side results in the
 execution of the right-hand side; *i.e.*, this operation effectively
 throws a fail exception with the specified description text, which is
@@ -373,7 +379,7 @@ then associated with the enclosing claim function.
 SCSReq1VA1VerifySubcomponentTotals(self : component, max : real) <=
 ** "VA1: sum of direct subcomponent weights " actuals%kg " within budget " max%kg **
 let actuals : real = AddSubcomponentWeightBudgets(self);
-(actuals <= max) or fail ** self " weight sum " acutals%kg "over budget " maxkg **
+(actuals <= max) orelse fail ** self " weight sum " acutals%kg "over budget " maxkg **
 ~~~
 
 ### Verification Assumptions and Preconditions
@@ -421,7 +427,7 @@ SCSReq1VA1SubcomponentsHaveWeight(self : component) <=
 ** "Ass1: All subcomponents have gross weight" **
 let ratio : int = SubcomponentWeightBudgetCoveragePercent(self);
 forall (sub : subcomponents(self)) . has_property(sub, SEI::GrossWeight)
-or fail ** "Percentage of subcomponents with weight " ratio " percent" **
+orelse fail ** "Percentage of subcomponents with weight " ratio " percent" **
 ~~~
 
 A use case for a verification action precondition is that the
@@ -460,6 +466,11 @@ model element, since they query the whole model independently of a
 specific model element. However, you should place them in the top-level
 component implementation to which the *Resolute* command is applied;
 otherwise, they may be invoked multiple times.
+
+Debugging Resolute
+==================
+
+Look in the appropriate section of the Resolute reference manual for debug tracing support.
 
 []{#copyright}
 

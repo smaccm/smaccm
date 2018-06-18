@@ -23,3 +23,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Rockwell Collins
 Comment: Import-Package: edu.uah.rsesc.aadlsimulator.agree.ext
 Export-Package: com.rockwellcollins.atc.tcg.extensions
+Automatic-Module-Name: com.rockwellcollins.atc.tcg

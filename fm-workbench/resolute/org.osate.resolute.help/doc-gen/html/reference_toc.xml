@@ -8,7 +8,7 @@
 		<topic label="Uses of Claim Functions" href="doc-gen/html/reference.html#uses-of-claim-functions">
 		</topic>
 	</topic>
-	<topic label="Computational Functions and Constants (Final Variables)" href="doc-gen/html/reference.html#computational-functions-and-constants-final-variables">
+	<topic label="Computational Functions and Constants" href="doc-gen/html/reference.html#computational-functions-and-constants">
 		<topic label="Computational Functions" href="doc-gen/html/reference.html#computational-functions">
 		</topic>
 		<topic label="Global Constants" href="doc-gen/html/reference.html#global-constants">
@@ -23,8 +23,6 @@
 			<topic label="Type-related operators" href="doc-gen/html/reference.html#type-related-operators">
 			</topic>
 			<topic label="Atomic expressions" href="doc-gen/html/reference.html#atomic-expressions">
-			</topic>
-			<topic label="Exception operators" href="doc-gen/html/reference.html#exception-operators">
 			</topic>
 			<topic label="Collection-related operators" href="doc-gen/html/reference.html#collection-related-operators">
 			</topic>
@@ -45,19 +43,31 @@
 		</topic>
 		<topic label="Built-in Functions for Ranges" href="doc-gen/html/reference.html#built-in-functions-for-ranges">
 		</topic>
-		<topic label="Built-in Functions on Any Model Element (of the instance model):" href="doc-gen/html/reference.html#built-in-functions-on-any-model-element-of-the-instance-model">
+		<topic label="Built-in Functions for Properties" href="doc-gen/html/reference.html#built-in-functions-for-properties">
 		</topic>
-		<topic label="Model Element Collections" href="doc-gen/html/reference.html#model-element-collections">
+		<topic label="Built-in Functions for Any Model Element and Components" href="doc-gen/html/reference.html#built-in-functions-for-any-model-element-and-components">
+		</topic>
+		<topic label="Built-in Functions for Features" href="doc-gen/html/reference.html#built-in-functions-for-features">
+		</topic>
+		<topic label="Built-in Functions for Connections" href="doc-gen/html/reference.html#built-in-functions-for-connections">
+		</topic>
+		<topic label="Built-in Functions for Bindings" href="doc-gen/html/reference.html#built-in-functions-for-bindings">
+		</topic>
+		<topic label="Built-in Functions for Sets and Lists" href="doc-gen/html/reference.html#built-in-functions-for-sets-and-lists">
+		</topic>
+		<topic label="Built-in Functions for Flows" href="doc-gen/html/reference.html#built-in-functions-for-flows">
+		</topic>
+		<topic label="Built-in Functions for Error Models" href="doc-gen/html/reference.html#built-in-functions-for-error-models">
 		</topic>
 		<topic label="External Functions" href="doc-gen/html/reference.html#external-functions">
 		</topic>
-		<topic label="Error Model Functions" href="doc-gen/html/reference.html#error-model-functions">
+		<topic label="Debug Functions" href="doc-gen/html/reference.html#debug-functions">
 		</topic>
 	</topic>
-	<topic label="Pre-declared Resolute Computational Function Library" href="doc-gen/html/reference.html#pre-declared-resolute-computational-function-library">
-		<topic label="Binding-Related Predicate Functions" href="doc-gen/html/reference.html#binding-related-predicate-functions">
+	<topic label="Common Resolute Function Library" href="doc-gen/html/reference.html#common-resolute-function-library">
+		<topic label="Binding Related Functions" href="doc-gen/html/reference.html#binding-related-functions">
 		</topic>
-		<topic label="Connection-Related Functions" href="doc-gen/html/reference.html#connection-related-functions">
+		<topic label="Connection Related Functions" href="doc-gen/html/reference.html#connection-related-functions">
 		</topic>
 		<topic label="Model Element Containment" href="doc-gen/html/reference.html#model-element-containment">
 		</topic>
@@ -67,7 +77,7 @@
 	<topic label="Resolute Examples" href="doc-gen/html/reference.html#resolute-examples">
 		<topic label="Debugging Models with Resolute" href="doc-gen/html/reference.html#debugging-models-with-resolute">
 		</topic>
-		<topic label="Reachable Collections of Model Elements" href="doc-gen/html/reference.html#reachable-collections-of-model-elements">
+		<topic label="Reachable Model Elements" href="doc-gen/html/reference.html#reachable-model-elements">
 		</topic>
 	</topic>
 	<topic label="Copyright" href="doc-gen/html/reference.html#copyright">

@@ -38,4 +38,5 @@ Export-Package: com.rockwellcollins.atc.resolute,
  com.rockwellcollins.atc.resolute.services,
  com.rockwellcollins.atc.resolute.validation,
  com.rockwellcollins.atc.resolute.parser.antlr.lexer
+Automatic-Module-Name: com.rockwellcollins.atc.resolute
 

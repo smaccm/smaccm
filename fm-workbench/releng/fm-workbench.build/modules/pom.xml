@@ -10,7 +10,7 @@
     <relativePath>..</relativePath>
   </parent>
 	<groupId>org.osate</groupId>
-	<artifactId>agree-modules</artifactId>
+	<artifactId>fm-workbench.modules</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -24,8 +24,12 @@
 		<module>../../../tcg/com.rockwellcollins.atc.tcg</module>
 		<module>../../../agree/com.rockwellcollins.atc.agree.feature</module>
 		
+		<module>../../../agree/edu.uah.rsesc.agree.ge</module>
+		<module>../../../agree/edu.uah.rsesc.agree.ge.ui</module>
+		
 		<module>../../../z3/com.rockwellcollins.atc.z3</module>
 		<module>../../../z3/com.rockwellcollins.atc.z3.feature</module>
+
 		<module>../../../simulator/edu.uah.rsesc.aadlsimulator</module>
 		<module>../../../simulator/edu.uah.rsesc.aadlsimulator.agree</module>
 		<module>../../../simulator/edu.uah.rsesc.aadlsimulator.agree.ui</module>
@@ -33,14 +37,18 @@
 		<module>../../../simulator/edu.uah.rsesc.aadlsimulator.ui</module>
 		<module>../../../simulator/edu.uah.rsesc.aadlsimulator.xtext</module>
 		<module>../../../simulator/edu.uah.rsesc.aadlsimulator.xtext.ui</module>
+		<module>../../../simulator/edu.uah.rsesc.aadlsimulator.feature</module>
+		<module>../../../simulator/edu.uah.rsesc.aadlsimulator.agree.feature</module>
 
 		<module>../../../resolute/com.rockwellcollins.atc.resolute</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.analysis</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.ngrep</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.schedule.analysis</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.ui</module>
-		<module>../../../resolute/com.rockwellcollins.atc.resolute.feature</module>
 		<module>../../../resolute/org.osate.resolute.help</module>
+		<module>../../../resolute/com.rockwellcollins.atc.resolute.feature</module>
+		
+		<module>../../fm-workbench.repository</module>
 	</modules>
 
 </project>

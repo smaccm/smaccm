@@ -31,6 +31,7 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.ProcessType;
 import org.osate.aadl2.ProcessorType;
 import org.osate.aadl2.Property;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.RangeType;
 import org.osate.aadl2.RecordType;
@@ -491,6 +492,17 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 	}
 
 	private void checkPropertyCall(BuiltInFnCallExpr funCall, List<ResoluteType> actualTypes) {
+		if (actualTypes.size() == 1) {
+			// we assume a property constant
+			Expr actual = funCall.getArgs().get(0);
+			if (actual instanceof IdExpr) {
+				IdExpr idex = (IdExpr) actual;
+				if (idex.getId() instanceof PropertyConstant) {
+					return;
+				}
+			}
+			error(funCall, "Only parameter expected to be a property constant reference.");
+		}
 		if(actualTypes.size() == 3){
 			ResoluteType type1 = actualTypes.get(1);
 			ResoluteType type2 = actualTypes.get(2);
@@ -500,9 +512,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 					return;
 				}
 			}
-			error(funCall, "If the second argument of a \"propery\" statement is a "
-					+ "parametric type is parameter must be the same type as the third argument. "
-					+ "The second argument is of type '"+type1+"' and the third argument is of type '"+type2+"'");
+			error(funCall,
+					"The second argument is of type '" + type1 + "' and the third argument is of type '" + type2 + "'");
 		}
 
 	}
@@ -1031,7 +1042,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (expr instanceof ListExpr) {
 				ListExpr listExpr = (ListExpr) expr;
 				if (listExpr.getExprs().isEmpty()) {
-					return BaseType.FAIL;
+					return new ListType(BaseType.ANY);
 				}
 
 				Iterator<Expr> iterator = listExpr.getExprs().iterator();
@@ -1050,7 +1061,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			if (expr instanceof SetExpr) {
 				SetExpr setExpr = (SetExpr) expr;
 				if (setExpr.getExprs().isEmpty()) {
-					return BaseType.FAIL;
+					return new SetType(BaseType.ANY);
 				}
 
 				Iterator<Expr> iterator = setExpr.getExprs().iterator();
@@ -1149,6 +1160,17 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		if (idClass instanceof Property) {
 			Property prop = (Property) idClass;
+			ResoluteType type = convertPropertyType(prop.getPropertyType());
+			if (type == null) {
+				error(id, "Unknown property type");
+				return BaseType.FAIL;
+			} else {
+				return type;
+			}
+		}
+
+		if (idClass instanceof PropertyConstant) {
+			PropertyConstant prop = (PropertyConstant) idClass;
 			ResoluteType type = convertPropertyType(prop.getPropertyType());
 			if (type == null) {
 				error(id, "Unknown property type");
