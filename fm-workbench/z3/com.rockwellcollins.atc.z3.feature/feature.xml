@@ -2,7 +2,7 @@
 <feature
       id="com.rockwellcollins.atc.z3.feature"
       label="Z3 Plugin"
-      version="4.5.0.qualifier"
+      version="4.7.1.qualifier"
       provider-name="Rockwell Collins, Inc.">
 
    <description url="https://github.com/smaccm/z3-plugins">
