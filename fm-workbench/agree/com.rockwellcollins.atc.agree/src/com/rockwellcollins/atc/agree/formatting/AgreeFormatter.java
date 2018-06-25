@@ -61,17 +61,17 @@ public class AgreeFormatter extends AbstractDeclarativeFormatter {
 		c.setLinewrap(2).before(grammarAccess.getEnumStatementRule());
 		c.setLinewrap(2).before(grammarAccess.getEqStatementRule());
 		c.setLinewrap(2).before(grammarAccess.getAssignStatementRule());
-		c.setLinewrap(2).before(grammarAccess.getLinearizationDefExprRule());
-		c.setLinewrap(2).before(grammarAccess.getFnDefExprRule());
-		c.setLinewrap(2).before(grammarAccess.getLibraryFnDefExprRule());
-		c.setLinewrap(2).before(grammarAccess.getNodeDefExprRule());
-		c.setLinewrap(2).before(grammarAccess.getRecordDefExprRule());
+		c.setLinewrap(2).before(grammarAccess.getLinearizationDefRule());
+		c.setLinewrap(2).before(grammarAccess.getFnDefRule());
+		c.setLinewrap(2).before(grammarAccess.getLibraryFnDefRule());
+		c.setLinewrap(2).before(grammarAccess.getNodeDefRule());
+		c.setLinewrap(2).before(grammarAccess.getRecordDefRule());
 		c.setLinewrap(2).before(grammarAccess.getInputStatementRule());
 
 		// set line wrap before node def, let, tel, each local var
 		c.setLinewrap().after(grammarAccess.getNodeStmtRule());
-		c.setLinewrap().after(grammarAccess.getNodeDefExprAccess().getArgsAssignment_3_1_1());
-		c.setLinewrap().after(grammarAccess.getNodeDefExprAccess().getReturnsKeyword_5());
+		c.setLinewrap().after(grammarAccess.getNodeDefAccess().getArgsAssignment_3_1_1());
+		c.setLinewrap().after(grammarAccess.getNodeDefAccess().getReturnsKeyword_5());
 		c.setLinewrap().after(grammarAccess.getNodeBodyExprAccess().getLetKeyword_1());
 		c.setLinewrap().after(grammarAccess.getNodeBodyExprAccess().getTelKeyword_3());
 		c.setIndentationIncrement().after(grammarAccess.getNodeBodyExprAccess().getLetKeyword_1());

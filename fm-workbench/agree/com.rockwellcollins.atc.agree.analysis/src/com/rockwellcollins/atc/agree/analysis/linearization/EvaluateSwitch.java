@@ -35,15 +35,14 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
+import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
+import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
-import com.rockwellcollins.atc.agree.validation.AgreeJavaValidator;
 
 public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Double>> {
 
@@ -54,7 +53,7 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 	}
 
 	@Override
-	public Function<Map<String, Double>, Double> caseLinearizationDefExpr(LinearizationDefExpr ctx) {
+	public Function<Map<String, Double>, Double> caseLinearizationDef(LinearizationDef ctx) {
 		return doSwitch(ctx.getExprBody());
 	}
 
@@ -92,8 +91,8 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 	}
 
 	@Override
-	public Function<Map<String, Double>, Double> caseNestedDotID(NestedDotID ctx) {
-		String id = AgreeJavaValidator.getFinalNestId(ctx).getName();
+	public Function<Map<String, Double>, Double> caseProjectionExpr(ProjectionExpr ctx) {
+		String id = ctx.getField().getName();
 		if (!vars.contains(id)) {
 			throw new IllegalArgumentException("Unknown variable: " + id);
 		}
@@ -109,9 +108,9 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 		}
 	}
 
-	private Map<com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr, java.lang.reflect.Method> nativeCallMap = new HashMap<>();
+	private Map<com.rockwellcollins.atc.agree.agree.LibraryFnDef, java.lang.reflect.Method> nativeCallMap = new HashMap<>();
 
-	private java.lang.reflect.Method lookupMethod(com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr nativeDef) {
+	private java.lang.reflect.Method lookupMethod(com.rockwellcollins.atc.agree.agree.LibraryFnDef nativeDef) {
 		java.lang.reflect.Method result = nativeCallMap.get(nativeDef);
 		final String containingClassName = "java.lang.Math";
 
@@ -145,12 +144,12 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 	}
 
 	@Override
-	public Function<Map<String, Double>, Double> caseFnCallExpr(FnCallExpr ctx) {
-		org.osate.aadl2.NamedElement fn = AgreeJavaValidator.getFinalNestId(ctx.getFn());
+	public Function<Map<String, Double>, Double> caseCallExpr(CallExpr ctx) {
+		org.osate.aadl2.NamedElement fn = ctx.getAbstractionRef().getLeaf();
 		Function<Map<String, Double>, Double> body = doSwitch(ctx.getArgs().get(0));
 
-		if (fn instanceof com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr) {
-			java.lang.reflect.Method method = lookupMethod((com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr) fn);
+		if (fn instanceof com.rockwellcollins.atc.agree.agree.LibraryFnDef) {
+			java.lang.reflect.Method method = lookupMethod((com.rockwellcollins.atc.agree.agree.LibraryFnDef) fn);
 			return x -> invokeStaticMethod(method, body.apply(x));
 		} else {
 			throw new AgreeException("Call to '" + fn.getName() + "' in linearization body is not a native method");

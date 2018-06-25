@@ -20,24 +20,29 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.PropertyValue;
+import org.osate.aadl2.RecordType;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
+import com.rockwellcollins.atc.agree.agree.AbstractionRef;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
-import com.rockwellcollins.atc.agree.agree.EnumStatement;
+import com.rockwellcollins.atc.agree.agree.CustomType;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
-import com.rockwellcollins.atc.agree.agree.NamedID;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
+import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SubcomponentRef;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
+import com.rockwellcollins.atc.agree.agree.TagExpr;
+import com.rockwellcollins.atc.agree.agree.ThisRef;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
 	public AgreeLinkingService() {
@@ -55,8 +60,14 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			return findUnitLiteralAsList((Element) context, name);
 		}
 
-		if (context instanceof NestedDotID || context instanceof NodeEq || context instanceof SynchStatement
-				|| context instanceof RecordExpr || context instanceof RecordType || context instanceof GetPropertyExpr
+		if (context instanceof ThisRef || context instanceof SubcomponentRef
+				|| context instanceof LiftStatement
+				|| context instanceof TagExpr
+				|| context instanceof ProjectionExpr
+				|| context instanceof NamedElmExpr
+				|| context instanceof CustomType || context instanceof AbstractionRef
+				|| context instanceof NodeEq || context instanceof SynchStatement
+				|| context instanceof RecordLitExpr || context instanceof RecordType || context instanceof GetPropertyExpr
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
 				|| context instanceof OrderStatement || context instanceof ConnectionStatement) {
 
@@ -77,13 +88,9 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			for (IEObjectDescription eod : allObjectTypes) {
 				if (isVisible(eod, visibleProjects)) {
 					EObject res = eod.getEObjectOrProxy();
+
 					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
-						// special code for AGREE enumerated types
-						if (((NamedID) res).getName().equals(name)) {
-							return Collections.singletonList(res);
-						}
-					}
+
 					if (sameName(eod, name)) {
 						if (!Aadl2Util.isNull(res)) {
 							return Collections.singletonList(res);

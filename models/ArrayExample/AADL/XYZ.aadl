@@ -1,0 +1,17 @@
+package XYZ
+
+public
+	
+with SW;
+	thread Filter
+			
+		annex agree {**
+
+--			guarantee "The Flight Planner shall receive a well-formed command from the Ground Station" : SW.foo(1);
+
+		**};
+
+	end Filter;
+
+	
+end XYZ;

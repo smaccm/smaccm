@@ -8,21 +8,19 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
+import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
-import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 
@@ -53,21 +51,12 @@ public class ExprCycleVisitor extends AgreeSwitch<Set<EObject>> {
 	}
 
 	@Override
-	public Set<EObject> caseNestedDotID(NestedDotID e) {
-		Set<EObject> result = new HashSet<>();
-		if (e.getBase().getName().equals(id)) {
-			result.add(e);
-		}
-		return result;
-	}
-
-	@Override
-	public Set<EObject> caseFnCallExpr(FnCallExpr e) {
+	public Set<EObject> caseCallExpr(CallExpr e) {
 		return Collections.emptySet();
 	}
 
 	@Override
-	public Set<EObject> caseRecordExpr(RecordExpr e) {
+	public Set<EObject> caseRecordLitExpr(RecordLitExpr e) {
 		Set<EObject> result = new HashSet<>();
 		for (Expr expr : e.getArgExpr()) {
 			result.addAll(doSwitch(expr));
@@ -130,17 +119,10 @@ public class ExprCycleVisitor extends AgreeSwitch<Set<EObject>> {
 	@Override
 	public Set<EObject> caseRecordUpdateExpr(RecordUpdateExpr e) {
 		Set<EObject> result = new HashSet<>();
-
-		for (Expr expr : e.getArgExpr()) {
-			result.addAll(doSwitch(expr));
-		}
+		result.addAll(doSwitch(e.getExpr()));
 		return result;
 	}
 
-	@Override
-	public Set<EObject> caseThisExpr(ThisExpr e) {
-		return Collections.emptySet();
-	}
 
 	@Override
 	public Set<EObject> caseUnaryExpr(UnaryExpr e) {

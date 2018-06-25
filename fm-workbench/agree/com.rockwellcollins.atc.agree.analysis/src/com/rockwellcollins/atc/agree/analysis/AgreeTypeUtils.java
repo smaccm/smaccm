@@ -16,24 +16,22 @@ import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DataPort;
-import org.osate.aadl2.Feature;
-import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.FeatureInstance;
 
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ComponentRef;
+import com.rockwellcollins.atc.agree.agree.CustomType;
+import com.rockwellcollins.atc.agree.agree.EnumID;
+import com.rockwellcollins.atc.agree.agree.EnumID;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
-import com.rockwellcollins.atc.agree.agree.NamedID;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
-import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
+import com.rockwellcollins.atc.agree.agree.SubcomponentRef;
+import com.rockwellcollins.atc.agree.agree.ThisRef;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
 import jkind.lustre.BoolExpr;
@@ -55,24 +53,19 @@ public class AgreeTypeUtils {
 
 	public static String getTypeName(com.rockwellcollins.atc.agree.agree.Type type) {
 		if (type instanceof PrimType) {
-			return ((PrimType) type).getString();
+			return ((PrimType) type).getName();
 		} else {
-			return getIDTypeStr((AgreeUtils.getFinalNestId(((RecordType) type).getRecord())));
+			return getIDTypeStr(((CustomType) type).getLeaf());
 		}
 	}
 
 	public static String getTypeName(com.rockwellcollins.atc.agree.agree.Type type, Map<NamedElement, String> typeMap,
 			Set<Type> typeExpressions) {
 		if (type instanceof PrimType) {
-			return ((PrimType) type).getString();
+			return ((PrimType) type).getName();
 		} else {
-			return getTypeName(((RecordType) type).getRecord(), typeMap, typeExpressions);
+			return getTypeName(((CustomType) type).getLeaf(), typeMap, typeExpressions);
 		}
-	}
-
-	public static String getTypeName(NestedDotID recId, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
-		NamedElement finalId = AgreeUtils.getFinalNestId(recId);
-		return getTypeName(finalId, typeMap, typeExpressions);
 	}
 
 	private static String getTypeName(NamedElement finalId, Map<NamedElement, String> typeMap,
@@ -125,18 +118,18 @@ public class AgreeTypeUtils {
 					subTypeMap.put(subComp.getName(), subType);
 				}
 			}
-		} else if (el instanceof RecordDefExpr) {
-			RecordDefExpr agreeRecDef = (RecordDefExpr) el;
+		} else if (el instanceof RecordDef) {
+			RecordDef agreeRecDef = (RecordDef) el;
 			for (Arg arg : agreeRecDef.getArgs()) {
 
 				com.rockwellcollins.atc.agree.agree.Type argType = arg.getType();
 				String typeStr = null;
 				Type subType = null;
 				if (argType instanceof PrimType) {
-					typeStr = ((PrimType) argType).getString();
+					typeStr = ((PrimType) argType).getName();
 				} else {
-					NestedDotID nestId = ((RecordType) argType).getRecord();
-					NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
+					CustomType nestId = ((CustomType) argType);
+					NamedElement namedEl = nestId.getLeaf();
 					subType = getType(namedEl, typeMap, typeExpressions);
 				}
 				if (typeStr != null) {
@@ -148,7 +141,7 @@ public class AgreeTypeUtils {
 		} else if (el instanceof EnumStatement) {
 			List<String> vals = new ArrayList<>();
 			EnumStatement enumStatement = (EnumStatement) el;
-			for (NamedID id : enumStatement.getEnums()) {
+			for (EnumID id : enumStatement.getEnums()) {
 				vals.add(id.getName());
 			}
 			String typeStr = getIDTypeStr(enumStatement);
@@ -196,7 +189,7 @@ public class AgreeTypeUtils {
 				foundType = true;
 				for (Entry<String, Type> field : type.fields.entrySet()) {
 					Type fieldType = field.getValue();
-					if (!(fieldType instanceof NamedType) && !(fieldType instanceof RecordType)) {
+					if (!(fieldType instanceof NamedType) && !(fieldType instanceof CustomType)) {
 						throw new AgreeException("Unhandled type: '" + fieldType.getClass().getTypeName() + "'");
 					}
 					Expr fieldExpr = getInitialType(fieldType.toString(), typeExpressions);
@@ -240,7 +233,7 @@ public class AgreeTypeUtils {
 
 			} while (type != null);
 			AgreeLogger.logWarning("Reference to component type '" + record.getName()
-					+ "' is not among the types reasoned about by AGREE");
+			+ "' is not among the types reasoned about by AGREE");
 			return null;
 		} else if (record instanceof ComponentImplementation) {
 			typeStr = record.getName();
@@ -323,49 +316,48 @@ public class AgreeTypeUtils {
 		return varList;
 	}
 
-	public static NamedElement namedElFromId(EObject obj, ComponentInstance compInst) {
-		if (obj instanceof NestedDotID) {
-			return AgreeUtils.getFinalNestId((NestedDotID) obj);
-		} else {
-			assert (obj instanceof ThisExpr);
-
-			ThisExpr thisExpr = (ThisExpr) obj;
-
-			NestedDotID nestId = thisExpr.getSubThis();
-
-			while (nestId != null) {
-				NamedElement base = nestId.getBase();
-
-				if (base instanceof Subcomponent) {
-					compInst = compInst.findSubcomponentInstance((Subcomponent) base);
-					nestId = nestId.getSub();
-				} else if (base instanceof FeatureGroup) {
-					assert (base instanceof FeatureGroup);
-					FeatureInstance featInst = compInst.findFeatureInstance((Feature) base);
-
-					while (nestId.getSub() != null) {
-						nestId = nestId.getSub();
-						assert (nestId.getBase() instanceof Feature);
-						Feature subFeat = (Feature) nestId.getBase();
-						FeatureInstance eqFeatInst = null;
-						for (FeatureInstance subFeatInst : featInst.getFeatureInstances()) {
-							if (subFeatInst.getFeature().equals(subFeat)) {
-								eqFeatInst = subFeatInst;
-								break;
-							}
-						}
-						featInst = eqFeatInst;
-					}
-
-					return featInst;
-				} else {
-					assert (base instanceof DataPort);
-					return compInst.findFeatureInstance((DataPort) base);
-				}
-
-			}
+	public static NamedElement namedElFromId(ComponentRef obj, ComponentInstance compInst) {
+		if (obj instanceof SubcomponentRef) {
+			return ((SubcomponentRef) obj).getNamedElm();
+		} else if (obj instanceof ThisRef) {
 			return compInst;
+//---OLD CODE HERE FOR REFERENCE---
+//			NestedDotID nestId = thisExpr.getSubThis();
+//
+//			while (nestId != null) {
+//				NamedElement base = nestId.getBase();
+//
+//				if (base instanceof Subcomponent) {
+//					compInst = compInst.findSubcomponentInstance((Subcomponent) base);
+//					nestId = nestId.getSub();
+//				} else if (base instanceof FeatureGroup) {
+//					assert (base instanceof FeatureGroup);
+//					FeatureInstance featInst = compInst.findFeatureInstance((Feature) base);
+//
+//					while (nestId.getSub() != null) {
+//						nestId = nestId.getSub();
+//						assert (nestId.getBase() instanceof Feature);
+//						Feature subFeat = (Feature) nestId.getBase();
+//						FeatureInstance eqFeatInst = null;
+//						for (FeatureInstance subFeatInst : featInst.getFeatureInstances()) {
+//							if (subFeatInst.getFeature().equals(subFeat)) {
+//								eqFeatInst = subFeatInst;
+//								break;
+//							}
+//						}
+//						featInst = eqFeatInst;
+//					}
+//
+//					return featInst;
+//				} else {
+//					assert (base instanceof DataPort);
+//					return compInst.findFeatureInstance((DataPort) base);
+//				}
+//
+//			}
+//			return compInst;
 		}
+		return null;
 	}
 
 	public static void addToRenamingAll(Map<String, String> renamings, Map<String, String> varRenaming) {

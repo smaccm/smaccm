@@ -3,7 +3,7 @@ package edu.uah.rsesc.agree.ge.ui.properties;
 import org.eclipse.jface.viewers.IFilter;
 import org.osate.ge.ui.properties.PropertySectionUtil;
 
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
 
 import edu.uah.rsesc.agree.ge.businessObjectHandlers.RecordDefExpressionHandler;
 
@@ -25,12 +25,12 @@ public class RecordDefinitionsPropertySection extends GenericPropertySection {
 
 	@Override
 	protected String getName(final Object element) {
-		return handler.getName((RecordDefExpr) element);
+		return handler.getName((RecordDef) element);
 	}
 
 	@Override
 	protected Object[] getSpecStatements() {
-		return getSpecStatements(AgreePropertySectionUtil::asPackageOrComponentClassifier, RecordDefExpr.class);
+		return getSpecStatements(AgreePropertySectionUtil::asPackageOrComponentClassifier, RecordDef.class);
 	}
 
 }

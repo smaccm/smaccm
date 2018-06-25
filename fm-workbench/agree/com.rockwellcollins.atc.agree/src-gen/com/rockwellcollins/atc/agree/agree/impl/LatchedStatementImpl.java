@@ -2,10 +2,10 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
-import org.eclipse.emf.ecore.EClass;
-
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
+
+import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->
@@ -14,24 +14,27 @@ import com.rockwellcollins.atc.agree.agree.LatchedStatement;
  *
  * @generated
  */
-public class LatchedStatementImpl extends SynchStatementImpl implements LatchedStatement {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected LatchedStatementImpl() {
-		super();
-	}
+public class LatchedStatementImpl extends SynchStatementImpl implements LatchedStatement
+{
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected LatchedStatementImpl()
+  {
+    super();
+  }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return AgreePackage.Literals.LATCHED_STATEMENT;
-	}
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  protected EClass eStaticClass()
+  {
+    return AgreePackage.Literals.LATCHED_STATEMENT;
+  }
 
-} // LatchedStatementImpl
+} //LatchedStatementImpl

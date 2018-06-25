@@ -25,10 +25,10 @@ import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
+import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 
 /**
@@ -52,10 +52,10 @@ public class AgreeReferenceHandler {
 		EQ_STATEMENT("eq", EqStatement.class, s -> s.getLhs().stream().map(a -> Strings.emptyIfNull(a.getName())).collect(Collectors.joining(" "))),
 		GUARANTEE_STATEMENT("guarantee", GuaranteeStatement.class, s -> s.getStr()),
 		LEMMA_STATEMENT("lemma", LemmaStatement.class, s -> s.getStr()),
-		LINEARIZATION_DEFINITION("linearization", LinearizationDefExpr.class, s -> s.getName()),
-		NODE_DEF_EXPRESSION("node_def", NodeDefExpr.class, s -> s.getName()),
+		LINEARIZATION_DEFINITION("linearization", LinearizationDef.class, s -> s.getName()),
+		NODE_DEF_EXPRESSION("node_def", NodeDef.class, s -> s.getName()),
 		PROPERTY_STATEMENT("property", PropertyStatement.class, s -> s.getName()),
-		RECORD_DEF_EXPRESSION("record_def", RecordDefExpr.class, s -> s.getName());
+		RECORD_DEF_EXPRESSION("record_def", RecordDef.class, s -> s.getName());
 
 		public final String id;
 		public final Class<?> boClass;

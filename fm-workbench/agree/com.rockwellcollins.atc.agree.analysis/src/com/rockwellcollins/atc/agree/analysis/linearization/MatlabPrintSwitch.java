@@ -27,19 +27,18 @@
 package com.rockwellcollins.atc.agree.analysis.linearization;
 
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
+import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
+import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
-import com.rockwellcollins.atc.agree.validation.AgreeJavaValidator;
 
 public class MatlabPrintSwitch extends AgreeSwitch<String> {
 
 	@Override
-	public String caseLinearizationDefExpr(LinearizationDefExpr ctx) {
+	public String caseLinearizationDef(LinearizationDef ctx) {
 		return doSwitch(ctx.getExprBody());
 	}
 
@@ -59,13 +58,13 @@ public class MatlabPrintSwitch extends AgreeSwitch<String> {
 	}
 
 	@Override
-	public String caseNestedDotID(NestedDotID ctx) {
-		return AgreeJavaValidator.getFinalNestId(ctx).getName();
+	public String caseProjectionExpr(ProjectionExpr ctx) {
+		return ctx.getField().getName();
 	}
 
 	@Override
-	public String caseFnCallExpr(FnCallExpr ctx) {
-		String fn = AgreeJavaValidator.getFinalNestId(ctx.getFn()).getName();
+	public String caseCallExpr(CallExpr ctx) {
+		String fn = ctx.getAbstractionRef().getLeaf().getName();
 		String arg = doSwitch(ctx.getArgs().get(0));
 		return fn + "(" + arg + ")";
 	}

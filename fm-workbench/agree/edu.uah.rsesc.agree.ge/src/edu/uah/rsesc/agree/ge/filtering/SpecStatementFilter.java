@@ -15,10 +15,10 @@ import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
+import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
 
 enum SpecStatementFilter implements ContentFilter {
 	// @formatter:off
@@ -29,10 +29,10 @@ enum SpecStatementFilter implements ContentFilter {
 	EQUATION(EqStatement.class, "equations", "Equations"),
 	GUARANTEE(GuaranteeStatement.class, "guarantees", "Guarantees"),
 	LEMMA(LemmaStatement.class, "lemmas", "Lemmas"),
-	LINEARIZATION_DEFINITION(LinearizationDefExpr.class, "linearizations", "Linearizations"),
-	NODE_DEFINITION(NodeDefExpr.class, "nodeDefinitions", "Node Definitions"),
+	LINEARIZATION_DEFINITION(LinearizationDef.class, "linearizations", "Linearizations"),
+	NODE_DEFINITION(NodeDef.class, "nodeDefinitions", "Node Definitions"),
 	PROPERTY(PropertyStatement.class, "properties", "Properties"),
-	RECORD_DEFINITION(RecordDefExpr.class, "recordDefinitions", "Record Definitions");
+	RECORD_DEFINITION(RecordDef.class, "recordDefinitions", "Record Definitions");
 	// @formatter:on
 
 	public final Class<?> statementClass;

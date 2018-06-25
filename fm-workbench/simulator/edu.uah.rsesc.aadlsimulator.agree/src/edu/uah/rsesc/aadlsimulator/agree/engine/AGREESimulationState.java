@@ -545,7 +545,7 @@ public class AGREESimulationState implements SimulationEngineState, LustreProgra
 	private static VariableType getType(final ConstStatement constStatement) {	
 		// Only simple expressions are supported for constants.
 		if(constStatement.getType() instanceof PrimType) {
-			switch (((PrimType)constStatement.getType()).getString()) {
+			switch (((PrimType)constStatement.getType()).getName()) {
 	        case "int":
 	        	return constStatement.getExpr() instanceof IntLitExpr ? VariableType.INTEGER : null;
 	        			

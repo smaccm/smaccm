@@ -40,7 +40,7 @@
             class="edu.uah.rsesc.agree.ge.businessObjectHandlers.LinearizationDefHandler">
       </handler>
       <handler
-            class="edu.uah.rsesc.agree.ge.businessObjectHandlers.NodeDefExpressionHandler">
+            class="edu.uah.rsesc.agree.ge.businessObjectHandlers.NodeDefHandler">
       </handler>
       <handler
             class="edu.uah.rsesc.agree.ge.businessObjectHandlers.PropertyStatementHandler">

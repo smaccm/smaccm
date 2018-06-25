@@ -21,10 +21,9 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.CustomType;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
@@ -123,22 +122,13 @@ public class RenamingVisitor extends AstIterVisitor {
 		return null;
 	}
 
-	private String nestedDotIdToString(NestedDotID id) {
-		String result = id.getBase().getName();
-		if (id.getSub() != null) {
-			result += "." + nestedDotIdToString(id.getSub());
-		}
-		if (id.getTag() != null) {
-			result += "." + id.getTag();
-		}
-		return result;
-	}
+
 
 	private String argToString(Arg arg) {
 		String result = arg.getName() + " : ";
 		if (arg.getType() instanceof PrimType) {
 			PrimType primType = (PrimType) arg.getType();
-			result += primType.getString();
+			result += primType.getName();
 			String lowLit = (primType.getLowNeg() != null) ? primType.getLowNeg() : "";
 			String highLit = (primType.getHighNeg() != null) ? primType.getHighNeg() : "";
 			if (primType.getRangeLow() != null) {
@@ -146,7 +136,7 @@ public class RenamingVisitor extends AstIterVisitor {
 						+ primType.getRangeHigh() + "]";
 			}
 		} else {
-			result += nestedDotIdToString(((RecordType) arg.getType()).getRecord());
+			result += ((CustomType) arg.getType()).getLeaf().getName();
 		}
 		return result;
 	}

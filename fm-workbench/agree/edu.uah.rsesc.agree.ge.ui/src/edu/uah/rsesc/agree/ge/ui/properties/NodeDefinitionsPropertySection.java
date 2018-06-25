@@ -3,12 +3,12 @@ package edu.uah.rsesc.agree.ge.ui.properties;
 import org.eclipse.jface.viewers.IFilter;
 import org.osate.ge.ui.properties.PropertySectionUtil;
 
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.NodeDef;
 
-import edu.uah.rsesc.agree.ge.businessObjectHandlers.NodeDefExpressionHandler;
+import edu.uah.rsesc.agree.ge.businessObjectHandlers.NodeDefHandler;
 
 public class NodeDefinitionsPropertySection extends GenericPropertySection {
-	final NodeDefExpressionHandler handler = new NodeDefExpressionHandler();
+	final NodeDefHandler handler = new NodeDefHandler();
 
 	public static class Filter implements IFilter {
 		@Override
@@ -25,12 +25,12 @@ public class NodeDefinitionsPropertySection extends GenericPropertySection {
 
 	@Override
 	protected String getName(final Object element) {
-		return handler.getName((NodeDefExpr) element);
+		return handler.getName((NodeDef) element);
 	}
 
 	@Override
 	protected Object[] getSpecStatements() {
-		return getSpecStatements(AgreePropertySectionUtil::asPackageOrComponentClassifier, NodeDefExpr.class);
+		return getSpecStatements(AgreePropertySectionUtil::asPackageOrComponentClassifier, NodeDef.class);
 	}
 
 }

@@ -7,9 +7,9 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 import org.osate.xtext.aadl2.serializer.Aadl2CrossReferenceSerializer;
 
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 
 public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer {
 
@@ -17,9 +17,8 @@ public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer
 	@SuppressWarnings("restriction")
 	protected String getCrossReferenceNameFromScope(EObject semanticObject, CrossReference crossref, EObject target,
 			final IScope scope, org.eclipse.xtext.serializer.diagnostic.ISerializationDiagnostic.Acceptor errors) {
-		if (semanticObject instanceof NestedDotID) {
-			NestedDotID dotID = (NestedDotID) semanticObject;
-			NamedElement base = dotID.getBase();
+		if (semanticObject instanceof NamedElmExpr) {
+			NamedElement base = ((NamedElmExpr) semanticObject).getNamedElm();
 			if (base instanceof Subcomponent) {
 				return base.getName();
 			} else if (scope.getElements(target).iterator().hasNext()) {
@@ -33,7 +32,7 @@ public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer
 			NodeEq nodeEq = (NodeEq) semanticObject;
 			assert (nodeEq.getLhs().size() == 1);
 			return nodeEq.getLhs().get(0).getName();
-		} else if (semanticObject instanceof RecordExpr) {
+		} else if (semanticObject instanceof RecordLitExpr) {
 			// RecordExpr recordExpr = (RecordExpr) semanticObject;
 			NamedElement namedElement = (NamedElement) target;
 			return namedElement.getName();

@@ -14,13 +14,12 @@ import org.osate.aadl2.NamedElement;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
+import com.rockwellcollins.atc.agree.agree.CustomType;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
+import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
 
@@ -36,17 +35,15 @@ public class RecordExprScoper {
 			return getScope((IfThenElseExpr) expr, outerScope);
 		} else if (expr instanceof RecordUpdateExpr) {
 			return getScope((RecordUpdateExpr) expr, outerScope);
-		} else if (expr instanceof NestedDotID) {
-			return getScope((NestedDotID) expr, outerScope);
-		} else if (expr instanceof RecordExpr) {
-			return getScope((RecordExpr) expr, outerScope);
+		} else if (expr instanceof RecordLitExpr) {
+			return getScope((RecordLitExpr) expr, outerScope);
 		}
 
 		return IScope.NULLSCOPE;
 	}
 
-	public static IScope getScope(RecordExpr expr, IScope outerScope) {
-		return getScope(expr.getRecord(), outerScope);
+	public static IScope getScope(RecordLitExpr expr, IScope outerScope) {
+		return getScope(expr.getRecordType().getLeaf(), outerScope);
 	}
 
 	public static IScope getScope(BinaryExpr binExpr, IScope outerScope) {
@@ -70,23 +67,11 @@ public class RecordExprScoper {
 		return getScope(iteExpr.getB(), outerScope);
 	}
 
-	public static IScope getScope(NestedDotID nestExpr, IScope outerScope) {
-		while (nestExpr.getSub() != null) {
-			nestExpr = nestExpr.getSub();
-		}
-		NamedElement recStatement = nestExpr.getBase();
-		return getScope(recStatement, outerScope);
-	}
-
 	public static IScope getScope(NamedElement recStatement, IScope outerScope) {
 		if (recStatement instanceof Arg) {
 			Type type = ((Arg) recStatement).getType();
-			if (type instanceof RecordType) {
-				NestedDotID nestExpr = ((RecordType) type).getRecord();
-				while (nestExpr.getSub() != null) {
-					nestExpr = nestExpr.getSub();
-				}
-				return getRecordComponents(nestExpr.getBase(), outerScope);
+			if (type instanceof CustomType) {
+				return getRecordComponents(((CustomType) type).getLeaf(), outerScope);
 			}
 		} else if (recStatement instanceof DataPort) {
 			DataSubcomponentType dataClass = ((DataPort) recStatement).getDataFeatureClassifier();
@@ -98,7 +83,7 @@ public class RecordExprScoper {
 			if (dataClass instanceof DataImplementation) {
 				return getRecordComponents(dataClass, outerScope);
 			}
-		} else if (recStatement instanceof RecordDefExpr) {
+		} else if (recStatement instanceof RecordDef) {
 			return getRecordComponents(recStatement, outerScope);
 		}
 		return IScope.NULLSCOPE;
@@ -109,8 +94,8 @@ public class RecordExprScoper {
 		if (recDef instanceof DataImplementation) {
 			components.addAll(((DataImplementation) recDef).getAllSubcomponents());
 			return Scopes.scopeFor(components, outerScope);
-		} else if (recDef instanceof RecordDefExpr) {
-			components.addAll(((RecordDefExpr) recDef).getArgs());
+		} else if (recDef instanceof RecordDef) {
+			components.addAll(((RecordDef) recDef).getArgs());
 			return Scopes.scopeFor(components, outerScope);
 		}
 		return IScope.NULLSCOPE;

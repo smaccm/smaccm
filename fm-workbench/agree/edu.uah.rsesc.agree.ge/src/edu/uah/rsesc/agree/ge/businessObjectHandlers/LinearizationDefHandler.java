@@ -30,9 +30,9 @@ import org.osate.ge.operations.StepResultBuilder;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
 import com.rockwellcollins.atc.agree.agree.Arg;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
@@ -44,7 +44,7 @@ public class LinearizationDefHandler {
 
 	@IsApplicable
 	@CanDelete
-	public boolean isApplicable(final @Named(Names.BUSINESS_OBJECT) LinearizationDefExpr bo) {
+	public boolean isApplicable(final @Named(Names.BUSINESS_OBJECT) LinearizationDef bo) {
 		return true;
 	}
 
@@ -86,7 +86,7 @@ public class LinearizationDefHandler {
 					.map(AgreeHandlerUtil.toBusinessObjectToModify())
 					.modifyPreviousResult(modifyBo -> {
 						final AgreeContract agreeContract = AgreeHandlerUtil.getOrCreateAgreeContract(modifyBo);
-						final LinearizationDefExpr newBo = AgreeFactory.eINSTANCE.createLinearizationDefExpr();
+						final LinearizationDef newBo = AgreeFactory.eINSTANCE.createLinearizationDef();
 						newBo.setName(AgreeBusinessObjectHandlerUtil.buildUniqueIdentifier(agreeContract,
 								"linearization"));
 
@@ -94,7 +94,7 @@ public class LinearizationDefHandler {
 						final Arg newArg = AgreeFactory.eINSTANCE.createArg();
 						newArg.setName("x");
 						final PrimType type = AgreeFactory.eINSTANCE.createPrimType();
-						type.setString("real");
+						type.setName("real");
 						newArg.setType(type);
 						newBo.getArgs().add(newArg);
 
@@ -119,8 +119,8 @@ public class LinearizationDefHandler {
 						newBo.setPrecision(precisionExpr);
 
 						// Body
-						final NestedDotID body = AgreeFactory.eINSTANCE.createNestedDotID();
-						body.setBase(newArg);
+						final NamedElmExpr body = AgreeFactory.eINSTANCE.createNamedElmExpr();
+						body.setNamedElm(newArg);
 						newBo.setExprBody(body);
 
 						agreeContract.getSpecs().add(newBo);
@@ -131,18 +131,18 @@ public class LinearizationDefHandler {
 	}
 
 	@GetName
-	public String getName(final @Named(Names.BUSINESS_OBJECT) LinearizationDefExpr bo) {
+	public String getName(final @Named(Names.BUSINESS_OBJECT) LinearizationDef bo) {
 		return bo.getName();
 	}
 
 	@ValidateName
-	public String validateName(final @Named(Names.BUSINESS_OBJECT) LinearizationDefExpr bo,
+	public String validateName(final @Named(Names.BUSINESS_OBJECT) LinearizationDef bo,
 			final @Named(Names.NAME) String value) {
 		return AgreeBusinessObjectHandlerUtil.validateName(bo, value);
 	}
 
 	@Rename
-	public void setName(final @Named(Names.BUSINESS_OBJECT) LinearizationDefExpr bo,
+	public void setName(final @Named(Names.BUSINESS_OBJECT) LinearizationDef bo,
 			final @Named(Names.NAME) String value) {
 		bo.setName(value);
 	}

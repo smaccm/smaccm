@@ -60,7 +60,7 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
-import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
+import com.rockwellcollins.atc.agree.agree.AbstractionRef;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -71,13 +71,15 @@ import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.CustomType;
+import com.rockwellcollins.atc.agree.agree.EnumLitExpr;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
-import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.FnDef;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
@@ -86,12 +88,11 @@ import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
-import com.rockwellcollins.atc.agree.agree.NamedID;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
@@ -99,16 +100,16 @@ import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
+import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
+import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
-import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TagExpr;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
@@ -1004,7 +1005,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private List<Type> gatherLustreTypes(EList<SpecStatement> specs) {
 		List<Type> types = new ArrayList<>();
 		for (SpecStatement spec : specs) {
-			if (spec instanceof RecordDefExpr) {
+			if (spec instanceof RecordDef) {
 				// this will record them to the global types
 				AgreeTypeUtils.getType((NamedElement) spec, typeMap, globalTypes);
 			}
@@ -1015,7 +1016,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private List<Node> addLustreNodes(EList<SpecStatement> specs) {
 		List<Node> nodes = new ArrayList<>();
 		for (SpecStatement spec : specs) {
-			if (spec instanceof NodeDefExpr || spec instanceof FnDefExpr) {
+			if (spec instanceof NodeDef || spec instanceof FnDef) {
 				doSwitch(spec);
 			}
 		}
@@ -1073,7 +1074,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		for (SpecStatement spec : specs) {
 			if (spec instanceof AssignStatement) {
 				Expr expr = doSwitch(((AssignStatement) spec).getExpr());
-				expr = new BinaryExpr(new IdExpr(((AssignStatement) spec).getId().getBase().getName()), BinaryOp.EQUAL,
+				NamedElement id = ((AssignStatement) spec).getId();
+				expr = new BinaryExpr(new IdExpr(id.getName()), BinaryOp.EQUAL,
 						expr);
 				assigns.add(new AgreeStatement("", expr, spec));
 			}
@@ -1201,7 +1203,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				Expr lowVal = null;
 				Expr highVal = null;
 
-				switch (primType.getString()) {
+				switch (primType.getName()) {
 				case "int":
 					long lowl = Long.valueOf(lowStr) * lowSign;
 					long highl = Long.valueOf(highStr) * highSign;
@@ -1215,15 +1217,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					highVal = new RealExpr(BigDecimal.valueOf(highd));
 					break;
 				default:
-					throw new AgreeException("Unhandled type '" + primType.getString() + "' in ranged type");
+					throw new AgreeException("Unhandled type '" + primType.getName() + "' in ranged type");
 				}
 				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
 				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
 				result = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
 			}
-		} else if (type instanceof RecordType) {
-			RecordType recType = (RecordType) type;
-			NamedElement recordTypeName = AgreeUtils.getFinalNestId(recType.getRecord());
+		} else if (type instanceof CustomType) {
+			CustomType recType = (CustomType) type;
+			NamedElement recordTypeName = recType.getLeaf();
 			if (recordTypeName instanceof DataClassifier) {
 				result = getDataClassifierRangeConstraintExpr(name, (DataClassifier) recordTypeName);
 			}
@@ -1333,24 +1335,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	// BEGIN CASE EXPRESSION STATEMENTS
 	@Override
 	public Expr caseRecordUpdateExpr(RecordUpdateExpr upExpr) {
-		EList<NamedElement> args = upExpr.getArgs();
-		EList<com.rockwellcollins.atc.agree.agree.Expr> argExprs = upExpr.getArgExpr();
 
 		Expr lustreExpr = doSwitch(upExpr.getRecord());
-		for (int i = 0; i < args.size(); i++) {
-			com.rockwellcollins.atc.agree.agree.Expr argExpr = argExprs.get(i);
-			NamedElement arg = args.get(i);
-			Expr lustreArgExpr = doSwitch(argExpr);
-			lustreExpr = new jkind.lustre.RecordUpdateExpr(lustreExpr, arg.getName(), lustreArgExpr);
-		}
+		Expr lustreArgExpr = doSwitch(upExpr.getExpr());
+		lustreExpr = new jkind.lustre.RecordUpdateExpr(lustreExpr, upExpr.getKey().getName(), lustreArgExpr);
 
 		return lustreExpr;
 	}
 
 	@Override
 	public Expr caseTimeOfExpr(TimeOfExpr timeExpr) {
-		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = timeExpr.getId();
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeOfVarMap.get(idStr);
@@ -1365,8 +1360,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseTimeRiseExpr(TimeRiseExpr timeExpr) {
-		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = timeExpr.getId();
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeRiseVarMap.get(idStr);
@@ -1381,8 +1375,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseTimeFallExpr(TimeFallExpr timeExpr) {
-		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = timeExpr.getId();
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeFallVarMap.get(idStr);
@@ -1396,7 +1389,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseRecordExpr(RecordExpr recExpr) {
+	public Expr caseRecordLitExpr(RecordLitExpr recExpr) {
 
 		EList<NamedElement> agreeArgs = recExpr.getArgs();
 		EList<com.rockwellcollins.atc.agree.agree.Expr> agreeArgExprs = recExpr.getArgExpr();
@@ -1413,11 +1406,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		}
 
-		NestedDotID recId = recExpr.getRecord();
-		while (recId.getSub() != null) {
-			recId = recId.getSub();
-		}
-		String recName = AgreeTypeUtils.getIDTypeStr(recId.getBase());
+		CustomType recId = recExpr.getRecordType();
+		String recName = AgreeTypeUtils.getIDTypeStr(recId.getLeaf());
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1562,9 +1552,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseFnCallExpr(FnCallExpr expr) {
-		NestedDotID dotId = expr.getFn();
-		NamedElement namedEl = AgreeUtils.getFinalNestId(dotId);
+	public Expr caseCallExpr(CallExpr expr) {
+		AbstractionRef dotId = expr.getAbstractionRef();
+		NamedElement namedEl = dotId.getLeaf();
 
 		String fnName = AgreeTypeUtils.getNodeName(namedEl);
 		boolean found = false;
@@ -1576,8 +1566,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		if (!found) {
-			NestedDotID fn = expr.getFn();
-			doSwitch(AgreeUtils.getFinalNestId(fn));
+			AbstractionRef fn = expr.getAbstractionRef();
+			doSwitch(fn.getLeaf());
 			// for dReal integration
 			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
 				fnName = namedEl.getName();
@@ -1595,7 +1585,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseFnDefExpr(FnDefExpr expr) {
+	public Expr caseFnDef(FnDef expr) {
 		String nodeName = AgreeTypeUtils.getNodeName(expr);
 		for (Node node : globalNodes) {
 			if (node.id.equals(nodeName)) {
@@ -1621,14 +1611,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseLinearizationDefExpr(LinearizationDefExpr expr) {
-		NodeDefExpr linearization = linearizationRewriter.addLinearization(expr);
-		caseNodeDefExpr(linearization);
+	public Expr caseLinearizationDef(LinearizationDef expr) {
+		NodeDef linearization = linearizationRewriter.addLinearization(expr);
+		caseNodeDef(linearization);
 		return null;
 	}
 
 	@Override
-	public Expr caseNodeDefExpr(NodeDefExpr expr) {
+	public Expr caseNodeDef(NodeDef expr) {
 
 		String nodeName = AgreeTypeUtils.getNodeName(expr);
 
@@ -1694,7 +1684,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		NamedElement propName = expr.getProp();
 		PropertyExpression propVal;
 		if (propName instanceof Property) {
-			NamedElement compName = AgreeTypeUtils.namedElFromId(expr.getComponent(), curInst);
+			NamedElement compName = AgreeTypeUtils.namedElFromId(expr.getComponentRef(), curInst);
 			Property prop = (Property) propName;
 			propVal = AgreeUtils.getPropExpression(compName, prop);
 
@@ -1822,10 +1812,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				new BinaryExpr(expr, BinaryOp.EQUAL, new UnaryExpr(UnaryOp.PRE, expr)));
 	}
 
-	@Override
-	public Expr caseThisExpr(ThisExpr expr) {
-		throw new AgreeException("A 'this' expression should never be called in a case statement");
-	}
 
 	@Override
 	public Expr caseIfThenElseExpr(com.rockwellcollins.atc.agree.agree.IfThenElseExpr expr) {
@@ -1843,63 +1829,90 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new IntExpr(BigInteger.valueOf(Integer.parseInt(expr.getVal())));
 	}
 
-	@Override
-	public Expr caseNestedDotID(NestedDotID id) {
+	private String dottedNameToString(ProjectionExpr e) {
 
-		String jKindVar = "";
-		String aadlVar = "";
-		NamedElement base = id.getBase();
-
-		while (id.getSub() != null
-				&& (base instanceof FeatureGroup || base instanceof AadlPackage || base instanceof Subcomponent)) {
-			jKindVar += base.getName() + dotChar;
-			aadlVar += base.getName() + ".";
-			id = id.getSub();
-			base = id.getBase();
+		if (e.getExpr() instanceof NamedElmExpr) {
+			return ((NamedElmExpr) e.getExpr()).getNamedElm().getName();
+		} else if (e.getExpr() instanceof ProjectionExpr) {
+			return dottedNameToString((ProjectionExpr) e.getExpr()) + dotChar + e.getField().getName();
 		}
 
-		NamedElement namedEl = id.getBase();
+		throw new AgreeException("Pattern");
 
-		String tag = id.getTag();
+	}
+
+	@Override
+	public Expr caseTagExpr(TagExpr e) {
+
+		String stemString = null;
+		if (e.getStem() instanceof NamedElmExpr) {
+			stemString = ((NamedElmExpr) e.getStem()).getNamedElm().getName();
+		} else if (e.getStem() instanceof ProjectionExpr) {
+			stemString = dottedNameToString((ProjectionExpr) e.getStem());
+		} else {
+			throw new AgreeException("Pattern");
+		}
+
+
+		String tag = e.getTag();
 		if (tag != null) {
 
 			switch (tag) {
 			case "_CLK":
-				IdExpr clockId = new IdExpr(namedEl.getName() + clockIDSuffix);
+				IdExpr clockId = new IdExpr(stemString + clockIDSuffix);
 				return clockId;
 			default:
-				throw new AgreeException("use of uknown tag: '" + tag + "' in expression: '" + aadlVar + tag + "'");
+				throw new AgreeException("use of uknown tag: '" + tag + "' in expression following " + stemString);
 			}
 		}
 
-		Expr result;
-		if (namedEl instanceof ConstStatement) {
-			// evaluate the constant
-			result = doSwitch(((ConstStatement) namedEl).getExpr());
-		} else if (namedEl instanceof NamedID) {
-			// Enumeration types get lifted to Lustre global types; accordingly
-			// lift the enumerators to global
-			jKindVar = namedEl.getName();
-			result = new IdExpr(jKindVar);
-		} else {
-			jKindVar = jKindVar + namedEl.getName();
-			result = new IdExpr(jKindVar);
+		throw new AgreeException("Pattern");
+
+	}
+
+	public Expr lustreExprFromProjectionExpr(ProjectionExpr e) {
+
+		NamedElement stem = null;
+
+		if (e.getExpr() instanceof NamedElmExpr) {
+			stem = ((NamedElmExpr) e.getExpr()).getNamedElm();
+
+		} else if (e.getExpr() instanceof ProjectionExpr) {
+			stem = ((ProjectionExpr) e.getExpr()).getField();
+
 		}
 
-		// this is a record accessrecord
-		while (id.getSub() != null) {
-			id = id.getSub();
-			namedEl = id.getBase();
-			result = new RecordAccessExpr(result, namedEl.getName());
-		}
+		if (stem instanceof FeatureGroup || stem instanceof AadlPackage || stem instanceof Subcomponent) {
+			return new IdExpr(dottedNameToString(e));
+		} else if (stem != null){
 
-		return result;
+			Expr result = null;
+			if (stem instanceof NamedElmExpr) {
+				NamedElement ne = ((NamedElmExpr) stem).getNamedElm();
+				if (ne instanceof ConstStatement) {
+					result = doSwitch(((ConstStatement) ne).getExpr());
+				} else {
+					result = new IdExpr(ne.getName());
+				}
+			} else if (stem instanceof ProjectionExpr) {
+				result = lustreExprFromProjectionExpr((ProjectionExpr) stem);
+			} else {
+				result = doSwitch(stem);
+			}
+
+			return new RecordAccessExpr(result, e.getField().getName());
+		}
+		throw new AgreeException("Pattern");
 	}
 
 	@Override
-	public Expr caseAADLEnumerator(AADLEnumerator aadlEnum) {
-		String typeStr = AgreeTypeUtils.getIDTypeStr(
-				com.rockwellcollins.atc.agree.validation.AgreeJavaValidator.getFinalNestId(aadlEnum.getEnumType()));
+	public Expr caseProjectionExpr(ProjectionExpr id) {
+		return lustreExprFromProjectionExpr(id);
+	}
+
+	@Override
+	public Expr caseEnumLitExpr(EnumLitExpr aadlEnum) {
+		String typeStr = AgreeTypeUtils.getIDTypeStr(aadlEnum.getEnumType().getLeaf());
 		return new IdExpr(typeStr.replace("__", "_") + "_" + aadlEnum.getValue());
 	}
 

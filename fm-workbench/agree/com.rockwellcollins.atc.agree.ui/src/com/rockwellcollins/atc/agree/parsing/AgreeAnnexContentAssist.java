@@ -26,9 +26,10 @@ import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.CustomType;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
+import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.ui.contentassist.AgreeProposalProvider;
@@ -73,8 +74,8 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		}
 
 		List<String> results = new ArrayList<>();
-		if (grammerObject instanceof NestedDotID) {
-			results.addAll(getNestedDotIDCandidates((NestedDotID) grammerObject));
+		if (grammerObject instanceof ProjectionExpr) {
+			results.addAll(getNestedDotIDCandidates((ProjectionExpr) grammerObject));
 		}
 
 		return results;
@@ -109,8 +110,8 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		List<NamedElement> namedEls = new ArrayList<>();
 		if (namedEl instanceof ComponentImplementation) {
 			namedEls.addAll(((ComponentImplementation) namedEl).getAllSubcomponents());
-		} else if (namedEl instanceof RecordDefExpr) {
-			namedEls.addAll(((RecordDefExpr) namedEl).getArgs());
+		} else if (namedEl instanceof RecordDef) {
+			namedEls.addAll(((RecordDef) namedEl).getArgs());
 		}
 		for (NamedElement el : namedEls) {
 			results.add(el.getName());
@@ -118,15 +119,15 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		return results;
 	}
 
-	private List<String> getNestedDotIDCandidates(NestedDotID id) {
+	private List<String> getNestedDotIDCandidates(ProjectionExpr id) {
 
-		NamedElement base = id.getBase();
+		NamedElement base = ((NamedElmExpr) id).getNamedElm();
 		NamedElement namedEl = null;
 
 		if (base instanceof Arg) {
 			Type type = ((Arg) base).getType();
-			NestedDotID elID = ((RecordType) type).getRecord();
-			namedEl = elID.getBase();
+			CustomType elID = ((CustomType) type);
+			namedEl = elID.getLeaf();
 		} else if (base instanceof DataPort) {
 			namedEl = ((DataPort) base).getDataFeatureClassifier();
 		} else if (base instanceof EventDataPort) {
