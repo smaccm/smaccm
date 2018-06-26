@@ -240,9 +240,11 @@ assembly {
         <endif>
         <if(model.threadCalendar.hasDispatchers)>
         <if(!model.externalTimerComponent)>
+        time_server.simple = true;
+        time_server.simple_extra_bootinfo = ["SEL4_BOOTINFO_HEADER_X86_TSC_FREQ"]; 
         time_server.putchar_attributes = "0";
         time_server.timers_per_client = 9;
-        time_server.heap_size = 8192;
+        time_server.heap_size = 16384;
         time_server.priority = 254;
         <endif>
         <model.threadCalendar.periodicDispatcherInstanceName>.timer_attributes = <model.generateCamkesTimeServerThreadIndex>;
