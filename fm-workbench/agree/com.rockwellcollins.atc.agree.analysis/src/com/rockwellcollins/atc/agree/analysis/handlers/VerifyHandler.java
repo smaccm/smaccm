@@ -234,10 +234,16 @@ public abstract class VerifyHandler extends AadlHandler {
 
 		wrapper.addChild(
 				createVerification("Contract Guarantees", si, program, agreeProgram, AnalysisType.AssumeGuarantee));
-		for (Pair<String, Program> consistencyAnalysis : consistencies) {
-			wrapper.addChild(createVerification(consistencyAnalysis.getFirst(), si, consistencyAnalysis.getSecond(),
-					agreeProgram, AnalysisType.Consistency));
-		}
+
+		// -----------------------------------------------------------------------------------------------
+		// TODO : Refactor this so that consistency checks can still be performed
+		// when SA is not running.
+		// -----------------------------------------------------------------------------------------------
+//		for (Pair<String, Program> consistencyAnalysis : consistencies) {
+//			wrapper.addChild(createVerification(consistencyAnalysis.getFirst(), si, consistencyAnalysis.getSecond(),
+//					agreeProgram, AnalysisType.Consistency));
+//		}
+
 	}
 
 	protected String getNestedMessages(Throwable e) {

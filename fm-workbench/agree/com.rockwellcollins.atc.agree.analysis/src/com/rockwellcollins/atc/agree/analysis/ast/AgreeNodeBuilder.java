@@ -296,4 +296,8 @@ public class AgreeNodeBuilder {
 		ivcElements.add(ivcElement);
 	}
 
+	public void addIvcElements(List<String> ivcList) {
+		ivcElements.addAll(ivcList);
+	}
+
 }

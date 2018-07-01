@@ -179,7 +179,9 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
-		List<String> ivcs = flatNode.ivcElements;
+		// List<String> ivcs = flatNode.ivcElements;
+		List<String> ivcs = new ArrayList<>();
+		ivcs.addAll(agreeProgram.topNode.getivcElements());
 
 		int j = 0;
 		for (AgreeStatement assumption : flatNode.assumptions) {
@@ -679,6 +681,7 @@ public class LustreAstBuilder {
 		builder.addOutput(outputs);
 		builder.addLocal(locals);
 		builder.addLocalEquation(equations);
+		builder.addIvcElements(agreeNode.getivcElements());
 		builder.addSubNode(agreeNode.subNodes);
 		builder.addAssertion(assertions);
 		builder.addAssumption(agreeNode.assumptions);
@@ -692,6 +695,7 @@ public class LustreAstBuilder {
 		builder.setTiming(null);
 		builder.addEventTime(timeEvents);
 		builder.setCompInst(agreeNode.compInst);
+
 
 		return builder.build();
 	}
