@@ -348,7 +348,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (!(foundSubNode || hasDirectAnnex)) {
 			return null;
 		}
-		gatherOutputsInputsAndTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes, assumptions, guarantees);
+		gatherOutputsInputsAndTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes, assumptions,
+				guarantees);
 
 		// verify that every variable that is reasoned about is
 		// in a component containing an annex
@@ -652,17 +653,21 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		case IN:
 			inputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
-				assumptions
-				.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
-						dataFeature));
+				if (getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						dataFeature) != null) {
+					assumptions.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+							dataFeature));
+				}
 			}
 			break;
 		case OUT:
 			outputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
-				guarantees
-				.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
-						dataFeature));
+				if (getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						dataFeature) != null) {
+					guarantees.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+							dataFeature));
+				}
 			}
 			break;
 		default:
@@ -1110,9 +1115,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	private AgreeStatement getDataClassifierRangeConstraint(String name, DataClassifier dataClassifier,
 			EObject reference) {
-		// must have reference so we don't throw them away later
-		return new AgreeStatement("Type predicate on '" + name + "'",
-				getDataClassifierRangeConstraintExpr(name, dataClassifier), reference);
+		if (getDataClassifierRangeConstraintExpr(name, dataClassifier) != null) {
+			// must have reference so we don't throw them away later
+			return new AgreeStatement("Type predicate on '" + name + "'",
+					getDataClassifierRangeConstraintExpr(name, dataClassifier), reference);
+		} else {
+			return null;
+		}
 	}
 
 	private Expr getDataClassifierRangeConstraintExpr(String name, DataClassifier dataClassifier) {
@@ -1164,8 +1173,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 							(DataClassifier) sub.getSubcomponentType()))
 					.collect(Collectors.toList()));
 		}
-
-		return constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
+		if (constraints.isEmpty()) {
+			return null;
+		} else {
+			return constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
+		}
 	}
 
 	private AgreeStatement getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
@@ -1237,8 +1249,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				.anyMatch(pa -> "Real_Range".equals(pa.getProperty().getName()));
 	}
 
-	private static List<PropertyAssociation> getIntegerRangePropertyAssociations(
-			Classifier classifier) {
+	private static List<PropertyAssociation> getIntegerRangePropertyAssociations(Classifier classifier) {
 		return classifier.getAllPropertyAssociations().stream()
 				.filter(pa -> "Integer_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
 	}
