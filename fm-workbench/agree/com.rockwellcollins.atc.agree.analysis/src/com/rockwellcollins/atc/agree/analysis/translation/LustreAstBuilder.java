@@ -12,6 +12,7 @@ import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.EventDataPortImpl;
+import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -193,7 +194,7 @@ public class LustreAstBuilder {
 			assertions.add(assumId);
 			// If ivc elements is empty, add ivcs from assumptions and guarantees.
 			// Else add the defined ivc list.
-			if (ivcs.isEmpty()) {
+			if (flatNode.getFaultTreeFlag() == false) {
 				ivcs.add(assumId.id);
 			}
 		}
@@ -364,7 +365,7 @@ public class LustreAstBuilder {
 			AgreeVar stuffAssumptionVar = new AgreeVar(stuffPrefix + assumeSuffix + stuffAssumptionIndex++,
 					NamedType.BOOL, assumption.reference, agreeNode.compInst, null);
 			locals.add(stuffAssumptionVar);
-			if (ivcs.isEmpty()) {
+			if (agreeNode.getFaultTreeFlag() == false) {
 				ivcs.add(stuffAssumptionVar.id);
 			}
 			IdExpr stuffAssumptionId = new IdExpr(stuffAssumptionVar.id);
@@ -378,8 +379,37 @@ public class LustreAstBuilder {
 			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++,
 					NamedType.BOOL, guarantee.reference, agreeNode.compInst, null);
 			locals.add(stuffGuaranteeVar);
-			if (ivcs.isEmpty()) {
+			if (agreeNode.getFaultTreeFlag() == false) {
 				ivcs.add(stuffGuaranteeVar.id);
+			} else {
+				// Get compInst from agreeNode and from that gather the list of componentInstances
+				List<ComponentInstance> compInstList = agreeNode.compInst.getAllComponentInstances();
+				// go through this list and for each element:
+				// if it has a component instance, add the guarantees from this
+				// element into the ivc list.
+				// If not, move along.
+				for (ComponentInstance ci : compInstList) {
+					if (!ci.getAllComponentInstances().isEmpty()) {
+						// this is the name we match with in the agree subnodes list
+						String instName = ci.getFullName();
+						System.out.println("============= INSTANCE NAME =============\n" + instName + "\n\n");
+						// Now get the subnodes of the original agreeNode and match it with
+						// the name we just found.
+						List<AgreeNode> subnodes = agreeNode.subNodes;
+						for (AgreeNode node : subnodes) {
+							if (node.id.equals(instName)) {
+								// Here is the subnode that we need to add the guarantees to the ivc list
+								AgreeVar subnodeGuaranteeVar = new AgreeVar(
+										stuffPrefix + guarSuffix + stuffGuaranteeIndex++, NamedType.BOOL,
+										guarantee.reference, agreeNode.compInst, null);
+								System.out.println(
+										"============= ID NAME =============\n" + subnodeGuaranteeVar.id + "\n\n");
+								ivcs.add(subnodeGuaranteeVar.id);
+							}
+						}
+					}
+				}
+
 			}
 			IdExpr stuffGuaranteeId = new IdExpr(stuffGuaranteeVar.id);
 			equations.add(new Equation(stuffGuaranteeId, guarantee.expr));
@@ -561,7 +591,7 @@ public class LustreAstBuilder {
 			locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst, null));
 			IdExpr guarId = new IdExpr(inputName);
 			equations.add(new Equation(guarId, statement.expr));
-			if (ivcs.isEmpty()) {
+			if (agreeNode.getFaultTreeFlag() == false) {
 				ivcs.add(guarId.id);
 			}
 			guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
@@ -910,5 +940,6 @@ public class LustreAstBuilder {
 		builder.addEquation(new Equation(histId, histExpr));
 		return builder.build();
 	}
+
 
 }
