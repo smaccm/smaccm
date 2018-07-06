@@ -179,9 +179,10 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
-		// List<String> ivcs = flatNode.ivcElements;
-		List<String> ivcs = new ArrayList<>();
-		ivcs.addAll(agreeProgram.topNode.getivcElements());
+
+		// List<String> ivcs = new ArrayList<>();
+
+		ArrayList<String> ivcs = new ArrayList<String>(agreeProgram.topNode.getivcElements());
 
 		int j = 0;
 		for (AgreeStatement assumption : flatNode.assumptions) {
@@ -531,7 +532,7 @@ public class LustreAstBuilder {
 		List<VarDecl> locals = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<Expr> assertions = new ArrayList<>();
-		List<String> ivcs = agreeNode.ivcElements;
+		List<String> ivcs = agreeNode.getivcElements();
 
 		// add assumption history variable
 		IdExpr assumHist = new IdExpr(assumeHistSufix);
@@ -628,6 +629,7 @@ public class LustreAstBuilder {
 		List<AgreeStatement> patternProps = new ArrayList<>();
 		List<AgreeEquation> equations = new ArrayList<>();
 		List<AgreeStatement> assertions = new ArrayList<>();
+		// List<String> ivcs = new ArrayList<>();
 		Set<AgreeVar> timeEvents = new HashSet<>(agreeNode.eventTimes);
 
 		Expr someoneTicks = null;
@@ -643,6 +645,7 @@ public class LustreAstBuilder {
 
 			AgreeNode flatNode = flattenAgreeNode(agreeProgram, subAgreeNode,
 					nodePrefix + subAgreeNode.id + AgreeASTBuilder.dotChar);
+
 
 			Node lustreNode = addSubNodeLustre(agreeProgram, agreeNode, nodePrefix, flatNode);
 

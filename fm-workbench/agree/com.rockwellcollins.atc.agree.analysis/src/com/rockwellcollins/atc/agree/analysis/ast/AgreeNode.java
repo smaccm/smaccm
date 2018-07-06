@@ -39,6 +39,7 @@ public class AgreeNode implements AgreeASTElement {
 	public final Map<String, AgreeVar> timeRiseMap;
 	public final Map<String, AgreeVar> timeFallMap;
 	public final List<String> ivcElements;
+	public final Boolean faultTreeFlag;
 
 	public final Set<AgreeVar> eventTimes;
 
@@ -48,7 +49,7 @@ public class AgreeNode implements AgreeASTElement {
 			List<AgreeStatement> lemmas, List<AgreeStatement> patternProps, Expr clockConstraint,
 			Expr initialConstraint, AgreeVar clockVar, EObject reference, TimingModel timing, Set<AgreeVar> eventTimes,
 			Map<String, AgreeVar> timeOfMap, Map<String, AgreeVar> timeRiseMap, Map<String, AgreeVar> timeFallMap,
-			ComponentInstance compinst, List<String> ivcElements) {
+			ComponentInstance compinst, List<String> ivcElements, Boolean faultTreeFlag) {
 		this.id = id;
 		this.inputs = jkind.util.Util.safeList(inputs);
 		this.outputs = jkind.util.Util.safeList(outputs);
@@ -76,6 +77,7 @@ public class AgreeNode implements AgreeASTElement {
 		this.timeRiseMap = timeRiseMap;
 		this.timeFallMap = timeFallMap;
 		this.ivcElements = ivcElements;
+		this.faultTreeFlag = faultTreeFlag;
 	}
 
 	@Override
@@ -90,6 +92,10 @@ public class AgreeNode implements AgreeASTElement {
 
 	public List<String> getivcElements() {
 		return ivcElements;
+	}
+
+	public Boolean getFaultTreeFlag() {
+		return faultTreeFlag;
 	}
 
 }

@@ -39,6 +39,7 @@ public class AgreeNodeBuilder {
 	private Map<String, AgreeVar> timeRiseMap = new HashMap<>();
 	private Map<String, AgreeVar> timeFallMap = new HashMap<>();
 	private List<String> ivcElements = new ArrayList<>();
+	private Boolean faultTreeFlag = false;
 
 	public AgreeNodeBuilder(String id) {
 		this.id = id;
@@ -68,6 +69,7 @@ public class AgreeNodeBuilder {
 		timing = node.timing;
 		compInst = node.compInst;
 		ivcElements = node.ivcElements;
+		faultTreeFlag = node.faultTreeFlag;
 	}
 
 	public void setId(String id) {
@@ -285,7 +287,7 @@ public class AgreeNodeBuilder {
 	public AgreeNode build() {
 		return new AgreeNode(id, inputs, outputs, locals, equations, connections, subNodes, assertions, assumptions,
 				guarantees, lemmas, patternProps, clockConstraint, initialConstraint, clockVar, reference, timing,
-				eventTimes, timeOfMap, timeRiseMap, timeFallMap, compInst, ivcElements);
+				eventTimes, timeOfMap, timeRiseMap, timeFallMap, compInst, ivcElements, faultTreeFlag);
 	}
 
 	public List<String> getIvcElements() {
@@ -298,6 +300,14 @@ public class AgreeNodeBuilder {
 
 	public void addIvcElements(List<String> ivcList) {
 		ivcElements.addAll(ivcList);
+	}
+
+	public Boolean getFaultTreeFlag() {
+		return faultTreeFlag;
+	}
+
+	public void setFaultTreeFlag(Boolean flag) {
+		faultTreeFlag = flag;
 	}
 
 }
