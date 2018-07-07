@@ -13,7 +13,6 @@ import org.eclipse.xtext.util.Tuples;
 import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.EventDataPortImpl;
 import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.SystemInstance;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -245,40 +244,43 @@ public class LustreAstBuilder {
 			equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
 			properties.add(guarName);
 		}
-
-		// Add here
 		if (flatNode.getFaultTreeFlag()) {
-			if (flatNode.compInst instanceof SystemInstance) {
-				System.out
-				.println("========== compInst (top level) =======\n" + flatNode.compInst.getFullName() + "\n");
-				ivcs.addAll(agreeProgram.topNode.getivcElements());
-				System.out.println("========== ivcs (top level) =======\n" + ivcs.toString() + "\n");
-
-				//
-
-			} else {
-				System.out.println(
-						"========== compInst (lower level) =======\n" + flatNode.compInst.getFullName() + "\n");
-				// Get compInst from agreeNode and from that gather the list of componentInstances
-				List<ComponentInstance> compInstList = flatNode.compInst.getComponentInstances();
-				// if it has a component instance, add the guarantees from this
-				// element into the ivc list.
-				// If not, move along.
-				if (!compInstList.isEmpty()) {
-
-					List<AgreeStatement> guars = flatNode.guarantees;
-					for (AgreeStatement as : guars) {
-
-						String guarName = guarSuffix + i++;
-						locals.add(new AgreeVar(guarName, NamedType.BOOL, as.reference, flatNode.compInst, null));
-						equations.add(new Equation(new IdExpr(guarName), as.expr));
-						ivcs.add(guarName);
-						System.out.println("========== guarName =======\n" + guarName + "\n");
-
-					}
-				}
-			}
+			ivcs.addAll(agreeProgram.topNode.getivcElements());
 		}
+
+//		// Add here
+//		if (flatNode.getFaultTreeFlag()) {
+//			if (flatNode.compInst instanceof SystemInstance) {
+//				System.out
+//						.println("========== compInst (top level) =======\n" + flatNode.compInst.getFullName() + "\n");
+//				ivcs.addAll(agreeProgram.topNode.getivcElements());
+//				System.out.println("========== ivcs (top level) =======\n" + ivcs.toString() + "\n");
+//
+//				//
+//
+//			} else {
+//				System.out.println(
+//						"========== compInst (lower level) =======\n" + flatNode.compInst.getFullName() + "\n");
+//				// Get compInst from agreeNode and from that gather the list of componentInstances
+//				List<ComponentInstance> compInstList = flatNode.compInst.getComponentInstances();
+//				// if it has a component instance, add the guarantees from this
+//				// element into the ivc list.
+//				// If not, move along.
+//				if (!compInstList.isEmpty()) {
+//
+//					List<AgreeStatement> guars = flatNode.guarantees;
+//					for (AgreeStatement as : guars) {
+//
+//						String guarName = guarSuffix + i++;
+//						locals.add(new AgreeVar(guarName, NamedType.BOOL, as.reference, flatNode.compInst, null));
+//						equations.add(new Equation(new IdExpr(guarName), as.expr));
+//						ivcs.add(guarName);
+//						System.out.println("========== guarName =======\n" + guarName + "\n");
+//
+//					}
+//				}
+//			}
+//	}
 
 		for (AgreeVar var : flatNode.inputs) {
 			inputs.add(var);
@@ -411,8 +413,8 @@ public class LustreAstBuilder {
 
 		int stuffGuaranteeIndex = 0;
 		for (AgreeStatement guarantee : agreeNode.guarantees) {
-			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++,
-					NamedType.BOOL, guarantee.reference, agreeNode.compInst, null);
+			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++, NamedType.BOOL,
+					guarantee.reference, agreeNode.compInst, null);
 			locals.add(stuffGuaranteeVar);
 			if (agreeNode.getFaultTreeFlag() == false) {
 				ivcs.add(stuffGuaranteeVar.id);
@@ -450,7 +452,7 @@ public class LustreAstBuilder {
 			}
 		} else {
 			// perhaps we should break out eq statements into implementation
-			// equations  and type equations. That would clear this up.
+			// equations and type equations. That would clear this up.
 			for (AgreeStatement assertion : agreeNode.assertions) {
 				if (AgreeUtils.referenceIsInContract(assertion.reference, agreeNode.compInst)) {
 					AgreeVar stuffAssertionVar = new AgreeVar(stuffPrefix + assertSuffix + stuffAssertionIndex++,
@@ -600,6 +602,17 @@ public class LustreAstBuilder {
 			if (agreeNode.getFaultTreeFlag() == false) {
 				ivcs.add(guarId.id);
 			}
+			if (agreeNode.getFaultTreeFlag() == false) {
+				ivcs.add(guarId.id);
+			} else {
+				// check if it's leaf node
+				// note to use getComponentInstances() instead of getAllComponentInstances()
+				List<ComponentInstance> compInstList = agreeNode.compInst.getComponentInstances();
+				if (!agreeNode.compInst.getComponentInstances().isEmpty()) {
+					ivcs.add(guarId.id);
+				}
+			}
+
 			guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
 		}
 		for (AgreeStatement statement : agreeNode.lemmas) {
@@ -682,7 +695,6 @@ public class LustreAstBuilder {
 			AgreeNode flatNode = flattenAgreeNode(agreeProgram, subAgreeNode,
 					nodePrefix + subAgreeNode.id + AgreeASTBuilder.dotChar);
 
-
 			Node lustreNode = addSubNodeLustre(agreeProgram, agreeNode, nodePrefix, flatNode);
 
 			addInputsAndOutputs(agreeNode, inputs, outputs, patternProps, flatNode, lustreNode, prefix);
@@ -735,7 +747,6 @@ public class LustreAstBuilder {
 		builder.addEventTime(timeEvents);
 		builder.setCompInst(agreeNode.compInst);
 		builder.setFaultTreeFlag(agreeNode.faultTreeFlag);
-
 
 		return builder.build();
 	}
@@ -947,6 +958,5 @@ public class LustreAstBuilder {
 		builder.addEquation(new Equation(histId, histExpr));
 		return builder.build();
 	}
-
 
 }
