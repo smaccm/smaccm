@@ -243,27 +243,39 @@ public class LustreAstBuilder {
 			locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, flatNode.compInst, null));
 			equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
 			properties.add(guarName);
+		}
 
-			// Add here
-			if (flatNode.getFaultTreeFlag()) {
-				// Get compInst from agreeNode and from that gather the list of componentInstances
-				List<ComponentInstance> compInstList = flatNode.compInst.getAllComponentInstances();
-				// go through this list and for each element:
-				// if it has a component instance, add the guarantees from this
-				// element into the ivc list.
-				// If not, move along.
-				for (ComponentInstance ci : compInstList) {
-					if (!ci.getAllComponentInstances().isEmpty()) {
-						// this is the name we match with in the agree subnodes list
-						String instName = ci.getFullName();
-						System.out.println("============= INSTANCE NAME =============\n" + instName + "\n\n");
-						// Now get the subnodes of the original agreeNode and match it with
-						// the name we just found.
-						List<AgreeNode> subnodes = flatNode.subNodes;
-						for (AgreeNode node : subnodes) {
-							if (node.id.equals(instName)) {
-								// Here is the subnode that we need to add the guarantees to the ivc list
-								System.out.println("============= ID NAME =============\n" + guarName + "\n\n");
+		// Add here
+		if (flatNode.getFaultTreeFlag()) {
+			// Get compInst from agreeNode and from that gather the list of componentInstances
+			List<ComponentInstance> compInstList = flatNode.compInst.getAllComponentInstances();
+			// go through this list and for each element:
+			// if it has a component instance, add the guarantees from this
+			// element into the ivc list.
+			// If not, move along.
+			for (ComponentInstance ci : compInstList) {
+				if (!ci.getAllComponentInstances().isEmpty()) {
+					// this is the name we match with in the agree subnodes list
+					String instName = ci.getFullName();
+					// System.out.println("============= INSTANCE NAME =============\n" + instName + "\n\n");
+					// Now get the subnodes of the original agreeNode and match it with
+					// the name we just found.
+					List<AgreeNode> subnodes = flatNode.subNodes;
+					for (AgreeNode node : subnodes) {
+						if (node.id.equals(instName)) {
+							// Here is the subnode that we need to add the guarantees to the ivc list
+							// System.out.println("============= ID NAME =============\n" + guarName + "\n\n");
+
+							// Need node.guarantees : This is a list of strings. Need to map these to the lustre guarantee
+							// names.
+							// ivcs.add(guarName);
+							List<AgreeStatement> guars = node.guarantees;
+							for (AgreeStatement as : guars) {
+
+								String guarName = guarSuffix + i++;
+								// locals.add(
+								// new AgreeVar(guarName2, NamedType.BOOL, as.reference, node.compInst, null));
+								// equations.add(new Equation(new IdExpr(guarName2), as.expr));
 								ivcs.add(guarName);
 							}
 						}
