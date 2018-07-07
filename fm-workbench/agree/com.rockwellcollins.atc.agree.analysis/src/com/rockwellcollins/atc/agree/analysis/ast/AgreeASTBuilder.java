@@ -1173,7 +1173,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 							(DataClassifier) sub.getSubcomponentType()))
 					.collect(Collectors.toList()));
 		}
-		if (constraints.isEmpty()) {
+		if (constraints.isEmpty() || constraints.contains(null)) {
 			return null;
 		} else {
 			return constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
@@ -1183,8 +1183,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private AgreeStatement getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
 			EObject reference) {
 		// must have reference so we don't throw them away later
-		return new AgreeStatement("Type predicate on '" + name + "'", getVariableRangeConstraintExpr(name, type),
-				reference);
+		if (getVariableRangeConstraintExpr(name, type) != null) {
+			return new AgreeStatement("Type predicate on '" + name + "'", getVariableRangeConstraintExpr(name, type),
+					reference);
+		} else {
+			return null;
+		}
 	}
 
 	private Expr getVariableRangeConstraintExpr(String name, com.rockwellcollins.atc.agree.agree.Type type) {
@@ -1234,7 +1238,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EObject reference) {
 		List<AgreeStatement> constraints = new ArrayList<>();
 		for (Arg arg : args) {
-			constraints.add(getVariableRangeConstraint(arg.getName(), arg.getType(), reference));
+			if (getVariableRangeConstraint(arg.getName(), arg.getType(), reference) != null) {
+				constraints.add(getVariableRangeConstraint(arg.getName(), arg.getType(), reference));
+			}
 		}
 		return constraints;
 	}
