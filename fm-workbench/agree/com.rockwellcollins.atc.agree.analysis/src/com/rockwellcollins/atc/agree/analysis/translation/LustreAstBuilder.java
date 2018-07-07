@@ -253,6 +253,9 @@ public class LustreAstBuilder {
 				.println("========== compInst (top level) =======\n" + flatNode.compInst.getFullName() + "\n");
 				ivcs.addAll(agreeProgram.topNode.getivcElements());
 				System.out.println("========== ivcs (top level) =======\n" + ivcs.toString() + "\n");
+
+				//
+
 			} else {
 				System.out.println(
 						"========== compInst (lower level) =======\n" + flatNode.compInst.getFullName() + "\n");
