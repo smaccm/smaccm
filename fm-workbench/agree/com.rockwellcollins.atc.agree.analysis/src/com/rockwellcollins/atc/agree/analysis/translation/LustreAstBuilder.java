@@ -181,7 +181,9 @@ public class LustreAstBuilder {
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
 
-		Set<String> ivcSet = new HashSet<>();
+		// List<String> ivcs = new ArrayList<>();
+
+		ArrayList<String> ivcs = new ArrayList<String>();
 
 		int j = 0;
 		for (AgreeStatement assumption : flatNode.assumptions) {
@@ -193,7 +195,7 @@ public class LustreAstBuilder {
 			// If ivc elements is empty, add ivcs from assumptions and guarantees.
 			// Else add the defined ivc list.
 			if (flatNode.getFaultTreeFlag() == false) {
-				ivcSet.add(assumId.id);
+				ivcs.add(assumId.id);
 			}
 		}
 
@@ -244,7 +246,7 @@ public class LustreAstBuilder {
 		}
 
 		if (flatNode.getFaultTreeFlag()) {
-			ivcSet.addAll(agreeProgram.topNode.getivcElements());
+			ivcs.addAll(agreeProgram.topNode.getivcElements());
 		}
 
 		for (AgreeVar var : flatNode.inputs) {
@@ -264,8 +266,6 @@ public class LustreAstBuilder {
 		builder.addEquations(equations);
 		builder.addProperties(properties);
 		builder.addAssertions(assertions);
-
-		ArrayList<String> ivcs = new ArrayList<String>(ivcSet);
 		builder.addIvcs(ivcs);
 
 		Node main = builder.build();
@@ -537,7 +537,7 @@ public class LustreAstBuilder {
 		List<VarDecl> locals = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<Expr> assertions = new ArrayList<>();
-		Set<String> ivcSet = new HashSet<>(agreeNode.getivcElements());
+		List<String> ivcs = agreeNode.getivcElements();
 
 		// add assumption history variable
 		IdExpr assumHist = new IdExpr(assumeHistSufix);
@@ -566,17 +566,15 @@ public class LustreAstBuilder {
 			locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst, null));
 			IdExpr guarId = new IdExpr(inputName);
 			equations.add(new Equation(guarId, statement.expr));
+
 			if (agreeNode.getFaultTreeFlag() == false) {
-				ivcSet.add(guarId.id);
-			}
-			if (agreeNode.getFaultTreeFlag() == false) {
-				ivcSet.add(guarId.id);
+				ivcs.add(guarId.id);
 			} else {
 				// check if it's leaf node
 				// note to use getComponentInstances() instead of getAllComponentInstances()
 				List<ComponentInstance> compInstList = agreeNode.compInst.getComponentInstances();
 				if (!agreeNode.compInst.getComponentInstances().isEmpty()) {
-					ivcSet.add(guarId.id);
+					ivcs.add(guarId.id);
 				}
 			}
 
@@ -632,7 +630,6 @@ public class LustreAstBuilder {
 		builder.addOutputs(outputs);
 		builder.addLocals(locals);
 		builder.addEquations(equations);
-		ArrayList<String> ivcs = new ArrayList<String>(ivcSet);
 		builder.addIvcs(ivcs);
 
 		return builder.build();
