@@ -664,23 +664,34 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		case IN:
 			inputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
-				assumptions
-				.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
-						dataFeature));
+
+				List<Expr> constraints = getDataClassifierRangeConstraintExprs(name, (DataClassifier) dataClass);
+				if (!constraints.isEmpty()) {
+					assumptions.add(getDataClassifierTypePredicate(feature.getName(), constraints, dataFeature));
+				}
 			}
 			break;
 		case OUT:
 			outputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
-				guarantees
-				.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
-						dataFeature));
+				List<Expr> constraints = getDataClassifierRangeConstraintExprs(name, (DataClassifier) dataClass);
+				if (!constraints.isEmpty()) {
+					guarantees.add(getDataClassifierTypePredicate(feature.getName(), constraints, dataFeature));
+				}
 			}
 			break;
 		default:
 			throw new AgreeException(
 					"Unable to reason about bi-directional event port: " + dataFeature.getQualifiedName());
 		}
+	}
+
+	private static AgreeStatement getDataClassifierTypePredicate(String name, List<Expr> constraints,
+			EObject reference) {
+		// must have reference so we don't throw them away later
+		return new AgreeStatement("Type predicate on '" + name + "'",
+				constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b)),
+				reference);
 	}
 
 	private List<AgreeAADLConnection> getConnections(EList<Connection> connections, ComponentInstance compInst,
@@ -1120,14 +1131,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return result;
 	}
 
-	private AgreeStatement getDataClassifierRangeConstraint(String name, DataClassifier dataClassifier,
-			EObject reference) {
-		// must have reference so we don't throw them away later
-		return new AgreeStatement("Type predicate on '" + name + "'",
-				getDataClassifierRangeConstraintExpr(name, dataClassifier), reference);
-	}
-
-	private Expr getDataClassifierRangeConstraintExpr(String name, DataClassifier dataClassifier) {
+	private List<Expr> getDataClassifierRangeConstraintExprs(String name, DataClassifier dataClassifier) {
 		List<Expr> constraints = new ArrayList<>();
 
 		if (dataClassifier instanceof DataType) {
@@ -1172,12 +1176,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		} else if (dataClassifier instanceof DataImplementation) {
 			constraints.addAll(((DataImplementation) dataClassifier).getAllSubcomponents().stream()
 					.filter(sub -> sub.getSubcomponentType() instanceof DataClassifier)
-					.map(sub -> getDataClassifierRangeConstraintExpr(name + "." + sub.getName(),
+					.map(sub -> getDataClassifierRangeConstraintExprs(name + "." + sub.getName(),
 							(DataClassifier) sub.getSubcomponentType()))
-					.collect(Collectors.toList()));
+					.flatMap(List::stream).collect(Collectors.toList()));
 		}
 
-		return constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
+		return constraints;
 	}
 
 	private AgreeStatement getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
@@ -1225,7 +1229,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			RecordType recType = (RecordType) type;
 			NamedElement recordTypeName = AgreeUtils.getFinalNestId(recType.getRecord());
 			if (recordTypeName instanceof DataClassifier) {
-				result = getDataClassifierRangeConstraintExpr(name, (DataClassifier) recordTypeName);
+				result = getDataClassifierRangeConstraintExprs(name, (DataClassifier) recordTypeName).stream()
+						.reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
 			}
 		}
 		return result;
