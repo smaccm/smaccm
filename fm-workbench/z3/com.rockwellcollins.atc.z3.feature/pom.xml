@@ -10,7 +10,7 @@
   </parent>
   <groupId>org.osate</groupId>
   <artifactId>com.rockwellcollins.atc.z3.feature</artifactId>
-  <version>4.5.0-SNAPSHOT</version>
+  <version>4.7.1-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
   
 	<build>

@@ -6,85 +6,85 @@
       <propertyTabs
             contributorId="org.osate.ge.editor.AgeDiagramEditor">
          <propertyTab
-               afterTab="org.osate.ge.ui.properties.aadlTab"
-               category="agree"
+               afterTab="org.osate.ge.ui.properties.tabs.aadl"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.agree"
                indented="false"
                label="AGREE">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.agree"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.assertions"
                indented="true"
                label="Assertions">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.assertions"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.assumptions"
                indented="true"
                label="Assumptions">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.assumptions"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.guarantees"
                indented="true"
                label="Guarantees">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.guarantees"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.constants"
                indented="true"
                label="Constants">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.constants"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.enumerations"
                indented="true"
                label="Enumerations">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.enumerations"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.equations"
                indented="true"
                label="Equations">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.equations"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.lemmas"
                indented="true"
                label="Lemmas">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.equations"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.linearizationDefinitions"
                indented="true"
                label="Linearization Definitions">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.linearizationDefinitions"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.nodeDefinitions"
                indented="true"
                label="Node Definitions">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.nodeDefinitions"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.properties"
                indented="true"
                label="Properties">
          </propertyTab>
          <propertyTab
                afterTab="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.properties"
-               category="agree"
+               category="org.osate.ge.contributions"
                id="edu.uah.rsesc.aadlsimulator.agree.ui.propertyTabs.recordDefinitions"
                indented="true"
                label="Record Definitions">
@@ -175,14 +175,5 @@
             class="edu.uah.rsesc.agree.ge.ui.tooltips.SpecStatementTooltip"
             priority="1">
       </tooltipContributor>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
-      <propertyContributor
-            contributorId="org.osate.ge.editor.AgeDiagramEditor">
-         <propertyCategory
-               category="agree">
-         </propertyCategory>
-      </propertyContributor>
    </extension>
 </plugin>
