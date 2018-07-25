@@ -12,6 +12,7 @@ import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.EventDataPortImpl;
+import org.osate.aadl2.instance.ComponentInstance;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -179,7 +180,10 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
-		List<String> ivcs = new ArrayList<>();
+
+		// List<String> ivcs = new ArrayList<>();
+
+		ArrayList<String> ivcs = new ArrayList<String>();
 
 		int j = 0;
 		for (AgreeStatement assumption : flatNode.assumptions) {
@@ -188,7 +192,11 @@ public class LustreAstBuilder {
 			IdExpr assumId = new IdExpr(assumName);
 			equations.add(new Equation(assumId, assumption.expr));
 			assertions.add(assumId);
-			ivcs.add(assumId.id);
+			// If ivc elements is empty, add ivcs from assumptions and guarantees.
+			// Else add the defined ivc list.
+			if (flatNode.getFaultTreeFlag() == false) {
+				ivcs.add(assumId.id);
+			}
 		}
 
 		for (AgreeStatement assertion : flatNode.assertions) {
@@ -235,6 +243,10 @@ public class LustreAstBuilder {
 			locals.add(new AgreeVar(guarName, NamedType.BOOL, guarantee.reference, flatNode.compInst, null));
 			equations.add(new Equation(new IdExpr(guarName), guarantee.expr));
 			properties.add(guarName);
+		}
+
+		if (flatNode.getFaultTreeFlag()) {
+			ivcs.addAll(agreeProgram.topNode.getivcElements());
 		}
 
 		for (AgreeVar var : flatNode.inputs) {
@@ -348,7 +360,7 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
-		List<String> ivcs = new ArrayList<>();
+		List<String> ivcs = agreeNode.ivcElements;
 
 		Expr stuffConj = new BoolExpr(true);
 
@@ -357,7 +369,9 @@ public class LustreAstBuilder {
 			AgreeVar stuffAssumptionVar = new AgreeVar(stuffPrefix + assumeSuffix + stuffAssumptionIndex++,
 					NamedType.BOOL, assumption.reference, agreeNode.compInst, null);
 			locals.add(stuffAssumptionVar);
-			ivcs.add(stuffAssumptionVar.id);
+			if (agreeNode.getFaultTreeFlag() == false) {
+				ivcs.add(stuffAssumptionVar.id);
+			}
 			IdExpr stuffAssumptionId = new IdExpr(stuffAssumptionVar.id);
 			equations.add(new Equation(stuffAssumptionId, assumption.expr));
 
@@ -366,10 +380,12 @@ public class LustreAstBuilder {
 
 		int stuffGuaranteeIndex = 0;
 		for (AgreeStatement guarantee : agreeNode.guarantees) {
-			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++,
-					NamedType.BOOL, guarantee.reference, agreeNode.compInst, null);
+			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++, NamedType.BOOL,
+					guarantee.reference, agreeNode.compInst, null);
 			locals.add(stuffGuaranteeVar);
-			ivcs.add(stuffGuaranteeVar.id);
+			if (agreeNode.getFaultTreeFlag() == false) {
+				ivcs.add(stuffGuaranteeVar.id);
+			}
 			IdExpr stuffGuaranteeId = new IdExpr(stuffGuaranteeVar.id);
 			equations.add(new Equation(stuffGuaranteeId, guarantee.expr));
 
@@ -403,7 +419,7 @@ public class LustreAstBuilder {
 			}
 		} else {
 			// perhaps we should break out eq statements into implementation
-			// equations  and type equations. That would clear this up.
+			// equations and type equations. That would clear this up.
 			for (AgreeStatement assertion : agreeNode.assertions) {
 				if (AgreeUtils.referenceIsInContract(assertion.reference, agreeNode.compInst)) {
 					AgreeVar stuffAssertionVar = new AgreeVar(stuffPrefix + assertSuffix + stuffAssertionIndex++,
@@ -521,7 +537,7 @@ public class LustreAstBuilder {
 		List<VarDecl> locals = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<Expr> assertions = new ArrayList<>();
-		List<String> ivcs = new ArrayList<>();
+		List<String> ivcs = agreeNode.getivcElements();
 
 		// add assumption history variable
 		IdExpr assumHist = new IdExpr(assumeHistSufix);
@@ -550,7 +566,18 @@ public class LustreAstBuilder {
 			locals.add(new AgreeVar(inputName, NamedType.BOOL, statement.reference, agreeNode.compInst, null));
 			IdExpr guarId = new IdExpr(inputName);
 			equations.add(new Equation(guarId, statement.expr));
-			ivcs.add(guarId.id);
+
+			if (agreeNode.getFaultTreeFlag() == false) {
+				ivcs.add(guarId.id);
+			} else {
+				// check if it's leaf node
+				// note to use getComponentInstances() instead of getAllComponentInstances()
+				List<ComponentInstance> compInstList = agreeNode.compInst.getComponentInstances();
+				if (!agreeNode.compInst.getComponentInstances().isEmpty()) {
+					ivcs.add(guarId.id);
+				}
+			}
+
 			guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
 		}
 		for (AgreeStatement statement : agreeNode.lemmas) {
@@ -616,6 +643,7 @@ public class LustreAstBuilder {
 		List<AgreeStatement> patternProps = new ArrayList<>();
 		List<AgreeEquation> equations = new ArrayList<>();
 		List<AgreeStatement> assertions = new ArrayList<>();
+		// List<String> ivcs = new ArrayList<>();
 		Set<AgreeVar> timeEvents = new HashSet<>(agreeNode.eventTimes);
 
 		Expr someoneTicks = null;
@@ -669,6 +697,7 @@ public class LustreAstBuilder {
 		builder.addOutput(outputs);
 		builder.addLocal(locals);
 		builder.addLocalEquation(equations);
+		builder.addIvcElements(agreeNode.getivcElements());
 		builder.addSubNode(agreeNode.subNodes);
 		builder.addAssertion(assertions);
 		builder.addAssumption(agreeNode.assumptions);
@@ -682,6 +711,7 @@ public class LustreAstBuilder {
 		builder.setTiming(null);
 		builder.addEventTime(timeEvents);
 		builder.setCompInst(agreeNode.compInst);
+		builder.setFaultTreeFlag(agreeNode.faultTreeFlag);
 
 		return builder.build();
 	}
