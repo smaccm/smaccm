@@ -360,7 +360,7 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
-		List<String> ivcs = agreeNode.ivcElements;
+		List<String> ivcs = new ArrayList<>();
 
 		Expr stuffConj = new BoolExpr(true);
 
@@ -369,9 +369,7 @@ public class LustreAstBuilder {
 			AgreeVar stuffAssumptionVar = new AgreeVar(stuffPrefix + assumeSuffix + stuffAssumptionIndex++,
 					NamedType.BOOL, assumption.reference, agreeNode.compInst, null);
 			locals.add(stuffAssumptionVar);
-			if (agreeNode.getFaultTreeFlag() == false) {
-				ivcs.add(stuffAssumptionVar.id);
-			}
+			ivcs.add(stuffAssumptionVar.id);
 			IdExpr stuffAssumptionId = new IdExpr(stuffAssumptionVar.id);
 			equations.add(new Equation(stuffAssumptionId, assumption.expr));
 
@@ -383,9 +381,7 @@ public class LustreAstBuilder {
 			AgreeVar stuffGuaranteeVar = new AgreeVar(stuffPrefix + guarSuffix + stuffGuaranteeIndex++, NamedType.BOOL,
 					guarantee.reference, agreeNode.compInst, null);
 			locals.add(stuffGuaranteeVar);
-			if (agreeNode.getFaultTreeFlag() == false) {
-				ivcs.add(stuffGuaranteeVar.id);
-			}
+			ivcs.add(stuffGuaranteeVar.id);
 			IdExpr stuffGuaranteeId = new IdExpr(stuffGuaranteeVar.id);
 			equations.add(new Equation(stuffGuaranteeId, guarantee.expr));
 
