@@ -264,8 +264,15 @@ ComplexExpr:
 		)?
 ;
 
+//NestedDotID:
+//	base=[aadl2::NamedElement|QCPREF] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
+	
 NestedDotID:
-	base=[aadl2::NamedElement|QCPREF] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
+	chainID=ChainID (=> ('.' tag=ReservedVarTag))?
+;
+
+ChainID returns ChainID:
+	({BaseID} namedElm=[aadl2::NamedElement|QCPREF]) (=>({RecordProj.chainID=current} '.' namedElm=[aadl2::NamedElement|QCPREF]))*;
 
 QCPREF:
 	=>(ID '::') ID =>('.' ID)?

@@ -2,7 +2,6 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
-import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -13,92 +12,66 @@ import org.osate.aadl2.NamedElement;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getBase <em>Base</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getChainID <em>Chain ID</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getTag <em>Tag</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}</li>
  * </ul>
  *
  * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID()
  * @model
  * @generated
  */
-public interface NestedDotID extends ComplexExpr {
-	/**
-	 * Returns the value of the '<em><b>Base</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Base</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Base</em>' reference.
-	 * @see #setBase(NamedElement)
-	 * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_Base()
-	 * @model
-	 * @generated
-	 */
-	NamedElement getBase();
+public interface NestedDotID extends ComplexExpr
+{
+  /**
+   * Returns the value of the '<em><b>Chain ID</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Chain ID</em>' containment reference isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Chain ID</em>' containment reference.
+   * @see #setChainID(ChainID)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_ChainID()
+   * @model containment="true"
+   * @generated
+   */
+  ChainID getChainID();
 
-	/**
-	 * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getBase <em>Base</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Base</em>' reference.
-	 * @see #getBase()
-	 * @generated
-	 */
-	void setBase(NamedElement value);
+  /**
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getChainID <em>Chain ID</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Chain ID</em>' containment reference.
+   * @see #getChainID()
+   * @generated
+   */
+  void setChainID(ChainID value);
 
-	/**
-	 * Returns the value of the '<em><b>Tag</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Tag</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Tag</em>' attribute.
-	 * @see #setTag(String)
-	 * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_Tag()
-	 * @model
-	 * @generated
-	 */
-	String getTag();
+  /**
+   * Returns the value of the '<em><b>Tag</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Tag</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Tag</em>' attribute.
+   * @see #setTag(String)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_Tag()
+   * @model
+   * @generated
+   */
+  String getTag();
 
-	/**
-	 * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getTag <em>Tag</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Tag</em>' attribute.
-	 * @see #getTag()
-	 * @generated
-	 */
-	void setTag(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Sub</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Sub</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Sub</em>' containment reference.
-	 * @see #setSub(NestedDotID)
-	 * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getNestedDotID_Sub()
-	 * @model containment="true"
-	 * @generated
-	 */
-	NestedDotID getSub();
-
-	/**
-	 * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getSub <em>Sub</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Sub</em>' containment reference.
-	 * @see #getSub()
-	 * @generated
-	 */
-	void setSub(NestedDotID value);
+  /**
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.NestedDotID#getTag <em>Tag</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Tag</em>' attribute.
+   * @see #getTag()
+   * @generated
+   */
+  void setTag(String value);
 
 } // NestedDotID

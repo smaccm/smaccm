@@ -12,6 +12,7 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.NamedElement;
 
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -71,10 +72,7 @@ public class RecordExprScoper {
 	}
 
 	public static IScope getScope(NestedDotID nestExpr, IScope outerScope) {
-		while (nestExpr.getSub() != null) {
-			nestExpr = nestExpr.getSub();
-		}
-		NamedElement recStatement = nestExpr.getBase();
+		NamedElement recStatement = AgreeAADLEnumerationUtils.getFinalNamedElm(nestExpr);
 		return getScope(recStatement, outerScope);
 	}
 
@@ -83,10 +81,7 @@ public class RecordExprScoper {
 			Type type = ((Arg) recStatement).getType();
 			if (type instanceof RecordType) {
 				NestedDotID nestExpr = ((RecordType) type).getRecord();
-				while (nestExpr.getSub() != null) {
-					nestExpr = nestExpr.getSub();
-				}
-				return getRecordComponents(nestExpr.getBase(), outerScope);
+				return getRecordComponents(AgreeAADLEnumerationUtils.getFinalNamedElm(nestExpr), outerScope);
 			}
 		} else if (recStatement instanceof DataPort) {
 			DataSubcomponentType dataClass = ((DataPort) recStatement).getDataFeatureClassifier();

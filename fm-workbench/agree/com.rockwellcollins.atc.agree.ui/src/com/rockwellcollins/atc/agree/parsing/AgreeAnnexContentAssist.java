@@ -20,11 +20,13 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.ui.contentassist.PropertiesProposalProvider;
 
 import com.google.inject.Injector;
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.BaseID;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -120,13 +122,13 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 
 	private List<String> getNestedDotIDCandidates(NestedDotID id) {
 
-		NamedElement base = id.getBase();
+		NamedElement base = AgreeAADLEnumerationUtils.getFinalNamedElm(id);
 		NamedElement namedEl = null;
 
 		if (base instanceof Arg) {
 			Type type = ((Arg) base).getType();
 			NestedDotID elID = ((RecordType) type).getRecord();
-			namedEl = elID.getBase();
+			namedEl = ((BaseID) elID.getChainID()).getNamedElm();
 		} else if (base instanceof DataPort) {
 			namedEl = ((DataPort) base).getDataFeatureClassifier();
 		} else if (base instanceof EventDataPort) {

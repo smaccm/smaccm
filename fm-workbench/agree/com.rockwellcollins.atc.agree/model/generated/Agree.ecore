@@ -120,10 +120,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="Expr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="ComplexExpr" eSuperTypes="#//Expr"/>
   <eClassifiers xsi:type="ecore:EClass" name="NestedDotID" eSuperTypes="#//ComplexExpr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="base" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sub" eType="#//NestedDotID"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="chainID" eType="#//ChainID"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ChainID">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="namedElm" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedID" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="AgreeContractLibrary" eSuperTypes="#//AgreeLibrary">
@@ -347,5 +349,10 @@
         eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="argExpr" upperBound="-1"
         eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BaseID" eSuperTypes="#//ChainID"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RecordProj" eSuperTypes="#//ChainID">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="chainID" eType="#//ChainID"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

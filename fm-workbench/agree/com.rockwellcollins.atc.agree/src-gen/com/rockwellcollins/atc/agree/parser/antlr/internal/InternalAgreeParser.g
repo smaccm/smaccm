@@ -6781,40 +6781,37 @@ ruleNestedDotID returns [EObject current=null]
     @after { leaveRule(); }:
 ((
 (
-		{
-			if ($current==null) {
-	            $current = createModelElement(grammarAccess.getNestedDotIDRule());
-	        }
-        }
 		{ 
-	        newCompositeNode(grammarAccess.getNestedDotIDAccess().getBaseNamedElementCrossReference_0_0()); 
+	        newCompositeNode(grammarAccess.getNestedDotIDAccess().getChainIDChainIDParserRuleCall_0_0()); 
 	    }
-		ruleQCPREF
-		{ 
+		lv_chainID_0_0=ruleChainID		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getNestedDotIDRule());
+	        }
+       		set(
+       			$current, 
+       			"chainID",
+        		lv_chainID_0_0, 
+        		"com.rockwellcollins.atc.agree.Agree.ChainID");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 )(((
 FullStop
-((
+(
 (
 ruleReservedVarTag
 )
-)
-    |(
-(
-ruleNestedDotID
-)
-))))=>(
+)))=>(
 	otherlv_1=FullStop
     {
     	newLeafNode(otherlv_1, grammarAccess.getNestedDotIDAccess().getFullStopKeyword_1_0_0());
     }
-((
+(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getNestedDotIDAccess().getTagReservedVarTagParserRuleCall_1_0_1_0_0()); 
+	        newCompositeNode(grammarAccess.getNestedDotIDAccess().getTagReservedVarTagParserRuleCall_1_0_1_0()); 
 	    }
 		lv_tag_2_0=ruleReservedVarTag		{
 	        if ($current==null) {
@@ -6829,26 +6826,85 @@ ruleNestedDotID
 	    }
 
 )
-)
-    |(
+)))?)
+;
+
+
+
+
+
+// Entry rule entryRuleChainID
+entryRuleChainID returns [EObject current=null]
+	:
+	{ newCompositeNode(grammarAccess.getChainIDRule()); }
+	 iv_ruleChainID=ruleChainID 
+	 { $current=$iv_ruleChainID.current; } 
+	 EOF 
+;
+
+// Rule ChainID
+ruleChainID returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+(((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getChainIDAccess().getBaseIDAction_0_0(),
+            $current);
+    }
+)(
 (
-		{ 
-	        newCompositeNode(grammarAccess.getNestedDotIDAccess().getSubNestedDotIDParserRuleCall_1_0_1_1_0()); 
-	    }
-		lv_sub_3_0=ruleNestedDotID		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getNestedDotIDRule());
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getChainIDRule());
 	        }
-       		set(
-       			$current, 
-       			"sub",
-        		lv_sub_3_0, 
-        		"com.rockwellcollins.atc.agree.Agree.NestedDotID");
+        }
+		{ 
+	        newCompositeNode(grammarAccess.getChainIDAccess().getNamedElmNamedElementCrossReference_0_1_0()); 
+	    }
+		ruleQCPREF
+		{ 
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
-))))?)
+))((((
+)
+FullStop
+(
+(
+		ruleQCPREF
+
+)
+)))=>((
+    {
+        $current = forceCreateModelElementAndSet(
+            grammarAccess.getChainIDAccess().getRecordProjChainIDAction_1_0_0(),
+            $current);
+    }
+)
+	otherlv_3=FullStop
+    {
+    	newLeafNode(otherlv_3, grammarAccess.getChainIDAccess().getFullStopKeyword_1_0_1());
+    }
+(
+(
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getChainIDRule());
+	        }
+        }
+		{ 
+	        newCompositeNode(grammarAccess.getChainIDAccess().getNamedElmNamedElementCrossReference_1_0_2_0()); 
+	    }
+		ruleQCPREF
+		{ 
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)))*)
 ;
 
 

@@ -1,0 +1,1358 @@
+{
+  "package": "SW",
+  "agree": [
+    {
+      "statements": [
+        {
+          "kind": "funDef",
+          "name": "good_coordinate",
+          "params": [
+            {
+              "kind": "param",
+              "name": "coord",
+              "type": {
+                "kind": "type",
+                "type": {
+                  "kind": "recordType",
+                  "recordType": {
+                    "kind": "nestedDotId",
+                    "name": "Coordinate.Impl"
+                  }
+                }
+              }
+            }
+          ],
+          "expr": {
+            "kind": "binary",
+            "left": {
+              "kind": "binary",
+              "left": {
+                "kind": "binary",
+                "left": {
+                  "kind": "binary",
+                  "left": {
+                    "kind": "binary",
+                    "left": {
+                      "kind": "binary",
+                      "left": {
+                        "kind": "nestedDotId",
+                        "name": "coord.lat"
+                      },
+                      "op": ">=",
+                      "right": {
+                        "kind": "unary",
+                        "operand": {
+                          "kind": "intLit",
+                          "value": "90"
+                        },
+                        "op": "-"
+                      }
+                    },
+                    "op": "and",
+                    "right": {
+                      "kind": "binary",
+                      "left": {
+                        "kind": "nestedDotId",
+                        "name": "coord.lat"
+                      },
+                      "op": "<=",
+                      "right": {
+                        "kind": "intLit",
+                        "value": "90"
+                      }
+                    }
+                  },
+                  "op": "and",
+                  "right": {
+                    "kind": "binary",
+                    "left": {
+                      "kind": "nestedDotId",
+                      "name": "coord.long"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "kind": "unary",
+                      "operand": {
+                        "kind": "intLit",
+                        "value": "180"
+                      },
+                      "op": "-"
+                    }
+                  }
+                },
+                "op": "and",
+                "right": {
+                  "kind": "binary",
+                  "left": {
+                    "kind": "nestedDotId",
+                    "name": "coord.long"
+                  },
+                  "op": "<=",
+                  "right": {
+                    "kind": "intLit",
+                    "value": "180"
+                  }
+                }
+              },
+              "op": "and",
+              "right": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "coord.alt"
+                },
+                "op": ">=",
+                "right": {
+                  "kind": "intLit",
+                  "value": "0"
+                }
+              }
+            },
+            "op": "and",
+            "right": {
+              "kind": "binary",
+              "left": {
+                "kind": "nestedDotId",
+                "name": "coord.alt"
+              },
+              "op": "<=",
+              "right": {
+                "kind": "intLit",
+                "value": "15000"
+              }
+            }
+          }
+        },
+        {
+          "kind": "funDef",
+          "name": "good_map",
+          "params": [
+            {
+              "kind": "param",
+              "name": "map",
+              "type": {
+                "kind": "type",
+                "type": {
+                  "kind": "recordType",
+                  "recordType": {
+                    "kind": "nestedDotId",
+                    "name": "Map.Impl"
+                  }
+                }
+              }
+            }
+          ],
+          "expr": {
+            "kind": "binary",
+            "left": {
+              "kind": "binary",
+              "left": {
+                "kind": "binary",
+                "left": {
+                  "kind": "fnCall",
+                  "function": {
+                    "kind": "nestedDotId",
+                    "name": "good_coordinate"
+                  },
+                  "args": [
+                    {
+                      "kind": "nestedDotId",
+                      "name": "map.wp1"
+                    }
+                  ]
+                },
+                "op": "and",
+                "right": {
+                  "kind": "fnCall",
+                  "function": {
+                    "kind": "nestedDotId",
+                    "name": "good_coordinate"
+                  },
+                  "args": [
+                    {
+                      "kind": "nestedDotId",
+                      "name": "map.wp2"
+                    }
+                  ]
+                }
+              },
+              "op": "and",
+              "right": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "good_coordinate"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "map.wp3"
+                  }
+                ]
+              }
+            },
+            "op": "and",
+            "right": {
+              "kind": "fnCall",
+              "function": {
+                "kind": "nestedDotId",
+                "name": "good_coordinate"
+              },
+              "args": [
+                {
+                  "kind": "nestedDotId",
+                  "name": "map.wp4"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "kind": "funDef",
+          "name": "good_pattern",
+          "params": [
+            {
+              "kind": "param",
+              "name": "pattern",
+              "type": {
+                "kind": "type",
+                "type": {
+                  "kind": "recordType",
+                  "recordType": {
+                    "kind": "nestedDotId",
+                    "name": "FlightPattern"
+                  }
+                }
+              }
+            }
+          ],
+          "expr": {
+            "kind": "binary",
+            "left": {
+              "kind": "binary",
+              "left": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "pattern"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "aadlEnum",
+                  "type": {
+                    "kind": "nestedDotId",
+                    "name": "FlightPattern"
+                  },
+                  "value": "ZigZag"
+                }
+              },
+              "op": "or",
+              "right": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "pattern"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "aadlEnum",
+                  "type": {
+                    "kind": "nestedDotId",
+                    "name": "FlightPattern"
+                  },
+                  "value": "StraightLine"
+                }
+              }
+            },
+            "op": "or",
+            "right": {
+              "kind": "binary",
+              "left": {
+                "kind": "nestedDotId",
+                "name": "pattern"
+              },
+              "op": "=",
+              "right": {
+                "kind": "aadlEnum",
+                "type": {
+                  "kind": "nestedDotId",
+                  "name": "FlightPattern"
+                },
+                "value": "Perimeter"
+              }
+            }
+          }
+        },
+        {
+          "kind": "funDef",
+          "name": "good_HMAC",
+          "params": [
+            {
+              "kind": "param",
+              "name": "hmac",
+              "type": {
+                "kind": "type",
+                "type": {
+                  "kind": "primType",
+                  "primType": "bool"
+                }
+              }
+            }
+          ],
+          "expr": {
+            "kind": "binary",
+            "left": {
+              "kind": "binary",
+              "left": {
+                "kind": "nestedDotId",
+                "name": "hmac"
+              },
+              "op": "=",
+              "right": {
+                "kind": "boolLit",
+                "value": "true"
+              }
+            },
+            "op": "or",
+            "right": {
+              "kind": "binary",
+              "left": {
+                "kind": "nestedDotId",
+                "name": "hmac"
+              },
+              "op": "=",
+              "right": {
+                "kind": "boolLit",
+                "value": "false"
+              }
+            }
+          }
+        },
+        {
+          "kind": "funDef",
+          "name": "good_gs_command",
+          "params": [
+            {
+              "kind": "param",
+              "name": "cmd",
+              "type": {
+                "kind": "type",
+                "type": {
+                  "kind": "recordType",
+                  "recordType": {
+                    "kind": "nestedDotId",
+                    "name": "Command.Impl"
+                  }
+                }
+              }
+            }
+          ],
+          "expr": {
+            "kind": "binary",
+            "left": {
+              "kind": "binary",
+              "left": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "good_map"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "cmd.Map"
+                  }
+                ]
+              },
+              "op": "and",
+              "right": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "good_pattern"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "cmd.Pattern"
+                  }
+                ]
+              }
+            },
+            "op": "and",
+            "right": {
+              "kind": "fnCall",
+              "function": {
+                "kind": "nestedDotId",
+                "name": "good_HMAC"
+              },
+              "args": [
+                {
+                  "kind": "nestedDotId",
+                  "name": "cmd.HMAC"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "kind": "funDef",
+          "name": "good_mission",
+          "params": [
+            {
+              "kind": "param",
+              "name": "mission",
+              "type": {
+                "kind": "type",
+                "type": {
+                  "kind": "recordType",
+                  "recordType": {
+                    "kind": "nestedDotId",
+                    "name": "Mission.Impl"
+                  }
+                }
+              }
+            }
+          ],
+          "expr": {
+            "kind": "binary",
+            "left": {
+              "kind": "binary",
+              "left": {
+                "kind": "binary",
+                "left": {
+                  "kind": "binary",
+                  "left": {
+                    "kind": "binary",
+                    "left": {
+                      "kind": "binary",
+                      "left": {
+                        "kind": "binary",
+                        "left": {
+                          "kind": "binary",
+                          "left": {
+                            "kind": "binary",
+                            "left": {
+                              "kind": "fnCall",
+                              "function": {
+                                "kind": "nestedDotId",
+                                "name": "good_coordinate"
+                              },
+                              "args": [
+                                {
+                                  "kind": "nestedDotId",
+                                  "name": "mission.wp1"
+                                }
+                              ]
+                            },
+                            "op": "and",
+                            "right": {
+                              "kind": "fnCall",
+                              "function": {
+                                "kind": "nestedDotId",
+                                "name": "good_coordinate"
+                              },
+                              "args": [
+                                {
+                                  "kind": "nestedDotId",
+                                  "name": "mission.wp2"
+                                }
+                              ]
+                            }
+                          },
+                          "op": "and",
+                          "right": {
+                            "kind": "fnCall",
+                            "function": {
+                              "kind": "nestedDotId",
+                              "name": "good_coordinate"
+                            },
+                            "args": [
+                              {
+                                "kind": "nestedDotId",
+                                "name": "mission.wp3"
+                              }
+                            ]
+                          }
+                        },
+                        "op": "and",
+                        "right": {
+                          "kind": "fnCall",
+                          "function": {
+                            "kind": "nestedDotId",
+                            "name": "good_coordinate"
+                          },
+                          "args": [
+                            {
+                              "kind": "nestedDotId",
+                              "name": "mission.wp4"
+                            }
+                          ]
+                        }
+                      },
+                      "op": "and",
+                      "right": {
+                        "kind": "fnCall",
+                        "function": {
+                          "kind": "nestedDotId",
+                          "name": "good_coordinate"
+                        },
+                        "args": [
+                          {
+                            "kind": "nestedDotId",
+                            "name": "mission.wp5"
+                          }
+                        ]
+                      }
+                    },
+                    "op": "and",
+                    "right": {
+                      "kind": "fnCall",
+                      "function": {
+                        "kind": "nestedDotId",
+                        "name": "good_coordinate"
+                      },
+                      "args": [
+                        {
+                          "kind": "nestedDotId",
+                          "name": "mission.wp6"
+                        }
+                      ]
+                    }
+                  },
+                  "op": "and",
+                  "right": {
+                    "kind": "fnCall",
+                    "function": {
+                      "kind": "nestedDotId",
+                      "name": "good_coordinate"
+                    },
+                    "args": [
+                      {
+                        "kind": "nestedDotId",
+                        "name": "mission.wp7"
+                      }
+                    ]
+                  }
+                },
+                "op": "and",
+                "right": {
+                  "kind": "fnCall",
+                  "function": {
+                    "kind": "nestedDotId",
+                    "name": "good_coordinate"
+                  },
+                  "args": [
+                    {
+                      "kind": "nestedDotId",
+                      "name": "mission.wp8"
+                    }
+                  ]
+                }
+              },
+              "op": "and",
+              "right": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "good_coordinate"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "mission.wp9"
+                  }
+                ]
+              }
+            },
+            "op": "and",
+            "right": {
+              "kind": "fnCall",
+              "function": {
+                "kind": "nestedDotId",
+                "name": "good_coordinate"
+              },
+              "args": [
+                {
+                  "kind": "nestedDotId",
+                  "name": "mission.wp10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "kind": "funDef",
+          "name": "good_mission_window",
+          "params": [
+            {
+              "kind": "param",
+              "name": "win",
+              "type": {
+                "kind": "type",
+                "type": {
+                  "kind": "recordType",
+                  "recordType": {
+                    "kind": "nestedDotId",
+                    "name": "MissionWindow.Impl"
+                  }
+                }
+              }
+            }
+          ],
+          "expr": {
+            "kind": "binary",
+            "left": {
+              "kind": "binary",
+              "left": {
+                "kind": "binary",
+                "left": {
+                  "kind": "fnCall",
+                  "function": {
+                    "kind": "nestedDotId",
+                    "name": "good_coordinate"
+                  },
+                  "args": [
+                    {
+                      "kind": "nestedDotId",
+                      "name": "win.wp1"
+                    }
+                  ]
+                },
+                "op": "and",
+                "right": {
+                  "kind": "fnCall",
+                  "function": {
+                    "kind": "nestedDotId",
+                    "name": "good_coordinate"
+                  },
+                  "args": [
+                    {
+                      "kind": "nestedDotId",
+                      "name": "win.wp2"
+                    }
+                  ]
+                }
+              },
+              "op": "and",
+              "right": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "good_coordinate"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "win.wp3"
+                  }
+                ]
+              }
+            },
+            "op": "and",
+            "right": {
+              "kind": "fnCall",
+              "function": {
+                "kind": "nestedDotId",
+                "name": "good_coordinate"
+              },
+              "args": [
+                {
+                  "kind": "nestedDotId",
+                  "name": "win.wp4"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "components": [
+    {
+      "name": "Coordinate",
+      "type": "data",
+      "features": [],
+      "properties": [],
+      "agree": []
+    },
+    {
+      "Coordinate": "Coordinate.Impl",
+      "subcomponents": [
+        {
+          "name": "lat",
+          "category": "data",
+          "classifier": "Base_Types::Integer"
+        },
+        {
+          "name": "long",
+          "category": "data",
+          "classifier": "Base_Types::Integer"
+        },
+        {
+          "name": "alt",
+          "category": "data",
+          "classifier": "Base_Types::Integer"
+        }
+      ],
+      "connections": [],
+      "agree": []
+    },
+    {
+      "name": "Map",
+      "type": "data",
+      "features": [],
+      "properties": [],
+      "agree": []
+    },
+    {
+      "Map": "Map.Impl",
+      "subcomponents": [
+        {
+          "name": "wp1",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp2",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp3",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp4",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        }
+      ],
+      "connections": [],
+      "agree": []
+    },
+    {
+      "name": "FlightPattern",
+      "type": "data",
+      "features": [],
+      "properties": [
+        {
+          "name": "Data_Representation",
+          "value": "Enum"
+        },
+        {
+          "name": "Enumerators",
+          "value": [
+            "ZigZag",
+            "StraightLine",
+            "Perimeter"
+          ]
+        }
+      ],
+      "agree": []
+    },
+    {
+      "name": "Command",
+      "type": "data",
+      "features": [],
+      "properties": [],
+      "agree": []
+    },
+    {
+      "Command": "Command.Impl",
+      "subcomponents": [
+        {
+          "name": "Map",
+          "category": "data",
+          "classifier": "SW::Map.Impl"
+        },
+        {
+          "name": "Pattern",
+          "category": "data",
+          "classifier": "SW::FlightPattern"
+        },
+        {
+          "name": "HMAC",
+          "category": "data",
+          "classifier": "Base_Types::Boolean"
+        }
+      ],
+      "connections": [],
+      "agree": []
+    },
+    {
+      "name": "Mission",
+      "type": "data",
+      "features": [],
+      "properties": [],
+      "agree": []
+    },
+    {
+      "Mission": "Mission.Impl",
+      "subcomponents": [
+        {
+          "name": "wp1",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp2",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp3",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp4",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp5",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp6",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp7",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp8",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp9",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp10",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        }
+      ],
+      "connections": [],
+      "agree": []
+    },
+    {
+      "name": "MissionWindow",
+      "type": "data",
+      "features": [],
+      "properties": [],
+      "agree": []
+    },
+    {
+      "MissionWindow": "MissionWindow.Impl",
+      "subcomponents": [
+        {
+          "name": "wp1",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp2",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp3",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "wp4",
+          "category": "data",
+          "classifier": "SW::Coordinate.Impl"
+        },
+        {
+          "name": "crc",
+          "category": "data",
+          "classifier": "Base_Types::Boolean"
+        }
+      ],
+      "connections": [],
+      "agree": []
+    },
+    {
+      "name": "RadioDriver",
+      "type": "thread",
+      "features": [
+        {
+          "port": {
+            "name": "recv_map_in",
+            "type": "event data",
+            "flow": "in"
+          }
+        },
+        {
+          "port": {
+            "name": "send_status_out",
+            "type": "event data",
+            "flow": "out"
+          }
+        },
+        {
+          "port": {
+            "name": "send_status_in",
+            "type": "event data",
+            "flow": "in"
+          }
+        },
+        {
+          "port": {
+            "name": "recv_map_out",
+            "type": "event data",
+            "flow": "out"
+          }
+        }
+      ],
+      "properties": [],
+      "agree": [
+        {
+          "statements": [
+            {
+              "kind": "assume",
+              "label": "Authenticated command from the Ground Station",
+              "expr": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "recv_map_in.HMAC"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "boolLit",
+                  "value": "true"
+                }
+              }
+            },
+            {
+              "kind": "guarantee",
+              "label": "Authenticated command from the Ground Station",
+              "expr": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "recv_map_out.HMAC"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "boolLit",
+                  "value": "true"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "FlightPlanner",
+      "type": "thread",
+      "features": [
+        {
+          "port": {
+            "name": "flight_plan",
+            "type": "data",
+            "flow": "out"
+          }
+        },
+        {
+          "port": {
+            "name": "recv_map",
+            "type": "event data",
+            "flow": "in"
+          }
+        },
+        {
+          "port": {
+            "name": "position_status",
+            "type": "event data",
+            "flow": "in"
+          }
+        }
+      ],
+      "properties": [],
+      "agree": [
+        {
+          "statements": [
+            {
+              "kind": "assume",
+              "label": "The Flight Planner shall receive an authenticated command from the Ground Station",
+              "expr": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "recv_map.HMAC"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "boolLit",
+                  "value": "true"
+                }
+              }
+            },
+            {
+              "kind": "guarantee",
+              "label": "The Flight Planner shall generate a valid mission",
+              "expr": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "SW.good_mission"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "flight_plan"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "WaypointManager",
+      "type": "thread",
+      "features": [
+        {
+          "port": {
+            "name": "flight_plan",
+            "type": "data",
+            "flow": "in"
+          }
+        },
+        {
+          "port": {
+            "name": "waypoint",
+            "type": "event data",
+            "flow": "out"
+          }
+        },
+        {
+          "port": {
+            "name": "position_status",
+            "type": "event data",
+            "flow": "in"
+          }
+        }
+      ],
+      "properties": [],
+      "agree": [
+        {
+          "statements": [
+            {
+              "kind": "assume",
+              "label": "The Waypoint Manager shall receive a well-formed mission",
+              "expr": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "SW.good_mission"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "flight_plan"
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "guarantee",
+              "label": "The Waypoint Manager shall output a well-formed mission window.",
+              "expr": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "SW.good_mission_window"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "waypoint"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "UARTDriver",
+      "type": "thread",
+      "features": [
+        {
+          "port": {
+            "name": "position_status_in",
+            "type": "event data",
+            "flow": "in"
+          }
+        },
+        {
+          "port": {
+            "name": "waypoint_out",
+            "type": "event data",
+            "flow": "out"
+          }
+        },
+        {
+          "port": {
+            "name": "position_status_out",
+            "type": "event data",
+            "flow": "out"
+          }
+        },
+        {
+          "port": {
+            "name": "waypoint_in",
+            "type": "event data",
+            "flow": "in"
+          }
+        }
+      ],
+      "properties": [],
+      "agree": [
+        {
+          "statements": [
+            {
+              "kind": "assume",
+              "label": "Well-formed mission window",
+              "expr": {
+                "kind": "fnCall",
+                "function": {
+                  "kind": "nestedDotId",
+                  "name": "SW.good_mission_window"
+                },
+                "args": [
+                  {
+                    "kind": "nestedDotId",
+                    "name": "waypoint_in"
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "guarantee",
+              "label": "A CRC shall be appended to the message to determine message correctness",
+              "expr": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "waypoint_out.crc"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "boolLit",
+                  "value": "true"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MC_SW",
+      "type": "process",
+      "features": [
+        {
+          "port": {
+            "name": "recv_map",
+            "type": "event data",
+            "flow": "in"
+          }
+        },
+        {
+          "port": {
+            "name": "send_status",
+            "type": "event data",
+            "flow": "out"
+          }
+        },
+        {
+          "port": {
+            "name": "waypoint",
+            "type": "event data",
+            "flow": "out"
+          }
+        },
+        {
+          "port": {
+            "name": "position_status",
+            "type": "event data",
+            "flow": "in"
+          }
+        }
+      ],
+      "properties": [],
+      "agree": [
+        {
+          "statements": [
+            {
+              "kind": "assume",
+              "label": "The Mission Computer shall only accept authenticated commands from the Ground Station",
+              "expr": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "recv_map.HMAC"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "boolLit",
+                  "value": "true"
+                }
+              }
+            },
+            {
+              "kind": "guarantee",
+              "label": "The Mission Computer shall output a valid mission window to the Flight Controller",
+              "expr": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "waypoint.crc"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "boolLit",
+                  "value": "true"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "MC_SW": "MC_SW.Impl",
+      "subcomponents": [
+        {
+          "name": "RADIO",
+          "category": "thread",
+          "classifier": "SW::RadioDriver"
+        },
+        {
+          "name": "FPLN",
+          "category": "thread",
+          "classifier": "SW::FlightPlanner"
+        },
+        {
+          "name": "WPM",
+          "category": "thread",
+          "classifier": "SW::WaypointManager"
+        },
+        {
+          "name": "UART",
+          "category": "thread",
+          "classifier": "SW::UARTDriver"
+        }
+      ],
+      "connections": [
+        {
+          "name": "c1",
+          "source": "recv_map",
+          "destination": "RADIO.recv_map_in"
+        },
+        {
+          "name": "c2",
+          "source": "RADIO.send_status_out",
+          "destination": "send_status"
+        },
+        {
+          "name": "c3",
+          "source": "RADIO.recv_map_out",
+          "destination": "FPLN.recv_map"
+        },
+        {
+          "name": "c5",
+          "source": "FPLN.flight_plan",
+          "destination": "WPM.flight_plan"
+        },
+        {
+          "name": "c6",
+          "source": "WPM.waypoint",
+          "destination": "UART.waypoint_in"
+        },
+        {
+          "name": "c7",
+          "source": "UART.position_status_out",
+          "destination": "WPM.position_status"
+        },
+        {
+          "name": "c8",
+          "source": "UART.position_status_out",
+          "destination": "FPLN.position_status"
+        },
+        {
+          "name": "c9",
+          "source": "UART.position_status_out",
+          "destination": "RADIO.send_status_in"
+        },
+        {
+          "name": "c10",
+          "source": "UART.waypoint_out",
+          "destination": "waypoint"
+        },
+        {
+          "name": "c11",
+          "source": "position_status",
+          "destination": "UART.position_status_in"
+        }
+      ],
+      "agree": [
+        {
+          "statements": [
+            {
+              "kind": "assume",
+              "label": "The Mission Computer shall only accept authenticated commands from the Ground Station",
+              "expr": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "recv_map.HMAC"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "boolLit",
+                  "value": "true"
+                }
+              }
+            },
+            {
+              "kind": "guarantee",
+              "label": "The Mission Computer shall output a valid mission window to the Flight Controller",
+              "expr": {
+                "kind": "binary",
+                "left": {
+                  "kind": "nestedDotId",
+                  "name": "waypoint.crc"
+                },
+                "op": "=",
+                "right": {
+                  "kind": "boolLit",
+                  "value": "true"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -18,7 +18,6 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.Feature;
-import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
@@ -27,11 +26,14 @@ import org.osate.aadl2.instance.FeatureInstance;
 
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.BaseID;
+import com.rockwellcollins.atc.agree.agree.ChainID;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordProj;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
@@ -57,7 +59,7 @@ public class AgreeTypeUtils {
 		if (type instanceof PrimType) {
 			return ((PrimType) type).getString();
 		} else {
-			return getIDTypeStr((AgreeUtils.getFinalNestId(((RecordType) type).getRecord())));
+			return getIDTypeStr((AgreeAADLEnumerationUtils.getFinalNamedElm(((RecordType) type).getRecord())));
 		}
 	}
 
@@ -71,7 +73,7 @@ public class AgreeTypeUtils {
 	}
 
 	public static String getTypeName(NestedDotID recId, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
-		NamedElement finalId = AgreeUtils.getFinalNestId(recId);
+		NamedElement finalId = AgreeAADLEnumerationUtils.getFinalNamedElm(recId);
 		return getTypeName(finalId, typeMap, typeExpressions);
 	}
 
@@ -136,7 +138,7 @@ public class AgreeTypeUtils {
 					typeStr = ((PrimType) argType).getString();
 				} else {
 					NestedDotID nestId = ((RecordType) argType).getRecord();
-					NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
+					NamedElement namedEl = AgreeAADLEnumerationUtils.getFinalNamedElm(nestId);
 					subType = getType(namedEl, typeMap, typeExpressions);
 				}
 				if (typeStr != null) {
@@ -240,7 +242,7 @@ public class AgreeTypeUtils {
 
 			} while (type != null);
 			AgreeLogger.logWarning("Reference to component type '" + record.getName()
-					+ "' is not among the types reasoned about by AGREE");
+			+ "' is not among the types reasoned about by AGREE");
 			return null;
 		} else if (record instanceof ComponentImplementation) {
 			typeStr = record.getName();
@@ -323,48 +325,67 @@ public class AgreeTypeUtils {
 		return varList;
 	}
 
+
+
+	private static NamedElement neLoop(ChainID pc, ComponentInstance baseCompInst) {
+
+		if (pc instanceof BaseID) {
+			NamedElement ne = ((BaseID) pc).getNamedElm();
+			if (ne instanceof Subcomponent) {
+				return baseCompInst.findSubcomponentInstance((Subcomponent) ne);
+			} else if (ne instanceof Feature) {
+				return baseCompInst.findFeatureInstance((Feature) ne);
+			} else if (ne instanceof DataPort) {
+				baseCompInst.findFeatureInstance((DataPort) ne);
+			} else {
+				throw new AgreeException("Should Never Happen");
+			}
+
+		} else if (pc instanceof RecordProj) {
+			NamedElement ne = ((RecordProj) pc).getNamedElm();
+			if (ne instanceof Subcomponent) {
+				ComponentInstance prevCompInst = (ComponentInstance) neLoop(((RecordProj) pc).getChainID(),
+						baseCompInst);
+				return prevCompInst.findSubcomponentInstance((Subcomponent) ne);
+			} else if (ne instanceof Feature) {
+				NamedElement prevInst = neLoop(((RecordProj) pc).getChainID(), baseCompInst);
+				if (prevInst instanceof ComponentInstance) {
+					return ((ComponentInstance) prevInst).findFeatureInstance((Feature) ne);
+				} else {
+					FeatureInstance prevFeatInst = (FeatureInstance) prevInst;
+					for (FeatureInstance featInst : prevFeatInst.getFeatureInstances()) {
+						if (featInst.getFeature().equals(ne)) {
+							return featInst;
+						}
+					}
+				}
+
+
+			} else if (ne instanceof DataPort) {
+				ComponentInstance prevCompInst = (ComponentInstance) neLoop(((RecordProj) pc).getChainID(),
+						baseCompInst);
+				prevCompInst.findFeatureInstance((DataPort) ne);
+
+			} else {
+				return neLoop(((RecordProj) pc).getChainID(), baseCompInst);
+			}
+
+		}
+
+		return null;
+	}
+
 	public static NamedElement namedElFromId(EObject obj, ComponentInstance compInst) {
 		if (obj instanceof NestedDotID) {
-			return AgreeUtils.getFinalNestId((NestedDotID) obj);
+			return AgreeAADLEnumerationUtils.getFinalNamedElm((NestedDotID) obj);
 		} else {
 			assert (obj instanceof ThisExpr);
 
 			ThisExpr thisExpr = (ThisExpr) obj;
 
 			NestedDotID nestId = thisExpr.getSubThis();
+			return neLoop(nestId.getChainID(), compInst);
 
-			while (nestId != null) {
-				NamedElement base = nestId.getBase();
-
-				if (base instanceof Subcomponent) {
-					compInst = compInst.findSubcomponentInstance((Subcomponent) base);
-					nestId = nestId.getSub();
-				} else if (base instanceof FeatureGroup) {
-					assert (base instanceof FeatureGroup);
-					FeatureInstance featInst = compInst.findFeatureInstance((Feature) base);
-
-					while (nestId.getSub() != null) {
-						nestId = nestId.getSub();
-						assert (nestId.getBase() instanceof Feature);
-						Feature subFeat = (Feature) nestId.getBase();
-						FeatureInstance eqFeatInst = null;
-						for (FeatureInstance subFeatInst : featInst.getFeatureInstances()) {
-							if (subFeatInst.getFeature().equals(subFeat)) {
-								eqFeatInst = subFeatInst;
-								break;
-							}
-						}
-						featInst = eqFeatInst;
-					}
-
-					return featInst;
-				} else {
-					assert (base instanceof DataPort);
-					return compInst.findFeatureInstance((DataPort) base);
-				}
-
-			}
-			return compInst;
 		}
 	}
 

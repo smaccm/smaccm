@@ -7,6 +7,7 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Subcomponent;
 import org.osate.xtext.aadl2.serializer.Aadl2CrossReferenceSerializer;
 
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
@@ -19,7 +20,7 @@ public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer
 			final IScope scope, org.eclipse.xtext.serializer.diagnostic.ISerializationDiagnostic.Acceptor errors) {
 		if (semanticObject instanceof NestedDotID) {
 			NestedDotID dotID = (NestedDotID) semanticObject;
-			NamedElement base = dotID.getBase();
+			NamedElement base = AgreeAADLEnumerationUtils.getBaseNamedElm(dotID);
 			if (base instanceof Subcomponent) {
 				return base.getName();
 			} else if (scope.getElements(target).iterator().hasNext()) {

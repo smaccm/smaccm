@@ -60,6 +60,7 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -69,8 +70,10 @@ import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
+import com.rockwellcollins.atc.agree.agree.BaseID;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.ChainID;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
@@ -104,6 +107,7 @@ import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordProj;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
@@ -664,34 +668,23 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		case IN:
 			inputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
-
-				List<Expr> constraints = getDataClassifierRangeConstraintExprs(name, (DataClassifier) dataClass);
-				if (!constraints.isEmpty()) {
-					assumptions.add(getDataClassifierTypePredicate(feature.getName(), constraints, dataFeature));
-				}
+				assumptions
+				.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						dataFeature));
 			}
 			break;
 		case OUT:
 			outputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
-				List<Expr> constraints = getDataClassifierRangeConstraintExprs(name, (DataClassifier) dataClass);
-				if (!constraints.isEmpty()) {
-					guarantees.add(getDataClassifierTypePredicate(feature.getName(), constraints, dataFeature));
-				}
+				guarantees
+				.add(getDataClassifierRangeConstraint(feature.getName(), (DataClassifier) dataClass,
+						dataFeature));
 			}
 			break;
 		default:
 			throw new AgreeException(
 					"Unable to reason about bi-directional event port: " + dataFeature.getQualifiedName());
 		}
-	}
-
-	private static AgreeStatement getDataClassifierTypePredicate(String name, List<Expr> constraints,
-			EObject reference) {
-		// must have reference so we don't throw them away later
-		return new AgreeStatement("Type predicate on '" + name + "'",
-				constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b)),
-				reference);
 	}
 
 	private List<AgreeAADLConnection> getConnections(EList<Connection> connections, ComponentInstance compInst,
@@ -1084,7 +1077,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		for (SpecStatement spec : specs) {
 			if (spec instanceof AssignStatement) {
 				Expr expr = doSwitch(((AssignStatement) spec).getExpr());
-				expr = new BinaryExpr(new IdExpr(((AssignStatement) spec).getId().getBase().getName()), BinaryOp.EQUAL,
+				expr = new BinaryExpr(new IdExpr(
+						(AgreeAADLEnumerationUtils.getBaseNamedElm(((AssignStatement) spec).getId()))
+						.getName()), BinaryOp.EQUAL,
 						expr);
 				assigns.add(new AgreeStatement("", expr, spec));
 			}
@@ -1131,7 +1126,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return result;
 	}
 
-	private List<Expr> getDataClassifierRangeConstraintExprs(String name, DataClassifier dataClassifier) {
+	private AgreeStatement getDataClassifierRangeConstraint(String name, DataClassifier dataClassifier,
+			EObject reference) {
+		// must have reference so we don't throw them away later
+		return new AgreeStatement("Type predicate on '" + name + "'",
+				getDataClassifierRangeConstraintExpr(name, dataClassifier), reference);
+	}
+
+	private Expr getDataClassifierRangeConstraintExpr(String name, DataClassifier dataClassifier) {
 		List<Expr> constraints = new ArrayList<>();
 
 		if (dataClassifier instanceof DataType) {
@@ -1141,27 +1143,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 						PropertyExpression propExpr = pv.getOwnedValue();
 						if (propExpr instanceof RangeValue) {
 							RangeValue rangeValue = (RangeValue) propExpr;
+							double min = rangeValue.getMinimumValue().getScaledValue();
+							double max = rangeValue.getMaximumValue().getScaledValue();
 							IdExpr id = new IdExpr(name);
-							List<Expr> boundExprs = new ArrayList<>();
-							try {
-								double min = rangeValue.getMinimumValue().getScaledValue();
-								Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
-								boundExprs.add(new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id));
-							} catch (Exception e) {
-								System.out.println("Could not find value for " + name + " lower bound.");
-							}
-							try {
-								double max = rangeValue.getMaximumValue().getScaledValue();
-								Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
-								boundExprs.add(new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal));
-							} catch (Exception e) {
-								System.out.println("Could not find value for " + name + " upper bound.");
-							}
-							if (boundExprs.size() == 2) {
-								constraints.add(new BinaryExpr(boundExprs.get(0), BinaryOp.AND, boundExprs.get(1)));
-							} else if (boundExprs.size() == 1) {
-								constraints.add(boundExprs.get(0));
-							}
+							Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
+							Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
+							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+							constraints.add(bound);
 						}
 					}
 				}
@@ -1171,27 +1161,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 						PropertyExpression propExpr = pv.getOwnedValue();
 						if (propExpr instanceof RangeValue) {
 							RangeValue rangeValue = (RangeValue) propExpr;
+							double min = rangeValue.getMinimumValue().getScaledValue();
+							double max = rangeValue.getMaximumValue().getScaledValue();
 							IdExpr id = new IdExpr(name);
-							List<Expr> boundExprs = new ArrayList<>();
-							try {
-								double min = rangeValue.getMinimumValue().getScaledValue();
-								Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
-								boundExprs.add(new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id));
-							} catch (Exception e) {
-								System.out.println("Could not find value for " + name + " lower bound.");
-							}
-							try {
-								double max = rangeValue.getMaximumValue().getScaledValue();
-								Expr highVal = new RealExpr(BigDecimal.valueOf(max));
-								boundExprs.add(new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal));
-							} catch (Exception e) {
-								System.out.println("Could not find value for " + name + " upper bound.");
-							}
-							if (boundExprs.size() == 2) {
-								constraints.add(new BinaryExpr(boundExprs.get(0), BinaryOp.AND, boundExprs.get(1)));
-							} else if (boundExprs.size() == 1) {
-								constraints.add(boundExprs.get(0));
-							}
+							Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
+							Expr highVal = new RealExpr(BigDecimal.valueOf(max));
+							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+							constraints.add(bound);
 						}
 					}
 				}
@@ -1200,16 +1178,23 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		} else if (dataClassifier instanceof DataImplementation) {
 			constraints.addAll(((DataImplementation) dataClassifier).getAllSubcomponents().stream()
 					.filter(sub -> sub.getSubcomponentType() instanceof DataClassifier)
-					.map(sub -> getDataClassifierRangeConstraintExprs(name + "." + sub.getName(),
+					.map(sub -> getDataClassifierRangeConstraintExpr(name + "." + sub.getName(),
 							(DataClassifier) sub.getSubcomponentType()))
-					.flatMap(List::stream).collect(Collectors.toList()));
+					.collect(Collectors.toList()));
 		}
 
-		return constraints;
+		return constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
 	}
 
-	private List<Expr> getVariableRangeConstraintExprs(String name, com.rockwellcollins.atc.agree.agree.Type type) {
-		List<Expr> result = new ArrayList<>();
+	private AgreeStatement getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
+			EObject reference) {
+		// must have reference so we don't throw them away later
+		return new AgreeStatement("Type predicate on '" + name + "'", getVariableRangeConstraintExpr(name, type),
+				reference);
+	}
+
+	private Expr getVariableRangeConstraintExpr(String name, com.rockwellcollins.atc.agree.agree.Type type) {
+		Expr result = new BoolExpr(true);
 		if (type instanceof PrimType) {
 			PrimType primType = (PrimType) type;
 			String lowStr = primType.getRangeLow();
@@ -1240,17 +1225,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				}
 				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
 				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-				result.add(new BinaryExpr(lowBound, BinaryOp.AND, highBound));
+				result = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
 			}
 		} else if (type instanceof RecordType) {
 			RecordType recType = (RecordType) type;
-			NamedElement recordTypeName = AgreeUtils.getFinalNestId(recType.getRecord());
+			NamedElement recordTypeName = AgreeAADLEnumerationUtils.getFinalNamedElm(recType.getRecord());
 			if (recordTypeName instanceof DataClassifier) {
-				result.addAll(getDataClassifierRangeConstraintExprs(name, (DataClassifier) recordTypeName));
-			} else if (recordTypeName instanceof RecordDefExpr) {
-				result.addAll(((RecordDefExpr) recordTypeName).getArgs().stream()
-						.map(arg -> getVariableRangeConstraintExprs(name + "." + arg.getName(), arg.getType()))
-						.flatMap(List::stream).collect(Collectors.toList()));
+				result = getDataClassifierRangeConstraintExpr(name, (DataClassifier) recordTypeName);
 			}
 		}
 		return result;
@@ -1259,11 +1240,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EObject reference) {
 		List<AgreeStatement> constraints = new ArrayList<>();
 		for (Arg arg : args) {
-			List<Expr> argConstraints = getVariableRangeConstraintExprs(arg.getName(), arg.getType());
-			if (!argConstraints.isEmpty()) {
-				constraints.add(new AgreeStatement("Type predicate on '" + arg.getName() + "'", argConstraints.stream()
-						.reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b)), reference));
-			}
+			constraints.add(getVariableRangeConstraint(arg.getName(), arg.getType(), reference));
 		}
 		return constraints;
 	}
@@ -1379,7 +1356,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseTimeOfExpr(TimeOfExpr timeExpr) {
 		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = AgreeAADLEnumerationUtils.getBaseNamedElm(nestId);
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeOfVarMap.get(idStr);
@@ -1395,7 +1372,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseTimeRiseExpr(TimeRiseExpr timeExpr) {
 		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = AgreeAADLEnumerationUtils.getBaseNamedElm(nestId);
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeRiseVarMap.get(idStr);
@@ -1411,7 +1388,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseTimeFallExpr(TimeFallExpr timeExpr) {
 		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = AgreeAADLEnumerationUtils.getBaseNamedElm(nestId);
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeFallVarMap.get(idStr);
@@ -1443,10 +1420,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		NestedDotID recId = recExpr.getRecord();
-		while (recId.getSub() != null) {
-			recId = recId.getSub();
-		}
-		String recName = AgreeTypeUtils.getIDTypeStr(recId.getBase());
+		String recName = AgreeTypeUtils.getIDTypeStr(AgreeAADLEnumerationUtils.getFinalNamedElm(recId));
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1593,7 +1567,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseFnCallExpr(FnCallExpr expr) {
 		NestedDotID dotId = expr.getFn();
-		NamedElement namedEl = AgreeUtils.getFinalNestId(dotId);
+		NamedElement namedEl = AgreeAADLEnumerationUtils.getFinalNamedElm(dotId);
 
 		String fnName = AgreeTypeUtils.getNodeName(namedEl);
 		boolean found = false;
@@ -1606,7 +1580,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		if (!found) {
 			NestedDotID fn = expr.getFn();
-			doSwitch(AgreeUtils.getFinalNestId(fn));
+			doSwitch(AgreeAADLEnumerationUtils.getFinalNamedElm(fn));
 			// for dReal integration
 			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
 				fnName = namedEl.getName();
@@ -1872,57 +1846,130 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new IntExpr(BigInteger.valueOf(Integer.parseInt(expr.getVal())));
 	}
 
+
+	private class SemanticException extends Exception {
+
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 1L;
+
+	}
+
+	private String dotStringLoop(ChainID pc) throws SemanticException {
+
+		if (pc instanceof BaseID) {
+			NamedElement ne = ((BaseID) pc).getNamedElm();
+			if (ne instanceof FeatureGroup || ne instanceof AadlPackage || ne instanceof Subcomponent) {
+				return ne.getName();
+			} else {
+				return null;
+			}
+
+		} else if (pc instanceof RecordProj) {
+			NamedElement ne = ((RecordProj) pc).getNamedElm();
+			if (ne instanceof FeatureGroup || ne instanceof AadlPackage || ne instanceof Subcomponent) {
+				return dotStringLoop(((RecordProj) pc).getChainID()) + dotChar + ne.getName();
+			} else {
+				return dotStringLoop(((RecordProj) pc).getChainID());
+			}
+
+		}
+
+
+
+		return null;
+	}
+
+	private Boolean isAadlCmpnt(ChainID pc) throws SemanticException {
+		if (pc instanceof BaseID) {
+			NamedElement ne = ((BaseID) pc).getNamedElm();
+			return (ne instanceof FeatureGroup || ne instanceof AadlPackage || ne instanceof Subcomponent);
+		} else if (pc instanceof RecordProj) {
+			NamedElement ne = ((RecordProj) pc).getNamedElm();
+			return (ne instanceof FeatureGroup || ne instanceof AadlPackage || ne instanceof Subcomponent);
+		}
+		return false;
+	}
+
+	private NamedElement firstNonCmpntloop(ChainID pc) throws SemanticException {
+		if (pc instanceof BaseID) {
+			NamedElement ne = ((BaseID) pc).getNamedElm();
+			if (ne instanceof FeatureGroup || ne instanceof AadlPackage || ne instanceof Subcomponent) {
+				return null;
+			} else {
+				return ne;
+			}
+
+		} else if (pc instanceof RecordProj) {
+			NamedElement ne = ((RecordProj) pc).getNamedElm();
+			if (ne instanceof FeatureGroup || ne instanceof AadlPackage || ne instanceof Subcomponent) {
+				return null;
+			} else if (isAadlCmpnt(((RecordProj) pc).getChainID())) {
+				return ne;
+			} else {
+				return firstNonCmpntloop(((RecordProj) pc).getChainID());
+			}
+
+		}
+		return null;
+	}
+
+	private Expr exprLoop(ChainID pc, String jKindVar, NamedElement base) throws SemanticException {
+
+
+		NamedElement ne = null;
+		if (pc instanceof BaseID) {
+			ne = ((BaseID) pc).getNamedElm();
+		} else if (pc instanceof RecordProj) {
+			ne = ((RecordProj) pc).getNamedElm();
+		}
+
+		if (base == ne) {
+			if (base instanceof ConstStatement) {
+				// evaluate the constant
+				return doSwitch(((ConstStatement) base).getExpr());
+			} else if (base instanceof NamedID) {
+				// Enumeration types get lifted to Lustre global types; accordingly
+				// lift the enumerators to global
+				return new IdExpr(base.getName());
+			} else {
+				return new IdExpr(jKindVar + base.getName());
+			}
+		} else if (pc instanceof RecordProj) {
+			RecordProj nid = (RecordProj) pc;
+			return new RecordAccessExpr(exprLoop(nid.getChainID(), jKindVar, base), ne.getName());
+		} else {
+			throw new SemanticException();
+		}
+	}
+
 	@Override
 	public Expr caseNestedDotID(NestedDotID id) {
+		try {
+			String jKindVar = dotStringLoop(id.getChainID());
 
-		String jKindVar = "";
-		String aadlVar = "";
-		NamedElement base = id.getBase();
+			NamedElement namedEl = firstNonCmpntloop(id.getChainID());
 
-		while (id.getSub() != null
-				&& (base instanceof FeatureGroup || base instanceof AadlPackage || base instanceof Subcomponent)) {
-			jKindVar += base.getName() + dotChar;
-			aadlVar += base.getName() + ".";
-			id = id.getSub();
-			base = id.getBase();
-		}
+			String tag = id.getTag();
+			if (tag != null) {
 
-		NamedElement namedEl = id.getBase();
-
-		String tag = id.getTag();
-		if (tag != null) {
-
-			switch (tag) {
-			case "_CLK":
-				IdExpr clockId = new IdExpr(namedEl.getName() + clockIDSuffix);
-				return clockId;
-			default:
-				throw new AgreeException("use of uknown tag: '" + tag + "' in expression: '" + aadlVar + tag + "'");
+				switch (tag) {
+				case "_CLK":
+					IdExpr clockId = new IdExpr(namedEl.getName() + clockIDSuffix);
+					return clockId;
+				default:
+					throw new AgreeException(
+							"use of uknown tag: '" + tag + "' in expression: '" + jKindVar + tag + "'");
+				}
 			}
+
+			return exprLoop(id.getChainID(), jKindVar, namedEl);
+		} catch (SemanticException e) {
+			e.printStackTrace();
 		}
 
-		Expr result;
-		if (namedEl instanceof ConstStatement) {
-			// evaluate the constant
-			result = doSwitch(((ConstStatement) namedEl).getExpr());
-		} else if (namedEl instanceof NamedID) {
-			// Enumeration types get lifted to Lustre global types; accordingly
-			// lift the enumerators to global
-			jKindVar = namedEl.getName();
-			result = new IdExpr(jKindVar);
-		} else {
-			jKindVar = jKindVar + namedEl.getName();
-			result = new IdExpr(jKindVar);
-		}
-
-		// this is a record accessrecord
-		while (id.getSub() != null) {
-			id = id.getSub();
-			namedEl = id.getBase();
-			result = new RecordAccessExpr(result, namedEl.getName());
-		}
-
-		return result;
+		return null;
 	}
 
 	@Override

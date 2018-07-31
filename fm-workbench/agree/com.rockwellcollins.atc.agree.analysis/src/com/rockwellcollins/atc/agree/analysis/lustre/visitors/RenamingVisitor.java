@@ -16,6 +16,8 @@ import org.osate.aadl2.instance.ComponentInstance;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.BaseID;
+import com.rockwellcollins.atc.agree.agree.ChainID;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
@@ -24,6 +26,7 @@ import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.RecordProj;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
@@ -123,15 +126,21 @@ public class RenamingVisitor extends AstIterVisitor {
 		return null;
 	}
 
+	private String projectionChainToString(ChainID pc) {
+
+		if (pc instanceof BaseID) {
+			return ((BaseID) pc).getNamedElm().getName();
+		} else if (pc instanceof RecordProj) {
+			String pcString = projectionChainToString(((RecordProj) pc).getChainID());
+			return pcString + "." + pc.getNamedElm().getName();
+		}
+
+		return null;
+	}
+
 	private String nestedDotIdToString(NestedDotID id) {
-		String result = id.getBase().getName();
-		if (id.getSub() != null) {
-			result += "." + nestedDotIdToString(id.getSub());
-		}
-		if (id.getTag() != null) {
-			result += "." + id.getTag();
-		}
-		return result;
+
+		return projectionChainToString(id.getChainID()) + "." + id.getTag();
 	}
 
 	private String argToString(Arg arg) {

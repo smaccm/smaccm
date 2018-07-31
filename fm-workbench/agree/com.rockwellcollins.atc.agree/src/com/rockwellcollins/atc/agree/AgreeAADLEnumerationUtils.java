@@ -9,12 +9,49 @@ import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.ListValue;
 import org.osate.aadl2.ModalPropertyValue;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyExpression;
 
+import com.rockwellcollins.atc.agree.agree.BaseID;
+import com.rockwellcollins.atc.agree.agree.ChainID;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.RecordProj;
+
 public class AgreeAADLEnumerationUtils {
+
+	public static NamedElement getFinalNamedElm(ChainID cid) {
+		if (cid instanceof BaseID) {
+			return cid.getNamedElm();
+		} else if (cid instanceof RecordProj) {
+			return cid.getNamedElm();
+		}
+
+		return cid.getNamedElm();
+
+	}
+
+	public static NamedElement getFinalNamedElm(NestedDotID dotId) {
+
+		ChainID cid = dotId.getChainID();
+		return getFinalNamedElm(cid);
+
+	}
+
+	private static NamedElement getBaseLoop(ChainID cid) {
+		if (cid instanceof BaseID) {
+			return ((BaseID) cid).getNamedElm();
+		} else if (cid instanceof RecordProj) {
+			return getBaseLoop(((RecordProj) cid).getChainID());
+		}
+		return null;
+	}
+
+	public static NamedElement getBaseNamedElm(NestedDotID dotId) {
+		return getBaseLoop(dotId.getChainID());
+	}
 
 //	private static AgreeContractLibrary getAnnexLibrary(PublicPackageSection publicSection) {
 //		AgreePackage agreePackage = AgreeFactory.eINSTANCE.getAgreePackage();
@@ -70,8 +107,8 @@ public class AgreeAADLEnumerationUtils {
 								&& (((NamedValue) pv.getOwnedValue())
 										.getNamedValue() instanceof org.osate.aadl2.EnumerationLiteral)
 								&& "Enum"
-										.equals(((EnumerationLiteral) ((NamedValue) pv.getOwnedValue()).getNamedValue())
-												.getName())));
+								.equals(((EnumerationLiteral) ((NamedValue) pv.getOwnedValue()).getNamedValue())
+										.getName())));
 	}
 
 //	public static List<NamedID> getMatchingEnumIDAsList(ComponentClassifier enumerationType, String qualifiedName) {

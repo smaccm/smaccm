@@ -68,10 +68,12 @@ import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
+import com.rockwellcollins.atc.agree.agree.BaseID;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.CallDef;
+import com.rockwellcollins.atc.agree.agree.ChainID;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
@@ -112,6 +114,7 @@ import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
+import com.rockwellcollins.atc.agree.agree.RecordProj;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
@@ -317,7 +320,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkAssign(AssignStatement assign) {
 		NestedDotID dotId = assign.getId();
-		NamedElement namedEl = dotId.getBase();
+
+		if (dotId.getChainID() instanceof RecordProj) {
+			error(dotId, "The Id on the left hand side of an assignment statement " + "must not contain a \".\"");
+			return;
+		}
+
+		NamedElement namedEl = ((BaseID) dotId.getChainID()).getNamedElm();
 		Expr expr = assign.getExpr();
 
 		if (namedEl == null || expr == null) {
@@ -331,10 +340,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return;
 		}
 
-		if (dotId.getSub() != null) {
-			error(dotId, "The Id on the left hand side of an assignment statement " + "must not contain a \".\"");
-			return;
-		}
+
 
 		if (namedEl.eContainer() instanceof InputStatement) {
 			error(dotId, "Assignment to agree_input variables is illegal.");
@@ -379,7 +385,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (contract != null) {
 			for (SpecStatement spec : contract.getSpecs()) {
 				if (spec instanceof AssignStatement && spec != assign) {
-					NamedElement otherEl = ((AssignStatement) spec).getId().getBase();
+					NamedElement otherEl = AgreeAADLEnumerationUtils.getBaseNamedElm(((AssignStatement) spec).getId());
 					if (otherEl.equals(namedEl)) {
 						error(spec, "Mulitiple assignments to variable '" + namedEl.getName() + "'");
 						error(assign, "Mulitiple assignments to variable '" + namedEl.getName() + "'");
@@ -670,12 +676,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkLift(LiftStatement lift) {
 		NestedDotID dotId = lift.getSubcomp();
 
-		if (dotId.getSub() != null) {
+		if (dotId.getChainID() instanceof RecordProj) {
 			error(lift, "Lift statements can be applied only to direct subcomponents."
 					+ "Place a lift statement in the subcomponents contract for heavy lifting");
 		}
 
-		NamedElement namedEl = dotId.getBase();
+		NamedElement namedEl = ((BaseID) dotId.getChainID()).getNamedElm();
 
 		if (namedEl != null) {
 			if (!(namedEl instanceof SubcomponentImpl)) {
@@ -718,14 +724,21 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	}
 
+	private void pcLoop(ChainID pc) {
+		if (pc instanceof BaseID) {
+			return;
+		} else if (pc instanceof RecordProj) {
+			NamedElement ne = ((RecordProj) pc).getNamedElm();
+			if (ne instanceof Property) {
+				error(ne, "You cannot reference AADL properties this way." + " Use a \"Get_Property\" statement.");
+			}
+
+		}
+	}
+
 	@Check(CheckType.FAST)
 	public void checkNestedDotID(NestedDotID dotId) {
-		NestedDotID sub = dotId.getSub();
-		if (sub != null) {
-			if (sub.getBase() instanceof Property) {
-				error(sub, "You cannot reference AADL properties this way." + " Use a \"Get_Property\" statement.");
-			}
-		}
+		pcLoop(dotId.getChainID());
 	}
 
 	@Check(CheckType.FAST)
@@ -769,7 +782,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (!(expr instanceof NestedDotID)) {
 			error(expr, "Patterns can contain only identifiers (not general expressions)");
 		} else {
-			if (((NestedDotID) expr).getSub() != null) {
+			if (((NestedDotID) expr).getChainID() instanceof RecordProj) {
 				error(expr, "Patterns can contain only identifiers (not general expressions)");
 			}
 		}
@@ -1060,7 +1073,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			error(expr, "Time functions can be applied only to Boolean identifiers");
 		}
 
-		if (id.getSub() != null) {
+		if (id.getChainID() instanceof RecordProj) {
 			error(expr, "Time functions can be applied only to identifiers");
 		}
 	}
@@ -1216,9 +1229,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		NestedDotID recId = recType.getRecord();
 		NamedElement finalId = getFinalNestId(recId);
 
+
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)
 				&& !(finalId instanceof DataType) && !(finalId instanceof EnumStatement)) {
-			error(recType, "types must be record definition, data implementation, enumeration, or datatype");
+			error(recType,
+					"types must be record definition, array definition, data implementation, enumeration, or datatype");
 		}
 
 		if (finalId instanceof DataImplementation) {
@@ -1248,6 +1263,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 	}
+
 
 	@Check(CheckType.FAST)
 	public void checkRecordExpr(RecordExpr recExpr) {
@@ -1301,6 +1317,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
+
 	private List<NamedElement> getArgNames(NestedDotID recId) {
 
 		NamedElement rec = getFinalNestId(recId);
@@ -1345,25 +1362,26 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return typeMap;
 	}
 
-//    private List<AgreeType> getArgTypes(NestedDotID recId){
+//	private List<AgreeType> getArgTypes(NestedDotID recId){
 //
-//    	NamedElement rec = getFinalNestId(recId);
-//    	List<AgreeType> types = new ArrayList<AgreeType>();
+//		NamedElement rec = getFinalNestId(recId);
+//		List<AgreeType> types = new ArrayList<AgreeType>();
 //
-//    	if(rec instanceof RecordDefExpr){
-//    		RecordDefExpr recDef = (RecordDefExpr)rec;
-//    		for(Arg arg : recDef.getArgs()){
-//    			types.add(getAgreeType(arg.getType()));
-//    		}
-//    	}else if(rec instanceof FeatureGroupType){
-//    		FeatureGroupType featGroup = (FeatureGroupType)rec;
-//    		for(Feature feat : featGroup.getAllFeatures()){
-//    			types.add(getAgreeType(feat));
-//    		}
-//    	}
+//		if(rec instanceof RecordDefExpr){
+//			RecordDefExpr recDef = (RecordDefExpr)rec;
+//			for(Arg arg : recDef.getArgs()){
+//				types.add(getAgreeType(arg.getType()));
+//			}
+//		}else if(rec instanceof FeatureGroupType){
+//			FeatureGroupType featGroup = (FeatureGroupType)rec;
+//			for(Feature feat : featGroup.getAllFeatures()){
+//				types.add(getAgreeType(feat));
+//			}
+//		}
 //
-//    	return types;
-//    }
+//		return types;
+//	}
+
 
 	private void dataImplCycleCheck(NestedDotID dataID) {
 		NamedElement finalId = getFinalNestId(dataID);
@@ -1474,10 +1492,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			for (ConstStatement constFrontElem : prevClosure) {
 				List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem, NestedDotID.class);
 				for (NestedDotID nestId : nestIds) {
-					while (nestId != null) {
-						NamedElement base = nestId.getBase();
-						if (base instanceof ConstStatement) {
-							ConstStatement closConst = (ConstStatement) base;
+					ChainID pc = nestId.getChainID();
+					while (pc instanceof RecordProj) {
+						NamedElement ne = ((RecordProj) pc).getNamedElm();
+						if (ne instanceof ConstStatement) {
+							ConstStatement closConst = (ConstStatement) ne;
 							if (closConst.equals(constStat)) {
 								error(constStat, "The expression for constant statment '" + constStat.getName()
 								+ "' is part of a cyclic definition");
@@ -1485,8 +1504,22 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 							}
 							constClosure.add(closConst);
 						}
-						nestId = nestId.getSub();
+
+						pc = ((RecordProj) pc).getChainID();
+
 					}
+
+					NamedElement ne = ((BaseID) pc).getNamedElm();
+					if (ne instanceof ConstStatement) {
+						ConstStatement closConst = (ConstStatement) ne;
+						if (closConst.equals(constStat)) {
+							error(constStat, "The expression for constant statment '" + constStat.getName()
+							+ "' is part of a cyclic definition");
+							break;
+						}
+						constClosure.add(closConst);
+					}
+
 				}
 			}
 		} while (!prevClosure.equals(constClosure));
@@ -2056,30 +2089,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		} else {
 			assert (expr instanceof ThisExpr);
 			NamedElement component = EcoreUtil2.getContainerOfType(expr, ComponentClassifier.class);
-
 			NestedDotID nestId = ((ThisExpr) expr).getSubThis();
-			while (nestId != null) {
-				NamedElement base = nestId.getBase();
-
-				if (base instanceof Subcomponent) {
-					component = ((Subcomponent) base).getSubcomponentType();
-					nestId = nestId.getSub();
-				} else if (base instanceof FeatureGroup) {
-					while (nestId.getSub() != null) {
-						nestId = nestId.getSub();
-						assert (nestId.getBase() instanceof Feature);
-						Feature subFeat = (Feature) nestId.getBase();
-						component = subFeat;
-					}
-					return component;
+			if (nestId == null) {
+				return component;
+			} else {
+				NamedElement ne = AgreeAADLEnumerationUtils.getFinalNamedElm(nestId);
+				if (ne instanceof Subcomponent) {
+					return ((Subcomponent) ne).getSubcomponentType();
 				} else {
-					assert (base instanceof DataPort);
-					component = base;
-					return component;
+					return ne;
 				}
 
 			}
-			return component;
 		}
 
 	}
@@ -2514,18 +2535,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //	}
 
 	public static NamedElement getFinalNestId(NestedDotID dotId) {
-		while (dotId.getSub() != null) {
-			dotId = dotId.getSub();
-		}
-
-		return dotId.getBase();
+		return AgreeAADLEnumerationUtils.getFinalNamedElm(dotId);
 	}
 
 	public String getNestedDotIDTag(NestedDotID dotId) {
-		while (dotId.getSub() != null) {
-			dotId = dotId.getSub();
-		}
-
 		return dotId.getTag();
 	}
 
@@ -2874,10 +2887,26 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return new AgreeType("component");
 		} else if (expr instanceof PreExpr) {
 			return getAgreeType(((PreExpr) expr).getExpr());
+//		} else if (expr instanceof ArrayLiteralExpr) {
+//			return getAgreeType((ArrayLiteralExpr) expr);
+//		} else if (expr instanceof ArrayUpdateExpr) {
+//			return getAgreeType((ArrayUpdateExpr) expr);
 		} else if (expr instanceof RecordExpr) {
 			return getAgreeType((RecordExpr) expr);
 		} else if (expr instanceof RecordUpdateExpr) {
 			return getAgreeType((RecordUpdateExpr) expr);
+
+//		} else if (expr instanceof ForallExpr) {
+//			return getAgreeType((ForallExpr) expr);
+//		} else if (expr instanceof ExistsExpr) {
+//			return getAgreeType((ExistsExpr) expr);
+//		} else if (expr instanceof ForeachExpr) {
+//			return getAgreeType((ForeachExpr) expr);
+//		} else if (expr instanceof FoldLeftExpr) {
+//			return getAgreeType((FoldLeftExpr) expr);
+//		} else if (expr instanceof FoldRightExpr) {
+//			return getAgreeType((FoldRightExpr) expr);
+
 		} else if (expr instanceof FloorCast) {
 			return INT;
 		} else if (expr instanceof RealCast) {
@@ -2913,6 +2942,47 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	private AgreeType getAgreeType(RecordExpr recExpr) {
 		return getNestIdAsType(recExpr.getRecord());
 	}
+
+//	private AgreeType getAgreeType(ArrayLiteralExpr arrExpr) {
+//		Expr first = arrExpr.getElems().get(0);
+//		int size = arrExpr.getElems().size();
+//		AgreeType firstType = getAgreeType(first);
+//		for (int i = 1; i < arrExpr.getElems().size(); i++) {
+//			Expr e = arrExpr.getElems().get(i);
+//			AgreeType eType = getAgreeType(e);
+//
+//			if (!eType.equals(firstType)) {
+//				error(e, "Expected element to have type '" + firstType + "' but found type '" + eType + "'");
+//			}
+//		}
+//
+//		return new AgreeType(firstType.toString() + "[" + size + "]");
+//	}
+
+//	private AgreeType getAgreeType(ArrayUpdateExpr upExpr) {
+//		return getAgreeType(upExpr.getArray());
+//	}
+//
+//	private AgreeType getAgreeType(ForallExpr forallExpr) {
+//		return getAgreeType(forallExpr.getExpr());
+//	}
+//
+//	private AgreeType getAgreeType(ExistsExpr existsExpr) {
+//		return getAgreeType(existsExpr.getExpr());
+//	}
+//
+//	private AgreeType getAgreeType(ForeachExpr foreachExpr) {
+//		return getAgreeType(foreachExpr.getExpr());
+//	}
+//
+//	private AgreeType getAgreeType(FoldLeftExpr foldlExpr) {
+//		return getAgreeType(foldlExpr.getExpr());
+//	}
+//
+//	private AgreeType getAgreeType(FoldRightExpr foldrExpr) {
+//		return getAgreeType(foldrExpr.getExpr());
+//	}
+
 
 	public static boolean matches(AgreeType expected, AgreeType actual) {
 		if (expected.equals(ERROR) || actual.equals(ERROR)) {

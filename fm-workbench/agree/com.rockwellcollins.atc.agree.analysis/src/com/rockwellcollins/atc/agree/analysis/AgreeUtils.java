@@ -35,7 +35,6 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
@@ -89,13 +88,6 @@ public class AgreeUtils {
 		} catch (PropertyNotPresentException propNotPresentException) {
 			return null;
 		}
-	}
-
-	public static NamedElement getFinalNestId(NestedDotID dotId) {
-		while (dotId.getSub() != null) {
-			dotId = dotId.getSub();
-		}
-		return dotId.getBase();
 	}
 
 	public static ComponentImplementation getInstanceImplementation(ComponentInstance compInst) {

@@ -38,6 +38,7 @@ import org.osate.aadl2.BooleanLiteral;
 
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.BaseID;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -173,10 +174,15 @@ public class LinearizationRewriter {
 		resultSlopeExpr.setVal(Double.toString((seg.stopY - seg.startY) / (seg.stopX - seg.startX)));
 
 		NestedDotID inputId = af.createNestedDotID();
-		inputId.setBase(EcoreUtil.copy(inputArg));
+		BaseID inputBid = af.createBaseID();
+		inputBid.setNamedElm(EcoreUtil.copy(inputArg));
+		inputId.setChainID(inputBid);
 
 		NestedDotID resultId = af.createNestedDotID();
-		resultId.setBase(EcoreUtil.copy(resultArg));
+
+		BaseID resultBid = af.createBaseID();
+		resultBid.setNamedElm(EcoreUtil.copy(resultArg));
+		inputId.setChainID(resultBid);
 
 		BinaryExpr rangeMinExpr = af.createBinaryExpr();
 		rangeMinExpr.setOp(">=");
@@ -246,8 +252,11 @@ public class LinearizationRewriter {
 		constraintArg.setName("constraint");
 		result.getRets().add(constraintArg);
 
+
 		NestedDotID inputId = af.createNestedDotID();
-		inputId.setBase(EcoreUtil.copy(inputArg));
+		BaseID inputBid = af.createBaseID();
+		inputBid.setNamedElm(EcoreUtil.copy(inputArg));
+		inputId.setChainID(inputBid);
 
 		RealLitExpr domainCheckLowerLit = af.createRealLitExpr();
 		domainCheckLowerLit.setVal(Double.toString(segs.lower.getFirst().startX));

@@ -30,6 +30,7 @@ import org.osate.ge.operations.StepResultBuilder;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.BaseID;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -120,7 +121,9 @@ public class LinearizationDefHandler {
 
 						// Body
 						final NestedDotID body = AgreeFactory.eINSTANCE.createNestedDotID();
-						body.setBase(newArg);
+						BaseID bid = AgreeFactory.eINSTANCE.createBaseID();
+						bid.setNamedElm(newArg);
+						body.setChainID(bid);
 						newBo.setExprBody(body);
 
 						agreeContract.getSpecs().add(newBo);

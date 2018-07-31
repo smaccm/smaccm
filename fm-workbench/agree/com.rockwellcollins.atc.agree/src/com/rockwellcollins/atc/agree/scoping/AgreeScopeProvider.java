@@ -33,6 +33,7 @@ import org.osate.aadl2.ThreadSubcomponent;
 import org.osate.aadl2.impl.FeatureGroupImpl;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -67,6 +68,38 @@ import com.rockwellcollins.atc.agree.agree.Type;
  */
 public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping.PropertiesScopeProvider {
 
+//	IScope scope_NamedElement(ForallExpr ctx, EReference ref) {
+//		List<Arg> bs = new ArrayList<Arg>();
+//		bs.add(ctx.getBinding());
+//		return Scopes.scopeFor(bs, getScope(ctx.eContainer(), ref));
+//	}
+//
+//	IScope scope_NamedElement(ExistsExpr ctx, EReference ref) {
+//		List<Arg> bs = new ArrayList<Arg>();
+//		bs.add(ctx.getBinding());
+//		return Scopes.scopeFor(bs, getScope(ctx.eContainer(), ref));
+//	}
+//
+//	IScope scope_NamedElement(ForeachExpr ctx, EReference ref) {
+//		List<Arg> bs = new ArrayList<Arg>();
+//		bs.add(ctx.getBinding());
+//		return Scopes.scopeFor(bs, getScope(ctx.eContainer(), ref));
+//	}
+//
+//	IScope scope_NamedElement(FoldLeftExpr ctx, EReference ref) {
+//		List<Arg> bs = new ArrayList<Arg>();
+//		bs.add(ctx.getAccumulator());
+//		bs.add(ctx.getBinding());
+//		return Scopes.scopeFor(bs, getScope(ctx.eContainer(), ref));
+//	}
+//
+//	IScope scope_NamedElement(FoldRightExpr ctx, EReference ref) {
+//		List<Arg> bs = new ArrayList<Arg>();
+//		bs.add(ctx.getAccumulator());
+//		bs.add(ctx.getBinding());
+//		return Scopes.scopeFor(bs, getScope(ctx.eContainer(), ref));
+//	}
+
 	IScope scope_NamedElement(FnDefExpr ctx, EReference ref) {
 		return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
 	}
@@ -81,10 +114,8 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 	IScope scope_RecordExpr_args(RecordExpr ctx, EReference ref) {
 		NestedDotID record = ctx.getRecord();
-		while (record.getSub() != null) {
-			record = record.getSub();
-		}
-		NamedElement recDef = record.getBase();
+
+		NamedElement recDef = AgreeAADLEnumerationUtils.getFinalNamedElm(record);
 		return RecordExprScoper.getRecordComponents(recDef, IScope.NULLSCOPE);
 	}
 
@@ -214,10 +245,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 				if (type instanceof RecordType) {
 					NestedDotID elID = ((RecordType) type).getRecord();
-					while (elID.getSub() != null) {
-						elID = elID.getSub();
-					}
-					NamedElement namedEl = elID.getBase();
+					NamedElement namedEl = AgreeAADLEnumerationUtils.getFinalNamedElm(elID);
 
 					if (namedEl instanceof ComponentImplementation) {
 						ComponentImplementation componentImplementation = (ComponentImplementation) namedEl;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.CallDef;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -125,13 +126,10 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr> {
 	public Expr caseFnCallExpr(FnCallExpr object) {
 		NestedDotID id = object.getFn();
 
-		while (id.getSub() != null) {
-			id = id.getSub();
-		}
 		CallDef callDef = null;
 
 		try {
-			callDef = (CallDef) id.getBase();
+			callDef = (CallDef) AgreeAADLEnumerationUtils.getFinalNamedElm(id);
 		} catch (ClassCastException e) {
 			return null;
 		}

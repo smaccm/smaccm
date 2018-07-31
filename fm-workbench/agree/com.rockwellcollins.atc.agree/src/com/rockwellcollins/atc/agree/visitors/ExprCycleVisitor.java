@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -55,7 +56,7 @@ public class ExprCycleVisitor extends AgreeSwitch<Set<EObject>> {
 	@Override
 	public Set<EObject> caseNestedDotID(NestedDotID e) {
 		Set<EObject> result = new HashSet<>();
-		if (e.getBase().getName().equals(id)) {
+		if (AgreeAADLEnumerationUtils.getBaseNamedElm(e).getName().equals(id)) {
 			result.add(e);
 		}
 		return result;
