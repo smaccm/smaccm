@@ -13,6 +13,7 @@ import org.eclipse.xtext.util.Tuples;
 import org.osate.aadl2.impl.DataPortImpl;
 import org.osate.aadl2.impl.EventDataPortImpl;
 import org.osate.aadl2.instance.ComponentInstance;
+import org.osate.aadl2.instance.impl.SystemInstanceImpl;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -180,9 +181,6 @@ public class LustreAstBuilder {
 		List<VarDecl> inputs = new ArrayList<>();
 		List<Equation> equations = new ArrayList<>();
 		List<String> properties = new ArrayList<>();
-
-		// List<String> ivcs = new ArrayList<>();
-
 		ArrayList<String> ivcs = new ArrayList<String>();
 
 		int j = 0;
@@ -192,9 +190,9 @@ public class LustreAstBuilder {
 			IdExpr assumId = new IdExpr(assumName);
 			equations.add(new Equation(assumId, assumption.expr));
 			assertions.add(assumId);
-			// If ivc elements is empty, add ivcs from assumptions and guarantees.
-			// Else add the defined ivc list.
-			if (flatNode.getFaultTreeFlag() == false) {
+			// If the fault analysis is running or we are at the top level system instance
+			// (the "real" top node), then add assumptions to IVC list.
+			if ((flatNode.getFaultTreeFlag() == false) || (flatNode.compInst instanceof SystemInstanceImpl)) {
 				ivcs.add(assumId.id);
 			}
 		}
