@@ -48,10 +48,17 @@ public class AgreeNodeToLustreContract {
 
 		Program program = new ProgramBuilder().addTypes(types).addNodes(nodes).build();
 
-		program = InlineNodeCalls.program(program);
-		program = FlattenPres.program(program);
+		// TODO: temporarily override this till mivc jkind has been synced with the master jkind
+//		program = InlineNodeCalls.program(program);
+//		program = FlattenPres.program(program);
+//
+//		Node main = DistributePres.node(program.getMainNode());
 
-		Node main = DistributePres.node(program.getMainNode());
+		Node main = InlineNodeCalls.program(program);
+		main = FlattenPres.node(main);
+
+		main = DistributePres.node(main);
+
 		main = OrderEquations.node(main);
 
 		return main;
