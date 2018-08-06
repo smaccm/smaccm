@@ -448,14 +448,15 @@ public abstract class VerifyHandler extends AadlHandler {
 
 					if (api instanceof JKindApi) {
 						String resultName = result.getName();
-						String adviceFileName = rerunAdviceMap.get(resultName);
-						if (adviceFileName == null) {
-							adviceFileName = "agree_advice" + adviceCount++;
-							rerunAdviceMap.put(resultName, adviceFileName);
-						} else {
-							((JKindApi) api).setReadAdviceFile(adviceFileName);
-						}
-						((JKindApi) api).setWriteAdviceFile(adviceFileName);
+//						String adviceFileName = rerunAdviceMap.get(resultName);
+//						if (adviceFileName == null) {
+//							adviceFileName = "agree_advice" + adviceCount++;
+//							rerunAdviceMap.put(resultName, adviceFileName);
+//						}
+//						else {
+//							((JKindApi) api).setReadAdviceFile(adviceFileName);
+//						}
+//						((JKindApi) api).setWriteAdviceFile(adviceFileName);
 					}
 
 					try {
