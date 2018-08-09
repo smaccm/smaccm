@@ -43,6 +43,15 @@ public class AgreeRenaming extends Renaming {
 		refMap = new HashMap<>();
 	}
 
+	public String getLustreNameFromAgreeVar(String agreeVar) {
+		for (Map.Entry<String, String> entry : explicitRenames.entrySet()) {
+			if (agreeVar.equals(entry.getValue())) {
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
+
 	public void addRenamings(AgreeRenaming renaming) {
 		explicitRenames.putAll(renaming.explicitRenames);
 		refMap.putAll(renaming.refMap);
