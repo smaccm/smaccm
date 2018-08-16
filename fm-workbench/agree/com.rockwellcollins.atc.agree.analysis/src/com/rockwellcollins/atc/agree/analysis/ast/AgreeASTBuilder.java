@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
@@ -55,10 +56,9 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.FeatureCategory;
 import org.osate.aadl2.instance.FeatureInstance;
-import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
+import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.annexsupport.AnnexUtil;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.agree.AbstractionRef;
@@ -698,7 +698,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 //		Set<AgreeVar> destinationSet = new HashSet<>();
 
-		Property commTimingProp = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(OsateResourceUtil.getResourceSet(),
+		Property commTimingProp = Aadl2GlobalScopeUtil.get(compInst, Aadl2Package.eINSTANCE.getProperty(),
 				"Communication_Properties::Timing");
 		List<AgreeAADLConnection> agreeConns = new ArrayList<>();
 		for (Connection conn : connections) {
