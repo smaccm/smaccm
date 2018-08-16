@@ -798,7 +798,7 @@ public class ResoluteBuiltInFnCallEvaluator {
 
 	private static boolean isInstanceOf(ComponentInstance instance, NamedElement declarative) {
 		ComponentClassifier cc = instance.getComponentClassifier();
-		if (cc.equals(declarative)) {
+		if (cc != null && cc.equals(declarative)) {
 			return true;
 		}
 

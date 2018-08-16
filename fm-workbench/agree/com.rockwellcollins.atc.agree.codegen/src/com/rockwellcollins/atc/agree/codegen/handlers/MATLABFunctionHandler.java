@@ -28,10 +28,10 @@ import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
 import org.osate.aadl2.properties.PropertyNotPresentException;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -230,7 +230,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 	}
 
 	private ModelInfo getMatlabExportInfo(ComponentType ct) {
-		Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(ct, "Source_Text");
+		Property prop = Aadl2GlobalScopeUtil.get(ct, Aadl2Package.eINSTANCE.getProperty(), "Source_Text");
 		try {
 			ListValue lv = (ListValue) PropertyUtils.getSimplePropertyListValue(ct, prop);
 			String str1 = readPathFromAADLProperty(getStringElement(lv, 0));
@@ -270,7 +270,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 	}
 
 	private ListValue getOrCreateSourceText(ComponentType ct) {
-		Property prop = EMFIndexRetrieval.getPropertyDefinitionInWorkspace(ct, "Source_Text");
+		Property prop = Aadl2GlobalScopeUtil.get(ct, Aadl2Package.eINSTANCE.getProperty(), "Source_Text");
 
 		try {
 			// Try to find existing property association

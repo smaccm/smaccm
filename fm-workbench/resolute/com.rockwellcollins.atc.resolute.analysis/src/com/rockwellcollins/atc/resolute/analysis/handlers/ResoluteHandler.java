@@ -40,10 +40,10 @@ import org.osate.aadl2.instance.FlowSpecificationInstance;
 import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
 import org.osate.aadl2.util.Aadl2Util;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionsMap;
@@ -89,7 +89,7 @@ public class ResoluteHandler extends AadlHandler {
 
 		// This code will only link to objects in the projects visible from the
 		// current project
-		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+		Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
 				eclass);
 		String contextProject = context.eResource().getURI().segment(1);
 		List<String> visibleProjects = getVisibleProjects(contextProject);
@@ -117,8 +117,9 @@ public class ResoluteHandler extends AadlHandler {
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject contextProject = root.getProject(URI.decode(contextProjectName));
-		if (!contextProject.exists() || !contextProject.isAccessible() || !contextProject.isOpen())
+		if (!contextProject.exists() || !contextProject.isAccessible() || !contextProject.isOpen()) {
 			return result;
+		}
 		try {
 			IProjectDescription description = contextProject.getDescription();
 			for (IProject referencedProject : description.getReferencedProjects()) {
@@ -283,7 +284,7 @@ public class ResoluteHandler extends AadlHandler {
 		System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
 
 		enableRerunHandler(root);
-		System.out.println(EcoreUtil2.getURI(root));
+		System.out.println(EcoreUtil.getURI(root));
 
 		return Status.OK_STATUS;
 	}
@@ -312,25 +313,19 @@ public class ResoluteHandler extends AadlHandler {
 	}
 
 	private void enableRerunHandler(final Element root) {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				IHandlerService handlerService = getHandlerService();
-				rerunActivation = handlerService.activateHandler(RERUN_ID,
-						new RerunHandler(root, ResoluteHandler.this));
-			}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			IHandlerService handlerService = getHandlerService();
+			rerunActivation = handlerService.activateHandler(RERUN_ID,
+					new RerunHandler(root, ResoluteHandler.this));
 		});
 	}
 
 	private void disableRerunHandler() {
 		if (rerunActivation != null) {
-			getWindow().getShell().getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					IHandlerService handlerService = getHandlerService();
-					handlerService.deactivateHandler(rerunActivation);
-					rerunActivation = null;
-				}
+			getWindow().getShell().getDisplay().syncExec(() -> {
+				IHandlerService handlerService = getHandlerService();
+				handlerService.deactivateHandler(rerunActivation);
+				rerunActivation = null;
 			});
 		}
 	}
@@ -378,12 +373,7 @@ public class ResoluteHandler extends AadlHandler {
 	private void drawProofs(final List<ResoluteResult> proofTrees) {
 		final IWorkbenchPage page = getWindow().getActivePage();
 
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				displayView(proofTrees, page);
-			}
-		});
+		Display.getDefault().asyncExec(() -> displayView(proofTrees, page));
 	}
 
 	private void displayView(final List<ResoluteResult> proofTrees, final IWorkbenchPage page) {
