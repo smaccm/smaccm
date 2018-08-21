@@ -273,11 +273,13 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	protected Set<Element> getAadlElements(EObject ctx) {
 		Set<Element> components = new HashSet<>();
 		if (ctx instanceof ComponentType) {
+			components.addAll(getAllAgreeElements(ctx));
 			components.addAll(((ComponentType) ctx).getAllFeatures());
 
 		} else if (ctx instanceof ComponentImplementation) {
 			components.addAll(((ComponentImplementation) ctx).getAllSubcomponents());
 			components.addAll(((ComponentImplementation) ctx).getAllConnections());
+			components.addAll(getAllAgreeElements(ctx));
 			components.addAll(getAadlElements(((ComponentImplementation) ctx).getType()));
 
 		} else if (ctx instanceof Classifier) {
