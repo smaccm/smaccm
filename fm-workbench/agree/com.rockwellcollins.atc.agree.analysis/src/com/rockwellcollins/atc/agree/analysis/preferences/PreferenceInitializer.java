@@ -16,11 +16,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.PREF_SOLVER, PreferenceConstants.SOLVER_SMTINTERPOL);
 		store.setDefault(PreferenceConstants.PREF_INDUCT_CEX, true);
 		store.setDefault(PreferenceConstants.PREF_SMOOTH_CEX, false);
-		store.setDefault(PreferenceConstants.PREF_UNSPECIFIED_AADL_PROPERTIES, false);
 		store.setDefault(PreferenceConstants.PREF_DISPLAY_DECIMAL_CEX, false);
 		store.setDefault(PreferenceConstants.PREF_DEPTH, 200);
 		store.setDefault(PreferenceConstants.PREF_TIMEOUT, 100);
 		store.setDefault(PreferenceConstants.PREF_CONSIST_DEPTH, 1);
+		store.setDefault(PreferenceConstants.PREF_PROP_LOG, false);
 		store.setDefault(PreferenceConstants.PREF_DEBUG, false);
 	}
 }
