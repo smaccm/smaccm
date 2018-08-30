@@ -288,7 +288,9 @@ public class ResoluteBuiltInFnCallEvaluator {
 			NamedElement e = args.get(0).getNamedElement();
 			if (e instanceof FeatureInstance) {
 				FeatureInstance feat = (FeatureInstance) e;
-				return new ListValue(context.getConnectionsForFeature(feat));
+				SortedSet<ResoluteValue> result = new TreeSet<>();
+				result.addAll(context.getConnectionsForFeature(feat));
+				return new SetValue(Collections.unmodifiableSortedSet(result));
 			} else if (e instanceof ComponentInstance) {
 				ComponentInstance ci = (ComponentInstance) e;
 				SortedSet<ResoluteValue> result = new TreeSet<>();
