@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: com.rockwellcollins.atc.agree.tests;
 Bundle-SymbolicName: com.rockwellcollins.atc.agree.tests;singleton:=true
 Bundle-Version: 2.1.3.qualifier
-Bundle-Activator: com.rockwellcollins.atc.agree.tests.Activator
 Bundle-Vendor: ROCKWELLCOLLINS
 Require-Bundle: com.rockwellcollins.atc.agree.tests,
  org.junit;bundle-version="4.12.0",
