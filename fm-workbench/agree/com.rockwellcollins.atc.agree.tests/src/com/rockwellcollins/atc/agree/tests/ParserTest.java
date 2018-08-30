@@ -1,5 +1,6 @@
 package com.rockwellcollins.atc.agree.tests;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -14,7 +15,9 @@ import org.osate.aadl2.Element;
 import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.AgreeInjectorProvider;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
+import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.impl.EnumStatementImpl;
@@ -32,7 +35,7 @@ public class ParserTest {
 	}
 
 	@Test
-	public void parseFnDefExprMulti() {
+	public void parseFnDefExprMultiRecord() {
 		try {
 			Element e = parser.parse("fun foo(a1:t1, a2:t2): rt = e");
 			assertTrue(e instanceof FnDefExprImpl);
@@ -55,7 +58,31 @@ public class ParserTest {
 			assertTrue(rt instanceof RecordType);
 			assertNull(((RecordType) rt).getRecord().getBase().getName()); /// cross-ref
 
-			assertTrue(true);
+			Expr ex = fd.getExpr();
+			assertNotNull(ex);
+
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	@Test
+	public void parseFnDefExprSinglePrim() {
+		try {
+			Element e = parser.parse("fun foo(a:int): int = e");
+			assertTrue(e instanceof FnDefExprImpl);
+			FnDefExpr fd = (FnDefExpr) e;
+			assertStringSame(fd.getName(), "foo");
+			assertSame(fd.getArgs().size(), 1);
+
+			assertStringSame(fd.getArgs().get(0).getName(), "a");
+			Type t = fd.getArgs().get(0).getType();
+			assertTrue(t instanceof PrimType);
+			assertStringSame(((PrimType) t).getString(), "int");
+
+			Expr ex = fd.getExpr();
+			assertNotNull(ex);
+
 		} catch (Exception e) {
 			assertTrue(false);
 		}
