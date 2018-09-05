@@ -17,12 +17,14 @@ import org.osate.aadl2.Element;
 import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.AgreeInjectorProvider;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.Type;
+import com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl;
 import com.rockwellcollins.atc.agree.agree.impl.EnumStatementImpl;
 import com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl;
 
@@ -44,8 +46,22 @@ public class ParserTest {
 
 	@Test
 	public void parseAssumeExpr() {
-		Element e = parseSpec("assume");
-		System.out.println(e);
+		Element e = parseSpec("assume \"xyz\": e; ");
+		assertTrue(e instanceof AssumeStatementImpl);
+		AssumeStatement a = (AssumeStatement) e;
+		assertStringSame(a.getStr(), "xyz");
+		assertNotNull(a.getExpr());
+		assertNull(a.getPattern());
+	}
+
+	@Test
+	public void parseAssumePattern() {
+		Element e = parseSpec("assume \"xyz\": whenever e1 occurs e2 occurs;");
+		assertTrue(e instanceof AssumeStatementImpl);
+		AssumeStatement a = (AssumeStatement) e;
+		assertStringSame(a.getStr(), "xyz");
+		assertNull(a.getExpr());
+		assertNotNull(a.getPattern());
 	}
 
 	@Test
