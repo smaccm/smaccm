@@ -18,8 +18,117 @@ import org.osate.xtext.aadl2.properties.services.PropertiesGrammarAccess;
 public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	
 	
-	public class NamedElementElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.NamedElement");
+	public class AgreeContractElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AgreeContract");
+		private final Assignment cSpecsAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cSpecsSpecStatementParserRuleCall_0 = (RuleCall)cSpecsAssignment.eContents().get(0);
+		
+		////Default Parsing
+		//AgreeContract:
+		//	specs+=SpecStatement*;
+		@Override public ParserRule getRule() { return rule; }
+
+		//specs+=SpecStatement*
+		public Assignment getSpecsAssignment() { return cSpecsAssignment; }
+
+		//SpecStatement
+		public RuleCall getSpecsSpecStatementParserRuleCall_0() { return cSpecsSpecStatementParserRuleCall_0; }
+	}
+
+	public class AgreeLibraryElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AgreeLibrary");
+		private final Assignment cContractAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cContractAgreeContractParserRuleCall_0 = (RuleCall)cContractAssignment.eContents().get(0);
+		
+		////AADL Connection Parsing
+		//AgreeLibrary:
+		//	contract=AgreeContract;
+		@Override public ParserRule getRule() { return rule; }
+
+		//contract=AgreeContract
+		public Assignment getContractAssignment() { return cContractAssignment; }
+
+		//AgreeContract
+		public RuleCall getContractAgreeContractParserRuleCall_0() { return cContractAgreeContractParserRuleCall_0; }
+	}
+
+	public class AgreeSubclauseElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AgreeSubclause");
+		private final Assignment cContractAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cContractAgreeContractParserRuleCall_0 = (RuleCall)cContractAssignment.eContents().get(0);
+		
+		//AgreeSubclause:
+		//	contract=AgreeContract;
+		@Override public ParserRule getRule() { return rule; }
+
+		//contract=AgreeContract
+		public Assignment getContractAssignment() { return cContractAssignment; }
+
+		//AgreeContract
+		public RuleCall getContractAgreeContractParserRuleCall_0() { return cContractAgreeContractParserRuleCall_0; }
+	}
+
+	public class CallDefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.CallDef");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cLinearizationDefExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cLibraryFnDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cFnDefExprParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cNodeDefExprParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		
+		//////
+		////Helper Subtyping	
+		//CallDef:
+		//	LinearizationDefExpr
+		//	| LibraryFnDefExpr
+		//	| FnDefExpr
+		//	| NodeDefExpr;
+		@Override public ParserRule getRule() { return rule; }
+
+		//LinearizationDefExpr | LibraryFnDefExpr | FnDefExpr | NodeDefExpr
+		public Alternatives getAlternatives() { return cAlternatives; }
+
+		//LinearizationDefExpr
+		public RuleCall getLinearizationDefExprParserRuleCall_0() { return cLinearizationDefExprParserRuleCall_0; }
+
+		//LibraryFnDefExpr
+		public RuleCall getLibraryFnDefExprParserRuleCall_1() { return cLibraryFnDefExprParserRuleCall_1; }
+
+		//FnDefExpr
+		public RuleCall getFnDefExprParserRuleCall_2() { return cFnDefExprParserRuleCall_2; }
+
+		//NodeDefExpr
+		public RuleCall getNodeDefExprParserRuleCall_3() { return cNodeDefExprParserRuleCall_3; }
+	}
+
+	public class _00Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree._00");
+		private final RuleCall cAgreeLibraryParserRuleCall = (RuleCall)rule.eContents().get(1);
+		
+		//////	
+		////AADL Subtyping		
+		//_00 aadl2::AnnexLibrary:
+		//	AgreeLibrary;
+		@Override public ParserRule getRule() { return rule; }
+
+		//AgreeLibrary
+		public RuleCall getAgreeLibraryParserRuleCall() { return cAgreeLibraryParserRuleCall; }
+	}
+
+	public class _10Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree._10");
+		private final RuleCall cAgreeSubclauseParserRuleCall = (RuleCall)rule.eContents().get(1);
+		
+		//_10 aadl2::AnnexSubclause:
+		//	AgreeSubclause;
+		@Override public ParserRule getRule() { return rule; }
+
+		//AgreeSubclause
+		public RuleCall getAgreeSubclauseParserRuleCall() { return cAgreeSubclauseParserRuleCall; }
+	}
+
+	public class _20Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree._20");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cArgParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cFnDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
@@ -31,8 +140,9 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cLibraryFnDefExprParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		private final RuleCall cRecordDefExprParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
 		private final RuleCall cNamedIDParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cCallDefParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
 		
-		//NamedElement aadl2::NamedElement:
+		//_20 aadl2::NamedElement:
 		//	Arg
 		//	| FnDefExpr
 		//	| PropertyStatement
@@ -42,11 +152,12 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| LinearizationDefExpr
 		//	| LibraryFnDefExpr
 		//	| RecordDefExpr
-		//	| NamedID;
+		//	| NamedID
+		//	| CallDef;
 		@Override public ParserRule getRule() { return rule; }
 
 		//Arg | FnDefExpr | PropertyStatement | ConstStatement | EnumStatement | NodeDefExpr | LinearizationDefExpr |
-		//LibraryFnDefExpr | RecordDefExpr | NamedID
+		//LibraryFnDefExpr | RecordDefExpr | NamedID | CallDef
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Arg
@@ -78,10 +189,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//NamedID
 		public RuleCall getNamedIDParserRuleCall_9() { return cNamedIDParserRuleCall_9; }
+
+		//CallDef
+		public RuleCall getCallDefParserRuleCall_10() { return cCallDefParserRuleCall_10; }
 	}
 
-	public class ElementElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.Element");
+	public class _30Elements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree._30");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cLinearizationIntervalParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
@@ -93,7 +207,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cEqStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		private final RuleCall cInputStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
 		
-		//Element aadl2::Element:
+		//_30 aadl2::Element:
 		//	Expr
 		//	| LinearizationInterval
 		//	| Type
@@ -135,102 +249,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//InputStatement
 		public RuleCall getInputStatementParserRuleCall_8() { return cInputStatementParserRuleCall_8; }
-	}
-
-	public class AnnexLibraryElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AnnexLibrary");
-		private final RuleCall cAgreeLibraryParserRuleCall = (RuleCall)rule.eContents().get(1);
-		
-		//AnnexLibrary aadl2::AnnexLibrary:
-		//	AgreeLibrary;
-		@Override public ParserRule getRule() { return rule; }
-
-		//AgreeLibrary
-		public RuleCall getAgreeLibraryParserRuleCall() { return cAgreeLibraryParserRuleCall; }
-	}
-
-	public class AnnexSubclauseElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AnnexSubclause");
-		private final RuleCall cAgreeSubclauseParserRuleCall = (RuleCall)rule.eContents().get(1);
-		
-		//AnnexSubclause aadl2::AnnexSubclause:
-		//	AgreeSubclause;
-		@Override public ParserRule getRule() { return rule; }
-
-		//AgreeSubclause
-		public RuleCall getAgreeSubclauseParserRuleCall() { return cAgreeSubclauseParserRuleCall; }
-	}
-
-	public class AgreeLibraryElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AgreeLibrary");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cAgreeContractLibraryAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cContractAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cContractAgreeContractParserRuleCall_1_0 = (RuleCall)cContractAssignment_1.eContents().get(0);
-		
-		//AgreeLibrary:
-		//	{AgreeContractLibrary} contract=AgreeContract;
-		@Override public ParserRule getRule() { return rule; }
-
-		//{AgreeContractLibrary} contract=AgreeContract
-		public Group getGroup() { return cGroup; }
-
-		//{AgreeContractLibrary}
-		public Action getAgreeContractLibraryAction_0() { return cAgreeContractLibraryAction_0; }
-
-		//contract=AgreeContract
-		public Assignment getContractAssignment_1() { return cContractAssignment_1; }
-
-		//AgreeContract
-		public RuleCall getContractAgreeContractParserRuleCall_1_0() { return cContractAgreeContractParserRuleCall_1_0; }
-	}
-
-	public class AgreeSubclauseElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AgreeSubclause");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cAgreeContractSubclauseAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cContractAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cContractAgreeContractParserRuleCall_1_0 = (RuleCall)cContractAssignment_1.eContents().get(0);
-		
-		//AgreeSubclause:
-		//	{AgreeContractSubclause} contract=AgreeContract;
-		@Override public ParserRule getRule() { return rule; }
-
-		//{AgreeContractSubclause} contract=AgreeContract
-		public Group getGroup() { return cGroup; }
-
-		//{AgreeContractSubclause}
-		public Action getAgreeContractSubclauseAction_0() { return cAgreeContractSubclauseAction_0; }
-
-		//contract=AgreeContract
-		public Assignment getContractAssignment_1() { return cContractAssignment_1; }
-
-		//AgreeContract
-		public RuleCall getContractAgreeContractParserRuleCall_1_0() { return cContractAgreeContractParserRuleCall_1_0; }
-	}
-
-	public class AgreeContractElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AgreeContract");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cAgreeContractAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cSpecsAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cSpecsSpecStatementParserRuleCall_1_0 = (RuleCall)cSpecsAssignment_1.eContents().get(0);
-		
-		//AgreeContract Contract:
-		//	{AgreeContract} specs+=SpecStatement*;
-		@Override public ParserRule getRule() { return rule; }
-
-		//{AgreeContract} specs+=SpecStatement*
-		public Group getGroup() { return cGroup; }
-
-		//{AgreeContract}
-		public Action getAgreeContractAction_0() { return cAgreeContractAction_0; }
-
-		//specs+=SpecStatement*
-		public Assignment getSpecsAssignment_1() { return cSpecsAssignment_1; }
-
-		//SpecStatement
-		public RuleCall getSpecsSpecStatementParserRuleCall_1_0() { return cSpecsSpecStatementParserRuleCall_1_0; }
 	}
 
 	public class SpecStatementElements extends AbstractParserRuleElementFinder {
@@ -331,6 +349,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRecordDefExprParserRuleCall_19 = (RuleCall)cAlternatives.eContents().get(19);
 		private final RuleCall cInputStatementParserRuleCall_20 = (RuleCall)cAlternatives.eContents().get(20);
 		
+		//////
 		//SpecStatement:
 		//	{AssumeStatement} 'assume' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
 		//	| {GuaranteeStatement} 'guarantee' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
@@ -1842,49 +1861,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 		//';'
 		public Keyword getSemicolonKeyword_4() { return cSemicolonKeyword_4; }
-	}
-
-	public class NamedCallDefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.NamedCallDef");
-		private final RuleCall cCallDefParserRuleCall = (RuleCall)rule.eContents().get(1);
-		
-		//NamedCallDef aadl2::NamedElement:
-		//	CallDef;
-		@Override public ParserRule getRule() { return rule; }
-
-		//CallDef
-		public RuleCall getCallDefParserRuleCall() { return cCallDefParserRuleCall; }
-	}
-
-	public class CallDefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.CallDef");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cLinearizationDefExprParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cLibraryFnDefExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cFnDefExprParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cNodeDefExprParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		
-		//CallDef:
-		//	LinearizationDefExpr
-		//	| LibraryFnDefExpr
-		//	| FnDefExpr
-		//	| NodeDefExpr;
-		@Override public ParserRule getRule() { return rule; }
-
-		//LinearizationDefExpr | LibraryFnDefExpr | FnDefExpr | NodeDefExpr
-		public Alternatives getAlternatives() { return cAlternatives; }
-
-		//LinearizationDefExpr
-		public RuleCall getLinearizationDefExprParserRuleCall_0() { return cLinearizationDefExprParserRuleCall_0; }
-
-		//LibraryFnDefExpr
-		public RuleCall getLibraryFnDefExprParserRuleCall_1() { return cLibraryFnDefExprParserRuleCall_1; }
-
-		//FnDefExpr
-		public RuleCall getFnDefExprParserRuleCall_2() { return cFnDefExprParserRuleCall_2; }
-
-		//NodeDefExpr
-		public RuleCall getNodeDefExprParserRuleCall_3() { return cNodeDefExprParserRuleCall_3; }
 	}
 
 	public class PropertyStatementElements extends AbstractParserRuleElementFinder {
@@ -4537,43 +4513,16 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_0() { return cNameIDTerminalRuleCall_0; }
 	}
-
-	public class JavaQualifiedNameElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.JavaQualifiedName");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cIDTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Keyword cFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final RuleCall cIDTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
-		
-		//JavaQualifiedName:
-		//	ID ('.' ID)*;
-		@Override public ParserRule getRule() { return rule; }
-
-		//ID ('.' ID)*
-		public Group getGroup() { return cGroup; }
-
-		//ID
-		public RuleCall getIDTerminalRuleCall_0() { return cIDTerminalRuleCall_0; }
-
-		//('.' ID)*
-		public Group getGroup_1() { return cGroup_1; }
-
-		//'.'
-		public Keyword getFullStopKeyword_1_0() { return cFullStopKeyword_1_0; }
-
-		//ID
-		public RuleCall getIDTerminalRuleCall_1_1() { return cIDTerminalRuleCall_1_1; }
-	}
 	
 	
-	private final NamedElementElements pNamedElement;
-	private final ElementElements pElement;
-	private final AnnexLibraryElements pAnnexLibrary;
-	private final AnnexSubclauseElements pAnnexSubclause;
+	private final AgreeContractElements pAgreeContract;
 	private final AgreeLibraryElements pAgreeLibrary;
 	private final AgreeSubclauseElements pAgreeSubclause;
-	private final AgreeContractElements pAgreeContract;
+	private final CallDefElements pCallDef;
+	private final _00Elements p_00;
+	private final _10Elements p_10;
+	private final _20Elements p_20;
+	private final _30Elements p_30;
 	private final SpecStatementElements pSpecStatement;
 	private final PatternStatementElements pPatternStatement;
 	private final WhenStatementElements pWhenStatement;
@@ -4582,8 +4531,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final TimeIntervalElements pTimeInterval;
 	private final SynchStatementElements pSynchStatement;
 	private final OrderStatementElements pOrderStatement;
-	private final NamedCallDefElements pNamedCallDef;
-	private final CallDefElements pCallDef;
 	private final PropertyStatementElements pPropertyStatement;
 	private final ConstStatementElements pConstStatement;
 	private final EnumStatementElements pEnumStatement;
@@ -4622,7 +4569,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final QCPREFElements pQCPREF;
 	private final ReservedVarTagElements pReservedVarTag;
 	private final NamedIDElements pNamedID;
-	private final JavaQualifiedNameElements pJavaQualifiedName;
 	
 	private final Grammar grammar;
 
@@ -4633,13 +4579,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		PropertiesGrammarAccess gaProperties) {
 		this.grammar = internalFindGrammar(grammarProvider);
 		this.gaProperties = gaProperties;
-		this.pNamedElement = new NamedElementElements();
-		this.pElement = new ElementElements();
-		this.pAnnexLibrary = new AnnexLibraryElements();
-		this.pAnnexSubclause = new AnnexSubclauseElements();
+		this.pAgreeContract = new AgreeContractElements();
 		this.pAgreeLibrary = new AgreeLibraryElements();
 		this.pAgreeSubclause = new AgreeSubclauseElements();
-		this.pAgreeContract = new AgreeContractElements();
+		this.pCallDef = new CallDefElements();
+		this.p_00 = new _00Elements();
+		this.p_10 = new _10Elements();
+		this.p_20 = new _20Elements();
+		this.p_30 = new _30Elements();
 		this.pSpecStatement = new SpecStatementElements();
 		this.pPatternStatement = new PatternStatementElements();
 		this.pWhenStatement = new WhenStatementElements();
@@ -4648,8 +4595,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pTimeInterval = new TimeIntervalElements();
 		this.pSynchStatement = new SynchStatementElements();
 		this.pOrderStatement = new OrderStatementElements();
-		this.pNamedCallDef = new NamedCallDefElements();
-		this.pCallDef = new CallDefElements();
 		this.pPropertyStatement = new PropertyStatementElements();
 		this.pConstStatement = new ConstStatementElements();
 		this.pEnumStatement = new EnumStatementElements();
@@ -4688,7 +4633,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pQCPREF = new QCPREFElements();
 		this.pReservedVarTag = new ReservedVarTagElements();
 		this.pNamedID = new NamedIDElements();
-		this.pJavaQualifiedName = new JavaQualifiedNameElements();
 	}
 	
 	protected Grammar internalFindGrammar(GrammarProvider grammarProvider) {
@@ -4718,65 +4662,20 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	
-	//NamedElement aadl2::NamedElement:
-	//	Arg
-	//	| FnDefExpr
-	//	| PropertyStatement
-	//	| ConstStatement
-	//	| EnumStatement
-	//	| NodeDefExpr
-	//	| LinearizationDefExpr
-	//	| LibraryFnDefExpr
-	//	| RecordDefExpr
-	//	| NamedID;
-	public NamedElementElements getNamedElementAccess() {
-		return pNamedElement;
+	////Default Parsing
+	//AgreeContract:
+	//	specs+=SpecStatement*;
+	public AgreeContractElements getAgreeContractAccess() {
+		return pAgreeContract;
 	}
 	
-	public ParserRule getNamedElementRule() {
-		return getNamedElementAccess().getRule();
+	public ParserRule getAgreeContractRule() {
+		return getAgreeContractAccess().getRule();
 	}
 
-	//Element aadl2::Element:
-	//	Expr
-	//	| LinearizationInterval
-	//	| Type
-	//	| AgreeContract
-	//	| SpecStatement
-	//	| NodeStmt
-	//	| NodeBodyExpr
-	//	| EqStatement
-	//	| InputStatement;
-	public ElementElements getElementAccess() {
-		return pElement;
-	}
-	
-	public ParserRule getElementRule() {
-		return getElementAccess().getRule();
-	}
-
-	//AnnexLibrary aadl2::AnnexLibrary:
-	//	AgreeLibrary;
-	public AnnexLibraryElements getAnnexLibraryAccess() {
-		return pAnnexLibrary;
-	}
-	
-	public ParserRule getAnnexLibraryRule() {
-		return getAnnexLibraryAccess().getRule();
-	}
-
-	//AnnexSubclause aadl2::AnnexSubclause:
-	//	AgreeSubclause;
-	public AnnexSubclauseElements getAnnexSubclauseAccess() {
-		return pAnnexSubclause;
-	}
-	
-	public ParserRule getAnnexSubclauseRule() {
-		return getAnnexSubclauseAccess().getRule();
-	}
-
+	////AADL Connection Parsing
 	//AgreeLibrary:
-	//	{AgreeContractLibrary} contract=AgreeContract;
+	//	contract=AgreeContract;
 	public AgreeLibraryElements getAgreeLibraryAccess() {
 		return pAgreeLibrary;
 	}
@@ -4786,7 +4685,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AgreeSubclause:
-	//	{AgreeContractSubclause} contract=AgreeContract;
+	//	contract=AgreeContract;
 	public AgreeSubclauseElements getAgreeSubclauseAccess() {
 		return pAgreeSubclause;
 	}
@@ -4795,16 +4694,82 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getAgreeSubclauseAccess().getRule();
 	}
 
-	//AgreeContract Contract:
-	//	{AgreeContract} specs+=SpecStatement*;
-	public AgreeContractElements getAgreeContractAccess() {
-		return pAgreeContract;
+	//////
+	////Helper Subtyping	
+	//CallDef:
+	//	LinearizationDefExpr
+	//	| LibraryFnDefExpr
+	//	| FnDefExpr
+	//	| NodeDefExpr;
+	public CallDefElements getCallDefAccess() {
+		return pCallDef;
 	}
 	
-	public ParserRule getAgreeContractRule() {
-		return getAgreeContractAccess().getRule();
+	public ParserRule getCallDefRule() {
+		return getCallDefAccess().getRule();
 	}
 
+	//////	
+	////AADL Subtyping		
+	//_00 aadl2::AnnexLibrary:
+	//	AgreeLibrary;
+	public _00Elements get_00Access() {
+		return p_00;
+	}
+	
+	public ParserRule get_00Rule() {
+		return get_00Access().getRule();
+	}
+
+	//_10 aadl2::AnnexSubclause:
+	//	AgreeSubclause;
+	public _10Elements get_10Access() {
+		return p_10;
+	}
+	
+	public ParserRule get_10Rule() {
+		return get_10Access().getRule();
+	}
+
+	//_20 aadl2::NamedElement:
+	//	Arg
+	//	| FnDefExpr
+	//	| PropertyStatement
+	//	| ConstStatement
+	//	| EnumStatement
+	//	| NodeDefExpr
+	//	| LinearizationDefExpr
+	//	| LibraryFnDefExpr
+	//	| RecordDefExpr
+	//	| NamedID
+	//	| CallDef;
+	public _20Elements get_20Access() {
+		return p_20;
+	}
+	
+	public ParserRule get_20Rule() {
+		return get_20Access().getRule();
+	}
+
+	//_30 aadl2::Element:
+	//	Expr
+	//	| LinearizationInterval
+	//	| Type
+	//	| AgreeContract
+	//	| SpecStatement
+	//	| NodeStmt
+	//	| NodeBodyExpr
+	//	| EqStatement
+	//	| InputStatement;
+	public _30Elements get_30Access() {
+		return p_30;
+	}
+	
+	public ParserRule get_30Rule() {
+		return get_30Access().getRule();
+	}
+
+	//////
 	//SpecStatement:
 	//	{AssumeStatement} 'assume' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
 	//	| {GuaranteeStatement} 'guarantee' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
@@ -4926,29 +4891,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getOrderStatementRule() {
 		return getOrderStatementAccess().getRule();
-	}
-
-	//NamedCallDef aadl2::NamedElement:
-	//	CallDef;
-	public NamedCallDefElements getNamedCallDefAccess() {
-		return pNamedCallDef;
-	}
-	
-	public ParserRule getNamedCallDefRule() {
-		return getNamedCallDefAccess().getRule();
-	}
-
-	//CallDef:
-	//	LinearizationDefExpr
-	//	| LibraryFnDefExpr
-	//	| FnDefExpr
-	//	| NodeDefExpr;
-	public CallDefElements getCallDefAccess() {
-		return pCallDef;
-	}
-	
-	public ParserRule getCallDefRule() {
-		return getCallDefAccess().getRule();
 	}
 
 	//PropertyStatement:
@@ -5367,16 +5309,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getNamedIDRule() {
 		return getNamedIDAccess().getRule();
-	}
-
-	//JavaQualifiedName:
-	//	ID ('.' ID)*;
-	public JavaQualifiedNameElements getJavaQualifiedNameAccess() {
-		return pJavaQualifiedName;
-	}
-	
-	public ParserRule getJavaQualifiedNameRule() {
-		return getJavaQualifiedNameAccess().getRule();
 	}
 
 	//PModel aadl2::Element:

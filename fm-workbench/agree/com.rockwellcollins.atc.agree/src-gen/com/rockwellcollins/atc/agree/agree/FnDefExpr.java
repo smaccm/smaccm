@@ -25,7 +25,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface FnDefExpr extends NamedElement, SpecStatement, CallDef
+public interface FnDefExpr extends CallDef, NamedElement, SpecStatement
 {
   /**
    * Returns the value of the '<em><b>Args</b></em>' containment reference list.

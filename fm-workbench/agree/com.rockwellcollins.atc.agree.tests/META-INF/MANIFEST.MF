@@ -12,16 +12,12 @@ Require-Bundle: com.rockwellcollins.atc.agree.tests,
  com.rockwellcollins.atc.agree.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.workbench;resolution:=optional,
- org.eclipse.core.runtime,
  org.eclipse.xtext.junit4,
- org.eclipse.ui.workbench;resolution:=optional,
  org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional,
  org.hamcrest.core;bundle-version="1.3.0";visibility:=reexport,
  org.eclipse.xtend.lib,
  org.eclipse.xtend.lib.macro,
- com.google.guava,
- org.eclipse.xtext.xbase.lib,
- org.eclipse.xtext.testing
+ com.google.guava
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: com.rockwellcollins.atc.agree,
@@ -34,5 +30,6 @@ Import-Package: com.rockwellcollins.atc.agree,
  org.junit.runners;version="4.5.0",
  org.junit.runners.model;version="4.5.0",
  org.osate.aadl2
-Export-Package: com.rockwellcollins.atc.agree.tests
+Export-Package: com.rockwellcollins.atc.agree.tests,
+ com.rockwellcollins.atc.agree
 Automatic-Module-Name: com.rockwellcollins.atc.agree.tests

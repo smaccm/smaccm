@@ -11,10 +11,10 @@ import org.osate.ge.operations.StepResult;
 
 import com.google.common.base.Strings;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
-import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
+import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 
 public class AgreeHandlerUtil {
 	private static final String AGREE_ANNEX_NAME = "agree";
@@ -29,11 +29,11 @@ public class AgreeHandlerUtil {
 
 	public static AgreeContract getOrCreateAgreeContract(final Object element) {
 		// Subclauses
-		final AgreeContractSubclause agreeSubclause;
+		final AgreeSubclause agreeSubclause;
 		if (element instanceof Classifier) {
 			agreeSubclause = getOrCreateAgreeSubclause((Classifier) element);
-		} else if (element instanceof AgreeContractSubclause) {
-			agreeSubclause = (AgreeContractSubclause) element;
+		} else if (element instanceof AgreeSubclause) {
+			agreeSubclause = (AgreeSubclause) element;
 		} else {
 			agreeSubclause = null;
 		}
@@ -41,11 +41,11 @@ public class AgreeHandlerUtil {
 		final AgreeContract contract;
 		if (agreeSubclause == null) {
 			// Libraries
-			final AgreeContractLibrary agreeLibrary;
+			final AgreeLibrary agreeLibrary;
 			if (element instanceof AadlPackage) {
 				agreeLibrary = getOrCreateAgreeLibrary((AadlPackage) element);
-			} else if (element instanceof AgreeContractLibrary) {
-				agreeLibrary = (AgreeContractLibrary) element;
+			} else if (element instanceof AgreeLibrary) {
+				agreeLibrary = (AgreeLibrary) element;
 			} else {
 				throw new RuntimeException("Specified business object is not a classifier or a subclause: " + element);
 			}
@@ -77,23 +77,23 @@ public class AgreeHandlerUtil {
 		return Strings.isNullOrEmpty(name) ? "<unnamed>" : name;
 	}
 
-	private static AgreeContractSubclause getOrCreateAgreeSubclause(final Classifier c) {
-		return (AgreeContractSubclause) GraphicalAnnexUtil.getOrCreateParsedAnnexSubclause(c, AGREE_ANNEX_NAME,
-				AgreePackage.eINSTANCE.getAgreeContractSubclause());
+	private static AgreeSubclause getOrCreateAgreeSubclause(final Classifier c) {
+		return (AgreeSubclause) GraphicalAnnexUtil.getOrCreateParsedAnnexSubclause(c, AGREE_ANNEX_NAME,
+				AgreePackage.eINSTANCE.getAgreeSubclause());
 	}
 
-	private static AgreeContractLibrary getOrCreateAgreeLibrary(final AadlPackage pkg) {
-		return (AgreeContractLibrary) GraphicalAnnexUtil.getOrCreateParsedAnnexLibrary(pkg, AGREE_ANNEX_NAME,
-				AgreePackage.eINSTANCE.getAgreeContractLibrary());
+	private static AgreeLibrary getOrCreateAgreeLibrary(final AadlPackage pkg) {
+		return (AgreeLibrary) GraphicalAnnexUtil.getOrCreateParsedAnnexLibrary(pkg, AGREE_ANNEX_NAME,
+				AgreePackage.eINSTANCE.getAgreeLibrary());
 	}
 
 	private static NamedElement getAgreeAnnexElement(final Element e) {
 		if (e instanceof Classifier) {
 			return GraphicalAnnexUtil.getFirstParsedAnnexSubclause((Classifier) e, AGREE_ANNEX_NAME,
-					AgreePackage.eINSTANCE.getAgreeContractSubclause());
+					AgreePackage.eINSTANCE.getAgreeSubclause());
 		} else if (e instanceof AadlPackage) {
 			return GraphicalAnnexUtil.getFirstParsedAnnexLibrary((AadlPackage) e, AGREE_ANNEX_NAME,
-					AgreePackage.eINSTANCE.getAgreeContractLibrary());
+					AgreePackage.eINSTANCE.getAgreeLibrary());
 		} else {
 			throw new RuntimeException("Unsupported element : " + e);
 		}

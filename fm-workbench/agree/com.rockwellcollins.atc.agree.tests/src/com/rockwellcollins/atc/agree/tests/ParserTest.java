@@ -1,9 +1,11 @@
 package com.rockwellcollins.atc.agree.tests;
 
+import static com.rockwellcollins.atc.agree.tests.Util.assertStringSame;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
@@ -14,6 +16,7 @@ import org.osate.aadl2.Element;
 
 import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.AgreeInjectorProvider;
+import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -28,94 +31,93 @@ import com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl;
 public class ParserTest {
 
 	@Inject
-	public ParseHelper<Element> parser;
+	public ParseHelper<AgreeContract> parser;
 
-	private void assertStringSame(String str1, String str2) {
-		assertTrue(str1.equals(str2));
+	private Element parseSpec(String str) {
+		try {
+			return parser.parse(str).getSpecs().get(0);
+		} catch (Exception e) {
+			fail();
+		}
+		return null;
+	}
+
+	@Test
+	public void parseAssumeExpr() {
+		Element e = parseSpec("assume");
+		System.out.println(e);
 	}
 
 	@Test
 	public void parseFnDefExprMultiRecord() {
-		try {
-			Element e = parser.parse("fun foo(a1:t1, a2:t2): rt = e");
-			assertTrue(e instanceof FnDefExprImpl);
-			FnDefExpr fd = (FnDefExpr) e;
-			assertStringSame(fd.getName(), "foo");
-			assertSame(fd.getArgs().size(), 2);
+		Element e = parseSpec("fun foo(a1:t1, a2:t2): rt = e");
+		assertTrue(e instanceof FnDefExprImpl);
+		FnDefExpr fd = (FnDefExpr) e;
+		assertStringSame(fd.getName(), "foo");
+		assertSame(fd.getArgs().size(), 2);
 
-			assertStringSame(fd.getArgs().get(0).getName(), "a1");
-			Type t1 = fd.getArgs().get(0).getType();
-			assertTrue(t1 instanceof RecordType);
-			assertNull(((RecordType) t1).getRecord().getBase().getName()); // cross-ref
+		assertStringSame(fd.getArgs().get(0).getName(), "a1");
+		Type t1 = fd.getArgs().get(0).getType();
+		assertTrue(t1 instanceof RecordType);
+		assertNull(((RecordType) t1).getRecord().getBase().getName()); // cross-ref
+
+		assertStringSame(fd.getArgs().get(1).getName(), "a2");
+		Type t2 = fd.getArgs().get(1).getType();
+		assertTrue(t2 instanceof RecordType);
+		assertNull(((RecordType) t2).getRecord().getBase().getName()); // cross-ref
+
+		Type rt = fd.getType();
+		assertTrue(rt instanceof RecordType);
+		assertNull(((RecordType) rt).getRecord().getBase().getName()); /// cross-ref
+
+		Expr ex = fd.getExpr();
+		assertNotNull(ex);
 
 
-			assertStringSame(fd.getArgs().get(1).getName(), "a2");
-			Type t2 = fd.getArgs().get(1).getType();
-			assertTrue(t2 instanceof RecordType);
-			assertNull(((RecordType) t2).getRecord().getBase().getName()); // cross-ref
-
-			Type rt = fd.getType();
-			assertTrue(rt instanceof RecordType);
-			assertNull(((RecordType) rt).getRecord().getBase().getName()); /// cross-ref
-
-			Expr ex = fd.getExpr();
-			assertNotNull(ex);
-
-		} catch (Exception e) {
-			assertTrue(false);
-		}
 	}
 
 	@Test
 	public void parseFnDefExprSinglePrim() {
-		try {
-			Element e = parser.parse("fun foo(a:int): int = e");
-			assertTrue(e instanceof FnDefExprImpl);
-			FnDefExpr fd = (FnDefExpr) e;
-			assertStringSame(fd.getName(), "foo");
-			assertSame(fd.getArgs().size(), 1);
+		Element e = parseSpec("fun foo(a:int): int = e");
+		assertTrue(e instanceof FnDefExprImpl);
+		FnDefExpr fd = (FnDefExpr) e;
+		assertStringSame(fd.getName(), "foo");
+		assertSame(fd.getArgs().size(), 1);
 
-			assertStringSame(fd.getArgs().get(0).getName(), "a");
-			Type t = fd.getArgs().get(0).getType();
-			assertTrue(t instanceof PrimType);
-			assertStringSame(((PrimType) t).getString(), "int");
+		assertStringSame(fd.getArgs().get(0).getName(), "a");
+		Type t = fd.getArgs().get(0).getType();
+		assertTrue(t instanceof PrimType);
+		assertStringSame(((PrimType) t).getString(), "int");
 
-			Expr ex = fd.getExpr();
-			assertNotNull(ex);
+		Expr ex = fd.getExpr();
+		assertNotNull(ex);
 
-		} catch (Exception e) {
-			assertTrue(false);
-		}
 	}
 
 	@Test
 	public void parseEnumStatementMulti() {
-		try {
-			Element elm = parser.parse("enum color = {red, blue, yellow}");
-			assertTrue(elm instanceof EnumStatementImpl);
-			EnumStatement e = (EnumStatement) elm;
-			assertSame(e.getEnums().size(), 3);
-			assertStringSame(e.getName(), "color");
-			assertStringSame(e.getEnums().get(0).getName(), "red");
-			assertStringSame(e.getEnums().get(1).getName(), "blue");
-			assertStringSame(e.getEnums().get(2).getName(), "yellow");
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+
+		Element elm = parseSpec("enum color = {red, blue, yellow}");
+		assertTrue(elm instanceof EnumStatementImpl);
+		EnumStatement e = (EnumStatement) elm;
+		assertSame(e.getEnums().size(), 3);
+		assertStringSame(e.getName(), "color");
+		assertStringSame(e.getEnums().get(0).getName(), "red");
+		assertStringSame(e.getEnums().get(1).getName(), "blue");
+		assertStringSame(e.getEnums().get(2).getName(), "yellow");
+
 	}
 
 	@Test
 	public void parseEnumStatementSingle() {
-		try {
-			Element elm = parser.parse("enum color = {red}");
-			assertTrue(elm instanceof EnumStatementImpl);
-			EnumStatement e = (EnumStatement) elm;
-			assertSame(e.getEnums().size(), 1);
-			assertStringSame(e.getName(), "color");
-			assertStringSame(e.getEnums().get(0).getName(), "red");
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+
+		Element elm = parseSpec("enum color = {red}");
+		assertTrue(elm instanceof EnumStatementImpl);
+		EnumStatement e = (EnumStatement) elm;
+		assertSame(e.getEnums().size(), 1);
+		assertStringSame(e.getName(), "color");
+		assertStringSame(e.getEnums().get(0).getName(), "red");
+
 	}
 
 }

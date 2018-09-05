@@ -6,9 +6,9 @@ package com.rockwellcollins.atc.agree.serializer;
 import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
-import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.AlwaysStatement;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
@@ -225,11 +225,11 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.AGREE_CONTRACT:
 				sequence_AgreeContract(context, (AgreeContract) semanticObject); 
 				return; 
-			case AgreePackage.AGREE_CONTRACT_LIBRARY:
-				sequence_AgreeLibrary(context, (AgreeContractLibrary) semanticObject); 
+			case AgreePackage.AGREE_LIBRARY:
+				sequence_AgreeLibrary(context, (AgreeLibrary) semanticObject); 
 				return; 
-			case AgreePackage.AGREE_CONTRACT_SUBCLAUSE:
-				sequence_AgreeSubclause(context, (AgreeContractSubclause) semanticObject); 
+			case AgreePackage.AGREE_SUBCLAUSE:
+				sequence_AgreeSubclause(context, (AgreeSubclause) semanticObject); 
 				return; 
 			case AgreePackage.ALWAYS_STATEMENT:
 				sequence_PatternStatement(context, (AlwaysStatement) semanticObject); 
@@ -442,7 +442,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns BinaryExpr
+	 *     _30 returns BinaryExpr
 	 *     Expr returns BinaryExpr
 	 *     ArrowExpr returns BinaryExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns BinaryExpr
@@ -489,11 +489,11 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns AgreeContract
 	 *     AgreeContract returns AgreeContract
+	 *     _30 returns AgreeContract
 	 *
 	 * Constraint:
-	 *     specs+=SpecStatement*
+	 *     specs+=SpecStatement+
 	 */
 	protected void sequence_AgreeContract(ISerializationContext context, AgreeContract semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -502,45 +502,45 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     AnnexLibrary returns AgreeContractLibrary
-	 *     AgreeLibrary returns AgreeContractLibrary
+	 *     AgreeLibrary returns AgreeLibrary
+	 *     _00 returns AgreeLibrary
 	 *
 	 * Constraint:
 	 *     contract=AgreeContract
 	 */
-	protected void sequence_AgreeLibrary(ISerializationContext context, AgreeContractLibrary semanticObject) {
+	protected void sequence_AgreeLibrary(ISerializationContext context, AgreeLibrary semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AGREE_CONTRACT_LIBRARY__CONTRACT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AGREE_CONTRACT_LIBRARY__CONTRACT));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AGREE_LIBRARY__CONTRACT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AGREE_LIBRARY__CONTRACT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAgreeLibraryAccess().getContractAgreeContractParserRuleCall_1_0(), semanticObject.getContract());
+		feeder.accept(grammarAccess.getAgreeLibraryAccess().getContractAgreeContractParserRuleCall_0(), semanticObject.getContract());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
-	 *     AnnexSubclause returns AgreeContractSubclause
-	 *     AgreeSubclause returns AgreeContractSubclause
+	 *     AgreeSubclause returns AgreeSubclause
+	 *     _10 returns AgreeSubclause
 	 *
 	 * Constraint:
 	 *     contract=AgreeContract
 	 */
-	protected void sequence_AgreeSubclause(ISerializationContext context, AgreeContractSubclause semanticObject) {
+	protected void sequence_AgreeSubclause(ISerializationContext context, AgreeSubclause semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AGREE_CONTRACT_SUBCLAUSE__CONTRACT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AGREE_CONTRACT_SUBCLAUSE__CONTRACT));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AGREE_SUBCLAUSE__CONTRACT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AGREE_SUBCLAUSE__CONTRACT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAgreeSubclauseAccess().getContractAgreeContractParserRuleCall_1_0(), semanticObject.getContract());
+		feeder.accept(grammarAccess.getAgreeSubclauseAccess().getContractAgreeContractParserRuleCall_0(), semanticObject.getContract());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns Arg
+	 *     _20 returns Arg
 	 *     Arg returns Arg
 	 *
 	 * Constraint:
@@ -562,7 +562,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns AssignStatement
+	 *     _30 returns AssignStatement
 	 *     SpecStatement returns AssignStatement
 	 *     AssignStatement returns AssignStatement
 	 *
@@ -585,7 +585,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns FnCallExpr
+	 *     _30 returns FnCallExpr
 	 *     Expr returns FnCallExpr
 	 *     ArrowExpr returns FnCallExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns FnCallExpr
@@ -623,7 +623,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns RecordExpr
+	 *     _30 returns RecordExpr
 	 *     Expr returns RecordExpr
 	 *     ArrowExpr returns RecordExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns RecordExpr
@@ -661,8 +661,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns ConstStatement
-	 *     Element returns ConstStatement
+	 *     _20 returns ConstStatement
+	 *     _30 returns ConstStatement
 	 *     SpecStatement returns ConstStatement
 	 *     ConstStatement returns ConstStatement
 	 *
@@ -688,8 +688,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns EnumStatement
-	 *     Element returns EnumStatement
+	 *     _20 returns EnumStatement
+	 *     _30 returns EnumStatement
 	 *     SpecStatement returns EnumStatement
 	 *     EnumStatement returns EnumStatement
 	 *
@@ -703,7 +703,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns EqStatement
+	 *     _30 returns EqStatement
 	 *     SpecStatement returns EqStatement
 	 *     EqStatement returns EqStatement
 	 *
@@ -717,11 +717,10 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns FnDefExpr
-	 *     Element returns FnDefExpr
-	 *     SpecStatement returns FnDefExpr
-	 *     NamedCallDef returns FnDefExpr
 	 *     CallDef returns FnDefExpr
+	 *     _20 returns FnDefExpr
+	 *     _30 returns FnDefExpr
+	 *     SpecStatement returns FnDefExpr
 	 *     FnDefExpr returns FnDefExpr
 	 *
 	 * Constraint:
@@ -734,7 +733,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns IfThenElseExpr
+	 *     _30 returns IfThenElseExpr
 	 *     Expr returns IfThenElseExpr
 	 *     ArrowExpr returns IfThenElseExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns IfThenElseExpr
@@ -783,7 +782,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns InputStatement
+	 *     _30 returns InputStatement
 	 *     SpecStatement returns InputStatement
 	 *     InputStatement returns InputStatement
 	 *
@@ -797,11 +796,10 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns LibraryFnDefExpr
-	 *     Element returns LibraryFnDefExpr
-	 *     SpecStatement returns LibraryFnDefExpr
-	 *     NamedCallDef returns LibraryFnDefExpr
 	 *     CallDef returns LibraryFnDefExpr
+	 *     _20 returns LibraryFnDefExpr
+	 *     _30 returns LibraryFnDefExpr
+	 *     SpecStatement returns LibraryFnDefExpr
 	 *     LibraryFnDefExpr returns LibraryFnDefExpr
 	 *
 	 * Constraint:
@@ -814,11 +812,10 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns LinearizationDefExpr
-	 *     Element returns LinearizationDefExpr
-	 *     SpecStatement returns LinearizationDefExpr
-	 *     NamedCallDef returns LinearizationDefExpr
 	 *     CallDef returns LinearizationDefExpr
+	 *     _20 returns LinearizationDefExpr
+	 *     _30 returns LinearizationDefExpr
+	 *     SpecStatement returns LinearizationDefExpr
 	 *     LinearizationDefExpr returns LinearizationDefExpr
 	 *
 	 * Constraint:
@@ -839,7 +836,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns LinearizationInterval
+	 *     _30 returns LinearizationInterval
 	 *     LinearizationInterval returns LinearizationInterval
 	 *
 	 * Constraint:
@@ -861,7 +858,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns NamedID
+	 *     _20 returns NamedID
 	 *     NamedID returns NamedID
 	 *
 	 * Constraint:
@@ -880,7 +877,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns NestedDotID
+	 *     _30 returns NestedDotID
 	 *     Expr returns NestedDotID
 	 *     ArrowExpr returns NestedDotID
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns NestedDotID
@@ -921,7 +918,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns NodeBodyExpr
+	 *     _30 returns NodeBodyExpr
 	 *     NodeBodyExpr returns NodeBodyExpr
 	 *
 	 * Constraint:
@@ -934,11 +931,10 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns NodeDefExpr
-	 *     Element returns NodeDefExpr
-	 *     SpecStatement returns NodeDefExpr
-	 *     NamedCallDef returns NodeDefExpr
 	 *     CallDef returns NodeDefExpr
+	 *     _20 returns NodeDefExpr
+	 *     _30 returns NodeDefExpr
+	 *     SpecStatement returns NodeDefExpr
 	 *     NodeDefExpr returns NodeDefExpr
 	 *
 	 * Constraint:
@@ -951,7 +947,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns NodeEq
+	 *     _30 returns NodeEq
 	 *     NodeStmt returns NodeEq
 	 *
 	 * Constraint:
@@ -964,7 +960,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns NodeLemma
+	 *     _30 returns NodeLemma
 	 *     NodeStmt returns NodeLemma
 	 *
 	 * Constraint:
@@ -986,7 +982,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns OrderStatement
+	 *     _30 returns OrderStatement
 	 *     SpecStatement returns OrderStatement
 	 *     OrderStatement returns OrderStatement
 	 *
@@ -1018,7 +1014,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns GetPropertyExpr
+	 *     _30 returns GetPropertyExpr
 	 *     Expr returns GetPropertyExpr
 	 *     ArrowExpr returns GetPropertyExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns GetPropertyExpr
@@ -1064,7 +1060,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns PrevExpr
+	 *     _30 returns PrevExpr
 	 *     Expr returns PrevExpr
 	 *     ArrowExpr returns PrevExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns PrevExpr
@@ -1110,8 +1106,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns PropertyStatement
-	 *     Element returns PropertyStatement
+	 *     _20 returns PropertyStatement
+	 *     _30 returns PropertyStatement
 	 *     SpecStatement returns PropertyStatement
 	 *     PropertyStatement returns PropertyStatement
 	 *
@@ -1160,8 +1156,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns RecordDefExpr
-	 *     Element returns RecordDefExpr
+	 *     _20 returns RecordDefExpr
+	 *     _30 returns RecordDefExpr
 	 *     SpecStatement returns RecordDefExpr
 	 *     RecordDefExpr returns RecordDefExpr
 	 *
@@ -1175,7 +1171,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns RecordUpdateExpr
+	 *     _30 returns RecordUpdateExpr
 	 *     Expr returns RecordUpdateExpr
 	 *     ArrowExpr returns RecordUpdateExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns RecordUpdateExpr
@@ -1212,7 +1208,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns AssertStatement
+	 *     _30 returns AssertStatement
 	 *     SpecStatement returns AssertStatement
 	 *
 	 * Constraint:
@@ -1225,7 +1221,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns AssumeStatement
+	 *     _30 returns AssumeStatement
 	 *     SpecStatement returns AssumeStatement
 	 *
 	 * Constraint:
@@ -1238,7 +1234,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns ConnectionStatement
+	 *     _30 returns ConnectionStatement
 	 *     SpecStatement returns ConnectionStatement
 	 *
 	 * Constraint:
@@ -1260,7 +1256,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns GuaranteeStatement
+	 *     _30 returns GuaranteeStatement
 	 *     SpecStatement returns GuaranteeStatement
 	 *
 	 * Constraint:
@@ -1273,7 +1269,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns InitialStatement
+	 *     _30 returns InitialStatement
 	 *     SpecStatement returns InitialStatement
 	 *
 	 * Constraint:
@@ -1292,7 +1288,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns LemmaStatement
+	 *     _30 returns LemmaStatement
 	 *     SpecStatement returns LemmaStatement
 	 *
 	 * Constraint:
@@ -1305,7 +1301,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns LiftStatement
+	 *     _30 returns LiftStatement
 	 *     SpecStatement returns LiftStatement
 	 *
 	 * Constraint:
@@ -1324,7 +1320,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns ParamStatement
+	 *     _30 returns ParamStatement
 	 *     SpecStatement returns ParamStatement
 	 *
 	 * Constraint:
@@ -1346,7 +1342,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns AsynchStatement
+	 *     _30 returns AsynchStatement
 	 *     SpecStatement returns AsynchStatement
 	 *     SynchStatement returns AsynchStatement
 	 *
@@ -1360,7 +1356,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns CalenStatement
+	 *     _30 returns CalenStatement
 	 *     SpecStatement returns CalenStatement
 	 *     SynchStatement returns CalenStatement
 	 *
@@ -1374,7 +1370,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns LatchedStatement
+	 *     _30 returns LatchedStatement
 	 *     SpecStatement returns LatchedStatement
 	 *     SynchStatement returns LatchedStatement
 	 *
@@ -1388,7 +1384,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns MNSynchStatement
+	 *     _30 returns MNSynchStatement
 	 *     SpecStatement returns MNSynchStatement
 	 *     SynchStatement returns MNSynchStatement
 	 *
@@ -1402,7 +1398,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns SynchStatement
+	 *     _30 returns SynchStatement
 	 *     SpecStatement returns SynchStatement
 	 *     SynchStatement returns SynchStatement
 	 *
@@ -1416,7 +1412,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns AADLEnumerator
+	 *     _30 returns AADLEnumerator
 	 *     Expr returns AADLEnumerator
 	 *     ArrowExpr returns AADLEnumerator
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns AADLEnumerator
@@ -1462,7 +1458,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns BoolLitExpr
+	 *     _30 returns BoolLitExpr
 	 *     Expr returns BoolLitExpr
 	 *     ArrowExpr returns BoolLitExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns BoolLitExpr
@@ -1505,7 +1501,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns EventExpr
+	 *     _30 returns EventExpr
 	 *     Expr returns EventExpr
 	 *     ArrowExpr returns EventExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns EventExpr
@@ -1548,7 +1544,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns FloorCast
+	 *     _30 returns FloorCast
 	 *     Expr returns FloorCast
 	 *     ArrowExpr returns FloorCast
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns FloorCast
@@ -1591,7 +1587,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns IntLitExpr
+	 *     _30 returns IntLitExpr
 	 *     Expr returns IntLitExpr
 	 *     ArrowExpr returns IntLitExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns IntLitExpr
@@ -1634,7 +1630,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns LatchedExpr
+	 *     _30 returns LatchedExpr
 	 *     Expr returns LatchedExpr
 	 *     ArrowExpr returns LatchedExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns LatchedExpr
@@ -1677,7 +1673,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns PreExpr
+	 *     _30 returns PreExpr
 	 *     Expr returns PreExpr
 	 *     ArrowExpr returns PreExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns PreExpr
@@ -1720,7 +1716,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns RealCast
+	 *     _30 returns RealCast
 	 *     Expr returns RealCast
 	 *     ArrowExpr returns RealCast
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns RealCast
@@ -1763,7 +1759,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns RealLitExpr
+	 *     _30 returns RealLitExpr
 	 *     Expr returns RealLitExpr
 	 *     ArrowExpr returns RealLitExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns RealLitExpr
@@ -1806,7 +1802,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns ThisExpr
+	 *     _30 returns ThisExpr
 	 *     Expr returns ThisExpr
 	 *     ArrowExpr returns ThisExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns ThisExpr
@@ -1843,7 +1839,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns TimeExpr
+	 *     _30 returns TimeExpr
 	 *     Expr returns TimeExpr
 	 *     ArrowExpr returns TimeExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns TimeExpr
@@ -1880,7 +1876,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns TimeFallExpr
+	 *     _30 returns TimeFallExpr
 	 *     Expr returns TimeFallExpr
 	 *     ArrowExpr returns TimeFallExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns TimeFallExpr
@@ -1923,7 +1919,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns TimeOfExpr
+	 *     _30 returns TimeOfExpr
 	 *     Expr returns TimeOfExpr
 	 *     ArrowExpr returns TimeOfExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns TimeOfExpr
@@ -1966,7 +1962,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns TimeRiseExpr
+	 *     _30 returns TimeRiseExpr
 	 *     Expr returns TimeRiseExpr
 	 *     ArrowExpr returns TimeRiseExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns TimeRiseExpr
@@ -2093,7 +2089,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns PrimType
+	 *     _30 returns PrimType
 	 *     Type returns PrimType
 	 *
 	 * Constraint:
@@ -2106,7 +2102,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns RecordType
+	 *     _30 returns RecordType
 	 *     Type returns RecordType
 	 *
 	 * Constraint:
@@ -2125,7 +2121,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns UnaryExpr
+	 *     _30 returns UnaryExpr
 	 *     Expr returns UnaryExpr
 	 *     ArrowExpr returns UnaryExpr
 	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns UnaryExpr

@@ -5,11 +5,11 @@ import javax.inject.Named;
 import org.osate.ge.di.IsApplicable;
 import org.osate.ge.di.Names;
 
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 
 public class AgreeContractSubclauseHandler {
 	@IsApplicable
-	public boolean isApplicable(final @Named(Names.BUSINESS_OBJECT) AgreeContractSubclause subclause) {
+	public boolean isApplicable(final @Named(Names.BUSINESS_OBJECT) AgreeSubclause subclause) {
 		return true;
 	}
 }

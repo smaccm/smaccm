@@ -79,6 +79,14 @@ public class AgreeSwitch<T> extends Switch<T>
   {
     switch (classifierID)
     {
+      case AgreePackage.AGREE_CONTRACT:
+      {
+        AgreeContract agreeContract = (AgreeContract)theEObject;
+        T result = caseAgreeContract(agreeContract);
+        if (result == null) result = caseElement(agreeContract);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.AGREE_LIBRARY:
       {
         AgreeLibrary agreeLibrary = (AgreeLibrary)theEObject;
@@ -100,11 +108,12 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.CONTRACT:
+      case AgreePackage.CALL_DEF:
       {
-        Contract contract = (Contract)theEObject;
-        T result = caseContract(contract);
-        if (result == null) result = caseElement(contract);
+        CallDef callDef = (CallDef)theEObject;
+        T result = caseCallDef(callDef);
+        if (result == null) result = caseNamedElement(callDef);
+        if (result == null) result = caseElement(callDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -172,15 +181,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.CALL_DEF:
-      {
-        CallDef callDef = (CallDef)theEObject;
-        T result = caseCallDef(callDef);
-        if (result == null) result = caseNamedElement(callDef);
-        if (result == null) result = caseElement(callDef);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.PROPERTY_STATEMENT:
       {
         PropertyStatement propertyStatement = (PropertyStatement)theEObject;
@@ -242,8 +242,8 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         FnDefExpr fnDefExpr = (FnDefExpr)theEObject;
         T result = caseFnDefExpr(fnDefExpr);
-        if (result == null) result = caseSpecStatement(fnDefExpr);
         if (result == null) result = caseCallDef(fnDefExpr);
+        if (result == null) result = caseSpecStatement(fnDefExpr);
         if (result == null) result = caseNamedElement(fnDefExpr);
         if (result == null) result = caseElement(fnDefExpr);
         if (result == null) result = defaultCase(theEObject);
@@ -253,8 +253,8 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         LibraryFnDefExpr libraryFnDefExpr = (LibraryFnDefExpr)theEObject;
         T result = caseLibraryFnDefExpr(libraryFnDefExpr);
-        if (result == null) result = caseSpecStatement(libraryFnDefExpr);
         if (result == null) result = caseCallDef(libraryFnDefExpr);
+        if (result == null) result = caseSpecStatement(libraryFnDefExpr);
         if (result == null) result = caseNamedElement(libraryFnDefExpr);
         if (result == null) result = caseElement(libraryFnDefExpr);
         if (result == null) result = defaultCase(theEObject);
@@ -264,8 +264,8 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         LinearizationDefExpr linearizationDefExpr = (LinearizationDefExpr)theEObject;
         T result = caseLinearizationDefExpr(linearizationDefExpr);
-        if (result == null) result = caseSpecStatement(linearizationDefExpr);
         if (result == null) result = caseCallDef(linearizationDefExpr);
+        if (result == null) result = caseSpecStatement(linearizationDefExpr);
         if (result == null) result = caseNamedElement(linearizationDefExpr);
         if (result == null) result = caseElement(linearizationDefExpr);
         if (result == null) result = defaultCase(theEObject);
@@ -283,8 +283,8 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         NodeDefExpr nodeDefExpr = (NodeDefExpr)theEObject;
         T result = caseNodeDefExpr(nodeDefExpr);
-        if (result == null) result = caseSpecStatement(nodeDefExpr);
         if (result == null) result = caseCallDef(nodeDefExpr);
+        if (result == null) result = caseSpecStatement(nodeDefExpr);
         if (result == null) result = caseNamedElement(nodeDefExpr);
         if (result == null) result = caseElement(nodeDefExpr);
         if (result == null) result = defaultCase(theEObject);
@@ -366,38 +366,6 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseNamedID(namedID);
         if (result == null) result = caseNamedElement(namedID);
         if (result == null) result = caseElement(namedID);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.AGREE_CONTRACT_LIBRARY:
-      {
-        AgreeContractLibrary agreeContractLibrary = (AgreeContractLibrary)theEObject;
-        T result = caseAgreeContractLibrary(agreeContractLibrary);
-        if (result == null) result = caseAgreeLibrary(agreeContractLibrary);
-        if (result == null) result = caseAnnexLibrary(agreeContractLibrary);
-        if (result == null) result = caseNamedElement(agreeContractLibrary);
-        if (result == null) result = caseElement(agreeContractLibrary);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.AGREE_CONTRACT_SUBCLAUSE:
-      {
-        AgreeContractSubclause agreeContractSubclause = (AgreeContractSubclause)theEObject;
-        T result = caseAgreeContractSubclause(agreeContractSubclause);
-        if (result == null) result = caseAgreeSubclause(agreeContractSubclause);
-        if (result == null) result = caseAnnexSubclause(agreeContractSubclause);
-        if (result == null) result = caseModalElement(agreeContractSubclause);
-        if (result == null) result = caseNamedElement(agreeContractSubclause);
-        if (result == null) result = caseElement(agreeContractSubclause);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.AGREE_CONTRACT:
-      {
-        AgreeContract agreeContract = (AgreeContract)theEObject;
-        T result = caseAgreeContract(agreeContract);
-        if (result == null) result = caseContract(agreeContract);
-        if (result == null) result = caseElement(agreeContract);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -866,6 +834,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Contract</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Contract</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAgreeContract(AgreeContract object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Library</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -898,17 +882,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Contract</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Call Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Contract</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Call Def</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseContract(Contract object)
+  public T caseCallDef(CallDef object)
   {
     return null;
   }
@@ -1037,22 +1021,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseOrderStatement(OrderStatement object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Call Def</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Call Def</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseCallDef(CallDef object)
   {
     return null;
   }
@@ -1373,54 +1341,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNamedID(NamedID object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Contract Library</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Contract Library</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseAgreeContractLibrary(AgreeContractLibrary object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Contract Subclause</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Contract Subclause</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseAgreeContractSubclause(AgreeContractSubclause object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Contract</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Contract</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseAgreeContract(AgreeContract object)
   {
     return null;
   }

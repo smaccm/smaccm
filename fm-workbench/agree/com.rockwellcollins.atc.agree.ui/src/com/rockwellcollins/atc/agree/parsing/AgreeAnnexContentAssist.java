@@ -21,7 +21,6 @@ import org.osate.xtext.aadl2.properties.ui.contentassist.PropertiesProposalProvi
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
-import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -85,9 +84,9 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		AgreeContract contract = null;
 		List<String> results = new ArrayList<>();
 		for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(aadlPackage,
-				AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+				AgreePackage.eINSTANCE.getAgreeLibrary())) {
 			if (annex instanceof AgreeLibrary) {
-				contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+				contract = (AgreeContract) ((AgreeLibrary) annex).getContract();
 			}
 		}
 

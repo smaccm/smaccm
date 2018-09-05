@@ -65,9 +65,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     switch (eClass.getClassifierID())
     {
+      case AgreePackage.AGREE_CONTRACT: return createAgreeContract();
       case AgreePackage.AGREE_LIBRARY: return createAgreeLibrary();
       case AgreePackage.AGREE_SUBCLAUSE: return createAgreeSubclause();
-      case AgreePackage.CONTRACT: return createContract();
+      case AgreePackage.CALL_DEF: return createCallDef();
       case AgreePackage.SPEC_STATEMENT: return createSpecStatement();
       case AgreePackage.PATTERN_STATEMENT: return createPatternStatement();
       case AgreePackage.WHEN_STATEMENT: return createWhenStatement();
@@ -76,7 +77,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.TIME_INTERVAL: return createTimeInterval();
       case AgreePackage.SYNCH_STATEMENT: return createSynchStatement();
       case AgreePackage.ORDER_STATEMENT: return createOrderStatement();
-      case AgreePackage.CALL_DEF: return createCallDef();
       case AgreePackage.PROPERTY_STATEMENT: return createPropertyStatement();
       case AgreePackage.CONST_STATEMENT: return createConstStatement();
       case AgreePackage.ENUM_STATEMENT: return createEnumStatement();
@@ -97,9 +97,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.COMPLEX_EXPR: return createComplexExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
       case AgreePackage.NAMED_ID: return createNamedID();
-      case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
-      case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
-      case AgreePackage.AGREE_CONTRACT: return createAgreeContract();
       case AgreePackage.ASSUME_STATEMENT: return createAssumeStatement();
       case AgreePackage.GUARANTEE_STATEMENT: return createGuaranteeStatement();
       case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
@@ -161,6 +158,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public AgreeContract createAgreeContract()
+  {
+    AgreeContractImpl agreeContract = new AgreeContractImpl();
+    return agreeContract;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public AgreeLibrary createAgreeLibrary()
   {
     AgreeLibraryImpl agreeLibrary = new AgreeLibraryImpl();
@@ -183,10 +191,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Contract createContract()
+  public CallDef createCallDef()
   {
-    ContractImpl contract = new ContractImpl();
-    return contract;
+    CallDefImpl callDef = new CallDefImpl();
+    return callDef;
   }
 
   /**
@@ -275,17 +283,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     OrderStatementImpl orderStatement = new OrderStatementImpl();
     return orderStatement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public CallDef createCallDef()
-  {
-    CallDefImpl callDef = new CallDefImpl();
-    return callDef;
   }
 
   /**
@@ -506,39 +503,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     NamedIDImpl namedID = new NamedIDImpl();
     return namedID;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public AgreeContractLibrary createAgreeContractLibrary()
-  {
-    AgreeContractLibraryImpl agreeContractLibrary = new AgreeContractLibraryImpl();
-    return agreeContractLibrary;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public AgreeContractSubclause createAgreeContractSubclause()
-  {
-    AgreeContractSubclauseImpl agreeContractSubclause = new AgreeContractSubclauseImpl();
-    return agreeContractSubclause;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public AgreeContract createAgreeContract()
-  {
-    AgreeContractImpl agreeContract = new AgreeContractImpl();
-    return agreeContract;
   }
 
   /**

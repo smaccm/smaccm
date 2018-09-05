@@ -24,6 +24,15 @@ public interface AgreeFactory extends EFactory
   AgreeFactory eINSTANCE = com.rockwellcollins.atc.agree.agree.impl.AgreeFactoryImpl.init();
 
   /**
+   * Returns a new object of class '<em>Contract</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Contract</em>'.
+   * @generated
+   */
+  AgreeContract createAgreeContract();
+
+  /**
    * Returns a new object of class '<em>Library</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -42,13 +51,13 @@ public interface AgreeFactory extends EFactory
   AgreeSubclause createAgreeSubclause();
 
   /**
-   * Returns a new object of class '<em>Contract</em>'.
+   * Returns a new object of class '<em>Call Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Contract</em>'.
+   * @return a new object of class '<em>Call Def</em>'.
    * @generated
    */
-  Contract createContract();
+  CallDef createCallDef();
 
   /**
    * Returns a new object of class '<em>Spec Statement</em>'.
@@ -121,15 +130,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   OrderStatement createOrderStatement();
-
-  /**
-   * Returns a new object of class '<em>Call Def</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Call Def</em>'.
-   * @generated
-   */
-  CallDef createCallDef();
 
   /**
    * Returns a new object of class '<em>Property Statement</em>'.
@@ -310,33 +310,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   NamedID createNamedID();
-
-  /**
-   * Returns a new object of class '<em>Contract Library</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Contract Library</em>'.
-   * @generated
-   */
-  AgreeContractLibrary createAgreeContractLibrary();
-
-  /**
-   * Returns a new object of class '<em>Contract Subclause</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Contract Subclause</em>'.
-   * @generated
-   */
-  AgreeContractSubclause createAgreeContractSubclause();
-
-  /**
-   * Returns a new object of class '<em>Contract</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Contract</em>'.
-   * @generated
-   */
-  AgreeContract createAgreeContract();
 
   /**
    * Returns a new object of class '<em>Assume Statement</em>'.

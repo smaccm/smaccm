@@ -37,8 +37,9 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 			nameMappings = new HashMap<AbstractElement, String>() {
 				private static final long serialVersionUID = 1L;
 				{
-					put(grammarAccess.getNamedElementAccess().getAlternatives(), "rule__NamedElement__Alternatives");
-					put(grammarAccess.getElementAccess().getAlternatives(), "rule__Element__Alternatives");
+					put(grammarAccess.getCallDefAccess().getAlternatives(), "rule__CallDef__Alternatives");
+					put(grammarAccess.get_20Access().getAlternatives(), "rule___20__Alternatives");
+					put(grammarAccess.get_30Access().getAlternatives(), "rule___30__Alternatives");
 					put(grammarAccess.getSpecStatementAccess().getAlternatives(), "rule__SpecStatement__Alternatives");
 					put(grammarAccess.getSpecStatementAccess().getAlternatives_0_4(), "rule__SpecStatement__Alternatives_0_4");
 					put(grammarAccess.getSpecStatementAccess().getAlternatives_1_4(), "rule__SpecStatement__Alternatives_1_4");
@@ -53,7 +54,6 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getTimeIntervalAccess().getAlternatives(), "rule__TimeInterval__Alternatives");
 					put(grammarAccess.getSynchStatementAccess().getAlternatives(), "rule__SynchStatement__Alternatives");
 					put(grammarAccess.getSynchStatementAccess().getSimAlternatives_0_5_0(), "rule__SynchStatement__SimAlternatives_0_5_0");
-					put(grammarAccess.getCallDefAccess().getAlternatives(), "rule__CallDef__Alternatives");
 					put(grammarAccess.getNodeStmtAccess().getAlternatives(), "rule__NodeStmt__Alternatives");
 					put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
 					put(grammarAccess.getTypeAccess().getRangeLowAlternatives_0_2_2_0(), "rule__Type__RangeLowAlternatives_0_2_2_0");
@@ -79,9 +79,6 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getSignedIntAccess().getAlternatives_0(), "rule__SignedInt__Alternatives_0");
 					put(grammarAccess.getSignedRealAccess().getAlternatives_0(), "rule__SignedReal__Alternatives_0");
 					put(grammarAccess.getNumAltAccess().getAlternatives(), "rule__NumAlt__Alternatives");
-					put(grammarAccess.getAgreeLibraryAccess().getGroup(), "rule__AgreeLibrary__Group__0");
-					put(grammarAccess.getAgreeSubclauseAccess().getGroup(), "rule__AgreeSubclause__Group__0");
-					put(grammarAccess.getAgreeContractAccess().getGroup(), "rule__AgreeContract__Group__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_0(), "rule__SpecStatement__Group_0__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_1(), "rule__SpecStatement__Group_1__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_2(), "rule__SpecStatement__Group_2__0");
@@ -258,8 +255,6 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getQCPREFAccess().getGroup_0_0_0(), "rule__QCPREF__Group_0_0_0__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_0_2(), "rule__QCPREF__Group_0_2__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_0_2_0(), "rule__QCPREF__Group_0_2_0__0");
-					put(grammarAccess.getJavaQualifiedNameAccess().getGroup(), "rule__JavaQualifiedName__Group__0");
-					put(grammarAccess.getJavaQualifiedNameAccess().getGroup_1(), "rule__JavaQualifiedName__Group_1__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup(), "rule__ContainedPropertyAssociation__Group__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3(), "rule__ContainedPropertyAssociation__Group_3__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3_1(), "rule__ContainedPropertyAssociation__Group_3_1__0");
@@ -308,9 +303,9 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getQCREFAccess().getGroup(), "rule__QCREF__Group__0");
 					put(grammarAccess.getQCREFAccess().getGroup_0(), "rule__QCREF__Group_0__0");
 					put(grammarAccess.getQCREFAccess().getGroup_2(), "rule__QCREF__Group_2__0");
-					put(grammarAccess.getAgreeLibraryAccess().getContractAssignment_1(), "rule__AgreeLibrary__ContractAssignment_1");
-					put(grammarAccess.getAgreeSubclauseAccess().getContractAssignment_1(), "rule__AgreeSubclause__ContractAssignment_1");
-					put(grammarAccess.getAgreeContractAccess().getSpecsAssignment_1(), "rule__AgreeContract__SpecsAssignment_1");
+					put(grammarAccess.getAgreeContractAccess().getSpecsAssignment(), "rule__AgreeContract__SpecsAssignment");
+					put(grammarAccess.getAgreeLibraryAccess().getContractAssignment(), "rule__AgreeLibrary__ContractAssignment");
+					put(grammarAccess.getAgreeSubclauseAccess().getContractAssignment(), "rule__AgreeSubclause__ContractAssignment");
 					put(grammarAccess.getSpecStatementAccess().getStrAssignment_0_2(), "rule__SpecStatement__StrAssignment_0_2");
 					put(grammarAccess.getSpecStatementAccess().getExprAssignment_0_4_0(), "rule__SpecStatement__ExprAssignment_0_4_0");
 					put(grammarAccess.getSpecStatementAccess().getPatternAssignment_0_4_1(), "rule__SpecStatement__PatternAssignment_0_4_1");
@@ -553,7 +548,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 	protected Collection<FollowElement> getFollowElements(AbstractInternalContentAssistParser parser) {
 		try {
 			com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser typedParser = (com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser) parser;
-			typedParser.entryRuleNamedElement();
+			typedParser.entryRuleAgreeContract();
 			return typedParser.getFollowElements();
 		} catch(RecognitionException ex) {
 			throw new RuntimeException(ex);

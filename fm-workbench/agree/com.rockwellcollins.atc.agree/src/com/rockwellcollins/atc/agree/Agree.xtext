@@ -5,7 +5,36 @@ generate agree "http://www.rockwellcollins.com/atc/agree/Agree"
 import "http://aadl.info/AADL/2.0" as aadl2
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
-NamedElement returns aadl2::NamedElement:
+
+//Default Parsing
+AgreeContract:
+	(specs+=SpecStatement)*;
+	
+
+//AADL Connection Parsing
+AgreeLibrary:
+	contract=AgreeContract;
+	
+AgreeSubclause:
+	contract=AgreeContract;
+////
+	
+//Helper Subtyping	
+CallDef:
+	LinearizationDefExpr
+	| LibraryFnDefExpr
+	| FnDefExpr
+	| NodeDefExpr;
+////	
+	
+//AADL Subtyping		
+_00 returns aadl2::AnnexLibrary:
+	AgreeLibrary;
+	
+_10 returns aadl2::AnnexSubclause:
+	AgreeSubclause;
+
+_20 returns aadl2::NamedElement:
 	Arg
 	| FnDefExpr
 	| PropertyStatement
@@ -15,9 +44,10 @@ NamedElement returns aadl2::NamedElement:
 	| LinearizationDefExpr
 	| LibraryFnDefExpr
 	| RecordDefExpr
-	| NamedID;
+	| NamedID
+	| CallDef;
 
-Element returns aadl2::Element:
+_30 returns aadl2::Element:
 	Expr
 	| LinearizationInterval
 	| Type
@@ -27,21 +57,8 @@ Element returns aadl2::Element:
 	| NodeBodyExpr
 	| EqStatement
 	| InputStatement;
+////
 
-AnnexLibrary returns aadl2::AnnexLibrary:
-	AgreeLibrary;
-
-AnnexSubclause returns aadl2::AnnexSubclause:
-	AgreeSubclause;
-
-AgreeLibrary:
-	{AgreeContractLibrary} contract=AgreeContract;
-
-AgreeSubclause:
-	{AgreeContractSubclause} contract=AgreeContract;
-
-AgreeContract returns Contract:
-	{AgreeContract} (specs+=SpecStatement)*;
 
 SpecStatement:
 	{AssumeStatement} 'assume' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
@@ -116,14 +133,6 @@ OrderStatement:
 	'ordering' ':' comps += [aadl2::NamedElement] ("," comps+=[aadl2::NamedElement])* ';'
 ;
 
-NamedCallDef returns aadl2::NamedElement:
-	CallDef;
-
-CallDef returns CallDef:
-	LinearizationDefExpr
-	| LibraryFnDefExpr
-	| FnDefExpr
-	| NodeDefExpr;
 
 PropertyStatement:
 	'property' name=ID '=' expr=Expr ';';
@@ -280,6 +289,3 @@ ReservedVarTag:
 NamedID:
 	name=ID
 ;
-
-JavaQualifiedName:
-	ID ('.' ID)*;

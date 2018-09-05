@@ -82,6 +82,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
     new AgreeSwitch<Adapter>()
     {
       @Override
+      public Adapter caseAgreeContract(AgreeContract object)
+      {
+        return createAgreeContractAdapter();
+      }
+      @Override
       public Adapter caseAgreeLibrary(AgreeLibrary object)
       {
         return createAgreeLibraryAdapter();
@@ -92,9 +97,9 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createAgreeSubclauseAdapter();
       }
       @Override
-      public Adapter caseContract(Contract object)
+      public Adapter caseCallDef(CallDef object)
       {
-        return createContractAdapter();
+        return createCallDefAdapter();
       }
       @Override
       public Adapter caseSpecStatement(SpecStatement object)
@@ -135,11 +140,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseOrderStatement(OrderStatement object)
       {
         return createOrderStatementAdapter();
-      }
-      @Override
-      public Adapter caseCallDef(CallDef object)
-      {
-        return createCallDefAdapter();
       }
       @Override
       public Adapter casePropertyStatement(PropertyStatement object)
@@ -240,21 +240,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseNamedID(NamedID object)
       {
         return createNamedIDAdapter();
-      }
-      @Override
-      public Adapter caseAgreeContractLibrary(AgreeContractLibrary object)
-      {
-        return createAgreeContractLibraryAdapter();
-      }
-      @Override
-      public Adapter caseAgreeContractSubclause(AgreeContractSubclause object)
-      {
-        return createAgreeContractSubclauseAdapter();
-      }
-      @Override
-      public Adapter caseAgreeContract(AgreeContract object)
-      {
-        return createAgreeContractAdapter();
       }
       @Override
       public Adapter caseAssumeStatement(AssumeStatement object)
@@ -559,6 +544,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
 
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AgreeContract <em>Contract</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.AgreeContract
+   * @generated
+   */
+  public Adapter createAgreeContractAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AgreeLibrary <em>Library</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -589,16 +589,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.Contract <em>Contract</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.CallDef <em>Call Def</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.Contract
+   * @see com.rockwellcollins.atc.agree.agree.CallDef
    * @generated
    */
-  public Adapter createContractAdapter()
+  public Adapter createCallDefAdapter()
   {
     return null;
   }
@@ -719,21 +719,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createOrderStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.CallDef <em>Call Def</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.CallDef
-   * @generated
-   */
-  public Adapter createCallDefAdapter()
   {
     return null;
   }
@@ -1034,51 +1019,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNamedIDAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AgreeContractLibrary <em>Contract Library</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.AgreeContractLibrary
-   * @generated
-   */
-  public Adapter createAgreeContractLibraryAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AgreeContractSubclause <em>Contract Subclause</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.AgreeContractSubclause
-   * @generated
-   */
-  public Adapter createAgreeContractSubclauseAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AgreeContract <em>Contract</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.AgreeContract
-   * @generated
-   */
-  public Adapter createAgreeContractAdapter()
   {
     return null;
   }

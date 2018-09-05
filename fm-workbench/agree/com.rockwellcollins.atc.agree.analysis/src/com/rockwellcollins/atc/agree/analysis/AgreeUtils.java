@@ -236,7 +236,7 @@ public class AgreeUtils {
 		ComponentType compType = subComp.getComponentType();
 		if (compType != null) {
 			EList<AnnexSubclause> annexes = AnnexUtil.getAllAnnexSubclauses(compType,
-					AgreePackage.eINSTANCE.getAgreeContractSubclause());
+					AgreePackage.eINSTANCE.getAgreeSubclause());
 			for (AnnexSubclause annex : annexes) {
 				EObject container = getClosestContainerOfType(annex, ComponentType.class);
 				if (compType.getName().equals(((ComponentType) container).getName())) {
@@ -251,7 +251,7 @@ public class AgreeUtils {
 		ComponentImplementation compImpl = subComp.getComponentImplementation();
 		if (compImpl != null) {
 			EList<AnnexSubclause> annexes = AnnexUtil.getAllAnnexSubclauses(compImpl,
-					AgreePackage.eINSTANCE.getAgreeContractSubclause());
+					AgreePackage.eINSTANCE.getAgreeSubclause());
 			for (AnnexSubclause annex : annexes) {
 				EObject container = getClosestContainerOfType(annex, ComponentImplementation.class);
 				if (container instanceof ComponentImplementation) {

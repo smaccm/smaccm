@@ -62,8 +62,8 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
@@ -277,7 +277,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		boolean hasSubcomponents = false;
 		ComponentClassifier compClass = compInst.getComponentClassifier();
 		if (compClass instanceof ComponentImplementation && (isTop || isMonolithic)) {
-			AgreeContractSubclause annex = getAgreeAnnex(compClass);
+			AgreeSubclause annex = getAgreeAnnex(compClass);
 
 			for (ComponentInstance subInst : compInst.getComponentInstances()) {
 				hasSubcomponents = true;
@@ -334,7 +334,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			timing = TimingModel.SYNC;
 		}
 
-		AgreeContractSubclause annex = getAgreeAnnex(compClass);
+		AgreeSubclause annex = getAgreeAnnex(compClass);
 		if (annex != null) {
 			hasDirectAnnex = true;
 			AgreeContract contract = (AgreeContract) annex.getContract();
@@ -1323,10 +1323,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return guarantees;
 	}
 
-	private AgreeContractSubclause getAgreeAnnex(ComponentClassifier comp) {
+	private AgreeSubclause getAgreeAnnex(ComponentClassifier comp) {
 		for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(comp,
-				AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-			if (annex instanceof AgreeContractSubclause) {
+				AgreePackage.eINSTANCE.getAgreeSubclause())) {
+			if (annex instanceof AgreeSubclause) {
 				// in newer versions of osate the annex this returns annexes in
 				// the type
 				// as well as the implementation. We want the annex in the
@@ -1336,7 +1336,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					container = container.eContainer();
 				}
 				if (container == comp) {
-					return (AgreeContractSubclause) annex;
+					return (AgreeSubclause) annex;
 				}
 			}
 		}

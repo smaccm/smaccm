@@ -37,7 +37,6 @@ import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
 
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
@@ -84,7 +83,7 @@ public class TcgLinkerFactory {
 
 		ComponentType sysType = AgreeUtils.getInstanceType(si);
 		EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
-				AgreePackage.eINSTANCE.getAgreeContractSubclause());
+				AgreePackage.eINSTANCE.getAgreeSubclause());
 
 		if (annexSubClauses.size() == 0) {
 			throw new AgreeException(
@@ -189,8 +188,8 @@ public class TcgLinkerFactory {
 			compClass = ((ComponentImplementation) compClass).getType();
 		}
 		for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(compClass,
-				AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-			if (annex instanceof AgreeContractSubclause) {
+				AgreePackage.eINSTANCE.getAgreeSubclause())) {
+			if (annex instanceof AgreeSubclause) {
 				return true;
 			}
 		}

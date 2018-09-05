@@ -2,9 +2,19 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="agree" nsURI="http://www.rockwellcollins.com/atc/agree/Agree"
     nsPrefix="agree">
-  <eClassifiers xsi:type="ecore:EClass" name="AgreeLibrary" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//AnnexLibrary"/>
-  <eClassifiers xsi:type="ecore:EClass" name="AgreeSubclause" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//AnnexSubclause"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Contract" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//Element"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeContract" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specs" upperBound="-1"
+        eType="#//SpecStatement" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeLibrary" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//AnnexLibrary">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//AgreeContract"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AgreeSubclause" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//AnnexSubclause">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//AgreeContract"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CallDef" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="SpecStatement" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="PatternStatement"/>
   <eClassifiers xsi:type="ecore:EClass" name="WhenStatement" eSuperTypes="#//PatternStatement">
@@ -40,7 +50,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="comps" unique="false" upperBound="-1"
         eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CallDef" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyStatement" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
@@ -66,18 +75,18 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FnDefExpr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
+  <eClassifiers xsi:type="ecore:EClass" name="FnDefExpr" eSuperTypes="#//CallDef platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LibraryFnDefExpr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
+  <eClassifiers xsi:type="ecore:EClass" name="LibraryFnDefExpr" eSuperTypes="#//CallDef platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LinearizationDefExpr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
+  <eClassifiers xsi:type="ecore:EClass" name="LinearizationDefExpr" eSuperTypes="#//CallDef platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="intervals" upperBound="-1"
@@ -92,7 +101,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="end" eType="#//Expr" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NodeDefExpr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement #//CallDef">
+  <eClassifiers xsi:type="ecore:EClass" name="NodeDefExpr" eSuperTypes="#//CallDef platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement #//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Arg"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rets" upperBound="-1" eType="#//Arg"
@@ -126,18 +135,6 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedID" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="AgreeContractLibrary" eSuperTypes="#//AgreeLibrary">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AgreeContractSubclause" eSuperTypes="#//AgreeSubclause">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AgreeContract" eSuperTypes="#//Contract">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="specs" upperBound="-1"
-        eType="#//SpecStatement" containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssumeStatement" eSuperTypes="#//SpecStatement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="str" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>

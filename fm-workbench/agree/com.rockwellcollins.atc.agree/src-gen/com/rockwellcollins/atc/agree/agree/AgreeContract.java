@@ -5,6 +5,10 @@ package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.ecore.EObject;
+
+import org.osate.aadl2.Element;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Contract</b></em>'.
@@ -21,7 +25,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface AgreeContract extends Contract
+public interface AgreeContract extends EObject, Element
 {
   /**
    * Returns the value of the '<em><b>Specs</b></em>' containment reference list.

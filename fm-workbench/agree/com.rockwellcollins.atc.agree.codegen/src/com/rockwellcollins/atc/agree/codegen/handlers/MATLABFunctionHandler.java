@@ -113,7 +113,7 @@ public class MATLABFunctionHandler extends ModifyingAadlHandler {
 			ComponentType sysType = AgreeUtils.getInstanceType(si);
 
 			EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
-					AgreePackage.eINSTANCE.getAgreeContractSubclause());
+					AgreePackage.eINSTANCE.getAgreeSubclause());
 
 			if (annexSubClauses.size() == 0) {
 				throw new AgreeException("There is not an AGREE annex in the '" + sysType.getName() + "' system type.");

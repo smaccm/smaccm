@@ -34,10 +34,10 @@ import org.osate.aadl2.impl.FeatureGroupImpl;
 import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
-import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
@@ -241,9 +241,9 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		Set<Element> result = new HashSet<>();
 		if (eobj instanceof Classifier) {
 			for (AnnexSubclause subclause : AnnexUtil.getAllAnnexSubclauses((Classifier) eobj,
-					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-				if (subclause instanceof AgreeContractSubclause) {
-					AgreeContractSubclause agreeSubclause = (AgreeContractSubclause) subclause;
+					AgreePackage.eINSTANCE.getAgreeSubclause())) {
+				if (subclause instanceof AgreeSubclause) {
+					AgreeSubclause agreeSubclause = (AgreeSubclause) subclause;
 					AgreeContract contract = (AgreeContract) agreeSubclause.getContract();
 					result.addAll(getAllElementsFromSpecs(contract.getSpecs()));
 				}
@@ -293,9 +293,9 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 				}
 			}
 			for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) ctx),
-					AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+					AgreePackage.eINSTANCE.getAgreeLibrary())) {
 				if (annex instanceof AgreeLibrary) {
-					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+					AgreeContract contract = (AgreeContract) ((AgreeLibrary) annex).getContract();
 					components.addAll(getAllElementsFromSpecs(contract.getSpecs()));
 				}
 			}

@@ -38,7 +38,7 @@ import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 	
 	@Override
 	protected String getFirstRuleName() {
-		return "NamedElement";	
+		return "AgreeContract";	
 	} 
 	   	   	
 	@Override
@@ -57,127 +57,40 @@ import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 
 
 
-// Entry rule entryRuleNamedElement
-entryRuleNamedElement returns [EObject current=null]
+// Entry rule entryRuleAgreeContract
+entryRuleAgreeContract returns [EObject current=null]
 	:
-	{ newCompositeNode(grammarAccess.getNamedElementRule()); }
-	 iv_ruleNamedElement=ruleNamedElement 
-	 { $current=$iv_ruleNamedElement.current; } 
+	{ newCompositeNode(grammarAccess.getAgreeContractRule()); }
+	 iv_ruleAgreeContract=ruleAgreeContract 
+	 { $current=$iv_ruleAgreeContract.current; } 
 	 EOF 
 ;
 
-// Rule NamedElement
-ruleNamedElement returns [EObject current=null] 
+// Rule AgreeContract
+ruleAgreeContract returns [EObject current=null] 
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
 (
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getArgParserRuleCall_0()); 
-    }
-    this_Arg_0=ruleArg
-    {
-        $current = $this_Arg_0.current;
-        afterParserOrEnumRuleCall();
-    }
+(
+		{ 
+	        newCompositeNode(grammarAccess.getAgreeContractAccess().getSpecsSpecStatementParserRuleCall_0()); 
+	    }
+		lv_specs_0_0=ruleSpecStatement		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getAgreeContractRule());
+	        }
+       		add(
+       			$current, 
+       			"specs",
+        		lv_specs_0_0, 
+        		"com.rockwellcollins.atc.agree.Agree.SpecStatement");
+	        afterParserOrEnumRuleCall();
+	    }
 
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getFnDefExprParserRuleCall_1()); 
-    }
-    this_FnDefExpr_1=ruleFnDefExpr
-    {
-        $current = $this_FnDefExpr_1.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getPropertyStatementParserRuleCall_2()); 
-    }
-    this_PropertyStatement_2=rulePropertyStatement
-    {
-        $current = $this_PropertyStatement_2.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getConstStatementParserRuleCall_3()); 
-    }
-    this_ConstStatement_3=ruleConstStatement
-    {
-        $current = $this_ConstStatement_3.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getEnumStatementParserRuleCall_4()); 
-    }
-    this_EnumStatement_4=ruleEnumStatement
-    {
-        $current = $this_EnumStatement_4.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getNodeDefExprParserRuleCall_5()); 
-    }
-    this_NodeDefExpr_5=ruleNodeDefExpr
-    {
-        $current = $this_NodeDefExpr_5.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getLinearizationDefExprParserRuleCall_6()); 
-    }
-    this_LinearizationDefExpr_6=ruleLinearizationDefExpr
-    {
-        $current = $this_LinearizationDefExpr_6.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getLibraryFnDefExprParserRuleCall_7()); 
-    }
-    this_LibraryFnDefExpr_7=ruleLibraryFnDefExpr
-    {
-        $current = $this_LibraryFnDefExpr_7.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getRecordDefExprParserRuleCall_8()); 
-    }
-    this_RecordDefExpr_8=ruleRecordDefExpr
-    {
-        $current = $this_RecordDefExpr_8.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getNamedIDParserRuleCall_9()); 
-    }
-    this_NamedID_9=ruleNamedID
-    {
-        $current = $this_NamedID_9.current;
-        afterParserOrEnumRuleCall();
-    }
 )
+)*
 ;
-
-
-
-
-
-
 
 
 
@@ -197,31 +110,25 @@ ruleAgreeLibrary returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-((
-    {
-        $current = forceCreateModelElement(
-            grammarAccess.getAgreeLibraryAccess().getAgreeContractLibraryAction_0(),
-            $current);
-    }
-)(
+(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getAgreeLibraryAccess().getContractAgreeContractParserRuleCall_1_0()); 
+	        newCompositeNode(grammarAccess.getAgreeLibraryAccess().getContractAgreeContractParserRuleCall_0()); 
 	    }
-		lv_contract_1_0=ruleAgreeContract		{
+		lv_contract_0_0=ruleAgreeContract		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getAgreeLibraryRule());
 	        }
        		set(
        			$current, 
        			"contract",
-        		lv_contract_1_0, 
+        		lv_contract_0_0, 
         		"com.rockwellcollins.atc.agree.Agree.AgreeContract");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
-))
+)
 ;
 
 
@@ -242,77 +149,94 @@ ruleAgreeSubclause returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-((
-    {
-        $current = forceCreateModelElement(
-            grammarAccess.getAgreeSubclauseAccess().getAgreeContractSubclauseAction_0(),
-            $current);
-    }
-)(
+(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getAgreeSubclauseAccess().getContractAgreeContractParserRuleCall_1_0()); 
+	        newCompositeNode(grammarAccess.getAgreeSubclauseAccess().getContractAgreeContractParserRuleCall_0()); 
 	    }
-		lv_contract_1_0=ruleAgreeContract		{
+		lv_contract_0_0=ruleAgreeContract		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getAgreeSubclauseRule());
 	        }
        		set(
        			$current, 
        			"contract",
-        		lv_contract_1_0, 
+        		lv_contract_0_0, 
         		"com.rockwellcollins.atc.agree.Agree.AgreeContract");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
-))
+)
 ;
 
 
 
 
 
-// Entry rule entryRuleAgreeContract
-entryRuleAgreeContract returns [EObject current=null]
+// Entry rule entryRuleCallDef
+entryRuleCallDef returns [EObject current=null]
 	:
-	{ newCompositeNode(grammarAccess.getAgreeContractRule()); }
-	 iv_ruleAgreeContract=ruleAgreeContract 
-	 { $current=$iv_ruleAgreeContract.current; } 
+	{ newCompositeNode(grammarAccess.getCallDefRule()); }
+	 iv_ruleCallDef=ruleCallDef 
+	 { $current=$iv_ruleCallDef.current; } 
 	 EOF 
 ;
 
-// Rule AgreeContract
-ruleAgreeContract returns [EObject current=null] 
+// Rule CallDef
+ruleCallDef returns [EObject current=null] 
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-((
-    {
-        $current = forceCreateModelElement(
-            grammarAccess.getAgreeContractAccess().getAgreeContractAction_0(),
-            $current);
-    }
-)(
 (
-		{ 
-	        newCompositeNode(grammarAccess.getAgreeContractAccess().getSpecsSpecStatementParserRuleCall_1_0()); 
-	    }
-		lv_specs_1_0=ruleSpecStatement		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getAgreeContractRule());
-	        }
-       		add(
-       			$current, 
-       			"specs",
-        		lv_specs_1_0, 
-        		"com.rockwellcollins.atc.agree.Agree.SpecStatement");
-	        afterParserOrEnumRuleCall();
-	    }
+    { 
+        newCompositeNode(grammarAccess.getCallDefAccess().getLinearizationDefExprParserRuleCall_0()); 
+    }
+    this_LinearizationDefExpr_0=ruleLinearizationDefExpr
+    {
+        $current = $this_LinearizationDefExpr_0.current;
+        afterParserOrEnumRuleCall();
+    }
 
+    |
+    { 
+        newCompositeNode(grammarAccess.getCallDefAccess().getLibraryFnDefExprParserRuleCall_1()); 
+    }
+    this_LibraryFnDefExpr_1=ruleLibraryFnDefExpr
+    {
+        $current = $this_LibraryFnDefExpr_1.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_2()); 
+    }
+    this_FnDefExpr_2=ruleFnDefExpr
+    {
+        $current = $this_FnDefExpr_2.current;
+        afterParserOrEnumRuleCall();
+    }
+
+    |
+    { 
+        newCompositeNode(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_3()); 
+    }
+    this_NodeDefExpr_3=ruleNodeDefExpr
+    {
+        $current = $this_NodeDefExpr_3.current;
+        afterParserOrEnumRuleCall();
+    }
 )
-)*)
 ;
+
+
+
+
+
+
+
+
 
 
 
@@ -2773,68 +2697,6 @@ ruleOrderStatement returns [EObject current=null]
 	otherlv_5=Semicolon
     {
     	newLeafNode(otherlv_5, grammarAccess.getOrderStatementAccess().getSemicolonKeyword_4());
-    }
-)
-;
-
-
-
-
-
-
-
-// Entry rule entryRuleCallDef
-entryRuleCallDef returns [EObject current=null]
-	:
-	{ newCompositeNode(grammarAccess.getCallDefRule()); }
-	 iv_ruleCallDef=ruleCallDef 
-	 { $current=$iv_ruleCallDef.current; } 
-	 EOF 
-;
-
-// Rule CallDef
-ruleCallDef returns [EObject current=null] 
-    @init { enterRule(); 
-    }
-    @after { leaveRule(); }:
-(
-    { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getLinearizationDefExprParserRuleCall_0()); 
-    }
-    this_LinearizationDefExpr_0=ruleLinearizationDefExpr
-    {
-        $current = $this_LinearizationDefExpr_0.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getLibraryFnDefExprParserRuleCall_1()); 
-    }
-    this_LibraryFnDefExpr_1=ruleLibraryFnDefExpr
-    {
-        $current = $this_LibraryFnDefExpr_1.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getFnDefExprParserRuleCall_2()); 
-    }
-    this_FnDefExpr_2=ruleFnDefExpr
-    {
-        $current = $this_FnDefExpr_2.current;
-        afterParserOrEnumRuleCall();
-    }
-
-    |
-    { 
-        newCompositeNode(grammarAccess.getCallDefAccess().getNodeDefExprParserRuleCall_3()); 
-    }
-    this_NodeDefExpr_3=ruleNodeDefExpr
-    {
-        $current = $this_NodeDefExpr_3.current;
-        afterParserOrEnumRuleCall();
     }
 )
 ;
@@ -7005,8 +6867,6 @@ ruleNamedID returns [EObject current=null]
 )
 )
 ;
-
-
 
 
 

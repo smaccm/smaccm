@@ -23,8 +23,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.osate.aadl2.impl.NamedElementImpl;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Node Def Expr</b></em>'.
@@ -40,7 +38,7 @@ import org.osate.aadl2.impl.NamedElementImpl;
  *
  * @generated
  */
-public class NodeDefExprImpl extends NamedElementImpl implements NodeDefExpr
+public class NodeDefExprImpl extends CallDefImpl implements NodeDefExpr
 {
   /**
    * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.

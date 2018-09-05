@@ -19,6 +19,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.osate.aadl2.impl.ElementImpl;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Contract</b></em>'.
@@ -32,7 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *
  * @generated
  */
-public class AgreeContractImpl extends ContractImpl implements AgreeContract
+public class AgreeContractImpl extends ElementImpl implements AgreeContract
 {
   /**
    * The cached value of the '{@link #getSpecs() <em>Specs</em>}' containment reference list.

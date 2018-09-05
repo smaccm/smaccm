@@ -33,9 +33,8 @@ import org.eclipse.xtext.serializer.impl.Serializer;
 //import com.google.inject.Guice;
 //import com.google.inject.Injector;
 import com.google.inject.Inject;
-//import com.google.inject.Provider;
-import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 
 @SuppressWarnings("restriction")
@@ -65,14 +64,14 @@ public class AgreeSerializer extends Serializer {
 	@Override
 	protected ISerializationContext getIContext(EObject semanticObject) {
 		ISerializationContext result = null;
-		if (semanticObject instanceof AgreeContractLibrary) {
+		if (semanticObject instanceof AgreeLibrary) {
 			for (final ISerializationContext o : contextFinder.findByContents(semanticObject, null)) {
 				if (o.getParserRule() == grammarAccess.getAgreeLibraryRule()) {
 					result = o;
 					break;
 				}
 			}
-		} else if (semanticObject instanceof AgreeContractSubclause) {
+		} else if (semanticObject instanceof AgreeSubclause) {
 			for (final ISerializationContext o : contextFinder.findByContents(semanticObject, null)) {
 				if (o.getParserRule() == grammarAccess.getAgreeSubclauseRule()) {
 					result = o;

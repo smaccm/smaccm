@@ -5,8 +5,6 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
-import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
 import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -25,7 +23,6 @@ import com.rockwellcollins.atc.agree.agree.ClosedTimeInterval;
 import com.rockwellcollins.atc.agree.agree.ComplexExpr;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
-import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -115,6 +112,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass agreeContractEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass agreeLibraryEClass = null;
 
   /**
@@ -129,7 +133,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass contractEClass = null;
+  private EClass callDefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -186,13 +190,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass orderStatementEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass callDefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -333,27 +330,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass namedIDEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass agreeContractLibraryEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass agreeContractSubclauseEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass agreeContractEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -784,9 +760,39 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getAgreeContract()
+  {
+    return agreeContractEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAgreeContract_Specs()
+  {
+    return (EReference)agreeContractEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getAgreeLibrary()
   {
     return agreeLibraryEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAgreeLibrary_Contract()
+  {
+    return (EReference)agreeLibraryEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -804,9 +810,19 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getContract()
+  public EReference getAgreeSubclause_Contract()
   {
-    return contractEClass;
+    return (EReference)agreeSubclauseEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getCallDef()
+  {
+    return callDefEClass;
   }
 
   /**
@@ -1027,16 +1043,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getOrderStatement_Comps()
   {
     return (EReference)orderStatementEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getCallDef()
-  {
-    return callDefEClass;
   }
 
   /**
@@ -1547,66 +1553,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EClass getNamedID()
   {
     return namedIDEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getAgreeContractLibrary()
-  {
-    return agreeContractLibraryEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getAgreeContractLibrary_Contract()
-  {
-    return (EReference)agreeContractLibraryEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getAgreeContractSubclause()
-  {
-    return agreeContractSubclauseEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getAgreeContractSubclause_Contract()
-  {
-    return (EReference)agreeContractSubclauseEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getAgreeContract()
-  {
-    return agreeContractEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getAgreeContract_Specs()
-  {
-    return (EReference)agreeContractEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2919,11 +2865,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     isCreated = true;
 
     // Create classes and their features
+    agreeContractEClass = createEClass(AGREE_CONTRACT);
+    createEReference(agreeContractEClass, AGREE_CONTRACT__SPECS);
+
     agreeLibraryEClass = createEClass(AGREE_LIBRARY);
+    createEReference(agreeLibraryEClass, AGREE_LIBRARY__CONTRACT);
 
     agreeSubclauseEClass = createEClass(AGREE_SUBCLAUSE);
+    createEReference(agreeSubclauseEClass, AGREE_SUBCLAUSE__CONTRACT);
 
-    contractEClass = createEClass(CONTRACT);
+    callDefEClass = createEClass(CALL_DEF);
 
     specStatementEClass = createEClass(SPEC_STATEMENT);
 
@@ -2954,8 +2905,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     orderStatementEClass = createEClass(ORDER_STATEMENT);
     createEReference(orderStatementEClass, ORDER_STATEMENT__COMPS);
-
-    callDefEClass = createEClass(CALL_DEF);
 
     propertyStatementEClass = createEClass(PROPERTY_STATEMENT);
     createEReference(propertyStatementEClass, PROPERTY_STATEMENT__EXPR);
@@ -3027,15 +2976,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(nestedDotIDEClass, NESTED_DOT_ID__SUB);
 
     namedIDEClass = createEClass(NAMED_ID);
-
-    agreeContractLibraryEClass = createEClass(AGREE_CONTRACT_LIBRARY);
-    createEReference(agreeContractLibraryEClass, AGREE_CONTRACT_LIBRARY__CONTRACT);
-
-    agreeContractSubclauseEClass = createEClass(AGREE_CONTRACT_SUBCLAUSE);
-    createEReference(agreeContractSubclauseEClass, AGREE_CONTRACT_SUBCLAUSE__CONTRACT);
-
-    agreeContractEClass = createEClass(AGREE_CONTRACT);
-    createEReference(agreeContractEClass, AGREE_CONTRACT__SPECS);
 
     assumeStatementEClass = createEClass(ASSUME_STATEMENT);
     createEAttribute(assumeStatementEClass, ASSUME_STATEMENT__STR);
@@ -3250,16 +3190,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     // Set bounds for type parameters
 
     // Add supertypes to classes
+    agreeContractEClass.getESuperTypes().add(theAadl2Package.getElement());
     agreeLibraryEClass.getESuperTypes().add(theAadl2Package.getAnnexLibrary());
     agreeSubclauseEClass.getESuperTypes().add(theAadl2Package.getAnnexSubclause());
-    contractEClass.getESuperTypes().add(theAadl2Package.getElement());
+    callDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     specStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     whenStatementEClass.getESuperTypes().add(this.getPatternStatement());
     wheneverStatementEClass.getESuperTypes().add(this.getPatternStatement());
     realTimeStatementEClass.getESuperTypes().add(this.getPatternStatement());
     synchStatementEClass.getESuperTypes().add(this.getSpecStatement());
     orderStatementEClass.getESuperTypes().add(this.getSpecStatement());
-    callDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(this.getSpecStatement());
     constStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
@@ -3271,19 +3211,19 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     inputStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     inputStatementEClass.getESuperTypes().add(this.getSpecStatement());
     assignStatementEClass.getESuperTypes().add(this.getSpecStatement());
+    fnDefExprEClass.getESuperTypes().add(this.getCallDef());
     fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
-    fnDefExprEClass.getESuperTypes().add(this.getCallDef());
+    libraryFnDefExprEClass.getESuperTypes().add(this.getCallDef());
     libraryFnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     libraryFnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
-    libraryFnDefExprEClass.getESuperTypes().add(this.getCallDef());
+    linearizationDefExprEClass.getESuperTypes().add(this.getCallDef());
     linearizationDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     linearizationDefExprEClass.getESuperTypes().add(this.getSpecStatement());
-    linearizationDefExprEClass.getESuperTypes().add(this.getCallDef());
     linearizationIntervalEClass.getESuperTypes().add(theAadl2Package.getElement());
+    nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
     nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     nodeDefExprEClass.getESuperTypes().add(this.getSpecStatement());
-    nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
     nodeBodyExprEClass.getESuperTypes().add(theAadl2Package.getElement());
     nodeStmtEClass.getESuperTypes().add(theAadl2Package.getElement());
     argEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
@@ -3294,9 +3234,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     complexExprEClass.getESuperTypes().add(this.getExpr());
     nestedDotIDEClass.getESuperTypes().add(this.getComplexExpr());
     namedIDEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    agreeContractLibraryEClass.getESuperTypes().add(this.getAgreeLibrary());
-    agreeContractSubclauseEClass.getESuperTypes().add(this.getAgreeSubclause());
-    agreeContractEClass.getESuperTypes().add(this.getContract());
     assumeStatementEClass.getESuperTypes().add(this.getSpecStatement());
     guaranteeStatementEClass.getESuperTypes().add(this.getSpecStatement());
     assertStatementEClass.getESuperTypes().add(this.getSpecStatement());
@@ -3350,11 +3287,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     recordExprEClass.getESuperTypes().add(this.getComplexExpr());
 
     // Initialize classes and features; add operations and parameters
+    initEClass(agreeContractEClass, AgreeContract.class, "AgreeContract", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getAgreeContract_Specs(), this.getSpecStatement(), null, "specs", null, 0, -1, AgreeContract.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(agreeLibraryEClass, AgreeLibrary.class, "AgreeLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getAgreeLibrary_Contract(), this.getAgreeContract(), null, "contract", null, 0, 1, AgreeLibrary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(agreeSubclauseEClass, AgreeSubclause.class, "AgreeSubclause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getAgreeSubclause_Contract(), this.getAgreeContract(), null, "contract", null, 0, 1, AgreeSubclause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(contractEClass, Contract.class, "Contract", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(callDefEClass, CallDef.class, "CallDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(specStatementEClass, SpecStatement.class, "SpecStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3385,8 +3327,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(orderStatementEClass, OrderStatement.class, "OrderStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getOrderStatement_Comps(), theAadl2Package.getNamedElement(), null, "comps", null, 0, -1, OrderStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(callDefEClass, CallDef.class, "CallDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(propertyStatementEClass, PropertyStatement.class, "PropertyStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPropertyStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, PropertyStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3458,15 +3398,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getNestedDotID_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(namedIDEClass, NamedID.class, "NamedID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(agreeContractLibraryEClass, AgreeContractLibrary.class, "AgreeContractLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAgreeContractLibrary_Contract(), this.getContract(), null, "contract", null, 0, 1, AgreeContractLibrary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(agreeContractSubclauseEClass, AgreeContractSubclause.class, "AgreeContractSubclause", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAgreeContractSubclause_Contract(), this.getContract(), null, "contract", null, 0, 1, AgreeContractSubclause.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(agreeContractEClass, AgreeContract.class, "AgreeContract", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAgreeContract_Specs(), this.getSpecStatement(), null, "specs", null, 0, -1, AgreeContract.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(assumeStatementEClass, AssumeStatement.class, "AssumeStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getAssumeStatement_Str(), theEcorePackage.getEString(), "str", null, 0, 1, AssumeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

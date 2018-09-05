@@ -17,9 +17,9 @@ import org.osate.ge.di.Activate;
 import org.osate.ge.di.Names;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
-import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
@@ -70,8 +70,8 @@ public class AgreeBusinessObjectProvider {
 	}
 
 	public static Stream<SpecStatement> getAllSpecStatements(final AadlPackage pkg) {
-		return AnnexUtil.getAllActualAnnexLibraries(pkg, AgreePackage.eINSTANCE.getAgreeContractLibrary()).stream()
-				.map(l -> (AgreeContractLibrary) l).filter(agreeLib -> agreeLib.getContract() instanceof AgreeContract)
+		return AnnexUtil.getAllActualAnnexLibraries(pkg, AgreePackage.eINSTANCE.getAgreeLibrary()).stream()
+				.map(l -> (AgreeLibrary) l).filter(agreeLib -> agreeLib.getContract() instanceof AgreeContract)
 				.flatMap(agreeLib -> ((AgreeContract) agreeLib.getContract()).getSpecs().stream());
 	}
 
@@ -101,7 +101,7 @@ public class AgreeBusinessObjectProvider {
 		}
 
 		return classifier.getOwnedAnnexSubclauses().stream().map(sc -> AnnexUtil.getParsedAnnex(sc))
-				.filter(sc -> sc instanceof AgreeContractSubclause).map(AgreeContractSubclause.class::cast)
+				.filter(sc -> sc instanceof AgreeSubclause).map(AgreeSubclause.class::cast)
 				.map(sc -> sc.getContract()).filter(c -> c instanceof AgreeContract).map(AgreeContract.class::cast)
 				.flatMap(c -> c.getSpecs().stream());
 	}
