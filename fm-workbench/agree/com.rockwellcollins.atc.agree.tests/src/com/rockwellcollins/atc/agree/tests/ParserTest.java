@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.testing.util.ParseHelper;
+import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osate.aadl2.Element;
@@ -18,6 +19,7 @@ import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.AgreeInjectorProvider;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -25,8 +27,10 @@ import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl;
+import com.rockwellcollins.atc.agree.agree.impl.BinaryExprImpl;
 import com.rockwellcollins.atc.agree.agree.impl.EnumStatementImpl;
 import com.rockwellcollins.atc.agree.agree.impl.FnDefExprImpl;
+import com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl;
 
 @InjectWith(AgreeInjectorProvider.class)
 @RunWith(XtextRunner.class)
@@ -35,9 +39,13 @@ public class ParserTest {
 	@Inject
 	public ParseHelper<AgreeContract> parser;
 
+	@Inject
+	public ValidationTestHelper validator;
+
 	private Element parseSpec(String str) {
 		try {
-			return parser.parse(str).getSpecs().get(0);
+			Element elm = parser.parse(str).getSpecs().get(0);
+			return elm;
 		} catch (Exception e) {
 			fail();
 		}
@@ -45,12 +53,43 @@ public class ParserTest {
 	}
 
 	@Test
-	public void parseAssumeExpr() {
-		Element e = parseSpec("assume \"xyz\": e; ");
+	public void parseAssumeArrowExpr() {
+		Element e = parseSpec("assume \"xyz\": A -> B; ");
 		assertTrue(e instanceof AssumeStatementImpl);
 		AssumeStatement a = (AssumeStatement) e;
-		assertStringSame(a.getStr(), "xyz");
-		assertNotNull(a.getExpr());
+		assertStringSame("xyz", a.getStr());
+		assertTrue(a.getExpr() instanceof BinaryExprImpl);
+		BinaryExpr b = (BinaryExpr) a.getExpr();
+		assertStringSame("->", b.getOp());
+		assertNull(a.getPattern());
+	}
+
+	@Test
+	public void parseAssumeBinaryExpr() {
+		String[] ops = { "->", "=>", "<=>", "or", "and", "<", "<=", ">", ">=", "=", "<>", "!=" };
+
+		for (int i = 0; i < ops.length; i++) {
+			String op = ops[i];
+			Element e = parseSpec("assume \"xyz\": A " + op + " B; ");
+			assertTrue(e instanceof AssumeStatementImpl);
+			AssumeStatement a = (AssumeStatement) e;
+			assertStringSame("xyz", a.getStr());
+			assertTrue(a.getExpr() instanceof BinaryExprImpl);
+			BinaryExpr b = (BinaryExpr) a.getExpr();
+			assertStringSame(op, b.getOp());
+			assertNull(a.getPattern());
+		}
+
+	}
+
+
+	@Test
+	public void parseAssumeNestedDotID() {
+		Element e = parseSpec("assume \"xyz\": something; ");
+		assertTrue(e instanceof AssumeStatementImpl);
+		AssumeStatement a = (AssumeStatement) e;
+		assertStringSame("xyz", a.getStr());
+		assertTrue(a.getExpr() instanceof NestedDotIDImpl);
 		assertNull(a.getPattern());
 	}
 

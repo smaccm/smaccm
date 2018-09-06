@@ -4,8 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 public class Util {
 
-	public static void assertStringSame(String str1, String str2) {
-		assertTrue(str1.equals(str2));
+	public static void assertStringSame(String expected, String actual) {
+		assertTrue(expected.equals(actual));
 	}
 
 }
