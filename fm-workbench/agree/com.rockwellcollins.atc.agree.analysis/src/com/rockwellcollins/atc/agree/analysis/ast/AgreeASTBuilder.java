@@ -1112,12 +1112,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				EList<Arg> lhs = eq.getLhs();
 				if (eq.getExpr() != null) {
 
-					System.out.println("Eq: " + eq);
-					for (Arg a : eq.getLhs()) {
-						System.out.println("Eq lhs: " + a);
-					}
-					System.out.println("Eq rhs: " + eq.getExpr());
-
 					Expr expr = doSwitch(eq.getExpr());
 
 					if (lhs.size() != 1) {
@@ -1601,16 +1595,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseFnDef(FnDef expr) {
-		String nodeName = AgreeTypeUtils.getNodeName(expr);
+	public Expr caseFnDef(FnDef fnDef) {
+		String nodeName = AgreeTypeUtils.getNodeName(fnDef);
 		for (Node node : globalNodes) {
 			if (node.id.equals(nodeName)) {
 				return null;
 			}
 		}
-		List<VarDecl> inputs = agreeVarsFromArgs(expr.getArgs(), null);
-		Expr bodyExpr = doSwitch(expr.getExpr());
-		NamedType outType = getNamedType(AgreeTypeUtils.getTypeName(expr.getType(), typeMap, globalTypes));
+		List<VarDecl> inputs = agreeVarsFromArgs(fnDef.getArgs(), null);
+		Expr bodyExpr = doSwitch(fnDef.getExpr());
+
+		NamedType outType = getNamedType(AgreeTypeUtils.getTypeName(fnDef.getType(), typeMap, globalTypes));
 		VarDecl outVar = new VarDecl("_outvar", outType);
 		List<VarDecl> outputs = Collections.singletonList(outVar);
 		Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
@@ -1623,6 +1618,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		Node node = builder.build();
 		addToNodeList(node);
+
 		return null;
 	}
 
@@ -1924,6 +1920,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseProjectionExpr(ProjectionExpr id) {
 		return lustreExprFromProjectionExpr(id);
+	}
+
+	@Override
+	public Expr caseNamedElmExpr(NamedElmExpr nelmExpr) {
+		return new IdExpr(nelmExpr.getNamedElm().getName());
 	}
 
 	// TODO: implement translation for array expressions.
