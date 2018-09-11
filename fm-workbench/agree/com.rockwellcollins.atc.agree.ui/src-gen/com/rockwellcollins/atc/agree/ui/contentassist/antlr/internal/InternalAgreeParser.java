@@ -64567,7 +64567,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:23089:1: ()
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getIndiciesExprAction_2_0()); 
+               before(grammarAccess.getTermExprAccess().getIndicesExprAction_2_0()); 
             }
             // InternalAgreeParser.g:23090:1: ()
             // InternalAgreeParser.g:23092:1: 
@@ -64575,7 +64575,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getIndiciesExprAction_2_0()); 
+               after(grammarAccess.getTermExprAccess().getIndicesExprAction_2_0()); 
             }
 
             }

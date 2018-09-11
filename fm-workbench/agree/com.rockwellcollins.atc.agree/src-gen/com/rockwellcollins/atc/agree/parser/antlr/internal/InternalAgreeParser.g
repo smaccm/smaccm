@@ -7238,7 +7238,7 @@ ruleTermExpr returns [EObject current=null]
     |((
     {
         $current = forceCreateModelElement(
-            grammarAccess.getTermExprAccess().getIndiciesExprAction_2_0(),
+            grammarAccess.getTermExprAccess().getIndicesExprAction_2_0(),
             $current);
     }
 )

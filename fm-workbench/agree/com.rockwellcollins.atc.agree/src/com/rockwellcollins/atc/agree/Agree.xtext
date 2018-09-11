@@ -300,7 +300,7 @@ ArraySubExpr returns Expr:
 TermExpr returns Expr:
 	{TimeExpr} 'time'
 	| => ({NamedElmExpr} namedElm=[aadl2::NamedElement])
-	| {IndiciesExpr} 'indices' '(' array=Expr ')'
+	| {IndicesExpr} 'indices' '(' array=Expr ')'
 	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' 
 	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
 	| => ({EnumLitExpr} 'enum' '(') enumType=CustomType ',' value=ID ')'

@@ -317,8 +317,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedElmExpr/component"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedElmExpr/componentRef"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//IndiciesExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//IndiciesExpr/array"/>
+    <genClasses ecoreClass="Agree.ecore#//IndicesExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//IndicesExpr/array"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//CallExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//CallExpr/abstractionRef"/>
@@ -367,6 +367,9 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RealCast">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RealCast/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//IndiciesExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//IndiciesExpr/array"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//IndexID"/>
     <genClasses ecoreClass="Agree.ecore#//ForIndexExpr">

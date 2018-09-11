@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlBoolean;
@@ -65,6 +66,9 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ArrayLiteralExpr;
+import com.rockwellcollins.atc.agree.agree.ArraySubExpr;
+import com.rockwellcollins.atc.agree.agree.ArrayUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -78,10 +82,15 @@ import com.rockwellcollins.atc.agree.agree.CustomType;
 import com.rockwellcollins.atc.agree.agree.EnumLitExpr;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.ExistsExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnDef;
+import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
+import com.rockwellcollins.atc.agree.agree.FoldRightExpr;
+import com.rockwellcollins.atc.agree.agree.ForallExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
+import com.rockwellcollins.atc.agree.agree.IndicesExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
@@ -1102,6 +1111,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				EqStatement eq = (EqStatement) spec;
 				EList<Arg> lhs = eq.getLhs();
 				if (eq.getExpr() != null) {
+
+					System.out.println("Eq: " + eq);
+					for (Arg a : eq.getLhs()) {
+						System.out.println("Eq lhs: " + a);
+					}
+					System.out.println("Eq rhs: " + eq.getExpr());
+
 					Expr expr = doSwitch(eq.getExpr());
 
 					if (lhs.size() != 1) {
@@ -1870,34 +1886,34 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	}
 
-	public Expr lustreExprFromProjectionExpr(ProjectionExpr e) {
+	private Expr lustreExprFromProjectionExpr(ProjectionExpr e) {
 
-		NamedElement stem = null;
+		NamedElement prevNamedElm = null;
 
 		if (e.getExpr() instanceof NamedElmExpr) {
-			stem = ((NamedElmExpr) e.getExpr()).getNamedElm();
+			prevNamedElm = ((NamedElmExpr) e.getExpr()).getNamedElm();
 
 		} else if (e.getExpr() instanceof ProjectionExpr) {
-			stem = ((ProjectionExpr) e.getExpr()).getField();
+			prevNamedElm = ((ProjectionExpr) e.getExpr()).getField();
 
 		}
 
-		if (stem instanceof FeatureGroup || stem instanceof AadlPackage || stem instanceof Subcomponent) {
+		if (prevNamedElm instanceof FeatureGroup || prevNamedElm instanceof AadlPackage || prevNamedElm instanceof Subcomponent) {
 			return new IdExpr(dottedNameToString(e));
-		} else if (stem != null){
+		} else if (prevNamedElm != null){
 
 			Expr result = null;
-			if (stem instanceof NamedElmExpr) {
-				NamedElement ne = ((NamedElmExpr) stem).getNamedElm();
+			if (e.getExpr() instanceof NamedElmExpr) {
+				NamedElement ne = ((NamedElmExpr) e.getExpr()).getNamedElm();
 				if (ne instanceof ConstStatement) {
 					result = doSwitch(((ConstStatement) ne).getExpr());
 				} else {
 					result = new IdExpr(ne.getName());
 				}
-			} else if (stem instanceof ProjectionExpr) {
-				result = lustreExprFromProjectionExpr((ProjectionExpr) stem);
+			} else if (e.getExpr() instanceof ProjectionExpr) {
+				result = lustreExprFromProjectionExpr((ProjectionExpr) e.getExpr());
 			} else {
-				result = doSwitch(stem);
+				result = doSwitch(e.getExpr());
 			}
 
 			return new RecordAccessExpr(result, e.getField().getName());
@@ -1909,6 +1925,48 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public Expr caseProjectionExpr(ProjectionExpr id) {
 		return lustreExprFromProjectionExpr(id);
 	}
+
+	// TODO: implement translation for array expressions.
+	@Override
+	public Expr caseArrayLiteralExpr(ArrayLiteralExpr expr) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
+	public Expr caseArrayUpdateExpr(ArrayUpdateExpr expr) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
+	public Expr caseArraySubExpr(ArraySubExpr expr) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
+	public Expr caseForallExpr(ForallExpr expr) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
+	public Expr caseExistsExpr(ExistsExpr expr) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
+	public Expr caseFoldLeftExpr(FoldLeftExpr expr) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
+	public Expr caseFoldRightExpr(FoldRightExpr expr) {
+		throw new NotImplementedException("TODO");
+	}
+
+	@Override
+	public Expr caseIndicesExpr(IndicesExpr expr) {
+		throw new NotImplementedException("TODO");
+	}
+	//////////
 
 	@Override
 	public Expr caseEnumLitExpr(EnumLitExpr aadlEnum) {

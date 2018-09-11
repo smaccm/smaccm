@@ -2171,7 +2171,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkGetPropertyExpr(GetPropertyExpr getPropExpr) {
 		ComponentRef componentRef = getPropExpr.getComponentRef();
-		// Type propType = Ooga.infer(propExpr.getName());
 		NamedElement prop = getPropExpr.getProp();
 
 		if (!(prop instanceof Property || prop instanceof PropertyConstant)) {

@@ -23086,11 +23086,11 @@ rule__TermExpr__Group_2__0__Impl
     }
 :
 (
-{ before(grammarAccess.getTermExprAccess().getIndiciesExprAction_2_0()); }
+{ before(grammarAccess.getTermExprAccess().getIndicesExprAction_2_0()); }
 (
 
 )
-{ after(grammarAccess.getTermExprAccess().getIndiciesExprAction_2_0()); }
+{ after(grammarAccess.getTermExprAccess().getIndicesExprAction_2_0()); }
 )
 
 ;

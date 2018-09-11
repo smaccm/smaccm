@@ -516,9 +516,9 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createNamedElmExprAdapter();
       }
       @Override
-      public Adapter caseIndiciesExpr(IndiciesExpr object)
+      public Adapter caseIndicesExpr(IndicesExpr object)
       {
-        return createIndiciesExprAdapter();
+        return createIndicesExprAdapter();
       }
       @Override
       public Adapter caseCallExpr(CallExpr object)
@@ -1943,16 +1943,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.IndiciesExpr <em>Indicies Expr</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.IndicesExpr <em>Indices Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.IndiciesExpr
+   * @see com.rockwellcollins.atc.agree.agree.IndicesExpr
    * @generated
    */
-  public Adapter createIndiciesExprAdapter()
+  public Adapter createIndicesExprAdapter()
   {
     return null;
   }

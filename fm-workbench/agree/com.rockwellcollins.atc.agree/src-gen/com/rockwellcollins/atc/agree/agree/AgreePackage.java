@@ -5006,14 +5006,14 @@ public interface AgreePackage extends EPackage
   int NAMED_ELM_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.IndiciesExprImpl <em>Indicies Expr</em>}' class.
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.IndicesExprImpl <em>Indices Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.IndiciesExprImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIndiciesExpr()
+   * @see com.rockwellcollins.atc.agree.agree.impl.IndicesExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIndicesExpr()
    * @generated
    */
-  int INDICIES_EXPR = 87;
+  int INDICES_EXPR = 87;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -5022,7 +5022,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int INDICIES_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+  int INDICES_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -5031,7 +5031,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int INDICIES_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+  int INDICES_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
 
   /**
    * The feature id for the '<em><b>Array</b></em>' containment reference.
@@ -5040,16 +5040,16 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int INDICIES_EXPR__ARRAY = EXPR_FEATURE_COUNT + 0;
+  int INDICES_EXPR__ARRAY = EXPR_FEATURE_COUNT + 0;
 
   /**
-   * The number of structural features of the '<em>Indicies Expr</em>' class.
+   * The number of structural features of the '<em>Indices Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int INDICIES_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+  int INDICES_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.CallExprImpl <em>Call Expr</em>}' class.
@@ -8132,25 +8132,25 @@ public interface AgreePackage extends EPackage
   EReference getNamedElmExpr_NamedElm();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.IndiciesExpr <em>Indicies Expr</em>}'.
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.IndicesExpr <em>Indices Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Indicies Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.IndiciesExpr
+   * @return the meta object for class '<em>Indices Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.IndicesExpr
    * @generated
    */
-  EClass getIndiciesExpr();
+  EClass getIndicesExpr();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.IndiciesExpr#getArray <em>Array</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.IndicesExpr#getArray <em>Array</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Array</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.IndiciesExpr#getArray()
-   * @see #getIndiciesExpr()
+   * @see com.rockwellcollins.atc.agree.agree.IndicesExpr#getArray()
+   * @see #getIndicesExpr()
    * @generated
    */
-  EReference getIndiciesExpr_Array();
+  EReference getIndicesExpr_Array();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.CallExpr <em>Call Expr</em>}'.
@@ -10496,14 +10496,14 @@ public interface AgreePackage extends EPackage
     EReference NAMED_ELM_EXPR__NAMED_ELM = eINSTANCE.getNamedElmExpr_NamedElm();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.IndiciesExprImpl <em>Indicies Expr</em>}' class.
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.IndicesExprImpl <em>Indices Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.IndiciesExprImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIndiciesExpr()
+     * @see com.rockwellcollins.atc.agree.agree.impl.IndicesExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIndicesExpr()
      * @generated
      */
-    EClass INDICIES_EXPR = eINSTANCE.getIndiciesExpr();
+    EClass INDICES_EXPR = eINSTANCE.getIndicesExpr();
 
     /**
      * The meta object literal for the '<em><b>Array</b></em>' containment reference feature.
@@ -10511,7 +10511,7 @@ public interface AgreePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference INDICIES_EXPR__ARRAY = eINSTANCE.getIndiciesExpr_Array();
+    EReference INDICES_EXPR__ARRAY = eINSTANCE.getIndicesExpr_Array();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.CallExprImpl <em>Call Expr</em>}' class.

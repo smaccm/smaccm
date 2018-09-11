@@ -2341,8 +2341,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//LinearizationDef:
 		//	'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')'
-		//	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']' ('within' precision=Expr)?
-		//	':' exprBody=Expr ';';
+		//	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']' ('within' precision=Expr)? ':'
+		//	exprBody=Expr ';';
 		@Override public ParserRule getRule() { return rule; }
 
 		//'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')' 'over' '[' intervals+=LinearizationInterval (','
@@ -2847,8 +2847,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cCustomTypeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//BaseType Type:
-		//	{PrimType} name=primTypes ('[' lowNeg='-'? rangeLow=(INTEGER_LIT | REAL_LIT) ',' highNeg='-'? rangeHigh=(INTEGER_LIT
-		//	| REAL_LIT) ']')?
+		//	{PrimType} name=primTypes ('[' lowNeg='-'? rangeLow=(INTEGER_LIT | REAL_LIT) ',' highNeg='-'? rangeHigh=(INTEGER_LIT |
+		//	REAL_LIT) ']')?
 		//	| CustomType;
 		@Override public ParserRule getRule() { return rule; }
 
@@ -4552,7 +4552,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final CrossReference cNamedElmNamedElementCrossReference_1_0_1_0 = (CrossReference)cNamedElmAssignment_1_0_1.eContents().get(0);
 		private final RuleCall cNamedElmNamedElementIDTerminalRuleCall_1_0_1_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_1_0_1_0.eContents().get(1);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
-		private final Action cIndiciesExprAction_2_0 = (Action)cGroup_2.eContents().get(0);
+		private final Action cIndicesExprAction_2_0 = (Action)cGroup_2.eContents().get(0);
 		private final Keyword cIndicesKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_2_2 = (Keyword)cGroup_2.eContents().get(2);
 		private final Assignment cArrayAssignment_2_3 = (Assignment)cGroup_2.eContents().get(3);
@@ -4686,7 +4686,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//TermExpr Expr:
 		//	{TimeExpr} 'time'
-		//	| => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndiciesExpr} 'indices' '(' array=Expr ')'
+		//	| => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndicesExpr} 'indices' '(' array=Expr ')'
 		//	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')'
 		//	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';'
 		//	args+=[aadl2::NamedElement] '=' argExpr+=Expr)* '}'
@@ -4706,8 +4706,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| '(' Expr ')';
 		@Override public ParserRule getRule() { return rule; }
 
-		//{TimeExpr} 'time' | => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndiciesExpr} 'indices' '(' array=Expr ')' |
-		//=> ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' | => ({RecordLitExpr}
+		//{TimeExpr} 'time' | => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndicesExpr} 'indices' '(' array=Expr ')' | =>
+		//({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' | => ({RecordLitExpr}
 		//recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement] '='
 		//argExpr+=Expr)* '}' | => ({EnumLitExpr} 'enum' '(') enumType=CustomType ',' value=ID ')' | ArrayLiteralExpr |
 		//{IntLitExpr} val=INTEGER_LIT | {PreExpr} 'pre' '(' expr=Expr ')' | {EventExpr} 'event' '(' id=Expr ')' | {LatchedExpr}
@@ -4744,11 +4744,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNamedElmNamedElementIDTerminalRuleCall_1_0_1_0_1() { return cNamedElmNamedElementIDTerminalRuleCall_1_0_1_0_1; }
 
-		//{IndiciesExpr} 'indices' '(' array=Expr ')'
+		//{IndicesExpr} 'indices' '(' array=Expr ')'
 		public Group getGroup_2() { return cGroup_2; }
 
-		//{IndiciesExpr}
-		public Action getIndiciesExprAction_2_0() { return cIndiciesExprAction_2_0; }
+		//{IndicesExpr}
+		public Action getIndicesExprAction_2_0() { return cIndicesExprAction_2_0; }
 
 		//'indices'
 		public Keyword getIndicesKeyword_2_1() { return cIndicesKeyword_2_1; }
@@ -5931,8 +5931,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//LinearizationDef:
 	//	'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')'
-	//	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']' ('within' precision=Expr)?
-	//	':' exprBody=Expr ';';
+	//	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']' ('within' precision=Expr)? ':'
+	//	exprBody=Expr ';';
 	public LinearizationDefElements getLinearizationDefAccess() {
 		return pLinearizationDef;
 	}
@@ -6008,8 +6008,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//BaseType Type:
-	//	{PrimType} name=primTypes ('[' lowNeg='-'? rangeLow=(INTEGER_LIT | REAL_LIT) ',' highNeg='-'? rangeHigh=(INTEGER_LIT
-	//	| REAL_LIT) ']')?
+	//	{PrimType} name=primTypes ('[' lowNeg='-'? rangeLow=(INTEGER_LIT | REAL_LIT) ',' highNeg='-'? rangeHigh=(INTEGER_LIT |
+	//	REAL_LIT) ']')?
 	//	| CustomType;
 	public BaseTypeElements getBaseTypeAccess() {
 		return pBaseType;
@@ -6324,7 +6324,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//TermExpr Expr:
 	//	{TimeExpr} 'time'
-	//	| => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndiciesExpr} 'indices' '(' array=Expr ')'
+	//	| => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndicesExpr} 'indices' '(' array=Expr ')'
 	//	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')'
 	//	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';'
 	//	args+=[aadl2::NamedElement] '=' argExpr+=Expr)* '}'

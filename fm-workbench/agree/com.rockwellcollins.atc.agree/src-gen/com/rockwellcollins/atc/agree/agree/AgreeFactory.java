@@ -806,13 +806,13 @@ public interface AgreeFactory extends EFactory
   NamedElmExpr createNamedElmExpr();
 
   /**
-   * Returns a new object of class '<em>Indicies Expr</em>'.
+   * Returns a new object of class '<em>Indices Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Indicies Expr</em>'.
+   * @return a new object of class '<em>Indices Expr</em>'.
    * @generated
    */
-  IndiciesExpr createIndiciesExpr();
+  IndicesExpr createIndicesExpr();
 
   /**
    * Returns a new object of class '<em>Call Expr</em>'.

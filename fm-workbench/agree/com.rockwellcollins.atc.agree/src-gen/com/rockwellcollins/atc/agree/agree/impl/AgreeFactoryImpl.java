@@ -151,7 +151,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.ARRAY_SUB_EXPR: return createArraySubExpr();
       case AgreePackage.TIME_EXPR: return createTimeExpr();
       case AgreePackage.NAMED_ELM_EXPR: return createNamedElmExpr();
-      case AgreePackage.INDICIES_EXPR: return createIndiciesExpr();
+      case AgreePackage.INDICES_EXPR: return createIndicesExpr();
       case AgreePackage.CALL_EXPR: return createCallExpr();
       case AgreePackage.RECORD_LIT_EXPR: return createRecordLitExpr();
       case AgreePackage.ENUM_LIT_EXPR: return createEnumLitExpr();
@@ -1133,10 +1133,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public IndiciesExpr createIndiciesExpr()
+  public IndicesExpr createIndicesExpr()
   {
-    IndiciesExprImpl indiciesExpr = new IndiciesExprImpl();
-    return indiciesExpr;
+    IndicesExprImpl indicesExpr = new IndicesExprImpl();
+    return indicesExpr;
   }
 
   /**

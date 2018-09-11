@@ -26,6 +26,7 @@ Bundle-ClassPath: .,
  dependencies/jxl.jar,
  dependencies/antlr-runtime-4.4.jar
 Import-Package: 
+ org.apache.commons.lang;version="2.6.0",
  org.osate.aadl2.instantiation,
  org.osate.annexsupport
 Export-Package: com.rockwellcollins.atc.agree.analysis,

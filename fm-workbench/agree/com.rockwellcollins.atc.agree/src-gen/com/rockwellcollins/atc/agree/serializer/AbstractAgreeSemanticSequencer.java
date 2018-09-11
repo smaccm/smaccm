@@ -44,7 +44,7 @@ import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
-import com.rockwellcollins.atc.agree.agree.IndiciesExpr;
+import com.rockwellcollins.atc.agree.agree.IndicesExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
@@ -352,8 +352,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.IF_THEN_ELSE_EXPR:
 				sequence_IfThenElseExpr(context, (IfThenElseExpr) semanticObject); 
 				return; 
-			case AgreePackage.INDICIES_EXPR:
-				sequence_TermExpr(context, (IndiciesExpr) semanticObject); 
+			case AgreePackage.INDICES_EXPR:
+				sequence_TermExpr(context, (IndicesExpr) semanticObject); 
 				return; 
 			case AgreePackage.INITIAL_STATEMENT:
 				sequence_SpecStatement(context, (InitialStatement) semanticObject); 
@@ -2428,53 +2428,53 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns IndiciesExpr
-	 *     Expr returns IndiciesExpr
-	 *     ForallExpr returns IndiciesExpr
-	 *     ExistsExpr returns IndiciesExpr
-	 *     ForeachExpr returns IndiciesExpr
-	 *     FoldLeftExpr returns IndiciesExpr
-	 *     FoldRightExpr returns IndiciesExpr
-	 *     ArrowExpr returns IndiciesExpr
-	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     ImpliesExpr returns IndiciesExpr
-	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     EquivExpr returns IndiciesExpr
-	 *     EquivExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     OrExpr returns IndiciesExpr
-	 *     OrExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     AndExpr returns IndiciesExpr
-	 *     AndExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     RelateExpr returns IndiciesExpr
-	 *     RelateExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     AddSubExpr returns IndiciesExpr
-	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     MultDivExpr returns IndiciesExpr
-	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     PowerExpr returns IndiciesExpr
-	 *     PowerExpr.BinaryExpr_1_0_0_0 returns IndiciesExpr
-	 *     UnaryExpr returns IndiciesExpr
-	 *     IfThenElseExpr returns IndiciesExpr
-	 *     PreDefFnExpr returns IndiciesExpr
-	 *     ArrayUpdateExpr returns IndiciesExpr
-	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns IndiciesExpr
-	 *     RecordUpdateExpr returns IndiciesExpr
-	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns IndiciesExpr
-	 *     TagExpr returns IndiciesExpr
-	 *     TagExpr.TagExpr_1_0 returns IndiciesExpr
-	 *     ProjectionExpr returns IndiciesExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns IndiciesExpr
-	 *     ArraySubExpr returns IndiciesExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IndiciesExpr
-	 *     TermExpr returns IndiciesExpr
+	 *     Element returns IndicesExpr
+	 *     Expr returns IndicesExpr
+	 *     ForallExpr returns IndicesExpr
+	 *     ExistsExpr returns IndicesExpr
+	 *     ForeachExpr returns IndicesExpr
+	 *     FoldLeftExpr returns IndicesExpr
+	 *     FoldRightExpr returns IndicesExpr
+	 *     ArrowExpr returns IndicesExpr
+	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     ImpliesExpr returns IndicesExpr
+	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     EquivExpr returns IndicesExpr
+	 *     EquivExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     OrExpr returns IndicesExpr
+	 *     OrExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     AndExpr returns IndicesExpr
+	 *     AndExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     RelateExpr returns IndicesExpr
+	 *     RelateExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     AddSubExpr returns IndicesExpr
+	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     MultDivExpr returns IndicesExpr
+	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     PowerExpr returns IndicesExpr
+	 *     PowerExpr.BinaryExpr_1_0_0_0 returns IndicesExpr
+	 *     UnaryExpr returns IndicesExpr
+	 *     IfThenElseExpr returns IndicesExpr
+	 *     PreDefFnExpr returns IndicesExpr
+	 *     ArrayUpdateExpr returns IndicesExpr
+	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns IndicesExpr
+	 *     RecordUpdateExpr returns IndicesExpr
+	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns IndicesExpr
+	 *     TagExpr returns IndicesExpr
+	 *     TagExpr.TagExpr_1_0 returns IndicesExpr
+	 *     ProjectionExpr returns IndicesExpr
+	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns IndicesExpr
+	 *     ArraySubExpr returns IndicesExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IndicesExpr
+	 *     TermExpr returns IndicesExpr
 	 *
 	 * Constraint:
 	 *     array=Expr
 	 */
-	protected void sequence_TermExpr(ISerializationContext context, IndiciesExpr semanticObject) {
+	protected void sequence_TermExpr(ISerializationContext context, IndicesExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.INDICIES_EXPR__ARRAY) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.INDICIES_EXPR__ARRAY));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.INDICES_EXPR__ARRAY) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.INDICES_EXPR__ARRAY));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getArrayExprParserRuleCall_2_3_0(), semanticObject.getArray());

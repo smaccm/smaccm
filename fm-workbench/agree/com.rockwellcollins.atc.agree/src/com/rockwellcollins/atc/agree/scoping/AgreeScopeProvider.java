@@ -181,10 +181,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 	}
 
-	IScope scope_RecordUpdateExpr_key(RecordUpdateExpr ctx, EReference ref) {
-		Type typ = AgreeTypeSystem.infer(ctx.getRecord());
-		return Scopes.scopeFor(getFieldsFromRecordType(typ));
-	}
+
 
 	IScope scope_AbstractionRef_stem(AbstractionRef ctx, EReference ref) {
 		return Scopes.scopeFor(new ArrayList<EObject>(), getScope(ctx.eContainer(), ref));
@@ -305,10 +302,6 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 
-	protected IScope scope_ProjectionExpr_field(ProjectionExpr ctx, EReference ref) {
-		Type typ = AgreeTypeSystem.infer(ctx.getExpr());
-		return Scopes.scopeFor(getFieldsFromRecordType(typ));
-	}
 
 	protected IScope scope_GetPropertyExpr_prop(GetPropertyExpr ctx, EReference ref) {
 
@@ -437,5 +430,27 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		}
 		return IScope.NULLSCOPE;
 	}
+
+	IScope scope_RecordUpdateExpr_key(RecordUpdateExpr ctx, EReference ref) {
+		try {
+			Type typ = AgreeTypeSystem.infer(ctx.getRecord());
+			return Scopes.scopeFor(getFieldsFromRecordType(typ));
+		} catch (Exception e) {
+			return IScope.NULLSCOPE;
+		}
+	}
+
+
+	protected IScope scope_ProjectionExpr_field(ProjectionExpr ctx, EReference ref) {
+		try {
+			Type typ = AgreeTypeSystem.infer(ctx.getExpr());
+			return Scopes.scopeFor(getFieldsFromRecordType(typ));
+		} catch (Exception e) {
+			return IScope.NULLSCOPE;
+		}
+	}
+
+
+
 
 }

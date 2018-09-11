@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlPackage;
@@ -25,7 +26,6 @@ import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ComponentRef;
 import com.rockwellcollins.atc.agree.agree.CustomType;
-import com.rockwellcollins.atc.agree.agree.EnumID;
 import com.rockwellcollins.atc.agree.agree.EnumID;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.PrimType;
@@ -63,8 +63,10 @@ public class AgreeTypeUtils {
 			Set<Type> typeExpressions) {
 		if (type instanceof PrimType) {
 			return ((PrimType) type).getName();
-		} else {
+		} else if (type instanceof CustomType) {
 			return getTypeName(((CustomType) type).getLeaf(), typeMap, typeExpressions);
+		} else {
+			throw new NotImplementedException("TO DO for Arrays");
 		}
 	}
 

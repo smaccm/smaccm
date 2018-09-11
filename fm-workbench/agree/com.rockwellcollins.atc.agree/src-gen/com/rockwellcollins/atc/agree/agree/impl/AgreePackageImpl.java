@@ -49,7 +49,7 @@ import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
-import com.rockwellcollins.atc.agree.agree.IndiciesExpr;
+import com.rockwellcollins.atc.agree.agree.IndicesExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
@@ -739,7 +739,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass indiciesExprEClass = null;
+  private EClass indicesExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -3171,9 +3171,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getIndiciesExpr()
+  public EClass getIndicesExpr()
   {
-    return indiciesExprEClass;
+    return indicesExprEClass;
   }
 
   /**
@@ -3181,9 +3181,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getIndiciesExpr_Array()
+  public EReference getIndicesExpr_Array()
   {
-    return (EReference)indiciesExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)indicesExprEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -3849,8 +3849,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     namedElmExprEClass = createEClass(NAMED_ELM_EXPR);
     createEReference(namedElmExprEClass, NAMED_ELM_EXPR__NAMED_ELM);
 
-    indiciesExprEClass = createEClass(INDICIES_EXPR);
-    createEReference(indiciesExprEClass, INDICIES_EXPR__ARRAY);
+    indicesExprEClass = createEClass(INDICES_EXPR);
+    createEReference(indicesExprEClass, INDICES_EXPR__ARRAY);
 
     callExprEClass = createEClass(CALL_EXPR);
     createEReference(callExprEClass, CALL_EXPR__ABSTRACTION_REF);
@@ -4029,7 +4029,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     arraySubExprEClass.getESuperTypes().add(this.getExpr());
     timeExprEClass.getESuperTypes().add(this.getExpr());
     namedElmExprEClass.getESuperTypes().add(this.getExpr());
-    indiciesExprEClass.getESuperTypes().add(this.getExpr());
+    indicesExprEClass.getESuperTypes().add(this.getExpr());
     callExprEClass.getESuperTypes().add(this.getExpr());
     recordLitExprEClass.getESuperTypes().add(this.getExpr());
     enumLitExprEClass.getESuperTypes().add(this.getExpr());
@@ -4359,8 +4359,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(namedElmExprEClass, NamedElmExpr.class, "NamedElmExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNamedElmExpr_NamedElm(), theAadl2Package.getNamedElement(), null, "namedElm", null, 0, 1, NamedElmExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(indiciesExprEClass, IndiciesExpr.class, "IndiciesExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getIndiciesExpr_Array(), this.getExpr(), null, "array", null, 0, 1, IndiciesExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(indicesExprEClass, IndicesExpr.class, "IndicesExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getIndicesExpr_Array(), this.getExpr(), null, "array", null, 0, 1, IndicesExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(callExprEClass, CallExpr.class, "CallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getCallExpr_AbstractionRef(), this.getAbstractionRef(), null, "abstractionRef", null, 0, 1, CallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -53,7 +53,7 @@ import com.rockwellcollins.atc.agree.agree.ForallExpr;
 import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
-import com.rockwellcollins.atc.agree.agree.IndiciesExpr;
+import com.rockwellcollins.atc.agree.agree.IndicesExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LibraryFnDef;
@@ -81,14 +81,6 @@ import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 
 public class AgreeTypeSystem {
-
-	private static class PatternException extends RuntimeException {
-		/**
-		 *
-		 */
-		private static final long serialVersionUID = -8068283537085267186L;
-
-	}
 
 	public static String typeToString(Type typ) {
 
@@ -188,7 +180,6 @@ public class AgreeTypeSystem {
 
 			if (stemType instanceof CustomType) {
 				NamedElement typedef = ((CustomType) stemType).getLeaf();
-
 				if (typedef instanceof RecordDef) {
 					EList<Arg> args = ((RecordDef) typedef).getArgs();
 					for (Arg choice : args) {
@@ -257,8 +248,8 @@ public class AgreeTypeSystem {
 				return ((ArrayType) arrType).getStem();
 			}
 
-		} else if (expr instanceof IndiciesExpr) {
-			Type arrType = infer(((IndiciesExpr) expr).getArray());
+		} else if (expr instanceof IndicesExpr) {
+			Type arrType = infer(((IndicesExpr) expr).getArray());
 			if (arrType instanceof ArrayType) {
 				int size = Integer.parseInt(((ArrayType) arrType).getSize());
 				return mkArrayType(intType, size);
@@ -474,8 +465,7 @@ public class AgreeTypeSystem {
 			}
 
 		}
-
-		throw new PatternException();
+		return errorType;
 
 	}
 
@@ -589,7 +579,17 @@ public class AgreeTypeSystem {
 			return ((ConstStatement) ne).getType();
 
 		} else if (ne instanceof Arg) {
-			return ((Arg) ne).getType();
+			Type t = ((Arg) ne).getType();
+
+			if (t instanceof CustomType) {
+				CustomType ct = (CustomType) t;
+				NamedElement typedef = ct.getLeaf();
+				return mkCustomType(typedef);
+
+			} else {
+				return t;
+
+			}
 
 		} else if (ne instanceof DataPort) {
 			DataSubcomponentType dt = ((DataPort) ne).getDataFeatureClassifier();
@@ -607,17 +607,25 @@ public class AgreeTypeSystem {
 //		} else if (namedEl instanceof DataAccess) {
 //		DataAccessType t = (((DataAccess) namedEl).getFeatureClassifier());
 //		return mkTypeFromAadlType(t);
+		return errorType;
+	}
 
-		throw new PatternException();
+	private static FnDef getContainingFnDef(EObject e) {
+		EObject container = e.eContainer();
+		if (container == null) {
+			return null;
+
+		} else if (container instanceof FnDef) {
+			return (FnDef) container;
+
+		} else {
+			return getContainingFnDef(container);
+
+		}
 	}
 
 	public static boolean hasType(NamedElement ne) {
-		try {
-			AgreeTypeSystem.typeFromID(ne);
-			return true;
-		} catch (PatternException pe) {
-			return false;
-		}
+		return AgreeTypeSystem.errorType != AgreeTypeSystem.typeFromID(ne);
 	}
 
 	public static boolean isInLinearizationBody(Expr expr) {

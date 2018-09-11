@@ -860,12 +860,12 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.INDICIES_EXPR:
+      case AgreePackage.INDICES_EXPR:
       {
-        IndiciesExpr indiciesExpr = (IndiciesExpr)theEObject;
-        T result = caseIndiciesExpr(indiciesExpr);
-        if (result == null) result = caseExpr(indiciesExpr);
-        if (result == null) result = caseElement(indiciesExpr);
+        IndicesExpr indicesExpr = (IndicesExpr)theEObject;
+        T result = caseIndicesExpr(indicesExpr);
+        if (result == null) result = caseExpr(indicesExpr);
+        if (result == null) result = caseElement(indicesExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -2392,17 +2392,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Indicies Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Indices Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Indicies Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Indices Expr</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseIndiciesExpr(IndiciesExpr object)
+  public T caseIndicesExpr(IndicesExpr object)
   {
     return null;
   }
