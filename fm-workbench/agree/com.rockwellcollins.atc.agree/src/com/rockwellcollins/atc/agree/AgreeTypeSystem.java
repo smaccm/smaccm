@@ -1,5 +1,7 @@
 package com.rockwellcollins.atc.agree;
 
+import static java.lang.Math.toIntExact;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
+import org.osate.aadl2.ArrayDimension;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
@@ -190,8 +193,17 @@ public class AgreeTypeSystem {
 				} else if (typedef instanceof DataImplementation) {
 					EList<Subcomponent> subcomps = ((DataImplementation) typedef).getAllSubcomponents();
 					for (Subcomponent choice : subcomps) {
+
 						if (choice.getName().equals(field.getName())) {
-							return mkTypeFromAadlType(choice.getClassifier());
+							CustomType t = (CustomType) mkTypeFromAadlType(choice.getClassifier());
+							List<ArrayDimension> dims = choice.getArrayDimensions();
+							if (dims.size() > 0) {
+								long arrSize = dims.get(0).getSize().getSize();
+								return mkArrayType(t, toIntExact(arrSize));
+							} else {
+								return t;
+							}
+
 						}
 					}
 				} else if (typedef instanceof ComponentImplementation) {
@@ -245,7 +257,9 @@ public class AgreeTypeSystem {
 			Expr arrExpr = ((ArraySubExpr) expr).getExpr();
 			Type arrType = infer(arrExpr);
 			if (arrType instanceof ArrayType) {
-				return ((ArrayType) arrType).getStem();
+
+				Type t = ((ArrayType) arrType).getStem();
+				return t;
 			}
 
 		} else if (expr instanceof IndicesExpr) {
@@ -580,16 +594,8 @@ public class AgreeTypeSystem {
 
 		} else if (ne instanceof Arg) {
 			Type t = ((Arg) ne).getType();
+			return t;
 
-			if (t instanceof CustomType) {
-				CustomType ct = (CustomType) t;
-				NamedElement typedef = ct.getLeaf();
-				return mkCustomType(typedef);
-
-			} else {
-				return t;
-
-			}
 
 		} else if (ne instanceof DataPort) {
 			DataSubcomponentType dt = ((DataPort) ne).getDataFeatureClassifier();
@@ -608,20 +614,6 @@ public class AgreeTypeSystem {
 //		DataAccessType t = (((DataAccess) namedEl).getFeatureClassifier());
 //		return mkTypeFromAadlType(t);
 		return errorType;
-	}
-
-	private static FnDef getContainingFnDef(EObject e) {
-		EObject container = e.eContainer();
-		if (container == null) {
-			return null;
-
-		} else if (container instanceof FnDef) {
-			return (FnDef) container;
-
-		} else {
-			return getContainingFnDef(container);
-
-		}
 	}
 
 	public static boolean hasType(NamedElement ne) {

@@ -491,6 +491,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createRecordUpdateExprAdapter();
       }
       @Override
+      public Adapter caseArraySubExpr(ArraySubExpr object)
+      {
+        return createArraySubExprAdapter();
+      }
+      @Override
       public Adapter caseTagExpr(TagExpr object)
       {
         return createTagExprAdapter();
@@ -499,11 +504,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseProjectionExpr(ProjectionExpr object)
       {
         return createProjectionExprAdapter();
-      }
-      @Override
-      public Adapter caseArraySubExpr(ArraySubExpr object)
-      {
-        return createArraySubExprAdapter();
       }
       @Override
       public Adapter caseTimeExpr(TimeExpr object)
@@ -1868,6 +1868,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ArraySubExpr <em>Array Sub Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ArraySubExpr
+   * @generated
+   */
+  public Adapter createArraySubExprAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TagExpr <em>Tag Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1893,21 +1908,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createProjectionExprAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ArraySubExpr <em>Array Sub Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.ArraySubExpr
-   * @generated
-   */
-  public Adapter createArraySubExprAdapter()
   {
     return null;
   }

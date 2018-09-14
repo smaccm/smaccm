@@ -296,6 +296,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/argExpr"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ArraySubExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArraySubExpr/expr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArraySubExpr/index"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//TagExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TagExpr/stem"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//TagExpr/tag"/>
@@ -305,10 +309,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/field"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/chainID"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/namedElm"/>
-    </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//ArraySubExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArraySubExpr/expr"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArraySubExpr/index"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//TimeExpr"/>
     <genClasses ecoreClass="Agree.ecore#//NamedElmExpr">

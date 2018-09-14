@@ -146,9 +146,9 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
       case AgreePackage.ARRAY_UPDATE_EXPR: return createArrayUpdateExpr();
       case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
+      case AgreePackage.ARRAY_SUB_EXPR: return createArraySubExpr();
       case AgreePackage.TAG_EXPR: return createTagExpr();
       case AgreePackage.PROJECTION_EXPR: return createProjectionExpr();
-      case AgreePackage.ARRAY_SUB_EXPR: return createArraySubExpr();
       case AgreePackage.TIME_EXPR: return createTimeExpr();
       case AgreePackage.NAMED_ELM_EXPR: return createNamedElmExpr();
       case AgreePackage.INDICES_EXPR: return createIndicesExpr();
@@ -1078,6 +1078,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public ArraySubExpr createArraySubExpr()
+  {
+    ArraySubExprImpl arraySubExpr = new ArraySubExprImpl();
+    return arraySubExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public TagExpr createTagExpr()
   {
     TagExprImpl tagExpr = new TagExprImpl();
@@ -1093,17 +1104,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ProjectionExprImpl projectionExpr = new ProjectionExprImpl();
     return projectionExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ArraySubExpr createArraySubExpr()
-  {
-    ArraySubExprImpl arraySubExpr = new ArraySubExprImpl();
-    return arraySubExpr;
   }
 
   /**

@@ -4921,12 +4921,97 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "ruleRecordUpdateExpr"
 
 
+    // $ANTLR start "entryRuleArraySubExpr"
+    // InternalAgreeParser.g:1710:1: entryRuleArraySubExpr : ruleArraySubExpr EOF ;
+    public final void entryRuleArraySubExpr() throws RecognitionException {
+        try {
+            // InternalAgreeParser.g:1711:1: ( ruleArraySubExpr EOF )
+            // InternalAgreeParser.g:1712:1: ruleArraySubExpr EOF
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprRule()); 
+            }
+            pushFollow(FollowSets000.FOLLOW_1);
+            ruleArraySubExpr();
+
+            state._fsp--;
+            if (state.failed) return ;
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprRule()); 
+            }
+            match(input,EOF,FollowSets000.FOLLOW_2); if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+        }
+        return ;
+    }
+    // $ANTLR end "entryRuleArraySubExpr"
+
+
+    // $ANTLR start "ruleArraySubExpr"
+    // InternalAgreeParser.g:1719:1: ruleArraySubExpr : ( ( rule__ArraySubExpr__Group__0 ) ) ;
+    public final void ruleArraySubExpr() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:1723:5: ( ( ( rule__ArraySubExpr__Group__0 ) ) )
+            // InternalAgreeParser.g:1724:1: ( ( rule__ArraySubExpr__Group__0 ) )
+            {
+            // InternalAgreeParser.g:1724:1: ( ( rule__ArraySubExpr__Group__0 ) )
+            // InternalAgreeParser.g:1725:1: ( rule__ArraySubExpr__Group__0 )
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getGroup()); 
+            }
+            // InternalAgreeParser.g:1726:1: ( rule__ArraySubExpr__Group__0 )
+            // InternalAgreeParser.g:1726:2: rule__ArraySubExpr__Group__0
+            {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group__0();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getGroup()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "ruleArraySubExpr"
+
+
     // $ANTLR start "entryRuleTagExpr"
-    // InternalAgreeParser.g:1710:1: entryRuleTagExpr : ruleTagExpr EOF ;
+    // InternalAgreeParser.g:1738:1: entryRuleTagExpr : ruleTagExpr EOF ;
     public final void entryRuleTagExpr() throws RecognitionException {
         try {
-            // InternalAgreeParser.g:1711:1: ( ruleTagExpr EOF )
-            // InternalAgreeParser.g:1712:1: ruleTagExpr EOF
+            // InternalAgreeParser.g:1739:1: ( ruleTagExpr EOF )
+            // InternalAgreeParser.g:1740:1: ruleTagExpr EOF
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagExprRule()); 
@@ -4956,23 +5041,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "ruleTagExpr"
-    // InternalAgreeParser.g:1719:1: ruleTagExpr : ( ( rule__TagExpr__Group__0 ) ) ;
+    // InternalAgreeParser.g:1747:1: ruleTagExpr : ( ( rule__TagExpr__Group__0 ) ) ;
     public final void ruleTagExpr() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:1723:5: ( ( ( rule__TagExpr__Group__0 ) ) )
-            // InternalAgreeParser.g:1724:1: ( ( rule__TagExpr__Group__0 ) )
+            // InternalAgreeParser.g:1751:5: ( ( ( rule__TagExpr__Group__0 ) ) )
+            // InternalAgreeParser.g:1752:1: ( ( rule__TagExpr__Group__0 ) )
             {
-            // InternalAgreeParser.g:1724:1: ( ( rule__TagExpr__Group__0 ) )
-            // InternalAgreeParser.g:1725:1: ( rule__TagExpr__Group__0 )
+            // InternalAgreeParser.g:1752:1: ( ( rule__TagExpr__Group__0 ) )
+            // InternalAgreeParser.g:1753:1: ( rule__TagExpr__Group__0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagExprAccess().getGroup()); 
             }
-            // InternalAgreeParser.g:1726:1: ( rule__TagExpr__Group__0 )
-            // InternalAgreeParser.g:1726:2: rule__TagExpr__Group__0
+            // InternalAgreeParser.g:1754:1: ( rule__TagExpr__Group__0 )
+            // InternalAgreeParser.g:1754:2: rule__TagExpr__Group__0
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__TagExpr__Group__0();
@@ -5007,11 +5092,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "entryRuleProjectionExpr"
-    // InternalAgreeParser.g:1738:1: entryRuleProjectionExpr : ruleProjectionExpr EOF ;
+    // InternalAgreeParser.g:1766:1: entryRuleProjectionExpr : ruleProjectionExpr EOF ;
     public final void entryRuleProjectionExpr() throws RecognitionException {
         try {
-            // InternalAgreeParser.g:1739:1: ( ruleProjectionExpr EOF )
-            // InternalAgreeParser.g:1740:1: ruleProjectionExpr EOF
+            // InternalAgreeParser.g:1767:1: ( ruleProjectionExpr EOF )
+            // InternalAgreeParser.g:1768:1: ruleProjectionExpr EOF
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprRule()); 
@@ -5041,23 +5126,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "ruleProjectionExpr"
-    // InternalAgreeParser.g:1747:1: ruleProjectionExpr : ( ( rule__ProjectionExpr__Group__0 ) ) ;
+    // InternalAgreeParser.g:1775:1: ruleProjectionExpr : ( ( rule__ProjectionExpr__Group__0 ) ) ;
     public final void ruleProjectionExpr() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:1751:5: ( ( ( rule__ProjectionExpr__Group__0 ) ) )
-            // InternalAgreeParser.g:1752:1: ( ( rule__ProjectionExpr__Group__0 ) )
+            // InternalAgreeParser.g:1779:5: ( ( ( rule__ProjectionExpr__Group__0 ) ) )
+            // InternalAgreeParser.g:1780:1: ( ( rule__ProjectionExpr__Group__0 ) )
             {
-            // InternalAgreeParser.g:1752:1: ( ( rule__ProjectionExpr__Group__0 ) )
-            // InternalAgreeParser.g:1753:1: ( rule__ProjectionExpr__Group__0 )
+            // InternalAgreeParser.g:1780:1: ( ( rule__ProjectionExpr__Group__0 ) )
+            // InternalAgreeParser.g:1781:1: ( rule__ProjectionExpr__Group__0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprAccess().getGroup()); 
             }
-            // InternalAgreeParser.g:1754:1: ( rule__ProjectionExpr__Group__0 )
-            // InternalAgreeParser.g:1754:2: rule__ProjectionExpr__Group__0
+            // InternalAgreeParser.g:1782:1: ( rule__ProjectionExpr__Group__0 )
+            // InternalAgreeParser.g:1782:2: rule__ProjectionExpr__Group__0
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__ProjectionExpr__Group__0();
@@ -5089,91 +5174,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "ruleProjectionExpr"
-
-
-    // $ANTLR start "entryRuleArraySubExpr"
-    // InternalAgreeParser.g:1766:1: entryRuleArraySubExpr : ruleArraySubExpr EOF ;
-    public final void entryRuleArraySubExpr() throws RecognitionException {
-        try {
-            // InternalAgreeParser.g:1767:1: ( ruleArraySubExpr EOF )
-            // InternalAgreeParser.g:1768:1: ruleArraySubExpr EOF
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprRule()); 
-            }
-            pushFollow(FollowSets000.FOLLOW_1);
-            ruleArraySubExpr();
-
-            state._fsp--;
-            if (state.failed) return ;
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprRule()); 
-            }
-            match(input,EOF,FollowSets000.FOLLOW_2); if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-        }
-        return ;
-    }
-    // $ANTLR end "entryRuleArraySubExpr"
-
-
-    // $ANTLR start "ruleArraySubExpr"
-    // InternalAgreeParser.g:1775:1: ruleArraySubExpr : ( ( rule__ArraySubExpr__Group__0 ) ) ;
-    public final void ruleArraySubExpr() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:1779:5: ( ( ( rule__ArraySubExpr__Group__0 ) ) )
-            // InternalAgreeParser.g:1780:1: ( ( rule__ArraySubExpr__Group__0 ) )
-            {
-            // InternalAgreeParser.g:1780:1: ( ( rule__ArraySubExpr__Group__0 ) )
-            // InternalAgreeParser.g:1781:1: ( rule__ArraySubExpr__Group__0 )
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getGroup()); 
-            }
-            // InternalAgreeParser.g:1782:1: ( rule__ArraySubExpr__Group__0 )
-            // InternalAgreeParser.g:1782:2: rule__ArraySubExpr__Group__0
-            {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group__0();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getGroup()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "ruleArraySubExpr"
 
 
     // $ANTLR start "entryRuleTermExpr"
@@ -61869,28 +61869,28 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__RecordUpdateExpr__Group__0__Impl"
-    // InternalAgreeParser.g:22077:1: rule__RecordUpdateExpr__Group__0__Impl : ( ruleTagExpr ) ;
+    // InternalAgreeParser.g:22077:1: rule__RecordUpdateExpr__Group__0__Impl : ( ruleArraySubExpr ) ;
     public final void rule__RecordUpdateExpr__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22081:1: ( ( ruleTagExpr ) )
-            // InternalAgreeParser.g:22082:1: ( ruleTagExpr )
+            // InternalAgreeParser.g:22081:1: ( ( ruleArraySubExpr ) )
+            // InternalAgreeParser.g:22082:1: ( ruleArraySubExpr )
             {
-            // InternalAgreeParser.g:22082:1: ( ruleTagExpr )
-            // InternalAgreeParser.g:22083:1: ruleTagExpr
+            // InternalAgreeParser.g:22082:1: ( ruleArraySubExpr )
+            // InternalAgreeParser.g:22083:1: ruleArraySubExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getRecordUpdateExprAccess().getTagExprParserRuleCall_0()); 
+               before(grammarAccess.getRecordUpdateExprAccess().getArraySubExprParserRuleCall_0()); 
             }
             pushFollow(FollowSets000.FOLLOW_2);
-            ruleTagExpr();
+            ruleArraySubExpr();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getRecordUpdateExprAccess().getTagExprParserRuleCall_0()); 
+               after(grammarAccess.getRecordUpdateExprAccess().getArraySubExprParserRuleCall_0()); 
             }
 
             }
@@ -62588,15 +62588,605 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__RecordUpdateExpr__Group_1_0__5__Impl"
 
 
+    // $ANTLR start "rule__ArraySubExpr__Group__0"
+    // InternalAgreeParser.g:22349:1: rule__ArraySubExpr__Group__0 : rule__ArraySubExpr__Group__0__Impl rule__ArraySubExpr__Group__1 ;
+    public final void rule__ArraySubExpr__Group__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22353:1: ( rule__ArraySubExpr__Group__0__Impl rule__ArraySubExpr__Group__1 )
+            // InternalAgreeParser.g:22354:2: rule__ArraySubExpr__Group__0__Impl rule__ArraySubExpr__Group__1
+            {
+            pushFollow(FollowSets000.FOLLOW_43);
+            rule__ArraySubExpr__Group__0__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group__1();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group__0"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group__0__Impl"
+    // InternalAgreeParser.g:22361:1: rule__ArraySubExpr__Group__0__Impl : ( ruleTagExpr ) ;
+    public final void rule__ArraySubExpr__Group__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22365:1: ( ( ruleTagExpr ) )
+            // InternalAgreeParser.g:22366:1: ( ruleTagExpr )
+            {
+            // InternalAgreeParser.g:22366:1: ( ruleTagExpr )
+            // InternalAgreeParser.g:22367:1: ruleTagExpr
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getTagExprParserRuleCall_0()); 
+            }
+            pushFollow(FollowSets000.FOLLOW_2);
+            ruleTagExpr();
+
+            state._fsp--;
+            if (state.failed) return ;
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getTagExprParserRuleCall_0()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group__0__Impl"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group__1"
+    // InternalAgreeParser.g:22378:1: rule__ArraySubExpr__Group__1 : rule__ArraySubExpr__Group__1__Impl ;
+    public final void rule__ArraySubExpr__Group__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22382:1: ( rule__ArraySubExpr__Group__1__Impl )
+            // InternalAgreeParser.g:22383:2: rule__ArraySubExpr__Group__1__Impl
+            {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group__1__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group__1"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group__1__Impl"
+    // InternalAgreeParser.g:22389:1: rule__ArraySubExpr__Group__1__Impl : ( ( rule__ArraySubExpr__Group_1__0 )* ) ;
+    public final void rule__ArraySubExpr__Group__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22393:1: ( ( ( rule__ArraySubExpr__Group_1__0 )* ) )
+            // InternalAgreeParser.g:22394:1: ( ( rule__ArraySubExpr__Group_1__0 )* )
+            {
+            // InternalAgreeParser.g:22394:1: ( ( rule__ArraySubExpr__Group_1__0 )* )
+            // InternalAgreeParser.g:22395:1: ( rule__ArraySubExpr__Group_1__0 )*
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getGroup_1()); 
+            }
+            // InternalAgreeParser.g:22396:1: ( rule__ArraySubExpr__Group_1__0 )*
+            loop101:
+            do {
+                int alt101=2;
+                int LA101_0 = input.LA(1);
+
+                if ( (LA101_0==LeftSquareBracket) ) {
+                    alt101=1;
+                }
+
+
+                switch (alt101) {
+            	case 1 :
+            	    // InternalAgreeParser.g:22396:2: rule__ArraySubExpr__Group_1__0
+            	    {
+            	    pushFollow(FollowSets000.FOLLOW_72);
+            	    rule__ArraySubExpr__Group_1__0();
+
+            	    state._fsp--;
+            	    if (state.failed) return ;
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop101;
+                }
+            } while (true);
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getGroup_1()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group__1__Impl"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1__0"
+    // InternalAgreeParser.g:22410:1: rule__ArraySubExpr__Group_1__0 : rule__ArraySubExpr__Group_1__0__Impl ;
+    public final void rule__ArraySubExpr__Group_1__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22414:1: ( rule__ArraySubExpr__Group_1__0__Impl )
+            // InternalAgreeParser.g:22415:2: rule__ArraySubExpr__Group_1__0__Impl
+            {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group_1__0__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1__0"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1__0__Impl"
+    // InternalAgreeParser.g:22421:1: rule__ArraySubExpr__Group_1__0__Impl : ( ( rule__ArraySubExpr__Group_1_0__0 ) ) ;
+    public final void rule__ArraySubExpr__Group_1__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22425:1: ( ( ( rule__ArraySubExpr__Group_1_0__0 ) ) )
+            // InternalAgreeParser.g:22426:1: ( ( rule__ArraySubExpr__Group_1_0__0 ) )
+            {
+            // InternalAgreeParser.g:22426:1: ( ( rule__ArraySubExpr__Group_1_0__0 ) )
+            // InternalAgreeParser.g:22427:1: ( rule__ArraySubExpr__Group_1_0__0 )
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getGroup_1_0()); 
+            }
+            // InternalAgreeParser.g:22428:1: ( rule__ArraySubExpr__Group_1_0__0 )
+            // InternalAgreeParser.g:22428:2: rule__ArraySubExpr__Group_1_0__0
+            {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group_1_0__0();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getGroup_1_0()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1__0__Impl"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1_0__0"
+    // InternalAgreeParser.g:22440:1: rule__ArraySubExpr__Group_1_0__0 : rule__ArraySubExpr__Group_1_0__0__Impl rule__ArraySubExpr__Group_1_0__1 ;
+    public final void rule__ArraySubExpr__Group_1_0__0() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22444:1: ( rule__ArraySubExpr__Group_1_0__0__Impl rule__ArraySubExpr__Group_1_0__1 )
+            // InternalAgreeParser.g:22445:2: rule__ArraySubExpr__Group_1_0__0__Impl rule__ArraySubExpr__Group_1_0__1
+            {
+            pushFollow(FollowSets000.FOLLOW_43);
+            rule__ArraySubExpr__Group_1_0__0__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group_1_0__1();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1_0__0"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1_0__0__Impl"
+    // InternalAgreeParser.g:22452:1: rule__ArraySubExpr__Group_1_0__0__Impl : ( () ) ;
+    public final void rule__ArraySubExpr__Group_1_0__0__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22456:1: ( ( () ) )
+            // InternalAgreeParser.g:22457:1: ( () )
+            {
+            // InternalAgreeParser.g:22457:1: ( () )
+            // InternalAgreeParser.g:22458:1: ()
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getArraySubExprExprAction_1_0_0()); 
+            }
+            // InternalAgreeParser.g:22459:1: ()
+            // InternalAgreeParser.g:22461:1: 
+            {
+            }
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getArraySubExprExprAction_1_0_0()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1_0__0__Impl"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1_0__1"
+    // InternalAgreeParser.g:22471:1: rule__ArraySubExpr__Group_1_0__1 : rule__ArraySubExpr__Group_1_0__1__Impl rule__ArraySubExpr__Group_1_0__2 ;
+    public final void rule__ArraySubExpr__Group_1_0__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22475:1: ( rule__ArraySubExpr__Group_1_0__1__Impl rule__ArraySubExpr__Group_1_0__2 )
+            // InternalAgreeParser.g:22476:2: rule__ArraySubExpr__Group_1_0__1__Impl rule__ArraySubExpr__Group_1_0__2
+            {
+            pushFollow(FollowSets000.FOLLOW_14);
+            rule__ArraySubExpr__Group_1_0__1__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group_1_0__2();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1_0__1"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1_0__1__Impl"
+    // InternalAgreeParser.g:22483:1: rule__ArraySubExpr__Group_1_0__1__Impl : ( LeftSquareBracket ) ;
+    public final void rule__ArraySubExpr__Group_1_0__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22487:1: ( ( LeftSquareBracket ) )
+            // InternalAgreeParser.g:22488:1: ( LeftSquareBracket )
+            {
+            // InternalAgreeParser.g:22488:1: ( LeftSquareBracket )
+            // InternalAgreeParser.g:22489:1: LeftSquareBracket
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getLeftSquareBracketKeyword_1_0_1()); 
+            }
+            match(input,LeftSquareBracket,FollowSets000.FOLLOW_2); if (state.failed) return ;
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getLeftSquareBracketKeyword_1_0_1()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1_0__1__Impl"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1_0__2"
+    // InternalAgreeParser.g:22502:1: rule__ArraySubExpr__Group_1_0__2 : rule__ArraySubExpr__Group_1_0__2__Impl rule__ArraySubExpr__Group_1_0__3 ;
+    public final void rule__ArraySubExpr__Group_1_0__2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22506:1: ( rule__ArraySubExpr__Group_1_0__2__Impl rule__ArraySubExpr__Group_1_0__3 )
+            // InternalAgreeParser.g:22507:2: rule__ArraySubExpr__Group_1_0__2__Impl rule__ArraySubExpr__Group_1_0__3
+            {
+            pushFollow(FollowSets000.FOLLOW_45);
+            rule__ArraySubExpr__Group_1_0__2__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group_1_0__3();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1_0__2"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1_0__2__Impl"
+    // InternalAgreeParser.g:22514:1: rule__ArraySubExpr__Group_1_0__2__Impl : ( ( rule__ArraySubExpr__IndexAssignment_1_0_2 ) ) ;
+    public final void rule__ArraySubExpr__Group_1_0__2__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22518:1: ( ( ( rule__ArraySubExpr__IndexAssignment_1_0_2 ) ) )
+            // InternalAgreeParser.g:22519:1: ( ( rule__ArraySubExpr__IndexAssignment_1_0_2 ) )
+            {
+            // InternalAgreeParser.g:22519:1: ( ( rule__ArraySubExpr__IndexAssignment_1_0_2 ) )
+            // InternalAgreeParser.g:22520:1: ( rule__ArraySubExpr__IndexAssignment_1_0_2 )
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getIndexAssignment_1_0_2()); 
+            }
+            // InternalAgreeParser.g:22521:1: ( rule__ArraySubExpr__IndexAssignment_1_0_2 )
+            // InternalAgreeParser.g:22521:2: rule__ArraySubExpr__IndexAssignment_1_0_2
+            {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__IndexAssignment_1_0_2();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getIndexAssignment_1_0_2()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1_0__2__Impl"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1_0__3"
+    // InternalAgreeParser.g:22531:1: rule__ArraySubExpr__Group_1_0__3 : rule__ArraySubExpr__Group_1_0__3__Impl ;
+    public final void rule__ArraySubExpr__Group_1_0__3() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22535:1: ( rule__ArraySubExpr__Group_1_0__3__Impl )
+            // InternalAgreeParser.g:22536:2: rule__ArraySubExpr__Group_1_0__3__Impl
+            {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__ArraySubExpr__Group_1_0__3__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1_0__3"
+
+
+    // $ANTLR start "rule__ArraySubExpr__Group_1_0__3__Impl"
+    // InternalAgreeParser.g:22542:1: rule__ArraySubExpr__Group_1_0__3__Impl : ( RightSquareBracket ) ;
+    public final void rule__ArraySubExpr__Group_1_0__3__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22546:1: ( ( RightSquareBracket ) )
+            // InternalAgreeParser.g:22547:1: ( RightSquareBracket )
+            {
+            // InternalAgreeParser.g:22547:1: ( RightSquareBracket )
+            // InternalAgreeParser.g:22548:1: RightSquareBracket
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getRightSquareBracketKeyword_1_0_3()); 
+            }
+            match(input,RightSquareBracket,FollowSets000.FOLLOW_2); if (state.failed) return ;
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getRightSquareBracketKeyword_1_0_3()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__Group_1_0__3__Impl"
+
+
     // $ANTLR start "rule__TagExpr__Group__0"
-    // InternalAgreeParser.g:22349:1: rule__TagExpr__Group__0 : rule__TagExpr__Group__0__Impl rule__TagExpr__Group__1 ;
+    // InternalAgreeParser.g:22569:1: rule__TagExpr__Group__0 : rule__TagExpr__Group__0__Impl rule__TagExpr__Group__1 ;
     public final void rule__TagExpr__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22353:1: ( rule__TagExpr__Group__0__Impl rule__TagExpr__Group__1 )
-            // InternalAgreeParser.g:22354:2: rule__TagExpr__Group__0__Impl rule__TagExpr__Group__1
+            // InternalAgreeParser.g:22573:1: ( rule__TagExpr__Group__0__Impl rule__TagExpr__Group__1 )
+            // InternalAgreeParser.g:22574:2: rule__TagExpr__Group__0__Impl rule__TagExpr__Group__1
             {
             pushFollow(FollowSets000.FOLLOW_113);
             rule__TagExpr__Group__0__Impl();
@@ -62627,17 +63217,17 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group__0__Impl"
-    // InternalAgreeParser.g:22361:1: rule__TagExpr__Group__0__Impl : ( ruleProjectionExpr ) ;
+    // InternalAgreeParser.g:22581:1: rule__TagExpr__Group__0__Impl : ( ruleProjectionExpr ) ;
     public final void rule__TagExpr__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22365:1: ( ( ruleProjectionExpr ) )
-            // InternalAgreeParser.g:22366:1: ( ruleProjectionExpr )
+            // InternalAgreeParser.g:22585:1: ( ( ruleProjectionExpr ) )
+            // InternalAgreeParser.g:22586:1: ( ruleProjectionExpr )
             {
-            // InternalAgreeParser.g:22366:1: ( ruleProjectionExpr )
-            // InternalAgreeParser.g:22367:1: ruleProjectionExpr
+            // InternalAgreeParser.g:22586:1: ( ruleProjectionExpr )
+            // InternalAgreeParser.g:22587:1: ruleProjectionExpr
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagExprAccess().getProjectionExprParserRuleCall_0()); 
@@ -62672,14 +63262,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group__1"
-    // InternalAgreeParser.g:22378:1: rule__TagExpr__Group__1 : rule__TagExpr__Group__1__Impl ;
+    // InternalAgreeParser.g:22598:1: rule__TagExpr__Group__1 : rule__TagExpr__Group__1__Impl ;
     public final void rule__TagExpr__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22382:1: ( rule__TagExpr__Group__1__Impl )
-            // InternalAgreeParser.g:22383:2: rule__TagExpr__Group__1__Impl
+            // InternalAgreeParser.g:22602:1: ( rule__TagExpr__Group__1__Impl )
+            // InternalAgreeParser.g:22603:2: rule__TagExpr__Group__1__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__TagExpr__Group__1__Impl();
@@ -62705,31 +63295,31 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group__1__Impl"
-    // InternalAgreeParser.g:22389:1: rule__TagExpr__Group__1__Impl : ( ( rule__TagExpr__Group_1__0 )? ) ;
+    // InternalAgreeParser.g:22609:1: rule__TagExpr__Group__1__Impl : ( ( rule__TagExpr__Group_1__0 )? ) ;
     public final void rule__TagExpr__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22393:1: ( ( ( rule__TagExpr__Group_1__0 )? ) )
-            // InternalAgreeParser.g:22394:1: ( ( rule__TagExpr__Group_1__0 )? )
+            // InternalAgreeParser.g:22613:1: ( ( ( rule__TagExpr__Group_1__0 )? ) )
+            // InternalAgreeParser.g:22614:1: ( ( rule__TagExpr__Group_1__0 )? )
             {
-            // InternalAgreeParser.g:22394:1: ( ( rule__TagExpr__Group_1__0 )? )
-            // InternalAgreeParser.g:22395:1: ( rule__TagExpr__Group_1__0 )?
+            // InternalAgreeParser.g:22614:1: ( ( rule__TagExpr__Group_1__0 )? )
+            // InternalAgreeParser.g:22615:1: ( rule__TagExpr__Group_1__0 )?
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagExprAccess().getGroup_1()); 
             }
-            // InternalAgreeParser.g:22396:1: ( rule__TagExpr__Group_1__0 )?
-            int alt101=2;
-            int LA101_0 = input.LA(1);
+            // InternalAgreeParser.g:22616:1: ( rule__TagExpr__Group_1__0 )?
+            int alt102=2;
+            int LA102_0 = input.LA(1);
 
-            if ( (LA101_0==FullStop) ) {
-                alt101=1;
+            if ( (LA102_0==FullStop) ) {
+                alt102=1;
             }
-            switch (alt101) {
+            switch (alt102) {
                 case 1 :
-                    // InternalAgreeParser.g:22396:2: rule__TagExpr__Group_1__0
+                    // InternalAgreeParser.g:22616:2: rule__TagExpr__Group_1__0
                     {
                     pushFollow(FollowSets000.FOLLOW_2);
                     rule__TagExpr__Group_1__0();
@@ -62767,14 +63357,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group_1__0"
-    // InternalAgreeParser.g:22410:1: rule__TagExpr__Group_1__0 : rule__TagExpr__Group_1__0__Impl rule__TagExpr__Group_1__1 ;
+    // InternalAgreeParser.g:22630:1: rule__TagExpr__Group_1__0 : rule__TagExpr__Group_1__0__Impl rule__TagExpr__Group_1__1 ;
     public final void rule__TagExpr__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22414:1: ( rule__TagExpr__Group_1__0__Impl rule__TagExpr__Group_1__1 )
-            // InternalAgreeParser.g:22415:2: rule__TagExpr__Group_1__0__Impl rule__TagExpr__Group_1__1
+            // InternalAgreeParser.g:22634:1: ( rule__TagExpr__Group_1__0__Impl rule__TagExpr__Group_1__1 )
+            // InternalAgreeParser.g:22635:2: rule__TagExpr__Group_1__0__Impl rule__TagExpr__Group_1__1
             {
             pushFollow(FollowSets000.FOLLOW_113);
             rule__TagExpr__Group_1__0__Impl();
@@ -62805,23 +63395,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group_1__0__Impl"
-    // InternalAgreeParser.g:22422:1: rule__TagExpr__Group_1__0__Impl : ( () ) ;
+    // InternalAgreeParser.g:22642:1: rule__TagExpr__Group_1__0__Impl : ( () ) ;
     public final void rule__TagExpr__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22426:1: ( ( () ) )
-            // InternalAgreeParser.g:22427:1: ( () )
+            // InternalAgreeParser.g:22646:1: ( ( () ) )
+            // InternalAgreeParser.g:22647:1: ( () )
             {
-            // InternalAgreeParser.g:22427:1: ( () )
-            // InternalAgreeParser.g:22428:1: ()
+            // InternalAgreeParser.g:22647:1: ( () )
+            // InternalAgreeParser.g:22648:1: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagExprAccess().getTagExprStemAction_1_0()); 
             }
-            // InternalAgreeParser.g:22429:1: ()
-            // InternalAgreeParser.g:22431:1: 
+            // InternalAgreeParser.g:22649:1: ()
+            // InternalAgreeParser.g:22651:1: 
             {
             }
 
@@ -62846,14 +63436,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group_1__1"
-    // InternalAgreeParser.g:22441:1: rule__TagExpr__Group_1__1 : rule__TagExpr__Group_1__1__Impl rule__TagExpr__Group_1__2 ;
+    // InternalAgreeParser.g:22661:1: rule__TagExpr__Group_1__1 : rule__TagExpr__Group_1__1__Impl rule__TagExpr__Group_1__2 ;
     public final void rule__TagExpr__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22445:1: ( rule__TagExpr__Group_1__1__Impl rule__TagExpr__Group_1__2 )
-            // InternalAgreeParser.g:22446:2: rule__TagExpr__Group_1__1__Impl rule__TagExpr__Group_1__2
+            // InternalAgreeParser.g:22665:1: ( rule__TagExpr__Group_1__1__Impl rule__TagExpr__Group_1__2 )
+            // InternalAgreeParser.g:22666:2: rule__TagExpr__Group_1__1__Impl rule__TagExpr__Group_1__2
             {
             pushFollow(FollowSets000.FOLLOW_114);
             rule__TagExpr__Group_1__1__Impl();
@@ -62884,17 +63474,17 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group_1__1__Impl"
-    // InternalAgreeParser.g:22453:1: rule__TagExpr__Group_1__1__Impl : ( FullStop ) ;
+    // InternalAgreeParser.g:22673:1: rule__TagExpr__Group_1__1__Impl : ( FullStop ) ;
     public final void rule__TagExpr__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22457:1: ( ( FullStop ) )
-            // InternalAgreeParser.g:22458:1: ( FullStop )
+            // InternalAgreeParser.g:22677:1: ( ( FullStop ) )
+            // InternalAgreeParser.g:22678:1: ( FullStop )
             {
-            // InternalAgreeParser.g:22458:1: ( FullStop )
-            // InternalAgreeParser.g:22459:1: FullStop
+            // InternalAgreeParser.g:22678:1: ( FullStop )
+            // InternalAgreeParser.g:22679:1: FullStop
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagExprAccess().getFullStopKeyword_1_1()); 
@@ -62925,14 +63515,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group_1__2"
-    // InternalAgreeParser.g:22472:1: rule__TagExpr__Group_1__2 : rule__TagExpr__Group_1__2__Impl ;
+    // InternalAgreeParser.g:22692:1: rule__TagExpr__Group_1__2 : rule__TagExpr__Group_1__2__Impl ;
     public final void rule__TagExpr__Group_1__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22476:1: ( rule__TagExpr__Group_1__2__Impl )
-            // InternalAgreeParser.g:22477:2: rule__TagExpr__Group_1__2__Impl
+            // InternalAgreeParser.g:22696:1: ( rule__TagExpr__Group_1__2__Impl )
+            // InternalAgreeParser.g:22697:2: rule__TagExpr__Group_1__2__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__TagExpr__Group_1__2__Impl();
@@ -62958,23 +63548,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group_1__2__Impl"
-    // InternalAgreeParser.g:22483:1: rule__TagExpr__Group_1__2__Impl : ( ( rule__TagExpr__TagAssignment_1_2 ) ) ;
+    // InternalAgreeParser.g:22703:1: rule__TagExpr__Group_1__2__Impl : ( ( rule__TagExpr__TagAssignment_1_2 ) ) ;
     public final void rule__TagExpr__Group_1__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22487:1: ( ( ( rule__TagExpr__TagAssignment_1_2 ) ) )
-            // InternalAgreeParser.g:22488:1: ( ( rule__TagExpr__TagAssignment_1_2 ) )
+            // InternalAgreeParser.g:22707:1: ( ( ( rule__TagExpr__TagAssignment_1_2 ) ) )
+            // InternalAgreeParser.g:22708:1: ( ( rule__TagExpr__TagAssignment_1_2 ) )
             {
-            // InternalAgreeParser.g:22488:1: ( ( rule__TagExpr__TagAssignment_1_2 ) )
-            // InternalAgreeParser.g:22489:1: ( rule__TagExpr__TagAssignment_1_2 )
+            // InternalAgreeParser.g:22708:1: ( ( rule__TagExpr__TagAssignment_1_2 ) )
+            // InternalAgreeParser.g:22709:1: ( rule__TagExpr__TagAssignment_1_2 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagExprAccess().getTagAssignment_1_2()); 
             }
-            // InternalAgreeParser.g:22490:1: ( rule__TagExpr__TagAssignment_1_2 )
-            // InternalAgreeParser.g:22490:2: rule__TagExpr__TagAssignment_1_2
+            // InternalAgreeParser.g:22710:1: ( rule__TagExpr__TagAssignment_1_2 )
+            // InternalAgreeParser.g:22710:2: rule__TagExpr__TagAssignment_1_2
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__TagExpr__TagAssignment_1_2();
@@ -63009,14 +63599,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group__0"
-    // InternalAgreeParser.g:22506:1: rule__ProjectionExpr__Group__0 : rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1 ;
+    // InternalAgreeParser.g:22726:1: rule__ProjectionExpr__Group__0 : rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1 ;
     public final void rule__ProjectionExpr__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22510:1: ( rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1 )
-            // InternalAgreeParser.g:22511:2: rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1
+            // InternalAgreeParser.g:22730:1: ( rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1 )
+            // InternalAgreeParser.g:22731:2: rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1
             {
             pushFollow(FollowSets000.FOLLOW_113);
             rule__ProjectionExpr__Group__0__Impl();
@@ -63047,28 +63637,28 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group__0__Impl"
-    // InternalAgreeParser.g:22518:1: rule__ProjectionExpr__Group__0__Impl : ( ruleArraySubExpr ) ;
+    // InternalAgreeParser.g:22738:1: rule__ProjectionExpr__Group__0__Impl : ( ruleTermExpr ) ;
     public final void rule__ProjectionExpr__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22522:1: ( ( ruleArraySubExpr ) )
-            // InternalAgreeParser.g:22523:1: ( ruleArraySubExpr )
+            // InternalAgreeParser.g:22742:1: ( ( ruleTermExpr ) )
+            // InternalAgreeParser.g:22743:1: ( ruleTermExpr )
             {
-            // InternalAgreeParser.g:22523:1: ( ruleArraySubExpr )
-            // InternalAgreeParser.g:22524:1: ruleArraySubExpr
+            // InternalAgreeParser.g:22743:1: ( ruleTermExpr )
+            // InternalAgreeParser.g:22744:1: ruleTermExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getArraySubExprParserRuleCall_0()); 
+               before(grammarAccess.getProjectionExprAccess().getTermExprParserRuleCall_0()); 
             }
             pushFollow(FollowSets000.FOLLOW_2);
-            ruleArraySubExpr();
+            ruleTermExpr();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getArraySubExprParserRuleCall_0()); 
+               after(grammarAccess.getProjectionExprAccess().getTermExprParserRuleCall_0()); 
             }
 
             }
@@ -63092,14 +63682,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group__1"
-    // InternalAgreeParser.g:22535:1: rule__ProjectionExpr__Group__1 : rule__ProjectionExpr__Group__1__Impl ;
+    // InternalAgreeParser.g:22755:1: rule__ProjectionExpr__Group__1 : rule__ProjectionExpr__Group__1__Impl ;
     public final void rule__ProjectionExpr__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22539:1: ( rule__ProjectionExpr__Group__1__Impl )
-            // InternalAgreeParser.g:22540:2: rule__ProjectionExpr__Group__1__Impl
+            // InternalAgreeParser.g:22759:1: ( rule__ProjectionExpr__Group__1__Impl )
+            // InternalAgreeParser.g:22760:2: rule__ProjectionExpr__Group__1__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__ProjectionExpr__Group__1__Impl();
@@ -63125,41 +63715,41 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group__1__Impl"
-    // InternalAgreeParser.g:22546:1: rule__ProjectionExpr__Group__1__Impl : ( ( rule__ProjectionExpr__Group_1__0 )* ) ;
+    // InternalAgreeParser.g:22766:1: rule__ProjectionExpr__Group__1__Impl : ( ( rule__ProjectionExpr__Group_1__0 )* ) ;
     public final void rule__ProjectionExpr__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22550:1: ( ( ( rule__ProjectionExpr__Group_1__0 )* ) )
-            // InternalAgreeParser.g:22551:1: ( ( rule__ProjectionExpr__Group_1__0 )* )
+            // InternalAgreeParser.g:22770:1: ( ( ( rule__ProjectionExpr__Group_1__0 )* ) )
+            // InternalAgreeParser.g:22771:1: ( ( rule__ProjectionExpr__Group_1__0 )* )
             {
-            // InternalAgreeParser.g:22551:1: ( ( rule__ProjectionExpr__Group_1__0 )* )
-            // InternalAgreeParser.g:22552:1: ( rule__ProjectionExpr__Group_1__0 )*
+            // InternalAgreeParser.g:22771:1: ( ( rule__ProjectionExpr__Group_1__0 )* )
+            // InternalAgreeParser.g:22772:1: ( rule__ProjectionExpr__Group_1__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprAccess().getGroup_1()); 
             }
-            // InternalAgreeParser.g:22553:1: ( rule__ProjectionExpr__Group_1__0 )*
-            loop102:
+            // InternalAgreeParser.g:22773:1: ( rule__ProjectionExpr__Group_1__0 )*
+            loop103:
             do {
-                int alt102=2;
-                int LA102_0 = input.LA(1);
+                int alt103=2;
+                int LA103_0 = input.LA(1);
 
-                if ( (LA102_0==FullStop) ) {
-                    int LA102_2 = input.LA(2);
+                if ( (LA103_0==FullStop) ) {
+                    int LA103_2 = input.LA(2);
 
-                    if ( (LA102_2==RULE_ID) ) {
-                        alt102=1;
+                    if ( (LA103_2==RULE_ID) ) {
+                        alt103=1;
                     }
 
 
                 }
 
 
-                switch (alt102) {
+                switch (alt103) {
             	case 1 :
-            	    // InternalAgreeParser.g:22553:2: rule__ProjectionExpr__Group_1__0
+            	    // InternalAgreeParser.g:22773:2: rule__ProjectionExpr__Group_1__0
             	    {
             	    pushFollow(FollowSets000.FOLLOW_115);
             	    rule__ProjectionExpr__Group_1__0();
@@ -63171,7 +63761,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             	    break;
 
             	default :
-            	    break loop102;
+            	    break loop103;
                 }
             } while (true);
 
@@ -63200,14 +63790,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group_1__0"
-    // InternalAgreeParser.g:22567:1: rule__ProjectionExpr__Group_1__0 : rule__ProjectionExpr__Group_1__0__Impl ;
+    // InternalAgreeParser.g:22787:1: rule__ProjectionExpr__Group_1__0 : rule__ProjectionExpr__Group_1__0__Impl ;
     public final void rule__ProjectionExpr__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22571:1: ( rule__ProjectionExpr__Group_1__0__Impl )
-            // InternalAgreeParser.g:22572:2: rule__ProjectionExpr__Group_1__0__Impl
+            // InternalAgreeParser.g:22791:1: ( rule__ProjectionExpr__Group_1__0__Impl )
+            // InternalAgreeParser.g:22792:2: rule__ProjectionExpr__Group_1__0__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__ProjectionExpr__Group_1__0__Impl();
@@ -63233,23 +63823,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group_1__0__Impl"
-    // InternalAgreeParser.g:22578:1: rule__ProjectionExpr__Group_1__0__Impl : ( ( rule__ProjectionExpr__Group_1_0__0 ) ) ;
+    // InternalAgreeParser.g:22798:1: rule__ProjectionExpr__Group_1__0__Impl : ( ( rule__ProjectionExpr__Group_1_0__0 ) ) ;
     public final void rule__ProjectionExpr__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22582:1: ( ( ( rule__ProjectionExpr__Group_1_0__0 ) ) )
-            // InternalAgreeParser.g:22583:1: ( ( rule__ProjectionExpr__Group_1_0__0 ) )
+            // InternalAgreeParser.g:22802:1: ( ( ( rule__ProjectionExpr__Group_1_0__0 ) ) )
+            // InternalAgreeParser.g:22803:1: ( ( rule__ProjectionExpr__Group_1_0__0 ) )
             {
-            // InternalAgreeParser.g:22583:1: ( ( rule__ProjectionExpr__Group_1_0__0 ) )
-            // InternalAgreeParser.g:22584:1: ( rule__ProjectionExpr__Group_1_0__0 )
+            // InternalAgreeParser.g:22803:1: ( ( rule__ProjectionExpr__Group_1_0__0 ) )
+            // InternalAgreeParser.g:22804:1: ( rule__ProjectionExpr__Group_1_0__0 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprAccess().getGroup_1_0()); 
             }
-            // InternalAgreeParser.g:22585:1: ( rule__ProjectionExpr__Group_1_0__0 )
-            // InternalAgreeParser.g:22585:2: rule__ProjectionExpr__Group_1_0__0
+            // InternalAgreeParser.g:22805:1: ( rule__ProjectionExpr__Group_1_0__0 )
+            // InternalAgreeParser.g:22805:2: rule__ProjectionExpr__Group_1_0__0
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__ProjectionExpr__Group_1_0__0();
@@ -63284,14 +63874,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group_1_0__0"
-    // InternalAgreeParser.g:22597:1: rule__ProjectionExpr__Group_1_0__0 : rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1 ;
+    // InternalAgreeParser.g:22817:1: rule__ProjectionExpr__Group_1_0__0 : rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1 ;
     public final void rule__ProjectionExpr__Group_1_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22601:1: ( rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1 )
-            // InternalAgreeParser.g:22602:2: rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1
+            // InternalAgreeParser.g:22821:1: ( rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1 )
+            // InternalAgreeParser.g:22822:2: rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1
             {
             pushFollow(FollowSets000.FOLLOW_113);
             rule__ProjectionExpr__Group_1_0__0__Impl();
@@ -63322,23 +63912,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group_1_0__0__Impl"
-    // InternalAgreeParser.g:22609:1: rule__ProjectionExpr__Group_1_0__0__Impl : ( () ) ;
+    // InternalAgreeParser.g:22829:1: rule__ProjectionExpr__Group_1_0__0__Impl : ( () ) ;
     public final void rule__ProjectionExpr__Group_1_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22613:1: ( ( () ) )
-            // InternalAgreeParser.g:22614:1: ( () )
+            // InternalAgreeParser.g:22833:1: ( ( () ) )
+            // InternalAgreeParser.g:22834:1: ( () )
             {
-            // InternalAgreeParser.g:22614:1: ( () )
-            // InternalAgreeParser.g:22615:1: ()
+            // InternalAgreeParser.g:22834:1: ( () )
+            // InternalAgreeParser.g:22835:1: ()
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprAccess().getProjectionExprExprAction_1_0_0()); 
             }
-            // InternalAgreeParser.g:22616:1: ()
-            // InternalAgreeParser.g:22618:1: 
+            // InternalAgreeParser.g:22836:1: ()
+            // InternalAgreeParser.g:22838:1: 
             {
             }
 
@@ -63363,14 +63953,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group_1_0__1"
-    // InternalAgreeParser.g:22628:1: rule__ProjectionExpr__Group_1_0__1 : rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2 ;
+    // InternalAgreeParser.g:22848:1: rule__ProjectionExpr__Group_1_0__1 : rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2 ;
     public final void rule__ProjectionExpr__Group_1_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22632:1: ( rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2 )
-            // InternalAgreeParser.g:22633:2: rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2
+            // InternalAgreeParser.g:22852:1: ( rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2 )
+            // InternalAgreeParser.g:22853:2: rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2
             {
             pushFollow(FollowSets000.FOLLOW_19);
             rule__ProjectionExpr__Group_1_0__1__Impl();
@@ -63401,17 +63991,17 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group_1_0__1__Impl"
-    // InternalAgreeParser.g:22640:1: rule__ProjectionExpr__Group_1_0__1__Impl : ( FullStop ) ;
+    // InternalAgreeParser.g:22860:1: rule__ProjectionExpr__Group_1_0__1__Impl : ( FullStop ) ;
     public final void rule__ProjectionExpr__Group_1_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22644:1: ( ( FullStop ) )
-            // InternalAgreeParser.g:22645:1: ( FullStop )
+            // InternalAgreeParser.g:22864:1: ( ( FullStop ) )
+            // InternalAgreeParser.g:22865:1: ( FullStop )
             {
-            // InternalAgreeParser.g:22645:1: ( FullStop )
-            // InternalAgreeParser.g:22646:1: FullStop
+            // InternalAgreeParser.g:22865:1: ( FullStop )
+            // InternalAgreeParser.g:22866:1: FullStop
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprAccess().getFullStopKeyword_1_0_1()); 
@@ -63442,14 +64032,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group_1_0__2"
-    // InternalAgreeParser.g:22659:1: rule__ProjectionExpr__Group_1_0__2 : rule__ProjectionExpr__Group_1_0__2__Impl ;
+    // InternalAgreeParser.g:22879:1: rule__ProjectionExpr__Group_1_0__2 : rule__ProjectionExpr__Group_1_0__2__Impl ;
     public final void rule__ProjectionExpr__Group_1_0__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22663:1: ( rule__ProjectionExpr__Group_1_0__2__Impl )
-            // InternalAgreeParser.g:22664:2: rule__ProjectionExpr__Group_1_0__2__Impl
+            // InternalAgreeParser.g:22883:1: ( rule__ProjectionExpr__Group_1_0__2__Impl )
+            // InternalAgreeParser.g:22884:2: rule__ProjectionExpr__Group_1_0__2__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__ProjectionExpr__Group_1_0__2__Impl();
@@ -63475,23 +64065,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__Group_1_0__2__Impl"
-    // InternalAgreeParser.g:22670:1: rule__ProjectionExpr__Group_1_0__2__Impl : ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) ) ;
+    // InternalAgreeParser.g:22890:1: rule__ProjectionExpr__Group_1_0__2__Impl : ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) ) ;
     public final void rule__ProjectionExpr__Group_1_0__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22674:1: ( ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) ) )
-            // InternalAgreeParser.g:22675:1: ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) )
+            // InternalAgreeParser.g:22894:1: ( ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) ) )
+            // InternalAgreeParser.g:22895:1: ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) )
             {
-            // InternalAgreeParser.g:22675:1: ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) )
-            // InternalAgreeParser.g:22676:1: ( rule__ProjectionExpr__FieldAssignment_1_0_2 )
+            // InternalAgreeParser.g:22895:1: ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) )
+            // InternalAgreeParser.g:22896:1: ( rule__ProjectionExpr__FieldAssignment_1_0_2 )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprAccess().getFieldAssignment_1_0_2()); 
             }
-            // InternalAgreeParser.g:22677:1: ( rule__ProjectionExpr__FieldAssignment_1_0_2 )
-            // InternalAgreeParser.g:22677:2: rule__ProjectionExpr__FieldAssignment_1_0_2
+            // InternalAgreeParser.g:22897:1: ( rule__ProjectionExpr__FieldAssignment_1_0_2 )
+            // InternalAgreeParser.g:22897:2: rule__ProjectionExpr__FieldAssignment_1_0_2
             {
             pushFollow(FollowSets000.FOLLOW_2);
             rule__ProjectionExpr__FieldAssignment_1_0_2();
@@ -63523,596 +64113,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "rule__ProjectionExpr__Group_1_0__2__Impl"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group__0"
-    // InternalAgreeParser.g:22693:1: rule__ArraySubExpr__Group__0 : rule__ArraySubExpr__Group__0__Impl rule__ArraySubExpr__Group__1 ;
-    public final void rule__ArraySubExpr__Group__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22697:1: ( rule__ArraySubExpr__Group__0__Impl rule__ArraySubExpr__Group__1 )
-            // InternalAgreeParser.g:22698:2: rule__ArraySubExpr__Group__0__Impl rule__ArraySubExpr__Group__1
-            {
-            pushFollow(FollowSets000.FOLLOW_43);
-            rule__ArraySubExpr__Group__0__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group__1();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group__0"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group__0__Impl"
-    // InternalAgreeParser.g:22705:1: rule__ArraySubExpr__Group__0__Impl : ( ruleTermExpr ) ;
-    public final void rule__ArraySubExpr__Group__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22709:1: ( ( ruleTermExpr ) )
-            // InternalAgreeParser.g:22710:1: ( ruleTermExpr )
-            {
-            // InternalAgreeParser.g:22710:1: ( ruleTermExpr )
-            // InternalAgreeParser.g:22711:1: ruleTermExpr
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getTermExprParserRuleCall_0()); 
-            }
-            pushFollow(FollowSets000.FOLLOW_2);
-            ruleTermExpr();
-
-            state._fsp--;
-            if (state.failed) return ;
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getTermExprParserRuleCall_0()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group__0__Impl"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group__1"
-    // InternalAgreeParser.g:22722:1: rule__ArraySubExpr__Group__1 : rule__ArraySubExpr__Group__1__Impl ;
-    public final void rule__ArraySubExpr__Group__1() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22726:1: ( rule__ArraySubExpr__Group__1__Impl )
-            // InternalAgreeParser.g:22727:2: rule__ArraySubExpr__Group__1__Impl
-            {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group__1__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group__1"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group__1__Impl"
-    // InternalAgreeParser.g:22733:1: rule__ArraySubExpr__Group__1__Impl : ( ( rule__ArraySubExpr__Group_1__0 )* ) ;
-    public final void rule__ArraySubExpr__Group__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22737:1: ( ( ( rule__ArraySubExpr__Group_1__0 )* ) )
-            // InternalAgreeParser.g:22738:1: ( ( rule__ArraySubExpr__Group_1__0 )* )
-            {
-            // InternalAgreeParser.g:22738:1: ( ( rule__ArraySubExpr__Group_1__0 )* )
-            // InternalAgreeParser.g:22739:1: ( rule__ArraySubExpr__Group_1__0 )*
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getGroup_1()); 
-            }
-            // InternalAgreeParser.g:22740:1: ( rule__ArraySubExpr__Group_1__0 )*
-            loop103:
-            do {
-                int alt103=2;
-                int LA103_0 = input.LA(1);
-
-                if ( (LA103_0==LeftSquareBracket) ) {
-                    alt103=1;
-                }
-
-
-                switch (alt103) {
-            	case 1 :
-            	    // InternalAgreeParser.g:22740:2: rule__ArraySubExpr__Group_1__0
-            	    {
-            	    pushFollow(FollowSets000.FOLLOW_72);
-            	    rule__ArraySubExpr__Group_1__0();
-
-            	    state._fsp--;
-            	    if (state.failed) return ;
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop103;
-                }
-            } while (true);
-
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getGroup_1()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group__1__Impl"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1__0"
-    // InternalAgreeParser.g:22754:1: rule__ArraySubExpr__Group_1__0 : rule__ArraySubExpr__Group_1__0__Impl ;
-    public final void rule__ArraySubExpr__Group_1__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22758:1: ( rule__ArraySubExpr__Group_1__0__Impl )
-            // InternalAgreeParser.g:22759:2: rule__ArraySubExpr__Group_1__0__Impl
-            {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group_1__0__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1__0"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1__0__Impl"
-    // InternalAgreeParser.g:22765:1: rule__ArraySubExpr__Group_1__0__Impl : ( ( rule__ArraySubExpr__Group_1_0__0 ) ) ;
-    public final void rule__ArraySubExpr__Group_1__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22769:1: ( ( ( rule__ArraySubExpr__Group_1_0__0 ) ) )
-            // InternalAgreeParser.g:22770:1: ( ( rule__ArraySubExpr__Group_1_0__0 ) )
-            {
-            // InternalAgreeParser.g:22770:1: ( ( rule__ArraySubExpr__Group_1_0__0 ) )
-            // InternalAgreeParser.g:22771:1: ( rule__ArraySubExpr__Group_1_0__0 )
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getGroup_1_0()); 
-            }
-            // InternalAgreeParser.g:22772:1: ( rule__ArraySubExpr__Group_1_0__0 )
-            // InternalAgreeParser.g:22772:2: rule__ArraySubExpr__Group_1_0__0
-            {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group_1_0__0();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getGroup_1_0()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1__0__Impl"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1_0__0"
-    // InternalAgreeParser.g:22784:1: rule__ArraySubExpr__Group_1_0__0 : rule__ArraySubExpr__Group_1_0__0__Impl rule__ArraySubExpr__Group_1_0__1 ;
-    public final void rule__ArraySubExpr__Group_1_0__0() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22788:1: ( rule__ArraySubExpr__Group_1_0__0__Impl rule__ArraySubExpr__Group_1_0__1 )
-            // InternalAgreeParser.g:22789:2: rule__ArraySubExpr__Group_1_0__0__Impl rule__ArraySubExpr__Group_1_0__1
-            {
-            pushFollow(FollowSets000.FOLLOW_43);
-            rule__ArraySubExpr__Group_1_0__0__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group_1_0__1();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1_0__0"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1_0__0__Impl"
-    // InternalAgreeParser.g:22796:1: rule__ArraySubExpr__Group_1_0__0__Impl : ( () ) ;
-    public final void rule__ArraySubExpr__Group_1_0__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22800:1: ( ( () ) )
-            // InternalAgreeParser.g:22801:1: ( () )
-            {
-            // InternalAgreeParser.g:22801:1: ( () )
-            // InternalAgreeParser.g:22802:1: ()
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getArraySubExprExprAction_1_0_0()); 
-            }
-            // InternalAgreeParser.g:22803:1: ()
-            // InternalAgreeParser.g:22805:1: 
-            {
-            }
-
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getArraySubExprExprAction_1_0_0()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1_0__0__Impl"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1_0__1"
-    // InternalAgreeParser.g:22815:1: rule__ArraySubExpr__Group_1_0__1 : rule__ArraySubExpr__Group_1_0__1__Impl rule__ArraySubExpr__Group_1_0__2 ;
-    public final void rule__ArraySubExpr__Group_1_0__1() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22819:1: ( rule__ArraySubExpr__Group_1_0__1__Impl rule__ArraySubExpr__Group_1_0__2 )
-            // InternalAgreeParser.g:22820:2: rule__ArraySubExpr__Group_1_0__1__Impl rule__ArraySubExpr__Group_1_0__2
-            {
-            pushFollow(FollowSets000.FOLLOW_14);
-            rule__ArraySubExpr__Group_1_0__1__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group_1_0__2();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1_0__1"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1_0__1__Impl"
-    // InternalAgreeParser.g:22827:1: rule__ArraySubExpr__Group_1_0__1__Impl : ( LeftSquareBracket ) ;
-    public final void rule__ArraySubExpr__Group_1_0__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22831:1: ( ( LeftSquareBracket ) )
-            // InternalAgreeParser.g:22832:1: ( LeftSquareBracket )
-            {
-            // InternalAgreeParser.g:22832:1: ( LeftSquareBracket )
-            // InternalAgreeParser.g:22833:1: LeftSquareBracket
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getLeftSquareBracketKeyword_1_0_1()); 
-            }
-            match(input,LeftSquareBracket,FollowSets000.FOLLOW_2); if (state.failed) return ;
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getLeftSquareBracketKeyword_1_0_1()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1_0__1__Impl"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1_0__2"
-    // InternalAgreeParser.g:22846:1: rule__ArraySubExpr__Group_1_0__2 : rule__ArraySubExpr__Group_1_0__2__Impl rule__ArraySubExpr__Group_1_0__3 ;
-    public final void rule__ArraySubExpr__Group_1_0__2() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22850:1: ( rule__ArraySubExpr__Group_1_0__2__Impl rule__ArraySubExpr__Group_1_0__3 )
-            // InternalAgreeParser.g:22851:2: rule__ArraySubExpr__Group_1_0__2__Impl rule__ArraySubExpr__Group_1_0__3
-            {
-            pushFollow(FollowSets000.FOLLOW_45);
-            rule__ArraySubExpr__Group_1_0__2__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group_1_0__3();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1_0__2"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1_0__2__Impl"
-    // InternalAgreeParser.g:22858:1: rule__ArraySubExpr__Group_1_0__2__Impl : ( ( rule__ArraySubExpr__IndexAssignment_1_0_2 ) ) ;
-    public final void rule__ArraySubExpr__Group_1_0__2__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22862:1: ( ( ( rule__ArraySubExpr__IndexAssignment_1_0_2 ) ) )
-            // InternalAgreeParser.g:22863:1: ( ( rule__ArraySubExpr__IndexAssignment_1_0_2 ) )
-            {
-            // InternalAgreeParser.g:22863:1: ( ( rule__ArraySubExpr__IndexAssignment_1_0_2 ) )
-            // InternalAgreeParser.g:22864:1: ( rule__ArraySubExpr__IndexAssignment_1_0_2 )
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getIndexAssignment_1_0_2()); 
-            }
-            // InternalAgreeParser.g:22865:1: ( rule__ArraySubExpr__IndexAssignment_1_0_2 )
-            // InternalAgreeParser.g:22865:2: rule__ArraySubExpr__IndexAssignment_1_0_2
-            {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__IndexAssignment_1_0_2();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getIndexAssignment_1_0_2()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1_0__2__Impl"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1_0__3"
-    // InternalAgreeParser.g:22875:1: rule__ArraySubExpr__Group_1_0__3 : rule__ArraySubExpr__Group_1_0__3__Impl ;
-    public final void rule__ArraySubExpr__Group_1_0__3() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22879:1: ( rule__ArraySubExpr__Group_1_0__3__Impl )
-            // InternalAgreeParser.g:22880:2: rule__ArraySubExpr__Group_1_0__3__Impl
-            {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__ArraySubExpr__Group_1_0__3__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1_0__3"
-
-
-    // $ANTLR start "rule__ArraySubExpr__Group_1_0__3__Impl"
-    // InternalAgreeParser.g:22886:1: rule__ArraySubExpr__Group_1_0__3__Impl : ( RightSquareBracket ) ;
-    public final void rule__ArraySubExpr__Group_1_0__3__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:22890:1: ( ( RightSquareBracket ) )
-            // InternalAgreeParser.g:22891:1: ( RightSquareBracket )
-            {
-            // InternalAgreeParser.g:22891:1: ( RightSquareBracket )
-            // InternalAgreeParser.g:22892:1: RightSquareBracket
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getRightSquareBracketKeyword_1_0_3()); 
-            }
-            match(input,RightSquareBracket,FollowSets000.FOLLOW_2); if (state.failed) return ;
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getRightSquareBracketKeyword_1_0_3()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__Group_1_0__3__Impl"
 
 
     // $ANTLR start "rule__TermExpr__Group_0__0"
@@ -91732,18 +91732,63 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__RecordUpdateExpr__ExprAssignment_1_0_4"
 
 
+    // $ANTLR start "rule__ArraySubExpr__IndexAssignment_1_0_2"
+    // InternalAgreeParser.g:33102:1: rule__ArraySubExpr__IndexAssignment_1_0_2 : ( ruleExpr ) ;
+    public final void rule__ArraySubExpr__IndexAssignment_1_0_2() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:33106:1: ( ( ruleExpr ) )
+            // InternalAgreeParser.g:33107:1: ( ruleExpr )
+            {
+            // InternalAgreeParser.g:33107:1: ( ruleExpr )
+            // InternalAgreeParser.g:33108:1: ruleExpr
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getArraySubExprAccess().getIndexExprParserRuleCall_1_0_2_0()); 
+            }
+            pushFollow(FollowSets000.FOLLOW_2);
+            ruleExpr();
+
+            state._fsp--;
+            if (state.failed) return ;
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getArraySubExprAccess().getIndexExprParserRuleCall_1_0_2_0()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__ArraySubExpr__IndexAssignment_1_0_2"
+
+
     // $ANTLR start "rule__TagExpr__TagAssignment_1_2"
-    // InternalAgreeParser.g:33102:1: rule__TagExpr__TagAssignment_1_2 : ( ruleReservedVarTag ) ;
+    // InternalAgreeParser.g:33117:1: rule__TagExpr__TagAssignment_1_2 : ( ruleReservedVarTag ) ;
     public final void rule__TagExpr__TagAssignment_1_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:33106:1: ( ( ruleReservedVarTag ) )
-            // InternalAgreeParser.g:33107:1: ( ruleReservedVarTag )
+            // InternalAgreeParser.g:33121:1: ( ( ruleReservedVarTag ) )
+            // InternalAgreeParser.g:33122:1: ( ruleReservedVarTag )
             {
-            // InternalAgreeParser.g:33107:1: ( ruleReservedVarTag )
-            // InternalAgreeParser.g:33108:1: ruleReservedVarTag
+            // InternalAgreeParser.g:33122:1: ( ruleReservedVarTag )
+            // InternalAgreeParser.g:33123:1: ruleReservedVarTag
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTagExprAccess().getTagReservedVarTagParserRuleCall_1_2_0()); 
@@ -91778,23 +91823,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ProjectionExpr__FieldAssignment_1_0_2"
-    // InternalAgreeParser.g:33117:1: rule__ProjectionExpr__FieldAssignment_1_0_2 : ( ( RULE_ID ) ) ;
+    // InternalAgreeParser.g:33132:1: rule__ProjectionExpr__FieldAssignment_1_0_2 : ( ( RULE_ID ) ) ;
     public final void rule__ProjectionExpr__FieldAssignment_1_0_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:33121:1: ( ( ( RULE_ID ) ) )
-            // InternalAgreeParser.g:33122:1: ( ( RULE_ID ) )
+            // InternalAgreeParser.g:33136:1: ( ( ( RULE_ID ) ) )
+            // InternalAgreeParser.g:33137:1: ( ( RULE_ID ) )
             {
-            // InternalAgreeParser.g:33122:1: ( ( RULE_ID ) )
-            // InternalAgreeParser.g:33123:1: ( RULE_ID )
+            // InternalAgreeParser.g:33137:1: ( ( RULE_ID ) )
+            // InternalAgreeParser.g:33138:1: ( RULE_ID )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
             }
-            // InternalAgreeParser.g:33124:1: ( RULE_ID )
-            // InternalAgreeParser.g:33125:1: RULE_ID
+            // InternalAgreeParser.g:33139:1: ( RULE_ID )
+            // InternalAgreeParser.g:33140:1: RULE_ID
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getProjectionExprAccess().getFieldNamedElementIDTerminalRuleCall_1_0_2_0_1()); 
@@ -91828,51 +91873,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         return ;
     }
     // $ANTLR end "rule__ProjectionExpr__FieldAssignment_1_0_2"
-
-
-    // $ANTLR start "rule__ArraySubExpr__IndexAssignment_1_0_2"
-    // InternalAgreeParser.g:33136:1: rule__ArraySubExpr__IndexAssignment_1_0_2 : ( ruleExpr ) ;
-    public final void rule__ArraySubExpr__IndexAssignment_1_0_2() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:33140:1: ( ( ruleExpr ) )
-            // InternalAgreeParser.g:33141:1: ( ruleExpr )
-            {
-            // InternalAgreeParser.g:33141:1: ( ruleExpr )
-            // InternalAgreeParser.g:33142:1: ruleExpr
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getArraySubExprAccess().getIndexExprParserRuleCall_1_0_2_0()); 
-            }
-            pushFollow(FollowSets000.FOLLOW_2);
-            ruleExpr();
-
-            state._fsp--;
-            if (state.failed) return ;
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getArraySubExprAccess().getIndexExprParserRuleCall_1_0_2_0()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__ArraySubExpr__IndexAssignment_1_0_2"
 
 
     // $ANTLR start "rule__TermExpr__NamedElmAssignment_1_0_1"
@@ -96101,7 +96101,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             "",
             "",
             "\1\32",
-            "\1\22\25\uffff\1\22\3\uffff\1\22\10\uffff\1\22\3\uffff\1\22\14\uffff\1\22\2\uffff\2\22\3\uffff\1\22\1\uffff\1\22\5\uffff\1\22\5\uffff\1\22\1\uffff\1\22\1\uffff\2\22\3\uffff\1\22\4\uffff\3\22\1\uffff\6\22\3\uffff\1\22\1\uffff\1\22\1\25\14\22\1\uffff\4\22",
+            "\1\22\25\uffff\1\22\3\uffff\1\22\10\uffff\1\22\3\uffff\1\22\14\uffff\1\22\2\uffff\2\22\3\uffff\1\22\1\uffff\1\22\5\uffff\1\22\5\uffff\1\22\1\uffff\1\22\1\uffff\2\22\3\uffff\1\22\4\uffff\3\22\1\uffff\6\22\3\uffff\1\22\1\uffff\1\22\1\25\21\22",
             "\1\22\26\uffff\1\26",
             "\1\33\11\uffff\1\26\12\uffff\1\26",
             "\1\34",
@@ -96193,7 +96193,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     static final String dfa_23s = "\1\10\7\0\2\uffff";
     static final String dfa_24s = "\1\u0081\7\0\2\uffff";
     static final String dfa_25s = "\10\uffff\1\2\1\1";
-    static final String dfa_26s = "\1\uffff\1\4\1\0\1\2\1\3\1\5\1\1\1\6\2\uffff}>";
+    static final String dfa_26s = "\1\uffff\1\0\1\3\1\5\1\6\1\1\1\4\1\2\2\uffff}>";
     static final String[] dfa_27s = {
             "\1\10\25\uffff\1\10\3\uffff\1\10\10\uffff\1\10\3\uffff\1\10\14\uffff\1\10\2\uffff\2\10\3\uffff\1\10\1\uffff\1\10\5\uffff\1\10\5\uffff\1\10\1\uffff\1\10\1\uffff\2\10\3\uffff\1\10\4\uffff\1\7\2\10\1\uffff\1\10\1\2\1\6\1\10\1\4\4\uffff\1\10\1\uffff\1\10\1\uffff\5\10\1\uffff\3\10\1\1\1\5\1\3\1\uffff\2\10\1\uffff\1\10",
             "\1\uffff",
@@ -96236,66 +96236,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA94_2 = input.LA(1);
-
-                         
-                        int index94_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_2);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA94_6 = input.LA(1);
-
-                         
-                        int index94_6 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_6);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA94_3 = input.LA(1);
-
-                         
-                        int index94_3 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_3);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA94_4 = input.LA(1);
-
-                         
-                        int index94_4 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_4);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
                         int LA94_1 = input.LA(1);
 
                          
@@ -96310,7 +96250,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         input.seek(index94_1);
                         if ( s>=0 ) return s;
                         break;
-                    case 5 : 
+                    case 1 : 
                         int LA94_5 = input.LA(1);
 
                          
@@ -96325,7 +96265,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         input.seek(index94_5);
                         if ( s>=0 ) return s;
                         break;
-                    case 6 : 
+                    case 2 : 
                         int LA94_7 = input.LA(1);
 
                          
@@ -96338,6 +96278,66 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
                          
                         input.seek(index94_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
+                        int LA94_2 = input.LA(1);
+
+                         
+                        int index94_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA94_6 = input.LA(1);
+
+                         
+                        int index94_6 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_6);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA94_3 = input.LA(1);
+
+                         
+                        int index94_3 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA94_4 = input.LA(1);
+
+                         
+                        int index94_4 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_4);
                         if ( s>=0 ) return s;
                         break;
             }

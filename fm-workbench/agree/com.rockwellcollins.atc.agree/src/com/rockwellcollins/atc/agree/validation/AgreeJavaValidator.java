@@ -461,7 +461,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		Type exprType = AgreeTypeSystem.infer(floor.getExpr());
 
 		if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, exprType)) {
-			error(floor, "Argument of floor cast is of type '" + exprType.toString() + "' but must be of type 'real'");
+			error(floor, "Argument of floor cast is of type '" + AgreeTypeSystem.typeToString(exprType)
+			+ "' but must be of type 'real'");
 		}
 	}
 
@@ -476,7 +477,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		Type exprType = AgreeTypeSystem.infer(real.getExpr());
 
 		if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.intType, exprType)) {
-			error(real, "Argument of real cast is of type '" + exprType.toString() + "' but must be of type 'int'");
+			error(real, "Argument of real cast is of type '" + AgreeTypeSystem.typeToString(exprType)
+			+ "' but must be of type 'int'");
 		}
 	}
 
@@ -650,7 +652,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (expr != null) {
 			Type exprType = AgreeTypeSystem.infer(expr);
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, exprType)) {
-				error(assume, "Expression for assume statement is of type '" + exprType.toString()
+				error(assume, "Expression for assume statement is of type '" + AgreeTypeSystem.typeToString(exprType)
 				+ "' but must be of type 'bool'");
 			}
 		}
@@ -665,8 +667,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		Type exprType = AgreeTypeSystem.infer(statement.getExpr());
 		if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, exprType)) {
-			error(statement, "Expression for 'initially' statement is of type '" + exprType.toString()
-			+ "' but must be of type 'bool'");
+			error(statement,
+					"Expression for 'initially' statement is of type '" + AgreeTypeSystem.typeToString(exprType)
+					+ "' but must be of type 'bool'");
 		}
 	}
 
@@ -709,7 +712,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (expr != null) {
 			Type exprType = AgreeTypeSystem.infer(expr);
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, exprType)) {
-				error(asser, "Expression for assert statement is of type '" + exprType.toString()
+				error(asser, "Expression for assert statement is of type '" + AgreeTypeSystem.typeToString(exprType)
 				+ "' but must be of type 'bool'");
 			}
 		}
@@ -754,7 +757,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (expr != null) {
 			Type exprType = AgreeTypeSystem.infer(expr);
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, exprType)) {
-				error(guar, "Expression for guarantee statement is of type '" + exprType.toString()
+				error(guar, "Expression for guarantee statement is of type '" + AgreeTypeSystem.typeToString(exprType)
 				+ "' but must be of type 'bool'");
 			}
 		}
@@ -1090,7 +1093,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (expr != null) {
 			Type exprType = AgreeTypeSystem.infer(expr);
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, exprType)) {
-				error(lemma, "Expression for lemma statement is of type '" + exprType.toString()
+				error(lemma, "Expression for lemma statement is of type '" + AgreeTypeSystem.typeToString(exprType)
 				+ "' but must be of type 'bool'");
 			}
 		}
@@ -2430,8 +2433,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				error(binExpr, "Arrow '->' expressions are not allowed in linearization body expressions.");
 			} else {
 				if (!AgreeTypeSystem.typesEqual(typeRight, typeLeft)) {
-					error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
-							+ "' and '" + typeRight + "', but must be of the same type");
+					error(binExpr,
+							"left and right sides of binary expression '" + op + "' are of type '"
+									+ AgreeTypeSystem.typeToString(typeLeft) + "' and '"
+									+ AgreeTypeSystem.typeToString(typeRight) + "', but must be of the same type");
 				}
 			}
 			return;
@@ -2445,12 +2450,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 						"Logical expressions (like '" + op + "') are not allowed in linearization body expressions.");
 			} else {
 				if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, typeLeft)) {
-					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft.toString()
-					+ "' but must be of " + "type 'bool'");
+					error(binExpr, "left side of binary expression '" + op + "' is of type '"
+							+ AgreeTypeSystem.typeToString(typeLeft)
+							+ "' but must be of " + "type 'bool'");
 				}
 				if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, typeRight)) {
-					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight.toString()
-					+ "' but must be of" + " type 'bool'");
+					error(binExpr, "right side of binary expression '" + op + "' is of type '"
+							+ AgreeTypeSystem.typeToString(typeRight)
+							+ "' but must be of" + " type 'bool'");
 				}
 			}
 			return;
@@ -2463,8 +2470,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 						+ "') are not allowed in linearization body expressions.");
 			} else {
 				if (!AgreeTypeSystem.typesEqual(typeRight, typeLeft)) {
-					error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
-							+ "' and '" + typeRight + "', but must be of the same type");
+					error(binExpr,
+							"left and right sides of binary expression '" + op + "' are of type '"
+									+ AgreeTypeSystem.typeToString(typeLeft) + "' and '"
+									+ AgreeTypeSystem.typeToString(typeRight) + "', but must be of the same type");
 				}
 			}
 			return;

@@ -4758,6 +4758,61 @@ public interface AgreePackage extends EPackage
   int RECORD_UPDATE_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ArraySubExprImpl <em>Array Sub Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.ArraySubExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getArraySubExpr()
+   * @generated
+   */
+  int ARRAY_SUB_EXPR = 82;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ARRAY_SUB_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ARRAY_SUB_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ARRAY_SUB_EXPR__EXPR = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Index</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ARRAY_SUB_EXPR__INDEX = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Array Sub Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ARRAY_SUB_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.TagExprImpl <em>Tag Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4765,7 +4820,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTagExpr()
    * @generated
    */
-  int TAG_EXPR = 82;
+  int TAG_EXPR = 83;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4820,7 +4875,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getProjectionExpr()
    * @generated
    */
-  int PROJECTION_EXPR = 83;
+  int PROJECTION_EXPR = 84;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4866,61 +4921,6 @@ public interface AgreePackage extends EPackage
    * @ordered
    */
   int PROJECTION_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
-
-  /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ArraySubExprImpl <em>Array Sub Expr</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.ArraySubExprImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getArraySubExpr()
-   * @generated
-   */
-  int ARRAY_SUB_EXPR = 84;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ARRAY_SUB_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ARRAY_SUB_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Expr</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ARRAY_SUB_EXPR__EXPR = EXPR_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Index</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ARRAY_SUB_EXPR__INDEX = EXPR_FEATURE_COUNT + 1;
-
-  /**
-   * The number of structural features of the '<em>Array Sub Expr</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ARRAY_SUB_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl <em>Time Expr</em>}' class.
@@ -8005,6 +8005,38 @@ public interface AgreePackage extends EPackage
   EReference getRecordUpdateExpr_Expr();
 
   /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.ArraySubExpr <em>Array Sub Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Array Sub Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.ArraySubExpr
+   * @generated
+   */
+  EClass getArraySubExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ArraySubExpr#getExpr <em>Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.ArraySubExpr#getExpr()
+   * @see #getArraySubExpr()
+   * @generated
+   */
+  EReference getArraySubExpr_Expr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ArraySubExpr#getIndex <em>Index</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Index</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.ArraySubExpr#getIndex()
+   * @see #getArraySubExpr()
+   * @generated
+   */
+  EReference getArraySubExpr_Index();
+
+  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.TagExpr <em>Tag Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -8067,38 +8099,6 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getProjectionExpr_Field();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.ArraySubExpr <em>Array Sub Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Array Sub Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ArraySubExpr
-   * @generated
-   */
-  EClass getArraySubExpr();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ArraySubExpr#getExpr <em>Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ArraySubExpr#getExpr()
-   * @see #getArraySubExpr()
-   * @generated
-   */
-  EReference getArraySubExpr_Expr();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ArraySubExpr#getIndex <em>Index</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Index</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ArraySubExpr#getIndex()
-   * @see #getArraySubExpr()
-   * @generated
-   */
-  EReference getArraySubExpr_Index();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.TimeExpr <em>Time Expr</em>}'.
@@ -10390,6 +10390,32 @@ public interface AgreePackage extends EPackage
     EReference RECORD_UPDATE_EXPR__EXPR = eINSTANCE.getRecordUpdateExpr_Expr();
 
     /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ArraySubExprImpl <em>Array Sub Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.ArraySubExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getArraySubExpr()
+     * @generated
+     */
+    EClass ARRAY_SUB_EXPR = eINSTANCE.getArraySubExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference ARRAY_SUB_EXPR__EXPR = eINSTANCE.getArraySubExpr_Expr();
+
+    /**
+     * The meta object literal for the '<em><b>Index</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference ARRAY_SUB_EXPR__INDEX = eINSTANCE.getArraySubExpr_Index();
+
+    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.TagExprImpl <em>Tag Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -10440,32 +10466,6 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference PROJECTION_EXPR__FIELD = eINSTANCE.getProjectionExpr_Field();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ArraySubExprImpl <em>Array Sub Expr</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.ArraySubExprImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getArraySubExpr()
-     * @generated
-     */
-    EClass ARRAY_SUB_EXPR = eINSTANCE.getArraySubExpr();
-
-    /**
-     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference ARRAY_SUB_EXPR__EXPR = eINSTANCE.getArraySubExpr_Expr();
-
-    /**
-     * The meta object literal for the '<em><b>Index</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference ARRAY_SUB_EXPR__INDEX = eINSTANCE.getArraySubExpr_Index();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl <em>Time Expr</em>}' class.

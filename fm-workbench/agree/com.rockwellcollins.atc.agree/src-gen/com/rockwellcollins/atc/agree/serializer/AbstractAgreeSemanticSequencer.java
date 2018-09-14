@@ -569,12 +569,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns BinaryExpr
 	 *     RecordUpdateExpr returns BinaryExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns BinaryExpr
+	 *     ArraySubExpr returns BinaryExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns BinaryExpr
 	 *     TagExpr returns BinaryExpr
 	 *     TagExpr.TagExpr_1_0 returns BinaryExpr
 	 *     ProjectionExpr returns BinaryExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns BinaryExpr
-	 *     ArraySubExpr returns BinaryExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns BinaryExpr
 	 *     TermExpr returns BinaryExpr
 	 *
 	 * Constraint:
@@ -702,12 +702,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ArrayLiteralExpr
 	 *     RecordUpdateExpr returns ArrayLiteralExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ArrayLiteralExpr
+	 *     ArraySubExpr returns ArrayLiteralExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArrayLiteralExpr
 	 *     TagExpr returns ArrayLiteralExpr
 	 *     TagExpr.TagExpr_1_0 returns ArrayLiteralExpr
 	 *     ProjectionExpr returns ArrayLiteralExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ArrayLiteralExpr
-	 *     ArraySubExpr returns ArrayLiteralExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArrayLiteralExpr
 	 *     TermExpr returns ArrayLiteralExpr
 	 *     ArrayLiteralExpr returns ArrayLiteralExpr
 	 *
@@ -772,12 +772,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ArraySubExpr
 	 *     RecordUpdateExpr returns ArraySubExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ArraySubExpr
+	 *     ArraySubExpr returns ArraySubExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArraySubExpr
 	 *     TagExpr returns ArraySubExpr
 	 *     TagExpr.TagExpr_1_0 returns ArraySubExpr
 	 *     ProjectionExpr returns ArraySubExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ArraySubExpr
-	 *     ArraySubExpr returns ArraySubExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArraySubExpr
 	 *     TermExpr returns ArraySubExpr
 	 *
 	 * Constraint:
@@ -831,12 +831,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ArrayUpdateExpr
 	 *     RecordUpdateExpr returns ArrayUpdateExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ArrayUpdateExpr
+	 *     ArraySubExpr returns ArrayUpdateExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArrayUpdateExpr
 	 *     TagExpr returns ArrayUpdateExpr
 	 *     TagExpr.TagExpr_1_0 returns ArrayUpdateExpr
 	 *     ProjectionExpr returns ArrayUpdateExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ArrayUpdateExpr
-	 *     ArraySubExpr returns ArrayUpdateExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArrayUpdateExpr
 	 *     TermExpr returns ArrayUpdateExpr
 	 *
 	 * Constraint:
@@ -1040,12 +1040,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ExistsExpr
 	 *     RecordUpdateExpr returns ExistsExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ExistsExpr
+	 *     ArraySubExpr returns ExistsExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ExistsExpr
 	 *     TagExpr returns ExistsExpr
 	 *     TagExpr.TagExpr_1_0 returns ExistsExpr
 	 *     ProjectionExpr returns ExistsExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ExistsExpr
-	 *     ArraySubExpr returns ExistsExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ExistsExpr
 	 *     TermExpr returns ExistsExpr
 	 *
 	 * Constraint:
@@ -1119,12 +1119,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns FoldLeftExpr
 	 *     RecordUpdateExpr returns FoldLeftExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns FoldLeftExpr
+	 *     ArraySubExpr returns FoldLeftExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FoldLeftExpr
 	 *     TagExpr returns FoldLeftExpr
 	 *     TagExpr.TagExpr_1_0 returns FoldLeftExpr
 	 *     ProjectionExpr returns FoldLeftExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns FoldLeftExpr
-	 *     ArraySubExpr returns FoldLeftExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FoldLeftExpr
 	 *     TermExpr returns FoldLeftExpr
 	 *
 	 * Constraint:
@@ -1187,12 +1187,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns FoldRightExpr
 	 *     RecordUpdateExpr returns FoldRightExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns FoldRightExpr
+	 *     ArraySubExpr returns FoldRightExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FoldRightExpr
 	 *     TagExpr returns FoldRightExpr
 	 *     TagExpr.TagExpr_1_0 returns FoldRightExpr
 	 *     ProjectionExpr returns FoldRightExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns FoldRightExpr
-	 *     ArraySubExpr returns FoldRightExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FoldRightExpr
 	 *     TermExpr returns FoldRightExpr
 	 *
 	 * Constraint:
@@ -1255,12 +1255,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ForallExpr
 	 *     RecordUpdateExpr returns ForallExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ForallExpr
+	 *     ArraySubExpr returns ForallExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ForallExpr
 	 *     TagExpr returns ForallExpr
 	 *     TagExpr.TagExpr_1_0 returns ForallExpr
 	 *     ProjectionExpr returns ForallExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ForallExpr
-	 *     ArraySubExpr returns ForallExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ForallExpr
 	 *     TermExpr returns ForallExpr
 	 *
 	 * Constraint:
@@ -1317,12 +1317,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ForeachExpr
 	 *     RecordUpdateExpr returns ForeachExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ForeachExpr
+	 *     ArraySubExpr returns ForeachExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ForeachExpr
 	 *     TagExpr returns ForeachExpr
 	 *     TagExpr.TagExpr_1_0 returns ForeachExpr
 	 *     ProjectionExpr returns ForeachExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ForeachExpr
-	 *     ArraySubExpr returns ForeachExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ForeachExpr
 	 *     TermExpr returns ForeachExpr
 	 *
 	 * Constraint:
@@ -1379,12 +1379,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns IfThenElseExpr
 	 *     RecordUpdateExpr returns IfThenElseExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns IfThenElseExpr
+	 *     ArraySubExpr returns IfThenElseExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IfThenElseExpr
 	 *     TagExpr returns IfThenElseExpr
 	 *     TagExpr.TagExpr_1_0 returns IfThenElseExpr
 	 *     ProjectionExpr returns IfThenElseExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns IfThenElseExpr
-	 *     ArraySubExpr returns IfThenElseExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IfThenElseExpr
 	 *     TermExpr returns IfThenElseExpr
 	 *
 	 * Constraint:
@@ -1616,12 +1616,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns GetPropertyExpr
 	 *     RecordUpdateExpr returns GetPropertyExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns GetPropertyExpr
+	 *     ArraySubExpr returns GetPropertyExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns GetPropertyExpr
 	 *     TagExpr returns GetPropertyExpr
 	 *     TagExpr.TagExpr_1_0 returns GetPropertyExpr
 	 *     ProjectionExpr returns GetPropertyExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns GetPropertyExpr
-	 *     ArraySubExpr returns GetPropertyExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns GetPropertyExpr
 	 *     TermExpr returns GetPropertyExpr
 	 *
 	 * Constraint:
@@ -1675,12 +1675,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns PrevExpr
 	 *     RecordUpdateExpr returns PrevExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns PrevExpr
+	 *     ArraySubExpr returns PrevExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns PrevExpr
 	 *     TagExpr returns PrevExpr
 	 *     TagExpr.TagExpr_1_0 returns PrevExpr
 	 *     ProjectionExpr returns PrevExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns PrevExpr
-	 *     ArraySubExpr returns PrevExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns PrevExpr
 	 *     TermExpr returns PrevExpr
 	 *
 	 * Constraint:
@@ -1734,12 +1734,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ProjectionExpr
 	 *     RecordUpdateExpr returns ProjectionExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ProjectionExpr
+	 *     ArraySubExpr returns ProjectionExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ProjectionExpr
 	 *     TagExpr returns ProjectionExpr
 	 *     TagExpr.TagExpr_1_0 returns ProjectionExpr
 	 *     ProjectionExpr returns ProjectionExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ProjectionExpr
-	 *     ArraySubExpr returns ProjectionExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ProjectionExpr
 	 *     TermExpr returns ProjectionExpr
 	 *
 	 * Constraint:
@@ -1858,12 +1858,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns RecordUpdateExpr
 	 *     RecordUpdateExpr returns RecordUpdateExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns RecordUpdateExpr
+	 *     ArraySubExpr returns RecordUpdateExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RecordUpdateExpr
 	 *     TagExpr returns RecordUpdateExpr
 	 *     TagExpr.TagExpr_1_0 returns RecordUpdateExpr
 	 *     ProjectionExpr returns RecordUpdateExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns RecordUpdateExpr
-	 *     ArraySubExpr returns RecordUpdateExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RecordUpdateExpr
 	 *     TermExpr returns RecordUpdateExpr
 	 *
 	 * Constraint:
@@ -2124,12 +2124,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns TagExpr
 	 *     RecordUpdateExpr returns TagExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns TagExpr
+	 *     ArraySubExpr returns TagExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TagExpr
 	 *     TagExpr returns TagExpr
 	 *     TagExpr.TagExpr_1_0 returns TagExpr
 	 *     ProjectionExpr returns TagExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TagExpr
-	 *     ArraySubExpr returns TagExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TagExpr
 	 *     TermExpr returns TagExpr
 	 *
 	 * Constraint:
@@ -2183,12 +2183,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns BoolLitExpr
 	 *     RecordUpdateExpr returns BoolLitExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns BoolLitExpr
+	 *     ArraySubExpr returns BoolLitExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns BoolLitExpr
 	 *     TagExpr returns BoolLitExpr
 	 *     TagExpr.TagExpr_1_0 returns BoolLitExpr
 	 *     ProjectionExpr returns BoolLitExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns BoolLitExpr
-	 *     ArraySubExpr returns BoolLitExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns BoolLitExpr
 	 *     TermExpr returns BoolLitExpr
 	 *
 	 * Constraint:
@@ -2239,12 +2239,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns CallExpr
 	 *     RecordUpdateExpr returns CallExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns CallExpr
+	 *     ArraySubExpr returns CallExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns CallExpr
 	 *     TagExpr returns CallExpr
 	 *     TagExpr.TagExpr_1_0 returns CallExpr
 	 *     ProjectionExpr returns CallExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns CallExpr
-	 *     ArraySubExpr returns CallExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns CallExpr
 	 *     TermExpr returns CallExpr
 	 *
 	 * Constraint:
@@ -2289,12 +2289,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns EnumLitExpr
 	 *     RecordUpdateExpr returns EnumLitExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns EnumLitExpr
+	 *     ArraySubExpr returns EnumLitExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns EnumLitExpr
 	 *     TagExpr returns EnumLitExpr
 	 *     TagExpr.TagExpr_1_0 returns EnumLitExpr
 	 *     ProjectionExpr returns EnumLitExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns EnumLitExpr
-	 *     ArraySubExpr returns EnumLitExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns EnumLitExpr
 	 *     TermExpr returns EnumLitExpr
 	 *
 	 * Constraint:
@@ -2348,12 +2348,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns EventExpr
 	 *     RecordUpdateExpr returns EventExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns EventExpr
+	 *     ArraySubExpr returns EventExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns EventExpr
 	 *     TagExpr returns EventExpr
 	 *     TagExpr.TagExpr_1_0 returns EventExpr
 	 *     ProjectionExpr returns EventExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns EventExpr
-	 *     ArraySubExpr returns EventExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns EventExpr
 	 *     TermExpr returns EventExpr
 	 *
 	 * Constraint:
@@ -2404,12 +2404,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns FloorCast
 	 *     RecordUpdateExpr returns FloorCast
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns FloorCast
+	 *     ArraySubExpr returns FloorCast
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FloorCast
 	 *     TagExpr returns FloorCast
 	 *     TagExpr.TagExpr_1_0 returns FloorCast
 	 *     ProjectionExpr returns FloorCast
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns FloorCast
-	 *     ArraySubExpr returns FloorCast
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FloorCast
 	 *     TermExpr returns FloorCast
 	 *
 	 * Constraint:
@@ -2460,12 +2460,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns IndicesExpr
 	 *     RecordUpdateExpr returns IndicesExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns IndicesExpr
+	 *     ArraySubExpr returns IndicesExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IndicesExpr
 	 *     TagExpr returns IndicesExpr
 	 *     TagExpr.TagExpr_1_0 returns IndicesExpr
 	 *     ProjectionExpr returns IndicesExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns IndicesExpr
-	 *     ArraySubExpr returns IndicesExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IndicesExpr
 	 *     TermExpr returns IndicesExpr
 	 *
 	 * Constraint:
@@ -2516,12 +2516,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns IntLitExpr
 	 *     RecordUpdateExpr returns IntLitExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns IntLitExpr
+	 *     ArraySubExpr returns IntLitExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IntLitExpr
 	 *     TagExpr returns IntLitExpr
 	 *     TagExpr.TagExpr_1_0 returns IntLitExpr
 	 *     ProjectionExpr returns IntLitExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns IntLitExpr
-	 *     ArraySubExpr returns IntLitExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IntLitExpr
 	 *     TermExpr returns IntLitExpr
 	 *
 	 * Constraint:
@@ -2572,12 +2572,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns LatchedExpr
 	 *     RecordUpdateExpr returns LatchedExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns LatchedExpr
+	 *     ArraySubExpr returns LatchedExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns LatchedExpr
 	 *     TagExpr returns LatchedExpr
 	 *     TagExpr.TagExpr_1_0 returns LatchedExpr
 	 *     ProjectionExpr returns LatchedExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns LatchedExpr
-	 *     ArraySubExpr returns LatchedExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns LatchedExpr
 	 *     TermExpr returns LatchedExpr
 	 *
 	 * Constraint:
@@ -2628,12 +2628,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns NamedElmExpr
 	 *     RecordUpdateExpr returns NamedElmExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns NamedElmExpr
+	 *     ArraySubExpr returns NamedElmExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns NamedElmExpr
 	 *     TagExpr returns NamedElmExpr
 	 *     TagExpr.TagExpr_1_0 returns NamedElmExpr
 	 *     ProjectionExpr returns NamedElmExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns NamedElmExpr
-	 *     ArraySubExpr returns NamedElmExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns NamedElmExpr
 	 *     TermExpr returns NamedElmExpr
 	 *
 	 * Constraint:
@@ -2684,12 +2684,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns PreExpr
 	 *     RecordUpdateExpr returns PreExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns PreExpr
+	 *     ArraySubExpr returns PreExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns PreExpr
 	 *     TagExpr returns PreExpr
 	 *     TagExpr.TagExpr_1_0 returns PreExpr
 	 *     ProjectionExpr returns PreExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns PreExpr
-	 *     ArraySubExpr returns PreExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns PreExpr
 	 *     TermExpr returns PreExpr
 	 *
 	 * Constraint:
@@ -2740,12 +2740,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns RealCast
 	 *     RecordUpdateExpr returns RealCast
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns RealCast
+	 *     ArraySubExpr returns RealCast
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RealCast
 	 *     TagExpr returns RealCast
 	 *     TagExpr.TagExpr_1_0 returns RealCast
 	 *     ProjectionExpr returns RealCast
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns RealCast
-	 *     ArraySubExpr returns RealCast
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RealCast
 	 *     TermExpr returns RealCast
 	 *
 	 * Constraint:
@@ -2796,12 +2796,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns RealLitExpr
 	 *     RecordUpdateExpr returns RealLitExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns RealLitExpr
+	 *     ArraySubExpr returns RealLitExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RealLitExpr
 	 *     TagExpr returns RealLitExpr
 	 *     TagExpr.TagExpr_1_0 returns RealLitExpr
 	 *     ProjectionExpr returns RealLitExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns RealLitExpr
-	 *     ArraySubExpr returns RealLitExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RealLitExpr
 	 *     TermExpr returns RealLitExpr
 	 *
 	 * Constraint:
@@ -2852,12 +2852,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns RecordLitExpr
 	 *     RecordUpdateExpr returns RecordLitExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns RecordLitExpr
+	 *     ArraySubExpr returns RecordLitExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RecordLitExpr
 	 *     TagExpr returns RecordLitExpr
 	 *     TagExpr.TagExpr_1_0 returns RecordLitExpr
 	 *     ProjectionExpr returns RecordLitExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns RecordLitExpr
-	 *     ArraySubExpr returns RecordLitExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RecordLitExpr
 	 *     TermExpr returns RecordLitExpr
 	 *
 	 * Constraint:
@@ -2902,12 +2902,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns TimeExpr
 	 *     RecordUpdateExpr returns TimeExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns TimeExpr
+	 *     ArraySubExpr returns TimeExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeExpr
 	 *     TagExpr returns TimeExpr
 	 *     TagExpr.TagExpr_1_0 returns TimeExpr
 	 *     ProjectionExpr returns TimeExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TimeExpr
-	 *     ArraySubExpr returns TimeExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeExpr
 	 *     TermExpr returns TimeExpr
 	 *
 	 * Constraint:
@@ -2952,12 +2952,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns TimeFallExpr
 	 *     RecordUpdateExpr returns TimeFallExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns TimeFallExpr
+	 *     ArraySubExpr returns TimeFallExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeFallExpr
 	 *     TagExpr returns TimeFallExpr
 	 *     TagExpr.TagExpr_1_0 returns TimeFallExpr
 	 *     ProjectionExpr returns TimeFallExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TimeFallExpr
-	 *     ArraySubExpr returns TimeFallExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeFallExpr
 	 *     TermExpr returns TimeFallExpr
 	 *
 	 * Constraint:
@@ -3008,12 +3008,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns TimeOfExpr
 	 *     RecordUpdateExpr returns TimeOfExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns TimeOfExpr
+	 *     ArraySubExpr returns TimeOfExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeOfExpr
 	 *     TagExpr returns TimeOfExpr
 	 *     TagExpr.TagExpr_1_0 returns TimeOfExpr
 	 *     ProjectionExpr returns TimeOfExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TimeOfExpr
-	 *     ArraySubExpr returns TimeOfExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeOfExpr
 	 *     TermExpr returns TimeOfExpr
 	 *
 	 * Constraint:
@@ -3064,12 +3064,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns TimeRiseExpr
 	 *     RecordUpdateExpr returns TimeRiseExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns TimeRiseExpr
+	 *     ArraySubExpr returns TimeRiseExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeRiseExpr
 	 *     TagExpr returns TimeRiseExpr
 	 *     TagExpr.TagExpr_1_0 returns TimeRiseExpr
 	 *     ProjectionExpr returns TimeRiseExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TimeRiseExpr
-	 *     ArraySubExpr returns TimeRiseExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeRiseExpr
 	 *     TermExpr returns TimeRiseExpr
 	 *
 	 * Constraint:
@@ -3227,12 +3227,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns UnaryExpr
 	 *     RecordUpdateExpr returns UnaryExpr
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns UnaryExpr
+	 *     ArraySubExpr returns UnaryExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns UnaryExpr
 	 *     TagExpr returns UnaryExpr
 	 *     TagExpr.TagExpr_1_0 returns UnaryExpr
 	 *     ProjectionExpr returns UnaryExpr
 	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns UnaryExpr
-	 *     ArraySubExpr returns UnaryExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns UnaryExpr
 	 *     TermExpr returns UnaryExpr
 	 *
 	 * Constraint:
