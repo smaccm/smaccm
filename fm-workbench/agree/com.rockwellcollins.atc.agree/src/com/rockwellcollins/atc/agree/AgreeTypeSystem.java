@@ -108,10 +108,6 @@ public class AgreeTypeSystem {
 		return "<type_error>//" + typ.toString();
 	}
 
-	public static boolean typesEqual(Type t1, Type t2) {
-		return typeToString(t1).equals(typeToString(t2));
-	}
-
 	private static PrimType mkRealType() {
 		PrimType pt = AgreeFactory.eINSTANCE.createPrimType();
 		pt.setName("real");
@@ -166,6 +162,31 @@ public class AgreeTypeSystem {
 			ct.setLeaf(cc);
 			return ct;
 		}
+	}
+
+	private static Type trySimp(Type t) {
+		if (t instanceof CustomType) {
+			String typeString = typeToString(t);
+			if (typeString.equals("Base_Types::Integer")) {
+				return intType;
+			} else if (typeString.equals("Base_Types::Real")) {
+				return realType;
+			} else if (typeString.contentEquals("Base_Types::Boolean")) {
+				return boolType;
+			} else {
+				return t;
+			}
+		} else {
+			return t;
+		}
+	}
+
+	public static boolean typesEqual(Type t1, Type t2) {
+
+		Type t10 = trySimp(t1);
+		Type t20 = trySimp(t2);
+
+		return typeToString(t10).equals(typeToString(t20));
 	}
 
 	public final static PrimType boolType = mkBoolType();
