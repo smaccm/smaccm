@@ -92,7 +92,7 @@ public class AgreeTypeSystem {
 		} else if (typ instanceof CustomType) {
 			NamedElement stem = ((CustomType) typ).getStem();
 			if (stem == null) {
-				EObject o = typ.eContainer();
+				EObject o = ((CustomType) typ).getLeaf().eContainer();
 				while (!(o instanceof AadlPackage)) {
 					o = o.eContainer();
 				}
