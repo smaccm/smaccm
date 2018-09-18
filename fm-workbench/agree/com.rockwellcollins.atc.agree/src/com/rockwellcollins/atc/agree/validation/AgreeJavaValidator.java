@@ -1281,7 +1281,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		Expr arrExpr = arrup.getArray();
 		checkTypeExists(arrExpr);
 		Type arrType = AgreeTypeSystem.infer(arrExpr);
-		if (!(arrType instanceof ArrayType)) {
+
+		if (arrType instanceof CustomType) {
+			NamedElement typedef = ((CustomType) arrType).getLeaf();
+			if (typedef instanceof DataType) {
+				ArrayDef ad = AgreeTypeSystem.arrayDefFromAadl((DataType) typedef);
+
+				if (!ad.isArray || ad.dimension <= 0 || ad.baseType == null) {
+					error(arrExpr, "expression must evaluate to an array");
+				}
+
+			}
+		} else if (!(arrType instanceof ArrayType)) {
 			error(arrExpr, "expression must evaluate to an array");
 		}
 
