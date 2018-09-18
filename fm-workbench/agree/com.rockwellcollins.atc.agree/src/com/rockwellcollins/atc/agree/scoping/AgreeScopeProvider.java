@@ -403,9 +403,8 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 
 	protected IScope scope_ProjectionExpr_field(ProjectionExpr ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
 		Type typ = AgreeTypeSystem.infer(ctx.getExpr());
-		return Scopes.scopeFor(getFieldsFromRecordType(typ), prevScope);
+		return Scopes.scopeFor(getFieldsFromRecordType(typ));
 	}
 
 	IScope scope_AbstractionRef_stem(AbstractionRef ctx, EReference ref) {

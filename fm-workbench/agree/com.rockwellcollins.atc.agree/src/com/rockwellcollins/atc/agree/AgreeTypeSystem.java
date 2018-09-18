@@ -1,7 +1,5 @@
 package com.rockwellcollins.atc.agree;
 
-import static java.lang.Math.toIntExact;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -183,10 +181,25 @@ public class AgreeTypeSystem {
 
 	public static boolean typesEqual(Type t1, Type t2) {
 
-		Type t10 = trySimp(t1);
-		Type t20 = trySimp(t2);
 
-		return typeToString(t10).equals(typeToString(t20));
+		if (t1 instanceof ArrayType && t2 instanceof ArrayType) {
+			String size1 = ((ArrayType) t1).getSize();
+			String size2 = ((ArrayType) t2).getSize();
+
+			if (!size1.contentEquals(size2)) {
+				return false;
+			} else {
+				Type stem1 = ((ArrayType) t1).getStem();
+				Type stem2 = ((ArrayType) t2).getStem();
+
+				return typesEqual(stem1, stem2);
+			}
+		} else {
+			Type t10 = trySimp(t1);
+			Type t20 = trySimp(t2);
+			return typeToString(t10).equals(typeToString(t20));
+
+		}
 	}
 
 	public final static PrimType boolType = mkBoolType();
@@ -204,57 +217,41 @@ public class AgreeTypeSystem {
 
 			if (stemType instanceof CustomType) {
 				NamedElement typedef = ((CustomType) stemType).getLeaf();
+
 				if (typedef instanceof RecordDef) {
-					EList<Arg> args = ((RecordDef) typedef).getArgs();
-					for (Arg choice : args) {
-						if (choice.getName().equals(field.getName())) {
-							return choice.getType();
-						}
-					}
+					Arg choice = (Arg) field;
+					return choice.getType();
+
 				} else if (typedef instanceof DataImplementation) {
-					EList<Subcomponent> subcomps = ((DataImplementation) typedef).getAllSubcomponents();
-					for (Subcomponent choice : subcomps) {
 
-						if (choice.getName().equals(field.getName())) {
-							CustomType t = (CustomType) mkTypeFromAadlType(choice.getClassifier());
-							List<ArrayDimension> dims = choice.getArrayDimensions();
-							if (dims.size() > 0) {
-								long arrSize = dims.get(0).getSize().getSize();
-								return mkArrayType(t, toIntExact(arrSize));
-							} else {
-								return t;
-							}
-
-						}
+					Subcomponent choice = (Subcomponent) field;
+					CustomType t = (CustomType) mkTypeFromAadlType(choice.getClassifier());
+					List<ArrayDimension> dims = choice.getArrayDimensions();
+					if (dims.size() > 0) {
+						long arrSize = dims.get(0).getSize().getSize();
+						return mkArrayType(t, java.lang.Math.toIntExact(arrSize));
+					} else {
+						return t;
 					}
+
 				} else if (typedef instanceof ComponentImplementation) {
-					EList<Subcomponent> subcomps = ((ComponentImplementation) typedef).getAllSubcomponents();
-					for (Subcomponent choice : subcomps) {
-						if (choice.getName().equals(field.getName())) {
-							return mkTypeFromAadlType(choice.getClassifier());
-						}
-					}
+
 
 					NamedElement parentType = ((ComponentImplementation) typedef).getType();
 					if (parentType instanceof Classifier) {
+						Feature choice = (Feature) field;
+						return mkTypeFromAadlType(choice.getClassifier());
 
-						EList<Feature> features = ((Classifier) parentType).getAllFeatures();
-						for (Feature choice : features) {
-							if (choice.getName().equals(field.getName())) {
-								return mkTypeFromAadlType(choice.getClassifier());
-							}
-						}
-
+					} else {
+						Subcomponent choice = (Subcomponent) field;
+						return mkTypeFromAadlType(choice.getClassifier());
 					}
 
-				} else if (typedef instanceof Classifier) {
 
-					EList<Feature> features = ((Classifier) typedef).getAllFeatures();
-					for (Feature choice : features) {
-						if (choice.getName().equals(field.getName())) {
-							return mkTypeFromAadlType(choice.getClassifier());
-						}
-					}
+
+				} else if (typedef instanceof ComponentType) {
+					Feature choice = (Feature) field;
+					return mkTypeFromAadlType(choice.getClassifier());
 
 				}
 			}
