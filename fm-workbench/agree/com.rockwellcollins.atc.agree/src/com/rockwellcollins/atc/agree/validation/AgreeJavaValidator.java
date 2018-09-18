@@ -46,6 +46,7 @@ import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem;
+import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayDef;
 import com.rockwellcollins.atc.agree.agree.Abstraction;
 import com.rockwellcollins.atc.agree.agree.AbstractionRef;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
@@ -1192,7 +1193,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			} else if (ne instanceof DataImplementation) {
 				// scoping should ensure the key is a proper Subcomponent
 				Subcomponent subcomp = (Subcomponent) upExpr.getKey();
-				Type keyType = AgreeTypeSystem.mkTypeFromAadlType(subcomp.getClassifier());
+				Type keyType = AgreeTypeSystem.mkCustomType(subcomp.getClassifier());
 				checkTypeExists(upExpr.getExpr());
 				Type expType = AgreeTypeSystem.infer(upExpr.getExpr());
 				if (!AgreeTypeSystem.typesEqual(keyType, expType)) {
@@ -1303,7 +1304,22 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		Expr arrayExp = asub.getExpr();
 		checkTypeExists(arrayExp);
 		Type arrayType = AgreeTypeSystem.infer(arrayExp);
-		if (!(arrayType instanceof ArrayType)) {
+
+		if (arrayType instanceof CustomType) {
+
+			NamedElement typedef = ((CustomType) arrayType).getLeaf();
+
+			if (typedef instanceof DataType) {
+				ArrayDef ad = AgreeTypeSystem.arrayDefFromAadl((DataType) typedef);
+
+				if (!ad.isArray || ad.dimension <= 0 || ad.baseType == null) {
+
+					error(arrayExp, "element must be an array");
+				}
+
+			}
+
+		} else if (!(arrayType instanceof ArrayType)) {
 			error(arrayExp, "element must be an array");
 		}
 
@@ -1401,7 +1417,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		} else if (rec instanceof DataImplementation) {
 			DataImplementation dataImpl = (DataImplementation) rec;
 			for (Subcomponent sub : dataImpl.getAllSubcomponents()) {
-				typeMap.put(sub.getName(), AgreeTypeSystem.mkTypeFromAadlType(sub.getClassifier()));
+				typeMap.put(sub.getName(), AgreeTypeSystem.mkCustomType(sub.getClassifier()));
 			}
 		} else {
 			error(recType, "Record type '" + rec.getName() + "' must be a feature group or a record type definition");

@@ -9,18 +9,26 @@ import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
+import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.ArrayDimension;
 import org.osate.aadl2.Classifier;
+import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponentType;
+import org.osate.aadl2.DataType;
+import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
+import org.osate.aadl2.IntegerLiteral;
+import org.osate.aadl2.ListValue;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyAssociation;
+import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.SubcomponentType;
@@ -137,17 +145,11 @@ public class AgreeTypeSystem {
 		return at;
 	}
 
-	public static Type mkCustomType(NamedElement ne) {
-		CustomType ct = AgreeFactory.eINSTANCE.createCustomType();
-		ct.setStem(null);
-		ct.setLeaf(ne);
-		return ct;
-	}
 
-	public static Type mkTypeFromAadlType(org.osate.aadl2.Type cc) {
+	public static Type mkCustomType(NamedElement cc) {
 
 		if (cc instanceof ComponentType && ((ComponentType) cc).getExtended() != null) {
-			return mkTypeFromAadlType(((Classifier) cc).getExtended());
+			return mkCustomType(((Classifier) cc).getExtended());
 		} else if (cc instanceof AadlBoolean) {
 			return boolType;
 		} else if (cc instanceof AadlInteger) {
@@ -208,6 +210,61 @@ public class AgreeTypeSystem {
 
 	public final static PrimType errorType = mkErrorType();
 
+	public static class ArrayDef {
+		public boolean isArray = false;
+		public int dimension = 0;
+		public NamedElement baseType = null;
+	}
+
+	public final static ArrayDef arrayDefFromAadl(DataType typedef) {
+
+		List<PropertyAssociation> pas = typedef.getAllPropertyAssociations();
+
+		ArrayDef ad = new ArrayDef();
+
+		for (PropertyAssociation choice : pas) {
+			Property p = choice.getProperty();
+
+			PropertyExpression v = choice.getOwnedValues().get(0).getOwnedValue();
+
+			String key = p.getQualifiedName();
+
+			if (key.equals("Data_Model::Data_Representation")) {
+				if (v instanceof NamedValue) {
+					AbstractNamedValue anv = ((NamedValue) v).getNamedValue();
+					if (anv instanceof EnumerationLiteral) {
+						EnumerationLiteral el = (EnumerationLiteral) anv;
+						ad.isArray = el.getName().equals("Array");
+					}
+				}
+
+			} else if (key.equals("Data_Model::Base_Type")) {
+				if (v instanceof ListValue) {
+					if (v instanceof ListValue) {
+						ListValue l = (ListValue) v;
+						PropertyExpression pe = l.getOwnedListElements().get(0);
+						if (pe instanceof ClassifierValue) {
+							ad.baseType = ((ClassifierValue) pe).getClassifier();
+						}
+					}
+				}
+
+			} else if (key.equals("Data_Model::Dimension")) {
+				if (v instanceof ListValue) {
+					ListValue l = (ListValue) v;
+					PropertyExpression pe = l.getOwnedListElements().get(0);
+					if (pe instanceof IntegerLiteral) {
+						ad.dimension = java.lang.Math.toIntExact(((IntegerLiteral) pe).getValue());
+					}
+				}
+			}
+
+		}
+
+		return ad;
+
+	}
+
 	public static Type infer(Expr expr) {
 
 		if (expr instanceof ProjectionExpr) {
@@ -225,7 +282,7 @@ public class AgreeTypeSystem {
 				} else if (typedef instanceof DataImplementation) {
 
 					Subcomponent choice = (Subcomponent) field;
-					CustomType t = (CustomType) mkTypeFromAadlType(choice.getClassifier());
+					CustomType t = (CustomType) mkCustomType(choice.getClassifier());
 					List<ArrayDimension> dims = choice.getArrayDimensions();
 					if (dims.size() > 0) {
 						long arrSize = dims.get(0).getSize().getSize();
@@ -240,18 +297,18 @@ public class AgreeTypeSystem {
 					NamedElement parentType = ((ComponentImplementation) typedef).getType();
 					if (parentType instanceof Classifier) {
 						Feature choice = (Feature) field;
-						return mkTypeFromAadlType(choice.getClassifier());
+						return mkCustomType(choice.getClassifier());
 
 					} else {
 						Subcomponent choice = (Subcomponent) field;
-						return mkTypeFromAadlType(choice.getClassifier());
+						return mkCustomType(choice.getClassifier());
 					}
 
 
 
 				} else if (typedef instanceof ComponentType) {
 					Feature choice = (Feature) field;
-					return mkTypeFromAadlType(choice.getClassifier());
+					return mkCustomType(choice.getClassifier());
 
 				}
 			}
@@ -278,6 +335,17 @@ public class AgreeTypeSystem {
 
 				Type t = ((ArrayType) arrType).getStem();
 				return t;
+			} else if (arrType instanceof CustomType) {
+				NamedElement typedef = ((CustomType) arrType).getLeaf();
+
+				if (typedef instanceof DataType) {
+					ArrayDef ad = arrayDefFromAadl((DataType) typedef);
+
+					if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
+						return mkCustomType(ad.baseType);
+					}
+
+				}
 			}
 
 		} else if (expr instanceof IndicesExpr) {
@@ -356,7 +424,7 @@ public class AgreeTypeSystem {
 
 				if (prop instanceof Property) {
 					PropertyType pt = ((Property) prop).getPropertyType();
-					return mkTypeFromAadlType(pt);
+					return mkCustomType(pt);
 
 				} else {
 
@@ -365,7 +433,7 @@ public class AgreeTypeSystem {
 					for (PropertyAssociation choice : pas) {
 						if (choice.getProperty().getName().equals(prop.getName())) {
 							PropertyType pt = choice.getProperty().getPropertyType();
-							return mkTypeFromAadlType(pt);
+							return mkCustomType(pt);
 						}
 					}
 				}
@@ -382,7 +450,7 @@ public class AgreeTypeSystem {
 
 							if (pchoice.getProperty().getName().equals(prop.getName())) {
 								PropertyType pt = pchoice.getProperty().getPropertyType();
-								return mkTypeFromAadlType(pt);
+								return mkCustomType(pt);
 							}
 						}
 
@@ -617,15 +685,15 @@ public class AgreeTypeSystem {
 
 		} else if (ne instanceof DataPort) {
 			DataSubcomponentType dt = ((DataPort) ne).getDataFeatureClassifier();
-			return mkTypeFromAadlType(dt);
+			return mkCustomType(dt);
 
 		} else if (ne instanceof EventDataPort) {
 			DataSubcomponentType dt = ((EventDataPort) ne).getDataFeatureClassifier();
-			return mkTypeFromAadlType(dt);
+			return mkCustomType(dt);
 
 		} else if (ne instanceof Subcomponent) {
 			SubcomponentType t = ((Subcomponent) ne).getSubcomponentType();
-			return mkTypeFromAadlType(t);
+			return mkCustomType(t);
 		}
 
 //		} else if (namedEl instanceof DataAccess) {
