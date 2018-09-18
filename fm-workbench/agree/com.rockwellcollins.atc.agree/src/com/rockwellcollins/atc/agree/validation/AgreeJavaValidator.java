@@ -1292,20 +1292,23 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				}
 
 			}
-		} else if (!(arrType instanceof ArrayType)) {
+		} else if (arrType instanceof ArrayType) {
+			Type elmType = ((ArrayType) arrType).getStem();
+			for (Expr e : exprs) {
+				checkTypeExists(e);
+				Type t = AgreeTypeSystem.infer(e);
+				if (!AgreeTypeSystem.typesEqual(elmType, t)) {
+					error(e, "type of element must be " + AgreeTypeSystem.typeToString(elmType) + ", but has type "
+							+ AgreeTypeSystem.typeToString(t));
+				}
+
+			}
+		} else {
 			error(arrExpr, "expression must evaluate to an array");
 		}
 
-		Type elmType = ((ArrayType) arrType).getStem();
-		for (Expr e : exprs) {
-			checkTypeExists(e);
-			Type t = AgreeTypeSystem.infer(e);
-			if (!AgreeTypeSystem.typesEqual(elmType, t)) {
-				error(e, "type of element must be " + AgreeTypeSystem.typeToString(elmType) + ", but has type "
-						+ AgreeTypeSystem.typeToString(t));
-			}
 
-		}
+
 
 	}
 

@@ -31,12 +31,11 @@ public
 		fun array_test2(t : array::struct_with_array.i) : bool =
 			t.array[0] = 10;
 			
---		fun array_test3(t : array::array_type) : bool = 
---			t.array[2] = 10;
---	
---	
---fun array_test4(t : array::array_type) : bool =
---forall i in indices(t), t[i] < 10;
+		fun array_test3(t : array::array_type) : bool = 
+			t[2] = 10;
+
+		fun array_test4(t : array::array_type) : bool =
+			forall i in indices(t), t[i] < 10;
 			
 	**};
 	

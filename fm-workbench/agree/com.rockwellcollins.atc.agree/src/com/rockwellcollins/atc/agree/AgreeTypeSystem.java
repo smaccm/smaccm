@@ -350,7 +350,14 @@ public class AgreeTypeSystem {
 
 		} else if (expr instanceof IndicesExpr) {
 			Type arrType = infer(((IndicesExpr) expr).getArray());
-			if (arrType instanceof ArrayType) {
+
+			if (arrType instanceof CustomType) {
+				NamedElement typedef = ((CustomType) arrType).getLeaf();
+				if (typedef instanceof DataType) {
+					ArrayDef ad = arrayDefFromAadl((DataType) typedef);
+					return mkArrayType(intType, ad.dimension);
+				}
+			} else if (arrType instanceof ArrayType) {
 				int size = Integer.parseInt(((ArrayType) arrType).getSize());
 				return mkArrayType(intType, size);
 			}
