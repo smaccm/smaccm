@@ -45,6 +45,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.osate.aadl2.Aadl2Factory;
@@ -52,7 +53,6 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
-import org.osate.core.OsateCorePlugin;
 import org.osgi.framework.FrameworkUtil;
 
 import com.google.inject.Injector;
@@ -139,7 +139,8 @@ public class SimulationLaunchConfigurationDelegate implements ILaunchConfigurati
 		final QualifiedName qualifiedName = QualifiedName.create(qualifiedNameStr.split("::"));
 		
 		final IPath projectPath = project == null ? null : project.getFullPath();
-		final Injector injector = OsateCorePlugin.getDefault().getInjector("org.osate.xtext.aadl2.properties.Properties");
+		Injector injector = IResourceServiceProvider.Registry.INSTANCE
+				.getResourceServiceProvider(URI.createFileURI("dummy.aadl")).get(Injector.class);
 		final ResourceDescriptionsProvider resourceDescProvider = injector.getInstance(ResourceDescriptionsProvider.class);
 		final IResourceDescriptions resDescriptions = resourceDescProvider.getResourceDescriptions(new XtextResourceSet());
 		
