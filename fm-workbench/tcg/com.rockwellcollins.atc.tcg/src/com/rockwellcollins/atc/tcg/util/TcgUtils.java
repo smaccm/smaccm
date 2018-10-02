@@ -23,16 +23,6 @@ package com.rockwellcollins.atc.tcg.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashSet;
-
-import org.eclipse.core.resources.IFile;
-import org.osate.aadl2.AadlPackage;
-import org.osate.aadl2.Classifier;
-import org.osate.aadl2.ComponentImplementation;
-import org.osate.aadl2.ModelUnit;
-import org.osate.aadl2.modelsupport.util.AadlUtil;
-
-import com.rockwellcollins.atc.tcg.TcgException;
 
 public class TcgUtils {
 
@@ -49,19 +39,4 @@ public class TcgUtils {
 		return sw.toString();
 	}
 
-	public static ComponentImplementation getComponentImplFromString(String qualifiedName) {
-		HashSet<IFile> files = org.osate.aadl2.modelsupport.modeltraversal.TraverseWorkspace.getAadlFilesInWorkspace();
-		for (IFile file : files) {
-			ModelUnit target = (ModelUnit) AadlUtil.getElement(file);
-			if (target instanceof AadlPackage) {
-				Classifier cl = org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil.get(target,
-						org.osate.aadl2.Aadl2Package.eINSTANCE.getComponentImplementation(), qualifiedName);
-				if (cl instanceof ComponentImplementation) {
-					return (ComponentImplementation) cl;
-				}
-			}
-		}
-		throw new TcgException("Error: test suite implementation under test: [" + qualifiedName
-				+ "] does not correspond to any " + "system implementation in the workspace.\n");
-	}
 }
