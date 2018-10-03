@@ -104,11 +104,18 @@ public class Util {
       }
    }
 
-
+	/**
+	* Check whether all connections of a port feature have process implementation matching
+	* that of the given port feature.
+	*
+	* @param pf port feature to check
+	* @return true if all connections have the same process implementation as the given port
+	*     feature, false otherwise.
+	*/
    public static boolean allConnectionsInProcess(PortFeature pf) {
       ProcessImplementation pi = Util.getProcessImplementation(pf);
       for (PortConnection pc : pf.getConnections()) {
-         ProcessImplementation pj = Util.getProcessImplementation(pf);
+			ProcessImplementation pj = Util.getProcessImplementation(pc);
          if (pi != pj) {
 			return false;
 		}
