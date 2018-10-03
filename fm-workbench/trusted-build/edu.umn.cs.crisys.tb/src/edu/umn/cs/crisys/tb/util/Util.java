@@ -15,7 +15,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -25,10 +24,13 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.osate.aadl2.AadlPackage;
-import org.osate.aadl2.Classifier;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.IntegerLiteral;
-import org.osate.aadl2.ModelUnit;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyExpression;
@@ -37,10 +39,13 @@ import org.osate.aadl2.impl.ListValueImpl;
 import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
-import org.osate.aadl2.modelsupport.util.AadlUtil;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
+import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.STGroupFile;
+
+import com.google.inject.Injector;
 
 import edu.umn.cs.crisys.tb.PluginActivator;
 import edu.umn.cs.crisys.tb.TbException;
@@ -273,18 +278,22 @@ public class Util {
    }
 
    public static Property getPropertyDefinitionInWorkspace(String pdname) {
-		HashSet<IFile> files = org.osate.aadl2.modelsupport.modeltraversal.TraverseWorkspace.getAadlFilesInWorkspace();
-		for (IFile file : files) {
-			ModelUnit target = (ModelUnit) AadlUtil.getElement(file);
-			if (target instanceof AadlPackage) {
-				Classifier cl = org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil.get(target,
-						org.osate.aadl2.Aadl2Package.eINSTANCE.getProperty(), pdname);
-				if (cl instanceof Property) {
-					return (Property) cl;
+		Injector injector = IResourceServiceProvider.Registry.INSTANCE
+				.getResourceServiceProvider(URI.createFileURI("dummy.aadl")).get(Injector.class);
+		final ResourceDescriptionsProvider resourceDescriptionsProvider = injector
+				.getInstance(ResourceDescriptionsProvider.class);
+		final IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider
+				.getResourceDescriptions(OsateResourceUtil.getResourceSet());
+		for (IEObjectDescription eobjDesc : resourceDescriptions
+				.getExportedObjectsByType(Aadl2Package.eINSTANCE.getProperty())) {
+			if (eobjDesc.getName().toString("::").equalsIgnoreCase(pdname)) {
+				EObject res = eobjDesc.getEObjectOrProxy();
+				res = EcoreUtil.resolve(res, OsateResourceUtil.getResourceSet());
+				if (!Aadl2Util.isNull(res)) {
+					return (Property) res;
 				}
 			}
 		}
-
 		throw new TbException(
 				"Error: " + pdname + " does not correspond to any " + "system implementation in the workspace.\n");
    }
