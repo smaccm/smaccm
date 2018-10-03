@@ -50,6 +50,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.osate.aadl2.Aadl2Package;
+import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
+
+import com.google.inject.Injector;
 
 import edu.uah.rsesc.aadlsimulator.launch.SimulationLaunchConfigurationAttributes;
 import edu.uah.rsesc.aadlsimulator.services.EngineType;
@@ -116,28 +123,25 @@ public class SimulationTab extends AbstractLaunchConfigurationTab {
 
 		final Button componentImplSelectBtn = createPushButton(root, "Select...", null);
 		componentImplSelectBtn.addSelectionListener(new SelectionAdapter() {
-			private List<IEObjectDescription> getComponentImplementationsInWorkspace() {
-				List<IEObjectDescription> result = new ArrayList<>();
-				org.osate.aadl2.modelsupport.modeltraversal.TraverseWorkspace.getAadlFilesInWorkspace()
-						.forEach(file -> org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil
-								.getAllEObjectDescriptions(org.osate.aadl2.modelsupport.util.AadlUtil.getElement(file),
-										org.osate.aadl2.Aadl2Package.eINSTANCE.getComponentImplementation())
-								.forEach(ci -> result.add(ci)));
-				return result;
-			}
-
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				// Get list of component implementations
 				final List<IEObjectDescription> componentImplementationDescriptions = new ArrayList<IEObjectDescription>();
+				Injector injector = IResourceServiceProvider.Registry.INSTANCE
+						.getResourceServiceProvider(URI.createFileURI("dummy.aadl")).get(Injector.class);
+				final ResourceDescriptionsProvider resourceDescriptionsProvider = injector
+						.getInstance(ResourceDescriptionsProvider.class);
+				final IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider
+						.getResourceDescriptions(OsateResourceUtil.getResourceSet());
 				final IProject selectedProject = getSelectedProject();
 				final IPath selectedProjectPath = selectedProject == null ? null : selectedProject.getFullPath();
 				if(selectedProjectPath != null) {
-					for (final IEObjectDescription desc : getComponentImplementationsInWorkspace()) {
-						final URI objUri = desc.getEObjectURI();
+					for (IEObjectDescription eobjDesc : resourceDescriptions
+							.getExportedObjectsByType(Aadl2Package.eINSTANCE.getComponentImplementation())) {
+						final URI objUri = eobjDesc.getEObjectURI();
 						final IPath objPath = new Path(objUri.toPlatformString(true));
-						if(selectedProjectPath.isPrefixOf(objPath)) {
-							componentImplementationDescriptions.add(desc);
+						if (selectedProjectPath.isPrefixOf(objPath)) {
+							componentImplementationDescriptions.add(eobjDesc);
 						}
 					}
 				}
