@@ -2041,7 +2041,17 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		List<NamedElmExpr> dotIds = EcoreUtil2.getAllContentsOfType(nodeStmt, NamedElmExpr.class);
 		for (NamedElmExpr dotId : dotIds) {
 			NamedElement id = dotId.getNamedElm();
-			if (!(id instanceof Arg) && !(id instanceof ConstStatement) && !(id instanceof NodeDef)
+
+			// restrict the elements that are single names or the last projection.
+			boolean restrictedElm = true;
+			if (dotId.eContainer() instanceof ProjectionExpr) {
+				NamedElement ne = ((ProjectionExpr) dotId.eContainer()).getField();
+				restrictedElm = ne == id && !(dotId.eContainer().eContainer() instanceof ProjectionExpr);
+			}
+
+			if (restrictedElm &&
+
+					!(id instanceof Arg) && !(id instanceof ConstStatement) && !(id instanceof NodeDef)
 					&& !(id instanceof FnDef) && !(id instanceof DataSubcomponent) && !(id instanceof CustomType)
 					&& !(id instanceof DataImplementation) && !(id instanceof RecordDef)) {
 				error(dotId, "Only arguments, constants, and node calls allowed within a node");

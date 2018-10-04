@@ -659,6 +659,9 @@ public class AgreeTypeSystem {
 		} else if (ne instanceof Feature) {
 			return mkCustomType(((Feature) ne).getClassifier());
 
+		} else if (ne instanceof AadlPackage) {
+			return mkCustomType(ne);
+
 		}
 
 //		} else if (namedEl instanceof DataAccess) {

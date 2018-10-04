@@ -389,6 +389,23 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 				result.addAll(namedSpecs);
 				return result;
 
+			} else if (leaf instanceof AadlPackage) {
+
+				List<NamedElement> result = new LinkedList<>();
+				AadlPackage ap = (AadlPackage) leaf;
+				List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
+
+				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(ap,
+						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+
+					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+					namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
+
+				}
+
+				result.addAll(namedSpecs);
+				return result;
+
 			} else {
 				return new LinkedList<>();
 			}
