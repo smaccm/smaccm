@@ -75,8 +75,8 @@ annex agree {**
 		after_event: bool; 
 		time: int; 
 	let
-		after_event = if i then false else if evt then true else 
-			(false -> pre(after_event)); 
+		after_event = if i then false else if evt then true else (false -> pre(after_event));
+		
 		time = if i then 0 else 
 				(0 -> pre(time)) + if after_event then 1 else 0;
 		o = time <= n;
