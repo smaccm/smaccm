@@ -71,15 +71,15 @@ annex agree {**
 	tel; 	
 
 	node WithinN(evt: bool, i: bool, n: int) returns (o: bool);
-	var
+	var 
 		after_event: bool; 
-		tm: int; 
+		time: int;
 	let
 		after_event = if i then false else if evt then true else (false -> pre(after_event));
 		
-		tm = if i then 0 else 
-				(0 -> pre(tm)) + if after_event then 1 else 0;
-		o = tm <= n;
+		time = if i then 0 else 
+				(0 -> pre(time)) + if after_event then 1 else 0;
+		o = time <= n;
 	tel;
 
 	node While(i: bool) returns (o: bool);

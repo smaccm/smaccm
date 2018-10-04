@@ -662,8 +662,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ARG__TYPE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getArgAccess().getNameIDTerminalRuleCall_0_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getArgAccess().getTypeTypeParserRuleCall_2_0(), semanticObject.getType());
+		feeder.accept(grammarAccess.getArgAccess().getNameIDTerminalRuleCall_0_0_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getArgAccess().getTypeTypeParserRuleCall_0_2_0(), semanticObject.getType());
 		feeder.finish();
 	}
 	
