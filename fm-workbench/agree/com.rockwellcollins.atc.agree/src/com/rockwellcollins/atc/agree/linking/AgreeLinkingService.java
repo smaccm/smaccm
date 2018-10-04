@@ -28,6 +28,7 @@ import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.agree.agree.AbstractionRef;
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.CustomType;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -65,6 +66,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 				|| context instanceof TagExpr
 				|| context instanceof ProjectionExpr
 				|| context instanceof NamedElmExpr
+				|| context instanceof AssignStatement
 				|| context instanceof CustomType || context instanceof AbstractionRef
 				|| context instanceof NodeEq || context instanceof SynchStatement
 				|| context instanceof RecordLitExpr || context instanceof RecordType || context instanceof GetPropertyExpr

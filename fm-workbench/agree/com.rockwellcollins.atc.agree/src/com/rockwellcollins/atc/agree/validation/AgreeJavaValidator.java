@@ -349,6 +349,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				assignableElements.addAll(EcoreUtil2.getAllContentsOfType(ac, EqStatement.class).stream()
 						.map(eq -> eq.getLhs()).flatMap(List::stream).collect(Collectors.toList()));
 			}
+
 			ComponentType compType = compImpl.getType();
 			if (compType != null) {
 				List<AgreeContract> typeContracts = EcoreUtil2.getAllContentsOfType(compType, AgreeContract.class);
@@ -368,12 +369,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 
-		String lhsType = namedEl.getName();
-		String rhsType = typeToString(AgreeTypeSystem.infer(expr));
+		Type lhsType = (AgreeTypeSystem.typeFromID(namedEl));
+		Type rhsType = (AgreeTypeSystem.infer(expr));
 
-		if (!lhsType.equals(rhsType)) {
-			error(assign, "The left hand side of the assignment statement is of type '" + lhsType
-					+ "' but the right hand side is of type '" + rhsType + "'");
+		if (!AgreeTypeSystem.typesEqual(lhsType, rhsType)) {
+			error(assign, "The left hand side of the assignment statement is of type '" + typeToString(lhsType)
+			+ "' but the right hand side is of type '" + typeToString(rhsType) + "'");
 		}
 
 		AgreeContract contract = EcoreUtil2.getContainerOfType(assign, AgreeContract.class);
@@ -2517,18 +2518,20 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 						+ "') are not allowed in linearization body expressions.");
 			} else {
 				if (!AgreeTypeSystem.typesEqual(typeRight, typeLeft)) {
-					error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
-							+ "' and '" + typeRight + "', but must be of the same type");
+					error(binExpr,
+							"left and right sides of binary expression '" + op + "' are of type '"
+									+ typeToString(typeLeft)
+									+ "' and '" + typeRight + "', but must be of the same type");
 				}
 				if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.intType, typeLeft)
 						&& !AgreeTypeSystem.typesEqual(AgreeTypeSystem.realType, typeLeft)) {
-					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft
-							+ "' but must be of type" + "'int' or 'real'");
+					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeToString(typeLeft)
+					+ "' but must be of type" + "'int' or 'real'");
 				}
 				if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.intType, typeRight)
 						&& !AgreeTypeSystem.typesEqual(AgreeTypeSystem.realType, typeRight)) {
-					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight
-							+ "' but must be of type" + "'int' or 'real'");
+					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeToString(typeRight)
+					+ "' but must be of type" + "'int' or 'real'");
 				}
 			}
 			return;
@@ -2537,18 +2540,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		case "-":
 		case "*":
 			if (!AgreeTypeSystem.typesEqual(typeRight, typeLeft)) {
-				error(binExpr, "left and right sides of binary expression '" + op + "' are of type '" + typeLeft
+				error(binExpr,
+						"left and right sides of binary expression '" + op + "' are of type '" + typeToString(typeLeft)
 						+ "' and '" + typeRight + "', but must be of the same type");
 			}
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.intType, typeLeft)
 					&& !AgreeTypeSystem.typesEqual(AgreeTypeSystem.realType, typeLeft)) {
-				error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft
-						+ "' but must be of type" + "'int' or 'real'");
+				error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeToString(typeLeft)
+				+ "' but must be of type" + "'int' or 'real'");
 			}
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.intType, typeRight)
 					&& !AgreeTypeSystem.typesEqual(AgreeTypeSystem.realType, typeRight)) {
-				error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight
-						+ "' but must be of type" + "'int' or 'real'");
+				error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeToString(typeRight)
+				+ "' but must be of type" + "'int' or 'real'");
 			}
 
 			if (op.equals("*") && !isInLinearizationBodyExpr) {
@@ -2568,12 +2572,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 						+ "') are not allowed in linearization body expressions.");
 			} else {
 				if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.intType, typeLeft)) {
-					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft
-							+ "' but must be of type 'int'");
+					error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeToString(typeLeft)
+					+ "' but must be of type 'int'");
 				}
 				if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.intType, typeRight)) {
-					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight
-							+ "' but must be of type 'int'");
+					error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeToString(typeRight)
+					+ "' but must be of type 'int'");
 				}
 				if (!rightSideConst) {
 					warning(binExpr,
@@ -2586,12 +2590,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		case "/":
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.realType, typeLeft)) {
-				error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeLeft
-						+ "' but must be of type 'real'");
+				error(binExpr, "left side of binary expression '" + op + "' is of type '" + typeToString(typeLeft)
+				+ "' but must be of type 'real'");
 			}
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.realType, typeRight)) {
-				error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeRight
-						+ "' but must be of type 'real'");
+				error(binExpr, "right side of binary expression '" + op + "' is of type '" + typeToString(typeRight)
+				+ "' but must be of type 'real'");
 			}
 
 			if (!rightSideConst && !isInLinearizationBodyExpr) {

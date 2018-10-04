@@ -43,6 +43,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.ComponentRef;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
@@ -143,6 +144,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 			}
 
 			components.addAll(getNamedElements(getAadlContainer(ctx)));
+
 		}
 
 		return components;
@@ -231,6 +233,10 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_NamedElement(SpecStatement ctx, EReference ref) {
+		return getScope(ctx.eContainer(), ref);
+	}
+
+	IScope scope_NamedElement(AssignStatement ctx, EReference ref) {
 		return getScope(ctx.eContainer(), ref);
 	}
 
@@ -342,7 +348,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return prevScope;
 	}
 
-	private List<NamedElement> getFieldsFromRecordType(Type typ) {
+	private List<NamedElement> getFieldsFromType(Type typ) {
 		if (typ instanceof CustomType) {
 
 			NamedElement leaf = ((CustomType) typ).getLeaf();
@@ -369,8 +375,18 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 			} else if (leaf instanceof Classifier) {
 
 				List<NamedElement> result = new LinkedList<>();
-				List<Feature> features = ((Classifier) leaf).getAllFeatures();
+				Classifier c = (Classifier) leaf;
+				List<Feature> features = c.getAllFeatures();
+				List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
+
+				for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(c,
+						AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+					AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+					namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
+				}
+
 				result.addAll(features);
+				result.addAll(namedSpecs);
 				return result;
 
 			} else {
@@ -398,13 +414,13 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	IScope scope_RecordUpdateExpr_key(RecordUpdateExpr ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
 		Type typ = AgreeTypeSystem.infer(ctx.getRecord());
-		return Scopes.scopeFor(getFieldsFromRecordType(typ), prevScope);
+		return Scopes.scopeFor(getFieldsFromType(typ), prevScope);
 	}
 
 
 	protected IScope scope_ProjectionExpr_field(ProjectionExpr ctx, EReference ref) {
 		Type typ = AgreeTypeSystem.infer(ctx.getExpr());
-		return Scopes.scopeFor(getFieldsFromRecordType(typ));
+		return Scopes.scopeFor(getFieldsFromType(typ));
 	}
 
 	IScope scope_AbstractionRef_stem(AbstractionRef ctx, EReference ref) {

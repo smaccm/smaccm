@@ -10,12 +10,10 @@ import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AbstractNamedValue;
-import org.osate.aadl2.ArrayDimension;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
@@ -31,7 +29,6 @@ import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
-import org.osate.aadl2.SubcomponentType;
 
 import com.rockwellcollins.atc.agree.agree.AbstractionRef;
 import com.rockwellcollins.atc.agree.agree.Acc;
@@ -76,7 +73,6 @@ import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
-import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SubcomponentRef;
@@ -169,7 +165,7 @@ public class AgreeTypeSystem {
 			String typeString = typeToString(t);
 			if (typeString.equals("Base_Types::Integer")) {
 				return intType;
-			} else if (typeString.equals("Base_Types::Real")) {
+			} else if (typeString.equals("Base_Types::Float")) {
 				return realType;
 			} else if (typeString.contentEquals("Base_Types::Boolean")) {
 				return boolType;
@@ -268,50 +264,8 @@ public class AgreeTypeSystem {
 	public static Type infer(Expr expr) {
 
 		if (expr instanceof ProjectionExpr) {
-			Expr stemExpr = ((ProjectionExpr) expr).getExpr();
-			Type stemType = infer(stemExpr);
 			NamedElement field = ((ProjectionExpr) expr).getField();
-
-			if (stemType instanceof CustomType) {
-				NamedElement typedef = ((CustomType) stemType).getLeaf();
-
-				if (typedef instanceof RecordDef) {
-					Arg choice = (Arg) field;
-					return choice.getType();
-
-				} else if (typedef instanceof DataImplementation) {
-
-					Subcomponent choice = (Subcomponent) field;
-					CustomType t = (CustomType) mkCustomType(choice.getClassifier());
-					List<ArrayDimension> dims = choice.getArrayDimensions();
-					if (dims.size() > 0) {
-						long arrSize = dims.get(0).getSize().getSize();
-						return mkArrayType(t, java.lang.Math.toIntExact(arrSize));
-					} else {
-						return t;
-					}
-
-				} else if (typedef instanceof ComponentImplementation) {
-
-
-					NamedElement parentType = ((ComponentImplementation) typedef).getType();
-					if (parentType instanceof Classifier) {
-						Feature choice = (Feature) field;
-						return mkCustomType(choice.getClassifier());
-
-					} else {
-						Subcomponent choice = (Subcomponent) field;
-						return mkCustomType(choice.getClassifier());
-					}
-
-
-
-				} else if (typedef instanceof ComponentType) {
-					Feature choice = (Feature) field;
-					return mkCustomType(choice.getClassifier());
-
-				}
-			}
+			return typeFromID(field);
 
 		} else if (expr instanceof TagExpr) {
 
@@ -616,6 +570,7 @@ public class AgreeTypeSystem {
 //	}
 
 	public static Type typeFromID(NamedElement ne) {
+
 		if (ne instanceof PropertyStatement) {
 			return infer(((PropertyStatement) ne).getExpr());
 
@@ -699,8 +654,11 @@ public class AgreeTypeSystem {
 			return mkCustomType(dt);
 
 		} else if (ne instanceof Subcomponent) {
-			SubcomponentType t = ((Subcomponent) ne).getSubcomponentType();
-			return mkCustomType(t);
+			return mkCustomType(((Subcomponent) ne).getClassifier());
+
+		} else if (ne instanceof Feature) {
+			return mkCustomType(((Feature) ne).getClassifier());
+
 		}
 
 //		} else if (namedEl instanceof DataAccess) {
