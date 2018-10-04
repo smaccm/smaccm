@@ -788,15 +788,6 @@ public interface AgreeFactory extends EFactory
   ProjectionExpr createProjectionExpr();
 
   /**
-   * Returns a new object of class '<em>Time Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Time Expr</em>'.
-   * @generated
-   */
-  TimeExpr createTimeExpr();
-
-  /**
    * Returns a new object of class '<em>Named Elm Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -804,6 +795,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   NamedElmExpr createNamedElmExpr();
+
+  /**
+   * Returns a new object of class '<em>Time Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Time Expr</em>'.
+   * @generated
+   */
+  TimeExpr createTimeExpr();
 
   /**
    * Returns a new object of class '<em>Indices Expr</em>'.

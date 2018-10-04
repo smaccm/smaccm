@@ -358,10 +358,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TimeExpr" eSuperTypes="#//Expr"/>
   <eClassifiers xsi:type="ecore:EClass" name="NamedElmExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="namedElm" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeExpr" eSuperTypes="#//Expr"/>
   <eClassifiers xsi:type="ecore:EClass" name="IndicesExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//Expr"
         containment="true"/>

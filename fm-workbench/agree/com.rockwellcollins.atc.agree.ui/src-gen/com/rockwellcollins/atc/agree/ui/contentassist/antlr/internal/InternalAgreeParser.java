@@ -8717,30 +8717,36 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__NamedElement__Alternatives"
-    // InternalAgreeParser.g:2986:1: rule__NamedElement__Alternatives : ( ( ruleArg ) | ( ruleFnDef ) | ( rulePropertyStatement ) | ( ruleConstStatement ) | ( ruleEnumStatement ) | ( ruleNodeDef ) | ( ruleLinearizationDef ) | ( ruleLibraryFnDef ) | ( ruleRecordDef ) | ( ( ruleEnumID ) ) | ( ( ruleArraySubBinding ) ) | ( ( ruleAcc ) ) );
+    // InternalAgreeParser.g:2986:1: rule__NamedElement__Alternatives : ( ( ( ruleArg ) ) | ( ruleFnDef ) | ( rulePropertyStatement ) | ( ruleConstStatement ) | ( ruleEnumStatement ) | ( ruleNodeDef ) | ( ruleLinearizationDef ) | ( ruleLibraryFnDef ) | ( ruleRecordDef ) | ( ( ruleEnumID ) ) | ( ( ruleArraySubBinding ) ) | ( ( ruleAcc ) ) );
     public final void rule__NamedElement__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:2990:1: ( ( ruleArg ) | ( ruleFnDef ) | ( rulePropertyStatement ) | ( ruleConstStatement ) | ( ruleEnumStatement ) | ( ruleNodeDef ) | ( ruleLinearizationDef ) | ( ruleLibraryFnDef ) | ( ruleRecordDef ) | ( ( ruleEnumID ) ) | ( ( ruleArraySubBinding ) ) | ( ( ruleAcc ) ) )
+            // InternalAgreeParser.g:2990:1: ( ( ( ruleArg ) ) | ( ruleFnDef ) | ( rulePropertyStatement ) | ( ruleConstStatement ) | ( ruleEnumStatement ) | ( ruleNodeDef ) | ( ruleLinearizationDef ) | ( ruleLibraryFnDef ) | ( ruleRecordDef ) | ( ( ruleEnumID ) ) | ( ( ruleArraySubBinding ) ) | ( ( ruleAcc ) ) )
             int alt1=12;
             alt1 = dfa1.predict(input);
             switch (alt1) {
                 case 1 :
-                    // InternalAgreeParser.g:2991:1: ( ruleArg )
+                    // InternalAgreeParser.g:2991:1: ( ( ruleArg ) )
                     {
-                    // InternalAgreeParser.g:2991:1: ( ruleArg )
-                    // InternalAgreeParser.g:2992:1: ruleArg
+                    // InternalAgreeParser.g:2991:1: ( ( ruleArg ) )
+                    // InternalAgreeParser.g:2992:1: ( ruleArg )
                     {
                     if ( state.backtracking==0 ) {
                        before(grammarAccess.getNamedElementAccess().getArgParserRuleCall_0()); 
                     }
+                    // InternalAgreeParser.g:2993:1: ( ruleArg )
+                    // InternalAgreeParser.g:2993:3: ruleArg
+                    {
                     pushFollow(FollowSets000.FOLLOW_2);
                     ruleArg();
 
                     state._fsp--;
                     if (state.failed) return ;
+
+                    }
+
                     if ( state.backtracking==0 ) {
                        after(grammarAccess.getNamedElementAccess().getArgParserRuleCall_0()); 
                     }
@@ -11829,11 +11835,16 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
             if ( (LA21_0==RULE_ID) ) {
                 switch ( input.LA(2) ) {
+                case RULE_ID:
+                    {
+                    alt21=1;
+                    }
+                    break;
                 case ColonColon:
                     {
-                    int LA21_2 = input.LA(3);
+                    int LA21_3 = input.LA(3);
 
-                    if ( (LA21_2==RULE_ID) ) {
+                    if ( (LA21_3==RULE_ID) ) {
                         switch ( input.LA(4) ) {
                         case FullStop:
                             {
@@ -11865,11 +11876,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                             }
                             }
                             break;
-                        case RULE_ID:
-                            {
-                            alt21=1;
-                            }
-                            break;
                         case EOF:
                         case RightParenthesis:
                         case Comma:
@@ -11880,6 +11886,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         case RightCurlyBracket:
                             {
                             alt21=2;
+                            }
+                            break;
+                        case RULE_ID:
+                            {
+                            alt21=1;
                             }
                             break;
                         default:
@@ -11894,7 +11905,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                     else {
                         if (state.backtracking>0) {state.failed=true; return ;}
                         NoViableAltException nvae =
-                            new NoViableAltException("", 21, 2, input);
+                            new NoViableAltException("", 21, 3, input);
 
                         throw nvae;
                     }
@@ -11910,11 +11921,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                 case RightCurlyBracket:
                     {
                     alt21=2;
-                    }
-                    break;
-                case RULE_ID:
-                    {
-                    alt21=1;
                     }
                     break;
                 default:
@@ -14218,11 +14224,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             if ( (LA38_0==RULE_ID) ) {
                 int LA38_1 = input.LA(2);
 
-                if ( (LA38_1==ColonColon) ) {
-                    alt38=1;
-                }
-                else if ( (LA38_1==EOF||LA38_1==RightParenthesis||LA38_1==Comma||LA38_1==FullStop||LA38_1==Semicolon||LA38_1==EqualsSign||LA38_1==LeftSquareBracket||(LA38_1>=LeftCurlyBracket && LA38_1<=RightCurlyBracket)||LA38_1==RULE_ID) ) {
+                if ( (LA38_1==EOF||LA38_1==RightParenthesis||LA38_1==Comma||LA38_1==FullStop||LA38_1==Semicolon||LA38_1==EqualsSign||LA38_1==LeftSquareBracket||(LA38_1>=LeftCurlyBracket && LA38_1<=RightCurlyBracket)||LA38_1==RULE_ID) ) {
                     alt38=2;
+                }
+                else if ( (LA38_1==ColonColon) ) {
+                    alt38=1;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return ;}
@@ -15151,11 +15157,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             case PlusSign:
                 {
                 switch ( input.LA(2) ) {
-                case RULE_REAL_LIT:
-                    {
-                    alt46=1;
-                    }
-                    break;
                 case RULE_ID:
                     {
                     alt46=3;
@@ -15164,6 +15165,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                 case RULE_INTEGER_LIT:
                     {
                     alt46=2;
+                    }
+                    break;
+                case RULE_REAL_LIT:
+                    {
+                    alt46=1;
                     }
                     break;
                 default:
@@ -46374,15 +46380,15 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             if ( (LA84_0==LeftSquareBracket) ) {
                 int LA84_1 = input.LA(2);
 
-                if ( (LA84_1==HyphenMinus||LA84_1==RULE_REAL_LIT) ) {
-                    alt84=1;
-                }
-                else if ( (LA84_1==RULE_INTEGER_LIT) ) {
-                    int LA84_4 = input.LA(3);
+                if ( (LA84_1==RULE_INTEGER_LIT) ) {
+                    int LA84_3 = input.LA(3);
 
-                    if ( (LA84_4==Comma) ) {
+                    if ( (LA84_3==Comma) ) {
                         alt84=1;
                     }
+                }
+                else if ( (LA84_1==HyphenMinus||LA84_1==RULE_REAL_LIT) ) {
+                    alt84=1;
                 }
             }
             switch (alt84) {
@@ -64116,22 +64122,17 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TermExpr__Group_0__0"
-    // InternalAgreeParser.g:22913:1: rule__TermExpr__Group_0__0 : rule__TermExpr__Group_0__0__Impl rule__TermExpr__Group_0__1 ;
+    // InternalAgreeParser.g:22913:1: rule__TermExpr__Group_0__0 : rule__TermExpr__Group_0__0__Impl ;
     public final void rule__TermExpr__Group_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22917:1: ( rule__TermExpr__Group_0__0__Impl rule__TermExpr__Group_0__1 )
-            // InternalAgreeParser.g:22918:2: rule__TermExpr__Group_0__0__Impl rule__TermExpr__Group_0__1
+            // InternalAgreeParser.g:22917:1: ( rule__TermExpr__Group_0__0__Impl )
+            // InternalAgreeParser.g:22918:2: rule__TermExpr__Group_0__0__Impl
             {
-            pushFollow(FollowSets000.FOLLOW_116);
-            rule__TermExpr__Group_0__0__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__TermExpr__Group_0__1();
+            rule__TermExpr__Group_0__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -64154,28 +64155,34 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TermExpr__Group_0__0__Impl"
-    // InternalAgreeParser.g:22925:1: rule__TermExpr__Group_0__0__Impl : ( () ) ;
+    // InternalAgreeParser.g:22924:1: rule__TermExpr__Group_0__0__Impl : ( ( rule__TermExpr__Group_0_0__0 ) ) ;
     public final void rule__TermExpr__Group_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22929:1: ( ( () ) )
-            // InternalAgreeParser.g:22930:1: ( () )
+            // InternalAgreeParser.g:22928:1: ( ( ( rule__TermExpr__Group_0_0__0 ) ) )
+            // InternalAgreeParser.g:22929:1: ( ( rule__TermExpr__Group_0_0__0 ) )
             {
-            // InternalAgreeParser.g:22930:1: ( () )
-            // InternalAgreeParser.g:22931:1: ()
+            // InternalAgreeParser.g:22929:1: ( ( rule__TermExpr__Group_0_0__0 ) )
+            // InternalAgreeParser.g:22930:1: ( rule__TermExpr__Group_0_0__0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getTimeExprAction_0_0()); 
+               before(grammarAccess.getTermExprAccess().getGroup_0_0()); 
             }
-            // InternalAgreeParser.g:22932:1: ()
-            // InternalAgreeParser.g:22934:1: 
+            // InternalAgreeParser.g:22931:1: ( rule__TermExpr__Group_0_0__0 )
+            // InternalAgreeParser.g:22931:2: rule__TermExpr__Group_0_0__0
             {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__TermExpr__Group_0_0__0();
+
+            state._fsp--;
+            if (state.failed) return ;
+
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getTimeExprAction_0_0()); 
+               after(grammarAccess.getTermExprAccess().getGroup_0_0()); 
             }
 
             }
@@ -64183,6 +64190,10 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
             }
 
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
         }
         finally {
 
@@ -64194,18 +64205,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__TermExpr__Group_0__0__Impl"
 
 
-    // $ANTLR start "rule__TermExpr__Group_0__1"
-    // InternalAgreeParser.g:22944:1: rule__TermExpr__Group_0__1 : rule__TermExpr__Group_0__1__Impl ;
-    public final void rule__TermExpr__Group_0__1() throws RecognitionException {
+    // $ANTLR start "rule__TermExpr__Group_0_0__0"
+    // InternalAgreeParser.g:22943:1: rule__TermExpr__Group_0_0__0 : rule__TermExpr__Group_0_0__0__Impl rule__TermExpr__Group_0_0__1 ;
+    public final void rule__TermExpr__Group_0_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22948:1: ( rule__TermExpr__Group_0__1__Impl )
-            // InternalAgreeParser.g:22949:2: rule__TermExpr__Group_0__1__Impl
+            // InternalAgreeParser.g:22947:1: ( rule__TermExpr__Group_0_0__0__Impl rule__TermExpr__Group_0_0__1 )
+            // InternalAgreeParser.g:22948:2: rule__TermExpr__Group_0_0__0__Impl rule__TermExpr__Group_0_0__1
             {
+            pushFollow(FollowSets000.FOLLOW_19);
+            rule__TermExpr__Group_0_0__0__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__TermExpr__Group_0__1__Impl();
+            rule__TermExpr__Group_0_0__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -64224,28 +64240,112 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__TermExpr__Group_0__1"
+    // $ANTLR end "rule__TermExpr__Group_0_0__0"
 
 
-    // $ANTLR start "rule__TermExpr__Group_0__1__Impl"
-    // InternalAgreeParser.g:22955:1: rule__TermExpr__Group_0__1__Impl : ( Time ) ;
-    public final void rule__TermExpr__Group_0__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__TermExpr__Group_0_0__0__Impl"
+    // InternalAgreeParser.g:22955:1: rule__TermExpr__Group_0_0__0__Impl : ( () ) ;
+    public final void rule__TermExpr__Group_0_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22959:1: ( ( Time ) )
-            // InternalAgreeParser.g:22960:1: ( Time )
+            // InternalAgreeParser.g:22959:1: ( ( () ) )
+            // InternalAgreeParser.g:22960:1: ( () )
             {
-            // InternalAgreeParser.g:22960:1: ( Time )
-            // InternalAgreeParser.g:22961:1: Time
+            // InternalAgreeParser.g:22960:1: ( () )
+            // InternalAgreeParser.g:22961:1: ()
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getTimeKeyword_0_1()); 
+               before(grammarAccess.getTermExprAccess().getNamedElmExprAction_0_0_0()); 
             }
-            match(input,Time,FollowSets000.FOLLOW_2); if (state.failed) return ;
+            // InternalAgreeParser.g:22962:1: ()
+            // InternalAgreeParser.g:22964:1: 
+            {
+            }
+
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getTimeKeyword_0_1()); 
+               after(grammarAccess.getTermExprAccess().getNamedElmExprAction_0_0_0()); 
+            }
+
+            }
+
+
+            }
+
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__TermExpr__Group_0_0__0__Impl"
+
+
+    // $ANTLR start "rule__TermExpr__Group_0_0__1"
+    // InternalAgreeParser.g:22974:1: rule__TermExpr__Group_0_0__1 : rule__TermExpr__Group_0_0__1__Impl ;
+    public final void rule__TermExpr__Group_0_0__1() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22978:1: ( rule__TermExpr__Group_0_0__1__Impl )
+            // InternalAgreeParser.g:22979:2: rule__TermExpr__Group_0_0__1__Impl
+            {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__TermExpr__Group_0_0__1__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+
+            	restoreStackSize(stackSize);
+
+        }
+        return ;
+    }
+    // $ANTLR end "rule__TermExpr__Group_0_0__1"
+
+
+    // $ANTLR start "rule__TermExpr__Group_0_0__1__Impl"
+    // InternalAgreeParser.g:22985:1: rule__TermExpr__Group_0_0__1__Impl : ( ( rule__TermExpr__NamedElmAssignment_0_0_1 ) ) ;
+    public final void rule__TermExpr__Group_0_0__1__Impl() throws RecognitionException {
+
+        		int stackSize = keepStackSize();
+            
+        try {
+            // InternalAgreeParser.g:22989:1: ( ( ( rule__TermExpr__NamedElmAssignment_0_0_1 ) ) )
+            // InternalAgreeParser.g:22990:1: ( ( rule__TermExpr__NamedElmAssignment_0_0_1 ) )
+            {
+            // InternalAgreeParser.g:22990:1: ( ( rule__TermExpr__NamedElmAssignment_0_0_1 ) )
+            // InternalAgreeParser.g:22991:1: ( rule__TermExpr__NamedElmAssignment_0_0_1 )
+            {
+            if ( state.backtracking==0 ) {
+               before(grammarAccess.getTermExprAccess().getNamedElmAssignment_0_0_1()); 
+            }
+            // InternalAgreeParser.g:22992:1: ( rule__TermExpr__NamedElmAssignment_0_0_1 )
+            // InternalAgreeParser.g:22992:2: rule__TermExpr__NamedElmAssignment_0_0_1
+            {
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__TermExpr__NamedElmAssignment_0_0_1();
+
+            state._fsp--;
+            if (state.failed) return ;
+
+            }
+
+            if ( state.backtracking==0 ) {
+               after(grammarAccess.getTermExprAccess().getNamedElmAssignment_0_0_1()); 
             }
 
             }
@@ -64265,21 +64365,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__TermExpr__Group_0__1__Impl"
+    // $ANTLR end "rule__TermExpr__Group_0_0__1__Impl"
 
 
     // $ANTLR start "rule__TermExpr__Group_1__0"
-    // InternalAgreeParser.g:22978:1: rule__TermExpr__Group_1__0 : rule__TermExpr__Group_1__0__Impl ;
+    // InternalAgreeParser.g:23006:1: rule__TermExpr__Group_1__0 : rule__TermExpr__Group_1__0__Impl rule__TermExpr__Group_1__1 ;
     public final void rule__TermExpr__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22982:1: ( rule__TermExpr__Group_1__0__Impl )
-            // InternalAgreeParser.g:22983:2: rule__TermExpr__Group_1__0__Impl
+            // InternalAgreeParser.g:23010:1: ( rule__TermExpr__Group_1__0__Impl rule__TermExpr__Group_1__1 )
+            // InternalAgreeParser.g:23011:2: rule__TermExpr__Group_1__0__Impl rule__TermExpr__Group_1__1
             {
-            pushFollow(FollowSets000.FOLLOW_2);
+            pushFollow(FollowSets000.FOLLOW_116);
             rule__TermExpr__Group_1__0__Impl();
+
+            state._fsp--;
+            if (state.failed) return ;
+            pushFollow(FollowSets000.FOLLOW_2);
+            rule__TermExpr__Group_1__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -64302,34 +64407,28 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TermExpr__Group_1__0__Impl"
-    // InternalAgreeParser.g:22989:1: rule__TermExpr__Group_1__0__Impl : ( ( rule__TermExpr__Group_1_0__0 ) ) ;
+    // InternalAgreeParser.g:23018:1: rule__TermExpr__Group_1__0__Impl : ( () ) ;
     public final void rule__TermExpr__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22993:1: ( ( ( rule__TermExpr__Group_1_0__0 ) ) )
-            // InternalAgreeParser.g:22994:1: ( ( rule__TermExpr__Group_1_0__0 ) )
+            // InternalAgreeParser.g:23022:1: ( ( () ) )
+            // InternalAgreeParser.g:23023:1: ( () )
             {
-            // InternalAgreeParser.g:22994:1: ( ( rule__TermExpr__Group_1_0__0 ) )
-            // InternalAgreeParser.g:22995:1: ( rule__TermExpr__Group_1_0__0 )
+            // InternalAgreeParser.g:23023:1: ( () )
+            // InternalAgreeParser.g:23024:1: ()
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getGroup_1_0()); 
+               before(grammarAccess.getTermExprAccess().getTimeExprAction_1_0()); 
             }
-            // InternalAgreeParser.g:22996:1: ( rule__TermExpr__Group_1_0__0 )
-            // InternalAgreeParser.g:22996:2: rule__TermExpr__Group_1_0__0
+            // InternalAgreeParser.g:23025:1: ()
+            // InternalAgreeParser.g:23027:1: 
             {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__TermExpr__Group_1_0__0();
-
-            state._fsp--;
-            if (state.failed) return ;
-
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getGroup_1_0()); 
+               after(grammarAccess.getTermExprAccess().getTimeExprAction_1_0()); 
             }
 
             }
@@ -64337,10 +64436,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
             }
 
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
         }
         finally {
 
@@ -64352,23 +64447,18 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__TermExpr__Group_1__0__Impl"
 
 
-    // $ANTLR start "rule__TermExpr__Group_1_0__0"
-    // InternalAgreeParser.g:23008:1: rule__TermExpr__Group_1_0__0 : rule__TermExpr__Group_1_0__0__Impl rule__TermExpr__Group_1_0__1 ;
-    public final void rule__TermExpr__Group_1_0__0() throws RecognitionException {
+    // $ANTLR start "rule__TermExpr__Group_1__1"
+    // InternalAgreeParser.g:23037:1: rule__TermExpr__Group_1__1 : rule__TermExpr__Group_1__1__Impl ;
+    public final void rule__TermExpr__Group_1__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:23012:1: ( rule__TermExpr__Group_1_0__0__Impl rule__TermExpr__Group_1_0__1 )
-            // InternalAgreeParser.g:23013:2: rule__TermExpr__Group_1_0__0__Impl rule__TermExpr__Group_1_0__1
+            // InternalAgreeParser.g:23041:1: ( rule__TermExpr__Group_1__1__Impl )
+            // InternalAgreeParser.g:23042:2: rule__TermExpr__Group_1__1__Impl
             {
-            pushFollow(FollowSets000.FOLLOW_19);
-            rule__TermExpr__Group_1_0__0__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__TermExpr__Group_1_0__1();
+            rule__TermExpr__Group_1__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -64387,112 +64477,28 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__TermExpr__Group_1_0__0"
+    // $ANTLR end "rule__TermExpr__Group_1__1"
 
 
-    // $ANTLR start "rule__TermExpr__Group_1_0__0__Impl"
-    // InternalAgreeParser.g:23020:1: rule__TermExpr__Group_1_0__0__Impl : ( () ) ;
-    public final void rule__TermExpr__Group_1_0__0__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:23024:1: ( ( () ) )
-            // InternalAgreeParser.g:23025:1: ( () )
-            {
-            // InternalAgreeParser.g:23025:1: ( () )
-            // InternalAgreeParser.g:23026:1: ()
-            {
-            if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getNamedElmExprAction_1_0_0()); 
-            }
-            // InternalAgreeParser.g:23027:1: ()
-            // InternalAgreeParser.g:23029:1: 
-            {
-            }
-
-            if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getNamedElmExprAction_1_0_0()); 
-            }
-
-            }
-
-
-            }
-
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__TermExpr__Group_1_0__0__Impl"
-
-
-    // $ANTLR start "rule__TermExpr__Group_1_0__1"
-    // InternalAgreeParser.g:23039:1: rule__TermExpr__Group_1_0__1 : rule__TermExpr__Group_1_0__1__Impl ;
-    public final void rule__TermExpr__Group_1_0__1() throws RecognitionException {
+    // $ANTLR start "rule__TermExpr__Group_1__1__Impl"
+    // InternalAgreeParser.g:23048:1: rule__TermExpr__Group_1__1__Impl : ( Time ) ;
+    public final void rule__TermExpr__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:23043:1: ( rule__TermExpr__Group_1_0__1__Impl )
-            // InternalAgreeParser.g:23044:2: rule__TermExpr__Group_1_0__1__Impl
+            // InternalAgreeParser.g:23052:1: ( ( Time ) )
+            // InternalAgreeParser.g:23053:1: ( Time )
             {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__TermExpr__Group_1_0__1__Impl();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
-        }
-        catch (RecognitionException re) {
-            reportError(re);
-            recover(input,re);
-        }
-        finally {
-
-            	restoreStackSize(stackSize);
-
-        }
-        return ;
-    }
-    // $ANTLR end "rule__TermExpr__Group_1_0__1"
-
-
-    // $ANTLR start "rule__TermExpr__Group_1_0__1__Impl"
-    // InternalAgreeParser.g:23050:1: rule__TermExpr__Group_1_0__1__Impl : ( ( rule__TermExpr__NamedElmAssignment_1_0_1 ) ) ;
-    public final void rule__TermExpr__Group_1_0__1__Impl() throws RecognitionException {
-
-        		int stackSize = keepStackSize();
-            
-        try {
-            // InternalAgreeParser.g:23054:1: ( ( ( rule__TermExpr__NamedElmAssignment_1_0_1 ) ) )
-            // InternalAgreeParser.g:23055:1: ( ( rule__TermExpr__NamedElmAssignment_1_0_1 ) )
-            {
-            // InternalAgreeParser.g:23055:1: ( ( rule__TermExpr__NamedElmAssignment_1_0_1 ) )
-            // InternalAgreeParser.g:23056:1: ( rule__TermExpr__NamedElmAssignment_1_0_1 )
+            // InternalAgreeParser.g:23053:1: ( Time )
+            // InternalAgreeParser.g:23054:1: Time
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getNamedElmAssignment_1_0_1()); 
+               before(grammarAccess.getTermExprAccess().getTimeKeyword_1_1()); 
             }
-            // InternalAgreeParser.g:23057:1: ( rule__TermExpr__NamedElmAssignment_1_0_1 )
-            // InternalAgreeParser.g:23057:2: rule__TermExpr__NamedElmAssignment_1_0_1
-            {
-            pushFollow(FollowSets000.FOLLOW_2);
-            rule__TermExpr__NamedElmAssignment_1_0_1();
-
-            state._fsp--;
-            if (state.failed) return ;
-
-            }
-
+            match(input,Time,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getNamedElmAssignment_1_0_1()); 
+               after(grammarAccess.getTermExprAccess().getTimeKeyword_1_1()); 
             }
 
             }
@@ -64512,7 +64518,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__TermExpr__Group_1_0__1__Impl"
+    // $ANTLR end "rule__TermExpr__Group_1__1__Impl"
 
 
     // $ANTLR start "rule__TermExpr__Group_2__0"
@@ -91875,9 +91881,9 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ProjectionExpr__FieldAssignment_1_0_2"
 
 
-    // $ANTLR start "rule__TermExpr__NamedElmAssignment_1_0_1"
-    // InternalAgreeParser.g:33151:1: rule__TermExpr__NamedElmAssignment_1_0_1 : ( ( RULE_ID ) ) ;
-    public final void rule__TermExpr__NamedElmAssignment_1_0_1() throws RecognitionException {
+    // $ANTLR start "rule__TermExpr__NamedElmAssignment_0_0_1"
+    // InternalAgreeParser.g:33151:1: rule__TermExpr__NamedElmAssignment_0_0_1 : ( ( RULE_ID ) ) ;
+    public final void rule__TermExpr__NamedElmAssignment_0_0_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -91889,23 +91895,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:33157:1: ( RULE_ID )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getNamedElmNamedElementCrossReference_1_0_1_0()); 
+               before(grammarAccess.getTermExprAccess().getNamedElmNamedElementCrossReference_0_0_1_0()); 
             }
             // InternalAgreeParser.g:33158:1: ( RULE_ID )
             // InternalAgreeParser.g:33159:1: RULE_ID
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getNamedElmNamedElementIDTerminalRuleCall_1_0_1_0_1()); 
+               before(grammarAccess.getTermExprAccess().getNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1()); 
             }
             match(input,RULE_ID,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getNamedElmNamedElementIDTerminalRuleCall_1_0_1_0_1()); 
+               after(grammarAccess.getTermExprAccess().getNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1()); 
             }
 
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getNamedElmNamedElementCrossReference_1_0_1_0()); 
+               after(grammarAccess.getTermExprAccess().getNamedElmNamedElementCrossReference_0_0_1_0()); 
             }
 
             }
@@ -91925,7 +91931,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__TermExpr__NamedElmAssignment_1_0_1"
+    // $ANTLR end "rule__TermExpr__NamedElmAssignment_0_0_1"
 
 
     // $ANTLR start "rule__TermExpr__ArrayAssignment_2_3"
@@ -96037,7 +96043,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             this.transition = dfa_6;
         }
         public String getDescription() {
-            return "2986:1: rule__NamedElement__Alternatives : ( ( ruleArg ) | ( ruleFnDef ) | ( rulePropertyStatement ) | ( ruleConstStatement ) | ( ruleEnumStatement ) | ( ruleNodeDef ) | ( ruleLinearizationDef ) | ( ruleLibraryFnDef ) | ( ruleRecordDef ) | ( ( ruleEnumID ) ) | ( ( ruleArraySubBinding ) ) | ( ( ruleAcc ) ) );";
+            return "2986:1: rule__NamedElement__Alternatives : ( ( ( ruleArg ) ) | ( ruleFnDef ) | ( rulePropertyStatement ) | ( ruleConstStatement ) | ( ruleEnumStatement ) | ( ruleNodeDef ) | ( ruleLinearizationDef ) | ( ruleLibraryFnDef ) | ( ruleRecordDef ) | ( ( ruleEnumID ) ) | ( ( ruleArraySubBinding ) ) | ( ( ruleAcc ) ) );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -96071,16 +96077,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
     }
     static final String dfa_7s = "\35\uffff";
-    static final String dfa_8s = "\2\uffff\1\22\25\uffff\1\22\4\uffff";
-    static final String dfa_9s = "\1\30\1\uffff\1\10\20\uffff\1\33\1\u008b\2\uffff\1\u008b\1\10\1\144\1\166\1\u008b\1\160";
-    static final String dfa_10s = "\1\u008b\1\uffff\1\u008b\20\uffff\2\u008b\2\uffff\1\u008b\1\u0081\1\173\3\u008b";
-    static final String dfa_11s = "\1\uffff\1\1\1\uffff\1\3\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\2\2\uffff\1\4\1\5\6\uffff";
+    static final String dfa_8s = "\1\uffff\1\24\26\uffff\1\24\4\uffff";
+    static final String dfa_9s = "\1\30\1\10\20\uffff\1\33\2\uffff\2\u008b\1\uffff\1\10\1\144\1\166\1\u008b\1\160";
+    static final String dfa_10s = "\2\u008b\20\uffff\1\u008b\2\uffff\2\u008b\1\uffff\1\u0081\1\173\3\u008b";
+    static final String dfa_11s = "\2\uffff\1\2\1\3\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\1\uffff\1\5\1\1\2\uffff\1\4\5\uffff";
     static final String dfa_12s = "\35\uffff}>";
     static final String[] dfa_13s = {
-            "\1\14\1\13\11\uffff\1\3\1\11\16\uffff\1\12\3\uffff\1\10\1\16\1\17\13\uffff\1\4\5\uffff\1\20\2\uffff\1\1\1\16\15\uffff\1\7\13\uffff\1\5\6\uffff\1\21\25\uffff\1\15\1\uffff\1\6\2\uffff\1\2",
-            "",
-            "\1\22\25\uffff\1\22\3\uffff\1\22\10\uffff\1\22\3\uffff\1\22\14\uffff\1\22\2\uffff\2\22\3\uffff\1\22\1\uffff\1\22\5\uffff\1\22\5\uffff\1\22\1\uffff\1\22\1\uffff\2\22\3\uffff\1\22\4\uffff\3\22\1\27\6\22\3\uffff\1\22\1\uffff\1\22\1\25\5\22\1\23\11\22\1\24\1\22\11\uffff\1\26",
-            "",
+            "\1\14\1\13\11\uffff\1\3\1\11\16\uffff\1\12\3\uffff\1\10\1\16\1\17\13\uffff\1\4\5\uffff\1\20\2\uffff\1\2\1\16\15\uffff\1\7\13\uffff\1\5\6\uffff\1\21\25\uffff\1\15\1\uffff\1\6\2\uffff\1\1",
+            "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\3\24\1\26\6\24\3\uffff\1\24\1\uffff\1\24\1\27\5\24\1\22\11\24\1\25\1\24\11\uffff\1\23",
             "",
             "",
             "",
@@ -96096,16 +96100,18 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             "",
             "",
             "",
-            "\2\22\11\uffff\1\22\32\uffff\1\22\111\uffff\1\30",
+            "",
+            "\2\24\11\uffff\1\24\32\uffff\1\24\111\uffff\1\30",
+            "",
+            "",
             "\1\31",
-            "",
-            "",
             "\1\32",
-            "\1\22\25\uffff\1\22\3\uffff\1\22\10\uffff\1\22\3\uffff\1\22\14\uffff\1\22\2\uffff\2\22\3\uffff\1\22\1\uffff\1\22\5\uffff\1\22\5\uffff\1\22\1\uffff\1\22\1\uffff\2\22\3\uffff\1\22\4\uffff\3\22\1\uffff\6\22\3\uffff\1\22\1\uffff\1\22\1\25\21\22",
-            "\1\22\26\uffff\1\26",
-            "\1\33\11\uffff\1\26\12\uffff\1\26",
+            "",
+            "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\3\24\1\uffff\6\24\3\uffff\1\24\1\uffff\1\24\1\27\21\24",
+            "\1\24\26\uffff\1\23",
+            "\1\33\11\uffff\1\23\12\uffff\1\23",
             "\1\34",
-            "\1\25\5\uffff\1\25\11\uffff\1\26\12\uffff\1\26"
+            "\1\27\5\uffff\1\27\11\uffff\1\23\12\uffff\1\23"
     };
 
     static final short[] dfa_7 = DFA.unpackEncodedString(dfa_7s);
@@ -96193,7 +96199,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     static final String dfa_23s = "\1\10\7\0\2\uffff";
     static final String dfa_24s = "\1\u0081\7\0\2\uffff";
     static final String dfa_25s = "\10\uffff\1\2\1\1";
-    static final String dfa_26s = "\1\uffff\1\0\1\3\1\5\1\6\1\1\1\4\1\2\2\uffff}>";
+    static final String dfa_26s = "\1\uffff\1\2\1\5\1\0\1\1\1\3\1\6\1\4\2\uffff}>";
     static final String[] dfa_27s = {
             "\1\10\25\uffff\1\10\3\uffff\1\10\10\uffff\1\10\3\uffff\1\10\14\uffff\1\10\2\uffff\2\10\3\uffff\1\10\1\uffff\1\10\5\uffff\1\10\5\uffff\1\10\1\uffff\1\10\1\uffff\2\10\3\uffff\1\10\4\uffff\1\7\2\10\1\uffff\1\10\1\2\1\6\1\10\1\4\4\uffff\1\10\1\uffff\1\10\1\uffff\5\10\1\uffff\3\10\1\1\1\5\1\3\1\uffff\2\10\1\uffff\1\10",
             "\1\uffff",
@@ -96236,81 +96242,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA94_1 = input.LA(1);
-
-                         
-                        int index94_1 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_1);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA94_5 = input.LA(1);
-
-                         
-                        int index94_5 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_5);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA94_7 = input.LA(1);
-
-                         
-                        int index94_7 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_7);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 3 : 
-                        int LA94_2 = input.LA(1);
-
-                         
-                        int index94_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_2);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA94_6 = input.LA(1);
-
-                         
-                        int index94_6 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_6);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
                         int LA94_3 = input.LA(1);
 
                          
@@ -96325,7 +96256,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         input.seek(index94_3);
                         if ( s>=0 ) return s;
                         break;
-                    case 6 : 
+                    case 1 : 
                         int LA94_4 = input.LA(1);
 
                          
@@ -96338,6 +96269,81 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
                          
                         input.seek(index94_4);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
+                        int LA94_1 = input.LA(1);
+
+                         
+                        int index94_1 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_1);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
+                        int LA94_5 = input.LA(1);
+
+                         
+                        int index94_5 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_5);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 4 : 
+                        int LA94_7 = input.LA(1);
+
+                         
+                        int index94_7 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_7);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA94_2 = input.LA(1);
+
+                         
+                        int index94_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA94_6 = input.LA(1);
+
+                         
+                        int index94_6 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_6);
                         if ( s>=0 ) return s;
                         break;
             }

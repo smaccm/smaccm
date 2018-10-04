@@ -2755,13 +2755,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeTypeParserRuleCall_2_0 = (RuleCall)cTypeAssignment_2.eContents().get(0);
 		
 		//Arg:
-		//	name=ID ':' type=Type;
+		//	=> name=ID ':' type=Type;
 		@Override public ParserRule getRule() { return rule; }
 
-		//name=ID ':' type=Type
+		//=> name=ID ':' type=Type
 		public Group getGroup() { return cGroup; }
 
-		//name=ID
+		//=> name=ID
 		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
 
 		//ID
@@ -4543,14 +4543,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.TermExpr");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Action cTimeExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
-		private final Keyword cTimeKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
+		private final Action cNamedElmExprAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
+		private final Assignment cNamedElmAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
+		private final CrossReference cNamedElmNamedElementCrossReference_0_0_1_0 = (CrossReference)cNamedElmAssignment_0_0_1.eContents().get(0);
+		private final RuleCall cNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_0_0_1_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
-		private final Action cNamedElmExprAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
-		private final Assignment cNamedElmAssignment_1_0_1 = (Assignment)cGroup_1_0.eContents().get(1);
-		private final CrossReference cNamedElmNamedElementCrossReference_1_0_1_0 = (CrossReference)cNamedElmAssignment_1_0_1.eContents().get(0);
-		private final RuleCall cNamedElmNamedElementIDTerminalRuleCall_1_0_1_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_1_0_1_0.eContents().get(1);
+		private final Action cTimeExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cTimeKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
 		private final Action cIndicesExprAction_2_0 = (Action)cGroup_2.eContents().get(0);
 		private final Keyword cIndicesKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
@@ -4685,8 +4685,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_18_2 = (Keyword)cGroup_18.eContents().get(2);
 		
 		//TermExpr Expr:
-		//	{TimeExpr} 'time'
-		//	| => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndicesExpr} 'indices' '(' array=Expr ')'
+		//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {TimeExpr} 'time'
+		//	| {IndicesExpr} 'indices' '(' array=Expr ')'
 		//	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')'
 		//	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';'
 		//	args+=[aadl2::NamedElement] '=' argExpr+=Expr)* '}'
@@ -4706,7 +4706,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| '(' Expr ')';
 		@Override public ParserRule getRule() { return rule; }
 
-		//{TimeExpr} 'time' | => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndicesExpr} 'indices' '(' array=Expr ')' | =>
+		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {TimeExpr} 'time' | {IndicesExpr} 'indices' '(' array=Expr ')' | =>
 		//({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' | => ({RecordLitExpr}
 		//recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement] '='
 		//argExpr+=Expr)* '}' | => ({EnumLitExpr} 'enum' '(') enumType=CustomType ',' value=ID ')' | ArrayLiteralExpr |
@@ -4717,32 +4717,32 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr ')'
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{TimeExpr} 'time'
+		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement])
 		public Group getGroup_0() { return cGroup_0; }
 
-		//{TimeExpr}
-		public Action getTimeExprAction_0_0() { return cTimeExprAction_0_0; }
-
-		//'time'
-		public Keyword getTimeKeyword_0_1() { return cTimeKeyword_0_1; }
-
-		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement])
-		public Group getGroup_1() { return cGroup_1; }
-
 		//{NamedElmExpr} namedElm=[aadl2::NamedElement]
-		public Group getGroup_1_0() { return cGroup_1_0; }
+		public Group getGroup_0_0() { return cGroup_0_0; }
 
 		//{NamedElmExpr}
-		public Action getNamedElmExprAction_1_0_0() { return cNamedElmExprAction_1_0_0; }
+		public Action getNamedElmExprAction_0_0_0() { return cNamedElmExprAction_0_0_0; }
 
 		//namedElm=[aadl2::NamedElement]
-		public Assignment getNamedElmAssignment_1_0_1() { return cNamedElmAssignment_1_0_1; }
+		public Assignment getNamedElmAssignment_0_0_1() { return cNamedElmAssignment_0_0_1; }
 
 		//[aadl2::NamedElement]
-		public CrossReference getNamedElmNamedElementCrossReference_1_0_1_0() { return cNamedElmNamedElementCrossReference_1_0_1_0; }
+		public CrossReference getNamedElmNamedElementCrossReference_0_0_1_0() { return cNamedElmNamedElementCrossReference_0_0_1_0; }
 
 		//ID
-		public RuleCall getNamedElmNamedElementIDTerminalRuleCall_1_0_1_0_1() { return cNamedElmNamedElementIDTerminalRuleCall_1_0_1_0_1; }
+		public RuleCall getNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1() { return cNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1; }
+
+		//{TimeExpr} 'time'
+		public Group getGroup_1() { return cGroup_1; }
+
+		//{TimeExpr}
+		public Action getTimeExprAction_1_0() { return cTimeExprAction_1_0; }
+
+		//'time'
+		public Keyword getTimeKeyword_1_1() { return cTimeKeyword_1_1; }
 
 		//{IndicesExpr} 'indices' '(' array=Expr ')'
 		public Group getGroup_2() { return cGroup_2; }
@@ -5988,7 +5988,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Arg:
-	//	name=ID ':' type=Type;
+	//	=> name=ID ':' type=Type;
 	public ArgElements getArgAccess() {
 		return pArg;
 	}
@@ -6323,8 +6323,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TermExpr Expr:
-	//	{TimeExpr} 'time'
-	//	| => ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {IndicesExpr} 'indices' '(' array=Expr ')'
+	//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {TimeExpr} 'time'
+	//	| {IndicesExpr} 'indices' '(' array=Expr ')'
 	//	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')'
 	//	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';'
 	//	args+=[aadl2::NamedElement] '=' argExpr+=Expr)* '}'

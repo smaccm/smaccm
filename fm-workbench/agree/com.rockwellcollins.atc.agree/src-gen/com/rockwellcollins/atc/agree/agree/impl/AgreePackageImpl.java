@@ -725,14 +725,14 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass timeExprEClass = null;
+  private EClass namedElmExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass namedElmExprEClass = null;
+  private EClass timeExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -3141,16 +3141,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getTimeExpr()
-  {
-    return timeExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getNamedElmExpr()
   {
     return namedElmExprEClass;
@@ -3164,6 +3154,16 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EReference getNamedElmExpr_NamedElm()
   {
     return (EReference)namedElmExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTimeExpr()
+  {
+    return timeExprEClass;
   }
 
   /**
@@ -3844,10 +3844,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(projectionExprEClass, PROJECTION_EXPR__EXPR);
     createEReference(projectionExprEClass, PROJECTION_EXPR__FIELD);
 
-    timeExprEClass = createEClass(TIME_EXPR);
-
     namedElmExprEClass = createEClass(NAMED_ELM_EXPR);
     createEReference(namedElmExprEClass, NAMED_ELM_EXPR__NAMED_ELM);
+
+    timeExprEClass = createEClass(TIME_EXPR);
 
     indicesExprEClass = createEClass(INDICES_EXPR);
     createEReference(indicesExprEClass, INDICES_EXPR__ARRAY);
@@ -4027,8 +4027,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     arraySubExprEClass.getESuperTypes().add(this.getExpr());
     tagExprEClass.getESuperTypes().add(this.getExpr());
     projectionExprEClass.getESuperTypes().add(this.getExpr());
-    timeExprEClass.getESuperTypes().add(this.getExpr());
     namedElmExprEClass.getESuperTypes().add(this.getExpr());
+    timeExprEClass.getESuperTypes().add(this.getExpr());
     indicesExprEClass.getESuperTypes().add(this.getExpr());
     callExprEClass.getESuperTypes().add(this.getExpr());
     recordLitExprEClass.getESuperTypes().add(this.getExpr());
@@ -4354,10 +4354,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getProjectionExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, ProjectionExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getProjectionExpr_Field(), theAadl2Package.getNamedElement(), null, "field", null, 0, 1, ProjectionExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(timeExprEClass, TimeExpr.class, "TimeExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
     initEClass(namedElmExprEClass, NamedElmExpr.class, "NamedElmExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNamedElmExpr_NamedElm(), theAadl2Package.getNamedElement(), null, "namedElm", null, 0, 1, NamedElmExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(timeExprEClass, TimeExpr.class, "TimeExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(indicesExprEClass, IndicesExpr.class, "IndicesExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getIndicesExpr_Array(), this.getExpr(), null, "array", null, 0, 1, IndicesExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

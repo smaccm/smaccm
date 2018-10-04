@@ -149,8 +149,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.ARRAY_SUB_EXPR: return createArraySubExpr();
       case AgreePackage.TAG_EXPR: return createTagExpr();
       case AgreePackage.PROJECTION_EXPR: return createProjectionExpr();
-      case AgreePackage.TIME_EXPR: return createTimeExpr();
       case AgreePackage.NAMED_ELM_EXPR: return createNamedElmExpr();
+      case AgreePackage.TIME_EXPR: return createTimeExpr();
       case AgreePackage.INDICES_EXPR: return createIndicesExpr();
       case AgreePackage.CALL_EXPR: return createCallExpr();
       case AgreePackage.RECORD_LIT_EXPR: return createRecordLitExpr();
@@ -1111,10 +1111,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public TimeExpr createTimeExpr()
+  public NamedElmExpr createNamedElmExpr()
   {
-    TimeExprImpl timeExpr = new TimeExprImpl();
-    return timeExpr;
+    NamedElmExprImpl namedElmExpr = new NamedElmExprImpl();
+    return namedElmExpr;
   }
 
   /**
@@ -1122,10 +1122,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public NamedElmExpr createNamedElmExpr()
+  public TimeExpr createTimeExpr()
   {
-    NamedElmExprImpl namedElmExpr = new NamedElmExprImpl();
-    return namedElmExpr;
+    TimeExprImpl timeExpr = new TimeExprImpl();
+    return timeExpr;
   }
 
   /**

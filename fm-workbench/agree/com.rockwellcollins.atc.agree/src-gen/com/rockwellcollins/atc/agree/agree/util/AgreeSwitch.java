@@ -842,21 +842,21 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.TIME_EXPR:
-      {
-        TimeExpr timeExpr = (TimeExpr)theEObject;
-        T result = caseTimeExpr(timeExpr);
-        if (result == null) result = caseExpr(timeExpr);
-        if (result == null) result = caseElement(timeExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.NAMED_ELM_EXPR:
       {
         NamedElmExpr namedElmExpr = (NamedElmExpr)theEObject;
         T result = caseNamedElmExpr(namedElmExpr);
         if (result == null) result = caseExpr(namedElmExpr);
         if (result == null) result = caseElement(namedElmExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.TIME_EXPR:
+      {
+        TimeExpr timeExpr = (TimeExpr)theEObject;
+        T result = caseTimeExpr(timeExpr);
+        if (result == null) result = caseExpr(timeExpr);
+        if (result == null) result = caseElement(timeExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -2360,22 +2360,6 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Time Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Time Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseTimeExpr(TimeExpr object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Named Elm Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -2387,6 +2371,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNamedElmExpr(NamedElmExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Time Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Time Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimeExpr(TimeExpr object)
   {
     return null;
   }

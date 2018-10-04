@@ -310,13 +310,13 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/chainID"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/namedElm"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//TimeExpr"/>
     <genClasses ecoreClass="Agree.ecore#//NamedElmExpr">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedElmExpr/namedElm"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedElmExpr/compClass"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedElmExpr/component"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedElmExpr/componentRef"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeExpr"/>
     <genClasses ecoreClass="Agree.ecore#//IndicesExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//IndicesExpr/array"/>
     </genClasses>

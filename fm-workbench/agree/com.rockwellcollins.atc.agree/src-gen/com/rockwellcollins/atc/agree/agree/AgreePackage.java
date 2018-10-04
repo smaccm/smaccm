@@ -4923,43 +4923,6 @@ public interface AgreePackage extends EPackage
   int PROJECTION_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl <em>Time Expr</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeExpr()
-   * @generated
-   */
-  int TIME_EXPR = 85;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TIME_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TIME_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
-
-  /**
-   * The number of structural features of the '<em>Time Expr</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TIME_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 0;
-
-  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NamedElmExprImpl <em>Named Elm Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4967,7 +4930,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNamedElmExpr()
    * @generated
    */
-  int NAMED_ELM_EXPR = 86;
+  int NAMED_ELM_EXPR = 85;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -5004,6 +4967,43 @@ public interface AgreePackage extends EPackage
    * @ordered
    */
   int NAMED_ELM_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl <em>Time Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeExpr()
+   * @generated
+   */
+  int TIME_EXPR = 86;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TIME_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TIME_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The number of structural features of the '<em>Time Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TIME_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 0;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.IndicesExprImpl <em>Indices Expr</em>}' class.
@@ -8101,16 +8101,6 @@ public interface AgreePackage extends EPackage
   EReference getProjectionExpr_Field();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.TimeExpr <em>Time Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Time Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.TimeExpr
-   * @generated
-   */
-  EClass getTimeExpr();
-
-  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NamedElmExpr <em>Named Elm Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -8130,6 +8120,16 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getNamedElmExpr_NamedElm();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.TimeExpr <em>Time Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Time Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.TimeExpr
+   * @generated
+   */
+  EClass getTimeExpr();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.IndicesExpr <em>Indices Expr</em>}'.
@@ -10468,16 +10468,6 @@ public interface AgreePackage extends EPackage
     EReference PROJECTION_EXPR__FIELD = eINSTANCE.getProjectionExpr_Field();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl <em>Time Expr</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeExpr()
-     * @generated
-     */
-    EClass TIME_EXPR = eINSTANCE.getTimeExpr();
-
-    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NamedElmExprImpl <em>Named Elm Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -10494,6 +10484,16 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference NAMED_ELM_EXPR__NAMED_ELM = eINSTANCE.getNamedElmExpr_NamedElm();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl <em>Time Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.TimeExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeExpr()
+     * @generated
+     */
+    EClass TIME_EXPR = eINSTANCE.getTimeExpr();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.IndicesExprImpl <em>Indices Expr</em>}' class.

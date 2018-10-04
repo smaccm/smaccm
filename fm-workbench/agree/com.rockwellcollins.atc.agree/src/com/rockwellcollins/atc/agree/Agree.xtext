@@ -174,7 +174,7 @@ NodeStmt:
 	| {NodeLemma} 'lemma' str=STRING ':' expr=Expr ';';
 
 Arg returns Arg:
-	name=ID ':' type=Type;
+	=> name=ID ':' type=Type;
 	
 Type returns Type:
 	BaseType (=> ({ArrayType.stem = current} '[' size=INTEGER_LIT ']'))*
@@ -303,8 +303,8 @@ ProjectionExpr returns Expr:
 
 
 TermExpr returns Expr:
-	{TimeExpr} 'time'
-	| => ({NamedElmExpr} namedElm=[aadl2::NamedElement])
+	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|ID])
+	| {TimeExpr} 'time'
 	| {IndicesExpr} 'indices' '(' array=Expr ')'
 	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' 
 	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'

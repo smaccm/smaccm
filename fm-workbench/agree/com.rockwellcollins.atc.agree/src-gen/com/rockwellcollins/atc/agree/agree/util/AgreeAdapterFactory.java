@@ -506,14 +506,14 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createProjectionExprAdapter();
       }
       @Override
-      public Adapter caseTimeExpr(TimeExpr object)
-      {
-        return createTimeExprAdapter();
-      }
-      @Override
       public Adapter caseNamedElmExpr(NamedElmExpr object)
       {
         return createNamedElmExprAdapter();
+      }
+      @Override
+      public Adapter caseTimeExpr(TimeExpr object)
+      {
+        return createTimeExprAdapter();
       }
       @Override
       public Adapter caseIndicesExpr(IndicesExpr object)
@@ -1913,21 +1913,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TimeExpr <em>Time Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.TimeExpr
-   * @generated
-   */
-  public Adapter createTimeExprAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NamedElmExpr <em>Named Elm Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1938,6 +1923,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNamedElmExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.TimeExpr <em>Time Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.TimeExpr
+   * @generated
+   */
+  public Adapter createTimeExprAdapter()
   {
     return null;
   }
