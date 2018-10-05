@@ -10,6 +10,7 @@ import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.ArrayDimension;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentImplementation;
@@ -282,7 +283,6 @@ public class AgreeTypeSystem {
 			}
 
 		} else if (expr instanceof ArraySubExpr) {
-
 			Expr arrExpr = ((ArraySubExpr) expr).getExpr();
 			Type arrType = infer(arrExpr);
 			if (arrType instanceof ArrayType) {
@@ -654,10 +654,31 @@ public class AgreeTypeSystem {
 			return mkCustomType(dt);
 
 		} else if (ne instanceof Subcomponent) {
-			return mkCustomType(((Subcomponent) ne).getClassifier());
+			Subcomponent sub = (Subcomponent) ne;
+
+			Classifier cl = sub.getClassifier();
+			List<ArrayDimension> dims = sub.getArrayDimensions();
+			if (dims.size() == 0) {
+				return mkCustomType(cl);
+			} else if (dims.size() == 1) {
+				ArrayDimension dim = dims.get(0);
+				long size = dim.getSize().getSize();
+				return mkArrayType(mkCustomType(cl), java.lang.Math.toIntExact(size));
+
+			}
 
 		} else if (ne instanceof Feature) {
-			return mkCustomType(((Feature) ne).getClassifier());
+			Classifier cl = ((Feature) ne).getClassifier();
+			List<ArrayDimension> dims = ((Feature) ne).getArrayDimensions();
+			if (dims.size() == 0) {
+				return mkCustomType(cl);
+			} else if (dims.size() == 1) {
+				ArrayDimension dim = dims.get(0);
+				long size = dim.getSize().getSize();
+				return mkArrayType(mkCustomType(cl), java.lang.Math.toIntExact(size));
+
+			}
+
 
 		} else if (ne instanceof AadlPackage) {
 			return mkCustomType(ne);

@@ -2316,6 +2316,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (fnType == null) {
 			return; // this error will be caught in parsing
 		}
+
 		Type exprType = AgreeTypeSystem.infer(fnDef.getExpr());
 		if (!AgreeTypeSystem.typesEqual(exprType, fnType)) {
 			error(fnDef, "Function '" + fnDef.getName() + "' is of type '" + typeToString(fnType)
