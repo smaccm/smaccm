@@ -187,7 +187,7 @@ BaseType returns Type:
 ;
 	
 CustomType:
-	=> (stem=[aadl2::NamedElement|QCPREF] leaf=[aadl2::NamedElement|ID]) |
+	=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement|ID]) |
 	=> (leaf=[aadl2::NamedElement|QCPREF])
 	;
 

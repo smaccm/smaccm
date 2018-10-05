@@ -4535,7 +4535,9 @@ ruleCustomType returns [EObject current=null]
 		ruleQCPREF
 
 )
-)(
+)
+FullStop
+(
 (
 	RULE_ID
 
@@ -4556,16 +4558,21 @@ ruleCustomType returns [EObject current=null]
 	    }
 
 )
-)(
+)
+	otherlv_1=FullStop
+    {
+    	newLeafNode(otherlv_1, grammarAccess.getCustomTypeAccess().getFullStopKeyword_0_0_1());
+    }
+(
 (
 		{
 			if ($current==null) {
 	            $current = createModelElement(grammarAccess.getCustomTypeRule());
 	        }
         }
-	otherlv_1=RULE_ID
+	otherlv_2=RULE_ID
 	{
-		newLeafNode(otherlv_1, grammarAccess.getCustomTypeAccess().getLeafNamedElementCrossReference_0_0_1_0()); 
+		newLeafNode(otherlv_2, grammarAccess.getCustomTypeAccess().getLeafNamedElementCrossReference_0_0_2_0()); 
 	}
 
 )

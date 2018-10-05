@@ -2933,26 +2933,27 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cStemAssignment_0_0_0 = (Assignment)cGroup_0_0.eContents().get(0);
 		private final CrossReference cStemNamedElementCrossReference_0_0_0_0 = (CrossReference)cStemAssignment_0_0_0.eContents().get(0);
 		private final RuleCall cStemNamedElementQCPREFParserRuleCall_0_0_0_0_1 = (RuleCall)cStemNamedElementCrossReference_0_0_0_0.eContents().get(1);
-		private final Assignment cLeafAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
-		private final CrossReference cLeafNamedElementCrossReference_0_0_1_0 = (CrossReference)cLeafAssignment_0_0_1.eContents().get(0);
-		private final RuleCall cLeafNamedElementIDTerminalRuleCall_0_0_1_0_1 = (RuleCall)cLeafNamedElementCrossReference_0_0_1_0.eContents().get(1);
+		private final Keyword cFullStopKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
+		private final Assignment cLeafAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
+		private final CrossReference cLeafNamedElementCrossReference_0_0_2_0 = (CrossReference)cLeafAssignment_0_0_2.eContents().get(0);
+		private final RuleCall cLeafNamedElementIDTerminalRuleCall_0_0_2_0_1 = (RuleCall)cLeafNamedElementCrossReference_0_0_2_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Assignment cLeafAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
 		private final CrossReference cLeafNamedElementCrossReference_1_0_0 = (CrossReference)cLeafAssignment_1_0.eContents().get(0);
 		private final RuleCall cLeafNamedElementQCPREFParserRuleCall_1_0_0_1 = (RuleCall)cLeafNamedElementCrossReference_1_0_0.eContents().get(1);
 		
 		//CustomType:
-		//	=> (stem=[aadl2::NamedElement|QCPREF] leaf=[aadl2::NamedElement]) |
+		//	=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement]) |
 		//	=> (leaf=[aadl2::NamedElement|QCPREF]);
 		@Override public ParserRule getRule() { return rule; }
 
-		//=> (stem=[aadl2::NamedElement|QCPREF] leaf=[aadl2::NamedElement]) | => (leaf=[aadl2::NamedElement|QCPREF])
+		//=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement]) | => (leaf=[aadl2::NamedElement|QCPREF])
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//=> (stem=[aadl2::NamedElement|QCPREF] leaf=[aadl2::NamedElement])
+		//=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement])
 		public Group getGroup_0() { return cGroup_0; }
 
-		//stem=[aadl2::NamedElement|QCPREF] leaf=[aadl2::NamedElement]
+		//stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement]
 		public Group getGroup_0_0() { return cGroup_0_0; }
 
 		//stem=[aadl2::NamedElement|QCPREF]
@@ -2964,14 +2965,17 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//QCPREF
 		public RuleCall getStemNamedElementQCPREFParserRuleCall_0_0_0_0_1() { return cStemNamedElementQCPREFParserRuleCall_0_0_0_0_1; }
 
+		//'.'
+		public Keyword getFullStopKeyword_0_0_1() { return cFullStopKeyword_0_0_1; }
+
 		//leaf=[aadl2::NamedElement]
-		public Assignment getLeafAssignment_0_0_1() { return cLeafAssignment_0_0_1; }
+		public Assignment getLeafAssignment_0_0_2() { return cLeafAssignment_0_0_2; }
 
 		//[aadl2::NamedElement]
-		public CrossReference getLeafNamedElementCrossReference_0_0_1_0() { return cLeafNamedElementCrossReference_0_0_1_0; }
+		public CrossReference getLeafNamedElementCrossReference_0_0_2_0() { return cLeafNamedElementCrossReference_0_0_2_0; }
 
 		//ID
-		public RuleCall getLeafNamedElementIDTerminalRuleCall_0_0_1_0_1() { return cLeafNamedElementIDTerminalRuleCall_0_0_1_0_1; }
+		public RuleCall getLeafNamedElementIDTerminalRuleCall_0_0_2_0_1() { return cLeafNamedElementIDTerminalRuleCall_0_0_2_0_1; }
 
 		//=> (leaf=[aadl2::NamedElement|QCPREF])
 		public Group getGroup_1() { return cGroup_1; }
@@ -6024,7 +6028,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//CustomType:
-	//	=> (stem=[aadl2::NamedElement|QCPREF] leaf=[aadl2::NamedElement]) |
+	//	=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement]) |
 	//	=> (leaf=[aadl2::NamedElement|QCPREF]);
 	public CustomTypeElements getCustomTypeAccess() {
 		return pCustomType;

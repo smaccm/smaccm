@@ -16652,6 +16652,7 @@ rule__CustomType__Group_0_0__1
     }
 :
 	rule__CustomType__Group_0_0__1__Impl
+	rule__CustomType__Group_0_0__2
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -16663,15 +16664,47 @@ rule__CustomType__Group_0_0__1__Impl
     }
 :
 (
-{ before(grammarAccess.getCustomTypeAccess().getLeafAssignment_0_0_1()); }
-(rule__CustomType__LeafAssignment_0_0_1)
-{ after(grammarAccess.getCustomTypeAccess().getLeafAssignment_0_0_1()); }
+{ before(grammarAccess.getCustomTypeAccess().getFullStopKeyword_0_0_1()); }
+
+	FullStop 
+
+{ after(grammarAccess.getCustomTypeAccess().getFullStopKeyword_0_0_1()); }
 )
 
 ;
 finally {
 	restoreStackSize(stackSize);
 }
+
+
+rule__CustomType__Group_0_0__2
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__CustomType__Group_0_0__2__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__CustomType__Group_0_0__2__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getCustomTypeAccess().getLeafAssignment_0_0_2()); }
+(rule__CustomType__LeafAssignment_0_0_2)
+{ after(grammarAccess.getCustomTypeAccess().getLeafAssignment_0_0_2()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
 
 
 
@@ -32143,18 +32176,18 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__CustomType__LeafAssignment_0_0_1
+rule__CustomType__LeafAssignment_0_0_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getCustomTypeAccess().getLeafNamedElementCrossReference_0_0_1_0()); }
+{ before(grammarAccess.getCustomTypeAccess().getLeafNamedElementCrossReference_0_0_2_0()); }
 (
-{ before(grammarAccess.getCustomTypeAccess().getLeafNamedElementIDTerminalRuleCall_0_0_1_0_1()); }
-	RULE_ID{ after(grammarAccess.getCustomTypeAccess().getLeafNamedElementIDTerminalRuleCall_0_0_1_0_1()); }
+{ before(grammarAccess.getCustomTypeAccess().getLeafNamedElementIDTerminalRuleCall_0_0_2_0_1()); }
+	RULE_ID{ after(grammarAccess.getCustomTypeAccess().getLeafNamedElementIDTerminalRuleCall_0_0_2_0_1()); }
 )
-{ after(grammarAccess.getCustomTypeAccess().getLeafNamedElementCrossReference_0_0_1_0()); }
+{ after(grammarAccess.getCustomTypeAccess().getLeafNamedElementCrossReference_0_0_2_0()); }
 )
 
 ;
