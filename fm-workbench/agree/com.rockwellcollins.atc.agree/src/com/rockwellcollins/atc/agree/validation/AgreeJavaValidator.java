@@ -115,7 +115,6 @@ import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SubcomponentRef;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
-import com.rockwellcollins.atc.agree.agree.TagExpr;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
 import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
@@ -1031,35 +1030,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return true;
 		}
 		return false;
-	}
-
-	@Check(CheckType.FAST)
-	public void checkTagExpr(TagExpr e) {
-		Expr stem = e.getStem();
-		NamedElement ne = null;
-		if (stem instanceof ProjectionExpr) {
-			ne = ((ProjectionExpr) stem).getField();
-		} else if (stem instanceof NamedElmExpr) {
-			ne = ((NamedElmExpr) stem).getNamedElm();
-		}
-
-		if (ne instanceof Subcomponent) {
-			ComponentImplementation ci = e.getContainingComponentImpl();
-			List<Subcomponent> subs = ci.getAllSubcomponents();
-			boolean found = false;
-			for (Subcomponent sub : subs) {
-				if (ne.getName().equals(sub.getName())) {
-					found = true;
-				}
-			}
-
-			if (!found) {
-				error(stem, ne + "//" + stem + ": 1 tag must be applied to a subcomponent");
-			}
-
-		} else {
-			error(stem, ne + "//" + stem + ": 2 tag must be applied to a subcomponent");
-		}
 	}
 
 	@Check(CheckType.FAST)
