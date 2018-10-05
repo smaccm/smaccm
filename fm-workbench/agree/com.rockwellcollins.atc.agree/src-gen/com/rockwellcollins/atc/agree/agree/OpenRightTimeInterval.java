@@ -2,6 +2,7 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Open Right Time Interval</b></em>'.
@@ -12,5 +13,6 @@ package com.rockwellcollins.atc.agree.agree;
  * @model
  * @generated
  */
-public interface OpenRightTimeInterval extends TimeInterval {
+public interface OpenRightTimeInterval extends TimeInterval
+{
 } // OpenRightTimeInterval

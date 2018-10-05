@@ -14,5 +14,6 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface PatternStatement extends EObject {
+public interface PatternStatement extends EObject
+{
 } // PatternStatement

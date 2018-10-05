@@ -3,6 +3,7 @@
 package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.ecore.EObject;
+
 import org.osate.aadl2.AnnexLibrary;
 
 /**
@@ -15,5 +16,6 @@ import org.osate.aadl2.AnnexLibrary;
  * @model
  * @generated
  */
-public interface AgreeLibrary extends EObject, AnnexLibrary {
+public interface AgreeLibrary extends EObject, AnnexLibrary
+{
 } // AgreeLibrary
