@@ -58,9 +58,12 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.google.common.collect.HashMultimap;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -635,6 +638,62 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	@Check(CheckType.FAST)
+	private void checkNoDuplicateIdInSpec(AadlPackage pkg) {
+
+		List<SpecStatement> specs = new ArrayList<SpecStatement>();
+		for (Classifier classifier : EcoreUtil2.getAllContentsOfType(pkg, Classifier.class)) {
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(classifier,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				specs.addAll(contract.getSpecs());
+
+			}
+		}
+
+		for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(pkg,
+				AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+			AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+			specs.addAll(contract.getSpecs());
+		}
+
+
+		HashMultimap<String, SpecStatement> multiMap = HashMultimap.create();
+
+		for (SpecStatement spec : specs) {
+
+			String id = null;
+			if (spec instanceof AssumeStatement) {
+				id = ((AssumeStatement) spec).getId();
+			} else if (spec instanceof GuaranteeStatement) {
+				id = ((GuaranteeStatement) spec).getId();
+			} else if (spec instanceof AssertStatement) {
+				id = ((AssertStatement) spec).getId();
+			} else if (spec instanceof LemmaStatement) {
+				id = ((LemmaStatement) spec).getId();
+			}
+
+			if (id != null) {
+
+				multiMap.put(id, spec);
+			}
+		}
+
+
+		for (Map.Entry<String, java.util.Collection<SpecStatement>> entry : multiMap.asMap().entrySet()) {
+			java.util.Collection<SpecStatement> duplicates = entry.getValue();
+			if (duplicates.size() > 1) {
+				for (SpecStatement d : duplicates) {
+					error(d, "Duplicate AGREE contract claim");
+				}
+			}
+		}
+
+
+
+
+	}
+
+	@Check(CheckType.FAST)
 	public void checkAssume(AssumeStatement assume) {
 		Classifier comp = assume.getContainingClassifier();
 		if (!(comp instanceof ComponentType)) {
@@ -650,6 +709,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				+ "' but must be of type 'bool'");
 			}
 		}
+
+
 	}
 
 	@Check(CheckType.FAST)

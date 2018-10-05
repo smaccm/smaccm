@@ -3,6 +3,7 @@
 package com.rockwellcollins.atc.agree.agree;
 
 import org.eclipse.emf.ecore.EObject;
+
 import org.osate.aadl2.NamedElement;
 
 /**
@@ -15,5 +16,6 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface CallDef extends EObject, NamedElement {
+public interface CallDef extends EObject, NamedElement
+{
 } // CallDef
