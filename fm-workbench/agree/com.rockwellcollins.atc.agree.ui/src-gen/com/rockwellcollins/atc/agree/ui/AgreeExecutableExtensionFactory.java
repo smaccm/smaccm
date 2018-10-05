@@ -7,11 +7,12 @@ import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
 
 import com.google.inject.Injector;
+
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
 /**
  * This class was generated. Customizations should only happen in a newly
- * introduced subclass.
+ * introduced subclass. 
  */
 public class AgreeExecutableExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory {
 
@@ -19,10 +20,10 @@ public class AgreeExecutableExtensionFactory extends AbstractGuiceAwareExecutabl
 	protected Bundle getBundle() {
 		return AgreeActivator.getInstance().getBundle();
 	}
-
+	
 	@Override
 	protected Injector getInjector() {
 		return AgreeActivator.getInstance().getInjector(AgreeActivator.COM_ROCKWELLCOLLINS_ATC_AGREE_AGREE);
 	}
-
+	
 }
