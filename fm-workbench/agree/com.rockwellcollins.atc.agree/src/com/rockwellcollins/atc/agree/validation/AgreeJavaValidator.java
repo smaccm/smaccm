@@ -2502,7 +2502,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 					error(binExpr,
 							"left and right sides of binary expression '" + op + "' are of type '"
 									+ typeToString(typeLeft)
-									+ "' and '" + typeRight + "', but must be of the same type");
+									+ "' and '" + typeToString(typeRight) + "', but must be of the same type");
 				}
 				if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.intType, typeLeft)
 						&& !AgreeTypeSystem.typesEqual(AgreeTypeSystem.realType, typeLeft)) {

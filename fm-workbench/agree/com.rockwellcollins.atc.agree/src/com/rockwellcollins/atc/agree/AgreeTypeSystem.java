@@ -27,6 +27,7 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyAssociation;
+import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
@@ -213,6 +214,21 @@ public class AgreeTypeSystem {
 		public NamedElement baseType = null;
 	}
 
+	private static int intFromPropExp(PropertyExpression pe) {
+		if (pe instanceof IntegerLiteral) {
+			return java.lang.Math.toIntExact(((IntegerLiteral) pe).getValue());
+
+		} else if (pe instanceof NamedValue) {
+			NamedValue nv = (NamedValue) pe;
+			AbstractNamedValue anv = nv.getNamedValue();
+			if (anv instanceof PropertyConstant) {
+				return intFromPropExp(((PropertyConstant) anv).getConstantValue());
+			}
+		}
+
+		return -1;
+	}
+
 	public final static ArrayDef arrayDefFromAadl(DataType typedef) {
 
 		List<PropertyAssociation> pas = typedef.getAllPropertyAssociations();
@@ -250,9 +266,7 @@ public class AgreeTypeSystem {
 				if (v instanceof ListValue) {
 					ListValue l = (ListValue) v;
 					PropertyExpression pe = l.getOwnedListElements().get(0);
-					if (pe instanceof IntegerLiteral) {
-						ad.dimension = java.lang.Math.toIntExact(((IntegerLiteral) pe).getValue());
-					}
+					ad.dimension = intFromPropExp(pe);
 				}
 			}
 
@@ -582,44 +596,39 @@ public class AgreeTypeSystem {
 
 			EObject container = ne.eContainer();
 
+			Expr arrExpr = null;
+
 			if (container instanceof ForallExpr) {
-				Expr arrExpr = ((ForallExpr) container).getArray();
-				Type arrType = infer(arrExpr);
-				if (arrType instanceof ArrayType) {
-					Type stem = ((ArrayType) arrType).getStem();
-					return stem;
-				}
+				arrExpr = ((ForallExpr) container).getArray();
 
 			} else if (container instanceof ExistsExpr) {
-				Expr arrExpr = ((ExistsExpr) container).getArray();
-				Type arrType = infer(arrExpr);
-				if (arrType instanceof ArrayType) {
-					Type stem = ((ArrayType) arrType).getStem();
-					return stem;
-				}
+				arrExpr = ((ExistsExpr) container).getArray();
 
 			} else if (container instanceof ForeachExpr) {
-				Expr arrExpr = ((ForeachExpr) container).getArray();
-				Type arrType = infer(arrExpr);
-				if (arrType instanceof ArrayType) {
-					Type stem = ((ArrayType) arrType).getStem();
-					return stem;
-				}
+				arrExpr = ((ForeachExpr) container).getArray();
 
 			} else if (container instanceof FoldLeftExpr) {
-				Expr arrExpr = ((FoldLeftExpr) container).getArray();
-				Type arrType = infer(arrExpr);
-				if (arrType instanceof ArrayType) {
-					Type stem = ((ArrayType) arrType).getStem();
-					return stem;
-				}
+				arrExpr = ((FoldLeftExpr) container).getArray();
 
 			} else if (container instanceof FoldRightExpr) {
-				Expr arrExpr = ((FoldRightExpr) container).getArray();
+				arrExpr = ((FoldRightExpr) container).getArray();
+
+			}
+
+			if (arrExpr != null) {
 				Type arrType = infer(arrExpr);
 				if (arrType instanceof ArrayType) {
 					Type stem = ((ArrayType) arrType).getStem();
 					return stem;
+
+				} else if (arrType instanceof CustomType) {
+					NamedElement typedef = ((CustomType) arrType).getLeaf();
+					if (typedef instanceof DataType) {
+						ArrayDef ad = arrayDefFromAadl((DataType) typedef);
+						if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
+							return mkCustomType(ad.baseType);
+						}
+					}
 				}
 			}
 
