@@ -49,6 +49,7 @@ import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
+import org.osate.aadl2.ModelUnit;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
@@ -637,9 +638,29 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	@Check(CheckType.FAST)
-	private void checkNoDuplicateIdInSpec(AadlPackage pkg) {
+	private Set<AadlPackage> getPackageDependencies(AadlPackage pkg) {
+		Set<AadlPackage> result = new HashSet<AadlPackage>();
 
+		List<ModelUnit> mus = new ArrayList<ModelUnit>();
+		if (pkg.getPrivateSection() != null) {
+			mus.addAll(pkg.getPrivateSection().getImportedUnits());
+		}
+
+		if (pkg.getPublicSection() != null) {
+			mus.addAll(pkg.getPublicSection().getImportedUnits());
+		}
+
+		for (ModelUnit mu : mus) {
+			if (mu instanceof AadlPackage) {
+				result.add((AadlPackage) mu);
+				result.addAll(getPackageDependencies((AadlPackage) mu));
+			}
+		}
+
+		return result;
+	}
+
+	private List<SpecStatement> getSpecStatements(AadlPackage pkg) {
 		List<SpecStatement> specs = new ArrayList<SpecStatement>();
 		for (Classifier classifier : EcoreUtil2.getAllContentsOfType(pkg, Classifier.class)) {
 			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(classifier,
@@ -655,41 +676,64 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
 			specs.addAll(contract.getSpecs());
 		}
+		return specs;
+	}
 
+	@Check(CheckType.NORMAL)
+	public void checkNoDuplicateIdInSpec(AadlPackage toppkg) {
+
+		Set<AadlPackage> pkgs = getPackageDependencies(toppkg);
+		pkgs.add(toppkg);
 
 		HashMultimap<String, SpecStatement> multiMap = HashMultimap.create();
+		for (AadlPackage pkg : pkgs) {
+			List<SpecStatement> specs = getSpecStatements(pkg);
 
-		for (SpecStatement spec : specs) {
+			//check local uniqueness
+			for (SpecStatement spec : specs) {
 
-			String id = null;
-			if (spec instanceof AssumeStatement) {
-				id = ((AssumeStatement) spec).getId();
-			} else if (spec instanceof GuaranteeStatement) {
-				id = ((GuaranteeStatement) spec).getId();
-			} else if (spec instanceof AssertStatement) {
-				id = ((AssertStatement) spec).getId();
-			} else if (spec instanceof LemmaStatement) {
-				id = ((LemmaStatement) spec).getId();
-			}
+				String id = null;
+				if (spec instanceof AssumeStatement) {
+					id = ((AssumeStatement) spec).getName();
+				} else if (spec instanceof GuaranteeStatement) {
+					id = ((GuaranteeStatement) spec).getName();
+				} else if (spec instanceof AssertStatement) {
+					id = ((AssertStatement) spec).getName();
+				} else if (spec instanceof LemmaStatement) {
+					id = ((LemmaStatement) spec).getName();
 
-			if (id != null) {
+				}
 
-				multiMap.put(id, spec);
-			}
-		}
-
-
-		for (Map.Entry<String, java.util.Collection<SpecStatement>> entry : multiMap.asMap().entrySet()) {
-			java.util.Collection<SpecStatement> duplicates = entry.getValue();
-			if (duplicates.size() > 1) {
-				for (SpecStatement d : duplicates) {
-					error(d, "Duplicate AGREE contract claim");
+				if (id != null) {
+					multiMap.put(id, spec);
 				}
 			}
 		}
 
 
+		List<SpecStatement> specs = getSpecStatements(toppkg);
+		for (SpecStatement spec : specs) {
 
+			org.eclipse.emf.ecore.EStructuralFeature structFeat = null;
+			String id = "";
+			if (spec instanceof AssumeStatement) {
+				structFeat = AgreePackage.eINSTANCE.getAssumeStatement_Name();
+				id = ((AssumeStatement) spec).getName();
+			} else if (spec instanceof GuaranteeStatement) {
+				structFeat = AgreePackage.eINSTANCE.getGuaranteeStatement_Name();
+				id = ((GuaranteeStatement) spec).getName();
+			} else if (spec instanceof AssertStatement) {
+				structFeat = AgreePackage.eINSTANCE.getAssertStatement_Name();
+				id = ((AssertStatement) spec).getName();
+			} else if (spec instanceof LemmaStatement) {
+				structFeat = AgreePackage.eINSTANCE.getLemmaStatement_Name();
+				id = ((LemmaStatement) spec).getName();
+			}
+
+			if (multiMap.get(id).size() > 1) {
+				error("Duplicate ID in AGREE claim", spec, structFeat);
+			}
+		}
 
 	}
 

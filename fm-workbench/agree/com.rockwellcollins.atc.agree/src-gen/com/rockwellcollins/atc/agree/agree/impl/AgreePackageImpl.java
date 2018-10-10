@@ -1623,7 +1623,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAssumeStatement_Id()
+  public EAttribute getAssumeStatement_Name()
   {
     return (EAttribute)assumeStatementEClass.getEStructuralFeatures().get(0);
   }
@@ -1673,7 +1673,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getGuaranteeStatement_Id()
+  public EAttribute getGuaranteeStatement_Name()
   {
     return (EAttribute)guaranteeStatementEClass.getEStructuralFeatures().get(0);
   }
@@ -1723,7 +1723,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAssertStatement_Id()
+  public EAttribute getAssertStatement_Name()
   {
     return (EAttribute)assertStatementEClass.getEStructuralFeatures().get(0);
   }
@@ -1773,7 +1773,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getLemmaStatement_Id()
+  public EAttribute getLemmaStatement_Name()
   {
     return (EAttribute)lemmaStatementEClass.getEStructuralFeatures().get(0);
   }
@@ -3077,25 +3077,25 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(agreeContractEClass, AGREE_CONTRACT__SPECS);
 
     assumeStatementEClass = createEClass(ASSUME_STATEMENT);
-    createEAttribute(assumeStatementEClass, ASSUME_STATEMENT__ID);
+    createEAttribute(assumeStatementEClass, ASSUME_STATEMENT__NAME);
     createEAttribute(assumeStatementEClass, ASSUME_STATEMENT__STR);
     createEReference(assumeStatementEClass, ASSUME_STATEMENT__EXPR);
     createEReference(assumeStatementEClass, ASSUME_STATEMENT__PATTERN);
 
     guaranteeStatementEClass = createEClass(GUARANTEE_STATEMENT);
-    createEAttribute(guaranteeStatementEClass, GUARANTEE_STATEMENT__ID);
+    createEAttribute(guaranteeStatementEClass, GUARANTEE_STATEMENT__NAME);
     createEAttribute(guaranteeStatementEClass, GUARANTEE_STATEMENT__STR);
     createEReference(guaranteeStatementEClass, GUARANTEE_STATEMENT__EXPR);
     createEReference(guaranteeStatementEClass, GUARANTEE_STATEMENT__PATTERN);
 
     assertStatementEClass = createEClass(ASSERT_STATEMENT);
-    createEAttribute(assertStatementEClass, ASSERT_STATEMENT__ID);
+    createEAttribute(assertStatementEClass, ASSERT_STATEMENT__NAME);
     createEAttribute(assertStatementEClass, ASSERT_STATEMENT__STR);
     createEReference(assertStatementEClass, ASSERT_STATEMENT__EXPR);
     createEReference(assertStatementEClass, ASSERT_STATEMENT__PATTERN);
 
     lemmaStatementEClass = createEClass(LEMMA_STATEMENT);
-    createEAttribute(lemmaStatementEClass, LEMMA_STATEMENT__ID);
+    createEAttribute(lemmaStatementEClass, LEMMA_STATEMENT__NAME);
     createEAttribute(lemmaStatementEClass, LEMMA_STATEMENT__STR);
     createEReference(lemmaStatementEClass, LEMMA_STATEMENT__EXPR);
     createEReference(lemmaStatementEClass, LEMMA_STATEMENT__PATTERN);
@@ -3512,25 +3512,25 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getAgreeContract_Specs(), this.getSpecStatement(), null, "specs", null, 0, -1, AgreeContract.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(assumeStatementEClass, AssumeStatement.class, "AssumeStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getAssumeStatement_Id(), theEcorePackage.getEString(), "id", null, 0, 1, AssumeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAssumeStatement_Name(), theEcorePackage.getEString(), "name", null, 0, 1, AssumeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getAssumeStatement_Str(), theEcorePackage.getEString(), "str", null, 0, 1, AssumeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssumeStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, AssumeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssumeStatement_Pattern(), this.getPatternStatement(), null, "pattern", null, 0, 1, AssumeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(guaranteeStatementEClass, GuaranteeStatement.class, "GuaranteeStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getGuaranteeStatement_Id(), theEcorePackage.getEString(), "id", null, 0, 1, GuaranteeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getGuaranteeStatement_Name(), theEcorePackage.getEString(), "name", null, 0, 1, GuaranteeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getGuaranteeStatement_Str(), theEcorePackage.getEString(), "str", null, 0, 1, GuaranteeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getGuaranteeStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, GuaranteeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getGuaranteeStatement_Pattern(), this.getPatternStatement(), null, "pattern", null, 0, 1, GuaranteeStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(assertStatementEClass, AssertStatement.class, "AssertStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getAssertStatement_Id(), theEcorePackage.getEString(), "id", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAssertStatement_Name(), theEcorePackage.getEString(), "name", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getAssertStatement_Str(), theEcorePackage.getEString(), "str", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssertStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssertStatement_Pattern(), this.getPatternStatement(), null, "pattern", null, 0, 1, AssertStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(lemmaStatementEClass, LemmaStatement.class, "LemmaStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getLemmaStatement_Id(), theEcorePackage.getEString(), "id", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getLemmaStatement_Name(), theEcorePackage.getEString(), "name", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getLemmaStatement_Str(), theEcorePackage.getEString(), "str", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLemmaStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLemmaStatement_Pattern(), this.getPatternStatement(), null, "pattern", null, 0, 1, LemmaStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

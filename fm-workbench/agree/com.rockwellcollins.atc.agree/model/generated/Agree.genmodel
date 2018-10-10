@@ -116,36 +116,36 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContract/specs"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AssumeStatement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssumeStatement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssumeStatement/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssumeStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssumeStatement/expr"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssumeStatement/pattern"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssumeStatement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssumeStatement/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssumeStatement/x"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssumeStatement/nam"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//GuaranteeStatement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//GuaranteeStatement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//GuaranteeStatement/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//GuaranteeStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GuaranteeStatement/expr"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GuaranteeStatement/pattern"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//GuaranteeStatement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//GuaranteeStatement/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//GuaranteeStatement/nam"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AssertStatement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssertStatement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssertStatement/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssertStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssertStatement/expr"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssertStatement/pattern"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssertStatement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssertStatement/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AssertStatement/nam"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//LemmaStatement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/str"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LemmaStatement/expr"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LemmaStatement/pattern"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//LemmaStatement/nam"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//InitialStatement">

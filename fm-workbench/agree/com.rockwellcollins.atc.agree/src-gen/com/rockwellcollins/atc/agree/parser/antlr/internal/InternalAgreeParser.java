@@ -951,27 +951,27 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSpecStatement"
-    // InternalAgreeParser.g:331:1: ruleSpecStatement returns [EObject current=null] : ( ( () otherlv_1= Assume ( (lv_id_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon ) | ( () otherlv_9= Guarantee ( (lv_id_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon ) | ( () otherlv_17= Assert ( ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon ) | ( () otherlv_25= Lemma ( (lv_id_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon ) | ( () otherlv_33= Initially otherlv_34= Colon ( (lv_expr_35_0= ruleExpr ) ) otherlv_36= Semicolon ) | ( () otherlv_38= Parameter ( (lv_expr_39_0= ruleExpr ) ) otherlv_40= Colon ( (lv_type_41_0= ruleType ) ) otherlv_42= Semicolon ) | ( () otherlv_44= Lift ( (lv_subcomp_45_0= ruleNestedDotID ) ) otherlv_46= Semicolon ) | ( () otherlv_48= Connection ( (otherlv_49= RULE_ID ) ) otherlv_50= Colon ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= Semicolon ) | this_SynchStatement_53= ruleSynchStatement | this_OrderStatement_54= ruleOrderStatement | this_PropertyStatement_55= rulePropertyStatement | this_ConstStatement_56= ruleConstStatement | this_EnumStatement_57= ruleEnumStatement | this_EqStatement_58= ruleEqStatement | this_AssignStatement_59= ruleAssignStatement | this_LinearizationDefExpr_60= ruleLinearizationDefExpr | this_FnDefExpr_61= ruleFnDefExpr | this_LibraryFnDefExpr_62= ruleLibraryFnDefExpr | this_NodeDefExpr_63= ruleNodeDefExpr | this_RecordDefExpr_64= ruleRecordDefExpr | this_InputStatement_65= ruleInputStatement ) ;
+    // InternalAgreeParser.g:331:1: ruleSpecStatement returns [EObject current=null] : ( ( () otherlv_1= Assume ( (lv_name_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon ) | ( () otherlv_9= Guarantee ( (lv_name_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon ) | ( () otherlv_17= Assert ( ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon ) | ( () otherlv_25= Lemma ( (lv_name_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon ) | ( () otherlv_33= Initially otherlv_34= Colon ( (lv_expr_35_0= ruleExpr ) ) otherlv_36= Semicolon ) | ( () otherlv_38= Parameter ( (lv_expr_39_0= ruleExpr ) ) otherlv_40= Colon ( (lv_type_41_0= ruleType ) ) otherlv_42= Semicolon ) | ( () otherlv_44= Lift ( (lv_subcomp_45_0= ruleNestedDotID ) ) otherlv_46= Semicolon ) | ( () otherlv_48= Connection ( (otherlv_49= RULE_ID ) ) otherlv_50= Colon ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= Semicolon ) | this_SynchStatement_53= ruleSynchStatement | this_OrderStatement_54= ruleOrderStatement | this_PropertyStatement_55= rulePropertyStatement | this_ConstStatement_56= ruleConstStatement | this_EnumStatement_57= ruleEnumStatement | this_EqStatement_58= ruleEqStatement | this_AssignStatement_59= ruleAssignStatement | this_LinearizationDefExpr_60= ruleLinearizationDefExpr | this_FnDefExpr_61= ruleFnDefExpr | this_LibraryFnDefExpr_62= ruleLibraryFnDefExpr | this_NodeDefExpr_63= ruleNodeDefExpr | this_RecordDefExpr_64= ruleRecordDefExpr | this_InputStatement_65= ruleInputStatement ) ;
     public final EObject ruleSpecStatement() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_1=null;
-        Token lv_id_2_0=null;
+        Token lv_name_2_0=null;
         Token lv_str_3_0=null;
         Token otherlv_4=null;
         Token otherlv_7=null;
         Token otherlv_9=null;
-        Token lv_id_10_0=null;
+        Token lv_name_10_0=null;
         Token lv_str_11_0=null;
         Token otherlv_12=null;
         Token otherlv_15=null;
         Token otherlv_17=null;
-        Token lv_id_18_0=null;
+        Token lv_name_18_0=null;
         Token lv_str_19_0=null;
         Token otherlv_20=null;
         Token otherlv_23=null;
         Token otherlv_25=null;
-        Token lv_id_26_0=null;
+        Token lv_name_26_0=null;
         Token lv_str_27_0=null;
         Token otherlv_28=null;
         Token otherlv_31=null;
@@ -1043,10 +1043,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // InternalAgreeParser.g:334:28: ( ( ( () otherlv_1= Assume ( (lv_id_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon ) | ( () otherlv_9= Guarantee ( (lv_id_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon ) | ( () otherlv_17= Assert ( ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon ) | ( () otherlv_25= Lemma ( (lv_id_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon ) | ( () otherlv_33= Initially otherlv_34= Colon ( (lv_expr_35_0= ruleExpr ) ) otherlv_36= Semicolon ) | ( () otherlv_38= Parameter ( (lv_expr_39_0= ruleExpr ) ) otherlv_40= Colon ( (lv_type_41_0= ruleType ) ) otherlv_42= Semicolon ) | ( () otherlv_44= Lift ( (lv_subcomp_45_0= ruleNestedDotID ) ) otherlv_46= Semicolon ) | ( () otherlv_48= Connection ( (otherlv_49= RULE_ID ) ) otherlv_50= Colon ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= Semicolon ) | this_SynchStatement_53= ruleSynchStatement | this_OrderStatement_54= ruleOrderStatement | this_PropertyStatement_55= rulePropertyStatement | this_ConstStatement_56= ruleConstStatement | this_EnumStatement_57= ruleEnumStatement | this_EqStatement_58= ruleEqStatement | this_AssignStatement_59= ruleAssignStatement | this_LinearizationDefExpr_60= ruleLinearizationDefExpr | this_FnDefExpr_61= ruleFnDefExpr | this_LibraryFnDefExpr_62= ruleLibraryFnDefExpr | this_NodeDefExpr_63= ruleNodeDefExpr | this_RecordDefExpr_64= ruleRecordDefExpr | this_InputStatement_65= ruleInputStatement ) )
-            // InternalAgreeParser.g:335:1: ( ( () otherlv_1= Assume ( (lv_id_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon ) | ( () otherlv_9= Guarantee ( (lv_id_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon ) | ( () otherlv_17= Assert ( ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon ) | ( () otherlv_25= Lemma ( (lv_id_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon ) | ( () otherlv_33= Initially otherlv_34= Colon ( (lv_expr_35_0= ruleExpr ) ) otherlv_36= Semicolon ) | ( () otherlv_38= Parameter ( (lv_expr_39_0= ruleExpr ) ) otherlv_40= Colon ( (lv_type_41_0= ruleType ) ) otherlv_42= Semicolon ) | ( () otherlv_44= Lift ( (lv_subcomp_45_0= ruleNestedDotID ) ) otherlv_46= Semicolon ) | ( () otherlv_48= Connection ( (otherlv_49= RULE_ID ) ) otherlv_50= Colon ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= Semicolon ) | this_SynchStatement_53= ruleSynchStatement | this_OrderStatement_54= ruleOrderStatement | this_PropertyStatement_55= rulePropertyStatement | this_ConstStatement_56= ruleConstStatement | this_EnumStatement_57= ruleEnumStatement | this_EqStatement_58= ruleEqStatement | this_AssignStatement_59= ruleAssignStatement | this_LinearizationDefExpr_60= ruleLinearizationDefExpr | this_FnDefExpr_61= ruleFnDefExpr | this_LibraryFnDefExpr_62= ruleLibraryFnDefExpr | this_NodeDefExpr_63= ruleNodeDefExpr | this_RecordDefExpr_64= ruleRecordDefExpr | this_InputStatement_65= ruleInputStatement )
+            // InternalAgreeParser.g:334:28: ( ( ( () otherlv_1= Assume ( (lv_name_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon ) | ( () otherlv_9= Guarantee ( (lv_name_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon ) | ( () otherlv_17= Assert ( ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon ) | ( () otherlv_25= Lemma ( (lv_name_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon ) | ( () otherlv_33= Initially otherlv_34= Colon ( (lv_expr_35_0= ruleExpr ) ) otherlv_36= Semicolon ) | ( () otherlv_38= Parameter ( (lv_expr_39_0= ruleExpr ) ) otherlv_40= Colon ( (lv_type_41_0= ruleType ) ) otherlv_42= Semicolon ) | ( () otherlv_44= Lift ( (lv_subcomp_45_0= ruleNestedDotID ) ) otherlv_46= Semicolon ) | ( () otherlv_48= Connection ( (otherlv_49= RULE_ID ) ) otherlv_50= Colon ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= Semicolon ) | this_SynchStatement_53= ruleSynchStatement | this_OrderStatement_54= ruleOrderStatement | this_PropertyStatement_55= rulePropertyStatement | this_ConstStatement_56= ruleConstStatement | this_EnumStatement_57= ruleEnumStatement | this_EqStatement_58= ruleEqStatement | this_AssignStatement_59= ruleAssignStatement | this_LinearizationDefExpr_60= ruleLinearizationDefExpr | this_FnDefExpr_61= ruleFnDefExpr | this_LibraryFnDefExpr_62= ruleLibraryFnDefExpr | this_NodeDefExpr_63= ruleNodeDefExpr | this_RecordDefExpr_64= ruleRecordDefExpr | this_InputStatement_65= ruleInputStatement ) )
+            // InternalAgreeParser.g:335:1: ( ( () otherlv_1= Assume ( (lv_name_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon ) | ( () otherlv_9= Guarantee ( (lv_name_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon ) | ( () otherlv_17= Assert ( ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon ) | ( () otherlv_25= Lemma ( (lv_name_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon ) | ( () otherlv_33= Initially otherlv_34= Colon ( (lv_expr_35_0= ruleExpr ) ) otherlv_36= Semicolon ) | ( () otherlv_38= Parameter ( (lv_expr_39_0= ruleExpr ) ) otherlv_40= Colon ( (lv_type_41_0= ruleType ) ) otherlv_42= Semicolon ) | ( () otherlv_44= Lift ( (lv_subcomp_45_0= ruleNestedDotID ) ) otherlv_46= Semicolon ) | ( () otherlv_48= Connection ( (otherlv_49= RULE_ID ) ) otherlv_50= Colon ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= Semicolon ) | this_SynchStatement_53= ruleSynchStatement | this_OrderStatement_54= ruleOrderStatement | this_PropertyStatement_55= rulePropertyStatement | this_ConstStatement_56= ruleConstStatement | this_EnumStatement_57= ruleEnumStatement | this_EqStatement_58= ruleEqStatement | this_AssignStatement_59= ruleAssignStatement | this_LinearizationDefExpr_60= ruleLinearizationDefExpr | this_FnDefExpr_61= ruleFnDefExpr | this_LibraryFnDefExpr_62= ruleLibraryFnDefExpr | this_NodeDefExpr_63= ruleNodeDefExpr | this_RecordDefExpr_64= ruleRecordDefExpr | this_InputStatement_65= ruleInputStatement )
             {
-            // InternalAgreeParser.g:335:1: ( ( () otherlv_1= Assume ( (lv_id_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon ) | ( () otherlv_9= Guarantee ( (lv_id_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon ) | ( () otherlv_17= Assert ( ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon ) | ( () otherlv_25= Lemma ( (lv_id_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon ) | ( () otherlv_33= Initially otherlv_34= Colon ( (lv_expr_35_0= ruleExpr ) ) otherlv_36= Semicolon ) | ( () otherlv_38= Parameter ( (lv_expr_39_0= ruleExpr ) ) otherlv_40= Colon ( (lv_type_41_0= ruleType ) ) otherlv_42= Semicolon ) | ( () otherlv_44= Lift ( (lv_subcomp_45_0= ruleNestedDotID ) ) otherlv_46= Semicolon ) | ( () otherlv_48= Connection ( (otherlv_49= RULE_ID ) ) otherlv_50= Colon ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= Semicolon ) | this_SynchStatement_53= ruleSynchStatement | this_OrderStatement_54= ruleOrderStatement | this_PropertyStatement_55= rulePropertyStatement | this_ConstStatement_56= ruleConstStatement | this_EnumStatement_57= ruleEnumStatement | this_EqStatement_58= ruleEqStatement | this_AssignStatement_59= ruleAssignStatement | this_LinearizationDefExpr_60= ruleLinearizationDefExpr | this_FnDefExpr_61= ruleFnDefExpr | this_LibraryFnDefExpr_62= ruleLibraryFnDefExpr | this_NodeDefExpr_63= ruleNodeDefExpr | this_RecordDefExpr_64= ruleRecordDefExpr | this_InputStatement_65= ruleInputStatement )
+            // InternalAgreeParser.g:335:1: ( ( () otherlv_1= Assume ( (lv_name_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon ) | ( () otherlv_9= Guarantee ( (lv_name_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon ) | ( () otherlv_17= Assert ( ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon ) | ( () otherlv_25= Lemma ( (lv_name_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon ) | ( () otherlv_33= Initially otherlv_34= Colon ( (lv_expr_35_0= ruleExpr ) ) otherlv_36= Semicolon ) | ( () otherlv_38= Parameter ( (lv_expr_39_0= ruleExpr ) ) otherlv_40= Colon ( (lv_type_41_0= ruleType ) ) otherlv_42= Semicolon ) | ( () otherlv_44= Lift ( (lv_subcomp_45_0= ruleNestedDotID ) ) otherlv_46= Semicolon ) | ( () otherlv_48= Connection ( (otherlv_49= RULE_ID ) ) otherlv_50= Colon ( (lv_expr_51_0= ruleExpr ) ) otherlv_52= Semicolon ) | this_SynchStatement_53= ruleSynchStatement | this_OrderStatement_54= ruleOrderStatement | this_PropertyStatement_55= rulePropertyStatement | this_ConstStatement_56= ruleConstStatement | this_EnumStatement_57= ruleEnumStatement | this_EqStatement_58= ruleEqStatement | this_AssignStatement_59= ruleAssignStatement | this_LinearizationDefExpr_60= ruleLinearizationDefExpr | this_FnDefExpr_61= ruleFnDefExpr | this_LibraryFnDefExpr_62= ruleLibraryFnDefExpr | this_NodeDefExpr_63= ruleNodeDefExpr | this_RecordDefExpr_64= ruleRecordDefExpr | this_InputStatement_65= ruleInputStatement )
             int alt12=21;
             switch ( input.LA(1) ) {
             case Assume:
@@ -1165,10 +1165,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
             switch (alt12) {
                 case 1 :
-                    // InternalAgreeParser.g:335:2: ( () otherlv_1= Assume ( (lv_id_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon )
+                    // InternalAgreeParser.g:335:2: ( () otherlv_1= Assume ( (lv_name_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon )
                     {
-                    // InternalAgreeParser.g:335:2: ( () otherlv_1= Assume ( (lv_id_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon )
-                    // InternalAgreeParser.g:335:3: () otherlv_1= Assume ( (lv_id_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon
+                    // InternalAgreeParser.g:335:2: ( () otherlv_1= Assume ( (lv_name_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon )
+                    // InternalAgreeParser.g:335:3: () otherlv_1= Assume ( (lv_name_2_0= RULE_ID ) )? ( (lv_str_3_0= RULE_STRING ) ) otherlv_4= Colon ( ( (lv_expr_5_0= ruleExpr ) ) | ( (lv_pattern_6_0= rulePatternStatement ) ) ) otherlv_7= Semicolon
                     {
                     // InternalAgreeParser.g:335:3: ()
                     // InternalAgreeParser.g:336:5: 
@@ -1189,7 +1189,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                           	newLeafNode(otherlv_1, grammarAccess.getSpecStatementAccess().getAssumeKeyword_0_1());
                           
                     }
-                    // InternalAgreeParser.g:346:1: ( (lv_id_2_0= RULE_ID ) )?
+                    // InternalAgreeParser.g:346:1: ( (lv_name_2_0= RULE_ID ) )?
                     int alt3=2;
                     int LA3_0 = input.LA(1);
 
@@ -1198,15 +1198,15 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt3) {
                         case 1 :
-                            // InternalAgreeParser.g:347:1: (lv_id_2_0= RULE_ID )
+                            // InternalAgreeParser.g:347:1: (lv_name_2_0= RULE_ID )
                             {
-                            // InternalAgreeParser.g:347:1: (lv_id_2_0= RULE_ID )
-                            // InternalAgreeParser.g:348:3: lv_id_2_0= RULE_ID
+                            // InternalAgreeParser.g:347:1: (lv_name_2_0= RULE_ID )
+                            // InternalAgreeParser.g:348:3: lv_name_2_0= RULE_ID
                             {
-                            lv_id_2_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_5); if (state.failed) return current;
+                            lv_name_2_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_5); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              			newLeafNode(lv_id_2_0, grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_0_2_0()); 
+                              			newLeafNode(lv_name_2_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_0_2_0()); 
                               		
                             }
                             if ( state.backtracking==0 ) {
@@ -1216,8 +1216,8 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                               	        }
                                      		setWithLastConsumed(
                                      			current, 
-                                     			"id",
-                                      		lv_id_2_0, 
+                                     			"name",
+                                      		lv_name_2_0, 
                                       		"org.osate.xtext.aadl2.properties.Properties.ID");
                               	    
                             }
@@ -1382,10 +1382,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalAgreeParser.g:430:6: ( () otherlv_9= Guarantee ( (lv_id_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon )
+                    // InternalAgreeParser.g:430:6: ( () otherlv_9= Guarantee ( (lv_name_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon )
                     {
-                    // InternalAgreeParser.g:430:6: ( () otherlv_9= Guarantee ( (lv_id_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon )
-                    // InternalAgreeParser.g:430:7: () otherlv_9= Guarantee ( (lv_id_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon
+                    // InternalAgreeParser.g:430:6: ( () otherlv_9= Guarantee ( (lv_name_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon )
+                    // InternalAgreeParser.g:430:7: () otherlv_9= Guarantee ( (lv_name_10_0= RULE_ID ) )? ( (lv_str_11_0= RULE_STRING ) ) otherlv_12= Colon ( ( (lv_expr_13_0= ruleExpr ) ) | ( (lv_pattern_14_0= rulePatternStatement ) ) ) otherlv_15= Semicolon
                     {
                     // InternalAgreeParser.g:430:7: ()
                     // InternalAgreeParser.g:431:5: 
@@ -1406,7 +1406,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                           	newLeafNode(otherlv_9, grammarAccess.getSpecStatementAccess().getGuaranteeKeyword_1_1());
                           
                     }
-                    // InternalAgreeParser.g:441:1: ( (lv_id_10_0= RULE_ID ) )?
+                    // InternalAgreeParser.g:441:1: ( (lv_name_10_0= RULE_ID ) )?
                     int alt5=2;
                     int LA5_0 = input.LA(1);
 
@@ -1415,15 +1415,15 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt5) {
                         case 1 :
-                            // InternalAgreeParser.g:442:1: (lv_id_10_0= RULE_ID )
+                            // InternalAgreeParser.g:442:1: (lv_name_10_0= RULE_ID )
                             {
-                            // InternalAgreeParser.g:442:1: (lv_id_10_0= RULE_ID )
-                            // InternalAgreeParser.g:443:3: lv_id_10_0= RULE_ID
+                            // InternalAgreeParser.g:442:1: (lv_name_10_0= RULE_ID )
+                            // InternalAgreeParser.g:443:3: lv_name_10_0= RULE_ID
                             {
-                            lv_id_10_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_5); if (state.failed) return current;
+                            lv_name_10_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_5); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              			newLeafNode(lv_id_10_0, grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_1_2_0()); 
+                              			newLeafNode(lv_name_10_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_1_2_0()); 
                               		
                             }
                             if ( state.backtracking==0 ) {
@@ -1433,8 +1433,8 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                               	        }
                                      		setWithLastConsumed(
                                      			current, 
-                                     			"id",
-                                      		lv_id_10_0, 
+                                     			"name",
+                                      		lv_name_10_0, 
                                       		"org.osate.xtext.aadl2.properties.Properties.ID");
                               	    
                             }
@@ -1599,10 +1599,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalAgreeParser.g:525:6: ( () otherlv_17= Assert ( ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon )
+                    // InternalAgreeParser.g:525:6: ( () otherlv_17= Assert ( ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon )
                     {
-                    // InternalAgreeParser.g:525:6: ( () otherlv_17= Assert ( ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon )
-                    // InternalAgreeParser.g:525:7: () otherlv_17= Assert ( ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon
+                    // InternalAgreeParser.g:525:6: ( () otherlv_17= Assert ( ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon )
+                    // InternalAgreeParser.g:525:7: () otherlv_17= Assert ( ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )? ( ( (lv_expr_21_0= ruleExpr ) ) | ( (lv_pattern_22_0= rulePatternStatement ) ) ) otherlv_23= Semicolon
                     {
                     // InternalAgreeParser.g:525:7: ()
                     // InternalAgreeParser.g:526:5: 
@@ -1623,7 +1623,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                           	newLeafNode(otherlv_17, grammarAccess.getSpecStatementAccess().getAssertKeyword_2_1());
                           
                     }
-                    // InternalAgreeParser.g:536:1: ( ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )?
+                    // InternalAgreeParser.g:536:1: ( ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon )?
                     int alt8=2;
                     int LA8_0 = input.LA(1);
 
@@ -1639,9 +1639,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt8) {
                         case 1 :
-                            // InternalAgreeParser.g:536:2: ( (lv_id_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon
+                            // InternalAgreeParser.g:536:2: ( (lv_name_18_0= RULE_ID ) )? ( (lv_str_19_0= RULE_STRING ) ) otherlv_20= Colon
                             {
-                            // InternalAgreeParser.g:536:2: ( (lv_id_18_0= RULE_ID ) )?
+                            // InternalAgreeParser.g:536:2: ( (lv_name_18_0= RULE_ID ) )?
                             int alt7=2;
                             int LA7_0 = input.LA(1);
 
@@ -1650,15 +1650,15 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                             }
                             switch (alt7) {
                                 case 1 :
-                                    // InternalAgreeParser.g:537:1: (lv_id_18_0= RULE_ID )
+                                    // InternalAgreeParser.g:537:1: (lv_name_18_0= RULE_ID )
                                     {
-                                    // InternalAgreeParser.g:537:1: (lv_id_18_0= RULE_ID )
-                                    // InternalAgreeParser.g:538:3: lv_id_18_0= RULE_ID
+                                    // InternalAgreeParser.g:537:1: (lv_name_18_0= RULE_ID )
+                                    // InternalAgreeParser.g:538:3: lv_name_18_0= RULE_ID
                                     {
-                                    lv_id_18_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_5); if (state.failed) return current;
+                                    lv_name_18_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_5); if (state.failed) return current;
                                     if ( state.backtracking==0 ) {
 
-                                      			newLeafNode(lv_id_18_0, grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_2_2_0_0()); 
+                                      			newLeafNode(lv_name_18_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_2_2_0_0()); 
                                       		
                                     }
                                     if ( state.backtracking==0 ) {
@@ -1668,8 +1668,8 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                                       	        }
                                              		setWithLastConsumed(
                                              			current, 
-                                             			"id",
-                                              		lv_id_18_0, 
+                                             			"name",
+                                              		lv_name_18_0, 
                                               		"org.osate.xtext.aadl2.properties.Properties.ID");
                                       	    
                                     }
@@ -1840,10 +1840,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalAgreeParser.g:620:6: ( () otherlv_25= Lemma ( (lv_id_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon )
+                    // InternalAgreeParser.g:620:6: ( () otherlv_25= Lemma ( (lv_name_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon )
                     {
-                    // InternalAgreeParser.g:620:6: ( () otherlv_25= Lemma ( (lv_id_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon )
-                    // InternalAgreeParser.g:620:7: () otherlv_25= Lemma ( (lv_id_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon
+                    // InternalAgreeParser.g:620:6: ( () otherlv_25= Lemma ( (lv_name_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon )
+                    // InternalAgreeParser.g:620:7: () otherlv_25= Lemma ( (lv_name_26_0= RULE_ID ) )? ( (lv_str_27_0= RULE_STRING ) ) otherlv_28= Colon ( ( (lv_expr_29_0= ruleExpr ) ) | ( (lv_pattern_30_0= rulePatternStatement ) ) ) otherlv_31= Semicolon
                     {
                     // InternalAgreeParser.g:620:7: ()
                     // InternalAgreeParser.g:621:5: 
@@ -1864,7 +1864,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                           	newLeafNode(otherlv_25, grammarAccess.getSpecStatementAccess().getLemmaKeyword_3_1());
                           
                     }
-                    // InternalAgreeParser.g:631:1: ( (lv_id_26_0= RULE_ID ) )?
+                    // InternalAgreeParser.g:631:1: ( (lv_name_26_0= RULE_ID ) )?
                     int alt10=2;
                     int LA10_0 = input.LA(1);
 
@@ -1873,15 +1873,15 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt10) {
                         case 1 :
-                            // InternalAgreeParser.g:632:1: (lv_id_26_0= RULE_ID )
+                            // InternalAgreeParser.g:632:1: (lv_name_26_0= RULE_ID )
                             {
-                            // InternalAgreeParser.g:632:1: (lv_id_26_0= RULE_ID )
-                            // InternalAgreeParser.g:633:3: lv_id_26_0= RULE_ID
+                            // InternalAgreeParser.g:632:1: (lv_name_26_0= RULE_ID )
+                            // InternalAgreeParser.g:633:3: lv_name_26_0= RULE_ID
                             {
-                            lv_id_26_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_5); if (state.failed) return current;
+                            lv_name_26_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_5); if (state.failed) return current;
                             if ( state.backtracking==0 ) {
 
-                              			newLeafNode(lv_id_26_0, grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_3_2_0()); 
+                              			newLeafNode(lv_name_26_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_3_2_0()); 
                               		
                             }
                             if ( state.backtracking==0 ) {
@@ -1891,8 +1891,8 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                               	        }
                                      		setWithLastConsumed(
                                      			current, 
-                                     			"id",
-                                      		lv_id_26_0, 
+                                     			"name",
+                                      		lv_name_26_0, 
                                       		"org.osate.xtext.aadl2.properties.Properties.ID");
                               	    
                             }

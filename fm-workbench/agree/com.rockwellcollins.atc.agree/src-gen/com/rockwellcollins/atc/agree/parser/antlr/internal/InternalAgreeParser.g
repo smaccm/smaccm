@@ -345,9 +345,9 @@ ruleSpecStatement returns [EObject current=null]
     }
 (
 (
-		lv_id_2_0=RULE_ID
+		lv_name_2_0=RULE_ID
 		{
-			newLeafNode(lv_id_2_0, grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_0_2_0()); 
+			newLeafNode(lv_name_2_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_0_2_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -355,8 +355,8 @@ ruleSpecStatement returns [EObject current=null]
 	        }
        		setWithLastConsumed(
        			$current, 
-       			"id",
-        		lv_id_2_0, 
+       			"name",
+        		lv_name_2_0, 
         		"org.osate.xtext.aadl2.properties.Properties.ID");
 	    }
 
@@ -440,9 +440,9 @@ ruleSpecStatement returns [EObject current=null]
     }
 (
 (
-		lv_id_10_0=RULE_ID
+		lv_name_10_0=RULE_ID
 		{
-			newLeafNode(lv_id_10_0, grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_1_2_0()); 
+			newLeafNode(lv_name_10_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_1_2_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -450,8 +450,8 @@ ruleSpecStatement returns [EObject current=null]
 	        }
        		setWithLastConsumed(
        			$current, 
-       			"id",
-        		lv_id_10_0, 
+       			"name",
+        		lv_name_10_0, 
         		"org.osate.xtext.aadl2.properties.Properties.ID");
 	    }
 
@@ -535,9 +535,9 @@ ruleSpecStatement returns [EObject current=null]
     }
 ((
 (
-		lv_id_18_0=RULE_ID
+		lv_name_18_0=RULE_ID
 		{
-			newLeafNode(lv_id_18_0, grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_2_2_0_0()); 
+			newLeafNode(lv_name_18_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_2_2_0_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -545,8 +545,8 @@ ruleSpecStatement returns [EObject current=null]
 	        }
        		setWithLastConsumed(
        			$current, 
-       			"id",
-        		lv_id_18_0, 
+       			"name",
+        		lv_name_18_0, 
         		"org.osate.xtext.aadl2.properties.Properties.ID");
 	    }
 
@@ -630,9 +630,9 @@ ruleSpecStatement returns [EObject current=null]
     }
 (
 (
-		lv_id_26_0=RULE_ID
+		lv_name_26_0=RULE_ID
 		{
-			newLeafNode(lv_id_26_0, grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_3_2_0()); 
+			newLeafNode(lv_name_26_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_3_2_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -640,8 +640,8 @@ ruleSpecStatement returns [EObject current=null]
 	        }
        		setWithLastConsumed(
        			$current, 
-       			"id",
-        		lv_id_26_0, 
+       			"name",
+        		lv_name_26_0, 
         		"org.osate.xtext.aadl2.properties.Properties.ID");
 	    }
 

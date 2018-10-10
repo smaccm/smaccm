@@ -1,7 +1,6 @@
-package Named_Contracts_Real_Toy
+package Named_Contracts_Real_Toy2
 public 
    with Base_Types;
-   with Named_Contracts_Real_Toy2;
    
    
 system A
@@ -43,8 +42,8 @@ system top_level
 		Output: out data port Base_Types::Float;
 	annex agree {** 
 			
-		assume am2 "System input range " : Input <= 10.0;
-		guarantee gt2 "System output range" : Output < 70.0;
+		assume am1 "System input range " : Input <= 10.0;
+		guarantee gt1 "System output range" : Output < 70.0;
 	**};	
 end top_level;
 
@@ -61,12 +60,11 @@ system implementation top_level.Impl
 		C_TO_Output : port C_sub.Output -> Output {Communication_Properties::Timing => immediate;}; 
 		
 		annex agree {**
-			assert at2 "true" : true;
-			lemma lm2 "true" : true;
---		    lemma lm2 "true" : true; -- Duplicate error
---		    lemma lm1 "true" : true; -- Duplicate error with dependent package
+			assert at1 "true" : true;
+			lemma lm1 "true" : true;
+--		    lemma lm1 "true" : true; -- Duplicate error
 		**};
 end top_level.Impl;
 
 
-end Named_Contracts_Real_Toy;
+end Named_Contracts_Real_Toy2;

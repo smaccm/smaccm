@@ -239,8 +239,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
 		private final Action cAssumeStatementAction_0_0 = (Action)cGroup_0.eContents().get(0);
 		private final Keyword cAssumeKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
-		private final Assignment cIdAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cIdIDTerminalRuleCall_0_2_0 = (RuleCall)cIdAssignment_0_2.eContents().get(0);
+		private final Assignment cNameAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
+		private final RuleCall cNameIDTerminalRuleCall_0_2_0 = (RuleCall)cNameAssignment_0_2.eContents().get(0);
 		private final Assignment cStrAssignment_0_3 = (Assignment)cGroup_0.eContents().get(3);
 		private final RuleCall cStrSTRINGTerminalRuleCall_0_3_0 = (RuleCall)cStrAssignment_0_3.eContents().get(0);
 		private final Keyword cColonKeyword_0_4 = (Keyword)cGroup_0.eContents().get(4);
@@ -253,8 +253,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cGuaranteeStatementAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cGuaranteeKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
-		private final Assignment cIdAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
-		private final RuleCall cIdIDTerminalRuleCall_1_2_0 = (RuleCall)cIdAssignment_1_2.eContents().get(0);
+		private final Assignment cNameAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cNameIDTerminalRuleCall_1_2_0 = (RuleCall)cNameAssignment_1_2.eContents().get(0);
 		private final Assignment cStrAssignment_1_3 = (Assignment)cGroup_1.eContents().get(3);
 		private final RuleCall cStrSTRINGTerminalRuleCall_1_3_0 = (RuleCall)cStrAssignment_1_3.eContents().get(0);
 		private final Keyword cColonKeyword_1_4 = (Keyword)cGroup_1.eContents().get(4);
@@ -268,8 +268,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cAssertStatementAction_2_0 = (Action)cGroup_2.eContents().get(0);
 		private final Keyword cAssertKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
 		private final Group cGroup_2_2 = (Group)cGroup_2.eContents().get(2);
-		private final Assignment cIdAssignment_2_2_0 = (Assignment)cGroup_2_2.eContents().get(0);
-		private final RuleCall cIdIDTerminalRuleCall_2_2_0_0 = (RuleCall)cIdAssignment_2_2_0.eContents().get(0);
+		private final Assignment cNameAssignment_2_2_0 = (Assignment)cGroup_2_2.eContents().get(0);
+		private final RuleCall cNameIDTerminalRuleCall_2_2_0_0 = (RuleCall)cNameAssignment_2_2_0.eContents().get(0);
 		private final Assignment cStrAssignment_2_2_1 = (Assignment)cGroup_2_2.eContents().get(1);
 		private final RuleCall cStrSTRINGTerminalRuleCall_2_2_1_0 = (RuleCall)cStrAssignment_2_2_1.eContents().get(0);
 		private final Keyword cColonKeyword_2_2_2 = (Keyword)cGroup_2_2.eContents().get(2);
@@ -282,8 +282,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
 		private final Action cLemmaStatementAction_3_0 = (Action)cGroup_3.eContents().get(0);
 		private final Keyword cLemmaKeyword_3_1 = (Keyword)cGroup_3.eContents().get(1);
-		private final Assignment cIdAssignment_3_2 = (Assignment)cGroup_3.eContents().get(2);
-		private final RuleCall cIdIDTerminalRuleCall_3_2_0 = (RuleCall)cIdAssignment_3_2.eContents().get(0);
+		private final Assignment cNameAssignment_3_2 = (Assignment)cGroup_3.eContents().get(2);
+		private final RuleCall cNameIDTerminalRuleCall_3_2_0 = (RuleCall)cNameAssignment_3_2.eContents().get(0);
 		private final Assignment cStrAssignment_3_3 = (Assignment)cGroup_3.eContents().get(3);
 		private final RuleCall cStrSTRINGTerminalRuleCall_3_3_0 = (RuleCall)cStrAssignment_3_3.eContents().get(0);
 		private final Keyword cColonKeyword_3_4 = (Keyword)cGroup_3.eContents().get(4);
@@ -340,10 +340,10 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cInputStatementParserRuleCall_20 = (RuleCall)cAlternatives.eContents().get(20);
 		
 		//SpecStatement:
-		//	{AssumeStatement} 'assume' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
-		//	| {GuaranteeStatement} 'guarantee' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
-		//	| {AssertStatement} 'assert' (id=ID? str=STRING ':')? (expr=Expr | pattern=PatternStatement) ';'
-		//	| {LemmaStatement} 'lemma' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+		//	{AssumeStatement} 'assume' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+		//	| {GuaranteeStatement} 'guarantee' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+		//	| {AssertStatement} 'assert' (name=ID? str=STRING ':')? (expr=Expr | pattern=PatternStatement) ';'
+		//	| {LemmaStatement} 'lemma' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
 		//	| {InitialStatement} 'initially' ':' expr=Expr ';'
 		//	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
 		//	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
@@ -363,17 +363,17 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| InputStatement;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{AssumeStatement} 'assume' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';' | {GuaranteeStatement}
-		//'guarantee' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';' | {AssertStatement} 'assert' (id=ID?
-		//str=STRING ':')? (expr=Expr | pattern=PatternStatement) ';' | {LemmaStatement} 'lemma' id=ID? str=STRING ':' (expr=Expr
-		//| pattern=PatternStatement) ';' | {InitialStatement} 'initially' ':' expr=Expr ';' | {ParamStatement} 'parameter'
-		//expr=Expr ':' type=Type ';' | {LiftStatement} 'lift' subcomp=NestedDotID ';' | {ConnectionStatement} 'connection'
-		//conn=[aadl2::NamedElement] ':' expr=Expr ';' | SynchStatement | OrderStatement | PropertyStatement | ConstStatement |
-		//EnumStatement | EqStatement | AssignStatement | LinearizationDefExpr | FnDefExpr | LibraryFnDefExpr | NodeDefExpr |
-		//RecordDefExpr | InputStatement
+		//{AssumeStatement} 'assume' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';' | {GuaranteeStatement}
+		//'guarantee' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';' | {AssertStatement} 'assert' (name=ID?
+		//str=STRING ':')? (expr=Expr | pattern=PatternStatement) ';' | {LemmaStatement} 'lemma' name=ID? str=STRING ':'
+		//(expr=Expr | pattern=PatternStatement) ';' | {InitialStatement} 'initially' ':' expr=Expr ';' | {ParamStatement}
+		//'parameter' expr=Expr ':' type=Type ';' | {LiftStatement} 'lift' subcomp=NestedDotID ';' | {ConnectionStatement}
+		//'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';' | SynchStatement | OrderStatement | PropertyStatement |
+		//ConstStatement | EnumStatement | EqStatement | AssignStatement | LinearizationDefExpr | FnDefExpr | LibraryFnDefExpr |
+		//NodeDefExpr | RecordDefExpr | InputStatement
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{AssumeStatement} 'assume' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+		//{AssumeStatement} 'assume' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{AssumeStatement}
@@ -382,11 +382,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'assume'
 		public Keyword getAssumeKeyword_0_1() { return cAssumeKeyword_0_1; }
 
-		//id=ID?
-		public Assignment getIdAssignment_0_2() { return cIdAssignment_0_2; }
+		//name=ID?
+		public Assignment getNameAssignment_0_2() { return cNameAssignment_0_2; }
 
 		//ID
-		public RuleCall getIdIDTerminalRuleCall_0_2_0() { return cIdIDTerminalRuleCall_0_2_0; }
+		public RuleCall getNameIDTerminalRuleCall_0_2_0() { return cNameIDTerminalRuleCall_0_2_0; }
 
 		//str=STRING
 		public Assignment getStrAssignment_0_3() { return cStrAssignment_0_3; }
@@ -415,7 +415,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//';'
 		public Keyword getSemicolonKeyword_0_6() { return cSemicolonKeyword_0_6; }
 
-		//{GuaranteeStatement} 'guarantee' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+		//{GuaranteeStatement} 'guarantee' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
 		public Group getGroup_1() { return cGroup_1; }
 
 		//{GuaranteeStatement}
@@ -424,11 +424,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'guarantee'
 		public Keyword getGuaranteeKeyword_1_1() { return cGuaranteeKeyword_1_1; }
 
-		//id=ID?
-		public Assignment getIdAssignment_1_2() { return cIdAssignment_1_2; }
+		//name=ID?
+		public Assignment getNameAssignment_1_2() { return cNameAssignment_1_2; }
 
 		//ID
-		public RuleCall getIdIDTerminalRuleCall_1_2_0() { return cIdIDTerminalRuleCall_1_2_0; }
+		public RuleCall getNameIDTerminalRuleCall_1_2_0() { return cNameIDTerminalRuleCall_1_2_0; }
 
 		//str=STRING
 		public Assignment getStrAssignment_1_3() { return cStrAssignment_1_3; }
@@ -457,7 +457,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//';'
 		public Keyword getSemicolonKeyword_1_6() { return cSemicolonKeyword_1_6; }
 
-		//{AssertStatement} 'assert' (id=ID? str=STRING ':')? (expr=Expr | pattern=PatternStatement) ';'
+		//{AssertStatement} 'assert' (name=ID? str=STRING ':')? (expr=Expr | pattern=PatternStatement) ';'
 		public Group getGroup_2() { return cGroup_2; }
 
 		//{AssertStatement}
@@ -466,14 +466,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'assert'
 		public Keyword getAssertKeyword_2_1() { return cAssertKeyword_2_1; }
 
-		//(id=ID? str=STRING ':')?
+		//(name=ID? str=STRING ':')?
 		public Group getGroup_2_2() { return cGroup_2_2; }
 
-		//id=ID?
-		public Assignment getIdAssignment_2_2_0() { return cIdAssignment_2_2_0; }
+		//name=ID?
+		public Assignment getNameAssignment_2_2_0() { return cNameAssignment_2_2_0; }
 
 		//ID
-		public RuleCall getIdIDTerminalRuleCall_2_2_0_0() { return cIdIDTerminalRuleCall_2_2_0_0; }
+		public RuleCall getNameIDTerminalRuleCall_2_2_0_0() { return cNameIDTerminalRuleCall_2_2_0_0; }
 
 		//str=STRING
 		public Assignment getStrAssignment_2_2_1() { return cStrAssignment_2_2_1; }
@@ -502,7 +502,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//';'
 		public Keyword getSemicolonKeyword_2_4() { return cSemicolonKeyword_2_4; }
 
-		//{LemmaStatement} 'lemma' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+		//{LemmaStatement} 'lemma' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
 		public Group getGroup_3() { return cGroup_3; }
 
 		//{LemmaStatement}
@@ -511,11 +511,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'lemma'
 		public Keyword getLemmaKeyword_3_1() { return cLemmaKeyword_3_1; }
 
-		//id=ID?
-		public Assignment getIdAssignment_3_2() { return cIdAssignment_3_2; }
+		//name=ID?
+		public Assignment getNameAssignment_3_2() { return cNameAssignment_3_2; }
 
 		//ID
-		public RuleCall getIdIDTerminalRuleCall_3_2_0() { return cIdIDTerminalRuleCall_3_2_0; }
+		public RuleCall getNameIDTerminalRuleCall_3_2_0() { return cNameIDTerminalRuleCall_3_2_0; }
 
 		//str=STRING
 		public Assignment getStrAssignment_3_3() { return cStrAssignment_3_3; }
@@ -4839,10 +4839,10 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//SpecStatement:
-	//	{AssumeStatement} 'assume' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
-	//	| {GuaranteeStatement} 'guarantee' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
-	//	| {AssertStatement} 'assert' (id=ID? str=STRING ':')? (expr=Expr | pattern=PatternStatement) ';'
-	//	| {LemmaStatement} 'lemma' id=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	//	{AssumeStatement} 'assume' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	//	| {GuaranteeStatement} 'guarantee' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	//	| {AssertStatement} 'assert' (name=ID? str=STRING ':')? (expr=Expr | pattern=PatternStatement) ';'
+	//	| {LemmaStatement} 'lemma' name=ID? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
 	//	| {InitialStatement} 'initially' ':' expr=Expr ';'
 	//	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
 	//	| {LiftStatement} 'lift' subcomp=NestedDotID ';'

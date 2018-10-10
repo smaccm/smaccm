@@ -2147,13 +2147,13 @@ public interface AgreePackage extends EPackage
   int ASSUME_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Id</b></em>' attribute.
+   * The feature id for the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ASSUME_STATEMENT__ID = SPEC_STATEMENT_FEATURE_COUNT + 0;
+  int ASSUME_STATEMENT__NAME = SPEC_STATEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Str</b></em>' attribute.
@@ -2220,13 +2220,13 @@ public interface AgreePackage extends EPackage
   int GUARANTEE_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Id</b></em>' attribute.
+   * The feature id for the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int GUARANTEE_STATEMENT__ID = SPEC_STATEMENT_FEATURE_COUNT + 0;
+  int GUARANTEE_STATEMENT__NAME = SPEC_STATEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Str</b></em>' attribute.
@@ -2293,13 +2293,13 @@ public interface AgreePackage extends EPackage
   int ASSERT_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Id</b></em>' attribute.
+   * The feature id for the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ASSERT_STATEMENT__ID = SPEC_STATEMENT_FEATURE_COUNT + 0;
+  int ASSERT_STATEMENT__NAME = SPEC_STATEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Str</b></em>' attribute.
@@ -2366,13 +2366,13 @@ public interface AgreePackage extends EPackage
   int LEMMA_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Id</b></em>' attribute.
+   * The feature id for the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int LEMMA_STATEMENT__ID = SPEC_STATEMENT_FEATURE_COUNT + 0;
+  int LEMMA_STATEMENT__NAME = SPEC_STATEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Str</b></em>' attribute.
@@ -5786,15 +5786,15 @@ public interface AgreePackage extends EPackage
   EClass getAssumeStatement();
 
   /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement#getId <em>Id</em>}'.
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Id</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement#getId()
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement#getName()
    * @see #getAssumeStatement()
    * @generated
    */
-  EAttribute getAssumeStatement_Id();
+  EAttribute getAssumeStatement_Name();
 
   /**
    * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement#getStr <em>Str</em>}'.
@@ -5840,15 +5840,15 @@ public interface AgreePackage extends EPackage
   EClass getGuaranteeStatement();
 
   /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getId <em>Id</em>}'.
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Id</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getId()
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getName()
    * @see #getGuaranteeStatement()
    * @generated
    */
-  EAttribute getGuaranteeStatement_Id();
+  EAttribute getGuaranteeStatement_Name();
 
   /**
    * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getStr <em>Str</em>}'.
@@ -5894,15 +5894,15 @@ public interface AgreePackage extends EPackage
   EClass getAssertStatement();
 
   /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getId <em>Id</em>}'.
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Id</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssertStatement#getId()
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AssertStatement#getName()
    * @see #getAssertStatement()
    * @generated
    */
-  EAttribute getAssertStatement_Id();
+  EAttribute getAssertStatement_Name();
 
   /**
    * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getStr <em>Str</em>}'.
@@ -5948,15 +5948,15 @@ public interface AgreePackage extends EPackage
   EClass getLemmaStatement();
 
   /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement#getId <em>Id</em>}'.
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement#getName <em>Name</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Id</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement#getId()
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement#getName()
    * @see #getLemmaStatement()
    * @generated
    */
-  EAttribute getLemmaStatement_Id();
+  EAttribute getLemmaStatement_Name();
 
   /**
    * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement#getStr <em>Str</em>}'.
@@ -7944,12 +7944,12 @@ public interface AgreePackage extends EPackage
     EClass ASSUME_STATEMENT = eINSTANCE.getAssumeStatement();
 
     /**
-     * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute ASSUME_STATEMENT__ID = eINSTANCE.getAssumeStatement_Id();
+    EAttribute ASSUME_STATEMENT__NAME = eINSTANCE.getAssumeStatement_Name();
 
     /**
      * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
@@ -7986,12 +7986,12 @@ public interface AgreePackage extends EPackage
     EClass GUARANTEE_STATEMENT = eINSTANCE.getGuaranteeStatement();
 
     /**
-     * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute GUARANTEE_STATEMENT__ID = eINSTANCE.getGuaranteeStatement_Id();
+    EAttribute GUARANTEE_STATEMENT__NAME = eINSTANCE.getGuaranteeStatement_Name();
 
     /**
      * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
@@ -8028,12 +8028,12 @@ public interface AgreePackage extends EPackage
     EClass ASSERT_STATEMENT = eINSTANCE.getAssertStatement();
 
     /**
-     * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute ASSERT_STATEMENT__ID = eINSTANCE.getAssertStatement_Id();
+    EAttribute ASSERT_STATEMENT__NAME = eINSTANCE.getAssertStatement_Name();
 
     /**
      * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
@@ -8070,12 +8070,12 @@ public interface AgreePackage extends EPackage
     EClass LEMMA_STATEMENT = eINSTANCE.getLemmaStatement();
 
     /**
-     * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute LEMMA_STATEMENT__ID = eINSTANCE.getLemmaStatement_Id();
+    EAttribute LEMMA_STATEMENT__NAME = eINSTANCE.getLemmaStatement_Name();
 
     /**
      * The meta object literal for the '<em><b>Str</b></em>' attribute feature.

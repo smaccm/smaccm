@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl#getId <em>Id</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl#getName <em>Name</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl#getStr <em>Str</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl#getExpr <em>Expr</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl#getPattern <em>Pattern</em>}</li>
@@ -34,24 +34,24 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 public class AssertStatementImpl extends SpecStatementImpl implements AssertStatement
 {
   /**
-   * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getId()
+   * @see #getName()
    * @generated
    * @ordered
    */
-  protected static final String ID_EDEFAULT = null;
+  protected static final String NAME_EDEFAULT = null;
 
   /**
-   * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getId()
+   * @see #getName()
    * @generated
    * @ordered
    */
-  protected String id = ID_EDEFAULT;
+  protected String name = NAME_EDEFAULT;
 
   /**
    * The default value of the '{@link #getStr() <em>Str</em>}' attribute.
@@ -119,9 +119,9 @@ public class AssertStatementImpl extends SpecStatementImpl implements AssertStat
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getId()
+  public String getName()
   {
-    return id;
+    return name;
   }
 
   /**
@@ -129,12 +129,12 @@ public class AssertStatementImpl extends SpecStatementImpl implements AssertStat
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setId(String newId)
+  public void setName(String newName)
   {
-    String oldId = id;
-    id = newId;
+    String oldName = name;
+    name = newName;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.ASSERT_STATEMENT__ID, oldId, id));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.ASSERT_STATEMENT__NAME, oldName, name));
   }
 
   /**
@@ -284,8 +284,8 @@ public class AssertStatementImpl extends SpecStatementImpl implements AssertStat
   {
     switch (featureID)
     {
-      case AgreePackage.ASSERT_STATEMENT__ID:
-        return getId();
+      case AgreePackage.ASSERT_STATEMENT__NAME:
+        return getName();
       case AgreePackage.ASSERT_STATEMENT__STR:
         return getStr();
       case AgreePackage.ASSERT_STATEMENT__EXPR:
@@ -306,8 +306,8 @@ public class AssertStatementImpl extends SpecStatementImpl implements AssertStat
   {
     switch (featureID)
     {
-      case AgreePackage.ASSERT_STATEMENT__ID:
-        setId((String)newValue);
+      case AgreePackage.ASSERT_STATEMENT__NAME:
+        setName((String)newValue);
         return;
       case AgreePackage.ASSERT_STATEMENT__STR:
         setStr((String)newValue);
@@ -332,8 +332,8 @@ public class AssertStatementImpl extends SpecStatementImpl implements AssertStat
   {
     switch (featureID)
     {
-      case AgreePackage.ASSERT_STATEMENT__ID:
-        setId(ID_EDEFAULT);
+      case AgreePackage.ASSERT_STATEMENT__NAME:
+        setName(NAME_EDEFAULT);
         return;
       case AgreePackage.ASSERT_STATEMENT__STR:
         setStr(STR_EDEFAULT);
@@ -358,8 +358,8 @@ public class AssertStatementImpl extends SpecStatementImpl implements AssertStat
   {
     switch (featureID)
     {
-      case AgreePackage.ASSERT_STATEMENT__ID:
-        return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+      case AgreePackage.ASSERT_STATEMENT__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case AgreePackage.ASSERT_STATEMENT__STR:
         return STR_EDEFAULT == null ? str != null : !STR_EDEFAULT.equals(str);
       case AgreePackage.ASSERT_STATEMENT__EXPR:
@@ -381,8 +381,8 @@ public class AssertStatementImpl extends SpecStatementImpl implements AssertStat
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (id: ");
-    result.append(id);
+    result.append(" (name: ");
+    result.append(name);
     result.append(", str: ");
     result.append(str);
     result.append(')');

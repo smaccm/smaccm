@@ -12,7 +12,7 @@ package com.rockwellcollins.atc.agree.agree;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getId <em>Id</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getName <em>Name</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getStr <em>Str</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getExpr <em>Expr</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getPattern <em>Pattern</em>}</li>
@@ -25,30 +25,30 @@ package com.rockwellcollins.atc.agree.agree;
 public interface AssertStatement extends SpecStatement
 {
   /**
-   * Returns the value of the '<em><b>Id</b></em>' attribute.
+   * Returns the value of the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Id</em>' attribute isn't clear,
+   * If the meaning of the '<em>Name</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Id</em>' attribute.
-   * @see #setId(String)
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getAssertStatement_Id()
+   * @return the value of the '<em>Name</em>' attribute.
+   * @see #setName(String)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getAssertStatement_Name()
    * @model
    * @generated
    */
-  String getId();
+  String getName();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getId <em>Id</em>}' attribute.
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getName <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Id</em>' attribute.
-   * @see #getId()
+   * @param value the new value of the '<em>Name</em>' attribute.
+   * @see #getName()
    * @generated
    */
-  void setId(String value);
+  void setName(String value);
 
   /**
    * Returns the value of the '<em><b>Str</b></em>' attribute.

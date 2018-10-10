@@ -4251,9 +4251,9 @@ rule__SpecStatement__Group_0__2__Impl
     }
 :
 (
-{ before(grammarAccess.getSpecStatementAccess().getIdAssignment_0_2()); }
-(rule__SpecStatement__IdAssignment_0_2)?
-{ after(grammarAccess.getSpecStatementAccess().getIdAssignment_0_2()); }
+{ before(grammarAccess.getSpecStatementAccess().getNameAssignment_0_2()); }
+(rule__SpecStatement__NameAssignment_0_2)?
+{ after(grammarAccess.getSpecStatementAccess().getNameAssignment_0_2()); }
 )
 
 ;
@@ -4475,9 +4475,9 @@ rule__SpecStatement__Group_1__2__Impl
     }
 :
 (
-{ before(grammarAccess.getSpecStatementAccess().getIdAssignment_1_2()); }
-(rule__SpecStatement__IdAssignment_1_2)?
-{ after(grammarAccess.getSpecStatementAccess().getIdAssignment_1_2()); }
+{ before(grammarAccess.getSpecStatementAccess().getNameAssignment_1_2()); }
+(rule__SpecStatement__NameAssignment_1_2)?
+{ after(grammarAccess.getSpecStatementAccess().getNameAssignment_1_2()); }
 )
 
 ;
@@ -4797,9 +4797,9 @@ rule__SpecStatement__Group_2_2__0__Impl
     }
 :
 (
-{ before(grammarAccess.getSpecStatementAccess().getIdAssignment_2_2_0()); }
-(rule__SpecStatement__IdAssignment_2_2_0)?
-{ after(grammarAccess.getSpecStatementAccess().getIdAssignment_2_2_0()); }
+{ before(grammarAccess.getSpecStatementAccess().getNameAssignment_2_2_0()); }
+(rule__SpecStatement__NameAssignment_2_2_0)?
+{ after(grammarAccess.getSpecStatementAccess().getNameAssignment_2_2_0()); }
 )
 
 ;
@@ -4953,9 +4953,9 @@ rule__SpecStatement__Group_3__2__Impl
     }
 :
 (
-{ before(grammarAccess.getSpecStatementAccess().getIdAssignment_3_2()); }
-(rule__SpecStatement__IdAssignment_3_2)?
-{ after(grammarAccess.getSpecStatementAccess().getIdAssignment_3_2()); }
+{ before(grammarAccess.getSpecStatementAccess().getNameAssignment_3_2()); }
+(rule__SpecStatement__NameAssignment_3_2)?
+{ after(grammarAccess.getSpecStatementAccess().getNameAssignment_3_2()); }
 )
 
 ;
@@ -26366,14 +26366,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__SpecStatement__IdAssignment_0_2
+rule__SpecStatement__NameAssignment_0_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_0_2_0()); }
-	RULE_ID{ after(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_0_2_0()); }
+{ before(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_0_2_0()); }
+	RULE_ID{ after(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_0_2_0()); }
 )
 
 ;
@@ -26426,14 +26426,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__SpecStatement__IdAssignment_1_2
+rule__SpecStatement__NameAssignment_1_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_1_2_0()); }
-	RULE_ID{ after(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_1_2_0()); }
+{ before(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_1_2_0()); }
+	RULE_ID{ after(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_1_2_0()); }
 )
 
 ;
@@ -26486,14 +26486,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__SpecStatement__IdAssignment_2_2_0
+rule__SpecStatement__NameAssignment_2_2_0
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_2_2_0_0()); }
-	RULE_ID{ after(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_2_2_0_0()); }
+{ before(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_2_2_0_0()); }
+	RULE_ID{ after(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_2_2_0_0()); }
 )
 
 ;
@@ -26546,14 +26546,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__SpecStatement__IdAssignment_3_2
+rule__SpecStatement__NameAssignment_3_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_3_2_0()); }
-	RULE_ID{ after(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_3_2_0()); }
+{ before(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_3_2_0()); }
+	RULE_ID{ after(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_3_2_0()); }
 )
 
 ;

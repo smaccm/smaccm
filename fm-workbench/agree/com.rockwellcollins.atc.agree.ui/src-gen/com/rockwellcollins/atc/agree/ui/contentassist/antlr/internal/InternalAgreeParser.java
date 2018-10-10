@@ -14102,22 +14102,22 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SpecStatement__Group_0__2__Impl"
-    // InternalAgreeParser.g:4248:1: rule__SpecStatement__Group_0__2__Impl : ( ( rule__SpecStatement__IdAssignment_0_2 )? ) ;
+    // InternalAgreeParser.g:4248:1: rule__SpecStatement__Group_0__2__Impl : ( ( rule__SpecStatement__NameAssignment_0_2 )? ) ;
     public final void rule__SpecStatement__Group_0__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:4252:1: ( ( ( rule__SpecStatement__IdAssignment_0_2 )? ) )
-            // InternalAgreeParser.g:4253:1: ( ( rule__SpecStatement__IdAssignment_0_2 )? )
+            // InternalAgreeParser.g:4252:1: ( ( ( rule__SpecStatement__NameAssignment_0_2 )? ) )
+            // InternalAgreeParser.g:4253:1: ( ( rule__SpecStatement__NameAssignment_0_2 )? )
             {
-            // InternalAgreeParser.g:4253:1: ( ( rule__SpecStatement__IdAssignment_0_2 )? )
-            // InternalAgreeParser.g:4254:1: ( rule__SpecStatement__IdAssignment_0_2 )?
+            // InternalAgreeParser.g:4253:1: ( ( rule__SpecStatement__NameAssignment_0_2 )? )
+            // InternalAgreeParser.g:4254:1: ( rule__SpecStatement__NameAssignment_0_2 )?
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getSpecStatementAccess().getIdAssignment_0_2()); 
+               before(grammarAccess.getSpecStatementAccess().getNameAssignment_0_2()); 
             }
-            // InternalAgreeParser.g:4255:1: ( rule__SpecStatement__IdAssignment_0_2 )?
+            // InternalAgreeParser.g:4255:1: ( rule__SpecStatement__NameAssignment_0_2 )?
             int alt42=2;
             int LA42_0 = input.LA(1);
 
@@ -14126,10 +14126,10 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
             switch (alt42) {
                 case 1 :
-                    // InternalAgreeParser.g:4255:2: rule__SpecStatement__IdAssignment_0_2
+                    // InternalAgreeParser.g:4255:2: rule__SpecStatement__NameAssignment_0_2
                     {
                     pushFollow(FollowSets000.FOLLOW_2);
-                    rule__SpecStatement__IdAssignment_0_2();
+                    rule__SpecStatement__NameAssignment_0_2();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -14140,7 +14140,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getSpecStatementAccess().getIdAssignment_0_2()); 
+               after(grammarAccess.getSpecStatementAccess().getNameAssignment_0_2()); 
             }
 
             }
@@ -14691,22 +14691,22 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SpecStatement__Group_1__2__Impl"
-    // InternalAgreeParser.g:4472:1: rule__SpecStatement__Group_1__2__Impl : ( ( rule__SpecStatement__IdAssignment_1_2 )? ) ;
+    // InternalAgreeParser.g:4472:1: rule__SpecStatement__Group_1__2__Impl : ( ( rule__SpecStatement__NameAssignment_1_2 )? ) ;
     public final void rule__SpecStatement__Group_1__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:4476:1: ( ( ( rule__SpecStatement__IdAssignment_1_2 )? ) )
-            // InternalAgreeParser.g:4477:1: ( ( rule__SpecStatement__IdAssignment_1_2 )? )
+            // InternalAgreeParser.g:4476:1: ( ( ( rule__SpecStatement__NameAssignment_1_2 )? ) )
+            // InternalAgreeParser.g:4477:1: ( ( rule__SpecStatement__NameAssignment_1_2 )? )
             {
-            // InternalAgreeParser.g:4477:1: ( ( rule__SpecStatement__IdAssignment_1_2 )? )
-            // InternalAgreeParser.g:4478:1: ( rule__SpecStatement__IdAssignment_1_2 )?
+            // InternalAgreeParser.g:4477:1: ( ( rule__SpecStatement__NameAssignment_1_2 )? )
+            // InternalAgreeParser.g:4478:1: ( rule__SpecStatement__NameAssignment_1_2 )?
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getSpecStatementAccess().getIdAssignment_1_2()); 
+               before(grammarAccess.getSpecStatementAccess().getNameAssignment_1_2()); 
             }
-            // InternalAgreeParser.g:4479:1: ( rule__SpecStatement__IdAssignment_1_2 )?
+            // InternalAgreeParser.g:4479:1: ( rule__SpecStatement__NameAssignment_1_2 )?
             int alt43=2;
             int LA43_0 = input.LA(1);
 
@@ -14715,10 +14715,10 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
             switch (alt43) {
                 case 1 :
-                    // InternalAgreeParser.g:4479:2: rule__SpecStatement__IdAssignment_1_2
+                    // InternalAgreeParser.g:4479:2: rule__SpecStatement__NameAssignment_1_2
                     {
                     pushFollow(FollowSets000.FOLLOW_2);
-                    rule__SpecStatement__IdAssignment_1_2();
+                    rule__SpecStatement__NameAssignment_1_2();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -14729,7 +14729,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getSpecStatementAccess().getIdAssignment_1_2()); 
+               after(grammarAccess.getSpecStatementAccess().getNameAssignment_1_2()); 
             }
 
             }
@@ -15550,22 +15550,22 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SpecStatement__Group_2_2__0__Impl"
-    // InternalAgreeParser.g:4794:1: rule__SpecStatement__Group_2_2__0__Impl : ( ( rule__SpecStatement__IdAssignment_2_2_0 )? ) ;
+    // InternalAgreeParser.g:4794:1: rule__SpecStatement__Group_2_2__0__Impl : ( ( rule__SpecStatement__NameAssignment_2_2_0 )? ) ;
     public final void rule__SpecStatement__Group_2_2__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:4798:1: ( ( ( rule__SpecStatement__IdAssignment_2_2_0 )? ) )
-            // InternalAgreeParser.g:4799:1: ( ( rule__SpecStatement__IdAssignment_2_2_0 )? )
+            // InternalAgreeParser.g:4798:1: ( ( ( rule__SpecStatement__NameAssignment_2_2_0 )? ) )
+            // InternalAgreeParser.g:4799:1: ( ( rule__SpecStatement__NameAssignment_2_2_0 )? )
             {
-            // InternalAgreeParser.g:4799:1: ( ( rule__SpecStatement__IdAssignment_2_2_0 )? )
-            // InternalAgreeParser.g:4800:1: ( rule__SpecStatement__IdAssignment_2_2_0 )?
+            // InternalAgreeParser.g:4799:1: ( ( rule__SpecStatement__NameAssignment_2_2_0 )? )
+            // InternalAgreeParser.g:4800:1: ( rule__SpecStatement__NameAssignment_2_2_0 )?
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getSpecStatementAccess().getIdAssignment_2_2_0()); 
+               before(grammarAccess.getSpecStatementAccess().getNameAssignment_2_2_0()); 
             }
-            // InternalAgreeParser.g:4801:1: ( rule__SpecStatement__IdAssignment_2_2_0 )?
+            // InternalAgreeParser.g:4801:1: ( rule__SpecStatement__NameAssignment_2_2_0 )?
             int alt45=2;
             int LA45_0 = input.LA(1);
 
@@ -15574,10 +15574,10 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
             switch (alt45) {
                 case 1 :
-                    // InternalAgreeParser.g:4801:2: rule__SpecStatement__IdAssignment_2_2_0
+                    // InternalAgreeParser.g:4801:2: rule__SpecStatement__NameAssignment_2_2_0
                     {
                     pushFollow(FollowSets000.FOLLOW_2);
-                    rule__SpecStatement__IdAssignment_2_2_0();
+                    rule__SpecStatement__NameAssignment_2_2_0();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -15588,7 +15588,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getSpecStatementAccess().getIdAssignment_2_2_0()); 
+               after(grammarAccess.getSpecStatementAccess().getNameAssignment_2_2_0()); 
             }
 
             }
@@ -15971,22 +15971,22 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__SpecStatement__Group_3__2__Impl"
-    // InternalAgreeParser.g:4950:1: rule__SpecStatement__Group_3__2__Impl : ( ( rule__SpecStatement__IdAssignment_3_2 )? ) ;
+    // InternalAgreeParser.g:4950:1: rule__SpecStatement__Group_3__2__Impl : ( ( rule__SpecStatement__NameAssignment_3_2 )? ) ;
     public final void rule__SpecStatement__Group_3__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:4954:1: ( ( ( rule__SpecStatement__IdAssignment_3_2 )? ) )
-            // InternalAgreeParser.g:4955:1: ( ( rule__SpecStatement__IdAssignment_3_2 )? )
+            // InternalAgreeParser.g:4954:1: ( ( ( rule__SpecStatement__NameAssignment_3_2 )? ) )
+            // InternalAgreeParser.g:4955:1: ( ( rule__SpecStatement__NameAssignment_3_2 )? )
             {
-            // InternalAgreeParser.g:4955:1: ( ( rule__SpecStatement__IdAssignment_3_2 )? )
-            // InternalAgreeParser.g:4956:1: ( rule__SpecStatement__IdAssignment_3_2 )?
+            // InternalAgreeParser.g:4955:1: ( ( rule__SpecStatement__NameAssignment_3_2 )? )
+            // InternalAgreeParser.g:4956:1: ( rule__SpecStatement__NameAssignment_3_2 )?
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getSpecStatementAccess().getIdAssignment_3_2()); 
+               before(grammarAccess.getSpecStatementAccess().getNameAssignment_3_2()); 
             }
-            // InternalAgreeParser.g:4957:1: ( rule__SpecStatement__IdAssignment_3_2 )?
+            // InternalAgreeParser.g:4957:1: ( rule__SpecStatement__NameAssignment_3_2 )?
             int alt46=2;
             int LA46_0 = input.LA(1);
 
@@ -15995,10 +15995,10 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
             switch (alt46) {
                 case 1 :
-                    // InternalAgreeParser.g:4957:2: rule__SpecStatement__IdAssignment_3_2
+                    // InternalAgreeParser.g:4957:2: rule__SpecStatement__NameAssignment_3_2
                     {
                     pushFollow(FollowSets000.FOLLOW_2);
-                    rule__SpecStatement__IdAssignment_3_2();
+                    rule__SpecStatement__NameAssignment_3_2();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -16009,7 +16009,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getSpecStatementAccess().getIdAssignment_3_2()); 
+               after(grammarAccess.getSpecStatementAccess().getNameAssignment_3_2()); 
             }
 
             }
@@ -72870,9 +72870,9 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__AgreeContract__SpecsAssignment_1"
 
 
-    // $ANTLR start "rule__SpecStatement__IdAssignment_0_2"
-    // InternalAgreeParser.g:26369:1: rule__SpecStatement__IdAssignment_0_2 : ( RULE_ID ) ;
-    public final void rule__SpecStatement__IdAssignment_0_2() throws RecognitionException {
+    // $ANTLR start "rule__SpecStatement__NameAssignment_0_2"
+    // InternalAgreeParser.g:26369:1: rule__SpecStatement__NameAssignment_0_2 : ( RULE_ID ) ;
+    public final void rule__SpecStatement__NameAssignment_0_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -72884,11 +72884,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:26375:1: RULE_ID
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_0_2_0()); 
+               before(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_0_2_0()); 
             }
             match(input,RULE_ID,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_0_2_0()); 
+               after(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_0_2_0()); 
             }
 
             }
@@ -72908,7 +72908,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__SpecStatement__IdAssignment_0_2"
+    // $ANTLR end "rule__SpecStatement__NameAssignment_0_2"
 
 
     // $ANTLR start "rule__SpecStatement__StrAssignment_0_3"
@@ -73042,9 +73042,9 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__SpecStatement__PatternAssignment_0_5_1"
 
 
-    // $ANTLR start "rule__SpecStatement__IdAssignment_1_2"
-    // InternalAgreeParser.g:26429:1: rule__SpecStatement__IdAssignment_1_2 : ( RULE_ID ) ;
-    public final void rule__SpecStatement__IdAssignment_1_2() throws RecognitionException {
+    // $ANTLR start "rule__SpecStatement__NameAssignment_1_2"
+    // InternalAgreeParser.g:26429:1: rule__SpecStatement__NameAssignment_1_2 : ( RULE_ID ) ;
+    public final void rule__SpecStatement__NameAssignment_1_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -73056,11 +73056,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:26435:1: RULE_ID
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_1_2_0()); 
+               before(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_1_2_0()); 
             }
             match(input,RULE_ID,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_1_2_0()); 
+               after(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_1_2_0()); 
             }
 
             }
@@ -73080,7 +73080,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__SpecStatement__IdAssignment_1_2"
+    // $ANTLR end "rule__SpecStatement__NameAssignment_1_2"
 
 
     // $ANTLR start "rule__SpecStatement__StrAssignment_1_3"
@@ -73214,9 +73214,9 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__SpecStatement__PatternAssignment_1_5_1"
 
 
-    // $ANTLR start "rule__SpecStatement__IdAssignment_2_2_0"
-    // InternalAgreeParser.g:26489:1: rule__SpecStatement__IdAssignment_2_2_0 : ( RULE_ID ) ;
-    public final void rule__SpecStatement__IdAssignment_2_2_0() throws RecognitionException {
+    // $ANTLR start "rule__SpecStatement__NameAssignment_2_2_0"
+    // InternalAgreeParser.g:26489:1: rule__SpecStatement__NameAssignment_2_2_0 : ( RULE_ID ) ;
+    public final void rule__SpecStatement__NameAssignment_2_2_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -73228,11 +73228,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:26495:1: RULE_ID
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_2_2_0_0()); 
+               before(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_2_2_0_0()); 
             }
             match(input,RULE_ID,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_2_2_0_0()); 
+               after(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_2_2_0_0()); 
             }
 
             }
@@ -73252,7 +73252,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__SpecStatement__IdAssignment_2_2_0"
+    // $ANTLR end "rule__SpecStatement__NameAssignment_2_2_0"
 
 
     // $ANTLR start "rule__SpecStatement__StrAssignment_2_2_1"
@@ -73386,9 +73386,9 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__SpecStatement__PatternAssignment_2_3_1"
 
 
-    // $ANTLR start "rule__SpecStatement__IdAssignment_3_2"
-    // InternalAgreeParser.g:26549:1: rule__SpecStatement__IdAssignment_3_2 : ( RULE_ID ) ;
-    public final void rule__SpecStatement__IdAssignment_3_2() throws RecognitionException {
+    // $ANTLR start "rule__SpecStatement__NameAssignment_3_2"
+    // InternalAgreeParser.g:26549:1: rule__SpecStatement__NameAssignment_3_2 : ( RULE_ID ) ;
+    public final void rule__SpecStatement__NameAssignment_3_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -73400,11 +73400,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:26555:1: RULE_ID
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_3_2_0()); 
+               before(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_3_2_0()); 
             }
             match(input,RULE_ID,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getSpecStatementAccess().getIdIDTerminalRuleCall_3_2_0()); 
+               after(grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_3_2_0()); 
             }
 
             }
@@ -73424,7 +73424,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__SpecStatement__IdAssignment_3_2"
+    // $ANTLR end "rule__SpecStatement__NameAssignment_3_2"
 
 
     // $ANTLR start "rule__SpecStatement__StrAssignment_3_3"

@@ -1216,7 +1216,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     SpecStatement returns AssertStatement
 	 *
 	 * Constraint:
-	 *     ((id=ID? str=STRING)? (expr=Expr | pattern=PatternStatement))
+	 *     ((name=ID? str=STRING)? (expr=Expr | pattern=PatternStatement))
 	 */
 	protected void sequence_SpecStatement(ISerializationContext context, AssertStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1229,7 +1229,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     SpecStatement returns AssumeStatement
 	 *
 	 * Constraint:
-	 *     (id=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
 	 */
 	protected void sequence_SpecStatement(ISerializationContext context, AssumeStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1264,7 +1264,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     SpecStatement returns GuaranteeStatement
 	 *
 	 * Constraint:
-	 *     (id=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
 	 */
 	protected void sequence_SpecStatement(ISerializationContext context, GuaranteeStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1296,7 +1296,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     SpecStatement returns LemmaStatement
 	 *
 	 * Constraint:
-	 *     (id=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
 	 */
 	protected void sequence_SpecStatement(ISerializationContext context, LemmaStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
