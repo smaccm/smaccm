@@ -163,18 +163,46 @@ public class AgreeTypeSystem {
 		}
 	}
 
+	private static ComponentType baseAadlComponentType(ComponentType dt) {
+		ComponentType parent = dt.getExtended();
+		if (parent == null) {
+			return dt;
+		} else {
+			return baseAadlComponentType(parent);
+		}
+	}
+
 	private static Type trySimp(Type t) {
-		if (t instanceof CustomType) {
-			String typeString = typeToString(t);
-			if (typeString.equals("Base_Types::Integer")) {
+
+		if (t instanceof PrimType) {
+			String name = ((PrimType) t).getName();
+			if (name.equals("int")) {
 				return intType;
-			} else if (typeString.equals("Base_Types::Float")) {
+			} else if (name.equals("real")) {
 				return realType;
-			} else if (typeString.contentEquals("Base_Types::Boolean")) {
+			} else if (name.equals("bool")) {
 				return boolType;
 			} else {
 				return t;
 			}
+		} else if (t instanceof CustomType) {
+			NamedElement ne = ((CustomType) t).getLeaf();
+			if (ne instanceof ComponentType) {
+
+				String typeString = typeToString(t);
+				if (typeString.equals("Base_Types::Integer")) {
+					return intType;
+				} else if (typeString.equals("Base_Types::Float")) {
+					return realType;
+				} else if (typeString.contentEquals("Base_Types::Boolean")) {
+					return boolType;
+				} else {
+					return trySimp(mkCustomType(baseAadlComponentType((ComponentType) ne)));
+				}
+			} else {
+				return t;
+			}
+
 		} else {
 			return t;
 		}

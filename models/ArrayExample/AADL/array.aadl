@@ -115,6 +115,10 @@ public
 		thread CompTest
 			
 		annex agree {**
+				
+			eq qq: int[190,200];
+			eq ww: int[180,181];
+			eq bb : bool = ww != qq;
 			
 			eq a0 : int = 1;
 			fun idnt(x: int) : int = x;
