@@ -14205,7 +14205,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                 if ( (LA38_1==ColonColon) ) {
                     alt38=1;
                 }
-                else if ( (LA38_1==EOF||LA38_1==RightParenthesis||LA38_1==Comma||LA38_1==FullStop||LA38_1==Semicolon||LA38_1==EqualsSign||LA38_1==LeftSquareBracket||(LA38_1>=LeftCurlyBracket && LA38_1<=RightCurlyBracket)) ) {
+                else if ( (LA38_1==EOF||LA38_1==Exclusively||LA38_1==Becomes||LA38_1==Implies||LA38_1==During||LA38_1==Occurs||LA38_1==Holds||(LA38_1>=Occur && LA38_1<=Times)||LA38_1==Else||LA38_1==Into||LA38_1==Then||LA38_1==With||LA38_1==LessThanSignEqualsSignGreaterThanSign||(LA38_1>=And && LA38_1<=Div)||LA38_1==Mod||(LA38_1>=ExclamationMarkEqualsSign && LA38_1<=FullStopFullStop)||(LA38_1>=ColonEqualsSign && LA38_1<=LeftSquareBracketVerticalLine)||LA38_1==Or||LA38_1==VerticalLineRightSquareBracket||(LA38_1>=RightParenthesis && LA38_1<=RightCurlyBracket)) ) {
                     alt38=2;
                 }
                 else {
@@ -92016,30 +92016,34 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TermExpr__NamedElmAssignment_0_0_1"
-    // InternalAgreeParser.g:33214:1: rule__TermExpr__NamedElmAssignment_0_0_1 : ( ( RULE_ID ) ) ;
+    // InternalAgreeParser.g:33214:1: rule__TermExpr__NamedElmAssignment_0_0_1 : ( ( ruleQCPREF ) ) ;
     public final void rule__TermExpr__NamedElmAssignment_0_0_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:33218:1: ( ( ( RULE_ID ) ) )
-            // InternalAgreeParser.g:33219:1: ( ( RULE_ID ) )
+            // InternalAgreeParser.g:33218:1: ( ( ( ruleQCPREF ) ) )
+            // InternalAgreeParser.g:33219:1: ( ( ruleQCPREF ) )
             {
-            // InternalAgreeParser.g:33219:1: ( ( RULE_ID ) )
-            // InternalAgreeParser.g:33220:1: ( RULE_ID )
+            // InternalAgreeParser.g:33219:1: ( ( ruleQCPREF ) )
+            // InternalAgreeParser.g:33220:1: ( ruleQCPREF )
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getTermExprAccess().getNamedElmNamedElementCrossReference_0_0_1_0()); 
             }
-            // InternalAgreeParser.g:33221:1: ( RULE_ID )
-            // InternalAgreeParser.g:33222:1: RULE_ID
+            // InternalAgreeParser.g:33221:1: ( ruleQCPREF )
+            // InternalAgreeParser.g:33222:1: ruleQCPREF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTermExprAccess().getNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1()); 
+               before(grammarAccess.getTermExprAccess().getNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1()); 
             }
-            match(input,RULE_ID,FollowSets000.FOLLOW_2); if (state.failed) return ;
+            pushFollow(FollowSets000.FOLLOW_2);
+            ruleQCPREF();
+
+            state._fsp--;
+            if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTermExprAccess().getNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1()); 
+               after(grammarAccess.getTermExprAccess().getNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1()); 
             }
 
             }
@@ -96283,12 +96287,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             throw nvae;
         }
     }
-    static final String dfa_7s = "\37\uffff";
-    static final String dfa_8s = "\1\uffff\1\24\25\uffff\1\24\7\uffff";
-    static final String dfa_9s = "\1\30\1\10\20\uffff\1\33\1\u008b\1\uffff\1\u008b\1\uffff\1\10\1\166\1\144\1\u008b\1\uffff\1\160\1\u008b\1\160";
-    static final String dfa_10s = "\1\u008b\1\u0081\20\uffff\2\u008b\1\uffff\1\u008b\1\uffff\1\u0081\1\u0080\1\173\1\u008b\1\uffff\1\u0080\1\u008b\1\u0080";
-    static final String dfa_11s = "\2\uffff\1\2\1\3\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\2\uffff\1\1\1\uffff\1\4\4\uffff\1\5\3\uffff";
-    static final String dfa_12s = "\37\uffff}>";
+    static final String dfa_7s = "\35\uffff";
+    static final String dfa_8s = "\1\uffff\1\24\25\uffff\2\24\3\uffff\1\24";
+    static final String dfa_9s = "\1\30\1\10\20\uffff\1\33\1\u008b\1\uffff\1\u008b\1\uffff\2\10\1\144\1\33\1\uffff\1\10";
+    static final String dfa_10s = "\1\u008b\1\u0081\20\uffff\2\u008b\1\uffff\1\u008b\1\uffff\2\u0081\1\173\1\u008b\1\uffff\1\u0081";
+    static final String dfa_11s = "\2\uffff\1\2\1\3\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\2\uffff\1\1\1\uffff\1\4\4\uffff\1\5\1\uffff";
+    static final String dfa_12s = "\35\uffff}>";
     static final String[] dfa_13s = {
             "\1\14\1\13\11\uffff\1\3\1\11\16\uffff\1\12\3\uffff\1\10\1\16\1\17\13\uffff\1\4\5\uffff\1\20\2\uffff\1\2\1\16\15\uffff\1\7\13\uffff\1\5\6\uffff\1\21\25\uffff\1\15\1\uffff\1\6\2\uffff\1\1",
             "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\3\24\1\23\6\24\3\uffff\1\24\1\uffff\1\24\1\26\5\24\1\22\11\24\1\25\1\24",
@@ -96314,13 +96318,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             "\1\31",
             "",
             "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\3\24\1\uffff\6\24\3\uffff\1\24\1\uffff\1\24\1\26\17\24\1\25\1\24",
-            "\1\32\11\uffff\1\33",
+            "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\3\24\1\uffff\6\24\3\uffff\1\24\1\uffff\1\24\1\uffff\5\24\1\32\11\24\1\25\1\24",
             "\1\24\26\uffff\1\33",
-            "\1\34",
+            "\2\24\11\uffff\1\24\32\uffff\1\24\111\uffff\1\34",
             "",
-            "\1\26\5\uffff\1\35\11\uffff\1\33",
-            "\1\36",
-            "\1\26\17\uffff\1\33"
+            "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\3\24\1\uffff\6\24\3\uffff\1\24\1\uffff\1\24\1\26\5\24\1\22\11\24\1\25\1\24"
     };
 
     static final short[] dfa_7 = DFA.unpackEncodedString(dfa_7s);
@@ -96408,7 +96410,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     static final String dfa_23s = "\1\10\7\0\2\uffff";
     static final String dfa_24s = "\1\u0081\7\0\2\uffff";
     static final String dfa_25s = "\10\uffff\1\2\1\1";
-    static final String dfa_26s = "\1\uffff\1\4\1\0\1\2\1\3\1\5\1\1\1\6\2\uffff}>";
+    static final String dfa_26s = "\1\uffff\1\4\1\2\1\1\1\0\1\5\1\3\1\6\2\uffff}>";
     static final String[] dfa_27s = {
             "\1\10\25\uffff\1\10\3\uffff\1\10\10\uffff\1\10\3\uffff\1\10\14\uffff\1\10\2\uffff\2\10\3\uffff\1\10\1\uffff\1\10\5\uffff\1\10\5\uffff\1\10\1\uffff\1\10\1\uffff\2\10\3\uffff\1\10\4\uffff\1\7\2\10\1\uffff\1\10\1\2\1\6\1\10\1\4\4\uffff\1\10\1\uffff\1\10\1\uffff\5\10\1\uffff\3\10\1\1\1\5\1\3\1\uffff\2\10\1\uffff\1\10",
             "\1\uffff",
@@ -96451,10 +96453,10 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA94_2 = input.LA(1);
+                        int LA94_4 = input.LA(1);
 
                          
-                        int index94_2 = input.index();
+                        int index94_4 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
@@ -96462,25 +96464,10 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         else if ( (true) ) {s = 8;}
 
                          
-                        input.seek(index94_2);
+                        input.seek(index94_4);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA94_6 = input.LA(1);
-
-                         
-                        int index94_6 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index94_6);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
                         int LA94_3 = input.LA(1);
 
                          
@@ -96495,11 +96482,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         input.seek(index94_3);
                         if ( s>=0 ) return s;
                         break;
-                    case 3 : 
-                        int LA94_4 = input.LA(1);
+                    case 2 : 
+                        int LA94_2 = input.LA(1);
 
                          
-                        int index94_4 = input.index();
+                        int index94_2 = input.index();
                         input.rewind();
                         s = -1;
                         if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
@@ -96507,7 +96494,22 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         else if ( (true) ) {s = 8;}
 
                          
-                        input.seek(index94_4);
+                        input.seek(index94_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 3 : 
+                        int LA94_6 = input.LA(1);
+
+                         
+                        int index94_6 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred173_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index94_6);
                         if ( s>=0 ) return s;
                         break;
                     case 4 : 

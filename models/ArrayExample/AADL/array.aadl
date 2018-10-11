@@ -7,9 +7,15 @@ public
 	data struct_with_array
 	end struct_with_array;
 	
+	data ranged_type extends Base_Types::Integer
+		properties
+			Data_Model::Integer_Range => SW_Properties::MIN_LONGITUDE .. SW_Properties::MAX_LONGITUDE;
+	end ranged_type;
+	
 	data implementation struct_with_array.i
 		subcomponents
 			array : data Base_Types::Integer[4];
+			ranged : data array::ranged_type;
 	end struct_with_array.i;
 	
 	data array_type
@@ -88,6 +94,20 @@ public
 			
 		fun array_test11(t : array::simple_struct.i2) : bool =
 			forall i in t.array, i < 10;
+			
+		fun tll0(x: int) : int = SW_Properties::MAX_ALTITUDE;
+		
+		fun tll1(x: int) : real = SW_Properties::MAX_LATTITUDE;
+			
+		fun ranged_type_test0(r : array::ranged_type) : bool = 
+			r != SW_Properties::MAX_ALTITUDE;
+			
+		fun ranged_type_test1(r : array::ranged_type) : bool =
+			r != 10;
+				
+		fun ranged_type_test2(r : array::struct_with_array.i) : bool =
+			r.ranged < 10;
+			
 			
 						
 	**};

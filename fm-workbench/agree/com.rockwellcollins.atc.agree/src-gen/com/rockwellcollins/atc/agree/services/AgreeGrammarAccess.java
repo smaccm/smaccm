@@ -4555,7 +4555,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cNamedElmExprAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Assignment cNamedElmAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
 		private final CrossReference cNamedElmNamedElementCrossReference_0_0_1_0 = (CrossReference)cNamedElmAssignment_0_0_1.eContents().get(0);
-		private final RuleCall cNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_0_0_1_0.eContents().get(1);
+		private final RuleCall cNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_0_0_1_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cTimeExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cTimeKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
@@ -4693,7 +4693,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_18_2 = (Keyword)cGroup_18.eContents().get(2);
 		
 		//TermExpr Expr:
-		//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {TimeExpr} 'time'
+		//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF]) | {TimeExpr} 'time'
 		//	| {IndicesExpr} 'indices' '(' array=Expr ')'
 		//	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')'
 		//	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';'
@@ -4714,8 +4714,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| '(' Expr ')';
 		@Override public ParserRule getRule() { return rule; }
 
-		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {TimeExpr} 'time' | {IndicesExpr} 'indices' '(' array=Expr ')' | =>
-		//({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' | => ({RecordLitExpr}
+		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF]) | {TimeExpr} 'time' | {IndicesExpr} 'indices' '(' array=Expr
+		//')' | => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' | => ({RecordLitExpr}
 		//recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement] '='
 		//argExpr+=Expr)* '}' | => ({EnumLitExpr} 'enum' '(') enumType=CustomType ',' value=ID ')' | ArrayLiteralExpr |
 		//{IntLitExpr} val=INTEGER_LIT | {PreExpr} 'pre' '(' expr=Expr ')' | {EventExpr} 'event' '(' id=Expr ')' | {LatchedExpr}
@@ -4725,23 +4725,23 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr ')'
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement])
+		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF])
 		public Group getGroup_0() { return cGroup_0; }
 
-		//{NamedElmExpr} namedElm=[aadl2::NamedElement]
+		//{NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF]
 		public Group getGroup_0_0() { return cGroup_0_0; }
 
 		//{NamedElmExpr}
 		public Action getNamedElmExprAction_0_0_0() { return cNamedElmExprAction_0_0_0; }
 
-		//namedElm=[aadl2::NamedElement]
+		//namedElm=[aadl2::NamedElement|QCPREF]
 		public Assignment getNamedElmAssignment_0_0_1() { return cNamedElmAssignment_0_0_1; }
 
-		//[aadl2::NamedElement]
+		//[aadl2::NamedElement|QCPREF]
 		public CrossReference getNamedElmNamedElementCrossReference_0_0_1_0() { return cNamedElmNamedElementCrossReference_0_0_1_0; }
 
-		//ID
-		public RuleCall getNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1() { return cNamedElmNamedElementIDTerminalRuleCall_0_0_1_0_1; }
+		//QCPREF
+		public RuleCall getNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1() { return cNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1; }
 
 		//{TimeExpr} 'time'
 		public Group getGroup_1() { return cGroup_1; }
@@ -6331,7 +6331,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TermExpr Expr:
-	//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement]) | {TimeExpr} 'time'
+	//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF]) | {TimeExpr} 'time'
 	//	| {IndicesExpr} 'indices' '(' array=Expr ')'
 	//	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')'
 	//	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';'

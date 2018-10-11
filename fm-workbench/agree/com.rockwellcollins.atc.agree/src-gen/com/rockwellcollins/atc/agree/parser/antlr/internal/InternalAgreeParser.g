@@ -7218,7 +7218,7 @@ ruleTermExpr returns [EObject current=null]
 (((((
 )(
 (
-	RULE_ID
+		ruleQCPREF
 
 )
 )))=>((
@@ -7234,10 +7234,13 @@ ruleTermExpr returns [EObject current=null]
 	            $current = createModelElement(grammarAccess.getTermExprRule());
 	        }
         }
-	otherlv_1=RULE_ID
-	{
-		newLeafNode(otherlv_1, grammarAccess.getTermExprAccess().getNamedElmNamedElementCrossReference_0_0_1_0()); 
-	}
+		{ 
+	        newCompositeNode(grammarAccess.getTermExprAccess().getNamedElmNamedElementCrossReference_0_0_1_0()); 
+	    }
+		ruleQCPREF
+		{ 
+	        afterParserOrEnumRuleCall();
+	    }
 
 )
 )))

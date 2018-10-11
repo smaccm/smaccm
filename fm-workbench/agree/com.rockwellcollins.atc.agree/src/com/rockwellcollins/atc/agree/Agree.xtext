@@ -303,7 +303,7 @@ ProjectionExpr returns Expr:
 
 
 TermExpr returns Expr:
-	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|ID])
+	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF])
 	| {TimeExpr} 'time'
 	| {IndicesExpr} 'indices' '(' array=Expr ')'
 	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' 

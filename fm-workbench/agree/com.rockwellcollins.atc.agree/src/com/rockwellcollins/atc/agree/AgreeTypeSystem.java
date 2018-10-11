@@ -30,6 +30,7 @@ import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
+import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.Subcomponent;
 
 import com.rockwellcollins.atc.agree.agree.AbstractionRef;
@@ -227,6 +228,24 @@ public class AgreeTypeSystem {
 		}
 
 		return -1;
+	}
+
+	private static Type typeFromPropExp(PropertyExpression pe) {
+		if (pe instanceof IntegerLiteral) {
+			return intType;
+
+		} else if (pe instanceof RealLiteral) {
+			return realType;
+
+		} else if (pe instanceof NamedValue) {
+			NamedValue nv = (NamedValue) pe;
+			AbstractNamedValue anv = nv.getNamedValue();
+			if (anv instanceof PropertyConstant) {
+				return typeFromPropExp(((PropertyConstant) anv).getConstantValue());
+			}
+		}
+
+		return errorType;
 	}
 
 	public final static ArrayDef arrayDefFromAadl(DataType typedef) {
@@ -691,6 +710,10 @@ public class AgreeTypeSystem {
 
 		} else if (ne instanceof AadlPackage) {
 			return mkCustomType(ne);
+
+		} else if (ne instanceof PropertyConstant) {
+			PropertyExpression pe = ((PropertyConstant) ne).getConstantValue();
+			return typeFromPropExp(pe);
 
 		}
 
