@@ -163,12 +163,12 @@ public class AgreeTypeSystem {
 		}
 	}
 
-	private static ComponentType baseAadlComponentType(ComponentType dt) {
-		ComponentType parent = dt.getExtended();
+	private static Classifier baseAadlClassifier(Classifier dt) {
+		Classifier parent = dt.getExtended();
 		if (parent == null) {
 			return dt;
 		} else {
-			return baseAadlComponentType(parent);
+			return baseAadlClassifier(parent);
 		}
 	}
 
@@ -187,7 +187,7 @@ public class AgreeTypeSystem {
 			}
 		} else if (t instanceof CustomType) {
 			NamedElement ne = ((CustomType) t).getLeaf();
-			if (ne instanceof ComponentType) {
+			if (ne instanceof Classifier) {
 
 				String typeString = typeToString(t);
 				if (typeString.equals("Base_Types::Integer")) {
@@ -197,7 +197,22 @@ public class AgreeTypeSystem {
 				} else if (typeString.contentEquals("Base_Types::Boolean")) {
 					return boolType;
 				} else {
-					return trySimp(mkCustomType(baseAadlComponentType((ComponentType) ne)));
+					if (((Classifier) ne).getExtended() != null) {
+						Classifier ct = baseAadlClassifier((Classifier) ne);
+						return trySimp(mkCustomType(ct));
+					} else if (ne instanceof DataType) {
+
+						System.out.println("oog array ne: " + ne);
+						ArrayDef ad = arrayDefFromAadl((DataType) ne);
+						if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
+							System.out.println("ooga base: " + ad.baseType);
+							return mkArrayType(trySimp(mkCustomType(ad.baseType)), ad.dimension);
+						} else {
+							return t;
+						}
+					} else {
+						return t;
+					}
 				}
 			} else {
 				return t;
@@ -209,7 +224,6 @@ public class AgreeTypeSystem {
 	}
 
 	public static boolean typesEqual(Type t1, Type t2) {
-
 
 		if (t1 instanceof ArrayType && t2 instanceof ArrayType) {
 			String size1 = ((ArrayType) t1).getSize();

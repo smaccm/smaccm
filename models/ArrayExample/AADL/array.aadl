@@ -45,6 +45,13 @@ public
 			Data_Model::Base_Type => (classifier (array::simple_struct.i));
 			Data_Model::Dimension => (4);
 	end simple_struct_array;
+	
+	data simple_int_array
+		properties
+			Data_Model::Data_Representation => Array;
+			Data_Model::Base_Type => (classifier (Base_Types::Integer));
+			Data_Model::Dimension => (4);
+	end simple_struct_array;
 		
 	data simple_struct_array_DIM
 		properties
@@ -107,6 +114,8 @@ public
 				
 		fun ranged_type_test2(r : array::struct_with_array.i) : bool =
 			r.ranged < 10;
+			
+		fun tll2(arr: simple_int_array) : bool = arr = [|5, 5, 5, 5|] ;
 			
 			
 						
