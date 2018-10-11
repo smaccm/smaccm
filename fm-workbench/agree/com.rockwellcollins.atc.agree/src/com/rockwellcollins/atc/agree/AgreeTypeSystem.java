@@ -201,11 +201,8 @@ public class AgreeTypeSystem {
 						Classifier ct = baseAadlClassifier((Classifier) ne);
 						return trySimp(mkCustomType(ct));
 					} else if (ne instanceof DataType) {
-
-						System.out.println("oog array ne: " + ne);
 						ArrayDef ad = arrayDefFromAadl((DataType) ne);
 						if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
-							System.out.println("ooga base: " + ad.baseType);
 							return mkArrayType(trySimp(mkCustomType(ad.baseType)), ad.dimension);
 						} else {
 							return t;
