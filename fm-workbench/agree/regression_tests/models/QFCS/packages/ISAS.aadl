@@ -1,0 +1,1336 @@
+package ISAS
+public
+  with Feature_Groups;
+  with Base_Types;
+
+system ISAS
+  features
+    egi1 : in data port Feature_Groups::EGI_Data.impl;
+    egi2 : in data port Feature_Groups::EGI_Data.impl;
+    egi3 : in data port Feature_Groups::EGI_Data.impl;
+    egi4 : in data port Feature_Groups::EGI_Data.impl;
+    
+    egi_select : out data port Feature_Groups::EGI_Data.impl;
+    
+    aoa1 : in data port Feature_Groups::AOA_Data.impl;
+    aoa2 : in data port Feature_Groups::AOA_Data.impl;
+    
+    aoa_select: out data port Feature_Groups::AOA_Data.impl;
+    
+    ads1 : in data port Feature_Groups::ADS_Data.impl;
+    ads2 : in data port Feature_Groups::ADS_Data.impl;
+    
+    ads_select : out data port Feature_Groups::ADS_Data.impl;
+
+    acts1_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts2_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts3_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts4_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    
+    acts_sense_select : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    
+    acts_ret : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    
+    --time_val stamp features
+    egi1_time_stamp: in data port Base_Types::Integer;
+    egi2_time_stamp: in data port Base_Types::Integer;
+    egi3_time_stamp: in data port Base_Types::Integer;
+    egi4_time_stamp: in data port Base_Types::Integer;
+    
+    aoa1_time_stamp: in data port Base_Types::Integer;
+    aoa2_time_stamp: in data port Base_Types::Integer;
+    
+    ads1_time_stamp: in data port Base_Types::Integer;
+    ads2_time_stamp: in data port Base_Types::Integer;
+    
+    acts1_sense_time_stamp: in data port Base_Types::Integer;
+    acts2_sense_time_stamp: in data port Base_Types::Integer;
+    acts3_sense_time_stamp: in data port Base_Types::Integer;
+    acts4_sense_time_stamp: in data port Base_Types::Integer;
+    
+    acts_ret_time_stamp: in data port Base_Types::Integer;
+    
+    
+  annex agree {**
+    
+    eq acts_ret_failed_update : bool;
+    eq acts1_sense_failed_update : bool;
+    eq acts2_sense_failed_update : bool;
+    eq acts3_sense_failed_update : bool;
+    eq acts4_sense_failed_update : bool;
+    eq ads1_failed_update : bool;
+    eq ads2_failed_update : bool;
+    eq aoa1_failed_update : bool;
+    eq aoa2_failed_update : bool; 
+    eq egi1_failed_update : bool;
+    eq egi2_failed_update : bool;
+    eq egi3_failed_update : bool;
+    eq egi4_failed_update : bool;
+    
+    --range variables
+    eq egi1_aoa_in_range: bool;
+    eq egi1_time_in_range: bool;
+    eq egi1_lat_in_range: bool;
+    eq egi1_long_in_range: bool;
+    eq egi1_alt_in_range: bool;
+    eq egi1_egi_health_in_range: bool;
+    eq egi1_bank_in_range: bool;
+    eq egi1_bank_rate_in_range: bool;
+    eq egi1_pitch_in_range: bool;
+    eq egi1_pitch_rate_in_range: bool;
+    eq egi1_heading_in_range: bool;
+    eq egi1_heading_rate_in_range: bool; 
+    eq egi1_velocity_x_in_range : bool;
+    eq egi1_velocity_y_in_range : bool;
+    eq egi1_velocity_z_in_range : bool;
+    eq egi1_accel_x_in_range: bool;
+    eq egi1_accel_y_in_range: bool;
+    eq egi1_accel_z_in_range: bool;
+    
+    eq egi2_aoa_in_range: bool;
+    eq egi2_time_in_range: bool;
+    eq egi2_lat_in_range: bool;
+    eq egi2_long_in_range: bool;
+    eq egi2_alt_in_range: bool;
+    eq egi2_egi_health_in_range: bool;
+    eq egi2_bank_in_range: bool;
+    eq egi2_bank_rate_in_range: bool;
+    eq egi2_pitch_in_range: bool;
+    eq egi2_pitch_rate_in_range: bool;
+    eq egi2_heading_in_range: bool;
+    eq egi2_heading_rate_in_range: bool;
+    eq egi2_velocity_x_in_range : bool;
+    eq egi2_velocity_y_in_range : bool;
+    eq egi2_velocity_z_in_range : bool;
+    eq egi2_accel_x_in_range: bool;
+    eq egi2_accel_y_in_range: bool;
+    eq egi2_accel_z_in_range: bool;    
+    
+    eq egi3_aoa_in_range: bool;
+    eq egi3_time_in_range: bool;
+    eq egi3_lat_in_range: bool;
+    eq egi3_long_in_range: bool;
+    eq egi3_alt_in_range: bool;
+    eq egi3_egi_health_in_range: bool;
+    eq egi3_bank_in_range: bool;
+    eq egi3_bank_rate_in_range: bool;
+    eq egi3_pitch_in_range: bool;
+    eq egi3_pitch_rate_in_range: bool;
+    eq egi3_heading_in_range: bool;
+    eq egi3_heading_rate_in_range: bool;
+    eq egi3_velocity_x_in_range : bool;
+    eq egi3_velocity_y_in_range : bool;
+    eq egi3_velocity_z_in_range : bool;
+    eq egi3_accel_x_in_range: bool;
+    eq egi3_accel_y_in_range: bool;
+    eq egi3_accel_z_in_range: bool;
+    
+    eq egi4_aoa_in_range: bool;
+    eq egi4_time_in_range: bool;
+    eq egi4_lat_in_range: bool;
+    eq egi4_long_in_range: bool;
+    eq egi4_alt_in_range: bool;
+    eq egi4_egi_health_in_range: bool;
+    eq egi4_bank_in_range: bool;
+    eq egi4_bank_rate_in_range: bool;
+    eq egi4_pitch_in_range: bool;
+    eq egi4_pitch_rate_in_range: bool;
+    eq egi4_heading_in_range: bool;
+    eq egi4_heading_rate_in_range: bool;
+    eq egi4_velocity_x_in_range : bool;
+    eq egi4_velocity_y_in_range : bool;
+    eq egi4_velocity_z_in_range : bool;
+    eq egi4_accel_x_in_range: bool;
+    eq egi4_accel_y_in_range: bool;
+    eq egi4_accel_z_in_range: bool;
+    
+    eq aoa1_aoa_in_range: bool;
+    eq aoa2_aoa_in_range: bool;
+
+    eq ads1_amb_press_in_range: bool;
+    eq ads1_amb_temp_in_range: bool;
+    eq ads1_total_press_in_range: bool;
+        
+    eq ads2_amb_press_in_range: bool;
+    eq ads2_amb_temp_in_range: bool;
+    eq ads2_total_press_in_range: bool;
+    
+    eq acts1_sense_ailerons_in_range: bool;
+    eq acts1_sense_elevators_in_range: bool;
+    eq acts1_sense_rudder_in_range: bool;
+    eq acts1_sense_spoiler_in_range: bool;
+    eq acts1_sense_flaps_gt_in_range: bool;
+    eq acts1_sense_flaps_lt_in_range: bool;
+    
+    eq acts2_sense_ailerons_in_range: bool;
+    eq acts2_sense_elevators_in_range: bool;
+    eq acts2_sense_rudder_in_range: bool;
+    eq acts2_sense_spoiler_in_range: bool;
+    eq acts2_sense_flaps_gt_in_range: bool;
+    eq acts2_sense_flaps_lt_in_range: bool;
+    
+    eq acts3_sense_ailerons_in_range: bool;
+    eq acts3_sense_elevators_in_range: bool;
+    eq acts3_sense_rudder_in_range: bool;
+    eq acts3_sense_spoiler_in_range: bool;
+    eq acts3_sense_flaps_gt_in_range: bool;
+    eq acts3_sense_flaps_lt_in_range: bool;
+    
+    eq acts4_sense_ailerons_in_range: bool;
+    eq acts4_sense_elevators_in_range: bool;
+    eq acts4_sense_rudder_in_range: bool;
+    eq acts4_sense_spoiler_in_range: bool;
+    eq acts4_sense_flaps_gt_in_range: bool;
+    eq acts4_sense_flaps_lt_in_range: bool;
+    
+    --dual input tolerances
+    eq amb_press_tolerance: int;
+    eq amb_temp_tolerance: int;
+    eq total_press_tolerance: int;
+    eq aoa_tolerance: int;
+    
+    --quad input tolerances
+    eq time_tolerance: int;
+    eq lat_tolerance: int;
+    eq long_tolerance: int;
+    eq alt_tolerance: int;
+    eq egi_health_tolerance: int;
+    eq bank_tolerance: int;
+    eq bank_rate_tolerance: int;
+    eq pitch_tolerance: int;
+    eq pitch_rate_tolerance: int;
+    eq heading_tolerance: int;
+    eq heading_rate_tolerance: int;
+    eq velocity_x_tolerance : int;
+    eq velocity_y_tolerance : int;
+    eq velocity_z_tolerance : int;
+    eq accel_x_tolerance: int;
+    eq accel_y_tolerance: int;
+    eq accel_z_tolerance: int;
+    eq ailerons_tolerance: real;
+    eq elevators_tolerance: real;
+    eq rudder_tolerance: real;
+    eq spoiler_tolerance: real;
+    eq flaps_gt_tolerance: real;
+    eq flaps_lt_tolerance: real;
+    
+    --dual tolerance faults
+    eq aoa_aoa_within_tol: bool;
+    eq aoa_aoa_within_egi_tol: bool;
+
+    eq ads_amb_press_within_tol: bool;
+    eq ads_amb_temp_within_tol: bool;
+    eq ads_total_press_within_tol: bool;  
+    eq ads_amb_press_within_egi_tol: bool;
+    eq ads_amb_temp_within_egi_tol: bool;
+    eq ads_total_press_within_egi_tol: bool;
+
+    
+    --quad tolerance faults
+    eq egi1_aoa_within_tol: bool;
+    eq egi1_time_within_tol: bool;
+    eq egi1_lat_within_tol: bool;
+    eq egi1_long_within_tol: bool;
+    eq egi1_alt_within_tol: bool;
+    eq egi1_egi_health_within_tol: bool;
+    eq egi1_bank_within_tol: bool;
+    eq egi1_bank_rate_within_tol: bool;
+    eq egi1_pitch_within_tol: bool;
+    eq egi1_pitch_rate_within_tol: bool;
+    eq egi1_heading_within_tol: bool;
+    eq egi1_heading_rate_within_tol: bool;
+    eq egi1_velocity_x_within_tol : bool;
+    eq egi1_velocity_y_within_tol : bool;
+    eq egi1_velocity_z_within_tol : bool;
+    eq egi1_accel_x_within_tol: bool;
+    eq egi1_accel_y_within_tol: bool;
+    eq egi1_accel_z_within_tol: bool;
+    
+    eq egi2_aoa_within_tol: bool;
+    eq egi2_time_within_tol: bool;
+    eq egi2_lat_within_tol: bool;
+    eq egi2_long_within_tol: bool;
+    eq egi2_alt_within_tol: bool;
+    eq egi2_egi_health_within_tol: bool;
+    eq egi2_bank_within_tol: bool;
+    eq egi2_bank_rate_within_tol: bool;
+    eq egi2_pitch_within_tol: bool;
+    eq egi2_pitch_rate_within_tol: bool;
+    eq egi2_heading_within_tol: bool;
+    eq egi2_heading_rate_within_tol: bool;
+    eq egi2_velocity_x_within_tol : bool;
+    eq egi2_velocity_y_within_tol : bool;
+    eq egi2_velocity_z_within_tol : bool;
+    eq egi2_accel_x_within_tol: bool;
+    eq egi2_accel_y_within_tol: bool;
+    eq egi2_accel_z_within_tol: bool;    
+    
+    eq egi3_aoa_within_tol: bool;
+    eq egi3_time_within_tol: bool;
+    eq egi3_lat_within_tol: bool;
+    eq egi3_long_within_tol: bool;
+    eq egi3_alt_within_tol: bool;
+    eq egi3_egi_health_within_tol: bool;
+    eq egi3_bank_within_tol: bool;
+    eq egi3_bank_rate_within_tol: bool;
+    eq egi3_pitch_within_tol: bool;
+    eq egi3_pitch_rate_within_tol: bool;
+    eq egi3_heading_within_tol: bool;
+    eq egi3_heading_rate_within_tol: bool;
+    eq egi3_velocity_x_within_tol : bool;
+    eq egi3_velocity_y_within_tol : bool;
+    eq egi3_velocity_z_within_tol : bool;
+    eq egi3_accel_x_within_tol: bool;
+    eq egi3_accel_y_within_tol: bool;
+    eq egi3_accel_z_within_tol: bool;
+    
+    eq egi4_aoa_within_tol: bool;
+    eq egi4_time_within_tol: bool;
+    eq egi4_lat_within_tol: bool;
+    eq egi4_long_within_tol: bool;
+    eq egi4_alt_within_tol: bool;
+    eq egi4_egi_health_within_tol: bool;
+    eq egi4_bank_within_tol: bool;
+    eq egi4_bank_rate_within_tol: bool;
+    eq egi4_pitch_within_tol: bool;
+    eq egi4_pitch_rate_within_tol: bool;
+    eq egi4_heading_within_tol: bool;
+    eq egi4_heading_rate_within_tol: bool;
+    eq egi4_velocity_x_within_tol : bool;
+    eq egi4_velocity_y_within_tol : bool;
+    eq egi4_velocity_z_within_tol : bool;
+    eq egi4_accel_x_within_tol: bool;
+    eq egi4_accel_y_within_tol: bool;
+    eq egi4_accel_z_within_tol: bool;
+    
+    eq acts1_sense_ailerons_within_tol: bool;
+    eq acts1_sense_elevators_within_tol: bool;
+    eq acts1_sense_rudder_within_tol: bool;
+    eq acts1_sense_spoiler_within_tol: bool;
+    eq acts1_sense_flaps_gt_within_tol: bool;
+    eq acts1_sense_flaps_lt_within_tol: bool;
+    
+    eq acts2_sense_ailerons_within_tol: bool;
+    eq acts2_sense_elevators_within_tol: bool;
+    eq acts2_sense_rudder_within_tol: bool;
+    eq acts2_sense_spoiler_within_tol: bool;
+    eq acts2_sense_flaps_gt_within_tol: bool;
+    eq acts2_sense_flaps_lt_within_tol: bool;
+    
+    eq acts3_sense_ailerons_within_tol: bool;
+    eq acts3_sense_elevators_within_tol: bool;
+    eq acts3_sense_rudder_within_tol: bool;
+    eq acts3_sense_spoiler_within_tol: bool;
+    eq acts3_sense_flaps_gt_within_tol: bool;
+    eq acts3_sense_flaps_lt_within_tol: bool;
+    
+    eq acts4_sense_ailerons_within_tol: bool;
+    eq acts4_sense_elevators_within_tol: bool;
+    eq acts4_sense_rudder_within_tol: bool;
+    eq acts4_sense_spoiler_within_tol: bool;
+    eq acts4_sense_flaps_gt_within_tol: bool;
+    eq acts4_sense_flaps_lt_within_tol: bool;
+        
+    --total fault variables
+    eq egi1_aoa_fault: bool;
+    eq egi1_time_fault: bool;
+    eq egi1_lat_fault: bool;
+    eq egi1_long_fault: bool;
+    eq egi1_alt_fault: bool;
+    eq egi1_egi_health_fault: bool;
+    eq egi1_bank_fault: bool;
+    eq egi1_bank_rate_fault: bool;
+    eq egi1_pitch_fault: bool;
+    eq egi1_pitch_rate_fault: bool;
+    eq egi1_heading_fault: bool;
+    eq egi1_heading_rate_fault: bool;
+    eq egi1_velocity_x_fault : bool;
+    eq egi1_velocity_y_fault : bool;
+    eq egi1_velocity_z_fault : bool;
+    eq egi1_accel_x_fault: bool;
+    eq egi1_accel_y_fault: bool;
+    eq egi1_accel_z_fault: bool;
+    
+    eq egi2_aoa_fault: bool;
+    eq egi2_time_fault: bool;
+    eq egi2_lat_fault: bool;
+    eq egi2_long_fault: bool;
+    eq egi2_alt_fault: bool;
+    eq egi2_egi_health_fault: bool;
+    eq egi2_bank_fault: bool;
+    eq egi2_bank_rate_fault: bool;
+    eq egi2_pitch_fault: bool;
+    eq egi2_pitch_rate_fault: bool;
+    eq egi2_heading_fault: bool;
+    eq egi2_heading_rate_fault: bool;
+    eq egi2_velocity_x_fault : bool;
+    eq egi2_velocity_y_fault : bool;
+    eq egi2_velocity_z_fault : bool;
+    eq egi2_accel_x_fault: bool;
+    eq egi2_accel_y_fault: bool;
+    eq egi2_accel_z_fault: bool;   
+    
+    eq egi3_aoa_fault: bool;
+    eq egi3_time_fault: bool;
+    eq egi3_lat_fault: bool;
+    eq egi3_long_fault: bool;
+    eq egi3_alt_fault: bool;
+    eq egi3_egi_health_fault: bool;
+    eq egi3_bank_fault: bool;
+    eq egi3_bank_rate_fault: bool;
+    eq egi3_pitch_fault: bool;
+    eq egi3_pitch_rate_fault: bool;
+    eq egi3_heading_fault: bool;
+    eq egi3_heading_rate_fault: bool;
+    eq egi3_velocity_x_fault : bool;
+    eq egi3_velocity_y_fault : bool;
+    eq egi3_velocity_z_fault : bool;
+    eq egi3_accel_x_fault: bool;
+    eq egi3_accel_y_fault: bool;
+    eq egi3_accel_z_fault: bool;
+    
+    eq egi4_aoa_fault: bool;
+    eq egi4_time_fault: bool;
+    eq egi4_lat_fault: bool;
+    eq egi4_long_fault: bool;
+    eq egi4_alt_fault: bool;
+    eq egi4_egi_health_fault: bool;
+    eq egi4_bank_fault: bool;
+    eq egi4_bank_rate_fault: bool;
+    eq egi4_pitch_fault: bool;
+    eq egi4_pitch_rate_fault: bool;
+    eq egi4_heading_fault: bool;
+    eq egi4_heading_rate_fault: bool;
+    eq egi4_velocity_x_fault : bool;
+    eq egi4_velocity_y_fault : bool;
+    eq egi4_velocity_z_fault : bool;
+    eq egi4_accel_x_fault: bool;
+    eq egi4_accel_y_fault: bool;
+    eq egi4_accel_z_fault: bool;
+    
+    eq acts1_sense_ailerons_fault: bool;
+    eq acts1_sense_elevators_fault: bool;
+    eq acts1_sense_rudder_fault: bool;
+    eq acts1_sense_spoiler_fault: bool;
+    eq acts1_sense_flaps_gt_fault: bool;
+    eq acts1_sense_flaps_lt_fault: bool;
+    
+    eq acts2_sense_ailerons_fault: bool;
+    eq acts2_sense_elevators_fault: bool;
+    eq acts2_sense_rudder_fault: bool;
+    eq acts2_sense_spoiler_fault: bool;
+    eq acts2_sense_flaps_gt_fault: bool;
+    eq acts2_sense_flaps_lt_fault: bool;
+    
+    eq acts3_sense_ailerons_fault: bool;
+    eq acts3_sense_elevators_fault: bool;
+    eq acts3_sense_rudder_fault: bool;
+    eq acts3_sense_spoiler_fault: bool;
+    eq acts3_sense_flaps_gt_fault: bool;
+    eq acts3_sense_flaps_lt_fault: bool;
+    
+    eq acts4_sense_ailerons_fault: bool;
+    eq acts4_sense_elevators_fault: bool;
+    eq acts4_sense_rudder_fault: bool;
+    eq acts4_sense_spoiler_fault: bool;
+    eq acts4_sense_flaps_gt_fault: bool;
+    eq acts4_sense_flaps_lt_fault: bool;
+        
+    eq aoa1_aoa_fault: bool;
+    eq aoa2_aoa_fault: bool;
+
+    eq ads1_amb_press_fault: bool;
+    eq ads1_amb_temp_fault: bool;
+    eq ads1_total_press_fault: bool;  
+    
+    eq ads2_amb_press_fault: bool;
+    eq ads2_amb_temp_fault: bool;
+    eq ads2_total_press_fault: bool;
+    
+    --latched fault variables
+    eq egi1_aoa_fault_latched: bool;
+    eq egi1_time_fault_latched: bool;
+    eq egi1_lat_fault_latched: bool;
+    eq egi1_long_fault_latched: bool;
+    eq egi1_alt_fault_latched: bool;
+    eq egi1_egi_health_fault_latched: bool;
+    eq egi1_bank_fault_latched: bool;
+    eq egi1_bank_rate_fault_latched: bool;
+    eq egi1_pitch_fault_latched: bool;
+    eq egi1_pitch_rate_fault_latched: bool;
+    eq egi1_heading_fault_latched: bool;
+    eq egi1_heading_rate_fault_latched: bool;
+    eq egi1_velocity_x_fault_latched : bool;
+    eq egi1_velocity_y_fault_latched : bool;
+    eq egi1_velocity_z_fault_latched : bool;
+    eq egi1_accel_x_fault_latched: bool;
+    eq egi1_accel_y_fault_latched: bool;
+    eq egi1_accel_z_fault_latched: bool;
+    
+    eq egi2_aoa_fault_latched: bool;
+    eq egi2_time_fault_latched: bool;
+    eq egi2_lat_fault_latched: bool;
+    eq egi2_long_fault_latched: bool;
+    eq egi2_alt_fault_latched: bool;
+    eq egi2_egi_health_fault_latched: bool;
+    eq egi2_bank_fault_latched: bool;
+    eq egi2_bank_rate_fault_latched: bool;
+    eq egi2_pitch_fault_latched: bool;
+    eq egi2_pitch_rate_fault_latched: bool;
+    eq egi2_heading_fault_latched: bool;
+    eq egi2_heading_rate_fault_latched: bool;
+    eq egi2_velocity_x_fault_latched : bool;
+    eq egi2_velocity_y_fault_latched : bool;
+    eq egi2_velocity_z_fault_latched : bool;
+    eq egi2_accel_x_fault_latched: bool;
+    eq egi2_accel_y_fault_latched: bool;
+    eq egi2_accel_z_fault_latched: bool;    
+    
+    eq egi3_aoa_fault_latched: bool;
+    eq egi3_time_fault_latched: bool;
+    eq egi3_lat_fault_latched: bool;
+    eq egi3_long_fault_latched: bool;
+    eq egi3_alt_fault_latched: bool;
+    eq egi3_egi_health_fault_latched: bool;
+    eq egi3_bank_fault_latched: bool;
+    eq egi3_bank_rate_fault_latched: bool;
+    eq egi3_pitch_fault_latched: bool;
+    eq egi3_pitch_rate_fault_latched: bool;
+    eq egi3_heading_fault_latched: bool;
+    eq egi3_heading_rate_fault_latched: bool;
+    eq egi3_velocity_x_fault_latched : bool;
+    eq egi3_velocity_y_fault_latched : bool;
+    eq egi3_velocity_z_fault_latched : bool;
+    eq egi3_accel_x_fault_latched: bool;
+    eq egi3_accel_y_fault_latched: bool;
+    eq egi3_accel_z_fault_latched: bool;
+    
+    eq egi4_aoa_fault_latched: bool;
+    eq egi4_time_fault_latched: bool;
+    eq egi4_lat_fault_latched: bool;
+    eq egi4_long_fault_latched: bool;
+    eq egi4_alt_fault_latched: bool;
+    eq egi4_egi_health_fault_latched: bool;
+    eq egi4_bank_fault_latched: bool;
+    eq egi4_bank_rate_fault_latched: bool;
+    eq egi4_pitch_fault_latched: bool;
+    eq egi4_pitch_rate_fault_latched: bool;
+    eq egi4_heading_fault_latched: bool;
+    eq egi4_heading_rate_fault_latched: bool;
+    eq egi4_velocity_x_fault_latched : bool;
+    eq egi4_velocity_y_fault_latched : bool;
+    eq egi4_velocity_z_fault_latched : bool;
+    eq egi4_accel_x_fault_latched: bool;
+    eq egi4_accel_y_fault_latched: bool;
+    eq egi4_accel_z_fault_latched: bool;
+    
+    eq acts1_sense_ailerons_fault_latched: bool;
+    eq acts1_sense_elevators_fault_latched: bool;
+    eq acts1_sense_rudder_fault_latched: bool;
+    eq acts1_sense_spoiler_fault_latched: bool;
+    eq acts1_sense_flaps_gt_fault_latched: bool;
+    eq acts1_sense_flaps_lt_fault_latched: bool;
+    
+    eq acts2_sense_ailerons_fault_latched: bool;
+    eq acts2_sense_elevators_fault_latched: bool;
+    eq acts2_sense_rudder_fault_latched: bool;
+    eq acts2_sense_spoiler_fault_latched: bool;
+    eq acts2_sense_flaps_gt_fault_latched: bool;
+    eq acts2_sense_flaps_lt_fault_latched: bool;
+    
+    eq acts3_sense_ailerons_fault_latched: bool;
+    eq acts3_sense_elevators_fault_latched: bool;
+    eq acts3_sense_rudder_fault_latched: bool;
+    eq acts3_sense_spoiler_fault_latched: bool;
+    eq acts3_sense_flaps_gt_fault_latched: bool;
+    eq acts3_sense_flaps_lt_fault_latched: bool;
+    
+    eq acts4_sense_ailerons_fault_latched: bool;
+    eq acts4_sense_elevators_fault_latched: bool;
+    eq acts4_sense_rudder_fault_latched: bool;
+    eq acts4_sense_spoiler_fault_latched: bool;
+    eq acts4_sense_flaps_gt_fault_latched: bool;
+    eq acts4_sense_flaps_lt_fault_latched: bool;
+        
+    eq aoa1_aoa_fault_latched: bool;
+    eq aoa2_aoa_fault_latched: bool;
+
+    eq ads1_amb_press_fault_latched: bool;
+    eq ads1_amb_temp_fault_latched: bool;
+    eq ads1_total_press_fault_latched: bool;  
+    
+    eq ads2_amb_press_fault_latched: bool;
+    eq ads2_amb_temp_fault_latched: bool;
+    eq ads2_total_press_fault_latched: bool;  
+    
+    --For single channel inputs, ISAS shall determine if the data has failed
+    --to update, however the command return value will still be passed to OSAS.
+    
+    --shall check dual and quad inputs to determine if the data has failed
+    --to update from the previous sample frame.
+    guarantee "ISAS-S-100 and ISAS-S-130" :
+      acts_ret_failed_update = 
+        (false -> acts_ret_time_stamp >= pre(acts_ret_time_stamp)) and
+      acts1_sense_failed_update =
+        (false -> acts1_sense_time_stamp >= pre(acts1_sense_time_stamp)) and
+      acts2_sense_failed_update =
+        (false -> acts2_sense_time_stamp >= pre(acts2_sense_time_stamp)) and
+      acts3_sense_failed_update =
+        (false -> acts3_sense_time_stamp >= pre(acts3_sense_time_stamp)) and
+      acts4_sense_failed_update =
+        (false -> acts4_sense_time_stamp >= pre(acts4_sense_time_stamp)) and
+      ads1_failed_update =
+        (false -> ads1_time_stamp >= pre(ads1_time_stamp)) and
+      ads2_failed_update =
+        (false -> ads2_time_stamp >= pre(ads2_time_stamp)) and
+      aoa1_failed_update =
+        (false -> aoa1_time_stamp >= pre(aoa1_time_stamp)) and
+      aoa2_failed_update =
+        (false -> aoa2_time_stamp >= pre(aoa2_time_stamp)) and
+      egi1_failed_update =
+        (false -> egi1_time_stamp >= pre(egi1_time_stamp)) and
+      egi2_failed_update =
+        (false -> egi2_time_stamp >= pre(egi2_time_stamp)) and
+      egi3_failed_update =
+        (false -> egi3_time_stamp >= pre(egi3_time_stamp)) and
+      egi4_failed_update =
+        (false -> egi4_time_stamp >= pre(egi4_time_stamp));
+        
+    --ISAS shall determine whether each dual and quad digital
+    --signal input falls outside its operational range.
+    guarantee "ISAS-S-110" : 
+      egi1_aoa_in_range = 
+        (AGREE_CONSTANTS.AGREE_CONSTANTS.aoa_range_low <= egi1.aoa and egi1.aoa <= AGREE_CONSTANTS.aoa_range_high) and
+      egi1_time_in_range =
+        (AGREE_CONSTANTS.time_range_low <= egi1.time_val and egi1.time_val <= AGREE_CONSTANTS.time_range_high) and
+      egi1_lat_in_range =
+        (AGREE_CONSTANTS.lat_range_low <= egi1.lat and egi1.lat <= AGREE_CONSTANTS.lat_range_high) and
+      egi1_long_in_range =
+        (AGREE_CONSTANTS.long_range_low <= egi1.long and egi1.long <= AGREE_CONSTANTS.long_range_high) and
+      egi1_alt_in_range =
+        (AGREE_CONSTANTS.alt_range_low <= egi1.alt and egi1.alt <= AGREE_CONSTANTS.alt_range_high) and
+      egi1_egi_health_in_range =
+        (AGREE_CONSTANTS.egi_health_range_low <= egi1.egi_health and egi1.egi_health <= AGREE_CONSTANTS.egi_health_range_high) and
+      egi1_bank_in_range =
+        (AGREE_CONSTANTS.bank_range_low <= egi1.bank and egi1.bank <= AGREE_CONSTANTS.bank_range_high) and
+      egi1_bank_rate_in_range =
+        (AGREE_CONSTANTS.bank_rate_range_low <= egi1.bank_rate and egi1.bank_rate <= AGREE_CONSTANTS.bank_rate_range_high) and
+      egi1_pitch_in_range =
+        (AGREE_CONSTANTS.pitch_range_low <= egi1.pitch and egi1.pitch <= AGREE_CONSTANTS.pitch_range_high) and
+      egi1_pitch_rate_in_range =
+        (AGREE_CONSTANTS.pitch_rate_range_low <= egi1.pitch_rate and egi1.pitch_rate <= AGREE_CONSTANTS.pitch_rate_range_high) and
+      egi1_heading_in_range =
+        (AGREE_CONSTANTS.heading_range_low <= egi1.heading and egi1.heading <= AGREE_CONSTANTS.heading_range_high) and
+      egi1_heading_rate_in_range =
+        (AGREE_CONSTANTS.heading_rate_range_low <= egi1.heading_rate and egi1.heading_rate <= AGREE_CONSTANTS.heading_rate_range_high) and
+      egi1_velocity_x_in_range =
+        (AGREE_CONSTANTS.velocity_x_range_low <= egi1.velocity_x and egi1.velocity_x <= AGREE_CONSTANTS.velocity_x_range_high) and
+      egi1_velocity_y_in_range =
+        (AGREE_CONSTANTS.velocity_y_range_low <= egi1.velocity_y and egi1.velocity_y <= AGREE_CONSTANTS.velocity_y_range_high) and
+      egi1_velocity_z_in_range =
+        (AGREE_CONSTANTS.velocity_z_range_low <= egi1.velocity_z and egi1.velocity_z <= AGREE_CONSTANTS.velocity_z_range_high) and
+      egi1_accel_x_in_range =
+        (AGREE_CONSTANTS.accel_x_range_low <= egi1.accel_x and egi1.accel_x <= AGREE_CONSTANTS.accel_x_range_high) and
+      egi1_accel_y_in_range =
+        (AGREE_CONSTANTS.accel_y_range_low <= egi1.accel_y and egi1.accel_y <= AGREE_CONSTANTS.accel_y_range_high) and
+      egi1_accel_z_in_range =
+        (AGREE_CONSTANTS.accel_z_range_low <= egi1.accel_z and egi1.accel_z <= AGREE_CONSTANTS.accel_z_range_high) and
+        
+      egi2_aoa_in_range = 
+        (AGREE_CONSTANTS.aoa_range_low <= egi2.aoa and egi2.aoa <= AGREE_CONSTANTS.aoa_range_high) and
+      egi2_time_in_range =
+        (AGREE_CONSTANTS.time_range_low <= egi2.time_val and egi2.time_val <= AGREE_CONSTANTS.time_range_high) and
+      egi2_lat_in_range =
+        (AGREE_CONSTANTS.lat_range_low <= egi2.lat and egi2.lat <= AGREE_CONSTANTS.lat_range_high) and
+      egi2_long_in_range =
+        (AGREE_CONSTANTS.long_range_low <= egi2.long and egi2.long <= AGREE_CONSTANTS.long_range_high) and
+      egi2_alt_in_range =
+        (AGREE_CONSTANTS.alt_range_low <= egi2.alt and egi2.alt <= AGREE_CONSTANTS.alt_range_high) and
+      egi2_egi_health_in_range =
+        (AGREE_CONSTANTS.egi_health_range_low <= egi2.egi_health and egi2.egi_health <= AGREE_CONSTANTS.egi_health_range_high) and
+      egi2_bank_in_range =
+        (AGREE_CONSTANTS.bank_range_low <= egi2.bank and egi2.bank <= AGREE_CONSTANTS.bank_range_high) and
+      egi2_bank_rate_in_range =
+        (AGREE_CONSTANTS.bank_rate_range_low <= egi2.bank_rate and egi2.bank_rate <= AGREE_CONSTANTS.bank_rate_range_high) and
+      egi2_pitch_in_range =
+        (AGREE_CONSTANTS.pitch_range_low <= egi2.pitch and egi2.pitch <= AGREE_CONSTANTS.pitch_range_high) and
+      egi2_pitch_rate_in_range =
+        (AGREE_CONSTANTS.pitch_rate_range_low <= egi2.pitch_rate and egi2.pitch_rate <= AGREE_CONSTANTS.pitch_rate_range_high) and
+      egi2_heading_in_range =
+        (AGREE_CONSTANTS.heading_range_low <= egi2.heading and egi2.heading <= AGREE_CONSTANTS.heading_range_high) and
+      egi2_heading_rate_in_range =
+        (AGREE_CONSTANTS.heading_rate_range_low <= egi2.heading_rate and egi2.heading_rate <= AGREE_CONSTANTS.heading_rate_range_high) and
+      egi2_velocity_x_in_range =
+        (AGREE_CONSTANTS.velocity_x_range_low <= egi2.velocity_x and egi2.velocity_x <= AGREE_CONSTANTS.velocity_x_range_high) and
+      egi2_velocity_y_in_range =
+        (AGREE_CONSTANTS.velocity_y_range_low <= egi2.velocity_y and egi2.velocity_y <= AGREE_CONSTANTS.velocity_y_range_high) and
+      egi2_velocity_z_in_range =
+        (AGREE_CONSTANTS.velocity_z_range_low <= egi2.velocity_z and egi2.velocity_z <= AGREE_CONSTANTS.velocity_z_range_high) and
+      egi2_accel_x_in_range =
+        (AGREE_CONSTANTS.accel_x_range_low <= egi2.accel_x and egi2.accel_x <= AGREE_CONSTANTS.accel_x_range_high) and
+      egi2_accel_y_in_range =
+        (AGREE_CONSTANTS.accel_y_range_low <= egi2.accel_y and egi2.accel_y <= AGREE_CONSTANTS.accel_y_range_high) and
+      egi2_accel_z_in_range =
+        (AGREE_CONSTANTS.accel_z_range_low <= egi2.accel_z and egi2.accel_z <= AGREE_CONSTANTS.accel_z_range_high) and
+        
+      egi3_aoa_in_range = 
+        (AGREE_CONSTANTS.aoa_range_low <= egi3.aoa and egi3.aoa <= AGREE_CONSTANTS.aoa_range_high) and
+      egi3_time_in_range =
+        (AGREE_CONSTANTS.time_range_low <= egi3.time_val and egi3.time_val <= AGREE_CONSTANTS.time_range_high) and
+      egi3_lat_in_range =
+        (AGREE_CONSTANTS.lat_range_low <= egi3.lat and egi3.lat <= AGREE_CONSTANTS.lat_range_high) and
+      egi3_long_in_range =
+        (AGREE_CONSTANTS.long_range_low <= egi3.long and egi3.long <= AGREE_CONSTANTS.long_range_high) and
+      egi3_alt_in_range =
+        (AGREE_CONSTANTS.alt_range_low <= egi3.alt and egi3.alt <= AGREE_CONSTANTS.alt_range_high) and
+      egi3_egi_health_in_range =
+        (AGREE_CONSTANTS.egi_health_range_low <= egi3.egi_health and egi3.egi_health <= AGREE_CONSTANTS.egi_health_range_high) and
+      egi3_bank_in_range =
+        (AGREE_CONSTANTS.bank_range_low <= egi3.bank and egi3.bank <= AGREE_CONSTANTS.bank_range_high) and
+      egi3_bank_rate_in_range =
+        (AGREE_CONSTANTS.bank_rate_range_low <= egi3.bank_rate and egi3.bank_rate <= AGREE_CONSTANTS.bank_rate_range_high) and
+      egi3_pitch_in_range =
+        (AGREE_CONSTANTS.pitch_range_low <= egi3.pitch and egi3.pitch <= AGREE_CONSTANTS.pitch_range_high) and
+      egi3_pitch_rate_in_range =
+        (AGREE_CONSTANTS.pitch_rate_range_low <= egi3.pitch_rate and egi3.pitch_rate <= AGREE_CONSTANTS.pitch_rate_range_high) and
+      egi3_heading_in_range =
+        (AGREE_CONSTANTS.heading_range_low <= egi3.heading and egi3.heading <= AGREE_CONSTANTS.heading_range_high) and
+      egi3_heading_rate_in_range =
+        (AGREE_CONSTANTS.heading_rate_range_low <= egi3.heading_rate and egi3.heading_rate <= AGREE_CONSTANTS.heading_rate_range_high) and
+      egi3_velocity_x_in_range =
+        (AGREE_CONSTANTS.velocity_x_range_low <= egi3.velocity_x and egi3.velocity_x <= AGREE_CONSTANTS.velocity_x_range_high) and
+      egi3_velocity_y_in_range =
+        (AGREE_CONSTANTS.velocity_y_range_low <= egi3.velocity_y and egi3.velocity_y <= AGREE_CONSTANTS.velocity_y_range_high) and
+      egi3_velocity_z_in_range =
+        (AGREE_CONSTANTS.velocity_z_range_low <= egi3.velocity_z and egi3.velocity_z <= AGREE_CONSTANTS.velocity_z_range_high) and
+      egi3_accel_x_in_range =
+        (AGREE_CONSTANTS.accel_x_range_low <= egi3.accel_x and egi3.accel_x <= AGREE_CONSTANTS.accel_x_range_high) and
+      egi3_accel_y_in_range =
+        (AGREE_CONSTANTS.accel_y_range_low <= egi3.accel_y and egi3.accel_y <= AGREE_CONSTANTS.accel_y_range_high) and
+      egi3_accel_z_in_range =
+        (AGREE_CONSTANTS.accel_z_range_low <= egi3.accel_z and egi3.accel_z <= AGREE_CONSTANTS.accel_z_range_high) and
+        
+      egi4_aoa_in_range = 
+        (AGREE_CONSTANTS.aoa_range_low <= egi4.aoa and egi4.aoa <= AGREE_CONSTANTS.aoa_range_high) and
+      egi4_time_in_range =
+        (AGREE_CONSTANTS.time_range_low <= egi4.time_val and egi4.time_val <= AGREE_CONSTANTS.time_range_high) and
+      egi4_lat_in_range =
+        (AGREE_CONSTANTS.lat_range_low <= egi4.lat and egi4.lat <= AGREE_CONSTANTS.lat_range_high) and
+      egi4_long_in_range =
+        (AGREE_CONSTANTS.long_range_low <= egi4.long and egi4.long <= AGREE_CONSTANTS.long_range_high) and
+      egi4_alt_in_range =
+        (AGREE_CONSTANTS.alt_range_low <= egi4.alt and egi4.alt <= AGREE_CONSTANTS.alt_range_high) and
+      egi4_egi_health_in_range =
+        (AGREE_CONSTANTS.egi_health_range_low <= egi4.egi_health and egi4.egi_health <= AGREE_CONSTANTS.egi_health_range_high) and
+      egi4_bank_in_range =
+        (AGREE_CONSTANTS.bank_range_low <= egi4.bank and egi4.bank <= AGREE_CONSTANTS.bank_range_high) and
+      egi4_bank_rate_in_range =
+        (AGREE_CONSTANTS.bank_rate_range_low <= egi4.bank_rate and egi4.bank_rate <= AGREE_CONSTANTS.bank_rate_range_high) and
+      egi4_pitch_in_range =
+        (AGREE_CONSTANTS.pitch_range_low <= egi4.pitch and egi4.pitch <= AGREE_CONSTANTS.pitch_range_high) and
+      egi4_pitch_rate_in_range =
+        (AGREE_CONSTANTS.pitch_rate_range_low <= egi4.pitch_rate and egi4.pitch_rate <= AGREE_CONSTANTS.pitch_rate_range_high) and
+      egi4_heading_in_range =
+        (AGREE_CONSTANTS.heading_range_low <= egi4.heading and egi4.heading <= AGREE_CONSTANTS.heading_range_high) and
+      egi4_heading_rate_in_range =
+        (AGREE_CONSTANTS.heading_rate_range_low <= egi4.heading_rate and egi4.heading_rate <= AGREE_CONSTANTS.heading_rate_range_high) and
+      egi4_velocity_x_in_range =
+        (AGREE_CONSTANTS.velocity_x_range_low <= egi4.velocity_x and egi4.velocity_x <= AGREE_CONSTANTS.velocity_x_range_high) and
+      egi4_velocity_y_in_range =
+        (AGREE_CONSTANTS.velocity_y_range_low <= egi4.velocity_y and egi4.velocity_y <= AGREE_CONSTANTS.velocity_y_range_high) and
+      egi4_velocity_z_in_range =
+        (AGREE_CONSTANTS.velocity_z_range_low <= egi4.velocity_z and egi4.velocity_z <= AGREE_CONSTANTS.velocity_z_range_high) and
+      egi4_accel_x_in_range =
+        (AGREE_CONSTANTS.accel_x_range_low <= egi4.accel_x and egi4.accel_x <= AGREE_CONSTANTS.accel_x_range_high) and
+      egi4_accel_y_in_range =
+        (AGREE_CONSTANTS.accel_y_range_low <= egi4.accel_y and egi4.accel_y <= AGREE_CONSTANTS.accel_y_range_high) and
+      egi4_accel_z_in_range =
+        (AGREE_CONSTANTS.accel_z_range_low <= egi4.accel_z and egi4.accel_z <= AGREE_CONSTANTS.accel_z_range_high) and
+        
+      aoa1_aoa_in_range =
+        (AGREE_CONSTANTS.aoa_range_low <= aoa1.aoa and aoa1.aoa <= AGREE_CONSTANTS.aoa_range_high) and
+      aoa2_aoa_in_range =
+        (AGREE_CONSTANTS.aoa_range_low <= aoa2.aoa and aoa2.aoa <= AGREE_CONSTANTS.aoa_range_high) and
+        
+      ads1_amb_press_in_range =
+        (AGREE_CONSTANTS.amb_press_range_low <= ads1.amb_press and ads1.amb_press <= AGREE_CONSTANTS.amb_press_range_high) and
+      ads1_amb_temp_in_range =
+        (AGREE_CONSTANTS.amb_temp_range_low <= ads1.amb_temp and ads1.amb_temp <= AGREE_CONSTANTS.amb_temp_range_high) and
+      ads1_total_press_in_range = 
+        (AGREE_CONSTANTS.total_press_range_low <= ads1.total_press and ads1.total_press <= AGREE_CONSTANTS.total_press_range_high) and
+      
+      ads2_amb_press_in_range =
+        (AGREE_CONSTANTS.amb_press_range_low <= ads2.amb_press and ads2.amb_press <= AGREE_CONSTANTS.amb_press_range_high) and
+      ads2_amb_temp_in_range =
+        (AGREE_CONSTANTS.amb_temp_range_low <= ads2.amb_temp and ads2.amb_temp <= AGREE_CONSTANTS.amb_temp_range_high) and
+      ads2_total_press_in_range = 
+        (AGREE_CONSTANTS.total_press_range_low <= ads2.total_press and ads2.total_press <= AGREE_CONSTANTS.total_press_range_high) and
+      
+      acts1_sense_ailerons_in_range = 
+        (AGREE_CONSTANTS.ailerons_range_low <= acts1_sense.ailerons and acts1_sense.ailerons <= AGREE_CONSTANTS.ailerons_range_high) and
+      acts1_sense_elevators_in_range =
+        (AGREE_CONSTANTS.elevators_range_low <= acts1_sense.elevators and acts1_sense.elevators <= AGREE_CONSTANTS.elevators_range_high) and
+      acts1_sense_rudder_in_range =
+        (AGREE_CONSTANTS.rudder_range_low <= acts1_sense.rudder and acts1_sense.rudder <= AGREE_CONSTANTS.rudder_range_high) and
+      acts1_sense_spoiler_in_range =
+        (AGREE_CONSTANTS.spoiler_range_low <= acts1_sense.spoiler and acts1_sense.spoiler <= AGREE_CONSTANTS.spoiler_range_high) and
+      acts1_sense_flaps_gt_in_range =
+        (AGREE_CONSTANTS.flaps_gt_range_low <= acts1_sense.flaps_gt and acts1_sense.flaps_gt <= AGREE_CONSTANTS.flaps_gt_range_high) and
+      acts1_sense_flaps_lt_in_range =
+        (AGREE_CONSTANTS.flaps_lt_range_low <= acts1_sense.flaps_lt and acts1_sense.flaps_lt <= AGREE_CONSTANTS.flaps_lt_range_high) and
+      
+      acts2_sense_ailerons_in_range = 
+        (AGREE_CONSTANTS.ailerons_range_low <= acts2_sense.ailerons and acts2_sense.ailerons <= AGREE_CONSTANTS.ailerons_range_high) and
+      acts2_sense_elevators_in_range =
+        (AGREE_CONSTANTS.elevators_range_low <= acts2_sense.elevators and acts2_sense.elevators <= AGREE_CONSTANTS.elevators_range_high) and
+      acts2_sense_rudder_in_range =
+        (AGREE_CONSTANTS.rudder_range_low <= acts2_sense.rudder and acts2_sense.rudder <= AGREE_CONSTANTS.rudder_range_high) and
+      acts2_sense_spoiler_in_range =
+        (AGREE_CONSTANTS.spoiler_range_low <= acts2_sense.spoiler and acts2_sense.spoiler < AGREE_CONSTANTS.spoiler_range_high) and
+      acts2_sense_flaps_gt_in_range =
+        (AGREE_CONSTANTS.flaps_gt_range_low <= acts2_sense.flaps_gt and acts2_sense.flaps_gt <= AGREE_CONSTANTS.flaps_gt_range_high) and
+      acts2_sense_flaps_lt_in_range =
+        (AGREE_CONSTANTS.flaps_lt_range_low <= acts2_sense.flaps_lt and acts2_sense.flaps_lt <= AGREE_CONSTANTS.flaps_lt_range_high) and
+      
+      acts3_sense_ailerons_in_range =  
+        (AGREE_CONSTANTS.ailerons_range_low <= acts3_sense.ailerons and acts3_sense.ailerons <= AGREE_CONSTANTS.ailerons_range_high) and
+      acts3_sense_elevators_in_range =
+        (AGREE_CONSTANTS.elevators_range_low <= acts3_sense.elevators and acts3_sense.elevators <= AGREE_CONSTANTS.elevators_range_high) and
+      acts3_sense_rudder_in_range =
+        (AGREE_CONSTANTS.rudder_range_low <= acts3_sense.rudder and acts3_sense.rudder <= AGREE_CONSTANTS.rudder_range_high) and
+      acts3_sense_spoiler_in_range =
+        (AGREE_CONSTANTS.spoiler_range_low <= acts3_sense.spoiler and acts3_sense.spoiler < AGREE_CONSTANTS.spoiler_range_high) and
+      acts3_sense_flaps_gt_in_range =
+        (AGREE_CONSTANTS.flaps_gt_range_low <= acts3_sense.flaps_gt and acts3_sense.flaps_gt <= AGREE_CONSTANTS.flaps_gt_range_high) and
+      acts3_sense_flaps_lt_in_range =
+        (AGREE_CONSTANTS.flaps_lt_range_low <= acts3_sense.flaps_lt and acts3_sense.flaps_lt <= AGREE_CONSTANTS.flaps_lt_range_high) and
+      
+      acts4_sense_ailerons_in_range = 
+        (AGREE_CONSTANTS.ailerons_range_low <= acts4_sense.ailerons and acts4_sense.ailerons <= AGREE_CONSTANTS.ailerons_range_high) and
+      acts4_sense_elevators_in_range =
+        (AGREE_CONSTANTS.elevators_range_low <= acts4_sense.elevators and acts4_sense.elevators <= AGREE_CONSTANTS.elevators_range_high) and
+      acts4_sense_rudder_in_range =
+        (AGREE_CONSTANTS.rudder_range_low <= acts4_sense.rudder and acts4_sense.rudder <= AGREE_CONSTANTS.rudder_range_high) and
+      acts4_sense_spoiler_in_range =
+        (AGREE_CONSTANTS.spoiler_range_low <= acts4_sense.spoiler and acts4_sense.spoiler < AGREE_CONSTANTS.spoiler_range_high) and
+      acts4_sense_flaps_gt_in_range =
+        (AGREE_CONSTANTS.flaps_gt_range_low <= acts4_sense.flaps_gt and acts4_sense.flaps_gt <= AGREE_CONSTANTS.flaps_gt_range_high) and
+      acts4_sense_flaps_lt_in_range =
+        (AGREE_CONSTANTS.flaps_lt_range_low <= acts4_sense.flaps_lt and acts4_sense.flaps_lt <= AGREE_CONSTANTS.flaps_lt_range_high);
+
+
+    --ISAS shall compare dual channel inputs to determine 
+    --if the signals match within a tolerance.
+    guarantee "ISAS-S-140":
+      aoa_aoa_within_tol =  
+        AGREE_ISAS_NODES.matches_tolerance_int(aoa1.aoa, aoa2.aoa, aoa_tolerance) and
+      ads_amb_press_within_tol = 
+        AGREE_ISAS_NODES.matches_tolerance_int(ads1.amb_press, ads2.amb_press, amb_press_tolerance) and
+      ads_amb_temp_within_tol = 
+        AGREE_ISAS_NODES.matches_tolerance_int(ads1.amb_temp, ads2.amb_temp, amb_temp_tolerance) and
+      ads_total_press_within_tol = 
+        AGREE_ISAS_NODES.matches_tolerance_int(ads1.total_press, ads2.total_press, total_press_tolerance);
+        
+     --ISAS shall compare quad digital inputs to determine if each channel's 
+     --signal matches within a tolerance to another channel's signal.
+     guarantee "ISAS-S-150": 
+      (egi1_aoa_within_tol = 
+        AGREE_ISAS_NODES.quad_matches_int(egi1.aoa, egi2.aoa, egi3.aoa, egi4.aoa, aoa_tolerance)) and
+      (egi1_time_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.time_val, egi2.time_val, egi3.time_val, egi4.time_val, time_tolerance)) and
+      (egi1_lat_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.lat, egi2.lat, egi3.lat, egi4.lat, lat_tolerance)) and
+      (egi1_long_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.long, egi2.long, egi3.long, egi4.long, long_tolerance)) and
+      (egi1_alt_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.alt, egi2.alt, egi3.alt, egi4.alt, alt_tolerance)) and
+      (egi1_egi_health_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.egi_health, egi2.egi_health, egi3.egi_health, egi4.egi_health, egi_health_tolerance)) and
+      (egi1_bank_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.bank, egi2.bank, egi3.bank, egi4.bank, bank_tolerance)) and
+      (egi1_bank_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.bank_rate, egi2.bank_rate, egi3.bank_rate, egi4.bank_rate, bank_rate_tolerance)) and
+      (egi1_pitch_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.pitch, egi2.pitch, egi3.pitch, egi4.pitch, pitch_tolerance)) and
+      (egi1_pitch_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.pitch_rate, egi2.pitch_rate, egi3.pitch_rate, egi4.pitch_rate, pitch_rate_tolerance)) and
+      (egi1_heading_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.heading, egi2.heading, egi3.heading, egi4.heading, heading_tolerance)) and
+      (egi1_heading_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.heading_rate, egi2.heading_rate, egi3.heading_rate, egi4.heading_rate, heading_rate_tolerance)) and
+      (egi1_velocity_x_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.velocity_x, egi2.velocity_x, egi3.velocity_x, egi4.velocity_x, velocity_x_tolerance)) and
+      (egi1_velocity_y_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.velocity_y, egi2.velocity_y, egi3.velocity_y, egi4.velocity_y, velocity_y_tolerance)) and
+      (egi1_velocity_z_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.velocity_z, egi2.velocity_z, egi3.velocity_z, egi4.velocity_z, velocity_z_tolerance)) and
+      (egi1_accel_x_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.accel_x, egi2.accel_x, egi3.accel_x, egi4.accel_x, accel_x_tolerance)) and
+      (egi1_accel_y_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.accel_y, egi2.accel_y, egi3.accel_y, egi4.accel_y, accel_y_tolerance)) and
+      (egi1_accel_z_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi1.accel_z, egi2.accel_z, egi3.accel_z, egi4.accel_z, accel_z_tolerance)) and
+       
+      (egi2_aoa_within_tol = 
+        AGREE_ISAS_NODES.quad_matches_int(egi2.aoa, egi1.aoa, egi3.aoa, egi4.aoa, aoa_tolerance)) and
+      (egi2_time_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.time_val, egi1.time_val, egi3.time_val, egi4.time_val, time_tolerance)) and
+      (egi2_lat_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.lat, egi1.lat, egi3.lat, egi4.lat, lat_tolerance)) and
+      (egi2_long_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.long, egi1.long, egi3.long, egi4.long, long_tolerance)) and
+      (egi2_alt_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.alt, egi1.alt, egi3.alt, egi4.alt, alt_tolerance)) and
+      (egi2_egi_health_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.egi_health, egi1.egi_health, egi3.egi_health, egi4.egi_health, egi_health_tolerance)) and
+      (egi2_bank_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.bank, egi1.bank, egi3.bank, egi4.bank, bank_tolerance)) and
+      (egi2_bank_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.bank_rate, egi1.bank_rate, egi3.bank_rate, egi4.bank_rate, bank_rate_tolerance)) and
+      (egi2_pitch_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.pitch, egi1.pitch, egi3.pitch, egi4.pitch, pitch_tolerance)) and
+      (egi2_pitch_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.pitch_rate, egi1.pitch_rate, egi3.pitch_rate, egi4.pitch_rate, pitch_rate_tolerance)) and
+      (egi2_heading_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.heading, egi1.heading, egi3.heading, egi4.heading, heading_tolerance)) and
+      (egi2_heading_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.heading_rate, egi1.heading_rate, egi3.heading_rate, egi4.heading_rate, heading_rate_tolerance)) and
+      (egi2_velocity_x_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.velocity_x, egi1.velocity_x, egi3.velocity_x, egi4.velocity_x, velocity_x_tolerance)) and
+      (egi2_velocity_y_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.velocity_y, egi1.velocity_y, egi3.velocity_y, egi4.velocity_y, velocity_y_tolerance)) and
+      (egi2_velocity_z_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.velocity_z, egi1.velocity_z, egi3.velocity_z, egi4.velocity_z, velocity_z_tolerance)) and
+      (egi2_accel_x_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.accel_x, egi1.accel_x, egi3.accel_x, egi4.accel_x, accel_x_tolerance)) and
+      (egi2_accel_y_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.accel_y, egi1.accel_y, egi3.accel_y, egi4.accel_y, accel_y_tolerance)) and
+      (egi2_accel_z_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi2.accel_z, egi1.accel_z, egi3.accel_z, egi4.accel_z, accel_z_tolerance)) and
+     
+      (egi3_aoa_within_tol = 
+        AGREE_ISAS_NODES.quad_matches_int(egi3.aoa, egi2.aoa, egi1.aoa, egi4.aoa, aoa_tolerance)) and
+      (egi3_time_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.time_val, egi2.time_val, egi1.time_val, egi4.time_val, time_tolerance)) and
+      (egi3_lat_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.lat, egi2.lat, egi1.lat, egi4.lat, lat_tolerance)) and
+      (egi3_long_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.long, egi2.long, egi1.long, egi4.long, long_tolerance)) and
+      (egi3_alt_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.alt, egi2.alt, egi1.alt, egi4.alt, alt_tolerance)) and
+      (egi3_egi_health_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.egi_health, egi2.egi_health, egi1.egi_health, egi4.egi_health, egi_health_tolerance)) and
+      (egi3_bank_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.bank, egi2.bank, egi1.bank, egi4.bank, bank_tolerance)) and
+      (egi3_bank_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.bank_rate, egi2.bank_rate, egi1.bank_rate, egi4.bank_rate, bank_rate_tolerance)) and
+      (egi3_pitch_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.pitch, egi2.pitch, egi1.pitch, egi4.pitch, pitch_tolerance)) and
+      (egi3_pitch_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.pitch_rate, egi2.pitch_rate, egi1.pitch_rate, egi4.pitch_rate, pitch_rate_tolerance)) and
+      (egi3_heading_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.heading, egi2.heading, egi1.heading, egi4.heading, heading_tolerance)) and
+      (egi3_heading_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.heading_rate, egi2.heading_rate, egi1.heading_rate, egi4.heading_rate, heading_rate_tolerance)) and
+      (egi3_velocity_x_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.velocity_x, egi2.velocity_x, egi1.velocity_x, egi4.velocity_x, velocity_x_tolerance)) and
+      (egi3_velocity_y_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.velocity_y, egi2.velocity_y, egi1.velocity_y, egi4.velocity_y, velocity_y_tolerance)) and
+      (egi3_velocity_z_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.velocity_z, egi2.velocity_z, egi1.velocity_z, egi4.velocity_z, velocity_z_tolerance)) and
+      (egi3_accel_x_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.accel_x, egi2.accel_x, egi1.accel_x, egi4.accel_x, accel_x_tolerance)) and
+      (egi3_accel_y_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.accel_y, egi2.accel_y, egi1.accel_y, egi4.accel_y, accel_y_tolerance)) and
+      (egi3_accel_z_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi3.accel_z, egi2.accel_z, egi1.accel_z, egi4.accel_z, accel_z_tolerance)) and
+     
+      (egi4_aoa_within_tol = 
+        AGREE_ISAS_NODES.quad_matches_int(egi4.aoa, egi2.aoa, egi3.aoa, egi1.aoa, aoa_tolerance)) and
+      (egi4_time_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.time_val, egi2.time_val, egi3.time_val, egi1.time_val, time_tolerance)) and
+      (egi4_lat_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.lat, egi2.lat, egi3.lat, egi1.lat, lat_tolerance)) and
+      (egi4_long_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.long, egi2.long, egi3.long, egi1.long, long_tolerance)) and
+      (egi4_alt_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.alt, egi2.alt, egi3.alt, egi1.alt, alt_tolerance)) and
+      (egi4_egi_health_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.egi_health, egi2.egi_health, egi3.egi_health, egi1.egi_health, egi_health_tolerance)) and
+      (egi4_bank_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.bank, egi2.bank, egi3.bank, egi1.bank, bank_tolerance)) and
+      (egi4_bank_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.bank_rate, egi2.bank_rate, egi3.bank_rate, egi1.bank_rate, bank_rate_tolerance)) and
+      (egi4_pitch_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.pitch, egi2.pitch, egi3.pitch, egi1.pitch, pitch_tolerance)) and
+      (egi4_pitch_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.pitch_rate, egi2.pitch_rate, egi3.pitch_rate, egi1.pitch_rate, pitch_rate_tolerance)) and
+      (egi4_heading_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.heading, egi2.heading, egi3.heading, egi1.heading, heading_tolerance)) and
+      (egi4_heading_rate_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.heading_rate, egi2.heading_rate, egi3.heading_rate, egi1.heading_rate, heading_rate_tolerance)) and
+      (egi4_velocity_x_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.velocity_x, egi2.velocity_x, egi3.velocity_x, egi1.velocity_x, velocity_x_tolerance)) and
+      (egi4_velocity_y_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.velocity_y, egi2.velocity_y, egi3.velocity_y, egi1.velocity_y, velocity_y_tolerance)) and
+      (egi4_velocity_z_within_tol  =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.velocity_z, egi2.velocity_z, egi3.velocity_z, egi1.velocity_z, velocity_z_tolerance)) and
+      (egi4_accel_x_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.accel_x, egi2.accel_x, egi3.accel_x, egi1.accel_x, accel_x_tolerance)) and
+      (egi4_accel_y_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.accel_y, egi2.accel_y, egi3.accel_y, egi1.accel_y, accel_y_tolerance)) and
+      (egi4_accel_z_within_tol =
+        AGREE_ISAS_NODES.quad_matches_int(egi4.accel_z, egi2.accel_z, egi3.accel_z, egi1.accel_z, accel_z_tolerance));
+  
+    --the ISAS-S-160 should be covered by ISAS-S-150 once we have type information
+    --guarantee "ISAS-S-160":
+     
+    --ISAS shall determine the selected value of healthy dual 
+    --inputs by averaging the signal values.
+    guarantee "ISAS-S-170":
+      (not aoa1_failed_update and not aoa2_failed_update and 
+       aoa_aoa_within_tol and aoa1_aoa_in_range and aoa2_aoa_in_range =>
+        aoa_select.aoa = (aoa1.aoa + aoa2.aoa) div 2) and
+      ((not ads1_failed_update and not ads2_failed_update) =>
+        ((ads_amb_press_within_tol and ads1_amb_press_in_range and ads2_amb_press_in_range =>
+          ads_select.amb_press = (ads1.amb_press + ads2.amb_press) div 2) and
+        (ads_amb_temp_within_tol and ads1_amb_temp_in_range and ads2_amb_temp_in_range =>
+          ads_select.amb_temp = (ads1.amb_temp + ads2.amb_temp) div 2) and
+        (ads_total_press_within_tol and ads1_total_press_in_range and ads2_total_press_in_range =>
+          ads_select.total_press = (ads1.total_press + ads2.total_press) div 2)));
+     
+    --If a single signal of a dual channel input has been declared 
+    --faulty due to being stale or out of range, ISAS shall compare 
+    --the remaining signal against the selected value of the equivalent
+    --parameter computed in the EGI, using a tolerance relevant to
+    --that comparison.
+    --TODO: Figure out if there is ads values in the egi interface
+    guarantee "ISAS-S-190":
+      aoa_aoa_within_egi_tol =
+	    if (aoa1_failed_update or not aoa1_aoa_in_range) and (not aoa2_failed_update and aoa2_aoa_in_range) then
+	      AGREE_ISAS_NODES.matches_tolerance_int(aoa2.aoa, egi_select.aoa, aoa_tolerance)
+	    else if (aoa2_failed_update or not aoa2_aoa_in_range) and (not aoa1_failed_update and aoa1_aoa_in_range) then
+	      AGREE_ISAS_NODES.matches_tolerance_int(aoa1.aoa, egi_select.aoa, aoa_tolerance)
+	    else
+	      true;
+        
+    --In the case of a single channel of a dual input signal being
+    --declared faulty, ISAS shall determine the selected value by
+    --averaging the remaining channel with the equivalent selected
+    --value of EGI data.
+    
+    --In the case of both channels of a dual input signal being
+    --declared faulty, ISAS shall set the selected value equal 
+    --to the equivalent selected value of EGI data provided the 
+    --EGI data is valid.
+    guarantee "ISAS-S-200 and ISAS-S-210":
+      if((aoa1_failed_update or not aoa1_aoa_in_range) and
+         (aoa2_failed_update or not aoa2_aoa_in_range) and
+         (egi1_aoa_in_range or egi2_aoa_in_range or egi3_aoa_in_range or egi4_aoa_in_range) and
+         not (egi1_failed_update and egi2_failed_update and egi3_failed_update and egi4_failed_update) and
+         (egi1_aoa_within_tol or egi2_aoa_within_tol or egi3_aoa_within_tol or egi4_aoa_within_tol)) then
+          aoa_select.aoa = egi_select.aoa
+      else if
+        (aoa2_failed_update or not aoa2_aoa_in_range) and (not aoa1_failed_update and aoa1_aoa_in_range) and aoa_aoa_within_egi_tol then
+          aoa_select.aoa = (egi_select.aoa + aoa1.aoa) div 2
+      else if
+        (aoa1_failed_update or not aoa1_aoa_in_range) and (not aoa2_failed_update and aoa2_aoa_in_range) and aoa_aoa_within_egi_tol then
+          aoa_select.aoa = (egi_select.aoa + aoa2.aoa) div 2
+      else if 
+        ((aoa1_failed_update or not aoa1_aoa_in_range) and (not aoa2_failed_update and aoa2_aoa_in_range) or
+         (aoa2_failed_update or not aoa2_aoa_in_range) and (not aoa1_failed_update and aoa1_aoa_in_range)) and
+        not aoa_aoa_within_egi_tol then
+      	  aoa_select.aoa = egi_select.aoa
+      else
+      	true;
+        
+    --In the case of mismatched dual input signals, ISAS shall
+    --set the selected value equal to the equivalent selected 
+    --value of EGI data. 
+    guarantee "ISAS-S-220":
+      not aoa_aoa_within_tol => 
+        aoa_select.aoa = egi_select.aoa;
+        
+    guarantee "ISAS-S-240a":
+      (egi1_aoa_fault = (not egi1_aoa_in_range or egi1_failed_update or not egi1_aoa_within_tol)) and
+      (egi1_time_fault = (not egi1_time_in_range or egi1_failed_update or not egi1_time_within_tol)) and
+      (egi1_lat_fault = (not egi1_lat_in_range or egi1_failed_update or not egi1_lat_within_tol)) and
+      (egi1_long_fault = (not egi1_long_in_range or egi1_failed_update or not egi1_long_within_tol)) and
+      (egi1_alt_fault = (not egi1_alt_in_range or egi1_failed_update or not egi1_alt_within_tol)) and
+      (egi1_egi_health_fault = (not egi1_egi_health_in_range or egi1_failed_update or not egi1_egi_health_within_tol)) and
+      (egi1_bank_fault = (not egi1_bank_in_range or egi1_failed_update or not egi1_bank_within_tol)) and
+      (egi1_bank_rate_fault = (not egi1_bank_rate_in_range or egi1_failed_update or not egi1_bank_rate_within_tol)) and
+      (egi1_pitch_fault = (not egi1_pitch_in_range or egi1_failed_update or not egi1_pitch_within_tol)) and
+      (egi1_pitch_rate_fault = (not egi1_pitch_rate_in_range or egi1_failed_update or not egi1_pitch_rate_within_tol)) and
+      (egi1_heading_fault = (not egi1_heading_in_range or egi1_failed_update or not egi1_heading_within_tol)) and
+      (egi1_heading_rate_fault = (not egi1_heading_rate_in_range or egi1_failed_update or not egi1_heading_rate_within_tol)) and
+      (egi1_velocity_x_fault  = (not egi1_velocity_x_in_range or egi1_failed_update or not egi1_velocity_x_within_tol)) and
+      (egi1_velocity_y_fault  = (not egi1_velocity_y_in_range or egi1_failed_update or not egi1_velocity_y_within_tol)) and
+      (egi1_velocity_z_fault  = (not egi1_velocity_z_in_range or egi1_failed_update or not egi1_velocity_z_within_tol)) and
+      (egi1_accel_x_fault = (not egi1_accel_x_in_range or egi1_failed_update or not egi1_accel_x_within_tol)) and
+      (egi1_accel_y_fault = (not egi1_accel_y_in_range or egi1_failed_update or not egi1_accel_y_within_tol)) and
+      (egi1_accel_z_fault = (not egi1_accel_z_in_range or egi1_failed_update or not egi1_accel_z_within_tol)) and
+    
+      (egi2_aoa_fault = (not egi2_aoa_in_range or egi2_failed_update or not egi2_aoa_within_tol)) and
+      (egi2_time_fault = (not egi2_time_in_range or egi2_failed_update or not egi2_time_within_tol)) and
+      (egi2_lat_fault = (not egi2_lat_in_range or egi2_failed_update or not egi2_lat_within_tol)) and
+      (egi2_long_fault = (not egi2_long_in_range or egi2_failed_update or not egi2_long_within_tol)) and
+      (egi2_alt_fault = (not egi2_alt_in_range or egi2_failed_update or not egi2_alt_within_tol)) and
+      (egi2_egi_health_fault = (not egi2_egi_health_in_range or egi2_failed_update or not egi2_egi_health_within_tol)) and
+      (egi2_bank_fault = (not egi2_bank_in_range or egi2_failed_update or not egi2_bank_within_tol)) and
+      (egi2_bank_rate_fault = (not egi2_bank_rate_in_range or egi2_failed_update or not egi2_bank_rate_within_tol)) and
+      (egi2_pitch_fault = (not egi2_pitch_in_range or egi2_failed_update or not egi2_pitch_within_tol)) and
+      (egi2_pitch_rate_fault = (not egi2_pitch_rate_in_range or egi2_failed_update or not egi2_pitch_rate_within_tol)) and
+      (egi2_heading_fault = (not egi2_heading_in_range or egi2_failed_update or not egi2_heading_within_tol)) and
+      (egi2_heading_rate_fault = (not egi2_heading_rate_in_range or egi2_failed_update or not egi2_heading_rate_within_tol)) and
+      (egi2_velocity_x_fault  = (not egi2_velocity_x_in_range or egi2_failed_update or not egi2_velocity_x_within_tol)) and
+      (egi2_velocity_y_fault  = (not egi2_velocity_y_in_range or egi2_failed_update or not egi2_velocity_y_within_tol)) and
+      (egi2_velocity_z_fault  = (not egi2_velocity_z_in_range or egi2_failed_update or not egi2_velocity_z_within_tol)) and
+      (egi2_accel_x_fault = (not egi2_accel_x_in_range or egi2_failed_update or not egi2_accel_x_within_tol)) and
+      (egi2_accel_y_fault = (not egi2_accel_y_in_range or egi2_failed_update or not egi2_accel_y_within_tol)) and
+      (egi2_accel_z_fault = (not egi2_accel_z_in_range or egi2_failed_update or not egi2_accel_z_within_tol)) and
+        
+      (egi3_aoa_fault = (not egi3_aoa_in_range or egi3_failed_update or not egi3_aoa_within_tol)) and
+      (egi3_time_fault = (not egi3_time_in_range or egi3_failed_update or not egi3_time_within_tol)) and
+      (egi3_lat_fault = (not egi3_lat_in_range or egi3_failed_update or not egi3_lat_within_tol)) and
+      (egi3_long_fault = (not egi3_long_in_range or egi3_failed_update or not egi3_long_within_tol)) and
+      (egi3_alt_fault = (not egi3_alt_in_range or egi3_failed_update or not egi3_alt_within_tol)) and
+      (egi3_egi_health_fault = (not egi3_egi_health_in_range or egi3_failed_update or not egi3_egi_health_within_tol)) and
+      (egi3_bank_fault = (not egi3_bank_in_range or egi3_failed_update or not egi3_bank_within_tol)) and
+      (egi3_bank_rate_fault = (not egi3_bank_rate_in_range or egi3_failed_update or not egi3_bank_rate_within_tol)) and
+      (egi3_pitch_fault = (not egi3_pitch_in_range or egi3_failed_update or not egi3_pitch_within_tol)) and
+      (egi3_pitch_rate_fault = (not egi3_pitch_rate_in_range or egi3_failed_update or not egi3_pitch_rate_within_tol)) and
+      (egi3_heading_fault = (not egi3_heading_in_range or egi3_failed_update or not egi3_heading_within_tol)) and
+      (egi3_heading_rate_fault = (not egi3_heading_rate_in_range or egi3_failed_update or not egi3_heading_rate_within_tol)) and
+      (egi3_velocity_x_fault  = (not egi3_velocity_x_in_range or egi3_failed_update or not egi3_velocity_x_within_tol)) and
+      (egi3_velocity_y_fault  = (not egi3_velocity_y_in_range or egi3_failed_update or not egi3_velocity_y_within_tol)) and
+      (egi3_velocity_z_fault  = (not egi3_velocity_z_in_range or egi3_failed_update or not egi3_velocity_z_within_tol)) and
+      (egi3_accel_x_fault = (not egi3_accel_x_in_range or egi3_failed_update or not egi3_accel_x_within_tol)) and
+      (egi3_accel_y_fault = (not egi3_accel_y_in_range or egi3_failed_update or not egi3_accel_y_within_tol)) and
+      (egi3_accel_z_fault = (not egi3_accel_z_in_range or egi3_failed_update or not egi3_accel_z_within_tol)) and
+  
+      (egi4_aoa_fault = (not egi4_aoa_in_range or egi4_failed_update or not egi4_aoa_within_tol)) and
+      (egi4_time_fault = (not egi4_time_in_range or egi4_failed_update or not egi4_time_within_tol)) and
+      (egi4_lat_fault = (not egi4_lat_in_range or egi4_failed_update or not egi4_lat_within_tol)) and
+      (egi4_long_fault = (not egi4_long_in_range or egi4_failed_update or not egi4_long_within_tol)) and
+      (egi4_alt_fault = (not egi4_alt_in_range or egi4_failed_update or not egi4_alt_within_tol)) and
+      (egi4_egi_health_fault = (not egi4_egi_health_in_range or egi4_failed_update or not egi4_egi_health_within_tol)) and
+      (egi4_bank_fault = (not egi4_bank_in_range or egi4_failed_update or not egi4_bank_within_tol)) and
+      (egi4_bank_rate_fault = (not egi4_bank_rate_in_range or egi4_failed_update or not egi4_bank_rate_within_tol)) and
+      (egi4_pitch_fault = (not egi4_pitch_in_range or egi4_failed_update or not egi4_pitch_within_tol)) and
+      (egi4_pitch_rate_fault = (not egi4_pitch_rate_in_range or egi4_failed_update or not egi4_pitch_rate_within_tol)) and
+      (egi4_heading_fault = (not egi4_heading_in_range or egi4_failed_update or not egi4_heading_within_tol)) and
+      (egi4_heading_rate_fault = (not egi4_heading_rate_in_range or egi4_failed_update or not egi4_heading_rate_within_tol)) and
+      (egi4_velocity_x_fault  = (not egi4_velocity_x_in_range or egi4_failed_update or not egi4_velocity_x_within_tol)) and
+      (egi4_velocity_y_fault  = (not egi4_velocity_y_in_range or egi4_failed_update or not egi4_velocity_y_within_tol)) and
+      (egi4_velocity_z_fault  = (not egi4_velocity_z_in_range or egi4_failed_update or not egi4_velocity_z_within_tol)) and
+      (egi4_accel_x_fault = (not egi4_accel_x_in_range or egi4_failed_update or not egi4_accel_x_within_tol)) and
+      (egi4_accel_y_fault = (not egi4_accel_y_in_range or egi4_failed_update or not egi4_accel_y_within_tol)) and
+      (egi4_accel_z_fault = (not egi4_accel_z_in_range or egi4_failed_update or not egi4_accel_z_within_tol)) and
+  
+      (acts1_sense_ailerons_fault = (not acts1_sense_ailerons_in_range or acts1_sense_failed_update or not acts1_sense_ailerons_within_tol)) and
+      (acts1_sense_elevators_fault = (not acts1_sense_elevators_in_range or acts1_sense_failed_update or not acts1_sense_elevators_within_tol)) and
+      (acts1_sense_rudder_fault = (not acts1_sense_rudder_in_range or acts1_sense_failed_update or not acts1_sense_rudder_within_tol)) and
+      (acts1_sense_spoiler_fault = (not acts1_sense_spoiler_in_range or acts1_sense_failed_update or not acts1_sense_spoiler_within_tol)) and
+      (acts1_sense_flaps_gt_fault = (not acts1_sense_flaps_gt_in_range or acts1_sense_failed_update or not acts1_sense_flaps_gt_within_tol)) and
+      (acts1_sense_flaps_lt_fault = (not acts1_sense_flaps_lt_in_range or acts1_sense_failed_update or not acts1_sense_flaps_lt_within_tol)) and
+  
+      (acts2_sense_ailerons_fault = (not acts2_sense_ailerons_in_range or acts2_sense_failed_update or not acts2_sense_ailerons_within_tol)) and
+      (acts2_sense_elevators_fault = (not acts2_sense_elevators_in_range or acts2_sense_failed_update or not acts2_sense_elevators_within_tol)) and
+      (acts2_sense_rudder_fault = (not acts2_sense_rudder_in_range or acts2_sense_failed_update or not acts2_sense_rudder_within_tol)) and
+      (acts2_sense_spoiler_fault = (not acts2_sense_spoiler_in_range or acts2_sense_failed_update or not acts2_sense_spoiler_within_tol)) and
+      (acts2_sense_flaps_gt_fault = (not acts2_sense_flaps_gt_in_range or acts2_sense_failed_update or not acts2_sense_flaps_gt_within_tol)) and
+      (acts2_sense_flaps_lt_fault = (not acts2_sense_flaps_lt_in_range or acts2_sense_failed_update or not acts2_sense_flaps_lt_within_tol)) and
+  
+      (acts3_sense_ailerons_fault = (not acts3_sense_ailerons_in_range or acts3_sense_failed_update or not acts3_sense_ailerons_within_tol)) and
+      (acts3_sense_elevators_fault = (not acts3_sense_elevators_in_range or acts3_sense_failed_update or not acts3_sense_elevators_within_tol)) and
+      (acts3_sense_rudder_fault = (not acts3_sense_rudder_in_range or acts3_sense_failed_update or not acts3_sense_rudder_within_tol)) and
+      (acts3_sense_spoiler_fault = (not acts3_sense_spoiler_in_range or acts3_sense_failed_update or not acts3_sense_spoiler_within_tol)) and
+      (acts3_sense_flaps_gt_fault = (not acts3_sense_flaps_gt_in_range or acts3_sense_failed_update or not acts3_sense_flaps_gt_within_tol)) and
+      (acts3_sense_flaps_lt_fault = (not acts3_sense_flaps_lt_in_range or acts3_sense_failed_update or not acts3_sense_flaps_lt_within_tol)) and
+
+      (acts4_sense_ailerons_fault = (not acts4_sense_ailerons_in_range or acts4_sense_failed_update or not acts4_sense_ailerons_within_tol)) and
+      (acts4_sense_elevators_fault = (not acts4_sense_elevators_in_range or acts4_sense_failed_update or not acts4_sense_elevators_within_tol)) and
+      (acts4_sense_rudder_fault = (not acts4_sense_rudder_in_range or acts4_sense_failed_update or not acts4_sense_rudder_within_tol)) and
+      (acts4_sense_spoiler_fault = (not acts4_sense_spoiler_in_range or acts4_sense_failed_update or not acts4_sense_spoiler_within_tol)) and
+      (acts4_sense_flaps_gt_fault = (not acts4_sense_flaps_gt_in_range or acts4_sense_failed_update or not acts4_sense_flaps_gt_within_tol)) and
+      (acts4_sense_flaps_lt_fault = (not acts4_sense_flaps_lt_in_range or acts4_sense_failed_update or not acts4_sense_flaps_lt_within_tol)) and
+  
+      (aoa1_aoa_fault = (not aoa1_aoa_in_range or aoa1_failed_update or not aoa_aoa_within_tol)) and
+      (aoa2_aoa_fault = (not aoa2_aoa_in_range or aoa2_failed_update or not aoa_aoa_within_tol)) and
+  
+      (ads1_amb_press_fault = (ads1_amb_press_in_range or ads1_failed_update or not ads_amb_press_within_tol)) and
+      (ads1_amb_temp_fault = (ads1_amb_temp_in_range or ads1_failed_update or not ads_amb_temp_within_tol)) and
+      (ads1_total_press_fault = (ads1_total_press_in_range or ads1_failed_update or not ads_total_press_within_tol)) and
+      
+      (ads2_amb_press_fault = (ads2_amb_press_in_range or ads2_failed_update or not ads_amb_press_within_tol)) and
+      (ads2_amb_temp_fault = (ads2_amb_temp_in_range or ads2_failed_update or not ads_amb_temp_within_tol)) and
+      (ads2_total_press_fault = (ads2_total_press_in_range or ads2_failed_update or not ads_total_press_within_tol));
+      
+      node latched_if_held_for(input : bool, time_val : int) returns (return : bool);
+      var
+        count : int; 
+        count_hit: bool; 
+      let
+        count_hit = (count >= time_val) -> pre(count_hit) or (count >= time_val);
+        count = if(input) then 1 else 0 -> if(input) then pre(count) + 1 else 0;
+        return = input or count_hit;
+      tel;
+      
+    guarantee "ISAS-S-240b":
+      (egi1_aoa_fault_latched =                    latched_if_held_for(egi1_aoa_fault, 5)) and            
+      (egi1_time_fault_latched =                   latched_if_held_for(egi1_time_fault, 5)) and
+      (egi1_lat_fault_latched =                    latched_if_held_for(egi1_lat_fault, 5)) and
+      (egi1_long_fault_latched =                   latched_if_held_for(egi1_long_fault, 5)) and
+      (egi1_alt_fault_latched =                    latched_if_held_for(egi1_alt_fault, 5)) and
+      (egi1_egi_health_fault_latched =             latched_if_held_for(egi1_egi_health_fault, 5)) and
+      (egi1_bank_fault_latched =                   latched_if_held_for(egi1_bank_fault, 5)) and
+      (egi1_bank_rate_fault_latched =              latched_if_held_for(egi1_bank_rate_fault, 5)) and
+      (egi1_pitch_fault_latched =                  latched_if_held_for(egi1_pitch_fault, 5)) and
+      (egi1_pitch_rate_fault_latched =             latched_if_held_for(egi1_pitch_rate_fault, 5)) and
+      (egi1_heading_fault_latched =                latched_if_held_for(egi1_heading_fault, 5)) and
+      (egi1_heading_rate_fault_latched =           latched_if_held_for(egi1_heading_rate_fault, 5)) and
+      (egi1_velocity_x_fault_latched =             latched_if_held_for(egi1_velocity_x_fault , 5)) and
+      (egi1_velocity_y_fault_latched =             latched_if_held_for(egi1_velocity_y_fault , 5)) and
+      (egi1_velocity_z_fault_latched =             latched_if_held_for(egi1_velocity_z_fault , 5)) and
+      (egi1_accel_x_fault_latched =                latched_if_held_for(egi1_accel_x_fault, 5)) and
+      (egi1_accel_y_fault_latched =                latched_if_held_for(egi1_accel_y_fault, 5)) and
+      (egi1_accel_z_fault_latched =                latched_if_held_for(egi1_accel_z_fault, 5)) and
+                                          
+      (egi2_aoa_fault_latched =                    latched_if_held_for(egi2_aoa_fault, 5)) and
+      (egi2_time_fault_latched =                   latched_if_held_for(egi2_time_fault, 5)) and
+      (egi2_lat_fault_latched =                    latched_if_held_for(egi2_lat_fault, 5)) and
+      (egi2_long_fault_latched =                   latched_if_held_for(egi2_long_fault, 5)) and
+      (egi2_alt_fault_latched =                    latched_if_held_for(egi2_alt_fault, 5)) and
+      (egi2_egi_health_fault_latched =             latched_if_held_for(egi2_egi_health_fault, 5)) and
+      (egi2_bank_fault_latched =                   latched_if_held_for(egi2_bank_fault, 5)) and
+      (egi2_bank_rate_fault_latched =              latched_if_held_for(egi2_bank_rate_fault, 5)) and
+      (egi2_pitch_fault_latched =                  latched_if_held_for(egi2_pitch_fault, 5)) and
+      (egi2_pitch_rate_fault_latched =             latched_if_held_for(egi2_pitch_rate_fault, 5)) and
+      (egi2_heading_fault_latched =                latched_if_held_for(egi2_heading_fault, 5)) and
+      (egi2_heading_rate_fault_latched =           latched_if_held_for(egi2_heading_rate_fault, 5)) and
+      (egi2_velocity_x_fault_latched =             latched_if_held_for(egi2_velocity_x_fault , 5)) and
+      (egi2_velocity_y_fault_latched =             latched_if_held_for(egi2_velocity_y_fault , 5)) and
+      (egi2_velocity_z_fault_latched =             latched_if_held_for(egi2_velocity_z_fault , 5)) and
+      (egi2_accel_x_fault_latched =                latched_if_held_for(egi2_accel_x_fault, 5)) and
+      (egi2_accel_y_fault_latched =                latched_if_held_for(egi2_accel_y_fault, 5)) and
+      (egi2_accel_z_fault_latched =                latched_if_held_for(egi2_accel_z_fault, 5)) and
+                                          
+      (egi3_aoa_fault_latched =                    latched_if_held_for(egi3_aoa_fault, 5)) and
+      (egi3_time_fault_latched =                   latched_if_held_for(egi3_time_fault, 5)) and
+      (egi3_lat_fault_latched =                    latched_if_held_for(egi3_lat_fault, 5)) and
+      (egi3_long_fault_latched =                   latched_if_held_for(egi3_long_fault, 5)) and
+      (egi3_alt_fault_latched =                    latched_if_held_for(egi3_alt_fault, 5)) and
+      (egi3_egi_health_fault_latched =             latched_if_held_for(egi3_egi_health_fault, 5)) and
+      (egi3_bank_fault_latched =                   latched_if_held_for(egi3_bank_fault, 5)) and
+      (egi3_bank_rate_fault_latched =              latched_if_held_for(egi3_bank_rate_fault, 5)) and
+      (egi3_pitch_fault_latched =                  latched_if_held_for(egi3_pitch_fault, 5)) and
+      (egi3_pitch_rate_fault_latched =             latched_if_held_for(egi3_pitch_rate_fault, 5)) and
+      (egi3_heading_fault_latched =                latched_if_held_for(egi3_heading_fault, 5)) and
+      (egi3_heading_rate_fault_latched =           latched_if_held_for(egi3_heading_rate_fault, 5)) and
+      (egi3_velocity_x_fault_latched =             latched_if_held_for(egi3_velocity_x_fault , 5)) and
+      (egi3_velocity_y_fault_latched =             latched_if_held_for(egi3_velocity_y_fault , 5)) and
+      (egi3_velocity_z_fault_latched =             latched_if_held_for(egi3_velocity_z_fault , 5)) and
+      (egi3_accel_x_fault_latched =                latched_if_held_for(egi3_accel_x_fault, 5)) and
+      (egi3_accel_y_fault_latched =                latched_if_held_for(egi3_accel_y_fault, 5)) and
+      (egi3_accel_z_fault_latched =                latched_if_held_for(egi3_accel_z_fault, 5)) and
+                                          
+      (egi4_aoa_fault_latched =                    latched_if_held_for(egi4_aoa_fault, 5)) and
+      (egi4_time_fault_latched =                   latched_if_held_for(egi4_time_fault, 5)) and
+      (egi4_lat_fault_latched =                    latched_if_held_for(egi4_lat_fault, 5)) and
+      (egi4_long_fault_latched =                   latched_if_held_for(egi4_long_fault, 5)) and
+      (egi4_alt_fault_latched =                    latched_if_held_for(egi4_alt_fault, 5)) and
+      (egi4_egi_health_fault_latched =             latched_if_held_for(egi4_egi_health_fault, 5)) and
+      (egi4_bank_fault_latched =                   latched_if_held_for(egi4_bank_fault, 5)) and
+      (egi4_bank_rate_fault_latched =              latched_if_held_for(egi4_bank_rate_fault, 5)) and
+      (egi4_pitch_fault_latched =                  latched_if_held_for(egi4_pitch_fault, 5)) and
+      (egi4_pitch_rate_fault_latched =             latched_if_held_for(egi4_pitch_rate_fault, 5)) and
+      (egi4_heading_fault_latched =                latched_if_held_for(egi4_heading_fault, 5)) and
+      (egi4_heading_rate_fault_latched =           latched_if_held_for(egi4_heading_rate_fault, 5)) and
+      (egi4_velocity_x_fault_latched =             latched_if_held_for(egi4_velocity_x_fault , 5)) and
+      (egi4_velocity_y_fault_latched =             latched_if_held_for(egi4_velocity_y_fault , 5)) and
+      (egi4_velocity_z_fault_latched =             latched_if_held_for(egi4_velocity_z_fault , 5)) and
+      (egi4_accel_x_fault_latched =                latched_if_held_for(egi4_accel_x_fault, 5)) and
+      (egi4_accel_y_fault_latched =                latched_if_held_for(egi4_accel_y_fault, 5)) and
+      (egi4_accel_z_fault_latched =                latched_if_held_for(egi4_accel_z_fault, 5)) and
+                                          
+      (acts1_sense_ailerons_fault_latched =        latched_if_held_for(acts1_sense_ailerons_fault, 5)) and
+      (acts1_sense_elevators_fault_latched =       latched_if_held_for(acts1_sense_elevators_fault, 5)) and
+      (acts1_sense_rudder_fault_latched =          latched_if_held_for(acts1_sense_rudder_fault, 5)) and
+      (acts1_sense_spoiler_fault_latched =         latched_if_held_for(acts1_sense_spoiler_fault, 5)) and
+      (acts1_sense_flaps_gt_fault_latched =        latched_if_held_for(acts1_sense_flaps_gt_fault, 5)) and
+      (acts1_sense_flaps_lt_fault_latched =        latched_if_held_for(acts1_sense_flaps_lt_fault, 5)) and
+                                          
+      (acts2_sense_ailerons_fault_latched =        latched_if_held_for(acts2_sense_ailerons_fault, 5)) and
+      (acts2_sense_elevators_fault_latched =       latched_if_held_for(acts2_sense_elevators_fault, 5)) and
+      (acts2_sense_rudder_fault_latched =          latched_if_held_for(acts2_sense_rudder_fault, 5)) and
+      (acts2_sense_spoiler_fault_latched =         latched_if_held_for(acts2_sense_spoiler_fault, 5)) and
+      (acts2_sense_flaps_gt_fault_latched =        latched_if_held_for(acts2_sense_flaps_gt_fault, 5)) and
+      (acts2_sense_flaps_lt_fault_latched =        latched_if_held_for(acts2_sense_flaps_lt_fault, 5)) and
+                                          
+      (acts3_sense_ailerons_fault_latched =        latched_if_held_for(acts3_sense_ailerons_fault, 5)) and
+      (acts3_sense_elevators_fault_latched =       latched_if_held_for(acts3_sense_elevators_fault, 5)) and
+      (acts3_sense_rudder_fault_latched =          latched_if_held_for(acts3_sense_rudder_fault, 5)) and
+      (acts3_sense_spoiler_fault_latched =         latched_if_held_for(acts3_sense_spoiler_fault, 5)) and
+      (acts3_sense_flaps_gt_fault_latched =        latched_if_held_for(acts3_sense_flaps_gt_fault, 5)) and
+      (acts3_sense_flaps_lt_fault_latched =        latched_if_held_for(acts3_sense_flaps_lt_fault, 5)) and
+                                          
+      (acts4_sense_ailerons_fault_latched =        latched_if_held_for(acts4_sense_ailerons_fault, 5)) and
+      (acts4_sense_elevators_fault_latched =       latched_if_held_for(acts4_sense_elevators_fault, 5)) and
+      (acts4_sense_rudder_fault_latched =          latched_if_held_for(acts4_sense_rudder_fault, 5)) and
+      (acts4_sense_spoiler_fault_latched =         latched_if_held_for(acts4_sense_spoiler_fault, 5)) and
+      (acts4_sense_flaps_gt_fault_latched =        latched_if_held_for(acts4_sense_flaps_gt_fault, 5)) and
+      (acts4_sense_flaps_lt_fault_latched =        latched_if_held_for(acts4_sense_flaps_lt_fault, 5)) and
+                                           
+      (aoa1_aoa_fault_latched =                    latched_if_held_for(aoa1_aoa_fault, 5)) and
+      (aoa2_aoa_fault_latched =                    latched_if_held_for(aoa2_aoa_fault, 5)) and
+                                          
+      (ads1_amb_press_fault_latched =              latched_if_held_for(ads1_amb_press_fault, 5)) and
+      (ads1_amb_temp_fault_latched =               latched_if_held_for(ads1_amb_temp_fault, 5)) and
+      (ads1_total_press_fault_latched =            latched_if_held_for(ads1_total_press_fault  , 5)) and
+                                          
+      (ads2_amb_press_fault_latched =              latched_if_held_for(ads2_amb_press_fault, 5)) and
+      (ads2_amb_temp_fault_latched =               latched_if_held_for(ads2_amb_temp_fault, 5)) and
+      (ads2_total_press_fault_latched =            latched_if_held_for(ads2_total_press_fault, 5));   
+
+
+    -- ISAS shall determine the selected value for a quad digital signal using the following table:
+    -- 1) 4 good values with total range less than SignalTolerance, average all 4
+    -- 2) 4 good values with total range greater than SignalTolerance, average middle 2
+    -- 3) 3 good values with total range less than SignalTolerance, average all 3
+    -- 4) 3 good values with total range greater than SignalTolerance, select middle value
+    -- 5) 2 good values with total range less than SignalTolerance, average values
+    
+    --note this isn't completely up to standard
+    
+    guarantee "ISAS-S-260" :
+  		if(not egi1_aoa_fault and not egi2_aoa_fault and not egi3_aoa_fault and not egi4_aoa_fault) then
+  			egi_select.aoa = (egi1.aoa + egi2.aoa + egi3.aoa + egi4.aoa) div 4
+  			
+  		else if(not egi2_aoa_fault and not egi3_aoa_fault and not egi4_aoa_fault) then
+    	    egi_select.aoa = (egi2.aoa + egi3.aoa + egi4.aoa) div 3
+  		else if(not egi1_aoa_fault and not egi3_aoa_fault and not egi4_aoa_fault) then
+    	    egi_select.aoa = (egi1.aoa + egi3.aoa + egi4.aoa) div 3
+  		else if(not egi1_aoa_fault and not egi2_aoa_fault and not egi4_aoa_fault) then
+    	    egi_select.aoa = (egi1.aoa + egi2.aoa + egi4.aoa) div 3
+  		else if(not egi1_aoa_fault and not egi2_aoa_fault and not egi3_aoa_fault) then
+    	    egi_select.aoa = (egi1.aoa + egi2.aoa + egi3.aoa) div 3
+    	    
+  		else if(not egi3_aoa_fault and not egi4_aoa_fault) then
+    	    egi_select.aoa = (egi3.aoa + egi4.aoa) div 2
+  		else if(not egi1_aoa_fault and not egi4_aoa_fault) then
+    	    egi_select.aoa = (egi1.aoa + egi4.aoa) div 2
+  		else if(not egi2_aoa_fault and not egi4_aoa_fault) then
+    	    egi_select.aoa = (egi2.aoa + egi4.aoa) div 2
+  		else if(not egi1_aoa_fault and not egi3_aoa_fault) then
+    	    egi_select.aoa = (egi1.aoa + egi3.aoa) div 2
+  		else if(not egi1_aoa_fault and not egi2_aoa_fault) then
+    	    egi_select.aoa = (egi1.aoa + egi2.aoa) div 2
+  		else --if(egi2_aoa_fault and egi3_aoa_fault) then
+    	    egi_select.aoa = (egi2.aoa + egi3.aoa) div 2;
+  
+  **}; 
+
+end ISAS;
+
+end ISAS;

@@ -1,0 +1,128 @@
+package FCC_RC5
+public
+
+annex agree {**
+  	
+  node req_els(elevators_fault : DATA_TYPES::QUAD_Elevators.tbool, 
+               elevators_select : DATA_TYPES::Elevators.treal)
+  returns (ret : bool);
+  let
+   ret = two_faults_in_range(elevators_fault.EL1.ELLOB, elevators_fault.EL2.ELLOB, 
+     elevators_fault.EL3.ELLOB, elevators_fault.EL4.ELLOB, elevators_select.ELLOB,
+     AGREE_CONSTANTS.ELLOB_range_high, AGREE_CONSTANTS.ELLOB_range_low) and 
+     
+     two_faults_in_range(elevators_fault.EL1.ELLIB, elevators_fault.EL2.ELLIB, 
+     elevators_fault.EL3.ELLIB, elevators_fault.EL4.ELLIB, elevators_select.ELLIB,
+     AGREE_CONSTANTS.ELLIB_range_high, AGREE_CONSTANTS.ELLIB_range_low) and 
+     
+     two_faults_in_range(elevators_fault.EL1.ELRIB, elevators_fault.EL2.ELRIB, 
+     elevators_fault.EL3.ELRIB, elevators_fault.EL4.ELRIB, elevators_select.ELRIB,
+     AGREE_CONSTANTS.ELRIB_range_high, AGREE_CONSTANTS.ELRIB_range_low) and 
+     
+     two_faults_in_range(elevators_fault.EL1.ELROB, elevators_fault.EL2.ELROB, 
+     elevators_fault.EL3.ELROB, elevators_fault.EL4.ELROB, elevators_select.ELROB,
+     AGREE_CONSTANTS.ELROB_range_high, AGREE_CONSTANTS.ELROB_range_low);
+  tel;
+  
+  node req_ails(ailerons_fault : DATA_TYPES::QUAD_Ailerons.tbool, 
+               ailerons_select : DATA_TYPES::Ailerons.treal)
+  returns (ret : bool);
+  let
+   ret = two_faults_in_range(ailerons_fault.AIL1.AILL, ailerons_fault.AIL2.AILL, 
+     ailerons_fault.AIL3.AILL, ailerons_fault.AIL4.AILL, ailerons_select.AILL,
+     AGREE_CONSTANTS.AILL_range_high, AGREE_CONSTANTS.AILL_range_low) and 
+     
+     two_faults_in_range(ailerons_fault.AIL1.AILR, ailerons_fault.AIL2.AILR, 
+     ailerons_fault.AIL3.AILR, ailerons_fault.AIL4.AILR, ailerons_select.AILR,
+     AGREE_CONSTANTS.AILR_range_high, AGREE_CONSTANTS.AILR_range_low);
+  tel;
+  
+  node req_flaps(flaps_fault : DATA_TYPES::QUAD_Flaps.tbool, 
+               flaps_select : DATA_TYPES::Flaps.treal)
+  returns (ret : bool);
+  let
+   ret = two_faults_in_range(flaps_fault.FLAPS1.FLLOB, flaps_fault.FLAPS2.FLLOB, 
+     flaps_fault.FLAPS3.FLLOB, flaps_fault.FLAPS4.FLLOB, flaps_select.FLLOB,
+     AGREE_CONSTANTS.FLLOB_range_high, AGREE_CONSTANTS.FLLOB_range_low) and 
+     
+     two_faults_in_range(flaps_fault.FLAPS1.FLLIB,flaps_fault.FLAPS2.FLLIB, 
+     flaps_fault.FLAPS3.FLLIB, flaps_fault.FLAPS4.FLLIB, flaps_select.FLLIB,
+     AGREE_CONSTANTS.FLLIB_range_high, AGREE_CONSTANTS.FLLIB_range_low) and 
+     
+     two_faults_in_range(flaps_fault.FLAPS1.FLRIB, flaps_fault.FLAPS2.FLRIB, 
+     flaps_fault.FLAPS3.FLRIB, flaps_fault.FLAPS4.FLRIB, flaps_select.FLRIB,
+     AGREE_CONSTANTS.FLRIB_range_high, AGREE_CONSTANTS.FLRIB_range_low) and 
+     
+     two_faults_in_range(flaps_fault.FLAPS1.FLROB, flaps_fault.FLAPS2.FLROB, 
+     flaps_fault.FLAPS3.FLROB, flaps_fault.FLAPS4.FLROB, flaps_select.FLROB,
+     AGREE_CONSTANTS.FLROB_range_high, AGREE_CONSTANTS.FLROB_range_low);
+  tel;
+  
+  node req_spoil(spoilers_fault : DATA_TYPES::QUAD_Spoilers.tbool, 
+               spoilers_select : DATA_TYPES::Spoilers.treal)
+  returns (ret : bool);
+  let
+   ret = two_faults_in_range(spoilers_fault.SPOIL1.SPLOB, spoilers_fault.SPOIL2.SPLOB, 
+     spoilers_fault.SPOIL3.SPLOB, spoilers_fault.SPOIL4.SPLOB, spoilers_select.SPLOB,
+     AGREE_CONSTANTS.SPLOB_range_high, AGREE_CONSTANTS.SPLOB_range_low) and 
+     
+     two_faults_in_range(spoilers_fault.SPOIL1.SPLIB, spoilers_fault.SPOIL2.SPLIB, 
+     spoilers_fault.SPOIL3.SPLIB, spoilers_fault.SPOIL4.SPLIB, spoilers_select.SPLIB,
+     AGREE_CONSTANTS.SPLIB_range_high, AGREE_CONSTANTS.SPLIB_range_low) and 
+     
+     two_faults_in_range(spoilers_fault.SPOIL1.SPRIB, spoilers_fault.SPOIL2.SPRIB, 
+     spoilers_fault.SPOIL3.SPRIB, spoilers_fault.SPOIL4.SPRIB, spoilers_select.SPRIB,
+     AGREE_CONSTANTS.SPRIB_range_high, AGREE_CONSTANTS.SPRIB_range_low) and 
+     
+     two_faults_in_range(spoilers_fault.SPOIL1.SPROB, spoilers_fault.SPOIL2.SPROB, 
+     spoilers_fault.SPOIL3.SPROB, spoilers_fault.SPOIL4.SPROB, spoilers_select.SPROB,
+     AGREE_CONSTANTS.SPROB_range_high, AGREE_CONSTANTS.SPROB_range_low);
+  tel;
+  
+  node req_rud(rudders_fault : DATA_TYPES::QUAD_Rudders.tbool, 
+               rudders_select : DATA_TYPES::Rudders.treal)
+  returns (ret : bool);
+  let
+   ret = two_faults_in_range(rudders_fault.RUDD1.RUDU, rudders_fault.RUDD2.RUDU, 
+     rudders_fault.RUDD3.RUDU, rudders_fault.RUDD4.RUDU, rudders_select.RUDU,
+     AGREE_CONSTANTS.RUDU_range_high, AGREE_CONSTANTS.RUDU_range_low) and 
+     
+     two_faults_in_range(rudders_fault.RUDD1.RUDL, rudders_fault.RUDD2.RUDL, 
+     rudders_fault.RUDD3.RUDL, rudders_fault.RUDD4.RUDL, rudders_select.RUDL,
+     AGREE_CONSTANTS.RUDL_range_high, AGREE_CONSTANTS.RUDL_range_low);
+  tel;
+  
+  node req_stab(stabilizers_fault : DATA_TYPES::QUAD_Stabilizer.tbool, 
+               stabilizers_select : DATA_TYPES::Stabilizer.treal)
+  returns (ret : bool);
+  let
+   ret = two_faults_in_range(stabilizers_fault.STAB1, stabilizers_fault.STAB2, 
+     stabilizers_fault.STAB3, stabilizers_fault.STAB4, stabilizers_select.VAL,
+     AGREE_CONSTANTS.STAB_range_high, AGREE_CONSTANTS.STAB_range_low);
+  tel;
+  
+  
+  node two_faults_in_range(f1 : bool, f2 : bool, f3 : bool, f4 : bool,
+  	                       select : real, high : real, low : real)
+  returns (ret : bool);
+  var
+    nf12 : bool;
+    nf13 : bool;
+    nf14 : bool;
+    nf23 : bool;
+    nf24 : bool;
+    nf34 : bool;
+  let
+    nf12 = not (f1 or f2);
+    nf13 = not (f1 or f3);
+    nf14 = not (f1 or f4);
+    nf23 = not (f2 or f3);
+    nf24 = not (f2 or f4);
+    nf34 = not (f3 or f4);
+    ret = nf12 or nf13 or nf14 or nf23 or nf24 or nf34 => low <= select and select <= high;
+  tel;
+
+  
+**};
+
+end FCC_RC5;

@@ -1,0 +1,231 @@
+package ISAS_S_140_150
+public
+
+annex agree {**
+	
+  node req(elevators : DATA_TYPES::QUAD_Elevators.treal, 
+		     ailerons : DATA_TYPES::QUAD_Ailerons.treal,
+             rudders : DATA_TYPES::QUAD_Rudders.treal,
+             flaps : DATA_TYPES::QUAD_Flaps.treal,
+             aoa : DATA_TYPES::DUAL_AoA.treal,
+             air_data : DATA_TYPES::DUAL_AirData.treal, 
+             spoilers :  DATA_TYPES::QUAD_Spoilers.treal,
+             stabilizers : DATA_TYPES::QUAD_Stabilizer.treal,
+             
+             elevators_within_tol : DATA_TYPES::QUAD_Elevators.tbool, 
+		     ailerons_within_tol : DATA_TYPES::QUAD_Ailerons.tbool,
+             rudders_within_tol : DATA_TYPES::QUAD_Rudders.tbool,
+             flaps_within_tol : DATA_TYPES::QUAD_Flaps.tbool,
+             aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool, 
+             spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool,
+             stabilizer_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool
+             
+	        ) returns (ret : bool);
+	  let
+	    ret = 
+	          stabilizer_quad_matches(stabilizers, stabilizer_within_tol) and 
+	          spoiler_quad_matches(spoilers, spoilers_within_tol) and
+	          air_data_dual_matches(air_data, air_data_within_tol) and
+	          aoa_dual_matches(aoa, aoa_within_tol) and
+	          flap_quad_matches(flaps, flaps_within_tol) and
+	          rudder_quad_matches(rudders, rudders_within_tol) and
+	          aileron_quad_matches(ailerons, ailerons_within_tol) and
+	          elevator_quad_matches(elevators, elevators_within_tol);
+	  tel;
+	  
+  node stabilizer_quad_matches(stabilizers : DATA_TYPES::QUAD_Stabilizer.treal,
+  	stabilizers_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool
+  ) returns (ret : bool);
+  let
+    ret = stabilizer_matches(stabilizers.STAB1, stabilizers.STAB2, stabilizers.STAB3, stabilizers.STAB4, stabilizers_within_tol.STAB1) and
+          stabilizer_matches(stabilizers.STAB2, stabilizers.STAB1, stabilizers.STAB3, stabilizers.STAB4, stabilizers_within_tol.STAB2) and
+          stabilizer_matches(stabilizers.STAB3, stabilizers.STAB2, stabilizers.STAB1, stabilizers.STAB4, stabilizers_within_tol.STAB3) and
+          stabilizer_matches(stabilizers.STAB4, stabilizers.STAB2, stabilizers.STAB3, stabilizers.STAB1, stabilizers_within_tol.STAB4);
+  tel;
+  
+  node stabilizer_matches(e1 : DATA_TYPES::Stabilizer.treal, 
+  	e2 : DATA_TYPES::Stabilizer.treal, 
+  	e3 : DATA_TYPES::Stabilizer.treal, 
+  	e4 : DATA_TYPES::Stabilizer.treal,
+  	e_tol: bool
+  ) returns (ret : bool); 
+  let
+    ret = (e_tol = quad_matches_real(e1.VAL, e2.VAL, e3.VAL, e4.VAL, AGREE_CONSTANTS.STAB_tol));
+  tel;
+	  
+  node spoiler_quad_matches(spoilers : DATA_TYPES::QUAD_Spoilers.treal,
+  	spoilers_within_tol : DATA_TYPES::QUAD_Spoilers.tbool
+  ) returns (ret : bool);
+  let
+    ret = spoiler_matches(spoilers.SPOIL1, spoilers.SPOIL2, spoilers.SPOIL3, spoilers.SPOIL4, spoilers_within_tol.SPOIL1) and
+          spoiler_matches(spoilers.SPOIL2, spoilers.SPOIL1, spoilers.SPOIL3, spoilers.SPOIL4, spoilers_within_tol.SPOIL2) and
+          spoiler_matches(spoilers.SPOIL3, spoilers.SPOIL2, spoilers.SPOIL1, spoilers.SPOIL4, spoilers_within_tol.SPOIL3) and
+          spoiler_matches(spoilers.SPOIL4, spoilers.SPOIL2, spoilers.SPOIL3, spoilers.SPOIL1, spoilers_within_tol.SPOIL4);
+  tel;
+  
+  node spoiler_matches(e1 : DATA_TYPES::Spoilers.treal, 
+  	e2 : DATA_TYPES::Spoilers.treal, 
+  	e3 : DATA_TYPES::Spoilers.treal, 
+  	e4 : DATA_TYPES::Spoilers.treal,
+  	e_tol: DATA_TYPES::Spoilers.tbool 
+  ) returns (ret : bool);
+  let
+    ret = (e_tol.SPLIB = quad_matches_real(e1.SPLIB, e2.SPLIB, e3.SPLIB, e4.SPLIB, AGREE_CONSTANTS.SPLIB_tol)) and
+          (e_tol.SPLOB = quad_matches_real(e1.SPLOB, e2.SPLOB, e3.SPLOB, e4.SPLOB, AGREE_CONSTANTS.SPLOB_tol)) and
+          (e_tol.SPROB = quad_matches_real(e1.SPROB, e2.SPROB, e3.SPROB, e4.SPROB, AGREE_CONSTANTS.SPROB_tol)) and
+          (e_tol.SPRIB = quad_matches_real(e1.SPRIB, e2.SPRIB, e3.SPRIB, e4.SPRIB, AGREE_CONSTANTS.SPRIB_tol));
+  tel;
+	  
+  node air_data_dual_matches(air_data : DATA_TYPES::DUAL_AirData.treal,
+  	air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool
+  ) returns (ret : bool);
+  let
+    ret = (air_data_within_tol.AD1.TAT = matches_tol_real(air_data.AD1.TAT, air_data.AD2.TAT, AGREE_CONSTANTS.TAT_tol)) and
+          (air_data_within_tol.AD2.TAT = matches_tol_real(air_data.AD1.TAT, air_data.AD2.TAT, AGREE_CONSTANTS.TAT_tol)) and
+          (air_data_within_tol.AD1.TotPres = matches_tol_real(air_data.AD1.TotPres, air_data.AD2.TotPres, AGREE_CONSTANTS.TotPres_tol)) and
+          (air_data_within_tol.AD2.TotPres = matches_tol_real(air_data.AD1.TotPres, air_data.AD2.TotPres, AGREE_CONSTANTS.TotPres_tol)) and
+          (air_data_within_tol.AD1.Pres = matches_tol_real(air_data.AD1.Pres, air_data.AD2.Pres, AGREE_CONSTANTS.Pres_tol)) and
+          (air_data_within_tol.AD2.Pres = matches_tol_real(air_data.AD1.Pres, air_data.AD2.Pres, AGREE_CONSTANTS.Pres_tol)) and
+          (air_data_within_tol.AD1.Temp = matches_tol_real(air_data.AD1.Temp, air_data.AD2.Temp, AGREE_CONSTANTS.Temp_tol)) and
+          (air_data_within_tol.AD2.Temp = matches_tol_real(air_data.AD1.Temp, air_data.AD2.Temp, AGREE_CONSTANTS.Temp_tol));
+  tel;
+	  
+  node aoa_dual_matches(aoa : DATA_TYPES::DUAL_AoA.treal,
+  	aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool
+  ) returns (ret : bool);
+  let
+    ret = (aoa_within_tol.AOA1.AOA = matches_tol_real(aoa.AOA1.AOA, aoa.AOA2.AOA, AGREE_CONSTANTS.AOA_tol)) and
+          (aoa_within_tol.AOA2.AOA = matches_tol_real(aoa.AOA1.AOA, aoa.AOA2.AOA, AGREE_CONSTANTS.AOA_tol));
+  tel;
+  
+  node aoa_matches(e1 : DATA_TYPES::Elevators.treal, 
+  	e2 : DATA_TYPES::Elevators.treal, 
+  	e3 : DATA_TYPES::Elevators.treal, 
+  	e4 : DATA_TYPES::Elevators.treal,
+  	e_tol: DATA_TYPES::Elevators.tbool 
+  ) returns (ret : bool);
+  let
+    ret = (e_tol.ELLIB = quad_matches_real(e1.ELLIB, e2.ELLIB, e3.ELLIB, e4.ELLIB, AGREE_CONSTANTS.ELLIB_tol)) and
+          (e_tol.ELLOB = quad_matches_real(e1.ELLOB, e2.ELLOB, e3.ELLOB, e4.ELLOB, AGREE_CONSTANTS.ELLOB_tol)) and
+          (e_tol.ELROB = quad_matches_real(e1.ELROB, e2.ELROB, e3.ELROB, e4.ELROB, AGREE_CONSTANTS.ELROB_tol)) and
+          (e_tol.ELRIB = quad_matches_real(e1.ELRIB, e2.ELRIB, e3.ELRIB, e4.ELRIB, AGREE_CONSTANTS.ELRIB_tol));
+  tel;
+	  
+  node flap_quad_matches(flaps : DATA_TYPES::QUAD_Flaps.treal,
+  	flaps_within_tol : DATA_TYPES::QUAD_Flaps.tbool
+  ) returns (ret : bool);
+  let
+    ret = flap_matches(flaps.FLAPS1, flaps.FLAPS2, flaps.FLAPS3, flaps.FLAPS4, flaps_within_tol.FLAPS1) and
+          flap_matches(flaps.FLAPS2, flaps.FLAPS1, flaps.FLAPS3, flaps.FLAPS4, flaps_within_tol.FLAPS2) and
+          flap_matches(flaps.FLAPS3, flaps.FLAPS2, flaps.FLAPS1, flaps.FLAPS4, flaps_within_tol.FLAPS3) and
+          flap_matches(flaps.FLAPS4, flaps.FLAPS2, flaps.FLAPS3, flaps.FLAPS1, flaps_within_tol.FLAPS4);
+  tel;
+  
+  node flap_matches(e1 : DATA_TYPES::Flaps.treal, 
+  	e2 : DATA_TYPES::Flaps.treal, 
+  	e3 : DATA_TYPES::Flaps.treal, 
+  	e4 : DATA_TYPES::Flaps.treal,
+  	e_tol: DATA_TYPES::Flaps.tbool 
+  ) returns (ret : bool);
+  let
+    ret = (e_tol.FLLIB = quad_matches_real(e1.FLLIB, e2.FLLIB, e3.FLLIB, e4.FLLIB, AGREE_CONSTANTS.FLLIB_tol)) and
+          (e_tol.FLLOB = quad_matches_real(e1.FLLOB, e2.FLLOB, e3.FLLOB, e4.FLLOB, AGREE_CONSTANTS.FLLOB_tol)) and
+          (e_tol.FLROB = quad_matches_real(e1.FLROB, e2.FLROB, e3.FLROB, e4.FLROB, AGREE_CONSTANTS.FLROB_tol)) and
+          (e_tol.FLRIB = quad_matches_real(e1.FLRIB, e2.FLRIB, e3.FLRIB, e4.FLRIB, AGREE_CONSTANTS.FLRIB_tol));
+  tel;
+	  
+  node rudder_quad_matches(rudders : DATA_TYPES::QUAD_Rudders.treal,
+  	rudders_within_tol : DATA_TYPES::QUAD_Rudders.tbool
+  ) returns (ret : bool);
+  let
+    ret = rudder_matches(rudders.RUDD1, rudders.RUDD2, rudders.RUDD3, rudders.RUDD4, rudders_within_tol.RUDD1) and
+          rudder_matches(rudders.RUDD2, rudders.RUDD1, rudders.RUDD3, rudders.RUDD4, rudders_within_tol.RUDD2) and
+          rudder_matches(rudders.RUDD3, rudders.RUDD2, rudders.RUDD1, rudders.RUDD4, rudders_within_tol.RUDD3) and
+          rudder_matches(rudders.RUDD4, rudders.RUDD2, rudders.RUDD3, rudders.RUDD1, rudders_within_tol.RUDD4);
+  tel;
+  
+  node rudder_matches(e1 : DATA_TYPES::Rudders.treal, 
+  	e2 : DATA_TYPES::Rudders.treal, 
+  	e3 : DATA_TYPES::Rudders.treal, 
+  	e4 : DATA_TYPES::Rudders.treal,
+  	e_tol: DATA_TYPES::Rudders.tbool 
+  ) returns (ret : bool);
+  let
+    ret = (e_tol.RUDL = quad_matches_real(e1.RUDL, e2.RUDL, e3.RUDL, e4.RUDL, AGREE_CONSTANTS.RUDL_tol)) and
+          (e_tol.RUDU = quad_matches_real(e1.RUDU, e2.RUDU, e3.RUDU, e4.RUDU, AGREE_CONSTANTS.RUDU_tol));
+  tel;
+	  
+  node aileron_quad_matches(ailerons : DATA_TYPES::QUAD_Ailerons.treal,
+  	ailerons_within_tol : DATA_TYPES::QUAD_Ailerons.tbool
+  ) returns (ret : bool);
+  let
+    ret = aileron_matches(ailerons.AIL1, ailerons.AIL2, ailerons.AIL3, ailerons.AIL4, ailerons_within_tol.AIL1) and
+          aileron_matches(ailerons.AIL2, ailerons.AIL1, ailerons.AIL3, ailerons.AIL4, ailerons_within_tol.AIL2) and
+          aileron_matches(ailerons.AIL3, ailerons.AIL2, ailerons.AIL1, ailerons.AIL4, ailerons_within_tol.AIL3) and
+          aileron_matches(ailerons.AIL4, ailerons.AIL2, ailerons.AIL3, ailerons.AIL1, ailerons_within_tol.AIL4);
+  tel;
+  
+  node aileron_matches(e1 : DATA_TYPES::Ailerons.treal, 
+  	e2 : DATA_TYPES::Ailerons.treal, 
+  	e3 : DATA_TYPES::Ailerons.treal, 
+  	e4 : DATA_TYPES::Ailerons.treal,
+  	e_tol: DATA_TYPES::Ailerons.tbool 
+  ) returns (ret : bool);
+  let
+    ret = (e_tol.AILL = quad_matches_real(e1.AILL, e2.AILL, e3.AILL, e4.AILL, AGREE_CONSTANTS.AILL_tol)) and
+          (e_tol.AILR = quad_matches_real(e1.AILR, e2.AILR, e3.AILR, e4.AILR, AGREE_CONSTANTS.AILR_tol));
+  tel;
+	  
+  node elevator_quad_matches(elevators : DATA_TYPES::QUAD_Elevators.treal,
+  	elevators_within_tol : DATA_TYPES::QUAD_Elevators.tbool
+  ) returns (ret : bool);
+  let
+    ret = elevator_matches(elevators.EL1, elevators.EL2, elevators.EL3, elevators.EL4, elevators_within_tol.EL1) and
+          elevator_matches(elevators.EL2, elevators.EL1, elevators.EL3, elevators.EL4, elevators_within_tol.EL2) and
+          elevator_matches(elevators.EL3, elevators.EL2, elevators.EL1, elevators.EL4, elevators_within_tol.EL3) and
+          elevator_matches(elevators.EL4, elevators.EL2, elevators.EL3, elevators.EL1, elevators_within_tol.EL4);
+  tel;
+  
+  node elevator_matches(e1 : DATA_TYPES::Elevators.treal, 
+  	e2 : DATA_TYPES::Elevators.treal, 
+  	e3 : DATA_TYPES::Elevators.treal, 
+  	e4 : DATA_TYPES::Elevators.treal,
+  	e_tol: DATA_TYPES::Elevators.tbool 
+  ) returns (ret : bool);
+  let
+    ret = (e_tol.ELLIB = quad_matches_real(e1.ELLIB, e2.ELLIB, e3.ELLIB, e4.ELLIB, AGREE_CONSTANTS.ELLIB_tol)) and
+          (e_tol.ELLOB = quad_matches_real(e1.ELLOB, e2.ELLOB, e3.ELLOB, e4.ELLOB, AGREE_CONSTANTS.ELLOB_tol)) and
+          (e_tol.ELROB = quad_matches_real(e1.ELROB, e2.ELROB, e3.ELROB, e4.ELROB, AGREE_CONSTANTS.ELROB_tol)) and
+          (e_tol.ELRIB = quad_matches_real(e1.ELRIB, e2.ELRIB, e3.ELRIB, e4.ELRIB, AGREE_CONSTANTS.ELRIB_tol));
+  tel;
+  
+  
+  --returns true if two reals match within a specified tol
+  node matches_tol_real(val1 : real, val2 : real, tol : real) returns (return : bool);
+    let
+      return = if(val1 <= val2) then
+                 val2 <= val1 + tol
+               else
+                 val1 <= val2 + tol;
+    tel;
+    
+  node quad_matches_real
+    (
+      target : real,
+      val1 : real,
+      val2 : real,
+      val3 : real,
+      tol : real
+    ) returns
+    (
+      result : bool 
+    );
+    let
+      result = matches_tol_real(target,val1, tol) or 
+               matches_tol_real(target,val2, tol) or
+               matches_tol_real(target,val3, tol);  
+
+    tel;
+**};
+end ISAS_S_140_150;

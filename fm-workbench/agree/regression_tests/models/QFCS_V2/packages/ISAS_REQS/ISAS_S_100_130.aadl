@@ -1,0 +1,86 @@
+package ISAS_S_100_130
+public
+
+annex agree {**
+	
+	--For single channel inputs, ISAS shall determine if the data has failed
+    --to update, however the command return value will still be passed to OSAS.
+    
+    --shall check dual and quad inputs to determine if the data has failed
+    --to update from the previous sample frame.
+	
+	--note the quad 2 is redundant
+	node req(elevators : DATA_TYPES::QUAD_Elevators.treal, 
+		     ailerons : DATA_TYPES::QUAD_Ailerons.treal,
+             rudders : DATA_TYPES::QUAD_Rudders.treal,
+             flaps : DATA_TYPES::QUAD_Flaps.treal,
+             aoa : DATA_TYPES::DUAL_AoA.treal,
+             air_data : DATA_TYPES::DUAL_AirData.treal, 
+             spoilers :  DATA_TYPES::QUAD_Spoilers.treal,
+             stabilizer : DATA_TYPES::QUAD_Stabilizer.treal,
+             elevators_failed_update : DATA_TYPES.quad_bool, 
+		     ailerons_failed_update : DATA_TYPES.quad_bool,
+             rudders_failed_update : DATA_TYPES.quad_bool,
+             flaps_failed_update : DATA_TYPES.quad_bool,
+             aoa_failed_update : DATA_TYPES.dual_bool,
+             air_data_failed_update : DATA_TYPES.dual_bool, 
+             spoilers_failed_update : DATA_TYPES.quad_bool,
+             stabilizer_failed_update : DATA_TYPES.quad_bool
+	        ) returns (ret : bool);
+	        let
+	          ret = single_req(elevators.EL1, ailerons.AIL1, rudders.RUDD1, flaps.FLAPS1, aoa.AOA1, 
+	          	air_data.AD1, spoilers.SPOIL1, stabilizer.STAB1, elevators_failed_update.val1, ailerons_failed_update.val1,
+                rudders_failed_update.val1, flaps_failed_update.val1, aoa_failed_update.val1, air_data_failed_update.val1, 
+                spoilers_failed_update.val1, stabilizer_failed_update.val1) and 
+                
+                single_req(elevators.EL2, ailerons.AIL2, rudders.RUDD2, flaps.FLAPS2, aoa.AOA2, 
+	          	  air_data.AD2, spoilers.SPOIL2, stabilizer.STAB2, elevators_failed_update.val2, ailerons_failed_update.val2,
+                  rudders_failed_update.val2, flaps_failed_update.val2, aoa_failed_update.val2, air_data_failed_update.val2, 
+                  spoilers_failed_update.val2, stabilizer_failed_update.val2) and
+                  
+                single_req(elevators.EL3, ailerons.AIL3, rudders.RUDD3, flaps.FLAPS3, aoa.AOA2, 
+	          	  air_data.AD2, spoilers.SPOIL3, stabilizer.STAB3, elevators_failed_update.val3, ailerons_failed_update.val3,
+                  rudders_failed_update.val3, flaps_failed_update.val3, aoa_failed_update.val2, air_data_failed_update.val2, 
+                  spoilers_failed_update.val3, stabilizer_failed_update.val3) and
+                  
+                single_req(elevators.EL4, ailerons.AIL4, rudders.RUDD4, flaps.FLAPS4, aoa.AOA2, 
+	          	  air_data.AD2, spoilers.SPOIL4, stabilizer.STAB4, elevators_failed_update.val4, ailerons_failed_update.val4,
+                  rudders_failed_update.val4, flaps_failed_update.val4, aoa_failed_update.val2, air_data_failed_update.val2, 
+                  spoilers_failed_update.val4, stabilizer_failed_update.val4);
+	        tel;
+	
+	node single_req(elevators : DATA_TYPES::Elevators.treal, 
+		     ailerons : DATA_TYPES::Ailerons.treal,
+             rudders : DATA_TYPES::Rudders.treal,
+             flaps : DATA_TYPES::Flaps.treal,
+             aoa : DATA_TYPES::AoA.treal,
+             air_data : DATA_TYPES::AirData.treal, 
+             spoilers :  DATA_TYPES::Spoilers.treal,
+             stabilizer : DATA_TYPES::Stabilizer.treal,
+             elevators_failed_update : bool, 
+		     ailerons_failed_update : bool,
+             rudders_failed_update : bool,
+             flaps_failed_update : bool,
+             aoa_failed_update : bool,
+             air_data_failed_update : bool, 
+             spoilers_failed_update : bool,
+             stabilizer_failed_update : bool
+	        ) returns (ret : bool);
+	        let
+	          ret = failed_update(elevators.TIME_STAMP, elevators_failed_update) and 
+	                failed_update(ailerons.TIME_STAMP, ailerons_failed_update) and 
+	                failed_update(rudders.TIME_STAMP, rudders_failed_update) and 
+	                failed_update(flaps.TIME_STAMP, elevators_failed_update) and 
+	                failed_update(aoa.TIME_STAMP, aoa_failed_update) and 
+	                failed_update(air_data.TIME_STAMP, air_data_failed_update) and 
+	                failed_update(spoilers.TIME_STAMP, spoilers_failed_update) and
+	                failed_update(stabilizer.TIME_STAMP, stabilizer_failed_update);
+	        tel;
+	        
+	node failed_update(timestamp : int, failed : bool) returns (ret : bool);
+	let
+	  ret = failed = (false -> timestamp = pre(timestamp));
+	tel;
+**};
+
+end ISAS_S_100_130;

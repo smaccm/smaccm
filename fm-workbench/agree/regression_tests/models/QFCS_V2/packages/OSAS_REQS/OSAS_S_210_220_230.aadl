@@ -1,0 +1,62 @@
+package OSAS_S_210_220_230
+public
+
+annex agree {**
+	
+	
+	node req 
+    (sovs1 : DATA_TYPES::BoolActuators.impl,
+     sovs2 : DATA_TYPES::BoolActuators.impl,
+     isas_fails : DATA_TYPES::BoolActuators.impl,
+     latched_fails : DATA_TYPES::BoolActuators.impl,
+     ccdl_num_fails : DATA_TYPES::NumActuators.impl)
+  returns
+    (res : bool); 
+  let
+  	res = req_helper(sovs1.AILL, sovs2.AILL, isas_fails.AILL, latched_fails.AILL, ccdl_num_fails.AILL) and 
+  	      req_helper(sovs1.AILR, sovs2.AILR, isas_fails.AILR, latched_fails.AILR, ccdl_num_fails.AILR) and
+  	      req_helper(sovs1.BRAKE, sovs2.BRAKE, isas_fails.BRAKE, latched_fails.BRAKE, ccdl_num_fails.BRAKE) and
+  	      req_helper(sovs1.ELLIB, sovs2.ELLIB, isas_fails.ELLIB, latched_fails.ELLIB, ccdl_num_fails.ELLIB) and 
+  	      req_helper(sovs1.ELLOB, sovs2.ELLOB, isas_fails.ELLOB, latched_fails.ELLOB, ccdl_num_fails.ELLOB) and
+  	      req_helper(sovs1.ELRIB, sovs2.ELRIB, isas_fails.ELRIB, latched_fails.ELRIB, ccdl_num_fails.ELRIB) and
+  	      req_helper(sovs1.ELROB, sovs2.ELROB, isas_fails.ELROB, latched_fails.ELROB, ccdl_num_fails.ELROB) and
+  	      req_helper(sovs1.FLAPLI, sovs2.FLAPLI, isas_fails.FLAPLI, latched_fails.FLAPLI, ccdl_num_fails.FLAPLI) and
+  	      req_helper(sovs1.FLAPLO, sovs2.FLAPLO, isas_fails.FLAPLO, latched_fails.FLAPLO, ccdl_num_fails.FLAPLO) and
+  	      req_helper(sovs1.FLAPRI, sovs2.FLAPRI, isas_fails.FLAPRI, latched_fails.FLAPRI, ccdl_num_fails.FLAPRI) and
+  	      req_helper(sovs1.FLAPRO, sovs2.FLAPRO, isas_fails.FLAPRO, latched_fails.FLAPRO, ccdl_num_fails.FLAPRO) and
+  	      req_helper(sovs1.GEAR, sovs2.GEAR, isas_fails.GEAR, latched_fails.GEAR, ccdl_num_fails.GEAR) and
+  	      req_helper(sovs1.RUDLO, sovs2.RUDLO, isas_fails.RUDLO, latched_fails.RUDLO, ccdl_num_fails.RUDLO) and
+  	      req_helper(sovs1.RUDUP, sovs2.RUDUP, isas_fails.RUDUP, latched_fails.RUDUP, ccdl_num_fails.RUDUP) and
+  	      req_helper(sovs1.SPLLIB, sovs2.SPLLIB, isas_fails.SPLLIB, latched_fails.SPLLIB, ccdl_num_fails.SPLLIB) and
+  	      req_helper(sovs1.SPLLOB, sovs2.SPLLOB, isas_fails.SPLLOB, latched_fails.SPLLOB, ccdl_num_fails.SPLLOB) and
+  	      req_helper(sovs1.SPLRIB, sovs2.SPLRIB, isas_fails.SPLRIB, latched_fails.SPLRIB, ccdl_num_fails.SPLRIB) and
+  	      req_helper(sovs1.SPLROB, sovs2.SPLROB, isas_fails.SPLROB, latched_fails.SPLROB, ccdl_num_fails.SPLROB) and
+  	      req_helper(sovs1.STEER, sovs2.STEER, isas_fails.STEER, latched_fails.STEER, ccdl_num_fails.STEER) and
+  	      req_helper(sovs1.THROTR, sovs2.THROTR, isas_fails.THROTR, latched_fails.THROTR, ccdl_num_fails.THROTR) and
+  	      req_helper(sovs1.THROTL, sovs2.THROTL, isas_fails.THROTL, latched_fails.THROTL, ccdl_num_fails.THROTL);
+  tel;
+  
+  node req_helper
+    (sov1 : bool,
+     sov2 : bool,
+     isas_fail : bool,
+     latched_fail : bool,
+     ccdl_num_fail : int)
+  returns
+    (res : bool);
+  let  
+    res = 
+        (sov1 = sov2) and
+      sov1 = true ->
+        if (isas_fail) then
+          false
+        else if(latched_fail and ccdl_num_fail >= 2) then
+          false
+        else
+          pre(sov1);
+  tel;		
+
+	
+**};
+
+end OSAS_S_210_220_230;

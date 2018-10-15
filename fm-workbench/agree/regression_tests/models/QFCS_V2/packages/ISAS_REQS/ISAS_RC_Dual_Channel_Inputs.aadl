@@ -1,0 +1,363 @@
+package ISAS_RC_Dual_Channel_Inputs
+public
+  with DATA_TYPES;
+  with ISAS;
+
+system ISAS_RC_Dual_Channel_Inputs
+     
+     annex agree {**
+     	guarantee "dummy guarantee for AGREE" : true;
+   	 **};
+    
+ end ISAS_RC_Dual_Channel_Inputs;
+       
+ system implementation ISAS_RC_Dual_Channel_Inputs.impl
+ 
+   subcomponents
+      c : system ISAS::ISAS_Sys;
+      
+   annex agree {**
+   	
+   	eq compare12_AOA: bool = 	
+   		c.aoa_in_range.AOA1.AOA and not c.aoa_failed_update.val1 and 
+   	 	c.aoa_in_range.AOA2.AOA and not c.aoa_failed_update.val2 and
+     	matches_tolerance_real(c.aoa.AOA1.AOA, c.aoa.AOA2.AOA, AGREE_CONSTANTS.AOA_tol);  
+         	        	
+    eq compare12_TAT: bool = 	
+    	c.air_data_in_range.AD1.TAT and not c.air_data_failed_update.val1 and 
+     	c.air_data_in_range.AD2.TAT and not c.air_data_failed_update.val2 and
+   		matches_tolerance_real(c.air_data.AD1.TAT, c.air_data.AD2.TAT, AGREE_CONSTANTS.TAT_tol);  
+     
+    eq compare12_TotPres: bool = 	
+    	c.air_data_in_range.AD1.TotPres and not c.air_data_failed_update.val1 and 
+     	c.air_data_in_range.AD2.TotPres and not c.air_data_failed_update.val2 and
+     	matches_tolerance_real(c.air_data.AD1.TotPres, c.air_data.AD2.TotPres, AGREE_CONSTANTS.TotPres_tol);    
+  
+    eq compare12_Pres: bool = 
+    	c.air_data_in_range.AD1.Pres and not c.air_data_failed_update.val1 and 
+      	c.air_data_in_range.AD2.Pres and not c.air_data_failed_update.val2 and
+     	matches_tolerance_real(c.air_data.AD1.Pres, c.air_data.AD2.Pres, AGREE_CONSTANTS.Pres_tol);    
+       
+    eq compare12_Temp : bool = 
+    	c.air_data_in_range.AD1.Temp and not c.air_data_failed_update.val1 and 
+      	c.air_data_in_range.AD2.Temp and not c.air_data_failed_update.val2 and
+      	matches_tolerance_real(c.air_data.AD1.Temp, c.air_data.AD2.Temp, AGREE_CONSTANTS.Temp_tol);    
+
+     
+    eq compare13_AOA : bool = 
+    	c.aoa_in_range.AOA1.AOA and not c.aoa_failed_update.val1 and not c.egi_select_fault.AOA and
+      	matches_tolerance_real(c.aoa.AOA1.AOA, c.egi_select.AOA, AGREE_CONSTANTS.EGI_AOA_tol);  
+  
+    eq compare13_TAT : bool = 
+    	c.air_data_in_range.AD1.TAT and not c.air_data_failed_update.val1 and not c.egi_select_fault.TAT and
+      	matches_tolerance_real(c.air_data.AD1.TAT, c.egi_select.TAT, AGREE_CONSTANTS.EGI_TAT_tol);  
+   
+    eq compare13_TotPres : bool = 
+    	c.air_data_in_range.AD1.TotPres and not c.air_data_failed_update.val1 and not c.egi_select_fault.TotPres and
+    	matches_tolerance_real(c.air_data.AD1.TotPres,c.egi_select.TotPres, AGREE_CONSTANTS.EGI_TotPres_tol);  
+
+    eq compare13_Pres : bool = 
+    	c.air_data_in_range.AD1.Pres and not c.air_data_failed_update.val1 and not c.egi_select_fault.Pres and
+    	matches_tolerance_real(c.air_data.AD1.Pres, c.egi_select.Pres, AGREE_CONSTANTS.EGI_Pres_tol); 
+    
+    eq compare13_Temp : bool = 
+    	c.air_data_in_range.AD1.Temp and not c.air_data_failed_update.val1 and not c.egi_select_fault.Temp and
+       	matches_tolerance_real(c.air_data.AD1.Temp, c.egi_select.Temp, AGREE_CONSTANTS.EGI_Temp_tol);  
+  
+    eq compare23_AOA : bool = 
+    	c.aoa_in_range.AOA2.AOA and not c.aoa_failed_update.val2 and not c.egi_select_fault.AOA and
+      	matches_tolerance_real(c.aoa.AOA2.AOA, c.egi_select.AOA, AGREE_CONSTANTS.EGI_AOA_tol);  
+  
+    eq compare23_TAT : bool = 
+    	c.air_data_in_range.AD2.TAT and not c.air_data_failed_update.val2 and not c.egi_select_fault.TAT and
+     	matches_tolerance_real(c.air_data.AD2.TAT, c.egi_select.TAT, AGREE_CONSTANTS.EGI_TAT_tol);  
+     
+    eq compare23_TotPres : bool = 
+    	c.air_data_in_range.AD2.TotPres and not c.air_data_failed_update.val2 and not c.egi_select_fault.TotPres and
+       	matches_tolerance_real(c.air_data.AD2.TotPres, c.egi_select.TotPres, AGREE_CONSTANTS.EGI_TotPres_tol); 
+     
+    eq compare23_Pres : bool = 
+    	c.air_data_in_range.AD2.Pres and not c.air_data_failed_update.val2 and not c.egi_select_fault.Pres and
+       	matches_tolerance_real(c.air_data.AD2.Pres, c.egi_select.Pres, AGREE_CONSTANTS.EGI_Pres_tol);  
+ 
+   	eq compare23_Temp : bool = 
+   		c.air_data_in_range.AD2.Temp and not c.air_data_failed_update.val2 and not c.egi_select_fault.Temp and
+      	matches_tolerance_real(c.air_data.AD2.Temp, c.egi_select.Temp, AGREE_CONSTANTS.EGI_Temp_tol);  
+      	
+    eq nCase_AOA : int = nCase(compare12_AOA, compare13_AOA, compare23_AOA, c.egi_select_fault.AOA); 
+    
+    eq nCase_TAT : int = nCase(compare12_TAT, compare13_TAT, compare23_TAT, c.egi_select_fault.TAT);
+    
+    eq nCase_TotPres : int = nCase(compare12_TotPres, compare13_TotPres, compare23_TotPres, c.egi_select_fault.TotPres);
+    
+    eq nCase_Pres : int = nCase(compare12_Pres, compare13_Pres, compare23_Pres, c.egi_select_fault.Pres);
+    
+    eq nCase_Temp : int = nCase(compare12_Temp, compare13_Temp, compare23_Temp, c.egi_select_fault.Temp);
+    
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 0 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_0_AOA" : nCase_AOA = 0 =>
+       (c.aoa_faults.AOA1.AOA and c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = c.egi_select.AOA);   	        	
+
+    lemma "nCase_0_TAT" : nCase_TAT = 0 =>
+       (c.air_data_faults.AD1.TAT and c.air_data_faults.AD2.TAT and c.air_data_select.TAT = c.egi_select.TAT); 
+          	       	    	   
+    lemma "nCase_0_TotPres" : nCase_TotPres = 0  =>
+       (c.air_data_faults.AD1.TotPres and c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = c.egi_select.TotPres);   	        	
+
+    lemma "nCase_0_Pres" : nCase_Pres = 0  =>
+       (c.air_data_faults.AD1.Pres and c.air_data_faults.AD2.Pres and c.air_data_select.Pres = c.egi_select.Pres);   	        	
+    
+    lemma "nCase_0_Temp" : nCase_Temp = 0 =>
+       (c.air_data_faults.AD1.Temp and c.air_data_faults.AD2.Temp and c.air_data_select.Temp = c.egi_select.Temp);  
+       
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 1 
+    -------------------------------------------------------------------------------------------------------------------
+    -- Extremely improbable during the lifetime of the fleet
+ 
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 2 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_2_AOA" : nCase_AOA = 2 => 
+   	   (c.aoa_faults.AOA1.AOA and not c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = (c.aoa.AOA2.AOA + c.egi_select.AOA) / 2.0);   	        	
+   	   
+    lemma "nCase_2_TAT" : nCase_TAT = 2 =>
+       (c.air_data_faults.AD1.TAT and not c.air_data_faults.AD2.TAT and  c.air_data_select.TAT = (c.air_data.AD2.TAT + c.egi_select.TAT) / 2.0);   	        	
+
+    lemma "nCase_2_TotPres" : nCase_TotPres = 2 => 
+       (c.air_data_faults.AD1.TotPres and not c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = (c.air_data.AD2.TotPres + c.egi_select.TotPres) / 2.0);   	        	
+
+    lemma "nCase_2_Pres" : nCase_Pres = 2 =>
+        (c.air_data_faults.AD1.Pres and not c.air_data_faults.AD2.Pres and c.air_data_select.Pres = (c.air_data.AD2.Pres + c.egi_select.Pres) / 2.0);   	        	
+    
+    lemma "nCase_2_Temp" : nCase_Temp = 2 =>
+       (c.air_data_faults.AD1.Temp and not c.air_data_faults.AD2.Temp and c.air_data_select.Temp = (c.air_data.AD2.Temp + c.egi_select.Temp) / 2.0);  
+   	
+   	-------------------------------------------------------------------------------------------------------------------     
+    -- Table row 3 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_3_AOA" : nCase_AOA = 3 => false;
+                      	
+    lemma "nCase_3_TAT" : nCase_TAT = 3 => false;       	
+
+    lemma "nCase_3_TotPres" : nCase_TotPres = 3 => false;
+    
+    lemma "nCase_3_Pres" : nCase_Pres = 3 => false;
+   
+    lemma "nCase_3_Temp" : nCase_Temp = 3 => false;
+      
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 4
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_4_AOA" : nCase_AOA = 4 => 
+   	   (not c.aoa_faults.AOA1.AOA and c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = (c.aoa.AOA1.AOA + c.egi_select.AOA) / 2.0);   	        	
+   	   
+    lemma "nCase_4_TAT" : nCase_TAT = 4 =>
+       (not c.air_data_faults.AD1.TAT and c.air_data_faults.AD2.TAT and c.air_data_select.TAT = (c.air_data.AD1.TAT + c.egi_select.TAT) / 2.0);   	        	
+
+    lemma "nCase_4_TotPres" : nCase_TotPres = 4 =>
+       (not c.air_data_faults.AD1.TotPres and c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = (c.air_data.AD1.TotPres + c.egi_select.TotPres) / 2.0);   	        	
+
+    lemma "nCase_4_Pres" : nCase_Pres = 4 =>
+       (not c.air_data_faults.AD1.Pres and c.air_data_faults.AD2.Pres and c.air_data_select.Pres = (c.air_data.AD1.Pres + c.egi_select.Pres) / 2.0);   	        	
+    
+    lemma "nCase_4_Temp" : nCase_Temp = 4 =>
+        (not c.air_data_faults.AD1.Temp and c.air_data_faults.AD2.Temp and  c.air_data_select.Temp = (c.air_data.AD1.Temp + c.egi_select.Temp) / 2.0);  
+ 
+   -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 5 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_5_AOA" : nCase_AOA = 5 => false;
+                      	
+    lemma "nCase_5_TAT" : nCase_TAT = 5 => false;       	
+
+    lemma "nCase_5_TotPres" : nCase_TotPres = 5 => false;
+    
+    lemma "nCase_5_Pres" : nCase_Pres = 5 => false;
+   
+    lemma "nCase_5_Temp" : nCase_Temp = 5 => false;
+    
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 6 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_6_AOA" : nCase_AOA = 6 =>
+       (not c.aoa_faults.AOA1.AOA and not c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = c.egi_select.AOA);   	        	
+
+    lemma "nCase_6_TAT" : nCase_TAT = 6 =>
+       (not c.air_data_faults.AD1.TAT and not c.air_data_faults.AD2.TAT and c.air_data_select.TAT = c.egi_select.TAT); 
+          	       	    	   
+    lemma "nCase_6_TotPres" : nCase_TotPres = 6  =>
+       (not c.air_data_faults.AD1.TotPres and not c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = c.egi_select.TotPres);   	        	
+
+    lemma "nCase_6_Pres" : nCase_Pres = 6  =>
+       (not c.air_data_faults.AD1.Pres and not c.air_data_faults.AD2.Pres and c.air_data_select.Pres = c.egi_select.Pres);   	        	
+    
+    lemma "nCase_6_Temp" : nCase_Temp = 6 =>
+       (not c.air_data_faults.AD1.Temp and not c.air_data_faults.AD2.Temp and c.air_data_select.Temp = c.egi_select.Temp);  
+         
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 7 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_7_AOA" : nCase_AOA = 7 => false;
+                      	
+    lemma "nCase_7_TAT" : nCase_TAT = 7 => false;       	
+
+    lemma "nCase_7_TotPres" : nCase_TotPres = 7 => false;
+    
+    lemma "nCase_7_Pres" : nCase_Pres = 7 => false;
+   
+    lemma "nCase_7_Temp" : nCase_Temp = 7 => false;
+      
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 8
+    -------------------------------------------------------------------------------------------------------------------          	          	
+   	lemma "nCase_8_AOA" : nCase_AOA = 8 =>
+   	   (not c.aoa_faults.AOA1.AOA and not c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = (c.aoa.AOA1.AOA + c.aoa.AOA2.AOA) / 2.0);   	        	
+   	   
+    lemma "nCase_8_TAT" : nCase_TAT = 8 =>
+      (not c.air_data_faults.AD1.TAT and not c.air_data_faults.AD2.TAT and c.air_data_select.TAT = (c.air_data.AD1.TAT + c.air_data.AD2.TAT) / 2.0);   	        	
+
+    lemma "nCase_8_TotPres" : nCase_TotPres = 8 =>
+      (not c.air_data_faults.AD1.TotPres and not c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = (c.air_data.AD1.TotPres + c.air_data.AD2.TotPres) / 2.0);   	        	
+
+    lemma "nCase_8_Pres" : nCase_Pres = 8 =>
+       (not c.air_data_faults.AD1.Pres and not c.air_data_faults.AD2.Pres and c.air_data_select.Pres = (c.air_data.AD1.Pres + c.air_data.AD2.Pres) / 2.0);   	        	
+
+    lemma "nCase_8Temp" : nCase_Temp = 8 =>
+       (not c.air_data_faults.AD1.Temp and not c.air_data_faults.AD2.Temp and c.air_data_select.Temp = (c.air_data.AD1.Temp + c.air_data.AD2.Temp) / 2.0);  
+          
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 9
+    -------------------------------------------------------------------------------------------------------------------          	          	
+   	lemma "nCase_9_AOA" : nCase_AOA = 9 =>
+   	   (not c.aoa_faults.AOA1.AOA and not c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = (c.aoa.AOA1.AOA + c.aoa.AOA2.AOA) / 2.0);   	        	
+   	   
+    lemma "nCase_9_TAT" : nCase_TAT = 9 =>
+      (not c.air_data_faults.AD1.TAT and not c.air_data_faults.AD2.TAT and c.air_data_select.TAT = (c.air_data.AD1.TAT + c.air_data.AD2.TAT) / 2.0);   	        	
+
+    lemma "nCase_9_TotPres" : nCase_TotPres = 9 =>
+      (not c.air_data_faults.AD1.TotPres and not c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = (c.air_data.AD1.TotPres + c.air_data.AD2.TotPres) / 2.0);   	        	
+
+    lemma "nCase_9_Pres" : nCase_Pres = 9 =>
+       (not c.air_data_faults.AD1.Pres and not c.air_data_faults.AD2.Pres and c.air_data_select.Pres = (c.air_data.AD1.Pres + c.air_data.AD2.Pres) / 2.0);   	        	
+
+    lemma "nCase_9Temp" : nCase_Temp = 9 =>
+       (not c.air_data_faults.AD1.Temp and not c.air_data_faults.AD2.Temp and c.air_data_select.Temp = (c.air_data.AD1.Temp + c.air_data.AD2.Temp) / 2.0);  
+ 
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 10
+    -------------------------------------------------------------------------------------------------------------------          	          	
+   	lemma "nCase_10_AOA" : nCase_AOA = 10 =>
+   	   (not c.aoa_faults.AOA1.AOA and not c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = (c.aoa.AOA1.AOA + c.aoa.AOA2.AOA) / 2.0);   	        	
+   	   
+    lemma "nCase_10_TAT" : nCase_TAT = 10 =>
+      (not c.air_data_faults.AD1.TAT and not c.air_data_faults.AD2.TAT and c.air_data_select.TAT = (c.air_data.AD1.TAT + c.air_data.AD2.TAT) / 2.0);   	        	
+
+    lemma "nCase_10_TotPres" : nCase_TotPres = 10 =>
+      (not c.air_data_faults.AD1.TotPres and not c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = (c.air_data.AD1.TotPres + c.air_data.AD2.TotPres) / 2.0);   	        	
+
+    lemma "nCase_10_Pres" : nCase_Pres = 10 =>
+       (not c.air_data_faults.AD1.Pres and not c.air_data_faults.AD2.Pres and c.air_data_select.Pres = (c.air_data.AD1.Pres + c.air_data.AD2.Pres) / 2.0);   	        	
+
+    lemma "nCase_10Temp" : nCase_Temp = 10 =>
+       (not c.air_data_faults.AD1.Temp and not c.air_data_faults.AD2.Temp and c.air_data_select.Temp = (c.air_data.AD1.Temp + c.air_data.AD2.Temp) / 2.0);  
+              
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 11 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_11_AOA" : nCase_AOA = 11 => false;
+                      	
+    lemma "nCase_11_TAT" : nCase_TAT = 11 => false;       	
+
+    lemma "nCase_11_TotPres" : nCase_TotPres = 11 => false;
+    
+    lemma "nCase_11_Pres" : nCase_Pres = 11 => false;
+   
+    lemma "nCase_11_Temp" : nCase_Temp = 11 => false;
+   
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 12
+    -------------------------------------------------------------------------------------------------------------------          	          	
+   	lemma "nCase_12_AOA" : nCase_AOA = 12 =>
+   	   (not c.aoa_faults.AOA1.AOA and not c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = (c.aoa.AOA1.AOA + c.aoa.AOA2.AOA) / 2.0);   	        	
+   	   
+    lemma "nCase_12_TAT" : nCase_TAT = 12 =>
+      (not c.air_data_faults.AD1.TAT and not c.air_data_faults.AD2.TAT and c.air_data_select.TAT = (c.air_data.AD1.TAT + c.air_data.AD2.TAT) / 2.0);   	        	
+
+    lemma "nCase_12_TotPres" : nCase_TotPres = 12 =>
+      (not c.air_data_faults.AD1.TotPres and not c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = (c.air_data.AD1.TotPres + c.air_data.AD2.TotPres) / 2.0);   	        	
+
+    lemma "nCase_12_Pres" : nCase_Pres = 12 =>
+       (not c.air_data_faults.AD1.Pres and not c.air_data_faults.AD2.Pres and c.air_data_select.Pres = (c.air_data.AD1.Pres + c.air_data.AD2.Pres) / 2.0);   	        	
+
+    lemma "nCase_12Temp" : nCase_Temp = 12 =>
+       (not c.air_data_faults.AD1.Temp and not c.air_data_faults.AD2.Temp and c.air_data_select.Temp = (c.air_data.AD1.Temp + c.air_data.AD2.Temp) / 2.0);  
+                    
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 13 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_13_AOA" : nCase_AOA = 13 => false;
+                      	
+    lemma "nCase_13_TAT" : nCase_TAT = 13 => false;       	
+
+    lemma "nCase_13_TotPres" : nCase_TotPres = 13 => false;
+    
+    lemma "nCase_13_Pres" : nCase_Pres = 13 => false;
+   
+    lemma "nCase_13_Temp" : nCase_Temp = 13 => false;
+            
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 14
+    -------------------------------------------------------------------------------------------------------------------          	          	
+   	lemma "nCase_14_AOA" : nCase_AOA = 14 =>
+   	   (not c.aoa_faults.AOA1.AOA and not c.aoa_faults.AOA2.AOA and c.aoa_select.AOA = (c.aoa.AOA1.AOA + c.aoa.AOA2.AOA) / 2.0);   	        	
+   	   
+    lemma "nCase_14_TAT" : nCase_TAT = 14 =>
+      (not c.air_data_faults.AD1.TAT and not c.air_data_faults.AD2.TAT and c.air_data_select.TAT = (c.air_data.AD1.TAT + c.air_data.AD2.TAT) / 2.0);   	        	
+
+    lemma "nCase_14_TotPres" : nCase_TotPres = 14 =>
+      (not c.air_data_faults.AD1.TotPres and not c.air_data_faults.AD2.TotPres and c.air_data_select.TotPres = (c.air_data.AD1.TotPres + c.air_data.AD2.TotPres) / 2.0);   	        	
+
+    lemma "nCase_14_Pres" : nCase_Pres = 14 =>
+       (not c.air_data_faults.AD1.Pres and not c.air_data_faults.AD2.Pres and c.air_data_select.Pres = (c.air_data.AD1.Pres + c.air_data.AD2.Pres) / 2.0);   	        	
+
+    lemma "nCase_14_Temp" : nCase_Temp = 14 =>
+       (not c.air_data_faults.AD1.Temp and not c.air_data_faults.AD2.Temp and c.air_data_select.Temp = (c.air_data.AD1.Temp + c.air_data.AD2.Temp) / 2.0);  
+          
+    -------------------------------------------------------------------------------------------------------------------     
+    -- Table row 15 
+    -------------------------------------------------------------------------------------------------------------------
+   	lemma "nCase_15_AOA" : nCase_AOA = 15 => false;
+                      	
+    lemma "nCase_15_TAT" : nCase_TAT = 15 => false;       	
+
+    lemma "nCase_15_TotPres" : nCase_TotPres = 15 => false;
+    
+    lemma "nCase_15_Pres" : nCase_Pres = 15 => false;
+   
+    lemma "nCase_15_Temp" : nCase_Temp = 15 => false;
+            
+   node b2int(b: bool) returns (i: int);      
+     let i = if b then 1 else 0; tel;
+      
+   node nCase(compare12: bool, compare13: bool, compare23: bool, fault3: bool) returns (i: int);
+     let 
+       i = b2int(compare12) * 8 + b2int(compare13) * 4 + b2int(compare23) * 2 + b2int(fault3);  
+     tel;    	
+    
+   node matches_tolerance_real(val1 : real, val2 : real, tol : real) returns (return : bool);
+    let
+      return = if(val1 <= val2) then
+                 val2 <= val1 + tol
+               else
+                 val1 <= val2 + tol;
+    tel;
+             	  	 	   	 	
+   **};  
+   
+ end ISAS_RC_Dual_Channel_Inputs.impl;
+ 
+end ISAS_RC_Dual_Channel_Inputs;
+

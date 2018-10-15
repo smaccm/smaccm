@@ -1,0 +1,58 @@
+package OSAS_S_190
+public
+
+annex agree {**
+	
+  node req 
+    (acts_in : DATA_TYPES::Actuators.impl,
+     acts_out : DATA_TYPES::Actuators.impl,
+     acts_gain : DATA_TYPES::Actuators.impl)
+  returns
+    (res : bool);
+  let
+  	res = req_helper(acts_in.AILL, acts_out.AILL, acts_gain.AILL) and 
+  	      req_helper(acts_in.AILR, acts_out.AILR, acts_gain.AILR) and
+  	      req_helper(acts_in.BRAKE, acts_out.BRAKE, acts_gain.BRAKE) and
+  	      req_helper(acts_in.ELLIB, acts_out.ELLIB, acts_gain.ELLIB) and 
+  	      req_helper(acts_in.ELLOB, acts_out.ELLOB, acts_gain.ELLOB) and
+  	      req_helper(acts_in.ELRIB, acts_out.ELRIB, acts_gain.ELRIB) and
+  	      req_helper(acts_in.ELROB, acts_out.ELROB, acts_gain.ELROB) and
+  	      req_helper(acts_in.FLAPLI, acts_out.FLAPLI, acts_gain.FLAPLI) and
+  	      req_helper(acts_in.FLAPLO, acts_out.FLAPLO, acts_gain.FLAPLO) and
+  	      req_helper(acts_in.FLAPRI, acts_out.FLAPRI, acts_gain.FLAPRI) and
+  	      req_helper(acts_in.FLAPRO, acts_out.FLAPRO, acts_gain.FLAPRO) and
+  	      req_helper(acts_in.GEAR, acts_out.GEAR, acts_gain.GEAR) and
+  	      req_helper(acts_in.RUDLO, acts_out.RUDLO, acts_gain.RUDLO) and
+  	      req_helper(acts_in.RUDUP, acts_out.RUDUP, acts_gain.RUDUP) and
+  	      req_helper(acts_in.SPLLIB, acts_out.SPLLIB, acts_gain.SPLLIB) and
+  	      req_helper(acts_in.SPLLOB, acts_out.SPLLOB, acts_gain.SPLLOB) and
+  	      req_helper(acts_in.SPLRIB, acts_out.SPLRIB, acts_gain.SPLRIB) and
+  	      req_helper(acts_in.SPLROB, acts_out.SPLROB, acts_gain.SPLROB) and
+  	      req_helper(acts_in.STEER, acts_out.STEER, acts_gain.STEER) and
+  	      req_helper(acts_in.THROTR, acts_out.THROTR, acts_gain.THROTR) and
+  	      req_helper(acts_in.THROTL, acts_out.THROTL, acts_gain.THROTL);
+  tel;
+   
+  node req_helper
+    (act_in : real,
+     act_out : real,
+     act_gain : real)
+  returns
+    (res : bool);
+  let  
+    res = if(act_gain = 1.0) then
+            act_out = act_in
+          else if(act_gain = 2.0) then
+            act_out = act_in * 2.0
+          else if(act_gain = 4.0/3.0) then
+            act_out = act_in *4.0/3.0
+          else if(act_gain = 4.0) then
+            act_out = act_in * 4.0
+          else
+            act_out = 0.0;
+       --act_out = act_in*act_gain;
+  tel;		
+    
+**};
+
+end OSAS_S_190;

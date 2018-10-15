@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the Infusion Manager behavioral model.
+--------------------------------------------------------------------------
+
+package Logging 
+public
+  with DATATYPES;
+  
+  system Logging
+    features    
+      TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;
+      CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
+      ALARM_IN: in data port DATATYPES::Alarm_Outputs.Impl;
+      SYS_STAT_IN: in data port DATATYPES::System_Status_Outputs.Impl;      
+      IM_IN: in data port DATATYPES::Infusion_Manager_Outputs.Impl;  
+      
+      LOG_OUT: out data port DATATYPES::Log_Output.Impl;          
+   
+      -- annex agree {****};
+      
+  end Logging;
+  
+  system implementation Logging.Impl
+  end Logging.Impl;
+    
+end Logging;

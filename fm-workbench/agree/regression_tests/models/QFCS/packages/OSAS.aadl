@@ -1,0 +1,347 @@
+package OSAS
+public
+  with Feature_Groups;
+  with Base_Types;
+  
+system OSAS
+  features
+   
+    --actuator signals sent from CCDL
+    acts_input: in data port Feature_Groups::ACTUATORS_Data.impl;
+    --transmitted actuator signals (after gain is applied)
+    acts: out data port Feature_Groups::ACTUATORS_Data.impl;
+    --the loop back actuator signals from the actuator
+    acts_ret : in data port Feature_Groups::ACTUATORS_DATA.impl;
+       
+    sovs: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    ccdl_frame_count: in data port Base_Types::Integer;
+    ccdl_failed: out data port Base_Types::Boolean;
+    
+    num_valid_ailerons: in data port Base_Types::Integer;
+    num_valid_elevators: in data port Base_Types::Integer;
+    num_valid_rudder: in data port Base_Types::Integer;
+    num_valid_spoiler: in data port Base_Types::Integer;
+    num_valid_flaps_gt: in data port Base_Types::Integer;
+    num_valid_flaps_lt: in data port Base_Types::Integer;
+    
+    ailerons_claw_fail: in data port Base_Types::Boolean;
+    elevators_claw_fail: in data port Base_Types::Boolean;
+    rudder_claw_fail: in data port Base_Types::Boolean;
+    spoiler_claw_fail: in data port Base_Types::Boolean;
+    flaps_gt_claw_fail: in data port Base_Types::Boolean;
+    flaps_lt_claw_fail: in data port Base_Types::Boolean;
+    
+    ailerons_isas_fail: in data port Base_Types::Boolean;
+    elevators_isas_fail: in data port Base_Types::Boolean;
+    rudder_isas_fail: in data port Base_Types::Boolean;
+    spoiler_isas_fail: in data port Base_Types::Boolean;
+    flaps_gt_isas_fail: in data port Base_Types::Boolean;
+    flaps_lt_isas_fail: in data port Base_Types::Boolean;
+    
+    ailerons_ccdl_num_fail: in data port Base_Types::Integer;
+    elevators_ccdl_num_fail: in data port Base_Types::Integer;
+    rudder_ccdl_num_fail: in data port Base_Types::Integer;
+    spoiler_ccdl_num_fail: in data port Base_Types::Integer;
+    flaps_gt_ccdl_num_fail: in data port Base_Types::Integer;
+    flaps_lt_ccdl_num_fail: in data port Base_Types::Integer;
+    
+    --set by the ccdl
+    osas_failed: in data port Base_Types::Boolean;
+    
+    --outputs
+    frame_count : out data port base_Types::Integer;
+    
+    ailerons_failed : out data port Base_Types::Boolean;
+    elevators_failed : out data port Base_Types::Boolean;
+    rudder_failed : out data port Base_Types::Boolean;
+    spoiler_failed : out data port Base_Types::Boolean;
+    flaps_gt_failed : out data port Base_Types::Boolean;
+    flaps_lt_failed : out data port Base_Types::Boolean;
+    
+  annex agree {**
+                          
+    --fault counters 1
+    eq ailerons_faults : int;
+    eq elevators_faults : int;
+    eq rudder_faults : int;
+    eq spoiler_faults : int;
+    eq flaps_gt_faults : int;
+    eq flaps_lt_faults : int;
+   
+    --actuator gains
+    eq ailerons_gain : int;
+    eq elevators_gain : int;
+    eq rudder_gain : int;
+    eq spoiler_gain : int;
+    eq flaps_gt_gain : int;
+    eq flaps_lt_gain : int;
+    
+    guarantee "fault counts are initially zero":
+      ((ailerons_faults  = 0) -> true) and
+      ((elevators_faults  = 0) -> true) and
+      ((rudder_faults  = 0) -> true) and
+      ((spoiler_faults  = 0) -> true) and
+      ((flaps_gt_faults  = 0) -> true) and
+      ((flaps_lt_faults  = 0) -> true);
+      
+    guarantee "fault counts positive":
+      (ailerons_faults >= 0) and
+      (elevators_faults >= 0) and
+      (rudder_faults >= 0) and
+      (spoiler_faults >= 0) and
+      (flaps_gt_faults >= 0) and
+      (flaps_lt_faults >= 0);
+      
+    --For each actuator, OSAS shall determine whether the actuator 
+    --command return value is within 2.5% of actuator command from 
+    --the previous frame, and if not shall increment a fault counter 
+    --for that actuator command.
+    
+    --OSAS shall set the actuator command fault counter to 0 (zero) 
+    --if the fault clears within 5 frames.
+    guarantee "OSAS-S-100 and OSAS-S-110": true ->
+      (ailerons_faults = 
+        if AGREE_OSAS_NODES.fault_occurred(acts.ailerons, acts_ret.ailerons) then
+          pre(ailerons_faults) + 1
+        else if AGREE_OSAS_NODES.no_fault_for_frames(acts.ailerons, acts_ret.ailerons, 5) then
+          0
+        else
+          pre(ailerons_faults)) and 
+      (elevators_faults = 
+        if AGREE_OSAS_NODES.fault_occurred(acts.elevators, acts_ret.elevators) then
+          pre(elevators_faults) + 1
+        else if AGREE_OSAS_NODES.no_fault_for_frames(acts.elevators, acts_ret.elevators, 5) then
+          0
+        else
+          pre(elevators_faults)) and 
+      (rudder_faults = 
+        if AGREE_OSAS_NODES.fault_occurred(acts.rudder, acts_ret.rudder) then
+          pre(rudder_faults) + 1
+        else if AGREE_OSAS_NODES.no_fault_for_frames(acts.rudder, acts_ret.rudder, 5) then
+          0
+        else
+          pre(rudder_faults)) and 
+      (spoiler_faults = 
+        if AGREE_OSAS_NODES.fault_occurred(acts.spoiler, acts_ret.spoiler) then
+          pre(spoiler_faults) + 1
+        else if AGREE_OSAS_NODES.no_fault_for_frames(acts.spoiler, acts_ret.spoiler, 5) then
+          0
+        else
+          pre(spoiler_faults)) and 
+      (flaps_gt_faults = 
+        if AGREE_OSAS_NODES.fault_occurred(acts.flaps_gt, acts_ret.flaps_gt) then
+          pre(flaps_gt_faults) + 1
+        else if AGREE_OSAS_NODES.no_fault_for_frames(acts.flaps_gt, acts_ret.flaps_gt, 5) then
+          0
+        else
+          pre(flaps_gt_faults)) and 
+      (flaps_lt_faults = 
+        if AGREE_OSAS_NODES.fault_occurred(acts.flaps_lt, acts_ret.flaps_lt) then
+          pre(flaps_lt_faults) + 1
+        else if AGREE_OSAS_NODES.no_fault_for_frames(acts.flaps_lt, acts_ret.flaps_lt, 5) then
+          0
+        else
+          pre(flaps_lt_faults));
+
+    --shall latch the actuator command FAILED if the fault 
+    --persists for 5 consecutive frames.
+    guarantee "OSAS-S-120": true ->
+      (ailerons_failed = 
+        if (AGREE_OSAS_NODES.fault_persists_for_frames(acts.ailerons, acts_ret.ailerons, 5)) then
+          true
+        else
+          pre (ailerons_failed)) and
+      (elevators_failed = 
+        if (AGREE_OSAS_NODES.fault_persists_for_frames(acts.elevators, acts_ret.elevators, 5)) then
+          true
+        else
+          pre (elevators_failed)) and
+      (rudder_failed = 
+        if (AGREE_OSAS_NODES.fault_persists_for_frames(acts_ret.rudder, acts.rudder, 5)) then
+          true
+        else
+          pre (rudder_failed)) and
+      (spoiler_failed = 
+        if (AGREE_OSAS_NODES.fault_persists_for_frames(acts.spoiler, acts_ret.spoiler, 5)) then
+          true
+        else
+          pre (spoiler_failed)) and
+      (flaps_gt_failed = 
+        if (AGREE_OSAS_NODES.fault_persists_for_frames(acts.flaps_gt, acts_ret.flaps_gt, 5)) then
+          true
+        else
+          pre (flaps_gt_failed)) and
+      (flaps_lt_failed = 
+        if (AGREE_OSAS_NODES.fault_persists_for_frames(acts.flaps_lt, acts_ret.flaps_lt, 5)) then
+          true
+        else
+          pre (flaps_lt_failed));
+      
+    --OSAS shall compare the current CCDL frame counter to the 
+    --previous value to determine if CCDL has had a failure.
+    
+    --If the CCDL frame counter fails to increment, or does 
+    --not increment by 1 (one) each frame, OSAS shall declare the CCDL FAILED.
+    guarantee "OSAS-S-150 and OSAS-S-160" : true ->
+      ccdl_failed = (ccdl_frame_count != pre(ccdl_frame_count) + 1);
+    
+    --If the local CCDL has failed, OSAS shall set the local
+    --actuator command gain to 1 (one).
+    guarantee "OSAS-S-170" :
+      ccdl_failed =>  
+         (ailerons_gain = 1) and
+         (elevators_gain = 1) and
+         (spoiler_gain = 1) and
+         (rudder_gain = 1) and
+         (flaps_gt_gain = 1) and
+         (flaps_lt_gain = 1);
+  
+    --this node allows us to compute the actuator gain
+    --by looking at the number of valid channels and
+    --returning 4/(number of valid channels). We use
+    --this node to do this computation to avoid non-linear
+    --arithmatic
+    node actuator_gain(num_valid : int) returns (result : int);
+    let
+      result = if(num_valid = 3) then
+                  1
+               else if(num_valid = 2) then
+                  3
+               else if(num_valid = 1) then
+                  2
+               else if(num_valid = 0) then
+                  4
+               else
+                  1;
+    tel;
+  
+    --OSAS shall compute the actuator command gain as the ratio
+    --of the total number of command channels to the number of
+    --valid command channels (i.e. 4/(number of valid command channels).
+    guarantee "OSAS-S-180" :
+      not ccdl_failed =>  
+         (ailerons_gain = actuator_gain(num_valid_ailerons)) and
+         (elevators_gain = actuator_gain(num_valid_elevators)) and
+         (rudder_gain = actuator_gain(num_valid_rudder)) and
+         (spoiler_gain = actuator_gain(num_valid_spoiler)) and
+         (flaps_gt_gain = actuator_gain(num_valid_flaps_gt)) and
+         (flaps_lt_gain = actuator_gain(num_valid_flaps_lt));
+  
+    node act_value(command : real, gain : int, failure : bool) returns (return : real);
+    let
+      return = if (failure) then
+                  0.0
+               else if(gain = 1) then
+                  command 
+               else if (gain = 2) then
+                  2.0 * command
+               else if (gain = 3) then
+                  (4.0/3.0) * command
+               else if (gain = 4) then
+                  4.0*command
+               else
+                  command;
+    tel;
+    
+    --When an actuator command has been latched failed, OSAS shall set 
+    --that actuator command to 0 (zero).
+    guarantee "OSAS-S-140" : 
+      (ailerons_failed => acts.ailerons = 0.0) and
+      (elevators_failed => acts.elevators = 0.0) and
+      (spoiler_failed => acts.spoiler = 0.0) and
+      (rudder_failed => acts.rudder = 0.0) and
+      (flaps_gt_failed => acts.flaps_gt = 0.0) and
+      (flaps_lt_failed => acts.flaps_lt = 0.0);
+    
+    
+    guarantee "OSAS-S-190, OSAS-S-240, and OSAS-S-250" :
+    ((not ailerons_failed)  =>
+      acts.ailerons = 
+        act_value(acts_input.ailerons, 
+                  ailerons_gain, 
+                  ailerons_claw_fail or osas_failed)) and
+    ((not elevators_failed)  =>
+      acts.elevators = 
+        act_value(acts_input.elevators,
+                  elevators_gain, 
+                  elevators_claw_fail or osas_failed)) and
+    ((not rudder_failed)  =>
+      acts.rudder = 
+        act_value(acts_input.rudder, 
+                  rudder_gain, 
+                  rudder_claw_fail or osas_failed)) and
+    ((not spoiler_failed)  =>
+      acts.spoiler = 
+        act_value(acts_input.spoiler, 
+                  spoiler_gain, 
+                  spoiler_claw_fail or osas_failed)) and
+    ((not flaps_gt_failed)  =>
+      acts.flaps_gt = 
+        act_value(acts_input.flaps_gt, 
+                  flaps_gt_gain, 
+                  flaps_gt_claw_fail or osas_failed)) and
+    ((not flaps_lt_failed)  =>
+      acts.flaps_lt = 
+        act_value(acts_input.flaps_lt, 
+                  flaps_lt_gain, 
+                  flaps_lt_claw_fail or osas_failed));
+
+    guarantee "OSAS-S-210, OSAS-S-220, and OSAS-S-230":
+      (sovs.ailerons_sov1_open = sovs.ailerons_sov2_open) and
+      sovs.ailerons_sov1_open = true ->
+        if (ailerons_isas_fail) then
+          false
+        else if(ailerons_failed and ailerons_ccdl_num_fail >= 2) then
+          false
+        else
+          pre(sovs.ailerons_sov1_open) and
+      (sovs.elevators_sov1_open = sovs.elevators_sov2_open) and
+      sovs.elevators_sov1_open = true ->
+        if (elevators_isas_fail) then
+          false
+        else if(elevators_failed and elevators_ccdl_num_fail >= 2) then
+          false
+        else
+          pre(sovs.elevators_sov1_open) and
+      (sovs.rudder_sov1_open = sovs.rudder_sov2_open) and
+      sovs.rudder_sov1_open = true ->
+        if (rudder_isas_fail) then
+          false
+        else if(rudder_failed and rudder_ccdl_num_fail >= 2) then
+          false
+        else
+          pre(sovs.rudder_sov1_open) and
+      (sovs.spoiler_sov1_open = sovs.spoiler_sov2_open) and
+      sovs.spoiler_sov1_open = true ->
+        if (spoiler_isas_fail) then
+          false
+        else if(spoiler_failed and spoiler_ccdl_num_fail >= 2) then
+          false
+        else
+          pre(sovs.spoiler_sov1_open) and
+      (sovs.flaps_gt_sov1_open = sovs.flaps_gt_sov2_open) and
+      sovs.flaps_gt_sov1_open = true ->
+        if (flaps_gt_isas_fail) then
+          false
+        else if(flaps_gt_failed and flaps_gt_ccdl_num_fail >= 2) then
+          false
+        else
+          pre(sovs.flaps_gt_sov1_open) and
+      (sovs.flaps_lt_sov1_open = sovs.flaps_lt_sov2_open) and
+      sovs.flaps_lt_sov1_open = true ->
+        if (flaps_lt_isas_fail) then 
+          false
+        else if(flaps_lt_failed and flaps_lt_ccdl_num_fail >= 2) then
+          false
+        else 
+          pre(sovs.flaps_lt_sov1_open);  
+       
+    guarantee "OSAS-S-260" :
+      frame_count = (0 -> pre(frame_count) + 1);
+
+      
+  **};
+    
+end OSAS;
+
+end OSAS;
