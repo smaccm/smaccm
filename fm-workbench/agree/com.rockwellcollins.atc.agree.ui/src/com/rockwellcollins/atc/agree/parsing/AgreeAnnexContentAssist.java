@@ -31,6 +31,7 @@ import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.ui.contentassist.AgreeProposalProvider;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
@@ -125,7 +126,7 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 
 		if (base instanceof Arg) {
 			Type type = ((Arg) base).getType();
-			NestedDotID elID = ((RecordType) type).getRecord();
+			TypeID elID = ((RecordType) type).getRecord();
 			namedEl = elID.getBase();
 		} else if (base instanceof DataPort) {
 			namedEl = ((DataPort) base).getDataFeatureClassifier();

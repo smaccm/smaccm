@@ -124,6 +124,7 @@ import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
@@ -1213,8 +1214,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkRecordType(RecordType recType) {
-		NestedDotID recId = recType.getRecord();
-		NamedElement finalId = getFinalNestId(recId);
+		TypeID recId = recType.getRecord();
+		NamedElement finalId = recId.getBase();
 
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)
 				&& !(finalId instanceof DataType) && !(finalId instanceof EnumStatement)) {
@@ -1252,13 +1253,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkRecordExpr(RecordExpr recExpr) {
 
-		NestedDotID recType = recExpr.getRecord();
+		TypeID recType = recExpr.getRecord();
 		List<NamedElement> defArgs = getArgNames(recType);
 		EList<NamedElement> exprArgs = recExpr.getArgs();
 		EList<Expr> argExprs = recExpr.getArgExpr();
 
-		NestedDotID recId = recExpr.getRecord();
-		NamedElement finalId = getFinalNestId(recId);
+		TypeID recId = recExpr.getRecord();
+		NamedElement finalId = recId.getBase();
 
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
 			error(recId, "types must be record definition or data implementation");
@@ -1301,9 +1302,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private List<NamedElement> getArgNames(NestedDotID recId) {
+	private List<NamedElement> getArgNames(TypeID recId) {
 
-		NamedElement rec = getFinalNestId(recId);
+		NamedElement rec = recId.getBase();
 		List<NamedElement> names = new ArrayList<>();
 
 		if (rec instanceof RecordDefExpr) {
@@ -1323,9 +1324,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return names;
 	}
 
-	private Map<String, AgreeType> getArgNameMap(NestedDotID recId) {
+	private Map<String, AgreeType> getArgNameMap(TypeID recId) {
 
-		NamedElement rec = getFinalNestId(recId);
+		NamedElement rec = recId.getBase();
 		Map<String, AgreeType> typeMap = new HashMap<>();
 
 		if (rec instanceof RecordDefExpr) {
@@ -1364,6 +1365,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //
 //    	return types;
 //    }
+
+	private void dataImplCycleCheck(TypeID dataID) {
+		NamedElement finalId = dataID.getBase();
+		DataImplementation dataImpl = (DataImplementation) finalId;
+		dataImplCycleCheck(dataImpl, dataID);
+	}
 
 	private void dataImplCycleCheck(NestedDotID dataID) {
 		NamedElement finalId = getFinalNestId(dataID);
@@ -1412,8 +1419,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		for (Arg arg : recordDef.getArgs()) {
 			Type type = arg.getType();
 			if (type instanceof RecordType) {
-				NestedDotID subRec = ((RecordType) type).getRecord();
-				NamedElement finalId = getFinalNestId(subRec);
+				TypeID subRec = ((RecordType) type).getRecord();
+				NamedElement finalId = subRec.getBase();
 
 //				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
 //					error(type, "types must be record definition or data implementation");
@@ -1440,8 +1447,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				for (Arg arg : subRecDef.getArgs()) {
 					Type type = arg.getType();
 					if (type instanceof RecordType) {
-						NestedDotID subRecId = ((RecordType) type).getRecord();
-						NamedElement subFinalEl = getFinalNestId(subRecId);
+						TypeID subRecId = ((RecordType) type).getRecord();
+						NamedElement subFinalEl = subRecId.getBase();
 						if (subFinalEl instanceof RecordDefExpr) {
 							recordClosure.add((RecordDefExpr) subFinalEl);
 						}
@@ -1506,14 +1513,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return new AgreeType(typeName);
 		} else {
 			RecordType recType = (RecordType) type;
-			NestedDotID recId = recType.getRecord();
-			return getNestIdAsType(recId);
+			TypeID recId = recType.getRecord();
+			return getTypeIDasType(recId);
 		}
 	}
 
-	private AgreeType getNestIdAsType(NestedDotID recId) {
+	private AgreeType getTypeIDasType(TypeID recId) {
 		String typeName = "";
-		NamedElement recEl = getFinalNestId(recId);
+		NamedElement recEl = recId.getBase();
 		EObject aadlPack = recEl.eContainer();
 
 		while (!(aadlPack instanceof AadlPackage)) {
@@ -2911,7 +2918,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	private AgreeType getAgreeType(RecordExpr recExpr) {
-		return getNestIdAsType(recExpr.getRecord());
+		return getTypeIDasType(recExpr.getRecord());
 	}
 
 	public static boolean matches(AgreeType expected, AgreeType actual) {

@@ -1,0 +1,148 @@
+-- 
+package Signals
+public
+with Base_Types;
+  system Fall
+    features
+      I: in data port Base_Types::Boolean;
+      O: out data port Base_Types::Boolean;
+    annex agree {**
+      
+      -- Inserted from /contracts/Fall.txt
+
+      eq ttF: bool = Agree_Nodes.tF(2);
+          
+      guarantee "Fall_Correct" : O = if ttF then false else (false -> pre(I) and not I);   
+                  
+**};
+  end Fall;
+  
+  system Rise
+    features
+      I: in data port Base_Types::Boolean;
+      O: out data port Base_Types::Boolean;
+    annex agree {**
+      
+      -- Inserted from /contracts/Rise.txt
+
+      eq ttF: bool = Agree_Nodes.tF(2);
+          
+      guarantee "Rise_Correct" : O = if ttF then false else (false -> not pre(I) and I);   
+                                
+**};
+  end Rise;
+  
+  system implementation Fall.Fall_Impl
+    annex behavior_specification {**
+      
+      variables
+        prev_I: Base_Types::Boolean;
+      states
+        St_Step :  state ;
+        St_Start :  initial state ;
+        St_Stop :  complete final state ;
+      transitions
+        T2 : St_Step -[  ]-> St_Step
+          { O := prev_I and not I; prev_I := I }  ; 
+        T1 : St_Start -[  ]-> St_Step
+          { O := false; prev_I := I }  ; 
+
+**};
+    annex agree {**
+      
+        const St_Step : int = 1;
+        const St_Start : int = 2;
+        const St_Stop : int = 3;
+
+        eq state : int;
+
+        eq prev_I: bool;
+
+        assert (state = St_Start) -> true;
+
+        assert (state = St_Start) or (state = St_Step) or (state = St_Stop);
+
+        eq T2: bool = (false -> (pre(state) = St_Step));
+
+        assert T2 => (state = St_Step);
+
+        assert T2 => (O = pre(prev_I) and not I);
+
+        assert T2 => (prev_I = I);
+
+        eq T1: bool = (false -> (pre(state) = St_Start));
+
+        assert T1 => (state = St_Step);
+
+        assert T1 => (O = false);
+
+        assert T1 => (prev_I = I);
+
+        assert true -> (not (T1 or T2) => (prev_I = pre(prev_I)));
+        assert true -> (not (T1 or T2) => (state = pre(state)));
+        assert true -> (not (T1 or T2) => (O = pre(O)));
+
+      -- Inserted from /contracts/Fall_Impl.txt
+
+      assert (O = false) -> true;
+      lemma "Stop_Unreachable": (state != St_Stop);
+**};
+  end Fall.Fall_Impl;
+  
+  system implementation Rise.Rise_Impl
+    annex behavior_specification {**
+      
+      variables
+        prev_I: Base_Types::Boolean;
+      states
+        St_Step :  state ;
+        St_Start :  initial state ;
+        St_Stop :  complete final state ;
+      transitions
+        T2 : St_Step -[  ]-> St_Step
+          { O := not prev_I and I; prev_I := I }  ; 
+        T1 : St_Start -[  ]-> St_Step
+          { O := false; prev_I := I }  ; 
+
+**};
+    annex agree {**
+      
+        const St_Step : int = 1;
+        const St_Start : int = 2;
+        const St_Stop : int = 3;
+
+        eq state : int;
+
+        eq prev_I: bool;
+
+        assert (state = St_Start) -> true;
+
+        assert (state = St_Start) or (state = St_Step) or (state = St_Stop);
+
+        eq T2: bool = (false -> (pre(state) = St_Step));
+
+        assert T2 => (state = St_Step);
+
+        assert T2 => (O = not pre(prev_I) and I);
+
+        assert T2 => (prev_I = I);
+
+        eq T1: bool = (false -> (pre(state) = St_Start));
+
+        assert T1 => (state = St_Step);
+
+        assert T1 => (O = false);
+
+        assert T1 => (prev_I = I);
+
+        assert true -> (not (T1 or T2) => (prev_I = pre(prev_I)));
+        assert true -> (not (T1 or T2) => (state = pre(state)));
+        assert true -> (not (T1 or T2) => (O = pre(O)));
+
+      -- Inserted from /contracts/Rise_Impl.txt
+
+      assert (O = false) -> true;
+      lemma "Stop_Unreachable": (state != St_Stop);
+**};
+  end Rise.Rise_Impl;
+end Signals;

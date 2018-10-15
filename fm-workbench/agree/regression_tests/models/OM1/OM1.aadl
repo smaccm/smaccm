@@ -35,17 +35,21 @@ system OM1
     eq num_faults : int = OM1.num_true(fault1, fault2, fault3);
     eq sent_val : int = if event(send_val) then send_val else 0 -> pre(sent_val);
       
+    eq send_val_event : bool =  event(send_val);
+    
     assume "bounded sending frequency" : 
-      condition event(send_val) occurs sporadic with IAT OM1.send_period; 
+      condition send_val_event occurs sporadic with IAT OM1.send_period; 
       
     assume "constant faults" : true ->
       fault1 = pre(fault1) and fault2 = pre(fault2) and fault3 = pre(fault3);
     
     assume "number of faults is less than equal to one": num_faults <= 1;
     
-    guarantee "receive vals correct" : whenever event(send_val) occurs 
-      receive_val1 = sent_val and
-      receive_val2 = sent_val occurs
+    
+    eq sent_val_eq: bool = receive_val1 = sent_val and receive_val2 = sent_val;
+    
+    guarantee "receive vals correct" : whenever send_val_event occurs 
+      sent_val_eq occurs
         during [0.0, OM1.receive_bound];
     
   **};
@@ -94,13 +98,17 @@ system relay
     guarantee "outputs always equal inputs (if not faulty)":
       not faulty => (output1 = last_input and output2 = last_input);
     
+    eq not_faulty:bool = not faulty and event(input);
+    eq output1_event: bool = event(output1);
     guarantee "output 1 behavior":
-      whenever not faulty and event(input) occurs 
-        event(output1) exclusively occurs during [OM1.relay_low, OM1.relay_high];
+      whenever not_faulty occurs 
+         output1_event exclusively occurs during [OM1.relay_low, OM1.relay_high];
     
+    eq not_faulty_event_input :bool = not faulty and event(input) ;
+    eq output2_event: bool = event(output2);
     guarantee "output 2 behavior":
-      whenever not faulty and event(input) occurs 
-        event(output2) exclusively occurs during [OM1.relay_low, OM1.relay_high];
+      whenever not_faulty_event_input occurs 
+        not_faulty_event_input exclusively occurs during [OM1.relay_low, OM1.relay_high];
     
   **};
 end relay;

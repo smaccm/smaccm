@@ -2,6 +2,7 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Complex Expr</b></em>'.
@@ -12,5 +13,6 @@ package com.rockwellcollins.atc.agree.agree;
  * @model
  * @generated
  */
-public interface ComplexExpr extends Expr {
+public interface ComplexExpr extends Expr
+{
 } // ComplexExpr

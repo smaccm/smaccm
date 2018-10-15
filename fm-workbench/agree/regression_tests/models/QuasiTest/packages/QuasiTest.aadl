@@ -14,8 +14,8 @@ system Squadron
 		left_r: out data port Base_types::Integer;
 		left_pend : out data port Base_Types::Boolean;
 		right_pend : out data port Base_Types::Boolean;
-		left_shift : in data port Base_types::Boolean;
-		right_shift : in data port Base_types::Boolean;
+		left_shift : out data port Base_types::Boolean;
+		right_shift : out data port Base_types::Boolean;
 
 	annex agree {**
 		

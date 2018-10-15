@@ -57,6 +57,7 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 
 /**
  * This class contains custom scoping description.
@@ -80,10 +81,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_RecordExpr_args(RecordExpr ctx, EReference ref) {
-		NestedDotID record = ctx.getRecord();
-		while (record.getSub() != null) {
-			record = record.getSub();
-		}
+		TypeID record = ctx.getRecord();
 		NamedElement recDef = record.getBase();
 		return RecordExprScoper.getRecordComponents(recDef, IScope.NULLSCOPE);
 	}
@@ -213,10 +211,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 				}
 
 				if (type instanceof RecordType) {
-					NestedDotID elID = ((RecordType) type).getRecord();
-					while (elID.getSub() != null) {
-						elID = elID.getSub();
-					}
+					TypeID elID = ((RecordType) type).getRecord();
 					NamedElement namedEl = elID.getBase();
 
 					if (namedEl instanceof ComponentImplementation) {

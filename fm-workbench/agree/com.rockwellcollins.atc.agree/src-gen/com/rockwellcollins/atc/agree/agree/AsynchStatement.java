@@ -2,6 +2,7 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Asynch Statement</b></em>'.
@@ -12,5 +13,6 @@ package com.rockwellcollins.atc.agree.agree;
  * @model
  * @generated
  */
-public interface AsynchStatement extends SynchStatement {
+public interface AsynchStatement extends SynchStatement
+{
 } // AsynchStatement

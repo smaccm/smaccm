@@ -113,6 +113,7 @@ import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
@@ -1244,7 +1245,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 		} else if (type instanceof RecordType) {
 			RecordType recType = (RecordType) type;
-			NamedElement recordTypeName = AgreeUtils.getFinalNestId(recType.getRecord());
+			NamedElement recordTypeName = recType.getRecord().getBase();
 			if (recordTypeName instanceof DataClassifier) {
 				result.addAll(getDataClassifierRangeConstraintExprs(name, (DataClassifier) recordTypeName));
 			} else if (recordTypeName instanceof RecordDefExpr) {
@@ -1442,10 +1443,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		}
 
-		NestedDotID recId = recExpr.getRecord();
-		while (recId.getSub() != null) {
-			recId = recId.getSub();
-		}
+		TypeID recId = recExpr.getRecord();
 		String recName = AgreeTypeUtils.getIDTypeStr(recId.getBase());
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 

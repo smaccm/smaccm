@@ -52,7 +52,7 @@ system FCC
       eq rudder_fault_occurred : bool = AGREE_OSAS_NODES.fault_occurred(acts_ret.rudder, acts_out.rudder);
       eq hist_rudder_fault : bool = rudder_fault_occurred -> pre(hist_rudder_fault) and rudder_fault_occurred;
     
-      eq time : int = 0 -> pre(time) + 1;
+      eq time_val : int = 0 -> pre(time_val) + 1;
       
       guarantee "OSAS-S-140" : 
         (ailerons_failed => acts_out.ailerons = 0.0) and
@@ -195,7 +195,7 @@ system implementation FCC.Impl
   annex agree {**
   	
     lemma "faulty rudder shuts off":
-        OSAS_comp.rudder_ccdl_num_fail > 2 and hist_rudder_fault and time > 5 => not sovs.rudder_sov1_open;
+        OSAS_comp.rudder_ccdl_num_fail > 2 and hist_rudder_fault and time_val > 5 => not sovs.rudder_sov1_open;
     
     lemma "aoa_select in range":
     	(not ISAS_comp.egi1_aoa_fault and not ISAS_comp.egi2_aoa_fault) or

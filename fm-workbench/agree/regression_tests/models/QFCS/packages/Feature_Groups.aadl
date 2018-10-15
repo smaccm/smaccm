@@ -8,7 +8,7 @@ end EGI_Data;
 data implementation EGI_Data.impl
   subcomponents
     aoa:  data  Base_Types::Integer;
-    time:  data  Base_Types::Integer;
+    time_val:  data  Base_Types::Integer;
     lat:  data  Base_Types::Integer;
     long:  data  Base_Types::Integer;
     alt:  data  Base_Types::Integer;
@@ -42,7 +42,7 @@ data implementation ADS_Data.impl
   subcomponents
     amb_press:  data  Base_Types::Integer;
     amb_temp:  data  Base_Types::Integer;
-    total_press:  data  Base_Types::Integer;
+    total_press:  data Base_Types::Integer;
 end ADS_Data.impl;
 
 data ACTUATORS_Data

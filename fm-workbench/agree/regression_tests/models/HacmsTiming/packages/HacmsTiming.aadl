@@ -144,20 +144,20 @@ system implementation top_level.i
   	 eq clock_m2 : bool = m2._CLK;
   	 eq clock_m3 : bool = m3._CLK;
   	 
-  	 node getLastSignal(time : real, period : real) returns (ret : real);
+  	 node getLastSignal(time_val : real, period : real) returns (ret : real);
   	 let
-  	   ret = 0.0 -> if time < pre(ret) + period then
+  	   ret = 0.0 -> if time_val < pre(ret) + period then
   	                  pre(ret)
   	                else
   	                  pre(ret) + period;
   	 tel;
   	 
-  	 node getSignalCleared(time : real, clock : bool, exec_time : real, init_clear : real) returns (ret : real);
+  	 node getSignalCleared(time_val : real, clock : bool, exec_time : real, init_clear : real) returns (ret : real);
   	 let
-  	   ret = if clock then time - exec_time else prev(ret, init_clear);
+  	   ret = if clock then time_val - exec_time else prev(ret, init_clear);
   	 tel;
   	 
-  	 --these variables indicate the last time that a signal's period has passed
+  	 --these variables indicate the last time_val that a signal's period has passed
   	 eq a1_sig_last : real = getLastSignal(t, a1_period);
   	 eq a2_sig_last : real = getLastSignal(t, a2_period);
   	 eq m1_sig_last : real = if clock_a1 and event(m1.input) then t else prev(m1_sig_last, 0.0);
@@ -165,7 +165,7 @@ system implementation top_level.i
   	 eq m3_sig_last : real = if clock_m1 and event(m3.input1) then t else
   	                         if clock_m2 and event(m3.input2) then t else prev(m3_sig_last, 0.0);
   	 
-  	 --these variables indicate the last time that a component ticked                          
+  	 --these variables indicate the last time_val that a component ticked                          
   	 eq a1_sig_cleared : real = getSignalCleared(t, clock_a1, a1.exec_time, -1.0);
   	 eq a2_sig_cleared : real = getSignalCleared(t, clock_a2, a2.exec_time, -1.0); 
   	 eq m1_sig_cleared : real = getSignalCleared(t, clock_m1, m1.exec_time, 0.0); 
@@ -180,10 +180,10 @@ system implementation top_level.i
   	 eq sig_m3 : bool = m3_sig_last > prev(m3_sig_cleared, 0.0);
   	 
 
-     --time is positive and always increasing
+     --time_val is positive and always increasing
 	 assert t >= 0.0 and (true -> t > pre(t)); 
 	 
-	 --time increases by atleast an execution time
+	 --time_val increases by atleast an execution time
 	 assert t = a1.exec_time or t = a2.exec_time or t = m1.exec_time or t = m2.exec_time or t = m3.exec_time -> true;
   	  
   	 --no two clocks tick at the same time
