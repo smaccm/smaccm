@@ -1,0 +1,175 @@
+package FCC
+public
+  with DATA_TYPES;
+  with ISAS;
+  with OSAS;
+  with CLAW;
+  with Base_Types;
+  
+system FCC
+  features
+    --inputs
+    elevators : in data port DATA_TYPES::QUAD_Elevators.treal;
+    ailerons : in data port DATA_TYPES::QUAD_Ailerons.treal;
+    rudders : in data port DATA_TYPES::QUAD_Rudders.treal;
+    flaps : in data port DATA_TYPES::QUAD_Flaps.treal;
+    aoa : in data port DATA_TYPES::DUAL_AoA.treal;
+    air_data : in data port DATA_TYPES::DUAL_AirData.treal;
+    egi : in data port DATA_TYPES::QUAD_EGI.treal;
+    spoilers : in data port DATA_TYPES::QUAD_Spoilers.treal;
+    stabilizers : in data port DATA_TYPES::QUAD_Stabilizer.treal;
+    
+    elevators_faults : out data port DATA_TYPES::QUAD_Elevators.tbool;
+    ailerons_faults : out data port DATA_TYPES::QUAD_Ailerons.tbool;
+    rudders_faults : out data port DATA_TYPES::QUAD_Rudders.tbool;
+    flaps_faults : out data port DATA_TYPES::QUAD_Flaps.tbool;
+    aoa_faults : out data port DATA_TYPES::DUAL_AoA.tbool;
+    air_data_faults : out data port DATA_TYPES::DUAL_AirData.tbool;
+    egi_faults : out data port DATA_TYPES::QUAD_EGI.tbool;
+    spoilers_faults : out data port DATA_TYPES::QUAD_Spoilers.tbool;
+    stabilizers_faults : out data port DATA_TYPES::QUAD_Stabilizer.tbool;
+    
+    elevators_select : out data port DATA_TYPES::Elevators.treal;
+    ailerons_select : out data port DATA_TYPES::Ailerons.treal;
+    rudders_select : out data port DATA_TYPES::Rudders.treal;
+    flaps_select : out data port DATA_TYPES::Flaps.treal;
+    aoa_select : out data port DATA_TYPES::AoA.treal;
+    air_data_select : out data port DATA_TYPES::AirData.treal; 
+    egi_select : out data port DATA_TYPES::EGI.treal;
+    spoilers_select : out data port DATA_TYPES::Spoilers.treal;
+    stabilizers_select : out data port DATA_TYPES::Stabilizer.treal;
+
+    acts_ret : in data port DATA_TYPES::Actuators.impl;
+    
+    num_valid_acts : in data port DATA_TYPES::NumActuators.impl;
+    
+    --outputs
+    acts_fail : out data port DATA_TYPES::BoolActuators.impl;
+    acts_out : out data port DATA_TYPES::Actuators.impl;
+    sovs1: out data port DATA_TYPES::BoolActuators.impl;
+    sovs2: out data port DATA_TYPES::BoolActuators.impl;
+
+        
+  annex agree {**
+	--BEGIN RC5 guarantees
+	guarantee "elevator bound" :
+	 FCC_RC5.req_els(elevators_faults, elevators_select);
+
+	guarantee "ailerons bound" :
+	 FCC_RC5.req_ails(ailerons_faults, ailerons_select);
+
+	guarantee "flaps bound" :
+	 FCC_RC5.req_flaps(flaps_faults, flaps_select);
+
+	guarantee "rudders bound" :
+	 FCC_RC5.req_rud(rudders_faults, rudders_select);
+
+	guarantee "spoilers bound" :
+	 FCC_RC5.req_spoil(spoilers_faults, spoilers_select);
+
+	guarantee "stabilzers bound" :
+	 FCC_RC5.req_stab(stabilizers_faults, stabilizers_select);
+
+	--BEGIN RC2 GUARANTEES
+	guarantee "actuators output range bound":
+		FCC_RC_2.req (acts_out, num_valid_acts);
+		
+    --When an actuator command has been latched failed, OSAS shall set 
+    --that actuator command to 0 (zero).
+    guarantee "OSAS-S-140" : 
+      OSAS_S_140.req(acts_out, acts_fail);
+      
+    guarantee "once failed always failed" : true ->
+      (pre(acts_fail.THROTL) => acts_fail.THROTL) and
+      (pre(acts_fail.THROTR) => acts_fail.THROTR) and
+      (pre(acts_fail.ELLOB) => acts_fail.ELLOB) and
+      (pre(acts_fail.ELLIB) => acts_fail.ELLIB) and
+      (pre(acts_fail.ELROB) => acts_fail.ELROB) and
+      (pre(acts_fail.ELRIB) => acts_fail.ELRIB) and
+      (pre(acts_fail.AILL) => acts_fail.AILL) and
+      (pre(acts_fail.AILR) => acts_fail.AILR) and
+      (pre(acts_fail.RUDUP) => acts_fail.RUDUP) and
+      (pre(acts_fail.RUDLO) => acts_fail.RUDLO) and
+      (pre(acts_fail.SPLLOB) => acts_fail.SPLLOB) and
+      (pre(acts_fail.SPLLIB) => acts_fail.SPLLIB) and
+      (pre(acts_fail.SPLROB) => acts_fail.SPLROB) and
+      (pre(acts_fail.SPLRIB) => acts_fail.SPLRIB) and
+      (pre(acts_fail.FLAPLI) => acts_fail.FLAPLI) and
+      (pre(acts_fail.FLAPLO) => acts_fail.FLAPLO) and
+      (pre(acts_fail.FLAPRI) => acts_fail.FLAPRI) and
+      (pre(acts_fail.GEAR) => acts_fail.GEAR) and
+      (pre(acts_fail.BRAKE) => acts_fail.BRAKE) and
+      (pre(acts_fail.STEER) => acts_fail.STEER);
+      
+    eq claw_acts : DATA_TYPES::Actuators.impl;
+    eq osas_failure : bool;
+
+  **};
+
+end FCC;
+
+system implementation FCC.Impl
+  subcomponents
+    ISAS_comp : system ISAS::ISAS_Sys;
+    OSAS_comp : system OSAS::OSAS_Sys;
+    CLAW_comp : system CLAW::CLAW;
+    
+  connections
+ 
+
+    --inputs from the outside world
+    conn_acts_ret_osas: port acts_ret -> OSAS_comp.acts_ret;
+    valid_conn: port num_valid_acts -> OSAS_comp.num_valid_acts;
+    elv_conn: port elevators -> ISAS_comp.elevators;
+    ail_conn: port ailerons -> ISAS_comp.ailerons;
+    rud_conn: port rudders -> ISAS_comp.rudders;
+    spoil_conn: port spoilers -> ISAS_comp.spoilers;
+    flaps_conn: port flaps -> ISAS_comp.flaps;
+    aoa_conn : port aoa -> ISAS_comp.aoa;
+    air_conn : port air_data -> ISAS_comp.air_data;
+    egi_conn : port egi -> ISAS_comp.egi;
+    stab_conn : port stabilizers -> ISAS_comp.stabilizers;
+    
+    --outputs to the outside world
+    conn_acts_out: port OSAS_comp.acts_out -> acts_out;
+    conn_sovs1: port OSAS_comp.sovs1 -> sovs1;  
+    conn_sovs2: port OSAS_comp.sovs2 -> sovs2;  
+    
+    elv_fault_conn: port ISAS_comp.elevators_faults -> elevators_faults;
+    ail_fault_conn: port ISAS_comp.ailerons_faults -> ailerons_faults;
+    rud_fault_conn: port ISAS_comp.rudders_faults -> rudders_faults;
+    spoil_fault_conn: port ISAS_comp.spoilers_faults -> spoilers_faults;
+    flaps_fault_conn: port ISAS_comp.flaps_faults -> flaps_faults;
+    aoa_fault_conn : port ISAS_comp.aoa_faults -> aoa_faults;
+    air_fault_conn : port ISAS_comp.air_data_faults -> air_data_faults;
+    egi_fault_conn : port ISAS_comp.egi_faults -> egi_faults;
+    stab_fault_conn : port ISAS_comp.stabilizers_faults -> stabilizers_faults;
+    
+    elv_select_conn: port ISAS_comp.elevators_select -> elevators_select;
+    ail_select_conn: port ISAS_comp.ailerons_select -> ailerons_select;
+    rud_select_conn: port ISAS_comp.rudders_select -> rudders_select;
+    spoil_select_conn: port ISAS_comp.spoilers_select -> spoilers_select;
+    flaps_select_conn: port ISAS_comp.flaps_select -> flaps_select;
+    aoa_select_conn : port ISAS_comp.aoa_select -> aoa_select;
+    air_select_conn : port ISAS_comp.air_data_select -> air_data_select;
+    egi_select_conn : port ISAS_comp.egi_select -> egi_select;
+    stab_select_conn : port ISAS_comp.stabilizers_select -> stabilizers_select;
+
+    fail_conn : port OSAS_comp.acts_fail -> acts_fail;
+    --internal connections
+    conn_ccdl_acts : port CLAW_comp.acts -> OSAS_comp.acts_in;
+    
+    annex agree {**
+    	assert claw_acts = CLAW_comp.acts;
+    **};
+    
+--  annex agree {**
+--  	lift ISAS_comp;
+--  	lift OSAS_comp;
+--  	lift CLAW_comp;
+--  **};
+
+end FCC.Impl;
+
+
+end FCC;
