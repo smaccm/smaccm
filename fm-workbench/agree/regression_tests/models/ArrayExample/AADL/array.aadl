@@ -51,7 +51,7 @@ public
 			Data_Model::Data_Representation => Array;
 			Data_Model::Base_Type => (classifier (Base_Types::Integer));
 			Data_Model::Dimension => (4);
-	end simple_struct_array;
+	end simple_int_array;
 		
 	data simple_struct_array_DIM
 		properties
