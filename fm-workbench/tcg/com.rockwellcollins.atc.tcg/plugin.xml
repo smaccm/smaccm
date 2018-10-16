@@ -57,11 +57,11 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+            locationURI="menu:org.osate.ui.osateMenu?after=additions">
          <menu
-               label="AGREE"
+               label="Test Case Generation"
                mnemonic="g"
-               id="com.rockwellcollins.atc.agree.analysis.menus.main">
+               id="com.rockwellcollins.atc.tcg.menus.main">
            <separator
                  name="com.rockwellcollins.atc.tcg.separator1"
    			  visible="true">
@@ -109,8 +109,8 @@
             allPopups="false"
             locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
          <menu
-               id="com.rockwellcollins.atc.agree.analysis.menus.main"
-               label="Test Case Generator"
+               id="com.rockwellcollins.atc.tcg.menus.outline"
+               label="Test Case Generation"
                mnemonic="g">
            <command
                   commandId="tcg.commands.generateTestsSingleLayer"
