@@ -178,7 +178,7 @@ Arg returns Arg:
 
 Type returns Type:
 	{PrimType} string=primTypes ('[' (lowNeg='-')? rangeLow=(INTEGER_LIT|REAL_LIT) ',' (highNeg='-')? rangeHigh=(INTEGER_LIT|REAL_LIT) ']')?
-|	{RecordType} record=NestedDotID
+|	{RecordType} record=TypeID
 ;
 
 primTypes:
@@ -258,18 +258,26 @@ TermExpr returns Expr:
 	
 
 ComplexExpr:
-	NestedDotID 
-		(=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' 
-		|=> ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
-		)?
+	(TypeID
+		=> ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
+		) 
+	| NestedDotID (=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' )?
 ;
 
 NestedDotID:
-	base=[aadl2::NamedElement|QCPREF] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
+	base=[aadl2::NamedElement|EID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
+	
+TypeID:
+	base=[aadl2::NamedElement|QCPREF] ;
 
 QCPREF:
-	=>(ID '::') ID =>('.' ID)?
-|	ID;
+	(ID '::')? ID ('.' ID)?	
+ ;
+ 
+ EID:
+	(ID '::')? ID	
+ ;
+
 	
 ReservedVarTag:
 	'_REMOVE'

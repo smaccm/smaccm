@@ -38,6 +38,7 @@ import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
 	public AgreeLinkingService() {
@@ -49,19 +50,23 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			throws IllegalNodeException {
 		String name = getCrossRefNodeAsString(node);
 		// TODO This will have to be changed in the develop branch
-		name = name.replaceAll("::", ".");
+		name = getCrossRefNodeAsString(node);
 
 		if (context instanceof PropertyValue) {
 			return findUnitLiteralAsList((Element) context, name);
 		}
 
-		if (context instanceof NestedDotID || context instanceof NodeEq || context instanceof SynchStatement
+		if (context instanceof TypeID || context instanceof NestedDotID || context instanceof NodeEq
+				|| context instanceof SynchStatement
 				|| context instanceof RecordExpr || context instanceof RecordType || context instanceof GetPropertyExpr
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
 				|| context instanceof OrderStatement || context instanceof ConnectionStatement) {
 
 			// EObject e = findClassifier(context, reference, name);
 			EObject e = getIndexedObject(context, reference, name);
+			if (e == null) {
+				e = findClassifier(context, reference, name);
+			}
 
 			if (e != null) {
 				return Collections.singletonList(e);
@@ -78,6 +83,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 				if (isVisible(eod, visibleProjects)) {
 					EObject res = eod.getEObjectOrProxy();
 					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+
 					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
 						// special code for AGREE enumerated types
 						if (((NamedID) res).getName().equals(name)) {
@@ -97,7 +103,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 	}
 
 	private static boolean sameName(IEObjectDescription eod, String name) {
-		return eod.getName().toString().equalsIgnoreCase(name);
+		return eod.getName().toString().equalsIgnoreCase(name.replace("::", "."));
 	}
 
 	private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {

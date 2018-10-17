@@ -34,6 +34,7 @@ import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
 import jkind.lustre.BoolExpr;
@@ -57,7 +58,7 @@ public class AgreeTypeUtils {
 		if (type instanceof PrimType) {
 			return ((PrimType) type).getString();
 		} else {
-			return getIDTypeStr((AgreeUtils.getFinalNestId(((RecordType) type).getRecord())));
+			return getIDTypeStr(((((RecordType) type).getRecord().getBase())));
 		}
 	}
 
@@ -66,7 +67,7 @@ public class AgreeTypeUtils {
 		if (type instanceof PrimType) {
 			return ((PrimType) type).getString();
 		} else {
-			return getTypeName(((RecordType) type).getRecord(), typeMap, typeExpressions);
+			return ((RecordType) type).toString();
 		}
 	}
 
@@ -135,8 +136,8 @@ public class AgreeTypeUtils {
 				if (argType instanceof PrimType) {
 					typeStr = ((PrimType) argType).getString();
 				} else {
-					NestedDotID nestId = ((RecordType) argType).getRecord();
-					NamedElement namedEl = AgreeUtils.getFinalNestId(nestId);
+					TypeID nestId = ((RecordType) argType).getRecord();
+					NamedElement namedEl = (nestId.getBase());
 					subType = getType(namedEl, typeMap, typeExpressions);
 				}
 				if (typeStr != null) {
@@ -240,7 +241,7 @@ public class AgreeTypeUtils {
 
 			} while (type != null);
 			AgreeLogger.logWarning("Reference to component type '" + record.getName()
-					+ "' is not among the types reasoned about by AGREE");
+			+ "' is not among the types reasoned about by AGREE");
 			return null;
 		} else if (record instanceof ComponentImplementation) {
 			typeStr = record.getName();

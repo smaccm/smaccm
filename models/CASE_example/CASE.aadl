@@ -1,0 +1,5 @@
+property set CASE is
+	COMP_TYPE: enumeration (FILTER, MONITOR, ROUTER, ISOLATOR) applies to (system, process, thread, device);
+	COMP_IMPL: aadlstring applies to (thread);
+	COMP_SPEC: aadlstring applies to (thread);
+end CASE;

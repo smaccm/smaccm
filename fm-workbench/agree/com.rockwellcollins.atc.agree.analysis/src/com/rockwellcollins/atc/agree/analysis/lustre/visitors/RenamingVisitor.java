@@ -134,6 +134,7 @@ public class RenamingVisitor extends AstIterVisitor {
 		return result;
 	}
 
+
 	private String argToString(Arg arg) {
 		String result = arg.getName() + " : ";
 		if (arg.getType() instanceof PrimType) {
@@ -146,7 +147,7 @@ public class RenamingVisitor extends AstIterVisitor {
 						+ primType.getRangeHigh() + "]";
 			}
 		} else {
-			result += nestedDotIdToString(((RecordType) arg.getType()).getRecord());
+			result += (((RecordType) arg.getType()).getRecord());
 		}
 		return result;
 	}
