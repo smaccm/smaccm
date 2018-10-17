@@ -345,9 +345,27 @@ ruleSpecStatement returns [EObject current=null]
     }
 (
 (
-		lv_str_2_0=RULE_STRING
+		lv_name_2_0=RULE_ID
 		{
-			newLeafNode(lv_str_2_0, grammarAccess.getSpecStatementAccess().getStrSTRINGTerminalRuleCall_0_2_0()); 
+			newLeafNode(lv_name_2_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_0_2_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSpecStatementRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_2_0, 
+        		"org.osate.xtext.aadl2.properties.Properties.ID");
+	    }
+
+)
+)?(
+(
+		lv_str_3_0=RULE_STRING
+		{
+			newLeafNode(lv_str_3_0, grammarAccess.getSpecStatementAccess().getStrSTRINGTerminalRuleCall_0_3_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -356,29 +374,29 @@ ruleSpecStatement returns [EObject current=null]
        		setWithLastConsumed(
        			$current, 
        			"str",
-        		lv_str_2_0, 
+        		lv_str_3_0, 
         		"org.osate.xtext.aadl2.properties.Properties.STRING");
 	    }
 
 )
 )
-	otherlv_3=Colon
+	otherlv_4=Colon
     {
-    	newLeafNode(otherlv_3, grammarAccess.getSpecStatementAccess().getColonKeyword_0_3());
+    	newLeafNode(otherlv_4, grammarAccess.getSpecStatementAccess().getColonKeyword_0_4());
     }
 ((
 (
 		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_0_4_0_0()); 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_0_5_0_0()); 
 	    }
-		lv_expr_4_0=ruleExpr		{
+		lv_expr_5_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"expr",
-        		lv_expr_4_0, 
+        		lv_expr_5_0, 
         		"com.rockwellcollins.atc.agree.Agree.Expr");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -388,25 +406,25 @@ ruleSpecStatement returns [EObject current=null]
     |(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getPatternPatternStatementParserRuleCall_0_4_1_0()); 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getPatternPatternStatementParserRuleCall_0_5_1_0()); 
 	    }
-		lv_pattern_5_0=rulePatternStatement		{
+		lv_pattern_6_0=rulePatternStatement		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"pattern",
-        		lv_pattern_5_0, 
+        		lv_pattern_6_0, 
         		"com.rockwellcollins.atc.agree.Agree.PatternStatement");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 ))
-	otherlv_6=Semicolon
+	otherlv_7=Semicolon
     {
-    	newLeafNode(otherlv_6, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_0_5());
+    	newLeafNode(otherlv_7, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_0_6());
     }
 )
     |((
@@ -416,15 +434,33 @@ ruleSpecStatement returns [EObject current=null]
             $current);
     }
 )
-	otherlv_8=Guarantee
+	otherlv_9=Guarantee
     {
-    	newLeafNode(otherlv_8, grammarAccess.getSpecStatementAccess().getGuaranteeKeyword_1_1());
+    	newLeafNode(otherlv_9, grammarAccess.getSpecStatementAccess().getGuaranteeKeyword_1_1());
     }
 (
 (
-		lv_str_9_0=RULE_STRING
+		lv_name_10_0=RULE_ID
 		{
-			newLeafNode(lv_str_9_0, grammarAccess.getSpecStatementAccess().getStrSTRINGTerminalRuleCall_1_2_0()); 
+			newLeafNode(lv_name_10_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_1_2_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSpecStatementRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_10_0, 
+        		"org.osate.xtext.aadl2.properties.Properties.ID");
+	    }
+
+)
+)?(
+(
+		lv_str_11_0=RULE_STRING
+		{
+			newLeafNode(lv_str_11_0, grammarAccess.getSpecStatementAccess().getStrSTRINGTerminalRuleCall_1_3_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -433,29 +469,29 @@ ruleSpecStatement returns [EObject current=null]
        		setWithLastConsumed(
        			$current, 
        			"str",
-        		lv_str_9_0, 
+        		lv_str_11_0, 
         		"org.osate.xtext.aadl2.properties.Properties.STRING");
 	    }
 
 )
 )
-	otherlv_10=Colon
+	otherlv_12=Colon
     {
-    	newLeafNode(otherlv_10, grammarAccess.getSpecStatementAccess().getColonKeyword_1_3());
+    	newLeafNode(otherlv_12, grammarAccess.getSpecStatementAccess().getColonKeyword_1_4());
     }
 ((
 (
 		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_1_4_0_0()); 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_1_5_0_0()); 
 	    }
-		lv_expr_11_0=ruleExpr		{
+		lv_expr_13_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"expr",
-        		lv_expr_11_0, 
+        		lv_expr_13_0, 
         		"com.rockwellcollins.atc.agree.Agree.Expr");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -465,25 +501,25 @@ ruleSpecStatement returns [EObject current=null]
     |(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getPatternPatternStatementParserRuleCall_1_4_1_0()); 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getPatternPatternStatementParserRuleCall_1_5_1_0()); 
 	    }
-		lv_pattern_12_0=rulePatternStatement		{
+		lv_pattern_14_0=rulePatternStatement		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"pattern",
-        		lv_pattern_12_0, 
+        		lv_pattern_14_0, 
         		"com.rockwellcollins.atc.agree.Agree.PatternStatement");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 ))
-	otherlv_13=Semicolon
+	otherlv_15=Semicolon
     {
-    	newLeafNode(otherlv_13, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_1_5());
+    	newLeafNode(otherlv_15, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_1_6());
     }
 )
     |((
@@ -493,15 +529,33 @@ ruleSpecStatement returns [EObject current=null]
             $current);
     }
 )
-	otherlv_15=Assert
+	otherlv_17=Assert
     {
-    	newLeafNode(otherlv_15, grammarAccess.getSpecStatementAccess().getAssertKeyword_2_1());
+    	newLeafNode(otherlv_17, grammarAccess.getSpecStatementAccess().getAssertKeyword_2_1());
     }
 ((
 (
-		lv_str_16_0=RULE_STRING
+		lv_name_18_0=RULE_ID
 		{
-			newLeafNode(lv_str_16_0, grammarAccess.getSpecStatementAccess().getStrSTRINGTerminalRuleCall_2_2_0_0()); 
+			newLeafNode(lv_name_18_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_2_2_0_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSpecStatementRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_18_0, 
+        		"org.osate.xtext.aadl2.properties.Properties.ID");
+	    }
+
+)
+)?(
+(
+		lv_str_19_0=RULE_STRING
+		{
+			newLeafNode(lv_str_19_0, grammarAccess.getSpecStatementAccess().getStrSTRINGTerminalRuleCall_2_2_1_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -510,29 +564,29 @@ ruleSpecStatement returns [EObject current=null]
        		setWithLastConsumed(
        			$current, 
        			"str",
-        		lv_str_16_0, 
+        		lv_str_19_0, 
         		"org.osate.xtext.aadl2.properties.Properties.STRING");
 	    }
 
 )
 )
-	otherlv_17=Colon
+	otherlv_20=Colon
     {
-    	newLeafNode(otherlv_17, grammarAccess.getSpecStatementAccess().getColonKeyword_2_2_1());
+    	newLeafNode(otherlv_20, grammarAccess.getSpecStatementAccess().getColonKeyword_2_2_2());
     }
 )?((
 (
 		{ 
 	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_2_3_0_0()); 
 	    }
-		lv_expr_18_0=ruleExpr		{
+		lv_expr_21_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"expr",
-        		lv_expr_18_0, 
+        		lv_expr_21_0, 
         		"com.rockwellcollins.atc.agree.Agree.Expr");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -544,139 +598,59 @@ ruleSpecStatement returns [EObject current=null]
 		{ 
 	        newCompositeNode(grammarAccess.getSpecStatementAccess().getPatternPatternStatementParserRuleCall_2_3_1_0()); 
 	    }
-		lv_pattern_19_0=rulePatternStatement		{
+		lv_pattern_22_0=rulePatternStatement		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"pattern",
-        		lv_pattern_19_0, 
+        		lv_pattern_22_0, 
         		"com.rockwellcollins.atc.agree.Agree.PatternStatement");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 ))
-	otherlv_20=Semicolon
+	otherlv_23=Semicolon
     {
-    	newLeafNode(otherlv_20, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_2_4());
+    	newLeafNode(otherlv_23, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_2_4());
     }
 )
     |((
     {
         $current = forceCreateModelElement(
-            grammarAccess.getSpecStatementAccess().getInitialStatementAction_3_0(),
+            grammarAccess.getSpecStatementAccess().getLemmaStatementAction_3_0(),
             $current);
     }
 )
-	otherlv_22=Initially
+	otherlv_25=Lemma
     {
-    	newLeafNode(otherlv_22, grammarAccess.getSpecStatementAccess().getInitiallyKeyword_3_1());
-    }
-
-	otherlv_23=Colon
-    {
-    	newLeafNode(otherlv_23, grammarAccess.getSpecStatementAccess().getColonKeyword_3_2());
+    	newLeafNode(otherlv_25, grammarAccess.getSpecStatementAccess().getLemmaKeyword_3_1());
     }
 (
 (
-		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_3_3_0()); 
-	    }
-		lv_expr_24_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
-	        }
-       		set(
-       			$current, 
-       			"expr",
-        		lv_expr_24_0, 
-        		"com.rockwellcollins.atc.agree.Agree.Expr");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-)
-	otherlv_25=Semicolon
-    {
-    	newLeafNode(otherlv_25, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_3_4());
-    }
-)
-    |((
-    {
-        $current = forceCreateModelElement(
-            grammarAccess.getSpecStatementAccess().getParamStatementAction_4_0(),
-            $current);
-    }
-)
-	otherlv_27=Parameter
-    {
-    	newLeafNode(otherlv_27, grammarAccess.getSpecStatementAccess().getParameterKeyword_4_1());
-    }
-(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_4_2_0()); 
-	    }
-		lv_expr_28_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
-	        }
-       		set(
-       			$current, 
-       			"expr",
-        		lv_expr_28_0, 
-        		"com.rockwellcollins.atc.agree.Agree.Expr");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-)
-	otherlv_29=Colon
-    {
-    	newLeafNode(otherlv_29, grammarAccess.getSpecStatementAccess().getColonKeyword_4_3());
-    }
-(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getTypeTypeParserRuleCall_4_4_0()); 
-	    }
-		lv_type_30_0=ruleType		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
-	        }
-       		set(
-       			$current, 
-       			"type",
-        		lv_type_30_0, 
-        		"com.rockwellcollins.atc.agree.Agree.Type");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-)
-	otherlv_31=Semicolon
-    {
-    	newLeafNode(otherlv_31, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_4_5());
-    }
-)
-    |((
-    {
-        $current = forceCreateModelElement(
-            grammarAccess.getSpecStatementAccess().getLemmaStatementAction_5_0(),
-            $current);
-    }
-)
-	otherlv_33=Lemma
-    {
-    	newLeafNode(otherlv_33, grammarAccess.getSpecStatementAccess().getLemmaKeyword_5_1());
-    }
-(
-(
-		lv_str_34_0=RULE_STRING
+		lv_name_26_0=RULE_ID
 		{
-			newLeafNode(lv_str_34_0, grammarAccess.getSpecStatementAccess().getStrSTRINGTerminalRuleCall_5_2_0()); 
+			newLeafNode(lv_name_26_0, grammarAccess.getSpecStatementAccess().getNameIDTerminalRuleCall_3_2_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getSpecStatementRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"name",
+        		lv_name_26_0, 
+        		"org.osate.xtext.aadl2.properties.Properties.ID");
+	    }
+
+)
+)?(
+(
+		lv_str_27_0=RULE_STRING
+		{
+			newLeafNode(lv_str_27_0, grammarAccess.getSpecStatementAccess().getStrSTRINGTerminalRuleCall_3_3_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -685,29 +659,29 @@ ruleSpecStatement returns [EObject current=null]
        		setWithLastConsumed(
        			$current, 
        			"str",
-        		lv_str_34_0, 
+        		lv_str_27_0, 
         		"org.osate.xtext.aadl2.properties.Properties.STRING");
 	    }
 
 )
 )
-	otherlv_35=Colon
+	otherlv_28=Colon
     {
-    	newLeafNode(otherlv_35, grammarAccess.getSpecStatementAccess().getColonKeyword_5_3());
+    	newLeafNode(otherlv_28, grammarAccess.getSpecStatementAccess().getColonKeyword_3_4());
     }
 ((
 (
 		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_5_4_0_0()); 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_3_5_0_0()); 
 	    }
-		lv_expr_36_0=ruleExpr		{
+		lv_expr_29_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"expr",
-        		lv_expr_36_0, 
+        		lv_expr_29_0, 
         		"com.rockwellcollins.atc.agree.Agree.Expr");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -717,25 +691,123 @@ ruleSpecStatement returns [EObject current=null]
     |(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getSpecStatementAccess().getPatternPatternStatementParserRuleCall_5_4_1_0()); 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getPatternPatternStatementParserRuleCall_3_5_1_0()); 
 	    }
-		lv_pattern_37_0=rulePatternStatement		{
+		lv_pattern_30_0=rulePatternStatement		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"pattern",
-        		lv_pattern_37_0, 
+        		lv_pattern_30_0, 
         		"com.rockwellcollins.atc.agree.Agree.PatternStatement");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 ))
-	otherlv_38=Semicolon
+	otherlv_31=Semicolon
     {
-    	newLeafNode(otherlv_38, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_5_5());
+    	newLeafNode(otherlv_31, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_3_6());
+    }
+)
+    |((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getSpecStatementAccess().getInitialStatementAction_4_0(),
+            $current);
+    }
+)
+	otherlv_33=Initially
+    {
+    	newLeafNode(otherlv_33, grammarAccess.getSpecStatementAccess().getInitiallyKeyword_4_1());
+    }
+
+	otherlv_34=Colon
+    {
+    	newLeafNode(otherlv_34, grammarAccess.getSpecStatementAccess().getColonKeyword_4_2());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_4_3_0()); 
+	    }
+		lv_expr_35_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
+	        }
+       		set(
+       			$current, 
+       			"expr",
+        		lv_expr_35_0, 
+        		"com.rockwellcollins.atc.agree.Agree.Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_36=Semicolon
+    {
+    	newLeafNode(otherlv_36, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_4_4());
+    }
+)
+    |((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getSpecStatementAccess().getParamStatementAction_5_0(),
+            $current);
+    }
+)
+	otherlv_38=Parameter
+    {
+    	newLeafNode(otherlv_38, grammarAccess.getSpecStatementAccess().getParameterKeyword_5_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_5_2_0()); 
+	    }
+		lv_expr_39_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
+	        }
+       		set(
+       			$current, 
+       			"expr",
+        		lv_expr_39_0, 
+        		"com.rockwellcollins.atc.agree.Agree.Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_40=Colon
+    {
+    	newLeafNode(otherlv_40, grammarAccess.getSpecStatementAccess().getColonKeyword_5_3());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getSpecStatementAccess().getTypeTypeParserRuleCall_5_4_0()); 
+	    }
+		lv_type_41_0=ruleType		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
+	        }
+       		set(
+       			$current, 
+       			"type",
+        		lv_type_41_0, 
+        		"com.rockwellcollins.atc.agree.Agree.Type");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_42=Semicolon
+    {
+    	newLeafNode(otherlv_42, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_5_5());
     }
 )
     |((
@@ -745,32 +817,32 @@ ruleSpecStatement returns [EObject current=null]
             $current);
     }
 )
-	otherlv_40=Lift
+	otherlv_44=Lift
     {
-    	newLeafNode(otherlv_40, grammarAccess.getSpecStatementAccess().getLiftKeyword_6_1());
+    	newLeafNode(otherlv_44, grammarAccess.getSpecStatementAccess().getLiftKeyword_6_1());
     }
 (
 (
 		{ 
 	        newCompositeNode(grammarAccess.getSpecStatementAccess().getSubcompNestedDotIDParserRuleCall_6_2_0()); 
 	    }
-		lv_subcomp_41_0=ruleNestedDotID		{
+		lv_subcomp_45_0=ruleNestedDotID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"subcomp",
-        		lv_subcomp_41_0, 
+        		lv_subcomp_45_0, 
         		"com.rockwellcollins.atc.agree.Agree.NestedDotID");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 )
-	otherlv_42=Semicolon
+	otherlv_46=Semicolon
     {
-    	newLeafNode(otherlv_42, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_6_3());
+    	newLeafNode(otherlv_46, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_6_3());
     }
 )
     |((
@@ -780,9 +852,9 @@ ruleSpecStatement returns [EObject current=null]
             $current);
     }
 )
-	otherlv_44=Connection
+	otherlv_48=Connection
     {
-    	newLeafNode(otherlv_44, grammarAccess.getSpecStatementAccess().getConnectionKeyword_7_1());
+    	newLeafNode(otherlv_48, grammarAccess.getSpecStatementAccess().getConnectionKeyword_7_1());
     }
 (
 (
@@ -791,48 +863,48 @@ ruleSpecStatement returns [EObject current=null]
 	            $current = createModelElement(grammarAccess.getSpecStatementRule());
 	        }
         }
-	otherlv_45=RULE_ID
+	otherlv_49=RULE_ID
 	{
-		newLeafNode(otherlv_45, grammarAccess.getSpecStatementAccess().getConnNamedElementCrossReference_7_2_0()); 
+		newLeafNode(otherlv_49, grammarAccess.getSpecStatementAccess().getConnNamedElementCrossReference_7_2_0()); 
 	}
 
 )
 )
-	otherlv_46=Colon
+	otherlv_50=Colon
     {
-    	newLeafNode(otherlv_46, grammarAccess.getSpecStatementAccess().getColonKeyword_7_3());
+    	newLeafNode(otherlv_50, grammarAccess.getSpecStatementAccess().getColonKeyword_7_3());
     }
 (
 (
 		{ 
 	        newCompositeNode(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_7_4_0()); 
 	    }
-		lv_expr_47_0=ruleExpr		{
+		lv_expr_51_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getSpecStatementRule());
 	        }
        		set(
        			$current, 
        			"expr",
-        		lv_expr_47_0, 
+        		lv_expr_51_0, 
         		"com.rockwellcollins.atc.agree.Agree.Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 )
-	otherlv_48=Semicolon
+	otherlv_52=Semicolon
     {
-    	newLeafNode(otherlv_48, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_7_5());
+    	newLeafNode(otherlv_52, grammarAccess.getSpecStatementAccess().getSemicolonKeyword_7_5());
     }
 )
     |
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getSynchStatementParserRuleCall_8()); 
     }
-    this_SynchStatement_49=ruleSynchStatement
+    this_SynchStatement_53=ruleSynchStatement
     {
-        $current = $this_SynchStatement_49.current;
+        $current = $this_SynchStatement_53.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -840,9 +912,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getOrderStatementParserRuleCall_9()); 
     }
-    this_OrderStatement_50=ruleOrderStatement
+    this_OrderStatement_54=ruleOrderStatement
     {
-        $current = $this_OrderStatement_50.current;
+        $current = $this_OrderStatement_54.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -850,9 +922,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getPropertyStatementParserRuleCall_10()); 
     }
-    this_PropertyStatement_51=rulePropertyStatement
+    this_PropertyStatement_55=rulePropertyStatement
     {
-        $current = $this_PropertyStatement_51.current;
+        $current = $this_PropertyStatement_55.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -860,9 +932,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getConstStatementParserRuleCall_11()); 
     }
-    this_ConstStatement_52=ruleConstStatement
+    this_ConstStatement_56=ruleConstStatement
     {
-        $current = $this_ConstStatement_52.current;
+        $current = $this_ConstStatement_56.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -870,9 +942,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getEnumStatementParserRuleCall_12()); 
     }
-    this_EnumStatement_53=ruleEnumStatement
+    this_EnumStatement_57=ruleEnumStatement
     {
-        $current = $this_EnumStatement_53.current;
+        $current = $this_EnumStatement_57.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -880,9 +952,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getEqStatementParserRuleCall_13()); 
     }
-    this_EqStatement_54=ruleEqStatement
+    this_EqStatement_58=ruleEqStatement
     {
-        $current = $this_EqStatement_54.current;
+        $current = $this_EqStatement_58.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -890,9 +962,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getAssignStatementParserRuleCall_14()); 
     }
-    this_AssignStatement_55=ruleAssignStatement
+    this_AssignStatement_59=ruleAssignStatement
     {
-        $current = $this_AssignStatement_55.current;
+        $current = $this_AssignStatement_59.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -900,9 +972,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getLinearizationDefExprParserRuleCall_15()); 
     }
-    this_LinearizationDefExpr_56=ruleLinearizationDefExpr
+    this_LinearizationDefExpr_60=ruleLinearizationDefExpr
     {
-        $current = $this_LinearizationDefExpr_56.current;
+        $current = $this_LinearizationDefExpr_60.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -910,9 +982,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getFnDefExprParserRuleCall_16()); 
     }
-    this_FnDefExpr_57=ruleFnDefExpr
+    this_FnDefExpr_61=ruleFnDefExpr
     {
-        $current = $this_FnDefExpr_57.current;
+        $current = $this_FnDefExpr_61.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -920,9 +992,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getLibraryFnDefExprParserRuleCall_17()); 
     }
-    this_LibraryFnDefExpr_58=ruleLibraryFnDefExpr
+    this_LibraryFnDefExpr_62=ruleLibraryFnDefExpr
     {
-        $current = $this_LibraryFnDefExpr_58.current;
+        $current = $this_LibraryFnDefExpr_62.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -930,9 +1002,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getNodeDefExprParserRuleCall_18()); 
     }
-    this_NodeDefExpr_59=ruleNodeDefExpr
+    this_NodeDefExpr_63=ruleNodeDefExpr
     {
-        $current = $this_NodeDefExpr_59.current;
+        $current = $this_NodeDefExpr_63.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -940,9 +1012,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getRecordDefExprParserRuleCall_19()); 
     }
-    this_RecordDefExpr_60=ruleRecordDefExpr
+    this_RecordDefExpr_64=ruleRecordDefExpr
     {
-        $current = $this_RecordDefExpr_60.current;
+        $current = $this_RecordDefExpr_64.current;
         afterParserOrEnumRuleCall();
     }
 
@@ -950,9 +1022,9 @@ ruleSpecStatement returns [EObject current=null]
     { 
         newCompositeNode(grammarAccess.getSpecStatementAccess().getInputStatementParserRuleCall_20()); 
     }
-    this_InputStatement_61=ruleInputStatement
+    this_InputStatement_65=ruleInputStatement
     {
-        $current = $this_InputStatement_61.current;
+        $current = $this_InputStatement_65.current;
         afterParserOrEnumRuleCall();
     }
 )

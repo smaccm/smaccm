@@ -15,7 +15,8 @@ NamedElement returns aadl2::NamedElement:
 	| LinearizationDefExpr
 	| LibraryFnDefExpr
 	| RecordDefExpr
-	| NamedID;
+	| NamedID
+	;
 
 Element returns aadl2::Element:
 	Expr
@@ -43,13 +44,14 @@ AgreeSubclause:
 AgreeContract returns Contract:
 	{AgreeContract} (specs+=SpecStatement)*;
 
+
 SpecStatement:
-	{AssumeStatement} 'assume' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
-	| {GuaranteeStatement} 'guarantee' str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
-	| {AssertStatement} 'assert' (str=STRING ':')? (expr=Expr | pattern=PatternStatement)';'
+	{AssumeStatement} 'assume' (name=ID)? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	| {GuaranteeStatement} 'guarantee' (name=ID)? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
+	| {AssertStatement} 'assert' ((name=ID)? str=STRING ':')? (expr=Expr | pattern=PatternStatement)';'
+	| {LemmaStatement} 'lemma' (name=ID)?  str=STRING ':' (expr=Expr | pattern=PatternStatement)';'
 	| {InitialStatement} 'initially' ':' expr=Expr  ';'
 	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
-	| {LemmaStatement} 'lemma' str=STRING ':' (expr=Expr | pattern=PatternStatement)';'
 	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
 	| {ConnectionStatement} 'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';'
 	| SynchStatement
