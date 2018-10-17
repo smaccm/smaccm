@@ -638,27 +638,33 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private Set<AadlPackage> getPackageDependencies(AadlPackage pkg) {
-		Set<AadlPackage> result = new HashSet<AadlPackage>();
+	private void getPackageDependencies(AadlPackage pkg, Set<AadlPackage> pkgs) {
 
-		List<ModelUnit> mus = new ArrayList<ModelUnit>();
+		// Add the parent package if it's not there, otherwise return
+		if (pkgs.contains(pkg)) {
+			return;
+		}
+		pkgs.add(pkg);
+
+		// Look at direct dependencies
 		if (pkg.getPrivateSection() != null) {
-			mus.addAll(pkg.getPrivateSection().getImportedUnits());
-		}
-
-		if (pkg.getPublicSection() != null) {
-			mus.addAll(pkg.getPublicSection().getImportedUnits());
-		}
-
-		for (ModelUnit mu : mus) {
-			if (mu instanceof AadlPackage) {
-				result.add((AadlPackage) mu);
-				result.addAll(getPackageDependencies((AadlPackage) mu));
+			for (ModelUnit mu : pkg.getPrivateSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
 			}
 		}
 
-		return result;
+		if (pkg.getPublicSection() != null) {
+			for (ModelUnit mu : pkg.getPublicSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
 	}
+
 
 	private List<SpecStatement> getSpecStatements(AadlPackage pkg) {
 		List<SpecStatement> specs = new ArrayList<SpecStatement>();
@@ -682,8 +688,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.NORMAL)
 	public void checkNoDuplicateIdInSpec(AadlPackage toppkg) {
 
-		Set<AadlPackage> pkgs = getPackageDependencies(toppkg);
-		pkgs.add(toppkg);
+		Set<AadlPackage> pkgs = new HashSet<>();
+		getPackageDependencies(toppkg, pkgs);
 
 		HashMultimap<String, SpecStatement> multiMap = HashMultimap.create();
 		for (AadlPackage pkg : pkgs) {
