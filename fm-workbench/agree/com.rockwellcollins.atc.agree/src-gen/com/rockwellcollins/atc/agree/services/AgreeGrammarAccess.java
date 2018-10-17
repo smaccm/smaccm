@@ -4555,7 +4555,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cNamedElmExprAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Assignment cNamedElmAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
 		private final CrossReference cNamedElmNamedElementCrossReference_0_0_1_0 = (CrossReference)cNamedElmAssignment_0_0_1.eContents().get(0);
-		private final RuleCall cNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_0_0_1_0.eContents().get(1);
+		private final RuleCall cNamedElmNamedElementEIDParserRuleCall_0_0_1_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_0_0_1_0.eContents().get(1);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cTimeExprAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cTimeKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
@@ -4693,7 +4693,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_18_2 = (Keyword)cGroup_18.eContents().get(2);
 		
 		//TermExpr Expr:
-		//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF]) | {TimeExpr} 'time'
+		//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|EID]) | {TimeExpr} 'time'
 		//	| {IndicesExpr} 'indices' '(' array=Expr ')'
 		//	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')'
 		//	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';'
@@ -4714,8 +4714,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| '(' Expr ')';
 		@Override public ParserRule getRule() { return rule; }
 
-		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF]) | {TimeExpr} 'time' | {IndicesExpr} 'indices' '(' array=Expr
-		//')' | => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' | => ({RecordLitExpr}
+		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|EID]) | {TimeExpr} 'time' | {IndicesExpr} 'indices' '(' array=Expr ')'
+		//| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' | => ({RecordLitExpr}
 		//recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement] '='
 		//argExpr+=Expr)* '}' | => ({EnumLitExpr} 'enum' '(') enumType=CustomType ',' value=ID ')' | ArrayLiteralExpr |
 		//{IntLitExpr} val=INTEGER_LIT | {PreExpr} 'pre' '(' expr=Expr ')' | {EventExpr} 'event' '(' id=Expr ')' | {LatchedExpr}
@@ -4725,23 +4725,23 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr ')'
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF])
+		//=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|EID])
 		public Group getGroup_0() { return cGroup_0; }
 
-		//{NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF]
+		//{NamedElmExpr} namedElm=[aadl2::NamedElement|EID]
 		public Group getGroup_0_0() { return cGroup_0_0; }
 
 		//{NamedElmExpr}
 		public Action getNamedElmExprAction_0_0_0() { return cNamedElmExprAction_0_0_0; }
 
-		//namedElm=[aadl2::NamedElement|QCPREF]
+		//namedElm=[aadl2::NamedElement|EID]
 		public Assignment getNamedElmAssignment_0_0_1() { return cNamedElmAssignment_0_0_1; }
 
-		//[aadl2::NamedElement|QCPREF]
+		//[aadl2::NamedElement|EID]
 		public CrossReference getNamedElmNamedElementCrossReference_0_0_1_0() { return cNamedElmNamedElementCrossReference_0_0_1_0; }
 
-		//QCPREF
-		public RuleCall getNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1() { return cNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1; }
+		//EID
+		public RuleCall getNamedElmNamedElementEIDParserRuleCall_0_0_1_0_1() { return cNamedElmNamedElementEIDParserRuleCall_0_0_1_0_1; }
 
 		//{TimeExpr} 'time'
 		public Group getGroup_1() { return cGroup_1; }
@@ -5289,56 +5289,67 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	public class QCPREFElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.QCPREF");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
-		private final Group cGroup_0_0_0 = (Group)cGroup_0_0.eContents().get(0);
-		private final RuleCall cIDTerminalRuleCall_0_0_0_0 = (RuleCall)cGroup_0_0_0.eContents().get(0);
-		private final Keyword cColonColonKeyword_0_0_0_1 = (Keyword)cGroup_0_0_0.eContents().get(1);
-		private final RuleCall cIDTerminalRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
-		private final Group cGroup_0_2 = (Group)cGroup_0.eContents().get(2);
-		private final Group cGroup_0_2_0 = (Group)cGroup_0_2.eContents().get(0);
-		private final Keyword cFullStopKeyword_0_2_0_0 = (Keyword)cGroup_0_2_0.eContents().get(0);
-		private final RuleCall cIDTerminalRuleCall_0_2_0_1 = (RuleCall)cGroup_0_2_0.eContents().get(1);
-		private final RuleCall cIDTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_0_0 = (RuleCall)cGroup_0.eContents().get(0);
+		private final Keyword cColonColonKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final RuleCall cIDTerminalRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cFullStopKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_2_1 = (RuleCall)cGroup_2.eContents().get(1);
 		
 		//QCPREF:
-		//	=> (ID '::') ID => ('.' ID)?
-		//	| ID;
+		//	(ID '::')? ID ('.' ID)?;
 		@Override public ParserRule getRule() { return rule; }
 
-		//=> (ID '::') ID => ('.' ID)? | ID
-		public Alternatives getAlternatives() { return cAlternatives; }
+		//(ID '::')? ID ('.' ID)?
+		public Group getGroup() { return cGroup; }
 
-		//=> (ID '::') ID => ('.' ID)?
+		//(ID '::')?
 		public Group getGroup_0() { return cGroup_0; }
 
-		//=> (ID '::')
-		public Group getGroup_0_0() { return cGroup_0_0; }
-
-		//ID '::'
-		public Group getGroup_0_0_0() { return cGroup_0_0_0; }
-
 		//ID
-		public RuleCall getIDTerminalRuleCall_0_0_0_0() { return cIDTerminalRuleCall_0_0_0_0; }
+		public RuleCall getIDTerminalRuleCall_0_0() { return cIDTerminalRuleCall_0_0; }
 
 		//'::'
-		public Keyword getColonColonKeyword_0_0_0_1() { return cColonColonKeyword_0_0_0_1; }
+		public Keyword getColonColonKeyword_0_1() { return cColonColonKeyword_0_1; }
 
 		//ID
-		public RuleCall getIDTerminalRuleCall_0_1() { return cIDTerminalRuleCall_0_1; }
+		public RuleCall getIDTerminalRuleCall_1() { return cIDTerminalRuleCall_1; }
 
-		//=> ('.' ID)?
-		public Group getGroup_0_2() { return cGroup_0_2; }
-
-		//'.' ID
-		public Group getGroup_0_2_0() { return cGroup_0_2_0; }
+		//('.' ID)?
+		public Group getGroup_2() { return cGroup_2; }
 
 		//'.'
-		public Keyword getFullStopKeyword_0_2_0_0() { return cFullStopKeyword_0_2_0_0; }
+		public Keyword getFullStopKeyword_2_0() { return cFullStopKeyword_2_0; }
 
 		//ID
-		public RuleCall getIDTerminalRuleCall_0_2_0_1() { return cIDTerminalRuleCall_0_2_0_1; }
+		public RuleCall getIDTerminalRuleCall_2_1() { return cIDTerminalRuleCall_2_1; }
+	}
+
+	public class EIDElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.EID");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final RuleCall cIDTerminalRuleCall_0_0 = (RuleCall)cGroup_0.eContents().get(0);
+		private final Keyword cColonColonKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final RuleCall cIDTerminalRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		
+		//EID:
+		//	(ID '::')? ID;
+		@Override public ParserRule getRule() { return rule; }
+
+		//(ID '::')? ID
+		public Group getGroup() { return cGroup; }
+
+		//(ID '::')?
+		public Group getGroup_0() { return cGroup_0; }
+
+		//ID
+		public RuleCall getIDTerminalRuleCall_0_0() { return cIDTerminalRuleCall_0_0; }
+
+		//'::'
+		public Keyword getColonColonKeyword_0_1() { return cColonColonKeyword_0_1; }
 
 		//ID
 		public RuleCall getIDTerminalRuleCall_1() { return cIDTerminalRuleCall_1; }
@@ -5517,6 +5528,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final ArrayLiteralExprElements pArrayLiteralExpr;
 	private final AbstractionRefElements pAbstractionRef;
 	private final QCPREFElements pQCPREF;
+	private final EIDElements pEID;
 	private final ReservedVarTagElements pReservedVarTag;
 	private final EnumIDElements pEnumID;
 	private final ArraySubBindingElements pArraySubBinding;
@@ -5597,6 +5609,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pArrayLiteralExpr = new ArrayLiteralExprElements();
 		this.pAbstractionRef = new AbstractionRefElements();
 		this.pQCPREF = new QCPREFElements();
+		this.pEID = new EIDElements();
 		this.pReservedVarTag = new ReservedVarTagElements();
 		this.pEnumID = new EnumIDElements();
 		this.pArraySubBinding = new ArraySubBindingElements();
@@ -6331,7 +6344,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TermExpr Expr:
-	//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF]) | {TimeExpr} 'time'
+	//	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|EID]) | {TimeExpr} 'time'
 	//	| {IndicesExpr} 'indices' '(' array=Expr ')'
 	//	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')'
 	//	| => ({RecordLitExpr} recordType=CustomType '{' args+=[aadl2::NamedElement] '=') argExpr+=Expr (';'
@@ -6380,14 +6393,23 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//QCPREF:
-	//	=> (ID '::') ID => ('.' ID)?
-	//	| ID;
+	//	(ID '::')? ID ('.' ID)?;
 	public QCPREFElements getQCPREFAccess() {
 		return pQCPREF;
 	}
 	
 	public ParserRule getQCPREFRule() {
 		return getQCPREFAccess().getRule();
+	}
+
+	//EID:
+	//	(ID '::')? ID;
+	public EIDElements getEIDAccess() {
+		return pEID;
+	}
+	
+	public ParserRule getEIDRule() {
+		return getEIDAccess().getRule();
 	}
 
 	//ReservedVarTag:

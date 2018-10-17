@@ -7218,7 +7218,7 @@ ruleTermExpr returns [EObject current=null]
 (((((
 )(
 (
-		ruleQCPREF
+		ruleEID
 
 )
 )))=>((
@@ -7237,7 +7237,7 @@ ruleTermExpr returns [EObject current=null]
 		{ 
 	        newCompositeNode(grammarAccess.getTermExprAccess().getNamedElmNamedElementCrossReference_0_0_1_0()); 
 	    }
-		ruleQCPREF
+		ruleEID
 		{ 
 	        afterParserOrEnumRuleCall();
 	    }
@@ -8199,50 +8199,80 @@ ruleQCPREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
     }
     @after { leaveRule();
     }:
-(((((RULE_ID
-	ColonColon 
-))=>(    this_ID_0=RULE_ID    {
+((    this_ID_0=RULE_ID    {
 		$current.merge(this_ID_0);
     }
 
     { 
-    newLeafNode(this_ID_0, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_0_0_0_0()); 
+    newLeafNode(this_ID_0, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_0_0()); 
     }
 
 	kw=ColonColon 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getQCPREFAccess().getColonColonKeyword_0_0_0_1()); 
+        newLeafNode(kw, grammarAccess.getQCPREFAccess().getColonColonKeyword_0_1()); 
     }
-))    this_ID_2=RULE_ID    {
+)?    this_ID_2=RULE_ID    {
 		$current.merge(this_ID_2);
     }
 
     { 
-    newLeafNode(this_ID_2, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_0_1()); 
+    newLeafNode(this_ID_2, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_1()); 
     }
-(((
-	FullStop 
-RULE_ID))=>(
+(
 	kw=FullStop 
     {
         $current.merge(kw);
-        newLeafNode(kw, grammarAccess.getQCPREFAccess().getFullStopKeyword_0_2_0_0()); 
+        newLeafNode(kw, grammarAccess.getQCPREFAccess().getFullStopKeyword_2_0()); 
     }
     this_ID_4=RULE_ID    {
 		$current.merge(this_ID_4);
     }
 
     { 
-    newLeafNode(this_ID_4, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_0_2_0_1()); 
+    newLeafNode(this_ID_4, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_2_1()); 
     }
-))?)
-    |    this_ID_5=RULE_ID    {
-		$current.merge(this_ID_5);
+)?)
+    ;
+
+
+
+
+
+// Entry rule entryRuleEID
+entryRuleEID returns [String current=null] 
+:
+	{ newCompositeNode(grammarAccess.getEIDRule()); } 
+	 iv_ruleEID=ruleEID 
+	 { $current=$iv_ruleEID.current.getText(); }  
+	 EOF 
+;
+
+// Rule EID
+ruleEID returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule();
+    }:
+((    this_ID_0=RULE_ID    {
+		$current.merge(this_ID_0);
     }
 
     { 
-    newLeafNode(this_ID_5, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_1()); 
+    newLeafNode(this_ID_0, grammarAccess.getEIDAccess().getIDTerminalRuleCall_0_0()); 
+    }
+
+	kw=ColonColon 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getEIDAccess().getColonColonKeyword_0_1()); 
+    }
+)?    this_ID_2=RULE_ID    {
+		$current.merge(this_ID_2);
+    }
+
+    { 
+    newLeafNode(this_ID_2, grammarAccess.getEIDAccess().getIDTerminalRuleCall_1()); 
     }
 )
     ;

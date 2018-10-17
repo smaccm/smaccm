@@ -75,7 +75,6 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getPreDefFnExprAccess().getAlternatives(), "rule__PreDefFnExpr__Alternatives");
 					put(grammarAccess.getTermExprAccess().getAlternatives(), "rule__TermExpr__Alternatives");
 					put(grammarAccess.getArrayLiteralExprAccess().getAlternatives(), "rule__ArrayLiteralExpr__Alternatives");
-					put(grammarAccess.getQCPREFAccess().getAlternatives(), "rule__QCPREF__Alternatives");
 					put(grammarAccess.getReservedVarTagAccess().getAlternatives(), "rule__ReservedVarTag__Alternatives");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getAlternatives_1(), "rule__ContainedPropertyAssociation__Alternatives_1");
 					put(grammarAccess.getPropertyAssociationAccess().getAlternatives_1(), "rule__PropertyAssociation__Alternatives_1");
@@ -291,11 +290,11 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getArrayLiteralExprAccess().getGroup_1_2(), "rule__ArrayLiteralExpr__Group_1_2__0");
 					put(grammarAccess.getAbstractionRefAccess().getGroup(), "rule__AbstractionRef__Group__0");
 					put(grammarAccess.getAbstractionRefAccess().getGroup_0(), "rule__AbstractionRef__Group_0__0");
+					put(grammarAccess.getQCPREFAccess().getGroup(), "rule__QCPREF__Group__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_0(), "rule__QCPREF__Group_0__0");
-					put(grammarAccess.getQCPREFAccess().getGroup_0_0(), "rule__QCPREF__Group_0_0__0");
-					put(grammarAccess.getQCPREFAccess().getGroup_0_0_0(), "rule__QCPREF__Group_0_0_0__0");
-					put(grammarAccess.getQCPREFAccess().getGroup_0_2(), "rule__QCPREF__Group_0_2__0");
-					put(grammarAccess.getQCPREFAccess().getGroup_0_2_0(), "rule__QCPREF__Group_0_2_0__0");
+					put(grammarAccess.getQCPREFAccess().getGroup_2(), "rule__QCPREF__Group_2__0");
+					put(grammarAccess.getEIDAccess().getGroup(), "rule__EID__Group__0");
+					put(grammarAccess.getEIDAccess().getGroup_0(), "rule__EID__Group_0__0");
 					put(grammarAccess.getJavaQualifiedNameAccess().getGroup(), "rule__JavaQualifiedName__Group__0");
 					put(grammarAccess.getJavaQualifiedNameAccess().getGroup_1(), "rule__JavaQualifiedName__Group_1__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup(), "rule__ContainedPropertyAssociation__Group__0");

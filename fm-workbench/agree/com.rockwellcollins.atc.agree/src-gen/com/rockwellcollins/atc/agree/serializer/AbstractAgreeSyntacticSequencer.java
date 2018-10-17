@@ -123,7 +123,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) 'timeof' '(' id=[NamedElement|ID]
 	 *     (rule start) (ambiguity) 'timerise' '(' id=[NamedElement|ID]
 	 *     (rule start) (ambiguity) abstractionRef=AbstractionRef
-	 *     (rule start) (ambiguity) namedElm=[NamedElement|QCPREF]
+	 *     (rule start) (ambiguity) namedElm=[NamedElement|EID]
 	 *     (rule start) (ambiguity) op='-'
 	 *     (rule start) (ambiguity) op='not'
 	 *     (rule start) (ambiguity) recordType=CustomType

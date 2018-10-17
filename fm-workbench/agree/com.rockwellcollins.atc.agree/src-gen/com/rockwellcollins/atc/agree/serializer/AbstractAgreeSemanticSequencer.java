@@ -2637,7 +2637,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     TermExpr returns NamedElmExpr
 	 *
 	 * Constraint:
-	 *     namedElm=[NamedElement|QCPREF]
+	 *     namedElm=[NamedElement|EID]
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, NamedElmExpr semanticObject) {
 		if (errorAcceptor != null) {
@@ -2645,7 +2645,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.NAMED_ELM_EXPR__NAMED_ELM));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTermExprAccess().getNamedElmNamedElementQCPREFParserRuleCall_0_0_1_0_1(), semanticObject.eGet(AgreePackage.Literals.NAMED_ELM_EXPR__NAMED_ELM, false));
+		feeder.accept(grammarAccess.getTermExprAccess().getNamedElmNamedElementEIDParserRuleCall_0_0_1_0_1(), semanticObject.eGet(AgreePackage.Literals.NAMED_ELM_EXPR__NAMED_ELM, false));
 		feeder.finish();
 	}
 	

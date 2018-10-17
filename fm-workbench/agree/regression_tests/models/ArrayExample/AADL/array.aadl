@@ -15,7 +15,7 @@ public
 	data implementation struct_with_array.i
 		subcomponents
 			array : data Base_Types::Integer[4];
-			ranged : data array::ranged_type;
+			ranged : data ranged_type;
 	end struct_with_array.i;
 	
 	data array_type
@@ -37,12 +37,13 @@ public
 		subcomponents
 			val : data Base_Types::Integer;
 			array : data Base_Types::Integer[10];
+			booga: data struct_with_array.i;
 	end simple_struct.i2;
 	
 	data simple_struct_array
 		properties
 			Data_Model::Data_Representation => Array;
-			Data_Model::Base_Type => (classifier (array::simple_struct.i));
+			Data_Model::Base_Type => (classifier (simple_struct.i));
 			Data_Model::Dimension => (4);
 	end simple_struct_array;
 	
@@ -56,63 +57,66 @@ public
 	data simple_struct_array_DIM
 		properties
 			Data_Model::Data_Representation => Array;
-			Data_Model::Base_Type => (classifier (array::simple_struct.i));
+			Data_Model::Base_Type => (classifier (simple_struct.i));
 			Data_Model::Dimension => (SW_Properties::MAP_DIMENSION);
 	end simple_struct_array_DIM;
 	
 	annex agree {**
 --		-- Type Error: cannot assign structure to integer literal
---		fun array_test0(t : array::struct_with_array.i) : bool =
+--		fun array_test0(t : struct_with_array.i) : bool =
 --			t = 10;
 --			
 --		-- Type Error: cannot assign array to integer literal
---		fun array_test1(t : array::struct_with_array.i) : bool =
+--		fun array_test1(t : struct_with_array.i) : bool =
 --			t.array = 10;
 		
 		-- Correct: assign integer array element to integer literal
-		fun array_test2(t : array::struct_with_array.i) : bool =
+		
+		fun array_foo(t : struct_with_array.i) : int[4] = t.array;
+		
+		fun array_test2(t : struct_with_array.i) : bool = 
 			t.array[0] = 10;
 			
-		fun array_test3(t : array::array_type) : bool = 
+		fun array_test3(t : array_type) : bool = 
 			t[2] = 10;
 
-		fun array_test4(t : array::array_type) : bool =
+		fun array_test4(t : array_type) : bool =
 			forall i in indices(t), t[i] < 10;
 			
-		fun array_test5(t : array::simple_struct_array) : bool =
+		fun array_test5(t : simple_struct_array) : bool =
 			forall i in t, i.val < 10;
 			
-		fun array_test6(t : array::simple_struct_array) : bool =
+		fun array_test6(t : simple_struct_array) : bool =
 			forall i in indices(t), (t[i]).val < 10;
 			
-		fun support_array_test7(x : array::simple_struct.i) : bool = x.val < 10;
+		fun support_array_test7(x : simple_struct.i) : bool = x.val < 10;
 		
-		fun array_test7(t : array::simple_struct_array) : bool = 
+		fun array_test7(t : simple_struct_array) : bool = 
 			forall i in t, support_array_test7(i);
 			
-		fun array_test8(t : array::simple_struct_array) : bool = 
+		fun array_test8(t : simple_struct_array) : bool = 
 			forall i in indices(t), support_array_test7(t[i]);
 		
-		fun array_test9(t : array::simple_struct_array_DIM) : bool =
+		fun array_test9(t : simple_struct_array_DIM) : bool =
 			forall i in indices(t), support_array_test7(t[i]);
 			
-		fun array_test10(t : array::simple_struct.i2) : bool =
+		fun array_test10(t : simple_struct.i2) : bool =
 			forall i in indices(t.array), (t.array)[i] < 10;
 			
-		fun array_test11(t : array::simple_struct.i2) : bool =
+		fun array_test11(t : simple_struct.i2) : bool =
 			forall i in t.array, i < 10;
 			
 		fun tll0(x: int) : int = SW_Properties::MAX_ALTITUDE;
 		
 		fun tll1(x: int) : real = SW_Properties::MAX_LATTITUDE;
 			
-		fun ranged_type_test0(r : array::ranged_type) : bool = 
+		fun ranged_type_test0(r : ranged_type) : bool = 
 			r != SW_Properties::MAX_ALTITUDE;
 			
-		fun ranged_type_test1(r : array::ranged_type) : bool =
+		fun ranged_type_test1(r : ranged_type) : bool =
 			r != 10;
 				
-		fun ranged_type_test2(r : array::struct_with_array.i) : bool =
+		fun ranged_type_test2(r : struct_with_array.i) : bool =
 			r.ranged < 10;
 			
 		fun tll2(arr: simple_int_array) : bool = arr = [|5, 5, 5, 5|] ;

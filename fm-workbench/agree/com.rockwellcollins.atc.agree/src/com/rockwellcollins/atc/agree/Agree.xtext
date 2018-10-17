@@ -303,7 +303,7 @@ ProjectionExpr returns Expr:
 
 
 TermExpr returns Expr:
-	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|QCPREF])
+	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|EID])
 	| {TimeExpr} 'time'
 	| {IndicesExpr} 'indices' '(' array=Expr ')'
 	| => ({CallExpr} abstractionRef=AbstractionRef '(') (args+=Expr (',' args+=Expr)*)? ')' 
@@ -336,8 +336,12 @@ AbstractionRef:
 
 	
 QCPREF:
-	=>(ID '::') ID =>('.' ID)?
-|	ID;
+	(ID '::')? ID ('.' ID)?
+	
+ ;
+ 
+ EID:
+	(ID '::')? ID;
 	
 ReservedVarTag:
 	'_REMOVE'

@@ -55,7 +55,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			throws IllegalNodeException {
 		String name = getCrossRefNodeAsString(node);
 		// TODO This will have to be changed in the develop branch
-		name = name.replaceAll("::", ".");
+		name = getCrossRefNodeAsString(node);
 
 		if (context instanceof PropertyValue) {
 			return findUnitLiteralAsList((Element) context, name);
@@ -75,10 +75,14 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
 			// EObject e = findClassifier(context, reference, name);
 			EObject e = getIndexedObject(context, reference, name);
+			if (e == null) {
+				e = findClassifier(context, reference, name);
+			}
 
 			if (e != null) {
 				return Collections.singletonList(e);
 			}
+
 
 			// This code will only link to objects in the projects visible from the current project
 			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
@@ -88,6 +92,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			List<String> visibleProjects = getVisibleProjects(contextProject);
 
 			for (IEObjectDescription eod : allObjectTypes) {
+
 				if (isVisible(eod, visibleProjects)) {
 					EObject res = eod.getEObjectOrProxy();
 
@@ -106,7 +111,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 	}
 
 	private static boolean sameName(IEObjectDescription eod, String name) {
-		return eod.getName().toString().equalsIgnoreCase(name);
+		return eod.getName().toString().equalsIgnoreCase(name.replace("::", "."));
 	}
 
 	private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {
