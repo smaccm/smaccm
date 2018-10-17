@@ -1,5 +1,6 @@
 package Lib
 public
+	with Base_Types;
 	annex agree {**
 		node abs (x : Base_Types::Float) returns (y : Base_Types::Float);
 
