@@ -352,8 +352,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//('int' | 'real' | 'string' | 'bool' | 'range' | 'aadl' | 'component' | 'abstract' | 'bus' | 'data' | 'device' | 'memory'
 		//| 'processor' | 'process' | 'subprogram_group' | 'subprogram' | 'system' | 'thread_group' | 'thread' | 'virtual_bus' |
-		//'virtual_processor' | 'connection' | 'property' | 'feature' | 'port' | 'data_port' | 'event_port' | 'event_data_port' |
-		//'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' | 'data_access' |
+		//'virtual_processor' | 'connection' | 'property' | 'feature' | 'port' | 'data_port' | 'event_port' | 'event_data_port'
+		//| 'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' | 'data_access' |
 		//'provides_data_access' | 'requires_data_access' | 'subprogram_access' | 'provides_subprogram_access' |
 		//'requires_subprogram_access' | 'subprogram_group_access' | 'provides_subprogram_group_access' |
 		//'requires_subprogram_group_access' | 'flow_specification' | 'end_to_end_flow')
@@ -2179,12 +2179,19 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cFlow_elementsKeyword_60 = (Keyword)cAlternatives.eContents().get(60);
 		private final Keyword cFlow_specificationsKeyword_61 = (Keyword)cAlternatives.eContents().get(61);
 		private final Keyword cEnd_to_end_flowsKeyword_62 = (Keyword)cAlternatives.eContents().get(62);
+		private final Keyword cHas_agree_propertyKeyword_63 = (Keyword)cAlternatives.eContents().get(63);
+		private final Keyword cAgree_property_textKeyword_64 = (Keyword)cAlternatives.eContents().get(64);
+		private final Keyword cAgree_propertiesKeyword_65 = (Keyword)cAlternatives.eContents().get(65);
+		private final Keyword cAgree_assumesKeyword_66 = (Keyword)cAlternatives.eContents().get(66);
+		private final Keyword cAgree_guaranteesKeyword_67 = (Keyword)cAlternatives.eContents().get(67);
+		private final Keyword cAgree_lemmasKeyword_68 = (Keyword)cAlternatives.eContents().get(68);
+		private final Keyword cAgree_assertsKeyword_69 = (Keyword)cAlternatives.eContents().get(69);
 		
 		//BuiltInFn: // Primary type: aadl
 		//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
 		//	'is_in_array' | 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' |
-		//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type'
-		//	| 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
+		//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' |
+		//	'is_of_type' | 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
 		//	| 'enumerated_values' // Primary type: component
 		//	| 'subcomponents' // Primary type: connection
 		//	| 'source' | 'destination' // Primary type: feature
@@ -2198,14 +2205,22 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	| 'contain_error' // the component contain the error
 		//	| 'propagate_error' // the component propagate an error
 		//	| 'error_state_reachable' // the error state is reachable
-		//	| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows';
+		//	| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows' // AGREE Annex
+		//	| 'has_agree_property' // the component has an agree property with the specified ID
+		//	| 'agree_property_text' // the agree property text for the specified ID
+		//	| 'agree_properties' // set of all agree property IDs (assume, guarantee, lemma, assert) for the given component
+		//	| 'agree_assumes' // set of agree assume IDs for the given component
+		//	| 'agree_guarantees' // set of agree guarantee IDs for the given component
+		//	| 'agree_lemmas' // set of agree lemma IDs for the given component
+		//	| 'agree_asserts' // set of agree assert IDs for the given component
+		//;
 		@Override public ParserRule getRule() { return rule; }
 
 		//// Primary type: aadl
 		//'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' | 'is_in_array'
 		//| 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' | 'is_virtual_bus'
-		//| 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type' | 'is_bound_to' |
-		//'has_member' | 'features' | 'connections' // Primary type: property
+		//| 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type' | 'is_bound_to'
+		//| 'has_member' | 'features' | 'connections' // Primary type: property
 		//| 'enumerated_values' // Primary type: component
 		//| 'subcomponents' // Primary type: connection
 		//| 'source' | 'destination' // Primary type: feature
@@ -2219,7 +2234,14 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//| 'contain_error' // the component contain the error
 		//| 'propagate_error' // the component propagate an error
 		//| 'error_state_reachable' // the error state is reachable
-		//| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows'
+		//| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows' // AGREE Annex
+		//| 'has_agree_property' // the component has an agree property with the specified ID
+		//| 'agree_property_text' // the agree property text for the specified ID
+		//| 'agree_properties' // set of all agree property IDs (assume, guarantee, lemma, assert) for the given component
+		//| 'agree_assumes' // set of agree assume IDs for the given component
+		//| 'agree_guarantees' // set of agree guarantee IDs for the given component
+		//| 'agree_lemmas' // set of agree lemma IDs for the given component
+		//| 'agree_asserts'
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//// Primary type: aadl
@@ -2411,6 +2433,27 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//'end_to_end_flows'
 		public Keyword getEnd_to_end_flowsKeyword_62() { return cEnd_to_end_flowsKeyword_62; }
+
+		//'has_agree_property'
+		public Keyword getHas_agree_propertyKeyword_63() { return cHas_agree_propertyKeyword_63; }
+
+		//'agree_property_text'
+		public Keyword getAgree_property_textKeyword_64() { return cAgree_property_textKeyword_64; }
+
+		//'agree_properties'
+		public Keyword getAgree_propertiesKeyword_65() { return cAgree_propertiesKeyword_65; }
+
+		//'agree_assumes'
+		public Keyword getAgree_assumesKeyword_66() { return cAgree_assumesKeyword_66; }
+
+		//'agree_guarantees'
+		public Keyword getAgree_guaranteesKeyword_67() { return cAgree_guaranteesKeyword_67; }
+
+		//'agree_lemmas'
+		public Keyword getAgree_lemmasKeyword_68() { return cAgree_lemmasKeyword_68; }
+
+		//'agree_asserts'
+		public Keyword getAgree_assertsKeyword_69() { return cAgree_assertsKeyword_69; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -3055,8 +3098,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//BuiltInFn: // Primary type: aadl
 	//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
 	//	'is_in_array' | 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' |
-	//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type'
-	//	| 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
+	//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' |
+	//	'is_of_type' | 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
 	//	| 'enumerated_values' // Primary type: component
 	//	| 'subcomponents' // Primary type: connection
 	//	| 'source' | 'destination' // Primary type: feature
@@ -3070,7 +3113,15 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	| 'contain_error' // the component contain the error
 	//	| 'propagate_error' // the component propagate an error
 	//	| 'error_state_reachable' // the error state is reachable
-	//	| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows';
+	//	| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows' // AGREE Annex
+	//	| 'has_agree_property' // the component has an agree property with the specified ID
+	//	| 'agree_property_text' // the agree property text for the specified ID
+	//	| 'agree_properties' // set of all agree property IDs (assume, guarantee, lemma, assert) for the given component
+	//	| 'agree_assumes' // set of agree assume IDs for the given component
+	//	| 'agree_guarantees' // set of agree guarantee IDs for the given component
+	//	| 'agree_lemmas' // set of agree lemma IDs for the given component
+	//	| 'agree_asserts' // set of agree assert IDs for the given component
+	//;
 	public BuiltInFnElements getBuiltInFnAccess() {
 		return pBuiltInFn;
 	}

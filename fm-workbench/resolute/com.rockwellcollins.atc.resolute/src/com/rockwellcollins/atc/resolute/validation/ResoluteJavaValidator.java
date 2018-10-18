@@ -830,6 +830,23 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			expectedTypes.add(BaseType.COMPONENT);
 			break;
 
+		// AGREE Annex
+		case "has_agree_property":
+			expectedTypes.add(BaseType.COMPONENT);
+			expectedTypes.add(BaseType.STRING);
+			break;
+		case "agree_property_text":
+			expectedTypes.add(BaseType.COMPONENT);
+			expectedTypes.add(BaseType.STRING);
+			break;
+		case "agree_properties":
+		case "agree_assumes":
+		case "agree_guarantees":
+		case "agree_lemmas":
+		case "agree_asserts":
+			expectedTypes.add(BaseType.COMPONENT);
+			break;
+
 		default:
 			error(funCall, "Unknown built-in function '" + funCall.getFn() + "'");
 			return null;
@@ -1306,6 +1323,16 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		case "propagate_error":
 		case "error_state_reachable":
 			return BaseType.BOOL;
+
+		// AGREE Annex
+		case "agree_property_text":
+			return BaseType.STRING;
+		case "agree_properties":
+		case "agree_assumes":
+		case "agree_guarantees":
+		case "agree_lemmas":
+		case "agree_asserts":
+			return new SetType(BaseType.STRING);
 
 		default:
 			return BaseType.FAIL;

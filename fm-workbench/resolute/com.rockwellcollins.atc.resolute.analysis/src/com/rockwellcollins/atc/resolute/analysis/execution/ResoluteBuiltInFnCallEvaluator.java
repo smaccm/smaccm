@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BasicPropertyAssociation;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.BusAccess;
@@ -50,6 +51,7 @@ import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
@@ -58,6 +60,14 @@ import org.osate.xtext.aadl2.errormodel.util.EMV2Util;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl;
+import com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl;
+import com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl;
+import com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ListValue;
@@ -779,6 +789,119 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "end_to_end_flows": {
 			ComponentInstance comp = (ComponentInstance) args.get(0).getNamedElement();
 			return createSetValue(comp.getEndToEndFlows());
+		}
+
+		case "has_agree_property": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			String agreePropertyID = args.get(1).getString();
+
+//			if (element instanceof ComponentInstance) {
+//				element = ((ComponentInstance) element).getComponentClassifier();
+//			}
+
+//			if (element instanceof ComponentClassifier) {
+			ComponentClassifier cc = ci.getComponentClassifier();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+						AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+					AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+					for (SpecStatement spec : contract.getSpecs()) {
+						if (spec instanceof AssumeStatementImpl) {
+							if (agreePropertyID.equalsIgnoreCase(((AssumeStatementImpl) spec).getName())) {
+								return new BoolValue(true);
+							}
+						} else if (spec instanceof GuaranteeStatementImpl) {
+							if (agreePropertyID.equalsIgnoreCase(((GuaranteeStatementImpl) spec).getName())) {
+								return new BoolValue(true);
+							}
+						} else if (spec instanceof LemmaStatementImpl) {
+							if (agreePropertyID.equalsIgnoreCase(((LemmaStatementImpl) spec).getName())) {
+								return new BoolValue(true);
+							}
+						} else if (spec instanceof AssertStatementImpl) {
+							if (agreePropertyID.equalsIgnoreCase(((AssertStatementImpl) spec).getName())) {
+								return new BoolValue(true);
+							}
+						}
+					}
+				}
+//			}
+
+			return new BoolValue(false);
+		}
+
+		case "agree_property_text": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			String agreePropertyID = args.get(1).getString();
+
+			ComponentClassifier cc = ci.getComponentClassifier();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof AssumeStatementImpl) {
+						if (agreePropertyID.equalsIgnoreCase(((AssumeStatementImpl) spec).getName())) {
+							return new StringValue(((AssumeStatementImpl) spec).getStr());
+						}
+					} else if (spec instanceof GuaranteeStatementImpl) {
+						if (agreePropertyID.equalsIgnoreCase(((GuaranteeStatementImpl) spec).getName())) {
+							return new StringValue(((GuaranteeStatementImpl) spec).getStr());
+						}
+					} else if (spec instanceof LemmaStatementImpl) {
+						if (agreePropertyID.equalsIgnoreCase(((LemmaStatementImpl) spec).getName())) {
+							return new StringValue(((LemmaStatementImpl) spec).getStr());
+						}
+					} else if (spec instanceof AssertStatementImpl) {
+						if (agreePropertyID.equalsIgnoreCase(((AssertStatementImpl) spec).getName())) {
+							return new StringValue(((AssertStatementImpl) spec).getStr());
+						}
+					}
+				}
+			}
+			throw new ResoluteFailException("AGREE property " + agreePropertyID + " not found on " + cc.getName(),
+					fnCallExpr);
+		}
+
+		case "agree_properties": {
+//			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+//			ComponentClassifier cc = ci.getComponentClassifier();
+//			SortedSet<String> result = new TreeSet<>();
+//			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+//					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+//				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+//				for (SpecStatement spec : contract.getSpecs()) {
+//					if (spec instanceof AssumeStatementImpl) {
+//						result.add(((AssumeStatementImpl) spec).getName());
+//					} else if (spec instanceof GuaranteeStatementImpl) {
+//						if (agreePropertyID.equalsIgnoreCase(((GuaranteeStatementImpl) spec).getName())) {
+//							return new StringValue(((GuaranteeStatementImpl) spec).getStr());
+//						}
+//					} else if (spec instanceof LemmaStatementImpl) {
+//						if (agreePropertyID.equalsIgnoreCase(((LemmaStatementImpl) spec).getName())) {
+//							return new StringValue(((LemmaStatementImpl) spec).getStr());
+//						}
+//					} else if (spec instanceof AssertStatementImpl) {
+//						if (agreePropertyID.equalsIgnoreCase(((AssertStatementImpl) spec).getName())) {
+//							return new StringValue(((AssertStatementImpl) spec).getStr());
+//						}
+//					}
+//				}
+//			}
+		}
+
+		case "agree_assumes": {
+
+		}
+
+		case "agree_guarantees": {
+
+		}
+
+		case "agree_lemmas": {
+
+		}
+
+		case "agree_asserts": {
+
 		}
 
 		default:

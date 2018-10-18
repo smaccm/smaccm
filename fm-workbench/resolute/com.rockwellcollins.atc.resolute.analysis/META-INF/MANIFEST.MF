@@ -40,7 +40,9 @@ Export-Package: com.rockwellcollins.atc.resolute.analysis,
  com.rockwellcollins.atc.resolute.analysis.views
 Eclipse-RegisterBuddy: com.rockwellcollins.atc.resolute.ui
 Bundle-Vendor: Rockwell Collins, Inc.
-Import-Package: org.eclipse.emf.transaction,
+Import-Package: com.rockwellcollins.atc.agree.agree,
+ com.rockwellcollins.atc.agree.agree.impl,
+ org.eclipse.emf.transaction,
  org.eclipse.gmf.runtime.diagram.core.preferences,
  org.eclipse.gmf.runtime.diagram.core.services,
  org.eclipse.gmf.runtime.emf.commands.core.command,
