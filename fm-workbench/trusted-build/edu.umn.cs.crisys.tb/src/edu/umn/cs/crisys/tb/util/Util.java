@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.IntegerLiteral;
@@ -290,7 +291,7 @@ public class Util {
 		final ResourceDescriptionsProvider resourceDescriptionsProvider = injector
 				.getInstance(ResourceDescriptionsProvider.class);
 		final IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider
-				.getResourceDescriptions(OsateResourceUtil.getResourceSet());
+				.getResourceDescriptions(new XtextResourceSet());
 		for (IEObjectDescription eobjDesc : resourceDescriptions
 				.getExportedObjectsByType(Aadl2Package.eINSTANCE.getProperty())) {
 			if (eobjDesc.getName().toString("::").equalsIgnoreCase(pdname)) {

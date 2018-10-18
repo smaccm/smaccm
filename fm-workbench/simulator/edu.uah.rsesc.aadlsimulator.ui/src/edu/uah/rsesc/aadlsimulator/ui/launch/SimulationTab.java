@@ -52,9 +52,9 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.osate.aadl2.Aadl2Package;
-import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 
 import com.google.inject.Injector;
 
@@ -132,7 +132,7 @@ public class SimulationTab extends AbstractLaunchConfigurationTab {
 				final ResourceDescriptionsProvider resourceDescriptionsProvider = injector
 						.getInstance(ResourceDescriptionsProvider.class);
 				final IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider
-						.getResourceDescriptions(OsateResourceUtil.getResourceSet());
+						.getResourceDescriptions(new XtextResourceSet());
 				final IProject selectedProject = getSelectedProject();
 				final IPath selectedProjectPath = selectedProject == null ? null : selectedProject.getFullPath();
 				if(selectedProjectPath != null) {

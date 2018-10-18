@@ -38,10 +38,10 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.ComponentImplementation;
-import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.aadl2.util.Aadl2Util;
 
 import com.google.inject.Inject;
@@ -112,13 +112,13 @@ public class OpenHandler extends NoElementHandler {
 	 */
 	private ComponentImplementation getComponentImplFromString(String qualifiedName) {
 		IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider
-				.getResourceDescriptions(OsateResourceUtil.getResourceSet());
+				.getResourceDescriptions(new XtextResourceSet());
 		for (IEObjectDescription eobjDesc : resourceDescriptions
 				.getExportedObjectsByType(
 				Aadl2Package.eINSTANCE.getComponentImplementation())) {
 			if (eobjDesc.getName().toString("::").equalsIgnoreCase(qualifiedName)) {
 				EObject res = eobjDesc.getEObjectOrProxy();
-				res = EcoreUtil.resolve(res, OsateResourceUtil.getResourceSet());
+				res = EcoreUtil.resolve(res, new XtextResourceSet());
 				if (!Aadl2Util.isNull(res)) {
 					return (ComponentImplementation) res;
 				}
