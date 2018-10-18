@@ -2,15 +2,15 @@
 <feature
       id="edu.uah.rsesc.aadlsimulator.feature"
       label="AADL Simulator"
-      version="2.1.3.qualifier"
+      version="2.3.6.qualifier"
       provider-name="The University of Alabama in Huntsville">
 
    <copyright>
-      Copyright (c) 2015, Rockwell Collins.
+      Copyright (c) 2018, Rockwell Collins.
    </copyright>
 
    <license url="">
-      Copyright (c) 2015, Rockwell Collins.
+      Copyright (c) 2018, Rockwell Collins.
 
 Developed with the sponsorship of Defense Advanced Research Projects Agency (DARPA).
 
