@@ -101,6 +101,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createSpecStatementAdapter();
       }
       @Override
+      public Adapter caseNamedSpecStatement(NamedSpecStatement object)
+      {
+        return createNamedSpecStatementAdapter();
+      }
+      @Override
       public Adapter casePatternStatement(PatternStatement object)
       {
         return createPatternStatementAdapter();
@@ -256,26 +261,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createAgreeContractAdapter();
       }
       @Override
-      public Adapter caseAssumeStatement(AssumeStatement object)
-      {
-        return createAssumeStatementAdapter();
-      }
-      @Override
-      public Adapter caseGuaranteeStatement(GuaranteeStatement object)
-      {
-        return createGuaranteeStatementAdapter();
-      }
-      @Override
-      public Adapter caseAssertStatement(AssertStatement object)
-      {
-        return createAssertStatementAdapter();
-      }
-      @Override
-      public Adapter caseLemmaStatement(LemmaStatement object)
-      {
-        return createLemmaStatementAdapter();
-      }
-      @Override
       public Adapter caseInitialStatement(InitialStatement object)
       {
         return createInitialStatementAdapter();
@@ -294,6 +279,26 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
       public Adapter caseConnectionStatement(ConnectionStatement object)
       {
         return createConnectionStatementAdapter();
+      }
+      @Override
+      public Adapter caseAssumeStatement(AssumeStatement object)
+      {
+        return createAssumeStatementAdapter();
+      }
+      @Override
+      public Adapter caseGuaranteeStatement(GuaranteeStatement object)
+      {
+        return createGuaranteeStatementAdapter();
+      }
+      @Override
+      public Adapter caseAssertStatement(AssertStatement object)
+      {
+        return createAssertStatementAdapter();
+      }
+      @Override
+      public Adapter caseLemmaStatement(LemmaStatement object)
+      {
+        return createLemmaStatementAdapter();
       }
       @Override
       public Adapter caseAlwaysStatement(AlwaysStatement object)
@@ -613,6 +618,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSpecStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NamedSpecStatement <em>Named Spec Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.NamedSpecStatement
+   * @generated
+   */
+  public Adapter createNamedSpecStatementAdapter()
   {
     return null;
   }
@@ -1083,66 +1103,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement <em>Assume Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement
-   * @generated
-   */
-  public Adapter createAssumeStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement <em>Guarantee Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement
-   * @generated
-   */
-  public Adapter createGuaranteeStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AssertStatement <em>Assert Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.AssertStatement
-   * @generated
-   */
-  public Adapter createAssertStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement <em>Lemma Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement
-   * @generated
-   */
-  public Adapter createLemmaStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.InitialStatement <em>Initial Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1198,6 +1158,66 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createConnectionStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement <em>Assume Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement
+   * @generated
+   */
+  public Adapter createAssumeStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement <em>Guarantee Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement
+   * @generated
+   */
+  public Adapter createGuaranteeStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AssertStatement <em>Assert Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.AssertStatement
+   * @generated
+   */
+  public Adapter createAssertStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement <em>Lemma Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement
+   * @generated
+   */
+  public Adapter createLemmaStatementAdapter()
   {
     return null;
   }

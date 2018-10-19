@@ -115,6 +115,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.NAMED_SPEC_STATEMENT:
+      {
+        NamedSpecStatement namedSpecStatement = (NamedSpecStatement)theEObject;
+        T result = caseNamedSpecStatement(namedSpecStatement);
+        if (result == null) result = caseNamedElement(namedSpecStatement);
+        if (result == null) result = caseSpecStatement(namedSpecStatement);
+        if (result == null) result = caseElement(namedSpecStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.PATTERN_STATEMENT:
       {
         PatternStatement patternStatement = (PatternStatement)theEObject;
@@ -400,42 +410,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.ASSUME_STATEMENT:
-      {
-        AssumeStatement assumeStatement = (AssumeStatement)theEObject;
-        T result = caseAssumeStatement(assumeStatement);
-        if (result == null) result = caseSpecStatement(assumeStatement);
-        if (result == null) result = caseElement(assumeStatement);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.GUARANTEE_STATEMENT:
-      {
-        GuaranteeStatement guaranteeStatement = (GuaranteeStatement)theEObject;
-        T result = caseGuaranteeStatement(guaranteeStatement);
-        if (result == null) result = caseSpecStatement(guaranteeStatement);
-        if (result == null) result = caseElement(guaranteeStatement);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.ASSERT_STATEMENT:
-      {
-        AssertStatement assertStatement = (AssertStatement)theEObject;
-        T result = caseAssertStatement(assertStatement);
-        if (result == null) result = caseSpecStatement(assertStatement);
-        if (result == null) result = caseElement(assertStatement);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.LEMMA_STATEMENT:
-      {
-        LemmaStatement lemmaStatement = (LemmaStatement)theEObject;
-        T result = caseLemmaStatement(lemmaStatement);
-        if (result == null) result = caseSpecStatement(lemmaStatement);
-        if (result == null) result = caseElement(lemmaStatement);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.INITIAL_STATEMENT:
       {
         InitialStatement initialStatement = (InitialStatement)theEObject;
@@ -469,6 +443,50 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseConnectionStatement(connectionStatement);
         if (result == null) result = caseSpecStatement(connectionStatement);
         if (result == null) result = caseElement(connectionStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ASSUME_STATEMENT:
+      {
+        AssumeStatement assumeStatement = (AssumeStatement)theEObject;
+        T result = caseAssumeStatement(assumeStatement);
+        if (result == null) result = caseNamedSpecStatement(assumeStatement);
+        if (result == null) result = caseNamedElement(assumeStatement);
+        if (result == null) result = caseSpecStatement(assumeStatement);
+        if (result == null) result = caseElement(assumeStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.GUARANTEE_STATEMENT:
+      {
+        GuaranteeStatement guaranteeStatement = (GuaranteeStatement)theEObject;
+        T result = caseGuaranteeStatement(guaranteeStatement);
+        if (result == null) result = caseNamedSpecStatement(guaranteeStatement);
+        if (result == null) result = caseNamedElement(guaranteeStatement);
+        if (result == null) result = caseSpecStatement(guaranteeStatement);
+        if (result == null) result = caseElement(guaranteeStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ASSERT_STATEMENT:
+      {
+        AssertStatement assertStatement = (AssertStatement)theEObject;
+        T result = caseAssertStatement(assertStatement);
+        if (result == null) result = caseNamedSpecStatement(assertStatement);
+        if (result == null) result = caseNamedElement(assertStatement);
+        if (result == null) result = caseSpecStatement(assertStatement);
+        if (result == null) result = caseElement(assertStatement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.LEMMA_STATEMENT:
+      {
+        LemmaStatement lemmaStatement = (LemmaStatement)theEObject;
+        T result = caseLemmaStatement(lemmaStatement);
+        if (result == null) result = caseNamedSpecStatement(lemmaStatement);
+        if (result == null) result = caseNamedElement(lemmaStatement);
+        if (result == null) result = caseSpecStatement(lemmaStatement);
+        if (result == null) result = caseElement(lemmaStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -924,6 +942,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseSpecStatement(SpecStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Named Spec Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Named Spec Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNamedSpecStatement(NamedSpecStatement object)
   {
     return null;
   }
@@ -1425,70 +1459,6 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Assume Statement</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Assume Statement</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseAssumeStatement(AssumeStatement object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Guarantee Statement</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Guarantee Statement</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseGuaranteeStatement(GuaranteeStatement object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Assert Statement</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Assert Statement</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseAssertStatement(AssertStatement object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Lemma Statement</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Lemma Statement</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseLemmaStatement(LemmaStatement object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Initial Statement</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1548,6 +1518,70 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseConnectionStatement(ConnectionStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Assume Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Assume Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAssumeStatement(AssumeStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Guarantee Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Guarantee Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseGuaranteeStatement(GuaranteeStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Assert Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Assert Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAssertStatement(AssertStatement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Lemma Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Lemma Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLemmaStatement(LemmaStatement object)
   {
     return null;
   }

@@ -49,7 +49,6 @@ import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
-import org.osate.aadl2.ModelUnit;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
@@ -59,12 +58,9 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.annexsupport.AnnexUtil;
 
-import com.google.common.collect.HashMultimap;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
-import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
-import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -638,110 +634,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private void getPackageDependencies(AadlPackage pkg, Set<AadlPackage> pkgs) {
-
-		// Add the parent package if it's not there, otherwise return
-		if (pkgs.contains(pkg)) {
-			return;
-		}
-		pkgs.add(pkg);
-
-		// Look at direct dependencies
-		if (pkg.getPrivateSection() != null) {
-			for (ModelUnit mu : pkg.getPrivateSection().getImportedUnits()) {
-				if (mu instanceof AadlPackage) {
-					getPackageDependencies((AadlPackage) mu, pkgs);
-				}
-			}
-		}
-
-		if (pkg.getPublicSection() != null) {
-			for (ModelUnit mu : pkg.getPublicSection().getImportedUnits()) {
-				if (mu instanceof AadlPackage) {
-					getPackageDependencies((AadlPackage) mu, pkgs);
-				}
-			}
-		}
-
-	}
-
-
-	private List<SpecStatement> getSpecStatements(AadlPackage pkg) {
-		List<SpecStatement> specs = new ArrayList<SpecStatement>();
-		for (Classifier classifier : EcoreUtil2.getAllContentsOfType(pkg, Classifier.class)) {
-			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(classifier,
-					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
-				specs.addAll(contract.getSpecs());
-
-			}
-		}
-
-		for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(pkg,
-				AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
-			AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
-			specs.addAll(contract.getSpecs());
-		}
-		return specs;
-	}
-
-	@Check(CheckType.NORMAL)
-	public void checkNoDuplicateIdInSpec(AadlPackage toppkg) {
-
-		Set<AadlPackage> pkgs = new HashSet<>();
-		getPackageDependencies(toppkg, pkgs);
-
-		HashMultimap<String, SpecStatement> multiMap = HashMultimap.create();
-		for (AadlPackage pkg : pkgs) {
-			List<SpecStatement> specs = getSpecStatements(pkg);
-
-			//check local uniqueness
-			for (SpecStatement spec : specs) {
-
-				String id = null;
-				if (spec instanceof AssumeStatement) {
-					id = ((AssumeStatement) spec).getName();
-				} else if (spec instanceof GuaranteeStatement) {
-					id = ((GuaranteeStatement) spec).getName();
-				} else if (spec instanceof AssertStatement) {
-					id = ((AssertStatement) spec).getName();
-				} else if (spec instanceof LemmaStatement) {
-					id = ((LemmaStatement) spec).getName();
-
-				}
-
-				if (id != null) {
-					multiMap.put(id, spec);
-				}
-			}
-		}
-
-
-		List<SpecStatement> specs = getSpecStatements(toppkg);
-		for (SpecStatement spec : specs) {
-
-			org.eclipse.emf.ecore.EStructuralFeature structFeat = null;
-			String id = "";
-			if (spec instanceof AssumeStatement) {
-				structFeat = AgreePackage.eINSTANCE.getAssumeStatement_Name();
-				id = ((AssumeStatement) spec).getName();
-			} else if (spec instanceof GuaranteeStatement) {
-				structFeat = AgreePackage.eINSTANCE.getGuaranteeStatement_Name();
-				id = ((GuaranteeStatement) spec).getName();
-			} else if (spec instanceof AssertStatement) {
-				structFeat = AgreePackage.eINSTANCE.getAssertStatement_Name();
-				id = ((AssertStatement) spec).getName();
-			} else if (spec instanceof LemmaStatement) {
-				structFeat = AgreePackage.eINSTANCE.getLemmaStatement_Name();
-				id = ((LemmaStatement) spec).getName();
-			}
-
-			if (multiMap.get(id).size() > 1) {
-				error("Duplicate ID in AGREE claim", spec, structFeat);
-			}
-		}
-
-	}
 
 	@Check(CheckType.FAST)
 	public void checkAssume(AssumeStatement assume) {

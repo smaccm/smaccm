@@ -68,6 +68,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.AGREE_SUBCLAUSE: return createAgreeSubclause();
       case AgreePackage.CONTRACT: return createContract();
       case AgreePackage.SPEC_STATEMENT: return createSpecStatement();
+      case AgreePackage.NAMED_SPEC_STATEMENT: return createNamedSpecStatement();
       case AgreePackage.PATTERN_STATEMENT: return createPatternStatement();
       case AgreePackage.WHEN_STATEMENT: return createWhenStatement();
       case AgreePackage.WHENEVER_STATEMENT: return createWheneverStatement();
@@ -99,14 +100,14 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
       case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
       case AgreePackage.AGREE_CONTRACT: return createAgreeContract();
-      case AgreePackage.ASSUME_STATEMENT: return createAssumeStatement();
-      case AgreePackage.GUARANTEE_STATEMENT: return createGuaranteeStatement();
-      case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
-      case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.INITIAL_STATEMENT: return createInitialStatement();
       case AgreePackage.PARAM_STATEMENT: return createParamStatement();
       case AgreePackage.LIFT_STATEMENT: return createLiftStatement();
       case AgreePackage.CONNECTION_STATEMENT: return createConnectionStatement();
+      case AgreePackage.ASSUME_STATEMENT: return createAssumeStatement();
+      case AgreePackage.GUARANTEE_STATEMENT: return createGuaranteeStatement();
+      case AgreePackage.ASSERT_STATEMENT: return createAssertStatement();
+      case AgreePackage.LEMMA_STATEMENT: return createLemmaStatement();
       case AgreePackage.ALWAYS_STATEMENT: return createAlwaysStatement();
       case AgreePackage.WHEN_HOLDS_STATEMENT: return createWhenHoldsStatement();
       case AgreePackage.WHEN_OCCURS_STATMENT: return createWhenOccursStatment();
@@ -197,6 +198,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     SpecStatementImpl specStatement = new SpecStatementImpl();
     return specStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NamedSpecStatement createNamedSpecStatement()
+  {
+    NamedSpecStatementImpl namedSpecStatement = new NamedSpecStatementImpl();
+    return namedSpecStatement;
   }
 
   /**
@@ -545,50 +557,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AssumeStatement createAssumeStatement()
-  {
-    AssumeStatementImpl assumeStatement = new AssumeStatementImpl();
-    return assumeStatement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public GuaranteeStatement createGuaranteeStatement()
-  {
-    GuaranteeStatementImpl guaranteeStatement = new GuaranteeStatementImpl();
-    return guaranteeStatement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public AssertStatement createAssertStatement()
-  {
-    AssertStatementImpl assertStatement = new AssertStatementImpl();
-    return assertStatement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public LemmaStatement createLemmaStatement()
-  {
-    LemmaStatementImpl lemmaStatement = new LemmaStatementImpl();
-    return lemmaStatement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public InitialStatement createInitialStatement()
   {
     InitialStatementImpl initialStatement = new InitialStatementImpl();
@@ -626,6 +594,50 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     ConnectionStatementImpl connectionStatement = new ConnectionStatementImpl();
     return connectionStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AssumeStatement createAssumeStatement()
+  {
+    AssumeStatementImpl assumeStatement = new AssumeStatementImpl();
+    return assumeStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public GuaranteeStatement createGuaranteeStatement()
+  {
+    GuaranteeStatementImpl guaranteeStatement = new GuaranteeStatementImpl();
+    return guaranteeStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AssertStatement createAssertStatement()
+  {
+    AssertStatementImpl assertStatement = new AssertStatementImpl();
+    return assertStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LemmaStatement createLemmaStatement()
+  {
+    LemmaStatementImpl lemmaStatement = new LemmaStatementImpl();
+    return lemmaStatement;
   }
 
   /**

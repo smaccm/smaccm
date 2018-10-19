@@ -59,6 +59,15 @@ public interface AgreeFactory extends EFactory
   SpecStatement createSpecStatement();
 
   /**
+   * Returns a new object of class '<em>Named Spec Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Named Spec Statement</em>'.
+   * @generated
+   */
+  NamedSpecStatement createNamedSpecStatement();
+
+  /**
    * Returns a new object of class '<em>Pattern Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -338,42 +347,6 @@ public interface AgreeFactory extends EFactory
   AgreeContract createAgreeContract();
 
   /**
-   * Returns a new object of class '<em>Assume Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Assume Statement</em>'.
-   * @generated
-   */
-  AssumeStatement createAssumeStatement();
-
-  /**
-   * Returns a new object of class '<em>Guarantee Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Guarantee Statement</em>'.
-   * @generated
-   */
-  GuaranteeStatement createGuaranteeStatement();
-
-  /**
-   * Returns a new object of class '<em>Assert Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Assert Statement</em>'.
-   * @generated
-   */
-  AssertStatement createAssertStatement();
-
-  /**
-   * Returns a new object of class '<em>Lemma Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Lemma Statement</em>'.
-   * @generated
-   */
-  LemmaStatement createLemmaStatement();
-
-  /**
    * Returns a new object of class '<em>Initial Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -408,6 +381,42 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   ConnectionStatement createConnectionStatement();
+
+  /**
+   * Returns a new object of class '<em>Assume Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Assume Statement</em>'.
+   * @generated
+   */
+  AssumeStatement createAssumeStatement();
+
+  /**
+   * Returns a new object of class '<em>Guarantee Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Guarantee Statement</em>'.
+   * @generated
+   */
+  GuaranteeStatement createGuaranteeStatement();
+
+  /**
+   * Returns a new object of class '<em>Assert Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Assert Statement</em>'.
+   * @generated
+   */
+  AssertStatement createAssertStatement();
+
+  /**
+   * Returns a new object of class '<em>Lemma Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Lemma Statement</em>'.
+   * @generated
+   */
+  LemmaStatement createLemmaStatement();
 
   /**
    * Returns a new object of class '<em>Always Statement</em>'.
