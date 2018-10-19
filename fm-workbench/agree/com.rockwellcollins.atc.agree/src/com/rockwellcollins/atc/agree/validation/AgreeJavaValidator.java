@@ -380,7 +380,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (contract != null) {
 			for (SpecStatement spec : contract.getSpecs()) {
 				if (spec instanceof AssignStatement && spec != assign) {
-					NamedElement otherEl = ((NamedElmExpr) ((AssignStatement) spec).getId()).getNamedElm();
+					NamedElement otherEl = ((AssignStatement) spec).getId();
 					if (otherEl.equals(namedEl)) {
 						error(spec, "Mulitiple assignments to variable '" + namedEl.getName() + "'");
 						error(assign, "Mulitiple assignments to variable '" + namedEl.getName() + "'");

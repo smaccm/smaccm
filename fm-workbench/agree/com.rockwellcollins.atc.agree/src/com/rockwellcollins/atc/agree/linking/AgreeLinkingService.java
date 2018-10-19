@@ -18,16 +18,23 @@ import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.Aadl2Package;
+import org.osate.aadl2.AadlPackage;
+import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.RecordType;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
 import org.osate.aadl2.util.Aadl2Util;
+import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 
 import com.rockwellcollins.atc.agree.agree.AbstractionRef;
+import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.CustomType;
@@ -40,11 +47,11 @@ import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SubcomponentRef;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.TagExpr;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
-
 public class AgreeLinkingService extends PropertiesLinkingService {
 	public AgreeLinkingService() {
 		super();
@@ -61,6 +68,8 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			return findUnitLiteralAsList((Element) context, name);
 		}
 
+
+
 		if (context instanceof ThisRef || context instanceof SubcomponentRef
 				|| context instanceof LiftStatement
 				|| context instanceof TagExpr
@@ -73,16 +82,17 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
 				|| context instanceof OrderStatement || context instanceof ConnectionStatement) {
 
-			// EObject e = findClassifier(context, reference, name);
 			EObject e = getIndexedObject(context, reference, name);
 			if (e == null) {
 				e = findClassifier(context, reference, name);
+			}
+			if (e == null) {
+				e = defObjectFromQualifiedType(context, reference, name);
 			}
 
 			if (e != null) {
 				return Collections.singletonList(e);
 			}
-
 
 			// This code will only link to objects in the projects visible from the current project
 			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
@@ -94,6 +104,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			for (IEObjectDescription eod : allObjectTypes) {
 
 				if (isVisible(eod, visibleProjects)) {
+
 					EObject res = eod.getEObjectOrProxy();
 
 					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
@@ -108,6 +119,29 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 		}
 
 		return super.getLinkedObjects(context, reference, node);
+	}
+
+	private EObject defObjectFromQualifiedType(EObject context, EReference reference, String name) {
+		String[] segments = name.split("\\.");
+		if (segments.length == 2) {
+			String pkgName = segments[0];
+			String localName = segments[1];
+			EObject eo = getIndexedObject(context, reference, pkgName);
+			if (eo instanceof AadlPackage) {
+				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) eo),
+						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+					for (SpecStatement spec : contract.getSpecs()) {
+						if (spec instanceof NamedElement) {
+							if (((NamedElement) spec).getName().equals(localName)) {
+								return spec;
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	private static boolean sameName(IEObjectDescription eod, String name) {

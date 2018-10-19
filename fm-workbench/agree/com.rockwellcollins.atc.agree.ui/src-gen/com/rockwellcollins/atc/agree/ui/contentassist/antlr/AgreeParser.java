@@ -288,8 +288,8 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getArrayLiteralExprAccess().getGroup_1_0(), "rule__ArrayLiteralExpr__Group_1_0__0");
 					put(grammarAccess.getArrayLiteralExprAccess().getGroup_1_0_0(), "rule__ArrayLiteralExpr__Group_1_0_0__0");
 					put(grammarAccess.getArrayLiteralExprAccess().getGroup_1_2(), "rule__ArrayLiteralExpr__Group_1_2__0");
-					put(grammarAccess.getAbstractionRefAccess().getGroup(), "rule__AbstractionRef__Group__0");
-					put(grammarAccess.getAbstractionRefAccess().getGroup_0(), "rule__AbstractionRef__Group_0__0");
+					put(grammarAccess.getDOTIDAccess().getGroup(), "rule__DOTID__Group__0");
+					put(grammarAccess.getDOTIDAccess().getGroup_1(), "rule__DOTID__Group_1__0");
 					put(grammarAccess.getQCPREFAccess().getGroup(), "rule__QCPREF__Group__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_0(), "rule__QCPREF__Group_0__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_2(), "rule__QCPREF__Group_2__0");
@@ -562,8 +562,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getArrayLiteralExprAccess().getElemsAssignment_1_0_0_1(), "rule__ArrayLiteralExpr__ElemsAssignment_1_0_0_1");
 					put(grammarAccess.getArrayLiteralExprAccess().getElemsAssignment_1_1(), "rule__ArrayLiteralExpr__ElemsAssignment_1_1");
 					put(grammarAccess.getArrayLiteralExprAccess().getElemsAssignment_1_2_1(), "rule__ArrayLiteralExpr__ElemsAssignment_1_2_1");
-					put(grammarAccess.getAbstractionRefAccess().getStemAssignment_0_0(), "rule__AbstractionRef__StemAssignment_0_0");
-					put(grammarAccess.getAbstractionRefAccess().getLeafAssignment_1(), "rule__AbstractionRef__LeafAssignment_1");
+					put(grammarAccess.getAbstractionRefAccess().getLeafAssignment(), "rule__AbstractionRef__LeafAssignment");
 					put(grammarAccess.getEnumIDAccess().getNameAssignment(), "rule__EnumID__NameAssignment");
 					put(grammarAccess.getArraySubBindingAccess().getNameAssignment(), "rule__ArraySubBinding__NameAssignment");
 					put(grammarAccess.getAccAccess().getNameAssignment(), "rule__Acc__NameAssignment");

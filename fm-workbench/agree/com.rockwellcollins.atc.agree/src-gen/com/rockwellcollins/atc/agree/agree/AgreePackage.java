@@ -1883,22 +1883,13 @@ public interface AgreePackage extends EPackage
   int ABSTRACTION_REF = 32;
 
   /**
-   * The feature id for the '<em><b>Stem</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ABSTRACTION_REF__STEM = 0;
-
-  /**
    * The feature id for the '<em><b>Leaf</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ABSTRACTION_REF__LEAF = 1;
+  int ABSTRACTION_REF__LEAF = 0;
 
   /**
    * The number of structural features of the '<em>Abstraction Ref</em>' class.
@@ -1907,7 +1898,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int ABSTRACTION_REF_FEATURE_COUNT = 2;
+  int ABSTRACTION_REF_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.EnumIDImpl <em>Enum ID</em>}' class.
@@ -6558,17 +6549,6 @@ public interface AgreePackage extends EPackage
   EClass getAbstractionRef();
 
   /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.AbstractionRef#getStem <em>Stem</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Stem</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AbstractionRef#getStem()
-   * @see #getAbstractionRef()
-   * @generated
-   */
-  EReference getAbstractionRef_Stem();
-
-  /**
    * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.AbstractionRef#getLeaf <em>Leaf</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -9202,14 +9182,6 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EClass ABSTRACTION_REF = eINSTANCE.getAbstractionRef();
-
-    /**
-     * The meta object literal for the '<em><b>Stem</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference ABSTRACTION_REF__STEM = eINSTANCE.getAbstractionRef_Stem();
 
     /**
      * The meta object literal for the '<em><b>Leaf</b></em>' reference feature.

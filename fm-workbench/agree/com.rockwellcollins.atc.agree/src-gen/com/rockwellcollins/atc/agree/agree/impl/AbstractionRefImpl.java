@@ -24,7 +24,6 @@ import org.osate.aadl2.NamedElement;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AbstractionRefImpl#getStem <em>Stem</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AbstractionRefImpl#getLeaf <em>Leaf</em>}</li>
  * </ul>
  *
@@ -32,16 +31,6 @@ import org.osate.aadl2.NamedElement;
  */
 public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements AbstractionRef
 {
-  /**
-   * The cached value of the '{@link #getStem() <em>Stem</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getStem()
-   * @generated
-   * @ordered
-   */
-  protected NamedElement stem;
-
   /**
    * The cached value of the '{@link #getLeaf() <em>Leaf</em>}' reference.
    * <!-- begin-user-doc -->
@@ -71,49 +60,6 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   protected EClass eStaticClass()
   {
     return AgreePackage.Literals.ABSTRACTION_REF;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NamedElement getStem()
-  {
-    if (stem != null && ((EObject)stem).eIsProxy())
-    {
-      InternalEObject oldStem = (InternalEObject)stem;
-      stem = (NamedElement)eResolveProxy(oldStem);
-      if (stem != oldStem)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.ABSTRACTION_REF__STEM, oldStem, stem));
-      }
-    }
-    return stem;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NamedElement basicGetStem()
-  {
-    return stem;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setStem(NamedElement newStem)
-  {
-    NamedElement oldStem = stem;
-    stem = newStem;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.ABSTRACTION_REF__STEM, oldStem, stem));
   }
 
   /**
@@ -169,9 +115,6 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   {
     switch (featureID)
     {
-      case AgreePackage.ABSTRACTION_REF__STEM:
-        if (resolve) return getStem();
-        return basicGetStem();
       case AgreePackage.ABSTRACTION_REF__LEAF:
         if (resolve) return getLeaf();
         return basicGetLeaf();
@@ -189,9 +132,6 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   {
     switch (featureID)
     {
-      case AgreePackage.ABSTRACTION_REF__STEM:
-        setStem((NamedElement)newValue);
-        return;
       case AgreePackage.ABSTRACTION_REF__LEAF:
         setLeaf((NamedElement)newValue);
         return;
@@ -209,9 +149,6 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   {
     switch (featureID)
     {
-      case AgreePackage.ABSTRACTION_REF__STEM:
-        setStem((NamedElement)null);
-        return;
       case AgreePackage.ABSTRACTION_REF__LEAF:
         setLeaf((NamedElement)null);
         return;
@@ -229,8 +166,6 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   {
     switch (featureID)
     {
-      case AgreePackage.ABSTRACTION_REF__STEM:
-        return stem != null;
       case AgreePackage.ABSTRACTION_REF__LEAF:
         return leaf != null;
     }

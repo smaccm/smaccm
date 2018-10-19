@@ -1691,19 +1691,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getAbstractionRef_Stem()
-  {
-    return (EReference)abstractionRefEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EReference getAbstractionRef_Leaf()
   {
-    return (EReference)abstractionRefEClass.getEStructuralFeatures().get(1);
+    return (EReference)abstractionRefEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -3646,7 +3636,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(arrayLiteralExprEClass, ARRAY_LITERAL_EXPR__ELEMS);
 
     abstractionRefEClass = createEClass(ABSTRACTION_REF);
-    createEReference(abstractionRefEClass, ABSTRACTION_REF__STEM);
     createEReference(abstractionRefEClass, ABSTRACTION_REF__LEAF);
 
     enumIDEClass = createEClass(ENUM_ID);
@@ -4156,7 +4145,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getArrayLiteralExpr_Elems(), this.getExpr(), null, "elems", null, 0, -1, ArrayLiteralExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(abstractionRefEClass, AbstractionRef.class, "AbstractionRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAbstractionRef_Stem(), theAadl2Package.getNamedElement(), null, "stem", null, 0, 1, AbstractionRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAbstractionRef_Leaf(), theAadl2Package.getNamedElement(), null, "leaf", null, 0, 1, AbstractionRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(enumIDEClass, EnumID.class, "EnumID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

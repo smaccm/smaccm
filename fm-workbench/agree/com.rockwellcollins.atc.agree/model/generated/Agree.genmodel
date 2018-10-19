@@ -112,8 +112,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayLiteralExpr/elems"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AbstractionRef">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//AbstractionRef/stem"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//AbstractionRef/leaf"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//AbstractionRef/stem"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//EnumID"/>
     <genClasses ecoreClass="Agree.ecore#//ArraySubBinding"/>

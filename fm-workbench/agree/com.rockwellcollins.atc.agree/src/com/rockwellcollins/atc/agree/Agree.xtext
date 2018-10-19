@@ -286,9 +286,6 @@ RecordUpdateExpr returns Expr:
 	ArraySubExpr (=> ({RecordUpdateExpr.record=current} '{' key=[aadl2::NamedElement|ID] ':=' expr=Expr '}'))*
 ;
 
-
-
-
 ArraySubExpr returns Expr:
   TagExpr (=>({ArraySubExpr.expr=current} '[' index=Expr ']'))*;
   
@@ -299,9 +296,6 @@ TagExpr returns Expr:
 ProjectionExpr returns Expr:
   TermExpr (=>({ProjectionExpr.expr=current} '.' field=[aadl2::NamedElement|ID]))*;
   
-
-
-
 TermExpr returns Expr:
 	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|EID])
 	| {TimeExpr} 'time'
@@ -331,13 +325,16 @@ ArrayLiteralExpr:
 
 
 AbstractionRef:
-	(stem=[aadl2::NamedElement|QCPREF] '.')? leaf=[aadl2::NamedElement|ID]
+	leaf=[aadl2::NamedElement|DOTID]
 ;
+
+DOTID:
+	ID ('.' ID)?
+ ;
 
 	
 QCPREF:
 	(ID '::')? ID ('.' ID)?
-	
  ;
  
  EID:

@@ -509,10 +509,16 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     AbstractionRef returns AbstractionRef
 	 *
 	 * Constraint:
-	 *     (stem=[NamedElement|QCPREF]? leaf=[NamedElement|ID])
+	 *     leaf=[NamedElement|DOTID]
 	 */
 	protected void sequence_AbstractionRef(ISerializationContext context, AbstractionRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.ABSTRACTION_REF__LEAF) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ABSTRACTION_REF__LEAF));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAbstractionRefAccess().getLeafNamedElementDOTIDParserRuleCall_0_1(), semanticObject.eGet(AgreePackage.Literals.ABSTRACTION_REF__LEAF, false));
+		feeder.finish();
 	}
 	
 	

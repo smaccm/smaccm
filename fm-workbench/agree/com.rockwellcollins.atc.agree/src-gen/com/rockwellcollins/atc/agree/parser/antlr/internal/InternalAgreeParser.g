@@ -8143,7 +8143,7 @@ ruleAbstractionRef returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-(((
+(
 (
 		{
 			if ($current==null) {
@@ -8151,34 +8151,58 @@ ruleAbstractionRef returns [EObject current=null]
 	        }
         }
 		{ 
-	        newCompositeNode(grammarAccess.getAbstractionRefAccess().getStemNamedElementCrossReference_0_0_0()); 
+	        newCompositeNode(grammarAccess.getAbstractionRefAccess().getLeafNamedElementCrossReference_0()); 
 	    }
-		ruleQCPREF
+		ruleDOTID
 		{ 
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 )
-	otherlv_1=FullStop
-    {
-    	newLeafNode(otherlv_1, grammarAccess.getAbstractionRefAccess().getFullStopKeyword_0_1());
-    }
-)?(
-(
-		{
-			if ($current==null) {
-	            $current = createModelElement(grammarAccess.getAbstractionRefRule());
-	        }
-        }
-	otherlv_2=RULE_ID
-	{
-		newLeafNode(otherlv_2, grammarAccess.getAbstractionRefAccess().getLeafNamedElementCrossReference_1_0()); 
-	}
-
-)
-))
 ;
+
+
+
+
+
+// Entry rule entryRuleDOTID
+entryRuleDOTID returns [String current=null] 
+:
+	{ newCompositeNode(grammarAccess.getDOTIDRule()); } 
+	 iv_ruleDOTID=ruleDOTID 
+	 { $current=$iv_ruleDOTID.current.getText(); }  
+	 EOF 
+;
+
+// Rule DOTID
+ruleDOTID returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule();
+    }:
+(    this_ID_0=RULE_ID    {
+		$current.merge(this_ID_0);
+    }
+
+    { 
+    newLeafNode(this_ID_0, grammarAccess.getDOTIDAccess().getIDTerminalRuleCall_0()); 
+    }
+(
+	kw=FullStop 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getDOTIDAccess().getFullStopKeyword_1_0()); 
+    }
+    this_ID_2=RULE_ID    {
+		$current.merge(this_ID_2);
+    }
+
+    { 
+    newLeafNode(this_ID_2, grammarAccess.getDOTIDAccess().getIDTerminalRuleCall_1_1()); 
+    }
+)?)
+    ;
 
 
 

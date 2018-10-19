@@ -459,26 +459,18 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 	IScope scope_AbstractionRef_leaf(AbstractionRef ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
-		NamedElement stem = ctx.getStem();
 
-		if (stem == null) {
-			CallExpr ce = (CallExpr) ctx.eContainer();
-			Classifier cc = ce.getContainingClassifier();
-			List<Abstraction> abstractions = EcoreUtil2.getAllContentsOfType(cc, Abstraction.class);
+		CallExpr ce = (CallExpr) ctx.eContainer();
+		Classifier cc = ce.getContainingClassifier();
+		List<Abstraction> abstractions = EcoreUtil2.getAllContentsOfType(cc, Abstraction.class);
 
-			if (cc instanceof ComponentImplementation) {
-				Classifier c = ((ComponentImplementation) cc).getType();
-				List<Abstraction> parentAbstractions = EcoreUtil2.getAllContentsOfType(c, Abstraction.class);
-				abstractions.addAll(parentAbstractions);
-			}
-
-			return Scopes.scopeFor(abstractions, prevScope);
-		} else if (stem instanceof AadlPackage || stem instanceof Classifier) {
-			List<Abstraction> abstractions = EcoreUtil2.getAllContentsOfType(stem, Abstraction.class);
-
-			return Scopes.scopeFor(abstractions, prevScope);
+		if (cc instanceof ComponentImplementation) {
+			Classifier c = ((ComponentImplementation) cc).getType();
+			List<Abstraction> parentAbstractions = EcoreUtil2.getAllContentsOfType(c, Abstraction.class);
+			abstractions.addAll(parentAbstractions);
 		}
-		return prevScope;
+
+		return Scopes.scopeFor(abstractions, prevScope);
 
 	}
 
