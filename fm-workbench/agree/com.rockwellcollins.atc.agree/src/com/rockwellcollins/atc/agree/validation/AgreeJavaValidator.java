@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
@@ -49,6 +50,7 @@ import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
+import org.osate.aadl2.ModelUnit;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
@@ -58,9 +60,12 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.google.common.collect.HashMultimap;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -96,6 +101,7 @@ import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NamedID;
+import com.rockwellcollins.atc.agree.agree.NamedSpecStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -632,6 +638,116 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				error("Left hand side quasi-synchronous values must be greater than the right hand side");
 			}
 		}
+	}
+
+	private void getPackageDependencies(AadlPackage pkg, Set<AadlPackage> pkgs) {
+
+		// Add the parent package if it's not there, otherwise return
+		if (pkgs.contains(pkg)) {
+			return;
+		}
+		pkgs.add(pkg);
+
+		// Look at direct dependencies
+		if (pkg.getPrivateSection() != null) {
+			for (ModelUnit mu : pkg.getPrivateSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
+		if (pkg.getPublicSection() != null) {
+			for (ModelUnit mu : pkg.getPublicSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
+	}
+
+	private List<NamedSpecStatement> getNamedSpecStatements(AadlPackage pkg) {
+		List<NamedSpecStatement> specs = new ArrayList<NamedSpecStatement>();
+		for (Classifier classifier : EcoreUtil2.getAllContentsOfType(pkg, Classifier.class)) {
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(classifier,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof NamedSpecStatement) {
+						specs.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+		}
+
+		for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(pkg,
+				AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+			AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+			for (SpecStatement spec : contract.getSpecs()) {
+				if (spec instanceof NamedSpecStatement) {
+					specs.add((NamedSpecStatement) spec);
+				}
+			}
+
+		}
+		return specs;
+	}
+
+	@Check(CheckType.NORMAL)
+	public void checkNoDuplicateIdInSpec(AadlPackage toppkg) {
+
+		Set<AadlPackage> pkgs = new HashSet<>();
+		getPackageDependencies(toppkg, pkgs);
+
+		HashMultimap<String, SpecStatement> multiMap = HashMultimap.create();
+		for (AadlPackage pkg : pkgs) {
+			List<NamedSpecStatement> specs = getNamedSpecStatements(pkg);
+
+			// check local uniqueness
+			for (NamedSpecStatement spec : specs) {
+
+				String id = spec.getName();
+//				if (spec instanceof AssumeStatement) {
+//					id = ((AssumeStatement) spec).getName();
+//				} else if (spec instanceof GuaranteeStatement) {
+//					id = ((GuaranteeStatement) spec).getName();
+//				} else if (spec instanceof AssertStatement) {
+//					id = ((AssertStatement) spec).getName();
+//				} else if (spec instanceof LemmaStatement) {
+//					id = ((LemmaStatement) spec).getName();
+//				}
+
+				if (id != null) {
+					multiMap.put(id, spec);
+				}
+			}
+		}
+
+		List<NamedSpecStatement> specs = getNamedSpecStatements(toppkg);
+		for (NamedSpecStatement spec : specs) {
+
+//			org.eclipse.emf.ecore.EStructuralFeature structFeat = null;
+			String id = spec.getName();
+//			if (spec instanceof AssumeStatement) {
+//				structFeat = AgreePackage.eINSTANCE.getAssumeStatement_Name();
+//				id = ((AssumeStatement) spec).getName();
+//			} else if (spec instanceof GuaranteeStatement) {
+//				structFeat = AgreePackage.eINSTANCE.getGuaranteeStatement_Name();
+//				id = ((GuaranteeStatement) spec).getName();
+//			} else if (spec instanceof AssertStatement) {
+//				structFeat = AgreePackage.eINSTANCE.getAssertStatement_Name();
+//				id = ((AssertStatement) spec).getName();
+//			} else if (spec instanceof LemmaStatement) {
+//				structFeat = AgreePackage.eINSTANCE.getLemmaStatement_Name();
+//				id = ((LemmaStatement) spec).getName();
+//			}
+
+			if (multiMap.get(id).size() > 1) {
+				error("Duplicate ID in AGREE claim", spec, Aadl2Package.eINSTANCE.getNamedElement_Name());
+			}
+		}
+
 	}
 
 	@Check(CheckType.FAST)
