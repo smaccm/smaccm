@@ -2,8 +2,10 @@ package com.rockwellcollins.atc.resolute.analysis.execution;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BasicPropertyAssociation;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.BusAccess;
@@ -50,6 +53,7 @@ import org.osate.aadl2.instance.InstanceReferenceValue;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.aadl2.properties.PropertyNotPresentException;
+import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorBehaviorTransition;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorPropagation;
 import org.osate.xtext.aadl2.errormodel.errorModel.ErrorTypes;
@@ -58,6 +62,19 @@ import org.osate.xtext.aadl2.errormodel.util.EMV2Util;
 import org.osate.xtext.aadl2.properties.util.GetProperties;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AssertStatement;
+import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
+import com.rockwellcollins.atc.agree.agree.LemmaStatement;
+import com.rockwellcollins.atc.agree.agree.NamedSpecStatement;
+import com.rockwellcollins.atc.agree.agree.SpecStatement;
+import com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl;
+import com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl;
+import com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl;
+import com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
 import com.rockwellcollins.atc.resolute.analysis.values.ListValue;
@@ -779,6 +796,155 @@ public class ResoluteBuiltInFnCallEvaluator {
 		case "end_to_end_flows": {
 			ComponentInstance comp = (ComponentInstance) args.get(0).getNamedElement();
 			return createSetValue(comp.getEndToEndFlows());
+		}
+
+		case "has_agree_property": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			String agreePropertyID = args.get(1).getString();
+
+			ComponentClassifier cc = ci.getComponentClassifier();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof NamedSpecStatement) {
+						if (agreePropertyID.equalsIgnoreCase(((NamedSpecStatement) spec).getName())) {
+							return new BoolValue(true);
+						}
+					}
+				}
+			}
+
+			return new BoolValue(false);
+		}
+
+		case "agree_property": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			String agreePropertyID = args.get(1).getString();
+			ComponentClassifier cc = ci.getComponentClassifier();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof NamedSpecStatement) {
+						if (agreePropertyID.equalsIgnoreCase(((NamedSpecStatement) spec).getName())) {
+							return new NamedElementValue((NamedSpecStatement) spec);
+						}
+					}
+				}
+			}
+			throw new ResoluteFailException("AGREE property " + agreePropertyID + " not found on " + cc.getName(),
+					fnCallExpr);
+		}
+
+		case "agree_property_id": {
+			NamedSpecStatement spec = (NamedSpecStatement) args.get(0).getNamedElement();
+			return new StringValue(spec.getName());
+		}
+
+		case "agree_property_description": {
+			NamedSpecStatement spec = (NamedSpecStatement) args.get(0).getNamedElement();
+			return new StringValue(spec.getStr());
+		}
+
+		case "agree_properties": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			ComponentClassifier cc = ci.getComponentClassifier();
+			Set<NamedSpecStatement> result = new HashSet<>();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof NamedSpecStatement) {
+						result.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+			return createSetValue(result);
+		}
+
+		case "agree_assumes": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			ComponentClassifier cc = ci.getComponentClassifier();
+			Set<NamedSpecStatement> result = new HashSet<>();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof AssumeStatement) {
+						result.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+			return createSetValue(result);
+		}
+
+		case "agree_guarantees": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			ComponentClassifier cc = ci.getComponentClassifier();
+			Set<NamedSpecStatement> result = new HashSet<>();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof GuaranteeStatement) {
+						result.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+			return createSetValue(result);
+		}
+
+		case "agree_lemmas": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			ComponentClassifier cc = ci.getComponentClassifier();
+			Set<NamedSpecStatement> result = new HashSet<>();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof LemmaStatement) {
+						result.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+			return createSetValue(result);
+		}
+
+		case "agree_asserts": {
+			ComponentInstance ci = (ComponentInstance) args.get(0).getNamedElement();
+			ComponentClassifier cc = ci.getComponentClassifier();
+			Set<NamedSpecStatement> result = new HashSet<>();
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(cc,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof AssertStatement) {
+						result.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+			return createSetValue(result);
+		}
+
+		case "is_assume": {
+			NamedSpecStatement spec = (NamedSpecStatement) args.get(0).getNamedElement();
+			return new BoolValue(spec instanceof AssumeStatementImpl);
+		}
+
+		case "is_guarantee": {
+			NamedSpecStatement spec = (NamedSpecStatement) args.get(0).getNamedElement();
+			return new BoolValue(spec instanceof GuaranteeStatementImpl);
+		}
+
+		case "is_lemma": {
+			NamedSpecStatement spec = (NamedSpecStatement) args.get(0).getNamedElement();
+			return new BoolValue(spec instanceof LemmaStatementImpl);
+		}
+
+		case "is_assert": {
+			NamedSpecStatement spec = (NamedSpecStatement) args.get(0).getNamedElement();
+			return new BoolValue(spec instanceof AssertStatementImpl);
 		}
 
 		default:

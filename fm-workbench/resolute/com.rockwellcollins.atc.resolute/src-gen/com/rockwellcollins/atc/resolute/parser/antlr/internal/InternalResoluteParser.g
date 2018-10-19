@@ -897,6 +897,19 @@ ruleBaseType returns [EObject current=null]
        		setWithLastConsumed($current, "type", lv_type_0_44, null);
 	    }
 
+    |		lv_type_0_45=
+	Agree_spec
+    {
+        newLeafNode(lv_type_0_45, grammarAccess.getBaseTypeAccess().getTypeAgree_specKeyword_0_44());
+    }
+
+	    {
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getBaseTypeRule());
+	        }
+       		setWithLastConsumed($current, "type", lv_type_0_45, null);
+	    }
+
 )
 
 )
@@ -3810,6 +3823,97 @@ ruleBuiltInFn returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
     {
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_62()); 
+    }
+
+    |
+	kw=Has_agree_property 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getHas_agree_propertyKeyword_63()); 
+    }
+
+    |
+	kw=Agree_property 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAgree_propertyKeyword_64()); 
+    }
+
+    |
+	kw=Agree_property_id 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAgree_property_idKeyword_65()); 
+    }
+
+    |
+	kw=Agree_property_description 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAgree_property_descriptionKeyword_66()); 
+    }
+
+    |
+	kw=Agree_properties 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAgree_propertiesKeyword_67()); 
+    }
+
+    |
+	kw=Agree_assumes 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAgree_assumesKeyword_68()); 
+    }
+
+    |
+	kw=Agree_guarantees 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAgree_guaranteesKeyword_69()); 
+    }
+
+    |
+	kw=Agree_lemmas 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAgree_lemmasKeyword_70()); 
+    }
+
+    |
+	kw=Agree_asserts 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getAgree_assertsKeyword_71()); 
+    }
+
+    |
+	kw=Is_assume 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_assumeKeyword_72()); 
+    }
+
+    |
+	kw=Is_guarantee 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_guaranteeKeyword_73()); 
+    }
+
+    |
+	kw=Is_lemma 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_lemmaKeyword_74()); 
+    }
+
+    |
+	kw=Is_assert 
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getBuiltInFnAccess().getIs_assertKeyword_75()); 
     }
 )
     ;

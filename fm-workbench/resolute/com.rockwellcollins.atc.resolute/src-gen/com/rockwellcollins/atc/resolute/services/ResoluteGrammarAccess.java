@@ -293,6 +293,7 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cTypeRequires_subprogram_group_accessKeyword_0_41 = (Keyword)cTypeAlternatives_0.eContents().get(41);
 		private final Keyword cTypeFlow_specificationKeyword_0_42 = (Keyword)cTypeAlternatives_0.eContents().get(42);
 		private final Keyword cTypeEnd_to_end_flowKeyword_0_43 = (Keyword)cTypeAlternatives_0.eContents().get(43);
+		private final Keyword cTypeAgree_specKeyword_0_44 = (Keyword)cTypeAlternatives_0.eContents().get(44);
 		
 		//BaseType:
 		//	type=('int'
@@ -338,7 +339,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	| 'provides_subprogram_group_access'
 		//	| 'requires_subprogram_group_access'
 		//	| 'flow_specification'
-		//	| 'end_to_end_flow');
+		//	| 'end_to_end_flow'
+		//	| 'agree_spec');
 		@Override public ParserRule getRule() { return rule; }
 
 		//type=('int' | 'real' | 'string' | 'bool' | 'range' | 'aadl' | 'component' | 'abstract' | 'bus' | 'data' | 'device' |
@@ -347,16 +349,16 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//'event_data_port' | 'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' |
 		//'data_access' | 'provides_data_access' | 'requires_data_access' | 'subprogram_access' | 'provides_subprogram_access' |
 		//'requires_subprogram_access' | 'subprogram_group_access' | 'provides_subprogram_group_access' |
-		//'requires_subprogram_group_access' | 'flow_specification' | 'end_to_end_flow')
+		//'requires_subprogram_group_access' | 'flow_specification' | 'end_to_end_flow' | 'agree_spec')
 		public Assignment getTypeAssignment() { return cTypeAssignment; }
 
 		//('int' | 'real' | 'string' | 'bool' | 'range' | 'aadl' | 'component' | 'abstract' | 'bus' | 'data' | 'device' | 'memory'
 		//| 'processor' | 'process' | 'subprogram_group' | 'subprogram' | 'system' | 'thread_group' | 'thread' | 'virtual_bus' |
-		//'virtual_processor' | 'connection' | 'property' | 'feature' | 'port' | 'data_port' | 'event_port' | 'event_data_port' |
-		//'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' | 'data_access' |
+		//'virtual_processor' | 'connection' | 'property' | 'feature' | 'port' | 'data_port' | 'event_port' | 'event_data_port'
+		//| 'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' | 'data_access' |
 		//'provides_data_access' | 'requires_data_access' | 'subprogram_access' | 'provides_subprogram_access' |
 		//'requires_subprogram_access' | 'subprogram_group_access' | 'provides_subprogram_group_access' |
-		//'requires_subprogram_group_access' | 'flow_specification' | 'end_to_end_flow')
+		//'requires_subprogram_group_access' | 'flow_specification' | 'end_to_end_flow' | 'agree_spec')
 		public Alternatives getTypeAlternatives_0() { return cTypeAlternatives_0; }
 
 		//'int'
@@ -490,6 +492,9 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//'end_to_end_flow'
 		public Keyword getTypeEnd_to_end_flowKeyword_0_43() { return cTypeEnd_to_end_flowKeyword_0_43; }
+
+		//'agree_spec'
+		public Keyword getTypeAgree_specKeyword_0_44() { return cTypeAgree_specKeyword_0_44; }
 	}
 
 	public class ArgElements extends AbstractParserRuleElementFinder {
@@ -2179,12 +2184,25 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cFlow_elementsKeyword_60 = (Keyword)cAlternatives.eContents().get(60);
 		private final Keyword cFlow_specificationsKeyword_61 = (Keyword)cAlternatives.eContents().get(61);
 		private final Keyword cEnd_to_end_flowsKeyword_62 = (Keyword)cAlternatives.eContents().get(62);
+		private final Keyword cHas_agree_propertyKeyword_63 = (Keyword)cAlternatives.eContents().get(63);
+		private final Keyword cAgree_propertyKeyword_64 = (Keyword)cAlternatives.eContents().get(64);
+		private final Keyword cAgree_property_idKeyword_65 = (Keyword)cAlternatives.eContents().get(65);
+		private final Keyword cAgree_property_descriptionKeyword_66 = (Keyword)cAlternatives.eContents().get(66);
+		private final Keyword cAgree_propertiesKeyword_67 = (Keyword)cAlternatives.eContents().get(67);
+		private final Keyword cAgree_assumesKeyword_68 = (Keyword)cAlternatives.eContents().get(68);
+		private final Keyword cAgree_guaranteesKeyword_69 = (Keyword)cAlternatives.eContents().get(69);
+		private final Keyword cAgree_lemmasKeyword_70 = (Keyword)cAlternatives.eContents().get(70);
+		private final Keyword cAgree_assertsKeyword_71 = (Keyword)cAlternatives.eContents().get(71);
+		private final Keyword cIs_assumeKeyword_72 = (Keyword)cAlternatives.eContents().get(72);
+		private final Keyword cIs_guaranteeKeyword_73 = (Keyword)cAlternatives.eContents().get(73);
+		private final Keyword cIs_lemmaKeyword_74 = (Keyword)cAlternatives.eContents().get(74);
+		private final Keyword cIs_assertKeyword_75 = (Keyword)cAlternatives.eContents().get(75);
 		
 		//BuiltInFn: // Primary type: aadl
 		//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
 		//	'is_in_array' | 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' |
-		//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type'
-		//	| 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
+		//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' |
+		//	'is_of_type' | 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
 		//	| 'enumerated_values' // Primary type: component
 		//	| 'subcomponents' // Primary type: connection
 		//	| 'source' | 'destination' // Primary type: feature
@@ -2198,14 +2216,28 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//	| 'contain_error' // the component contain the error
 		//	| 'propagate_error' // the component propagate an error
 		//	| 'error_state_reachable' // the error state is reachable
-		//	| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows';
+		//	| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows' // AGREE Annex
+		//	| 'has_agree_property' // the component has an agree property with the specified ID
+		//	| 'agree_property' // the agree contract in the specified component with the specified ID
+		//	| 'agree_property_id' // the agree property ID for the given agree contract
+		//	| 'agree_property_description' // the agree property text for the given agree contract
+		//	| 'agree_properties' // set of all agree property IDs (assume, guarantee, lemma, assert) for the given component
+		//	| 'agree_assumes' // set of agree assume IDs for the given component
+		//	| 'agree_guarantees' // set of agree guarantee IDs for the given component
+		//	| 'agree_lemmas' // set of agree lemma IDs for the given component
+		//	| 'agree_asserts' // set of agree assert IDs for the given component
+		//	| 'is_assume' // is given agree property an assume spec
+		//	| 'is_guarantee' // is given agree property a guarantee spec
+		//	| 'is_lemma' // is given agree property a lemma spec
+		//	| 'is_assert' // is given agree property an assert spec
+		//;
 		@Override public ParserRule getRule() { return rule; }
 
 		//// Primary type: aadl
 		//'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' | 'is_in_array'
 		//| 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' | 'is_virtual_bus'
-		//| 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type' | 'is_bound_to' |
-		//'has_member' | 'features' | 'connections' // Primary type: property
+		//| 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type' | 'is_bound_to'
+		//| 'has_member' | 'features' | 'connections' // Primary type: property
 		//| 'enumerated_values' // Primary type: component
 		//| 'subcomponents' // Primary type: connection
 		//| 'source' | 'destination' // Primary type: feature
@@ -2219,7 +2251,20 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//| 'contain_error' // the component contain the error
 		//| 'propagate_error' // the component propagate an error
 		//| 'error_state_reachable' // the error state is reachable
-		//| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows'
+		//| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows' // AGREE Annex
+		//| 'has_agree_property' // the component has an agree property with the specified ID
+		//| 'agree_property' // the agree contract in the specified component with the specified ID
+		//| 'agree_property_id' // the agree property ID for the given agree contract
+		//| 'agree_property_description' // the agree property text for the given agree contract
+		//| 'agree_properties' // set of all agree property IDs (assume, guarantee, lemma, assert) for the given component
+		//| 'agree_assumes' // set of agree assume IDs for the given component
+		//| 'agree_guarantees' // set of agree guarantee IDs for the given component
+		//| 'agree_lemmas' // set of agree lemma IDs for the given component
+		//| 'agree_asserts' // set of agree assert IDs for the given component
+		//| 'is_assume' // is given agree property an assume spec
+		//| 'is_guarantee' // is given agree property a guarantee spec
+		//| 'is_lemma' // is given agree property a lemma spec
+		//| 'is_assert'
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//// Primary type: aadl
@@ -2411,6 +2456,45 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//'end_to_end_flows'
 		public Keyword getEnd_to_end_flowsKeyword_62() { return cEnd_to_end_flowsKeyword_62; }
+
+		//'has_agree_property'
+		public Keyword getHas_agree_propertyKeyword_63() { return cHas_agree_propertyKeyword_63; }
+
+		//'agree_property'
+		public Keyword getAgree_propertyKeyword_64() { return cAgree_propertyKeyword_64; }
+
+		//'agree_property_id'
+		public Keyword getAgree_property_idKeyword_65() { return cAgree_property_idKeyword_65; }
+
+		//'agree_property_description'
+		public Keyword getAgree_property_descriptionKeyword_66() { return cAgree_property_descriptionKeyword_66; }
+
+		//'agree_properties'
+		public Keyword getAgree_propertiesKeyword_67() { return cAgree_propertiesKeyword_67; }
+
+		//'agree_assumes'
+		public Keyword getAgree_assumesKeyword_68() { return cAgree_assumesKeyword_68; }
+
+		//'agree_guarantees'
+		public Keyword getAgree_guaranteesKeyword_69() { return cAgree_guaranteesKeyword_69; }
+
+		//'agree_lemmas'
+		public Keyword getAgree_lemmasKeyword_70() { return cAgree_lemmasKeyword_70; }
+
+		//'agree_asserts'
+		public Keyword getAgree_assertsKeyword_71() { return cAgree_assertsKeyword_71; }
+
+		//'is_assume'
+		public Keyword getIs_assumeKeyword_72() { return cIs_assumeKeyword_72; }
+
+		//'is_guarantee'
+		public Keyword getIs_guaranteeKeyword_73() { return cIs_guaranteeKeyword_73; }
+
+		//'is_lemma'
+		public Keyword getIs_lemmaKeyword_74() { return cIs_lemmaKeyword_74; }
+
+		//'is_assert'
+		public Keyword getIs_assertKeyword_75() { return cIs_assertKeyword_75; }
 	}
 
 	public class RealTermElements extends AbstractParserRuleElementFinder {
@@ -2832,7 +2916,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	| 'provides_subprogram_group_access'
 	//	| 'requires_subprogram_group_access'
 	//	| 'flow_specification'
-	//	| 'end_to_end_flow');
+	//	| 'end_to_end_flow'
+	//	| 'agree_spec');
 	public BaseTypeElements getBaseTypeAccess() {
 		return pBaseType;
 	}
@@ -3055,8 +3140,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//BuiltInFn: // Primary type: aadl
 	//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
 	//	'is_in_array' | 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' |
-	//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type'
-	//	| 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
+	//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' |
+	//	'is_of_type' | 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
 	//	| 'enumerated_values' // Primary type: component
 	//	| 'subcomponents' // Primary type: connection
 	//	| 'source' | 'destination' // Primary type: feature
@@ -3070,7 +3155,21 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//	| 'contain_error' // the component contain the error
 	//	| 'propagate_error' // the component propagate an error
 	//	| 'error_state_reachable' // the error state is reachable
-	//	| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows';
+	//	| 'flow_source' | 'flow_destination' | 'flow_elements' | 'flow_specifications' | 'end_to_end_flows' // AGREE Annex
+	//	| 'has_agree_property' // the component has an agree property with the specified ID
+	//	| 'agree_property' // the agree contract in the specified component with the specified ID
+	//	| 'agree_property_id' // the agree property ID for the given agree contract
+	//	| 'agree_property_description' // the agree property text for the given agree contract
+	//	| 'agree_properties' // set of all agree property IDs (assume, guarantee, lemma, assert) for the given component
+	//	| 'agree_assumes' // set of agree assume IDs for the given component
+	//	| 'agree_guarantees' // set of agree guarantee IDs for the given component
+	//	| 'agree_lemmas' // set of agree lemma IDs for the given component
+	//	| 'agree_asserts' // set of agree assert IDs for the given component
+	//	| 'is_assume' // is given agree property an assume spec
+	//	| 'is_guarantee' // is given agree property a guarantee spec
+	//	| 'is_lemma' // is given agree property a lemma spec
+	//	| 'is_assert' // is given agree property an assert spec
+	//;
 	public BuiltInFnElements getBuiltInFnAccess() {
 		return pBuiltInFn;
 	}

@@ -89,6 +89,7 @@ BaseType:
          | 'requires_subprogram_group_access'
          | 'flow_specification'
          | 'end_to_end_flow'
+         | 'agree_spec'
          );
 
 //Arg types are used for functions, claims, and quantifiers
@@ -279,6 +280,21 @@ BuiltInFn:
 |   'flow_elements'
 |   'flow_specifications'
 |   'end_to_end_flows'
+
+// AGREE Annex
+|	'has_agree_property'			// the component has an agree property with the specified ID
+|	'agree_property'				// the agree contract in the specified component with the specified ID
+|	'agree_property_id'				// the agree property ID for the given agree contract
+|	'agree_property_description'	// the agree property text for the given agree contract
+|	'agree_properties'				// set of all agree property IDs (assume, guarantee, lemma, assert) for the given component
+|	'agree_assumes'					// set of agree assume IDs for the given component
+|	'agree_guarantees'				// set of agree guarantee IDs for the given component
+|	'agree_lemmas'					// set of agree lemma IDs for the given component
+|	'agree_asserts'					// set of agree assert IDs for the given component
+|	'is_assume'						// is given agree property an assume spec
+|	'is_guarantee'					// is given agree property a guarantee spec
+|	'is_lemma'						// is given agree property a lemma spec
+|	'is_assert'						// is given agree property an assert spec
 ;
 
 @Override

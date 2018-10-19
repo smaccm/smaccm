@@ -65,9 +65,11 @@ public class BaseType extends ResoluteType {
 	public static final BaseType SUBPROGRAM_GROUP_ACCESS = new BaseType("subprogram_group_access");
 	public static final BaseType PROVIDES_SUBPROGRAM_GROUP_ACCESS = new BaseType("provides_subprogram_group_access");
 	public static final BaseType REQUIRES_SUBPROGRAM_GROUP_ACCESS = new BaseType("requires_subprogram_group_access");
-	
+
 	public static final BaseType FLOW_SPECIFICATION = new BaseType("flow_specification");
 	public static final BaseType END_TO_END_FLOW = new BaseType("end_to_end_flow");
+
+	public static final BaseType AGREE_SPEC = new BaseType("agree_spec");
 
 	final public String name;
 
@@ -121,7 +123,8 @@ public class BaseType extends ResoluteType {
 			CONNECTION, PROPERTY, FEATURE, PORT, DATA_PORT, EVENT_PORT, EVENT_DATA_PORT, FEATURE_GROUP, ACCESS,
 			BUS_ACCESS, PROVIDES_BUS_ACCESS, REQUIRES_BUS_ACCESS, DATA_ACCESS, PROVIDES_DATA_ACCESS,
 			REQUIRES_DATA_ACCESS, SUBPROGRAM_ACCESS, PROVIDES_SUBPROGRAM_ACCESS, REQUIRES_SUBPROGRAM_ACCESS,
-			SUBPROGRAM_GROUP_ACCESS, PROVIDES_SUBPROGRAM_GROUP_ACCESS, REQUIRES_SUBPROGRAM_GROUP_ACCESS };
+			SUBPROGRAM_GROUP_ACCESS, PROVIDES_SUBPROGRAM_GROUP_ACCESS, REQUIRES_SUBPROGRAM_GROUP_ACCESS,
+			AGREE_SPEC };
 
 	public List<BaseType> getAllSuperTypes() {
 		return Arrays.stream(INSTANCE_TYPES).filter(this::subtypeOf).collect(toList());
@@ -156,14 +159,14 @@ public class BaseType extends ResoluteType {
 			switch (bt.name) {
 			case "aadl":
 				return subtypeOf(COMPONENT) || subtypeOf(CONNECTION) || subtypeOf(PROPERTY) || subtypeOf(FEATURE)
-						|| subtypeOf(FLOW_SPECIFICATION) || subtypeOf(END_TO_END_FLOW);
+						|| subtypeOf(FLOW_SPECIFICATION) || subtypeOf(END_TO_END_FLOW) || subtypeOf(AGREE_SPEC);
 
 			case "component":
 				return subtypeOf(ABSTRACT) || subtypeOf(BUS) || subtypeOf(DATA) || subtypeOf(DEVICE)
 						|| subtypeOf(MEMORY) || subtypeOf(PROCESSOR) || subtypeOf(PROCESS)
 						|| subtypeOf(SUBPROGRAM_GROUP) || subtypeOf(SUBPROGRAM) || subtypeOf(SYSTEM)
 						|| subtypeOf(THREAD_GROUP) || subtypeOf(THREAD) || subtypeOf(VIRTUAL_BUS)
-						|| subtypeOf(VIRTUAL_PROCESSOR);
+						|| subtypeOf(VIRTUAL_PROCESSOR) || subtypeOf(AGREE_SPEC);
 
 			case "feature":
 				return subtypeOf(PORT) || subtypeOf(ACCESS) || subtypeOf(FEATURE_GROUP);
@@ -234,6 +237,7 @@ public class BaseType extends ResoluteType {
 		return false;
 	}
 
+	@Override
 	public boolean similar(Type otherType) {
 		if (otherType instanceof com.rockwellcollins.atc.resolute.resolute.BaseType) {
 			com.rockwellcollins.atc.resolute.resolute.BaseType bt = (com.rockwellcollins.atc.resolute.resolute.BaseType) otherType;

@@ -1052,7 +1052,8 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *         type='provides_subprogram_group_access' | 
 	 *         type='requires_subprogram_group_access' | 
 	 *         type='flow_specification' | 
-	 *         type='end_to_end_flow'
+	 *         type='end_to_end_flow' | 
+	 *         type='agree_spec'
 	 *     )
 	 */
 	protected void sequence_BaseType(ISerializationContext context, BaseType semanticObject) {
@@ -1110,7 +1111,8 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *             type='provides_subprogram_group_access' | 
 	 *             type='requires_subprogram_group_access' | 
 	 *             type='flow_specification' | 
-	 *             type='end_to_end_flow'
+	 *             type='end_to_end_flow' | 
+	 *             type='agree_spec'
 	 *         ) 
 	 *         paramType=Type?
 	 *     )

@@ -129,6 +129,7 @@ import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 		tokenNameToValue.put("Features", "'features'");
 		tokenNameToValue.put("Has_type", "'has_type'");
 		tokenNameToValue.put("Instance", "'instance'");
+		tokenNameToValue.put("Is_lemma", "'is_lemma'");
 		tokenNameToValue.put("Property", "'property'");
 		tokenNameToValue.put("Component", "'component'");
 		tokenNameToValue.put("Data_port", "'data_port'");
@@ -136,12 +137,15 @@ import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 		tokenNameToValue.put("Has_modes", "'has_modes'");
 		tokenNameToValue.put("Instances", "'instances'");
 		tokenNameToValue.put("Intersect", "'intersect'");
+		tokenNameToValue.put("Is_assert", "'is_assert'");
+		tokenNameToValue.put("Is_assume", "'is_assume'");
 		tokenNameToValue.put("Is_device", "'is_device'");
 		tokenNameToValue.put("Is_memory", "'is_memory'");
 		tokenNameToValue.put("Is_system", "'is_system'");
 		tokenNameToValue.put("Is_thread", "'is_thread'");
 		tokenNameToValue.put("Processor", "'processor'");
 		tokenNameToValue.put("Reference", "'reference'");
+		tokenNameToValue.put("Agree_spec", "'agree_spec'");
 		tokenNameToValue.put("Bus_access", "'bus_access'");
 		tokenNameToValue.put("Classifier", "'classifier'");
 		tokenNameToValue.put("Connection", "'connection'");
@@ -161,10 +165,14 @@ import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 		tokenNameToValue.put("Lower_bound", "'lower_bound'");
 		tokenNameToValue.put("Upper_bound", "'upper_bound'");
 		tokenNameToValue.put("Virtual_bus", "'virtual_bus'");
+		tokenNameToValue.put("Agree_lemmas", "'agree_lemmas'");
 		tokenNameToValue.put("Has_property", "'has_property'");
 		tokenNameToValue.put("Is_data_port", "'is_data_port'");
+		tokenNameToValue.put("Is_guarantee", "'is_guarantee'");
 		tokenNameToValue.put("Is_processor", "'is_processor'");
 		tokenNameToValue.put("Thread_group", "'thread_group'");
+		tokenNameToValue.put("Agree_asserts", "'agree_asserts'");
+		tokenNameToValue.put("Agree_assumes", "'agree_assumes'");
 		tokenNameToValue.put("Contain_error", "'contain_error'");
 		tokenNameToValue.put("Feature_group", "'feature_group'");
 		tokenNameToValue.put("Flow_elements", "'flow_elements'");
@@ -172,6 +180,7 @@ import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 		tokenNameToValue.put("Is_subprogram", "'is_subprogram'");
 		tokenNameToValue.put("Receive_error", "'receive_error'");
 		tokenNameToValue.put("Subcomponents", "'subcomponents'");
+		tokenNameToValue.put("Agree_property", "'agree_property'");
 		tokenNameToValue.put("Has_prototypes", "'has_prototypes'");
 		tokenNameToValue.put("Is_data_access", "'is_data_access'");
 		tokenNameToValue.put("Is_virtual_bus", "'is_virtual_bus'");
@@ -179,13 +188,17 @@ import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 		tokenNameToValue.put("Event_data_port", "'event_data_port'");
 		tokenNameToValue.put("Propagate_error", "'propagate_error'");
 		tokenNameToValue.put("Property_member", "'property_member'");
+		tokenNameToValue.put("Agree_guarantees", "'agree_guarantees'");
+		tokenNameToValue.put("Agree_properties", "'agree_properties'");
 		tokenNameToValue.put("End_to_end_flows", "'end_to_end_flows'");
 		tokenNameToValue.put("Flow_destination", "'flow_destination'");
 		tokenNameToValue.put("Subprogram_group", "'subprogram_group'");
+		tokenNameToValue.put("Agree_property_id", "'agree_property_id'");
 		tokenNameToValue.put("Enumerated_values", "'enumerated_values'");
 		tokenNameToValue.put("Subprogram_access", "'subprogram_access'");
 		tokenNameToValue.put("Virtual_processor", "'virtual_processor'");
 		tokenNameToValue.put("Flow_specification", "'flow_specification'");
+		tokenNameToValue.put("Has_agree_property", "'has_agree_property'");
 		tokenNameToValue.put("Flow_specifications", "'flow_specifications'");
 		tokenNameToValue.put("Is_abstract_feature", "'is_abstract_feature'");
 		tokenNameToValue.put("Provides_bus_access", "'provides_bus_access'");
@@ -195,6 +208,7 @@ import com.rockwellcollins.atc.resolute.services.ResoluteGrammarAccess;
 		tokenNameToValue.put("Requires_data_access", "'requires_data_access'");
 		tokenNameToValue.put("Error_state_reachable", "'error_state_reachable'");
 		tokenNameToValue.put("Subprogram_group_access", "'subprogram_group_access'");
+		tokenNameToValue.put("Agree_property_description", "'agree_property_description'");
 		tokenNameToValue.put("Provides_subprogram_access", "'provides_subprogram_access'");
 		tokenNameToValue.put("Requires_subprogram_access", "'requires_subprogram_access'");
 		tokenNameToValue.put("Provides_subprogram_group_access", "'provides_subprogram_group_access'");
@@ -2342,6 +2356,14 @@ rule__BaseType__TypeAlternatives_0
 { after(grammarAccess.getBaseTypeAccess().getTypeEnd_to_end_flowKeyword_0_43()); }
 )
 
+    |(
+{ before(grammarAccess.getBaseTypeAccess().getTypeAgree_specKeyword_0_44()); }
+
+	Agree_spec 
+
+{ after(grammarAccess.getBaseTypeAccess().getTypeAgree_specKeyword_0_44()); }
+)
+
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -3341,6 +3363,110 @@ rule__BuiltInFn__Alternatives
 	End_to_end_flows 
 
 { after(grammarAccess.getBuiltInFnAccess().getEnd_to_end_flowsKeyword_62()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getHas_agree_propertyKeyword_63()); }
+
+	Has_agree_property 
+
+{ after(grammarAccess.getBuiltInFnAccess().getHas_agree_propertyKeyword_63()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getAgree_propertyKeyword_64()); }
+
+	Agree_property 
+
+{ after(grammarAccess.getBuiltInFnAccess().getAgree_propertyKeyword_64()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getAgree_property_idKeyword_65()); }
+
+	Agree_property_id 
+
+{ after(grammarAccess.getBuiltInFnAccess().getAgree_property_idKeyword_65()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getAgree_property_descriptionKeyword_66()); }
+
+	Agree_property_description 
+
+{ after(grammarAccess.getBuiltInFnAccess().getAgree_property_descriptionKeyword_66()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getAgree_propertiesKeyword_67()); }
+
+	Agree_properties 
+
+{ after(grammarAccess.getBuiltInFnAccess().getAgree_propertiesKeyword_67()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getAgree_assumesKeyword_68()); }
+
+	Agree_assumes 
+
+{ after(grammarAccess.getBuiltInFnAccess().getAgree_assumesKeyword_68()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getAgree_guaranteesKeyword_69()); }
+
+	Agree_guarantees 
+
+{ after(grammarAccess.getBuiltInFnAccess().getAgree_guaranteesKeyword_69()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getAgree_lemmasKeyword_70()); }
+
+	Agree_lemmas 
+
+{ after(grammarAccess.getBuiltInFnAccess().getAgree_lemmasKeyword_70()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getAgree_assertsKeyword_71()); }
+
+	Agree_asserts 
+
+{ after(grammarAccess.getBuiltInFnAccess().getAgree_assertsKeyword_71()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getIs_assumeKeyword_72()); }
+
+	Is_assume 
+
+{ after(grammarAccess.getBuiltInFnAccess().getIs_assumeKeyword_72()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getIs_guaranteeKeyword_73()); }
+
+	Is_guarantee 
+
+{ after(grammarAccess.getBuiltInFnAccess().getIs_guaranteeKeyword_73()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getIs_lemmaKeyword_74()); }
+
+	Is_lemma 
+
+{ after(grammarAccess.getBuiltInFnAccess().getIs_lemmaKeyword_74()); }
+)
+
+    |(
+{ before(grammarAccess.getBuiltInFnAccess().getIs_assertKeyword_75()); }
+
+	Is_assert 
+
+{ after(grammarAccess.getBuiltInFnAccess().getIs_assertKeyword_75()); }
 )
 
 ;
