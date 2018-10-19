@@ -3,7 +3,6 @@
 	<name>ArrayExample</name>
 	<comment></comment>
 	<projects>
-		<project>Plugin_Resources</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -14,6 +13,5 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
-		<nature>org.osate.core.aadlnature</nature>
 	</natures>
 </projectDescription>

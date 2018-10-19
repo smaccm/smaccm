@@ -67,30 +67,30 @@ with Base_Types,Signals,QS_Properties,Data_Model;
       riseTS: in data port Base_Types::Boolean;
       riseOSPF: in data port Base_Types::Boolean;
       PFS: out data port Base_Types::Boolean;
-    annex behavior_specification {**
-      
-      variables
-        inhibit_count: Base_Types::Integer;
-      states
-        St_Inhibited :  state ;
-        St_Listening :  state ;
-        St_Pilot_Flying :  state ;
-        St_Start :  initial state ;
-        St_Stop :  complete final state ;
-      transitions
-        T4 : St_Inhibited -[ inhibit_count >= 2 ]-> St_Listening ; 
-        Do_St_Inhibited : St_Inhibited -[ not (inhibit_count >= 2) ]-> St_Inhibited
-          { inhibit_count := inhibit_count + 1 }  ; 
-        T6 : St_Listening -[ riseTS ]-> St_Pilot_Flying
-          { PFS := true }  ; 
-        T3 : St_Pilot_Flying -[ riseOSPF ]-> St_Inhibited
-          { PFS := false; inhibit_count := 0 }  ; 
-        T1 : St_Start -[ QS_Properties::Primary_Side ]-> St_Pilot_Flying
-          { PFS := true }  ; 
-        T2 : St_Start -[ not QS_Properties::Primary_Side ]-> St_Inhibited
-          { PFS := false; inhibit_count := 0 }  ; 
-
-**};
+--    annex behavior_specification {**
+--      
+--      variables
+--        inhibit_count: Base_Types::Integer;
+--      states
+--        St_Inhibited :  state ;
+--        St_Listening :  state ;
+--        St_Pilot_Flying :  state ;
+--        St_Start :  initial state ;
+--        St_Stop :  complete final state ;
+--      transitions
+--        T4 : St_Inhibited -[ inhibit_count >= 2 ]-> St_Listening ; 
+--        Do_St_Inhibited : St_Inhibited -[ not (inhibit_count >= 2) ]-> St_Inhibited
+--          { inhibit_count := inhibit_count + 1 }  ; 
+--        T6 : St_Listening -[ riseTS ]-> St_Pilot_Flying
+--          { PFS := true }  ; 
+--        T3 : St_Pilot_Flying -[ riseOSPF ]-> St_Inhibited
+--          { PFS := false; inhibit_count := 0 }  ; 
+--        T1 : St_Start -[ QS_Properties::Primary_Side ]-> St_Pilot_Flying
+--          { PFS := true }  ; 
+--        T2 : St_Start -[ not QS_Properties::Primary_Side ]-> St_Inhibited
+--          { PFS := false; inhibit_count := 0 }  ; 
+--
+--**};
     annex agree {**
       
         const St_Inhibited : int = 1;
@@ -166,21 +166,21 @@ with Base_Types,Signals,QS_Properties,Data_Model;
   end Side;
   
   system implementation Cross_Channel_Bus.Cross_Channel_Bus_Impl
-    annex behavior_specification {**
-      
-      variables
-        prev_I: Base_Types::Boolean;
-      states
-        St_Step :  state ;
-        St_Start :  initial state ;
-        St_Stop :  complete final state ;
-      transitions
-        T2 : St_Step -[  ]-> St_Step
-          { O := prev_I; prev_I := I }  ; 
-        T1 : St_Start -[  ]-> St_Step
-          { O := QS_Properties::Init_Bool; prev_I := I }  ; 
-
-**};
+--    annex behavior_specification {**
+--      
+--      variables
+--        prev_I: Base_Types::Boolean;
+--      states
+--        St_Step :  state ;
+--        St_Start :  initial state ;
+--        St_Stop :  complete final state ;
+--      transitions
+--        T2 : St_Step -[  ]-> St_Step
+--          { O := prev_I; prev_I := I }  ; 
+--        T1 : St_Start -[  ]-> St_Step
+--          { O := QS_Properties::Init_Bool; prev_I := I }  ; 
+--
+--**};
     annex agree {**
       
         const St_Step : int = 1;

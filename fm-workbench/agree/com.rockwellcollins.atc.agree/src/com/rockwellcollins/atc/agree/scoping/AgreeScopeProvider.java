@@ -102,14 +102,14 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 
-	private Set<Element> getNamedElements(EObject ctx) {
+	private Set<NamedElement> getNamedElements(EObject ctx) {
 
-		Set<Element> components = new HashSet<>();
+		Set<NamedElement> components = new HashSet<>();
 		if (ctx instanceof AadlPackage) {
 			PublicPackageSection pubSec = ((AadlPackage) ctx).getPublicSection();
 			for (Element el : pubSec.getOwnedElements()) {
 				if (el instanceof DataImplementation || el instanceof DataType) {
-					components.add(el);
+					components.add((NamedElement) el);
 				}
 			}
 
@@ -361,9 +361,14 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	private List<NamedElement> getFieldsFromType(Type typ) {
+
+
 		if (typ instanceof CustomType) {
 
 			NamedElement leaf = ((CustomType) typ).getLeaf();
+
+
+
 			if (leaf instanceof RecordDef) {
 				List<NamedElement> result = new LinkedList<>();
 				result.addAll(((RecordDef) leaf).getArgs());
@@ -376,30 +381,9 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 				result.addAll(subs);
 				return result;
 
-			} else if (leaf instanceof ComponentImplementation) {
-
-				List<NamedElement> result = new LinkedList<>();
-				Classifier parent = ((ComponentImplementation) leaf).getType();
-				List<Feature> features = parent.getAllFeatures();
-				result.addAll(features);
-				return result;
-
 			} else if (leaf instanceof Classifier) {
 
-				List<NamedElement> result = new LinkedList<>();
-				Classifier c = (Classifier) leaf;
-				List<Feature> features = c.getAllFeatures();
-				List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
-
-				for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(c,
-						AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-					AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
-					namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
-				}
-
-				result.addAll(features);
-				result.addAll(namedSpecs);
-				return result;
+				return new ArrayList<NamedElement>(getNamedElements(leaf));
 
 			} else if (leaf instanceof AadlPackage) {
 

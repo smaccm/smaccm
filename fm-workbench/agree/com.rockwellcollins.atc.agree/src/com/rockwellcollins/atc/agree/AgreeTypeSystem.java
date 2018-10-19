@@ -711,7 +711,6 @@ public class AgreeTypeSystem {
 			Type t = ((Arg) ne).getType();
 			return t;
 
-
 		} else if (ne instanceof DataPort) {
 			DataSubcomponentType dt = ((DataPort) ne).getDataFeatureClassifier();
 			return mkCustomType(dt);
@@ -733,6 +732,7 @@ public class AgreeTypeSystem {
 				return mkArrayType(mkCustomType(cl), java.lang.Math.toIntExact(size));
 
 			}
+
 
 		} else if (ne instanceof Feature) {
 			Classifier cl = ((Feature) ne).getClassifier();
