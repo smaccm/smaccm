@@ -706,18 +706,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 			// check local uniqueness
 			for (NamedSpecStatement spec : specs) {
-
 				String id = spec.getName();
-//				if (spec instanceof AssumeStatement) {
-//					id = ((AssumeStatement) spec).getName();
-//				} else if (spec instanceof GuaranteeStatement) {
-//					id = ((GuaranteeStatement) spec).getName();
-//				} else if (spec instanceof AssertStatement) {
-//					id = ((AssertStatement) spec).getName();
-//				} else if (spec instanceof LemmaStatement) {
-//					id = ((LemmaStatement) spec).getName();
-//				}
-
 				if (id != null) {
 					multiMap.put(id, spec);
 				}
@@ -727,22 +716,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		List<NamedSpecStatement> specs = getNamedSpecStatements(toppkg);
 		for (NamedSpecStatement spec : specs) {
 
-//			org.eclipse.emf.ecore.EStructuralFeature structFeat = null;
 			String id = spec.getName();
-//			if (spec instanceof AssumeStatement) {
-//				structFeat = AgreePackage.eINSTANCE.getAssumeStatement_Name();
-//				id = ((AssumeStatement) spec).getName();
-//			} else if (spec instanceof GuaranteeStatement) {
-//				structFeat = AgreePackage.eINSTANCE.getGuaranteeStatement_Name();
-//				id = ((GuaranteeStatement) spec).getName();
-//			} else if (spec instanceof AssertStatement) {
-//				structFeat = AgreePackage.eINSTANCE.getAssertStatement_Name();
-//				id = ((AssertStatement) spec).getName();
-//			} else if (spec instanceof LemmaStatement) {
-//				structFeat = AgreePackage.eINSTANCE.getLemmaStatement_Name();
-//				id = ((LemmaStatement) spec).getName();
-//			}
-
 			if (multiMap.get(id).size() > 1) {
 				error("Duplicate ID in AGREE claim", spec, Aadl2Package.eINSTANCE.getNamedElement_Name());
 			}
