@@ -187,9 +187,7 @@ BaseType returns Type:
 ;
 	
 CustomType:
-	=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement|ID]) |
-	=> (leaf=[aadl2::NamedElement|QCPREF])
-	;
+	=> (namedElm=[aadl2::NamedElement|QCPREF]) ;
 
 primTypes:
   'real' | 'bool' | 'int';
@@ -325,7 +323,7 @@ ArrayLiteralExpr:
 
 
 AbstractionRef:
-	leaf=[aadl2::NamedElement|DOTID]
+	namedElm=[aadl2::NamedElement|DOTID]
 ;
 
 DOTID:

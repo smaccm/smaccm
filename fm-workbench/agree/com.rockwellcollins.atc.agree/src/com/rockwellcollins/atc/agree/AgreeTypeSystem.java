@@ -95,16 +95,12 @@ public class AgreeTypeSystem {
 		if (typ instanceof PrimType) {
 			return ((PrimType) typ).getName();
 		} else if (typ instanceof CustomType) {
-			NamedElement stem = ((CustomType) typ).getStem();
-			if (stem == null) {
-				EObject o = ((CustomType) typ).getLeaf().eContainer();
-				while (!(o instanceof AadlPackage)) {
-					o = o.eContainer();
-				}
-				return ((AadlPackage) o).getName() + "::" + ((CustomType) typ).getLeaf().getName();
-			} else {
-				return ((CustomType) typ).getStem().getName() + "." + ((CustomType) typ).getLeaf().getName();
+			EObject o = ((CustomType) typ).getNamedElm().eContainer();
+			while (!(o instanceof AadlPackage)) {
+				o = o.eContainer();
 			}
+			return ((AadlPackage) o).getName() + "::" + ((CustomType) typ).getNamedElm().getName();
+
 		} else if (typ instanceof ArrayType) {
 			String stemString = typeToString(((ArrayType) typ).getStem());
 			return stemString + "[" + ((ArrayType) typ).getSize() + "]";
@@ -157,8 +153,7 @@ public class AgreeTypeSystem {
 			return realType;
 		} else {
 			CustomType ct = AgreeFactory.eINSTANCE.createCustomType();
-			ct.setStem(null);
-			ct.setLeaf(cc);
+			ct.setNamedElm(cc);
 			return ct;
 		}
 	}
@@ -186,7 +181,7 @@ public class AgreeTypeSystem {
 				return t;
 			}
 		} else if (t instanceof CustomType) {
-			NamedElement ne = ((CustomType) t).getLeaf();
+			NamedElement ne = ((CustomType) t).getNamedElm();
 			if (ne instanceof Classifier) {
 
 				String typeString = typeToString(t);
@@ -362,7 +357,7 @@ public class AgreeTypeSystem {
 				Type t = ((ArrayType) arrType).getStem();
 				return t;
 			} else if (arrType instanceof CustomType) {
-				NamedElement typedef = ((CustomType) arrType).getLeaf();
+				NamedElement typedef = ((CustomType) arrType).getNamedElm();
 
 				if (typedef instanceof DataType) {
 					ArrayDef ad = arrayDefFromAadl((DataType) typedef);
@@ -378,7 +373,7 @@ public class AgreeTypeSystem {
 			Type arrType = infer(((IndicesExpr) expr).getArray());
 
 			if (arrType instanceof CustomType) {
-				NamedElement typedef = ((CustomType) arrType).getLeaf();
+				NamedElement typedef = ((CustomType) arrType).getNamedElm();
 				if (typedef instanceof DataType) {
 					ArrayDef ad = arrayDefFromAadl((DataType) typedef);
 					return mkArrayType(intType, ad.dimension);
@@ -566,7 +561,7 @@ public class AgreeTypeSystem {
 
 			CallExpr fnCall = ((CallExpr) expr);
 			AbstractionRef dotId = fnCall.getAbstractionRef();
-			NamedElement namedEl = dotId.getLeaf();
+			NamedElement namedEl = dotId.getNamedElm();
 
 			if (isInLinearizationBody(fnCall)) {
 				// extract in/out arguments
@@ -680,7 +675,7 @@ public class AgreeTypeSystem {
 					return stem;
 
 				} else if (arrType instanceof CustomType) {
-					NamedElement typedef = ((CustomType) arrType).getLeaf();
+					NamedElement typedef = ((CustomType) arrType).getNamedElm();
 					if (typedef instanceof DataType) {
 						ArrayDef ad = arrayDefFromAadl((DataType) typedef);
 						if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {

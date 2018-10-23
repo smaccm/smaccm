@@ -24,7 +24,7 @@ import org.osate.aadl2.NamedElement;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AbstractionRefImpl#getLeaf <em>Leaf</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.AbstractionRefImpl#getNamedElm <em>Named Elm</em>}</li>
  * </ul>
  *
  * @generated
@@ -32,14 +32,14 @@ import org.osate.aadl2.NamedElement;
 public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements AbstractionRef
 {
   /**
-   * The cached value of the '{@link #getLeaf() <em>Leaf</em>}' reference.
+   * The cached value of the '{@link #getNamedElm() <em>Named Elm</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getLeaf()
+   * @see #getNamedElm()
    * @generated
    * @ordered
    */
-  protected NamedElement leaf;
+  protected NamedElement namedElm;
 
   /**
    * <!-- begin-user-doc -->
@@ -67,19 +67,19 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
-  public NamedElement getLeaf()
+  public NamedElement getNamedElm()
   {
-    if (leaf != null && ((EObject)leaf).eIsProxy())
+    if (namedElm != null && ((EObject)namedElm).eIsProxy())
     {
-      InternalEObject oldLeaf = (InternalEObject)leaf;
-      leaf = (NamedElement)eResolveProxy(oldLeaf);
-      if (leaf != oldLeaf)
+      InternalEObject oldNamedElm = (InternalEObject)namedElm;
+      namedElm = (NamedElement)eResolveProxy(oldNamedElm);
+      if (namedElm != oldNamedElm)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.ABSTRACTION_REF__LEAF, oldLeaf, leaf));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.ABSTRACTION_REF__NAMED_ELM, oldNamedElm, namedElm));
       }
     }
-    return leaf;
+    return namedElm;
   }
 
   /**
@@ -87,9 +87,9 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
-  public NamedElement basicGetLeaf()
+  public NamedElement basicGetNamedElm()
   {
-    return leaf;
+    return namedElm;
   }
 
   /**
@@ -97,12 +97,12 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setLeaf(NamedElement newLeaf)
+  public void setNamedElm(NamedElement newNamedElm)
   {
-    NamedElement oldLeaf = leaf;
-    leaf = newLeaf;
+    NamedElement oldNamedElm = namedElm;
+    namedElm = newNamedElm;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.ABSTRACTION_REF__LEAF, oldLeaf, leaf));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.ABSTRACTION_REF__NAMED_ELM, oldNamedElm, namedElm));
   }
 
   /**
@@ -115,9 +115,9 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   {
     switch (featureID)
     {
-      case AgreePackage.ABSTRACTION_REF__LEAF:
-        if (resolve) return getLeaf();
-        return basicGetLeaf();
+      case AgreePackage.ABSTRACTION_REF__NAMED_ELM:
+        if (resolve) return getNamedElm();
+        return basicGetNamedElm();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -132,8 +132,8 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   {
     switch (featureID)
     {
-      case AgreePackage.ABSTRACTION_REF__LEAF:
-        setLeaf((NamedElement)newValue);
+      case AgreePackage.ABSTRACTION_REF__NAMED_ELM:
+        setNamedElm((NamedElement)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -149,8 +149,8 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   {
     switch (featureID)
     {
-      case AgreePackage.ABSTRACTION_REF__LEAF:
-        setLeaf((NamedElement)null);
+      case AgreePackage.ABSTRACTION_REF__NAMED_ELM:
+        setNamedElm((NamedElement)null);
         return;
     }
     super.eUnset(featureID);
@@ -166,8 +166,8 @@ public class AbstractionRefImpl extends MinimalEObjectImpl.Container implements 
   {
     switch (featureID)
     {
-      case AgreePackage.ABSTRACTION_REF__LEAF:
-        return leaf != null;
+      case AgreePackage.ABSTRACTION_REF__NAMED_ELM:
+        return namedElm != null;
     }
     return super.eIsSet(featureID);
   }

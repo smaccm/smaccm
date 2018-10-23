@@ -43,7 +43,7 @@ public class RecordExprScoper {
 	}
 
 	public static IScope getScope(RecordLitExpr expr, IScope outerScope) {
-		return getScope(expr.getRecordType().getLeaf(), outerScope);
+		return getScope(expr.getRecordType().getNamedElm(), outerScope);
 	}
 
 	public static IScope getScope(BinaryExpr binExpr, IScope outerScope) {
@@ -71,7 +71,7 @@ public class RecordExprScoper {
 		if (recStatement instanceof Arg) {
 			Type type = ((Arg) recStatement).getType();
 			if (type instanceof CustomType) {
-				return getRecordComponents(((CustomType) type).getLeaf(), outerScope);
+				return getRecordComponents(((CustomType) type).getNamedElm(), outerScope);
 			}
 		} else if (recStatement instanceof DataPort) {
 			DataSubcomponentType dataClass = ((DataPort) recStatement).getDataFeatureClassifier();

@@ -732,7 +732,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkAADLEnumerator(EnumLitExpr aadlEnum) {
 		CustomType enumType = aadlEnum.getEnumType();
-		NamedElement enumTypeNamedElement = enumType.getLeaf();
+		NamedElement enumTypeNamedElement = enumType.getNamedElm();
 		if (!AgreeAADLEnumerationUtils.isAADLEnumeration(enumTypeNamedElement)) {
 			error(enumType, "AADL Enumerations must refer to a Data Type with \"Enum\" data representation "
 					+ "property and have an \"Enumerators\' property value list.");
@@ -1150,7 +1150,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 
 		if (recordType instanceof CustomType) {
-			NamedElement ne = ((CustomType) recordType).getLeaf();
+			NamedElement ne = ((CustomType) recordType).getNamedElm();
 			if (ne instanceof RecordDef) {
 				// scoping should ensure the key is a proper Arg
 				Arg arg = (Arg) upExpr.getKey();
@@ -1188,7 +1188,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkRecordType(CustomType recType) {
-		NamedElement finalId = recType.getLeaf();
+		NamedElement finalId = recType.getNamedElm();
 
 //		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDef)
 //				&& !(finalId instanceof DataType) && !(finalId instanceof EnumStatement)) {
@@ -1255,7 +1255,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		Type arrType = AgreeTypeSystem.infer(arrExpr);
 
 		if (arrType instanceof CustomType) {
-			NamedElement typedef = ((CustomType) arrType).getLeaf();
+			NamedElement typedef = ((CustomType) arrType).getNamedElm();
 			if (typedef instanceof DataType) {
 				ArrayDef ad = AgreeTypeSystem.arrayDefFromAadl((DataType) typedef);
 
@@ -1292,7 +1292,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		if (arrayType instanceof CustomType) {
 
-			NamedElement typedef = ((CustomType) arrayType).getLeaf();
+			NamedElement typedef = ((CustomType) arrayType).getNamedElm();
 
 			if (typedef instanceof DataType) {
 				ArrayDef ad = AgreeTypeSystem.arrayDefFromAadl((DataType) typedef);
@@ -1326,7 +1326,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		EList<NamedElement> exprArgs = recExpr.getArgs();
 		EList<Expr> argExprs = recExpr.getArgExpr();
 
-		NamedElement finalId = recExpr.getRecordType().getLeaf();
+		NamedElement finalId = recExpr.getRecordType().getNamedElm();
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDef)) {
 			error(recType, "types must be record definition or data implementation");
 		}
@@ -1369,7 +1369,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	private List<NamedElement> getArgNames(CustomType recType) {
 
-		NamedElement rec = recType.getLeaf();
+		NamedElement rec = recType.getNamedElm();
 		List<NamedElement> names = new ArrayList<>();
 
 		if (rec instanceof RecordDef) {
@@ -1391,7 +1391,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	private Map<String, Type> getFieldTypes(CustomType recType) {
 
-		NamedElement rec = recType.getLeaf();
+		NamedElement rec = recType.getNamedElm();
 		Map<String, Type> typeMap = new HashMap<>();
 
 		if (rec instanceof RecordDef) {
@@ -1479,7 +1479,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		for (Arg arg : recordDef.getArgs()) {
 			Type type = arg.getType();
 			if (type instanceof CustomType) {
-				NamedElement finalId = ((CustomType) type).getLeaf();
+				NamedElement finalId = ((CustomType) type).getNamedElm();
 
 //				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
 //					error(type, "types must be record definition or data implementation");
@@ -1506,7 +1506,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				for (Arg arg : subRecDef.getArgs()) {
 					Type type = arg.getType();
 					if (type instanceof CustomType) {
-						NamedElement subFinalEl = ((CustomType) type).getLeaf();
+						NamedElement subFinalEl = ((CustomType) type).getNamedElm();
 						if (subFinalEl instanceof RecordDef) {
 							recordClosure.add((RecordDef) subFinalEl);
 						}
@@ -1800,7 +1800,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		List<Type> agreeRhsTypes = new ArrayList<>();
 
 		if (rhsExpr instanceof CallExpr) {
-			NamedElement namedEl = ((CallExpr) rhsExpr).getAbstractionRef().getLeaf();
+			NamedElement namedEl = ((CallExpr) rhsExpr).getAbstractionRef().getNamedElm();
 			if (namedEl instanceof NodeDef) {
 				NodeDef nodeDef = (NodeDef) namedEl;
 				for (Arg var : nodeDef.getRets()) {
@@ -2230,7 +2230,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	public void checkInputsVsActuals(CallExpr call) {
 		AbstractionRef dotId = call.getAbstractionRef();
-		NamedElement namedEl = dotId.getLeaf();
+		NamedElement namedEl = dotId.getNamedElm();
 
 		if (!(namedEl instanceof Abstraction)) {
 			// this error will be caught elsewhere
@@ -2291,7 +2291,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkCallExpr(CallExpr call) {
-		NamedElement fn = call.getAbstractionRef().getLeaf();
+		NamedElement fn = call.getAbstractionRef().getNamedElm();
 		if (isInLinearizationBody(call)) {
 			if (fn instanceof NodeDef) {
 				error(call, "Node definitions cannot be applied in a linearization definition");
@@ -2319,6 +2319,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		Type exprType = AgreeTypeSystem.infer(fnDef.getExpr());
 		if (!AgreeTypeSystem.typesEqual(exprType, fnType)) {
+			System.out.println("fnType: " + fnType);
+			System.out.println("exprType: " + exprType);
 			error(fnDef, "Function '" + fnDef.getName() + "' is of type '" + typeToString(fnType)
 			+ "' but its expression is of type '" + typeToString(exprType) + "'");
 		}

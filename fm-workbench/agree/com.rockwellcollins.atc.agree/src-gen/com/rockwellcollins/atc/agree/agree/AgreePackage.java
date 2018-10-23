@@ -1598,22 +1598,13 @@ public interface AgreePackage extends EPackage
   int CUSTOM_TYPE__OWNED_COMMENT = TYPE__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Stem</b></em>' reference.
+   * The feature id for the '<em><b>Named Elm</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CUSTOM_TYPE__STEM = TYPE_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Leaf</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int CUSTOM_TYPE__LEAF = TYPE_FEATURE_COUNT + 1;
+  int CUSTOM_TYPE__NAMED_ELM = TYPE_FEATURE_COUNT + 0;
 
   /**
    * The number of structural features of the '<em>Custom Type</em>' class.
@@ -1622,7 +1613,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int CUSTOM_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 2;
+  int CUSTOM_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordDefImpl <em>Record Def</em>}' class.
@@ -1883,13 +1874,13 @@ public interface AgreePackage extends EPackage
   int ABSTRACTION_REF = 32;
 
   /**
-   * The feature id for the '<em><b>Leaf</b></em>' reference.
+   * The feature id for the '<em><b>Named Elm</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ABSTRACTION_REF__LEAF = 0;
+  int ABSTRACTION_REF__NAMED_ELM = 0;
 
   /**
    * The number of structural features of the '<em>Abstraction Ref</em>' class.
@@ -6434,26 +6425,15 @@ public interface AgreePackage extends EPackage
   EClass getCustomType();
 
   /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.CustomType#getStem <em>Stem</em>}'.
+   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.CustomType#getNamedElm <em>Named Elm</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Stem</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.CustomType#getStem()
+   * @return the meta object for the reference '<em>Named Elm</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.CustomType#getNamedElm()
    * @see #getCustomType()
    * @generated
    */
-  EReference getCustomType_Stem();
-
-  /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.CustomType#getLeaf <em>Leaf</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Leaf</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.CustomType#getLeaf()
-   * @see #getCustomType()
-   * @generated
-   */
-  EReference getCustomType_Leaf();
+  EReference getCustomType_NamedElm();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RecordDef <em>Record Def</em>}'.
@@ -6549,15 +6529,15 @@ public interface AgreePackage extends EPackage
   EClass getAbstractionRef();
 
   /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.AbstractionRef#getLeaf <em>Leaf</em>}'.
+   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.AbstractionRef#getNamedElm <em>Named Elm</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Leaf</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AbstractionRef#getLeaf()
+   * @return the meta object for the reference '<em>Named Elm</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AbstractionRef#getNamedElm()
    * @see #getAbstractionRef()
    * @generated
    */
-  EReference getAbstractionRef_Leaf();
+  EReference getAbstractionRef_NamedElm();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.EnumID <em>Enum ID</em>}'.
@@ -9084,20 +9064,12 @@ public interface AgreePackage extends EPackage
     EClass CUSTOM_TYPE = eINSTANCE.getCustomType();
 
     /**
-     * The meta object literal for the '<em><b>Stem</b></em>' reference feature.
+     * The meta object literal for the '<em><b>Named Elm</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference CUSTOM_TYPE__STEM = eINSTANCE.getCustomType_Stem();
-
-    /**
-     * The meta object literal for the '<em><b>Leaf</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference CUSTOM_TYPE__LEAF = eINSTANCE.getCustomType_Leaf();
+    EReference CUSTOM_TYPE__NAMED_ELM = eINSTANCE.getCustomType_NamedElm();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordDefImpl <em>Record Def</em>}' class.
@@ -9184,12 +9156,12 @@ public interface AgreePackage extends EPackage
     EClass ABSTRACTION_REF = eINSTANCE.getAbstractionRef();
 
     /**
-     * The meta object literal for the '<em><b>Leaf</b></em>' reference feature.
+     * The meta object literal for the '<em><b>Named Elm</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference ABSTRACTION_REF__LEAF = eINSTANCE.getAbstractionRef_Leaf();
+    EReference ABSTRACTION_REF__NAMED_ELM = eINSTANCE.getAbstractionRef_NamedElm();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.EnumIDImpl <em>Enum ID</em>}' class.

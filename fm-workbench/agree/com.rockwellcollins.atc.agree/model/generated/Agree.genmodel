@@ -93,6 +93,7 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//Type"/>
     <genClasses ecoreClass="Agree.ecore#//CustomType">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//CustomType/namedElm"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//CustomType/stem"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//CustomType/leaf"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//CustomType/recordTypePath"/>
@@ -112,6 +113,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayLiteralExpr/elems"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//AbstractionRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//AbstractionRef/namedElm"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//AbstractionRef/leaf"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//AbstractionRef/stem"/>
     </genClasses>

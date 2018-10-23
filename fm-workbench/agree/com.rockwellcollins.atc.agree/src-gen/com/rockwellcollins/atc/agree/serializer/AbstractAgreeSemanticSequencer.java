@@ -509,15 +509,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     AbstractionRef returns AbstractionRef
 	 *
 	 * Constraint:
-	 *     leaf=[NamedElement|DOTID]
+	 *     namedElm=[NamedElement|DOTID]
 	 */
 	protected void sequence_AbstractionRef(ISerializationContext context, AbstractionRef semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.ABSTRACTION_REF__LEAF) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ABSTRACTION_REF__LEAF));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.ABSTRACTION_REF__NAMED_ELM) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ABSTRACTION_REF__NAMED_ELM));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAbstractionRefAccess().getLeafNamedElementDOTIDParserRuleCall_0_1(), semanticObject.eGet(AgreePackage.Literals.ABSTRACTION_REF__LEAF, false));
+		feeder.accept(grammarAccess.getAbstractionRefAccess().getNamedElmNamedElementDOTIDParserRuleCall_0_1(), semanticObject.eGet(AgreePackage.Literals.ABSTRACTION_REF__NAMED_ELM, false));
 		feeder.finish();
 	}
 	
@@ -957,10 +957,16 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     CustomType returns CustomType
 	 *
 	 * Constraint:
-	 *     ((stem=[NamedElement|QCPREF] leaf=[NamedElement|ID]) | leaf=[NamedElement|QCPREF])
+	 *     namedElm=[NamedElement|QCPREF]
 	 */
 	protected void sequence_CustomType(ISerializationContext context, CustomType semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.CUSTOM_TYPE__NAMED_ELM) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.CUSTOM_TYPE__NAMED_ELM));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getCustomTypeAccess().getNamedElmNamedElementQCPREFParserRuleCall_0_0_1(), semanticObject.eGet(AgreePackage.Literals.CUSTOM_TYPE__NAMED_ELM, false));
+		feeder.finish();
 	}
 	
 	

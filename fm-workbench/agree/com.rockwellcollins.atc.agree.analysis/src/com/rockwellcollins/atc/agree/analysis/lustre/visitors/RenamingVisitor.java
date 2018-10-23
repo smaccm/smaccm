@@ -136,7 +136,7 @@ public class RenamingVisitor extends AstIterVisitor {
 						+ primType.getRangeHigh() + "]";
 			}
 		} else {
-			result += ((CustomType) arg.getType()).getLeaf().getName();
+			result += ((CustomType) arg.getType()).getNamedElm().getName();
 		}
 		return result;
 	}

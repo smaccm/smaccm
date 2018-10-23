@@ -284,26 +284,26 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 
-	protected IScope scope_CustomType_leaf(CustomType ctx, EReference ref) {
-		if (ctx.getStem() == null) {
-			return getScope(ctx.eContainer(), ref);
-		} else {
-			NamedElement stem = ctx.getStem();
-
-			List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
-			if (stem instanceof AadlPackage) {
-				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) stem),
-						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
-
-					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
-					namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
-
-				}
-			}
-
-			return Scopes.scopeFor(namedSpecs, getScope(stem, ref));
-		}
-	}
+//	protected IScope scope_CustomType_namedElm(CustomType ctx, EReference ref) {
+//		if (ctx.getStem() == null) {
+//			return getScope(ctx.eContainer(), ref);
+//		} else {
+//			NamedElement stem = ctx.getStem();
+//
+//			List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
+//			if (stem instanceof AadlPackage) {
+//				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) stem),
+//						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+//
+//					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+//					namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
+//
+//				}
+//			}
+//
+//			return Scopes.scopeFor(namedSpecs, getScope(stem, ref));
+//		}
+//	}
 
 	protected IScope scope_GetPropertyExpr_prop(GetPropertyExpr ctx, EReference ref) {
 
@@ -365,7 +365,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 		if (typ instanceof CustomType) {
 
-			NamedElement leaf = ((CustomType) typ).getLeaf();
+			NamedElement leaf = ((CustomType) typ).getNamedElm();
 
 
 
@@ -412,7 +412,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 	IScope scope_RecordLitExpr_args(RecordLitExpr ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
-		NamedElement recDef = ctx.getRecordType().getLeaf();
+		NamedElement recDef = ctx.getRecordType().getNamedElm();
 		Set<Element> components = new HashSet<>();
 		if (recDef instanceof DataImplementation) {
 			components.addAll(((DataImplementation) recDef).getAllSubcomponents());
@@ -436,12 +436,12 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return Scopes.scopeFor(getFieldsFromType(typ));
 	}
 
-	IScope scope_AbstractionRef_stem(AbstractionRef ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
-		return Scopes.scopeFor(new ArrayList<EObject>(), prevScope);
-	}
+//	IScope scope_AbstractionRef_stem(AbstractionRef ctx, EReference ref) {
+//		IScope prevScope = getScope(ctx.eContainer(), ref);
+//		return Scopes.scopeFor(new ArrayList<EObject>(), prevScope);
+//	}
 
-	IScope scope_AbstractionRef_leaf(AbstractionRef ctx, EReference ref) {
+	IScope scope_AbstractionRef_namedElm(AbstractionRef ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
 
 		CallExpr ce = (CallExpr) ctx.eContainer();

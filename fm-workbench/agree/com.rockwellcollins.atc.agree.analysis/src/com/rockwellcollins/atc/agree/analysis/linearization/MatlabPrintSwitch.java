@@ -64,7 +64,7 @@ public class MatlabPrintSwitch extends AgreeSwitch<String> {
 
 	@Override
 	public String caseCallExpr(CallExpr ctx) {
-		String fn = ctx.getAbstractionRef().getLeaf().getName();
+		String fn = ctx.getAbstractionRef().getNamedElm().getName();
 		String arg = doSwitch(ctx.getArgs().get(0));
 		return fn + "(" + arg + ")";
 	}

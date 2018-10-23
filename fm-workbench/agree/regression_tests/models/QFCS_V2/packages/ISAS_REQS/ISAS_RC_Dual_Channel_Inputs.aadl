@@ -8,7 +8,7 @@ system ISAS_RC_Dual_Channel_Inputs
      annex agree {**
      	guarantee "dummy guarantee for AGREE" : true;
    	 **};
-    
+   	 
  end ISAS_RC_Dual_Channel_Inputs;
        
  system implementation ISAS_RC_Dual_Channel_Inputs.impl
@@ -18,7 +18,7 @@ system ISAS_RC_Dual_Channel_Inputs
       
    annex agree {**
    	
-   	eq compare12_AOA: bool = 	
+   	eq compare12_AOA: bool =
    		c.aoa_in_range.AOA1.AOA and not c.aoa_failed_update.val1 and 
    	 	c.aoa_in_range.AOA2.AOA and not c.aoa_failed_update.val2 and
      	matches_tolerance_real(c.aoa.AOA1.AOA, c.aoa.AOA2.AOA, AGREE_CONSTANTS.AOA_tol);  

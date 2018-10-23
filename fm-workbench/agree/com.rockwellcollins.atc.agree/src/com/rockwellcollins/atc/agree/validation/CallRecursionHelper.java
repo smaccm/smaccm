@@ -128,7 +128,7 @@ public class CallRecursionHelper extends AgreeSwitch<Expr> {
 		Abstraction callDef = null;
 
 		try {
-			callDef = (Abstraction) id.getLeaf();
+			callDef = (Abstraction) id.getNamedElm();
 		} catch (ClassCastException e) {
 			return null;
 		}

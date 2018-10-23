@@ -2927,67 +2927,26 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	public class CustomTypeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.CustomType");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
-		private final Assignment cStemAssignment_0_0_0 = (Assignment)cGroup_0_0.eContents().get(0);
-		private final CrossReference cStemNamedElementCrossReference_0_0_0_0 = (CrossReference)cStemAssignment_0_0_0.eContents().get(0);
-		private final RuleCall cStemNamedElementQCPREFParserRuleCall_0_0_0_0_1 = (RuleCall)cStemNamedElementCrossReference_0_0_0_0.eContents().get(1);
-		private final Keyword cFullStopKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
-		private final Assignment cLeafAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
-		private final CrossReference cLeafNamedElementCrossReference_0_0_2_0 = (CrossReference)cLeafAssignment_0_0_2.eContents().get(0);
-		private final RuleCall cLeafNamedElementIDTerminalRuleCall_0_0_2_0_1 = (RuleCall)cLeafNamedElementCrossReference_0_0_2_0.eContents().get(1);
-		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
-		private final Assignment cLeafAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
-		private final CrossReference cLeafNamedElementCrossReference_1_0_0 = (CrossReference)cLeafAssignment_1_0.eContents().get(0);
-		private final RuleCall cLeafNamedElementQCPREFParserRuleCall_1_0_0_1 = (RuleCall)cLeafNamedElementCrossReference_1_0_0.eContents().get(1);
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cNamedElmAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final CrossReference cNamedElmNamedElementCrossReference_0_0 = (CrossReference)cNamedElmAssignment_0.eContents().get(0);
+		private final RuleCall cNamedElmNamedElementQCPREFParserRuleCall_0_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_0_0.eContents().get(1);
 		
 		//CustomType:
-		//	=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement]) |
-		//	=> (leaf=[aadl2::NamedElement|QCPREF]);
+		//	=> (namedElm=[aadl2::NamedElement|QCPREF]);
 		@Override public ParserRule getRule() { return rule; }
 
-		//=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement]) | => (leaf=[aadl2::NamedElement|QCPREF])
-		public Alternatives getAlternatives() { return cAlternatives; }
+		//=> (namedElm=[aadl2::NamedElement|QCPREF])
+		public Group getGroup() { return cGroup; }
 
-		//=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement])
-		public Group getGroup_0() { return cGroup_0; }
-
-		//stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement]
-		public Group getGroup_0_0() { return cGroup_0_0; }
-
-		//stem=[aadl2::NamedElement|QCPREF]
-		public Assignment getStemAssignment_0_0_0() { return cStemAssignment_0_0_0; }
+		//namedElm=[aadl2::NamedElement|QCPREF]
+		public Assignment getNamedElmAssignment_0() { return cNamedElmAssignment_0; }
 
 		//[aadl2::NamedElement|QCPREF]
-		public CrossReference getStemNamedElementCrossReference_0_0_0_0() { return cStemNamedElementCrossReference_0_0_0_0; }
+		public CrossReference getNamedElmNamedElementCrossReference_0_0() { return cNamedElmNamedElementCrossReference_0_0; }
 
 		//QCPREF
-		public RuleCall getStemNamedElementQCPREFParserRuleCall_0_0_0_0_1() { return cStemNamedElementQCPREFParserRuleCall_0_0_0_0_1; }
-
-		//'.'
-		public Keyword getFullStopKeyword_0_0_1() { return cFullStopKeyword_0_0_1; }
-
-		//leaf=[aadl2::NamedElement]
-		public Assignment getLeafAssignment_0_0_2() { return cLeafAssignment_0_0_2; }
-
-		//[aadl2::NamedElement]
-		public CrossReference getLeafNamedElementCrossReference_0_0_2_0() { return cLeafNamedElementCrossReference_0_0_2_0; }
-
-		//ID
-		public RuleCall getLeafNamedElementIDTerminalRuleCall_0_0_2_0_1() { return cLeafNamedElementIDTerminalRuleCall_0_0_2_0_1; }
-
-		//=> (leaf=[aadl2::NamedElement|QCPREF])
-		public Group getGroup_1() { return cGroup_1; }
-
-		//leaf=[aadl2::NamedElement|QCPREF]
-		public Assignment getLeafAssignment_1_0() { return cLeafAssignment_1_0; }
-
-		//[aadl2::NamedElement|QCPREF]
-		public CrossReference getLeafNamedElementCrossReference_1_0_0() { return cLeafNamedElementCrossReference_1_0_0; }
-
-		//QCPREF
-		public RuleCall getLeafNamedElementQCPREFParserRuleCall_1_0_0_1() { return cLeafNamedElementQCPREFParserRuleCall_1_0_0_1; }
+		public RuleCall getNamedElmNamedElementQCPREFParserRuleCall_0_0_1() { return cNamedElmNamedElementQCPREFParserRuleCall_0_0_1; }
 	}
 
 	public class PrimTypesElements extends AbstractParserRuleElementFinder {
@@ -5245,22 +5204,22 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	public class AbstractionRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.AbstractionRef");
-		private final Assignment cLeafAssignment = (Assignment)rule.eContents().get(1);
-		private final CrossReference cLeafNamedElementCrossReference_0 = (CrossReference)cLeafAssignment.eContents().get(0);
-		private final RuleCall cLeafNamedElementDOTIDParserRuleCall_0_1 = (RuleCall)cLeafNamedElementCrossReference_0.eContents().get(1);
+		private final Assignment cNamedElmAssignment = (Assignment)rule.eContents().get(1);
+		private final CrossReference cNamedElmNamedElementCrossReference_0 = (CrossReference)cNamedElmAssignment.eContents().get(0);
+		private final RuleCall cNamedElmNamedElementDOTIDParserRuleCall_0_1 = (RuleCall)cNamedElmNamedElementCrossReference_0.eContents().get(1);
 		
 		//AbstractionRef:
-		//	leaf=[aadl2::NamedElement|DOTID];
+		//	namedElm=[aadl2::NamedElement|DOTID];
 		@Override public ParserRule getRule() { return rule; }
 
-		//leaf=[aadl2::NamedElement|DOTID]
-		public Assignment getLeafAssignment() { return cLeafAssignment; }
+		//namedElm=[aadl2::NamedElement|DOTID]
+		public Assignment getNamedElmAssignment() { return cNamedElmAssignment; }
 
 		//[aadl2::NamedElement|DOTID]
-		public CrossReference getLeafNamedElementCrossReference_0() { return cLeafNamedElementCrossReference_0; }
+		public CrossReference getNamedElmNamedElementCrossReference_0() { return cNamedElmNamedElementCrossReference_0; }
 
 		//DOTID
-		public RuleCall getLeafNamedElementDOTIDParserRuleCall_0_1() { return cLeafNamedElementDOTIDParserRuleCall_0_1; }
+		public RuleCall getNamedElmNamedElementDOTIDParserRuleCall_0_1() { return cNamedElmNamedElementDOTIDParserRuleCall_0_1; }
 	}
 
 	public class DOTIDElements extends AbstractParserRuleElementFinder {
@@ -6047,8 +6006,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//CustomType:
-	//	=> (stem=[aadl2::NamedElement|QCPREF] '.' leaf=[aadl2::NamedElement]) |
-	//	=> (leaf=[aadl2::NamedElement|QCPREF]);
+	//	=> (namedElm=[aadl2::NamedElement|QCPREF]);
 	public CustomTypeElements getCustomTypeAccess() {
 		return pCustomType;
 	}
@@ -6389,7 +6347,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//AbstractionRef:
-	//	leaf=[aadl2::NamedElement|DOTID];
+	//	namedElm=[aadl2::NamedElement|DOTID];
 	public AbstractionRefElements getAbstractionRefAccess() {
 		return pAbstractionRef;
 	}

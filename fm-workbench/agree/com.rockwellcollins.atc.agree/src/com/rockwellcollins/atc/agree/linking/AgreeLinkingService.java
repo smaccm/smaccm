@@ -61,13 +61,10 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 	public List<EObject> getLinkedObjects(EObject context, EReference reference, INode node)
 			throws IllegalNodeException {
 		String name = getCrossRefNodeAsString(node);
-		// TODO This will have to be changed in the develop branch
-		name = getCrossRefNodeAsString(node);
 
 		if (context instanceof PropertyValue) {
 			return findUnitLiteralAsList((Element) context, name);
 		}
-
 
 
 		if (context instanceof ThisRef || context instanceof SubcomponentRef

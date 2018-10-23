@@ -1581,19 +1581,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getCustomType_Stem()
+  public EReference getCustomType_NamedElm()
   {
     return (EReference)customTypeEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getCustomType_Leaf()
-  {
-    return (EReference)customTypeEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1691,7 +1681,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getAbstractionRef_Leaf()
+  public EReference getAbstractionRef_NamedElm()
   {
     return (EReference)abstractionRefEClass.getEStructuralFeatures().get(0);
   }
@@ -3619,8 +3609,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     typeEClass = createEClass(TYPE);
 
     customTypeEClass = createEClass(CUSTOM_TYPE);
-    createEReference(customTypeEClass, CUSTOM_TYPE__STEM);
-    createEReference(customTypeEClass, CUSTOM_TYPE__LEAF);
+    createEReference(customTypeEClass, CUSTOM_TYPE__NAMED_ELM);
 
     recordDefEClass = createEClass(RECORD_DEF);
     createEReference(recordDefEClass, RECORD_DEF__ARGS);
@@ -3636,7 +3625,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(arrayLiteralExprEClass, ARRAY_LITERAL_EXPR__ELEMS);
 
     abstractionRefEClass = createEClass(ABSTRACTION_REF);
-    createEReference(abstractionRefEClass, ABSTRACTION_REF__LEAF);
+    createEReference(abstractionRefEClass, ABSTRACTION_REF__NAMED_ELM);
 
     enumIDEClass = createEClass(ENUM_ID);
 
@@ -4128,8 +4117,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(customTypeEClass, CustomType.class, "CustomType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getCustomType_Stem(), theAadl2Package.getNamedElement(), null, "stem", null, 0, 1, CustomType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getCustomType_Leaf(), theAadl2Package.getNamedElement(), null, "leaf", null, 0, 1, CustomType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCustomType_NamedElm(), theAadl2Package.getNamedElement(), null, "namedElm", null, 0, 1, CustomType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(recordDefEClass, RecordDef.class, "RecordDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRecordDef_Args(), this.getArg(), null, "args", null, 0, -1, RecordDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4145,7 +4133,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getArrayLiteralExpr_Elems(), this.getExpr(), null, "elems", null, 0, -1, ArrayLiteralExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(abstractionRefEClass, AbstractionRef.class, "AbstractionRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAbstractionRef_Leaf(), theAadl2Package.getNamedElement(), null, "leaf", null, 0, 1, AbstractionRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAbstractionRef_NamedElm(), theAadl2Package.getNamedElement(), null, "namedElm", null, 0, 1, AbstractionRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(enumIDEClass, EnumID.class, "EnumID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

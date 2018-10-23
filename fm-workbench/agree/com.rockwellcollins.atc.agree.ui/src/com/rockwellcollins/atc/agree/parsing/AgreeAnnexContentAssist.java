@@ -127,7 +127,7 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		if (base instanceof Arg) {
 			Type type = ((Arg) base).getType();
 			CustomType elID = ((CustomType) type);
-			namedEl = elID.getLeaf();
+			namedEl = elID.getNamedElm();
 		} else if (base instanceof DataPort) {
 			namedEl = ((DataPort) base).getDataFeatureClassifier();
 		} else if (base instanceof EventDataPort) {

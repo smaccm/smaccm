@@ -473,6 +473,7 @@ public abstract class VerifyHandler extends AadlHandler {
 						System.out.println(result.getText());
 						System.out.println("******** Agree Lustre ********");
 						System.out.println(program);
+
 						break;
 					}
 					queue.remove();

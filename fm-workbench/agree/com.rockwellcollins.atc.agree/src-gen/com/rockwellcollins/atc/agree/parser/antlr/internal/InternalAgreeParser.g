@@ -4530,54 +4530,7 @@ ruleCustomType returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-(((((
-(
-		ruleQCPREF
-
-)
-)
-FullStop
-(
-(
-	RULE_ID
-
-)
-)))=>((
-(
-		{
-			if ($current==null) {
-	            $current = createModelElement(grammarAccess.getCustomTypeRule());
-	        }
-        }
-		{ 
-	        newCompositeNode(grammarAccess.getCustomTypeAccess().getStemNamedElementCrossReference_0_0_0_0()); 
-	    }
-		ruleQCPREF
-		{ 
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-)
-	otherlv_1=FullStop
-    {
-    	newLeafNode(otherlv_1, grammarAccess.getCustomTypeAccess().getFullStopKeyword_0_0_1());
-    }
-(
-(
-		{
-			if ($current==null) {
-	            $current = createModelElement(grammarAccess.getCustomTypeRule());
-	        }
-        }
-	otherlv_2=RULE_ID
-	{
-		newLeafNode(otherlv_2, grammarAccess.getCustomTypeAccess().getLeafNamedElementCrossReference_0_0_2_0()); 
-	}
-
-)
-)))
-    |(((
+(((
 (
 		ruleQCPREF
 
@@ -4590,7 +4543,7 @@ FullStop
 	        }
         }
 		{ 
-	        newCompositeNode(grammarAccess.getCustomTypeAccess().getLeafNamedElementCrossReference_1_0_0()); 
+	        newCompositeNode(grammarAccess.getCustomTypeAccess().getNamedElmNamedElementCrossReference_0_0()); 
 	    }
 		ruleQCPREF
 		{ 
@@ -4598,7 +4551,7 @@ FullStop
 	    }
 
 )
-)))
+))
 ;
 
 
@@ -8151,7 +8104,7 @@ ruleAbstractionRef returns [EObject current=null]
 	        }
         }
 		{ 
-	        newCompositeNode(grammarAccess.getAbstractionRefAccess().getLeafNamedElementCrossReference_0()); 
+	        newCompositeNode(grammarAccess.getAbstractionRefAccess().getNamedElmNamedElementCrossReference_0()); 
 	    }
 		ruleDOTID
 		{ 

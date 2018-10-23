@@ -1235,7 +1235,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 		} else if (type instanceof CustomType) {
 			CustomType recType = (CustomType) type;
-			NamedElement recordTypeName = recType.getLeaf();
+			NamedElement recordTypeName = recType.getNamedElm();
 			if (recordTypeName instanceof DataClassifier) {
 				result = getDataClassifierRangeConstraintExpr(name, (DataClassifier) recordTypeName);
 			}
@@ -1417,7 +1417,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		CustomType recId = recExpr.getRecordType();
-		String recName = AgreeTypeUtils.getIDTypeStr(recId.getLeaf());
+		String recName = AgreeTypeUtils.getIDTypeStr(recId.getNamedElm());
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1564,7 +1564,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseCallExpr(CallExpr expr) {
 		AbstractionRef dotId = expr.getAbstractionRef();
-		NamedElement namedEl = dotId.getLeaf();
+		NamedElement namedEl = dotId.getNamedElm();
 
 		String fnName = AgreeTypeUtils.getNodeName(namedEl);
 		boolean found = false;
@@ -1577,7 +1577,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		if (!found) {
 			AbstractionRef fn = expr.getAbstractionRef();
-			doSwitch(fn.getLeaf());
+			doSwitch(fn.getNamedElm());
 			// for dReal integration
 			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
 				fnName = namedEl.getName();
@@ -1971,7 +1971,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseEnumLitExpr(EnumLitExpr aadlEnum) {
-		String typeStr = AgreeTypeUtils.getIDTypeStr(aadlEnum.getEnumType().getLeaf());
+		String typeStr = AgreeTypeUtils.getIDTypeStr(aadlEnum.getEnumType().getNamedElm());
 		return new IdExpr(typeStr.replace("__", "_") + "_" + aadlEnum.getValue());
 	}
 

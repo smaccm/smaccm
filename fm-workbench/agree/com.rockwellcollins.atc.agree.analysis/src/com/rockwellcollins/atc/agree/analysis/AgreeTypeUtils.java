@@ -55,7 +55,7 @@ public class AgreeTypeUtils {
 		if (type instanceof PrimType) {
 			return ((PrimType) type).getName();
 		} else {
-			return getIDTypeStr(((CustomType) type).getLeaf());
+			return getIDTypeStr(((CustomType) type).getNamedElm());
 		}
 	}
 
@@ -64,7 +64,7 @@ public class AgreeTypeUtils {
 		if (type instanceof PrimType) {
 			return ((PrimType) type).getName();
 		} else if (type instanceof CustomType) {
-			return getTypeName(((CustomType) type).getLeaf(), typeMap, typeExpressions);
+			return getTypeName(((CustomType) type).getNamedElm(), typeMap, typeExpressions);
 		} else {
 			throw new NotImplementedException("TO DO for Arrays");
 		}
@@ -131,7 +131,7 @@ public class AgreeTypeUtils {
 					typeStr = ((PrimType) argType).getName();
 				} else {
 					CustomType nestId = ((CustomType) argType);
-					NamedElement namedEl = nestId.getLeaf();
+					NamedElement namedEl = nestId.getNamedElm();
 					subType = getType(namedEl, typeMap, typeExpressions);
 				}
 				if (typeStr != null) {
