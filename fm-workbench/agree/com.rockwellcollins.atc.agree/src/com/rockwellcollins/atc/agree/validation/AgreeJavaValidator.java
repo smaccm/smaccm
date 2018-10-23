@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
@@ -49,6 +51,7 @@ import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
+import org.osate.aadl2.ModelUnit;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
@@ -56,11 +59,15 @@ import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.google.common.collect.HashMultimap;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -96,6 +103,7 @@ import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NamedID;
+import com.rockwellcollins.atc.agree.agree.NamedSpecStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -632,6 +640,110 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				error("Left hand side quasi-synchronous values must be greater than the right hand side");
 			}
 		}
+	}
+
+	private void getPackageDependencies(AadlPackage pkg, Set<AadlPackage> pkgs) {
+
+		// Add the parent package if it's not there, otherwise return
+		if (pkgs.contains(pkg)) {
+			return;
+		}
+		pkgs.add(pkg);
+
+		// Look at direct dependencies in private section
+		if (pkg.getPrivateSection() != null) {
+			for (ModelUnit mu : pkg.getPrivateSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
+		// Look at direct dependencies in public section
+		if (pkg.getPublicSection() != null) {
+			for (ModelUnit mu : pkg.getPublicSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
+	}
+
+	private List<NamedSpecStatement> getNamedSpecStatements(AadlPackage pkg) {
+		List<NamedSpecStatement> specs = new ArrayList<NamedSpecStatement>();
+		for (Classifier classifier : EcoreUtil2.getAllContentsOfType(pkg, Classifier.class)) {
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(classifier,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof NamedSpecStatement) {
+						specs.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+		}
+
+		for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(pkg,
+				AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+			AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+			for (SpecStatement spec : contract.getSpecs()) {
+				if (spec instanceof NamedSpecStatement) {
+					specs.add((NamedSpecStatement) spec);
+				}
+			}
+
+		}
+		return specs;
+	}
+
+	@Check(CheckType.NORMAL)
+	public void checkNoDuplicateIdInSpec(AadlPackage toppkg) {
+
+		// namedSpecs associates an agree spec ID with all the agree specs that have that ID
+		HashMultimap<String, NamedSpecStatement> namedSpecs = HashMultimap.create();
+
+		// Get the set of packages referenced in model
+		Set<AadlPackage> pkgs = new HashSet<>();
+		getPackageDependencies(toppkg, pkgs);
+
+		for (AadlPackage pkg : pkgs) {
+
+			// Get the list of agree specs in each package
+			List<NamedSpecStatement> specs = getNamedSpecStatements(pkg);
+
+			for (NamedSpecStatement spec : specs) {
+				String id = spec.getName();
+
+				if (id != null) {
+					namedSpecs.put(id, spec);
+				}
+			}
+		}
+
+		// Get the agree specs in the current package
+		List<NamedSpecStatement> specs = getNamedSpecStatements(toppkg);
+		Iterator<NamedSpecStatement> i = specs.iterator();
+		while (i.hasNext()) {
+
+			NamedSpecStatement spec = i.next();
+			String id = spec.getName();
+			// If the current spec name is associated with multiple agree specs, we've found a duplicate
+			if (namedSpecs.get(id).size() > 1) {
+				Iterator<NamedSpecStatement> ii = namedSpecs.get(id).iterator();
+				while (ii.hasNext()) {
+					String pkgName = AadlUtil.getContainingPackage(ii.next()).getName();
+					// If the specs are from the same package, the error will be generated from the
+					// NamedElement check.
+					if (!pkgName.contentEquals(AadlUtil.getContainingPackage(spec).getName())) {
+						error("Duplicate AGREE property ID in package " + pkgName, spec,
+								Aadl2Package.eINSTANCE.getNamedElement_Name());
+					}
+				}
+				namedSpecs.removeAll(id);
+			}
+		}
+
 	}
 
 	@Check(CheckType.FAST)
