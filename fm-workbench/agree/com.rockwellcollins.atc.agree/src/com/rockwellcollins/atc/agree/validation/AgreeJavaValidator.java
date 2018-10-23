@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,7 @@ import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.annexsupport.AnnexUtil;
 
 import com.google.common.collect.HashMultimap;
@@ -648,7 +650,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 		pkgs.add(pkg);
 
-		// Look at direct dependencies
+		// Look at direct dependencies in private section
 		if (pkg.getPrivateSection() != null) {
 			for (ModelUnit mu : pkg.getPrivateSection().getImportedUnits()) {
 				if (mu instanceof AadlPackage) {
@@ -657,6 +659,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 
+		// Look at direct dependencies in public section
 		if (pkg.getPublicSection() != null) {
 			for (ModelUnit mu : pkg.getPublicSection().getImportedUnits()) {
 				if (mu instanceof AadlPackage) {
@@ -697,28 +700,47 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.NORMAL)
 	public void checkNoDuplicateIdInSpec(AadlPackage toppkg) {
 
+		// namedSpecs associates an agree spec ID with all the agree specs that have that ID
+		HashMultimap<String, NamedSpecStatement> namedSpecs = HashMultimap.create();
+
+		// Get the set of packages referenced in model
 		Set<AadlPackage> pkgs = new HashSet<>();
 		getPackageDependencies(toppkg, pkgs);
 
-		HashMultimap<String, SpecStatement> multiMap = HashMultimap.create();
 		for (AadlPackage pkg : pkgs) {
+
+			// Get the list of agree specs in each package
 			List<NamedSpecStatement> specs = getNamedSpecStatements(pkg);
 
-			// check local uniqueness
 			for (NamedSpecStatement spec : specs) {
 				String id = spec.getName();
+
 				if (id != null) {
-					multiMap.put(id, spec);
+					namedSpecs.put(id, spec);
 				}
 			}
 		}
 
+		// Get the agree specs in the current package
 		List<NamedSpecStatement> specs = getNamedSpecStatements(toppkg);
-		for (NamedSpecStatement spec : specs) {
+		Iterator<NamedSpecStatement> i = specs.iterator();
+		while (i.hasNext()) {
 
+			NamedSpecStatement spec = i.next();
 			String id = spec.getName();
-			if (multiMap.get(id).size() > 1) {
-				error("Duplicate ID in AGREE claim", spec, Aadl2Package.eINSTANCE.getNamedElement_Name());
+			// If the current spec name is associated with multiple agree specs, we've found a duplicate
+			if (namedSpecs.get(id).size() > 1) {
+				Iterator<NamedSpecStatement> ii = namedSpecs.get(id).iterator();
+				while (ii.hasNext()) {
+					String pkgName = AadlUtil.getContainingPackage(ii.next()).getName();
+					// If the specs are from the same package, the error will be generated from the
+					// NamedElement check.
+					if (!pkgName.contentEquals(AadlUtil.getContainingPackage(spec).getName())) {
+						error("Duplicate AGREE property ID in package " + pkgName, spec,
+								Aadl2Package.eINSTANCE.getNamedElement_Name());
+					}
+				}
+				namedSpecs.removeAll(id);
 			}
 		}
 
