@@ -197,6 +197,7 @@ public abstract class VerifyHandler extends AadlHandler {
 				result = wrapper;
 			} else if (isRealizability()) {
 				AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, false);
+
 				Program program = LustreAstBuilder.getRealizabilityLustreProgram(agreeProgram);
 				wrapper.addChild(createVerification("Realizability Check", si, program, agreeProgram,
 						AnalysisType.Realizability));
@@ -205,6 +206,7 @@ public abstract class VerifyHandler extends AadlHandler {
 				wrapVerificationResult(si, wrapper);
 				result = wrapper;
 			}
+
 			showView(result, linker);
 			return doAnalysis(root, monitor);
 		} catch (Throwable e) {
@@ -467,12 +469,16 @@ public abstract class VerifyHandler extends AadlHandler {
 							api.execute(program, result, subMonitor);
 						}
 					} catch (JKindException e) {
+
 						System.out.println("******** JKindException Text ********");
 						e.printStackTrace(System.out);
 						System.out.println("******** JKind Output ********");
 						System.out.println(result.getText());
 						System.out.println("******** Agree Lustre ********");
 						System.out.println(program);
+
+
+						System.out.println(e.getMessage());
 						break;
 					}
 					queue.remove();

@@ -67,12 +67,12 @@ public class AgreeTypeUtils {
 		if (type instanceof PrimType) {
 			return ((PrimType) type).getString();
 		} else {
-			return ((RecordType) type).toString();
+			return getTypeName(((RecordType) type).getRecord(), typeMap, typeExpressions);
 		}
 	}
 
-	public static String getTypeName(NestedDotID recId, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
-		NamedElement finalId = AgreeUtils.getFinalNestId(recId);
+	public static String getTypeName(TypeID recId, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
+		NamedElement finalId = recId.getBase();
 		return getTypeName(finalId, typeMap, typeExpressions);
 	}
 
