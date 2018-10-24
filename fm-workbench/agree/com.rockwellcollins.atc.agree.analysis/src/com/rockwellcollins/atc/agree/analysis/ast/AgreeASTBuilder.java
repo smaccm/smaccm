@@ -1895,19 +1895,34 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		if (prevNamedElm instanceof FeatureGroup || prevNamedElm instanceof AadlPackage || prevNamedElm instanceof Subcomponent) {
-			return new IdExpr(dottedNameToString(e));
+			NamedElement ne = e.getField();
+			if (ne instanceof ConstStatement) {
+				// constant propagation
+				return doSwitch(((ConstStatement) ne).getExpr());
+			} else {
+				return new IdExpr(dottedNameToString(e));
+			}
+
 		} else if (prevNamedElm != null){
 
 			Expr result = null;
 			if (e.getExpr() instanceof NamedElmExpr) {
 				NamedElement ne = ((NamedElmExpr) e.getExpr()).getNamedElm();
 				if (ne instanceof ConstStatement) {
+					// constant propagation
 					result = doSwitch(((ConstStatement) ne).getExpr());
 				} else {
 					result = new IdExpr(ne.getName());
 				}
 			} else if (e.getExpr() instanceof ProjectionExpr) {
-				result = lustreExprFromProjectionExpr((ProjectionExpr) e.getExpr());
+				NamedElement ne = ((ProjectionExpr) e.getExpr()).getField();
+				if (ne instanceof ConstStatement) {
+					// constant propagation
+					result = doSwitch(((ConstStatement) ne).getExpr());
+				} else {
+					result = lustreExprFromProjectionExpr((ProjectionExpr) e.getExpr());
+				}
+
 			} else {
 				result = doSwitch(e.getExpr());
 			}

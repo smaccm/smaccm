@@ -1,5 +1,6 @@
 package com.rockwellcollins.atc.agree.analysis.handlers;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayDeque;
@@ -12,6 +13,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,6 +59,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
+import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
@@ -292,6 +297,30 @@ public abstract class VerifyHandler extends AadlHandler {
 
 	private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram,
 			AgreeProgram agreeProgram, AnalysisType analysisType) {
+
+		/////////
+		Logger logger = Logger.getLogger("MyLog");
+		FileHandler fh;
+		try {
+
+			// This block configure the logger with handler and formatter
+			fh = new FileHandler("/Users/thomas/zzz.log");
+			logger.addHandler(fh);
+			SimpleFormatter formatter = new SimpleFormatter();
+			fh.setFormatter(formatter);
+
+			logger.info("Agree Program:");
+			AgreeASTPrettyprinter pp = new AgreeASTPrettyprinter();
+			pp.visit(agreeProgram);
+			logger.info(pp.toString());
+
+		} catch (SecurityException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		////////////////
+
 		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
 				.getRegistry(ExtensionRegistry.AGREE_AUTOMATER_EXT_ID);
 		List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
@@ -313,6 +342,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		RenamingVisitor.addRenamings(lustreProgram, renaming, compInst, layout);
 		addProperties(renaming, properties, mainNode, agreeProgram);
 
+
 		for (AgreeAutomater aa : automaters) {
 			renaming = aa.rename(renaming);
 			layout = aa.transformLayout(layout);
@@ -332,6 +362,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		default:
 			throw new AgreeException("Unhandled Analysis Type");
 		}
+
 		queue.add(result);
 
 		ComponentImplementation compImpl = AgreeUtils.getInstanceImplementation(compInst);
@@ -342,6 +373,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		linker.setReferenceMap(result, renaming.getRefMap());
 		linker.setLog(result, AgreeLogger.getLog());
 		linker.setRenaming(result, renaming);
+
 
 		// System.out.println(program);
 		return result;
@@ -458,6 +490,7 @@ public abstract class VerifyHandler extends AadlHandler {
 						((JKindApi) api).setWriteAdviceFile(adviceFileName);
 					}
 
+
 					try {
 						if (result instanceof ConsistencyResult) {
 							consistApi.execute(program, result, subMonitor);
@@ -473,6 +506,9 @@ public abstract class VerifyHandler extends AadlHandler {
 						System.out.println(result.getText());
 						System.out.println("******** Agree Lustre ********");
 						System.out.println(program);
+
+
+						System.out.println(e.getMessage().substring(0, 300));
 
 						break;
 					}
