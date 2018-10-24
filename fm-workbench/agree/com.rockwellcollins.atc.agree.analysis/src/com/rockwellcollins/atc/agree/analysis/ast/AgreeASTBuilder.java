@@ -1907,13 +1907,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 			Expr result = null;
 			if (e.getExpr() instanceof NamedElmExpr) {
-				NamedElement ne = ((NamedElmExpr) e.getExpr()).getNamedElm();
-				if (ne instanceof ConstStatement) {
-					// constant propagation
-					result = doSwitch(((ConstStatement) ne).getExpr());
-				} else {
-					result = new IdExpr(ne.getName());
-				}
+				result = doSwitch(e.getExpr());
 			} else if (e.getExpr() instanceof ProjectionExpr) {
 				NamedElement ne = ((ProjectionExpr) e.getExpr()).getField();
 				if (ne instanceof ConstStatement) {
@@ -1939,7 +1933,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseNamedElmExpr(NamedElmExpr nelmExpr) {
-		return new IdExpr(nelmExpr.getNamedElm().getName());
+		NamedElement ne = nelmExpr.getNamedElm();
+		if (ne instanceof ConstStatement) {
+			// constant propagation
+			return doSwitch(((ConstStatement) ne).getExpr());
+		} else {
+			return new IdExpr(ne.getName());
+		}
 	}
 
 	// TODO: implement translation for array expressions.

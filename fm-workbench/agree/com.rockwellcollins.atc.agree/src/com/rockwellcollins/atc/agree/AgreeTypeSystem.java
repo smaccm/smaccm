@@ -751,8 +751,6 @@ public class AgreeTypeSystem {
 
 		}
 
-		System.out.println("fall through ne: " + ne);
-
 //		} else if (namedEl instanceof DataAccess) {
 //		DataAccessType t = (((DataAccess) namedEl).getFeatureClassifier());
 //		return mkTypeFromAadlType(t);
