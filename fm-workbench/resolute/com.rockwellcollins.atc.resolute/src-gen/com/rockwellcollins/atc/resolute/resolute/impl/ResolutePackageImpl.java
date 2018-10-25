@@ -27,6 +27,7 @@ import com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
+import com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListType;
@@ -309,6 +310,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass quantifiedExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass libraryFnCallExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1241,6 +1249,46 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getLibraryFnCallExpr()
+  {
+    return libraryFnCallExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getLibraryFnCallExpr_LibName()
+  {
+    return (EAttribute)libraryFnCallExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getLibraryFnCallExpr_FnName()
+  {
+    return (EAttribute)libraryFnCallExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLibraryFnCallExpr_Args()
+  {
+    return (EReference)libraryFnCallExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getBuiltInFnCallExpr()
   {
     return builtInFnCallExprEClass;
@@ -1592,6 +1640,11 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     createEReference(quantifiedExprEClass, QUANTIFIED_EXPR__ARGS);
     createEReference(quantifiedExprEClass, QUANTIFIED_EXPR__EXPR);
 
+    libraryFnCallExprEClass = createEClass(LIBRARY_FN_CALL_EXPR);
+    createEAttribute(libraryFnCallExprEClass, LIBRARY_FN_CALL_EXPR__LIB_NAME);
+    createEAttribute(libraryFnCallExprEClass, LIBRARY_FN_CALL_EXPR__FN_NAME);
+    createEReference(libraryFnCallExprEClass, LIBRARY_FN_CALL_EXPR__ARGS);
+
     builtInFnCallExprEClass = createEClass(BUILT_IN_FN_CALL_EXPR);
     createEAttribute(builtInFnCallExprEClass, BUILT_IN_FN_CALL_EXPR__FN);
     createEReference(builtInFnCallExprEClass, BUILT_IN_FN_CALL_EXPR__ARGS);
@@ -1690,6 +1743,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     stringExprEClass.getESuperTypes().add(this.getExpr());
     ifThenElseExprEClass.getESuperTypes().add(this.getExpr());
     quantifiedExprEClass.getESuperTypes().add(this.getExpr());
+    libraryFnCallExprEClass.getESuperTypes().add(this.getExpr());
     builtInFnCallExprEClass.getESuperTypes().add(this.getExpr());
     fnCallExprEClass.getESuperTypes().add(this.getExpr());
     listFilterMapExprEClass.getESuperTypes().add(this.getExpr());
@@ -1814,6 +1868,11 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     initEAttribute(getQuantifiedExpr_Quant(), theEcorePackage.getEString(), "quant", null, 0, 1, QuantifiedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getQuantifiedExpr_Args(), this.getArg(), null, "args", null, 0, -1, QuantifiedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getQuantifiedExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantifiedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(libraryFnCallExprEClass, LibraryFnCallExpr.class, "LibraryFnCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getLibraryFnCallExpr_LibName(), theEcorePackage.getEString(), "libName", null, 0, 1, LibraryFnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getLibraryFnCallExpr_FnName(), theEcorePackage.getEString(), "fnName", null, 0, 1, LibraryFnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLibraryFnCallExpr_Args(), this.getExpr(), null, "args", null, 0, -1, LibraryFnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(builtInFnCallExprEClass, BuiltInFnCallExpr.class, "BuiltInFnCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getBuiltInFnCallExpr_Fn(), theEcorePackage.getEString(), "fn", null, 0, 1, BuiltInFnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

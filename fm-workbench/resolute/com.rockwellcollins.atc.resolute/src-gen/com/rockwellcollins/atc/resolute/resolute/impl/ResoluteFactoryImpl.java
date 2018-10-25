@@ -99,6 +99,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.STRING_EXPR: return createStringExpr();
       case ResolutePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
       case ResolutePackage.QUANTIFIED_EXPR: return createQuantifiedExpr();
+      case ResolutePackage.LIBRARY_FN_CALL_EXPR: return createLibraryFnCallExpr();
       case ResolutePackage.BUILT_IN_FN_CALL_EXPR: return createBuiltInFnCallExpr();
       case ResolutePackage.FN_CALL_EXPR: return createFnCallExpr();
       case ResolutePackage.LIST_FILTER_MAP_EXPR: return createListFilterMapExpr();
@@ -494,6 +495,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     QuantifiedExprImpl quantifiedExpr = new QuantifiedExprImpl();
     return quantifiedExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LibraryFnCallExpr createLibraryFnCallExpr()
+  {
+    LibraryFnCallExprImpl libraryFnCallExpr = new LibraryFnCallExprImpl();
+    return libraryFnCallExpr;
   }
 
   /**

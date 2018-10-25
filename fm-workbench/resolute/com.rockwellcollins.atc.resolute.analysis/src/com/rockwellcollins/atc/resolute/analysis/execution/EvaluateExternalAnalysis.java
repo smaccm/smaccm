@@ -13,9 +13,11 @@ import com.rockwellcollins.atc.resolute.analysis.values.ResoluteValue;
 public class EvaluateExternalAnalysis {
     final private static String EXTENTION_ID = "com.rockwellcollins.atc.resolute.analysis.external.resoluteExternalAnalysis";
     private static Map<String, ResoluteExternalAnalysis> analysisMap;
-    
+	private static Map<String, ResoluteExternalLibrary> libraryMap;
+
     static public void init(IExtensionRegistry registry) {
         analysisMap = new HashMap<>();
+		libraryMap = new HashMap<>();
         evaluate(registry);
     }
 
@@ -24,8 +26,11 @@ public class EvaluateExternalAnalysis {
             for (IConfigurationElement e : registry.getConfigurationElementsFor(EXTENTION_ID)) {
                 String name = e.getAttribute("name");
                 Object o = e.createExecutableExtension("analysisClass");
-                ResoluteExternalAnalysis analysis = (ResoluteExternalAnalysis) o;
-                analysisMap.put(name, analysis);
+				if (o instanceof ResoluteExternalAnalysis) {
+					analysisMap.put(name, (ResoluteExternalAnalysis) o);
+				} else if (o instanceof ResoluteExternalLibrary) {
+					libraryMap.put(name, (ResoluteExternalLibrary) o);
+				}
             }
         } catch (CoreException e) {
             throw new IllegalStateException(e);
@@ -35,4 +40,9 @@ public class EvaluateExternalAnalysis {
     public static ResoluteValue evaluate(String name, EvaluationContext context, List<ResoluteValue> args) {
         return analysisMap.get(name).run(context, args);
     }
+
+	public static ResoluteValue evaluate(String name, EvaluationContext context, String function,
+			List<ResoluteValue> args) {
+		return libraryMap.get(name).run(context, function, args);
+	}
 }
