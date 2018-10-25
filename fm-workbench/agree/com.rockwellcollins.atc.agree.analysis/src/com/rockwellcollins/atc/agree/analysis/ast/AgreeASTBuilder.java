@@ -1841,16 +1841,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new IntExpr(BigInteger.valueOf(Integer.parseInt(expr.getVal())));
 	}
 
-	private String dottedNameToString(ProjectionExpr e) {
-
-		if (e.getExpr() instanceof NamedElmExpr) {
-			return ((NamedElmExpr) e.getExpr()).getNamedElm().getName();
-		} else if (e.getExpr() instanceof ProjectionExpr) {
-			return dottedNameToString((ProjectionExpr) e.getExpr()) + dotChar + e.getField().getName();
+	private String dottedNameToString(com.rockwellcollins.atc.agree.agree.Expr e) {
+		if (e instanceof NamedElmExpr) {
+			return ((NamedElmExpr) e).getNamedElm().getName();
+		} else if (e instanceof ProjectionExpr) {
+			return dottedNameToString(((ProjectionExpr) e).getExpr()) + dotChar
+					+ ((ProjectionExpr) e).getField().getName();
 		}
 
 		throw new AgreeException("Pattern");
-
 	}
 
 	@Override
@@ -1860,7 +1859,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (e.getStem() instanceof NamedElmExpr) {
 			stemString = ((NamedElmExpr) e.getStem()).getNamedElm().getName();
 		} else if (e.getStem() instanceof ProjectionExpr) {
-			stemString = dottedNameToString((ProjectionExpr) e.getStem());
+			stemString = dottedNameToString(e.getStem());
 		} else {
 			throw new AgreeException("Pattern");
 		}
@@ -1882,53 +1881,26 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	}
 
-	private Expr lustreExprFromProjectionExpr(ProjectionExpr e) {
-
-		NamedElement prevNamedElm = null;
+	@Override
+	public Expr caseProjectionExpr(ProjectionExpr e) {
 
 		if (e.getExpr() instanceof NamedElmExpr) {
-			prevNamedElm = ((NamedElmExpr) e.getExpr()).getNamedElm();
-
-		} else if (e.getExpr() instanceof ProjectionExpr) {
-			prevNamedElm = ((ProjectionExpr) e.getExpr()).getField();
-
-		}
-
-		if (prevNamedElm instanceof FeatureGroup || prevNamedElm instanceof AadlPackage || prevNamedElm instanceof Subcomponent) {
-			NamedElement ne = e.getField();
-			if (ne instanceof ConstStatement) {
-				// constant propagation
-				return doSwitch(((ConstStatement) ne).getExpr());
-			} else {
-				return new IdExpr(dottedNameToString(e));
-			}
-
-		} else if (prevNamedElm != null){
-
-			Expr result = null;
-			if (e.getExpr() instanceof NamedElmExpr) {
-				result = doSwitch(e.getExpr());
-			} else if (e.getExpr() instanceof ProjectionExpr) {
-				NamedElement ne = ((ProjectionExpr) e.getExpr()).getField();
-				if (ne instanceof ConstStatement) {
+			NamedElement base = ((NamedElmExpr) e.getExpr()).getNamedElm();
+			if (base instanceof AadlPackage) {
+				NamedElement field = e.getField();
+				if (field instanceof ConstStatement) {
 					// constant propagation
-					result = doSwitch(((ConstStatement) ne).getExpr());
+					return doSwitch(((ConstStatement) field).getExpr());
 				} else {
-					result = lustreExprFromProjectionExpr((ProjectionExpr) e.getExpr());
+					return new IdExpr(base.getName() + dotChar + field.getName());
 				}
-
 			} else {
-				result = doSwitch(e.getExpr());
+				return new RecordAccessExpr(doSwitch(e.getExpr()), e.getField().getName());
 			}
-
-			return new RecordAccessExpr(result, e.getField().getName());
+		} else {
+			return new RecordAccessExpr(doSwitch(e.getExpr()), e.getField().getName());
 		}
-		throw new AgreeException("Pattern");
-	}
 
-	@Override
-	public Expr caseProjectionExpr(ProjectionExpr id) {
-		return lustreExprFromProjectionExpr(id);
 	}
 
 	@Override

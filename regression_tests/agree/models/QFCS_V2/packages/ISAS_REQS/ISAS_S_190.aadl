@@ -44,7 +44,7 @@ annex agree {**
 	    and -- TAT1 stale or out-of-range - determine if TAT2 within tolerance of EGI
 		    ((air_failed_update.val1 or not air_data_in_range.AD1.TAT) => air_data_within_tol.AD2.TAT = 
 		    	(not air_failed_update.val2 and air_data_in_range.AD2.TAT and not egi_select_fault.TAT and 
-		    	 matches_tolerance_real(air_data.AD2.TAT, egi_select.TAT, AGREE_CONSTANTS.AGREE_CONSTANTS.EGI_TAT_tol)))
+		    	 matches_tolerance_real(air_data.AD2.TAT, egi_select.TAT, AGREE_CONSTANTS.EGI_TAT_tol)))
 	    
 	    and -- TAT2 stale or out-of-range - determine if TAT1 within tolerance of EGI
 		    ((air_failed_update.val2 or not air_data_in_range.AD2.TAT) => air_data_within_tol.AD1.TAT = 
