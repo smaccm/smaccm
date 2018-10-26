@@ -600,7 +600,7 @@ system ISAS
     --signal input falls outside its operational range.
     guarantee "ISAS-S-110" : 
       egi1_aoa_in_range = 
-        (AGREE_CONSTANTS.AGREE_CONSTANTS.aoa_range_low <= egi1.aoa and egi1.aoa <= AGREE_CONSTANTS.aoa_range_high) and
+        (AGREE_CONSTANTS.aoa_range_low <= egi1.aoa and egi1.aoa <= AGREE_CONSTANTS.aoa_range_high) and
       egi1_time_in_range =
         (AGREE_CONSTANTS.time_range_low <= egi1.time_val and egi1.time_val <= AGREE_CONSTANTS.time_range_high) and
       egi1_lat_in_range =
