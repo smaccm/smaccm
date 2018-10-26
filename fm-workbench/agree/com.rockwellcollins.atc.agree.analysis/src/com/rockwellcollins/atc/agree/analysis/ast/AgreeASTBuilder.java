@@ -1886,7 +1886,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		if (e.getExpr() instanceof NamedElmExpr) {
 			NamedElement base = ((NamedElmExpr) e.getExpr()).getNamedElm();
-			if (base instanceof AadlPackage) {
+			if (base instanceof AadlPackage || base instanceof Subcomponent || base instanceof FeatureGroup) {
 				NamedElement field = e.getField();
 				if (field instanceof ConstStatement) {
 					// constant propagation
