@@ -338,6 +338,15 @@ public interface ResoluteFactory extends EFactory
   QuantifiedExpr createQuantifiedExpr();
 
   /**
+   * Returns a new object of class '<em>Library Fn Call Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Library Fn Call Expr</em>'.
+   * @generated
+   */
+  LibraryFnCallExpr createLibraryFnCallExpr();
+
+  /**
    * Returns a new object of class '<em>Built In Fn Call Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

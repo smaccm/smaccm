@@ -392,6 +392,15 @@ public class ResoluteSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ResolutePackage.LIBRARY_FN_CALL_EXPR:
+      {
+        LibraryFnCallExpr libraryFnCallExpr = (LibraryFnCallExpr)theEObject;
+        T result = caseLibraryFnCallExpr(libraryFnCallExpr);
+        if (result == null) result = caseExpr(libraryFnCallExpr);
+        if (result == null) result = caseElement(libraryFnCallExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ResolutePackage.BUILT_IN_FN_CALL_EXPR:
       {
         BuiltInFnCallExpr builtInFnCallExpr = (BuiltInFnCallExpr)theEObject;
@@ -1015,6 +1024,22 @@ public class ResoluteSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseQuantifiedExpr(QuantifiedExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Library Fn Call Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Library Fn Call Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLibraryFnCallExpr(LibraryFnCallExpr object)
   {
     return null;
   }

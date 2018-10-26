@@ -1930,6 +1930,70 @@ public interface ResolutePackage extends EPackage
   int QUANTIFIED_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.LibraryFnCallExprImpl <em>Library Fn Call Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.LibraryFnCallExprImpl
+   * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getLibraryFnCallExpr()
+   * @generated
+   */
+  int LIBRARY_FN_CALL_EXPR = 35;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_CALL_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_CALL_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Lib Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_CALL_EXPR__LIB_NAME = EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Fn Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_CALL_EXPR__FN_NAME = EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_CALL_EXPR__ARGS = EXPR_FEATURE_COUNT + 2;
+
+  /**
+   * The number of structural features of the '<em>Library Fn Call Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LIBRARY_FN_CALL_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltInFnCallExprImpl <em>Built In Fn Call Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1937,7 +2001,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getBuiltInFnCallExpr()
    * @generated
    */
-  int BUILT_IN_FN_CALL_EXPR = 35;
+  int BUILT_IN_FN_CALL_EXPR = 36;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1992,7 +2056,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 36;
+  int FN_CALL_EXPR = 37;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2047,7 +2111,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getListFilterMapExpr()
    * @generated
    */
-  int LIST_FILTER_MAP_EXPR = 37;
+  int LIST_FILTER_MAP_EXPR = 38;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2111,7 +2175,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getListExpr()
    * @generated
    */
-  int LIST_EXPR = 38;
+  int LIST_EXPR = 39;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2157,7 +2221,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getSetFilterMapExpr()
    * @generated
    */
-  int SET_FILTER_MAP_EXPR = 39;
+  int SET_FILTER_MAP_EXPR = 40;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2221,7 +2285,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getSetExpr()
    * @generated
    */
-  int SET_EXPR = 40;
+  int SET_EXPR = 41;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2267,7 +2331,7 @@ public interface ResolutePackage extends EPackage
    * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getLetExpr()
    * @generated
    */
-  int LET_EXPR = 41;
+  int LET_EXPR = 42;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3170,6 +3234,49 @@ public interface ResolutePackage extends EPackage
    * @generated
    */
   EReference getQuantifiedExpr_Expr();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr <em>Library Fn Call Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Library Fn Call Expr</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr
+   * @generated
+   */
+  EClass getLibraryFnCallExpr();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr#getLibName <em>Lib Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Lib Name</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr#getLibName()
+   * @see #getLibraryFnCallExpr()
+   * @generated
+   */
+  EAttribute getLibraryFnCallExpr_LibName();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr#getFnName <em>Fn Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Fn Name</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr#getFnName()
+   * @see #getLibraryFnCallExpr()
+   * @generated
+   */
+  EAttribute getLibraryFnCallExpr_FnName();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr#getArgs()
+   * @see #getLibraryFnCallExpr()
+   * @generated
+   */
+  EReference getLibraryFnCallExpr_Args();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.resolute.resolute.BuiltInFnCallExpr <em>Built In Fn Call Expr</em>}'.
@@ -4135,6 +4242,40 @@ public interface ResolutePackage extends EPackage
      * @generated
      */
     EReference QUANTIFIED_EXPR__EXPR = eINSTANCE.getQuantifiedExpr_Expr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.LibraryFnCallExprImpl <em>Library Fn Call Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.LibraryFnCallExprImpl
+     * @see com.rockwellcollins.atc.resolute.resolute.impl.ResolutePackageImpl#getLibraryFnCallExpr()
+     * @generated
+     */
+    EClass LIBRARY_FN_CALL_EXPR = eINSTANCE.getLibraryFnCallExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Lib Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute LIBRARY_FN_CALL_EXPR__LIB_NAME = eINSTANCE.getLibraryFnCallExpr_LibName();
+
+    /**
+     * The meta object literal for the '<em><b>Fn Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute LIBRARY_FN_CALL_EXPR__FN_NAME = eINSTANCE.getLibraryFnCallExpr_FnName();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LIBRARY_FN_CALL_EXPR__ARGS = eINSTANCE.getLibraryFnCallExpr_Args();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.resolute.resolute.impl.BuiltInFnCallExprImpl <em>Built In Fn Call Expr</em>}' class.

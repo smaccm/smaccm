@@ -257,6 +257,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createQuantifiedExprAdapter();
       }
       @Override
+      public Adapter caseLibraryFnCallExpr(LibraryFnCallExpr object)
+      {
+        return createLibraryFnCallExprAdapter();
+      }
+      @Override
       public Adapter caseBuiltInFnCallExpr(BuiltInFnCallExpr object)
       {
         return createBuiltInFnCallExprAdapter();
@@ -864,6 +869,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createQuantifiedExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr <em>Library Fn Call Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr
+   * @generated
+   */
+  public Adapter createLibraryFnCallExprAdapter()
   {
     return null;
   }

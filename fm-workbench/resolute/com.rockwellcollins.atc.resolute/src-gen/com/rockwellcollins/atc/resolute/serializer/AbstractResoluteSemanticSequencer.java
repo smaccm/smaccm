@@ -24,6 +24,7 @@ import com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
+import com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListType;
@@ -250,6 +251,9 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 			case ResolutePackage.LET_EXPR:
 				sequence_AtomicExpr(context, (LetExpr) semanticObject); 
 				return; 
+			case ResolutePackage.LIBRARY_FN_CALL_EXPR:
+				sequence_AtomicExpr(context, (LibraryFnCallExpr) semanticObject); 
+				return; 
 			case ResolutePackage.LIST_EXPR:
 				sequence_AtomicExpr(context, (ListExpr) semanticObject); 
 				return; 
@@ -325,10 +329,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns BinaryExpr
 	 *     PrefixExpr returns BinaryExpr
 	 *     AtomicExpr returns BinaryExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns BinaryExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns BinaryExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns BinaryExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns BinaryExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns BinaryExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns BinaryExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns BinaryExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns BinaryExpr
 	 *
 	 * Constraint:
 	 *     (
@@ -414,10 +418,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns BoolExpr
 	 *     PrefixExpr returns BoolExpr
 	 *     AtomicExpr returns BoolExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns BoolExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns BoolExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns BoolExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns BoolExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns BoolExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns BoolExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns BoolExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns BoolExpr
 	 *
 	 * Constraint:
 	 *     val=BooleanLiteral
@@ -455,10 +459,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns BuiltInFnCallExpr
 	 *     PrefixExpr returns BuiltInFnCallExpr
 	 *     AtomicExpr returns BuiltInFnCallExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns BuiltInFnCallExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns BuiltInFnCallExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns BuiltInFnCallExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns BuiltInFnCallExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns BuiltInFnCallExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns BuiltInFnCallExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns BuiltInFnCallExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns BuiltInFnCallExpr
 	 *
 	 * Constraint:
 	 *     (fn=BuiltInFn (args+=Expr args+=Expr*)?)
@@ -490,10 +494,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns FailExpr
 	 *     PrefixExpr returns FailExpr
 	 *     AtomicExpr returns FailExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns FailExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns FailExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns FailExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns FailExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns FailExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns FailExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns FailExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns FailExpr
 	 *
 	 * Constraint:
 	 *     (val=Expr | failmsg+=ClaimText+)
@@ -525,10 +529,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns FnCallExpr
 	 *     PrefixExpr returns FnCallExpr
 	 *     AtomicExpr returns FnCallExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns FnCallExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns FnCallExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns FnCallExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns FnCallExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns FnCallExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns FnCallExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns FnCallExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns FnCallExpr
 	 *
 	 * Constraint:
 	 *     (fn=[FunctionDefinition|ID] (args+=Expr args+=Expr*)?)
@@ -560,10 +564,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns IdExpr
 	 *     PrefixExpr returns IdExpr
 	 *     AtomicExpr returns IdExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns IdExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns IdExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns IdExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns IdExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns IdExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns IdExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns IdExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns IdExpr
 	 *
 	 * Constraint:
 	 *     id=[NamedElement|QCREF]
@@ -601,10 +605,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns IfThenElseExpr
 	 *     PrefixExpr returns IfThenElseExpr
 	 *     AtomicExpr returns IfThenElseExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns IfThenElseExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns IfThenElseExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns IfThenElseExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns IfThenElseExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns IfThenElseExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns IfThenElseExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns IfThenElseExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns IfThenElseExpr
 	 *
 	 * Constraint:
 	 *     (cond=Expr then=Expr else=Expr)
@@ -648,10 +652,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns IntExpr
 	 *     PrefixExpr returns IntExpr
 	 *     AtomicExpr returns IntExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns IntExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns IntExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns IntExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns IntExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns IntExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns IntExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns IntExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns IntExpr
 	 *
 	 * Constraint:
 	 *     val=IntegerTerm
@@ -689,10 +693,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns LetExpr
 	 *     PrefixExpr returns LetExpr
 	 *     AtomicExpr returns LetExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns LetExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns LetExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns LetExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns LetExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns LetExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns LetExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns LetExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns LetExpr
 	 *
 	 * Constraint:
 	 *     (binding=LetBinding expr=Expr)
@@ -705,9 +709,44 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ResolutePackage.Literals.LET_EXPR__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAtomicExprAccess().getBindingLetBindingParserRuleCall_15_2_0(), semanticObject.getBinding());
-		feeder.accept(grammarAccess.getAtomicExprAccess().getExprExprParserRuleCall_15_4_0(), semanticObject.getExpr());
+		feeder.accept(grammarAccess.getAtomicExprAccess().getBindingLetBindingParserRuleCall_16_2_0(), semanticObject.getBinding());
+		feeder.accept(grammarAccess.getAtomicExprAccess().getExprExprParserRuleCall_16_4_0(), semanticObject.getExpr());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Element returns LibraryFnCallExpr
+	 *     Expr returns LibraryFnCallExpr
+	 *     ImpliesExpr returns LibraryFnCallExpr
+	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns LibraryFnCallExpr
+	 *     OrExpr returns LibraryFnCallExpr
+	 *     OrExpr.BinaryExpr_1_0_0_0 returns LibraryFnCallExpr
+	 *     AndExpr returns LibraryFnCallExpr
+	 *     AndExpr.BinaryExpr_1_0_0_0 returns LibraryFnCallExpr
+	 *     InstanceOfExpr returns LibraryFnCallExpr
+	 *     InstanceOfExpr.InstanceOfExpr_1_0_0_0 returns LibraryFnCallExpr
+	 *     RelationalExpr returns LibraryFnCallExpr
+	 *     RelationalExpr.BinaryExpr_1_0_0_0 returns LibraryFnCallExpr
+	 *     PlusExpr returns LibraryFnCallExpr
+	 *     PlusExpr.BinaryExpr_1_0_0_0 returns LibraryFnCallExpr
+	 *     TimesExpr returns LibraryFnCallExpr
+	 *     TimesExpr.BinaryExpr_1_0_0_0 returns LibraryFnCallExpr
+	 *     ExpExpr returns LibraryFnCallExpr
+	 *     ExpExpr.BinaryExpr_1_0_0_0 returns LibraryFnCallExpr
+	 *     PrefixExpr returns LibraryFnCallExpr
+	 *     AtomicExpr returns LibraryFnCallExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns LibraryFnCallExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns LibraryFnCallExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns LibraryFnCallExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns LibraryFnCallExpr
+	 *
+	 * Constraint:
+	 *     (libName=ID fnName=ID (args+=Expr args+=Expr*)?)
+	 */
+	protected void sequence_AtomicExpr(ISerializationContext context, LibraryFnCallExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -733,13 +772,13 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns ListExpr
 	 *     PrefixExpr returns ListExpr
 	 *     AtomicExpr returns ListExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns ListExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns ListExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns ListExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns ListExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns ListExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns ListExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns ListExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns ListExpr
 	 *
 	 * Constraint:
-	 *     (exprs+=AtomicExpr_ListExpr_11_2_1_0 exprs+=Expr*)?
+	 *     (exprs+=AtomicExpr_ListExpr_12_2_1_0 exprs+=Expr*)?
 	 */
 	protected void sequence_AtomicExpr(ISerializationContext context, ListExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -768,13 +807,13 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns ListFilterMapExpr
 	 *     PrefixExpr returns ListFilterMapExpr
 	 *     AtomicExpr returns ListFilterMapExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns ListFilterMapExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns ListFilterMapExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns ListFilterMapExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns ListFilterMapExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns ListFilterMapExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns ListFilterMapExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns ListFilterMapExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns ListFilterMapExpr
 	 *
 	 * Constraint:
-	 *     (map=AtomicExpr_ListFilterMapExpr_11_2_0_0 args+=Arg+ filter=Expr?)
+	 *     (map=AtomicExpr_ListFilterMapExpr_12_2_0_0 args+=Arg+ filter=Expr?)
 	 */
 	protected void sequence_AtomicExpr(ISerializationContext context, ListFilterMapExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -803,10 +842,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns QuantifiedExpr
 	 *     PrefixExpr returns QuantifiedExpr
 	 *     AtomicExpr returns QuantifiedExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns QuantifiedExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns QuantifiedExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns QuantifiedExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns QuantifiedExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns QuantifiedExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns QuantifiedExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns QuantifiedExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns QuantifiedExpr
 	 *
 	 * Constraint:
 	 *     ((quant='forall' | quant='exists') args+=Arg+ expr=Expr)
@@ -838,10 +877,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns RealExpr
 	 *     PrefixExpr returns RealExpr
 	 *     AtomicExpr returns RealExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns RealExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns RealExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns RealExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns RealExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns RealExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns RealExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns RealExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns RealExpr
 	 *
 	 * Constraint:
 	 *     val=RealTerm
@@ -879,13 +918,13 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns SetExpr
 	 *     PrefixExpr returns SetExpr
 	 *     AtomicExpr returns SetExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns SetExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns SetExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns SetExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns SetExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns SetExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns SetExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns SetExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns SetExpr
 	 *
 	 * Constraint:
-	 *     (exprs+=AtomicExpr_SetExpr_12_2_1_0 exprs+=Expr*)?
+	 *     (exprs+=AtomicExpr_SetExpr_13_2_1_0 exprs+=Expr*)?
 	 */
 	protected void sequence_AtomicExpr(ISerializationContext context, SetExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -914,13 +953,13 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns SetFilterMapExpr
 	 *     PrefixExpr returns SetFilterMapExpr
 	 *     AtomicExpr returns SetFilterMapExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns SetFilterMapExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns SetFilterMapExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns SetFilterMapExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns SetFilterMapExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns SetFilterMapExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns SetFilterMapExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns SetFilterMapExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns SetFilterMapExpr
 	 *
 	 * Constraint:
-	 *     (map=AtomicExpr_SetFilterMapExpr_12_2_0_0 args+=Arg+ filter=Expr?)
+	 *     (map=AtomicExpr_SetFilterMapExpr_13_2_0_0 args+=Arg+ filter=Expr?)
 	 */
 	protected void sequence_AtomicExpr(ISerializationContext context, SetFilterMapExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -949,10 +988,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns StringExpr
 	 *     PrefixExpr returns StringExpr
 	 *     AtomicExpr returns StringExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns StringExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns StringExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns StringExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns StringExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns StringExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns StringExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns StringExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns StringExpr
 	 *
 	 * Constraint:
 	 *     val=StringTerm
@@ -990,10 +1029,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns ThisExpr
 	 *     PrefixExpr returns ThisExpr
 	 *     AtomicExpr returns ThisExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns ThisExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns ThisExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns ThisExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns ThisExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns ThisExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns ThisExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns ThisExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns ThisExpr
 	 *
 	 * Constraint:
 	 *     sub=NestedDotID?
@@ -1251,10 +1290,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns InstanceOfExpr
 	 *     PrefixExpr returns InstanceOfExpr
 	 *     AtomicExpr returns InstanceOfExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns InstanceOfExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns InstanceOfExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns InstanceOfExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns InstanceOfExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns InstanceOfExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns InstanceOfExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns InstanceOfExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns InstanceOfExpr
 	 *
 	 * Constraint:
 	 *     (expr=InstanceOfExpr_InstanceOfExpr_1_0_0_0 type=BaseType)
@@ -1347,10 +1386,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns CastExpr
 	 *     PrefixExpr returns CastExpr
 	 *     AtomicExpr returns CastExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns CastExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns CastExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns CastExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns CastExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns CastExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns CastExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns CastExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns CastExpr
 	 *
 	 * Constraint:
 	 *     (type=BaseType expr=PrefixExpr)
@@ -1391,10 +1430,10 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 *     ExpExpr.BinaryExpr_1_0_0_0 returns UnaryExpr
 	 *     PrefixExpr returns UnaryExpr
 	 *     AtomicExpr returns UnaryExpr
-	 *     AtomicExpr.ListFilterMapExpr_11_2_0_0 returns UnaryExpr
-	 *     AtomicExpr.ListExpr_11_2_1_0 returns UnaryExpr
-	 *     AtomicExpr.SetFilterMapExpr_12_2_0_0 returns UnaryExpr
-	 *     AtomicExpr.SetExpr_12_2_1_0 returns UnaryExpr
+	 *     AtomicExpr.ListFilterMapExpr_12_2_0_0 returns UnaryExpr
+	 *     AtomicExpr.ListExpr_12_2_1_0 returns UnaryExpr
+	 *     AtomicExpr.SetFilterMapExpr_13_2_0_0 returns UnaryExpr
+	 *     AtomicExpr.SetExpr_13_2_1_0 returns UnaryExpr
 	 *
 	 * Constraint:
 	 *     ((op='-' | op='not') expr=PrefixExpr)
