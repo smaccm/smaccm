@@ -303,7 +303,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		try {
 
 			// This block configure the logger with handler and formatter
-			fh = new FileHandler();
+			fh = new FileHandler("/home/thomas/zzz.log");
 			logger.addHandler(fh);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fh.setFormatter(formatter);
