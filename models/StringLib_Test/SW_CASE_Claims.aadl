@@ -35,7 +35,7 @@ public
 		
 		test_hashCode(i:int) <=
 		** "hashCode: " i **
-		i = -1823152606
+		i = -1013805980
 		
 		test_indexOf(i:int) <=
 		** "indexOf: " i **
@@ -47,7 +47,7 @@ public
 		
 		test_length(i:int) <=
 		** "length: " i **
-		i = 12
+		i = 13
 		
 		test_matches(b: bool) <=
 		** "matches: " b **
