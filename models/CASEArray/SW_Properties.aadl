@@ -1,9 +1,9 @@
 property set SW_Properties is
 	MAX_ALTITUDE : constant aadlinteger => 15000;
-	MIN_LATTITUDE : constant aadlreal => -90.0;
-	MAX_LATTITUDE : constant aadlreal => 90.0;
-	MAX_LONGITUDE : constant aadlreal => 180.0;
-	MIN_LONGITUDE : constant aadlreal => -180.00;
+	MIN_LATTITUDE : constant aadlinteger => -90;
+	MAX_LATTITUDE : constant aadlinteger => 90;
+	MAX_LONGITUDE : constant aadlinteger => 180;
+	MIN_LONGITUDE : constant aadlinteger => -180;
 	
 	Dimension : type aadlinteger;
 	MAP_DIMENSION : constant SW_Properties::Dimension => 4;

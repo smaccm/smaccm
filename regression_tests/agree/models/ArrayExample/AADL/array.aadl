@@ -4,13 +4,13 @@ public
 	with Data_Model;
 	with SW_Properties;
 	
-	data struct_with_array
-	end struct_with_array;
-	
 	data ranged_type extends Base_Types::Integer
 		properties
-			Data_Model::Integer_Range => SW_Properties::MIN_LONGITUDE .. SW_Properties::MAX_LONGITUDE;
+			Data_Model::Integer_Range => SW_Properties::LOWER .. SW_Properties::UPPER;
 	end ranged_type;
+	
+	data struct_with_array
+	end struct_with_array;
 	
 	data implementation struct_with_array.i
 		subcomponents
@@ -110,7 +110,9 @@ public
 		
 		fun tll1(x: int) : real = SW_Properties::MAX_LATTITUDE;
 			
-		fun ranged_type_test0(r : ranged_type) : bool = 
+		fun tll2(arr: simple_int_array) : bool = arr = [|5, 5, 5, 5|] ;
+		
+        fun ranged_type_test0(r : ranged_type) : bool = 
 			r != SW_Properties::MAX_ALTITUDE;
 			
 		fun ranged_type_test1(r : ranged_type) : bool =
@@ -118,11 +120,6 @@ public
 				
 		fun ranged_type_test2(r : struct_with_array.i) : bool =
 			r.ranged < 10;
-			
-		fun tll2(arr: simple_int_array) : bool = arr = [|5, 5, 5, 5|] ;
-			
-			
-						
 	**};
 
 		thread CompTest
@@ -158,5 +155,9 @@ public
 		**};
 		
 	end CompTest;
+	
+	thread implementation CompTest.i
+		
+	end CompTest.i;
 	
 end array;

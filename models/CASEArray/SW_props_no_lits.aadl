@@ -1,15 +1,15 @@
-package SW
+package SW_props_no_lits
 public
 	with Data_Model;
 	with Base_Types;
 	with SW_Properties;
 	
-	data Longitude extends Base_Types::Float_32
+	data Longitude extends Base_Types::Integer
 		properties
 			Data_Model::Real_Range => SW_Properties::MIN_LONGITUDE .. SW_Properties::MAX_LONGITUDE;
 	end Longitude;
 	
-	data Lattitude extends Base_Types::Float_32
+	data Lattitude extends Base_Types::Integer
 		properties
 			Data_Model::Real_Range => SW_Properties::MIN_LATTITUDE .. SW_Properties::MAX_LATTITUDE;
 	end Lattitude;
@@ -91,48 +91,49 @@ public
 	
 	annex agree {**
 		
-		
---				fun good_longitude(long : Base_Types::Float_32) : bool =
---				long >= 1.0;
 
-		fun good_longitude(long : SW::Longitude) : bool =
+		fun good_longitude(long : Longitude) : bool =
 				long >= SW_Properties::MIN_LONGITUDE
 			and long <= SW_Properties::MAX_LONGITUDE;
 		
---		fun good_lattitude(lat : SW::Lattitude) : bool =
---				lat >= SW_Properties::MIN_LATTITUDE
---			and lat <= SW_Properties::MAX_LATTITUDE;
---			
---		fun good_altitude(alt : SW::Altitude) : bool =
---				alt >= 0 
---			and alt <= SW_Properties::MAX_ALTITUDE;
+		fun good_lattitude(lat : Lattitude) : bool =
+				lat >= SW_Properties::MIN_LATTITUDE
+			and lat <= SW_Properties::MAX_LATTITUDE;
+		
+		const MAX_ALTITUDE : int = SW_Properties::MAX_ALTITUDE;
+			
+		fun good_altitude(alt : Altitude) : bool =
+				alt >= 0 
+			and alt <= MAX_ALTITUDE;
 			
 		-- These functions check the well-formedness of message structures
---		fun good_coordinate(coord : SW::Coordinate.Impl) : bool =	
---				good_longitude(coord.long)
---			and good_lattitude(coord.lat)
---			and	good_altitude(coord.alt);
+		fun good_coordinate(coord : Coordinate.Impl) : bool =	
+				good_longitude(coord.long)
+			and good_lattitude(coord.lat)
+			and	good_altitude(coord.alt);
 			
-																	
---		fun good_map(map : SW::Map) : bool =	
---			forall coord in Map, good_coordinate(coord);
+		fun good_map(map : Map) : bool =	
+			forall coord in map, good_coordinate(coord);
 													
-		fun good_pattern(pattern : SW::FlightPattern) : bool =	(pattern = enum(SW::FlightPattern, ZigZag)) or 
-																(pattern = enum(SW::FlightPattern, StraightLine)) or 
-																(pattern = enum(SW::FlightPattern, Perimeter));
+		fun good_pattern(pattern : FlightPattern) : bool =	
+				(pattern = enum(FlightPattern, ZigZag)) 
+			or	(pattern = enum(FlightPattern, StraightLine)) 
+			or 	(pattern = enum(FlightPattern, Perimeter));
 																
 		fun good_HMAC(hmac : bool) : bool = (hmac = True) or (hmac = False);
 		
---		fun good_gs_command(cmd : SW::Command.Impl) : bool =	good_map(cmd.Map) and 
---																good_pattern(cmd.Pattern) and 
---																good_HMAC(cmd.HMAC);
+		fun good_gs_command(cmd : Command.Impl) : bool =	
+				good_map(cmd.Map) 
+			and good_pattern(cmd.Pattern)
+			and good_HMAC(cmd.HMAC);
 																
---		fun good_mission(mission : SW::Mission) : bool =	
---			forall coord in mission, good_coordinate(coord);
+		fun good_mission(mission : Mission) : bool =	
+			forall coord in mission, good_coordinate(coord);
 																
---		fun good_mission_window(win : SW::MissionWindow.Impl) : bool =	
---				win.crc = true
---			and	forall coord in win.wps, good_coordinate(coord);																								
+		fun good_mission_window(win : MissionWindow.Impl) : bool =	
+				forall coord in win.wps, good_coordinate(coord)
+			and	win.crc = true;
+																									
 	**};
 
 	thread RadioDriver
@@ -159,7 +160,7 @@ public
 --		annex agree {**
 --
 --			guarantee "The Flight Planner shall receive an authenticated command from the Ground Station" : filtered_command.HMAC = True;
---			guarantee "The Flight Planner shall receive a well-formed command from the Ground Station" : SW.good_gs_command(filtered_command);
+--			guarantee "The Flight Planner shall receive a well-formed command from the Ground Station" : SW_props_no_lits.good_gs_command(filtered_command);
 --
 --		**};
 --
@@ -173,8 +174,8 @@ public
 --			CASE::AGREE_PROPERTIES_PASSED => ("good_gs_command");
 		annex agree {**
 			assume "The Flight Planner shall receive an authenticated command from the Ground Station" : recv_map.HMAC = True;
---			assume "The Flight Planner shall receive a well-formed command from the Ground Station" : SW.good_gs_command(recv_map);
---			guarantee "The Flight Planner shall generate a valid mission" : SW.good_mission(flight_plan);
+--			assume "The Flight Planner shall receive a well-formed command from the Ground Station" : SW_props_no_lits.good_gs_command(recv_map);
+--			guarantee "The Flight Planner shall generate a valid mission" : SW_props_no_lits.good_mission(flight_plan);
 		**};
 --		annex Resolute {**
 --			prove (well_formed(this, "good_gs_command"))
@@ -187,8 +188,8 @@ public
 			waypoint: out event data port MissionWindow.Impl;
 			position_status: in event data port Coordinate.Impl;
 		annex agree {**
---			assume "The Waypoint Manager shall receive a well-formed mission" : SW.good_mission(flight_plan);
---			guarantee "The Waypoint Manager shall output a well-formed mission window." : SW.good_mission_window(waypoint);
+--			assume "The Waypoint Manager shall receive a well-formed mission" : SW_props_no_lits.good_mission(flight_plan);
+--			guarantee "The Waypoint Manager shall output a well-formed mission window." : SW_props_no_lits.good_mission_window(waypoint);
 		**};
 	end WaypointManager;
 
@@ -199,7 +200,7 @@ public
 			position_status_out: out event data port Coordinate.Impl;
 			waypoint_in: in event data port MissionWindow.Impl;
 		annex agree {**
---			assume "Well-formed mission window" : SW.good_mission_window(waypoint_in);
+--			assume "Well-formed mission window" : SW_props_no_lits.good_mission_window(waypoint_in);
 			guarantee "A CRC shall be appended to the message to determine message correctness" : waypoint_out.crc = True;
 		**};
 	end UARTDriver;
@@ -238,4 +239,4 @@ public
 			c10: port UART.waypoint_out -> waypoint;
 			c11: port position_status -> UART.position_status_in;
 	end MC_SW.Impl;
-end SW;
+end SW_props_no_lits;
