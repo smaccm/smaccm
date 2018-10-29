@@ -3,6 +3,7 @@ instances
 *.sacm
 .svn
 .#*
+.sw?
 TAGS
 .aadlbin-gen
 *~
