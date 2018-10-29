@@ -592,49 +592,11 @@ public class AgreeTypeSystem {
 
 			}
 
+
 		}
 		return errorType;
 
 	}
-
-//	} else if (namedEl instanceof Feature) {
-//		return null;
-//
-//	} else if (namedEl instanceof Subcomponent) {
-//		return null;
-//
-//	}
-//
-//	else if (namedEl instanceof DataSubcomponent) {
-//		// this is for checking "Base_Types::Boolean" etc...
-//		ComponentClassifier compClass = ((DataSubcomponent) namedEl).getAllClassifier();
-//		if (compClass instanceof DataImplementation) {
-//			return null; // infer(compClass);
-//		}
-//		return null; // AgreeTypeSystem.infer(compClass);
-//
-
-//	} else if (namedEl instanceof EqStatement) {
-//		return null; // infer(namedEl);
-//
-
-//
-//	} else if (namedEl instanceof DataAccess) {
-//		return null; // mkClassifierType(((NamedElement) ((DataAccess) namedEl).getFeatureClassifier()));
-//
-//	} else if (namedEl instanceof DataType) {
-//		return null; // infer(namedEl);
-//
-//	} else if (namedEl instanceof DataImplementation) {
-//		return null; // infer(namedEl);
-//
-//	} else if (namedEl instanceof NamedID) {
-//		return null; // infer(namedEl);
-//
-//	} else if (namedEl instanceof ClassifierType || namedEl instanceof Subcomponent) {
-//		return null; // new Type.Name("component");
-//
-//	}
 
 	public static Type typeFromID(NamedElement ne) {
 
@@ -728,7 +690,6 @@ public class AgreeTypeSystem {
 
 			}
 
-
 		} else if (ne instanceof Feature) {
 			Classifier cl = ((Feature) ne).getClassifier();
 			List<ArrayDimension> dims = ((Feature) ne).getArrayDimensions();
@@ -741,7 +702,6 @@ public class AgreeTypeSystem {
 
 			}
 
-
 		} else if (ne instanceof AadlPackage) {
 			return mkCustomType(ne);
 
@@ -751,9 +711,6 @@ public class AgreeTypeSystem {
 
 		}
 
-//		} else if (namedEl instanceof DataAccess) {
-//		DataAccessType t = (((DataAccess) namedEl).getFeatureClassifier());
-//		return mkTypeFromAadlType(t);
 		return errorType;
 	}
 

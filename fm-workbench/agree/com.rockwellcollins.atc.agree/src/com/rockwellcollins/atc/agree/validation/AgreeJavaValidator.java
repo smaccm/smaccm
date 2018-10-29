@@ -144,45 +144,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return (eObject.eClass().getEPackage() == AgreePackage.eINSTANCE) || eObject instanceof AadlPackage;
 	}
 
-//	@Inject
-//	IResourceDescriptions resourceDescriptions;
-//
-//	@Check(CheckType.FAST)
-//	public void checkAADL2Package(AadlPackage pack){
-//		Resource resource = pack.eResource();
-//		ResourceSet resources = resource.getResourceSet();
-//		for(Resource subRes : resources.getResources()){
-//			TreeIterator<EObject> contents = subRes.getAllContents();
-//			if(contents.hasNext()){
-//				EObject obj = contents.next();
-//				if(obj instanceof AadlPackage){
-//					List<AnnexLibrary> agreeAnnex = AnnexUtil.getAllActualAnnexLibraries((AadlPackage) obj, AgreePackage.eINSTANCE.getAgreeContractLibrary());
-//				}
-//			}
-//			while(contents.hasNext()){
-//				EObject obj = contents.next();
-//			}
-//			System.out.println();
-//		}
-//
-//		String contextProject = pack.eResource().getURI().segment(1);
-//		for (IResourceDescription resourceDescription : resourceDescriptions.getAllResourceDescriptions()) {
-//			for (IEObjectDescription eobjectDescription : resourceDescription.getExportedObjectsByType(Aadl2Package.eINSTANCE.getAadlPackage())) {
-//				EObject description = eobjectDescription.getEObjectOrProxy();
-//				System.out.println();
-//			}
-//		}
-//	}
-//
-//	private Map<String, List<NamedElement>> getAllIdToElementMap(AgreeContract contract){
-//
-//		for(SpecStatement spec : contract.getSpecs()){
-//			if (spec instanceof )
-//		}
-//
-//		return null;
-//	}
-
 	@Check(CheckType.FAST)
 	public void checkEnumStatement(EnumStatement statement) {
 		String contextProject = statement.eResource().getURI().segment(1);
@@ -692,14 +653,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				error(lift, "Lift statements must apply to subcomponent implementations. '" + namedEl.getName()
 				+ "' is not a subcomponent.");
 			}
-//            } else {
-//                SubcomponentImpl subImpl = (SubcomponentImpl) namedEl;
-//                if (subImpl.getComponentImplementation() == null) {
-//                    error(lift, "Lift statements must apply to subcomponent implementations. '"
-//                            + namedEl.getName()
-//                            + "' is a subcomponent type, not a subcomponent implementation.");
-//                }
-//            }
 		}
 	}
 
@@ -1007,9 +960,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkTimeInterval(TimeInterval interval) {
 		Expr lower = interval.getLow();
 		Expr higher = interval.getHigh();
-
-//	    Type lowerType = AgreeTypeSystem.infer(lower);
-//	    Type higherType = AgreeTypeSystem.infer(higher);
 
 		if (!(lower instanceof RealLitExpr || isConst(lower))) {
 			error(lower, "Lower interval must be a real valued literal");
@@ -1411,64 +1361,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return typeMap;
 	}
 
-//	private List<Type> getArgTypes(NestedDotID recId){
-//
-//		NamedElement rec = getFinalNestId(recId);
-//		List<Type> types = new ArrayList<Type>();
-//
-//		if(rec instanceof RecordDefExpr){
-//			RecordDefExpr recDef = (RecordDefExpr)rec;
-//			for(Arg arg : recDef.getArgs()){
-//				types.add(Ooga.infer(arg.getType()));
-//			}
-//		}else if(rec instanceof FeatureGroupType){
-//			FeatureGroupType featGroup = (FeatureGroupType)rec;
-//			for(Feature feat : featGroup.getAllFeatures()){
-//				types.add(Ooga.infer(feat));
-//			}
-//		}
-//
-//		return types;
-//	}
-
-
-//	private void dataImplCycleCheck(NestedDotID dataID) {
-//		NamedElement finalId = getFinalNestId(dataID);
-//		DataImplementation dataImpl = (DataImplementation) finalId;
-//		dataImplCycleCheck(dataImpl, dataID);
-//	}
-
-	private void dataImplCycleCheck(DataImplementation dataImpl, EObject errorSource) {
-		Set<DataImplementation> dataClosure = new HashSet<>();
-		Set<DataImplementation> prevClosure = null;
-
-		for (Subcomponent sub : dataImpl.getAllSubcomponents()) {
-			ComponentImplementation subImpl = sub.getComponentImplementation();
-			if (subImpl != null) {
-				dataClosure.add((DataImplementation) subImpl);
-			}
-		}
-
-		do {
-			prevClosure = new HashSet<>(dataClosure);
-			for (DataImplementation subImpl : prevClosure) {
-				if (subImpl == dataImpl) {
-					error(errorSource, "The component implementation '" + dataImpl.getName()
-					+ "' has a cyclic definition.  This cannot be reasoned about by AGREE.");
-					break;
-				}
-				for (Subcomponent subSub : subImpl.getAllSubcomponents()) {
-					ComponentImplementation subSubImpl = subSub.getComponentImplementation();
-					if (subSubImpl != null) {
-						dataClosure.add((DataImplementation) subSubImpl);
-					}
-				}
-
-			}
-
-		} while (!prevClosure.equals(dataClosure));
-
-	}
 
 	@Check(CheckType.FAST)
 	public void checkRecordDefExpr(RecordDef recordDef) {
@@ -1481,15 +1373,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			if (type instanceof CustomType) {
 				NamedElement finalId = ((CustomType) type).getNamedElm();
 
-//				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
-//					error(type, "types must be record definition or data implementation");
-//					return;
-//				}
-
 				if (finalId instanceof RecordDef) {
 					recordClosure.add((RecordDef) finalId);
-				} else if (finalId instanceof DataImplementation) {
-					// dataImplCycleCheck(subRec);
 				}
 			}
 		}
@@ -1573,72 +1458,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 	}
-
-	private class PatternException extends RuntimeException {
-
-		/**
-		 *
-		 */
-		private static final long serialVersionUID = -8068283537085267186L;
-
-	}
-
-//	protected Type infer(Type type) {
-//		String typeName = null;
-//		if (type instanceof PrimType) {
-//			typeName = ((PrimType) type).getName();
-//			return new Type.Name(typeName);
-//		} else if (type instanceof CustomType) {
-//			return Ooga.inferFomrRecordType((CustomType) type);
-//		} else if (type instanceof ArrayType) {
-//			ArrayType arrType = (ArrayType) type;
-//			Type stem = arrType.getStem();
-//			Type stemType = Ooga.infer(stem);
-//			int size = Integer.parseInt(arrType.getSize());
-//			return new Type.Array(stemType, size);
-//		}
-//
-//		throw new PatternException();
-//	}
-
-//	private Type inferFomrRecordType(CustomType recType) {
-//		String typeName = "";
-//		NamedElement recEl = recType.getLeaf();
-//		EObject aadlPack = recEl.eContainer();
-//
-//		while (!(aadlPack instanceof AadlPackage)) {
-//			aadlPack = aadlPack.eContainer();
-//		}
-//
-//		String packName = ((AadlPackage) aadlPack).getName();
-//
-//		if (recEl instanceof RecordDef) {
-//			EObject component = recEl.eContainer();
-//			while (!(component instanceof ComponentClassifier) && !(component instanceof AadlPackage)) {
-//				component = component.eContainer();
-//			}
-//
-//			if (component == aadlPack) {
-//				typeName = recEl.getName();
-//			} else {
-//				typeName = ((ComponentClassifier) component).getName() + "." + recEl.getName();
-//			}
-//
-//		} else if (recEl instanceof DataImplementation) {
-//			Type nativeType = getNativeType((DataImplementation) recEl);
-//			if (nativeType != null) {
-//				return nativeType;
-//			}
-//			typeName = recEl.getName();
-//		} else if (recEl instanceof DataType) {
-//			return Ooga.infer((ComponentClassifier) recEl);
-//		} else if (recEl instanceof EnumStatement) {
-//			typeName = recEl.getFullName();
-//		}
-//		typeName = packName + "::" + typeName;
-//
-//		return new Type.Name(typeName);
-//	}
 
 	public boolean isPossibleConstant(Expr e) {
 		if (e instanceof PrevExpr || e instanceof PreExpr) {
@@ -1834,40 +1653,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 						+ typeToString(lhsType) + "' but must be of type '" + typeToString(rhsType) + "'");
 			}
 		}
-
-//        // check for constant cycles
-//        Set<EObject> eqClosure = new HashSet<EObject>();
-//        Set<EObject> prevClosure;
-//        eqClosure.add(src);
-//
-//        // quick and dirty cycle check
-//        do {
-//            prevClosure = new HashSet<EObject>(eqClosure);
-//            for (EObject constFrontElem : prevClosure) {
-//                List<NestedDotID> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem,
-//                        NestedDotID.class);
-//                for (NestedDotID nestId : nestIds) {
-//                    while(nestId != null){
-//                        NamedElement base = nestId.getBase();
-//                        if (base instanceof Arg) {
-//                            EObject container = base;
-//                            while(!(container instanceof EqStatement) &&
-//                                  !(container instanceof NodeEq)){
-//                                container = container.eContainer();
-//                            }
-//                            if (lhsArgs.contains(base)) {
-//                                warning(src,
-//                                        "The expression for eq statment '" + base.getName()
-//                                        + "' may be part of a cyclic definition");
-//                                break;
-//                            }
-//                            eqClosure.add(container);
-//                        }
-//                        nestId = nestId.getSub();
-//                    }
-//                }
-//            }
-//        } while (!prevClosure.equals(eqClosure));
 
 	}
 
@@ -2146,36 +1931,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private static NamedElement namedElementFromIdExpr(ComponentRef componentRef) {
+	private static NamedElement namedElementFromComponentRef(ComponentRef componentRef) {
 		if (componentRef instanceof SubcomponentRef) {
 			return ((SubcomponentRef) componentRef).getNamedElm();
 		} else if (componentRef instanceof ThisRef) {
 			NamedElement component = EcoreUtil2.getContainerOfType(componentRef, ComponentClassifier.class);
 			return component;
-//---OLD CODE HERE FOR REFERENCE---
-//			NestedDotID nestId = ((ThisExpr) component).getSubThis();
-//			while (nestId != null) {
-//				NamedElement base = nestId.getBase();
-//
-//				if (base instanceof Subcomponent) {
-//					component = ((Subcomponent) base).getSubcomponentType();
-//					nestId = nestId.getSub();
-//				} else if (base instanceof FeatureGroup) {
-//					while (nestId.getSub() != null) {
-//						nestId = nestId.getSub();
-//						assert (nestId.getBase() instanceof Feature);
-//						Feature subFeat = (Feature) nestId.getBase();
-//						component = subFeat;
-//					}
-//					return component;
-//				} else {
-//					assert (base instanceof DataPort);
-//					component = base;
-//					return component;
-//				}
-//
-//			}
-//			return component
 		}
 
 		return null;
@@ -2192,7 +1953,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 
 		if (prop instanceof Property) {
-			NamedElement element = namedElementFromIdExpr(componentRef);
+			NamedElement element = namedElementFromComponentRef(componentRef);
 			final boolean applies = element.acceptsProperty((Property) prop);
 			if (!applies) {
 				error("Property " + ((Property) prop).getQualifiedName() + " does not apply to "
@@ -2319,8 +2080,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		Type exprType = AgreeTypeSystem.infer(fnDef.getExpr());
 		if (!AgreeTypeSystem.typesEqual(exprType, fnType)) {
-			System.out.println("fnType: " + fnType);
-			System.out.println("exprType: " + exprType);
 			error(fnDef, "Function '" + fnDef.getName() + "' is of type '" + typeToString(fnType)
 			+ "' but its expression is of type '" + typeToString(exprType) + "'");
 		}
@@ -2389,42 +2148,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-//	private infer(IfThenElseExpr expr) {
-//		return AgreeTypeSystem.infer(expr.getB());
-//	}
 
-	/*
-	 * @Check(CheckType.FAST)
-	 * public void checkUnaryNonLinearExpr(UnaryNonLinearExpr expr) {
-	 * Type typeSub = Ooga.infer(expr.getExpr());
-	 * String op = expr.getOp();
-	 * warning(expr, "Use of trigonometric function: '" + op
-	 * + "'.  Trigonometric expressions are allowed only with dReal."
-	 * + " Scalability is as yet unknown.");
-	 * if (!matches(REAL, typeSub)) {
-	 * error(expr, "argument to trigonometric function '" + op + "' is of type '" + typeSub.toString()
-	 * + "' but must be of " + "type 'real'");
-	 * }
-	 * }
-	 *
-	 * @Check(CheckType.FAST)
-	 * public void checkBinaryNonLinearExpr(BinaryNonLinearExpr expr) {
-	 * Type typeLeft = Ooga.infer(expr.getLeft());
-	 * Type typeRight = Ooga.infer(expr.getRight());
-	 * String op = expr.getOp();
-	 * warning(expr, "Use of trigonometric function: '" + op
-	 * + "'.  Trigonometric expressions are allowed only with dReal."
-	 * + " Scalability is as yet unknown.");
-	 * if (!matches(REAL, typeLeft)) {
-	 * error(expr, "argument to trigonometric function '" + op + "' is of type '" + typeLeft.toString()
-	 * + "' but must be of " + "type 'real'");
-	 * }
-	 * if (!matches(REAL, typeRight)) {
-	 * error(expr, "argument to trigonometric function '" + op + "' is of type '" + typeRight.toString()
-	 * + "' but must be of " + "type 'real'");
-	 * }
-	 * }
-	 */
 	@Check(CheckType.FAST)
 	public void checkBinaryExpr(BinaryExpr binExpr) {
 
@@ -2612,28 +2336,5 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 		return false;
 	}
-
-//	// TODO: Don't we need more validation here? What if the Id of the IdExpr
-//	private Boolean hasAbstractionParent(Element e) {
-//		while (e != null) {
-//			if (e instanceof Abstraction) {
-//				return true;
-//			}
-//			e = e.getOwner();
-//		}
-//		return false;
-//	}
-//
-//	private void checkScope(Expr expr, NamedElement id) {
-//		if (hasAbstractionParent(expr)) {
-//			if (!hasAbstractionParent(id) && !(id instanceof ConstStatement)) {
-//				error("Unknown identifier Id: '" + id
-//						+ "' (Note that nodes can refer only to inputs, outputs, and local variables and global constants).");
-//			}
-//		}
-//	}
-
-
-
 
 }
