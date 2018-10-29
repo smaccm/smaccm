@@ -270,6 +270,97 @@ public interface AgreePackage extends EPackage
   int SPEC_STATEMENT_FEATURE_COUNT = Aadl2Package.ELEMENT_FEATURE_COUNT + 0;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NamedSpecStatementImpl <em>Named Spec Statement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.NamedSpecStatementImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNamedSpecStatement()
+   * @generated
+   */
+  int NAMED_SPEC_STATEMENT = 4;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT__OWNED_ELEMENT = Aadl2Package.NAMED_ELEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT__OWNED_COMMENT = Aadl2Package.NAMED_ELEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT__NAME = Aadl2Package.NAMED_ELEMENT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT__QUALIFIED_NAME = Aadl2Package.NAMED_ELEMENT__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT__OWNED_PROPERTY_ASSOCIATION = Aadl2Package.NAMED_ELEMENT__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Str</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT__STR = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT__EXPR = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT__PATTERN = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 2;
+
+  /**
+   * The number of structural features of the '<em>Named Spec Statement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NAMED_SPEC_STATEMENT_FEATURE_COUNT = Aadl2Package.NAMED_ELEMENT_FEATURE_COUNT + 3;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.PatternStatementImpl <em>Pattern Statement</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -277,7 +368,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPatternStatement()
    * @generated
    */
-  int PATTERN_STATEMENT = 4;
+  int PATTERN_STATEMENT = 5;
 
   /**
    * The number of structural features of the '<em>Pattern Statement</em>' class.
@@ -296,7 +387,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getWhenStatement()
    * @generated
    */
-  int WHEN_STATEMENT = 5;
+  int WHEN_STATEMENT = 6;
 
   /**
    * The feature id for the '<em><b>Condition</b></em>' containment reference.
@@ -342,7 +433,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getWheneverStatement()
    * @generated
    */
-  int WHENEVER_STATEMENT = 6;
+  int WHENEVER_STATEMENT = 7;
 
   /**
    * The feature id for the '<em><b>Cause</b></em>' containment reference.
@@ -388,7 +479,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealTimeStatement()
    * @generated
    */
-  int REAL_TIME_STATEMENT = 7;
+  int REAL_TIME_STATEMENT = 8;
 
   /**
    * The feature id for the '<em><b>Event</b></em>' containment reference.
@@ -425,7 +516,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeInterval()
    * @generated
    */
-  int TIME_INTERVAL = 8;
+  int TIME_INTERVAL = 9;
 
   /**
    * The feature id for the '<em><b>Low</b></em>' containment reference.
@@ -462,7 +553,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getSynchStatement()
    * @generated
    */
-  int SYNCH_STATEMENT = 9;
+  int SYNCH_STATEMENT = 10;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -526,7 +617,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOrderStatement()
    * @generated
    */
-  int ORDER_STATEMENT = 10;
+  int ORDER_STATEMENT = 11;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -572,7 +663,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getCallDef()
    * @generated
    */
-  int CALL_DEF = 11;
+  int CALL_DEF = 12;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -636,7 +727,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPropertyStatement()
    * @generated
    */
-  int PROPERTY_STATEMENT = 12;
+  int PROPERTY_STATEMENT = 13;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -709,7 +800,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getConstStatement()
    * @generated
    */
-  int CONST_STATEMENT = 13;
+  int CONST_STATEMENT = 14;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -791,7 +882,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getEnumStatement()
    * @generated
    */
-  int ENUM_STATEMENT = 14;
+  int ENUM_STATEMENT = 15;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -864,7 +955,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getEqStatement()
    * @generated
    */
-  int EQ_STATEMENT = 15;
+  int EQ_STATEMENT = 16;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -919,7 +1010,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getInputStatement()
    * @generated
    */
-  int INPUT_STATEMENT = 16;
+  int INPUT_STATEMENT = 17;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -965,7 +1056,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssignStatement()
    * @generated
    */
-  int ASSIGN_STATEMENT = 17;
+  int ASSIGN_STATEMENT = 18;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1020,7 +1111,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnDefExpr()
    * @generated
    */
-  int FN_DEF_EXPR = 18;
+  int FN_DEF_EXPR = 19;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1111,7 +1202,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLibraryFnDefExpr()
    * @generated
    */
-  int LIBRARY_FN_DEF_EXPR = 19;
+  int LIBRARY_FN_DEF_EXPR = 20;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1193,7 +1284,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLinearizationDefExpr()
    * @generated
    */
-  int LINEARIZATION_DEF_EXPR = 20;
+  int LINEARIZATION_DEF_EXPR = 21;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1293,7 +1384,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLinearizationInterval()
    * @generated
    */
-  int LINEARIZATION_INTERVAL = 21;
+  int LINEARIZATION_INTERVAL = 22;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1348,7 +1439,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeDefExpr()
    * @generated
    */
-  int NODE_DEF_EXPR = 22;
+  int NODE_DEF_EXPR = 23;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1439,7 +1530,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeBodyExpr()
    * @generated
    */
-  int NODE_BODY_EXPR = 23;
+  int NODE_BODY_EXPR = 24;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1494,7 +1585,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeStmt()
    * @generated
    */
-  int NODE_STMT = 24;
+  int NODE_STMT = 25;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1540,7 +1631,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getArg()
    * @generated
    */
-  int ARG = 25;
+  int ARG = 26;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1613,7 +1704,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getType()
    * @generated
    */
-  int TYPE = 26;
+  int TYPE = 27;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1650,7 +1741,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordDefExpr()
    * @generated
    */
-  int RECORD_DEF_EXPR = 27;
+  int RECORD_DEF_EXPR = 28;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1723,7 +1814,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getExpr()
    * @generated
    */
-  int EXPR = 28;
+  int EXPR = 29;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1760,7 +1851,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getComplexExpr()
    * @generated
    */
-  int COMPLEX_EXPR = 29;
+  int COMPLEX_EXPR = 30;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1797,7 +1888,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNestedDotID()
    * @generated
    */
-  int NESTED_DOT_ID = 30;
+  int NESTED_DOT_ID = 31;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1861,7 +1952,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTypeID()
    * @generated
    */
-  int TYPE_ID = 31;
+  int TYPE_ID = 32;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1907,7 +1998,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNamedID()
    * @generated
    */
-  int NAMED_ID = 32;
+  int NAMED_ID = 33;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -1971,7 +2062,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractLibrary()
    * @generated
    */
-  int AGREE_CONTRACT_LIBRARY = 33;
+  int AGREE_CONTRACT_LIBRARY = 34;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2044,7 +2135,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContractSubclause()
    * @generated
    */
-  int AGREE_CONTRACT_SUBCLAUSE = 34;
+  int AGREE_CONTRACT_SUBCLAUSE = 35;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2126,7 +2217,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAgreeContract()
    * @generated
    */
-  int AGREE_CONTRACT = 35;
+  int AGREE_CONTRACT = 36;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2165,198 +2256,6 @@ public interface AgreePackage extends EPackage
   int AGREE_CONTRACT_FEATURE_COUNT = CONTRACT_FEATURE_COUNT + 1;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl <em>Assume Statement</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssumeStatement()
-   * @generated
-   */
-  int ASSUME_STATEMENT = 36;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSUME_STATEMENT__OWNED_ELEMENT = SPEC_STATEMENT__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSUME_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Str</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSUME_STATEMENT__STR = SPEC_STATEMENT_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Expr</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSUME_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSUME_STATEMENT__PATTERN = SPEC_STATEMENT_FEATURE_COUNT + 2;
-
-  /**
-   * The number of structural features of the '<em>Assume Statement</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSUME_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 3;
-
-  /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl <em>Guarantee Statement</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGuaranteeStatement()
-   * @generated
-   */
-  int GUARANTEE_STATEMENT = 37;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GUARANTEE_STATEMENT__OWNED_ELEMENT = SPEC_STATEMENT__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GUARANTEE_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Str</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GUARANTEE_STATEMENT__STR = SPEC_STATEMENT_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Expr</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GUARANTEE_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GUARANTEE_STATEMENT__PATTERN = SPEC_STATEMENT_FEATURE_COUNT + 2;
-
-  /**
-   * The number of structural features of the '<em>Guarantee Statement</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GUARANTEE_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 3;
-
-  /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl <em>Assert Statement</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssertStatement()
-   * @generated
-   */
-  int ASSERT_STATEMENT = 38;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSERT_STATEMENT__OWNED_ELEMENT = SPEC_STATEMENT__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSERT_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Str</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSERT_STATEMENT__STR = SPEC_STATEMENT_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Expr</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSERT_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSERT_STATEMENT__PATTERN = SPEC_STATEMENT_FEATURE_COUNT + 2;
-
-  /**
-   * The number of structural features of the '<em>Assert Statement</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ASSERT_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 3;
-
-  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.InitialStatementImpl <em>Initial Statement</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2364,7 +2263,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getInitialStatement()
    * @generated
    */
-  int INITIAL_STATEMENT = 39;
+  int INITIAL_STATEMENT = 37;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2410,7 +2309,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getParamStatement()
    * @generated
    */
-  int PARAM_STATEMENT = 40;
+  int PARAM_STATEMENT = 38;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2458,70 +2357,6 @@ public interface AgreePackage extends EPackage
   int PARAM_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl <em>Lemma Statement</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLemmaStatement()
-   * @generated
-   */
-  int LEMMA_STATEMENT = 41;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LEMMA_STATEMENT__OWNED_ELEMENT = SPEC_STATEMENT__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LEMMA_STATEMENT__OWNED_COMMENT = SPEC_STATEMENT__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Str</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LEMMA_STATEMENT__STR = SPEC_STATEMENT_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Expr</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LEMMA_STATEMENT__EXPR = SPEC_STATEMENT_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LEMMA_STATEMENT__PATTERN = SPEC_STATEMENT_FEATURE_COUNT + 2;
-
-  /**
-   * The number of structural features of the '<em>Lemma Statement</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int LEMMA_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 3;
-
-  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LiftStatementImpl <em>Lift Statement</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2529,7 +2364,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLiftStatement()
    * @generated
    */
-  int LIFT_STATEMENT = 42;
+  int LIFT_STATEMENT = 39;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2575,7 +2410,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getConnectionStatement()
    * @generated
    */
-  int CONNECTION_STATEMENT = 43;
+  int CONNECTION_STATEMENT = 40;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -2623,6 +2458,370 @@ public interface AgreePackage extends EPackage
   int CONNECTION_STATEMENT_FEATURE_COUNT = SPEC_STATEMENT_FEATURE_COUNT + 2;
 
   /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl <em>Assume Statement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssumeStatement()
+   * @generated
+   */
+  int ASSUME_STATEMENT = 41;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT__OWNED_ELEMENT = NAMED_SPEC_STATEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT__OWNED_COMMENT = NAMED_SPEC_STATEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT__NAME = NAMED_SPEC_STATEMENT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT__QUALIFIED_NAME = NAMED_SPEC_STATEMENT__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT__OWNED_PROPERTY_ASSOCIATION = NAMED_SPEC_STATEMENT__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Str</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT__STR = NAMED_SPEC_STATEMENT__STR;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT__EXPR = NAMED_SPEC_STATEMENT__EXPR;
+
+  /**
+   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT__PATTERN = NAMED_SPEC_STATEMENT__PATTERN;
+
+  /**
+   * The number of structural features of the '<em>Assume Statement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSUME_STATEMENT_FEATURE_COUNT = NAMED_SPEC_STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl <em>Guarantee Statement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGuaranteeStatement()
+   * @generated
+   */
+  int GUARANTEE_STATEMENT = 42;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT__OWNED_ELEMENT = NAMED_SPEC_STATEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT__OWNED_COMMENT = NAMED_SPEC_STATEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT__NAME = NAMED_SPEC_STATEMENT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT__QUALIFIED_NAME = NAMED_SPEC_STATEMENT__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT__OWNED_PROPERTY_ASSOCIATION = NAMED_SPEC_STATEMENT__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Str</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT__STR = NAMED_SPEC_STATEMENT__STR;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT__EXPR = NAMED_SPEC_STATEMENT__EXPR;
+
+  /**
+   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT__PATTERN = NAMED_SPEC_STATEMENT__PATTERN;
+
+  /**
+   * The number of structural features of the '<em>Guarantee Statement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GUARANTEE_STATEMENT_FEATURE_COUNT = NAMED_SPEC_STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl <em>Assert Statement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssertStatement()
+   * @generated
+   */
+  int ASSERT_STATEMENT = 43;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__OWNED_ELEMENT = NAMED_SPEC_STATEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__OWNED_COMMENT = NAMED_SPEC_STATEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__NAME = NAMED_SPEC_STATEMENT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__QUALIFIED_NAME = NAMED_SPEC_STATEMENT__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__OWNED_PROPERTY_ASSOCIATION = NAMED_SPEC_STATEMENT__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Str</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__STR = NAMED_SPEC_STATEMENT__STR;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__EXPR = NAMED_SPEC_STATEMENT__EXPR;
+
+  /**
+   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT__PATTERN = NAMED_SPEC_STATEMENT__PATTERN;
+
+  /**
+   * The number of structural features of the '<em>Assert Statement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ASSERT_STATEMENT_FEATURE_COUNT = NAMED_SPEC_STATEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl <em>Lemma Statement</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLemmaStatement()
+   * @generated
+   */
+  int LEMMA_STATEMENT = 44;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__OWNED_ELEMENT = NAMED_SPEC_STATEMENT__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__OWNED_COMMENT = NAMED_SPEC_STATEMENT__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__NAME = NAMED_SPEC_STATEMENT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__QUALIFIED_NAME = NAMED_SPEC_STATEMENT__QUALIFIED_NAME;
+
+  /**
+   * The feature id for the '<em><b>Owned Property Association</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__OWNED_PROPERTY_ASSOCIATION = NAMED_SPEC_STATEMENT__OWNED_PROPERTY_ASSOCIATION;
+
+  /**
+   * The feature id for the '<em><b>Str</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__STR = NAMED_SPEC_STATEMENT__STR;
+
+  /**
+   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__EXPR = NAMED_SPEC_STATEMENT__EXPR;
+
+  /**
+   * The feature id for the '<em><b>Pattern</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT__PATTERN = NAMED_SPEC_STATEMENT__PATTERN;
+
+  /**
+   * The number of structural features of the '<em>Lemma Statement</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LEMMA_STATEMENT_FEATURE_COUNT = NAMED_SPEC_STATEMENT_FEATURE_COUNT + 0;
+
+  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.AlwaysStatementImpl <em>Always Statement</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2630,7 +2829,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAlwaysStatement()
    * @generated
    */
-  int ALWAYS_STATEMENT = 44;
+  int ALWAYS_STATEMENT = 45;
 
   /**
    * The feature id for the '<em><b>Expr</b></em>' containment reference.
@@ -2658,7 +2857,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getWhenHoldsStatement()
    * @generated
    */
-  int WHEN_HOLDS_STATEMENT = 45;
+  int WHEN_HOLDS_STATEMENT = 46;
 
   /**
    * The feature id for the '<em><b>Condition</b></em>' containment reference.
@@ -2722,7 +2921,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getWhenOccursStatment()
    * @generated
    */
-  int WHEN_OCCURS_STATMENT = 46;
+  int WHEN_OCCURS_STATMENT = 47;
 
   /**
    * The feature id for the '<em><b>Condition</b></em>' containment reference.
@@ -2786,7 +2985,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getWheneverOccursStatement()
    * @generated
    */
-  int WHENEVER_OCCURS_STATEMENT = 47;
+  int WHENEVER_OCCURS_STATEMENT = 48;
 
   /**
    * The feature id for the '<em><b>Cause</b></em>' containment reference.
@@ -2841,7 +3040,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getWheneverBecomesTrueStatement()
    * @generated
    */
-  int WHENEVER_BECOMES_TRUE_STATEMENT = 48;
+  int WHENEVER_BECOMES_TRUE_STATEMENT = 49;
 
   /**
    * The feature id for the '<em><b>Cause</b></em>' containment reference.
@@ -2896,7 +3095,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getWheneverHoldsStatement()
    * @generated
    */
-  int WHENEVER_HOLDS_STATEMENT = 49;
+  int WHENEVER_HOLDS_STATEMENT = 50;
 
   /**
    * The feature id for the '<em><b>Cause</b></em>' containment reference.
@@ -2951,7 +3150,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getWheneverImpliesStatement()
    * @generated
    */
-  int WHENEVER_IMPLIES_STATEMENT = 50;
+  int WHENEVER_IMPLIES_STATEMENT = 51;
 
   /**
    * The feature id for the '<em><b>Cause</b></em>' containment reference.
@@ -3015,7 +3214,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPeriodicStatement()
    * @generated
    */
-  int PERIODIC_STATEMENT = 51;
+  int PERIODIC_STATEMENT = 52;
 
   /**
    * The feature id for the '<em><b>Event</b></em>' containment reference.
@@ -3061,7 +3260,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getSporadicStatement()
    * @generated
    */
-  int SPORADIC_STATEMENT = 52;
+  int SPORADIC_STATEMENT = 53;
 
   /**
    * The feature id for the '<em><b>Event</b></em>' containment reference.
@@ -3107,7 +3306,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getClosedTimeInterval()
    * @generated
    */
-  int CLOSED_TIME_INTERVAL = 53;
+  int CLOSED_TIME_INTERVAL = 54;
 
   /**
    * The feature id for the '<em><b>Low</b></em>' containment reference.
@@ -3144,7 +3343,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenLeftTimeInterval()
    * @generated
    */
-  int OPEN_LEFT_TIME_INTERVAL = 54;
+  int OPEN_LEFT_TIME_INTERVAL = 55;
 
   /**
    * The feature id for the '<em><b>Low</b></em>' containment reference.
@@ -3181,7 +3380,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenRightTimeInterval()
    * @generated
    */
-  int OPEN_RIGHT_TIME_INTERVAL = 55;
+  int OPEN_RIGHT_TIME_INTERVAL = 56;
 
   /**
    * The feature id for the '<em><b>Low</b></em>' containment reference.
@@ -3218,7 +3417,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getOpenTimeInterval()
    * @generated
    */
-  int OPEN_TIME_INTERVAL = 56;
+  int OPEN_TIME_INTERVAL = 57;
 
   /**
    * The feature id for the '<em><b>Low</b></em>' containment reference.
@@ -3255,7 +3454,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getMNSynchStatement()
    * @generated
    */
-  int MN_SYNCH_STATEMENT = 57;
+  int MN_SYNCH_STATEMENT = 58;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3355,7 +3554,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getCalenStatement()
    * @generated
    */
-  int CALEN_STATEMENT = 58;
+  int CALEN_STATEMENT = 59;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3428,7 +3627,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAsynchStatement()
    * @generated
    */
-  int ASYNCH_STATEMENT = 59;
+  int ASYNCH_STATEMENT = 60;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3492,7 +3691,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLatchedStatement()
    * @generated
    */
-  int LATCHED_STATEMENT = 60;
+  int LATCHED_STATEMENT = 61;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3556,7 +3755,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeEq()
    * @generated
    */
-  int NODE_EQ = 61;
+  int NODE_EQ = 62;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3611,7 +3810,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNodeLemma()
    * @generated
    */
-  int NODE_LEMMA = 62;
+  int NODE_LEMMA = 63;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3666,7 +3865,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrimType()
    * @generated
    */
-  int PRIM_TYPE = 63;
+  int PRIM_TYPE = 64;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3748,7 +3947,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordType()
    * @generated
    */
-  int RECORD_TYPE = 64;
+  int RECORD_TYPE = 65;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3794,7 +3993,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBinaryExpr()
    * @generated
    */
-  int BINARY_EXPR = 65;
+  int BINARY_EXPR = 66;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3858,7 +4057,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getUnaryExpr()
    * @generated
    */
-  int UNARY_EXPR = 66;
+  int UNARY_EXPR = 67;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3913,7 +4112,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIfThenElseExpr()
    * @generated
    */
-  int IF_THEN_ELSE_EXPR = 67;
+  int IF_THEN_ELSE_EXPR = 68;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -3977,7 +4176,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPrevExpr()
    * @generated
    */
-  int PREV_EXPR = 68;
+  int PREV_EXPR = 69;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4032,7 +4231,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGetPropertyExpr()
    * @generated
    */
-  int GET_PROPERTY_EXPR = 69;
+  int GET_PROPERTY_EXPR = 70;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4087,7 +4286,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordUpdateExpr()
    * @generated
    */
-  int RECORD_UPDATE_EXPR = 70;
+  int RECORD_UPDATE_EXPR = 71;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4151,7 +4350,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeExpr()
    * @generated
    */
-  int TIME_EXPR = 71;
+  int TIME_EXPR = 72;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4188,7 +4387,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getIntLitExpr()
    * @generated
    */
-  int INT_LIT_EXPR = 72;
+  int INT_LIT_EXPR = 73;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4234,7 +4433,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getPreExpr()
    * @generated
    */
-  int PRE_EXPR = 73;
+  int PRE_EXPR = 74;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4280,7 +4479,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getEventExpr()
    * @generated
    */
-  int EVENT_EXPR = 74;
+  int EVENT_EXPR = 75;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4326,7 +4525,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLatchedExpr()
    * @generated
    */
-  int LATCHED_EXPR = 75;
+  int LATCHED_EXPR = 76;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4372,7 +4571,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeOfExpr()
    * @generated
    */
-  int TIME_OF_EXPR = 76;
+  int TIME_OF_EXPR = 77;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4418,7 +4617,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeRiseExpr()
    * @generated
    */
-  int TIME_RISE_EXPR = 77;
+  int TIME_RISE_EXPR = 78;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4464,7 +4663,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getTimeFallExpr()
    * @generated
    */
-  int TIME_FALL_EXPR = 78;
+  int TIME_FALL_EXPR = 79;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4510,7 +4709,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealLitExpr()
    * @generated
    */
-  int REAL_LIT_EXPR = 79;
+  int REAL_LIT_EXPR = 80;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4556,7 +4755,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getBoolLitExpr()
    * @generated
    */
-  int BOOL_LIT_EXPR = 80;
+  int BOOL_LIT_EXPR = 81;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4602,7 +4801,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getThisExpr()
    * @generated
    */
-  int THIS_EXPR = 81;
+  int THIS_EXPR = 82;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4648,7 +4847,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFloorCast()
    * @generated
    */
-  int FLOOR_CAST = 82;
+  int FLOOR_CAST = 83;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4694,7 +4893,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRealCast()
    * @generated
    */
-  int REAL_CAST = 83;
+  int REAL_CAST = 84;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4740,7 +4939,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAADLEnumerator()
    * @generated
    */
-  int AADL_ENUMERATOR = 84;
+  int AADL_ENUMERATOR = 85;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4795,7 +4994,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordExpr()
    * @generated
    */
-  int RECORD_EXPR = 85;
+  int RECORD_EXPR = 86;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4859,7 +5058,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
    * @generated
    */
-  int FN_CALL_EXPR = 86;
+  int FN_CALL_EXPR = 87;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4946,6 +5145,49 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EClass getSpecStatement();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NamedSpecStatement <em>Named Spec Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Named Spec Statement</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NamedSpecStatement
+   * @generated
+   */
+  EClass getNamedSpecStatement();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.NamedSpecStatement#getStr <em>Str</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Str</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NamedSpecStatement#getStr()
+   * @see #getNamedSpecStatement()
+   * @generated
+   */
+  EAttribute getNamedSpecStatement_Str();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NamedSpecStatement#getExpr <em>Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NamedSpecStatement#getExpr()
+   * @see #getNamedSpecStatement()
+   * @generated
+   */
+  EReference getNamedSpecStatement_Expr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.NamedSpecStatement#getPattern <em>Pattern</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Pattern</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.NamedSpecStatement#getPattern()
+   * @see #getNamedSpecStatement()
+   * @generated
+   */
+  EReference getNamedSpecStatement_Pattern();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.PatternStatement <em>Pattern Statement</em>}'.
@@ -5807,135 +6049,6 @@ public interface AgreePackage extends EPackage
   EReference getAgreeContract_Specs();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement <em>Assume Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Assume Statement</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement
-   * @generated
-   */
-  EClass getAssumeStatement();
-
-  /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement#getStr <em>Str</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Str</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement#getStr()
-   * @see #getAssumeStatement()
-   * @generated
-   */
-  EAttribute getAssumeStatement_Str();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement#getExpr <em>Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement#getExpr()
-   * @see #getAssumeStatement()
-   * @generated
-   */
-  EReference getAssumeStatement_Expr();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement#getPattern <em>Pattern</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Pattern</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement#getPattern()
-   * @see #getAssumeStatement()
-   * @generated
-   */
-  EReference getAssumeStatement_Pattern();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement <em>Guarantee Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Guarantee Statement</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement
-   * @generated
-   */
-  EClass getGuaranteeStatement();
-
-  /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getStr <em>Str</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Str</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getStr()
-   * @see #getGuaranteeStatement()
-   * @generated
-   */
-  EAttribute getGuaranteeStatement_Str();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getExpr <em>Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getExpr()
-   * @see #getGuaranteeStatement()
-   * @generated
-   */
-  EReference getGuaranteeStatement_Expr();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getPattern <em>Pattern</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Pattern</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement#getPattern()
-   * @see #getGuaranteeStatement()
-   * @generated
-   */
-  EReference getGuaranteeStatement_Pattern();
-
-  /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AssertStatement <em>Assert Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Assert Statement</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssertStatement
-   * @generated
-   */
-  EClass getAssertStatement();
-
-  /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getStr <em>Str</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Str</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssertStatement#getStr()
-   * @see #getAssertStatement()
-   * @generated
-   */
-  EAttribute getAssertStatement_Str();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getExpr <em>Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssertStatement#getExpr()
-   * @see #getAssertStatement()
-   * @generated
-   */
-  EReference getAssertStatement_Expr();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.AssertStatement#getPattern <em>Pattern</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Pattern</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.AssertStatement#getPattern()
-   * @see #getAssertStatement()
-   * @generated
-   */
-  EReference getAssertStatement_Pattern();
-
-  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.InitialStatement <em>Initial Statement</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -5989,49 +6102,6 @@ public interface AgreePackage extends EPackage
   EReference getParamStatement_Type();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement <em>Lemma Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Lemma Statement</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement
-   * @generated
-   */
-  EClass getLemmaStatement();
-
-  /**
-   * Returns the meta object for the attribute '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement#getStr <em>Str</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Str</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement#getStr()
-   * @see #getLemmaStatement()
-   * @generated
-   */
-  EAttribute getLemmaStatement_Str();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement#getExpr <em>Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement#getExpr()
-   * @see #getLemmaStatement()
-   * @generated
-   */
-  EReference getLemmaStatement_Expr();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement#getPattern <em>Pattern</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Pattern</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement#getPattern()
-   * @see #getLemmaStatement()
-   * @generated
-   */
-  EReference getLemmaStatement_Pattern();
-
-  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.LiftStatement <em>Lift Statement</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -6083,6 +6153,46 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getConnectionStatement_Expr();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement <em>Assume Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Assume Statement</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AssumeStatement
+   * @generated
+   */
+  EClass getAssumeStatement();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.GuaranteeStatement <em>Guarantee Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Guarantee Statement</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.GuaranteeStatement
+   * @generated
+   */
+  EClass getGuaranteeStatement();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AssertStatement <em>Assert Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Assert Statement</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.AssertStatement
+   * @generated
+   */
+  EClass getAssertStatement();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement <em>Lemma Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Lemma Statement</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.LemmaStatement
+   * @generated
+   */
+  EClass getLemmaStatement();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.AlwaysStatement <em>Always Statement</em>}'.
@@ -7227,6 +7337,40 @@ public interface AgreePackage extends EPackage
     EClass SPEC_STATEMENT = eINSTANCE.getSpecStatement();
 
     /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NamedSpecStatementImpl <em>Named Spec Statement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.NamedSpecStatementImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getNamedSpecStatement()
+     * @generated
+     */
+    EClass NAMED_SPEC_STATEMENT = eINSTANCE.getNamedSpecStatement();
+
+    /**
+     * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute NAMED_SPEC_STATEMENT__STR = eINSTANCE.getNamedSpecStatement_Str();
+
+    /**
+     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NAMED_SPEC_STATEMENT__EXPR = eINSTANCE.getNamedSpecStatement_Expr();
+
+    /**
+     * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NAMED_SPEC_STATEMENT__PATTERN = eINSTANCE.getNamedSpecStatement_Pattern();
+
+    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.PatternStatementImpl <em>Pattern Statement</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7939,108 +8083,6 @@ public interface AgreePackage extends EPackage
     EReference AGREE_CONTRACT__SPECS = eINSTANCE.getAgreeContract_Specs();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl <em>Assume Statement</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssumeStatement()
-     * @generated
-     */
-    EClass ASSUME_STATEMENT = eINSTANCE.getAssumeStatement();
-
-    /**
-     * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute ASSUME_STATEMENT__STR = eINSTANCE.getAssumeStatement_Str();
-
-    /**
-     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference ASSUME_STATEMENT__EXPR = eINSTANCE.getAssumeStatement_Expr();
-
-    /**
-     * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference ASSUME_STATEMENT__PATTERN = eINSTANCE.getAssumeStatement_Pattern();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl <em>Guarantee Statement</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGuaranteeStatement()
-     * @generated
-     */
-    EClass GUARANTEE_STATEMENT = eINSTANCE.getGuaranteeStatement();
-
-    /**
-     * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute GUARANTEE_STATEMENT__STR = eINSTANCE.getGuaranteeStatement_Str();
-
-    /**
-     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference GUARANTEE_STATEMENT__EXPR = eINSTANCE.getGuaranteeStatement_Expr();
-
-    /**
-     * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference GUARANTEE_STATEMENT__PATTERN = eINSTANCE.getGuaranteeStatement_Pattern();
-
-    /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl <em>Assert Statement</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssertStatement()
-     * @generated
-     */
-    EClass ASSERT_STATEMENT = eINSTANCE.getAssertStatement();
-
-    /**
-     * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute ASSERT_STATEMENT__STR = eINSTANCE.getAssertStatement_Str();
-
-    /**
-     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference ASSERT_STATEMENT__EXPR = eINSTANCE.getAssertStatement_Expr();
-
-    /**
-     * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference ASSERT_STATEMENT__PATTERN = eINSTANCE.getAssertStatement_Pattern();
-
-    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.InitialStatementImpl <em>Initial Statement</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -8085,40 +8127,6 @@ public interface AgreePackage extends EPackage
     EReference PARAM_STATEMENT__TYPE = eINSTANCE.getParamStatement_Type();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl <em>Lemma Statement</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLemmaStatement()
-     * @generated
-     */
-    EClass LEMMA_STATEMENT = eINSTANCE.getLemmaStatement();
-
-    /**
-     * The meta object literal for the '<em><b>Str</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute LEMMA_STATEMENT__STR = eINSTANCE.getLemmaStatement_Str();
-
-    /**
-     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference LEMMA_STATEMENT__EXPR = eINSTANCE.getLemmaStatement_Expr();
-
-    /**
-     * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference LEMMA_STATEMENT__PATTERN = eINSTANCE.getLemmaStatement_Pattern();
-
-    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.LiftStatementImpl <em>Lift Statement</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -8161,6 +8169,46 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference CONNECTION_STATEMENT__EXPR = eINSTANCE.getConnectionStatement_Expr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl <em>Assume Statement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.AssumeStatementImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssumeStatement()
+     * @generated
+     */
+    EClass ASSUME_STATEMENT = eINSTANCE.getAssumeStatement();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl <em>Guarantee Statement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.GuaranteeStatementImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getGuaranteeStatement()
+     * @generated
+     */
+    EClass GUARANTEE_STATEMENT = eINSTANCE.getGuaranteeStatement();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl <em>Assert Statement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.AssertStatementImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getAssertStatement()
+     * @generated
+     */
+    EClass ASSERT_STATEMENT = eINSTANCE.getAssertStatement();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl <em>Lemma Statement</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.LemmaStatementImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getLemmaStatement()
+     * @generated
+     */
+    EClass LEMMA_STATEMENT = eINSTANCE.getLemmaStatement();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.AlwaysStatementImpl <em>Always Statement</em>}' class.

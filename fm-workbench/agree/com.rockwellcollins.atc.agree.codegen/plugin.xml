@@ -17,7 +17,7 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+            locationURI="menu:org.osate.ui.analysesMenu?after=additions">
          <menu
                label="AGREE"
                mnemonic="g"
@@ -48,7 +48,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+            locationURI="popup:org.osate.ui.analysesOutlinePopup?after=additions">
          <menu
                id="com.rockwellcollins.atc.agree.analysis.popups.main"
                label="AGREE"

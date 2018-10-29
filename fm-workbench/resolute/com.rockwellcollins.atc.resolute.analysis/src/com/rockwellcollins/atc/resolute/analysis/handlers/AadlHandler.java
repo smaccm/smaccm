@@ -10,17 +10,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
-import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Element;
 
 public abstract class AadlHandler extends AbstractHandler {
@@ -37,12 +38,12 @@ public abstract class AadlHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) {
-		EObjectNode node = getEObjectNode(HandlerUtil.getCurrentSelection(event));
 		this.executionEvent = event;
-		if (node == null) {
+
+		final URI uri = getSelectionURI(HandlerUtil.getCurrentSelection(event));
+		if (uri == null) {
 			return null;
 		}
-		final URI uri = node.getEObjectURI();
 
 		window = HandlerUtil.getActiveWorkbenchWindow(event);
 		if (window == null) {
@@ -65,15 +66,12 @@ public abstract class AadlHandler extends AbstractHandler {
 		WorkspaceJob job = new WorkspaceJob(getJobName()) {
 			@Override
 			public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				return xtextEditor.getDocument().readOnly(new IUnitOfWork<IStatus, XtextResource>() {
-					@Override
-					public IStatus exec(XtextResource resource) throws Exception {
-						EObject eobj = resource.getResourceSet().getEObject(uri, true);
-						if (eobj instanceof Element) {
-							return runJob((Element) eobj, monitor);
-						} else {
-							return Status.CANCEL_STATUS;
-						}
+				return xtextEditor.getDocument().readOnly(resource -> {
+					EObject eobj = resource.getResourceSet().getEObject(uri, true);
+					if (eobj instanceof Element) {
+						return runJob((Element) eobj, monitor);
+					} else {
+						return Status.CANCEL_STATUS;
 					}
 				});
 			}
@@ -100,12 +98,23 @@ public abstract class AadlHandler extends AbstractHandler {
 		}
 	}
 
-	private EObjectNode getEObjectNode(ISelection currentSelection) {
+
+	private URI getSelectionURI(ISelection currentSelection) {
+
 		if (currentSelection instanceof IStructuredSelection) {
-			IStructuredSelection iss = (IStructuredSelection) currentSelection;
+			final IStructuredSelection iss = (IStructuredSelection) currentSelection;
 			if (iss.size() == 1) {
-				return (EObjectNode) iss.getFirstElement();
+				final Object obj = iss.getFirstElement();
+				return ((EObjectNode) obj).getEObjectURI();
 			}
+		} else if (currentSelection instanceof TextSelection) {
+			// Selection may be stale, get latest from editor
+			XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
+			TextSelection ts = (TextSelection) xtextEditor.getSelectionProvider().getSelection();
+			return xtextEditor.getDocument().readOnly(resource -> {
+				EObject e = new EObjectAtOffsetHelper().resolveContainedElementAt(resource, ts.getOffset());
+				return EcoreUtil.getURI(e);
+			});
 		}
 		return null;
 	}

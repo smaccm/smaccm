@@ -2,15 +2,17 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.TypeID;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -63,8 +65,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  @Override
-public TypeID getRecord()
+  public TypeID getRecord()
   {
     return record;
   }
@@ -81,11 +82,7 @@ public TypeID getRecord()
     if (eNotificationRequired())
     {
       ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__RECORD, oldRecord, newRecord);
-      if (msgs == null) {
-		msgs = notification;
-	} else {
-		msgs.add(notification);
-	}
+      if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
   }
@@ -95,26 +92,20 @@ public TypeID getRecord()
    * <!-- end-user-doc -->
    * @generated
    */
-  @Override
-public void setRecord(TypeID newRecord)
+  public void setRecord(TypeID newRecord)
   {
     if (newRecord != record)
     {
       NotificationChain msgs = null;
-      if (record != null) {
-		msgs = ((InternalEObject)record).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__RECORD, null, msgs);
-	}
-      if (newRecord != null) {
-		msgs = ((InternalEObject)newRecord).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__RECORD, null, msgs);
-	}
+      if (record != null)
+        msgs = ((InternalEObject)record).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__RECORD, null, msgs);
+      if (newRecord != null)
+        msgs = ((InternalEObject)newRecord).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.RECORD_TYPE__RECORD, null, msgs);
       msgs = basicSetRecord(newRecord, msgs);
-      if (msgs != null) {
-		msgs.dispatch();
-	}
+      if (msgs != null) msgs.dispatch();
     }
-    else if (eNotificationRequired()) {
-		eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__RECORD, newRecord, newRecord));
-	}
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.RECORD_TYPE__RECORD, newRecord, newRecord));
   }
 
   /**

@@ -59,6 +59,15 @@ public interface AgreeFactory extends EFactory
   SpecStatement createSpecStatement();
 
   /**
+   * Returns a new object of class '<em>Named Spec Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Named Spec Statement</em>'.
+   * @generated
+   */
+  NamedSpecStatement createNamedSpecStatement();
+
+  /**
    * Returns a new object of class '<em>Pattern Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -347,6 +356,42 @@ public interface AgreeFactory extends EFactory
   AgreeContract createAgreeContract();
 
   /**
+   * Returns a new object of class '<em>Initial Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Initial Statement</em>'.
+   * @generated
+   */
+  InitialStatement createInitialStatement();
+
+  /**
+   * Returns a new object of class '<em>Param Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Param Statement</em>'.
+   * @generated
+   */
+  ParamStatement createParamStatement();
+
+  /**
+   * Returns a new object of class '<em>Lift Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Lift Statement</em>'.
+   * @generated
+   */
+  LiftStatement createLiftStatement();
+
+  /**
+   * Returns a new object of class '<em>Connection Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Connection Statement</em>'.
+   * @generated
+   */
+  ConnectionStatement createConnectionStatement();
+
+  /**
    * Returns a new object of class '<em>Assume Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -374,24 +419,6 @@ public interface AgreeFactory extends EFactory
   AssertStatement createAssertStatement();
 
   /**
-   * Returns a new object of class '<em>Initial Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Initial Statement</em>'.
-   * @generated
-   */
-  InitialStatement createInitialStatement();
-
-  /**
-   * Returns a new object of class '<em>Param Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Param Statement</em>'.
-   * @generated
-   */
-  ParamStatement createParamStatement();
-
-  /**
    * Returns a new object of class '<em>Lemma Statement</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -399,24 +426,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   LemmaStatement createLemmaStatement();
-
-  /**
-   * Returns a new object of class '<em>Lift Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Lift Statement</em>'.
-   * @generated
-   */
-  LiftStatement createLiftStatement();
-
-  /**
-   * Returns a new object of class '<em>Connection Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Connection Statement</em>'.
-   * @generated
-   */
-  ConnectionStatement createConnectionStatement();
 
   /**
    * Returns a new object of class '<em>Always Statement</em>'.

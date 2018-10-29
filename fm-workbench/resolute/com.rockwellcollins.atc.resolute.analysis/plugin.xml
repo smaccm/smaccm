@@ -60,18 +60,9 @@
       </menuContribution>
    
 
-       <menuContribution
-            allPopups="false"
-            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
-        	<menu id="com.rockwellcollins.atc.resolute.analysis.menus.predefined" icon="icons/claims.png" label="Predefined Theorems">	
-            	<command commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolutePredefined" icon="icons/claims.png" style="push" label="Check ARINC653" id="com.rockwellcollins.atc.resolute.analysis.menus.resolutePredefined">
-					<parameter name="com.rockwellcollins.atc.resolute.analysis.theorem" value="check_arinc653_compliance"/>
-				</command>
-      		</menu>
-      </menuContribution> 
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+            locationURI="popup:org.osate.ui.analysesOutlinePopup?after=additions">
          <command
                 commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolute"
                 icon="icons/claims.png"
@@ -79,6 +70,22 @@
                 mnemonic="r"
                 style="push">
          </command>
+         <menu
+               icon="icons/claims.png"
+               id="com.rockwellcollins.atc.resolute.analysis.menus.predefined"
+               label="Predefined Theorems">
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolutePredefined"
+                  icon="icons/claims.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resolutePredefined"
+                  label="Check ARINC653"
+                  style="push">
+               <parameter
+                     name="com.rockwellcollins.atc.resolute.analysis.theorem"
+                     value="check_arinc653_compliance">
+               </parameter>
+            </command>
+         </menu>
       </menuContribution>
       
       <menuContribution
@@ -88,6 +95,44 @@
                commandId="com.rockwellcollins.atc.resolute.analysis.commands.rerunResolute"
                icon="icons/refresh.gif"
                label="Re-run Resolute"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.osate.ui.analysesMenu?after=additions">
+         <command
+               commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolute"
+               icon="icons/claims.png"
+               id="com.rockwellcollins.atc.resolute.analysis.menus.resolute"
+               mnemonic="r"
+               style="push">
+         </command>
+         <menu
+               icon="icons/claims.png"
+               id="com.rockwellcollins.atc.resolute.analysis.menus.predefined"
+               label="Predefined Theorems">
+            <command
+                  commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolutePredefined"
+                  icon="icons/claims.png"
+                  id="com.rockwellcollins.atc.resolute.analysis.menus.resolutePredefined"
+                  label="Check ARINC653"
+                  style="push">
+               <parameter
+                     name="com.rockwellcollins.atc.resolute.analysis.theorem"
+                     value="check_arinc653_compliance">
+               </parameter>
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:#TextEditorContext?after=additions">
+         <command
+               commandId="com.rockwellcollins.atc.resolute.analysis.commands.resolute"
+               icon="icons/claims.png"
+               id="com.rockwellcollins.atc.resolute.analysis.menus.resolute"
+               mnemonic="r"
                style="push">
          </command>
       </menuContribution>
@@ -119,6 +164,7 @@
          point="org.eclipse.core.expressions.definitions">
       <definition
             id="com.rockwellcollins.atc.resolute.analysis.expressions.isSingleOutlineSelection">
+         <or>
          <with
                variable="selection">
             <and>
@@ -134,6 +180,10 @@
                </iterate>
             </and>
          </with>
+         <reference
+               definitionId="org.osate.xtext.aadl2.Aadl2.Editor.opened">
+         </reference>
+         </or>
       </definition>
    </extension>
    <extension

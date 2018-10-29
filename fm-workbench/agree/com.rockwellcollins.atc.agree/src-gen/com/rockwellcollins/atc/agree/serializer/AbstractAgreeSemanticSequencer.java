@@ -239,13 +239,13 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				sequence_Arg(context, (Arg) semanticObject); 
 				return; 
 			case AgreePackage.ASSERT_STATEMENT:
-				sequence_SpecStatement(context, (AssertStatement) semanticObject); 
+				sequence_NamedSpecStatement(context, (AssertStatement) semanticObject); 
 				return; 
 			case AgreePackage.ASSIGN_STATEMENT:
 				sequence_AssignStatement(context, (AssignStatement) semanticObject); 
 				return; 
 			case AgreePackage.ASSUME_STATEMENT:
-				sequence_SpecStatement(context, (AssumeStatement) semanticObject); 
+				sequence_NamedSpecStatement(context, (AssumeStatement) semanticObject); 
 				return; 
 			case AgreePackage.ASYNCH_STATEMENT:
 				sequence_SynchStatement(context, (AsynchStatement) semanticObject); 
@@ -290,7 +290,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				sequence_PreDefFnExpr(context, (GetPropertyExpr) semanticObject); 
 				return; 
 			case AgreePackage.GUARANTEE_STATEMENT:
-				sequence_SpecStatement(context, (GuaranteeStatement) semanticObject); 
+				sequence_NamedSpecStatement(context, (GuaranteeStatement) semanticObject); 
 				return; 
 			case AgreePackage.IF_THEN_ELSE_EXPR:
 				sequence_IfThenElseExpr(context, (IfThenElseExpr) semanticObject); 
@@ -311,7 +311,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				sequence_SynchStatement(context, (LatchedStatement) semanticObject); 
 				return; 
 			case AgreePackage.LEMMA_STATEMENT:
-				sequence_SpecStatement(context, (LemmaStatement) semanticObject); 
+				sequence_NamedSpecStatement(context, (LemmaStatement) semanticObject); 
 				return; 
 			case AgreePackage.LIBRARY_FN_DEF_EXPR:
 				sequence_LibraryFnDefExpr(context, (LibraryFnDefExpr) semanticObject); 
@@ -884,6 +884,66 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns AssertStatement
+	 *     Element returns AssertStatement
+	 *     SpecStatement returns AssertStatement
+	 *     NamedSpecStatement returns AssertStatement
+	 *
+	 * Constraint:
+	 *     ((name=ID? str=STRING)? (expr=Expr | pattern=PatternStatement))
+	 */
+	protected void sequence_NamedSpecStatement(ISerializationContext context, AssertStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns AssumeStatement
+	 *     Element returns AssumeStatement
+	 *     SpecStatement returns AssumeStatement
+	 *     NamedSpecStatement returns AssumeStatement
+	 *
+	 * Constraint:
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 */
+	protected void sequence_NamedSpecStatement(ISerializationContext context, AssumeStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns GuaranteeStatement
+	 *     Element returns GuaranteeStatement
+	 *     SpecStatement returns GuaranteeStatement
+	 *     NamedSpecStatement returns GuaranteeStatement
+	 *
+	 * Constraint:
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 */
+	protected void sequence_NamedSpecStatement(ISerializationContext context, GuaranteeStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns LemmaStatement
+	 *     Element returns LemmaStatement
+	 *     SpecStatement returns LemmaStatement
+	 *     NamedSpecStatement returns LemmaStatement
+	 *
+	 * Constraint:
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 */
+	protected void sequence_NamedSpecStatement(ISerializationContext context, LemmaStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Element returns NestedDotID
 	 *     Expr returns NestedDotID
 	 *     ArrowExpr returns NestedDotID
@@ -1215,32 +1275,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns AssertStatement
-	 *     SpecStatement returns AssertStatement
-	 *
-	 * Constraint:
-	 *     (str=STRING? (expr=Expr | pattern=PatternStatement))
-	 */
-	protected void sequence_SpecStatement(ISerializationContext context, AssertStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     Element returns AssumeStatement
-	 *     SpecStatement returns AssumeStatement
-	 *
-	 * Constraint:
-	 *     (str=STRING (expr=Expr | pattern=PatternStatement))
-	 */
-	protected void sequence_SpecStatement(ISerializationContext context, AssumeStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     Element returns ConnectionStatement
 	 *     SpecStatement returns ConnectionStatement
 	 *
@@ -1255,22 +1289,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.CONNECTION_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getConnNamedElementIDTerminalRuleCall_7_2_0_1(), semanticObject.eGet(AgreePackage.Literals.CONNECTION_STATEMENT__CONN, false));
-		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_7_4_0(), semanticObject.getExpr());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getConnNamedElementIDTerminalRuleCall_4_2_0_1(), semanticObject.eGet(AgreePackage.Literals.CONNECTION_STATEMENT__CONN, false));
+		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_4_4_0(), semanticObject.getExpr());
 		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     Element returns GuaranteeStatement
-	 *     SpecStatement returns GuaranteeStatement
-	 *
-	 * Constraint:
-	 *     (str=STRING (expr=Expr | pattern=PatternStatement))
-	 */
-	protected void sequence_SpecStatement(ISerializationContext context, GuaranteeStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1288,21 +1309,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.INITIAL_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_3_3_0(), semanticObject.getExpr());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_1_3_0(), semanticObject.getExpr());
 		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     Element returns LemmaStatement
-	 *     SpecStatement returns LemmaStatement
-	 *
-	 * Constraint:
-	 *     (str=STRING (expr=Expr | pattern=PatternStatement))
-	 */
-	protected void sequence_SpecStatement(ISerializationContext context, LemmaStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1320,7 +1328,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.LIFT_STATEMENT__SUBCOMP));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getSubcompNestedDotIDParserRuleCall_6_2_0(), semanticObject.getSubcomp());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getSubcompNestedDotIDParserRuleCall_3_2_0(), semanticObject.getSubcomp());
 		feeder.finish();
 	}
 	
@@ -1341,8 +1349,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PARAM_STATEMENT__TYPE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_4_2_0(), semanticObject.getExpr());
-		feeder.accept(grammarAccess.getSpecStatementAccess().getTypeTypeParserRuleCall_4_4_0(), semanticObject.getType());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_2_2_0(), semanticObject.getExpr());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getTypeTypeParserRuleCall_2_4_0(), semanticObject.getType());
 		feeder.finish();
 	}
 	

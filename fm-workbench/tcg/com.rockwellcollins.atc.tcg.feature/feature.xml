@@ -2,7 +2,7 @@
 <feature
       id="com.rockwellcollins.atc.tcg.feature"
       label="Test Case Generator"
-      version="1.1.0.qualifier"
+      version="1.1.1.qualifier"
       provider-name="ROCKWELLCOLLINS">
 
    <description url="http://www.example.com/description">
@@ -33,7 +33,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS
          id="com.rockwellcollins.atc.tcg"
          download-size="0"
          install-size="0"
-         version="1.1.0.qualifier"
+         version="1.1.1.qualifier"
          unpack="false"/>
 
 </feature>

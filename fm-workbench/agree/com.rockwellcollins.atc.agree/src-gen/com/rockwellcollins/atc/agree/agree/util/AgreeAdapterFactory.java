@@ -101,6 +101,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createSpecStatementAdapter();
       }
       @Override
+      public Adapter caseNamedSpecStatement(NamedSpecStatement object)
+      {
+        return createNamedSpecStatementAdapter();
+      }
+      @Override
       public Adapter casePatternStatement(PatternStatement object)
       {
         return createPatternStatementAdapter();
@@ -261,6 +266,26 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createAgreeContractAdapter();
       }
       @Override
+      public Adapter caseInitialStatement(InitialStatement object)
+      {
+        return createInitialStatementAdapter();
+      }
+      @Override
+      public Adapter caseParamStatement(ParamStatement object)
+      {
+        return createParamStatementAdapter();
+      }
+      @Override
+      public Adapter caseLiftStatement(LiftStatement object)
+      {
+        return createLiftStatementAdapter();
+      }
+      @Override
+      public Adapter caseConnectionStatement(ConnectionStatement object)
+      {
+        return createConnectionStatementAdapter();
+      }
+      @Override
       public Adapter caseAssumeStatement(AssumeStatement object)
       {
         return createAssumeStatementAdapter();
@@ -276,29 +301,9 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createAssertStatementAdapter();
       }
       @Override
-      public Adapter caseInitialStatement(InitialStatement object)
-      {
-        return createInitialStatementAdapter();
-      }
-      @Override
-      public Adapter caseParamStatement(ParamStatement object)
-      {
-        return createParamStatementAdapter();
-      }
-      @Override
       public Adapter caseLemmaStatement(LemmaStatement object)
       {
         return createLemmaStatementAdapter();
-      }
-      @Override
-      public Adapter caseLiftStatement(LiftStatement object)
-      {
-        return createLiftStatementAdapter();
-      }
-      @Override
-      public Adapter caseConnectionStatement(ConnectionStatement object)
-      {
-        return createConnectionStatementAdapter();
       }
       @Override
       public Adapter caseAlwaysStatement(AlwaysStatement object)
@@ -618,6 +623,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSpecStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.NamedSpecStatement <em>Named Spec Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.NamedSpecStatement
+   * @generated
+   */
+  public Adapter createNamedSpecStatementAdapter()
   {
     return null;
   }
@@ -1103,6 +1123,66 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.InitialStatement <em>Initial Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.InitialStatement
+   * @generated
+   */
+  public Adapter createInitialStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ParamStatement <em>Param Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ParamStatement
+   * @generated
+   */
+  public Adapter createParamStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LiftStatement <em>Lift Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.LiftStatement
+   * @generated
+   */
+  public Adapter createLiftStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ConnectionStatement <em>Connection Statement</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.ConnectionStatement
+   * @generated
+   */
+  public Adapter createConnectionStatementAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.AssumeStatement <em>Assume Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1148,36 +1228,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.InitialStatement <em>Initial Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.InitialStatement
-   * @generated
-   */
-  public Adapter createInitialStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ParamStatement <em>Param Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.ParamStatement
-   * @generated
-   */
-  public Adapter createParamStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LemmaStatement <em>Lemma Statement</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1188,36 +1238,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createLemmaStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.LiftStatement <em>Lift Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.LiftStatement
-   * @generated
-   */
-  public Adapter createLiftStatementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ConnectionStatement <em>Connection Statement</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.ConnectionStatement
-   * @generated
-   */
-  public Adapter createConnectionStatementAdapter()
   {
     return null;
   }
