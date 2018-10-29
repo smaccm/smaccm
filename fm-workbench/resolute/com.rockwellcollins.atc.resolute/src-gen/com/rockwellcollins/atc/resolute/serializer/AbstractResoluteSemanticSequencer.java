@@ -25,6 +25,7 @@ import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.LibraryFnType;
 import com.rockwellcollins.atc.resolute.resolute.ListExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListType;
@@ -253,6 +254,9 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 				return; 
 			case ResolutePackage.LIBRARY_FN_CALL_EXPR:
 				sequence_AtomicExpr(context, (LibraryFnCallExpr) semanticObject); 
+				return; 
+			case ResolutePackage.LIBRARY_FN_TYPE:
+				sequence_Type(context, (LibraryFnType) semanticObject); 
 				return; 
 			case ResolutePackage.LIST_EXPR:
 				sequence_AtomicExpr(context, (ListExpr) semanticObject); 
@@ -1499,6 +1503,27 @@ public abstract class AbstractResoluteSemanticSequencer extends PropertiesSemant
 	 */
 	protected void sequence_ResoluteSubclause(ISerializationContext context, ResoluteSubclause semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Type returns LibraryFnType
+	 *
+	 * Constraint:
+	 *     (libName=ID fnType=ID)
+	 */
+	protected void sequence_Type(ISerializationContext context, LibraryFnType semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ResolutePackage.Literals.LIBRARY_FN_TYPE__LIB_NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ResolutePackage.Literals.LIBRARY_FN_TYPE__LIB_NAME));
+			if (transientValues.isValueTransient(semanticObject, ResolutePackage.Literals.LIBRARY_FN_TYPE__FN_TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ResolutePackage.Literals.LIBRARY_FN_TYPE__FN_TYPE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getTypeAccess().getLibNameIDTerminalRuleCall_3_1_0(), semanticObject.getLibName());
+		feeder.accept(grammarAccess.getTypeAccess().getFnTypeIDTerminalRuleCall_3_3_0(), semanticObject.getFnType());
+		feeder.finish();
 	}
 	
 	

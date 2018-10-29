@@ -81,6 +81,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
       case ResolutePackage.LIST_TYPE: return createListType();
       case ResolutePackage.SET_TYPE: return createSetType();
+      case ResolutePackage.LIBRARY_FN_TYPE: return createLibraryFnType();
       case ResolutePackage.QUANT_ARG: return createQuantArg();
       case ResolutePackage.FUNCTION_BODY: return createFunctionBody();
       case ResolutePackage.CLAIM_BODY: return createClaimBody();
@@ -297,6 +298,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     SetTypeImpl setType = new SetTypeImpl();
     return setType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LibraryFnType createLibraryFnType()
+  {
+    LibraryFnTypeImpl libraryFnType = new LibraryFnTypeImpl();
+    return libraryFnType;
   }
 
   /**

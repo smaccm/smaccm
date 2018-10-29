@@ -177,14 +177,23 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cParamTypeAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
 		private final RuleCall cParamTypeTypeParserRuleCall_2_1_1_0 = (RuleCall)cParamTypeAssignment_2_1_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_2_1_2 = (Keyword)cGroup_2_1.eContents().get(2);
+		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
+		private final Action cLibraryFnTypeAction_3_0 = (Action)cGroup_3.eContents().get(0);
+		private final Assignment cLibNameAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cLibNameIDTerminalRuleCall_3_1_0 = (RuleCall)cLibNameAssignment_3_1.eContents().get(0);
+		private final Keyword cFullStopKeyword_3_2 = (Keyword)cGroup_3.eContents().get(2);
+		private final Assignment cFnTypeAssignment_3_3 = (Assignment)cGroup_3.eContents().get(3);
+		private final RuleCall cFnTypeIDTerminalRuleCall_3_3_0 = (RuleCall)cFnTypeAssignment_3_3.eContents().get(0);
 		
 		//Type:
 		//	{ListType} '[' type=Type ']'
 		//	| {SetType} '{' type=Type '}'
-		//	| BaseType ('<' paramType=Type '>')?;
+		//	| BaseType ('<' paramType=Type '>')?
+		//	| {LibraryFnType} libName=ID '.' fnType=ID;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{ListType} '[' type=Type ']' | {SetType} '{' type=Type '}' | BaseType ('<' paramType=Type '>')?
+		//{ListType} '[' type=Type ']' | {SetType} '{' type=Type '}' | BaseType ('<' paramType=Type '>')? | {LibraryFnType}
+		//libName=ID '.' fnType=ID
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{ListType} '[' type=Type ']'
@@ -243,6 +252,27 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//'>'
 		public Keyword getGreaterThanSignKeyword_2_1_2() { return cGreaterThanSignKeyword_2_1_2; }
+
+		//{LibraryFnType} libName=ID '.' fnType=ID
+		public Group getGroup_3() { return cGroup_3; }
+
+		//{LibraryFnType}
+		public Action getLibraryFnTypeAction_3_0() { return cLibraryFnTypeAction_3_0; }
+
+		//libName=ID
+		public Assignment getLibNameAssignment_3_1() { return cLibNameAssignment_3_1; }
+
+		//ID
+		public RuleCall getLibNameIDTerminalRuleCall_3_1_0() { return cLibNameIDTerminalRuleCall_3_1_0; }
+
+		//'.'
+		public Keyword getFullStopKeyword_3_2() { return cFullStopKeyword_3_2; }
+
+		//fnType=ID
+		public Assignment getFnTypeAssignment_3_3() { return cFnTypeAssignment_3_3; }
+
+		//ID
+		public RuleCall getFnTypeIDTerminalRuleCall_3_3_0() { return cFnTypeIDTerminalRuleCall_3_3_0; }
 	}
 
 	public class BaseTypeElements extends AbstractParserRuleElementFinder {
@@ -2849,7 +2879,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//Type:
 	//	{ListType} '[' type=Type ']'
 	//	| {SetType} '{' type=Type '}'
-	//	| BaseType ('<' paramType=Type '>')?;
+	//	| BaseType ('<' paramType=Type '>')?
+	//	| {LibraryFnType} libName=ID '.' fnType=ID;
 	public TypeElements getTypeAccess() {
 		return pType;
 	}

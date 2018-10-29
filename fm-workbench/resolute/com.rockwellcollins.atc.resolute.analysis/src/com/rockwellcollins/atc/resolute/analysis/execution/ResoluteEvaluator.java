@@ -594,7 +594,8 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	public ResoluteValue caseLibraryFnCallExpr(LibraryFnCallExpr object) {
 		List<ResoluteValue> args = doSwitchList(object.getArgs());
 
-		ResoluteValue value = EvaluateExternalAnalysis.evaluate(object.getLibName(), context, object.getFnName(), args);
+		ResoluteValue value = EvaluateExternalLibraryFunction.evaluate(object.getLibName(), context, object.getFnName(),
+				args);
 
 		if (value == null) {
 			throw new ResoluteFailException(

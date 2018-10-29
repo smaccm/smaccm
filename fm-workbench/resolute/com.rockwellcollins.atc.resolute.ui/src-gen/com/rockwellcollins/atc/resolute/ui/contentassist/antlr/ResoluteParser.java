@@ -72,6 +72,7 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getTypeAccess().getGroup_1(), "rule__Type__Group_1__0");
 					put(grammarAccess.getTypeAccess().getGroup_2(), "rule__Type__Group_2__0");
 					put(grammarAccess.getTypeAccess().getGroup_2_1(), "rule__Type__Group_2_1__0");
+					put(grammarAccess.getTypeAccess().getGroup_3(), "rule__Type__Group_3__0");
 					put(grammarAccess.getArgAccess().getGroup_0(), "rule__Arg__Group_0__0");
 					put(grammarAccess.getArgAccess().getGroup_0_0(), "rule__Arg__Group_0_0__0");
 					put(grammarAccess.getArgAccess().getGroup_1(), "rule__Arg__Group_1__0");
@@ -214,6 +215,8 @@ public class ResoluteParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getTypeAccess().getTypeAssignment_0_2(), "rule__Type__TypeAssignment_0_2");
 					put(grammarAccess.getTypeAccess().getTypeAssignment_1_2(), "rule__Type__TypeAssignment_1_2");
 					put(grammarAccess.getTypeAccess().getParamTypeAssignment_2_1_1(), "rule__Type__ParamTypeAssignment_2_1_1");
+					put(grammarAccess.getTypeAccess().getLibNameAssignment_3_1(), "rule__Type__LibNameAssignment_3_1");
+					put(grammarAccess.getTypeAccess().getFnTypeAssignment_3_3(), "rule__Type__FnTypeAssignment_3_3");
 					put(grammarAccess.getBaseTypeAccess().getTypeAssignment(), "rule__BaseType__TypeAssignment");
 					put(grammarAccess.getArgAccess().getNameAssignment_0_0_0(), "rule__Arg__NameAssignment_0_0_0");
 					put(grammarAccess.getArgAccess().getTypeAssignment_0_0_2(), "rule__Arg__TypeAssignment_0_0_2");

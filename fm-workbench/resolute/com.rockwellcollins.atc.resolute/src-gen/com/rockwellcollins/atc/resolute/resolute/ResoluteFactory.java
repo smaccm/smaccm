@@ -176,6 +176,15 @@ public interface ResoluteFactory extends EFactory
   SetType createSetType();
 
   /**
+   * Returns a new object of class '<em>Library Fn Type</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Library Fn Type</em>'.
+   * @generated
+   */
+  LibraryFnType createLibraryFnType();
+
+  /**
    * Returns a new object of class '<em>Quant Arg</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

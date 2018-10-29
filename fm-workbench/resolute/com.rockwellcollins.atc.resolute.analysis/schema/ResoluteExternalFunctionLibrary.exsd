@@ -3,10 +3,10 @@
 <schema targetNamespace="com.rockwellcollins.atc.resolute.analysis.external" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="com.rockwellcollins.atc.resolute.analysis.external" id="resoluteExternalAnalysis" name="Resolute External Analysis"/>
+         <meta.schema plugin="com.rockwellcollins.atc.resolute.analysis.external" id="ResoluteExternalFunctionLibrary" name="Resolute External Function Library"/>
       </appinfo>
       <documentation>
-         Extension point for external resolute analysis
+         Extension point for external Resolute function libraries
       </documentation>
    </annotation>
 
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="externalAnalysis"/>
+            <element ref="externalLibrary"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,7 +47,7 @@
       </complexType>
    </element>
 
-   <element name="externalAnalysis">
+   <element name="externalLibrary">
       <complexType>
          <attribute name="name" type="string" use="required">
             <annotation>
@@ -62,17 +62,17 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalAnalysisType"/>
+                  <meta.attribute kind="java" basedOn="com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalFunctionLibraryType:"/>
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="analysisClass" type="string" use="required">
+         <attribute name="libraryClass" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis"/>
+                  <meta.attribute kind="java" basedOn="com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalFunctionLibrary:"/>
                </appinfo>
             </annotation>
          </attribute>

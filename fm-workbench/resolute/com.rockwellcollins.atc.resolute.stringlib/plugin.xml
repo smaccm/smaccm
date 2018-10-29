@@ -2,12 +2,12 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="com.rockwellcollins.atc.resolute.analysis.external.resoluteExternalAnalysis">
-      <externalAnalysis
-            analysisClass="com.rockwellcollins.atc.resolute.stringlib.ResoluteStringFunctions"
+         point="com.rockwellcollins.atc.resolute.analysis.external.resoluteExternalFunctionLibrary">
+      <externalLibrary
+            libraryClass="com.rockwellcollins.atc.resolute.stringlib.ResoluteStringFunctions"
             name="StringLib"
             typeClass="com.rockwellcollins.atc.resolute.stringlib.ResoluteStringFunctionsType">
-      </externalAnalysis>
+      </externalLibrary>
    </extension>
 
 </plugin>

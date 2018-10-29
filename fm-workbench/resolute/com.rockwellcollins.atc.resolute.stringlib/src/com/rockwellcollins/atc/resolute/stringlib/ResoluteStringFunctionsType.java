@@ -3,12 +3,12 @@ package com.rockwellcollins.atc.resolute.stringlib;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalLibraryType;
+import com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalFunctionLibraryType;
 import com.rockwellcollins.atc.resolute.validation.BaseType;
 import com.rockwellcollins.atc.resolute.validation.ListType;
 import com.rockwellcollins.atc.resolute.validation.ResoluteType;
 
-public class ResoluteStringFunctionsType implements ResoluteExternalLibraryType {
+public class ResoluteStringFunctionsType extends ResoluteExternalFunctionLibraryType {
 
 	@Override
 	public ResoluteType getType(String function) {

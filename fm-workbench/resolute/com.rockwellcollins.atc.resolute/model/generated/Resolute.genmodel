@@ -54,6 +54,11 @@
     <genClasses ecoreClass="Resolute.ecore#//SetType">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetType/type"/>
     </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//LibraryFnType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//LibraryFnType/libName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//LibraryFnType/fnType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//LibraryFnType/name"/>
+    </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//QuantArg">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantArg/expr"/>
     </genClasses>

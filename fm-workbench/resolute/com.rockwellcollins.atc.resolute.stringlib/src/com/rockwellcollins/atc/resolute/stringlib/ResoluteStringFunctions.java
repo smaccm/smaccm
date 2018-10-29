@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
-import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalLibrary;
+import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalFunctionLibrary;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteFailException;
 import com.rockwellcollins.atc.resolute.analysis.values.BoolValue;
 import com.rockwellcollins.atc.resolute.analysis.values.IntValue;
@@ -15,7 +15,7 @@ import com.rockwellcollins.atc.resolute.analysis.values.StringValue;
 /**
  * String function library for manipulating strings in Resolute
  */
-public class ResoluteStringFunctions implements ResoluteExternalLibrary {
+public class ResoluteStringFunctions extends ResoluteExternalFunctionLibrary {
 
 	@Override
 	public ResoluteValue run(EvaluationContext context, String function, List<ResoluteValue> args) {

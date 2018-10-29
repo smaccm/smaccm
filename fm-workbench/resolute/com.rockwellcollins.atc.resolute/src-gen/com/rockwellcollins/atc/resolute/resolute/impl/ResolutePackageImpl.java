@@ -28,6 +28,7 @@ import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
 import com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.LibraryFnType;
 import com.rockwellcollins.atc.resolute.resolute.ListExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListType;
@@ -184,6 +185,13 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
    * @generated
    */
   private EClass setTypeEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass libraryFnTypeEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -772,6 +780,36 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
   public EReference getSetType_Type()
   {
     return (EReference)setTypeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLibraryFnType()
+  {
+    return libraryFnTypeEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getLibraryFnType_LibName()
+  {
+    return (EAttribute)libraryFnTypeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getLibraryFnType_FnType()
+  {
+    return (EAttribute)libraryFnTypeEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1575,6 +1613,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     setTypeEClass = createEClass(SET_TYPE);
     createEReference(setTypeEClass, SET_TYPE__TYPE);
 
+    libraryFnTypeEClass = createEClass(LIBRARY_FN_TYPE);
+    createEAttribute(libraryFnTypeEClass, LIBRARY_FN_TYPE__LIB_NAME);
+    createEAttribute(libraryFnTypeEClass, LIBRARY_FN_TYPE__FN_TYPE);
+
     quantArgEClass = createEClass(QUANT_ARG);
     createEReference(quantArgEClass, QUANT_ARG__EXPR);
 
@@ -1725,6 +1767,7 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
     proveStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     listTypeEClass.getESuperTypes().add(this.getType());
     setTypeEClass.getESuperTypes().add(this.getType());
+    libraryFnTypeEClass.getESuperTypes().add(this.getType());
     quantArgEClass.getESuperTypes().add(this.getArg());
     functionBodyEClass.getESuperTypes().add(this.getDefinitionBody());
     claimBodyEClass.getESuperTypes().add(this.getDefinitionBody());
@@ -1803,6 +1846,10 @@ public class ResolutePackageImpl extends EPackageImpl implements ResolutePackage
 
     initEClass(setTypeEClass, SetType.class, "SetType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSetType_Type(), this.getType(), null, "type", null, 0, 1, SetType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(libraryFnTypeEClass, LibraryFnType.class, "LibraryFnType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getLibraryFnType_LibName(), theEcorePackage.getEString(), "libName", null, 0, 1, LibraryFnType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getLibraryFnType_FnType(), theEcorePackage.getEString(), "fnType", null, 0, 1, LibraryFnType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(quantArgEClass, QuantArg.class, "QuantArg", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getQuantArg_Expr(), this.getExpr(), null, "expr", null, 0, 1, QuantArg.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

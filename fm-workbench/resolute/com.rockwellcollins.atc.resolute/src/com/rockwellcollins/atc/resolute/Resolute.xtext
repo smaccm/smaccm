@@ -42,6 +42,7 @@ Type:
 	{ListType} '[' type=Type ']'
 |	{SetType} '{' type=Type '}'
 |	BaseType ('<' paramType=Type '>')?
+|	{LibraryFnType} libName=ID '.' fnType=ID
 ;
 
 BaseType:

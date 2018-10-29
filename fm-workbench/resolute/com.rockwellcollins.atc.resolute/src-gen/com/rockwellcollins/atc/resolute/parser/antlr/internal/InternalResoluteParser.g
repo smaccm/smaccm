@@ -301,7 +301,55 @@ ruleType returns [EObject current=null]
     {
     	newLeafNode(otherlv_11, grammarAccess.getTypeAccess().getGreaterThanSignKeyword_2_1_2());
     }
-)?))
+)?)
+    |((
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getTypeAccess().getLibraryFnTypeAction_3_0(),
+            $current);
+    }
+)(
+(
+		lv_libName_13_0=RULE_ID
+		{
+			newLeafNode(lv_libName_13_0, grammarAccess.getTypeAccess().getLibNameIDTerminalRuleCall_3_1_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTypeRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"libName",
+        		lv_libName_13_0, 
+        		"org.osate.xtext.aadl2.properties.Properties.ID");
+	    }
+
+)
+)
+	otherlv_14=FullStop
+    {
+    	newLeafNode(otherlv_14, grammarAccess.getTypeAccess().getFullStopKeyword_3_2());
+    }
+(
+(
+		lv_fnType_15_0=RULE_ID
+		{
+			newLeafNode(lv_fnType_15_0, grammarAccess.getTypeAccess().getFnTypeIDTerminalRuleCall_3_3_0()); 
+		}
+		{
+	        if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTypeRule());
+	        }
+       		setWithLastConsumed(
+       			$current, 
+       			"fnType",
+        		lv_fnType_15_0, 
+        		"org.osate.xtext.aadl2.properties.Properties.ID");
+	    }
+
+)
+)))
 ;
 
 
