@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -20,6 +22,7 @@ import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
+import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
 import org.osate.aadl2.Classifier;
@@ -45,6 +48,8 @@ import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
+import org.osate.aadl2.NumberValue;
+import org.osate.aadl2.Operation;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
@@ -146,6 +151,7 @@ import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePeriodicPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeSporadicPattern;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreExprFactory;
 
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
@@ -241,6 +247,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		program.containsRealTimePatterns(containsRTPatterns);
+
+		// EGM-DEBUG
+//		System.out.println("getAgreeProgram");
+//		com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter pp = new com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter();
+//		program.accept(pp);
+//		System.out.println(pp.toString());
 
 		return program;
 	}
@@ -383,6 +395,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		builder.addLocalEquation(localEquations);
 		builder.addConnection(connections);
 		builder.addSubNode(subNodes);
+
+		// Clean up any vacuous true predicates
+		Predicate<AgreeStatement> isBoolExprAndisTrue = st -> (st.expr instanceof BoolExpr)
+				&& ((BoolExpr) st.expr).value;
+		assertions.removeIf(isBoolExprAndisTrue);
+		assumptions.removeIf(isBoolExprAndisTrue);
+		guarantees.removeIf(isBoolExprAndisTrue);
+
 		builder.addAssertion(assertions);
 		builder.addAssumption(assumptions);
 		builder.addGuarantee(guarantees);
@@ -970,9 +990,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				for (j = i + 1; j < clockIds.size(); j++) {
 					Expr clock2 = clockIds.get(j);
 					NodeCallExpr nodeCall = new NodeCallExpr(nodeName, clock1, clock2);
-					clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+					clockAssertion = LustreExprFactory.makeANDExpr(clockAssertion, nodeCall);
 					nodeCall = new NodeCallExpr(nodeName, clock2, clock1);
-					clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+					clockAssertion = LustreExprFactory.makeANDExpr(clockAssertion, nodeCall);
 				}
 			}
 		}
@@ -1003,9 +1023,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 
 			NodeCallExpr nodeCall = new NodeCallExpr(nodeName, elem.maxClock, elem.minClock);
-			clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+			clockAssertion = LustreExprFactory.makeANDExpr(clockAssertion, nodeCall);
 			nodeCall = new NodeCallExpr(nodeName, elem.minClock, elem.maxClock);
-			clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+			clockAssertion = LustreExprFactory.makeANDExpr(clockAssertion, nodeCall);
 		}
 
 		return clockAssertion;
@@ -1139,48 +1159,88 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				getDataClassifierRangeConstraintExpr(name, dataClassifier), reference);
 	}
 
+	private PropertyExpression getPropertyExpression (AbstractNamedValue nv) {
+		if (nv instanceof PropertyConstant) {
+			return ((PropertyConstant) nv).getConstantValue();
+		}
+
+		// EGM-TODO: need to pull out the property value rather that the default value,
+		// but I am not sure how to do that.
+		if (nv instanceof Property) {
+			assert ("ERROR: default property value in AgreeASTBuilder::PropertyExpression" == null);
+			return ((Property) nv).getDefaultValue();
+		}
+
+		// nv is an enumeration literal
+		assert ("ERROR: enumeration literal in AgreeASTBuildter::getPropertyExpression" == null);
+		return null;
+	}
+
+	// EGM-COMMENT: RangeValueImpl::getNumberValue(pe) does not cover the NamedValue instance
+	// of a property expression. The getNumberValue here duplicates that code and adds the
+	// missing type. RangeValueImpl::getNumberValue(pe) is used by RangeValueImpl::getMavimumValue()
+	// and its minimum value counterpart. These are needed for the range constraints.
+	private NumberValue getNumberValue(PropertyExpression pe) {
+		if (pe instanceof Operation) {
+			pe = ((Operation) pe).getOwnedPropertyExpressions().get(0);
+		}
+
+		if (pe instanceof NumberValue) {
+			return (NumberValue) pe;
+		}
+
+		if (pe instanceof PropertyConstant) {
+			return (NumberValue) ((PropertyConstant) pe).getConstantValue();
+		}
+
+		if (pe instanceof NamedValue) {
+			pe = getPropertyExpression(((NamedValue) pe).getNamedValue());
+			return getNumberValue(pe);
+		}
+
+		assert ("ERROR: missing type in AgreeASTBuilder::getNumberValue" == null);
+		return null;
+	}
+
+	private double getScaledValue(PropertyExpression pe) {
+		return getNumberValue(pe).getScaledValue();
+	}
+
+	private Expr createExprForBound(String name, RangeValue rv, Function<BigDecimal, Expr> makeExpr) {
+		double min = getScaledValue(rv.getMinimum());
+		double max = getScaledValue(rv.getMaximum());
+		IdExpr id = new IdExpr(name);
+		Expr lowVal = makeExpr.apply(BigDecimal.valueOf(min));
+		Expr highVal = makeExpr.apply(BigDecimal.valueOf(max));
+		Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+		Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+		return LustreExprFactory.makeANDExpr(lowBound, highBound);
+	}
+
+
 	private Expr getDataClassifierRangeConstraintExpr(String name, DataClassifier dataClassifier) {
 		List<Expr> constraints = new ArrayList<>();
 
-		if (dataClassifier instanceof DataType) {
+		if (dataClassifier instanceof DataType &&
+				(hasIntegerRangeProperty(dataClassifier) || hasRealRangeProperty(dataClassifier))) {
+			Function<BigDecimal, Expr> makeExpr = null;
+			List<PropertyAssociation> pa_list = null;
 			if (hasIntegerRangeProperty(dataClassifier)) {
-				for (PropertyAssociation pa : getIntegerRangePropertyAssociations(dataClassifier)) {
-					for (ModalPropertyValue pv : pa.getOwnedValues()) {
-						PropertyExpression propExpr = pv.getOwnedValue();
-						if (propExpr instanceof RangeValue) {
-							RangeValue rangeValue = (RangeValue) propExpr;
-							double min = rangeValue.getMinimumValue().getScaledValue();
-							double max = rangeValue.getMaximumValue().getScaledValue();
-							IdExpr id = new IdExpr(name);
-							Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
-							Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
-							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-							constraints.add(bound);
-						}
-					}
-				}
-			} else if (hasRealRangeProperty(dataClassifier)) {
-				for (PropertyAssociation pa : getRealRangePropertyAssociations(dataClassifier)) {
-					for (ModalPropertyValue pv : pa.getOwnedValues()) {
-						PropertyExpression propExpr = pv.getOwnedValue();
-						if (propExpr instanceof RangeValue) {
-							RangeValue rangeValue = (RangeValue) propExpr;
-							double min = rangeValue.getMinimumValue().getScaledValue();
-							double max = rangeValue.getMaximumValue().getScaledValue();
-							IdExpr id = new IdExpr(name);
-							Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
-							Expr highVal = new RealExpr(BigDecimal.valueOf(max));
-							Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-							Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-							Expr bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
-							constraints.add(bound);
-						}
+				makeExpr = (bigDec) -> {return new IntExpr(bigDec.toBigInteger());};
+				pa_list = getIntegerRangePropertyAssociations(dataClassifier);
+			} else {
+				makeExpr = (bigDec) -> {return new RealExpr(bigDec);};
+				pa_list = getRealRangePropertyAssociations(dataClassifier);
+			}
+			for (PropertyAssociation pa : pa_list) {
+				for (ModalPropertyValue pv : pa.getOwnedValues()) {
+					PropertyExpression propExpr = pv.getOwnedValue();
+					if (propExpr instanceof RangeValue) {
+						Expr bound = createExprForBound(name, (RangeValue)propExpr, makeExpr);
+						constraints.add(bound);
 					}
 				}
 			}
-
 		} else if (dataClassifier instanceof DataImplementation) {
 			constraints.addAll(((DataImplementation) dataClassifier).getAllSubcomponents().stream()
 					.filter(sub -> sub.getSubcomponentType() instanceof DataClassifier)
@@ -1189,7 +1249,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					.collect(Collectors.toList()));
 		}
 
-		return constraints.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
+		return constraints.stream().reduce(new BoolExpr(true),
+				(a, b) -> LustreExprFactory.makeANDExpr(a, b));
 	}
 
 	private AgreeStatement getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
@@ -1231,7 +1292,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				}
 				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
 				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-				result = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+				result = LustreExprFactory.makeANDExpr(lowBound, highBound);
 			}
 		} else if (type instanceof CustomType) {
 			CustomType recType = (CustomType) type;
@@ -1342,7 +1403,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 	}
 
-	// BEGIN CASE EXPRESSION STATEMENTS
+// BEGIN CASE EXPRESSION STATEMENTS
 	@Override
 	public Expr caseRecordUpdateExpr(RecordUpdateExpr upExpr) {
 
@@ -1538,7 +1599,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			break;
 		case "and":
 			binOp = BinaryOp.AND;
-			break;
+			return LustreExprFactory.makeANDExpr(leftExpr, rightExpr);
 		case "xor":
 			binOp = BinaryOp.XOR;
 			break;
@@ -1679,7 +1740,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return null;
 	}
 
-	// helper method for above
+// helper method for above
 	private Equation nodeEqToEq(NodeEq nodeEq) {
 		Expr expr = doSwitch(nodeEq.getExpr());
 		List<IdExpr> ids = new ArrayList<>();
@@ -1783,7 +1844,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 							BigDecimal.valueOf(((IntegerLiteral) upperBound).getScaledValue()).toBigInteger());
 					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
 					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
-					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+					bound = LustreExprFactory.makeANDExpr(lowBound, highBound);
 				}
 			} else if (prop.getReferencedPropertyType() instanceof AadlReal) {
 				AadlReal aadlReal = (AadlReal) prop.getReferencedPropertyType();
@@ -1797,7 +1858,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					Expr highVal = new RealExpr(BigDecimal.valueOf(((RealLiteral) upperBound).getValue()));
 					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
 					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
-					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+					bound = LustreExprFactory.makeANDExpr(lowBound, highBound);
 				}
 			} else {
 				throw new AgreeException(
@@ -1811,7 +1872,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 			Expr constraint = getUnchangingConstraintExpr(propInputIdExpr);
 			if (bound != null) {
-				constraint = new BinaryExpr(constraint, BinaryOp.AND, bound);
+				constraint = LustreExprFactory.makeANDExpr(constraint, bound);
 			}
 
 			inputs.add(propInputVar);
@@ -1914,7 +1975,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 	}
 
-	// TODO: implement translation for array expressions.
+// TODO: implement translation for array expressions.
 	@Override
 	public Expr caseArrayLiteralExpr(ArrayLiteralExpr expr) {
 		throw new NotImplementedException("TODO");
@@ -1954,7 +2015,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public Expr caseIndicesExpr(IndicesExpr expr) {
 		throw new NotImplementedException("TODO");
 	}
-	//////////
+//////////
 
 	@Override
 	public Expr caseEnumLitExpr(EnumLitExpr aadlEnum) {
