@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AGREE Code Generation
 Bundle-SymbolicName: com.rockwellcollins.atc.agree.codegen;singleton:=true
-Bundle-Version: 2.3.6.qualifier
+Bundle-Version: 2.3.6.vfinal
 Bundle-Activator: com.rockwellcollins.atc.agree.codegen.Activator
 Bundle-Vendor: ROCKWELLCOLLINS
 Require-Bundle: org.eclipse.ui,
