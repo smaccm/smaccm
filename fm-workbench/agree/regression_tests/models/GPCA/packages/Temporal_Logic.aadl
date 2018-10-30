@@ -1,0 +1,74 @@
+package Temporal_Logic
+public 
+
+annex agree {**
+    
+    -- Past time temporal logic operators implemented in Lustre
+    
+    node Y(inp: bool) returns (outp: bool); 
+    let
+      outp = false -> pre(inp);
+    tel;
+
+    node Z(inp: bool) returns (outp: bool); 
+    let
+      outp = true -> pre(inp); 
+    tel;
+    
+    node H(inp: bool) returns (outp: bool); 
+    let
+      outp = inp -> (inp and pre(outp));
+    tel;
+    
+    node O(inp: bool) returns (outp: bool); 
+    let
+      outp = inp -> (inp or (pre(outp))); 
+    tel ; 
+
+    node S_Univ(p: bool, q: bool) returns (outp: bool); 
+    let
+      outp = (Y(O(q))) => p;   
+    tel;
+
+	node T_Univ(p: bool, q: bool) returns (outp: bool);
+    let
+      outp = (S_Univ(q,p)) or H(p) ; 
+    tel;
+	
+	-- Edge detection	
+	node Rising_Edge(inp: bool, init: bool) returns (outp: bool);
+	let
+		outp = init -> (inp and not (pre(inp)));
+	tel;
+	
+	node Falling_Edge(inp: bool, init: bool) returns (outp: bool);
+	let
+		outp = init -> ((not inp) and (pre(inp)));
+	tel;
+	
+	node Either_Edge(inp: bool, init: bool) returns (outp: bool);
+	let
+		outp = init -> (inp <> (pre(inp)));
+	tel;
+	
+	
+	-- Region-based TL statements
+	node Occurs_Within(region: bool, expected: bool) returns (outp: bool);
+	var 
+		occurred_in_region: bool;
+	let
+		occurred_in_region = 
+			if (Rising_Edge(region, region)) then expected else 
+				(false -> (expected or pre(occurred_in_region)));
+		outp = Falling_Edge(region, false) => occurred_in_region;
+	tel;
+	
+	-- Timer operators implemented in Lustre
+	node Simple_Timer( ) returns (outp: int);
+	let
+	   outp = 0 -> pre(outp) + 1;
+	tel;
+	
+**};
+
+end Temporal_Logic;

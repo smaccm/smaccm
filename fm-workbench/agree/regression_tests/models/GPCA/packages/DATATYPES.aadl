@@ -1,0 +1,292 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The data definitions in this file matches the data inputs in buses-uint8.mat for the behavioral models 
+--------------------------------------------------------------------------
+
+package DATATYPES
+public
+with Base_Types;
+
+ data Alarm_Outputs
+  end Alarm_Outputs;
+  
+  data implementation Alarm_Outputs.Impl
+  	subcomponents
+  		Is_Audio_Disabled : data Base_Types::Integer ; 
+  		Notification_Message : data Base_Types::Integer ; 
+  		Audio_Notification_Command : data Base_Types::Integer ;
+  		Highest_Level_Alarm : data Base_Types::Integer ; 
+  		Log_Message_ID : data Base_Types::Integer ; 
+  		--Current_Alarm : data Base_Types::Integer ;
+  		--Added by Anitha on 5/6 after changing model.
+  		--Actual_Reservoir_Volume : data Base_Types::Integer ;   
+  		--Infuse_Ok : data Base_Types::Boolean ;   
+  		--Actual_Volume_Infused : data Base_Types::Integer ;   
+  		   
+  end Alarm_Outputs.Impl;
+  
+   data Config_Outputs
+  end Config_Outputs;
+  
+  data implementation Config_Outputs.Impl
+    subcomponents
+   	  Patient_ID: data Base_Types::Integer;
+      Drug_Name: data Base_Types::Integer;
+      Drug_Concentration: data Base_Types::Integer;
+      Infusion_Total_Duration : data Base_Types::Integer; 
+      VTBI_Total : data Base_Types::Integer; 
+      Flow_Rate_Basal : data Base_Types::Integer;
+      Flow_Rate_Intermittent_Bolus : data Base_Types::Integer; 
+      Duration_Intermittent_Bolus : data Base_Types::Integer ; 
+      Interval_Intermittent_Bolus : data Base_Types::Integer ;
+      Flow_Rate_Patient_Bolus : data Base_Types::Integer ;
+      Duration_Patient_Bolus : data Base_Types::Integer ;
+      Lockout_Period_Patient_Bolus :data Base_Types::Integer ;
+      Max_Number_of_Patient_Bolus : data Base_Types::Integer ;
+      Flow_Rate_KVO : data Base_Types::Integer ; 
+      Entered_Reservoir_Volume: data Base_Types::Integer ;
+  	  --Reservoir_Current_Volume: data Base_Types::Integer ;
+  	  Reservoir_Volume: data Base_Types::Integer ;
+  	  Configured: data Base_Types::Integer ;
+  	  Error_Message_ID: data Base_Types::Integer ;
+  	  Request_Config_Type : data Base_Types::Boolean ; 
+  	  Request_Confirm_Infusion_Initiate : data Base_Types::Boolean ; 
+  	  Request_Patient_Drug_Info : data Base_Types::Boolean ; 
+  	  Request_Infusion_Info : data Base_Types::Boolean ; 
+  	  Log_Message_ID : data Base_Types::Integer ; 
+  	  Config_Timer : data Base_Types::Integer ;
+  	  Config_Mode : data Base_Types::Integer ;    
+  end Config_Outputs.Impl; 
+  
+  
+  data Device_Configuration_Inputs
+  end Device_Configuration_Inputs;
+  
+  data implementation Device_Configuration_Inputs.Impl
+  	subcomponents 
+  		Audio_Enable_Duration : data Base_Types::Integer ;
+  		Audio_Level : data Base_Types::Integer ;
+  		Config_Warning_Duration : data Base_Types::Integer ;
+  		Empty_Reservoir : data Base_Types::Integer ;
+  		Low_Reservoir : data Base_Types::Integer ;
+  		Max_Config_Duration : data Base_Types::Integer ;
+  		Max_Duration_Over_Infusion : data Base_Types::Integer ;
+  		Max_Duration_Under_Infusion : data Base_Types::Integer ;
+  		Max_Paused_Duration : data Base_Types::Integer ;
+  		Max_Idle_Duration : data Base_Types::Integer ;
+  		Tolerance_Max : data Base_Types::Integer ;
+  		Tolerance_Min : data Base_Types::Integer ;
+		Log_Interval  : data Base_Types::Integer ;
+		System_Test_Inteval : data Base_Types::Integer ;
+		Max_Display_Duration : data Base_Types::Integer ;
+		Max_Confirm_Stop_Duration : data Base_Types::Integer ;
+  end Device_Configuration_Inputs.Impl;
+  
+  
+  data Device_Sensor_Inputs
+  end Device_Sensor_Inputs;
+
+  data implementation Device_Sensor_Inputs.Impl
+  	subcomponents
+  		Flow_Rate : data Base_Types::Integer ; 
+  		Flow_Rate_Not_Stable : data Base_Types::Boolean ; 
+  		Air_In_Line : data Base_Types::Boolean ; 
+  		Occlusion : data Base_Types::Boolean ; 
+  		Door_Open : data Base_Types::Boolean ; 
+  		Temp : data Base_Types::Boolean ; 
+  		Air_Pressure : data Base_Types::Boolean ; 
+  		Humidity : data Base_Types::Boolean ; 
+  		Battery_Depleted : data Base_Types::Boolean ;
+  		Battery_Low : data Base_Types::Boolean ;
+  		Battery_Unable_To_Charge : data Base_Types::Boolean ;
+  		Supply_Voltage : data Base_Types::Boolean ; 
+  		CPU_Error : data Base_Types::Boolean ;
+  		RTC_Error : data Base_Types::Boolean ;
+  		Watchdog_Interrupted : data Base_Types::Boolean ;
+  		Memory_Corrupted : data Base_Types::Boolean ;
+  		--Log : data Base_Types::Boolean ;
+  		Pump_Too_Hot : data Base_Types::Boolean ;
+  		Pump_Overheated : data Base_Types::Boolean ;
+  		Pump_Primed : data Base_Types::Boolean ;
+  		Post_Successful : data Base_Types::Boolean ;
+  end Device_Sensor_Inputs.Impl;
+  
+   data Drug_Database_Inputs
+  end Drug_Database_Inputs;
+  
+  data implementation Drug_Database_Inputs.Impl
+  	subcomponents
+  		Known_Prescription: data Base_Types::Boolean ; 
+  		Drug_Name: data Base_Types::Integer ; 
+  		Drug_Concentration_High: data Base_Types::Integer ; 
+  		Drug_Concentration_Low: data Base_Types::Integer ; 
+  		VTBI_High : data Base_Types::Integer ; 
+  		VTBI_Low : data Base_Types::Integer ; 
+  		Inteval_Patient_Bolus : data Base_Types::Integer ;
+  		Number_Max_Patient_Bolus : data Base_Types::Integer ; 
+  		Flow_Rate_KVO : data Base_Types::Integer ; 
+  		Flow_Rate_High : data Base_Types::Integer ;
+  		Flow_Rate_Low : data Base_Types::Integer ; 
+  end Drug_Database_Inputs.Impl;
+  
+  
+ data GPCA_SW_Outputs
+  end GPCA_SW_Outputs; 
+  
+  data implementation GPCA_SW_Outputs.Impl
+  	subcomponents  		
+	 Request_Confirm_Stop : data Base_Types::Boolean ; 
+	 Log : data  Base_Types::Integer ;
+	 Current_System_Mode : data Base_Types::Integer ;
+	 Actual_Infusion_Duration : data  Base_Types::Integer ; 
+	 Commanded_Flow_Rate : data  Base_Types::Integer ; 
+	 Volume_Infused : data Base_Types::Integer ; 
+	 Reservoir_Volume : data Base_Types::Integer ; 
+	 Is_Audio_Disabled : data Base_Types::Integer ; 
+	 Notification_Message : data Base_Types::Integer ; 
+	 Audio_Notification_Command : data Base_Types::Integer ; 
+	 Patient_ID: data Base_Types::Integer ; 
+	  Drug_Name: data Base_Types::Integer ; 
+	  Drug_Concentration: data Base_Types::Integer ; 
+	  Infusion_Total_Duration : data Base_Types::Integer ; 
+	  VTBI_Total : data Base_Types::Integer ; 
+	  Flow_Rate_Basal : data Base_Types::Integer ; 
+	  Flow_Rate_Intermittent_Bolus : data Base_Types::Integer ; 
+	  Duration_Intermittent_Bolus : data Base_Types::Integer ; 
+	  Interval_Intermittent_Bolus : data Base_Types::Integer ; 
+	  Flow_Rate_Patient_Bolus : data Base_Types::Integer ; 
+	  Duration_Patient_Bolus : data Base_Types::Integer ; 
+	  Lockout_Period_Patient_Bolus :data Base_Types::Integer ; 
+	  Max_Number_of_Patient_Bolus : data Base_Types::Integer ; 
+	  Flow_Rate_KVO : data Base_Types::Integer ; 
+	  Entered_Reservoir_Volume: data Base_Types::Integer ; 
+	  Configured: data Base_Types::Integer ; 
+	  Error_Message_ID: data Base_Types::Integer ; 
+	  Request_Config_Type : data Base_Types::Boolean ; 
+	  Request_Confirm_Infusion_Initiate : data Base_Types::Boolean ; 
+	  Request_Patient_Drug_Info : data Base_Types::Boolean ; 
+	  Request_Infusion_Info : data Base_Types::Boolean ; 
+	  New_Infusion : data Base_Types::Boolean ;
+
+	  Is_Locked_Out:data Base_Types::Boolean;
+  end GPCA_SW_Outputs.Impl;
+  
+  data Infusion_Manager_Outputs
+  end Infusion_Manager_Outputs; 
+  
+  data implementation Infusion_Manager_Outputs.Impl
+  	subcomponents
+  		Commanded_Flow_Rate : data Base_Types::Integer;
+  		Current_System_Mode : data Base_Types::Integer ; 
+  		New_Infusion : data Base_Types::Boolean ; 
+  		Log_Message_ID : data Base_Types::Integer ;
+  		Actual_Infusion_Duration : data Base_Types::Integer ; 
+  		Is_Locked_Out:data Base_Types::Boolean;
+  end Infusion_Manager_Outputs.Impl;
+  
+  data Log_Output
+  end Log_Output; 
+  
+  data implementation Log_Output.Impl	
+  	subcomponents
+  		Log : data Base_Types::Integer;
+  		Logging_Failed : data Base_Types::Boolean ;
+  end Log_Output.Impl;
+  
+  
+  data Operator_Commands
+  end Operator_Commands;
+    
+data implementation Operator_Commands.Impl
+    subcomponents
+      System_Start: data Base_Types::Boolean ; 
+      System_Stop: data Base_Types::Boolean ; 
+      Infusion_Initiate : data Base_Types::Boolean ; 
+      Infusion_Inhibit : data Base_Types::Boolean ;
+      Infusion_Cancel : data Base_Types::Boolean ; 
+      Data_Config : data Base_Types::Boolean ; 
+      Next : data Base_Types::Boolean ; 
+      Back : data Base_Types::Boolean ; 
+      Cancel : data Base_Types::Boolean ; 
+      Keyboard : data Base_Types::Boolean ; 
+      Disable_Audio : data Base_Types::Integer ; 
+      Notification_Cancel : data Base_Types::Boolean ; 
+      Configuration_Type : data Base_Types::Integer ; 
+      Confirm_Stop : data Base_Types::Boolean ; 
+  end Operator_Commands.Impl;
+  
+
+data Patient_Inputs
+  end Patient_Inputs;
+
+  data implementation Patient_Inputs.Impl
+  	subcomponents
+  		Patient_Bolus_Request : data Base_Types::Boolean ; 
+  end Patient_Inputs.Impl;
+
+
+ data Prescription_Inputs
+  end Prescription_Inputs;
+
+  data implementation Prescription_Inputs.Impl
+    subcomponents
+      Patient_ID: data Base_Types::Integer;
+      Drug_Name: data Base_Types::Integer;
+      Drug_Concentration: data Base_Types::Integer;
+      VTBI_Total : data Base_Types::Integer; 
+      Total_Duration : data Base_Types::Integer; 
+      Flow_Rate_Basal : data Base_Types::Integer;
+      Flow_Rate_Intermittent_Bolus : data Base_Types::Integer; 
+      Duration_Intermittent_Bolus : data Base_Types::Integer ; 
+      Interval_Intermittent_Bolus : data Base_Types::Integer ;
+      Flow_Rate_Patient_Bolus : data Base_Types::Integer ;
+      Duration_Patient_Bolus : data Base_Types::Integer ;
+      Lockout_Period_Patient_Bolus :data Base_Types::Integer ;
+      Max_Number_of_Patient_Bolus : data Base_Types::Integer ;
+      Entered_Reservoir_Volume: data Base_Types::Integer ;
+  end Prescription_Inputs.Impl;
+
+ 
+  
+  data System_Monitor_Output
+  end System_Monitor_Output;
+  
+  data implementation System_Monitor_Output.Impl
+   subcomponents
+     System_Monitor_Failed : data Base_Types::Boolean ; 
+  end System_Monitor_Output.Impl; 
+  
+  
+  data System_Status_Outputs
+  end System_Status_Outputs;
+  
+  data implementation System_Status_Outputs.Impl
+  subcomponents
+   Reservoir_Empty : data Base_Types::Boolean ; 
+   Reservoir_Volume : data Base_Types::Integer ;  
+   Volume_Infused : data Base_Types::Integer ;  
+   Log_Message_ID : data Base_Types::Integer ;  
+   In_Therapy : data Base_Types::Boolean ; 
+   Paused_Time_Exceeded : data Base_Types::Boolean ; 
+   Idle_Time_Exceeded : data Base_Types::Boolean ;    
+  end System_Status_Outputs.Impl; 
+  
+  
+    
+  data Top_Level_Mode_Outputs
+  end Top_Level_Mode_Outputs;
+  
+  data implementation Top_Level_Mode_Outputs.Impl
+  	subcomponents 
+  		System_On: data Base_Types::Boolean ; 
+  		Request_Confirm_Stop: data Base_Types::Boolean ; 
+  		Log_Message_ID : data Base_Types::Integer ; 
+  end Top_Level_Mode_Outputs.Impl;
+  
+end DATATYPES;

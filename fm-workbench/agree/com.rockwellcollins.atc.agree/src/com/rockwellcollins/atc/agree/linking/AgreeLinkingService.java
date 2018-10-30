@@ -18,14 +18,20 @@ import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.Aadl2Package;
+import org.osate.aadl2.AadlPackage;
+import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
 import org.osate.aadl2.util.Aadl2Util;
+import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 
+import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -34,10 +40,13 @@ import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
+import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
 	public AgreeLinkingService() {
@@ -48,21 +57,25 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 	public List<EObject> getLinkedObjects(EObject context, EReference reference, INode node)
 			throws IllegalNodeException {
 		String name = getCrossRefNodeAsString(node);
-		// TODO This will have to be changed in the develop branch
-		name = name.replaceAll("::", ".");
 
 		if (context instanceof PropertyValue) {
 			return findUnitLiteralAsList((Element) context, name);
 		}
 
-		if (context instanceof NestedDotID || context instanceof NodeEq || context instanceof SynchStatement
+		if (context instanceof TypeID || context instanceof NestedDotID || context instanceof NodeEq
+				|| context instanceof SynchStatement
 				|| context instanceof RecordExpr || context instanceof RecordType || context instanceof GetPropertyExpr
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
 				|| context instanceof OrderStatement || context instanceof ConnectionStatement) {
 
 			// EObject e = findClassifier(context, reference, name);
 			EObject e = getIndexedObject(context, reference, name);
-
+			if (e == null) {
+				e = findClassifier(context, reference, name);
+			}
+			if (e == null) {
+				e = recordDefFromQualifiedType(context, reference, name);
+			}
 			if (e != null) {
 				return Collections.singletonList(e);
 			}
@@ -78,6 +91,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 				if (isVisible(eod, visibleProjects)) {
 					EObject res = eod.getEObjectOrProxy();
 					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+
 					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
 						// special code for AGREE enumerated types
 						if (((NamedID) res).getName().equals(name)) {
@@ -96,8 +110,37 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 		return super.getLinkedObjects(context, reference, node);
 	}
 
+	private RecordDefExpr recordDefFromQualifiedType(EObject context, EReference reference, String name) {
+		String[] segments = name.split("\\.");
+
+		if (segments.length == 2) {
+			String pkgName = segments[0];
+			String recordTypeName = segments[1];
+			EObject eo = getIndexedObject(context, reference, pkgName);
+
+			if (eo instanceof AadlPackage) {
+				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) eo),
+						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+
+					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+					for (SpecStatement spec : contract.getSpecs()) {
+						if (spec instanceof RecordDefExpr) {
+							if (((RecordDefExpr) spec).getName().equals(recordTypeName)) {
+								return ((RecordDefExpr) spec);
+							}
+
+						}
+					}
+
+				}
+			}
+
+		}
+		return null;
+	}
+
 	private static boolean sameName(IEObjectDescription eod, String name) {
-		return eod.getName().toString().equalsIgnoreCase(name);
+		return eod.getName().toString().equalsIgnoreCase(name.replace("::", "."));
 	}
 
 	private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {

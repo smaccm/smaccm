@@ -3,8 +3,8 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -37,7 +37,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * @generated
    * @ordered
    */
-  protected NestedDotID record;
+  protected TypeID record;
 
   /**
    * <!-- begin-user-doc -->
@@ -65,7 +65,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getRecord()
+  public TypeID getRecord()
   {
     return record;
   }
@@ -75,9 +75,9 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetRecord(NestedDotID newRecord, NotificationChain msgs)
+  public NotificationChain basicSetRecord(TypeID newRecord, NotificationChain msgs)
   {
-    NestedDotID oldRecord = record;
+    TypeID oldRecord = record;
     record = newRecord;
     if (eNotificationRequired())
     {
@@ -92,7 +92,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setRecord(NestedDotID newRecord)
+  public void setRecord(TypeID newRecord)
   {
     if (newRecord != record)
     {
@@ -151,7 +151,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
     switch (featureID)
     {
       case AgreePackage.RECORD_TYPE__RECORD:
-        setRecord((NestedDotID)newValue);
+        setRecord((TypeID)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -168,7 +168,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
     switch (featureID)
     {
       case AgreePackage.RECORD_TYPE__RECORD:
-        setRecord((NestedDotID)null);
+        setRecord((TypeID)null);
         return;
     }
     super.eUnset(featureID);

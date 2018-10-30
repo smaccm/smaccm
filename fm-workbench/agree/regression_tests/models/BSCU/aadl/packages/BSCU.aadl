@@ -1,0 +1,312 @@
+-- 
+package BSCU
+public
+with Base_Types,QS_Properties;
+  data ChannelStatus
+  end ChannelStatus;
+  
+  data PanelMsg
+  end PanelMsg;
+  
+  data SyncMsg
+  end SyncMsg;
+  
+  system BSCU
+    features
+      Panel: in data port PanelMsg.PanelMsgImpl;
+      CH1: out data port ChannelStatus.ChannelStatusImpl;
+      CH2: out data port ChannelStatus.ChannelStatusImpl;
+      Pedal: in data port Base_Types::Integer;
+      FailCOM1: in data port Base_Types::Boolean;
+      FailMON1: in data port Base_Types::Boolean;
+      FailCOM2: in data port Base_Types::Boolean;
+      FailMON2: in data port Base_Types::Boolean;
+    annex agree {**
+      
+      -- Inserted from /contracts/BSCU.txt
+
+     eq Initializing : bool;
+     
+     eq COM1Failed: bool = Agree_Nodes.Latch(FailCOM1);
+     eq COM2Failed: bool = Agree_Nodes.Latch(FailCOM2);
+     eq MON1Failed: bool = Agree_Nodes.Latch(FailMON1);
+     eq MON2Failed: bool = Agree_Nodes.Latch(FailMON2);
+     
+     eq No_Failed_Component: bool = 
+        not (COM1Failed or COM2Failed or MON1Failed or MON2Failed);
+        
+     eq At_Most_One_Failed_Component: bool = 
+        (COM1Failed => not (COM2Failed or MON1Failed or MON2Failed)) and
+        (COM2Failed => not (COM1Failed or MON1Failed or MON2Failed)) and
+        (MON1Failed => not (COM1Failed or COM2Failed or MON2Failed)) and
+        (MON2Failed => not (COM1Failed or COM2Failed or MON1Failed));
+        
+     assume "At Most One Failed Component" : At_Most_One_Failed_Component;
+     
+     assume "Fixed Pedal Pressure" : Pedal = 100;
+     
+     assume "Only One Button Pressed at a Time" :  
+             (Panel.LO  => not (Panel.MED or Panel.MAX)) and
+             (Panel.MED => not (Panel.LO  or Panel.MAX)) and
+             (Panel.MAX => not (Panel.LO  or Panel.MED));
+                                
+     assume "Button Presses are Long Enough to be Seen by All Nodes" : 
+             Agree_Nodes.True_At_Least(Panel.LO,  13) and
+             Agree_Nodes.True_At_Least(Panel.MED, 13) and 
+             Agree_Nodes.True_At_Least(Panel.MAX, 13);   
+                                                             
+     assume "Button Presses are Bounded in Duration" : 
+             Agree_Nodes.True_At_Most(Panel.LO,  20) and
+             Agree_Nodes.True_At_Most(Panel.MED, 20) and 
+             Agree_Nodes.True_At_Most(Panel.MAX, 20);   
+             
+     assume "Button Presses Do Not Occur Too Quickly" : 
+             Agree_Nodes.True_At_Least(not Panel.LO,  13) and
+             Agree_Nodes.True_At_Least(not Panel.MED, 13) and 
+             Agree_Nodes.True_At_Least(not Panel.MAX, 13);   
+
+     ----------------------------------------------------------------------------------------------------          
+     -- R1. At least one channel shall be error free if no components have failed.   
+     ----------------------------------------------------------------------------------------------------                                                        
+     guarantee "At Least One Channel Error Free - No Failures" : 
+            No_Failed_Component =>
+                 (not Initializing => (not CH1.Error or not CH2.Error));
+                 
+     ----------------------------------------------------------------------------------------------------               
+     -- R2. At least one channel shall be error free if at most one component has failed.
+     ----------------------------------------------------------------------------------------------------      
+     guarantee "At Least One Channel Error Free - One Failure" : 
+            At_Most_One_Failed_Component =>
+                 (not Initializing => (not CH1.Error or not CH2.Error));
+                 
+     ----------------------------------------------------------------------------------------------------           
+     -- R3. At least one channel shall be active if no components have failed.
+     ----------------------------------------------------------------------------------------------------           
+     guarantee "At Least One Channel Active - No Failures" :
+             No_Failed_Component =>
+                 (not Initializing => CH1.Active or CH2.Active);
+                 
+     ----------------------------------------------------------------------------------------------------          
+     -- R4. At least one channel shall be active if at most one component has failed.
+     ----------------------------------------------------------------------------------------------------                                
+     guarantee "At Least One Channel Active - One Failure" :
+             At_Most_One_Failed_Component =>
+                 Agree_Nodes.Duration(not Initializing and not(CH1.Active or CH2.Active)) < 7;
+
+     ----------------------------------------------------------------------------------------------------
+     -- R5. At most one channel shall be active if no components have failed.
+     ----------------------------------------------------------------------------------------------------                      
+     guarantee "At Most One Channel Active - No Failures" :
+             No_Failed_Component =>
+                 Agree_Nodes.Duration(not Initializing and CH1.Active and CH2.Active) < 7;
+                 
+     ----------------------------------------------------------------------------------------------------  
+     -- R6. At most one channel shall be active if at most one component has failed.  
+     ----------------------------------------------------------------------------------------------------                
+     guarantee "At Most One Channel Active - One Failure" :
+             At_Most_One_Failed_Component =>
+                 Agree_Nodes.Duration(not Initializing and CH1.Active and CH2.Active) < 7;
+**};
+  end BSCU;
+  
+  system COM
+    features
+      Panel: in data port PanelMsg.PanelMsgImpl;
+      CMD: out data port Base_Types::Integer;
+      Pedal: in data port Base_Types::Integer;
+      Fail: in data port Base_Types::Boolean;
+    annex agree {**
+      
+      -- Inserted from /contracts/COM.txt
+
+     eq Mode: int = Agree_Nodes.Brake_Mode(Mode, Panel.LO, Panel.MED, Panel.MAX);
+        
+     -- The CMD output is reliably output if the component is not failed
+     guarantee "Valve Command" : 
+         not Fail => CMD = Agree_Nodes.Brake_Cmd(Mode, Pedal);
+**};
+  end COM;
+  
+  system MON
+    features
+      Panel: in data port PanelMsg.PanelMsgImpl;
+      CMD_From_COM: in data port Base_Types::Integer;
+      Sync_To: out data port SyncMsg.SyncMsgImpl;
+      Sync_From: in data port SyncMsg.SyncMsgImpl;
+      Status: out data port ChannelStatus.ChannelStatusImpl;
+      Pedal: in data port Base_Types::Integer;
+      Fail: in data port Base_Types::Boolean;
+    properties
+      QS_Properties::Primary_Side => false;
+Source_Text => ("C:\\Users\\jdbackes\\git\\smaccm\\models\\Simulink_models\\BSCU\\scripts",
+								"C:\\Users\\jdbackes\\git\\smaccm\\models\\Simulink_models\\BSCU\\models\\MON_sl.slx", "MON_sl_after.slx",
+								"MON_Functional");
+    annex agree {**
+      
+      -- Inserted from /contracts/MON.txt
+
+      eq Primary_Side: bool = Get_Property(this, QS_Properties::Primary_Side);
+                    
+      eq Mode: int = Agree_Nodes.Brake_Mode(Mode, Panel.LO, Panel.MED, Panel.MAX);
+      
+      eq Error: bool =  Agree_Nodes.Latch(Agree_Nodes.Duration(not (Status.Cmd = CMD_From_COM)) > 15);
+      
+      eq Active : bool =     
+          -- first side started becomes the active side 
+          (not Sync_From.Active -> 	
+          	-- A side in error is never active 
+          	if (Error) then false 
+          	-- Resolve ties at start-up in favor of the primary side 
+          	else if (pre(Active) and Sync_From.Active and not Sync_From.Error and not Primary_Side) then false  	
+         	-- Other side is no longer active or is in error so we become active
+         	else if (not pre(Active) and (not Sync_From.Active or Sync_From.Error)) then true
+         	-- Otherwise no change
+         	else pre(Active));
+         	
+      -- The CMD output is reliably output if the component is not failed
+      guarantee "MON Brake Command" : 
+        not Fail => (Status.Cmd = Agree_Nodes.Brake_Cmd(Mode, Pedal));
+             
+      -- The Error status is reliably output even if the component is failed      
+      guarantee "Status Error" : Status.Error = Error;     
+      guarantee "Sync To Error" : Sync_To.Error = Error;
+      
+      -- The Active status is reliably output even if the component is failed   
+      guarantee "Status Active" : Status.Active = Active;
+      guarantee "Sync To Active" : Sync_To.Active = Active;        
+**};
+  end MON;
+  
+  data implementation ChannelStatus.ChannelStatusImpl
+    subcomponents
+      Error: data Base_Types::Boolean;
+      Active: data Base_Types::Boolean;
+      Cmd: data Base_Types::Integer;
+  end ChannelStatus.ChannelStatusImpl;
+  
+  data implementation PanelMsg.PanelMsgImpl
+    subcomponents
+      MAX: data Base_Types::Boolean;
+      MED: data Base_Types::Boolean;
+      LO: data Base_Types::Boolean;
+  end PanelMsg.PanelMsgImpl;
+  
+  data implementation SyncMsg.SyncMsgImpl
+    subcomponents
+      Active: data Base_Types::Boolean;
+      Error: data Base_Types::Boolean;
+  end SyncMsg.SyncMsgImpl;
+  
+  system implementation BSCU.BSCU_Impl
+    subcomponents
+      COM1: system COM {
+        QS_Properties::Clock_Name => "COM1";
+        };
+      MON1: system MON {
+        QS_Properties::Clock_Name => "MON1";
+        QS_Properties::Primary_Side => true;
+        };
+      COM2: system COM {
+        QS_Properties::Clock_Name => "COM2";
+        };
+      MON2: system MON {
+        QS_Properties::Clock_Name => "MON2";
+        QS_Properties::Primary_Side => false;
+        };
+    connections
+      panel_to_COM1: port Panel -> COM1.Panel {
+        Timing => immediate;
+        };
+      COM1_to_MON1: port COM1.CMD -> MON1.CMD_From_COM {
+        Timing => immediate;
+        };
+      pedal_to_COM1: port Pedal -> COM1.Pedal {
+        Timing => immediate;
+        };
+      fail_to_COM1: port FailCOM1 -> COM1.Fail {
+        Timing => immediate;
+        };
+      panel_to_MON1: port Panel -> MON1.Panel {
+        Timing => immediate;
+        };
+      MON1_to_MON2: port MON1.Sync_To -> MON2.Sync_From {
+        Timing => immediate;
+        };
+      MON2_to_MON1: port MON2.Sync_To -> MON1.Sync_From {
+        Timing => immediate;
+        };
+      Mon1_to_BSCU: port MON1.Status -> CH1 {
+        Timing => immediate;
+        };
+      pedal_to_MON1: port Pedal -> MON1.Pedal {
+        Timing => immediate;
+        };
+      fail_to_MON1: port FailMON1 -> MON1.Fail {
+        Timing => immediate;
+        };
+      panel_to_COM2: port Panel -> COM2.Panel {
+        Timing => immediate;
+        };
+      COM2_to_MON2: port COM2.CMD -> MON2.CMD_From_COM {
+        Timing => immediate;
+        };
+      pedal_to_COM2: port Pedal -> COM2.Pedal {
+        Timing => immediate;
+        };
+      fail_to_COM2: port FailCOM2 -> COM2.Fail {
+        Timing => immediate;
+        };
+      panel_to_MON2: port Panel -> MON2.Panel {
+        Timing => immediate;
+        };
+      Mon2_to_BSCU: port MON2.Status -> CH2 {
+        Timing => immediate;
+        };
+      pedal_to_MON2: port Pedal -> MON2.Pedal {
+        Timing => immediate;
+        };
+      fail_to_MON2: port FailMON2 -> MON2.Fail {
+        Timing => immediate;
+        };
+    annex agree {**
+      
+      -- Inserted from /contracts/BSCU_Impl.txt
+
+      synchrony : 2;
+     
+      -- Each component is running once its clock has ticked once
+      eq COM1_Running  : bool = COM1._CLK -> pre(COM1_Running) or COM1._CLK;
+      eq COM2_Running  : bool = COM2._CLK -> pre(COM2_Running) or COM2._CLK;
+      eq MON1_Running  : bool = MON1._CLK -> pre(MON1_Running) or MON1._CLK;
+      eq MON2_Running  : bool = MON2._CLK -> pre(MON2_Running) or MON2._CLK;
+      
+      -- System is initializing if any component is initializing
+      assert Initializing = not (COM1_Running and COM2_Running and MON1_Running and MON2_Running);
+    
+      -- Until a component starts running, other components should assume its not in error and not active  
+      assert not MON1_Running => not (MON1.Status.Active or MON1.Sync_To.Active or 
+      	                              MON1.Status.Error  or MON1.Sync_To.Error);
+      	                              
+      assert not MON2_Running => not (MON2.Status.Active or MON2.Sync_To.Active or 
+      	                              MON2.Status.Error  or MON2.Sync_To.Error); 
+       
+      -- These lemmas eliminate inductive counterexamples where the valve cmd is inconsistent with the braking mode
+      lemma "COM1 Consistency" : COM1._CLK and not FailCOM1 => (COM1.CMD = Agree_Nodes.Brake_Cmd(COM1.Mode,Pedal));
+      lemma "COM2 Consistency" : COM2._CLK and not FailCOM2 => (COM2.CMD = Agree_Nodes.Brake_Cmd(COM2.Mode,Pedal));
+      lemma "MON1 Consistency" : MON1._CLK and not FailMON1 => (MON1.Status.Cmd = Agree_Nodes.Brake_Cmd(MON1.Mode,Pedal));
+      lemma "MON2 Consistency" : MON2._CLK and not FailMON2 => (MON2.Status.Cmd = Agree_Nodes.Brake_Cmd(MON2.Mode,Pedal));
+         
+      -- These lemmas help to speed up the higher level proofs
+      lemma "CH1 Consistency" : (MON1_Running and COM1_Running) => Agree_Nodes.Duration(MON1.Mode != COM1.Mode) < 7;
+      lemma "CH2 Consistency" : (MON2_Running and COM2_Running) => Agree_Nodes.Duration(MON2.Mode != COM2.Mode) < 7;
+      
+      lemma "COM1 Sleeping Max" : Agree_Nodes.Duration(not COM1._CLK) < 7;
+      lemma "MON1 Sleeping Max" : Agree_Nodes.Duration(not MON1._CLK) < 7;
+      lemma "COM2 Sleeping Max" : Agree_Nodes.Duration(not COM2._CLK) < 7;
+      lemma "MON2 Sleeping Max" : Agree_Nodes.Duration(not MON2._CLK) < 7;
+    
+      lemma "CH1 Error Only if Failed" : CH1.Error => COM1Failed or MON1Failed;
+      lemma "Ch2 Error Only if Failed" : CH2.Error => COM2Failed or MON2Failed;
+**};
+  end BSCU.BSCU_Impl;
+end BSCU;

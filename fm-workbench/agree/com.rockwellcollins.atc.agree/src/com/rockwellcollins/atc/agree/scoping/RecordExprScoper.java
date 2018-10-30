@@ -23,6 +23,7 @@ import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 
 public class RecordExprScoper {
 
@@ -82,10 +83,7 @@ public class RecordExprScoper {
 		if (recStatement instanceof Arg) {
 			Type type = ((Arg) recStatement).getType();
 			if (type instanceof RecordType) {
-				NestedDotID nestExpr = ((RecordType) type).getRecord();
-				while (nestExpr.getSub() != null) {
-					nestExpr = nestExpr.getSub();
-				}
+				TypeID nestExpr = ((RecordType) type).getRecord();
 				return getRecordComponents(nestExpr.getBase(), outerScope);
 			}
 		} else if (recStatement instanceof DataPort) {

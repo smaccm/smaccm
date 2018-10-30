@@ -1,0 +1,247 @@
+-- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
+-- of the Defense Advanced Research Projects Agency (DARPA).
+--
+-- Permission is hereby granted, free of charge, to any person obtaining
+-- a copy of this data, including any software or models in source or
+-- binary form, as well as any drawings, specifications, and
+-- documentation (collectively "the Data"), to deal in the Data without
+-- restriction, including without limitation the rights to use, copy,
+-- modify, merge, publish, distribute, sublicense, and/or sell copies of
+-- the Data, and to permit persons to whom the Data is furnished to do
+-- so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Data.
+--
+-- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+-- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
+-- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+-- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
+-- DATA.
+package FGS
+public
+with AHS,ADS,FMS,NAV,FCI,LDS,Base_Types,IMA,META_Properties,PALS_Properties;
+  data Capture_Conditions
+  end Capture_Conditions;
+  
+  data Flight_Modes
+  end Flight_Modes;
+  
+  data Guidance_Commands
+  end Guidance_Commands;
+  
+  data Guidance_Data
+  end Guidance_Data;
+  
+  data Lateral_Modes
+  end Lateral_Modes;
+  
+  data Vertical_Modes extends Base_Types::Integer
+  end Vertical_Modes;
+  
+  thread Control_Laws
+    features
+      AH: in data port AHS::Attitude_Heading_Data;
+      AD: in data port ADS::Air_Data.Air_Data_Impl;
+      VNAV: in data port FMS::Flight_Management_Data;
+      NAV: in data port NAV::Navigation_Data;
+      CC: out data port Capture_Conditions;
+      MD: in data port Flight_Modes.Flight_Modes_Impl;
+      GC: out data port Guidance_Data.Guidance_Data_Impl;
+  end Control_Laws;
+  
+  process Flight_Guidance_Process
+    features
+      VNAV: in data port FMS::Flight_Management_Data;
+      AD: in data port ADS::Air_Data.Air_Data_Impl;
+      AH: in data port AHS::Attitude_Heading_Data;
+      NAV: in data port NAV::Navigation_Data;
+      FCI: in data port FCI::Flight_Crew_Interface_Data;
+      LSI: in data port LDS::Leader_Selection_Data.Leader_Selection_Data_Impl;
+      LSO: out data port LDS::Leader_Selection_Data.Leader_Selection_Data_Impl;
+      GC: out data port Guidance_Data.Guidance_Data_Impl;
+  end Flight_Guidance_Process;
+  
+  system Flight_Guidance_System
+    features
+      FCI: in data port FCI::Flight_Crew_Interface_Data;
+      AD: in data port ADS::Air_Data.Air_Data_Impl;
+      AH: in data port AHS::Attitude_Heading_Data;
+      VNAV: in data port FMS::Flight_Management_Data;
+      NAV: in data port NAV::Navigation_Data;
+      GC: out data port Guidance_Data.Guidance_Data_Impl; 
+      LSO: out data port LDS::Leader_Selection_Data.Leader_Selection_Data_Impl;
+      LSI: in data port LDS::Leader_Selection_Data.Leader_Selection_Data_Impl;
+
+annex agree {**
+	
+	---------------------------------------------------------------
+-- Flight_Guidance_System Contract
+--
+-- I assume that the GC output port has fields:
+--    active: Boolean ;
+--    pitch_delta: real ;
+-- and that the leader selection datatype has fields:
+--    Valid: Boolean ;
+--    Leader: Integer ;
+--
+-- Note: this is simplified from a 'real' active
+-- standby FGS.  It assumes that any time that
+-- the device is ok, it produces something where
+-- the output delta is o.k.  Really, you'd need to
+-- also account for state transfer from the other
+-- FGS.
+--
+-- Note: Right now we do not check anything if the
+-- other side is in control.  This is fine as
+-- long as the altimeter handles the step when the
+-- system is 'between' leaders without relying on
+-- the 'leader-to-be'.  Otherwise, we can
+-- uncomment the other-side properties, but
+-- verifying these requires circular reasoning at the
+-- FCS level.
+--
+------------------------------------------------------------------------
+
+  fun abs(x: real) : real = if (x > 0.0) then x else -x ;
+
+  --parameter META_Properties::Leader_Select_ID : int ;
+
+  property this_side_in_control =
+   GC.mds.active;
+
+  property active_implies_valid =
+    this_side_in_control => LSO.Valid ;
+
+  property leader_implies_active =
+    (LSO.Leader = Get_Property(this, META_Properties::Leader_Select_ID)) => GC.mds.active ;
+
+  const GC_MAX_PITCH_DELTA_STEP: real = 1.0 ; 
+  const GC_MAX_PITCH_DELTA: real = 5.0 ;
+
+  -- property other_side_in_control  =
+  --  (LSI.device_ok and LSI.leader = LSI.ID) ;
+
+  property gc_ok =
+     (true -> (abs(GC.cmds.Pitch_Delta - prev(GC.cmds.Pitch_Delta, 0.0)) < GC_MAX_PITCH_DELTA_STEP)) and
+     (abs(GC.cmds.Pitch_Delta) < GC_MAX_PITCH_DELTA);
+
+  guarantee "active implies valid" : active_implies_valid ;
+  guarantee "leader implies active" : leader_implies_active ;
+  guarantee "LSO and Pitch the same" : LSO.Valid <=> AD.Pitch.Valid ;
+
+  guarantee "this side in control pitch ok" :
+    this_side_in_control => gc_ok ;
+
+  guarantee "some name":
+  	this_side_in_control => (AD.Pitch.Val = GC.cmds.Pitch_Delta) ;
+
+-- End of Flight_Guidance_System Contract
+---------------------------------------------------------------
+**};
+
+  end Flight_Guidance_System;
+  
+  thread Mode_Logic
+    features
+      LSR: out data port LDS::Leader_Selection_Rank;
+      LSA: in data port LDS::Leader_Selection_Active;
+      FCI: in data port FCI::Flight_Crew_Interface_Data;
+      CC: in data port Capture_Conditions;
+      MD: out data port Flight_Modes.Flight_Modes_Impl;
+  end Mode_Logic;
+  
+  data implementation Flight_Modes.Flight_Modes_Impl
+    subcomponents
+      active: data Base_Types::Boolean;
+      lat: data Lateral_Modes.Lateral_Modes_Impl;
+      ver: data Vertical_Modes;
+  end Flight_Modes.Flight_Modes_Impl;
+  
+  data implementation Guidance_Commands.Guidance_Commands_Impl
+    subcomponents
+      Pitch_Valid: data Base_Types::Boolean;
+      Pitch_Delta: data Base_Types::Float;
+  end Guidance_Commands.Guidance_Commands_Impl;
+  
+  data implementation Guidance_Data.Guidance_Data_Impl
+    subcomponents
+      mds: data Flight_Modes.Flight_Modes_Impl;
+      cmds: data Guidance_Commands.Guidance_Commands_Impl;
+    properties
+      Data_Size => 1024 Bytes;
+  end Guidance_Data.Guidance_Data_Impl;
+  
+  data implementation Lateral_Modes.Lateral_Modes_Impl
+    subcomponents
+      ROLL_active: data Base_Types::Boolean;
+      HDG_active: data Base_Types::Boolean;
+  end Lateral_Modes.Lateral_Modes_Impl;
+  
+  data implementation Vertical_Modes.Vertical_Modes_Impl
+  end Vertical_Modes.Vertical_Modes_Impl;
+  
+  thread implementation Control_Laws.Control_Laws_Impl
+  end Control_Laws.Control_Laws_Impl;
+  
+  process implementation Flight_Guidance_Process.Flight_Guidance_Process_Impl
+    subcomponents
+      LS: thread LDS::Leader_Selection.Leader_Selection_Impl {
+        Deadline => 20 ms in binding (IMA::PowerPC_350Mhz);
+--        Deadline => 30 ms in binding (IMA::PowerPC_250Mhz);
+--        META_Properties::Output_Delay => 10 ms in binding (IMA::PowerPC_250Mhz);
+        META_Properties::Output_Delay => 7 ms in binding (IMA::PowerPC_350Mhz);
+        PALS_Properties::PALS_Id => "Leader_Selection";
+        PALS_Properties::PALS_Period => 40 ms;
+        Period => 40 ms;
+        };
+      ML: thread Mode_Logic.Mode_Logic_Impl;
+      CL: thread Control_Laws.Control_Laws_Impl;
+    connections
+      LSItoLS: port LSI -> LS.LSI;
+      LStoLSO: port LS.LSO -> LSO;
+      LStoML: port LS.LSA -> ML.LSA;
+      MLtoLS: port ML.LSR -> LS.LSR;
+      FCItoML: port FCI -> ML.FCI;
+      CCtoML: port CL.CC -> ML.CC;
+      MLtoCL: port ML.MD -> CL.MD;
+      AHtoCL: port AH -> CL.AH;
+      ADtoCL: port AD -> CL.AD;
+      VNAVtoCL: port VNAV -> CL.VNAV;
+      NAVtoCL: port NAV -> CL.NAV;
+      CLtoGC: port CL.GC -> GC;
+  end Flight_Guidance_Process.Flight_Guidance_Process_Impl;
+  
+  system implementation Flight_Guidance_System.Flight_Guidance_System_Impl
+    subcomponents
+      FGP: process Flight_Guidance_Process.Flight_Guidance_Process_Impl;
+    connections
+      VNAVtoFGP: port VNAV -> FGP.VNAV;
+      ADtoFGP: port AD -> FGP.AD;
+      AHtoFGP: port AH -> FGP.AH;
+      NAVtoFGP: port NAV -> FGP.NAV;
+      FCItoFGP: port FCI -> FGP.FCI;
+      LSItoFGP: port LSI -> FGP.LSI;
+      FGPtoLSO: port FGP.LSO -> LSO;
+      FGPtoGC: port FGP.GC -> GC;
+      
+      annex agree {**
+      	
+      	assert active_implies_valid ;
+  		assert leader_implies_active ; 
+  		assert LSO.Valid <=> AD.Pitch.Valid ;
+
+  		assert 
+    		this_side_in_control => gc_ok ;
+
+  		assert this_side_in_control => (AD.Pitch.Val = GC.cmds.Pitch_Delta) ;
+      **};
+      
+  end Flight_Guidance_System.Flight_Guidance_System_Impl;
+  
+  thread implementation Mode_Logic.Mode_Logic_Impl
+  end Mode_Logic.Mode_Logic_Impl;
+end FGS;

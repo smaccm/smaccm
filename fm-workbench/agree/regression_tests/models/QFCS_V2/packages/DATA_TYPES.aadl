@@ -1,0 +1,463 @@
+package DATA_TYPES
+public
+  with Base_Types;
+
+annex agree{**
+	type quad_bool = struct {val1 : bool, val2 : bool, val3 : bool, val4 :bool};
+	type dual_bool = struct {val1 : bool, val2 : bool};
+**};
+
+data Spoilers
+end Spoilers;
+
+data implementation Spoilers.treal
+  subcomponents
+    SPLOB : data Base_Types::Float;
+    SPLIB : data Base_Types::Float;
+    SPROB : data Base_Types::Float;
+    SPRIB : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
+end Spoilers.treal;
+
+data implementation Spoilers.tbool
+  subcomponents
+    SPLOB : data Base_Types::Boolean;
+    SPLIB : data Base_Types::Boolean;
+    SPROB : data Base_Types::Boolean; 
+    SPRIB : data Base_Types::Boolean;
+end Spoilers.tbool;
+
+data QUAD_Spoilers
+end QUAD_Spoilers;
+
+data implementation QUAD_Spoilers.treal
+  subcomponents
+    SPOIL1 : data Spoilers.treal;
+    SPOIL2 : data Spoilers.treal;
+    SPOIL3 : data Spoilers.treal;
+    SPOIL4 : data Spoilers.treal;
+end QUAD_Spoilers.treal;
+
+data implementation QUAD_Spoilers.tbool
+  subcomponents
+    SPOIL1 : data Spoilers.tbool;
+    SPOIL2 : data Spoilers.tbool;
+    SPOIL3 : data Spoilers.tbool;
+    SPOIL4 : data Spoilers.tbool;
+end QUAD_Spoilers.tbool;
+
+data Elevators
+end Elevators;
+
+data implementation Elevators.treal
+  subcomponents
+    ELLOB : data Base_Types::Float;
+    ELLIB : data Base_Types::Float;
+    ELROB : data Base_Types::Float;
+    ELRIB : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
+end Elevators.treal;
+
+data implementation Elevators.tbool
+  subcomponents
+    ELLOB : data Base_Types::Boolean;
+    ELLIB : data Base_Types::Boolean;
+    ELROB : data Base_Types::Boolean;
+    ELRIB : data Base_Types::Boolean;
+end Elevators.tbool;
+
+data QUAD_Elevators
+end QUAD_Elevators;
+
+data implementation QUAD_Elevators.treal
+  subcomponents
+    EL1 : data Elevators.treal;
+    EL2 : data Elevators.treal;
+    EL3 : data Elevators.treal;
+    EL4 : data Elevators.treal;
+end QUAD_Elevators.treal;
+
+data implementation QUAD_Elevators.tbool
+  subcomponents
+    EL1 : data Elevators.tbool;
+    EL2 : data Elevators.tbool;
+    EL3 : data Elevators.tbool;
+    EL4 : data Elevators.tbool;
+end QUAD_Elevators.tbool;
+
+data Ailerons
+end Ailerons;
+
+data implementation Ailerons.treal
+  subcomponents
+    AILL : data Base_Types::Float;
+    AILR : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
+end Ailerons.treal;
+
+
+data QUAD_Ailerons
+end QUAD_Ailerons;
+
+data implementation QUAD_Ailerons.treal
+  subcomponents
+    AIL1 : data Ailerons.treal;
+    AIL2 : data Ailerons.treal;
+    AIL3 : data Ailerons.treal;
+    AIL4 : data Ailerons.treal;
+end QUAD_Ailerons.treal;
+
+data Rudders
+end Rudders;
+
+data implementation Rudders.treal
+  subcomponents
+    RUDU : data Base_Types::Float;
+    RUDL : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
+end Rudders.treal;
+
+data QUAD_Rudders
+end QUAD_Rudders;
+
+data implementation QUAD_Rudders.treal
+  subcomponents
+    RUDD1 : data Rudders.treal;
+    RUDD2 : data Rudders.treal;
+    RUDD3 : data Rudders.treal;
+    RUDD4 : data Rudders.treal;
+end QUAD_Rudders.treal;
+
+data Flaps
+end Flaps;
+
+data implementation Flaps.treal
+  subcomponents
+    FLLOB : data Base_Types::Float;
+    FLLIB : data Base_Types::Float;
+    FLROB : data Base_Types::Float;
+    FLRIB : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
+end Flaps.treal;
+
+data QUAD_Flaps
+end QUAD_Flaps;
+
+data implementation QUAD_Flaps.treal
+  subcomponents
+    FLAPS1 : data Flaps.treal;
+    FLAPS2 : data Flaps.treal;
+    FLAPS3 : data Flaps.treal;
+    FLAPS4 : data Flaps.treal;
+end QUAD_Flaps.treal;
+
+data AoA
+end AoA;
+
+data implementation AoA.treal
+  subcomponents
+    AOA : data Base_Types::Float;  
+    TIME_STAMP : data Base_Types::Integer;
+end AoA.treal;
+
+data DUAL_AoA
+end DUAL_AoA;
+
+data implementation DUAL_AoA.treal
+  subcomponents
+    AOA1 : data AoA.treal;
+    AOA2 : data AoA.treal;
+end DUAL_AoA.treal;
+
+data AirData
+end AirData;
+
+data implementation AirData.treal
+  subcomponents
+    TAT : data Base_Types::Float;
+    TotPres : data Base_Types::Float;
+    Pres : data Base_Types::Float;
+    Temp : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
+end AirData.treal;
+
+data DUAL_AirData
+end DUAL_AirData;
+
+data implementation DUAL_AirData.treal
+  subcomponents
+    AD1 : data AirData.treal;
+    AD2 : data AirData.treal;
+end DUAL_AirData.treal;
+
+data Stabilizer
+end Stabilizer;
+
+data implementation Stabilizer.treal
+  subcomponents
+    VAL : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
+end Stabilizer.treal;
+
+data QUAD_Stabilizer
+end QUAD_Stabilizer;
+
+data implementation QUAD_Stabilizer.treal
+  subcomponents
+    STAB1 : data Stabilizer.treal;
+    STAB2 : data Stabilizer.treal;
+    STAB3 : data Stabilizer.treal;
+    STAB4 : data Stabilizer.treal;
+end QUAD_Stabilizer.treal;
+
+data EGI
+end EGI;
+
+data implementation EGI.treal
+  subcomponents
+    AOA : data Base_Types::Float;      -- TBD: SPM 2014/07/07: Is this actually part of the EGI interface?
+    TAT : data Base_Types::Float;      -- TBD: SPM 2014/07/08: Is this actually part of the EGI interface?
+    TotPres : data Base_Types::Float;  -- TBD: SPM 2014/07/08: Is this actually part of the EGI interface?
+    Pres : data Base_Types::Float;     -- TBD: SPM 2014/07/08: Is this actually part of the EGI interface?
+    Temp : data Base_Types::Float;     -- TBD: SPM 2014/07/08: Is this actually part of the EGI interface?
+    
+    PHI : data Base_Types::Float;
+    THETA : data Base_Types::Float;
+    PSI : data Base_Types::Float;
+    PB : data Base_Types::Float;
+    QB : data Base_Types::Float;
+    RB : data Base_Types::Float;
+    NX : data Base_Types::Float;
+    NY : data Base_Types::Float;
+    NZ : data Base_Types::Float;
+    VN : data Base_Types::Float;
+    VE : data Base_Types::Float;
+    HDOT : data Base_Types::Float;
+    LAT : data Base_Types::Float;
+    LON : data Base_Types::Float;
+    ALT : data Base_Types::Float;
+    GAMLNS : data Base_Types::Float;
+    GS : data Base_Types::Float;
+    VGOT : data Base_Types::Float;
+    XTACC : data Base_Types::Float;
+    FPACCEL : data Base_Types::Float;
+    HDD : data Base_Types::Float;
+    TIME_STAMP : data Base_Types::Integer;
+end EGI.treal;
+
+data QUAD_EGI
+end QUAD_EGI;
+
+data implementation QUAD_EGI.treal
+  subcomponents
+    egi1 : data EGI.treal;
+    egi2 : data EGI.treal;
+    egi3 : data EGI.treal;
+    egi4 : data EGI.treal;
+end QUAD_EGI.treal;
+
+data implementation Ailerons.tbool
+  subcomponents
+    AILL : data Base_Types::Boolean;
+    AILR : data Base_Types::Boolean;
+end Ailerons.tbool;
+
+data implementation QUAD_Ailerons.tbool
+  subcomponents
+    AIL1 : data Ailerons.tbool;
+    AIL2 : data Ailerons.tbool;
+    AIL3 : data Ailerons.tbool;
+    AIL4 : data Ailerons.tbool;
+end QUAD_Ailerons.tbool;
+
+data implementation Rudders.tbool
+  subcomponents
+    RUDU : data Base_Types::Boolean;
+    RUDL : data Base_Types::Boolean;
+end Rudders.tbool;
+
+data implementation QUAD_Rudders.tbool
+  subcomponents
+    RUDD1 : data Rudders.tbool;
+    RUDD2 : data Rudders.tbool;
+    RUDD3 : data Rudders.tbool;
+    RUDD4 : data Rudders.tbool;
+end QUAD_Rudders.tbool;
+
+data implementation Flaps.tbool
+  subcomponents
+    FLLOB : data Base_Types::Boolean;
+    FLLIB : data Base_Types::Boolean;
+    FLROB : data Base_Types::Boolean;
+    FLRIB : data Base_Types::Boolean;
+end Flaps.tbool;
+
+data implementation QUAD_Flaps.tbool
+  subcomponents
+    FLAPS1 : data Flaps.tbool;
+    FLAPS2 : data Flaps.tbool;
+    FLAPS3 : data Flaps.tbool;
+    FLAPS4 : data Flaps.tbool;
+end QUAD_Flaps.tbool;
+
+data implementation AoA.tbool
+  subcomponents
+    AOA : data Base_Types::Boolean;  
+end AoA.tbool;
+
+data implementation DUAL_AoA.tbool
+  subcomponents
+    AOA1 : data AoA.tbool;
+    AOA2 : data AoA.tbool;
+end DUAL_AoA.tbool;
+
+data implementation AirData.tbool
+  subcomponents
+    TAT : data Base_Types::Boolean;
+    TotPres : data Base_Types::Boolean;
+    Pres : data Base_Types::Boolean;
+    Temp : data Base_Types::Boolean;
+end AirData.tbool;
+
+data implementation DUAL_AirData.tbool
+  subcomponents
+    AD1 : data AirData.tbool;
+    AD2 : data AirData.tbool;
+end DUAL_AirData.tbool;
+
+data implementation QUAD_Stabilizer.tbool
+  subcomponents
+    STAB1 : data Base_Types::Boolean;
+    STAB2 : data Base_Types::Boolean;
+    STAB3 : data Base_Types::Boolean;
+    STAB4 : data Base_Types::Boolean;
+end QUAD_Stabilizer.tbool;
+
+data implementation EGI.tbool
+  subcomponents
+    AOA : data Base_Types::Boolean;      -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+    TAT : data Base_Types::Boolean;      -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+    TotPres : data Base_Types::Boolean;  -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+    Pres : data Base_Types::Boolean;     -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+    Temp : data Base_Types::Boolean;     -- TBD: SPM 2014/07/16: Is this actually part of the EGI interface?
+  
+    PHI : data Base_Types::Boolean;
+    THETA : data Base_Types::Boolean;
+    PSI : data Base_Types::Boolean;
+    PB : data Base_Types::Boolean;
+    QB : data Base_Types::Boolean;
+    RB : data Base_Types::Boolean;
+    NX : data Base_Types::Boolean;
+    NY : data Base_Types::Boolean;
+    NZ : data Base_Types::Boolean;
+    VN : data Base_Types::Boolean;
+    VE : data Base_Types::Boolean;
+    HDOT : data Base_Types::Boolean;
+    LAT : data Base_Types::Boolean;
+    LON : data Base_Types::Boolean;
+    ALT : data Base_Types::Boolean;
+    GAMLNS : data Base_Types::Boolean;
+    GS : data Base_Types::Boolean;
+    VGOT : data Base_Types::Boolean;
+    XTACC : data Base_Types::Boolean;
+    FPACCEL : data Base_Types::Boolean;
+    HDD : data Base_Types::Boolean;
+end EGI.tbool;
+
+data implementation QUAD_EGI.tbool
+  subcomponents
+    egi1 : data EGI.tbool;
+    egi2 : data EGI.tbool;
+    egi3 : data EGI.tbool;
+    egi4 : data EGI.tbool;
+end QUAD_EGI.tbool;
+
+data Actuators
+end Actuators;
+
+data implementation Actuators.impl
+  subcomponents
+    THROTL : data Base_Types::Float;
+    THROTR : data Base_Types::Float;
+    ELLOB : data Base_Types::Float;
+    ELLIB : data Base_Types::Float;
+    ELROB : data Base_Types::Float;
+    ELRIB : data Base_Types::Float;
+    AILL : data Base_Types::Float;
+    AILR : data Base_Types::Float;
+    RUDUP : data Base_Types::Float;
+    RUDLO : data Base_Types::Float;
+    SPLLIB : data Base_Types::Float;
+    SPLLOB : data Base_Types::Float;
+    SPLRIB : data Base_Types::Float;
+    SPLROB : data Base_Types::Float;
+    FLAPLI : data Base_Types::Float;
+    FLAPLO : data Base_Types::Float;
+    FLAPRI : data Base_Types::Float;
+    FLAPRO : data Base_Types::Float;
+    GEAR : data Base_Types::Float;
+    BRAKE : data Base_Types::Float;
+    STEER : data Base_Types::Float;
+end Actuators.impl;
+
+data NumActuators
+end NumActuators;
+
+data implementation NumActuators.impl
+  subcomponents
+    THROTL : data Base_Types::Integer;
+    THROTR : data Base_Types::Integer;
+    ELLOB : data Base_Types::Integer;
+    ELLIB : data Base_Types::Integer;
+    ELROB : data Base_Types::Integer;
+    ELRIB : data Base_Types::Integer;
+    AILL : data Base_Types::Integer;
+    AILR : data Base_Types::Integer;
+    RUDUP : data Base_Types::Integer;
+    RUDLO : data Base_Types::Integer;
+    SPLLIB : data Base_Types::Integer;
+    SPLLOB : data Base_Types::Integer;
+    SPLRIB : data Base_Types::Integer;
+    SPLROB : data Base_Types::Integer;
+    FLAPLI : data Base_Types::Integer;
+    FLAPLO : data Base_Types::Integer;
+    FLAPRI : data Base_Types::Integer;
+    FLAPRO : data Base_Types::Integer;
+    GEAR : data Base_Types::Integer;
+    BRAKE : data Base_Types::Integer;
+    STEER : data Base_Types::Integer;
+end NumActuators.impl;
+
+data BoolActuators
+end BoolActuators;
+
+data implementation BoolActuators.impl
+  subcomponents
+    THROTL : data Base_Types::Boolean;
+    THROTR : data Base_Types::Boolean;
+    ELLOB : data Base_Types::Boolean;
+    ELLIB : data Base_Types::Boolean;
+    ELROB : data Base_Types::Boolean;
+    ELRIB : data Base_Types::Boolean;
+    AILL : data Base_Types::Boolean;
+    AILR : data Base_Types::Boolean;
+    RUDUP : data Base_Types::Boolean;
+    RUDLO : data Base_Types::Boolean;
+    SPLLIB : data Base_Types::Boolean;
+    SPLLOB : data Base_Types::Boolean;
+    SPLRIB : data Base_Types::Boolean;
+    SPLROB : data Base_Types::Boolean;
+    FLAPLI : data Base_Types::Boolean;
+    FLAPLO : data Base_Types::Boolean;
+    FLAPRI : data Base_Types::Boolean;
+    FLAPRO : data Base_Types::Boolean;
+    GEAR : data Base_Types::Boolean;
+    BRAKE : data Base_Types::Boolean;
+    STEER : data Base_Types::Boolean;
+end BoolActuators.impl;
+
+data ACTUATORS_SOV_Data
+end ACTUATORS_SOV_Data;
+
+
+end DATA_TYPES;

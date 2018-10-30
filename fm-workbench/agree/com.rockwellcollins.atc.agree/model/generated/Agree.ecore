@@ -131,6 +131,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="sub" eType="#//NestedDotID"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TypeID" eSuperTypes="#//ComplexExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="base" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedID" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="AgreeContractLibrary" eSuperTypes="#//AgreeLibrary">
     <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"
@@ -236,7 +239,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rangeHigh" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RecordType" eSuperTypes="#//Type">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//NestedDotID"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//TypeID"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BinaryExpr" eSuperTypes="#//Expr">
@@ -320,18 +323,18 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FnCallExpr" eSuperTypes="#//ComplexExpr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fn" eType="#//NestedDotID"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Expr"
-        containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RecordExpr" eSuperTypes="#//ComplexExpr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//NestedDotID"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//TypeID"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" unique="false" upperBound="-1"
         eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="argExpr" upperBound="-1"
         eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FnCallExpr" eSuperTypes="#//ComplexExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fn" eType="#//NestedDotID"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Expr"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

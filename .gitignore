@@ -3,6 +3,8 @@ instances
 *.sacm
 .svn
 .#*
+.sw?
 TAGS
 .aadlbin-gen
 *~
+.DS_Store

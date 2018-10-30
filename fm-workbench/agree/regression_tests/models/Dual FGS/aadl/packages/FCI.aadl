@@ -1,0 +1,83 @@
+-- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
+-- of the Defense Advanced Research Projects Agency (DARPA).
+--
+-- Permission is hereby granted, free of charge, to any person obtaining
+-- a copy of this data, including any software or models in source or
+-- binary form, as well as any drawings, specifications, and
+-- documentation (collectively "the Data"), to deal in the Data without
+-- restriction, including without limitation the rights to use, copy,
+-- modify, merge, publish, distribute, sublicense, and/or sell copies of
+-- the Data, and to permit persons to whom the Data is furnished to do
+-- so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Data.
+--
+-- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+-- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
+-- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+-- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
+-- DATA.
+package FCI
+public
+with THROTTLE,YOKE;
+  data Flight_Crew_Interface_Data
+    properties
+      Data_Size => 16 Bytes;
+  end Flight_Crew_Interface_Data;
+  
+  system Flight_Crew_Interface
+    features
+      THROT_L: in data port THROTTLE::Throttle_Data;
+      THROT_R: in data port THROTTLE::Throttle_Data;
+      YOKE_L: in data port YOKE::Yoke_Data;
+      YOKE_R: in data port YOKE::Yoke_Data;
+      FCI: out data port Flight_Crew_Interface_Data;
+  end Flight_Crew_Interface;
+  
+  process Flight_Crew_Interface_Process
+    features
+      THROT_L: in data port THROTTLE::Throttle_Data;
+      THROT_R: in data port THROTTLE::Throttle_Data;
+      YOKE_L: in data port YOKE::Yoke_Data;
+      YOKE_R: in data port YOKE::Yoke_Data;
+      FCI: out data port Flight_Crew_Interface_Data;
+  end Flight_Crew_Interface_Process;
+  
+  thread Flight_Crew_Interface_Thread
+    features
+      YOKE_L: in data port YOKE::Yoke_Data;
+      YOKE_R: in data port YOKE::Yoke_Data;
+      THROT_L: in data port THROTTLE::Throttle_Data;
+      THROT_R: in data port THROTTLE::Throttle_Data;
+      FCI: out data port Flight_Crew_Interface_Data;
+  end Flight_Crew_Interface_Thread;
+  
+  thread implementation Flight_Crew_Interface_Thread.Flight_Control_Interface_Thread_Impl
+  end Flight_Crew_Interface_Thread.Flight_Control_Interface_Thread_Impl;
+  
+  system implementation Flight_Crew_Interface.Flight_Crew_Interface_Impl
+    subcomponents
+      FCIP: process Flight_Crew_Interface_Process.Flight_Crew_Interface_Process_Impl;
+    connections
+      THROTL2FCIP: port THROT_L -> FCIP.THROT_L;
+      THROTR2FCIP: port THROT_R -> FCIP.THROT_R;
+      YOKEL2FCIP: port YOKE_L -> FCIP.YOKE_L;
+      YOKER2FCIP: port YOKE_R -> FCIP.YOKE_R;
+      FCIP2FCI: port FCIP.FCI -> FCI;
+  end Flight_Crew_Interface.Flight_Crew_Interface_Impl;
+  
+  process implementation Flight_Crew_Interface_Process.Flight_Crew_Interface_Process_Impl
+    subcomponents
+      FCIT: thread Flight_Crew_Interface_Thread.Flight_Control_Interface_Thread_Impl;
+    connections
+      YOKEL2FCIT: port YOKE_L -> FCIT.YOKE_L;
+      YOKER2FCIT: port YOKE_R -> FCIT.YOKE_R;
+      THROTL2FCIT: port THROT_L -> FCIT.THROT_L;
+      THROTR2FCIT: port THROT_R -> FCIT.THROT_R;
+      FCIT2FCI: port FCIT.FCI -> FCI;
+  end Flight_Crew_Interface_Process.Flight_Crew_Interface_Process_Impl;
+end FCI;
