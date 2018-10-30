@@ -1,0 +1,121 @@
+-- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
+-- of the Defense Advanced Research Projects Agency (DARPA).
+--
+-- Permission is hereby granted, free of charge, to any person obtaining
+-- a copy of this data, including any software or models in source or
+-- binary form, as well as any drawings, specifications, and
+-- documentation (collectively "the Data"), to deal in the Data without
+-- restriction, including without limitation the rights to use, copy,
+-- modify, merge, publish, distribute, sublicense, and/or sell copies of
+-- the Data, and to permit persons to whom the Data is furnished to do
+-- so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Data.
+--
+-- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+-- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
+-- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+-- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
+-- DATA.
+package APS
+public
+with FGS,Base_Types;
+  data Control_Surface_Actuator_Data
+    properties
+      Data_Size => 8 Bytes;
+  end Control_Surface_Actuator_Data;
+  
+  process AutoPilot_Process
+    features
+      CSA: out data port Control_Surface_Actuator_Data.Control_Surface_Actuator_Data_Impl;
+      GC_L: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+      GC_R: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+  end AutoPilot_Process;
+  
+  system Autopilot_System
+    features
+      GC_L: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+      GC_R: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+      CSA: out data port Control_Surface_Actuator_Data.Control_Surface_Actuator_Data_Impl;
+
+annex agree {**
+	----------------------------------------------------------------
+-- Autopilot_System Contract
+--
+-- Data assumptions: 
+-- CSA structure has: 
+--  CSA_Pitch_Delta: real; 
+-- GC structure has: 
+--  active: Bool ; 
+--  Pitch_Delta: real;  
+-----------------------------------------------------------------
+
+eq leader_pitch_delta : real =  
+   if (GC_L.mds.active) then GC_L.cmds.Pitch_Delta
+   else if (GC_R.mds.active) then GC_R.cmds.Pitch_Delta
+   else (prev(leader_pitch_delta, 0.0)) ;
+   
+-- defines CSA pitch delta in terms of the leader pitch delta.
+property leader_pitch_delta_correct =
+  (leader_pitch_delta > 0.0 => (CSA.CSA_Pitch_Delta > 0.0 and CSA.CSA_Pitch_Delta <= leader_pitch_delta)) and
+  (leader_pitch_delta <= 0.0 => (CSA.CSA_Pitch_Delta <= 0.0 and CSA.CSA_Pitch_Delta >= leader_pitch_delta)); 
+  
+guarantee "leader pitch delta" :
+	leader_pitch_delta_correct;
+**};
+
+  end Autopilot_System;
+  
+  thread Autopilot_Thread
+    features
+      CSA: out data port Control_Surface_Actuator_Data.Control_Surface_Actuator_Data_Impl;
+      GC: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+  end Autopilot_Thread;
+  
+  thread Guidance_Selector
+    features
+      IN1: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+      IN2: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+      OUTPUT: out data port FGS::Guidance_Data.Guidance_Data_Impl;
+  end Guidance_Selector;
+  
+  data implementation Control_Surface_Actuator_Data.Control_Surface_Actuator_Data_Impl
+    subcomponents
+      CSA_Pitch_Delta: data Base_Types::Float;
+      CSA_Pitch_Valid: data Base_Types::Boolean;
+  end Control_Surface_Actuator_Data.Control_Surface_Actuator_Data_Impl;
+  
+  process implementation AutoPilot_Process.Autopilot_Process_Impl
+    subcomponents
+      SELT: thread Guidance_Selector.Guidance_Selector_Impl;
+      APT: thread Autopilot_Thread.Autopilot_Thread_Impl;
+    connections
+      GCLtoSELT: port GC_L -> SELT.IN1;
+      GCRtoSELT: port GC_R -> SELT.IN2;
+      SELTtoAPT: port SELT.OUTPUT -> APT.GC;
+      APT2CSA: port APT.CSA -> CSA;
+  end AutoPilot_Process.Autopilot_Process_Impl;
+  
+  system implementation Autopilot_System.Autopilot_System_Impl
+    subcomponents
+      APP: process AutoPilot_Process.Autopilot_Process_Impl;
+    connections
+      APP2CSA: port APP.CSA -> CSA;
+      GCL2APP: port GC_L -> APP.GC_L;
+      GCR2APP: port GC_R -> APP.GC_R;
+      
+      annex agree {**
+        assert leader_pitch_delta_correct;  
+      **};
+  end Autopilot_System.Autopilot_System_Impl;
+  
+  thread implementation Autopilot_Thread.Autopilot_Thread_Impl
+  end Autopilot_Thread.Autopilot_Thread_Impl;
+  
+  thread implementation Guidance_Selector.Guidance_Selector_Impl
+  end Guidance_Selector.Guidance_Selector_Impl;
+end APS;

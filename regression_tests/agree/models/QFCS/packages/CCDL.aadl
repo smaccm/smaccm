@@ -1,0 +1,30 @@
+package CCDL
+public
+  with Feature_Groups;
+  
+system CCDL
+  features
+    acts : out data port Feature_Groups::ACTUATORS_Data.impl;
+    
+  annex agree {**
+    guarantee "actuator bounds" :
+      (AGREE_CONSTANTS.ailerons_range_low <= acts.ailerons and 
+        acts.ailerons <= AGREE_CONSTANTS.ailerons_range_high) and 
+      (AGREE_CONSTANTS.elevators_range_low <= acts.elevators and 
+        acts.elevators <= AGREE_CONSTANTS.elevators_range_high) and 
+      (AGREE_CONSTANTS.rudder_range_low <= acts.rudder and 
+        acts.rudder <= AGREE_CONSTANTS.rudder_range_high) and 
+      (AGREE_CONSTANTS.spoiler_range_low <= acts.spoiler and 
+        acts.spoiler <= AGREE_CONSTANTS.spoiler_range_high) and 
+      (AGREE_CONSTANTS.flaps_gt_range_low <= acts.flaps_gt and 
+        acts.flaps_gt <= AGREE_CONSTANTS.flaps_gt_range_high) and 
+      (AGREE_CONSTANTS.flaps_lt_range_low <= acts.flaps_lt and 
+        acts.flaps_lt <= AGREE_CONSTANTS.flaps_lt_range_high);
+  **};
+    
+end CCDL;
+
+system implementation CCDL.Impl
+end CCDL.Impl;
+
+end CCDL;

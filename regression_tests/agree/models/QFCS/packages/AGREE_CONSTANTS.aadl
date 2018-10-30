@@ -1,0 +1,68 @@
+package AGREE_CONSTANTS
+public
+
+annex agree {**
+  
+    const aoa_range_high: int = 50;
+    const time_range_high: int = 50;
+    const lat_range_high: int = 50;
+    const long_range_high: int = 50;
+    const alt_range_high: int = 50;
+    const egi_health_range_high: int = 50;
+    const bank_range_high: int = 50;
+    const bank_rate_range_high: int = 50;
+    const pitch_range_high: int = 50;
+    const pitch_rate_range_high: int = 50;
+    const heading_range_high: int = 50;
+    const heading_rate_range_high: int = 50;
+    const velocity_x_range_high : int = 50;
+    const velocity_y_range_high : int = 50;
+    const velocity_z_range_high : int = 50;
+    const accel_x_range_high: int = 50;
+    const accel_y_range_high: int = 50;
+    const accel_z_range_high: int = 50;
+    
+    const aoa_range_low: int = 0;
+    const time_range_low: int = 0;
+    const lat_range_low: int = 0;
+    const long_range_low: int = 0;
+    const alt_range_low: int = 0;
+    const egi_health_range_low: int = 0;
+    const bank_range_low: int = 0;
+    const bank_rate_range_low: int = 0;
+    const pitch_range_low: int = 0;
+    const pitch_rate_range_low: int = 0;
+    const heading_range_low: int = 0;
+    const heading_rate_range_low: int = 0;
+    const velocity_x_range_low : int = 0;
+    const velocity_y_range_low : int = 0;
+    const velocity_z_range_low : int = 0;
+    const accel_x_range_low: int = 0;
+    const accel_y_range_low: int = 0;
+    const accel_z_range_low: int = 0;
+    
+    const amb_press_range_high: int = 50;
+    const amb_temp_range_high: int = 50;
+    const total_press_range_high: int = 50;
+    
+    const amb_press_range_low: int = 0;
+    const amb_temp_range_low: int = 0;
+    const total_press_range_low: int = 0;
+    
+    const ailerons_range_low: real = 0.0;
+    const elevators_range_low: real = 0.0;
+    const rudder_range_low: real = 0.0;
+    const spoiler_range_low: real = 0.0;
+    const flaps_gt_range_low: real = 0.0;
+    const flaps_lt_range_low: real = 0.0;
+    
+    const ailerons_range_high: real = 50.0;
+    const elevators_range_high: real = 50.0;
+    const rudder_range_high: real = 50.0;
+    const spoiler_range_high: real = 50.0;
+    const flaps_gt_range_high: real = 50.0;
+    const flaps_lt_range_high: real = 50.0;
+  
+**};
+
+end AGREE_CONSTANTS;

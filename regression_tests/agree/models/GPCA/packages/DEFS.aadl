@@ -1,0 +1,58 @@
+package DEFS
+public
+
+with DATATYPES;
+
+annex agree {**
+	
+	const OFF : int = 0;
+	const IDLE : int = 1; 
+	const BASAL : int = 2;
+	const PATIENT_BOLUS : int = 3;
+	const SQUARE_BOLUS : int = 4;
+	const PAUSE_KVO : int = 6;
+	const PAUSE_NO_KVO : int = 7;
+	const PAUSE_MANUAL : int = 8;
+	
+	const EMPTY_RES : int = 1;
+	const ENVIRO_ERROR : int = 2;
+	const HW_ERROR : int = 3;
+	const OVER_FR : int = 4;
+	const OVER_VTBI : int = 5;
+	const AIR : int = 6;
+	const OCCLUSION : int = 7;
+	const DOOR_OPEN : int = 8;
+	const LOW_RES : int = 9;
+	const UNDER_FR : int = 10;
+	const UNSTABLE_FR : int = 11;
+	const IDLE_TIME : int = 12;
+	const PAUSE_TIME : int = 13;
+	const CONFIG_TIME : int = 14;
+	const BATTERY : int = 15;
+	const PUMP_HOT : int = 16;
+	const LOG_FAIL : int = 17;  
+	const SYS_MONITOR : int = 18;
+	
+	
+	fun is_on(mode: int) : bool = (mode > 0);
+	fun is_idle(mode: int) : bool = (mode = 1);
+	fun is_therapy(mode: int) : bool = (mode > 1);
+	fun is_active(mode: int) : bool = (mode = 2 or mode = 3 or mode = 4);
+	
+	node Is_Infusion_above_tolerance(actual_flow_rate : int, desired_flow_rate : int, tol : int)
+		 returns (high: bool); 
+		 let 
+		 high = (actual_flow_rate > (desired_flow_rate + tol));
+	tel;
+	
+	node Is_Infusion_below_tolerance(actual_flow_rate : int, desired_flow_rate : int, tol : int)
+		 returns (under: bool);
+		 let 
+		 under = (actual_flow_rate < (desired_flow_rate - tol));
+	tel;
+	
+	
+	
+**};
+
+end defs;

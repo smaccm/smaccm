@@ -1,0 +1,94 @@
+package OSAS
+public
+  with DATA_TYPES;
+  with Base_Types;
+
+system OSAS_Sys
+  features
+    acts_in : in data port DATA_TYPES::Actuators.impl;
+    acts_ret : in data port DATA_TYPES::Actuators.impl;
+    acts_claw_fail : in data port DATA_TYPES::BoolActuators.impl;
+    acts_isas_fail : in data port DATA_TYPES::BoolActuators.impl;
+    acts_ccdl_num_fail : in data port DATA_TYPES::NumActuators.impl;
+    
+    acts_out : out data port DATA_TYPES::Actuators.impl;
+	acts_fail : out data port DATA_TYPES::BoolActuators.impl;
+     
+    sovs1 : out data port DATA_TYPES::BoolActuators.impl; 
+    sovs2 : out data port DATA_TYPES::BoolActuators.impl; 
+    
+    ccdl_frame_count: in data port Base_Types::Integer;
+    ccdl_failed: in data port Base_Types::Boolean;
+    
+    num_valid_acts: in data port DATA_TYPES::NumActuators.impl;
+    osas_failed : in data port Base_Types::Boolean;
+    act_claw_fails : in data port Base_types::Boolean;
+    
+    
+  annex agree {**
+  	
+  	eq fail_counts : DATA_TYPES::NumActuators.impl;
+  	eq act_gains : DATA_TYPES::Actuators.impl;
+  	  	
+  	--For each actuator, OSAS shall determine whether the actuator 
+    --command return value is within 2.5% of actuator command from 
+    --the previous frame, and if not shall increment a fault counter 
+    --for that actuator command.
+    
+    --OSAS shall set the actuator command fault counter to 0 (zero) 
+    --if the fault clears within 5 frames.
+    guarantee "OSAS-S-110":
+      OSAS_S_110.req(acts_out, acts_ret, fail_counts); 
+    	
+    --shall latch the actuator command FAILED if the fault 
+    --persists for 5 consecutive frames.
+
+    guarantee "OSAS-S-120":
+      OSAS_S_120.req(acts_out, acts_ret, acts_fail); 
+    	
+    --When an actuator command has been latched failed, OSAS shall set 
+    --that actuator command to 0 (zero).
+    guarantee "OSAS-S-140" : 
+      OSAS_S_140.req(acts_out, acts_fail); 
+    
+    --OSAS shall compare the current CCDL frame counter to the 
+    --previous value to determine if CCDL has had a failure.
+    
+    --If the CCDL frame counter fails to increment, or does 
+    --not increment by 1 (one) each frame, OSAS shall declare the CCDL FAILED.
+    guarantee "OSAS-S-150 and OSAS-S-160" : true ->
+      ccdl_failed = (true -> (ccdl_frame_count != pre(ccdl_frame_count) + 1));
+      
+    --If the local CCDL has failed, OSAS shall set the local
+    --actuator command gain to 1 (one).
+    guarantee "OSAS-S-170" :
+      OSAS_S_170.req(act_gains, ccdl_failed);
+      
+    --OSAS shall compute the actuator command gain as the ratio
+    --of the total number of command channels to the number of
+    --valid command channels (i.e. 4/(number of valid command channels).
+    guarantee "OSAS-S-180" :
+     OSAS_S_180.req(act_gains, num_valid_acts, ccdl_failed); --THIS UNREAL
+    
+    guarantee "OSAS-S-190" : 
+      OSAS_S_190.req(acts_in, acts_out, act_gains);
+    
+    guarantee "OSAS-S-240" :
+      OSAS_S_240.req(act_gains, osas_failed); 
+    
+    guarantee "OSAS-S-250" : 
+      OSAS_S_250.req(act_gains, act_claw_fails);  --THIS UNREAL
+
+
+    guarantee "OSAS-S-210, OSAS-S-220, and OSAS-S-230":	
+      OSAS_S_210_220_230.req(sovs1, sovs2, acts_isas_fail, acts_fail, acts_ccdl_num_fail);  	
+    	    	
+  **};
+end OSAS_Sys;
+
+system implementation OSAS_Sys.i
+
+end OSAS_Sys.i;
+
+
+end OSAS;

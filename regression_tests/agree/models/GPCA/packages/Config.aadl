@@ -1,0 +1,131 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the Config behavioral model. 
+--------------------------------------------------------------------------
+
+package Config
+public
+
+  with DATATYPES;
+  
+  system Config
+    features
+     TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;
+     PRES_IN: in data port DATATYPES::Prescription_Inputs.Impl;
+     OP_CMD_IN: in data port DATATYPES::Operator_Commands.Impl;
+     DB_IN: in data port DATATYPES::Drug_Database_Inputs.Impl;
+     CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
+     --IM_IN: in data port DATATYPES::Infusion_Manager_Outputs.Impl;
+     SYS_STAT_IN: in data port DATATYPES::System_Status_Outputs.Impl;       
+	 
+	 CONFIG_OUT: out data port DATATYPES::Config_Outputs.Impl;    
+
+
+	 annex agree {** 
+		 property flow_rate_kvo_gt_0 = 
+				(TLM_MODE_IN.System_On => (CONFIG_OUT.Flow_Rate_KVO > 0));
+	
+		guarantee "flow_rate_kvo_gt_0":  flow_rate_kvo_gt_0;
+		
+		 property config_range = 
+				(TLM_MODE_IN.System_On => (CONFIG_OUT.Configured >= 0 and CONFIG_OUT.Configured <= 3 ));
+	
+		guarantee "config_range":  config_range;
+		
+		property Infusion_Total_Duration = 
+				(TLM_MODE_IN.System_On => CONFIG_OUT.Infusion_Total_Duration >= 0);	
+		guarantee "Infusion_Total_Duration":  Infusion_Total_Duration;
+		
+		property config_gt_1_implies_values_configured =
+			(TLM_MODE_IN.System_On and CONFIG_OUT.Configured > 0 ) => CONFIG_OUT.Infusion_Total_Duration > 0;
+		guarantee "config_gt_1_implies_values_configured":  config_gt_1_implies_values_configured;
+		
+		property configuration_type_request =
+			OP_CMD_IN.Data_Config => CONFIG_OUT.Request_Config_Type;
+		guarantee "configuration_type_request" : configuration_type_request;
+		
+		property validate_configured_patient_drug_info =
+			(CONFIG_OUT.Configured = 1) and ((PRES_IN.Drug_Name = 0) or ((PRES_IN.Drug_Concentration < DB_IN.Drug_Concentration_Low) or
+			(PRES_IN.Drug_Concentration > DB_IN.Drug_Concentration_High)) or (PRES_IN.Entered_Reservoir_Volume < CONST_IN.Empty_Reservoir)) => 
+			(CONFIG_OUT.Error_Message_ID = 5) and CONFIG_OUT.Request_Patient_Drug_Info;
+		guarantee "validate_configured_patient_drug_info" : validate_configured_patient_drug_info;
+		
+		property validate_configured_infusion_info =
+			(CONFIG_OUT.Configured > 0) and ((PRES_IN.VTBI_Total > DB_IN.VTBI_High) or (PRES_IN.VTBI_Total < DB_IN.VTBI_Low) or
+			(PRES_IN.Flow_Rate_Basal < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Basal > DB_IN.Flow_Rate_High) or 
+			(PRES_IN.Flow_Rate_Intermittent_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Intermittent_Bolus > DB_IN.Flow_Rate_High) or
+			(PRES_IN.Flow_Rate_Patient_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Patient_Bolus > DB_IN.Flow_Rate_High) or
+			(PRES_IN.Duration_Intermittent_Bolus > PRES_IN.Interval_Intermittent_Bolus) or (PRES_IN.Max_Number_of_Patient_Bolus 
+			> DB_IN.Number_Max_Patient_Bolus) or (PRES_IN.Flow_Rate_Intermittent_Bolus < PRES_IN.Flow_Rate_Basal) or
+			(PRES_IN.Flow_Rate_Patient_Bolus < PRES_IN.Flow_Rate_Basal)) => CONFIG_OUT.Request_Patient_Drug_Info;
+		guarantee "validate_configured_infusion_info" : validate_configured_infusion_info;
+		
+		
+	
+	**};
+
+  end Config;
+  
+  system implementation Config.Impl 
+  end Config.Impl;
+    
+end Config;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--
+--	-------> Flow_Rate_KVO is always > 0  <-------
+--  
+--	property flow_rate_kvo_gte_0 = 
+--		true -> 
+--			(TLM_MODE_IN.System_On => (CONFIG_OUT.Flow_Rate_KVO >= 0));
+--
+--	assert flow_rate_kvo_gte_0;	
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,86 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the Alarm behavioral model.
+--------------------------------------------------------------------------
+
+package OutputBus 
+public
+
+  with DATATYPES;
+  
+  system OutputBus 
+    features
+
+      TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;
+      SYS_STAT_IN: in data port DATATYPES::System_Status_Outputs.Impl;
+      ALARM_IN: in data port DATATYPES::Alarm_Outputs.Impl;
+	  CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
+      IM_IN: in data port DATATYPES::Infusion_Manager_Outputs.Impl;
+      SYS_MON_IN: in data port DATATYPES::System_Monitor_Output.Impl;
+      LOG_IN: in data port DATATYPES::Log_Output.Impl;
+            
+	  GPCA_SW_OUT: out data port DATATYPES::GPCA_SW_Outputs.Impl; 
+	            
+annex agree {**
+
+	guarantee "output 1":  (TLM_MODE_IN.Request_Confirm_Stop <=> GPCA_SW_OUT.Request_Confirm_Stop);
+	
+	guarantee "output 2": (SYS_STAT_IN.Volume_Infused = GPCA_SW_OUT.Volume_Infused);
+	guarantee "output 3": (SYS_STAT_IN.Reservoir_Volume = GPCA_SW_OUT.Reservoir_Volume);
+	
+	guarantee "output 4": (ALARM_IN.Is_Audio_Disabled = GPCA_SW_OUT.Is_Audio_Disabled);
+	guarantee "output 5": (ALARM_IN.Notification_Message = GPCA_SW_OUT.Notification_Message);
+	guarantee "output 6": (ALARM_IN.Audio_Notification_Command = GPCA_SW_OUT.Audio_Notification_Command);
+	   
+	guarantee "output 7": (CONFIG_IN.Patient_ID = GPCA_SW_OUT.Patient_ID);
+	guarantee "output 8": (CONFIG_IN.Drug_Name =  GPCA_SW_OUT.Drug_Name);
+	guarantee "output 9": (CONFIG_IN.Drug_Concentration = GPCA_SW_OUT.Drug_Concentration);
+	guarantee "output 10": (CONFIG_IN.Infusion_Total_Duration = GPCA_SW_OUT.Infusion_Total_Duration);
+	guarantee "output 11": (CONFIG_IN.VTBI_Total = GPCA_SW_OUT.VTBI_Total);
+	guarantee "output 12": (CONFIG_IN.Flow_Rate_Basal = GPCA_SW_OUT.Flow_Rate_Basal);
+	guarantee "output 13": (CONFIG_IN.Flow_Rate_Intermittent_Bolus = GPCA_SW_OUT.Flow_Rate_Intermittent_Bolus);
+	guarantee "output 14": (CONFIG_IN.Duration_Intermittent_Bolus = GPCA_SW_OUT.Duration_Intermittent_Bolus);
+	guarantee "output 15": (CONFIG_IN.Interval_Intermittent_Bolus = GPCA_SW_OUT.Interval_Intermittent_Bolus);
+	guarantee "output 16": (CONFIG_IN.Flow_Rate_Patient_Bolus = GPCA_SW_OUT.Flow_Rate_Patient_Bolus);
+	guarantee "output 17": (CONFIG_IN.Duration_Patient_Bolus = GPCA_SW_OUT.Duration_Patient_Bolus);
+	guarantee "output 18": (CONFIG_IN.Lockout_Period_Patient_Bolus = GPCA_SW_OUT.Lockout_Period_Patient_Bolus);
+	guarantee "output 19": (CONFIG_IN.Max_Number_of_Patient_Bolus = GPCA_SW_OUT.Max_Number_of_Patient_Bolus);
+	guarantee "output 20": (CONFIG_IN.Flow_Rate_KVO = GPCA_SW_OUT.Flow_Rate_KVO);
+	guarantee "output 21": (CONFIG_IN.Entered_Reservoir_Volume = GPCA_SW_OUT.Entered_Reservoir_Volume);
+	guarantee "output 22": (CONFIG_IN.Configured = GPCA_SW_OUT.Configured);
+	guarantee "output 23": (CONFIG_IN.Error_Message_ID = GPCA_SW_OUT.Error_Message_ID);
+	guarantee "output 24": (CONFIG_IN.Request_Config_Type <=> GPCA_SW_OUT.Request_Config_Type);
+	guarantee "output 25": (CONFIG_IN.Request_Confirm_Infusion_Initiate <=> GPCA_SW_OUT.Request_Confirm_Infusion_Initiate);
+	guarantee "output 26": (CONFIG_IN.Request_Patient_Drug_Info <=> GPCA_SW_OUT.Request_Patient_Drug_Info);
+	guarantee "output 27": (CONFIG_IN.Request_Infusion_Info <=> GPCA_SW_OUT.Request_Infusion_Info);
+
+	guarantee "output 28": (IM_IN.Current_System_Mode = GPCA_SW_OUT.Current_System_Mode);
+	guarantee "output 29": (IM_IN.Actual_Infusion_Duration = GPCA_SW_OUT.Actual_Infusion_Duration);
+	guarantee "output 30": (IM_IN.Commanded_Flow_Rate = GPCA_SW_OUT.Commanded_Flow_Rate);
+	guarantee "output 31": (IM_IN.New_Infusion = GPCA_SW_OUT.New_Infusion);
+	guarantee "output 31.1": (IM_IN.Is_Locked_Out = GPCA_SW_OUT.Is_Locked_Out);
+	
+	guarantee "output 32": (LOG_IN.Log = GPCA_SW_OUT.Log);
+	
+
+
+**};
+ 
+    	      
+      
+  end OutputBus;
+  
+  system implementation OutputBus.Impl
+  
+  
+  
+  
+  end OutputBus.Impl;
+    
+end OutputBus;

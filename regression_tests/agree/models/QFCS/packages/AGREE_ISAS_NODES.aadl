@@ -1,0 +1,70 @@
+package AGREE_ISAS_NODES
+public
+
+annex agree {**
+	
+  --variables that indicate if a variable failed to update
+  type update_failures = struct {
+  	acts_ret : bool, acts1_sense : bool, acts2_sense : bool, acts3_sense : bool,
+    acts4_sense : bool, ads1 : bool, ads2 : bool, aoa1 : bool, aoa2 : bool,
+    egi1 : bool, egi2 : bool, egi3 : bool, egi4 : bool};
+      
+  --returns true if two integers match within a specified tolerance
+  node matches_tolerance_int(val1 : int, val2 : int, tol : int) returns (return : bool);
+    let
+      return = if(val1 <= val2) then
+                 val2 <= val1 + tol
+               else
+                 val1 <= val2 + tol;
+    tel;
+    
+  --returns true if two reals match within a specified tolerance
+  node matches_tolerance_real(val1 : real, val2 : real, tol : real) returns (return : bool);
+    let
+      return = if(val1 <= val2) then
+                 val2 <= val1 + tol
+               else
+                 val1 <= val2 + tol;
+    tel;
+    
+  node quad_matches_real
+    (
+      target : real,
+      val1 : real,
+      val2 : real,
+      val3 : real,
+      tol : real
+    ) returns
+    (
+      result : bool 
+    );
+    let
+      result = matches_tolerance_real(target,val1, tol) or  
+               matches_tolerance_real(target,val2, tol) or
+               matches_tolerance_real(target,val3, tol);  
+
+    tel;
+    
+    node quad_matches_int
+    (
+      target : int,
+      val1 : int,
+      val2 : int,
+      val3 : int,
+      tol : int
+    ) returns
+    (
+      result : bool 
+    );
+    let
+      result = matches_tolerance_int(target,val1, tol) or 
+               matches_tolerance_int(target,val2, tol) or
+               matches_tolerance_int(target,val3, tol);  
+
+    tel;
+  
+    
+    
+**};
+
+end AGREE_ISAS_NODES;

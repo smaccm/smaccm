@@ -1,0 +1,122 @@
+package FCS_RC1
+public
+
+annex agree {**
+  node req 
+    (acts1 : DATA_TYPES::Actuators.impl,
+  	 acts2 : DATA_TYPES::Actuators.impl,
+  	 acts3 : DATA_TYPES::Actuators.impl,
+  	 acts4 : DATA_TYPES::Actuators.impl
+  	)
+  returns
+    (res : bool);
+  let
+    res = sum_in_range(acts1.AILL, acts2.AILL, acts3.AILL, acts4.AILL,
+    	AGREE_CONSTANTS.AILL_range_low, AGREE_CONSTANTS.AILL_range_high) and 
+    	sum_in_range(acts1.AILR, acts2.AILR, acts3.AILR, acts4.AILR,
+    	AGREE_CONSTANTS.AILR_range_low, AGREE_CONSTANTS.AILR_range_high) and 
+    	sum_in_range(acts1.BRAKE, acts2.BRAKE, acts3.BRAKE, acts4.BRAKE,
+    	AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high) and 
+    	sum_in_range(acts1.ELLIB, acts2.ELLIB, acts3.ELLIB, acts4.ELLIB,
+    	AGREE_CONSTANTS.ELLIB_range_low, AGREE_CONSTANTS.ELLIB_range_high) and 
+    	sum_in_range(acts1.ELLOB, acts2.ELLOB, acts3.ELLOB, acts4.ELLOB,
+    	AGREE_CONSTANTS.ELLOB_range_low, AGREE_CONSTANTS.ELLOB_range_high) and 
+    	sum_in_range(acts1.ELRIB, acts2.ELRIB, acts3.ELRIB, acts4.ELRIB,
+    	AGREE_CONSTANTS.ELRIB_range_low, AGREE_CONSTANTS.ELRIB_range_high) and 
+    	sum_in_range(acts1.ELROB, acts2.ELROB, acts3.ELROB, acts4.ELROB,
+    	AGREE_CONSTANTS.ELROB_range_low, AGREE_CONSTANTS.ELROB_range_high) and 
+    	sum_in_range(acts1.FLAPLO, acts2.FLAPLO, acts3.FLAPLO, acts4.FLAPLO,
+    	AGREE_CONSTANTS.FLAPLO_range_low, AGREE_CONSTANTS.FLAPLO_range_high) and 
+    	sum_in_range(acts1.FLAPLI, acts2.FLAPLI, acts3.FLAPLI, acts4.FLAPLI,
+    	AGREE_CONSTANTS.FLAPLI_range_low, AGREE_CONSTANTS.FLAPLI_range_high) and 
+    	sum_in_range(acts1.FLAPRI, acts2.FLAPRI, acts3.FLAPRI, acts4.FLAPRI,
+    	AGREE_CONSTANTS.FLAPRI_range_low, AGREE_CONSTANTS.FLAPRI_range_high) and 
+    	sum_in_range(acts1.FLAPRO, acts2.FLAPRO, acts3.FLAPRO, acts4.FLAPRO,
+    	AGREE_CONSTANTS.FLAPRO_range_low, AGREE_CONSTANTS.FLAPRO_range_high) and 
+    	sum_in_range(acts1.GEAR, acts2.GEAR, acts3.GEAR, acts4.GEAR,
+    	AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high) and 
+    	sum_in_range(acts1.RUDLO, acts2.RUDLO, acts3.RUDLO, acts4.RUDLO,
+    	AGREE_CONSTANTS.RUDLO_range_low, AGREE_CONSTANTS.RUDLO_range_high) and 
+    	sum_in_range(acts1.RUDUP, acts2.RUDUP, acts3.RUDUP, acts4.RUDUP,
+    	AGREE_CONSTANTS.RUDUP_range_low, AGREE_CONSTANTS.RUDUP_range_high) and 
+    	sum_in_range(acts1.SPLLIB, acts2.SPLLIB, acts3.SPLLIB, acts4.SPLLIB,
+    	AGREE_CONSTANTS.SPLLIB_range_low, AGREE_CONSTANTS.SPLLIB_range_high) and 
+    	sum_in_range(acts1.SPLLOB, acts2.SPLLOB, acts3.SPLLOB, acts4.SPLLOB,
+    	AGREE_CONSTANTS.SPLLOB_range_low, AGREE_CONSTANTS.SPLLOB_range_high) and 
+    	sum_in_range(acts1.SPLRIB, acts2.SPLRIB, acts3.SPLRIB, acts4.SPLRIB,
+    	AGREE_CONSTANTS.SPLRIB_range_low, AGREE_CONSTANTS.SPLRIB_range_high) and 
+    	sum_in_range(acts1.SPLROB, acts2.SPLROB, acts3.SPLROB, acts4.SPLROB,
+    	AGREE_CONSTANTS.SPLROB_range_low, AGREE_CONSTANTS.SPLROB_range_high) and  
+    	sum_in_range(acts1.STEER, acts2.STEER, acts3.STEER, acts4.STEER,
+    	AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high) and 
+    	sum_in_range(acts1.THROTL, acts2.THROTL, acts3.THROTL, acts4.THROTL,
+    	AGREE_CONSTANTS.THROTL_range_low, AGREE_CONSTANTS.THROTL_range_high) and 
+    	sum_in_range(acts1.THROTR, acts2.THROTR, acts3.THROTR, acts4.THROTR,
+    	AGREE_CONSTANTS.THROTR_range_low, AGREE_CONSTANTS.THROTR_range_high);
+  tel;
+  
+  node sum_in_range(a1 : real, a2 : real, a3 : real, a4 : real, low : real, high : real)
+  returns (res : bool);
+  var
+    avg : real;
+  let
+    avg = (a1 + a2 + a3 + a4) / 4.0;
+    res = low <= avg and avg <= high;
+  tel;
+      	
+  node valid_to_num(f1 : bool, f2 : bool, f3 : bool, f4 : bool, nv : int) returns (ret : bool);
+    let
+      ret = (((f1 and f2 and f3 and f4) => nv = 0) and
+            ((f1 and f2 and f3 and not f4) => nv = 1) and
+    	    ((f1 and f2 and not f3 and f4) => nv = 1) and
+    	    ((f1 and f2 and not f3 and not f4) => nv = 2) and
+    	    ((f1 and not f2 and f3 and f4) => nv = 1) and
+    	    ((f1 and not f2 and f3 and not f4) => nv = 2) and
+    	    ((f1 and not f2 and not f3 and f4) => nv = 2) and
+    	    ((f1 and not f2 and not f3 and not f4) => nv = 3) and
+    	    ((not f1 and f2 and f3 and f4) => nv = 1) and
+    	    ((not f1 and f2 and f3 and not f4) => nv = 2) and
+    	    ((not f1 and f2 and not f3 and f4) => nv = 2) and
+    	    ((not f1 and f2 and not f3 and not f4) => nv = 3) and
+    	    ((not f1 and not f2 and f3 and f4) => nv = 2) and
+    	    ((not f1 and not f2 and f3 and not f4) => nv = 3) and
+    	    ((not f1 and not f2 and not f3 and f4) => nv = 3) and
+    	    ((not f1 and not f2 and not f3 and not f4) => nv = 4));
+    tel;
+  
+  
+  node valids_to_nums(num_valids : DATA_TYPES::NumActuators.impl,
+  	                 f1 : DATA_TYPES::BoolActuators.impl,
+  	                 f2 : DATA_TYPES::BoolActuators.impl,
+  	                 f3 : DATA_TYPES::BoolActuators.impl,
+  	                 f4 : DATA_TYPES::BoolActuators.impl)
+  	   returns(ret : bool);
+  	   let
+  	     ret = valid_to_num(f1.THROTL, f2.THROTL, f3.THROTL, f4.THROTL, num_valids.THROTL) and
+  	           valid_to_num(f1.THROTR, f2.THROTR, f3.THROTR, f4.THROTR, num_valids.THROTR) and
+  	           valid_to_num(f1.ELLOB, f2.ELLOB, f3.ELLOB, f4.ELLOB, num_valids.ELLOB) and
+  	           valid_to_num(f1.ELLIB, f2.ELLIB, f3.ELLIB, f4.ELLIB, num_valids.ELLIB) and
+  	           valid_to_num(f1.ELROB, f2.ELROB, f3.ELROB, f4.ELROB, num_valids.ELROB) and
+  	           valid_to_num(f1.ELRIB, f2.ELRIB, f3.ELRIB, f4.ELRIB, num_valids.ELRIB) and
+  	           valid_to_num(f1.AILL, f2.AILL, f3.AILL, f4.AILL, num_valids.AILL) and
+  	           valid_to_num(f1.AILR, f2.AILR, f3.AILR, f4.AILR, num_valids.AILR) and
+  	           valid_to_num(f1.RUDUP, f2.RUDUP, f3.RUDUP, f4.RUDUP, num_valids.RUDUP) and
+  	           valid_to_num(f1.RUDLO, f2.RUDLO, f3.RUDLO, f4.RUDLO, num_valids.RUDLO) and
+  	           valid_to_num(f1.SPLLIB, f2.SPLLIB, f3.SPLLIB, f4.SPLLIB, num_valids.SPLLIB) and
+  	           valid_to_num(f1.SPLLOB, f2.SPLLOB, f3.SPLLOB, f4.SPLLOB, num_valids.SPLLOB) and
+  	           valid_to_num(f1.SPLRIB, f2.SPLRIB, f3.SPLRIB, f4.SPLRIB, num_valids.SPLRIB) and
+  	           valid_to_num(f1.SPLROB, f2.SPLROB, f3.SPLROB, f4.SPLROB, num_valids.SPLROB) and
+  	           valid_to_num(f1.FLAPLI, f2.FLAPLI, f3.FLAPLI, f4.FLAPLI, num_valids.FLAPLI) and
+  	           valid_to_num(f1.FLAPLO, f2.FLAPLO, f3.FLAPLO, f4.FLAPLO, num_valids.FLAPLO) and
+  	           valid_to_num(f1.FLAPRI, f2.FLAPRI, f3.FLAPRI, f4.FLAPRI, num_valids.FLAPRI) and
+  	           valid_to_num(f1.FLAPRO, f2.FLAPRO, f3.FLAPRO, f4.FLAPRO, num_valids.FLAPRO) and
+  	           valid_to_num(f1.GEAR, f2.GEAR, f3.GEAR, f4.GEAR, num_valids.GEAR) and
+  	           valid_to_num(f1.BRAKE, f2.BRAKE, f3.BRAKE, f4.BRAKE, num_valids.BRAKE) and
+  	           valid_to_num(f1.STEER, f2.STEER, f3.STEER, f4.STEER, num_valids.STEER);
+       tel;
+
+    
+    
+**};
+
+end FCS_RC1;

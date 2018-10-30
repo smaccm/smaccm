@@ -1,0 +1,66 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the System Status behavioral model.
+--------------------------------------------------------------------------
+
+package System_Status 
+public
+
+  with DATATYPES;
+  
+  system System_Status
+    features	
+	  IM_IN: in data port DATATYPES::Infusion_Manager_Outputs.Impl;
+	  TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;    
+      SENSOR_IN: in data port DATATYPES::Device_Sensor_Inputs.Impl;
+	  CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
+      CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
+	  
+	  SYS_STAT_OUT: out data port DATATYPES::System_Status_Outputs.Impl;
+	            
+       annex agree {**
+
+		-------> if the system is ON and the computed Reservoir_Volume is less than the threshold then Reservoir_Empty = true  <-------
+
+		property empty_reservoir_condition = 
+			SYS_STAT_OUT.Reservoir_Empty <=> (TLM_MODE_IN.System_On and (SYS_STAT_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir) );
+
+		guarantee "empty_reservoir_condition ":  empty_reservoir_condition;
+		
+		property empty_reservoir_exclusive =
+			(TLM_MODE_IN.System_On and SYS_STAT_OUT.Reservoir_Empty) => (SYS_STAT_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir);
+		guarantee "empty_reservoir_exclusive" : empty_reservoir_exclusive;
+
+
+		-------> if the system is ON and the Current_System_Mode from Infusion manager was > 1 then In_Therapy = true  <-------
+
+		property mode_grt_1_implies_In_Therapy = 
+			((TLM_MODE_IN.System_On and ((IM_IN.Current_System_Mode) > 1))) => SYS_STAT_OUT.In_Therapy;
+
+		guarantee "mode_grt_1_implies_In_Therapy ":  mode_grt_1_implies_In_Therapy; 
+		
+	   -------> if the system is ON and the Current_System_Mode from Infusion manager was > 1 then In_Therapy = true  <-------
+
+		property mode_not_grt_1_implies_not_In_Therapy = 
+			((TLM_MODE_IN.System_On and not((IM_IN.Current_System_Mode) > 1)) => not(SYS_STAT_OUT.In_Therapy));
+
+		guarantee "mode_not_grt_1_implies_not_In_Therapy ":  mode_not_grt_1_implies_not_In_Therapy;
+		
+		
+		
+
+		
+**};
+
+  end System_Status;
+  
+  system implementation System_Status.Impl 
+  end System_Status.Impl;
+    
+end System_Status;

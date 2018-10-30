@@ -1,0 +1,12 @@
+package RUN_LENGTH
+public
+annex agree {**	
+	-- Counts the number of times sig is on.
+	node f(sig: bool) 
+  	returns (count : int);
+  	let
+    	count = if sig then prev(count,0) + 1 else 0;
+ 
+  	tel;
+**};
+end RUN_LENGTH;

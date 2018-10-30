@@ -1,0 +1,27 @@
+package EGI
+public
+  with Base_Types;
+
+device EGI
+  features
+    aoa: out data port Base_Types::Integer;
+    time: out data port Base_Types::Integer;
+    lat: out data port Base_Types::Integer;
+    long: out data port Base_Types::Integer;
+    alt: out data port Base_Types::Integer;
+    egi_health: out data port Base_Types::Integer;
+    bank: out data port Base_Types::Integer;
+    bank_rate: out data port Base_Types::Integer;
+    pitch: out data port Base_Types::Integer;
+    pitch_rate: out data port Base_Types::Integer;
+    heading: out data port Base_Types::Integer;
+    heading_rate: out data port Base_Types::Integer;
+    velocity_x : out data port Base_Types::Integer;
+    velocity_y : out data port Base_Types::Integer;
+    velocity_z : out data port Base_Types::Integer;
+    accel_x: out data port Base_Types::Integer;
+    accel_y: out data port Base_Types::Integer;
+    accel_z: out data port Base_Types::Integer;
+end EGI;
+
+end EGI;

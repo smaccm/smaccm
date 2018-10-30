@@ -1,0 +1,13 @@
+package Agree_Constants
+public
+
+annex agree {**
+	
+  const MANUAL : int = 1;
+  const LO     : int = 2;
+  const MED    : int = 3;
+  const MAX    : int = 4; 
+	
+**};
+
+end Agree_Constants;

@@ -1,0 +1,43 @@
+package AGREE_OSAS_NODES
+public
+
+annex agree {**
+  
+  node fault_occurred(act : real, act_ret : real) returns (return : bool);
+  let
+    return = false -> not ((act_ret <= 1.025*pre(act)) and (act_ret >= 0.975*pre(act)));
+  tel;
+  
+  node no_fault_for_frames
+    (act : real, act_ret : real, for : int) 
+  returns 
+    (return : bool);
+  var 
+    count : int; 
+  let
+    count = 0 -> if (fault_occurred(act, act_ret)) then
+                    0 else pre(count) + 1;
+    return = count >= for;
+    
+    lemma "pos count" : count >= 0;
+    
+  tel;
+  
+  node fault_persists_for_frames
+    (act : real, act_ret : real, for : int) 
+  returns 
+    (return : bool);
+  var
+    count : int;
+  let
+    count = 0 -> if (fault_occurred(act, act_ret)) then
+                    pre(count) + 1 else 0;
+    return = count >= for;
+    
+    lemma "pos count" : count >= 0; 
+    
+  tel;
+    
+**};
+
+end AGREE_OSAS_NODES;

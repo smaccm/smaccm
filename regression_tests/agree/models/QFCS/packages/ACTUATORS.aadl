@@ -1,0 +1,16 @@
+package ACTUATORS
+public
+  with Base_Types;
+  
+device ACTUATORS
+  features
+    ailerons: in data port Base_Types::Float;
+    elevators: in data port Base_Types::Float;
+    rudder: in data port Base_Types::Float;
+    spoiler: in data port Base_Types::Float;
+    flaps_gt: in data port Base_Types::Float;
+    flaps_lt: in data port base_Types::Float;
+end ACTUATORS;
+
+
+end ACTUATORS;

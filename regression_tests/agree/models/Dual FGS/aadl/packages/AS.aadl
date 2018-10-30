@@ -1,0 +1,65 @@
+-- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
+-- of the Defense Advanced Research Projects Agency (DARPA).
+--
+-- Permission is hereby granted, free of charge, to any person obtaining
+-- a copy of this data, including any software or models in source or
+-- binary form, as well as any drawings, specifications, and
+-- documentation (collectively "the Data"), to deal in the Data without
+-- restriction, including without limitation the rights to use, copy,
+-- modify, merge, publish, distribute, sublicense, and/or sell copies of
+-- the Data, and to permit persons to whom the Data is furnished to do
+-- so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Data.
+--
+-- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+-- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
+-- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+-- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
+-- DATA.
+package AS
+public
+with CSA,YOKE,THROTTLE,FCS,PFD,ADS,AHS,FMS,NAV;
+  system Avionics_System
+  end Avionics_System;
+  
+  system implementation Avionics_System.Avionics_System_Impl
+    subcomponents
+      CSA: device CSA::Control_Surface_Actuators;
+      YOKE_R: device YOKE::Yoke;
+      THROT_L: device THROTTLE::Throttle;
+      YOKE_L: device YOKE::Yoke;
+      THROT_R: device THROTTLE::Throttle;
+      FCS: system FCS::Flight_Control_System.Flight_Control_System_Impl;
+      PFD_L: system PFD::Primary_Flight_Display.Primary_Flight_Display_Impl;
+      ADS_L: system ADS::Air_Data_System.Air_Data_System_Impl;
+      AHS_L: system AHS::Attitude_Heading_System.Attitude_Heading_System_Impl;
+      FMS_L: system FMS::Flight_Management_System.Flight_Management_System_Impl;
+      NAV_L: system NAV::Navigation_System.Navigation_System_Impl;
+      PFD_R: system PFD::Primary_Flight_Display.Primary_Flight_Display_Impl;
+      ADS_R: system ADS::Air_Data_System.Air_Data_System_Impl;
+      AHS_R: system AHS::Attitude_Heading_System.Attitude_Heading_System_Impl;
+      FMS_R: system FMS::Flight_Management_System.Flight_Management_System_Impl;
+      NAV_R: system NAV::Navigation_System.Navigation_System_Impl;
+    connections
+      FCS2PFDL: port FCS.FD_L -> PFD_L.FD;
+      AHSL2FCS: port AHS_L.AH -> FCS.AH_L;
+      ADSL2FCS: port ADS_L.AD -> FCS.AD_L;
+      FMSL2FCS: port FMS_L.FM -> FCS.FM_L;
+      NAVL2FCS: port NAV_L.NAV -> FCS.NAV_L;
+      THROTL2FCS: port THROT_L.THROT -> FCS.THROT_L;
+      YOKEL2FCS: port YOKE_L.YOKE -> FCS.YOKE_L;
+      FCS2PFDR: port FCS.FD_R -> PFD_R.FD;
+      ADSR2FCS: port ADS_R.AD -> FCS.AD_R;
+      AHSR2FCS: port AHS_R.AH -> FCS.AH_R;
+      FMSR2FCS: port FMS_R.FM -> FCS.FM_R;
+      NAVR2FCS: port NAV_R.NAV -> FCS.NAV_R;
+      THROTR2FCS: port THROT_R.THROT -> FCS.THROT_R;
+      YOKER2FCS: port YOKE_R.YOKE -> FCS.YOKE_R;
+      FCS2CSA: port FCS.CSA -> CSA.CMD;
+  end Avionics_System.Avionics_System_Impl;
+end AS;

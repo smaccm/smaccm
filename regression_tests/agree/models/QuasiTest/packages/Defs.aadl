@@ -1,0 +1,26 @@
+package Defs
+public
+
+annex agree{**
+	
+	node rising(signal : bool) returns (result : bool);
+	let
+		result = false -> pre(not signal) and signal;
+	tel;
+	
+	node falling(signal : bool) returns (result : bool);
+	let
+		result = false -> pre(signal) and (not signal);
+	tel;
+	
+	node high_for(signal : bool) returns (result : int);
+	let
+	  result = if (signal) then 
+	            (1 -> pre(result) + 1)
+	          else
+	            0;
+	tel;
+	
+**};
+
+end Defs;

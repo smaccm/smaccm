@@ -1,0 +1,95 @@
+-- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
+-- of the Defense Advanced Research Projects Agency (DARPA).
+--
+-- Permission is hereby granted, free of charge, to any person obtaining
+-- a copy of this data, including any software or models in source or
+-- binary form, as well as any drawings, specifications, and
+-- documentation (collectively "the Data"), to deal in the Data without
+-- restriction, including without limitation the rights to use, copy,
+-- modify, merge, publish, distribute, sublicense, and/or sell copies of
+-- the Data, and to permit persons to whom the Data is furnished to do
+-- so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Data.
+--
+-- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+-- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
+-- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+-- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
+-- DATA.
+package IMA
+public
+  bus IMA_BUS
+    properties
+      Latency => 5 ms .. 8 ms;
+  end IMA_BUS;
+  
+  data IMA_Data
+  end IMA_Data;
+  
+  system CCM_Fast
+    features
+      ES: requires bus access IMA_BUS.IMA_BUS_Impl;
+  end CCM_Fast;
+  
+  system CCM_Slow
+    features
+      ES: requires bus access IMA_BUS.IMA_BUS_Impl;
+  end CCM_Slow;
+  
+  system IMA_Platform
+  end IMA_Platform;
+  
+  processor PowerPC_250Mhz
+    features
+      ES: requires bus access IMA_BUS.IMA_BUS_Impl;
+    properties
+      Clock_Jitter => 10 us;
+  end PowerPC_250Mhz;
+  
+  processor PowerPC_350Mhz
+    features
+      ES: requires bus access IMA_BUS.IMA_BUS_Impl;
+    properties
+      Clock_Jitter => 10 us;
+  end PowerPC_350Mhz;
+  
+  bus implementation IMA_BUS.IMA_BUS_Impl
+  end IMA_BUS.IMA_BUS_Impl;
+  
+  system implementation CCM_Fast.CCM_Fast_Impl
+    subcomponents
+      PRC: processor PowerPC_350Mhz.PowerPC_350Mhz_Impl;
+    connections
+      EStoPRC: bus access ES -> PRC.ES;
+  end CCM_Fast.CCM_Fast_Impl;
+  
+  system implementation CCM_Slow.CCM_Slow_Impl
+    subcomponents
+      PRC: processor PowerPC_250Mhz.PowerPC_250Mhz_Impl;
+    connections
+      EStoPRC: bus access ES -> PRC.ES;
+  end CCM_Slow.CCM_Slow_Impl;
+  
+  system implementation IMA_Platform.IMA_Platform_Impl
+    subcomponents
+      IMA_Bus: bus IMA_BUS.IMA_BUS_Impl;
+      A: system CCM_Fast.CCM_Fast_Impl;
+      B: system CCM_Fast.CCM_Fast_Impl;
+      C: system CCM_Slow.CCM_Slow_Impl;
+    connections
+      BUStoA: bus access IMA_Bus -> A.ES;
+      BUStoB: bus access IMA_Bus -> B.ES;
+      BUS2C: bus access IMA_Bus -> C.ES;
+  end IMA_Platform.IMA_Platform_Impl;
+  
+  processor implementation PowerPC_250Mhz.PowerPC_250Mhz_Impl
+  end PowerPC_250Mhz.PowerPC_250Mhz_Impl;
+  
+  processor implementation PowerPC_350Mhz.PowerPC_350Mhz_Impl
+  end PowerPC_350Mhz.PowerPC_350Mhz_Impl;
+end IMA;

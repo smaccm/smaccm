@@ -1,0 +1,329 @@
+package ISAS_S_240
+public
+
+annex agree {**
+	
+	node req(elevators_within_tol : DATA_TYPES::QUAD_Elevators.tbool, 
+		     ailerons_within_tol : DATA_TYPES::QUAD_Ailerons.tbool,
+             rudders_within_tol : DATA_TYPES::QUAD_Rudders.tbool,
+             flaps_within_tol : DATA_TYPES::QUAD_Flaps.tbool,
+             spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool,
+             stabilizers_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool,
+             aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool,
+             
+             elevators_failed_update : DATA_TYPES.quad_bool, 
+		     ailerons_failed_update : DATA_TYPES.quad_bool,
+             rudders_failed_update : DATA_TYPES.quad_bool,
+             flaps_failed_update : DATA_TYPES.quad_bool,
+             spoilers_failed_update :  DATA_TYPES.quad_bool,
+             stabilizers_failed_update : DATA_TYPES.quad_bool,
+             aoa_failed_update : DATA_TYPES.dual_bool,
+             air_data_failed_update : DATA_TYPES.dual_bool, 
+             
+             elevators_in_range : DATA_TYPES::QUAD_Elevators.tbool, 
+		     ailerons_in_range : DATA_TYPES::QUAD_Ailerons.tbool,
+             rudders_in_range : DATA_TYPES::QUAD_Rudders.tbool,
+             flaps_in_range : DATA_TYPES::QUAD_Flaps.tbool,
+             spoilers_in_range :  DATA_TYPES::QUAD_Spoilers.tbool,
+             stabilizers_in_range : DATA_TYPES::QUAD_Stabilizer.tbool,
+             aoa_in_range : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_in_range : DATA_TYPES::DUAL_AirData.tbool,
+             
+             elevators_latched_faults : DATA_TYPES::QUAD_Elevators.tbool, 
+		     ailerons_latched_faults : DATA_TYPES::QUAD_Ailerons.tbool,
+             rudders_latched_faults : DATA_TYPES::QUAD_Rudders.tbool,
+             flaps_latched_faults : DATA_TYPES::QUAD_Flaps.tbool,
+             spoilers_latched_faults :  DATA_TYPES::QUAD_Spoilers.tbool,
+             stabilizers_latched_faults : DATA_TYPES::QUAD_Stabilizer.tbool,
+             aoa_latched_faults : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_latched_faults : DATA_TYPES::DUAL_AirData.tbool
+	        ) returns (ret : bool);   
+    let
+      ret = 
+        elevators_faults(elevators_within_tol, elevators_failed_update, 
+    	  elevators_in_range, elevators_latched_faults) and 
+    	ailerons_faults(ailerons_within_tol, ailerons_failed_update, 
+    	  ailerons_in_range, ailerons_latched_faults) and 
+    	rudders_faults(rudders_within_tol, rudders_failed_update, 
+    	  rudders_in_range, rudders_latched_faults) and 
+    	flaps_faults(flaps_within_tol, flaps_failed_update, 
+    	  flaps_in_range, flaps_latched_faults) and 
+    	spoilers_faults(spoilers_within_tol, spoilers_failed_update, 
+    	  spoilers_in_range, spoilers_latched_faults) and 
+    	stabilizers_faults(stabilizers_within_tol, stabilizers_failed_update, 
+    	  stabilizers_in_range, stabilizers_latched_faults) and 
+    	aoa_faults(aoa_within_tol, aoa_failed_update, 
+    	  aoa_in_range, aoa_latched_faults) and 
+    	air_data_faults(air_data_within_tol, air_data_failed_update, 
+    	  air_data_in_range, air_data_latched_faults);
+    tel;
+    
+    node air_data_faults(air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool,
+    	air_data_failed_update : DATA_TYPES.dual_bool, 
+    	air_data_in_range : DATA_TYPES::DUAL_AirData.tbool, 
+    	air_data_latched_faults : DATA_TYPES::DUAL_AirData.tbool)
+    returns (ret : bool);
+    let
+      ret = fault(air_data_in_range.AD1.TAT, air_data_failed_update.val1,
+      	          air_data_within_tol.AD1.TAT, air_data_latched_faults.AD1.TAT) and
+      	    fault(air_data_in_range.AD1.TotPres, air_data_failed_update.val1,
+      	          air_data_within_tol.AD1.TotPres, air_data_latched_faults.AD1.TotPres) and
+      	    fault(air_data_in_range.AD1.Pres, air_data_failed_update.val1,
+      	          air_data_within_tol.AD1.Pres, air_data_latched_faults.AD1.Pres) and
+      	    fault(air_data_in_range.AD1.Temp, air_data_failed_update.val1,
+      	          air_data_within_tol.AD1.Temp, air_data_latched_faults.AD1.Temp) and
+      	    fault(air_data_in_range.AD2.TAT, air_data_failed_update.val2,
+      	          air_data_within_tol.AD2.TAT, air_data_latched_faults.AD2.TAT) and
+      	    fault(air_data_in_range.AD2.TotPres, air_data_failed_update.val2,
+      	          air_data_within_tol.AD2.TotPres, air_data_latched_faults.AD2.TotPres) and
+      	    fault(air_data_in_range.AD2.Pres, air_data_failed_update.val2,
+      	          air_data_within_tol.AD2.Pres, air_data_latched_faults.AD2.Pres) and
+      	    fault(air_data_in_range.AD2.Temp, air_data_failed_update.val2,
+      	          air_data_within_tol.AD2.Temp, air_data_latched_faults.AD2.Temp);
+    tel;
+    
+    node aoa_faults(aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool,
+    	aoa_failed_update : DATA_TYPES.dual_bool, 
+    	aoa_in_range : DATA_TYPES::DUAL_AoA.tbool, 
+    	aoa_latched_faults : DATA_TYPES::DUAL_AoA.tbool)
+    returns (ret : bool);
+    let
+      ret = fault(aoa_in_range.AOA1.AOA, aoa_failed_update.val1,
+      	          aoa_within_tol.AOA1.AOA, aoa_latched_faults.AOA1.AOA) and
+      	    fault(aoa_in_range.AOA2.AOA, aoa_failed_update.val2,
+      	          aoa_within_tol.AOA2.AOA, aoa_latched_faults.AOA2.AOA);
+    tel;
+    
+    node stabilizers_faults(stabilizers_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool,
+    	stabilizers_failed_update : DATA_TYPES.quad_bool, 
+    	stabilizers_in_range : DATA_TYPES::QUAD_Stabilizer.tbool, 
+    	stabilizers_latched_faults : DATA_TYPES::QUAD_Stabilizer.tbool)
+    returns (ret : bool);
+    let
+      ret = fault(stabilizers_in_range.STAB1, stabilizers_failed_update.val1,
+      	          stabilizers_in_range.STAB1, stabilizers_latched_faults.STAB1) and
+      	    fault(stabilizers_in_range.STAB1, stabilizers_failed_update.val1,
+      	          stabilizers_in_range.STAB1, stabilizers_latched_faults.STAB1) and
+      	    fault(stabilizers_in_range.STAB1, stabilizers_failed_update.val1,
+      	          stabilizers_in_range.STAB1, stabilizers_latched_faults.STAB1) and
+      	    fault(stabilizers_in_range.STAB1, stabilizers_failed_update.val1,
+      	          stabilizers_in_range.STAB2, stabilizers_latched_faults.STAB2) and
+      	    fault(stabilizers_in_range.STAB2, stabilizers_failed_update.val2,
+      	          stabilizers_in_range.STAB2, stabilizers_latched_faults.STAB2) and
+      	    fault(stabilizers_in_range.STAB2, stabilizers_failed_update.val2,
+      	          stabilizers_in_range.STAB2, stabilizers_latched_faults.STAB2) and
+      	    fault(stabilizers_in_range.STAB2, stabilizers_failed_update.val2,
+      	          stabilizers_in_range.STAB2, stabilizers_latched_faults.STAB2) and
+      	    fault(stabilizers_in_range.STAB2, stabilizers_failed_update.val2,
+      	          stabilizers_in_range.STAB2, stabilizers_latched_faults.STAB2) and
+      	    fault(stabilizers_in_range.STAB3, stabilizers_failed_update.val3,
+      	          stabilizers_in_range.STAB3, stabilizers_latched_faults.STAB3) and
+      	    fault(stabilizers_in_range.STAB3, stabilizers_failed_update.val3,
+      	          stabilizers_in_range.STAB3, stabilizers_latched_faults.STAB3) and
+      	    fault(stabilizers_in_range.STAB3, stabilizers_failed_update.val3,
+      	          stabilizers_in_range.STAB3, stabilizers_latched_faults.STAB3) and
+      	    fault(stabilizers_in_range.STAB3, stabilizers_failed_update.val3,
+      	          stabilizers_in_range.STAB3, stabilizers_latched_faults.STAB3) and
+      	    fault(stabilizers_in_range.STAB4, stabilizers_failed_update.val4,
+      	          stabilizers_in_range.STAB4, stabilizers_latched_faults.STAB4) and
+      	    fault(stabilizers_in_range.STAB4, stabilizers_failed_update.val4,
+      	          stabilizers_in_range.STAB4, stabilizers_latched_faults.STAB4) and
+      	    fault(stabilizers_in_range.STAB4, stabilizers_failed_update.val4,
+      	          stabilizers_in_range.STAB4, stabilizers_latched_faults.STAB4) and
+      	    fault(stabilizers_in_range.STAB4, stabilizers_failed_update.val4,
+      	          stabilizers_in_range.STAB4, stabilizers_latched_faults.STAB4);
+      	          
+    tel;
+    
+    node spoilers_faults(spoilers_within_tol : DATA_TYPES::QUAD_Spoilers.tbool,
+    	spoilers_failed_update : DATA_TYPES.quad_bool, 
+    	spoilers_in_range : DATA_TYPES::QUAD_Spoilers.tbool, 
+    	spoilers_latched_faults : DATA_TYPES::QUAD_Spoilers.tbool)
+    returns (ret : bool);
+    let
+      ret = fault(spoilers_in_range.SPOIL1.SPLOB, spoilers_failed_update.val1,
+      	          spoilers_in_range.SPOIL1.SPLOB, spoilers_latched_faults.SPOIL1.SPLOB) and
+      	    fault(spoilers_in_range.SPOIL1.SPLIB, spoilers_failed_update.val1,
+      	          spoilers_in_range.SPOIL1.SPLIB, spoilers_latched_faults.SPOIL1.SPLIB) and
+      	    fault(spoilers_in_range.SPOIL1.SPRIB, spoilers_failed_update.val1,
+      	          spoilers_in_range.SPOIL1.SPRIB, spoilers_latched_faults.SPOIL1.SPRIB) and
+      	    fault(spoilers_in_range.SPOIL1.SPROB, spoilers_failed_update.val1, 
+      	          spoilers_in_range.SPOIL1.SPROB, spoilers_latched_faults.SPOIL1.SPROB) and
+      	    fault(spoilers_in_range.SPOIL2.SPLOB, spoilers_failed_update.val2,
+      	          spoilers_in_range.SPOIL2.SPLOB, spoilers_latched_faults.SPOIL2.SPLOB) and
+      	    fault(spoilers_in_range.SPOIL2.SPLIB, spoilers_failed_update.val2,
+      	          spoilers_in_range.SPOIL2.SPLIB, spoilers_latched_faults.SPOIL2.SPLIB) and
+      	    fault(spoilers_in_range.SPOIL2.SPRIB, spoilers_failed_update.val2,
+      	          spoilers_in_range.SPOIL2.SPRIB, spoilers_latched_faults.SPOIL2.SPRIB) and
+      	    fault(spoilers_in_range.SPOIL2.SPROB, spoilers_failed_update.val2,
+      	          spoilers_in_range.SPOIL2.SPROB, spoilers_latched_faults.SPOIL2.SPROB) and
+      	    fault(spoilers_in_range.SPOIL3.SPLOB, spoilers_failed_update.val3,
+      	          spoilers_in_range.SPOIL3.SPLOB, spoilers_latched_faults.SPOIL3.SPLOB) and
+      	    fault(spoilers_in_range.SPOIL3.SPLIB, spoilers_failed_update.val3,
+      	          spoilers_in_range.SPOIL3.SPLIB, spoilers_latched_faults.SPOIL3.SPLIB) and
+      	    fault(spoilers_in_range.SPOIL3.SPRIB, spoilers_failed_update.val3,
+      	          spoilers_in_range.SPOIL3.SPRIB, spoilers_latched_faults.SPOIL3.SPRIB) and
+      	    fault(spoilers_in_range.SPOIL3.SPROB, spoilers_failed_update.val3,
+      	          spoilers_in_range.SPOIL3.SPROB, spoilers_latched_faults.SPOIL3.SPROB) and
+      	    fault(spoilers_in_range.SPOIL4.SPLOB, spoilers_failed_update.val4,
+      	          spoilers_in_range.SPOIL4.SPLOB, spoilers_latched_faults.SPOIL4.SPLOB) and
+      	    fault(spoilers_in_range.SPOIL4.SPLIB, spoilers_failed_update.val4,
+      	          spoilers_in_range.SPOIL4.SPLIB, spoilers_latched_faults.SPOIL4.SPLIB) and
+      	    fault(spoilers_in_range.SPOIL4.SPRIB, spoilers_failed_update.val4,
+      	          spoilers_in_range.SPOIL4.SPRIB, spoilers_latched_faults.SPOIL4.SPRIB) and
+      	    fault(spoilers_in_range.SPOIL4.SPROB, spoilers_failed_update.val4,
+      	          spoilers_in_range.SPOIL4.SPROB, spoilers_latched_faults.SPOIL4.SPROB);
+      	          
+    tel;
+    
+    node flaps_faults(flaps_within_tol : DATA_TYPES::QUAD_Flaps.tbool,
+    	flaps_failed_update : DATA_TYPES.quad_bool, 
+    	flaps_in_range : DATA_TYPES::QUAD_Flaps.tbool, 
+    	flaps_latched_faults : DATA_TYPES::QUAD_Flaps.tbool)
+    returns (ret : bool);
+    let
+      ret = fault(flaps_in_range.FLAPS1.FLLOB, flaps_failed_update.val1,
+      	          flaps_in_range.FLAPS1.FLLOB, flaps_latched_faults.FLAPS1.FLLOB) and
+      	    fault(flaps_in_range.FLAPS1.FLLIB, flaps_failed_update.val1,
+      	          flaps_in_range.FLAPS1.FLLIB, flaps_latched_faults.FLAPS1.FLLIB) and
+      	    fault(flaps_in_range.FLAPS1.FLRIB, flaps_failed_update.val1,
+      	          flaps_in_range.FLAPS1.FLRIB, flaps_latched_faults.FLAPS1.FLRIB) and
+      	    fault(flaps_in_range.FLAPS1.FLROB, flaps_failed_update.val1,
+      	          flaps_in_range.FLAPS1.FLROB, flaps_latched_faults.FLAPS1.FLROB) and
+      	    fault(flaps_in_range.FLAPS2.FLLOB, flaps_failed_update.val2,
+      	          flaps_in_range.FLAPS2.FLLOB, flaps_latched_faults.FLAPS2.FLLOB) and
+      	    fault(flaps_in_range.FLAPS2.FLLIB, flaps_failed_update.val2,
+      	          flaps_in_range.FLAPS2.FLLIB, flaps_latched_faults.FLAPS2.FLLIB) and
+      	    fault(flaps_in_range.FLAPS2.FLRIB, flaps_failed_update.val2,
+      	          flaps_in_range.FLAPS2.FLRIB, flaps_latched_faults.FLAPS2.FLRIB) and
+      	    fault(flaps_in_range.FLAPS2.FLROB, flaps_failed_update.val2,
+      	          flaps_in_range.FLAPS2.FLROB, flaps_latched_faults.FLAPS2.FLROB) and
+      	    fault(flaps_in_range.FLAPS3.FLLOB, flaps_failed_update.val3,
+      	          flaps_in_range.FLAPS3.FLLOB, flaps_latched_faults.FLAPS3.FLLOB) and
+      	    fault(flaps_in_range.FLAPS3.FLLIB, flaps_failed_update.val3,
+      	          flaps_in_range.FLAPS3.FLLIB, flaps_latched_faults.FLAPS3.FLLIB) and
+      	    fault(flaps_in_range.FLAPS3.FLRIB, flaps_failed_update.val3,
+      	          flaps_in_range.FLAPS3.FLRIB, flaps_latched_faults.FLAPS3.FLRIB) and
+      	    fault(flaps_in_range.FLAPS3.FLROB, flaps_failed_update.val3,
+      	          flaps_in_range.FLAPS3.FLROB, flaps_latched_faults.FLAPS3.FLROB) and
+      	    fault(flaps_in_range.FLAPS4.FLLOB, flaps_failed_update.val4,
+      	          flaps_in_range.FLAPS4.FLLOB, flaps_latched_faults.FLAPS4.FLLOB) and
+      	    fault(flaps_in_range.FLAPS4.FLLIB, flaps_failed_update.val4,
+      	          flaps_in_range.FLAPS4.FLLIB, flaps_latched_faults.FLAPS4.FLLIB) and
+      	    fault(flaps_in_range.FLAPS4.FLRIB, flaps_failed_update.val4,
+      	          flaps_in_range.FLAPS4.FLRIB, flaps_latched_faults.FLAPS4.FLRIB) and
+      	    fault(flaps_in_range.FLAPS4.FLROB, flaps_failed_update.val4,
+      	          flaps_in_range.FLAPS4.FLROB, flaps_latched_faults.FLAPS4.FLROB);
+      	          
+    tel;
+    
+    node rudders_faults(rudders_within_tol : DATA_TYPES::QUAD_Rudders.tbool,
+    	rudders_failed_update : DATA_TYPES.quad_bool, 
+    	rudders_in_range : DATA_TYPES::QUAD_Rudders.tbool, 
+    	rudders_latched_faults : DATA_TYPES::QUAD_Rudders.tbool)
+    returns (ret : bool);
+    let
+      ret = fault(rudders_in_range.RUDD1.RUDU, rudders_failed_update.val1,
+      	          rudders_in_range.RUDD1.RUDU, rudders_latched_faults.RUDD1.RUDU) and
+      	    fault(rudders_in_range.RUDD1.RUDL, rudders_failed_update.val1,
+      	          rudders_in_range.RUDD1.RUDL, rudders_latched_faults.RUDD1.RUDL) and
+      	    fault(rudders_in_range.RUDD2.RUDU, rudders_failed_update.val2,
+      	          rudders_in_range.RUDD2.RUDU, rudders_latched_faults.RUDD2.RUDU) and
+      	    fault(rudders_in_range.RUDD2.RUDL, rudders_failed_update.val2,
+      	          rudders_in_range.RUDD2.RUDL, rudders_latched_faults.RUDD2.RUDL) and
+      	    fault(rudders_in_range.RUDD3.RUDU, rudders_failed_update.val3,
+      	          rudders_in_range.RUDD3.RUDU, rudders_latched_faults.RUDD3.RUDU) and
+      	    fault(rudders_in_range.RUDD3.RUDL, rudders_failed_update.val3,
+      	          rudders_in_range.RUDD3.RUDL, rudders_latched_faults.RUDD3.RUDL) and
+      	    fault(rudders_in_range.RUDD4.RUDU, rudders_failed_update.val4,
+      	          rudders_in_range.RUDD4.RUDU, rudders_latched_faults.RUDD4.RUDU) and
+      	    fault(rudders_in_range.RUDD4.RUDL, rudders_failed_update.val4,
+      	          rudders_in_range.RUDD4.RUDL, rudders_latched_faults.RUDD4.RUDL);
+        
+    tel;
+    
+    node ailerons_faults(ailerons_within_tol : DATA_TYPES::QUAD_Ailerons.tbool,
+    	ailerons_failed_update : DATA_TYPES.quad_bool, 
+    	ailerons_in_range : DATA_TYPES::QUAD_Ailerons.tbool, 
+    	ailerons_latched_faults : DATA_TYPES::QUAD_Ailerons.tbool)
+    returns (ret : bool);
+    let
+      ret = fault(ailerons_in_range.AIL1.AILL, ailerons_failed_update.val1,
+      	          ailerons_in_range.AIL1.AILL, ailerons_latched_faults.AIL1.AILL) and
+      	    fault(ailerons_in_range.AIL1.AILR, ailerons_failed_update.val1,
+      	          ailerons_in_range.AIL1.AILR, ailerons_latched_faults.AIL1.AILR) and
+      	    fault(ailerons_in_range.AIL2.AILL, ailerons_failed_update.val2,
+      	          ailerons_in_range.AIL2.AILL, ailerons_latched_faults.AIL2.AILL) and
+      	    fault(ailerons_in_range.AIL2.AILR, ailerons_failed_update.val2,
+      	          ailerons_in_range.AIL2.AILR, ailerons_latched_faults.AIL2.AILR) and
+      	    fault(ailerons_in_range.AIL3.AILL, ailerons_failed_update.val3,
+      	          ailerons_in_range.AIL3.AILL, ailerons_latched_faults.AIL3.AILL) and
+      	    fault(ailerons_in_range.AIL3.AILR, ailerons_failed_update.val3,
+      	          ailerons_in_range.AIL3.AILR, ailerons_latched_faults.AIL3.AILR) and
+      	    fault(ailerons_in_range.AIL4.AILL, ailerons_failed_update.val4,
+      	          ailerons_in_range.AIL4.AILL, ailerons_latched_faults.AIL4.AILL) and
+      	    fault(ailerons_in_range.AIL4.AILR, ailerons_failed_update.val4,
+      	          ailerons_in_range.AIL4.AILR, ailerons_latched_faults.AIL4.AILR);
+        
+    tel;
+    
+    node elevators_faults(elevators_within_tol : DATA_TYPES::QUAD_Elevators.tbool,
+    	elevators_failed_update : DATA_TYPES.quad_bool, 
+    	elevators_in_range : DATA_TYPES::QUAD_Elevators.tbool, 
+    	elevators_latched_faults : DATA_TYPES::QUAD_Elevators.tbool)
+    returns (ret : bool);
+    let
+      ret = fault(elevators_in_range.EL1.ELLOB, elevators_failed_update.val1,
+      	          elevators_in_range.EL1.ELLOB, elevators_latched_faults.EL1.ELLOB) and
+      	    fault(elevators_in_range.EL1.ELLIB, elevators_failed_update.val1,
+      	          elevators_in_range.EL1.ELLIB, elevators_latched_faults.EL1.ELLIB) and
+      	    fault(elevators_in_range.EL1.ELRIB, elevators_failed_update.val1,
+      	          elevators_in_range.EL1.ELRIB, elevators_latched_faults.EL1.ELRIB) and
+      	    fault(elevators_in_range.EL1.ELROB, elevators_failed_update.val1,
+      	          elevators_in_range.EL1.ELROB, elevators_latched_faults.EL1.ELROB) and
+      	    fault(elevators_in_range.EL2.ELLOB, elevators_failed_update.val2,
+      	          elevators_in_range.EL2.ELLOB, elevators_latched_faults.EL2.ELLOB) and
+      	    fault(elevators_in_range.EL2.ELLIB, elevators_failed_update.val2,
+      	          elevators_in_range.EL2.ELLIB, elevators_latched_faults.EL2.ELLIB) and
+      	    fault(elevators_in_range.EL2.ELRIB, elevators_failed_update.val2,
+      	          elevators_in_range.EL2.ELRIB, elevators_latched_faults.EL2.ELRIB) and
+      	    fault(elevators_in_range.EL2.ELROB, elevators_failed_update.val2,
+      	          elevators_in_range.EL2.ELROB, elevators_latched_faults.EL2.ELROB) and
+      	    fault(elevators_in_range.EL3.ELLOB, elevators_failed_update.val3,
+      	          elevators_in_range.EL3.ELLOB, elevators_latched_faults.EL3.ELLOB) and
+      	    fault(elevators_in_range.EL3.ELLIB, elevators_failed_update.val3,
+      	          elevators_in_range.EL3.ELLIB, elevators_latched_faults.EL3.ELLIB) and
+      	    fault(elevators_in_range.EL3.ELRIB, elevators_failed_update.val3,
+      	          elevators_in_range.EL3.ELRIB, elevators_latched_faults.EL3.ELRIB) and
+      	    fault(elevators_in_range.EL3.ELROB, elevators_failed_update.val3,
+      	          elevators_in_range.EL3.ELROB, elevators_latched_faults.EL3.ELROB) and
+      	    fault(elevators_in_range.EL4.ELLOB, elevators_failed_update.val4,
+      	          elevators_in_range.EL4.ELLOB, elevators_latched_faults.EL4.ELLOB) and
+      	    fault(elevators_in_range.EL4.ELLIB, elevators_failed_update.val4,
+      	          elevators_in_range.EL4.ELLIB, elevators_latched_faults.EL4.ELLIB) and
+      	    fault(elevators_in_range.EL4.ELRIB, elevators_failed_update.val4,
+      	          elevators_in_range.EL4.ELRIB, elevators_latched_faults.EL4.ELRIB) and
+      	    fault(elevators_in_range.EL4.ELROB, elevators_failed_update.val4,
+      	          elevators_in_range.EL4.ELROB, elevators_latched_faults.EL4.ELROB);
+      	   
+      	          
+    tel;
+    
+    node fault(in_range : bool, failed_update : bool, within_tol : bool, fault_latch : bool)
+         returns (ret : bool);
+    var
+      consec_faults : int;
+      cur_fault : bool;
+      fault_latched : bool;
+    let
+      cur_fault = not in_range or failed_update or not within_tol;
+      consec_faults = if cur_fault then 1 else 0 -> if cur_fault then pre(consec_faults) + 1 else 0;
+      fault_latched = false -> (pre (fault_latched) or (if(consec_faults = 5) then true else false));
+      ret = (fault_latch = if(fault_latched) then true else cur_fault);
+    tel;
+    
+	
+**};
+
+end ISAS_S_240;

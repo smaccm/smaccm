@@ -1,0 +1,83 @@
+package OSAS_S_100_110
+public
+
+annex agree {**
+	
+	
+  --For each actuator, OSAS shall determine whether the actuator 
+  --command return value is within 2.5% of actuator command from 
+  --the previous frame, and if not shall increment a fault counter 
+  --for that actuator command.
+  
+   --OSAS shall set the actuator command fault counter to 0 (zero) 
+   --if the fault clears within 5 frames.
+  node req 
+  	(acts : DATA_TYPES::Actuators.impl,  
+  	 acts_ret : DATA_TYPES::Actuators.impl,
+  	 fail_counts : DATA_TYPES::NumActuators.impl)
+  returns
+    (res : bool);
+  let
+  	res = req_helper(acts.AILL, acts_ret.AILL, fail_counts.AILL) and 
+  	      req_helper(acts.AILR, acts_ret.AILR, fail_counts.AILR) and
+  	      req_helper(acts.BRAKE, acts_ret.BRAKE, fail_counts.BRAKE) and
+  	      req_helper(acts.ELLIB, acts_ret.ELLIB, fail_counts.ELLIB) and 
+  	      req_helper(acts.ELLOB, acts_ret.ELLOB, fail_counts.ELLOB) and
+  	      req_helper(acts.ELRIB, acts_ret.ELRIB, fail_counts.ELRIB) and
+  	      req_helper(acts.ELROB, acts_ret.ELROB, fail_counts.ELROB) and
+  	      req_helper(acts.FLAPLI, acts_ret.FLAPLI, fail_counts.FLAPLI) and
+  	      req_helper(acts.FLAPLO, acts_ret.FLAPLO, fail_counts.FLAPLO) and
+  	      req_helper(acts.FLAPRI, acts_ret.FLAPRI, fail_counts.FLAPRI) and
+  	      req_helper(acts.FLAPRO, acts_ret.FLAPRO, fail_counts.FLAPRO) and 
+  	      req_helper(acts.GEAR, acts_ret.GEAR, fail_counts.GEAR) and
+  	      req_helper(acts.RUDLO, acts_ret.RUDLO, fail_counts.RUDLO) and
+  	      req_helper(acts.RUDUP, acts_ret.RUDUP, fail_counts.RUDUP) and
+  	      req_helper(acts.SPLLIB, acts_ret.SPLLIB, fail_counts.SPLLIB) and
+  	      req_helper(acts.SPLLOB, acts_ret.SPLLOB, fail_counts.SPLLOB) and
+  	      req_helper(acts.SPLRIB, acts_ret.SPLRIB, fail_counts.SPLRIB) and
+  	      req_helper(acts.SPLROB, acts_ret.SPLROB, fail_counts.SPLROB) and
+  	      req_helper(acts.STEER, acts_ret.STEER, fail_counts.STEER) and
+  	      req_helper(acts.THROTR, acts_ret.THROTR, fail_counts.THROTR) and
+  	      req_helper(acts.THROTL, acts_ret.THROTL, fail_counts.THROTL);
+  tel;    
+  
+   
+  node req_helper
+    (act : real,
+     act_ret : real,
+     fail_count : int)
+  returns
+    (res : bool);
+  let  
+    res = true ->
+    	fail_count = 
+    		if(fault_occurred(act, act_ret)) then
+    			pre(fail_count) + 1
+    		else if(no_fault_for_frames(act, act_ret, 5)) then
+    			0
+    		else
+    			pre(fail_count);
+  tel;
+  
+  node fault_occurred(act : real, act_ret : real) returns (return : bool);
+  let
+    return = false -> not ((act_ret <= 1.025*pre(act)) and (act_ret >= 0.975*pre(act)));
+  tel;
+  
+  node no_fault_for_frames
+    (act : real, act_ret : real, for : int) 
+  returns 
+    (return : bool);
+  var 
+    count : int;  
+  let
+    count = 0 -> if (fault_occurred(act, act_ret)) then
+                    0 else pre(count) + 1;
+    return = count >= for;
+    
+    lemma "pos count" : count >= 0;
+    
+  tel;
+	
+**};
+end OSAS_S_100_110;

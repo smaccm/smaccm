@@ -1,0 +1,58 @@
+-- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
+-- of the Defense Advanced Research Projects Agency (DARPA).
+--
+-- Permission is hereby granted, free of charge, to any person obtaining
+-- a copy of this data, including any software or models in source or
+-- binary form, as well as any drawings, specifications, and
+-- documentation (collectively "the Data"), to deal in the Data without
+-- restriction, including without limitation the rights to use, copy,
+-- modify, merge, publish, distribute, sublicense, and/or sell copies of
+-- the Data, and to permit persons to whom the Data is furnished to do
+-- so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Data.
+--
+-- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+-- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
+-- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+-- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
+-- DATA.
+package PFD
+public
+with FGS;
+  system Primary_Flight_Display
+    features
+      FD: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+  end Primary_Flight_Display;
+  
+  process Primary_Flight_Display_Process
+    features
+      FD: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+  end Primary_Flight_Display_Process;
+  
+  thread Primary_Flight_Display_Thread
+    features
+      FD: in data port FGS::Guidance_Data.Guidance_Data_Impl;
+  end Primary_Flight_Display_Thread;
+  
+  system implementation Primary_Flight_Display.Primary_Flight_Display_Impl
+    subcomponents
+      PFDP: process Primary_Flight_Display_Process.Primary_Flight_Display_Process_Impl;
+    connections
+      FD2PFDP: port FD -> PFDP.FD;
+  end Primary_Flight_Display.Primary_Flight_Display_Impl;
+  
+  process implementation Primary_Flight_Display_Process.Primary_Flight_Display_Process_Impl
+    subcomponents
+      PFDT: thread Primary_Flight_Display_Thread.Primary_Flight_Display_Thread_Impl;
+    connections
+      FD2PFDT: port FD -> PFDT.FD;
+  end Primary_Flight_Display_Process.Primary_Flight_Display_Process_Impl;
+  
+  thread implementation Primary_Flight_Display_Thread.Primary_Flight_Display_Thread_Impl
+  end Primary_Flight_Display_Thread.Primary_Flight_Display_Thread_Impl;
+end PFD;

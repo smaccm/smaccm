@@ -1,0 +1,270 @@
+package FCS
+public
+  with Feature_Groups;
+  with FCC;
+  with QFCS_PROPS;
+
+system FCS
+  features
+     --inputs
+    egi1 : in data port Feature_Groups::EGI_Data.impl;
+    egi2 : in data port Feature_Groups::EGI_Data.impl;
+    egi3 : in data port Feature_Groups::EGI_Data.impl;
+    egi4 : in data port Feature_Groups::EGI_Data.impl;
+    
+    ads1 : in data port Feature_Groups::ADS_Data.impl;
+    ads2 : in data port Feature_Groups::ADS_Data.impl;
+    
+    aoa1 : in data port Feature_Groups::AOA_Data.impl;
+    aoa2 : in data port Feature_Groups::AOA_Data.impl;
+    
+    acts1_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts2_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts3_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts4_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    
+    acts_ret1 : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_ret2 : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_ret3 : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_ret4 : in data port Feature_Groups::ACTUATORS_DATA.impl;
+  
+    --outputs
+    acts_out1 : out data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_out2 : out data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_out3 : out data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts_out4 : out data port Feature_Groups::ACTUATORS_DATA.impl;
+    
+    sovs1: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    sovs2: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    sovs3: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    sovs4: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    
+    
+  annex agree {**
+    
+    eq ailerons_cmd : real = acts_out1.ailerons + acts_out2.ailerons +
+                      acts_out3.ailerons + acts_out4.ailerons;
+    eq elevators_cmd : real = acts_out1.elevators + acts_out2.elevators +
+                      acts_out3.elevators + acts_out4.elevators;
+    eq spoiler_cmd : real = acts_out1.spoiler + acts_out2.spoiler +
+                      acts_out3.spoiler + acts_out4.spoiler;
+    eq rudder_cmd : real = acts_out1.rudder + acts_out2.rudder +
+                      acts_out3.rudder + acts_out4.rudder;
+    eq flaps_gt_cmd : real = acts_out1.flaps_gt + acts_out2.flaps_gt +
+                      acts_out3.flaps_gt + acts_out4.flaps_gt;
+    eq flaps_lt_cmd : real = acts_out1.flaps_lt + acts_out2.flaps_lt +
+                      acts_out3.flaps_lt + acts_out4.flaps_lt;
+  
+    guarantee "actuators cmd range bound":
+          (AGREE_CONSTANTS.ailerons_range_low <= ailerons_cmd and
+          4.0*AGREE_CONSTANTS.ailerons_range_high >= ailerons_cmd) and
+          (AGREE_CONSTANTS.elevators_range_low <= elevators_cmd and
+          4.0*AGREE_CONSTANTS.elevators_range_high >= elevators_cmd) and
+          (AGREE_CONSTANTS.spoiler_range_low <= spoiler_cmd and
+          4.0*AGREE_CONSTANTS.spoiler_range_high >= spoiler_cmd) and
+          (AGREE_CONSTANTS.rudder_range_low <= rudder_cmd and
+          4.0*AGREE_CONSTANTS.rudder_range_high >= rudder_cmd) and
+          (AGREE_CONSTANTS.flaps_gt_range_low <= flaps_gt_cmd and
+          4.0*AGREE_CONSTANTS.flaps_gt_range_high >= flaps_gt_cmd) and
+          (AGREE_CONSTANTS.flaps_lt_range_low <= flaps_lt_cmd and
+          4.0*AGREE_CONSTANTS.flaps_lt_range_high >= flaps_lt_cmd);
+    
+  **};
+    
+end FCS;
+
+
+system implementation FCS.Impl
+  subcomponents
+    fcc1 : system FCC::FCC.Impl;
+    fcc2 : system FCC::FCC.Impl;
+    fcc3 : system FCC::FCC.Impl;
+    fcc4 : system FCC::FCC.Impl;
+    
+  connections
+    fcc1_conn_egi1 : port egi1 -> fcc1.egi1;
+    fcc1_conn_egi2 : port egi2 -> fcc1.egi2;
+    fcc1_conn_egi3 : port egi3 -> fcc1.egi3;
+    fcc1_conn_egi4 : port egi4 -> fcc1.egi4;
+    fcc1_conn_ads1 : port ads1 -> fcc1.ads1;
+    fcc1_conn_ads2 : port ads2 -> fcc1.ads2;
+    fcc1_conn_aoa1 : port aoa1 -> fcc1.aoa1;
+    fcc1_conn_aoa2 : port aoa2 -> fcc1.aoa2;
+    fcc1_conn_acts1 : port acts1_sense -> fcc1.acts1_sense;
+    fcc1_conn_acts2 : port acts2_sense -> fcc1.acts2_sense;
+    fcc1_conn_acts3 : port acts3_sense -> fcc1.acts3_sense;
+    fcc1_conn_acts4 : port acts4_sense -> fcc1.acts4_sense;
+    fcc1_conn_acts_ret : port acts_ret1 -> fcc1.acts_ret;
+    fcc1_conn_acts_out : port fcc1.acts_out -> acts_out1;
+    fcc1_conn_sovs : port fcc1.sovs -> sovs1;
+    
+    fcc2_conn_egi1 : port egi1 -> fcc2.egi1;
+    fcc2_conn_egi2 : port egi2 -> fcc2.egi2;
+    fcc2_conn_egi3 : port egi3 -> fcc2.egi3;
+    fcc2_conn_egi4 : port egi4 -> fcc2.egi4;
+    fcc2_conn_ads1 : port ads1 -> fcc2.ads1;
+    fcc2_conn_ads2 : port ads2 -> fcc2.ads2;
+    fcc2_conn_aoa1 : port aoa1 -> fcc2.aoa1;
+    fcc2_conn_aoa2 : port aoa2 -> fcc2.aoa2;
+    fcc2_conn_acts1 : port acts1_sense -> fcc2.acts1_sense;
+    fcc2_conn_acts2 : port acts2_sense -> fcc2.acts2_sense;
+    fcc2_conn_acts3 : port acts3_sense -> fcc2.acts3_sense;
+    fcc2_conn_acts4 : port acts4_sense -> fcc2.acts4_sense;
+    fcc2_conn_acts_ret : port acts_ret1 -> fcc2.acts_ret;
+    fcc2_conn_acts_out : port fcc2.acts_out -> acts_out2;
+    fcc2_conn_sovs : port fcc2.sovs -> sovs2;
+    
+    fcc3_conn_egi1 : port egi1 -> fcc3.egi1;
+    fcc3_conn_egi2 : port egi2 -> fcc3.egi2;
+    fcc3_conn_egi3 : port egi3 -> fcc3.egi3;
+    fcc3_conn_egi4 : port egi4 -> fcc3.egi4;
+    fcc3_conn_ads1 : port ads1 -> fcc3.ads1;
+    fcc3_conn_ads2 : port ads2 -> fcc3.ads2;
+    fcc3_conn_aoa1 : port aoa1 -> fcc3.aoa1;
+    fcc3_conn_aoa2 : port aoa2 -> fcc3.aoa2;
+    fcc3_conn_acts1 : port acts1_sense -> fcc3.acts1_sense;
+    fcc3_conn_acts2 : port acts2_sense -> fcc3.acts2_sense;
+    fcc3_conn_acts3 : port acts3_sense -> fcc3.acts3_sense;
+    fcc3_conn_acts4 : port acts4_sense -> fcc3.acts4_sense;
+    fcc3_conn_acts_ret : port acts_ret1 -> fcc3.acts_ret;
+    fcc3_conn_acts_out : port fcc3.acts_out -> acts_out3;
+    fcc3_conn_sovs : port fcc3.sovs -> sovs3;
+    
+    fcc4_conn_egi1 : port egi1 -> fcc4.egi1;
+    fcc4_conn_egi2 : port egi2 -> fcc4.egi2;
+    fcc4_conn_egi3 : port egi3 -> fcc4.egi3;
+    fcc4_conn_egi4 : port egi4 -> fcc4.egi4;
+    fcc4_conn_ads1 : port ads1 -> fcc4.ads1;
+    fcc4_conn_ads2 : port ads2 -> fcc4.ads2;
+    fcc4_conn_aoa1 : port aoa1 -> fcc4.aoa1;
+    fcc4_conn_aoa2 : port aoa2 -> fcc4.aoa2;
+    fcc4_conn_acts1 : port acts1_sense -> fcc4.acts1_sense;
+    fcc4_conn_acts2 : port acts2_sense -> fcc4.acts2_sense;
+    fcc4_conn_acts3 : port acts3_sense -> fcc4.acts3_sense;
+    fcc4_conn_acts4 : port acts4_sense -> fcc4.acts4_sense;
+    fcc4_conn_acts_ret : port acts_ret1 -> fcc4.acts_ret;
+    fcc4_conn_acts_out : port fcc4.acts_out -> acts_out4;
+    fcc4_conn_sovs : port fcc4.sovs -> sovs4;
+    
+  properties
+    QFCS_PROPS::FCC_INDEX => 1 applies to fcc1;
+    QFCS_PROPS::FCC_INDEX => 2 applies to fcc2;
+    QFCS_PROPS::FCC_INDEX => 3 applies to fcc3;
+    QFCS_PROPS::FCC_INDEX => 4 applies to fcc4;
+    
+    
+  annex agree {**
+  	
+  	--actuator failer variables
+  	eq ailerons1_valid : int = if(fcc1.ailerons_failed) then 0 else 1;
+  	eq elevators1_valid : int = if(fcc1.elevators_failed) then 0 else 1;
+  	eq spoiler1_valid : int = if(fcc1.spoiler_failed) then 0 else 1;
+  	eq rudder1_valid : int = if(fcc1.rudder_failed) then 0 else 1;
+  	eq flaps_gt1_valid : int = if(fcc1.flaps_gt_failed) then 0 else 1;
+  	eq flaps_lt1_valid : int = if(fcc1.flaps_lt_failed) then 0 else 1;
+  	
+  	eq ailerons2_valid : int = if(fcc2.ailerons_failed) then 0 else 1;
+  	eq elevators2_valid : int = if(fcc2.elevators_failed) then 0 else 1;
+  	eq spoiler2_valid : int = if(fcc2.spoiler_failed) then 0 else 1;
+  	eq rudder2_valid : int = if(fcc2.rudder_failed) then 0 else 1;
+  	eq flaps_gt2_valid : int = if(fcc2.flaps_gt_failed) then 0 else 1;
+  	eq flaps_lt2_valid : int = if(fcc2.flaps_lt_failed) then 0 else 1;
+  	
+  	eq ailerons3_valid : int = if(fcc3.ailerons_failed) then 0 else 1;
+  	eq elevators3_valid : int = if(fcc3.elevators_failed) then 0 else 1;
+  	eq spoiler3_valid : int = if(fcc3.spoiler_failed) then 0 else 1;
+  	eq rudder3_valid : int = if(fcc3.rudder_failed) then 0 else 1;
+  	eq flaps_gt3_valid : int = if(fcc3.flaps_gt_failed) then 0 else 1;
+  	eq flaps_lt3_valid : int = if(fcc3.flaps_lt_failed) then 0 else 1;
+  	
+  	eq ailerons4_valid : int = if(fcc4.ailerons_failed) then 0 else 1;
+  	eq elevators4_valid : int = if(fcc4.elevators_failed) then 0 else 1;
+  	eq spoiler4_valid : int = if(fcc4.spoiler_failed) then 0 else 1;
+  	eq rudder4_valid : int = if(fcc4.rudder_failed) then 0 else 1;
+  	eq flaps_gt4_valid : int = if(fcc4.flaps_gt_failed) then 0 else 1;
+  	eq flaps_lt4_valid : int = if(fcc4.flaps_lt_failed) then 0 else 1;
+  	
+  	assert fcc1.num_valid_ailerons = (ailerons2_valid +
+  		                              ailerons3_valid +
+  									  ailerons4_valid);
+  	assert fcc1.num_valid_elevators = (elevators2_valid +
+  		                              elevators3_valid +
+  									  elevators4_valid);
+  	assert fcc1.num_valid_spoiler = (spoiler2_valid +
+  		                              spoiler3_valid +
+  									  spoiler4_valid);
+  	assert fcc1.num_valid_rudder = (rudder2_valid +
+  		                              rudder3_valid +
+  									  rudder4_valid);
+  	assert fcc1.num_valid_flaps_gt = (flaps_gt2_valid +
+  		                              flaps_gt3_valid +
+  									  flaps_gt4_valid);
+  	assert fcc1.num_valid_flaps_lt = (flaps_lt2_valid +
+  		                              flaps_lt3_valid +
+  									  flaps_lt4_valid);
+  									  
+  	assert fcc2.num_valid_ailerons = (ailerons1_valid +
+  		                              ailerons3_valid +
+  									  ailerons4_valid);
+  	assert fcc2.num_valid_elevators = (elevators1_valid +
+  		                              elevators3_valid +
+  									  elevators4_valid);
+  	assert fcc2.num_valid_spoiler = (spoiler1_valid +
+  		                              spoiler3_valid +
+  									  spoiler4_valid);
+  	assert fcc2.num_valid_rudder = (rudder1_valid +
+  		                              rudder3_valid +
+  									  rudder4_valid);
+  	assert fcc2.num_valid_flaps_gt = (flaps_gt1_valid +
+  		                              flaps_gt3_valid +
+  									  flaps_gt4_valid);
+  	assert fcc2.num_valid_flaps_lt = (flaps_lt1_valid +
+  		                              flaps_lt3_valid +
+  									  flaps_lt4_valid);
+  									  
+  	assert fcc3.num_valid_ailerons = (ailerons2_valid +
+  		                              ailerons1_valid +
+  									  ailerons4_valid);
+  	assert fcc3.num_valid_elevators = (elevators2_valid +
+  		                              elevators1_valid +
+  									  elevators4_valid);
+  	assert fcc3.num_valid_spoiler = (spoiler2_valid +
+  		                              spoiler1_valid +
+  									  spoiler4_valid);
+  	assert fcc3.num_valid_rudder = (rudder2_valid +
+  		                              rudder1_valid +
+  									  rudder4_valid);
+  	assert fcc3.num_valid_flaps_gt = (flaps_gt2_valid +
+  		                              flaps_gt1_valid +
+  									  flaps_gt4_valid);
+  	assert fcc3.num_valid_flaps_lt = (flaps_lt2_valid +
+  		                              flaps_lt1_valid +
+  									  flaps_lt4_valid);
+  									  
+  	assert fcc4.num_valid_ailerons = (ailerons2_valid +
+  		                              ailerons3_valid +
+  									  ailerons1_valid);
+  	assert fcc4.num_valid_elevators = (elevators2_valid +
+  		                              elevators3_valid +
+  									  elevators1_valid);
+  	assert fcc4.num_valid_spoiler = (spoiler2_valid +
+  		                              spoiler3_valid +
+  									  spoiler1_valid);
+  	assert fcc4.num_valid_rudder = (rudder2_valid +
+  		                              rudder3_valid +
+  									  rudder1_valid);
+  	assert fcc4.num_valid_flaps_gt = (flaps_gt2_valid +
+  		                              flaps_gt3_valid +
+  									  flaps_gt1_valid);
+  	assert fcc4.num_valid_flaps_lt = (flaps_lt2_valid +
+  		                              flaps_lt3_valid +
+  									  flaps_lt1_valid);
+  	
+  	
+  **};
+    
+end FCS.Impl;
+
+
+
+end FCS;

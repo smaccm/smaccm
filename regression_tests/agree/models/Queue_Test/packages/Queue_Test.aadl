@@ -1,0 +1,111 @@
+package Queue_Test
+public
+  with Base_Types;
+
+system sys
+  features
+    inport : in event data port Base_Types::Integer;
+	outport : out event data port Base_Types::Integer{Queue_Size => 2;};
+    
+  annex agree {**
+  		
+    --make an assumption about how often data comes into the system
+    assume "input frequency" :
+    	(prev(inport._INSERT, false) or  
+    	prev(prev(inport._INSERT,false),false)) => not (inport._INSERT);
+    	
+    assume "initial outport" : outport = 0 -> true;
+    
+    assume "positive input" : inport >= 0;
+    
+    assume "don't remove" : outport._COUNT <= 0 => not outport._REMOVE; 
+    	
+    eq in_data : int = if(inport._INSERT) then inport else 0;
+    eq input_total : int = in_data -> pre(input_total) + in_data;
+    
+  	guarantee "outport bound" :
+  		outport <= input_total;
+  		
+  	guarantee "monotonic output" :
+  		true -> outport >= pre(outport);
+  		
+  	guarantee "output changes only on remove" :
+  		true -> outport != pre(outport) => pre(outport._REMOVE);
+  		
+  	
+  	
+  **};
+end sys;
+
+
+system implementation sys.impl
+
+  subcomponents
+    sysa : system subsysa;
+    sysb : system subsysb;
+    sysc : system subsysa;
+    
+  connections
+  	conn0 : port inport -> sysa.inport;
+  	conn1 : port sysa.outport -> sysb.inport;
+  	conn2 : port sysc.outport -> sysb.inport;
+  	conn3 : port sysb.outport -> outport;
+  	conn4 : port inport -> sysc.inport;
+
+  annex agree {**
+  	calendar: sysa, sysc, sysb, sysb;
+  	
+  	assert(inport._INSERT => not(sysa._CLK or sysc._CLK));
+  	assert(outport._COUNT > 0 and (not sysb._CLK) => outport._REMOVE);
+  	
+  	lemma "outport count bound" : outport._COUNT <= 2;
+  	lemma "outport count positive" : outport._COUNT >= 0;
+  	
+  **};
+
+end sys.impl;
+
+
+
+system subsysa
+  features
+    inport : in event data port Base_Types::Integer;
+	outport : out event data port Base_Types::Integer;
+	
+  annex agree {**
+  	guarantee "foo" : if(inport._COUNT > 0) then
+  						inport._REMOVE and
+  						outport._INSERT and
+  						outport = inport div 2
+  					  else
+  					  	not inport._REMOVE and
+  					  	not outport._INSERT;
+  					  	
+  	guarantee "initial outport" : outport = 0 -> true;
+  	
+  **};
+end subsysa;
+
+
+system subsysb
+  features
+    inport : in event data port Base_Types::Integer;
+	outport : out event data port Base_Types::Integer;
+
+  annex agree {**
+  	guarantee "foo" : if(inport._COUNT > 0) then
+  						inport._REMOVE and
+  						outport._INSERT and
+  						outport = inport + prev(outport,0)
+  					  else
+  					  	not inport._REMOVE and
+  					  	not outport._INSERT and
+  					  	outport = prev(outport, 0);
+  					  	
+  	guarantee "initial outport" : outport = 0 -> true;
+  	
+  **};
+end subsysb;
+
+
+end Queue_Test;

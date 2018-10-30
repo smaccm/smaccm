@@ -1,0 +1,46 @@
+package OSAS_S_170
+public
+
+annex agree {**
+	
+  node req 
+  	(acts_gain : DATA_TYPES::Actuators.impl,
+  	 ccdl_failed : bool)
+  returns
+    (res : bool);
+  let
+  	res = req_helper(acts_gain.AILL, ccdl_failed) and 
+  	      req_helper(acts_gain.AILR, ccdl_failed) and
+  	      req_helper(acts_gain.BRAKE, ccdl_failed) and
+  	      req_helper(acts_gain.ELLIB, ccdl_failed) and 
+  	      req_helper(acts_gain.ELLOB, ccdl_failed) and
+  	      req_helper(acts_gain.ELRIB, ccdl_failed) and
+  	      req_helper(acts_gain.ELROB, ccdl_failed) and
+  	      req_helper(acts_gain.FLAPLI, ccdl_failed) and
+  	      req_helper(acts_gain.FLAPLO, ccdl_failed) and
+  	      req_helper(acts_gain.FLAPRI, ccdl_failed) and
+  	      req_helper(acts_gain.FLAPRO, ccdl_failed) and
+  	      req_helper(acts_gain.GEAR, ccdl_failed) and
+  	      req_helper(acts_gain.RUDLO, ccdl_failed) and
+  	      req_helper(acts_gain.RUDUP, ccdl_failed) and
+  	      req_helper(acts_gain.SPLLIB, ccdl_failed) and 
+  	      req_helper(acts_gain.SPLLOB, ccdl_failed) and
+  	      req_helper(acts_gain.SPLRIB, ccdl_failed) and
+  	      req_helper(acts_gain.SPLROB, ccdl_failed) and
+  	      req_helper(acts_gain.STEER, ccdl_failed) and
+  	      req_helper(acts_gain.THROTR, ccdl_failed) and
+  	      req_helper(acts_gain.THROTL, ccdl_failed);
+  tel;
+  
+  node req_helper
+    (act_gain : real,
+     ccdl_failed : bool)
+  returns
+    (res : bool);
+  let  
+    res = 
+      ccdl_failed => act_gain = 1.0;
+  tel;
+	
+**};
+end OSAS_S_170;

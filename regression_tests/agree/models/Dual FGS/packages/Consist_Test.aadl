@@ -1,0 +1,23 @@
+package Consist_Test
+public
+  with Base_Types;
+
+system sys
+  features
+    Output : out data port Base_Types::Boolean;
+
+  annex agree {**
+  	    const a : real = 3.0;
+  	
+  		guarantee "consist1" : not Output;
+  		guarantee "consist2" : Output;
+  **};
+
+end sys;
+
+
+system implementation sys.impl
+
+end sys.impl;
+
+end Consist_Test;

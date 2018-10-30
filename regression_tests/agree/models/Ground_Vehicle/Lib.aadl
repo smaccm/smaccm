@@ -1,0 +1,13 @@
+package Lib
+public
+	with Base_Types;
+	
+	annex agree {**
+		node abs (x : Base_Types::Float) returns (y : Base_Types::Float);
+
+		let
+		  y = if(x >= 0.0) then x else -1.0 * x;
+		tel;
+	**};
+	
+end Lib;

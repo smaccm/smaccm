@@ -1,0 +1,46 @@
+package CLAW
+public
+  with DATA_TYPES;
+  
+system CLAW
+  features
+    acts : out data port DATA_TYPES::ACTUATORS.impl;
+    
+  annex agree {**
+  	
+    guarantee "actuator bounds" :
+      bound_rec(acts.THROTL, AGREE_CONSTANTS.THROTL_range_low, AGREE_CONSTANTS.THROTL_range_high) and
+      bound_rec(acts.THROTR, AGREE_CONSTANTS.THROTR_range_low, AGREE_CONSTANTS.THROTR_range_high) and
+      bound_rec(acts.ELLOB, AGREE_CONSTANTS.ELLOB_range_low, AGREE_CONSTANTS.ELLOB_range_high) and
+      bound_rec(acts.ELLIB, AGREE_CONSTANTS.ELLIB_range_low, AGREE_CONSTANTS.ELLIB_range_high) and
+      bound_rec(acts.ELROB, AGREE_CONSTANTS.ELROB_range_low, AGREE_CONSTANTS.ELROB_range_high) and
+      bound_rec(acts.ELRIB, AGREE_CONSTANTS.ELRIB_range_low, AGREE_CONSTANTS.ELRIB_range_high) and
+      bound_rec(acts.AILL, AGREE_CONSTANTS.AILL_range_low, AGREE_CONSTANTS.AILL_range_high) and
+      bound_rec(acts.AILR, AGREE_CONSTANTS.AILR_range_low, AGREE_CONSTANTS.AILR_range_high) and
+      bound_rec(acts.RUDUP, AGREE_CONSTANTS.RUDUP_range_low, AGREE_CONSTANTS.RUDUP_range_high) and
+      bound_rec(acts.RUDLO, AGREE_CONSTANTS.RUDLO_range_low, AGREE_CONSTANTS.RUDLO_range_high) and
+      bound_rec(acts.SPLLIB, AGREE_CONSTANTS.SPLLIB_range_low, AGREE_CONSTANTS.SPLLIB_range_high) and
+      bound_rec(acts.SPLLOB, AGREE_CONSTANTS.SPLLOB_range_low, AGREE_CONSTANTS.SPLLOB_range_high) and
+      bound_rec(acts.SPLRIB, AGREE_CONSTANTS.SPLRIB_range_low, AGREE_CONSTANTS.SPLRIB_range_high) and
+      bound_rec(acts.SPLROB, AGREE_CONSTANTS.SPLROB_range_low, AGREE_CONSTANTS.SPLROB_range_high) and
+      bound_rec(acts.FLAPLI, AGREE_CONSTANTS.FLAPLI_range_low, AGREE_CONSTANTS.FLAPLI_range_high) and
+      bound_rec(acts.FLAPLO, AGREE_CONSTANTS.FLAPLO_range_low, AGREE_CONSTANTS.FLAPLO_range_high) and
+      bound_rec(acts.FLAPRO, AGREE_CONSTANTS.FLAPRO_range_low, AGREE_CONSTANTS.FLAPRO_range_high) and
+      bound_rec(acts.FLAPRI, AGREE_CONSTANTS.FLAPRI_range_low, AGREE_CONSTANTS.FLAPRI_range_high) and
+      bound_rec(acts.GEAR, AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high) and
+      bound_rec(acts.BRAKE, AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high) and
+      bound_rec(acts.STEER, AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high);
+        
+    node bound_rec(act : real, low : real, high : real) returns (ret : bool);
+    let
+    	ret = (low <= act) and (act <= high);
+    tel;
+        
+  **};
+    
+end CLAW;
+
+system implementation CLAW.Impl
+end CLAW.Impl;
+
+end CLAW;

@@ -1,0 +1,151 @@
+-- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
+-- of the Defense Advanced Research Projects Agency (DARPA).
+--
+-- Permission is hereby granted, free of charge, to any person obtaining
+-- a copy of this data, including any software or models in source or
+-- binary form, as well as any drawings, specifications, and
+-- documentation (collectively "the Data"), to deal in the Data without
+-- restriction, including without limitation the rights to use, copy,
+-- modify, merge, publish, distribute, sublicense, and/or sell copies of
+-- the Data, and to permit persons to whom the Data is furnished to do
+-- so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Data.
+--
+-- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+-- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
+-- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+-- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
+-- DATA.
+package ADS
+public
+with Base_Types;
+  data Air_Data
+  end Air_Data;
+  
+  data Airspeed
+  end Airspeed;
+  
+  data Pitch
+  end Pitch;
+  
+  process Air_Data_Process
+    features
+      AD: out data port Air_Data.Air_Data_Impl;
+      PTCH1: in data port Pitch.Pitch_Impl;
+      PTCH2: in data port Pitch.Pitch_Impl;
+      PTCH3: in data port Pitch.Pitch_Impl;
+      AS2: in data port Airspeed.Airspeed_Impl;
+      AS3: in data port Airspeed.Airspeed_Impl;
+      AS1: in data port Airspeed.Airspeed_Impl;
+  end Air_Data_Process;
+  
+  system Air_Data_System
+    features
+      AD: out data port Air_Data.Air_Data_Impl;
+  end Air_Data_System;
+  
+  thread Air_Data_Thread
+    features
+      AD: out data port Air_Data.Air_Data_Impl;
+      PTCH: in data port Pitch.Pitch_Impl;
+      AS: in data port Airspeed.Airspeed_Impl;
+  end Air_Data_Thread;
+  
+  device Airspeed_Sensor
+    features
+      AS: out data port Airspeed.Airspeed_Impl;
+  end Airspeed_Sensor;
+  
+  thread Airspeed_Voter
+    features
+      IN1: in data port Airspeed.Airspeed_Impl;
+      IN2: in data port Airspeed.Airspeed_Impl;
+      IN3: in data port Airspeed.Airspeed_Impl;
+      OUTPUT: out data port Airspeed.Airspeed_Impl;
+  end Airspeed_Voter;
+  
+  device Pitch_Sensor
+    features
+      PTCH: out data port Pitch.Pitch_Impl;
+  end Pitch_Sensor;
+  
+  thread Pitch_Voter
+    features
+      IN1: in data port Pitch.Pitch_Impl;
+      IN2: in data port Pitch.Pitch_Impl;
+      IN3: in data port Pitch.Pitch_Impl;
+      OUTPUT: out data port Pitch.Pitch_Impl;
+  end Pitch_Voter;
+  
+  data implementation Air_Data.Air_Data_Impl
+    subcomponents
+      AirSpeed: data Airspeed.Airspeed_Impl;
+      Pitch: data Pitch.Pitch_Impl;
+    properties
+      Data_Size => 8 Bytes;
+  end Air_Data.Air_Data_Impl;
+  
+  data implementation Airspeed.Airspeed_Impl
+    subcomponents
+      Val: data Base_Types::Float;
+      Valid: data Base_Types::Boolean;
+    properties
+      Data_Size => 8 Bytes;
+  end Airspeed.Airspeed_Impl;
+  
+  data implementation Pitch.Pitch_Impl
+    subcomponents
+      Valid: data Base_Types::Boolean;
+      Val: data Base_Types::Float;
+  end Pitch.Pitch_Impl;
+  
+  process implementation Air_Data_Process.Air_Data_Process_Impl
+    subcomponents
+      ADT: thread Air_Data_Thread.Air_Data_Thread_Impl;
+      PTCHVT: thread Pitch_Voter.Pitch_Voter_Impl;
+      ASVT: thread Airspeed_Voter.Airspeed_Voter_Impl;
+    connections
+      ADTtoADP: port ADT.AD -> AD;
+      PTCHVTtoADT: port PTCHVT.OUTPUT -> ADT.PTCH;
+      ASVTtoADT: port ASVT.OUTPUT -> ADT.AS;
+      PTCH1toPTCHVT: port PTCH1 -> PTCHVT.IN1;
+      PTCH2toPTCHV: port PTCH2 -> PTCHVT.IN2;
+      PTCH3toPTCHVT: port PTCH3 -> PTCHVT.IN3;
+      AS1toASVT: port AS1 -> ASVT.IN1;
+      AS2toASVT: port AS2 -> ASVT.IN2;
+      AS3toASVT: port AS3 -> ASVT.IN3;
+  end Air_Data_Process.Air_Data_Process_Impl;
+  
+  system implementation Air_Data_System.Air_Data_System_Impl
+    subcomponents
+      PTCH1: device Pitch_Sensor;
+      PTCH2: device Pitch_Sensor;
+      PTCH3: device Pitch_Sensor;
+      AS1: device Airspeed_Sensor;
+      AS2: device Airspeed_Sensor;
+      AS3: device Airspeed_Sensor;
+      ADP: process Air_Data_Process.Air_Data_Process_Impl;
+    connections
+      ADPtoADS: port ADP.AD -> AD;
+      PTCH1toADP: port PTCH1.PTCH -> ADP.PTCH1;
+      PTCH2toADP: port PTCH2.PTCH -> ADP.PTCH2;
+      PTCH3toADP: port PTCH3.PTCH -> ADP.PTCH3;
+      AS3toADP: port AS3.AS -> ADP.AS1;
+      AS2toADP: port AS2.AS -> ADP.AS2;
+      AS1toADP: port AS1.AS -> ADP.AS3;
+  end Air_Data_System.Air_Data_System_Impl;
+  
+  thread implementation Air_Data_Thread.Air_Data_Thread_Impl
+  end Air_Data_Thread.Air_Data_Thread_Impl;
+  
+  thread implementation Airspeed_Voter.Airspeed_Voter_Impl
+  end Airspeed_Voter.Airspeed_Voter_Impl;
+  
+  thread implementation Pitch_Voter.Pitch_Voter_Impl
+  end Pitch_Voter.Pitch_Voter_Impl;
+end ADS;
