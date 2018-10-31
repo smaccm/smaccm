@@ -47,6 +47,7 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
+import com.rockwellcollins.atc.agree.analysis.AgreePropertyLog;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
@@ -59,6 +60,7 @@ import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.RenamingVisitor;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
@@ -430,6 +432,9 @@ public abstract class VerifyHandler extends AadlHandler {
 
 	private IStatus doAnalysis(final Element root, final IProgressMonitor globalMonitor) {
 
+		// Record the analysis start time
+		long startTime = System.currentTimeMillis();
+
 		Thread analysisThread = new Thread() {
 			@Override
 			public void run() {
@@ -475,6 +480,12 @@ public abstract class VerifyHandler extends AadlHandler {
 						System.out.println(program);
 						break;
 					}
+
+					// Print to property analysis log, if necessary
+					if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PREF_PROP_LOG)) {
+						AgreePropertyLog.print(root, result, startTime);
+					}
+
 					queue.remove();
 				}
 
