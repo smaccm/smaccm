@@ -167,7 +167,7 @@ public class AgreeTypeSystem {
 		}
 	}
 
-	private static Type trySimp(Type t) {
+	public static Type normalizeType(Type t) {
 
 		if (t instanceof PrimType) {
 			String name = ((PrimType) t).getName();
@@ -180,6 +180,10 @@ public class AgreeTypeSystem {
 			} else {
 				return t;
 			}
+		} else if (t instanceof ArrayType) {
+			String size = ((ArrayType) t).getSize();
+			Type stem = ((ArrayType) t).getStem();
+			return mkArrayType(normalizeType(stem), Integer.parseInt(size));
 		} else if (t instanceof CustomType) {
 			NamedElement ne = ((CustomType) t).getNamedElm();
 			if (ne instanceof Classifier) {
@@ -194,12 +198,13 @@ public class AgreeTypeSystem {
 				} else {
 					if (((Classifier) ne).getExtended() != null) {
 						Classifier ct = baseAadlClassifier((Classifier) ne);
-						return trySimp(mkCustomType(ct));
+						return normalizeType(mkCustomType(ct));
 					} else if (ne instanceof DataType) {
 						ArrayDef ad = arrayDefFromAadl((DataType) ne);
 						if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
-							return mkArrayType(trySimp(mkCustomType(ad.baseType)), ad.dimension);
+							return mkArrayType(normalizeType(mkCustomType(ad.baseType)), ad.dimension);
 						} else {
+							System.out.println("trySimp3 ne: " + ne);
 							return t;
 						}
 					} else {
@@ -230,8 +235,8 @@ public class AgreeTypeSystem {
 				return typesEqual(stem1, stem2);
 			}
 		} else {
-			Type t10 = trySimp(t1);
-			Type t20 = trySimp(t2);
+			Type t10 = normalizeType(t1);
+			Type t20 = normalizeType(t2);
 			return typeToString(t10).equals(typeToString(t20));
 
 		}
@@ -395,6 +400,14 @@ public class AgreeTypeSystem {
 			if (arrType instanceof ArrayType) {
 				int size = Integer.parseInt(((ArrayType) arrType).getSize());
 				return mkArrayType(stemType, size);
+			} else if (arrType instanceof CustomType) {
+				NamedElement typedef = ((CustomType) arrType).getNamedElm();
+				if (typedef instanceof DataType) {
+					ArrayDef ad = arrayDefFromAadl((DataType) typedef);
+					if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
+						return mkArrayType(stemType, ad.dimension);
+					}
+				}
 			}
 
 		} else if (expr instanceof FoldLeftExpr) {

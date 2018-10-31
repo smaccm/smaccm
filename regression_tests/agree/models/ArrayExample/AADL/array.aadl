@@ -150,6 +150,12 @@ public
 			eq a5 : roo[2] = [| (roo {g = 4; y=2}), (roo {g = 5; y=3}) |];
 			eq i3 : int = a4[0];
 			eq i4 : int = (a5[0]).y;
+			
+			eq arr1: simple_int_array;
+			eq arr2: simple_int_array = foreach aa in arr1, (aa * 4);
+			
+			assume "array_sorted" : forall ii in indices(arr1), ii = 0 or arr1[ii - 1] <= arr1[ii]; 
+			guarantee "sortednes_preserved" : forall iii in indices(arr2), iii = 0 or arr1[iii - 1] <= arr1[iii]; 
 
 			
 		**};
@@ -157,6 +163,13 @@ public
 	end CompTest;
 	
 	thread implementation CompTest.i
+		subcomponents
+			arr1: data simple_int_array;
+			arr2: data simple_int_array;
+			
+		annex agree {**
+--			lemma "array_sorted" : forall iq in indices(arr1), iq = 0 or arr1[iq - 1] <= arr1[iq]; 
+		**};
 		
 	end CompTest.i;
 	
