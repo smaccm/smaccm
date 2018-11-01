@@ -17,3 +17,7 @@ The AGREE plugin is only packaged with the SMTInterpol SMT solver. If you want t
 [MathSAT](http://mathsat.fbk.eu/)) you will need to obtain them separately and set your PATH environment variable to point at their location.  In order to perform Realizability Analysis you must have Z3 installed.
 
 **If you have trouble installing the updates you might need to run OSATE as administrator.**
+
+Generated Code
+=====
+Commit generated source code separately from manually created code, to make reviewing changes easier.  
