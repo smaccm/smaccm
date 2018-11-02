@@ -332,4 +332,12 @@
         class="com.rockwellcollins.atc.resolute.ui.ResoluteExecutableExtensionFactory:com.rockwellcollins.atc.resolute.parsing.ResoluteAnnexLinkingService"
         id="com.rockwellcollins.atc.resolute.linkingservice"/>
   </extension>
+  <extension
+        point="org.osate.annexsupport.unparser">
+     <unparser
+           annexName="resolute"
+           class="com.rockwellcollins.atc.resolute.unparsing.ResoluteAnnexUnparser"
+           id="com.rockwellcollins.atc.resolute.unparser">
+     </unparser>
+  </extension>
 </plugin>

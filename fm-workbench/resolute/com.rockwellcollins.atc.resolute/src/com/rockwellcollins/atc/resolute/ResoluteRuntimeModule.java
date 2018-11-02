@@ -20,4 +20,8 @@ public class ResoluteRuntimeModule extends AbstractResoluteRuntimeModule {
 		return com.rockwellcollins.atc.resolute.naming.ResoluteQualifiedNameConverter.class;
 	}
 
+	@SuppressWarnings("restriction")
+	public Class<? extends org.eclipse.xtext.serializer.tokens.ICrossReferenceSerializer> bindICrossReferenceSerializer() {
+		return com.rockwellcollins.atc.resolute.serializer.ResoluteCrossReferenceSerializer.class;
+	}
 }
