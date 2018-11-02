@@ -50,8 +50,13 @@ class ResoluteFormatter extends PropertiesFormatter {
 
 	def dispatch void format(ResoluteLibrary resolutelibrary, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
+		var i = 0;
 		for (Definition definitions : resolutelibrary.getDefinitions()) {
+			if(i != 0) {
+				definitions.prepend[newLines = 2]
+			}
 			format(definitions, document);
+			i = i + 1;
 		}
 	}
 
@@ -87,10 +92,9 @@ class ResoluteFormatter extends PropertiesFormatter {
 	}
 
 	def dispatch void format(FunctionDefinition functiondefinition, extension IFormattableDocument document) {
-		functiondefinition.surround[newLines=2]
-		functiondefinition.regionFor.keyword("(").surround[noSpace];
-		functiondefinition.regionFor.keyword(")").prepend[noSpace].append[oneSpace];
-
+		functiondefinition.regionFor.keyword("(").prepend[noSpace].append[oneSpace];
+		functiondefinition.regionFor.keyword(")").surround[oneSpace];
+		functiondefinition.regionFor.keyword(",").prepend[noSpace];
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
 		for (Arg args : functiondefinition.getArgs()) {
 			format(args, document);
