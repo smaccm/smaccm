@@ -352,8 +352,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 
 		//('int' | 'real' | 'string' | 'bool' | 'range' | 'aadl' | 'component' | 'abstract' | 'bus' | 'data' | 'device' | 'memory'
 		//| 'processor' | 'process' | 'subprogram_group' | 'subprogram' | 'system' | 'thread_group' | 'thread' | 'virtual_bus' |
-		//'virtual_processor' | 'connection' | 'property' | 'feature' | 'port' | 'data_port' | 'event_port' | 'event_data_port' |
-		//'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' | 'data_access' |
+		//'virtual_processor' | 'connection' | 'property' | 'feature' | 'port' | 'data_port' | 'event_port' | 'event_data_port'
+		//| 'feature_group' | 'access' | 'bus_access' | 'provides_bus_access' | 'requires_bus_access' | 'data_access' |
 		//'provides_data_access' | 'requires_data_access' | 'subprogram_access' | 'provides_subprogram_access' |
 		//'requires_subprogram_access' | 'subprogram_group_access' | 'provides_subprogram_group_access' |
 		//'requires_subprogram_group_access' | 'flow_specification' | 'end_to_end_flow')
@@ -2183,8 +2183,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//BuiltInFn: // Primary type: aadl
 		//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
 		//	'is_in_array' | 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' |
-		//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type'
-		//	| 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
+		//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' |
+		//	'is_of_type' | 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
 		//	| 'enumerated_values' // Primary type: component
 		//	| 'subcomponents' // Primary type: connection
 		//	| 'source' | 'destination' // Primary type: feature
@@ -2204,8 +2204,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 		//// Primary type: aadl
 		//'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' | 'is_in_array'
 		//| 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' | 'is_virtual_bus'
-		//| 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type' | 'is_bound_to' |
-		//'has_member' | 'features' | 'connections' // Primary type: property
+		//| 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type' | 'is_bound_to'
+		//| 'has_member' | 'features' | 'connections' // Primary type: property
 		//| 'enumerated_values' // Primary type: component
 		//| 'subcomponents' // Primary type: connection
 		//| 'source' | 'destination' // Primary type: feature
@@ -3055,8 +3055,8 @@ public class ResoluteGrammarAccess extends AbstractGrammarElementFinder {
 	//BuiltInFn: // Primary type: aadl
 	//	'has_property' | 'property' | 'property_member' | 'has_parent' | 'parent' | 'name' | 'type' | 'has_type' |
 	//	'is_in_array' | 'has_prototypes' | 'has_modes' | 'is_processor' | 'is_virtual_processor' | 'is_system' | 'is_bus' |
-	//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' | 'is_of_type'
-	//	| 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
+	//	'is_virtual_bus' | 'is_device' | 'is_memory' | 'is_thread' | 'is_process' | 'is_data' | 'is_subprogram' |
+	//	'is_of_type' | 'is_bound_to' | 'has_member' | 'features' | 'connections' // Primary type: property
 	//	| 'enumerated_values' // Primary type: component
 	//	| 'subcomponents' // Primary type: connection
 	//	| 'source' | 'destination' // Primary type: feature

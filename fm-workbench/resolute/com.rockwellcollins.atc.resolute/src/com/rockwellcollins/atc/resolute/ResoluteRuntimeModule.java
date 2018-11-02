@@ -24,4 +24,10 @@ public class ResoluteRuntimeModule extends AbstractResoluteRuntimeModule {
 	public Class<? extends org.eclipse.xtext.serializer.tokens.ICrossReferenceSerializer> bindICrossReferenceSerializer() {
 		return com.rockwellcollins.atc.resolute.serializer.ResoluteCrossReferenceSerializer.class;
 	}
+
+	// shouldn't need to do this, it should appear in the srg-gen version...just testing
+	@Override
+	public Class<? extends org.eclipse.xtext.formatting.IFormatter> bindIFormatter() {
+		return com.rockwellcollins.atc.resolute.formatting.ResoluteFormatter.class;
+	}
 }
