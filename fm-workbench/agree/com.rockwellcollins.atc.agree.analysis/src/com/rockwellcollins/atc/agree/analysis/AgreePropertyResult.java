@@ -7,10 +7,10 @@ public class AgreePropertyResult {
 	private String name;
 	private Status status;
 	private long timestamp;
-	private long hash;
+	private String hash;
 
 //	public AgreePropertyResult(String name, Status status, long timestamp) {
-	public AgreePropertyResult(String name, Status status, long timestamp, long hash) {
+	public AgreePropertyResult(String name, Status status, long timestamp, String hash) {
 		this.name = name;
 		this.status = status;
 		this.timestamp = timestamp;
@@ -29,7 +29,7 @@ public class AgreePropertyResult {
 		return timestamp;
 	}
 
-	public long getHash() {
+	public String getHash() {
 		return hash;
 	}
 

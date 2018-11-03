@@ -27,7 +27,7 @@ import jkind.api.results.Status;
 public class ResoluteAgreeCheck implements ResoluteExternalAnalysis {
 
 //	private long modelTimestamp;
-	private long modelHash = 0;
+	private String modelHash = "";
 	private Set<AgreePropertyResult> agreePropertyResults;
 	private EvaluationContext evalContext;
 
@@ -50,8 +50,19 @@ public class ResoluteAgreeCheck implements ResoluteExternalAnalysis {
 //		getModelTimestamp();
 
 		// Get the hash representing the current model
-		modelHash = AgreePropertyLog.getModelHash(evalContext.getThisInstance());
-
+		try {
+			NamedElement root = null;
+			if (evalContext.getThisInstance() instanceof SystemInstanceImpl) {
+				SystemInstanceImpl si = (SystemInstanceImpl) evalContext.getThisInstance();
+				root = si.getComponentImplementation();
+			} else if (evalContext.getThisInstance() instanceof ComponentInstanceImpl) {
+				ComponentInstanceImpl ci = (ComponentInstanceImpl) evalContext.getThisInstance();
+				root = ci.getClassifier();
+			}
+			modelHash = AgreePropertyLog.getModelHash(root);
+		} catch (Exception e) {
+			throw new ResoluteFailException(e.getMessage(), evalContext.getThisInstance());
+		}
 		// Get the AGREE analysis hashes from log
 		getAgreePropertyResults();
 
@@ -59,7 +70,6 @@ public class ResoluteAgreeCheck implements ResoluteExternalAnalysis {
 		// AGREE contracts specified in that component.
 		// If it is a component implementation, examine all components referred to in
 		// that implementation.
-		// TODO: can there be a component implementation in a component implementation?
 		if (evalContext.getThisInstance() instanceof SystemInstanceImpl) {
 			Set<NamedElement> components = evalContext.getSet("component");
 			for (NamedElement component : components) {
@@ -231,6 +241,8 @@ public class ResoluteAgreeCheck implements ResoluteExternalAnalysis {
 	private boolean checkComponentAgreeProperties(ComponentInstanceImpl component) {
 
 		// Get AGREE properties specified for this component
+		// If the component is a component implementation, get the component
+//		if (component instanceof )
 		List<AssumeStatementImpl> assumeStatements = EcoreUtil2.getAllContentsOfType(component.getComponentClassifier(),
 				AssumeStatementImpl.class);
 		String propName;
@@ -266,11 +278,11 @@ public class ResoluteAgreeCheck implements ResoluteExternalAnalysis {
 
 		try {
 			for (AgreePropertyResult propResult : agreePropertyResults) {
-				if (propResult.getName().equals(property)) {
+				if (propResult.getName().contentEquals(property)) {
 					// Check status and timestamp
 					if (propResult.getStatus() == Status.VALID
 //							&& propResult.getTimestamp().getTime() >= modelTimestamp) {
-							&& propResult.getHash() == modelHash) {
+							&& propResult.getHash().contentEquals(modelHash)) {
 						return true;
 					}
 					break;

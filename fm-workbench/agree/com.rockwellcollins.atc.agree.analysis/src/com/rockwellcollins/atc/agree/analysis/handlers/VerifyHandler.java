@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
@@ -33,6 +34,7 @@ import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.Realization;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
@@ -190,11 +192,27 @@ public abstract class VerifyHandler extends AadlHandler {
 				throw new AgreeException("There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
 			}
 
+			String rootName = "";
+			if (root instanceof NamedElement) {
+				rootName = ((NamedElement) root).getName();
+			} else if (root instanceof Realization) {
+				Realization realization = (Realization) root;
+				EObject eObj = realization.eContainer();
+				if (eObj instanceof NamedElement) {
+					rootName = ((NamedElement) eObj).getName();
+				}
+			}
+			if (rootName.isEmpty()) {
+				throw new AgreeException("Could not determine name of root element");
+			}
+
 			if (isRecursive()) {
 				if (AgreeUtils.usingKind2()) {
 					throw new AgreeException("Kind2 only supports monolithic verification");
 				}
-				result = buildAnalysisResult(((NamedElement) root).getName(), si);
+
+//				result = buildAnalysisResult(((NamedElement) root).getName(), si);
+				result = buildAnalysisResult(rootName, si);
 				wrapper.addChild(result);
 				result = wrapper;
 			} else if (isRealizability()) {
@@ -204,8 +222,12 @@ public abstract class VerifyHandler extends AadlHandler {
 						AnalysisType.Realizability));
 				result = wrapper;
 			} else {
-				wrapVerificationResult(si, wrapper);
+				CompositeAnalysisResult wrapperTop = new CompositeAnalysisResult("Verification for " + rootName);
+				wrapVerificationResult(si, wrapperTop);
+				wrapper.addChild(wrapperTop);
 				result = wrapper;
+//				wrapVerificationResult(si, wrapper);
+//				result = wrapper;
 			}
 			showView(result, linker);
 			return doAnalysis(root, monitor);
@@ -432,12 +454,23 @@ public abstract class VerifyHandler extends AadlHandler {
 
 	private IStatus doAnalysis(final Element root, final IProgressMonitor globalMonitor) {
 
-		// Record the analysis start time
-		long startTime = System.currentTimeMillis();
-
 		Thread analysisThread = new Thread() {
 			@Override
 			public void run() {
+
+				// Record the analysis start time and get model hashcode for
+				// saving to property analysis log, if necessary
+				String modelHash = "";
+				long startTime = 0;
+				if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PREF_PROP_LOG)) {
+					try {
+						modelHash = AgreePropertyLog.getModelHash(root);
+						startTime = System.currentTimeMillis();
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+						return;
+					}
+				}
 
 				activateTerminateHandlers(globalMonitor);
 				KindApi api = PreferencesUtil.getKindApi();
@@ -483,7 +516,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
 					// Print to property analysis log, if necessary
 					if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PREF_PROP_LOG)) {
-						AgreePropertyLog.print(root, result, startTime);
+						AgreePropertyLog.print(result, startTime, modelHash);
 					}
 
 					queue.remove();
@@ -518,9 +551,11 @@ public abstract class VerifyHandler extends AadlHandler {
 	}
 
 	private void enableRerunHandler(final Element root) {
+
 		getWindow().getShell().getDisplay().syncExec(() -> {
 			IHandlerService handlerService = getHandlerService();
-			rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, VerifyHandler.this));
+			rerunActivation = handlerService.activateHandler(RERUN_ID,
+					new RerunHandler(root, VerifyHandler.this));
 		});
 	}
 

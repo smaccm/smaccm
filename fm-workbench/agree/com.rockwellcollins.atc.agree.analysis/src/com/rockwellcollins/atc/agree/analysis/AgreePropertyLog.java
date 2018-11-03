@@ -5,10 +5,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.HashSet;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Vector;
 import java.util.concurrent.Semaphore;
 
 import org.eclipse.core.resources.IFile;
@@ -31,15 +36,20 @@ import jkind.api.results.Status;
 
 public class AgreePropertyLog {
 
+	// Field delimiter used in the log
 	private final static String LOG_RESULT_DELIMITER = ":";
+	// Replace any LOG_RESULT_DELIMITER occurrences in the hash string with this alternative character
+	private final static String LOG_RESULT_DELIMITER_ALT = ";";
 	private final static Semaphore mutex = new Semaphore(1);
 
 	/**
 	 * Prints a timestamped AGREE analysis result to the property log file
 	 * (specified in AGREE preferences).
 	 * @param result - The result of the AGREE analysis.
+	 * @param timestamp - The time at which the analysis started
+	 * @param hash - The hashcode for the combined model files
 	 */
-	public static void print(final Element root, JKindResult result, long timestamp) {
+	public static void print(JKindResult result, long timestamp, String hash) {
 
 		try {
 
@@ -73,9 +83,6 @@ public class AgreePropertyLog {
 					if (propName.equals("Result")) {
 						propName = result.getName();
 					}
-
-					// Get hash of model files
-					long hash = getModelHash(root);
 
 					// Add the properties to the property set
 					logFileProps.add(new AgreePropertyResult(propName, pr.getStatus(), timestamp, hash));
@@ -140,7 +147,7 @@ public class AgreePropertyLog {
 		String name = "";
 		Status status = null;
 		long timestamp = 0;
-		long hash = 0;
+		String hash = "";
 
 		try {
 
@@ -158,7 +165,7 @@ public class AgreePropertyLog {
 				name = name.trim();
 				status = Status.valueOf(parts[parts.length - 3].trim().toUpperCase());
 				timestamp = Long.parseLong(parts[parts.length - 2].trim());
-				hash = Long.parseLong(parts[parts.length - 1].trim());
+				hash = parts[parts.length - 1];
 			}
 		} catch (Exception e) {
 			return null;
@@ -177,56 +184,85 @@ public class AgreePropertyLog {
 //		return result.getName() + LOG_RESULT_DELIMITER + result.getStatus().toString() + LOG_RESULT_DELIMITER
 //				+ Long.toString(result.getTimestamp());
 		return result.getName() + LOG_RESULT_DELIMITER + result.getStatus().toString() + LOG_RESULT_DELIMITER
-				+ Long.toString(result.getTimestamp()) + Long.toString(result.getHash());
+				+ Long.toString(result.getTimestamp()) + LOG_RESULT_DELIMITER + result.getHash();
 	}
 
 	/**
 	 * Collects files that contain the current model and its references.
 	 * Returns a combined hash.
+	 * @throws Exception
 	 */
-	public static long getModelHash(final Element root) {
+	public static String getModelHash(final Element root) throws Exception {
 
-		Set<IFile> files = new HashSet<>();
-		long hash = 0;
+		SortedSet<IFile> files = new TreeSet<IFile>((f1, f2) -> f2.getName().compareTo(f1.getName()));
+//		long hash = 0;
 
 		// Get the file containing the component instance under evaluation
-//		final Resource thisResource = evalContext.getThisInstance().getComponentClassifier().eResource();
 		final Resource thisResource = root.eResource();
 		if (thisResource == null) {
-			// TODO: address this error
+			throw new Exception("Resource not found.");
 		}
 
 		// Get the hash for this resource, as well as all resources
 		// referred to by this resource (recursively)
 		collectResourceFiles(thisResource, files);
 
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		Vector<InputStream> fileStreams = new Vector<>();
 		for (IFile f : files) {
+			fileStreams.add(f.getContents());
+//			File ff = f.getRawLocation().makeAbsolute().toFile();
 
+//			f.getContents()
+//			if (f.getRawLocation() != null) {
+//				md.update(Files.readAllBytes(f.getRawLocation().makeAbsolute().toFile().toPath()));
+//			}
+//			else {
+//				System.out.println(f.getName());
+//			}
 		}
 
-		return hash;
+		DigestInputStream dis = null;
+		try {
+			SequenceInputStream sequenceInputStream = new SequenceInputStream(fileStreams.elements());
+//			md.update(f);
+			dis = new DigestInputStream(sequenceInputStream, md);
+			dis.on(true);
+			while (dis.read() >= 0) {
+			}
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			dis.close();
+		}
+
+		return new String(md.digest()).trim().replace(LOG_RESULT_DELIMITER, LOG_RESULT_DELIMITER_ALT);
 	}
 
 	/**
 	 * Recursive function to recursively collect all referenced files of the current resource.
 	 * @param resource - The resource representing the file.
 	 * @param files - Set of resource path/file names.
+	 * @throws Exception
 	 */
-	private static void collectResourceFiles(Resource resource, Set<IFile> files) {
+	private static void collectResourceFiles(Resource resource, Set<IFile> files) throws Exception {
 
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		URI uri = resource.getURI();
 		IFile file = workspaceRoot.getFile(new Path(uri.toPlatformString(true)));
 
+//		try {
 		if (uri.segment(0).equals("plugin")) {
-			files.add(file);
-		} else if (!file.isAccessible()) {
-			// TODO: Address this error
-//			throw new ResoluteFailException("Unable to access file " + file.getName() + ".",
-//					evalContext.getThisInstance());
+			// We're going to ignore these
+			return;
+		} else if (!file.isAccessible() || !file.exists()) {
+			throw new Exception("Unable to access file " + file.getName() + ".");
 		} else {
 			files.add(file);
 		}
+//		} catch (Exception e) {
+//			return;
+//		}
 
 		// Get the resources that are referred to (via the 'with' statement)
 		EList<EObject> resourceContents = resource.getContents();
@@ -238,7 +274,6 @@ public class AgreePropertyLog {
 				if (aadlPackageImpl.getOwnedPublicSection() != null) {
 					final EList<ModelUnit> importedUnits = aadlPackageImpl.getPublicSection().getImportedUnits();
 					for (ModelUnit mUnit : importedUnits) {
-//						String resourceName = mUnit.eResource().getURI().lastSegment();
 						IFile resourceFile = workspaceRoot
 								.getFile(new Path(mUnit.eResource().getURI().toPlatformString(true)));
 						if (!files.contains(resourceFile)) {
@@ -250,7 +285,6 @@ public class AgreePropertyLog {
 				if (aadlPackageImpl.getOwnedPrivateSection() != null) {
 					final EList<ModelUnit> importedUnits = aadlPackageImpl.getPrivateSection().getImportedUnits();
 					for (ModelUnit mUnit : importedUnits) {
-//						String resourceName = mUnit.eResource().getURI().lastSegment();
 						IFile resourceFile = workspaceRoot
 								.getFile(new Path(mUnit.eResource().getURI().toPlatformString(true)));
 						if (!files.contains(resourceFile)) {
