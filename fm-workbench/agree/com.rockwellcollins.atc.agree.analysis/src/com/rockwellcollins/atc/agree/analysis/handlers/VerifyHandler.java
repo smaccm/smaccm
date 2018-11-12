@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
@@ -33,8 +32,6 @@ import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.NamedElement;
-import org.osate.aadl2.Realization;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
@@ -49,7 +46,6 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
-import com.rockwellcollins.atc.agree.analysis.AgreePropertyLog;
 import com.rockwellcollins.atc.agree.analysis.AgreeRenaming;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ConsistencyResult;
@@ -68,6 +64,7 @@ import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
+import com.rockwellcollins.atc.agree.saving.AgreeFileUtil;
 
 import jkind.JKindException;
 import jkind.api.JKindApi;
@@ -104,8 +101,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
 	protected abstract boolean isRealizability();
 
-	protected SystemInstance getSysInstance(Element root, EphemeralImplementationUtil implUtil) {
-		ComponentImplementation ci = getComponentImplementation(root, implUtil);
+	protected SystemInstance getSysInstance(ComponentImplementation ci, EphemeralImplementationUtil implUtil) {
 		try {
 			return InstantiateModel.buildInstanceModelFile(ci);
 		} catch (Exception e) {
@@ -149,7 +145,7 @@ public abstract class VerifyHandler extends AadlHandler {
 				return ci;
 			} else {
 				throw new AgreeException(
-						"AADL Component Type has multiple implementation to verify: please select just one");
+						"AADL Component Type has multiple implementations to verify: please select just one");
 			}
 		}
 	}
@@ -178,12 +174,15 @@ public abstract class VerifyHandler extends AadlHandler {
 		handlerService = getWindow().getService(IHandlerService.class);
 
 		try {
-			SystemInstance si = getSysInstance(root, implUtil);
+
+			// Make sure the user selected a component implementation
+			ComponentImplementation ci = getComponentImplementation(root, implUtil);
+
+			SystemInstance si = getSysInstance(ci, implUtil);
 
 			AnalysisResult result;
 			CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
 
-			// SystemType sysType = si.getSystemImplementation().getType();
 			ComponentType sysType = AgreeUtils.getInstanceType(si);
 			EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
 					AgreePackage.eINSTANCE.getAgreeContractSubclause());
@@ -192,27 +191,11 @@ public abstract class VerifyHandler extends AadlHandler {
 				throw new AgreeException("There is not an AGREE annex in the '" + sysType.getName() + "' system type.");
 			}
 
-			String rootName = "";
-			if (root instanceof NamedElement) {
-				rootName = ((NamedElement) root).getName();
-			} else if (root instanceof Realization) {
-				Realization realization = (Realization) root;
-				EObject eObj = realization.eContainer();
-				if (eObj instanceof NamedElement) {
-					rootName = ((NamedElement) eObj).getName();
-				}
-			}
-			if (rootName.isEmpty()) {
-				throw new AgreeException("Could not determine name of root element");
-			}
-
 			if (isRecursive()) {
 				if (AgreeUtils.usingKind2()) {
 					throw new AgreeException("Kind2 only supports monolithic verification");
 				}
-
-//				result = buildAnalysisResult(((NamedElement) root).getName(), si);
-				result = buildAnalysisResult(rootName, si);
+				result = buildAnalysisResult(ci.getName(), si);
 				wrapper.addChild(result);
 				result = wrapper;
 			} else if (isRealizability()) {
@@ -222,15 +205,14 @@ public abstract class VerifyHandler extends AadlHandler {
 						AnalysisType.Realizability));
 				result = wrapper;
 			} else {
-				CompositeAnalysisResult wrapperTop = new CompositeAnalysisResult("Verification for " + rootName);
+				CompositeAnalysisResult wrapperTop = new CompositeAnalysisResult(
+						"Verification for " + ci.getName());
 				wrapVerificationResult(si, wrapperTop);
 				wrapper.addChild(wrapperTop);
 				result = wrapper;
-//				wrapVerificationResult(si, wrapper);
-//				result = wrapper;
 			}
 			showView(result, linker);
-			return doAnalysis(root, monitor);
+			return doAnalysis(ci, monitor);
 		} catch (Throwable e) {
 			String messages = getNestedMessages(e);
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
@@ -464,7 +446,7 @@ public abstract class VerifyHandler extends AadlHandler {
 				long startTime = 0;
 				if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PREF_PROP_LOG)) {
 					try {
-						modelHash = AgreePropertyLog.getModelHash(root);
+						modelHash = AgreeFileUtil.getModelHashcode(root);
 						startTime = System.currentTimeMillis();
 					} catch (Exception e) {
 						System.out.println(e.getMessage());
@@ -516,7 +498,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
 					// Print to property analysis log, if necessary
 					if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PREF_PROP_LOG)) {
-						AgreePropertyLog.print(result, startTime, modelHash);
+						AgreeFileUtil.printLog(result, startTime, modelHash);
 					}
 
 					queue.remove();
