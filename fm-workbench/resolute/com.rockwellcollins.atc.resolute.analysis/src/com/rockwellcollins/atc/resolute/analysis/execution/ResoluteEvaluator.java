@@ -50,6 +50,7 @@ import com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
+import com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
@@ -587,6 +588,22 @@ public class ResoluteEvaluator extends ResoluteSwitch<ResoluteValue> {
 	public ResoluteValue caseBuiltInFnCallExpr(BuiltInFnCallExpr object) {
 		List<ResoluteValue> args = doSwitchList(object.getArgs());
 		return new ResoluteBuiltInFnCallEvaluator(context).evaluate(object, args);
+	}
+
+	@Override
+	public ResoluteValue caseLibraryFnCallExpr(LibraryFnCallExpr object) {
+		List<ResoluteValue> args = doSwitchList(object.getArgs());
+
+		ResoluteValue value = EvaluateExternalLibraryFunction.evaluate(object.getLibName(), context, object.getFnName(),
+				args);
+
+		if (value == null) {
+			throw new ResoluteFailException(
+					"External library function '" + object.getLibName() + "." + object.getFnName() + "()' failed.",
+					object);
+		} else {
+			return value;
+		}
 	}
 
 	private static ResoluteValue bool(boolean bool) {

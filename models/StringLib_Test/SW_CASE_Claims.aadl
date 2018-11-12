@@ -1,0 +1,87 @@
+package SW_CASE_Claims
+public
+
+	annex resolute {**
+
+		test_StringLib(c:component, s:string) <=
+		** "test_StringLib: " s **
+		test_concat(StringLib.concat(s, StringLib.concat("_", s))) and
+		test_contains(StringLib.contains(s, "Req")) and
+		test_endsWith(StringLib.endsWith(s, "Filter")) and
+		test_hashCode(StringLib.hashCode(s)) and
+		test_indexOf(StringLib.indexOf(s, "_")) and
+		test_lastIndexOf(StringLib.lastIndexOf(s, "r")) and
+		test_length(StringLib.stringlength(s)) and 
+		test_matches(StringLib.matches(s, "Req[0-9]{3}_(Filter|FlightPlanner)")) and
+		test_replace(StringLib.replace(s, "Req", "Wreck")) and
+		test_split(StringLib.split(s, "_")) and
+		test_startsWith(StringLib.startsWith(s, "Req")) and
+		test_substring(StringLib.substring(s, 2, 7)) and
+		test_toLowerCase(StringLib.toLowerCase(s)) and
+		test_toUpperCase(StringLib.toUpperCase(s)) and
+		test_trim(StringLib.trim(StringLib.concat(s, "   ")))
+
+		test_concat(s:string) <=
+		** "concat: " s **
+		s = "Req001_Filter_Req001_Filter"
+		
+		test_contains(b:bool) <=
+		** "contains: " b **
+		b = true
+		
+		test_endsWith(b:bool) <=
+		** "endsWith: " b **
+		b = true
+		
+		test_hashCode(i:int) <=
+		** "hashCode: " i **
+		i = -1013805980
+		
+		test_indexOf(i:int) <=
+		** "indexOf: " i **
+		i = 6
+		
+		test_lastIndexOf(i:int) <=
+		** "lastIndexOf: " i **
+		i = 12
+		
+		test_length(i:int) <=
+		** "length: " i **
+		i = 13
+		
+		test_matches(b: bool) <=
+		** "matches: " b **
+		b = true
+		
+		test_replace(s:string) <=
+		** "replace: " s **
+		s = "Wreck001_Filter"
+		
+		test_split(s:[string]) <=
+		** "split" **
+		size(s) = 2 and member("Req001", s) and member("Filter", s)
+		
+		test_startsWith(b:bool) <=
+		** "startsWith: " b **
+		b = true
+		
+		test_substring(s:string) <=
+		** "substring: " s **
+		s = "q001_"
+		
+		test_toLowerCase(s:string) <=
+		** "toLowerCase: " s **
+		s = "req001_filter"
+		
+		test_toUpperCase(s:string) <=
+		** "toUpper: " s **
+		s = "REQ001_FILTER"
+		
+		test_trim(s:string) <=
+		** "trim: " s **
+		s = "Req001_Filter"
+
+	**};
+	
+
+end SW_CASE_Claims;

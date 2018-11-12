@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: StringLib
+Bundle-SymbolicName: com.rockwellcollins.atc.resolute.stringlib;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.rockwellcollins.atc.resolute.stringlib.Activator
+Bundle-Vendor: RockwellCollins
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.rockwellcollins.atc.resolute.analysis
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: StringLib
+Import-Package: com.rockwellcollins.atc.resolute.analysis.external,
+ com.rockwellcollins.atc.resolute.resolute,
+ com.rockwellcollins.atc.resolute.validation,
+ org.eclipse.emf.ecore,
+ org.osate.aadl2.instance
