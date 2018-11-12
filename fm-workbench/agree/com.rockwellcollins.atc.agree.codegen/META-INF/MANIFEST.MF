@@ -21,5 +21,6 @@ Import-Package: com.rockwellcollins.atc.agree.analysis.handlers,
  org.eclipse.xtext.ui.editor.preferences,
  org.osate.aadl2,
  org.osate.aadl2.instantiation,
+ org.osate.aadl2.modelsupport.scoping,
  org.osate.ui.dialogs
 Automatic-Module-Name: com.rockwellcollins.atc.agree.codegen
