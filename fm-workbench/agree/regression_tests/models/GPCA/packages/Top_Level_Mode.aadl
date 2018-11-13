@@ -1,0 +1,52 @@
+---------------------------------------------------------------------------
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Mike Whalen
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Edited by : Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the top level mode behavioral model.
+--------------------------------------------------------------------------
+
+package Top_Level_Mode
+public
+
+  with DATATYPES, Base_Types;
+  
+  system Top_Level_Mode
+    features
+      OP_CMD_IN: in data port DATATYPES::Operator_Commands.Impl;
+      CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
+      
+      TLM_MODE_OUT: out data port DATATYPES::Top_Level_Mode_Outputs.Impl;
+            
+    annex agree {**
+	--assume "not_system_start_and_system_stop" : not(OP_CMD_IN.System_Start and OP_CMD_IN.System_Stop);
+	-------> If System_Start and not System_Stop, then mode is ON<-------
+
+	property system_start_implies_system_on = 
+		  (OP_CMD_IN.System_Start) => (TLM_MODE_OUT.System_On); 
+--	 and not OP_CMD_IN.System_Stop
+	guarantee "system_start_implies_system_on" : system_start_implies_system_on;
+	
+	property not_system_start_implies_system_off = 
+		  not(OP_CMD_IN.System_Start) => not(TLM_MODE_OUT.System_On); 
+	
+	guarantee "not_system_start_implies_system_off" : not_system_start_implies_system_off;
+	
+	property system_stop_implies_not_system_on =
+			(OP_CMD_IN.System_Stop) => not(TLM_MODE_OUT.System_On);
+	guarantee "system_stop_implies_not_system_on" : system_stop_implies_not_system_on;
+	
+	**};
+	
+	
+	
+   
+  end Top_Level_Mode;
+  
+  system implementation Top_Level_Mode.Impl 
+  end Top_Level_Mode.Impl;
+    
+end Top_Level_Mode;

@@ -117,7 +117,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) 'timefall' '(' id=NestedDotID
 	 *     (rule start) (ambiguity) 'timeof' '(' id=NestedDotID
 	 *     (rule start) (ambiguity) 'timerise' '(' id=NestedDotID
-	 *     (rule start) (ambiguity) base=[NamedElement|QCPREF]
+	 *     (rule start) (ambiguity) base=[NamedElement|EID]
 	 *     (rule start) (ambiguity) op='-'
 	 *     (rule start) (ambiguity) op='not'
 	 *     (rule start) (ambiguity) val=BooleanLiteral

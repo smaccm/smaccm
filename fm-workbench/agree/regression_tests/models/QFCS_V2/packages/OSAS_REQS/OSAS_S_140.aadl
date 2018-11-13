@@ -1,0 +1,44 @@
+package OSAS_S_140
+public
+
+annex agree {**
+	node req 
+  	(acts : DATA_TYPES::Actuators.impl,
+  	 fails : DATA_TYPES::BoolActuators.impl)
+  returns
+    (res : bool);
+  let
+  	res = req_helper(acts.AILL, fails.AILL) and 
+  	      req_helper(acts.AILR, fails.AILR) and
+  	      req_helper(acts.BRAKE, fails.BRAKE) and
+  	      req_helper(acts.ELLIB, fails.ELLIB) and 
+  	      req_helper(acts.ELLOB, fails.ELLOB) and
+  	      req_helper(acts.ELRIB, fails.ELRIB) and
+  	      req_helper(acts.ELROB, fails.ELROB) and
+  	      req_helper(acts.FLAPLI, fails.FLAPLI) and
+  	      req_helper(acts.FLAPLO, fails.FLAPLO) and
+  	      req_helper(acts.FLAPRI, fails.FLAPRI) and
+  	      req_helper(acts.FLAPRO, fails.FLAPRO) and
+  	      req_helper(acts.GEAR, fails.GEAR) and
+  	      req_helper(acts.RUDLO, fails.RUDLO) and
+  	      req_helper(acts.RUDUP, fails.RUDUP) and
+  	      req_helper(acts.SPLLIB, fails.SPLLIB) and 
+  	      req_helper(acts.SPLLOB, fails.SPLLOB) and
+  	      req_helper(acts.SPLRIB, fails.SPLRIB) and
+  	      req_helper(acts.SPLROB, fails.SPLROB) and
+  	      req_helper(acts.STEER, fails.STEER) and
+  	      req_helper(acts.THROTR, fails.THROTR) and
+  	      req_helper(acts.THROTL, fails.THROTL);
+  tel;
+  
+  node req_helper
+    (act : real,
+     fail : bool)
+  returns
+    (res : bool);
+  let  
+    res = fail => act = 0.0;
+    
+  tel;
+**};
+end OSAS_S_140;

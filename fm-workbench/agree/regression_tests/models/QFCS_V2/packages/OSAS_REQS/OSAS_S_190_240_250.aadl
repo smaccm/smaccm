@@ -1,0 +1,53 @@
+package OSAS_S_190_240_250
+public
+
+annex agree {**
+	
+  node req 
+    (acts_in : DATA_TYPES::Actuators.impl,
+     acts_out : DATA_TYPES::Actuators.impl,
+     acts_gain : DATA_TYPES::Actuators.impl,
+     acts_claw_fail : DATA_TYPES::BoolActuators.impl,
+     osas_failed : bool)
+  returns
+    (res : bool);
+  let
+  	res = req_helper(acts_in.AILL, acts_out.AILL, acts_gain.AILL, acts_claw_fail.AILL, osas_failed) and 
+  	      req_helper(acts_in.AILR, acts_out.AILR, acts_gain.AILR, acts_claw_fail.AILR, osas_failed) and
+  	      req_helper(acts_in.BRAKE, acts_out.BRAKE, acts_gain.BRAKE, acts_claw_fail.BRAKE, osas_failed) and
+  	      req_helper(acts_in.ELLIB, acts_out.ELLIB, acts_gain.ELLIB, acts_claw_fail.ELLIB, osas_failed) and 
+  	      req_helper(acts_in.ELLOB, acts_out.ELLOB, acts_gain.ELLOB, acts_claw_fail.ELLOB, osas_failed) and
+  	      req_helper(acts_in.ELRIB, acts_out.ELRIB, acts_gain.ELRIB, acts_claw_fail.ELRIB, osas_failed) and
+  	      req_helper(acts_in.ELROB, acts_out.ELROB, acts_gain.ELROB, acts_claw_fail.ELROB, osas_failed) and
+  	      req_helper(acts_in.FLAPLI, acts_out.FLAPLI, acts_gain.FLAPLI, acts_claw_fail.FLAPLI, osas_failed) and
+  	      req_helper(acts_in.FLAPLO, acts_out.FLAPLO, acts_gain.FLAPLO, acts_claw_fail.FLAPLO, osas_failed) and
+  	      req_helper(acts_in.FLAPRI, acts_out.FLAPRI, acts_gain.FLAPRI, acts_claw_fail.FLAPRI, osas_failed) and
+  	      req_helper(acts_in.FLAPRO, acts_out.FLAPRO, acts_gain.FLAPRO, acts_claw_fail.FLAPRO, osas_failed) and
+  	      req_helper(acts_in.GEAR, acts_out.GEAR, acts_gain.GEAR, acts_claw_fail.GEAR, osas_failed) and
+  	      req_helper(acts_in.RUDLO, acts_out.RUDLO, acts_gain.RUDLO, acts_claw_fail.RUDLO, osas_failed) and
+  	      req_helper(acts_in.RUDUP, acts_out.RUDUP, acts_gain.RUDUP, acts_claw_fail.RUDUP, osas_failed) and
+  	      req_helper(acts_in.SPLLIB, acts_out.SPLLIB, acts_gain.SPLLIB, acts_claw_fail.SPLLIB, osas_failed) and
+  	      req_helper(acts_in.SPLLOB, acts_out.SPLLOB, acts_gain.SPLLOB, acts_claw_fail.SPLLOB, osas_failed) and
+  	      req_helper(acts_in.SPLRIB, acts_out.SPLRIB, acts_gain.SPLRIB, acts_claw_fail.SPLRIB, osas_failed) and
+  	      req_helper(acts_in.SPLROB, acts_out.SPLROB, acts_gain.SPLROB, acts_claw_fail.SPLROB, osas_failed) and
+  	      req_helper(acts_in.STEER, acts_out.STEER, acts_gain.STEER, acts_claw_fail.STEER, osas_failed) and
+  	      req_helper(acts_in.THROTR, acts_out.THROTR, acts_gain.THROTR, acts_claw_fail.THROTR, osas_failed) and
+  	      req_helper(acts_in.THROTL, acts_out.THROTL, acts_gain.THROTL, acts_claw_fail.THROTL, osas_failed);
+  tel;
+   
+  node req_helper
+    (act_in : real,
+     act_out : real,
+     act_gain : real,
+     act_claw_fail : bool,
+     osas_fail : bool)
+  returns
+    (res : bool);
+  let  
+    res = 
+       act_out = act_in*act_gain;
+  tel;		
+    
+**};
+
+end OSAS_S_190_240_250;

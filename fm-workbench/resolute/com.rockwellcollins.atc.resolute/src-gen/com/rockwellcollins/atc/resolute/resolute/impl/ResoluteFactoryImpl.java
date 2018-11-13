@@ -81,6 +81,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.PROVE_STATEMENT: return createProveStatement();
       case ResolutePackage.LIST_TYPE: return createListType();
       case ResolutePackage.SET_TYPE: return createSetType();
+      case ResolutePackage.LIBRARY_FN_TYPE: return createLibraryFnType();
       case ResolutePackage.QUANT_ARG: return createQuantArg();
       case ResolutePackage.FUNCTION_BODY: return createFunctionBody();
       case ResolutePackage.CLAIM_BODY: return createClaimBody();
@@ -99,6 +100,7 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
       case ResolutePackage.STRING_EXPR: return createStringExpr();
       case ResolutePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
       case ResolutePackage.QUANTIFIED_EXPR: return createQuantifiedExpr();
+      case ResolutePackage.LIBRARY_FN_CALL_EXPR: return createLibraryFnCallExpr();
       case ResolutePackage.BUILT_IN_FN_CALL_EXPR: return createBuiltInFnCallExpr();
       case ResolutePackage.FN_CALL_EXPR: return createFnCallExpr();
       case ResolutePackage.LIST_FILTER_MAP_EXPR: return createListFilterMapExpr();
@@ -303,6 +305,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public LibraryFnType createLibraryFnType()
+  {
+    LibraryFnTypeImpl libraryFnType = new LibraryFnTypeImpl();
+    return libraryFnType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public QuantArg createQuantArg()
   {
     QuantArgImpl quantArg = new QuantArgImpl();
@@ -494,6 +507,17 @@ public class ResoluteFactoryImpl extends EFactoryImpl implements ResoluteFactory
   {
     QuantifiedExprImpl quantifiedExpr = new QuantifiedExprImpl();
     return quantifiedExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LibraryFnCallExpr createLibraryFnCallExpr()
+  {
+    LibraryFnCallExprImpl libraryFnCallExpr = new LibraryFnCallExprImpl();
+    return libraryFnCallExpr;
   }
 
   /**

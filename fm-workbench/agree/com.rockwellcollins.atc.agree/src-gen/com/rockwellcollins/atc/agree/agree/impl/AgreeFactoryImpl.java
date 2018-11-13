@@ -96,6 +96,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.EXPR: return createExpr();
       case AgreePackage.COMPLEX_EXPR: return createComplexExpr();
       case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
+      case AgreePackage.TYPE_ID: return createTypeID();
       case AgreePackage.NAMED_ID: return createNamedID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
       case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
@@ -149,8 +150,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.FLOOR_CAST: return createFloorCast();
       case AgreePackage.REAL_CAST: return createRealCast();
       case AgreePackage.AADL_ENUMERATOR: return createAADLEnumerator();
-      case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       case AgreePackage.RECORD_EXPR: return createRecordExpr();
+      case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -506,6 +507,17 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     NestedDotIDImpl nestedDotID = new NestedDotIDImpl();
     return nestedDotID;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TypeID createTypeID()
+  {
+    TypeIDImpl typeID = new TypeIDImpl();
+    return typeID;
   }
 
   /**
@@ -1096,10 +1108,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public FnCallExpr createFnCallExpr()
+  public RecordExpr createRecordExpr()
   {
-    FnCallExprImpl fnCallExpr = new FnCallExprImpl();
-    return fnCallExpr;
+    RecordExprImpl recordExpr = new RecordExprImpl();
+    return recordExpr;
   }
 
   /**
@@ -1107,10 +1119,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RecordExpr createRecordExpr()
+  public FnCallExpr createFnCallExpr()
   {
-    RecordExprImpl recordExpr = new RecordExprImpl();
-    return recordExpr;
+    FnCallExprImpl fnCallExpr = new FnCallExprImpl();
+    return fnCallExpr;
   }
 
   /**

@@ -1,0 +1,92 @@
+package FCC_RC_2
+public
+
+annex agree {**
+	
+  --RC-2 - Actuator signals are bounded based on the number
+  --of failed signals.  This is basically a lemma to prove RC-1
+	
+  node req 
+    (acts_out : DATA_TYPES::Actuators.impl,  
+  	 num_valid_acts : DATA_TYPES::NumActuators.impl)
+  returns
+    (ret : bool);
+  let
+    ret = output_range(num_valid_acts.THROTL, acts_out.THROTL,
+			AGREE_CONSTANTS.THROTL_range_low, AGREE_CONSTANTS.THROTL_range_high
+      	)
+      	and
+      	output_range(num_valid_acts.THROTR, acts_out.THROTR, 
+      		AGREE_CONSTANTS.THROTR_range_low, AGREE_CONSTANTS.THROTR_range_high
+      	) and
+      	output_range(num_valid_acts.ELLOB, acts_out.ELLOB, 
+      		AGREE_CONSTANTS.ELLOB_range_low, AGREE_CONSTANTS.ELLOB_range_high
+      	) and
+      	output_range(num_valid_acts.ELLIB, acts_out.ELLIB, 
+      		AGREE_CONSTANTS.ELLIB_range_low, AGREE_CONSTANTS.ELLIB_range_high
+      	) and
+      	output_range(num_valid_acts.ELROB, acts_out.ELROB, 
+      		AGREE_CONSTANTS.ELROB_range_low, AGREE_CONSTANTS.ELROB_range_high
+      	) and
+      	output_range(num_valid_acts.ELRIB, acts_out.ELRIB, 
+      		AGREE_CONSTANTS.ELRIB_range_low, AGREE_CONSTANTS.ELRIB_range_high
+      	) and
+      	output_range(num_valid_acts.AILL, acts_out.AILL, 
+      		AGREE_CONSTANTS.AILL_range_low, AGREE_CONSTANTS.AILL_range_high
+      	) and
+      	output_range(num_valid_acts.AILR, acts_out.AILR, 
+      		AGREE_CONSTANTS.AILR_range_low, AGREE_CONSTANTS.AILR_range_high
+      	) and
+      	output_range(num_valid_acts.RUDUP, acts_out.RUDUP, 
+      		AGREE_CONSTANTS.RUDUP_range_low, AGREE_CONSTANTS.RUDUP_range_high
+      	) and
+      	output_range(num_valid_acts.RUDLO, acts_out.RUDLO, 
+      		AGREE_CONSTANTS.RUDLO_range_low, AGREE_CONSTANTS.RUDLO_range_high
+      	) and
+      	output_range(num_valid_acts.SPLLIB, acts_out.SPLLIB, 
+      		AGREE_CONSTANTS.SPLLIB_range_low, AGREE_CONSTANTS.SPLLIB_range_high
+      	) and
+      	output_range(num_valid_acts.SPLLOB, acts_out.SPLLOB, 
+      		AGREE_CONSTANTS.SPLLOB_range_low, AGREE_CONSTANTS.SPLLOB_range_high
+      	) and
+      	output_range(num_valid_acts.SPLRIB, acts_out.SPLRIB, 
+      		AGREE_CONSTANTS.SPLRIB_range_low, AGREE_CONSTANTS.SPLRIB_range_high
+      	) and
+      	output_range(num_valid_acts.SPLROB, acts_out.SPLROB, 
+      		AGREE_CONSTANTS.SPLROB_range_low, AGREE_CONSTANTS.SPLROB_range_high
+      	) and
+      	output_range(num_valid_acts.FLAPLI, acts_out.FLAPLI, 
+      		AGREE_CONSTANTS.FLAPLI_range_low, AGREE_CONSTANTS.FLAPLI_range_high
+      	) and
+      	output_range(num_valid_acts.FLAPLO, acts_out.FLAPLO, 
+      		AGREE_CONSTANTS.FLAPLO_range_low, AGREE_CONSTANTS.FLAPLO_range_high
+      	) and
+      	output_range(num_valid_acts.FLAPRI, acts_out.FLAPRI, 
+      		AGREE_CONSTANTS.FLAPRI_range_low, AGREE_CONSTANTS.FLAPRI_range_high
+      	) and
+      	output_range(num_valid_acts.FLAPRO, acts_out.FLAPRO, 
+      		AGREE_CONSTANTS.FLAPRO_range_low, AGREE_CONSTANTS.FLAPRO_range_high 
+      	) and
+      	output_range(num_valid_acts.GEAR, acts_out.GEAR, 
+      		AGREE_CONSTANTS.GEAR_range_low, AGREE_CONSTANTS.GEAR_range_high
+      	) and
+      	output_range(num_valid_acts.BRAKE, acts_out.BRAKE, 
+      		AGREE_CONSTANTS.BRAKE_range_low, AGREE_CONSTANTS.BRAKE_range_high
+      	) and
+      	output_range(num_valid_acts.STEER, acts_out.STEER, 
+      		AGREE_CONSTANTS.STEER_range_low, AGREE_CONSTANTS.STEER_range_high
+      	);
+  tel;
+  
+  node output_range(num_valid : int, act : real, low : real, high : real)
+  returns (ret : bool);
+  let
+    ret = (num_valid = 0 => (low <= act and act <= 4.0*high)) and
+          (num_valid = 1 => (low <= act and act <= 2.0*high)) and
+          (num_valid = 2 => (low <= act and act <= (4.0/3.0)*high)) and
+          (num_valid = 3 => (low <= act and act <= high)) and
+          (num_valid = 4 => (low <= act and act <= high));
+  tel;   
+
+**};
+end FCC_RC_2;

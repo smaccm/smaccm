@@ -42,6 +42,7 @@ Type:
 	{ListType} '[' type=Type ']'
 |	{SetType} '{' type=Type '}'
 |	BaseType ('<' paramType=Type '>')?
+|	{LibraryFnType} libName=ID '.' fnType=ID
 ;
 
 BaseType:
@@ -175,6 +176,7 @@ AtomicExpr returns Expr:
 |   {StringExpr} val=StringTerm
 |	{IfThenElseExpr} 'if' cond=Expr 'then' then=Expr 'else' else=Expr
 |   {QuantifiedExpr} quant=('forall' | 'exists') ('(' args+=Arg ')')+ '.' expr=Expr
+|	=> ({LibraryFnCallExpr} libName=ID '.' fnName=ID '(' (args+=(Expr) (',' args+=(Expr))*)? ')')
 |   {BuiltInFnCallExpr} fn=BuiltInFn '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |	{FnCallExpr} fn=[FunctionDefinition] '(' (args+=(Expr) (',' args+=(Expr))*)? ')'
 |   '[' Expr ( ({ListFilterMapExpr.map=current} 'for' ('(' args+=Arg ')')+ ('|' filter=Expr)?)

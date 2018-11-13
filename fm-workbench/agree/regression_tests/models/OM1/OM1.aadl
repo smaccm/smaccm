@@ -1,0 +1,135 @@
+package OM1
+public
+	with Base_Types;
+	
+annex agree {**
+  const relay_low : real = 5.0;
+  const relay_high : real = 10.0;
+  const send_period : real = 50.0;
+  const receive_bound : real = 11.0;
+  
+  node num_true(a : bool, b : bool, c : bool) returns (ret : int);
+  let
+    ret = if a and b and c then 3 else
+          if a and b then 2 else
+          if a and c then 2 else
+          if b and c then 2 else
+          if a then 1 else
+          if b then 1 else
+          if c then 1 else 0;
+  tel;
+**};
+	
+system OM1
+	features
+		send_val : in event data port Base_Types::Integer;
+		receive_val1 : out data port Base_Types::Integer;
+		receive_val2 : out data port Base_Types::Integer;
+		
+  annex agree {**
+    
+    eq fault1 : bool;
+    eq fault2 : bool;
+    eq fault3 : bool;
+    
+    eq num_faults : int = OM1.num_true(fault1, fault2, fault3);
+    eq sent_val : int = if event(send_val) then send_val else 0 -> pre(sent_val);
+      
+    eq send_val_event : bool =  event(send_val);
+    
+    assume "bounded sending frequency" : 
+      condition send_val_event occurs sporadic with IAT OM1.send_period; 
+      
+    assume "constant faults" : true ->
+      fault1 = pre(fault1) and fault2 = pre(fault2) and fault3 = pre(fault3);
+    
+    assume "number of faults is less than equal to one": num_faults <= 1;
+    
+    
+    eq sent_val_eq: bool = receive_val1 = sent_val and receive_val2 = sent_val;
+    
+    guarantee "receive vals correct" : whenever send_val_event occurs 
+      sent_val_eq occurs
+        during [0.0, OM1.receive_bound];
+    
+  **};
+end OM1;
+
+system implementation OM1.i
+	subcomponents
+		rly1 : system relay;
+		rly2 : system relay;
+		rly3 : system relay;
+		rec1 : system receiver;
+		rec2 : system receiver;
+	connections
+	  conn_rl1 : port send_val -> rly1.input;
+    conn_rl2 : port send_val -> rly2.input;
+    conn_rl3 : port send_val -> rly3.input;
+    
+    conn_rec11 : port rly1.output1 -> rec1.input1;
+    conn_rec12 : port rly2.output1 -> rec1.input2;
+    conn_rec13 : port rly3.output1 -> rec1.input3;
+    
+    conn_rec21 : port rly1.output2 -> rec2.input1;
+    conn_rec22 : port rly2.output2 -> rec2.input2;
+    conn_rec23 : port rly3.output2 -> rec2.input3;
+    
+    conn_out1 : port rec1.output -> receive_val1;
+    conn_out2 : port rec2.output -> receive_val2;
+    
+  annex agree {**
+    --set the fault variables
+    assign fault1 = rly1.faulty;
+    assign fault2 = rly2.faulty;
+    assign fault3 = rly3.faulty;
+  **};
+end OM1.i;
+	
+system relay
+	features
+		input : in event data port Base_Types::Integer;
+		output1 : out event data port Base_Types::Integer;
+		output2 : out event data port Base_Types::Integer;
+  annex agree {**
+    eq faulty : bool;
+    eq last_input : int = if event(input) then input else 0 -> pre(last_input);
+    
+    guarantee "outputs always equal inputs (if not faulty)":
+      not faulty => (output1 = last_input and output2 = last_input);
+    
+    eq not_faulty:bool = not faulty and event(input);
+    eq output1_event: bool = event(output1);
+    guarantee "output 1 behavior":
+      whenever not_faulty occurs 
+         output1_event exclusively occurs during [OM1.relay_low, OM1.relay_high];
+    
+    eq not_faulty_event_input :bool = not faulty and event(input) ;
+    eq output2_event: bool = event(output2);
+    guarantee "output 2 behavior":
+      whenever not_faulty_event_input occurs 
+        not_faulty_event_input exclusively occurs during [OM1.relay_low, OM1.relay_high];
+    
+  **};
+end relay;
+	
+system receiver
+	features
+		input1 : in event data port Base_Types::Integer;
+		input2 : in event data port Base_Types::Integer;
+		input3 : in event data port Base_Types::Integer;
+		output : out data port Base_Types::Integer;
+	annex agree {**
+	  eq last1 : int = if event(input1) then input1 else 0 -> pre(last1);
+    eq last2 : int = if event(input2) then input2 else 0 -> pre(last2);
+    eq last3 : int = if event(input3) then input3 else 0 -> pre(last3);
+    
+    guarantee "any two agree" :
+      (last1 = last2 => output = last1) and
+      (last1 = last3 => output = last1) and
+      (last2 = last3 => output = last2);
+	**};
+end receiver;
+
+
+end OM1;

@@ -45,8 +45,10 @@ import org.osate.aadl2.ThreadType;
 import org.osate.aadl2.VirtualBusType;
 import org.osate.aadl2.VirtualProcessorType;
 
+import com.rockwellcollins.atc.resolute.analysis.external.EvaluateLibraryTypeExtension;
 import com.rockwellcollins.atc.resolute.analysis.external.EvaluateTypeExtention;
 import com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalAnalysisType;
+import com.rockwellcollins.atc.resolute.analysis.external.ResoluteExternalFunctionLibraryType;
 import com.rockwellcollins.atc.resolute.resolute.Arg;
 import com.rockwellcollins.atc.resolute.resolute.BinaryExpr;
 import com.rockwellcollins.atc.resolute.resolute.BoolExpr;
@@ -66,6 +68,8 @@ import com.rockwellcollins.atc.resolute.resolute.InstanceOfExpr;
 import com.rockwellcollins.atc.resolute.resolute.IntExpr;
 import com.rockwellcollins.atc.resolute.resolute.LetBinding;
 import com.rockwellcollins.atc.resolute.resolute.LetExpr;
+import com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr;
+import com.rockwellcollins.atc.resolute.resolute.LibraryFnType;
 import com.rockwellcollins.atc.resolute.resolute.ListExpr;
 import com.rockwellcollins.atc.resolute.resolute.ListFilterMapExpr;
 import com.rockwellcollins.atc.resolute.resolute.NestedDotID;
@@ -87,6 +91,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 	protected List<EPackage> getEPackages() {
 		// initialize the types for the external analysis calls
 		EvaluateTypeExtention.init(Platform.getExtensionRegistry());
+		// initialize the types for the external function libraries
+		EvaluateLibraryTypeExtension.init(Platform.getExtensionRegistry());
 		return super.getEPackages();
 	}
 
@@ -395,6 +401,45 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 	}
 
 	@Check
+	public void checkLibraryFnCallExpr(LibraryFnCallExpr funCall) {
+		EList<Expr> actuals = funCall.getArgs();
+		List<ResoluteType> actualTypes = getExprTypes(funCall.getArgs());
+		if (containsFail(actualTypes)) {
+			return;
+		}
+
+		ResoluteExternalFunctionLibraryType libraryType = EvaluateLibraryTypeExtension.getLibraryType(funCall.getLibName());
+		if (libraryType == null) {
+			error(funCall, "Could not find external library '" + funCall.getLibName() + "'");
+			return;
+		}
+
+		List<ResoluteType> argTypes = libraryType.getArgTypes(funCall.getFnName());
+
+		if (argTypes == null) {
+			error(funCall, "External function '" + funCall.getFnName() + "()' not found in library '"
+					+ funCall.getLibName() + "'.");
+			return;
+		}
+
+		if (actuals.size() != argTypes.size()) {
+			error(funCall, "External library function '" + funCall.getLibName() + "." + funCall.getFnName()
+					+ "()' expects " + argTypes.size() + " arguments but found " + (actuals.size()) + " arguments");
+			return;
+		}
+
+		for (int i = 0; i < argTypes.size(); i++) {
+			ResoluteType actualType = getExprType(actuals.get(i));
+			ResoluteType expectedType = argTypes.get(i);
+
+			if (!actualType.subtypeOf(expectedType)) {
+				error(funCall.getArgs().get(i), "Expected type " + expectedType + " but found type " + actualType);
+			}
+		}
+
+	}
+
+	@Check
 	public void checkBuiltInFnCallExpr(BuiltInFnCallExpr funCall) {
 		EList<Expr> actuals = funCall.getArgs();
 		List<ResoluteType> actualTypes = getExprTypes(actuals);
@@ -541,7 +586,7 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		StringExpr analysisStrExpr = (StringExpr) expr;
 		String analysisStr = analysisStrExpr.getVal().getValue().replace("\"", "");
-		ResoluteExternalAnalysisType analysisType = EvaluateTypeExtention.getType(analysisStr);
+		ResoluteExternalAnalysisType analysisType = EvaluateTypeExtention.getAnalysisType(analysisStr);
 
 		if (analysisType == null) {
 			error(funCall, "Could not find external analysis '" + analysisStr + "'");
@@ -926,6 +971,22 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 		}
 	}
 
+	@Check
+	public void checkLibraryFnType(LibraryFnType libFnType) {
+		// Make sure library exists
+		ResoluteExternalFunctionLibraryType libraryType = EvaluateLibraryTypeExtension.getLibraryType(libFnType.getLibName());
+		if (libraryType == null) {
+			error(libFnType, "Could not find external library '" + libFnType.getLibName() + "'");
+			return;
+		}
+
+		// Check if library defines the specified type
+		if (!libraryType.isTypeDefined(libFnType.getFnType())) {
+			error(libFnType,
+					"User-defined type '" + libFnType.getFnType() + "' not defined in " + libFnType.getLibName());
+		}
+	}
+
 	/************* Begin helper functions ***************/
 
 	private Stack<EObject> typeEvalContext = new Stack<>();
@@ -1037,6 +1098,10 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 			if (expr instanceof BuiltInFnCallExpr) {
 				return getBuiltInFnCallType((BuiltInFnCallExpr) expr);
+			}
+
+			if (expr instanceof LibraryFnCallExpr) {
+				return getLibraryFunctionType((LibraryFnCallExpr) expr);
 			}
 
 			if (expr instanceof ListExpr) {
@@ -1429,12 +1494,26 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 
 		StringExpr analysisStrExpr = (StringExpr) expr;
 		String analysisStr = analysisStrExpr.getVal().getValue().replace("\"", "");
-		ResoluteExternalAnalysisType analysisType = EvaluateTypeExtention.getType(analysisStr);
+		ResoluteExternalAnalysisType analysisType = EvaluateTypeExtention.getAnalysisType(analysisStr);
 
 		if (analysisType == null) {
 			return BaseType.FAIL;
 		}
 		return analysisType.getType();
+	}
+
+	private ResoluteType getLibraryFunctionType(LibraryFnCallExpr funCall) {
+		if (funCall.getLibName().isEmpty()) {
+			return BaseType.FAIL;
+		} else if (funCall.getFnName().isEmpty()) {
+			return BaseType.FAIL;
+		}
+
+		ResoluteExternalFunctionLibraryType libraryType = EvaluateLibraryTypeExtension.getLibraryType(funCall.getLibName());
+		if (libraryType == null) {
+			return BaseType.FAIL;
+		}
+		return libraryType.getType(funCall.getFnName());
 	}
 
 	static private ResoluteType getComponentType(ComponentType comp) {
@@ -1505,6 +1584,8 @@ public class ResoluteJavaValidator extends AbstractResoluteJavaValidator {
 			} else {
 				return new SetType(innerType);
 			}
+		} else if (type instanceof LibraryFnType) {
+			return new BaseType("agree_spec");
 		} else {
 			error(type, "Unable to convert type");
 			throw new IllegalArgumentException();

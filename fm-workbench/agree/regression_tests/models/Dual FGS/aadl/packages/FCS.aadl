@@ -1,0 +1,259 @@
+-- Copyright (c) 2011, Rockwell Collins. Developed with the sponsorship
+-- of the Defense Advanced Research Projects Agency (DARPA).
+--
+-- Permission is hereby granted, free of charge, to any person obtaining
+-- a copy of this data, including any software or models in source or
+-- binary form, as well as any drawings, specifications, and
+-- documentation (collectively "the Data"), to deal in the Data without
+-- restriction, including without limitation the rights to use, copy,
+-- modify, merge, publish, distribute, sublicense, and/or sell copies of
+-- the Data, and to permit persons to whom the Data is furnished to do
+-- so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Data.
+--
+-- THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+-- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+-- IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR
+-- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+-- OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE
+-- DATA.
+package FCS
+public
+with FGS,ADS,AHS,FMS,NAV,THROTTLE,YOKE,APS,META_Properties,FCI;
+  system Flight_Control_System
+    features
+      FD_L: out data port FGS::Guidance_Data.Guidance_Data_Impl;
+      AD_L: in data port ADS::Air_Data.Air_Data_Impl;
+      FD_R: out data port FGS::Guidance_Data.Guidance_Data_Impl;
+      AD_R: in data port ADS::Air_Data.Air_Data_Impl;
+      AH_L: in data port AHS::Attitude_Heading_Data;
+      AH_R: in data port AHS::Attitude_Heading_Data;
+      FM_L: in data port FMS::Flight_Management_Data;
+      FM_R: in data port FMS::Flight_Management_Data;
+      NAV_L: in data port NAV::Navigation_Data;
+      NAV_R: in data port NAV::Navigation_Data;
+      THROT_L: in data port THROTTLE::Throttle_Data;
+      THROT_R: in data port THROTTLE::Throttle_Data;
+      YOKE_L: in data port YOKE::Yoke_Data;
+      YOKE_R: in data port YOKE::Yoke_Data;
+      CSA: out data port APS::Control_Surface_Actuator_Data.Control_Surface_Actuator_Data_Impl;
+
+annex agree {**
+	----------------------------------------------------------------
+-- Flight_Contol_System Contact
+-- 
+-- Data assumptions: 
+-- ADS structure has: 
+--   Pitch: real
+--   Pitch_Valid: Boolean
+-- GC structure has:
+--   mds: { 
+--    active: Boolean
+--  }
+-- CSA structure has: 
+--   CSA_Pitch_Delta: real ; 
+
+-- Questions: 
+-- 
+-- Q1: should the property be guidance-mode specific?
+-- Q2: is it reasonable to talk about commanded vertical 
+-- 	 acceleration from AP?  What do AP commands look like? 
+-- Q3: We should probably have an import capability where we 
+--     can bring in functions like min/max/abs/etc.
+-- Q4: Eventually do we want to create (or integrate with AADL's  
+--     concept of) units?  The 'naked' constants below don't 
+--     make a lot of sense.
+-- Q5: What happens with 'derived' assumptions?  Suppose that 
+--     the FGS failure data (which I'm calling: FD_L.FGS_nonfailed
+--     and FD_R.FGS_nonfailed) is not output at this level but is 
+--     only internal to the leader select portion of the FGSes.
+--     How would we speak about this assumption at the system 
+--     level?  Could we define a variable here (something like
+--     var at_least_one_FGS_nonfailed: bool) and define it 
+--     at the system implementation level for any system that 
+--     we care about?
+-- Q6: What do we do about the initial step for expressions 
+--     involving 'next'?  My thought on these is that if an 
+--     expression contains 'next' then it is always true in 
+--     the initial state.
+-- Q7: The assumptions about the system state aren't really 
+--     appropriate; they are appropriate for this property
+--     and possibly for 'normal' operation, whatever that 
+--     means.  You can't really say that the altitude can't 
+--     change more than 'x' per step unless that 'x' is so 
+--     large that the physical characteristics of the aircraft
+--     prevent it from being exceeded.  We could (and 
+--     probably should) make the property implicative 
+--     or add some support for property-specific assumptions.
+--    
+-- Q8: May want to write both 'max pitch' and 'max pitch delta'
+--    properties.  A 'max pitch' property would require some 
+--    mapping between the measured pitch (input) and 
+--    the commanded pitch (delta).  	
+-----------------------------------------------------------------
+
+fun abs(x: real) : real = if (x > 0.0) then x else -x ;  
+		  
+const ADS_MAX_PITCH_DELTA: real = 1.0 ;
+const FCS_MAX_PITCH_SIDE_DELTA: real = 2.0 ;
+const CSA_MAX_PITCH_DELTA: real = 5.0 ; 
+const CSA_MAX_PITCH_DELTA_STEP: real = 5.0 ; 
+		  
+-- We assume that the transient for altitude is bounded both 
+-- in terms of the next state and from left to right side. 	  
+
+-- real time:
+-- at arbitrary instant, max pitch change is less than ADS_MAX_PITCH_DELTA within 1 second.
+    		  
+property AD_L_Pitch_Step_Delta_Valid = 
+  true -> abs(AD_L.Pitch.Val - prev(AD_L.Pitch.Val, 0.0)) < ADS_MAX_PITCH_DELTA ;
+property AD_R_Pitch_Step_Delta_Valid =
+  true -> abs(AD_R.Pitch.Val - prev(AD_R.Pitch.Val, 0.0)) < ADS_MAX_PITCH_DELTA ; 
+
+-- no change for real time - it is invariant
+property pitch_lr_ok = 
+  abs(AD_L.Pitch.Val - AD_R.Pitch.Val) < FCS_MAX_PITCH_SIDE_DELTA ; 
+property left_side_valid = AD_L.Pitch.Valid ;
+property right_side_valid = AD_R.Pitch.Valid ;
+property some_side_valid = 
+  left_side_valid or right_side_valid ;
+  		  
+-- We assume one side non-failed.  I leave this assumption unlabeled. 
+assume "valid assumption" : some_side_valid ;
+
+-- We assume when a side recovers it does not fail immediately
+assume "don't fail otherside assumption" : 
+	   -- After_2_steps((pre(pre(not left_side_valid)) and pre(left_side_valid)) => left_side_valid);   
+	   prev(prev(not left_side_valid, false), false) and 
+       prev(left_side_valid, false) => 
+           left_side_valid ;  
+
+-- real-time: 
+-- If fail, then there is a minimum time 
+-- on falling edge of valid, valid will not occur within 2 seconds. 
+
+--assume "dont fail assumption" : 
+--	   prev(prev(not right_side_valid, false), false) and
+--       prev(right_side_valid, false) =>
+--         right_side_valid ;
+		  
+assume "valid pitch" :AD_L_Pitch_Step_Delta_Valid and  
+       AD_R_Pitch_Step_Delta_Valid and pitch_lr_ok ; 
+		  
+-- Assertion: our computed pitch deltas are less than some 
+-- maximum amount.
+
+-- initial values have to be replaced by initial time intervals.
+-- after 1 second, then...
+
+guarantee "pitch is valid" : 
+  	true -> abs(CSA.CSA_Pitch_Delta) < CSA_MAX_PITCH_DELTA ;
+
+-- another example of an invariant within an interval:
+-- the commanded pitch delta is within CSA_MAX_PITCH_DELTA_STEP over a 500 ms interval.
+
+guarantee "pitch step is valid" : 
+	true -> abs(CSA.CSA_Pitch_Delta - prev(CSA.CSA_Pitch_Delta, 0.0)) < CSA_MAX_PITCH_DELTA_STEP ;
+
+-- End of Flight_Control_System Contact
+----------------------------------------------------------------
+**};
+  end Flight_Control_System;
+  
+  system implementation Flight_Control_System.Flight_Control_System_Impl
+    subcomponents
+      AP: system APS::Autopilot_System.Autopilot_System_Impl;
+      FCI: system FCI::Flight_Crew_Interface.Flight_Crew_Interface_Impl;
+      FGS_L: system FGS::Flight_Guidance_System.Flight_Guidance_System_Impl {
+        META_Properties::Leader_Select_ID => 1; 
+        };
+      FGS_R: system FGS::Flight_Guidance_System.Flight_Guidance_System_Impl {
+        META_Properties::Leader_Select_ID => 2;
+        };
+    connections
+      FGSLtoAP: port FGS_L.GC -> AP.GC_L;
+      FGSRtoAP: port FGS_R.GC -> AP.GC_R;
+      AP2CSA: port AP.CSA -> CSA;
+      THROTR2FCI: port THROT_R -> FCI.THROT_R; 
+      YOKEL2FCI: port YOKE_L -> FCI.YOKE_L;
+      YOKER2FCI: port YOKE_R -> FCI.YOKE_R;
+      FCItoFGSL: port FCI.FCI -> FGS_L.FCI;
+      FCItoFGSR: port FCI.FCI -> FGS_R.FCI;
+      THROTL2FCI: port THROT_L -> FCI.THROT_L;
+      ADLtoFGSL: port AD_L -> FGS_L.AD;
+      AHLtoFGSL: port AH_L -> FGS_L.AH;
+      FMLtoFGSL: port FM_L -> FGS_L.VNAV;
+      NAVLtoFGSL: port NAV_L -> FGS_L.NAV;
+      FGSRtoFGSL: port FGS_R.LSO -> FGS_L.LSI {
+        Latency => 5 ms .. 8 ms;
+        };
+      FGSLtoFDL: port FGS_L.GC -> FD_L;
+      FGSLtoFGSR: port FGS_L.LSO -> FGS_R.LSI;
+      AHRtoFGSR: port AH_R -> FGS_R.AH; 
+      FMRtoFGSR: port FM_R -> FGS_R.VNAV;
+      NAVRtoFGSR: port NAV_R -> FGS_R.NAV;
+      FGSRtoFDR: port FGS_R.GC -> FD_R;
+      ADRtoFGSR: port AD_R -> FGS_R.AD;
+    properties
+      Latency => 5 ms .. 8 ms applies to FGSLtoFGSR;
+      Latency => 5 ms .. 8 ms applies to FGSRtoFGSL;
+      META_Properties::Not_Collocated => (reference(FGS_L)) applies to FGS_R;
+      META_Properties::Not_Collocated => (reference(FGS_R)) applies to FGS_L;
+
+annex agree {**
+	----------------------------------------------------------------
+-- Flight_Control_System_Impl Facts  
+   
+assert (FGS_L.LSO.Valid and FGS_R.LSO.Valid) => FGS_L.LSO.Leader = FGS_R.LSO.Leader;
+			
+  -- If a node fails, leadership is transferred to a non-failed node (if one exists)
+  -- real-time: These must be in terms of time!
+  -- If the left side is invalid, then within XXX time (50 ms), the right side will 
+  -- select itself to be the leader if it is valid.
+  -- symmetric for right side.
+  
+assert (prev(not(FGS_L.LSO.Valid), false) => 
+	(FGS_R.LSO.Valid => FGS_R.LSO.Leader != Get_Property(FGS_L, META_Properties::Leader_Select_ID)));		
+  
+assert prev(not(FGS_R.LSO.Valid), false) =>  
+	(FGS_L.LSO.Valid => FGS_L.LSO.Leader != Get_Property(FGS_R, META_Properties::Leader_Select_ID));
+			 
+  -- If any non-failed nodes exist, one of them will be the leader
+  -- If either side has been valid for at least interval XXX (125ms?) then 
+  -- one side has a reasonable leader.
+assert (prev(FGS_L.LSO.Valid or FGS_R.LSO.Valid, false)) => 
+	(( FGS_L.LSO.Valid => (FGS_L.LSO.Leader >= 1 and FGS_L.LSO.Leader <= 2)) and
+	(FGS_R.LSO.Valid => (FGS_R.LSO.Leader >= 1 and FGS_R.LSO.Leader <= 2)));
+			     
+  -- If the leader does not fail, it shall remain the leader.  
+  --  ????  This is an interesting one.
+  -- We could approximate it: if I am leader now, I will be the leader in the future.
+  -- This is just an "arbitrary time" property.  At any instant, if I am leader for interval, 
+  -- I will continue to be leader.
+  -- Need a category of things that are checked at every "interesting" instant.
+  -- Some notion of a "minimum quanta", use to check edges or min intervals.
+  
+  -- Any signal "inside" or box has a start and end time.  External signals are arbitrary.
+  -- How do we talk about random, external events?
+  
+property prop2 =
+	(prev(FGS_L.LSO.Valid and FGS_L.LSO.Leader = Get_Property(FGS_L, META_Properties::Leader_Select_ID), false)) =>
+	(FGS_L.LSO.Valid => FGS_L.LSO.Leader = Get_Property(FGS_L, META_Properties::Leader_Select_ID));
+		
+property prop1 =
+	(prev(FGS_R.LSO.Valid and FGS_R.LSO.Leader = Get_Property(FGS_R, META_Properties::Leader_Select_ID), false)) =>
+	(FGS_R.LSO.Valid => FGS_R.LSO.Leader = Get_Property(FGS_R, META_Properties::Leader_Select_ID));      	 
+
+assert prop1 and prop2 ;  
+
+-- End of Flight_Control_System_Impl Facts
+----------------------------------------------------------------
+**};
+
+  end Flight_Control_System.Flight_Control_System_Impl;
+  
+end FCS;
