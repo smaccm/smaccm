@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Resolute Help
 Bundle-SymbolicName: org.osate.resolute.help;singleton:=true
-Bundle-Version: 2.3.6.vfinal
+Bundle-Version: 2.4.0.qualifier
 Bundle-Vendor: CMU/SEI

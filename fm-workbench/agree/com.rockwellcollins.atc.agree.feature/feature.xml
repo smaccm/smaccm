@@ -2,7 +2,7 @@
 <feature
       id="com.rockwellcollins.atc.agree.feature"
       label="Agree"
-      version="2.3.6.vfinal"
+      version="2.4.0.qualifier"
       provider-name="ROCKWELLCOLLINS">
 
    <copyright>
