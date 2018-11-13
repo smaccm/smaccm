@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AADL Simulator AGREE Components
 Bundle-SymbolicName: edu.uah.rsesc.aadlsimulator.agree;singleton:=true
-Bundle-Version: 2.3.6.vfinal
+Bundle-Version: 2.4.0.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.rockwellcollins.atc.agree,
