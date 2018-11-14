@@ -1,0 +1,10 @@
+package SW2_Include
+public
+
+	-- There is nothing in this file.  It is only used to demonstrate
+	-- that AgreeCheck works correctly when included files are modified.
+	-- Modifying any part of this file (for example, by adding or removing
+	-- white space) should cause AgreeCheck to return FAIL.
+	
+
+end SW2_Include;
