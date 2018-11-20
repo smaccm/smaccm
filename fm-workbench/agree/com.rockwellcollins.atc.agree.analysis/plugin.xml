@@ -34,10 +34,11 @@
             id="com.rockwellcollins.atc.agree.analysis.commands"
             name="Commands related to AGREE">
       </category>     
-      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+      <command
+            categoryId="com.rockwellcollins.atc.agree.analysis.commands"
             description="Re-run last AGREE analysis"
             id="com.rockwellcollins.atc.agree.analysis.commands.rerunAgree"
-            name="Re-run AGREE Analysis">
+            name="Re-run AGREE Analysis"> 
      </command>
      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
             description="Terminate the current AGREE analysis"
