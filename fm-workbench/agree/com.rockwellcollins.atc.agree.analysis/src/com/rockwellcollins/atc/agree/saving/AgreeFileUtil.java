@@ -222,16 +222,19 @@ public class AgreeFileUtil {
 					}
 				}
 
-				// Set the status for this analysis based on the status of each sub-analysis
-				MultiStatus status = new MultiStatus();
-				for (AgreeLogResult analysis : logResult.getAnalyses()) {
-					status.add(Status.valueOf(analysis.getResult().toUpperCase()));
-				}
-				logResult.setResult(status.getOverallStatus().toString());
-
 				// Set timestamp and hashcode of the current JKind result
 				logResult.setTimestamp(agreeLogResult.getTimestamp());
 				logResult.setHashcode(agreeLogResult.getHashcode());
+
+				// Set the status for this analysis based on the status of each sub-analysis
+				// that has the same timestamp as this analysis
+				MultiStatus status = new MultiStatus();
+				for (AgreeLogResult analysis : logResult.getAnalyses()) {
+					if (analysis.getTimestamp() >= logResult.getTimestamp()) {
+						status.add(Status.valueOf(analysis.getResult().toUpperCase()));
+					}
+				}
+				logResult.setResult(status.getOverallStatus().toString());
 
 				break;
 			}
