@@ -26,7 +26,7 @@ Import-Package: org.apache.log4j,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.rockwellcollins.atc.resolute,
  com.rockwellcollins.atc.resolute.analysis.external,
- com.rockwellcollins.atc.resolute.formatting,
+ com.rockwellcollins.atc.resolute.formatting2,
  com.rockwellcollins.atc.resolute.linking,
  com.rockwellcollins.atc.resolute.parser.antlr,
  com.rockwellcollins.atc.resolute.parser.antlr.internal,
