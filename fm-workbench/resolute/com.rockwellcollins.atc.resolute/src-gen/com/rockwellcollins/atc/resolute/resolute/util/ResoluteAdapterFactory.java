@@ -167,6 +167,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
         return createSetTypeAdapter();
       }
       @Override
+      public Adapter caseLibraryFnType(LibraryFnType object)
+      {
+        return createLibraryFnTypeAdapter();
+      }
+      @Override
       public Adapter caseQuantArg(QuantArg object)
       {
         return createQuantArgAdapter();
@@ -255,6 +260,11 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
       public Adapter caseQuantifiedExpr(QuantifiedExpr object)
       {
         return createQuantifiedExprAdapter();
+      }
+      @Override
+      public Adapter caseLibraryFnCallExpr(LibraryFnCallExpr object)
+      {
+        return createLibraryFnCallExprAdapter();
       }
       @Override
       public Adapter caseBuiltInFnCallExpr(BuiltInFnCallExpr object)
@@ -599,6 +609,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.LibraryFnType <em>Library Fn Type</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.LibraryFnType
+   * @generated
+   */
+  public Adapter createLibraryFnTypeAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.QuantArg <em>Quant Arg</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -864,6 +889,21 @@ public class ResoluteAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createQuantifiedExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr <em>Library Fn Call Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.resolute.resolute.LibraryFnCallExpr
+   * @generated
+   */
+  public Adapter createLibraryFnCallExprAdapter()
   {
     return null;
   }

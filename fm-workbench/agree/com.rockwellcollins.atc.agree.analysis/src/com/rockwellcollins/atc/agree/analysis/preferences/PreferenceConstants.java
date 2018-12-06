@@ -43,5 +43,8 @@ public class PreferenceConstants {
 
 	public static final String PREF_CONSIST_DEPTH = "consistDepth";
 
+	public static final String PREF_PROP_LOG = "propLog";
+	public static final String PREF_PROP_LOG_FILENAME = "propLogFileName";
+
 	public static final String PREF_DEBUG = "debug";
 }

@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="dependencies/jkind-api.jar" sourcepath="dependencies/jkind-api.jar"/>
+	<classpathentry kind="lib" path="dependencies/gson-2.8.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

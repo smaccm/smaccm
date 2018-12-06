@@ -9,6 +9,7 @@
         id="com.rockwellcollins.atc.resolute.analysis.resoluteConfidenceAnalysis"
         name="Resolute Confidence Analysis"
         schema="schema/ResoluteConfidenceAnalysis.exsd"/>
+   <extension-point id="com.rockwellcollins.atc.resolute.analysis.external.resoluteExternalFunctionLibrary" name="Resolute External Function Library" schema="schema/ResoluteExternalFunctionLibrary.exsd"/>
         
     <extension point="org.eclipse.ui.views">
       <category

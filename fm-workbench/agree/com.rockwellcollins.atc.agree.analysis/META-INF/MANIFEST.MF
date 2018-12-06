@@ -24,7 +24,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  dependencies/jkind-api.jar,
  dependencies/jxl.jar,
- dependencies/antlr-runtime-4.4.jar
+ dependencies/antlr-runtime-4.4.jar,
+ dependencies/gson-2.8.5.jar
 Import-Package: 
  org.osate.aadl2.instantiation,
  org.osate.annexsupport
@@ -37,6 +38,7 @@ Export-Package: com.rockwellcollins.atc.agree.analysis,
  com.rockwellcollins.atc.agree.analysis.preferences,
  com.rockwellcollins.atc.agree.analysis.translation,
  com.rockwellcollins.atc.agree.analysis.views,
+ com.rockwellcollins.atc.agree.saving,
  jkind,
  jkind.api,
  jkind.api.results,

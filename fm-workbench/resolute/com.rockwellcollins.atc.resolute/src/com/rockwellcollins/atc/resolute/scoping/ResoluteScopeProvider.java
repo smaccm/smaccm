@@ -15,6 +15,7 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.DefaultAnnexSubclause;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.ThreadSubcomponent;
@@ -85,13 +86,19 @@ public class ResoluteScopeProvider extends PropertiesScopeProvider {
 
 	IScope scope_NamedElement(ProveStatement ctx, EReference ref) {
 		EObject container = ctx.eContainer();
+
 		assert (container instanceof ResoluteSubclause);
 		container = container.eContainer();
+
+		assert (container instanceof DefaultAnnexSubclause);
+		container = container.eContainer();
+
+		IScope scope = getScope(container, ref);
 		if (container instanceof ComponentImplementation) {
 			ComponentImplementation compImpl = (ComponentImplementation) container;
-			return Scopes.scopeFor(compImpl.getAllModes(), getScope(ctx.eContainer(), ref));
+			return Scopes.scopeFor(compImpl.getAllModes(), scope);
 		}
-		return getScope(ctx.eContainer(), ref);
+		return scope;
 	}
 
 	IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
@@ -140,6 +147,7 @@ public class ResoluteScopeProvider extends PropertiesScopeProvider {
 			result.addAll(compImpl.getAllModes());
 			if (compImpl instanceof ComponentImplementation) {
 				result.addAll(((ComponentImplementation) compImpl).getAllSubcomponents());
+				result.addAll(((ComponentImplementation) compImpl).getAllConnections());
 			}
 
 		} else {

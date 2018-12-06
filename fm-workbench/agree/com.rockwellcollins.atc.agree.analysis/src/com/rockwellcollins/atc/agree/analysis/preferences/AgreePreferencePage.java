@@ -2,11 +2,13 @@ package com.rockwellcollins.atc.agree.analysis.preferences;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -14,8 +16,10 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.analysis.Activator;
 
@@ -68,6 +72,8 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
 	private NonNegativeIntegerFieldEditor timeoutFieldEditor;
 	private NonNegativeIntegerFieldEditor pdrMaxEditor;
 	private NonNegativeIntegerFieldEditor consistDepthEditor;
+	private BooleanFieldEditor propLogFieldEditor;
+	private FileFieldEditor propLogFileFieldEditor;
 	private BooleanFieldEditor debugFieldEditor;
 	// Anitha added this for getting support field
 	private BooleanFieldEditor getSetOfSupportFieldEditor;
@@ -129,6 +135,53 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
 		consistDepthEditor = new NonNegativeIntegerFieldEditor(PreferenceConstants.PREF_CONSIST_DEPTH,
 				"Depth to check consistency up to", getFieldEditorParent());
 		addField(consistDepthEditor);
+
+		propLogFieldEditor = new BooleanFieldEditor(PreferenceConstants.PREF_PROP_LOG, "Generate property analysis log",
+				getFieldEditorParent());
+		addField(propLogFieldEditor);
+
+		propLogFileFieldEditor = new FileFieldEditor(PreferenceConstants.PREF_PROP_LOG_FILENAME,
+				"Property log filename:", true, getFieldEditorParent()) {
+
+			@Override
+			protected String changePressed() {
+
+				FileDialog dlgSaveAs = new FileDialog(getShell(), SWT.SAVE | SWT.SHEET);
+				dlgSaveAs.setText("AGREE analysis log file");
+				if (!getTextControl().getText().isEmpty()) {
+					dlgSaveAs.setFileName(getTextControl().getText());
+				} else {
+					dlgSaveAs.setFileName("agree.log");
+				}
+				dlgSaveAs.setOverwrite(false);
+				dlgSaveAs.setFilterExtensions(new String[] { "*.log", "*.*" });
+				String fileName = dlgSaveAs.open();
+				if (fileName == null) {
+					return null;
+				} else {
+					fileName = fileName.trim();
+				}
+
+				// Create the file if it doesn't exist
+				try {
+					File file = new File(fileName);
+					file.createNewFile();
+				} catch (IOException e) {
+					Dialog.showError("AGREE analysis log file - Error", "A problem occurred while creating the file.");
+					return null;
+				}
+
+				return fileName;
+			}
+
+			@Override
+			protected boolean checkState() {
+				// Don't want to enforce proper path/filenaming
+				clearErrorMessage();
+				return true;
+			}
+		};
+		addField(propLogFileFieldEditor);
 
 		debugFieldEditor = new BooleanButtonFieldEditor(PreferenceConstants.PREF_DEBUG, "Debug mode (record log files)",
 				"Open temporary folder", this::openTemporaryFolder, getFieldEditorParent());
@@ -198,6 +251,7 @@ public class AgreePreferencePage extends FieldEditorPreferencePage implements IW
 		pdrMaxEditor.setEnabled(isJKind, getFieldEditorParent());
 		generalizeFieldEditor.setEnabled(isJKind, getFieldEditorParent());
 		depthFieldEditor.setEnabled(isJKind, getFieldEditorParent());
+		propLogFileFieldEditor.setEnabled(propLogFieldEditor.getBooleanValue(), getFieldEditorParent());
 	}
 
 	@Override
