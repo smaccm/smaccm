@@ -140,8 +140,8 @@ Workflow {
 //			}
 			
 			// formatter API 
-			fragment = formatting.FormatterFragment {}
-			//fragment = formatting2.Formatter2Fragment auto-inject {}
+//			fragment = formatting.FormatterFragment {}
+			fragment = formatting2.Formatter2Fragment auto-inject {}
 
 			// labeling API 
 			fragment = labeling.LabelProviderFragment {}

@@ -2,7 +2,7 @@
 <feature
       id="edu.uah.rsesc.aadlsimulator.feature"
       label="AADL Simulator"
-      version="2.3.6.qualifier"
+      version="2.4.0.qualifier"
       provider-name="The University of Alabama in Huntsville">
 
    <copyright>
