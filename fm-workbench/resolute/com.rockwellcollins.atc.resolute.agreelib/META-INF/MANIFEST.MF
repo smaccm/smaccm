@@ -6,19 +6,15 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.rockwellcollins.atc.resolute.agreelib.Activator
 Bundle-Vendor: ROCKWELLCOLLINS
 Require-Bundle: org.eclipse.ui,
+ org.eclipse.emf;bundle-version="2.6.0",
  org.eclipse.emf.common,
-  org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.osate.aadl2,
+ org.osate.annexsupport;bundle-version="1.0.0",
+ com.rockwellcollins.atc.agree,
+ com.rockwellcollins.atc.agree.analysis,
+ com.rockwellcollins.atc.resolute,
+ com.rockwellcollins.atc.resolute.analysis
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.rockwellcollins.atc.resolute.agreelib
 Bundle-ActivationPolicy: lazy
-Import-Package: com.rockwellcollins.atc.agree.agree,
- com.rockwellcollins.atc.agree.agree.impl,
- com.rockwellcollins.atc.resolute.analysis.execution,
- com.rockwellcollins.atc.resolute.analysis.external,
- com.rockwellcollins.atc.resolute.analysis.values,
- com.rockwellcollins.atc.resolute.resolute,
- com.rockwellcollins.atc.resolute.validation,
- org.eclipse.emf.ecore,
- org.osate.aadl2,
- org.osate.aadl2.instance,
- org.osate.annexsupport
