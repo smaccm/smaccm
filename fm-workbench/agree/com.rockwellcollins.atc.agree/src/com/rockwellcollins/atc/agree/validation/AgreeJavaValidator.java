@@ -734,12 +734,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				Iterator<NamedSpecStatement> ii = namedSpecs.get(id).iterator();
 				while (ii.hasNext()) {
 					String pkgName = AadlUtil.getContainingPackage(ii.next()).getName();
-					// If the specs are from the same package, the error will be generated from the
-					// NamedElement check.
-					if (!pkgName.contentEquals(AadlUtil.getContainingPackage(spec).getName())) {
-						error("Duplicate AGREE property ID in package " + pkgName, spec,
-								Aadl2Package.eINSTANCE.getNamedElement_Name());
-					}
+//					// If the specs are from the same package, the error will be generated from the
+//					// NamedElement check.
+//					if (!pkgName.contentEquals(AadlUtil.getContainingPackage(spec).getName())) {
+					error("Duplicate AGREE property ID in package " + pkgName, spec,
+							Aadl2Package.eINSTANCE.getNamedElement_Name());
+//					}
 				}
 				namedSpecs.removeAll(id);
 			}

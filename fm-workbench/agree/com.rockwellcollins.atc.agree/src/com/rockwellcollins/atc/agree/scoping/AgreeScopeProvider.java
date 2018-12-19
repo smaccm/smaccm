@@ -183,6 +183,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 			if (container instanceof ThreadSubcomponent) {
 				container = ((ThreadSubcomponent) container).getComponentType();
+				result.addAll(getAadlElements(container));
 			} else if (container instanceof Subcomponent) {
 				container = ((Subcomponent) container).getComponentImplementation();
 				if (container == null) { // no implementation is provided
