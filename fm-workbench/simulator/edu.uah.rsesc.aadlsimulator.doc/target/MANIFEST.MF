@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: edu.uah.rsesc.aadlsimulator.doc;singleton:=true
+Bundle-Name: AADL Simulator Documentation
+Bundle-Version: 2.4.0.v20181204-2157
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime
+Bundle-ManifestVersion: 2
+Bundle-ActivationPolicy: lazy
+

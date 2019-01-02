@@ -19,4 +19,14 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.rockwellcollins.atc.resolute.agreecheck
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.xtext
+Import-Package: com.rockwellcollins.atc.agree.agree,
+ com.rockwellcollins.atc.agree.agree.impl,
+ com.rockwellcollins.atc.agree.analysis,
+ com.rockwellcollins.atc.agree.analysis.saving,
+ com.rockwellcollins.atc.resolute.analysis.external,
+ com.rockwellcollins.atc.resolute.validation,
+ jkind.api.results,
+ org.eclipse.core.resources,
+ org.eclipse.xtext,
+ org.osate.aadl2,
+ org.osate.aadl2.instance

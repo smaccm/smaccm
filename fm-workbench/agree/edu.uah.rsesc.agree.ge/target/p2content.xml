@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<units size='2'>
+  <unit id='edu.uah.rsesc.agree.ge' version='2.1.3.v20180424-1420'>
+    <update id='edu.uah.rsesc.agree.ge' range='[0.0.0,2.1.3.v20180424-1420)' severity='0'/>
+    <properties size='4'>
+      <property name='org.eclipse.equinox.p2.name' value='AGREE extensions to the OSATE Graphical Editor'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='edu.uah.rsesc.agree.ge'/>
+      <property name='maven-version' value='2.1.3-SNAPSHOT'/>
+    </properties>
+    <provides size='5'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.agree.ge' version='2.1.3.v20180424-1420'/>
+      <provided namespace='osgi.bundle' name='edu.uah.rsesc.agree.ge' version='2.1.3.v20180424-1420'/>
+      <provided namespace='java.package' name='edu.uah.rsesc.agree.ge' version='0.0.0'/>
+      <provided namespace='java.package' name='edu.uah.rsesc.agree.ge.businessObjectHandlers' version='0.0.0'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+    </provides>
+    <requires size='5'>
+      <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='com.rockwellcollins.atc.agree' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.osate.aadl2' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.osate.ge' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.osate.annexsupport' range='0.0.0'/>
+    </requires>
+    <artifacts size='1'>
+      <artifact classifier='osgi.bundle' id='edu.uah.rsesc.agree.ge' version='2.1.3.v20180424-1420'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='manifest'>
+          Bundle-SymbolicName: edu.uah.rsesc.agree.ge;singleton:=true&#xA;Bundle-Version: 2.1.3.v20180424-1420&#xA;
+        </instruction>
+      </instructions>
+    </touchpointData>
+  </unit>
+  <unit id='edu.uah.rsesc.agree.ge.source' version='2.1.3.v20180424-1420' singleton='false'>
+    <update id='edu.uah.rsesc.agree.ge.source' range='[0.0.0,2.1.3.v20180424-1420)' severity='0'/>
+    <properties size='9'>
+      <property name='df_LT.bundleVendor' value='unknown'/>
+      <property name='df_LT.bundleName' value='AGREE extensions to the OSATE Graphical Editor Source'/>
+      <property name='org.eclipse.equinox.p2.name' value='%bundleName'/>
+      <property name='org.eclipse.equinox.p2.provider' value='%bundleVendor'/>
+      <property name='org.eclipse.equinox.p2.bundle.localization' value='OSGI-INF/l10n/bundle-src'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='edu.uah.rsesc.agree.ge'/>
+      <property name='maven-version' value='2.1.3-SNAPSHOT'/>
+      <property name='maven-classifier' value='sources'/>
+    </properties>
+    <provides size='4'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.agree.ge.source' version='2.1.3.v20180424-1420'/>
+      <provided namespace='osgi.bundle' name='edu.uah.rsesc.agree.ge.source' version='2.1.3.v20180424-1420'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='source' version='1.0.0'/>
+      <provided namespace='org.eclipse.equinox.p2.localization' name='df_LT' version='1.0.0'/>
+    </provides>
+    <artifacts size='1'>
+      <artifact classifier='osgi.bundle' id='edu.uah.rsesc.agree.ge.source' version='2.1.3.v20180424-1420'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='manifest'>
+          Bundle-SymbolicName: edu.uah.rsesc.agree.ge.source&#xA;Bundle-Version: 2.1.3.v20180424-1420&#xA;
+        </instruction>
+      </instructions>
+    </touchpointData>
+  </unit>
+</units>

@@ -8,3 +8,5 @@ TAGS
 .aadlbin-gen
 *~
 .DS_Store
+*.class
+
