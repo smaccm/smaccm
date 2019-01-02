@@ -18,7 +18,7 @@ Bundle-ActivationPolicy: lazy
 Import-Package: com.rockwellcollins.atc.agree.agree,
  com.rockwellcollins.atc.agree.agree.impl,
  com.rockwellcollins.atc.agree.analysis,
- com.rockwellcollins.atc.agree.saving,
+ com.rockwellcollins.atc.agree.analysis.saving,
  com.rockwellcollins.atc.resolute.analysis.external,
  com.rockwellcollins.atc.resolute.validation,
  jkind.api.results,

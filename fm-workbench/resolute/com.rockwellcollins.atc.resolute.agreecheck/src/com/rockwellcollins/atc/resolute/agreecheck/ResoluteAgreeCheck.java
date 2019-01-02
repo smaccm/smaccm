@@ -6,8 +6,8 @@ import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 
-import com.rockwellcollins.atc.agree.saving.AgreeFileUtil;
-import com.rockwellcollins.atc.agree.saving.AgreeLogResult;
+import com.rockwellcollins.atc.agree.analysis.saving.AgreeFileUtil;
+import com.rockwellcollins.atc.agree.analysis.saving.AgreeLogResult;
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteExternalAnalysis;
 import com.rockwellcollins.atc.resolute.analysis.execution.ResoluteFailException;

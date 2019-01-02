@@ -60,11 +60,11 @@ import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.RenamingVisitor;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
+import com.rockwellcollins.atc.agree.analysis.saving.AgreeFileUtil;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
-import com.rockwellcollins.atc.agree.saving.AgreeFileUtil;
 
 import jkind.JKindException;
 import jkind.api.JKindApi;
