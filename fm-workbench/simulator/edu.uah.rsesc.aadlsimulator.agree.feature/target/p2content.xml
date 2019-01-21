@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<units size='4'>
+  <unit id='edu.uah.rsesc.aadlsimulator.agree.feature.feature.group' version='2.4.0.v20181204-2157' singleton='false'>
+    <update id='edu.uah.rsesc.aadlsimulator.agree.feature.feature.group' range='[0.0.0,2.4.0.v20181204-2157)' severity='0'/>
+    <properties size='5'>
+      <property name='org.eclipse.equinox.p2.name' value='AADL Simulator - AGREE Simulation Engine'/>
+      <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='edu.uah.rsesc.aadlsimulator.agree.feature'/>
+      <property name='maven-version' value='2.4.0-SNAPSHOT'/>
+    </properties>
+    <provides size='1'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.feature.feature.group' version='2.4.0.v20181204-2157'/>
+    </provides>
+    <requires size='14'>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.ui' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.core.runtime' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='com.rockwellcollins.atc.agree' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.osate.aadl2' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='com.rockwellcollins.atc.agree.analysis' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.ui' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.swt' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.jface' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.equinox.registry' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.osgi' range='0.0.0'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree' range='[2.4.0.v20181204-2157,2.4.0.v20181204-2157]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.ui' range='[2.4.0.v20181204-2157,2.4.0.v20181204-2157]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.feature.feature.jar' range='[2.4.0.v20181204-2157,2.4.0.v20181204-2157]'>
+        <filter>
+          (org.eclipse.update.install.features=true)
+        </filter>
+      </required>
+    </requires>
+    <touchpoint id='null' version='0.0.0'/>
+    <licenses size='1'>
+      <license uri='' url=''>
+        Copyright (c) 2018, Rockwell Collins.&#xA;&#xA;Developed with the sponsorship of Defense Advanced Research Projects Agency (DARPA).&#xA;&#xA;Permission is hereby granted, free of charge, to any person obtaining a copy of this data, including any software or models in source or binary form, as well as any drawings, specifications, &#xA;and documentation (collectively &quot;the Data&quot;), to deal in the Data without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, &#xA;and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, subject to the following conditions:&#xA;&#xA;The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Data.&#xA;&#xA;THE DATA IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. &#xA;IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, &#xA;ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
+      </license>
+    </licenses>
+    <copyright>
+      Copyright (c) 2018, Rockwell Collins.
+    </copyright>
+  </unit>
+  <unit id='edu.uah.rsesc.aadlsimulator.agree.feature.feature.jar' version='2.4.0.v20181204-2157'>
+    <properties size='4'>
+      <property name='org.eclipse.equinox.p2.name' value='AADL Simulator - AGREE Simulation Engine'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='edu.uah.rsesc.aadlsimulator.agree.feature'/>
+      <property name='maven-version' value='2.4.0-SNAPSHOT'/>
+    </properties>
+    <provides size='3'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.feature.feature.jar' version='2.4.0.v20181204-2157'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+      <provided namespace='org.eclipse.update.feature' name='edu.uah.rsesc.aadlsimulator.agree.feature' version='2.4.0.v20181204-2157'/>
+    </provides>
+    <filter>
+      (org.eclipse.update.install.features=true)
+    </filter>
+    <artifacts size='1'>
+      <artifact classifier='org.eclipse.update.feature' id='edu.uah.rsesc.aadlsimulator.agree.feature' version='2.4.0.v20181204-2157'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='zipped'>
+          true
+        </instruction>
+      </instructions>
+    </touchpointData>
+    <licenses size='1'>
+      <license uri='' url=''>
+        Copyright (c) 2018, Rockwell Collins.&#xA;&#xA;Developed with the sponsorship of Defense Advanced Research Projects Agency (DARPA).&#xA;&#xA;Permission is hereby granted, free of charge, to any person obtaining a copy of this data, including any software or models in source or binary form, as well as any drawings, specifications, &#xA;and documentation (collectively &quot;the Data&quot;), to deal in the Data without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, &#xA;and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, subject to the following conditions:&#xA;&#xA;The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Data.&#xA;&#xA;THE DATA IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. &#xA;IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, &#xA;ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
+      </license>
+    </licenses>
+    <copyright>
+      Copyright (c) 2018, Rockwell Collins.
+    </copyright>
+  </unit>
+  <unit id='edu.uah.rsesc.aadlsimulator.agree.feature.source.feature.group' version='2.4.0.v20181204-2157' singleton='false'>
+    <update id='edu.uah.rsesc.aadlsimulator.agree.feature.source.feature.group' range='[0.0.0,2.4.0.v20181204-2157)' severity='0'/>
+    <properties size='6'>
+      <property name='org.eclipse.equinox.p2.name' value='AADL Simulator - AGREE Simulation Engine Developer Resources'/>
+      <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='edu.uah.rsesc.aadlsimulator.agree.feature'/>
+      <property name='maven-version' value='2.4.0-SNAPSHOT'/>
+      <property name='maven-classifier' value='sources-feature'/>
+    </properties>
+    <provides size='1'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.feature.source.feature.group' version='2.4.0.v20181204-2157'/>
+    </provides>
+    <requires size='4'>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.feature.feature.group' range='[2.4.0.v20181204-2157,2.4.0.v20181204-2157]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.source' range='[2.4.0.v20181204-2157,2.4.0.v20181204-2157]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.ui.source' range='[2.4.0.v20181204-2157,2.4.0.v20181204-2157]'/>
+      <required namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.feature.source.feature.jar' range='[2.4.0.v20181204-2157,2.4.0.v20181204-2157]'>
+        <filter>
+          (org.eclipse.update.install.features=true)
+        </filter>
+      </required>
+    </requires>
+    <touchpoint id='null' version='0.0.0'/>
+    <licenses size='1'>
+      <license uri='' url=''>
+        Copyright (c) 2018, Rockwell Collins.&#xA;&#xA;Developed with the sponsorship of Defense Advanced Research Projects Agency (DARPA).&#xA;&#xA;Permission is hereby granted, free of charge, to any person obtaining a copy of this data, including any software or models in source or binary form, as well as any drawings, specifications, &#xA;and documentation (collectively &amp;quot;the Data&amp;quot;), to deal in the Data without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, &#xA;and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, subject to the following conditions:&#xA;&#xA;The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Data.&#xA;&#xA;THE DATA IS PROVIDED &amp;quot;AS IS&amp;quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. &#xA;IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, &#xA;ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
+      </license>
+    </licenses>
+    <copyright>
+      Copyright (c) 2018, Rockwell Collins.
+    </copyright>
+  </unit>
+  <unit id='edu.uah.rsesc.aadlsimulator.agree.feature.source.feature.jar' version='2.4.0.v20181204-2157'>
+    <properties size='5'>
+      <property name='org.eclipse.equinox.p2.name' value='AADL Simulator - AGREE Simulation Engine Developer Resources'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='edu.uah.rsesc.aadlsimulator.agree.feature'/>
+      <property name='maven-version' value='2.4.0-SNAPSHOT'/>
+      <property name='maven-classifier' value='sources-feature'/>
+    </properties>
+    <provides size='3'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='edu.uah.rsesc.aadlsimulator.agree.feature.source.feature.jar' version='2.4.0.v20181204-2157'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+      <provided namespace='org.eclipse.update.feature' name='edu.uah.rsesc.aadlsimulator.agree.feature.source' version='2.4.0.v20181204-2157'/>
+    </provides>
+    <filter>
+      (org.eclipse.update.install.features=true)
+    </filter>
+    <artifacts size='1'>
+      <artifact classifier='org.eclipse.update.feature' id='edu.uah.rsesc.aadlsimulator.agree.feature.source' version='2.4.0.v20181204-2157'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='zipped'>
+          true
+        </instruction>
+      </instructions>
+    </touchpointData>
+    <licenses size='1'>
+      <license uri='' url=''>
+        Copyright (c) 2018, Rockwell Collins.&#xA;&#xA;Developed with the sponsorship of Defense Advanced Research Projects Agency (DARPA).&#xA;&#xA;Permission is hereby granted, free of charge, to any person obtaining a copy of this data, including any software or models in source or binary form, as well as any drawings, specifications, &#xA;and documentation (collectively &amp;quot;the Data&amp;quot;), to deal in the Data without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, &#xA;and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, subject to the following conditions:&#xA;&#xA;The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Data.&#xA;&#xA;THE DATA IS PROVIDED &amp;quot;AS IS&amp;quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. &#xA;IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, &#xA;ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
+      </license>
+    </licenses>
+    <copyright>
+      Copyright (c) 2018, Rockwell Collins.
+    </copyright>
+  </unit>
+</units>

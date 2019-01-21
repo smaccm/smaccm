@@ -15,11 +15,8 @@ import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
-import org.osate.aadl2.DataPort;
-import org.osate.aadl2.DataSubcomponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.EnumerationLiteral;
-import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.ListValue;
@@ -204,7 +201,6 @@ public class AgreeTypeSystem {
 						if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
 							return mkArrayType(normalizeType(mkCustomType(ad.baseType)), ad.dimension);
 						} else {
-							System.out.println("trySimp3 ne: " + ne);
 							return t;
 						}
 					} else {
@@ -613,6 +609,7 @@ public class AgreeTypeSystem {
 
 	public static Type typeFromID(NamedElement ne) {
 
+
 		if (ne instanceof PropertyStatement) {
 			return infer(((PropertyStatement) ne).getExpr());
 
@@ -680,14 +677,6 @@ public class AgreeTypeSystem {
 		} else if (ne instanceof Arg) {
 			Type t = ((Arg) ne).getType();
 			return t;
-
-		} else if (ne instanceof DataPort) {
-			DataSubcomponentType dt = ((DataPort) ne).getDataFeatureClassifier();
-			return mkCustomType(dt);
-
-		} else if (ne instanceof EventDataPort) {
-			DataSubcomponentType dt = ((EventDataPort) ne).getDataFeatureClassifier();
-			return mkCustomType(dt);
 
 		} else if (ne instanceof Subcomponent) {
 			Subcomponent sub = (Subcomponent) ne;

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: com.rockwellcollins.atc.agree.doc;singleton:=true
+Bundle-Name: AGREE Documentation
+Bundle-Version: 2.4.0.v20190103-1414
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime
+Bundle-ManifestVersion: 2
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: ROCKWELLCOLLINS
+
