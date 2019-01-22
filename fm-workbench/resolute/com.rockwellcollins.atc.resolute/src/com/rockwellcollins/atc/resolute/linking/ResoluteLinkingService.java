@@ -53,7 +53,7 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 			}
             return getIndexedObject(context, reference, name);
         }
-        
+
         if(context instanceof QuantArg) {
             return getIndexedObject(context, reference, name);
         }
@@ -63,10 +63,10 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
             if (e != null) {
                 return e;
             }
-            
+
 			Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
 					reference.getEReferenceType());
-            
+
             URI contextUri = context.eResource().getURI();
             String contextProject = contextUri.segment(1);
             for (IEObjectDescription eod : allObjectTypes) {
@@ -81,7 +81,7 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
                     }
                 }
             }
-            
+
             e = getFromScope(context, reference, name);
             if (e != null) {
                 return e;
@@ -129,5 +129,5 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
 
         return null;
     }
-    
+
 }

@@ -2,20 +2,20 @@
 Copyright (c) 2016, Rockwell Collins.
 Developed with the sponsorship of Defense Advanced Research Projects Agency (DARPA).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this data, 
-including any software or models in source or binary form, as well as any drawings, specifications, 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this data,
+including any software or models in source or binary form, as well as any drawings, specifications,
 and documentation (collectively "the Data"), to deal in the Data without restriction, including
-without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so, 
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Data, and to permit persons to whom the Data is furnished to do so,
 subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or 
+The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Data.
 
-THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
-LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+THE DATA IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS, SPONSORS, DEVELOPERS, CONTRIBUTORS, OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA.
 */
 
@@ -29,13 +29,10 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.ComponentImplementation;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
@@ -45,7 +42,6 @@ import com.rockwellcollins.atc.tcg.readers.TcgXmlReader;
 import com.rockwellcollins.atc.tcg.suite.TestSuite;
 import com.rockwellcollins.atc.tcg.util.TcgUtils;
 import com.rockwellcollins.atc.tcg.views.TcgLinkerFactory;
-import com.rockwellcollins.atc.tcg.views.TestSuiteLinker;
 // import com.rockwellcollins.atc.tcg.views.TestSuiteLinkerFactory;
 import com.rockwellcollins.atc.tcg.views.TestSuiteView;
 
@@ -59,7 +55,7 @@ public class OpenHandler extends NoElementHandler {
 
 	@Override
 	protected final IStatus runJob(IProgressMonitor monitor) {
-		handlerService = (IHandlerService) getWindow().getService(IHandlerService.class);
+		handlerService = getWindow().getService(IHandlerService.class);
 
 		try {
 			return doAnalysis(monitor);
@@ -68,7 +64,7 @@ public class OpenHandler extends NoElementHandler {
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
 		}
 	}
-	
+
 	protected JKindResult extractJKindResult(AnalysisResult result) {
 		if (result instanceof JKindResult) {
 			return (JKindResult)result;
@@ -80,17 +76,17 @@ public class OpenHandler extends NoElementHandler {
 		}
 		throw new TcgException("Unexpected jkind 'result' type when opening test suite");
 	}
-	
+
 	protected IStatus doAnalysis(final IProgressMonitor monitor) {
 		try {
 			System.out.println("Loading test suite...");
 			TestSuite testSuite = loadTests();
 			if (testSuite != null) {
 				ComponentImplementation ci = TcgUtils.getComponentImplFromString(testSuite.getSystemImplUnderTest());
-				TcgLinkerFactory linkerFactory = new TcgLinkerFactory(ci, false, false); 
-				
-				showSuiteView(testSuite, 
-						linkerFactory.getLinker(), 
+				TcgLinkerFactory linkerFactory = new TcgLinkerFactory(ci, false, false);
+
+				showSuiteView(testSuite,
+						linkerFactory.getLinker(),
 						extractJKindResult(linkerFactory.getAnalysisResult()));
 			}
 		} catch (Exception e) {
@@ -112,7 +108,7 @@ public class OpenHandler extends NoElementHandler {
 			if (location != null) {
 				InputStream targetStream = new FileInputStream(location);
 				TestSuite ts = new TestSuite();
-				TcgXmlReader reader = new TcgXmlReader(targetStream); 
+				TcgXmlReader reader = new TcgXmlReader(targetStream);
 				reader.readSuite(ts);
 				ts.setState(TestSuite.State.LOADED);
 				return ts;
@@ -123,8 +119,8 @@ public class OpenHandler extends NoElementHandler {
 			throw new TcgException("Error loading test file", e);
 		}
 	}
-	
-	
+
+
 
 	private void syncExec(Runnable runnable) {
 		getWindow().getShell().getDisplay().syncExec(runnable);
@@ -141,7 +137,7 @@ public class OpenHandler extends NoElementHandler {
 			}
 		});
 	}
-	
+
 	@Override
 	protected String getJobName() {
 		return "TCG - Open Test Suite";

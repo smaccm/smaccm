@@ -87,16 +87,22 @@ import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 
 public class AgreeTypeSystem {
 
+	public static String classifierToString(Classifier c) {
+		EObject o = c.eContainer();
+		while (!(o instanceof AadlPackage)) {
+			o = o.eContainer();
+		}
+		return ((AadlPackage) o).getName() + "::" + c.getName();
+	}
+
 	public static String typeToString(Type typ) {
 
 		if (typ instanceof PrimType) {
 			return ((PrimType) typ).getName();
 		} else if (typ instanceof CustomType) {
-			EObject o = ((CustomType) typ).getNamedElm().eContainer();
-			while (!(o instanceof AadlPackage)) {
-				o = o.eContainer();
-			}
-			return ((AadlPackage) o).getName() + "::" + ((CustomType) typ).getNamedElm().getName();
+
+			Classifier c = (Classifier) ((CustomType) typ).getNamedElm();
+			return classifierToString(c);
 
 		} else if (typ instanceof ArrayType) {
 			String stemString = typeToString(((ArrayType) typ).getStem());
@@ -164,78 +170,51 @@ public class AgreeTypeSystem {
 		}
 	}
 
-	public static Type normalizeType(Type t) {
+	public static String normalizeClassifier(Classifier c) {
+		String typeString = classifierToString(c);
+		if (typeString.equals("Base_Types::Integer")) {
+			return "int";
+		} else if (typeString.equals("Base_Types::Float")) {
+			return "real";
+		} else if (typeString.contentEquals("Base_Types::Boolean")) {
+			return "bool";
+		} else {
+			if (c.getExtended() != null) {
+				Classifier ct = baseAadlClassifier(c);
+				return normalizeType(mkCustomType(ct));
+			} else if (c instanceof DataType) {
+				ArrayDef ad = arrayDefFromAadl((DataType) c);
+				if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
+					return normalizeClassifier((Classifier) ad.baseType) + "[" + ad.dimension + "]";
+				} else {
+					return c.getName();
+				}
+			} else {
+				return c.getName();
+			}
+		}
+	}
+	public static String normalizeType(Type t) {
 
 		if (t instanceof PrimType) {
-			String name = ((PrimType) t).getName();
-			if (name.equals("int")) {
-				return intType;
-			} else if (name.equals("real")) {
-				return realType;
-			} else if (name.equals("bool")) {
-				return boolType;
-			} else {
-				return t;
-			}
+			return ((PrimType) t).getName();
+
 		} else if (t instanceof ArrayType) {
 			String size = ((ArrayType) t).getSize();
 			Type stem = ((ArrayType) t).getStem();
-			return mkArrayType(normalizeType(stem), Integer.parseInt(size));
+			return normalizeType(stem) + "[" + size + "]";
 		} else if (t instanceof CustomType) {
 			NamedElement ne = ((CustomType) t).getNamedElm();
 			if (ne instanceof Classifier) {
-
-				String typeString = typeToString(t);
-				if (typeString.equals("Base_Types::Integer")) {
-					return intType;
-				} else if (typeString.equals("Base_Types::Float")) {
-					return realType;
-				} else if (typeString.contentEquals("Base_Types::Boolean")) {
-					return boolType;
-				} else {
-					if (((Classifier) ne).getExtended() != null) {
-						Classifier ct = baseAadlClassifier((Classifier) ne);
-						return normalizeType(mkCustomType(ct));
-					} else if (ne instanceof DataType) {
-						ArrayDef ad = arrayDefFromAadl((DataType) ne);
-						if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
-							return mkArrayType(normalizeType(mkCustomType(ad.baseType)), ad.dimension);
-						} else {
-							return t;
-						}
-					} else {
-						return t;
-					}
-				}
-			} else {
-				return t;
+				return normalizeClassifier((Classifier) ne);
 			}
-
-		} else {
-			return t;
 		}
+
+		return "";
 	}
 
 	public static boolean typesEqual(Type t1, Type t2) {
-
-		if (t1 instanceof ArrayType && t2 instanceof ArrayType) {
-			String size1 = ((ArrayType) t1).getSize();
-			String size2 = ((ArrayType) t2).getSize();
-
-			if (!size1.contentEquals(size2)) {
-				return false;
-			} else {
-				Type stem1 = ((ArrayType) t1).getStem();
-				Type stem2 = ((ArrayType) t2).getStem();
-
-				return typesEqual(stem1, stem2);
-			}
-		} else {
-			Type t10 = normalizeType(t1);
-			Type t20 = normalizeType(t2);
-			return typeToString(t10).equals(typeToString(t20));
-
-		}
+		return normalizeType(t1).contentEquals(normalizeType(t2));
 	}
 
 	public final static PrimType boolType = mkBoolType();
