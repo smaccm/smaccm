@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?artifactRepository version='1.1.0'?>
+<artifacts size='2'>
+  <artifact classifier='osgi.bundle' id='com.rockwellcollins.atc.agree.doc' version='2.3.7.vfinal'>
+    <properties size='5'>
+      <property name='artifact.size' value='1826597'/>
+      <property name='download.size' value='1826597'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='com.rockwellcollins.atc.agree.doc'/>
+      <property name='maven-version' value='2.3.7.vfinal'/>
+    </properties>
+  </artifact>
+  <artifact classifier='osgi.bundle' id='com.rockwellcollins.atc.agree.doc.source' version='2.3.7.vfinal'>
+    <properties size='6'>
+      <property name='artifact.size' value='3574800'/>
+      <property name='download.size' value='3574800'/>
+      <property name='maven-groupId' value='org.osate'/>
+      <property name='maven-artifactId' value='com.rockwellcollins.atc.agree.doc'/>
+      <property name='maven-version' value='2.3.7.vfinal'/>
+      <property name='maven-classifier' value='sources'/>
+    </properties>
+  </artifact>
+</artifacts>

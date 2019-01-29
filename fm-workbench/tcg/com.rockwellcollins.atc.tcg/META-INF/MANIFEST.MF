@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test Case Generator
 Bundle-SymbolicName: com.rockwellcollins.atc.tcg;singleton:=true
-Bundle-Version: 2.3.7.vfinal
+Bundle-Version: 2.4.0.qualifier
 Bundle-Activator: com.rockwellcollins.atc.tcg.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
