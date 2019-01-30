@@ -1,0 +1,24 @@
+package typequestion
+public
+	with Base_Types;
+	
+	annex agree {**
+
+		fun good_longitude(long : Base_Types::Integer[3]) : bool =
+		    forall i in long, 
+				i >= -180
+			and i <= 180;										
+	**};
+
+	thread LongitudeDriver
+		features
+			recv_in: in event data port Base_Types::Integer[3];
+			recv_out: out event data port Base_Types::Integer[3];
+		annex agree {**
+		    eq f : bool = good_longitude(recv_in);
+			assume "Longitude Driver: Valid Longitude" : good_longitude(recv_in);
+			guarantee "Longitude Driver: Updated Longitude" : foreach i in recv_out, prev(i + 10, 0);
+		**};
+	end LongitudeDriver;
+
+end typequestion;

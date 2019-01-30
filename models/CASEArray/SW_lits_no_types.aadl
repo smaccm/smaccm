@@ -3,6 +3,7 @@ public
 	with Data_Model;
 	with Base_Types;
 	with SW_Properties;
+	with SW_Data_Types;
 	with CASE;
 	
 	-- This is the structure to hold the lat/long/alt values of a coordinate
@@ -125,6 +126,9 @@ public
 			send_status_in: in event data port Coordinate.Impl;
 			recv_map_out: out event data port Command.Impl;
 		annex agree {**
+		    -- Verify ranges on "Type Predicates" that are checked as a guarantee
+            eq f : int[-90,90];
+            
 			assume "Authenticated command from the Ground Station" : recv_map_in.HMAC = True;
 			guarantee "Authenticated command from the Ground Station" : recv_map_out.HMAC = True;
 		**};
@@ -168,8 +172,8 @@ public
 			waypoint: out event data port MissionWindow.Impl;
 			position_status: in event data port Coordinate.Impl;
 		annex agree {**
---			assume "The Waypoint Manager shall receive a well-formed mission" : SW_lits_no_types.good_mission(flight_plan);
---			guarantee "The Waypoint Manager shall output a well-formed mission window." : SW_lits_no_types.good_mission_window(waypoint);
+			assume "The Waypoint Manager shall receive a well-formed mission" : SW_lits_no_types.good_mission(flight_plan);
+			guarantee "The Waypoint Manager shall output a well-formed mission window." : SW_lits_no_types.good_mission_window(waypoint);
 		**};
 	end WaypointManager;
 
@@ -180,7 +184,7 @@ public
 			position_status_out: out event data port Coordinate.Impl;
 			waypoint_in: in event data port MissionWindow.Impl;
 		annex agree {**
---			assume "Well-formed mission window" : SW_lits_no_types.good_mission_window(waypoint_in);
+			assume "Well-formed mission window" : SW_lits_no_types.good_mission_window(waypoint_in);
 			guarantee "A CRC shall be appended to the message to determine message correctness" : waypoint_out.crc = True;
 		**};
 	end UARTDriver;

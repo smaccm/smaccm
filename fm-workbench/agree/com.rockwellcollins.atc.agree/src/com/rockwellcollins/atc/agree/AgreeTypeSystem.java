@@ -11,6 +11,8 @@ import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.ArrayDimension;
+import org.osate.aadl2.ArraySize;
+import org.osate.aadl2.ArraySizeProperty;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierValue;
 import org.osate.aadl2.ComponentImplementation;
@@ -148,17 +150,26 @@ public class AgreeTypeSystem {
 
 		if (cc instanceof ComponentType && ((ComponentType) cc).getExtended() != null) {
 			return mkCustomType(((Classifier) cc).getExtended());
-		} else if (cc instanceof AadlBoolean) {
-			return boolType;
-		} else if (cc instanceof AadlInteger) {
-			return intType;
-		} else if (cc instanceof AadlReal) {
-			return realType;
-		} else {
-			CustomType ct = AgreeFactory.eINSTANCE.createCustomType();
-			ct.setNamedElm(cc);
-			return ct;
 		}
+
+		// TODO: verify that all the base_types are covered
+		String name = cc.getName();
+		if (cc instanceof AadlBoolean || name.contains("Boolean")) {
+			return boolType;
+		}
+
+		if (cc instanceof AadlInteger || name.contains("Integer") || name.contains("Natural")
+				|| name.contains("Unsigned")) {
+			return intType;
+		}
+
+		if (cc instanceof AadlReal || name.contains("Float")) {
+			return realType;
+		}
+
+		CustomType ct = AgreeFactory.eINSTANCE.createCustomType();
+		ct.setNamedElm(cc);
+		return ct;
 	}
 
 	private static Classifier baseAadlClassifier(Classifier dt) {
@@ -665,8 +676,7 @@ public class AgreeTypeSystem {
 			if (dims.size() == 0) {
 				return mkCustomType(cl);
 			} else if (dims.size() == 1) {
-				ArrayDimension dim = dims.get(0);
-				long size = dim.getSize().getSize();
+				long size = getArrayDimension(dims.get(0));
 				return mkArrayType(mkCustomType(cl), java.lang.Math.toIntExact(size));
 
 			}
@@ -677,8 +687,7 @@ public class AgreeTypeSystem {
 			if (dims.size() == 0) {
 				return mkCustomType(cl);
 			} else if (dims.size() == 1) {
-				ArrayDimension dim = dims.get(0);
-				long size = dim.getSize().getSize();
+				long size = getArrayDimension(dims.get(0));
 				return mkArrayType(mkCustomType(cl), java.lang.Math.toIntExact(size));
 
 			}
@@ -690,9 +699,27 @@ public class AgreeTypeSystem {
 			PropertyExpression pe = ((PropertyConstant) ne).getConstantValue();
 			return typeFromPropExp(pe);
 
+		} else if (ne instanceof ComponentImplementation) {
+			return mkCustomType(ne);
+		} else if (ne instanceof ComponentType) {
+			return mkCustomType(ne);
 		}
 
 		return errorType;
+	}
+
+	private static long getArrayDimension(ArrayDimension arrayDimension) {
+		ArraySize arraySize = arrayDimension.getSize();
+		long size = arraySize.getSize();
+		if (size == 0) {
+			ArraySizeProperty arraySizeProperty = arraySize.getSizeProperty();
+			if (arraySizeProperty instanceof PropertyConstant) {
+				PropertyExpression pe = ((PropertyConstant) arraySizeProperty).getConstantValue();
+				size = intFromPropExp(pe);
+			}
+		}
+		assert size > 0;
+		return size;
 	}
 
 	public static boolean hasType(NamedElement ne) {

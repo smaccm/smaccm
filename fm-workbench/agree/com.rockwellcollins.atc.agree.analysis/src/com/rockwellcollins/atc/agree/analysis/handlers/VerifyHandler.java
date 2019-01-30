@@ -1,6 +1,5 @@
 package com.rockwellcollins.atc.agree.analysis.handlers;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayDeque;
@@ -13,9 +12,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -59,7 +55,6 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeStatement;
-import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
@@ -298,26 +293,26 @@ public abstract class VerifyHandler extends AadlHandler {
 			AgreeProgram agreeProgram, AnalysisType analysisType) {
 
 		/////////
-		Logger logger = Logger.getLogger("MyLog");
-		FileHandler fh;
-		try {
+//		Logger logger = Logger.getLogger("MyLog");
+//		FileHandler fh;
+//		try {
 
-			// This block configure the logger with handler and formatter
-			fh = new FileHandler("/home/thomas/zzz.log");
-			logger.addHandler(fh);
-			SimpleFormatter formatter = new SimpleFormatter();
-			fh.setFormatter(formatter);
+		// This block configure the logger with handler and formatter
+//			fh = new FileHandler("/home/thomas/zzz.log");
+//			logger.addHandler(fh);
+//			SimpleFormatter formatter = new SimpleFormatter();
+//			fh.setFormatter(formatter);
+//			logger.info("Agree Program:");
+//			AgreeASTPrettyprinter pp = new AgreeASTPrettyprinter();
+//			pp.visit(agreeProgram);
+//			logger.info(pp.toString());
 
-			logger.info("Agree Program:");
-			AgreeASTPrettyprinter pp = new AgreeASTPrettyprinter();
-			pp.visit(agreeProgram);
-			logger.info(pp.toString());
-
-		} catch (SecurityException ex) {
-			ex.printStackTrace();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+//		} catch (SecurityException ex) {
+//			ex.printStackTrace();
+//		}
+//		catch (IOException ex) {
+//			ex.printStackTrace();
+//		}
 		////////////////
 
 		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry

@@ -66,13 +66,17 @@ import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
+import com.rockwellcollins.atc.agree.AgreeTypeSystem;
+import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayDef;
 import com.rockwellcollins.atc.agree.agree.AbstractionRef;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ArrayLiteralExpr;
+import com.rockwellcollins.atc.agree.agree.ArraySubBinding;
 import com.rockwellcollins.atc.agree.agree.ArraySubExpr;
+import com.rockwellcollins.atc.agree.agree.ArrayType;
 import com.rockwellcollins.atc.agree.agree.ArrayUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
@@ -153,6 +157,7 @@ import com.rockwellcollins.atc.agree.analysis.realtime.AgreePeriodicPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeSporadicPattern;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreExprFactory;
 
+import jkind.lustre.ArrayAccessExpr;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
@@ -182,8 +187,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public static final String unspecifiedAadlPropertyPrefix = "_unspec_property_";
 
 	public static List<Node> globalNodes;
-	private static Set<Type> globalTypes;
-	private static Map<NamedElement, String> typeMap;
+
+	// EGM: array-backend
+
+	// Symbol table to gather all the globalTypes
+	public static AgreeTypeUtils symbolTable;
+
+	// Connects the ArraySubBinding in forall, foreach, exists, to a Lustre array-reference
+	private static Map<ArraySubBinding, Expr> arraySubBindingMap;
+
+	// EGM: end-array-backend
+
 	private static Map<String, AgreeVar> timeOfVarMap;
 	private static Map<String, AgreeVar> timeRiseVarMap;
 	private static Map<String, AgreeVar> timeFallVarMap;
@@ -216,18 +230,25 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		this.isMonolithic = isMonolithic;
 		globalNodes = new ArrayList<>();
-		globalTypes = new HashSet<>();
-		typeMap = new HashMap<>();
 		renamings = new HashMap<>();
 		refMap = new HashMap<>();
+
+		// EGM: array-backend
+		symbolTable = new AgreeTypeUtils();
+		arraySubBindingMap = new HashMap<>();
 
 		AgreeNode topNode = getAgreeNode(compInst, true);
 		List<AgreeNode> agreeNodes = gatherNodes(topNode);
 
+		// EGM: array-backend
+		// List<Type> lustreTypes = new ArrayList<>(globalTypes);
+		List<Type> lustreTypes = symbolTable.getLustreTypes();
+
+
 		// have to convert the types. The reason we use Record types in the
 		// first place rather than the more general types is so we can check set
 		// containment easily
-		AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), new ArrayList<>(globalTypes),
+		AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), lustreTypes,
 				topNode);
 
 		// if there are any patterns in the AgreeProgram we need to inline them
@@ -248,11 +269,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		program.containsRealTimePatterns(containsRTPatterns);
 
-		// EGM-DEBUG
-//		System.out.println("getAgreeProgram");
-//		com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter pp = new com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter();
-//		program.accept(pp);
-//		System.out.println(pp.toString());
+		// EGM: DEBUG
+		System.out.println("getAgreeProgram");
+		com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter pp = new com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter();
+		program.accept(pp);
+		System.out.println(pp.toString());
+		System.out.println(AgreeLogger.getLog());
 
 		return program;
 	}
@@ -376,13 +398,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			gatherLustreTypes(contract.getSpecs());
 		}
 
-		gatherUnspecifiedAadlProperties(unspecifiedAadlProperties, typeMap, globalTypes, inputs, assumptions,
-				guarantees);
+		gatherUnspecifiedAadlProperties(unspecifiedAadlProperties, inputs, assumptions, guarantees);
 
 		if (!(foundSubNode || hasDirectAnnex)) {
 			return null;
 		}
-		gatherOutputsInputsAndTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes, assumptions, guarantees);
+		gatherOutputsInputsAndTypes(outputs, inputs, compInst.getFeatureInstances(), assumptions, guarantees);
 
 		// verify that every variable that is reasoned about is
 		// in a component containing an annex
@@ -599,24 +620,21 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private void gatherOutputsInputsAndTypes(List<AgreeVar> outputs, List<AgreeVar> inputs,
-			EList<FeatureInstance> features, Map<NamedElement, String> typeMap, Set<Type> typeExpressions,
-			List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
+			EList<FeatureInstance> features, List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
 		for (FeatureInstance feature : features) {
-			featureToAgreeVars(outputs, inputs, feature, typeMap, typeExpressions, assumptions, guarantees);
+			featureToAgreeVars(outputs, inputs, feature, assumptions, guarantees);
 		}
 
 	}
 
 	private void featureToAgreeVars(List<AgreeVar> outputs, List<AgreeVar> inputs, FeatureInstance feature,
-			Map<NamedElement, String> typeMap, Set<Type> typeExpressions, List<AgreeStatement> assumptions,
-			List<AgreeStatement> guarantees) {
+			List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
 
 		switch (feature.getCategory()) {
 		case FEATURE_GROUP:
 			List<AgreeVar> newInputs = new ArrayList<>();
 			List<AgreeVar> newOutputs = new ArrayList<>();
-			gatherOutputsInputsAndTypes(newOutputs, newInputs, feature.getFeatureInstances(), typeMap, typeExpressions,
-					assumptions, guarantees);
+			gatherOutputsInputsAndTypes(newOutputs, newInputs, feature.getFeatureInstances(), assumptions, guarantees);
 			for (AgreeVar agreeVar : newInputs) {
 				String newName = feature.getName() + dotChar + agreeVar.id;
 				inputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature(), feature.getComponentInstance(),
@@ -631,7 +649,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		case DATA_PORT:
 		case EVENT_PORT:
 		case EVENT_DATA_PORT:
-			portToAgreeVar(outputs, inputs, feature, typeMap, typeExpressions, assumptions, guarantees);
+			portToAgreeVar(outputs, inputs, feature, assumptions, guarantees);
 			return;
 		case DATA_ACCESS:
 			break;
@@ -643,7 +661,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private void portToAgreeVar(List<AgreeVar> outputs, List<AgreeVar> inputs, FeatureInstance feature,
-			Map<NamedElement, String> typeMap, Set<Type> typeExpressions, List<AgreeStatement> assumptions,
+			List<AgreeStatement> assumptions,
 			List<AgreeStatement> guarantees) {
 
 		DataSubcomponentType dataClass;
@@ -682,7 +700,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			return;
 		}
 
-		Type type = AgreeTypeUtils.getType(dataClass, typeMap, typeExpressions);
+		// EGM: array-backend
+		// Type type = AgreeTypeUtils.getType(dataClass, typeMap, typeExpressions);
+		Type type = symbolTable.getLustreType(dataClass);
+
 		if (type == null) {
 			// we do not reason about this type
 			return;
@@ -819,7 +840,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (dataClass == null) {
 			return null;
 		}
-		return AgreeTypeUtils.getType(dataClass, typeMap, globalTypes);
+		// EGM: array-backend
+		// Type lustreType = AgreeTypeUtils.getType(dataClass, typeMap, globalTypes);
+		Type lustreType = symbolTable.getLustreType(dataClass);
+		return lustreType;
 	}
 
 	private List<AgreeVar> getAgreePortNames(ConnectionEnd port, String prefix, ComponentInstance compInst) {
@@ -1036,7 +1060,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		for (SpecStatement spec : specs) {
 			if (spec instanceof RecordDef) {
 				// this will record them to the global types
-				AgreeTypeUtils.getType((NamedElement) spec, typeMap, globalTypes);
+				// EGM: array-backend
+				// AgreeTypeUtils.getType((NamedElement) spec, typeMap, globalTypes);
+				symbolTable.getLustreType((NamedElement) spec);
 			}
 		}
 		return types;
@@ -1053,7 +1079,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	public VarDecl agreeVarFromArg(Arg arg, ComponentInstance compInst) {
-		NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
+		// EGM: array-backend
+		// String typeStr = AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes);
+		Type type = symbolTable.getLustreType(arg.getType());
 		return new AgreeVar(arg.getName(), type, arg, compInst, null);
 	}
 
@@ -1155,8 +1183,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private AgreeStatement getDataClassifierRangeConstraint(String name, DataClassifier dataClassifier,
 			EObject reference) {
 		// must have reference so we don't throw them away later
+		Expr expr = getDataClassifierRangeConstraintExpr(name, dataClassifier);
 		return new AgreeStatement("Type predicate on '" + name + "'",
-				getDataClassifierRangeConstraintExpr(name, dataClassifier), reference);
+				expr, reference);
 	}
 
 	private PropertyExpression getPropertyExpression (AbstractNamedValue nv) {
@@ -1164,7 +1193,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			return ((PropertyConstant) nv).getConstantValue();
 		}
 
-		// EGM-TODO: need to pull out the property value rather that the default value,
+		// TODO: EGM need to pull out the property value rather that the default value,
 		// but I am not sure how to do that.
 		if (nv instanceof Property) {
 			assert ("ERROR: default property value in AgreeASTBuilder::PropertyExpression" == null);
@@ -1218,25 +1247,46 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 
+	private List<Expr> getArrayRangeConstraint(String namePrefix, ArrayDef array) {
+		List<Expr> constraints = new ArrayList<>();
+		assert (array.baseType instanceof DataClassifier);
+		Expr expr = getDataClassifierRangeConstraintExpr(array.baseType.getName(), (DataClassifier) array.baseType);
+		for (int i = 0; i < array.dimension; ++i) {
+			String name = namePrefix + "[" + i + "]";
+		}
+		return constraints;
+	}
+
 	private Expr getDataClassifierRangeConstraintExpr(String name, DataClassifier dataClassifier) {
 		List<Expr> constraints = new ArrayList<>();
 
-		if (dataClassifier instanceof DataType &&
-				(hasIntegerRangeProperty(dataClassifier) || hasRealRangeProperty(dataClassifier))) {
+		ArrayDef array = null;
+		if (dataClassifier instanceof DataType) {
+			array = AgreeTypeSystem.arrayDefFromAadl((DataType) dataClassifier);
+		}
+
+		if (array != null && array.isArray == true) {
+			List<Expr> exprList = getArrayRangeConstraint(name, array);
+			constraints.addAll(exprList);
+		} else if (array != null && (hasIntegerRangeProperty(dataClassifier) || hasRealRangeProperty(dataClassifier))) {
 			Function<BigDecimal, Expr> makeExpr = null;
 			List<PropertyAssociation> pa_list = null;
 			if (hasIntegerRangeProperty(dataClassifier)) {
-				makeExpr = (bigDec) -> {return new IntExpr(bigDec.toBigInteger());};
+				makeExpr = (bigDec) -> {
+					return new IntExpr(bigDec.toBigInteger());
+				};
 				pa_list = getIntegerRangePropertyAssociations(dataClassifier);
 			} else {
-				makeExpr = (bigDec) -> {return new RealExpr(bigDec);};
+				makeExpr = (bigDec) -> {
+					return new RealExpr(bigDec);
+				};
 				pa_list = getRealRangePropertyAssociations(dataClassifier);
 			}
 			for (PropertyAssociation pa : pa_list) {
 				for (ModalPropertyValue pv : pa.getOwnedValues()) {
 					PropertyExpression propExpr = pv.getOwnedValue();
 					if (propExpr instanceof RangeValue) {
-						Expr bound = createExprForBound(name, (RangeValue)propExpr, makeExpr);
+						Expr bound = createExprForBound(name, (RangeValue) propExpr, makeExpr);
 						constraints.add(bound);
 					}
 				}
@@ -1249,8 +1299,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					.collect(Collectors.toList()));
 		}
 
-		return constraints.stream().reduce(new BoolExpr(true),
-				(a, b) -> LustreExprFactory.makeANDExpr(a, b));
+		return constraints.stream().reduce(new BoolExpr(true), (a, b) -> LustreExprFactory.makeANDExpr(a, b));
 	}
 
 	private AgreeStatement getVariableRangeConstraint(String name, com.rockwellcollins.atc.agree.agree.Type type,
@@ -1300,6 +1349,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			if (recordTypeName instanceof DataClassifier) {
 				result = getDataClassifierRangeConstraintExpr(name, (DataClassifier) recordTypeName);
 			}
+		} else if (type instanceof ArrayType) {
+			ArrayType arrayType = (ArrayType) type;
+			throw new AgreeException("ERROR: " + arrayType.getStem().getOwner().getElementRoot().getFullName()
+					+ " unhandled in ranged type");
 		}
 		return result;
 	}
@@ -1478,7 +1531,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		CustomType recId = recExpr.getRecordType();
-		String recName = AgreeTypeUtils.getIDTypeStr(recId.getNamedElm());
+
+		// EGM: array-backend
+		// NamedElement ne = recId.getNamedElm();
+		// String recName = AgreeTypeUtils.getIDTypeStr(ne);
+		String recName = symbolTable.getTypeString(recId);
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1666,7 +1723,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		List<VarDecl> inputs = agreeVarsFromArgs(fnDef.getArgs(), null);
 		Expr bodyExpr = doSwitch(fnDef.getExpr());
 
-		NamedType outType = getNamedType(AgreeTypeUtils.getTypeName(fnDef.getType(), typeMap, globalTypes));
+		// EGM: array-backend
+		// Type outType = getNamedType(AgreeTypeUtils.getTypeName(fnDef.getType(), typeMap, globalTypes));
+		Type outType = symbolTable.getLustreType(fnDef.getType());
+
 		VarDecl outVar = new VarDecl("_outvar", outType);
 		List<VarDecl> outputs = Collections.singletonList(outVar);
 		Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
@@ -1816,7 +1876,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private void gatherUnspecifiedAadlProperties(Map<String, GetPropertyExpr> unspecifiedAadlProperties,
-			Map<NamedElement, String> typeMap, Set<Type> globalTypes, List<AgreeVar> inputs,
+			List<AgreeVar> inputs,
 			List<AgreeStatement> assumptions,
 			List<AgreeStatement> guarantees) {
 
@@ -1970,9 +2030,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (ne instanceof ConstStatement) {
 			// constant propagation
 			return doSwitch(((ConstStatement) ne).getExpr());
-		} else {
-			return new IdExpr(ne.getName());
 		}
+
+		if (ne instanceof ArraySubBinding) {
+			return doSwitch(ne);
+		}
+
+		return new IdExpr(ne.getName());
 	}
 
 // TODO: implement translation for array expressions.
@@ -1988,12 +2052,64 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseArraySubExpr(ArraySubExpr expr) {
-		throw new NotImplementedException("TODO");
+		Expr index = doSwitch(expr.getIndex());
+		Expr array = doSwitch(expr.getExpr());
+		return new ArrayAccessExpr(array, index);
+	}
+
+	private int getArraySize(com.rockwellcollins.atc.agree.agree.Type agreeType) {
+		if (agreeType instanceof ArrayType) {
+			return AgreeTypeUtils.getArraySize((ArrayType) agreeType);
+		}
+
+		if (agreeType instanceof CustomType) {
+			NamedElement ne = ((CustomType) agreeType).getNamedElm();
+			assert (ne instanceof DataType);
+			ArrayDef ad = AgreeTypeSystem.arrayDefFromAadl((DataType) ne);
+			assert (ad.isArray);
+			return ad.dimension;
+		}
+
+		throw new AgreeException("ERROR: '" + agreeType.getClass() + "' not handled");
 	}
 
 	@Override
 	public Expr caseForallExpr(ForallExpr expr) {
-		throw new NotImplementedException("TODO");
+		com.rockwellcollins.atc.agree.agree.Expr arrayExpr = expr.getArray();
+		Expr array = doSwitch(arrayExpr);
+
+		com.rockwellcollins.atc.agree.agree.Type agreeType = AgreeTypeSystem.infer(arrayExpr);
+		int size = getArraySize(agreeType);
+
+		ArraySubBinding binding = expr.getBinding();
+		boolean isIndices = arrayExpr instanceof IndicesExpr;
+		Expr final_expr = new BoolExpr(true);
+
+		for (int i = 0; i < size; ++i) {
+			Expr arrayAccess = null;
+			if (isIndices) {
+				arrayAccess = new IntExpr(i);
+			} else {
+				arrayAccess = new ArrayAccessExpr(array, i);
+			}
+
+			AgreeASTBuilder.arraySubBindingMap.put(binding, arrayAccess);
+			Expr body = doSwitch(expr.getExpr());
+			final_expr = LustreExprFactory.makeANDExpr(final_expr, body);
+		}
+
+		return final_expr;
+	}
+
+	@Override
+	public Expr caseArraySubBinding(ArraySubBinding object) {
+		Expr e = arraySubBindingMap.get(object);
+		if (e != null) {
+			return e;
+		}
+
+		// TODO: check what happens when the ArraySubBinding is a literal (code assumes a variable)
+		return new IdExpr(object.getName());
 	}
 
 	@Override
@@ -2013,13 +2129,18 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseIndicesExpr(IndicesExpr expr) {
-		throw new NotImplementedException("TODO");
+		// Lift out the array in the call to indices()
+		return doSwitch(expr.getArray());
 	}
 //////////
 
 	@Override
 	public Expr caseEnumLitExpr(EnumLitExpr aadlEnum) {
-		String typeStr = AgreeTypeUtils.getIDTypeStr(aadlEnum.getEnumType().getNamedElm());
+		NamedElement ne = aadlEnum.getEnumType().getNamedElm();
+		// EGM: array-backend
+		// String typeStr = AgreeTypeUtils.getIDTypeStr(ne);
+		String typeStr = symbolTable.getTypeString(ne);
+
 		return new IdExpr(typeStr.replace("__", "_") + "_" + aadlEnum.getValue());
 	}
 

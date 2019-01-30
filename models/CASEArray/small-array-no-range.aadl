@@ -1,0 +1,51 @@
+package smallArrayNoRange
+public
+    with Data_Model;
+	with Base_Types;
+	
+	data Array
+        properties
+            Data_Model::Data_Representation => Array;
+            Data_Model::Base_Type => (classifier (Base_Types::Integer));
+            Data_Model::Dimension => (3);
+    end Array;
+    
+	annex agree {**
+
+		fun good_longitude(long : Array) : bool =
+		    forall i in long, 
+				i >= -180
+			and i <= 180;										
+	**};
+
+	thread LongitudeDriver
+		features
+			recv_in: in event data port Array;
+			recv_out: out event data port Array;
+		annex agree {**
+			assume "Longitude Driver: Valid Longitude" : good_longitude(recv_in);
+			-- TODO: once implemented replace with
+			-- guarantee "Longitude Driver: Updated Longitude" : foreach i in recv_out, prev(i + 10, 0); 
+--			guarantee "Longitude Driver: Updated Longitude" : recv_out = recv_in;
+		**};
+	end LongitudeDriver;
+    
+	process MC_SW
+		features
+			recv_in: in event data port Array;
+			recv_out: out event data port Array;
+		annex agree {**
+			-- we abstract away the authentication and just assume the message has undergone authenticity verification
+			assume "MC_SW: Valid Longitude" : good_longitude(recv_in);
+			guarantee "MC_SW: Valid Longitude Out" : good_longitude(recv_out);
+		**};
+	end MC_SW;
+
+	process implementation MC_SW.Impl
+		subcomponents
+			LONG: thread LongitudeDriver;
+		connections
+			c1: port recv_in -> LONG.recv_in;
+			c3: port LONG.recv_out -> recv_out;
+	end MC_SW.Impl;
+end smallArrayNoRange;
