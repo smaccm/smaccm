@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.linking.impl.IllegalNodeException;
+import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.osate.aadl2.Aadl2Package;
@@ -25,7 +26,6 @@ import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
-import org.osate.aadl2.util.Aadl2Util;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 
@@ -33,13 +33,13 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
-import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
-import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
+import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
@@ -53,16 +53,39 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 		super();
 	}
 
+	public static String getTokenText(INode node) {
+		if (node instanceof ILeafNode) {
+			return ((ILeafNode) node).getText();
+		} else {
+			StringBuilder builder = new StringBuilder(Math.max(node.getTotalLength(), 1));
+			boolean hiddenSeen = false;
+			for (ILeafNode leaf : node.getLeafNodes()) {
+				if (!leaf.isHidden()) {
+					if (hiddenSeen && builder.length() > 0) {
+						builder.append(' ');
+					}
+					builder.append(leaf.getText());
+					hiddenSeen = false;
+				} else {
+					hiddenSeen = true;
+				}
+			}
+			return builder.toString();
+		}
+	}
+
 	@Override
 	public List<EObject> getLinkedObjects(EObject context, EReference reference, INode node)
 			throws IllegalNodeException {
+
 		String name = getCrossRefNodeAsString(node);
 
 		if (context instanceof PropertyValue) {
 			return findUnitLiteralAsList((Element) context, name);
 		}
 
-		if (context instanceof TypeID || context instanceof NestedDotID || context instanceof NodeEq
+		if (context instanceof TypeID || context instanceof QualID || context instanceof NestedDotID
+				|| context instanceof NodeEq
 				|| context instanceof SynchStatement
 				|| context instanceof RecordExpr || context instanceof RecordType || context instanceof GetPropertyExpr
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
@@ -73,51 +96,57 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			if (e == null) {
 				e = findClassifier(context, reference, name);
 			}
+
 			if (e == null) {
-				e = recordDefFromQualifiedType(context, reference, name);
+				e = specStatement(context, reference, name);
 			}
+
+
 			if (e != null) {
 				return Collections.singletonList(e);
 			}
 
-			// This code will only link to objects in the projects visible from the current project
-			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
-					reference.getEReferenceType());
 
-			String contextProject = context.eResource().getURI().segment(1);
-			List<String> visibleProjects = getVisibleProjects(contextProject);
-
-			for (IEObjectDescription eod : allObjectTypes) {
-				if (isVisible(eod, visibleProjects)) {
-					EObject res = eod.getEObjectOrProxy();
-					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-
-					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
-						// special code for AGREE enumerated types
-						if (((NamedID) res).getName().equals(name)) {
-							return Collections.singletonList(res);
-						}
-					}
-					if (sameName(eod, name)) {
-						if (!Aadl2Util.isNull(res)) {
-							return Collections.singletonList(res);
-						}
-					}
-				}
-			}
+//			// This code will only link to objects in the projects visible from the current project
+//			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
+//					reference.getEReferenceType());
+//
+//			String contextProject = context.eResource().getURI().segment(1);
+//			List<String> visibleProjects = getVisibleProjects(contextProject);
+//
+//
+//			for (IEObjectDescription eod : allObjectTypes) {
+//
+//				if (isVisible(eod, visibleProjects)) {
+//					EObject res = eod.getEObjectOrProxy();
+//					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+//
+//					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
+//						// special code for AGREE enumerated type definitions
+//						if (((NamedID) res).getName().equals(name)) {
+//							return Collections.singletonList(res);
+//						}
+//					}
+//					if (sameName(eod, name)) {
+//						if (!Aadl2Util.isNull(res)) {
+//							return Collections.singletonList(res);
+//						}
+//					}
+//				}
+//			}
 		}
 
 		return super.getLinkedObjects(context, reference, node);
 	}
 
-	private RecordDefExpr recordDefFromQualifiedType(EObject context, EReference reference, String name) {
+
+	private SpecStatement specStatement(EObject context, EReference reference, String name) {
 		String[] segments = name.split("\\.");
 
 		if (segments.length == 2) {
 			String pkgName = segments[0];
 			String recordTypeName = segments[1];
-			EObject eo = getIndexedObject(context, reference, pkgName);
-
+			EObject eo = getIndexedObject(context, reference, pkgName.replace("::", "."));
 			if (eo instanceof AadlPackage) {
 				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) eo),
 						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
@@ -126,7 +155,12 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 					for (SpecStatement spec : contract.getSpecs()) {
 						if (spec instanceof RecordDefExpr) {
 							if (((RecordDefExpr) spec).getName().equals(recordTypeName)) {
-								return ((RecordDefExpr) spec);
+								return (spec);
+							}
+
+						} else if (spec instanceof FnDefExpr) {
+							if (((FnDefExpr) spec).getName().equals(recordTypeName)) {
+								return (spec);
 							}
 
 						}
@@ -140,7 +174,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 	}
 
 	private static boolean sameName(IEObjectDescription eod, String name) {
-		return eod.getName().toString().equalsIgnoreCase(name.replace("::", "."));
+		return eod.getName().toString().equalsIgnoreCase(name);
 	}
 
 	private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {

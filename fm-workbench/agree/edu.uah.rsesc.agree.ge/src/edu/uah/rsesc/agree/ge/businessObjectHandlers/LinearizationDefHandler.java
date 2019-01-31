@@ -2,6 +2,7 @@ package edu.uah.rsesc.agree.ge.businessObjectHandlers;
 
 import javax.inject.Named;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.osate.aadl2.NamedElement;
 import org.osate.ge.BusinessObjectContext;
 import org.osate.ge.GraphicalConfiguration;
@@ -34,6 +35,7 @@ import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
+import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 
@@ -121,7 +123,11 @@ public class LinearizationDefHandler {
 						// Body
 						final NestedDotID body = AgreeFactory.eINSTANCE.createNestedDotID();
 						body.setBase(newArg);
-						newBo.setExprBody(body);
+
+						QualID qualId = AgreeFactory.eINSTANCE.createQualID();
+						qualId.setId(EcoreUtil.copy(body));
+
+						newBo.setExprBody(qualId);
 
 						agreeContract.getSpecs().add(newBo);
 

@@ -103,7 +103,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) 'Get_Property' '(' component=Expr
-	 *     (rule start) (ambiguity) 'enum' '(' enumType=NestedDotID
+	 *     (rule start) (ambiguity) 'enum' '(' enumType=TypeID
 	 *     (rule start) (ambiguity) 'event' '(' id=NestedDotID
 	 *     (rule start) (ambiguity) 'floor' '(' expr=Expr
 	 *     (rule start) (ambiguity) 'if' a=Expr
@@ -117,7 +117,8 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) 'timefall' '(' id=NestedDotID
 	 *     (rule start) (ambiguity) 'timeof' '(' id=NestedDotID
 	 *     (rule start) (ambiguity) 'timerise' '(' id=NestedDotID
-	 *     (rule start) (ambiguity) base=[NamedElement|EID]
+	 *     (rule start) (ambiguity) aadlQual=[NamedElement|QCPREF]
+	 *     (rule start) (ambiguity) id=NestedDotID
 	 *     (rule start) (ambiguity) op='-'
 	 *     (rule start) (ambiguity) op='not'
 	 *     (rule start) (ambiguity) val=BooleanLiteral

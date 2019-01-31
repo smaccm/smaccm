@@ -100,6 +100,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -1590,7 +1591,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseFnCallExpr(FnCallExpr expr) {
-		NestedDotID dotId = expr.getFn();
+
+		NestedDotID dotId = expr.getFn().getId();
 		NamedElement namedEl = AgreeUtils.getFinalNestId(dotId);
 
 		String fnName = AgreeTypeUtils.getNodeName(namedEl);
@@ -1603,7 +1605,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		if (!found) {
-			NestedDotID fn = expr.getFn();
+			NestedDotID fn = expr.getFn().getId();
 			doSwitch(AgreeUtils.getFinalNestId(fn));
 			// for dReal integration
 			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
@@ -1871,6 +1873,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
+	public Expr caseQualID(QualID qual) {
+		return doSwitch(qual.getId());
+	}
+
+	@Override
 	public Expr caseNestedDotID(NestedDotID id) {
 
 		String jKindVar = "";
@@ -1925,8 +1932,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseAADLEnumerator(AADLEnumerator aadlEnum) {
-		String typeStr = AgreeTypeUtils.getIDTypeStr(
-				com.rockwellcollins.atc.agree.validation.AgreeJavaValidator.getFinalNestId(aadlEnum.getEnumType()));
+		String typeStr = AgreeTypeUtils.getIDTypeStr(aadlEnum.getEnumType().getBase());
 		return new IdExpr(typeStr.replace("__", "_") + "_" + aadlEnum.getValue());
 	}
 

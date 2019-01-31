@@ -302,6 +302,15 @@ public interface AgreeFactory extends EFactory
   ComplexExpr createComplexExpr();
 
   /**
+   * Returns a new object of class '<em>Qual ID</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Qual ID</em>'.
+   * @generated
+   */
+  QualID createQualID();
+
+  /**
    * Returns a new object of class '<em>Nested Dot ID</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

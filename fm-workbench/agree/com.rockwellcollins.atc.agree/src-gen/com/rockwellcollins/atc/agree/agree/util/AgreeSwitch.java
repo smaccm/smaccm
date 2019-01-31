@@ -359,13 +359,20 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.QUAL_ID:
+      {
+        QualID qualID = (QualID)theEObject;
+        T result = caseQualID(qualID);
+        if (result == null) result = caseComplexExpr(qualID);
+        if (result == null) result = caseExpr(qualID);
+        if (result == null) result = caseElement(qualID);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.NESTED_DOT_ID:
       {
         NestedDotID nestedDotID = (NestedDotID)theEObject;
         T result = caseNestedDotID(nestedDotID);
-        if (result == null) result = caseComplexExpr(nestedDotID);
-        if (result == null) result = caseExpr(nestedDotID);
-        if (result == null) result = caseElement(nestedDotID);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1384,6 +1391,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseComplexExpr(ComplexExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Qual ID</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Qual ID</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseQualID(QualID object)
   {
     return null;
   }

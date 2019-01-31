@@ -57,6 +57,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -375,6 +376,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.PROPERTY_STATEMENT:
 				sequence_PropertyStatement(context, (PropertyStatement) semanticObject); 
+				return; 
+			case AgreePackage.QUAL_ID:
+				sequence_QualID(context, (QualID) semanticObject); 
 				return; 
 			case AgreePackage.REAL_CAST:
 				sequence_TermExpr(context, (RealCast) semanticObject); 
@@ -944,38 +948,10 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns NestedDotID
-	 *     Expr returns NestedDotID
-	 *     ArrowExpr returns NestedDotID
-	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     ImpliesExpr returns NestedDotID
-	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     EquivExpr returns NestedDotID
-	 *     EquivExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     OrExpr returns NestedDotID
-	 *     OrExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     AndExpr returns NestedDotID
-	 *     AndExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     RelateExpr returns NestedDotID
-	 *     RelateExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     AddSubExpr returns NestedDotID
-	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     MultDivExpr returns NestedDotID
-	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     PowerExpr returns NestedDotID
-	 *     PowerExpr.BinaryExpr_1_0_0_0 returns NestedDotID
-	 *     UnaryExpr returns NestedDotID
-	 *     IfThenElseExpr returns NestedDotID
-	 *     PreDefFnExpr returns NestedDotID
-	 *     RecordUpdateExpr returns NestedDotID
-	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns NestedDotID
-	 *     TermExpr returns NestedDotID
-	 *     ComplexExpr returns NestedDotID
-	 *     ComplexExpr.FnCallExpr_1_1_0_0_0 returns NestedDotID
 	 *     NestedDotID returns NestedDotID
 	 *
 	 * Constraint:
-	 *     (base=[NamedElement|EID] (tag=ReservedVarTag | sub=NestedDotID)?)
+	 *     (base=[NamedElement|ID] (tag=ReservedVarTag | sub=NestedDotID)?)
 	 */
 	protected void sequence_NestedDotID(ISerializationContext context, NestedDotID semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1192,6 +1168,46 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 		feeder.accept(grammarAccess.getPropertyStatementAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
 		feeder.accept(grammarAccess.getPropertyStatementAccess().getExprExprParserRuleCall_3_0(), semanticObject.getExpr());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Element returns QualID
+	 *     Expr returns QualID
+	 *     ArrowExpr returns QualID
+	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     ImpliesExpr returns QualID
+	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     EquivExpr returns QualID
+	 *     EquivExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     OrExpr returns QualID
+	 *     OrExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     AndExpr returns QualID
+	 *     AndExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     RelateExpr returns QualID
+	 *     RelateExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     AddSubExpr returns QualID
+	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     MultDivExpr returns QualID
+	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     PowerExpr returns QualID
+	 *     PowerExpr.BinaryExpr_1_0_0_0 returns QualID
+	 *     UnaryExpr returns QualID
+	 *     IfThenElseExpr returns QualID
+	 *     PreDefFnExpr returns QualID
+	 *     RecordUpdateExpr returns QualID
+	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns QualID
+	 *     TermExpr returns QualID
+	 *     ComplexExpr returns QualID
+	 *     ComplexExpr.FnCallExpr_1_1_0_0_0 returns QualID
+	 *     QualID returns QualID
+	 *
+	 * Constraint:
+	 *     (aadlQual=[NamedElement|QCPREF]? id=NestedDotID)
+	 */
+	protected void sequence_QualID(ISerializationContext context, QualID semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1455,7 +1471,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     TermExpr returns AADLEnumerator
 	 *
 	 * Constraint:
-	 *     (enumType=NestedDotID value=ID)
+	 *     (enumType=TypeID value=ID)
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, AADLEnumerator semanticObject) {
 		if (errorAcceptor != null) {
@@ -1465,7 +1481,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTermExprAccess().getEnumTypeNestedDotIDParserRuleCall_14_3_0(), semanticObject.getEnumType());
+		feeder.accept(grammarAccess.getTermExprAccess().getEnumTypeTypeIDParserRuleCall_14_3_0(), semanticObject.getEnumType());
 		feeder.accept(grammarAccess.getTermExprAccess().getValueIDTerminalRuleCall_14_5_0(), semanticObject.getValue());
 		feeder.finish();
 	}

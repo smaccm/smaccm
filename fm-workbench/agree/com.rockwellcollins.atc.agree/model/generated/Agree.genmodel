@@ -105,6 +105,10 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//Expr"/>
     <genClasses ecoreClass="Agree.ecore#//ComplexExpr"/>
+    <genClasses ecoreClass="Agree.ecore#//QualID">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//QualID/aadlQual"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//QualID/id"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//NestedDotID">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NestedDotID/base"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NestedDotID/tag"/>

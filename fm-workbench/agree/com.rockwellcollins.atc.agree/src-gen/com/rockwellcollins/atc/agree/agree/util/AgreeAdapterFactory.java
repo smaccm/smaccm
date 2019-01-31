@@ -236,6 +236,11 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createComplexExprAdapter();
       }
       @Override
+      public Adapter caseQualID(QualID object)
+      {
+        return createQualIDAdapter();
+      }
+      @Override
       public Adapter caseNestedDotID(NestedDotID object)
       {
         return createNestedDotIDAdapter();
@@ -1028,6 +1033,21 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createComplexExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.QualID <em>Qual ID</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.rockwellcollins.atc.agree.agree.QualID
+   * @generated
+   */
+  public Adapter createQualIDAdapter()
   {
     return null;
   }

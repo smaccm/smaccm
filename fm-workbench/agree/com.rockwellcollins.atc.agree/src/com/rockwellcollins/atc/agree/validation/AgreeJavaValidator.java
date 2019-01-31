@@ -116,6 +116,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -843,8 +844,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkAADLEnumerator(AADLEnumerator aadlEnum) {
-		NestedDotID enumType = aadlEnum.getEnumType();
-		NamedElement enumTypeNamedElement = getFinalNestId(enumType);
+		TypeID enumType = aadlEnum.getEnumType();
+		NamedElement enumTypeNamedElement = enumType.getBase();
+
 		if (!AgreeAADLEnumerationUtils.isAADLEnumeration(enumTypeNamedElement)) {
 			error(enumType, "AADL Enumerations must refer to a Data Type with \"Enum\" data representation "
 					+ "property and have an \"Enumerators\' property value list.");
@@ -1826,7 +1828,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		List<AgreeType> agreeRhsTypes = new ArrayList<>();
 
 		if (rhsExpr instanceof FnCallExpr) {
-			NamedElement namedEl = getFinalNestId(((FnCallExpr) rhsExpr).getFn());
+
+			NamedElement namedEl = getFinalNestId(((FnCallExpr) rhsExpr).getFn().getId());
 			if (namedEl instanceof NodeDefExpr) {
 				NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
 				for (Arg var : nodeDef.getRets()) {
@@ -2250,7 +2253,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	public void checkInputsVsActuals(FnCallExpr fnCall) {
-		NestedDotID dotId = fnCall.getFn();
+		NestedDotID dotId = fnCall.getFn().getId();
 
 		// if the id has a 'tag' then it is using a resrved variable
 		String tag = getNestedDotIDTag(dotId);
@@ -2315,7 +2318,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkFnCallExpr(FnCallExpr fnCall) {
-		NamedElement fn = getFinalNestId(fnCall.getFn());
+		NamedElement fn = getFinalNestId(fnCall.getFn().getId());
 		if (isInLinearizationBody(fnCall)) {
 			if (fn instanceof NodeDefExpr) {
 				error(fnCall, "Node definitions cannot be applied in a linearization definition");
@@ -2656,6 +2659,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return getAgreeType(unaryExpr.getExpr());
 	}
 
+	private AgreeType getAgreeType(QualID qualID) {
+		return getAgreeType(qualID.getId());
+	}
+
 	private AgreeType getAgreeType(NestedDotID nestDotIdExpr) {
 
 		String tag = getNestedDotIDTag(nestDotIdExpr);
@@ -2889,7 +2896,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		// TODO: Examine type system in more detail
 		// TODO: Fix to make support type lists.
 
-		NestedDotID dotId = fnCall.getFn();
+		NestedDotID dotId = fnCall.getFn().getId();
 		NamedElement namedEl = getFinalNestId(dotId);
 
 		if (isInLinearizationBody(fnCall)) {
@@ -2979,6 +2986,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return getAgreeType((PrevExpr) expr);
 		} else if (expr instanceof GetPropertyExpr) {
 			return getAgreeType((GetPropertyExpr) expr);
+		} else if (expr instanceof QualID) {
+			return getAgreeType((QualID) expr);
 		} else if (expr instanceof NestedDotID) {
 			return getAgreeType((NestedDotID) expr);
 		} else if (expr instanceof UnaryExpr) {
@@ -3023,6 +3032,11 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	private AgreeType getAgreeType(AADLEnumerator enumExpr) {
 		return getAgreeType(enumExpr.getEnumType());
+	}
+
+	private AgreeType getAgreeType(TypeID typeId) {
+		String qualName = typeId.getBase().getQualifiedName();
+		return new AgreeType(qualName);
 	}
 
 	private AgreeType getAgreeType(RecordUpdateExpr upExpr) {

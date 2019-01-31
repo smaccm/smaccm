@@ -32,12 +32,12 @@ public interface FnCallExpr extends ComplexExpr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fn</em>' containment reference.
-   * @see #setFn(NestedDotID)
+   * @see #setFn(QualID)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getFnCallExpr_Fn()
    * @model containment="true"
    * @generated
    */
-  NestedDotID getFn();
+  QualID getFn();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr#getFn <em>Fn</em>}' containment reference.
@@ -47,7 +47,7 @@ public interface FnCallExpr extends ComplexExpr
    * @see #getFn()
    * @generated
    */
-  void setFn(NestedDotID value);
+  void setFn(QualID value);
 
   /**
    * Returns the value of the '<em><b>Args</b></em>' containment reference list.

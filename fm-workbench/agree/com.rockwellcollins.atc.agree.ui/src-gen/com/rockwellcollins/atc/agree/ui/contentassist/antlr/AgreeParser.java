@@ -250,14 +250,14 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getComplexExprAccess().getGroup_1_1_0_0(), "rule__ComplexExpr__Group_1_1_0_0__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_1_1(), "rule__ComplexExpr__Group_1_1_1__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_1_1_1(), "rule__ComplexExpr__Group_1_1_1_1__0");
+					put(grammarAccess.getQualIDAccess().getGroup(), "rule__QualID__Group__0");
 					put(grammarAccess.getNestedDotIDAccess().getGroup(), "rule__NestedDotID__Group__0");
 					put(grammarAccess.getNestedDotIDAccess().getGroup_1(), "rule__NestedDotID__Group_1__0");
 					put(grammarAccess.getNestedDotIDAccess().getGroup_1_0(), "rule__NestedDotID__Group_1_0__0");
 					put(grammarAccess.getQCPREFAccess().getGroup(), "rule__QCPREF__Group__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_0(), "rule__QCPREF__Group_0__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_2(), "rule__QCPREF__Group_2__0");
-					put(grammarAccess.getEIDAccess().getGroup(), "rule__EID__Group__0");
-					put(grammarAccess.getEIDAccess().getGroup_0(), "rule__EID__Group_0__0");
+					put(grammarAccess.getQCPREFAccess().getGroup_2_0(), "rule__QCPREF__Group_2_0__0");
 					put(grammarAccess.getJavaQualifiedNameAccess().getGroup(), "rule__JavaQualifiedName__Group__0");
 					put(grammarAccess.getJavaQualifiedNameAccess().getGroup_1(), "rule__JavaQualifiedName__Group_1__0");
 					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup(), "rule__ContainedPropertyAssociation__Group__0");
@@ -492,6 +492,8 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getComplexExprAccess().getArgExprAssignment_0_3_3(), "rule__ComplexExpr__ArgExprAssignment_0_3_3");
 					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_1_1_0(), "rule__ComplexExpr__ArgsAssignment_1_1_1_0");
 					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_1_1_1_1(), "rule__ComplexExpr__ArgsAssignment_1_1_1_1_1");
+					put(grammarAccess.getQualIDAccess().getAadlQualAssignment_0(), "rule__QualID__AadlQualAssignment_0");
+					put(grammarAccess.getQualIDAccess().getIdAssignment_1(), "rule__QualID__IdAssignment_1");
 					put(grammarAccess.getNestedDotIDAccess().getBaseAssignment_0(), "rule__NestedDotID__BaseAssignment_0");
 					put(grammarAccess.getNestedDotIDAccess().getTagAssignment_1_0_1_0(), "rule__NestedDotID__TagAssignment_1_0_1_0");
 					put(grammarAccess.getNestedDotIDAccess().getSubAssignment_1_0_1_1(), "rule__NestedDotID__SubAssignment_1_0_1_1");

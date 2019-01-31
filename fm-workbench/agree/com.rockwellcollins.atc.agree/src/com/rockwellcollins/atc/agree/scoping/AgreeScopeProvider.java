@@ -50,6 +50,7 @@ import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
+import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
@@ -162,6 +163,10 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return IScope.NULLSCOPE;
 	}
 
+	protected IScope scope_NamedElement(QualID ctx, EReference ref) {
+		return getScope(ctx.eContainer(), ref);
+	}
+
 	protected IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
 		return Scopes.scopeFor(getCorrespondingAadlElement(ctx, ref), getScope(ctx.eContainer(), ref));
 	}
@@ -170,14 +175,26 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		EObject container = id.eContainer();
 		Set<Element> result = new HashSet<>();
 
+		EList<EObject> refs  = null;
+
 		if (container instanceof NestedDotID) {
 			NestedDotID parent = (NestedDotID) container;
-			EList<EObject> refs = parent.eCrossReferences();
+			refs = parent.eCrossReferences();
+		} else if (container instanceof QualID) {
+			QualID parent = (QualID) container;
+
+			System.out.println("QualID: " + parent.getAadlQual().getQualifiedName());
+			refs = parent.eCrossReferences();
+
+		}
+
+		if (refs != null) {
 
 			if (refs.size() != 1) {
 				return new HashSet<>(); // this will throw a parsing error
 			}
 			container = refs.get(0); // figure out what this type this portion
+
 			// of the nest id is so we can figure out
 			// what we could possibly link to
 

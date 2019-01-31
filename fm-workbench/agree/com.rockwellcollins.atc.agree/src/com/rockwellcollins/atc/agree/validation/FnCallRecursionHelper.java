@@ -123,7 +123,7 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseFnCallExpr(FnCallExpr object) {
-		NestedDotID id = object.getFn();
+		NestedDotID id = object.getFn().getId();
 
 		while (id.getSub() != null) {
 			id = id.getSub();

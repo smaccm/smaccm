@@ -65,6 +65,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
+import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RealTimeStatement;
@@ -327,6 +328,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass complexExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass qualIDEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1552,6 +1560,36 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
   public EClass getComplexExpr()
   {
     return complexExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getQualID()
+  {
+    return qualIDEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getQualID_AadlQual()
+  {
+    return (EReference)qualIDEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getQualID_Id()
+  {
+    return (EReference)qualIDEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2981,6 +3019,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     complexExprEClass = createEClass(COMPLEX_EXPR);
 
+    qualIDEClass = createEClass(QUAL_ID);
+    createEReference(qualIDEClass, QUAL_ID__AADL_QUAL);
+    createEReference(qualIDEClass, QUAL_ID__ID);
+
     nestedDotIDEClass = createEClass(NESTED_DOT_ID);
     createEReference(nestedDotIDEClass, NESTED_DOT_ID__BASE);
     createEAttribute(nestedDotIDEClass, NESTED_DOT_ID__TAG);
@@ -3245,7 +3287,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     recordDefExprEClass.getESuperTypes().add(this.getSpecStatement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
     complexExprEClass.getESuperTypes().add(this.getExpr());
-    nestedDotIDEClass.getESuperTypes().add(this.getComplexExpr());
+    qualIDEClass.getESuperTypes().add(this.getComplexExpr());
     typeIDEClass.getESuperTypes().add(this.getComplexExpr());
     namedIDEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     agreeContractLibraryEClass.getESuperTypes().add(this.getAgreeLibrary());
@@ -3410,6 +3452,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(exprEClass, Expr.class, "Expr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(complexExprEClass, ComplexExpr.class, "ComplexExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(qualIDEClass, QualID.class, "QualID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getQualID_AadlQual(), theAadl2Package.getNamedElement(), null, "aadlQual", null, 0, 1, QualID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getQualID_Id(), this.getNestedDotID(), null, "id", null, 0, 1, QualID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(nestedDotIDEClass, NestedDotID.class, "NestedDotID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNestedDotID_Base(), theAadl2Package.getNamedElement(), null, "base", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3585,7 +3631,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getRealCast_Expr(), this.getExpr(), null, "expr", null, 0, 1, RealCast.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(aadlEnumeratorEClass, AADLEnumerator.class, "AADLEnumerator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAADLEnumerator_EnumType(), this.getNestedDotID(), null, "enumType", null, 0, 1, AADLEnumerator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAADLEnumerator_EnumType(), this.getTypeID(), null, "enumType", null, 0, 1, AADLEnumerator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getAADLEnumerator_Value(), theEcorePackage.getEString(), "value", null, 0, 1, AADLEnumerator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(recordExprEClass, RecordExpr.class, "RecordExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3594,7 +3640,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getRecordExpr_ArgExpr(), this.getExpr(), null, "argExpr", null, 0, -1, RecordExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fnCallExprEClass, FnCallExpr.class, "FnCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getFnCallExpr_Fn(), this.getNestedDotID(), null, "fn", null, 0, 1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFnCallExpr_Fn(), this.getQualID(), null, "fn", null, 0, 1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFnCallExpr_Args(), this.getExpr(), null, "args", null, 0, -1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource

@@ -260,7 +260,7 @@ TermExpr returns Expr:
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
 	| {FloorCast} 'floor' '(' expr=Expr ')'
 	| {RealCast}  'real' '(' expr=Expr ')'
-	| {AADLEnumerator} 'enum' '(' enumType=NestedDotID ',' value=ID ')'
+	| {AADLEnumerator} 'enum' '(' enumType=TypeID ',' value=ID ')'
 	| '(' Expr ')';
 	
 
@@ -268,23 +268,23 @@ ComplexExpr:
 	(TypeID
 		=> ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
 		) 
-	| NestedDotID (=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' )?
+	| QualID (=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' )?
+;
+
+QualID:
+	(=> aadlQual=[aadl2::NamedElement|QCPREF])? id=NestedDotID
 ;
 
 NestedDotID:
-	base=[aadl2::NamedElement|EID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
+	base=[aadl2::NamedElement|ID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
 	
 TypeID:
 	base=[aadl2::NamedElement|QCPREF] ;
 
 QCPREF:
-	(ID '::')? ID ('.' ID)?	
+	(ID '::')* ID =>('.' ID)?	
  ;
  
- EID:
-	(ID '::')? ID	
- ;
-
 	
 ReservedVarTag:
 	'_REMOVE'

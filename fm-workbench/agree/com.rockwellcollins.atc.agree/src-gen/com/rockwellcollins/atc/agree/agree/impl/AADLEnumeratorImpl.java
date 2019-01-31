@@ -4,7 +4,7 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -38,7 +38,7 @@ public class AADLEnumeratorImpl extends ExprImpl implements AADLEnumerator
    * @generated
    * @ordered
    */
-  protected NestedDotID enumType;
+  protected TypeID enumType;
 
   /**
    * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
@@ -86,7 +86,7 @@ public class AADLEnumeratorImpl extends ExprImpl implements AADLEnumerator
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getEnumType()
+  public TypeID getEnumType()
   {
     return enumType;
   }
@@ -96,9 +96,9 @@ public class AADLEnumeratorImpl extends ExprImpl implements AADLEnumerator
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetEnumType(NestedDotID newEnumType, NotificationChain msgs)
+  public NotificationChain basicSetEnumType(TypeID newEnumType, NotificationChain msgs)
   {
-    NestedDotID oldEnumType = enumType;
+    TypeID oldEnumType = enumType;
     enumType = newEnumType;
     if (eNotificationRequired())
     {
@@ -113,7 +113,7 @@ public class AADLEnumeratorImpl extends ExprImpl implements AADLEnumerator
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setEnumType(NestedDotID newEnumType)
+  public void setEnumType(TypeID newEnumType)
   {
     if (newEnumType != enumType)
     {
@@ -197,7 +197,7 @@ public class AADLEnumeratorImpl extends ExprImpl implements AADLEnumerator
     switch (featureID)
     {
       case AgreePackage.AADL_ENUMERATOR__ENUM_TYPE:
-        setEnumType((NestedDotID)newValue);
+        setEnumType((TypeID)newValue);
         return;
       case AgreePackage.AADL_ENUMERATOR__VALUE:
         setValue((String)newValue);
@@ -217,7 +217,7 @@ public class AADLEnumeratorImpl extends ExprImpl implements AADLEnumerator
     switch (featureID)
     {
       case AgreePackage.AADL_ENUMERATOR__ENUM_TYPE:
-        setEnumType((NestedDotID)null);
+        setEnumType((TypeID)null);
         return;
       case AgreePackage.AADL_ENUMERATOR__VALUE:
         setValue(VALUE_EDEFAULT);
