@@ -28,6 +28,7 @@ import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
+import org.osate.aadl2.util.Aadl2Util;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 
@@ -39,8 +40,8 @@ import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
-import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.NamedID;
@@ -88,13 +89,15 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 		String name = getCrossRefNodeAsString(node);
 
 		if (context instanceof PropertyValue) {
+
 			return findUnitLiteralAsList((Element) context, name);
 		}
+
 
 		if (context instanceof DoubleDotRef || context instanceof NestedDotID
 				|| context instanceof NodeEq
 				|| context instanceof SynchStatement
-				|| context instanceof RecordExpr || context instanceof RecordType || context instanceof GetPropertyExpr
+				|| context instanceof RecordExpr || context instanceof RecordType || context instanceof Expr
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
 				|| context instanceof OrderStatement || context instanceof ConnectionStatement) {
 
@@ -114,33 +117,32 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			}
 
 
-//			// This code will only link to objects in the projects visible from the current project
-//			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
-//					reference.getEReferenceType());
-//
-//			String contextProject = context.eResource().getURI().segment(1);
-//			List<String> visibleProjects = getVisibleProjects(contextProject);
-//
-//
-//			for (IEObjectDescription eod : allObjectTypes) {
-//
-//				if (isVisible(eod, visibleProjects)) {
-//					EObject res = eod.getEObjectOrProxy();
-//					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-//
-//					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
-//						// special code for AGREE enumerated type definitions
-//						if (((NamedID) res).getName().equals(name)) {
-//							return Collections.singletonList(res);
-//						}
-//					}
-//					if (sameName(eod, name)) {
-//						if (!Aadl2Util.isNull(res)) {
-//							return Collections.singletonList(res);
-//						}
-//					}
-//				}
-//			}
+			// This code will only link to objects in the projects visible from the current project
+			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
+					reference.getEReferenceType());
+
+			String contextProject = context.eResource().getURI().segment(1);
+			List<String> visibleProjects = getVisibleProjects(contextProject);
+
+			for (IEObjectDescription eod : allObjectTypes) {
+
+				if (isVisible(eod, visibleProjects)) {
+					EObject res = eod.getEObjectOrProxy();
+					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
+
+					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
+						// special code for AGREE enumerated type definitions
+						if (((NamedID) res).getName().equals(name)) {
+							return Collections.singletonList(res);
+						}
+					}
+					if (sameName(eod, name)) {
+						if (!Aadl2Util.isNull(res)) {
+							return Collections.singletonList(res);
+						}
+					}
+				}
+			}
 		}
 
 		return super.getLinkedObjects(context, reference, node);
@@ -215,7 +217,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
 
 	private static boolean sameName(IEObjectDescription eod, String name) {
-		return eod.getName().toString().equalsIgnoreCase(name);
+		return eod.getName().toString().equalsIgnoreCase(name.replace("::", "."));
 	}
 
 	private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {
