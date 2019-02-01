@@ -42,7 +42,7 @@ public
 	    		
 	    	eq accel : real = 0.0 -> measured_speed - pre(measured_speed);
 	    	guarantee "The acceleration is bounded" :
-	    	  Lib.abs(accel) <= Ground_Vehicle_C.ACCEL_BOUND;
+	    	  Lib::abs(accel) <= Ground_Vehicle_C::ACCEL_BOUND;
 	    	  
 	    	eq const_target_speed : bool = true -> target_speed = pre(target_speed) and pre(const_target_speed);
 	    	guarantee "measured speed approaches target speed" :
@@ -85,7 +85,7 @@ public
 		annex agree {**
 			
             guarantee "speed error range" :
-              Lib.abs(1.0*rpms - speed) <= 1.0;
+              Lib::abs(1.0*rpms - speed) <= 1.0;
               
             guarantee "speed is positve" :
               0.0 <= speed;
@@ -159,7 +159,7 @@ public
 	    	
 	    	
 	    	guarantee "to_brake behavior" :
-			  to_brakes = if(Lib.abs(act_val) < brake_pressure) then
+			  to_brakes = if(Lib::abs(act_val) < brake_pressure) then
 			                brake_pressure
 			              else if measured_speed < 0.0 and act_val > 0.0 then
 			                act_val

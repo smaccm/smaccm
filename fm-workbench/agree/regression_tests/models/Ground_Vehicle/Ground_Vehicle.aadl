@@ -22,7 +22,7 @@ public
 	    annex agree {**	    	
 	    	eq accel : real = 0.0 -> measured_speed - pre(measured_speed);
 	    	guarantee "The acceleration is bounded" :
-	    	  Lib.abs(accel) <= Ground_Vehicle.ACCEL_BOUND;
+	    	  Lib::abs(accel) <= Ground_Vehicle.ACCEL_BOUND;
 	    	  
 	    	eq count : int = 0 -> pre(count) + 1;
 	    **};
@@ -64,7 +64,7 @@ public
 --			  speed <= Lib.abs(rpms) + Ground_Vehicle.SPEEDOMETER_ERROR_BOUND;
 			  
 			guarantee "speed with no error" :
-			  speed = Lib.abs(rpms);
+			  speed = Lib::abs(rpms);
 			  
 		    guarantee "speed bound" :
 		      0.0 <= speed;
@@ -104,7 +104,7 @@ public
 			  brake_pressure > 0.0 => motor_rpms = 0.0;
 			    
 			assume "do not shift directions if wheel is spinning too fast": true ->
-			    pre(Lib.abs(actual_rpms)) > Ground_Vehicle.MAX_SPEED_DIRECTION_SHIFT => forward = pre(forward);
+			    pre(Lib::abs(actual_rpms)) > Ground_Vehicle.MAX_SPEED_DIRECTION_SHIFT => forward = pre(forward);
 			    
 			guarantee "actual rpms depends on direction" :
 			  actual_rpms = if forward then (rpms_after_friction + motor_rpms) else -1.0 * (rpms_after_friction + motor_rpms);  
@@ -165,7 +165,7 @@ public
 	    	
 	    	
 	    	guarantee "to_brake behavior" :
-			  to_brakes = if(Lib.abs(act_val) < brake_pressure) then
+			  to_brakes = if(Lib::abs(act_val) < brake_pressure) then
 			                brake_pressure
 			              else if measured_speed < 0.0 and act_val > 0.0 then
 			                 act_val

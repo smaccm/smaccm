@@ -39,14 +39,14 @@ public  with DATATYPES;
 								SENSOR_IN.Pump_Too_Hot or SENSOR_IN.Watchdog_Interrupted));
 	
 	eq Time_FR_Over_Min_Tol : int = 0 ->
-		if DEFS.Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, IM_IN.Commanded_Flow_Rate, CONST_IN.Tolerance_Min)
+		if DEFS::Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, IM_IN.Commanded_Flow_Rate, CONST_IN.Tolerance_Min)
 			then pre(Time_FR_Over_Min_Tol) + 1
 		else
 			0;			
 			
 	eq Is_Over_Infusion : bool = false ->
 			((CONST_IN.Max_Duration_Over_Infusion < Time_FR_Over_Min_Tol) or
-					DEFS.Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, IM_IN.Commanded_Flow_Rate, CONST_IN.Tolerance_Max) or 
+					DEFS::Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, IM_IN.Commanded_Flow_Rate, CONST_IN.Tolerance_Max) or 
 						(SENSOR_IN.Flow_Rate > DB_IN.Flow_Rate_High)); 		
 								
 	eq level_3_alarm : bool = (TLM_MODE_IN.System_On and 
@@ -58,14 +58,14 @@ public  with DATATYPES;
 	eq level_2_alarm : bool = false -> low_reservoiur;
 	
 	 eq Time_FR_Under_Min_Tol : int = 0 ->
-		if DEFS.Is_Infusion_below_tolerance (SENSOR_IN.Flow_Rate, IM_IN.Commanded_Flow_Rate, CONST_IN.Tolerance_Min)
+		if DEFS::Is_Infusion_below_tolerance (SENSOR_IN.Flow_Rate, IM_IN.Commanded_Flow_Rate, CONST_IN.Tolerance_Min)
 			then pre(Time_FR_Under_Min_Tol) + 1
 		else
 			0;							
 	
 	eq is_under_infusion : bool =  
 			( (CONST_IN.Max_Duration_Under_Infusion < Time_FR_Under_Min_Tol) or
-			(DEFS.Is_Infusion_below_tolerance(SENSOR_IN.Flow_Rate, IM_IN.Commanded_Flow_Rate, CONST_IN.Tolerance_Max)) or
+			(DEFS::Is_Infusion_below_tolerance(SENSOR_IN.Flow_Rate, IM_IN.Commanded_Flow_Rate, CONST_IN.Tolerance_Max)) or
 			(SENSOR_IN.Flow_Rate < DB_IN.Flow_Rate_Low));
 			
 	 
@@ -87,7 +87,7 @@ public  with DATATYPES;
 				0; 
 
 	    eq Idle_Time_Counter : int = 0 ->
-			if ((IM_IN.Current_System_Mode) = DEFS.IDLE)
+			if ((IM_IN.Current_System_Mode) = DEFS::IDLE)
 				then pre(Idle_Time_Counter) + 1
 			else 0;
 				
@@ -240,7 +240,7 @@ public  with DATATYPES;
 		
 		property level_1_alarm_visual = true ->
 			(ALARM_OUT.Highest_Level_Alarm = 1) => (ALARM_OUT.Notification_Message = DEFS.UNDER_FR) or
-			(ALARM_OUT.Notification_Message = DEFS.UNSTABLE_FR) or (ALARM_OUT.Notification_Message = DEFS.IDLE_TIME) or
+			(ALARM_OUT.Notification_Message = DEFS.UNSTABLE_FR) or (ALARM_OUT.Notification_Message = DEFS::IDLE_TIME) or
 			(ALARM_OUT.Notification_Message = DEFS.PAUSE_TIME) or (ALARM_OUT.Notification_Message = DEFS.CONFIG_TIME) or
 			(ALARM_OUT.Notification_Message = DEFS.BATTERY) or (ALARM_OUT.Notification_Message = DEFS.PUMP_HOT) or
 			(ALARM_OUT.Notification_Message = DEFS.LOG_FAIL) or (ALARM_OUT.Notification_Message = DEFS.SYS_MONITOR);
@@ -255,7 +255,7 @@ public  with DATATYPES;
 		guarantee "unstable_fr_visual_implies_error" : unstable_fr_visual_implies_error;
 		
 		property idle_time_visual_implies_error =
-			true -> (ALARM_OUT.Notification_Message = DEFS.IDLE_TIME) => (Idle_Time_Counter > CONST_IN.Max_Idle_Duration);
+			true -> (ALARM_OUT.Notification_Message = DEFS::IDLE_TIME) => (Idle_Time_Counter > CONST_IN.Max_Idle_Duration);
 		guarantee "idle_time_visual_implies_error" : idle_time_visual_implies_error;
 		
 		property pause_time_visual_implies_error =

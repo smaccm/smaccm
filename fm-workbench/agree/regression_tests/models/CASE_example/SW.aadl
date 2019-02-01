@@ -164,7 +164,7 @@ public
 			waypoint_in: in event data port MissionWindow.Impl;
 			
 		annex agree {**
-			assume "foo test": GS.foo(0);
+			assume "foo test": GS::foo(0);
 			assume "Well-formed mission window" : good_mission_window(waypoint_in);
 			guarantee "A CRC shall be appended to the message to determine message correctness" : waypoint_out.crc = True;
 		**};

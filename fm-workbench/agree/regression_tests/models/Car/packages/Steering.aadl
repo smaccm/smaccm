@@ -13,7 +13,7 @@ public
 --			Agree_Nodes.abs(Target_Tire_Direction.val) <= 0.45;
 			
 		guarantee "roll limiter" :
-			if (Agree_Nodes.abs(Target_Tire_Direction.val) > 0.20 and Speed.val > 45.0)
+			if (Agree_Nodes::abs(Target_Tire_Direction.val) > 0.20 and Speed.val > 45.0)
 			then
 				Actual_Tire_Direction.val = 0.20
 			else
@@ -26,7 +26,7 @@ public
 	system implementation Axel.Axel_Impl
 	
 	annex agree {**
-		assert if (Agree_Nodes.abs(Target_Tire_Direction.val) > 0.20 and Speed.val > 45.0)
+		assert if (Agree_Nodes::abs(Target_Tire_Direction.val) > 0.20 and Speed.val > 45.0)
 			then
 				Actual_Tire_Direction.val = 0.20
 			else

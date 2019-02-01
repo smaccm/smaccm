@@ -22,24 +22,24 @@ public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, 
 	  	eq sys_initial: bool = true -> false;
 						
 		eq timeUnderMinTolerance : int = 0 ->
-			if DEFS.Is_Infusion_below_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Min)
+			if DEFS::Is_Infusion_below_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Min)
 				then pre(timeUnderMinTolerance) + 1
 			else
 				0;							
 		eq is_under_infusion : bool =  
 				( (CONST_IN.Max_Duration_Under_Infusion < timeUnderMinTolerance) or
-				(DEFS.Is_Infusion_below_tolerance(SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Max)) or
+				(DEFS::Is_Infusion_below_tolerance(SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Max)) or
 				(SENSOR_IN.Flow_Rate < DB_IN.Flow_Rate_Low));
 				
 		eq timeOverMinTolerance : int = 0 -> 
-			if DEFS.Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Min)
+			if DEFS::Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Min)
 				then pre(timeOverMinTolerance) + 1
 			else
 				0;		
 		
 		eq Is_Over_Infusion : bool = false ->
 				((CONST_IN.Max_Duration_Over_Infusion < timeOverMinTolerance) or
-						DEFS.Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Max) or 
+						DEFS::Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Max) or 
 							(SENSOR_IN.Flow_Rate > DB_IN.Flow_Rate_High)); 
 
 		eq pausedTimeCounter : int = 0 -> 
@@ -50,7 +50,7 @@ public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, 
 				0;
 		  
 		eq idleTimeCounter : int = 0 ->
-			if (DEFS.is_idle(pre(GPCA_SW_OUT.Current_System_Mode)))
+			if (DEFS::is_idle(pre(GPCA_SW_OUT.Current_System_Mode)))
 				then pre(idleTimeCounter) + 1
 			else 0;
 		

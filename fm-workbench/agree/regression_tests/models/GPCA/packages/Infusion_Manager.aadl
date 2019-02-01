@@ -72,9 +72,9 @@ public
 		
 		------>  highest_level_alarm_3_implies_flow_rate_kvo <------- 
 		
-		--Realizability: DEFS.is_therapy(IM_OUT.Current_System_Mode)
+		--Realizability: DEFS::is_therapy(IM_OUT.Current_System_Mode)
 		property alarm_L3_implies_flow_rate_kvo = 
-			(((TLM_MODE_IN.System_On) and (ALARM_IN.Highest_Level_Alarm = 3) and DEFS.is_therapy(IM_OUT.Current_System_Mode)) 
+			(((TLM_MODE_IN.System_On) and (ALARM_IN.Highest_Level_Alarm = 3) and DEFS::is_therapy(IM_OUT.Current_System_Mode)) 
 					=> (IM_OUT.Commanded_Flow_Rate = CONFIG_IN.Flow_Rate_KVO));
 
 		guarantee "alarm_L3_implies_flow_rate_kvo":   alarm_L3_implies_flow_rate_kvo;
@@ -94,10 +94,10 @@ public
 						(IM_OUT.Current_System_Mode = DEFS.IDLE);
 		guarantee "infusion_cancel_implies_flow_0 ":  infusion_cancel_implies_flow_0;		
 		
-		-- Infusion Pause => <= Flow_Rate KVO (Realizability: not (ALARM_IN.Highest_Level_Alarm = 4) and DEFS.is_therapy(IM_OUT.Current_System_Mode))
+		-- Infusion Pause => <= Flow_Rate KVO (Realizability: not (ALARM_IN.Highest_Level_Alarm = 4) and DEFS::is_therapy(IM_OUT.Current_System_Mode))
 		property infusion_pause_implies_flow_kvo = 
 			true ->  
-			 (TLM_MODE_IN.System_On and OP_CMD_IN.Infusion_Inhibit and not (ALARM_IN.Highest_Level_Alarm = 4) and DEFS.is_therapy(IM_OUT.Current_System_Mode) ) => 
+			 (TLM_MODE_IN.System_On and OP_CMD_IN.Infusion_Inhibit and not (ALARM_IN.Highest_Level_Alarm = 4) and DEFS::is_therapy(IM_OUT.Current_System_Mode) ) => 
 						(IM_OUT.Commanded_Flow_Rate <= CONFIG_IN.Flow_Rate_KVO);
 		guarantee "infusion_pause_implies_flow_kvo ":  infusion_pause_implies_flow_kvo;
 		
@@ -141,14 +141,14 @@ public
 		----->REALIZABILITY<------
 		--REQ 28
 		property infusion_complete_implies_idle =
-			true -> (TLM_MODE_IN.System_On and pre(DEFS.is_active(IM_OUT.Current_System_Mode)) and ((IM_OUT.Actual_Infusion_Duration 
+			true -> (TLM_MODE_IN.System_On and pre(DEFS::is_active(IM_OUT.Current_System_Mode)) and ((IM_OUT.Actual_Infusion_Duration 
 				>= CONFIG_IN.Infusion_Total_Duration) or (SYS_STAT_IN.Volume_Infused >= CONFIG_IN.VTBI_Total))) and not 
 					OP_CMD_IN.Infusion_Inhibit => (IM_OUT.Current_System_Mode = DEFS.IDLE);
 		guarantee "infusion_complete_implies_idle" : infusion_complete_implies_idle;
 		
 		--REQ 29
 		property infusion_inhibit_implies_paused =
-			true -> (TLM_MODE_IN.System_On and pre(DEFS.is_active(IM_OUT.Current_System_Mode)) and OP_CMD_IN.Infusion_Inhibit and (CONFIG_IN.Configured > 0)) 
+			true -> (TLM_MODE_IN.System_On and pre(DEFS::is_active(IM_OUT.Current_System_Mode)) and OP_CMD_IN.Infusion_Inhibit and (CONFIG_IN.Configured > 0)) 
 			=> (IM_OUT.Current_System_Mode = DEFS.PAUSE_KVO) or (IM_OUT.Current_System_Mode = DEFS.PAUSE_MANUAL) or 
 			(IM_OUT.Current_System_Mode = DEFS.PAUSE_NO_KVO);
 		guarantee "infusion_inhibit_implies_paused" : infusion_inhibit_implies_paused;
