@@ -1,0 +1,31 @@
+package Data_Types
+public
+	with Base_Types;
+
+	with Data_Model;
+
+	data Primary_Color
+		properties
+			Data_Model::Data_Representation => Enum;
+			Data_Model::Enumerators => ("Red", "Green", "Blue");
+	end Primary_Color;
+
+		--------------------------------------------------------
+		-- This is how to define a record type. 
+		--------------------------------------------------------
+	data Example_Record_Type
+	end Example_Record_Type;
+
+	data implementation Example_Record_Type.Impl
+		subcomponents
+			Example_Field1: data Base_Types::Integer;
+			Example_Field2: data Base_Types::Float;
+	end Example_Record_Type.Impl;
+
+		--------------------------------------------------------
+	annex agree {**
+		type abc = struct {x: int};
+		fun ghi(x: int): int = x;
+		enum xyz = {X, Y, Z};**};
+	
+end Data_Types;
