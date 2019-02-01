@@ -146,7 +146,7 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 
 	@Override
 	public Function<Map<String, Double>, Double> caseFnCallExpr(FnCallExpr ctx) {
-		org.osate.aadl2.NamedElement fn = (ctx.getFn().getElm());
+		org.osate.aadl2.NamedElement fn = (ctx.getFn().getBase());
 		Function<Map<String, Double>, Double> body = doSwitch(ctx.getArgs().get(0));
 
 		if (fn instanceof com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr) {

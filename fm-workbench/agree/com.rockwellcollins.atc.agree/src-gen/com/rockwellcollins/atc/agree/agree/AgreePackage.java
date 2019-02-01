@@ -1891,31 +1891,13 @@ public interface AgreePackage extends EPackage
   int DOUBLE_DOT_REF = 31;
 
   /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int DOUBLE_DOT_REF__OWNED_ELEMENT = COMPLEX_EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int DOUBLE_DOT_REF__OWNED_COMMENT = COMPLEX_EXPR__OWNED_COMMENT;
-
-  /**
    * The feature id for the '<em><b>Elm</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int DOUBLE_DOT_REF__ELM = COMPLEX_EXPR_FEATURE_COUNT + 0;
+  int DOUBLE_DOT_REF__ELM = 0;
 
   /**
    * The number of structural features of the '<em>Double Dot Ref</em>' class.
@@ -1924,7 +1906,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int DOUBLE_DOT_REF_FEATURE_COUNT = COMPLEX_EXPR_FEATURE_COUNT + 1;
+  int DOUBLE_DOT_REF_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl <em>Nested Dot ID</em>}' class.

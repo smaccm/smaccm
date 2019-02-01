@@ -618,7 +618,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ComplexExpr returns FnCallExpr
 	 *
 	 * Constraint:
-	 *     (fn=ComplexExpr_FnCallExpr_0_0_1_0_0_0_0 (args+=Expr args+=Expr*)?)
+	 *     (fn=ComplexExpr_FnCallExpr_1_0_0_0_0 (args+=Expr args+=Expr*)?)
 	 */
 	protected void sequence_ComplexExpr(ISerializationContext context, FnCallExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -656,7 +656,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ComplexExpr returns RecordExpr
 	 *
 	 * Constraint:
-	 *     (record=ComplexExpr_RecordExpr_0_0_1_1_0_0_0 args+=[NamedElement|ID] argExpr+=Expr (args+=[NamedElement|ID] argExpr+=Expr)*)
+	 *     (record=ComplexExpr_RecordExpr_1_1_0_0_0 args+=[NamedElement|ID] argExpr+=Expr (args+=[NamedElement|ID] argExpr+=Expr)*)
 	 */
 	protected void sequence_ComplexExpr(ISerializationContext context, RecordExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -692,35 +692,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns DoubleDotRef
-	 *     Expr returns DoubleDotRef
-	 *     ArrowExpr returns DoubleDotRef
-	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     ImpliesExpr returns DoubleDotRef
-	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     EquivExpr returns DoubleDotRef
-	 *     EquivExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     OrExpr returns DoubleDotRef
-	 *     OrExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     AndExpr returns DoubleDotRef
-	 *     AndExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     RelateExpr returns DoubleDotRef
-	 *     RelateExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     AddSubExpr returns DoubleDotRef
-	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     MultDivExpr returns DoubleDotRef
-	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     PowerExpr returns DoubleDotRef
-	 *     PowerExpr.BinaryExpr_1_0_0_0 returns DoubleDotRef
-	 *     UnaryExpr returns DoubleDotRef
-	 *     IfThenElseExpr returns DoubleDotRef
-	 *     PreDefFnExpr returns DoubleDotRef
-	 *     RecordUpdateExpr returns DoubleDotRef
-	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns DoubleDotRef
-	 *     TermExpr returns DoubleDotRef
-	 *     ComplexExpr returns DoubleDotRef
-	 *     ComplexExpr.FnCallExpr_0_0_1_0_0_0_0 returns DoubleDotRef
-	 *     ComplexExpr.RecordExpr_0_0_1_1_0_0_0 returns DoubleDotRef
 	 *     DoubleDotRef returns DoubleDotRef
 	 *
 	 * Constraint:
@@ -1018,10 +989,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns NestedDotID
 	 *     TermExpr returns NestedDotID
 	 *     ComplexExpr returns NestedDotID
+	 *     ComplexExpr.FnCallExpr_1_0_0_0_0 returns NestedDotID
+	 *     ComplexExpr.RecordExpr_1_1_0_0_0 returns NestedDotID
 	 *     NestedDotID returns NestedDotID
 	 *
 	 * Constraint:
-	 *     (base=[NamedElement|ID] (tag=ReservedVarTag | sub=NestedDotID)?)
+	 *     (base=[NamedElement|DCID] (tag=ReservedVarTag | sub=NestedDotID)?)
 	 */
 	protected void sequence_NestedDotID(ISerializationContext context, NestedDotID semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

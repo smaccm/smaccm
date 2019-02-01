@@ -3,9 +3,9 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
 
 import java.util.Collection;
 
@@ -46,7 +46,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
    * @generated
    * @ordered
    */
-  protected DoubleDotRef fn;
+  protected NestedDotID fn;
 
   /**
    * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
@@ -84,7 +84,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public DoubleDotRef getFn()
+  public NestedDotID getFn()
   {
     return fn;
   }
@@ -94,9 +94,9 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetFn(DoubleDotRef newFn, NotificationChain msgs)
+  public NotificationChain basicSetFn(NestedDotID newFn, NotificationChain msgs)
   {
-    DoubleDotRef oldFn = fn;
+    NestedDotID oldFn = fn;
     fn = newFn;
     if (eNotificationRequired())
     {
@@ -111,7 +111,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setFn(DoubleDotRef newFn)
+  public void setFn(NestedDotID newFn)
   {
     if (newFn != fn)
     {
@@ -189,7 +189,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
     switch (featureID)
     {
       case AgreePackage.FN_CALL_EXPR__FN:
-        setFn((DoubleDotRef)newValue);
+        setFn((NestedDotID)newValue);
         return;
       case AgreePackage.FN_CALL_EXPR__ARGS:
         getArgs().clear();
@@ -210,7 +210,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
     switch (featureID)
     {
       case AgreePackage.FN_CALL_EXPR__FN:
-        setFn((DoubleDotRef)null);
+        setFn((NestedDotID)null);
         return;
       case AgreePackage.FN_CALL_EXPR__ARGS:
         getArgs().clear();

@@ -1443,8 +1443,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		}
 
-		DoubleDotRef recId = recExpr.getRecord();
-		String recName = AgreeTypeUtils.getIDTypeStr(recId.getElm());
+		NestedDotID recId = recExpr.getRecord();
+		String recName = AgreeTypeUtils.getIDTypeStr(recId.getBase());
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1592,7 +1592,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public Expr caseFnCallExpr(FnCallExpr expr) {
 
 
-		NamedElement namedEl = expr.getFn().getElm();
+		NamedElement namedEl = expr.getFn().getBase();
 
 		String fnName = AgreeTypeUtils.getNodeName(namedEl);
 		boolean found = false;
@@ -1604,7 +1604,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		if (!found) {
-			doSwitch(expr.getFn().getElm());
+			doSwitch(expr.getFn().getBase());
 			// for dReal integration
 			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
 				fnName = namedEl.getName();

@@ -126,7 +126,7 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr> {
 		CallDef callDef = null;
 
 		try {
-			callDef = (CallDef) object.getFn().getElm();
+			callDef = (CallDef) object.getFn().getBase();
 		} catch (ClassCastException e) {
 			return null;
 		}

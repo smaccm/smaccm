@@ -2,6 +2,8 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
+import org.eclipse.emf.ecore.EObject;
+
 import org.osate.aadl2.NamedElement;
 
 /**
@@ -20,7 +22,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface DoubleDotRef extends ComplexExpr
+public interface DoubleDotRef extends EObject
 {
   /**
    * Returns the value of the '<em><b>Elm</b></em>' reference.

@@ -279,6 +279,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/argExpr"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//QualRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//QualRef/elm"/>
+    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//QualID">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//QualID/aadlQual"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//QualID/id"/>

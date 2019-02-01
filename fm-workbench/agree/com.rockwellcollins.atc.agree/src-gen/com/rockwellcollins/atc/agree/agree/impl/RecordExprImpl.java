@@ -3,8 +3,8 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.Expr;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 
 import java.util.Collection;
@@ -50,7 +50,7 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
    * @generated
    * @ordered
    */
-  protected DoubleDotRef record;
+  protected NestedDotID record;
 
   /**
    * The cached value of the '{@link #getArgs() <em>Args</em>}' reference list.
@@ -98,7 +98,7 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public DoubleDotRef getRecord()
+  public NestedDotID getRecord()
   {
     return record;
   }
@@ -108,9 +108,9 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetRecord(DoubleDotRef newRecord, NotificationChain msgs)
+  public NotificationChain basicSetRecord(NestedDotID newRecord, NotificationChain msgs)
   {
-    DoubleDotRef oldRecord = record;
+    NestedDotID oldRecord = record;
     record = newRecord;
     if (eNotificationRequired())
     {
@@ -125,7 +125,7 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setRecord(DoubleDotRef newRecord)
+  public void setRecord(NestedDotID newRecord)
   {
     if (newRecord != record)
     {
@@ -219,7 +219,7 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
     switch (featureID)
     {
       case AgreePackage.RECORD_EXPR__RECORD:
-        setRecord((DoubleDotRef)newValue);
+        setRecord((NestedDotID)newValue);
         return;
       case AgreePackage.RECORD_EXPR__ARGS:
         getArgs().clear();
@@ -244,7 +244,7 @@ public class RecordExprImpl extends ComplexExprImpl implements RecordExpr
     switch (featureID)
     {
       case AgreePackage.RECORD_EXPR__RECORD:
-        setRecord((DoubleDotRef)null);
+        setRecord((NestedDotID)null);
         return;
       case AgreePackage.RECORD_EXPR__ARGS:
         getArgs().clear();

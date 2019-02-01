@@ -272,12 +272,11 @@ TermExpr returns Expr:
 //;
 
 ComplexExpr:
- => (DoubleDotRef 
-	 (
-	   => ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')'
-	 | => ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
-	 )?)
-| NestedDotID
+NestedDotID
+ (
+   => ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')'
+ | => ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
+ )?
 ;
 
 
@@ -285,12 +284,17 @@ DoubleDotRef:
 	elm=[aadl2::NamedElement|QCPREF]
 ;
 
+
 NestedDotID:
-	base=[aadl2::NamedElement|ID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
+	base=[aadl2::NamedElement|DCID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
 	
 
 QCPREF:
 	(ID '::')* ID =>('.' ID)?	
+ ;
+ 
+ DCID:
+	(ID '::')* ID
  ;
  
 	

@@ -1365,13 +1365,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkRecordExpr(RecordExpr recExpr) {
 
-		DoubleDotRef recType = recExpr.getRecord();
+		NestedDotID recType = recExpr.getRecord();
 		List<NamedElement> defArgs = getArgNames(recType);
 		EList<NamedElement> exprArgs = recExpr.getArgs();
 		EList<Expr> argExprs = recExpr.getArgExpr();
 
-		DoubleDotRef recId = recExpr.getRecord();
-		NamedElement finalId = recId.getElm();
+		NestedDotID recId = recExpr.getRecord();
+		NamedElement finalId = recId.getBase();
 
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
 			error(recId, "types must be record definition or data implementation");
@@ -1414,9 +1414,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private List<NamedElement> getArgNames(DoubleDotRef recId) {
+	private List<NamedElement> getArgNames(NestedDotID recId) {
 
-		NamedElement rec = recId.getElm();
+		NamedElement rec = recId.getBase();
 		List<NamedElement> names = new ArrayList<>();
 
 		if (rec instanceof RecordDefExpr) {
@@ -1436,9 +1436,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return names;
 	}
 
-	private Map<String, AgreeType> getArgNameMap(DoubleDotRef recId) {
+	private Map<String, AgreeType> getArgNameMap(NestedDotID recId) {
 
-		NamedElement rec = recId.getElm();
+		NamedElement rec = recId.getBase();
 		Map<String, AgreeType> typeMap = new HashMap<>();
 
 		if (rec instanceof RecordDefExpr) {
@@ -1478,17 +1478,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //    	return types;
 //    }
 
+	private void dataImplCycleCheck(NestedDotID dataID) {
+		NamedElement finalId = dataID.getBase();
+		DataImplementation dataImpl = (DataImplementation) finalId;
+		dataImplCycleCheck(dataImpl, dataID);
+	}
+
 	private void dataImplCycleCheck(DoubleDotRef dataID) {
 		NamedElement finalId = dataID.getElm();
 		DataImplementation dataImpl = (DataImplementation) finalId;
 		dataImplCycleCheck(dataImpl, dataID);
 	}
 
-	private void dataImplCycleCheck(NestedDotID dataID) {
-		NamedElement finalId = getFinalNestId(dataID);
-		DataImplementation dataImpl = (DataImplementation) finalId;
-		dataImplCycleCheck(dataImpl, dataID);
-	}
 
 	private void dataImplCycleCheck(DataImplementation dataImpl, EObject errorSource) {
 		Set<DataImplementation> dataClosure = new HashSet<>();
@@ -1626,13 +1627,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		} else {
 			RecordType recType = (RecordType) type;
 			DoubleDotRef recId = recType.getRecord();
-			return getDoubleDotRefasType(recId);
+			return getNamedElmAsType(recId.getElm());
 		}
 	}
 
-	private AgreeType getDoubleDotRefasType(DoubleDotRef recId) {
+	private AgreeType getNamedElmAsType(NamedElement recEl) {
 		String typeName = "";
-		NamedElement recEl = recId.getElm();
 		EObject aadlPack = recEl.eContainer();
 
 		while (!(aadlPack instanceof AadlPackage)) {
@@ -1827,7 +1827,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		if (rhsExpr instanceof FnCallExpr) {
 
-			NamedElement namedEl = (((FnCallExpr) rhsExpr).getFn().getElm());
+			NamedElement namedEl = (((FnCallExpr) rhsExpr).getFn().getBase());
 			if (namedEl instanceof NodeDefExpr) {
 				NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
 				for (Arg var : nodeDef.getRets()) {
@@ -2253,13 +2253,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkInputsVsActuals(FnCallExpr fnCall) {
 
 		// if the id has a 'tag' then it is using a resrved variable
-		String tag = fnCall.getFn().getElm().getName();
-		if (tag != null) {
-			error(fnCall, "Use of reserved variable tag: '" + tag + " does not make sense"
-					+ " in the context of a node call");
-		}
 
-		NamedElement namedEl = fnCall.getFn().getElm();
+		NamedElement namedEl = fnCall.getFn().getBase();
 
 		if (!(namedEl instanceof CallDef)) {
 			// this error will be caught elsewhere
@@ -2315,7 +2310,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkFnCallExpr(FnCallExpr fnCall) {
-		NamedElement fn = (fnCall.getFn().getElm());
+		NamedElement fn = (fnCall.getFn().getBase());
 		if (isInLinearizationBody(fnCall)) {
 			if (fn instanceof NodeDefExpr) {
 				error(fnCall, "Node definitions cannot be applied in a linearization definition");
@@ -2890,7 +2885,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		// TODO: Examine type system in more detail
 		// TODO: Fix to make support type lists.
 
-		NamedElement namedEl = fnCall.getFn().getElm();
+		NamedElement namedEl = fnCall.getFn().getBase();
 
 		if (isInLinearizationBody(fnCall)) {
 			// extract in/out arguments
@@ -2983,6 +2978,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return getAgreeType((DoubleDotRef) expr);
 		} else if (expr instanceof NestedDotID) {
 			return getAgreeType((NestedDotID) expr);
+		} else if (expr instanceof NestedDotID) {
+			return getAgreeType((NestedDotID) expr);
 		} else if (expr instanceof UnaryExpr) {
 			return getAgreeType((UnaryExpr) expr);
 		} else if (expr instanceof IntLitExpr) {
@@ -3036,7 +3033,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	private AgreeType getAgreeType(RecordExpr recExpr) {
-		return getDoubleDotRefasType(recExpr.getRecord());
+		return getNamedElmAsType(recExpr.getRecord().getBase());
 	}
 
 	public static boolean matches(AgreeType expected, AgreeType actual) {

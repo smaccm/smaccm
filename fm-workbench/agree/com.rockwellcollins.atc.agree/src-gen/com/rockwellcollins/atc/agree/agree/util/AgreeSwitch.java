@@ -363,9 +363,6 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         DoubleDotRef doubleDotRef = (DoubleDotRef)theEObject;
         T result = caseDoubleDotRef(doubleDotRef);
-        if (result == null) result = caseComplexExpr(doubleDotRef);
-        if (result == null) result = caseExpr(doubleDotRef);
-        if (result == null) result = caseElement(doubleDotRef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }

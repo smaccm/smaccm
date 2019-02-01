@@ -1,6 +1,7 @@
 package com.rockwellcollins.atc.agree.linking;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -33,12 +35,17 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
+import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -98,7 +105,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			}
 
 			if (e == null) {
-				e = specStatement(context, reference, name);
+				e = getElm(context, reference, name);
 			}
 
 
@@ -140,13 +147,14 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 	}
 
 
-	private SpecStatement specStatement(EObject context, EReference reference, String name) {
-		String[] segments = name.split("\\.");
+	private Element getElm(EObject context, EReference reference, String name) {
+		String[] segments = name.split("::");
 
-		if (segments.length == 2) {
-			String pkgName = segments[0];
-			String statementName = segments[1];
-			EObject eo = getIndexedObject(context, reference, pkgName.replace("::", "."));
+		if (segments.length >= 2) {
+			String pkgName = String.join(".", Arrays.copyOf(segments, segments.length - 1));
+
+			String statementName = segments[segments.length - 1];
+			EObject eo = getIndexedObject(context, reference, pkgName);
 			if (eo instanceof AadlPackage) {
 				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) eo),
 						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
@@ -163,10 +171,36 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 								return (spec);
 							}
 
-						}
-						else if (spec instanceof EnumStatement) {
+						} else if (spec instanceof LibraryFnDefExpr) {
+							if (((LibraryFnDefExpr) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof NodeDefExpr) {
+							if (((NodeDefExpr) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof LinearizationDefExpr) {
+							if (((LinearizationDefExpr) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof ConstStatement) {
+							if (((ConstStatement) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof EnumStatement) {
 							if (((EnumStatement) spec).getName().equals(statementName)) {
 								return (spec);
+							}
+
+							EList<NamedID> enums = ((EnumStatement) spec).getEnums();
+							for (NamedID nid : enums) {
+								if (nid.getName().contentEquals(statementName)) {
+									return nid;
+								}
 							}
 
 						}
@@ -178,6 +212,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 		}
 		return null;
 	}
+
 
 	private static boolean sameName(IEObjectDescription eod, String name) {
 		return eod.getName().toString().equalsIgnoreCase(name);
