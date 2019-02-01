@@ -359,13 +359,13 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.QUAL_ID:
+      case AgreePackage.DOUBLE_DOT_REF:
       {
-        QualID qualID = (QualID)theEObject;
-        T result = caseQualID(qualID);
-        if (result == null) result = caseComplexExpr(qualID);
-        if (result == null) result = caseExpr(qualID);
-        if (result == null) result = caseElement(qualID);
+        DoubleDotRef doubleDotRef = (DoubleDotRef)theEObject;
+        T result = caseDoubleDotRef(doubleDotRef);
+        if (result == null) result = caseComplexExpr(doubleDotRef);
+        if (result == null) result = caseExpr(doubleDotRef);
+        if (result == null) result = caseElement(doubleDotRef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -373,16 +373,9 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         NestedDotID nestedDotID = (NestedDotID)theEObject;
         T result = caseNestedDotID(nestedDotID);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.TYPE_ID:
-      {
-        TypeID typeID = (TypeID)theEObject;
-        T result = caseTypeID(typeID);
-        if (result == null) result = caseComplexExpr(typeID);
-        if (result == null) result = caseExpr(typeID);
-        if (result == null) result = caseElement(typeID);
+        if (result == null) result = caseComplexExpr(nestedDotID);
+        if (result == null) result = caseExpr(nestedDotID);
+        if (result == null) result = caseElement(nestedDotID);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -875,16 +868,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.RECORD_EXPR:
-      {
-        RecordExpr recordExpr = (RecordExpr)theEObject;
-        T result = caseRecordExpr(recordExpr);
-        if (result == null) result = caseComplexExpr(recordExpr);
-        if (result == null) result = caseExpr(recordExpr);
-        if (result == null) result = caseElement(recordExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.FN_CALL_EXPR:
       {
         FnCallExpr fnCallExpr = (FnCallExpr)theEObject;
@@ -892,6 +875,16 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseComplexExpr(fnCallExpr);
         if (result == null) result = caseExpr(fnCallExpr);
         if (result == null) result = caseElement(fnCallExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.RECORD_EXPR:
+      {
+        RecordExpr recordExpr = (RecordExpr)theEObject;
+        T result = caseRecordExpr(recordExpr);
+        if (result == null) result = caseComplexExpr(recordExpr);
+        if (result == null) result = caseExpr(recordExpr);
+        if (result == null) result = caseElement(recordExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1396,17 +1389,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Qual ID</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Double Dot Ref</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Qual ID</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Double Dot Ref</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseQualID(QualID object)
+  public T caseDoubleDotRef(DoubleDotRef object)
   {
     return null;
   }
@@ -1423,22 +1416,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNestedDotID(NestedDotID object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Type ID</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Type ID</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseTypeID(TypeID object)
   {
     return null;
   }
@@ -2292,22 +2269,6 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Record Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Record Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseRecordExpr(RecordExpr object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Fn Call Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -2319,6 +2280,22 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseFnCallExpr(FnCallExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Record Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Record Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRecordExpr(RecordExpr object)
   {
     return null;
   }

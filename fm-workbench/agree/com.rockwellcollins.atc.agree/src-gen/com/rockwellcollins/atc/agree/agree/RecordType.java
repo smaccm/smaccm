@@ -30,12 +30,12 @@ public interface RecordType extends Type
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Record</em>' containment reference.
-   * @see #setRecord(TypeID)
+   * @see #setRecord(DoubleDotRef)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordType_Record()
    * @model containment="true"
    * @generated
    */
-  TypeID getRecord();
+  DoubleDotRef getRecord();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.RecordType#getRecord <em>Record</em>}' containment reference.
@@ -45,6 +45,6 @@ public interface RecordType extends Type
    * @see #getRecord()
    * @generated
    */
-  void setRecord(TypeID value);
+  void setRecord(DoubleDotRef value);
 
 } // RecordType

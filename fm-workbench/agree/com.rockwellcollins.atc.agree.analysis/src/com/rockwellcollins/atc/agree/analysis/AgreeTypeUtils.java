@@ -27,6 +27,7 @@ import org.osate.aadl2.instance.FeatureInstance;
 
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
@@ -34,7 +35,6 @@ import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.ThisExpr;
-import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
 import jkind.lustre.BoolExpr;
@@ -58,7 +58,7 @@ public class AgreeTypeUtils {
 		if (type instanceof PrimType) {
 			return ((PrimType) type).getString();
 		} else {
-			return getIDTypeStr(((((RecordType) type).getRecord().getBase())));
+			return getIDTypeStr(((((RecordType) type).getRecord().getElm())));
 		}
 	}
 
@@ -71,8 +71,8 @@ public class AgreeTypeUtils {
 		}
 	}
 
-	public static String getTypeName(TypeID recId, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
-		NamedElement finalId = recId.getBase();
+	public static String getTypeName(DoubleDotRef recId, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
+		NamedElement finalId = recId.getElm();
 		return getTypeName(finalId, typeMap, typeExpressions);
 	}
 
@@ -136,8 +136,8 @@ public class AgreeTypeUtils {
 				if (argType instanceof PrimType) {
 					typeStr = ((PrimType) argType).getString();
 				} else {
-					TypeID nestId = ((RecordType) argType).getRecord();
-					NamedElement namedEl = (nestId.getBase());
+					DoubleDotRef nestId = ((RecordType) argType).getRecord();
+					NamedElement namedEl = (nestId.getElm());
 					subType = getType(namedEl, typeMap, typeExpressions);
 				}
 				if (typeStr != null) {

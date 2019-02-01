@@ -73,6 +73,7 @@ import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
@@ -100,7 +101,6 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
@@ -114,7 +114,6 @@ import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
-import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
@@ -1246,7 +1245,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 		} else if (type instanceof RecordType) {
 			RecordType recType = (RecordType) type;
-			NamedElement recordTypeName = recType.getRecord().getBase();
+			NamedElement recordTypeName = recType.getRecord().getElm();
 			if (recordTypeName instanceof DataClassifier) {
 				result.addAll(getDataClassifierRangeConstraintExprs(name, (DataClassifier) recordTypeName));
 			} else if (recordTypeName instanceof RecordDefExpr) {
@@ -1444,8 +1443,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		}
 
-		TypeID recId = recExpr.getRecord();
-		String recName = AgreeTypeUtils.getIDTypeStr(recId.getBase());
+		DoubleDotRef recId = recExpr.getRecord();
+		String recName = AgreeTypeUtils.getIDTypeStr(recId.getElm());
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1592,8 +1591,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseFnCallExpr(FnCallExpr expr) {
 
-		NestedDotID dotId = expr.getFn().getId();
-		NamedElement namedEl = AgreeUtils.getFinalNestId(dotId);
+
+		NamedElement namedEl = expr.getFn().getElm();
 
 		String fnName = AgreeTypeUtils.getNodeName(namedEl);
 		boolean found = false;
@@ -1605,8 +1604,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		if (!found) {
-			NestedDotID fn = expr.getFn().getId();
-			doSwitch(AgreeUtils.getFinalNestId(fn));
+			doSwitch(expr.getFn().getElm());
 			// for dReal integration
 			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
 				fnName = namedEl.getName();
@@ -1873,8 +1871,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseQualID(QualID qual) {
-		return doSwitch(qual.getId());
+	public Expr caseDoubleDotRef(DoubleDotRef qual) {
+		return doSwitch(qual.getElm());
 	}
 
 	@Override
@@ -1932,7 +1930,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseAADLEnumerator(AADLEnumerator aadlEnum) {
-		String typeStr = AgreeTypeUtils.getIDTypeStr(aadlEnum.getEnumType().getBase());
+		String typeStr = AgreeTypeUtils.getIDTypeStr(aadlEnum.getEnumType().getElm());
 		return new IdExpr(typeStr.replace("__", "_") + "_" + aadlEnum.getValue());
 	}
 

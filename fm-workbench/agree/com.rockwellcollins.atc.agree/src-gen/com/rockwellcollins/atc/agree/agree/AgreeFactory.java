@@ -302,13 +302,13 @@ public interface AgreeFactory extends EFactory
   ComplexExpr createComplexExpr();
 
   /**
-   * Returns a new object of class '<em>Qual ID</em>'.
+   * Returns a new object of class '<em>Double Dot Ref</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Qual ID</em>'.
+   * @return a new object of class '<em>Double Dot Ref</em>'.
    * @generated
    */
-  QualID createQualID();
+  DoubleDotRef createDoubleDotRef();
 
   /**
    * Returns a new object of class '<em>Nested Dot ID</em>'.
@@ -318,15 +318,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   NestedDotID createNestedDotID();
-
-  /**
-   * Returns a new object of class '<em>Type ID</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Type ID</em>'.
-   * @generated
-   */
-  TypeID createTypeID();
 
   /**
    * Returns a new object of class '<em>Named ID</em>'.
@@ -806,15 +797,6 @@ public interface AgreeFactory extends EFactory
   AADLEnumerator createAADLEnumerator();
 
   /**
-   * Returns a new object of class '<em>Record Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Record Expr</em>'.
-   * @generated
-   */
-  RecordExpr createRecordExpr();
-
-  /**
    * Returns a new object of class '<em>Fn Call Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -822,6 +804,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   FnCallExpr createFnCallExpr();
+
+  /**
+   * Returns a new object of class '<em>Record Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Record Expr</em>'.
+   * @generated
+   */
+  RecordExpr createRecordExpr();
 
   /**
    * Returns the package supported by this factory.

@@ -48,7 +48,6 @@ import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.analysis.AgreeTypeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
@@ -176,24 +175,19 @@ public class LinearizationRewriter {
 		NestedDotID inputId = af.createNestedDotID();
 		inputId.setBase(EcoreUtil.copy(inputArg));
 
-		QualID inputQualId = af.createQualID();
-		inputQualId.setId(EcoreUtil.copy(inputId));
 
 		NestedDotID resultId = af.createNestedDotID();
 		resultId.setBase(EcoreUtil.copy(resultArg));
 
-		QualID resultQualId = af.createQualID();
-		resultQualId.setId(EcoreUtil.copy(resultId));
-
 
 		BinaryExpr rangeMinExpr = af.createBinaryExpr();
 		rangeMinExpr.setOp(">=");
-		rangeMinExpr.setLeft(EcoreUtil.copy(inputQualId));
+		rangeMinExpr.setLeft(EcoreUtil.copy(inputId));
 		rangeMinExpr.setRight(EcoreUtil.copy(inputMinExpr));
 
 		BinaryExpr rangeMaxExpr = af.createBinaryExpr();
 		rangeMaxExpr.setOp("<=");
-		rangeMaxExpr.setLeft(EcoreUtil.copy(inputQualId));
+		rangeMaxExpr.setLeft(EcoreUtil.copy(inputId));
 		rangeMaxExpr.setRight(EcoreUtil.copy(inputMaxExpr));
 
 		BinaryExpr rangeExpr = af.createBinaryExpr();
@@ -203,7 +197,7 @@ public class LinearizationRewriter {
 
 		BinaryExpr shiftExpr = af.createBinaryExpr();
 		shiftExpr.setOp("-");
-		shiftExpr.setLeft(EcoreUtil.copy(inputQualId));
+		shiftExpr.setLeft(EcoreUtil.copy(inputId));
 		shiftExpr.setRight(EcoreUtil.copy(inputMinExpr));
 
 		BinaryExpr multiplyExpr = af.createBinaryExpr();
@@ -218,7 +212,7 @@ public class LinearizationRewriter {
 
 		BinaryExpr linearBoundExpr = af.createBinaryExpr();
 		linearBoundExpr.setOp(relop);
-		linearBoundExpr.setLeft(EcoreUtil.copy(resultQualId));
+		linearBoundExpr.setLeft(EcoreUtil.copy(resultId));
 		linearBoundExpr.setRight(additionExpr);
 
 		BinaryExpr result = af.createBinaryExpr();
@@ -257,23 +251,20 @@ public class LinearizationRewriter {
 		NestedDotID inputId = af.createNestedDotID();
 		inputId.setBase(EcoreUtil.copy(inputArg));
 
-		QualID inputQualId = af.createQualID();
-		inputQualId.setId(EcoreUtil.copy(inputId));
-
 		RealLitExpr domainCheckLowerLit = af.createRealLitExpr();
 		domainCheckLowerLit.setVal(Double.toString(segs.lower.getFirst().startX));
 
 		BinaryExpr domainCheckLowerExpr = af.createBinaryExpr();
 		domainCheckLowerExpr.setOp("<=");
 		domainCheckLowerExpr.setLeft(domainCheckLowerLit);
-		domainCheckLowerExpr.setRight(EcoreUtil.copy(inputQualId));
+		domainCheckLowerExpr.setRight(EcoreUtil.copy(inputId));
 
 		RealLitExpr domainCheckUpperLit = af.createRealLitExpr();
 		domainCheckUpperLit.setVal(Double.toString(segs.lower.getLast().stopX));
 
 		BinaryExpr domainCheckUpperExpr = af.createBinaryExpr();
 		domainCheckUpperExpr.setOp("<=");
-		domainCheckUpperExpr.setLeft(EcoreUtil.copy(inputQualId));
+		domainCheckUpperExpr.setLeft(EcoreUtil.copy(inputId));
 		domainCheckUpperExpr.setRight(domainCheckUpperLit);
 
 		BinaryExpr domainCheckExpr = af.createBinaryExpr();

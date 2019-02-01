@@ -26,12 +26,12 @@ import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
-import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.ui.contentassist.AgreeProposalProvider;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
 
@@ -126,8 +126,8 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 
 		if (base instanceof Arg) {
 			Type type = ((Arg) base).getType();
-			TypeID elID = ((RecordType) type).getRecord();
-			namedEl = elID.getBase();
+			DoubleDotRef elID = ((RecordType) type).getRecord();
+			namedEl = elID.getElm();
 		} else if (base instanceof DataPort) {
 			namedEl = ((DataPort) base).getDataFeatureClassifier();
 		} else if (base instanceof EventDataPort) {

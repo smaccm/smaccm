@@ -2,8 +2,6 @@
  */
 package com.rockwellcollins.atc.agree.agree;
 
-import org.eclipse.emf.ecore.EObject;
-
 import org.osate.aadl2.NamedElement;
 
 /**
@@ -24,7 +22,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface NestedDotID extends EObject
+public interface NestedDotID extends ComplexExpr
 {
   /**
    * Returns the value of the '<em><b>Base</b></em>' reference.

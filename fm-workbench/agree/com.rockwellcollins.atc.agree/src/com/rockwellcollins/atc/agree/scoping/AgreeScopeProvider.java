@@ -41,6 +41,7 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
@@ -50,7 +51,6 @@ import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
-import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
@@ -58,7 +58,6 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
-import com.rockwellcollins.atc.agree.agree.TypeID;
 
 /**
  * This class contains custom scoping description.
@@ -82,8 +81,8 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_RecordExpr_args(RecordExpr ctx, EReference ref) {
-		TypeID record = ctx.getRecord();
-		NamedElement recDef = record.getBase();
+		DoubleDotRef record = ctx.getRecord();
+		NamedElement recDef = record.getElm();
 		return RecordExprScoper.getRecordComponents(recDef, IScope.NULLSCOPE);
 	}
 
@@ -163,7 +162,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return IScope.NULLSCOPE;
 	}
 
-	protected IScope scope_NamedElement(QualID ctx, EReference ref) {
+	protected IScope scope_NamedElement(DoubleDotRef ctx, EReference ref) {
 		return getScope(ctx.eContainer(), ref);
 	}
 
@@ -180,15 +179,6 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		if (container instanceof NestedDotID) {
 			NestedDotID parent = (NestedDotID) container;
 			refs = parent.eCrossReferences();
-		} else if (container instanceof QualID) {
-			QualID parent = (QualID) container;
-
-			System.out.println("QualID: " + parent.getAadlQual().getQualifiedName());
-			refs = parent.eCrossReferences();
-
-		}
-
-		if (refs != null) {
 
 			if (refs.size() != 1) {
 				return new HashSet<>(); // this will throw a parsing error
@@ -229,8 +219,8 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 				}
 
 				if (type instanceof RecordType) {
-					TypeID elID = ((RecordType) type).getRecord();
-					NamedElement namedEl = elID.getBase();
+					DoubleDotRef elID = ((RecordType) type).getRecord();
+					NamedElement namedEl = elID.getElm();
 
 					if (namedEl instanceof ComponentImplementation) {
 						ComponentImplementation componentImplementation = (ComponentImplementation) namedEl;

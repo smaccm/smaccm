@@ -3,9 +3,9 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
-import com.rockwellcollins.atc.agree.agree.QualID;
 
 import java.util.Collection;
 
@@ -46,7 +46,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
    * @generated
    * @ordered
    */
-  protected QualID fn;
+  protected DoubleDotRef fn;
 
   /**
    * The cached value of the '{@link #getArgs() <em>Args</em>}' containment reference list.
@@ -84,7 +84,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public QualID getFn()
+  public DoubleDotRef getFn()
   {
     return fn;
   }
@@ -94,9 +94,9 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetFn(QualID newFn, NotificationChain msgs)
+  public NotificationChain basicSetFn(DoubleDotRef newFn, NotificationChain msgs)
   {
-    QualID oldFn = fn;
+    DoubleDotRef oldFn = fn;
     fn = newFn;
     if (eNotificationRequired())
     {
@@ -111,7 +111,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setFn(QualID newFn)
+  public void setFn(DoubleDotRef newFn)
   {
     if (newFn != fn)
     {
@@ -189,7 +189,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
     switch (featureID)
     {
       case AgreePackage.FN_CALL_EXPR__FN:
-        setFn((QualID)newValue);
+        setFn((DoubleDotRef)newValue);
         return;
       case AgreePackage.FN_CALL_EXPR__ARGS:
         getArgs().clear();
@@ -210,7 +210,7 @@ public class FnCallExprImpl extends ComplexExprImpl implements FnCallExpr
     switch (featureID)
     {
       case AgreePackage.FN_CALL_EXPR__FN:
-        setFn((QualID)null);
+        setFn((DoubleDotRef)null);
         return;
       case AgreePackage.FN_CALL_EXPR__ARGS:
         getArgs().clear();

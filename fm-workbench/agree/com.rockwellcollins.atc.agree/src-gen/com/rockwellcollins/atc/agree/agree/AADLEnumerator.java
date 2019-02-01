@@ -31,12 +31,12 @@ public interface AADLEnumerator extends Expr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Enum Type</em>' containment reference.
-   * @see #setEnumType(TypeID)
+   * @see #setEnumType(DoubleDotRef)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getAADLEnumerator_EnumType()
    * @model containment="true"
    * @generated
    */
-  TypeID getEnumType();
+  DoubleDotRef getEnumType();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.AADLEnumerator#getEnumType <em>Enum Type</em>}' containment reference.
@@ -46,7 +46,7 @@ public interface AADLEnumerator extends Expr
    * @see #getEnumType()
    * @generated
    */
-  void setEnumType(TypeID value);
+  void setEnumType(DoubleDotRef value);
 
   /**
    * Returns the value of the '<em><b>Value</b></em>' attribute.

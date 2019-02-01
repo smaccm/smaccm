@@ -10,7 +10,6 @@ import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnCallExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -123,15 +122,11 @@ public class FnCallRecursionHelper extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseFnCallExpr(FnCallExpr object) {
-		NestedDotID id = object.getFn().getId();
 
-		while (id.getSub() != null) {
-			id = id.getSub();
-		}
 		CallDef callDef = null;
 
 		try {
-			callDef = (CallDef) id.getBase();
+			callDef = (CallDef) object.getFn().getElm();
 		} catch (ClassCastException e) {
 			return null;
 		}

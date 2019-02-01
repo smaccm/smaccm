@@ -3,8 +3,8 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.RecordType;
-import com.rockwellcollins.atc.agree.agree.TypeID;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -37,7 +37,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * @generated
    * @ordered
    */
-  protected TypeID record;
+  protected DoubleDotRef record;
 
   /**
    * <!-- begin-user-doc -->
@@ -65,7 +65,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public TypeID getRecord()
+  public DoubleDotRef getRecord()
   {
     return record;
   }
@@ -75,9 +75,9 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetRecord(TypeID newRecord, NotificationChain msgs)
+  public NotificationChain basicSetRecord(DoubleDotRef newRecord, NotificationChain msgs)
   {
-    TypeID oldRecord = record;
+    DoubleDotRef oldRecord = record;
     record = newRecord;
     if (eNotificationRequired())
     {
@@ -92,7 +92,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setRecord(TypeID newRecord)
+  public void setRecord(DoubleDotRef newRecord)
   {
     if (newRecord != record)
     {
@@ -151,7 +151,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
     switch (featureID)
     {
       case AgreePackage.RECORD_TYPE__RECORD:
-        setRecord((TypeID)newValue);
+        setRecord((DoubleDotRef)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -168,7 +168,7 @@ public class RecordTypeImpl extends TypeImpl implements RecordType
     switch (featureID)
     {
       case AgreePackage.RECORD_TYPE__RECORD:
-        setRecord((TypeID)null);
+        setRecord((DoubleDotRef)null);
         return;
     }
     super.eUnset(featureID);

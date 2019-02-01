@@ -33,20 +33,20 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
+import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
-import com.rockwellcollins.atc.agree.agree.QualID;
 import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
 import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
-import com.rockwellcollins.atc.agree.agree.TypeID;
 
 public class AgreeLinkingService extends PropertiesLinkingService {
 	public AgreeLinkingService() {
@@ -84,7 +84,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			return findUnitLiteralAsList((Element) context, name);
 		}
 
-		if (context instanceof TypeID || context instanceof QualID || context instanceof NestedDotID
+		if (context instanceof DoubleDotRef || context instanceof NestedDotID
 				|| context instanceof NodeEq
 				|| context instanceof SynchStatement
 				|| context instanceof RecordExpr || context instanceof RecordType || context instanceof GetPropertyExpr
@@ -145,7 +145,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
 		if (segments.length == 2) {
 			String pkgName = segments[0];
-			String recordTypeName = segments[1];
+			String statementName = segments[1];
 			EObject eo = getIndexedObject(context, reference, pkgName.replace("::", "."));
 			if (eo instanceof AadlPackage) {
 				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) eo),
@@ -154,12 +154,18 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
 					for (SpecStatement spec : contract.getSpecs()) {
 						if (spec instanceof RecordDefExpr) {
-							if (((RecordDefExpr) spec).getName().equals(recordTypeName)) {
+							if (((RecordDefExpr) spec).getName().equals(statementName)) {
 								return (spec);
 							}
 
 						} else if (spec instanceof FnDefExpr) {
-							if (((FnDefExpr) spec).getName().equals(recordTypeName)) {
+							if (((FnDefExpr) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						}
+						else if (spec instanceof EnumStatement) {
+							if (((EnumStatement) spec).getName().equals(statementName)) {
 								return (spec);
 							}
 

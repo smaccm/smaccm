@@ -3,7 +3,7 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.TypeID;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -17,35 +17,35 @@ import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Type ID</b></em>'.
+ * An implementation of the model object '<em><b>Double Dot Ref</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.TypeIDImpl#getBase <em>Base</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.DoubleDotRefImpl#getElm <em>Elm</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class TypeIDImpl extends ComplexExprImpl implements TypeID
+public class DoubleDotRefImpl extends ComplexExprImpl implements DoubleDotRef
 {
   /**
-   * The cached value of the '{@link #getBase() <em>Base</em>}' reference.
+   * The cached value of the '{@link #getElm() <em>Elm</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getBase()
+   * @see #getElm()
    * @generated
    * @ordered
    */
-  protected NamedElement base;
+  protected NamedElement elm;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected TypeIDImpl()
+  protected DoubleDotRefImpl()
   {
     super();
   }
@@ -58,7 +58,7 @@ public class TypeIDImpl extends ComplexExprImpl implements TypeID
   @Override
   protected EClass eStaticClass()
   {
-    return AgreePackage.Literals.TYPE_ID;
+    return AgreePackage.Literals.DOUBLE_DOT_REF;
   }
 
   /**
@@ -66,19 +66,19 @@ public class TypeIDImpl extends ComplexExprImpl implements TypeID
    * <!-- end-user-doc -->
    * @generated
    */
-  public NamedElement getBase()
+  public NamedElement getElm()
   {
-    if (base != null && ((EObject)base).eIsProxy())
+    if (elm != null && ((EObject)elm).eIsProxy())
     {
-      InternalEObject oldBase = (InternalEObject)base;
-      base = (NamedElement)eResolveProxy(oldBase);
-      if (base != oldBase)
+      InternalEObject oldElm = (InternalEObject)elm;
+      elm = (NamedElement)eResolveProxy(oldElm);
+      if (elm != oldElm)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.TYPE_ID__BASE, oldBase, base));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.DOUBLE_DOT_REF__ELM, oldElm, elm));
       }
     }
-    return base;
+    return elm;
   }
 
   /**
@@ -86,9 +86,9 @@ public class TypeIDImpl extends ComplexExprImpl implements TypeID
    * <!-- end-user-doc -->
    * @generated
    */
-  public NamedElement basicGetBase()
+  public NamedElement basicGetElm()
   {
-    return base;
+    return elm;
   }
 
   /**
@@ -96,12 +96,12 @@ public class TypeIDImpl extends ComplexExprImpl implements TypeID
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setBase(NamedElement newBase)
+  public void setElm(NamedElement newElm)
   {
-    NamedElement oldBase = base;
-    base = newBase;
+    NamedElement oldElm = elm;
+    elm = newElm;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.TYPE_ID__BASE, oldBase, base));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.DOUBLE_DOT_REF__ELM, oldElm, elm));
   }
 
   /**
@@ -114,9 +114,9 @@ public class TypeIDImpl extends ComplexExprImpl implements TypeID
   {
     switch (featureID)
     {
-      case AgreePackage.TYPE_ID__BASE:
-        if (resolve) return getBase();
-        return basicGetBase();
+      case AgreePackage.DOUBLE_DOT_REF__ELM:
+        if (resolve) return getElm();
+        return basicGetElm();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -131,8 +131,8 @@ public class TypeIDImpl extends ComplexExprImpl implements TypeID
   {
     switch (featureID)
     {
-      case AgreePackage.TYPE_ID__BASE:
-        setBase((NamedElement)newValue);
+      case AgreePackage.DOUBLE_DOT_REF__ELM:
+        setElm((NamedElement)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -148,8 +148,8 @@ public class TypeIDImpl extends ComplexExprImpl implements TypeID
   {
     switch (featureID)
     {
-      case AgreePackage.TYPE_ID__BASE:
-        setBase((NamedElement)null);
+      case AgreePackage.DOUBLE_DOT_REF__ELM:
+        setElm((NamedElement)null);
         return;
     }
     super.eUnset(featureID);
@@ -165,10 +165,10 @@ public class TypeIDImpl extends ComplexExprImpl implements TypeID
   {
     switch (featureID)
     {
-      case AgreePackage.TYPE_ID__BASE:
-        return base != null;
+      case AgreePackage.DOUBLE_DOT_REF__ELM:
+        return elm != null;
     }
     return super.eIsSet(featureID);
   }
 
-} //TypeIDImpl
+} //DoubleDotRefImpl

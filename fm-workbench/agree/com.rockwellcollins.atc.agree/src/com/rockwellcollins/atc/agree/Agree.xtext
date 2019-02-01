@@ -185,7 +185,7 @@ Arg returns Arg:
 
 Type returns Type:
 	{PrimType} string=primTypes ('[' (lowNeg='-')? rangeLow=(INTEGER_LIT|REAL_LIT) ',' (highNeg='-')? rangeHigh=(INTEGER_LIT|REAL_LIT) ']')?
-|	{RecordType} record=TypeID
+|	{RecordType} record=DoubleDotRef
 ;
 
 primTypes:
@@ -260,26 +260,34 @@ TermExpr returns Expr:
 	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
 	| {FloorCast} 'floor' '(' expr=Expr ')'
 	| {RealCast}  'real' '(' expr=Expr ')'
-	| {AADLEnumerator} 'enum' '(' enumType=TypeID ',' value=ID ')'
+	| {AADLEnumerator} 'enum' '(' enumType=DoubleDotRef ',' value=ID ')'
 	| '(' Expr ')';
 	
 
+//ComplexExpr:
+//
+// (DoubleDotRef ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' )
+//| (DoubleDotRef => ( {RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}') 
+//| NestedDotID
+//;
+
 ComplexExpr:
-	(TypeID
-		=> ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
-		) 
-	| QualID (=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' )?
+ => (DoubleDotRef 
+	 (
+	   => ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')'
+	 | => ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
+	 )?)
+| NestedDotID
 ;
 
-QualID:
-	(=> aadlQual=[aadl2::NamedElement|QCPREF])? id=NestedDotID
+
+DoubleDotRef:
+	elm=[aadl2::NamedElement|QCPREF]
 ;
 
 NestedDotID:
 	base=[aadl2::NamedElement|ID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
 	
-TypeID:
-	base=[aadl2::NamedElement|QCPREF] ;
 
 QCPREF:
 	(ID '::')* ID =>('.' ID)?	
