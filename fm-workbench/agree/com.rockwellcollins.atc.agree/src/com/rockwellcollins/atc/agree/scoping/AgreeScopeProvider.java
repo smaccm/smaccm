@@ -162,9 +162,9 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return IScope.NULLSCOPE;
 	}
 
-	protected IScope scope_NamedElement(DoubleDotRef ctx, EReference ref) {
-		return getScope(ctx.eContainer(), ref);
-	}
+//	protected IScope scope_NamedElement(DoubleDotRef ctx, EReference ref) {
+//		return getScope(ctx.eContainer(), ref);
+//	}
 
 	protected IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
 		return Scopes.scopeFor(getCorrespondingAadlElement(ctx, ref), getScope(ctx.eContainer(), ref));

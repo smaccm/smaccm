@@ -2,6 +2,7 @@ package QuasiTest
 public
 with Base_Types;
 with QuasiTestProps; 
+with Defs;
 
 
 system Squadron
@@ -27,8 +28,8 @@ system Squadron
 		
 		assume "not both shifting" : not (left_shift and right_shift);
 		
-		eq left_shift_time : int = defs.high_for(left_shift);
-		eq right_shift_time : int = defs.high_for(right_shift);
+		eq left_shift_time : int = Defs::high_for(left_shift);
+		eq right_shift_time : int = defs::high_for(right_shift);
 			
 	    assume "left shift time": true -> pre(0 < left_shift_time and left_shift_time < 25) => left_shift;
 	    assume "right shift time": true -> pre(0 < right_shift_time and right_shift_time < 25) => right_shift;
@@ -36,7 +37,7 @@ system Squadron
 		eq pending : bool = left_pend or right_pend;
 				
 		assume "only shift if none pending" : true ->
-			defs.rising(left_shift) or defs.rising(right_shift) => 
+			Defs::rising(left_shift) or Defs::rising(right_shift) => 
 				not pre(pending);
 		
 		guarantee "leader equivalence" : 
@@ -92,27 +93,27 @@ system implementation Squadron.impl
 			
 			
 --		assert 
---			true -> pre(defs.rising(left_shift)) => left_shift or 
+--			true -> pre(Defs::rising(left_shift)) => left_shift or 
 --				((form_right.pend_leader != none) and (form_right.pend_right != none) and (form_right.pend_left != none));
 --				
 --		assert 
---			true -> pre(defs.rising(right_shift)) => right_shift or 
+--			true -> pre(Defs::rising(right_shift)) => right_shift or 
 --				((form_right.pend_leader != none) and (form_right.pend_right != none) and (form_right.pend_left != none));
 --				
 --		assert
---			defs.rising(left_shift) or defs.rising(right_shift) => 
+--			Defs::rising(left_shift) or Defs::rising(right_shift) => 
 --				((pre(form_right.leader) != none) and (pre(form_right.right) != none) and (pre(form_right.left) != none));
 --				
 --	    assert 
---			true -> pre(defs.rising(left_shift)) => left_shift or 
+--			true -> pre(Defs::rising(left_shift)) => left_shift or 
 --				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
 --				 
 --		assert 
---			true -> pre(defs.rising(right_shift)) => right_shift or 
+--			true -> pre(Defs::rising(right_shift)) => right_shift or 
 --				((form_left.pend_leader != none) and (form_left.pend_right != none) and (form_left.pend_left != none));
 --				
 --		assert
---			defs.rising(left_shift) or defs.rising(right_shift) => 
+--			Defs::rising(left_shift) or Defs::rising(right_shift) => 
 --				((pre(form_left.leader) != none) and (pre(form_left.right) != none) and (pre(form_left.left) != none));
 			
 				
@@ -184,10 +185,10 @@ system Formation
 		
 		--guarantees about how things move during shifts
 		eq last_shift_left : bool = false -> 
-			defs.rising(left_shift) or (pre(last_shift_left) and not defs.rising(right_shift));
+			Defs::rising(left_shift) or (pre(last_shift_left) and not Defs::rising(right_shift));
 			
 		eq last_shift_right : bool = false -> 
-			defs.rising(right_shift) or (pre(last_shift_right) and not defs.rising(left_shift));
+			Defs::rising(right_shift) or (pre(last_shift_right) and not Defs::rising(left_shift));
 			
 		guarantee "right shift behavior" :
 			true -> (pend_right = pre(leader) and pend_right != none => last_shift_right) and
@@ -207,11 +208,11 @@ system Formation
 		assume "not shifting both same" : not (left_shift and right_shift);
 						
 		assume "only shift if none pending" : true ->
-			defs.rising(left_shift) or defs.rising(right_shift) => 
+			Defs::rising(left_shift) or Defs::rising(right_shift) => 
 				not pre(pending);
 				
-		eq left_shift_time : int = defs.high_for(left_shift);
-		eq right_shift_time : int = defs.high_for(right_shift);
+		eq left_shift_time : int = Defs::high_for(left_shift);
+		eq right_shift_time : int = Defs::high_for(right_shift);
 			
 	    assume "left shift time": true -> 
 	      pre(0 < left_shift_time and left_shift_time < 3) => left_shift;
@@ -358,24 +359,24 @@ system Vehicle
 			state >= 0 and state <= 5;
 
 		guarantee "leader position behavior": true ->
-			((defs.rising(left_shift) and pre(state) = leader) => state = pend_left)
+			((Defs::rising(left_shift) and pre(state) = leader) => state = pend_left)
 			and
-			((defs.rising(right_shift) and pre(state) = leader) => state = pend_right);
+			((Defs::rising(right_shift) and pre(state) = leader) => state = pend_right);
 			
 		guarantee "left position behavior": true ->
-			((defs.rising(left_shift) and pre(state) = left) => state = pend_right)
+			((Defs::rising(left_shift) and pre(state) = left) => state = pend_right)
 			and
-			((defs.rising(right_shift) and pre(state) = left) => state = pend_leader);
+			((Defs::rising(right_shift) and pre(state) = left) => state = pend_leader);
 			
 		guarantee "right position behavior": true ->
-			((defs.rising(left_shift) and pre(state) = right) => state = pend_leader)
+			((Defs::rising(left_shift) and pre(state) = right) => state = pend_leader)
 			and
-			((defs.rising(right_shift) and pre(state) = right) => state = pend_left);
+			((Defs::rising(right_shift) and pre(state) = right) => state = pend_left);
 			
 		guarantee "initial state" : state = init_state -> true;
 		
 		guarantee "stationary behavior" : true ->
-			not (defs.rising(left_shift) or defs.rising(right_shift)) and pre(state) <= 2 =>
+			not (Defs::rising(left_shift) or Defs::rising(right_shift)) and pre(state) <= 2 =>
 				state = pre(state);
 			
 		guarantee "state leader transition behavior" :
@@ -419,7 +420,7 @@ system implementation Vehicle.impl
 					right
 				else if(pre(state) = pend_left and pre(neighbor_state0) != left and pre(neighbor_state1) != left) then
 					left
-				else if(defs.rising(left_shift)) then
+				else if(Defs::rising(left_shift)) then
 					if(pre(state) = leader) then
 						pend_left
 					else if (pre(state) = left) then
@@ -428,7 +429,7 @@ system implementation Vehicle.impl
 						pend_leader
 					else
 						pre(state)
-				else if(defs.rising(right_shift)) then
+				else if(Defs::rising(right_shift)) then
 					if(pre(state) = leader) then
 						pend_right
 					else if (pre(state) = left) then

@@ -2,6 +2,7 @@ package EnumExpModel
 public
 	with Top::EnumExp;
 	with Data_Types;
+	with QS_Properties;
 	
 	process MyProc
 		features
@@ -10,7 +11,6 @@ public
 			DInput: in data port Data_Types::Primary_Color;
 			DOutput: out data port Data_Types::Primary_Color;
 		annex agree {**
-				
 				
 			assume "hello": Top::EnumExp::ghi(1) = 1;
 			eq y: Top::EnumExp::abc = Top::EnumExp::abc {x=1};
@@ -37,6 +37,8 @@ public
 				DOutput = enum(Data_Types::Primary_Color, Green);
 			
 			eq MyLocalSturct3 : Data_Types::Example_Record_Type.Impl;
+			
+      		eq qqq: bool = Get_Property(this, QS_Properties::Init_Bool);   
 		**};		
 	end MyProc;
 	

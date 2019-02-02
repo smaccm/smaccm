@@ -39,7 +39,7 @@ system FCS
     
   annex agree {**
   	guarantee "bounded actuators" : 
-  	  FCS_RC1.req(acts_out1, acts_out2, acts_out3, acts_out4);
+  	  FCS_RC1::req(acts_out1, acts_out2, acts_out3, acts_out4);
   **};
     
 end FCS;

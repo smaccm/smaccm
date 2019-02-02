@@ -1,7 +1,8 @@
 -- 
 package Pilot_Flying
 public
-with Base_Types,Signals,QS_Properties,Data_Model;
+with Base_Types,Signals,QS_Properties,Data_Model,Agree_Nodes;
+with QS_Properties;
   system Cross_Channel_Bus
     features
       I: in data port Base_Types::Boolean;
@@ -10,8 +11,8 @@ with Base_Types,Signals,QS_Properties,Data_Model;
       
       -- Inserted from /contracts/Cross_Channel_Bus.txt
 
-      eq ffT: bool = Agree_Nodes.fT(2);
-          
+      eq ffT: bool = Agree_Nodes::fT(2);
+      guarantee "O_Is_Pre_I" : O = Get_Property(this, QS_Properties::Init_Bool);  
       guarantee "O_Is_Pre_I" : O = if ffT then pre(I) else Get_Property(this, QS_Properties::Init_Bool);   
 **};
   end Cross_Channel_Bus;
@@ -26,10 +27,10 @@ with Base_Types,Signals,QS_Properties,Data_Model;
       -- Inserted from /contracts/Pilot_Flying.txt
 
      node PRESSED (p : bool) returns (r : bool);
-       let r = Agree_Nodes.Rise(p); tel;
+       let r = Agree_Nodes::Rise(p); tel;
            
      node CHANGED (p : bool) returns (r : bool);
-      let r = Agree_Nodes.Changed(p); tel;
+      let r = Agree_Nodes::Changed(p); tel;
           
  	 ----------------------------------------------------------------------------------------------------
      -- R1. At least one side shall always be the pilot flying side.
@@ -41,7 +42,7 @@ with Base_Types,Signals,QS_Properties,Data_Model;
      -- except while the system is switching sides.
      ----------------------------------------------------------------------------------------------------
      guarantee "agree_on_pilot_flying_side" : 
-          Agree_Nodes.Duration(not PRESSED(TS)) > 25 => (LPFS = not RPFS);
+          Agree_Nodes::Duration(not PRESSED(TS)) > 25 => (LPFS = not RPFS);
           
     ----------------------------------------------------------------------------------------------------
     -- R4. The system shall start with the left side as the pilot flying side.
@@ -53,7 +54,7 @@ with Base_Types,Signals,QS_Properties,Data_Model;
     -- R5. If the transfer switch is not pressed the system shall not change the pilot flying side.
     ----------------------------------------------------------------------------------------------------
     guarantee "pilot_flying_side_unchanged_unless_transfer_switch_pressed" : 
-        Agree_Nodes.Duration(not PRESSED(TS)) > 26 => not (CHANGED(RPFS) or CHANGED(LPFS));   
+        Agree_Nodes::Duration(not PRESSED(TS)) > 26 => not (CHANGED(RPFS) or CHANGED(LPFS));   
        
 **};
   end Pilot_Flying;
@@ -298,11 +299,11 @@ with Base_Types,Signals,QS_Properties,Data_Model;
      -- R3. Pressing the transfer switch shall always change the pilot flying side.
      ----------------------------------------------------------------------------------------------------
      lemma "transfer_switch_changes_sides" :
-       pre(Agree_Nodes.Duration(not PRESSED(TS)) > 46) => 
+       pre(Agree_Nodes::Duration(not PRESSED(TS)) > 46) => 
           (not pre(LPFS) and PRESSED_SEEN(TS, LS._CLK) => LPFS) and 
           (not pre(RPFS) and PRESSED_SEEN(TS, RS._CLK) => RPFS);
 
-     eq duration : int = Agree_Nodes.Duration(LS.PFS and RS.PFS and RL.O and LR.O);
+     eq duration : int = Agree_Nodes::Duration(LS.PFS and RS.PFS and RL.O and LR.O);
 	 lemma "Side_Bus_Consistency" : duration <  10;
 **};
   end Pilot_Flying.Pilot_Flying_Impl;

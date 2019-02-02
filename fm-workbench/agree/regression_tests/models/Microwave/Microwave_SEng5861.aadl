@@ -13,10 +13,10 @@ system Mode_Control
 		cooking_mode: out data port Base_Types::Integer;
 							
 	annex agree {** 
-		eq is_cooking : bool = defs.is_cooking(cooking_mode); 
-		eq is_setup : bool = defs.is_setup(cooking_mode); 
-		eq is_suspended : bool = defs.is_suspended(cooking_mode);
-		eq is_running : bool = defs.is_running(cooking_mode);
+		eq is_cooking : bool = defs::is_cooking(cooking_mode); 
+		eq is_setup : bool = defs::is_setup(cooking_mode); 
+		eq is_suspended : bool = defs::is_suspended(cooking_mode);
+		eq is_running : bool = defs::is_running(cooking_mode);
 		
 		
 		-- A freebie.
@@ -29,7 +29,7 @@ system Mode_Control
 		guarantee "The microwave shall be in cooking mode only when the door is closed." : 
 			true;			
 		
-		-- encode this property using the defs.initially_true node.  
+		-- encode this property using the defs::initially_true node.  
 		-- take a look at this definition: why does it encode something that 
 		-- is true in the initial instant?
 		guarantee "The microwave shall be in setup mode in the initial state." : 
@@ -37,7 +37,7 @@ system Mode_Control
 
 		-- A freebie		
 		guarantee "At the instant the microwave starts running, it shall be in the cooking mode if the door is closed" : 
-			(defs.rising_edge(is_running) and door_closed) => 
+			(defs::rising_edge(is_running) and door_closed) => 
 				is_cooking;
 
 		guarantee "At the instant the microwave starts running, it shall enter the suspended mode if the door is open" : 
@@ -68,23 +68,23 @@ system implementation Mode_Control.Impl
 		const SETUP_MODE : int = 1; 
 		const SUSPENDED_MODE : int = 2;
 		const COOKING_MODE : int = 3;
-		eq st_pr: bool = defs.rising_edge(start);
-		eq cl_pr: bool = defs.rising_edge(clear);
+		eq st_pr: bool = defs::rising_edge(start);
+		eq cl_pr: bool = defs::rising_edge(clear);
 
 		-- encoding the state machine used for mode control as a sequence of if/then/elses.
 		eq sm : int = SETUP_MODE -> 
-			if pre(defs.is_setup(sm)) and st_pr and seconds_to_cook > 0 then 
+			if pre(defs::is_setup(sm)) and st_pr and seconds_to_cook > 0 then 
 				if (door_closed) then 
 					COOKING_MODE
 				else 
 					SUSPENDED_MODE
-			else if pre(defs.is_running(sm)) and seconds_to_cook <= 0 then 
+			else if pre(defs::is_running(sm)) and seconds_to_cook <= 0 then 
 				SETUP_MODE
-			else if pre(defs.is_cooking(sm)) and (cl_pr or not door_closed) then
+			else if pre(defs::is_cooking(sm)) and (cl_pr or not door_closed) then
 				SUSPENDED_MODE
-			else if pre(defs.is_suspended(sm)) and cl_pr then 
+			else if pre(defs::is_suspended(sm)) and cl_pr then 
 				SETUP_MODE
-			else if pre(defs.is_suspended(sm)) and door_closed then 
+			else if pre(defs::is_suspended(sm)) and door_closed then 
 				COOKING_MODE
 			else pre(sm); 
 
@@ -120,21 +120,21 @@ system Display_Control
 	annex agree {**
 		-- These variables encode the "rising edge" or initial time instant in which 
 		-- the buttons are pressed.
-		eq kp_0_pressed : bool = defs.rising_edge(kp_0);
-		eq kp_1_pressed : bool = defs.rising_edge(kp_1);
-		eq kp_2_pressed : bool = defs.rising_edge(kp_2);
-		eq kp_3_pressed : bool = defs.rising_edge(kp_3);
-		eq kp_4_pressed : bool = defs.rising_edge(kp_4);
-		eq kp_5_pressed : bool = defs.rising_edge(kp_5);
-		eq kp_6_pressed : bool = defs.rising_edge(kp_6);
-		eq kp_7_pressed : bool = defs.rising_edge(kp_7);
-		eq kp_8_pressed : bool = defs.rising_edge(kp_8);
-		eq kp_9_pressed : bool = defs.rising_edge(kp_9);
-		eq clear_pressed: bool = defs.rising_edge(clear);
+		eq kp_0_pressed : bool = defs::rising_edge(kp_0);
+		eq kp_1_pressed : bool = defs::rising_edge(kp_1);
+		eq kp_2_pressed : bool = defs::rising_edge(kp_2);
+		eq kp_3_pressed : bool = defs::rising_edge(kp_3);
+		eq kp_4_pressed : bool = defs::rising_edge(kp_4);
+		eq kp_5_pressed : bool = defs::rising_edge(kp_5);
+		eq kp_6_pressed : bool = defs::rising_edge(kp_6);
+		eq kp_7_pressed : bool = defs::rising_edge(kp_7);
+		eq kp_8_pressed : bool = defs::rising_edge(kp_8);
+		eq kp_9_pressed : bool = defs::rising_edge(kp_9);
+		eq clear_pressed: bool = defs::rising_edge(clear);
 
 		-- keypad is enabled (for changing time to cook) when mode_control 
 		-- is in the 'setup' mode
-		eq keypad_enabled: bool = (defs.is_setup(cooking_mode)); 
+		eq keypad_enabled: bool = (defs::is_setup(cooking_mode)); 
 				
 		eq any_digit_pressed : bool = 
 			kp_1_pressed or kp_2_pressed or kp_3_pressed or kp_4_pressed or 
@@ -200,13 +200,13 @@ system implementation Display_Control.Impl
 			 (digit: int, carry_out: bool); 
 		let
 			digit = 0 -> 
-				if defs.is_cooking(mode) then
+				if defs::is_cooking(mode) then
 					if (prev_at_zero) then 0
 					else if carry_in then 
 						if pre(digit) = 0 then carry_value else pre(digit) - 1
 					else
 						pre(digit)
-				else if (defs.is_setup(mode)) then 
+				else if (defs::is_setup(mode)) then 
 					if (clear_pressed) then 
 						0
 					else if digit_pressed then 
@@ -249,7 +249,7 @@ system Output_Processing
 	annex agree {**
 		-- freebie
 		guarantee "heating_element_on is equivalent to cooking_mode being 'cooking'" : 
-			heating_element_on = (defs.is_cooking(cooking_mode));
+			heating_element_on = (defs::is_cooking(cooking_mode));
 	**};
 end Output_Processing;
 

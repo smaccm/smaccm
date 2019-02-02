@@ -45,7 +45,7 @@ annex agree{**
   let  
     res = 
     	fail = 
-    		if(OCCURRED.f(RUN_LENGTH.f(OSAS_S_100.req(act,act_ret))>= 5)) then
+    		if(OCCURRED::f(RUN_LENGTH::f(OSAS_S_100::req(act,act_ret))>= 5)) then
     			true
     		else 
     			(false -> pre (fail));

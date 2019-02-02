@@ -1,17 +1,10 @@
 package com.rockwellcollins.atc.agree.linking;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -24,11 +17,13 @@ import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.Namespace;
+import org.osate.aadl2.PropertySet;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
-import org.osate.aadl2.util.Aadl2Util;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 
@@ -101,8 +96,9 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
 				|| context instanceof OrderStatement || context instanceof ConnectionStatement) {
 
-			// EObject e = findClassifier(context, reference, name);
+
 			EObject e = getIndexedObject(context, reference, name);
+
 			if (e == null) {
 				e = findClassifier(context, reference, name);
 			}
@@ -111,38 +107,14 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 				e = getElm(context, reference, name);
 			}
 
+			if (e == null) {
+				e = findPropertySetElement(context, reference, name);
+			}
 
 			if (e != null) {
 				return Collections.singletonList(e);
 			}
 
-
-			// This code will only link to objects in the projects visible from the current project
-			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
-					reference.getEReferenceType());
-
-			String contextProject = context.eResource().getURI().segment(1);
-			List<String> visibleProjects = getVisibleProjects(contextProject);
-
-			for (IEObjectDescription eod : allObjectTypes) {
-
-				if (isVisible(eod, visibleProjects)) {
-					EObject res = eod.getEObjectOrProxy();
-					res = EcoreUtil.resolve(res, context.eResource().getResourceSet());
-
-					if (res.eContainer() instanceof EnumStatement && res instanceof NamedID) {
-						// special code for AGREE enumerated type definitions
-						if (((NamedID) res).getName().equals(name)) {
-							return Collections.singletonList(res);
-						}
-					}
-					if (sameName(eod, name)) {
-						if (!Aadl2Util.isNull(res)) {
-							return Collections.singletonList(res);
-						}
-					}
-				}
-			}
 		}
 
 		return super.getLinkedObjects(context, reference, node);
@@ -153,95 +125,78 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 		String[] segments = name.split("::");
 
 		if (segments.length >= 2) {
-			String pkgName = String.join(".", Arrays.copyOf(segments, segments.length - 1));
+			String pkgName = String.join("::", Arrays.copyOf(segments, segments.length - 1));
 
 			String statementName = segments[segments.length - 1];
-			EObject eo = getIndexedObject(context, reference, pkgName);
-			if (eo instanceof AadlPackage) {
-				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) eo),
-						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
 
-					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
-					for (SpecStatement spec : contract.getSpecs()) {
-						if (spec instanceof RecordDefExpr) {
-							if (((RecordDefExpr) spec).getName().equals(statementName)) {
-								return (spec);
-							}
+			Namespace namespace = AadlUtil.getContainingTopLevelNamespace(context);
 
-						} else if (spec instanceof FnDefExpr) {
-							if (((FnDefExpr) spec).getName().equals(statementName)) {
-								return (spec);
-							}
+			PropertySet propSet = AadlUtil.findImportedPropertySet(pkgName, namespace);
 
-						} else if (spec instanceof LibraryFnDefExpr) {
-							if (((LibraryFnDefExpr) spec).getName().equals(statementName)) {
-								return (spec);
-							}
+			if (propSet != null) {
+				Element elm = propSet.findNamedElement(statementName);
+				return elm;
+			}
 
-						} else if (spec instanceof NodeDefExpr) {
-							if (((NodeDefExpr) spec).getName().equals(statementName)) {
-								return (spec);
-							}
+			AadlPackage aadlPackage = AadlUtil.findImportedPackage(pkgName, namespace);
 
-						} else if (spec instanceof LinearizationDefExpr) {
-							if (((LinearizationDefExpr) spec).getName().equals(statementName)) {
-								return (spec);
-							}
 
-						} else if (spec instanceof ConstStatement) {
-							if (((ConstStatement) spec).getName().equals(statementName)) {
-								return (spec);
-							}
+			for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(aadlPackage,
+					AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
 
-						} else if (spec instanceof EnumStatement) {
-							if (((EnumStatement) spec).getName().equals(statementName)) {
-								return (spec);
-							}
-
-							EList<NamedID> enums = ((EnumStatement) spec).getEnums();
-							for (NamedID nid : enums) {
-								if (nid.getName().contentEquals(statementName)) {
-									return nid;
-								}
-							}
-
+				AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof RecordDefExpr) {
+						if (((RecordDefExpr) spec).getName().equals(statementName)) {
+							return (spec);
 						}
+
+					} else if (spec instanceof FnDefExpr) {
+						if (((FnDefExpr) spec).getName().equals(statementName)) {
+							return (spec);
+						}
+
+					} else if (spec instanceof LibraryFnDefExpr) {
+						if (((LibraryFnDefExpr) spec).getName().equals(statementName)) {
+							return (spec);
+						}
+
+					} else if (spec instanceof NodeDefExpr) {
+						if (((NodeDefExpr) spec).getName().equals(statementName)) {
+							return (spec);
+						}
+
+					} else if (spec instanceof LinearizationDefExpr) {
+						if (((LinearizationDefExpr) spec).getName().equals(statementName)) {
+							return (spec);
+						}
+
+					} else if (spec instanceof ConstStatement) {
+						if (((ConstStatement) spec).getName().equals(statementName)) {
+							return (spec);
+						}
+
+					} else if (spec instanceof EnumStatement) {
+						if (((EnumStatement) spec).getName().equals(statementName)) {
+							return (spec);
+						}
+
+						EList<NamedID> enums = ((EnumStatement) spec).getEnums();
+						for (NamedID nid : enums) {
+							if (nid.getName().contentEquals(statementName)) {
+								return nid;
+							}
+						}
+
 					}
-
 				}
-			}
 
+			}
 		}
+
+
+
 		return null;
-	}
-
-
-	private static boolean sameName(IEObjectDescription eod, String name) {
-		return eod.getName().toString().equalsIgnoreCase(name.replace("::", "."));
-	}
-
-	private static boolean isVisible(IEObjectDescription eod, List<String> visibleProjects) {
-		URI uri = eod.getEObjectURI();
-		String project = uri.segment(1);
-		return visibleProjects.contains(project);
-	}
-
-	private static List<String> getVisibleProjects(String contextProjectName) {
-		List<String> result = new ArrayList<>();
-		result.add(contextProjectName);
-
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject contextProject = root.getProject(URI.decode(contextProjectName));
-		try {
-			IProjectDescription description = contextProject.getDescription();
-			for (IProject referencedProject : description.getReferencedProjects()) {
-				result.add(URI.encodeSegment(referencedProject.getName(), false));
-			}
-		} catch (CoreException ex) {
-			ex.printStackTrace();
-		}
-
-		return result;
 	}
 
 	private static List<EObject> findUnitLiteralAsList(Element context, String name) {

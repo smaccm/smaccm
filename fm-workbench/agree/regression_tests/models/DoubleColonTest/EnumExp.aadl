@@ -18,7 +18,6 @@ public
 			MyBool : data Base_Types::Boolean;
 	end MyStruct.impl;
 	
-	
 	annex agree {**
 		type abc = struct {x: int};
 		fun ghi(x: int): int = x;
