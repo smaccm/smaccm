@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="com.rockwellcollins.atc.resolute.analysis.external.resoluteExternalAnalysis">
+      <externalAnalysis
+            analysisClass="com.rockwellcollins.atc.resolute.agreecheck.ResoluteAgreeCheck"
+            name="AgreeCheck"
+            typeClass="com.rockwellcollins.atc.resolute.agreecheck.ResoluteAgreeCheckType">
+      </externalAnalysis>
+   </extension>
+
+</plugin>

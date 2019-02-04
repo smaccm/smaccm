@@ -1,0 +1,68 @@
+package ISAS_S_170
+public
+
+annex agree {**
+	
+	node req(aoa : DATA_TYPES::DUAL_AoA.treal,
+             air_data : DATA_TYPES::DUAL_AirData.treal, 
+             
+             aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool,
+             
+             aoa_failed_update : DATA_TYPES.dual_bool,
+             air_failed_update : DATA_TYPES.dual_bool, 
+             
+             aoa_in_range : DATA_TYPES::DUAL_AoA.tbool,
+             air_data_in_range : DATA_TYPES::DUAL_AirData.tbool,
+             
+             aoa_select : DATA_TYPES::AoA.treal,
+             air_data_select : DATA_TYPES::AirData.treal
+	        ) returns (ret : bool);
+	  let
+	    ret = ((not aoa_failed_update.val1 and 
+	          not aoa_failed_update.val2 and
+	          aoa_within_tol.AOA1.AOA and
+	          aoa_within_tol.AOA2.AOA and
+	          aoa_in_range.AOA1.AOA and
+	          aoa_in_range.AOA2.AOA) =>
+	          (aoa_select.AOA = (aoa.AOA1.AOA + aoa.AOA2.AOA) / 2.0)) and
+	          
+	          ((not air_failed_update.val1 and not air_failed_update.val2) =>
+	          	(dual_select(air_data_within_tol.AD1.TAT and air_data_within_tol.AD2.TAT,
+	          		        air_data_in_range.AD1.TAT,
+	          		        air_data_in_range.AD2.TAT,
+	          		        air_data_select.TAT,
+	          		        air_data.AD1.TAT,
+	          		        air_data.AD2.TAT) and
+	            dual_select(air_data_within_tol.AD1.TotPres and air_data_within_tol.AD2.TotPres,
+	          		        air_data_in_range.AD1.TotPres,
+	          		        air_data_in_range.AD2.TotPres,
+	          		        air_data_select.TotPres,
+	          		        air_data.AD1.TotPres,
+	          		        air_data.AD2.TotPres) and
+	            dual_select(air_data_within_tol.AD1.Pres and air_data_within_tol.AD2.Pres,
+	          		        air_data_in_range.AD1.Pres,
+	          		        air_data_in_range.AD2.Pres,
+	          		        air_data_select.Pres,
+	          		        air_data.AD1.Pres,
+	          		        air_data.AD2.Pres) and
+	            dual_select(air_data_within_tol.AD1.Temp and air_data_within_tol.AD2.Temp,
+	          		        air_data_in_range.AD1.Temp,
+	          		        air_data_in_range.AD2.Temp,
+	          		        air_data_select.Temp,
+	          		        air_data.AD1.Temp,
+	          		        air_data.AD2.Temp))
+	          );
+	  tel;
+	  
+  node dual_select(within_tol : bool, in_range1 : bool, in_range2 : bool,
+  	               select : real, val1 : real, val2 : real) returns (ret : bool);
+  let
+    ret = (within_tol and in_range1 and in_range2) => (select = (val1 + val2) / 2.0);
+  tel;
+  
+	
+**};
+
+
+end ISAS_S_170;

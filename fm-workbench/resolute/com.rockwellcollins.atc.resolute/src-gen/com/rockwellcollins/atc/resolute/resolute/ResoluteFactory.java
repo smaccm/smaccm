@@ -176,6 +176,15 @@ public interface ResoluteFactory extends EFactory
   SetType createSetType();
 
   /**
+   * Returns a new object of class '<em>Library Fn Type</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Library Fn Type</em>'.
+   * @generated
+   */
+  LibraryFnType createLibraryFnType();
+
+  /**
    * Returns a new object of class '<em>Quant Arg</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -336,6 +345,15 @@ public interface ResoluteFactory extends EFactory
    * @generated
    */
   QuantifiedExpr createQuantifiedExpr();
+
+  /**
+   * Returns a new object of class '<em>Library Fn Call Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Library Fn Call Expr</em>'.
+   * @generated
+   */
+  LibraryFnCallExpr createLibraryFnCallExpr();
 
   /**
    * Returns a new object of class '<em>Built In Fn Call Expr</em>'.

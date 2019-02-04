@@ -21,7 +21,6 @@ import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RecordType;
@@ -123,16 +122,7 @@ public class RenamingVisitor extends AstIterVisitor {
 		return null;
 	}
 
-	private String nestedDotIdToString(NestedDotID id) {
-		String result = id.getBase().getName();
-		if (id.getSub() != null) {
-			result += "." + nestedDotIdToString(id.getSub());
-		}
-		if (id.getTag() != null) {
-			result += "." + id.getTag();
-		}
-		return result;
-	}
+
 
 	private String argToString(Arg arg) {
 		String result = arg.getName() + " : ";
@@ -146,7 +136,7 @@ public class RenamingVisitor extends AstIterVisitor {
 						+ primType.getRangeHigh() + "]";
 			}
 		} else {
-			result += nestedDotIdToString(((RecordType) arg.getType()).getRecord());
+			result += ((RecordType) arg.getType()).getRecord().getBase().getName();
 		}
 		return result;
 	}

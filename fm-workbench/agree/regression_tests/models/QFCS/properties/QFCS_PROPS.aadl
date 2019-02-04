@@ -1,0 +1,3 @@
+property set QFCS_PROPS is
+	FCC_INDEX: aadlinteger applies to (system);
+end QFCS_PROPS;

@@ -303,7 +303,8 @@ public class LustreAstBuilder {
 		nodes.addAll(AgreeRealtimeCalendarBuilder.getRealTimeNodes());
 
 		Program topConsistProg = new ProgramBuilder().addTypes(types).addNodes(nodes).setMain(topConsist.id).build();
-
+//		String topComponentName = agreeProgram.topNode.id.replace("_Instance", "");
+//		programs.add(Tuples.create(topComponentName + " consistent", topConsistProg));
 		programs.add(Tuples.create("This component consistent", topConsistProg));
 
 		for (AgreeNode subNode : agreeProgram.topNode.subNodes) {

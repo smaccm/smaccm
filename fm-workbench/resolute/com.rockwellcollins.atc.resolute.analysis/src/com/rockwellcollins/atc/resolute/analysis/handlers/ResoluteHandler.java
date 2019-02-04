@@ -30,8 +30,11 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
+import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentImplementation;
+import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
@@ -40,10 +43,11 @@ import org.osate.aadl2.instance.FlowSpecificationInstance;
 import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
+import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.aadl2.util.Aadl2Util;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.ui.dialogs.Dialog;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.resolute.analysis.execution.EvaluationContext;
 import com.rockwellcollins.atc.resolute.analysis.execution.FeatureToConnectionsMap;
@@ -89,7 +93,7 @@ public class ResoluteHandler extends AadlHandler {
 
 		// This code will only link to objects in the projects visible from the
 		// current project
-		Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+		Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
 				eclass);
 		String contextProject = context.eResource().getURI().segment(1);
 		List<String> visibleProjects = getVisibleProjects(contextProject);
@@ -117,8 +121,9 @@ public class ResoluteHandler extends AadlHandler {
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject contextProject = root.getProject(URI.decode(contextProjectName));
-		if (!contextProject.exists() || !contextProject.isAccessible() || !contextProject.isOpen())
+		if (!contextProject.exists() || !contextProject.isAccessible() || !contextProject.isOpen()) {
 			return result;
+		}
 		try {
 			IProjectDescription description = contextProject.getDescription();
 			for (IProject referencedProject : description.getReferencedProjects()) {
@@ -132,6 +137,65 @@ public class ResoluteHandler extends AadlHandler {
 		return result;
 	}
 
+	private List<ComponentImplementation> getComponentImplementations(ComponentType ct) {
+		List<ComponentImplementation> result = new ArrayList<>();
+		AadlPackage pkg = AadlUtil.getContainingPackage(ct);
+		for (ComponentImplementation ci : EcoreUtil2.getAllContentsOfType(pkg, ComponentImplementation.class)) {
+			if (ci.getType().equals(ct)) {
+				result.add(ci);
+			}
+		}
+		return result;
+	}
+
+	private Classifier getOutermostClassifier(Element element) {
+		List<EObject> containers = new ArrayList<>();
+		EObject curr = element;
+		while (curr != null) {
+			containers.add(curr);
+			curr = curr.eContainer();
+		}
+		Collections.reverse(containers);
+		for (EObject container : containers) {
+			if (container instanceof Classifier) {
+				// System.out.println(container);
+				return (Classifier) container;
+			}
+		}
+		return null;
+	}
+
+	private ComponentImplementation getComponentImplementation(Element root) {
+		Classifier classifier = getOutermostClassifier(root);
+
+		if (classifier instanceof ComponentImplementation) {
+			return (ComponentImplementation) classifier;
+		}
+		if (!(classifier instanceof ComponentType)) {
+			Dialog.showError("Model Instantiate", "Must select an AADL Component Type or Implementation");
+			return null;
+		}
+		ComponentType ct = (ComponentType) classifier;
+		List<ComponentImplementation> cis = getComponentImplementations(ct);
+		if (cis.size() == 0) {
+			Dialog.showError("Model Instantiate", "AADL Component Type has no implementation to check");
+			return null;
+		} else if (cis.size() == 1) {
+			ComponentImplementation ci = cis.get(0);
+			String message = "User selected " + ct.getFullName() + ". Run checks on " + ci.getFullName() + " instead?";
+			if (Dialog.askQuestion("Model Instantiation", message)) {
+				return ci;
+			} else {
+				return null;
+			}
+		} else {
+			Dialog.showError("Model Instantiate",
+					"AADL Component Type has multiple implementation to verify: please select just one");
+			return null;
+		}
+
+	}
+
 	@Override
 	protected IStatus runJob(Element root, IProgressMonitor monitor) {
 		clearProofs();
@@ -142,17 +206,16 @@ public class ResoluteHandler extends AadlHandler {
 
 		long start = System.currentTimeMillis();
 		SystemInstance si;
-		if (root instanceof ComponentImplementation) {
-			ComponentImplementation compImpl = (ComponentImplementation) root;
+		ComponentImplementation compImpl = getComponentImplementation(root);
+		if (compImpl == null) {
+			return Status.CANCEL_STATUS;
+		} else {
 			try {
 				si = InstantiateModel.buildInstanceModelFile(compImpl);
 			} catch (Exception e) {
 				Dialog.showError("Model Instantiate", "Error while re-instantiating the model: " + e.getMessage());
 				return Status.CANCEL_STATUS;
 			}
-		} else {
-			Dialog.showError("Model Instantiate", "You must select a Component Implementation to instantiate");
-			return Status.CANCEL_STATUS;
 		}
 		long stop = System.currentTimeMillis();
 		System.out.println("Instantiation time: " + (stop - start) / 1000.0 + "s");
@@ -283,7 +346,7 @@ public class ResoluteHandler extends AadlHandler {
 		System.out.println("Evaluation time: " + (stop - start) / 1000.0 + "s");
 
 		enableRerunHandler(root);
-		System.out.println(EcoreUtil2.getURI(root));
+		System.out.println(EcoreUtil.getURI(root));
 
 		return Status.OK_STATUS;
 	}
@@ -312,25 +375,19 @@ public class ResoluteHandler extends AadlHandler {
 	}
 
 	private void enableRerunHandler(final Element root) {
-		getWindow().getShell().getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				IHandlerService handlerService = getHandlerService();
-				rerunActivation = handlerService.activateHandler(RERUN_ID,
-						new RerunHandler(root, ResoluteHandler.this));
-			}
+		getWindow().getShell().getDisplay().syncExec(() -> {
+			IHandlerService handlerService = getHandlerService();
+			rerunActivation = handlerService.activateHandler(RERUN_ID,
+					new RerunHandler(root, ResoluteHandler.this));
 		});
 	}
 
 	private void disableRerunHandler() {
 		if (rerunActivation != null) {
-			getWindow().getShell().getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					IHandlerService handlerService = getHandlerService();
-					handlerService.deactivateHandler(rerunActivation);
-					rerunActivation = null;
-				}
+			getWindow().getShell().getDisplay().syncExec(() -> {
+				IHandlerService handlerService = getHandlerService();
+				handlerService.deactivateHandler(rerunActivation);
+				rerunActivation = null;
 			});
 		}
 	}
@@ -378,12 +435,7 @@ public class ResoluteHandler extends AadlHandler {
 	private void drawProofs(final List<ResoluteResult> proofTrees) {
 		final IWorkbenchPage page = getWindow().getActivePage();
 
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				displayView(proofTrees, page);
-			}
-		});
+		Display.getDefault().asyncExec(() -> displayView(proofTrees, page));
 	}
 
 	private void displayView(final List<ResoluteResult> proofTrees, final IWorkbenchPage page) {

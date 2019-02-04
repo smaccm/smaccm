@@ -32,7 +32,6 @@ import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.Element;
-import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.instance.ComponentInstance;
 import org.osate.aadl2.instance.SystemInstance;
 import org.osate.aadl2.instantiation.InstantiateModel;
@@ -59,11 +58,13 @@ import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomater;
 import com.rockwellcollins.atc.agree.analysis.extentions.AgreeAutomaterRegistry;
 import com.rockwellcollins.atc.agree.analysis.extentions.ExtensionRegistry;
 import com.rockwellcollins.atc.agree.analysis.lustre.visitors.RenamingVisitor;
+import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferencesUtil;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreContractAstBuilder;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsLinker;
 import com.rockwellcollins.atc.agree.analysis.views.AgreeResultsView;
+import com.rockwellcollins.atc.agree.saving.AgreeFileUtil;
 
 import jkind.JKindException;
 import jkind.api.JKindApi;
@@ -100,8 +101,7 @@ public abstract class VerifyHandler extends AadlHandler {
 
 	protected abstract boolean isRealizability();
 
-	protected SystemInstance getSysInstance(Element root, EphemeralImplementationUtil implUtil) {
-		ComponentImplementation ci = getComponentImplementation(root, implUtil);
+	protected SystemInstance getSysInstance(ComponentImplementation ci, EphemeralImplementationUtil implUtil) {
 		try {
 			return InstantiateModel.buildInstanceModelFile(ci);
 		} catch (Exception e) {
@@ -145,7 +145,7 @@ public abstract class VerifyHandler extends AadlHandler {
 				return ci;
 			} else {
 				throw new AgreeException(
-						"AADL Component Type has multiple implementation to verify: please select just one");
+						"AADL Component Type has multiple implementations to verify: please select just one");
 			}
 		}
 	}
@@ -174,12 +174,15 @@ public abstract class VerifyHandler extends AadlHandler {
 		handlerService = getWindow().getService(IHandlerService.class);
 
 		try {
-			SystemInstance si = getSysInstance(root, implUtil);
+
+			// Make sure the user selected a component implementation
+			ComponentImplementation ci = getComponentImplementation(root, implUtil);
+
+			SystemInstance si = getSysInstance(ci, implUtil);
 
 			AnalysisResult result;
 			CompositeAnalysisResult wrapper = new CompositeAnalysisResult("");
 
-			// SystemType sysType = si.getSystemImplementation().getType();
 			ComponentType sysType = AgreeUtils.getInstanceType(si);
 			EList<AnnexSubclause> annexSubClauses = AnnexUtil.getAllAnnexSubclauses(sysType,
 					AgreePackage.eINSTANCE.getAgreeContractSubclause());
@@ -192,21 +195,26 @@ public abstract class VerifyHandler extends AadlHandler {
 				if (AgreeUtils.usingKind2()) {
 					throw new AgreeException("Kind2 only supports monolithic verification");
 				}
-				result = buildAnalysisResult(((NamedElement) root).getName(), si);
+				result = buildAnalysisResult(ci.getName(), si);
 				wrapper.addChild(result);
 				result = wrapper;
 			} else if (isRealizability()) {
 				AgreeProgram agreeProgram = new AgreeASTBuilder().getAgreeProgram(si, false);
+
 				Program program = LustreAstBuilder.getRealizabilityLustreProgram(agreeProgram);
 				wrapper.addChild(createVerification("Realizability Check", si, program, agreeProgram,
 						AnalysisType.Realizability));
 				result = wrapper;
 			} else {
-				wrapVerificationResult(si, wrapper);
+				CompositeAnalysisResult wrapperTop = new CompositeAnalysisResult(
+						"Verification for " + ci.getName());
+				wrapVerificationResult(si, wrapperTop);
+				wrapper.addChild(wrapperTop);
 				result = wrapper;
 			}
+
 			showView(result, linker);
-			return doAnalysis(root, monitor);
+			return doAnalysis(ci, monitor);
 		} catch (Throwable e) {
 			String messages = getNestedMessages(e);
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, messages, e);
@@ -434,6 +442,20 @@ public abstract class VerifyHandler extends AadlHandler {
 			@Override
 			public void run() {
 
+				// Record the analysis start time and get model hashcode for
+				// saving to property analysis log, if necessary
+				String modelHash = "";
+				long startTime = 0;
+				if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PREF_PROP_LOG)) {
+					try {
+						modelHash = AgreeFileUtil.getModelHashcode(root);
+						startTime = System.currentTimeMillis();
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+						return;
+					}
+				}
+
 				activateTerminateHandlers(globalMonitor);
 				KindApi api = PreferencesUtil.getKindApi();
 				KindApi consistApi = PreferencesUtil.getConsistencyApi();
@@ -468,14 +490,24 @@ public abstract class VerifyHandler extends AadlHandler {
 							api.execute(program, result, subMonitor);
 						}
 					} catch (JKindException e) {
+
 						System.out.println("******** JKindException Text ********");
 						e.printStackTrace(System.out);
 						System.out.println("******** JKind Output ********");
 						System.out.println(result.getText());
 						System.out.println("******** Agree Lustre ********");
 						System.out.println(program);
+
+
+						System.out.println(e.getMessage());
 						break;
 					}
+
+					// Print to property analysis log, if necessary
+					if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.PREF_PROP_LOG)) {
+						AgreeFileUtil.printLog(result, startTime, modelHash);
+					}
+
 					queue.remove();
 				}
 
@@ -508,9 +540,11 @@ public abstract class VerifyHandler extends AadlHandler {
 	}
 
 	private void enableRerunHandler(final Element root) {
+
 		getWindow().getShell().getDisplay().syncExec(() -> {
 			IHandlerService handlerService = getHandlerService();
-			rerunActivation = handlerService.activateHandler(RERUN_ID, new RerunHandler(root, VerifyHandler.this));
+			rerunActivation = handlerService.activateHandler(RERUN_ID,
+					new RerunHandler(root, VerifyHandler.this));
 		});
 	}
 

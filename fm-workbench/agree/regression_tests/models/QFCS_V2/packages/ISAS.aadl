@@ -1,0 +1,275 @@
+package ISAS
+public
+  with DATA_TYPES;
+
+
+system ISAS_Sys
+  Features
+    elevators : in data port DATA_TYPES::QUAD_Elevators.treal;
+    ailerons : in data port DATA_TYPES::QUAD_Ailerons.treal;
+    rudders : in data port DATA_TYPES::QUAD_Rudders.treal;
+    flaps : in data port DATA_TYPES::QUAD_Flaps.treal;
+    aoa : in data port DATA_TYPES::DUAL_AoA.treal;
+    air_data : in data port DATA_TYPES::DUAL_AirData.treal;
+    egi : in data port DATA_TYPES::QUAD_EGI.treal;
+    spoilers : in data port DATA_TYPES::QUAD_Spoilers.treal;
+    stabilizers : in data port DATA_TYPES::QUAD_Stabilizer.treal;
+    
+    elevators_select : out data port DATA_TYPES::Elevators.treal;
+    ailerons_select : out data port DATA_TYPES::Ailerons.treal;
+    rudders_select : out data port DATA_TYPES::Rudders.treal;
+    flaps_select : out data port DATA_TYPES::Flaps.treal;
+    aoa_select : out data port DATA_TYPES::AoA.treal;
+    air_data_select : out data port DATA_TYPES::AirData.treal; 
+    egi_select : out data port DATA_TYPES::EGI.treal;
+    spoilers_select : out data port DATA_TYPES::Spoilers.treal;
+    stabilizers_select : out data port DATA_TYPES::Stabilizer.treal;
+    
+    elevators_faults : out data port DATA_TYPES::QUAD_Elevators.tbool;
+    ailerons_faults : out data port DATA_TYPES::QUAD_Ailerons.tbool;
+    rudders_faults : out data port DATA_TYPES::QUAD_Rudders.tbool;
+    flaps_faults : out data port DATA_TYPES::QUAD_Flaps.tbool;
+    aoa_faults : out data port DATA_TYPES::DUAL_AoA.tbool;
+    air_data_faults : out data port DATA_TYPES::DUAL_AirData.tbool;
+    egi_faults : out data port DATA_TYPES::QUAD_EGI.tbool;
+    spoilers_faults : out data port DATA_TYPES::QUAD_Spoilers.tbool;
+    stabilizers_faults : out data port DATA_TYPES::QUAD_Stabilizer.tbool;
+    
+    annex agree {**
+    	    	
+    	eq elevators_failed_update : DATA_TYPES.quad_bool; 
+		eq ailerons_failed_update : DATA_TYPES.quad_bool;
+        eq rudders_failed_update : DATA_TYPES.quad_bool;
+        eq flaps_failed_update : DATA_TYPES.quad_bool;
+        eq aoa_failed_update : DATA_TYPES.dual_bool;
+        eq air_data_failed_update : DATA_TYPES.dual_bool; 
+        eq spoilers_failed_update : DATA_TYPES.quad_bool;
+        eq stabilizers_failed_update : DATA_TYPES.quad_bool;
+        
+        eq elevators_in_range : DATA_TYPES::QUAD_Elevators.tbool; 
+		eq ailerons_in_range : DATA_TYPES::QUAD_Ailerons.tbool;
+        eq rudders_in_range : DATA_TYPES::QUAD_Rudders.tbool;
+        eq flaps_in_range : DATA_TYPES::QUAD_Flaps.tbool;
+        eq aoa_in_range : DATA_TYPES::DUAL_AoA.tbool;
+        eq air_data_in_range : DATA_TYPES::DUAL_AirData.tbool; 
+        eq spoilers_in_range :  DATA_TYPES::QUAD_Spoilers.tbool;
+        eq stabilizer_in_range : DATA_TYPES::QUAD_Stabilizer.tbool;
+        
+        eq elevators_within_tol : DATA_TYPES::QUAD_Elevators.tbool; 
+		eq ailerons_within_tol : DATA_TYPES::QUAD_Ailerons.tbool;
+        eq rudders_within_tol : DATA_TYPES::QUAD_Rudders.tbool;
+        eq flaps_within_tol : DATA_TYPES::QUAD_Flaps.tbool;
+        eq aoa_within_tol : DATA_TYPES::DUAL_AoA.tbool;
+        eq air_data_within_tol : DATA_TYPES::DUAL_AirData.tbool; 
+        eq spoilers_within_tol :  DATA_TYPES::QUAD_Spoilers.tbool;
+        eq stabilizer_within_tol : DATA_TYPES::QUAD_Stabilizer.tbool;
+        
+        eq egi_select_fault : DATA_TYPES::EGI.tbool;
+        
+        eq elevators_sig_tol : DATA_TYPES::Elevators.treal =
+         DATA_TYPES::Elevators.treal 
+         {ELLOB = AGREE_CONSTANTS.ELLOB_tol; 
+          ELLIB = AGREE_CONSTANTS.ELLIB_tol; 
+          ELROB = AGREE_CONSTANTS.ELROB_tol; 
+          ELRIB = AGREE_CONSTANTS.ELRIB_tol;
+          TIME_STAMP = 0
+         };
+         
+		eq ailerons_sig_tol : DATA_TYPES::Ailerons.treal =
+		  DATA_TYPES::Ailerons.treal
+		  {AILL = AGREE_CONSTANTS.AILL_tol;
+		   AILR = AGREE_CONSTANTS.AILR_tol;
+		   TIME_STAMP = 0
+		  };
+		  
+        eq rudders_sig_tol : DATA_TYPES::Rudders.treal =
+		  DATA_TYPES::Rudders.treal
+		  {RUDU = AGREE_CONSTANTS.RUDU_tol;
+		   RUDL = AGREE_CONSTANTS.RUDL_tol;
+		   TIME_STAMP = 0
+		  };
+		  
+        eq flaps_sig_tol : DATA_TYPES::Flaps.treal =
+         DATA_TYPES::Flaps.treal 
+         {FLLOB = AGREE_CONSTANTS.FLLOB_tol; 
+          FLLIB = AGREE_CONSTANTS.FLLIB_tol; 
+          FLROB = AGREE_CONSTANTS.FLROB_tol; 
+          FLRIB = AGREE_CONSTANTS.FLRIB_tol;
+          TIME_STAMP = 0
+         };
+         
+        eq aoa_sig_tol : DATA_TYPES::AoA.treal =
+         DATA_TYPES::AoA.treal 
+         {AOA = AGREE_CONSTANTS.AOA_tol; 
+          TIME_STAMP = 0
+         };
+         
+        eq air_data_sig_tol : DATA_TYPES::AirData.treal =
+         DATA_TYPES::AirData.treal 
+         {TAT = AGREE_CONSTANTS.TAT_tol; 
+          TotPres = AGREE_CONSTANTS.TotPres_tol; 
+          Pres = AGREE_CONSTANTS.Pres_tol; 
+          Temp = AGREE_CONSTANTS.Temp_tol;
+          TIME_STAMP = 0
+         };
+         
+        eq spoilers_sig_tol :  DATA_TYPES::Spoilers.treal =
+         DATA_TYPES::Spoilers.treal 
+         {SPLOB = AGREE_CONSTANTS.SPLOB_tol; 
+          SPLIB = AGREE_CONSTANTS.SPLIB_tol; 
+          SPROB = AGREE_CONSTANTS.SPROB_tol; 
+          SPRIB = AGREE_CONSTANTS.SPRIB_tol;
+          TIME_STAMP = 0
+         };
+         
+        eq stabilizer_sig_tol : DATA_TYPES::Stabilizer.treal =
+         DATA_TYPES::Stabilizer.treal 
+         {VAL = AGREE_CONSTANTS.STAB_tol; 
+          TIME_STAMP = 0
+         };
+        
+        --For single channel inputs, ISAS shall determine if the data has failed
+        --to update, however the command return value will still be passed to OSAS.
+    
+        --shall check dual and quad inputs to determine if the data has failed
+        --to update from the previous sample frame.
+        
+        guarantee "ISAS_S_100_130" : ISAS_S_100_130.req(elevators,
+		     ailerons , rudders , flaps , aoa , air_data , spoilers , stabilizers,
+             elevators_failed_update , ailerons_failed_update , rudders_failed_update ,
+             flaps_failed_update , aoa_failed_update , air_data_failed_update , 
+             spoilers_failed_update, stabilizers_failed_update);
+             
+        --ISAS shall determine whether each dual and quad digital
+        --signal input falls outside its operational range.
+        guarantee "ISAS-S-110" : ISAS_S_110.req(elevators,
+		     ailerons , rudders , flaps , aoa , air_data , spoilers , stabilizers,
+             elevators_in_range , ailerons_in_range , rudders_in_range ,
+             flaps_in_range , aoa_in_range , air_data_in_range , 
+             spoilers_in_range, stabilizer_in_range);
+             
+        guarantee "ISAS-S-140" : 
+        --ISAS shall compare dual channel inputs to determine 
+        --if the signals match within a tolerance.
+        ISAS_S_140.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
+        	           aoa_in_range, air_data_in_range, 
+        	           aoa_within_tol, air_data_within_tol);
+              
+        --ISAS shall compare dual channel inputs to determine 
+        --if the signals match within a tolerance.
+        
+        --ISAS shall compare quad digital inputs to determine if each channel's  
+        --signal matches within a tolerance to another channel's signal.
+        guarantee "ISAS-S-140-150" : ISAS_S_140_150.req(elevators,
+		     ailerons , rudders , flaps , aoa , air_data , spoilers , stabilizers,
+             elevators_within_tol , ailerons_within_tol , rudders_within_tol ,
+             flaps_within_tol , aoa_within_tol , air_data_within_tol , 
+             spoilers_within_tol, stabilizer_within_tol);
+        
+        --the ISAS-S-160 should be covered by ISAS-S-150 once we have type information
+        --guarantee "ISAS-S-160": true;
+        
+         --ISAS shall determine the selected value of healthy dual 
+         --inputs by averaging the signal values.
+        guarantee "ISAS-S-170" : ISAS_S_170.req(aoa, air_data, aoa_within_tol, air_data_within_tol,
+            aoa_failed_update, air_data_failed_update, aoa_in_range, air_data_in_range,
+            aoa_select, air_data_select);
+            
+        guarantee "ISAS-S-190" : 
+        -- If a single signal of a dual channel input has been declared faulty due 
+        -- to being stale or out of range, ISAS shall compare the remaining signal against 
+        -- the selected value of the equivalent parameter computed in the EGI,
+        -- using a tolerance relevant to that comparison.
+        ISAS_S_190.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
+        	           aoa_in_range, air_data_in_range, egi_select, egi_select_fault,
+        	           aoa_within_tol, air_data_within_tol);
+            
+        guarantee "ISAS-S-200" :  
+        -- In the case of a single channel of a dual input signal being declared faulty, 
+        -- ISAS shall determine the selected value by averaging the remaining channel 
+        -- with the equivalent selected value of EGI data.
+        ISAS_S_200.req(aoa, air_data, aoa_faults, air_data_faults, egi_select, 
+        	           aoa_select, air_data_select);
+
+        guarantee "ISAS-S-210" :  
+        -- In the case of both channels of a dual input signal being declared faulty, 
+        -- ISAS shall set the selected value equal to the equivalent selected value 
+        -- of EGI data provided the EGI data is valid.
+        ISAS_S_210.req(aoa, air_data, aoa_faults, air_data_faults, egi_select, 
+        	           aoa_select, air_data_select);
+       
+        guarantee "ISAS-S-220" :  
+        -- In the case of mismatched dual input signals, ISAS shall set the 
+        -- selected value equal to the equivalent selected value of EGI data.
+        ISAS_S_220.req(aoa, air_data, aoa_failed_update, air_data_failed_update, 
+        	           aoa_in_range, air_data_in_range, egi_select, egi_select_fault, aoa_select, air_data_select);  
+            
+        -- ISAS shall determine the selected value for a quad digital signal using the following table:
+        -- 1) 4 good values with total range less than SignalTolerance, average all 4
+        -- 2) 4 good values with total range greater than SignalTolerance, average middle 2
+        -- 3) 3 good values with total range less than SignalTolerance, average all 3
+        -- 4) 3 good values with total range greater than SignalTolerance, select middle value
+        -- 5) 2 good values with total range less than SignalTolerance, average values
+        
+        guarantee "ISAS-S-260" : ISAS_S_260.req(
+        	 elevators, ailerons, rudders, flaps, spoilers, stabilizers,
+             elevators_faults, ailerons_faults, rudders_faults, flaps_faults, spoilers_faults, stabilizers_faults,
+             elevators_sig_tol, ailerons_sig_tol, rudders_sig_tol, flaps_sig_tol, spoilers_sig_tol, stabilizer_sig_tol,
+             elevators_select, ailerons_select, rudders_select, flaps_select, spoilers_select, stabilizers_select);
+        
+        -- ISAS-S-240 - ISAS shall latch each signal fault that persists
+        -- for 5 consecutive frames FAILED where it will remain until the FCC is reset.
+        guarantee "ISAS-S-240" : ISAS_S_240.req(
+        	 elevators_within_tol, 
+		     ailerons_within_tol,
+             rudders_within_tol,
+             flaps_within_tol,
+             spoilers_within_tol,
+             stabilizer_within_tol,
+             aoa_within_tol,
+             air_data_within_tol,
+             
+             elevators_failed_update, 
+		     ailerons_failed_update,
+             rudders_failed_update,
+             flaps_failed_update,
+             spoilers_failed_update,
+             stabilizers_failed_update,
+             aoa_failed_update,
+             air_data_failed_update, 
+             
+             elevators_in_range, 
+		     ailerons_in_range,
+             rudders_in_range,
+             flaps_in_range,
+             spoilers_in_range,
+             stabilizer_in_range,
+             aoa_in_range,
+             air_data_in_range,
+             
+             elevators_faults, 
+		     ailerons_faults,
+             rudders_faults,
+             flaps_faults,
+             spoilers_faults,
+             stabilizers_faults,
+             aoa_faults,
+             air_data_faults);
+             
+     **}; 
+            
+end ISAS_Sys; 
+
+system implementation ISAS_Sys.Impl
+--   annex agree {**
+--   	   
+--   	     lemma "aoa_compare12" :
+--   	     (aoa_in_range.AOA1.AOA and not aoa_failed_update.val1 and aoa_within_tol.AOA1.AOA and
+--          aoa_in_range.AOA2.AOA and not aoa_failed_update.val2 and aoa_within_tol.AOA2.AOA)  =>
+--          	        not (aoa_faults.AOA1.AOA and not aoa_faults.AOA2.AOA);
+-- 
+--   **};
+   
+end ISAS_Sys.Impl;
+
+end ISAS;

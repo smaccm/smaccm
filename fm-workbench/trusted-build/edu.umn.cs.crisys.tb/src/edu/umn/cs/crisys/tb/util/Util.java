@@ -1,11 +1,9 @@
 package edu.umn.cs.crisys.tb.util;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -26,6 +24,13 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.IntegerLiteral;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Property;
@@ -36,18 +41,15 @@ import org.osate.aadl2.impl.PortImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.ConnectionInstanceEnd;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
+import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
-import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.STGroupFile;
 
-import edu.umn.cs.crisys.tb.Logger;
+import com.google.inject.Injector;
+
 import edu.umn.cs.crisys.tb.PluginActivator;
 import edu.umn.cs.crisys.tb.TbException;
-import edu.umn.cs.crisys.tb.TbFailure;
-import edu.umn.cs.crisys.tb.codegen.common.TbSTErrorListener;
-import edu.umn.cs.crisys.tb.codegen.common.names.ModelNames;
 import edu.umn.cs.crisys.tb.model.ModelElement;
 import edu.umn.cs.crisys.tb.model.OSModel;
 import edu.umn.cs.crisys.tb.model.connection.PortConnection;
@@ -57,9 +59,9 @@ import edu.umn.cs.crisys.tb.model.process.ProcessInstance;
 
 public class Util {
    // TODO: Clean up Util, PortUtil, and PropertyUtil!
-   
-   
-   // TODO: MWW: necessary to implement listeners.  This is *ugly* but 
+
+
+   // TODO: MWW: necessary to implement listeners.  This is *ugly* but
    // I don't have a good solution right now.
    private static STErrorListener listener;
    public static void setListener(STErrorListener listener) { Util.listener = listener ; }
@@ -73,13 +75,13 @@ public class Util {
    public static String getPrefix_() {
       return prefix + "_";
    }
-   
+
    public static void setPrefix(String aprefix) {
       prefix = aprefix;
    }
-   
-   
-   
+
+
+
    public static OSModel getElementOSModel(ModelElement element) {
       if (element == null) {
          return null;
@@ -92,7 +94,7 @@ public class Util {
 
    public static ProcessImplementation getProcessImplementation(ModelElement element) {
       if (element == null) {
-         return null; 
+         return null;
       } else if (element instanceof ProcessImplementation) {
          return (ProcessImplementation)element;
       } else if (element instanceof ProcessInstance) {
@@ -102,18 +104,26 @@ public class Util {
          return getProcessImplementation(element.getParent());
       }
    }
-   
-   
+
+	/**
+	* Check whether all connections of a port feature have process implementation matching
+	* that of the given port feature.
+	*
+	* @param pf port feature to check
+	* @return true if all connections have the same process implementation as the given port
+	*     feature, false otherwise.
+	*/
    public static boolean allConnectionsInProcess(PortFeature pf) {
       ProcessImplementation pi = Util.getProcessImplementation(pf);
       for (PortConnection pc : pf.getConnections()) {
-         ProcessImplementation pj = Util.getProcessImplementation(pf);
-         if (pi != pj)
-            return false;
+			ProcessImplementation pj = Util.getProcessImplementation(pc);
+         if (pi != pj) {
+			return false;
+		}
       }
       return true;
    }
-   
+
    public static String stackTraceString(Exception e) {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);
@@ -150,12 +160,12 @@ public class Util {
    }
 
    public static String getCUintTypeForMaxValue(int maxValue) {
-      if (maxValue <= 256) 
-         return "c_uint8";
-      else if (maxValue <= 65536) {
+      if (maxValue <= 256) {
+		return "c_uint8";
+	} else if (maxValue <= 65536) {
          return "c_uint16";
       } else {
-         return "c_uint32"; 
+         return "c_uint32";
       }
 
    }
@@ -213,9 +223,9 @@ public class Util {
    }
 
    public static int moduloCeiling(int modulus, int val) {
-      return ((val % modulus) == 0) ? val : val + (modulus - (val % modulus));  
+      return ((val % modulus) == 0) ? val : val + (modulus - (val % modulus));
    }
-   
+
    public static <T> T assertNonNull(T obj, String error) {
       if (obj == null) {
          throw new TbException(error);
@@ -276,8 +286,24 @@ public class Util {
    }
 
    public static Property getPropertyDefinitionInWorkspace(String pdname) {
-      return EMFIndexRetrieval.getPropertyDefinitionInWorkspace(
-            OsateResourceUtil.getResourceSet(), pdname);
+		Injector injector = IResourceServiceProvider.Registry.INSTANCE
+				.getResourceServiceProvider(URI.createFileURI("dummy.aadl")).get(Injector.class);
+		final ResourceDescriptionsProvider resourceDescriptionsProvider = injector
+				.getInstance(ResourceDescriptionsProvider.class);
+		final IResourceDescriptions resourceDescriptions = resourceDescriptionsProvider
+				.getResourceDescriptions(new XtextResourceSet());
+		for (IEObjectDescription eobjDesc : resourceDescriptions
+				.getExportedObjectsByType(Aadl2Package.eINSTANCE.getProperty())) {
+			if (eobjDesc.getName().toString("::").equalsIgnoreCase(pdname)) {
+				EObject res = eobjDesc.getEObjectOrProxy();
+				res = EcoreUtil.resolve(res, OsateResourceUtil.getResourceSet());
+				if (!Aadl2Util.isNull(res)) {
+					return (Property) res;
+				}
+			}
+		}
+		throw new TbException(
+				"Error: " + pdname + " does not correspond to any " + "system implementation in the workspace.\n");
    }
 
    public static File getDirectory(EObject e) {
@@ -292,22 +318,22 @@ public class Util {
    // Attempts to find trusted build configuration files in one of three
    // places (in order of preference):
    //   1. A user-defined environment variable: $TB_CONFIG_DIR
-   //   2. A directory titled: "tb_resources" in the directory containing the 
+   //   2. A directory titled: "tb_resources" in the directory containing the
    //      .jar file
    //   3. A directory titled: "tb_resources" within the .jar file itself.
    //      Note: if running from the command line, this is not available!
    //
-   // the findConfigFileLocation attempts the first two locations; if it 
+   // the findConfigFileLocation attempts the first two locations; if it
    // 'hits', it returns the canonical path to the location of the file;
    // otherwise, it returns null.
-   // 
+   //
    /////////////////////////////////////////////////////////////////////
 
    public static final String tb_resource = "tb_resource";
 
    public static String findConfigFileLocation(String fileName) {
       String envAadlDirString = System.getenv("TB_CONFIG_DIR");
-      //Map<String, String> myMap = System.getenv(); 
+      //Map<String, String> myMap = System.getenv();
       File envAadlDir = null;
       try {
          if (envAadlDirString != null) {
@@ -320,16 +346,16 @@ public class Util {
             }
          }
 
-         PluginActivator pi = PluginActivator.getDefault(); 
+         PluginActivator pi = PluginActivator.getDefault();
          if (pi != null) {
             URL url = createURLFromClass(pi.getClass());
             File pluginDir = getFileFromURL(url);
             if (pluginDir != null && pluginDir.exists()) {
                File resourceDir = new File(pluginDir, tb_resource);
                if (resourceDir.exists()) {
-                  File fileNameLoc = new File(resourceDir, fileName); 
+                  File fileNameLoc = new File(resourceDir, fileName);
                   if (fileNameLoc.exists()) {
-                     return fileNameLoc.getCanonicalPath(); 
+                     return fileNameLoc.getCanonicalPath();
                   }
                }
             }
@@ -337,7 +363,7 @@ public class Util {
       } catch (URISyntaxException e) { }
       catch (IOException e) { }
 
-      return null; 
+      return null;
    }
 
    public static InputStream findConfigFile(String fileName) {
@@ -346,7 +372,7 @@ public class Util {
       try {
          String fileLocation = findConfigFileLocation(fileName);
          if (fileLocation != null) {
-            File f = new File(fileLocation); 
+            File f = new File(fileLocation);
             ins = new FileInputStream(f);
          }
          else {
@@ -399,15 +425,15 @@ public class Util {
          + "FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, " + System.lineSeparator()
          + "ARISING FROM, OUT OF OR IN CONNECTION WITH THE DATA OR THE USE OR OTHER DEALINGS IN THE DATA. " + System.lineSeparator();
 
-   
+
    /******************************************************************
-    * 
+    *
     * File writing helper functions
-    * 
+    *
     ******************************************************************/
    public static String getDate() {
       DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
       Date d = new Date();
-      return dateFormat.format(d);  
+      return dateFormat.format(d);
    }
 }

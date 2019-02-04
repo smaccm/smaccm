@@ -1,0 +1,154 @@
+package FCS
+public
+  with DATA_TYPES;
+  with FCC;
+
+system FCS
+  features
+    elevators : in data port DATA_TYPES::QUAD_Elevators.treal;
+    ailerons : in data port DATA_TYPES::QUAD_Ailerons.treal;
+    rudders : in data port DATA_TYPES::QUAD_Rudders.treal;
+    flaps : in data port DATA_TYPES::QUAD_Flaps.treal;
+    aoa : in data port DATA_TYPES::DUAL_AoA.treal;
+    air_data : in data port DATA_TYPES::DUAL_AirData.treal;
+    egi : in data port DATA_TYPES::QUAD_EGI.treal;
+    spoilers : in data port DATA_TYPES::QUAD_Spoilers.treal;
+    stabilizers : in data port DATA_TYPES::QUAD_Stabilizer.treal;
+    
+    acts_ret1 : in data port DATA_TYPES::Actuators.impl;
+    acts_ret2 : in data port DATA_TYPES::Actuators.impl;
+    acts_ret3 : in data port DATA_TYPES::Actuators.impl;
+    acts_ret4 : in data port DATA_TYPES::Actuators.impl;
+
+    acts_out1 : out data port DATA_TYPES::Actuators.impl;
+    acts_out2 : out data port DATA_TYPES::Actuators.impl;
+    acts_out3 : out data port DATA_TYPES::Actuators.impl;
+    acts_out4 : out data port DATA_TYPES::Actuators.impl;
+    
+    sovs11: out data port DATA_TYPES::BoolActuators.impl;
+    sovs21: out data port DATA_TYPES::BoolActuators.impl;
+    
+    sovs12: out data port DATA_TYPES::BoolActuators.impl;
+    sovs22: out data port DATA_TYPES::BoolActuators.impl;
+    
+    sovs13: out data port DATA_TYPES::BoolActuators.impl;
+    sovs23: out data port DATA_TYPES::BoolActuators.impl;
+    
+    sovs14: out data port DATA_TYPES::BoolActuators.impl;
+    sovs24: out data port DATA_TYPES::BoolActuators.impl;
+    
+  annex agree {**
+  	guarantee "bounded actuators" : 
+  	  FCS_RC1.req(acts_out1, acts_out2, acts_out3, acts_out4);
+  **};
+    
+end FCS;
+
+system implementation FCS.impl
+  subcomponents
+    FCC1 : system FCC::FCC.impl;
+    FCC2 : system FCC::FCC.impl;
+    FCC3 : system FCC::FCC.impl;
+    FCC4 : system FCC::FCC.impl;
+  
+  connections
+    elv_conn1: port elevators -> FCC1.elevators;
+    ail_conn1: port ailerons -> FCC1.ailerons;
+    rud_conn1: port rudders -> FCC1.rudders;
+    spoil_conn1: port spoilers -> FCC1.spoilers;
+    flaps_conn1: port flaps -> FCC1.flaps;
+    aoa_conn1 : port aoa -> FCC1.aoa;
+    air_conn1 : port air_data -> FCC1.air_data;
+    stab_conn1 : port stabilizers -> FCC1.stabilizers;
+    
+    elv_conn2: port elevators -> FCC2.elevators;
+    ail_conn2: port ailerons -> FCC2.ailerons;
+    rud_conn2: port rudders -> FCC2.rudders;
+    spoil_conn2: port spoilers -> FCC2.spoilers;
+    flaps_conn2: port flaps -> FCC2.flaps;
+    aoa_conn2 : port aoa -> FCC2.aoa;
+    air_conn2 : port air_data -> FCC2.air_data;
+    stab_conn2 : port stabilizers -> FCC2.stabilizers;
+    
+    elv_conn3: port elevators -> FCC3.elevators;
+    ail_conn3: port ailerons -> FCC3.ailerons;
+    rud_conn3: port rudders -> FCC3.rudders;
+    spoil_conn3: port spoilers -> FCC3.spoilers;
+    flaps_conn3: port flaps -> FCC3.flaps;
+    aoa_conn3 : port aoa -> FCC3.aoa;
+    air_conn3 : port air_data -> FCC3.air_data;
+    stab_conn3 : port stabilizers -> FCC3.stabilizers;
+    
+    elv_conn4: port elevators -> FCC4.elevators;
+    ail_conn4: port ailerons -> FCC4.ailerons;
+    rud_conn4: port rudders -> FCC4.rudders;
+    spoil_conn4: port spoilers -> FCC4.spoilers;
+    flaps_conn4: port flaps -> FCC4.flaps;
+    aoa_conn4 : port aoa -> FCC4.aoa;
+    air_conn4 : port air_data -> FCC4.air_data;
+    stab_conn4 : port stabilizers -> FCC4.stabilizers;
+    
+    conn1_acts_ret: port acts_ret1 -> FCC1.acts_ret;
+    conn2_acts_ret: port acts_ret2 -> FCC2.acts_ret;
+    conn3_acts_ret: port acts_ret3 -> FCC3.acts_ret;
+    conn4_acts_ret: port acts_ret4 -> FCC4.acts_ret;
+    
+    conn_acts_out1: port FCC1.acts_out -> acts_out1;
+    conn_acts_out2: port FCC2.acts_out -> acts_out2;
+    conn_acts_out3: port FCC3.acts_out -> acts_out3;
+    conn_acts_out4: port FCC4.acts_out -> acts_out4;
+    
+    conn_sovs11: port FCC1.sovs1 -> sovs11;  
+    conn_sovs21: port FCC1.sovs2 -> sovs21; 
+    conn_sovs12: port FCC1.sovs1 -> sovs12;  
+    conn_sovs22: port FCC1.sovs2 -> sovs22; 
+    conn_sovs13: port FCC1.sovs1 -> sovs13;  
+    conn_sovs23: port FCC1.sovs2 -> sovs23; 
+    conn_sovs14: port FCC1.sovs1 -> sovs14;  
+    conn_sovs24: port FCC1.sovs2 -> sovs24; 
+    
+    annex agree {**
+    	eq num_valids : DATA_TYPES::NumActuators.impl;
+    	
+    	-- this is basically doing the work of the ccdl
+    	assert FCC1.num_valid_acts = num_valids;
+    	assert FCC2.num_valid_acts = num_valids;
+    	assert FCC3.num_valid_acts = num_valids;
+    	assert FCC4.num_valid_acts = num_valids;
+    	
+    	assert FCS_RC1.valids_to_nums(num_valids,
+    		                         FCC1.acts_fail,
+    		                         FCC2.acts_fail,
+    		                         FCC3.acts_fail,
+    		                         FCC4.acts_fail);
+    		                         
+        lemma "valids monotonically decreasing" : true ->
+          num_valids.THROTL <= pre(num_valids.THROTL) and
+          num_valids.THROTR <= pre(num_valids.THROTR) and
+          num_valids.ELLOB <= pre(num_valids.ELLOB) and
+          num_valids.ELLIB <= pre(num_valids.ELLIB) and
+          num_valids.ELROB <= pre(num_valids.ELROB) and
+          num_valids.ELRIB <= pre(num_valids.ELRIB) and
+          num_valids.AILL <= pre(num_valids.AILL) and
+          num_valids.AILR <= pre(num_valids.AILR) and
+          num_valids.RUDUP <= pre(num_valids.RUDUP) and
+          num_valids.RUDLO <= pre(num_valids.RUDLO) and
+          num_valids.SPLLOB <= pre(num_valids.SPLLOB) and
+          num_valids.SPLLIB <= pre(num_valids.SPLLIB) and
+          num_valids.SPLROB <= pre(num_valids.SPLROB) and
+          num_valids.SPLRIB <= pre(num_valids.SPLRIB) and
+          num_valids.FLAPLI <= pre(num_valids.FLAPLI) and
+          num_valids.FLAPLO <= pre(num_valids.FLAPLO) and
+          num_valids.FLAPRI <= pre(num_valids.FLAPRI) and
+          num_valids.GEAR <= pre(num_valids.GEAR) and
+          num_valids.BRAKE <= pre(num_valids.BRAKE) and
+          num_valids.STEER <= pre(num_valids.STEER);
+    		                         
+    		                         
+    	
+    **};
+    
+end FCS.impl;
+
+
+end FCS;

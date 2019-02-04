@@ -33,6 +33,7 @@ import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.Element;
+import org.osate.aadl2.Realization;
 import org.osate.aadl2.modelsupport.resources.OsateResourceUtil;
 import org.osate.ge.BusinessObjectSelection;
 
@@ -147,6 +148,9 @@ public abstract class AadlHandler extends AbstractHandler {
 			TextSelection ts = (TextSelection) xtextEditor.getSelectionProvider().getSelection();
 			return xtextEditor.getDocument().readOnly(resource -> {
 				EObject e = new EObjectAtOffsetHelper().resolveContainedElementAt(resource, ts.getOffset());
+				if (e instanceof Realization) {
+					e = e.eContainer();
+				}
 				return EcoreUtil.getURI(e);
 			});
 		}

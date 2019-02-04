@@ -1,0 +1,12 @@
+package ADS
+public
+  with Base_Types;
+
+device ADS
+  features
+    amb_press: out data port Base_Types::Integer;
+    amb_temp: out data port Base_Types::Integer;
+    total_press: out data port Base_Types::Integer;
+end ADS;
+
+end ADS;

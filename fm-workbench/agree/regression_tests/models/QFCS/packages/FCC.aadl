@@ -1,0 +1,217 @@
+package FCC
+public
+  with Feature_Groups;
+  with ISAS;
+  with OSAS;
+  with CCDL;
+  with QFCS_PROPS;
+  with Base_Types;
+  
+system FCC
+  features
+    --inputs
+    egi1 : in data port Feature_Groups::EGI_Data.impl;
+    egi2 : in data port Feature_Groups::EGI_Data.impl;
+    egi3 : in data port Feature_Groups::EGI_Data.impl;
+    egi4 : in data port Feature_Groups::EGI_Data.impl;
+    
+    ads1 : in data port Feature_Groups::ADS_Data.impl;
+    ads2 : in data port Feature_Groups::ADS_Data.impl;
+    
+    aoa1 : in data port Feature_Groups::AOA_Data.impl;
+    aoa2 : in data port Feature_Groups::AOA_Data.impl;
+    
+    acts1_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts2_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts3_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    acts4_sense : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    
+    acts_ret : in data port Feature_Groups::ACTUATORS_DATA.impl;
+    
+    num_valid_ailerons: in data port Base_Types::Integer;
+    num_valid_elevators: in data port Base_Types::Integer;
+    num_valid_rudder: in data port Base_Types::Integer;
+    num_valid_spoiler: in data port Base_Types::Integer;
+    num_valid_flaps_gt: in data port Base_Types::Integer; 
+    num_valid_flaps_lt: in data port Base_Types::Integer;
+    
+    --outputs
+    acts_out : out data port Feature_Groups::ACTUATORS_Data.impl;
+    sovs: out data port Feature_Groups::ACTUATORS_SOV_Data.impl;
+    
+    ailerons_failed : out data port Base_Types::Boolean;
+    elevators_failed : out data port Base_Types::Boolean;
+    rudder_failed : out data port Base_Types::Boolean;
+    spoiler_failed : out data port Base_Types::Boolean;
+    flaps_gt_failed : out data port Base_Types::Boolean;
+    flaps_lt_failed : out data port Base_Types::Boolean;
+        
+  annex agree {**
+    
+      eq rudder_fault_persists : bool = AGREE_OSAS_NODES.fault_persists_for_frames(acts_ret.rudder, acts_out.rudder, 5);
+      eq rudder_fault_occurred : bool = AGREE_OSAS_NODES.fault_occurred(acts_ret.rudder, acts_out.rudder);
+      eq hist_rudder_fault : bool = rudder_fault_occurred -> pre(hist_rudder_fault) and rudder_fault_occurred;
+    
+      eq time_val : int = 0 -> pre(time_val) + 1;
+      
+      guarantee "OSAS-S-140" : 
+        (ailerons_failed => acts_out.ailerons = 0.0) and
+        (elevators_failed => acts_out.elevators = 0.0) and
+        (spoiler_failed => acts_out.spoiler = 0.0) and
+        (rudder_failed => acts_out.rudder = 0.0) and
+        (flaps_gt_failed => acts_out.flaps_gt = 0.0) and
+        (flaps_lt_failed => acts_out.flaps_lt = 0.0);
+          
+      guarantee "actuators output range bound":
+        (num_valid_ailerons = 0 =>
+          (acts_out.ailerons >= AGREE_CONSTANTS.ailerons_range_low and 
+          acts_out.ailerons <= 4.0*AGREE_CONSTANTS.ailerons_range_high)) and 
+        (num_valid_ailerons = 1 =>
+          (acts_out.ailerons >= AGREE_CONSTANTS.ailerons_range_low and 
+          acts_out.ailerons <= 2.0*AGREE_CONSTANTS.ailerons_range_high)) and 
+        (num_valid_ailerons = 2 =>
+          (acts_out.ailerons >= AGREE_CONSTANTS.ailerons_range_low and 
+          acts_out.ailerons <= (4.0/3.0)*AGREE_CONSTANTS.ailerons_range_high))  and
+        (num_valid_ailerons = 3 =>
+          (acts_out.ailerons >= AGREE_CONSTANTS.ailerons_range_low and 
+          acts_out.ailerons <= AGREE_CONSTANTS.ailerons_range_high)) and
+          
+        (num_valid_elevators = 0 =>
+          (acts_out.elevators >= AGREE_CONSTANTS.elevators_range_low and 
+          acts_out.elevators <= 4.0*AGREE_CONSTANTS.elevators_range_high)) and 
+        (num_valid_elevators = 1 =>
+          (acts_out.elevators >= AGREE_CONSTANTS.elevators_range_low and 
+          acts_out.elevators <= 2.0*AGREE_CONSTANTS.elevators_range_high)) and 
+        (num_valid_elevators = 2 =>
+          (acts_out.elevators >= AGREE_CONSTANTS.elevators_range_low and 
+          acts_out.elevators <= (4.0/3.0)*AGREE_CONSTANTS.elevators_range_high)) and
+        (num_valid_elevators = 3 =>
+          (acts_out.elevators >= AGREE_CONSTANTS.elevators_range_low and 
+          acts_out.elevators <= AGREE_CONSTANTS.elevators_range_high)) and 
+          
+        (num_valid_spoiler = 0 =>
+          (acts_out.spoiler >= AGREE_CONSTANTS.spoiler_range_low and 
+          acts_out.spoiler <= 4.0*AGREE_CONSTANTS.spoiler_range_high)) and 
+        (num_valid_spoiler = 1 =>
+          (acts_out.spoiler >= AGREE_CONSTANTS.spoiler_range_low and 
+          acts_out.spoiler <= 2.0*AGREE_CONSTANTS.spoiler_range_high)) and 
+        (num_valid_spoiler = 2 =>
+          (acts_out.spoiler >= AGREE_CONSTANTS.spoiler_range_low and 
+          acts_out.spoiler <= (4.0/3.0)*AGREE_CONSTANTS.spoiler_range_high)) and
+        (num_valid_spoiler = 3 =>
+          (acts_out.spoiler >= AGREE_CONSTANTS.spoiler_range_low and 
+          acts_out.spoiler <= AGREE_CONSTANTS.spoiler_range_high)) and
+          
+        (num_valid_rudder = 0 =>
+          (acts_out.rudder >= AGREE_CONSTANTS.rudder_range_low and 
+          acts_out.rudder <= 4.0*AGREE_CONSTANTS.rudder_range_high)) and 
+        (num_valid_rudder = 1 =>
+          (acts_out.rudder >= AGREE_CONSTANTS.rudder_range_low and 
+          acts_out.rudder <= 2.0*AGREE_CONSTANTS.rudder_range_high)) and 
+        (num_valid_rudder = 2 =>
+          (acts_out.rudder >= AGREE_CONSTANTS.rudder_range_low and 
+          acts_out.rudder <= (4.0/3.0)*AGREE_CONSTANTS.rudder_range_high)) and
+        (num_valid_rudder = 3 =>
+          (acts_out.rudder >= AGREE_CONSTANTS.rudder_range_low and 
+          acts_out.rudder <= AGREE_CONSTANTS.rudder_range_high)) and 
+          
+        (num_valid_flaps_gt = 0 =>
+          (acts_out.flaps_gt >= AGREE_CONSTANTS.flaps_gt_range_low and 
+          acts_out.flaps_gt <= 4.0*AGREE_CONSTANTS.flaps_gt_range_high)) and 
+        (num_valid_flaps_gt = 1 =>
+          (acts_out.flaps_gt >= AGREE_CONSTANTS.flaps_gt_range_low and 
+          acts_out.flaps_gt <= 2.0*AGREE_CONSTANTS.flaps_gt_range_high)) and 
+        (num_valid_flaps_gt = 2 =>
+          (acts_out.flaps_gt >= AGREE_CONSTANTS.flaps_gt_range_low and 
+          acts_out.flaps_gt <= (4.0/3.0)*AGREE_CONSTANTS.flaps_gt_range_high)) and
+        (num_valid_flaps_gt = 3 =>
+          (acts_out.flaps_gt >= AGREE_CONSTANTS.flaps_gt_range_low and 
+          acts_out.flaps_gt <= AGREE_CONSTANTS.flaps_gt_range_high)) and 
+          
+        (num_valid_flaps_lt = 0 =>
+          (acts_out.flaps_lt >= AGREE_CONSTANTS.flaps_lt_range_low and 
+          acts_out.flaps_lt <= 4.0*AGREE_CONSTANTS.flaps_lt_range_high)) and 
+        (num_valid_flaps_lt = 1 =>
+          (acts_out.flaps_lt >= AGREE_CONSTANTS.flaps_lt_range_low and 
+          acts_out.flaps_lt <= 2.0*AGREE_CONSTANTS.flaps_lt_range_high)) and 
+        (num_valid_flaps_lt = 2 =>
+          (acts_out.flaps_lt >= AGREE_CONSTANTS.flaps_lt_range_low and 
+          acts_out.flaps_lt <= (4.0/3.0)*AGREE_CONSTANTS.flaps_lt_range_high)) and
+        (num_valid_flaps_lt = 3 =>
+          (acts_out.flaps_lt >= AGREE_CONSTANTS.flaps_lt_range_low and 
+          acts_out.flaps_lt <= AGREE_CONSTANTS.flaps_lt_range_high));
+  **}; 
+        
+end FCC;
+
+system implementation FCC.Impl
+  subcomponents
+    ISAS_comp : system ISAS::ISAS;
+    OSAS_comp : system OSAS::OSAS;
+    CCDL_comp : system CCDL::CCDL;
+    
+  connections
+    --inputs from the outside world
+    conn_egi1: port egi1 -> ISAS_comp.egi1; 
+    conn_egi2: port egi2 -> ISAS_comp.egi2;
+    conn_egi3: port egi3 -> ISAS_comp.egi3;
+    conn_egi4: port egi4 -> ISAS_comp.egi4;
+    
+    conn_acts1_sense: port acts1_sense -> ISAS_comp.acts1_sense;
+    conn_acts2_sense: port acts2_sense -> ISAS_comp.acts2_sense;
+    conn_acts3_sense: port acts3_sense -> ISAS_comp.acts3_sense;
+    conn_acts4_sense: port acts4_sense -> ISAS_comp.acts4_sense;
+    
+    conn_aoa1: port aoa1 -> ISAS_comp.aoa1;
+    conn_aoa2: port aoa2 -> ISAS_comp.aoa2;
+    
+    conn_ads1: port ads1 -> ISAS_comp.ads1;
+    conn_ads2: port ads2 -> ISAS_comp.ads2;
+   
+    conn_acts_ret_isas: port acts_ret -> ISAS_comp.acts_ret;
+    conn_acts_ret_osas: port acts_ret -> OSAS_comp.acts_ret;
+      
+    valid_ailerons_conn: port num_valid_ailerons -> OSAS_comp.num_valid_ailerons;
+    valid_elevators_conn: port num_valid_elevators -> OSAS_comp.num_valid_elevators;
+    valid_spoiler_conn: port num_valid_spoiler -> OSAS_comp.num_valid_spoiler;
+    valid_rudder_conn: port num_valid_rudder -> OSAS_comp.num_valid_rudder;
+    valid_flaps_gt_conn: port num_valid_flaps_gt -> OSAS_comp.num_valid_flaps_gt;
+    valid_flaps_lt_conn: port num_valid_flaps_lt -> OSAS_comp.num_valid_flaps_lt;
+    
+    --outputs to the outside world
+    conn_acts_out: port OSAS_comp.acts -> acts_out;
+    conn_sovs: port OSAS_comp.sovs -> sovs;  
+    
+    ailerons_failed_conn: port OSAS_comp.ailerons_failed -> ailerons_failed;
+    elevators_failed_conn: port OSAS_comp.elevators_failed -> elevators_failed;
+    spoiler_failed_conn: port OSAS_comp.spoiler_failed -> spoiler_failed;
+    rudder_failed_conn: port OSAS_comp.rudder_failed -> rudder_failed;
+    flaps_gt_failed_conn: port OSAS_comp.flaps_gt_failed -> flaps_gt_failed;
+    flaps_lt_failed_conn: port OSAS_comp.flaps_lt_failed -> flaps_lt_failed;
+    
+    --internal connections
+    conn_ccdl_acts : port CCDL_comp.acts -> OSAS_comp.acts_input;
+    
+  annex agree {**
+  	
+    lemma "faulty rudder shuts off":
+        OSAS_comp.rudder_ccdl_num_fail > 2 and hist_rudder_fault and time_val > 5 => not sovs.rudder_sov1_open;
+    
+    lemma "aoa_select in range":
+    	(not ISAS_comp.egi1_aoa_fault and not ISAS_comp.egi2_aoa_fault) or
+    	(not ISAS_comp.egi1_aoa_fault and not ISAS_comp.egi3_aoa_fault) or
+    	(not ISAS_comp.egi1_aoa_fault and not ISAS_comp.egi4_aoa_fault) or
+    	(not ISAS_comp.egi2_aoa_fault and not ISAS_comp.egi3_aoa_fault) or
+    	(not ISAS_comp.egi2_aoa_fault and not ISAS_comp.egi4_aoa_fault) or
+    	(not ISAS_comp.egi3_aoa_fault and not ISAS_comp.egi4_aoa_fault) 
+    	=> 
+    	(ISAS_comp.aoa_select.aoa >= AGREE_CONSTANTS.aoa_range_low and
+    	ISAS_comp.aoa_select.aoa <= AGREE_CONSTANTS.aoa_range_high);
+    
+    
+  **};
+    
+end FCC.Impl;
+
+
+end FCC;

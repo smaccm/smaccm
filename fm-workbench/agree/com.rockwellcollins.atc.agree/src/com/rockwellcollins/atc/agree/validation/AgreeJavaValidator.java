@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
@@ -49,6 +51,7 @@ import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
+import org.osate.aadl2.ModelUnit;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
@@ -56,11 +59,15 @@ import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.google.common.collect.HashMultimap;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -96,6 +103,7 @@ import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
 import com.rockwellcollins.atc.agree.agree.NamedID;
+import com.rockwellcollins.atc.agree.agree.NamedSpecStatement;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
@@ -124,6 +132,7 @@ import com.rockwellcollins.atc.agree.agree.TimeInterval;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 import com.rockwellcollins.atc.agree.agree.Type;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
@@ -632,6 +641,110 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				error("Left hand side quasi-synchronous values must be greater than the right hand side");
 			}
 		}
+	}
+
+	private void getPackageDependencies(AadlPackage pkg, Set<AadlPackage> pkgs) {
+
+		// Add the parent package if it's not there, otherwise return
+		if (pkgs.contains(pkg)) {
+			return;
+		}
+		pkgs.add(pkg);
+
+		// Look at direct dependencies in private section
+		if (pkg.getPrivateSection() != null) {
+			for (ModelUnit mu : pkg.getPrivateSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
+		// Look at direct dependencies in public section
+		if (pkg.getPublicSection() != null) {
+			for (ModelUnit mu : pkg.getPublicSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
+	}
+
+	private List<NamedSpecStatement> getNamedSpecStatements(AadlPackage pkg) {
+		List<NamedSpecStatement> specs = new ArrayList<NamedSpecStatement>();
+		for (Classifier classifier : EcoreUtil2.getAllContentsOfType(pkg, Classifier.class)) {
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(classifier,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof NamedSpecStatement) {
+						specs.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+		}
+
+		for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(pkg,
+				AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+			AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+			for (SpecStatement spec : contract.getSpecs()) {
+				if (spec instanceof NamedSpecStatement) {
+					specs.add((NamedSpecStatement) spec);
+				}
+			}
+
+		}
+		return specs;
+	}
+
+	@Check(CheckType.NORMAL)
+	public void checkNoDuplicateIdInSpec(AadlPackage toppkg) {
+
+		// namedSpecs associates an agree spec ID with all the agree specs that have that ID
+		HashMultimap<String, NamedSpecStatement> namedSpecs = HashMultimap.create();
+
+		// Get the set of packages referenced in model
+		Set<AadlPackage> pkgs = new HashSet<>();
+		getPackageDependencies(toppkg, pkgs);
+
+		for (AadlPackage pkg : pkgs) {
+
+			// Get the list of agree specs in each package
+			List<NamedSpecStatement> specs = getNamedSpecStatements(pkg);
+
+			for (NamedSpecStatement spec : specs) {
+				String id = spec.getName();
+
+				if (id != null) {
+					namedSpecs.put(id, spec);
+				}
+			}
+		}
+
+		// Get the agree specs in the current package
+		List<NamedSpecStatement> specs = getNamedSpecStatements(toppkg);
+		Iterator<NamedSpecStatement> i = specs.iterator();
+		while (i.hasNext()) {
+
+			NamedSpecStatement spec = i.next();
+			String id = spec.getName();
+			// If the current spec name is associated with multiple agree specs, we've found a duplicate
+			if (namedSpecs.get(id).size() > 1) {
+				Iterator<NamedSpecStatement> ii = namedSpecs.get(id).iterator();
+				while (ii.hasNext()) {
+					String pkgName = AadlUtil.getContainingPackage(ii.next()).getName();
+//					// If the specs are from the same package, the error will be generated from the
+//					// NamedElement check.
+//					if (!pkgName.contentEquals(AadlUtil.getContainingPackage(spec).getName())) {
+					error("Duplicate AGREE property ID in package " + pkgName, spec,
+							Aadl2Package.eINSTANCE.getNamedElement_Name());
+//					}
+				}
+				namedSpecs.removeAll(id);
+			}
+		}
+
 	}
 
 	@Check(CheckType.FAST)
@@ -1213,8 +1326,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkRecordType(RecordType recType) {
-		NestedDotID recId = recType.getRecord();
-		NamedElement finalId = getFinalNestId(recId);
+		TypeID recId = recType.getRecord();
+		NamedElement finalId = recId.getBase();
 
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)
 				&& !(finalId instanceof DataType) && !(finalId instanceof EnumStatement)) {
@@ -1252,13 +1365,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkRecordExpr(RecordExpr recExpr) {
 
-		NestedDotID recType = recExpr.getRecord();
+		TypeID recType = recExpr.getRecord();
 		List<NamedElement> defArgs = getArgNames(recType);
 		EList<NamedElement> exprArgs = recExpr.getArgs();
 		EList<Expr> argExprs = recExpr.getArgExpr();
 
-		NestedDotID recId = recExpr.getRecord();
-		NamedElement finalId = getFinalNestId(recId);
+		TypeID recId = recExpr.getRecord();
+		NamedElement finalId = recId.getBase();
 
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
 			error(recId, "types must be record definition or data implementation");
@@ -1301,9 +1414,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private List<NamedElement> getArgNames(NestedDotID recId) {
+	private List<NamedElement> getArgNames(TypeID recId) {
 
-		NamedElement rec = getFinalNestId(recId);
+		NamedElement rec = recId.getBase();
 		List<NamedElement> names = new ArrayList<>();
 
 		if (rec instanceof RecordDefExpr) {
@@ -1323,9 +1436,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return names;
 	}
 
-	private Map<String, AgreeType> getArgNameMap(NestedDotID recId) {
+	private Map<String, AgreeType> getArgNameMap(TypeID recId) {
 
-		NamedElement rec = getFinalNestId(recId);
+		NamedElement rec = recId.getBase();
 		Map<String, AgreeType> typeMap = new HashMap<>();
 
 		if (rec instanceof RecordDefExpr) {
@@ -1364,6 +1477,12 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 //
 //    	return types;
 //    }
+
+	private void dataImplCycleCheck(TypeID dataID) {
+		NamedElement finalId = dataID.getBase();
+		DataImplementation dataImpl = (DataImplementation) finalId;
+		dataImplCycleCheck(dataImpl, dataID);
+	}
 
 	private void dataImplCycleCheck(NestedDotID dataID) {
 		NamedElement finalId = getFinalNestId(dataID);
@@ -1412,8 +1531,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		for (Arg arg : recordDef.getArgs()) {
 			Type type = arg.getType();
 			if (type instanceof RecordType) {
-				NestedDotID subRec = ((RecordType) type).getRecord();
-				NamedElement finalId = getFinalNestId(subRec);
+				TypeID subRec = ((RecordType) type).getRecord();
+				NamedElement finalId = subRec.getBase();
 
 //				if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
 //					error(type, "types must be record definition or data implementation");
@@ -1440,8 +1559,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				for (Arg arg : subRecDef.getArgs()) {
 					Type type = arg.getType();
 					if (type instanceof RecordType) {
-						NestedDotID subRecId = ((RecordType) type).getRecord();
-						NamedElement subFinalEl = getFinalNestId(subRecId);
+						TypeID subRecId = ((RecordType) type).getRecord();
+						NamedElement subFinalEl = subRecId.getBase();
 						if (subFinalEl instanceof RecordDefExpr) {
 							recordClosure.add((RecordDefExpr) subFinalEl);
 						}
@@ -1506,14 +1625,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return new AgreeType(typeName);
 		} else {
 			RecordType recType = (RecordType) type;
-			NestedDotID recId = recType.getRecord();
-			return getNestIdAsType(recId);
+			TypeID recId = recType.getRecord();
+			return getTypeIDasType(recId);
 		}
 	}
 
-	private AgreeType getNestIdAsType(NestedDotID recId) {
+	private AgreeType getTypeIDasType(TypeID recId) {
 		String typeName = "";
-		NamedElement recEl = getFinalNestId(recId);
+		NamedElement recEl = recId.getBase();
 		EObject aadlPack = recEl.eContainer();
 
 		while (!(aadlPack instanceof AadlPackage)) {
@@ -1842,7 +1961,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
 			for (NamedElement e : es) {
 				if (!(e.eContainer() instanceof NodeDefExpr)) { // ignore elements in node defs
-					if (parentNames.contains(e.getName())) {
+					if (e.getName() != null && parentNames.contains(e.getName())) {
 						error(e, e.getName() + " already defined in component type contract");
 					}
 				}
@@ -2911,7 +3030,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	private AgreeType getAgreeType(RecordExpr recExpr) {
-		return getNestIdAsType(recExpr.getRecord());
+		return getTypeIDasType(recExpr.getRecord());
 	}
 
 	public static boolean matches(AgreeType expected, AgreeType actual) {

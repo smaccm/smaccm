@@ -1,0 +1,192 @@
+package ISAS_S_260
+public
+
+annex agree {**
+	node req(elevators : DATA_TYPES::QUAD_Elevators.treal, 
+		     ailerons : DATA_TYPES::QUAD_Ailerons.treal,
+             rudders : DATA_TYPES::QUAD_Rudders.treal,
+             flaps : DATA_TYPES::QUAD_Flaps.treal,
+             spoilers :  DATA_TYPES::QUAD_Spoilers.treal,
+             stabilizers : DATA_TYPES::QUAD_Stabilizer.treal,
+             
+             elevators_fault : DATA_TYPES::QUAD_Elevators.tbool, 
+		     ailerons_fault : DATA_TYPES::QUAD_Ailerons.tbool,
+             rudders_fault : DATA_TYPES::QUAD_Rudders.tbool,
+             flaps_fault : DATA_TYPES::QUAD_Flaps.tbool,
+             spoilers_fault :  DATA_TYPES::QUAD_Spoilers.tbool,
+             stabilizers_fault : DATA_TYPES::QUAD_Stabilizer.tbool,
+             
+             elevators_sig_tol : DATA_TYPES::Elevators.treal, 
+		     ailerons_sig_tol : DATA_TYPES::Ailerons.treal,
+             rudders_sig_tol : DATA_TYPES::Rudders.treal,
+             flaps_sig_tol : DATA_TYPES::Flaps.treal,
+             spoilers_sig_tol :  DATA_TYPES::Spoilers.treal,
+             stabilizers_sig_tol : DATA_TYPES::Stabilizer.treal,
+             
+             elevators_select : DATA_TYPES::Elevators.treal, 
+		     ailerons_select : DATA_TYPES::Ailerons.treal,
+             rudders_select : DATA_TYPES::Rudders.treal,
+             flaps_select : DATA_TYPES::Flaps.treal,
+             spoilers_select :  DATA_TYPES::Spoilers.treal,
+             stabilizers_select : DATA_TYPES::Stabilizer.treal
+             
+	        ) returns (ret : bool);
+	  let
+	    ret = 
+	       --elevators
+           value_select(elevators.EL1.ELLOB, elevators.EL2.ELLOB, elevators.EL3.ELLOB, elevators.EL4.ELLOB,
+             elevators_fault.EL1.ELLOB, elevators_fault.EL2.ELLOB, elevators_fault.EL3.ELLOB, elevators_fault.EL4.ELLOB,
+             elevators_sig_tol.ELLOB, elevators_select.ELLOB) and 
+           value_select(elevators.EL1.ELLIB, elevators.EL2.ELLIB, elevators.EL3.ELLIB, elevators.EL4.ELLIB,
+             elevators_fault.EL1.ELLIB, elevators_fault.EL2.ELLIB, elevators_fault.EL3.ELLIB, elevators_fault.EL4.ELLIB,
+             elevators_sig_tol.ELLIB, elevators_select.ELLIB) and
+           value_select(elevators.EL1.ELROB, elevators.EL2.ELROB, elevators.EL3.ELROB, elevators.EL4.ELROB,
+             elevators_fault.EL1.ELROB, elevators_fault.EL2.ELROB, elevators_fault.EL3.ELROB, elevators_fault.EL4.ELROB,
+             elevators_sig_tol.ELROB, elevators_select.ELROB) and
+           value_select(elevators.EL1.ELRIB, elevators.EL2.ELRIB, elevators.EL3.ELRIB, elevators.EL4.ELRIB,
+             elevators_fault.EL1.ELRIB, elevators_fault.EL2.ELRIB, elevators_fault.EL3.ELRIB, elevators_fault.EL4.ELRIB,
+             elevators_sig_tol.ELRIB, elevators_select.ELRIB) and
+           --ailerons
+           value_select(ailerons.AIL1.AILL, ailerons.AIL2.AILL, ailerons.AIL3.AILL, ailerons.AIL4.AILL,
+             ailerons_fault.AIL1.AILL, ailerons_fault.AIL2.AILL, ailerons_fault.AIL3.AILL, ailerons_fault.AIL4.AILL,
+             ailerons_sig_tol.AILL, ailerons_select.AILL) and 
+           value_select(ailerons.AIL1.AILR, ailerons.AIL2.AILR, ailerons.AIL3.AILR, ailerons.AIL4.AILR,
+             ailerons_fault.AIL1.AILR, ailerons_fault.AIL2.AILR, ailerons_fault.AIL3.AILR, ailerons_fault.AIL4.AILR,
+             ailerons_sig_tol.AILR, ailerons_select.AILR) and
+           --rudders
+           value_select(rudders.RUDD1.RUDU, rudders.RUDD2.RUDU, rudders.RUDD3.RUDU, rudders.RUDD4.RUDU,
+             rudders_fault.RUDD1.RUDU, rudders_fault.RUDD2.RUDU, rudders_fault.RUDD3.RUDU, rudders_fault.RUDD4.RUDU,
+             rudders_sig_tol.RUDU, rudders_select.RUDU) and 
+           value_select(rudders.RUDD1.RUDL, rudders.RUDD2.RUDL, rudders.RUDD3.RUDL, rudders.RUDD4.RUDL,
+             rudders_fault.RUDD1.RUDL, rudders_fault.RUDD2.RUDL, rudders_fault.RUDD3.RUDL, rudders_fault.RUDD4.RUDL,
+             rudders_sig_tol.RUDL, rudders_select.RUDL) and
+           --flaps
+           value_select(flaps.FLAPS1.FLLOB, flaps.FLAPS2.FLLOB, flaps.FLAPS3.FLLOB, flaps.FLAPS4.FLLOB,
+             flaps_fault.FLAPS1.FLLOB, flaps_fault.FLAPS2.FLLOB, flaps_fault.FLAPS3.FLLOB, flaps_fault.FLAPS4.FLLOB,
+             flaps_sig_tol.FLLOB, flaps_select.FLLOB) and 
+           value_select(flaps.FLAPS1.FLLIB, flaps.FLAPS2.FLLIB, flaps.FLAPS3.FLLIB, flaps.FLAPS4.FLLIB,
+             flaps_fault.FLAPS1.FLLIB, flaps_fault.FLAPS2.FLLIB, flaps_fault.FLAPS3.FLLIB, flaps_fault.FLAPS4.FLLIB,
+             flaps_sig_tol.FLLIB, flaps_select.FLLIB) and
+           value_select(flaps.FLAPS1.FLROB, flaps.FLAPS2.FLROB, flaps.FLAPS3.FLROB, flaps.FLAPS4.FLROB,
+             flaps_fault.FLAPS1.FLROB, flaps_fault.FLAPS2.FLROB, flaps_fault.FLAPS3.FLROB, flaps_fault.FLAPS4.FLROB,
+             flaps_sig_tol.FLROB, flaps_select.FLROB) and
+           value_select(flaps.FLAPS1.FLRIB, flaps.FLAPS2.FLRIB, flaps.FLAPS3.FLRIB, flaps.FLAPS4.FLRIB,
+             flaps_fault.FLAPS1.FLRIB, flaps_fault.FLAPS2.FLRIB, flaps_fault.FLAPS3.FLRIB, flaps_fault.FLAPS4.FLRIB,
+             flaps_sig_tol.FLRIB, flaps_select.FLRIB) and
+           --spoilers
+           value_select(spoilers.SPOIL1.SPLOB, spoilers.SPOIL2.SPLOB, spoilers.SPOIL3.SPLOB, spoilers.SPOIL4.SPLOB,
+             spoilers_fault.SPOIL1.SPLOB, spoilers_fault.SPOIL2.SPLOB, spoilers_fault.SPOIL3.SPLOB, spoilers_fault.SPOIL4.SPLOB,
+             spoilers_sig_tol.SPLOB, spoilers_select.SPLOB) and 
+           value_select(spoilers.SPOIL1.SPLIB, spoilers.SPOIL2.SPLIB, spoilers.SPOIL3.SPLIB, spoilers.SPOIL4.SPLIB,
+             spoilers_fault.SPOIL1.SPLIB, spoilers_fault.SPOIL2.SPLIB, spoilers_fault.SPOIL3.SPLIB, spoilers_fault.SPOIL4.SPLIB,
+             spoilers_sig_tol.SPLIB, spoilers_select.SPLIB) and
+           value_select(spoilers.SPOIL1.SPROB, spoilers.SPOIL2.SPROB, spoilers.SPOIL3.SPROB, spoilers.SPOIL4.SPROB,
+             spoilers_fault.SPOIL1.SPROB, spoilers_fault.SPOIL2.SPROB, spoilers_fault.SPOIL3.SPROB, spoilers_fault.SPOIL4.SPROB,
+             spoilers_sig_tol.SPROB, spoilers_select.SPROB) and
+           value_select(spoilers.SPOIL1.SPRIB, spoilers.SPOIL2.SPRIB, spoilers.SPOIL3.SPRIB, spoilers.SPOIL4.SPRIB,
+             spoilers_fault.SPOIL1.SPRIB, spoilers_fault.SPOIL2.SPRIB, spoilers_fault.SPOIL3.SPRIB, spoilers_fault.SPOIL4.SPRIB,
+             spoilers_sig_tol.SPRIB, spoilers_select.SPRIB) and
+           --stabilizers
+           value_select(stabilizers.STAB1.VAL, stabilizers.STAB2.VAL, stabilizers.STAB3.VAL, stabilizers.STAB4.VAL,
+             stabilizers_fault.STAB1, stabilizers_fault.STAB2, stabilizers_fault.STAB3, stabilizers_fault.STAB4,
+             stabilizers_sig_tol.VAL, stabilizers_select.VAL)
+           
+           ;
+	          
+	  tel;
+	  
+	  
+  node value_select(val1 : real, val2: real, val3 : real, val4 : real,
+  	                f1 : bool, f2 : bool, f3 : bool, f4 : bool, sig_tol : real, select : real)
+  	   returns(ret : bool);
+  var
+    nf1 : bool;
+    nf2 : bool;
+    nf3 : bool;
+    nf4 : bool;
+  let
+    nf1 = not f1;
+    nf2 = not f2;
+    nf3 = not f3;
+    nf4 = not f4;
+    ret = if(nf1 and nf2 and nf3 and nf4) then
+            select = value_select4(val1,val2,val3,val4,sig_tol)
+          else if(nf1 and nf2 and nf3) then
+            select = value_select3(val1,val2,val3, sig_tol)
+          else if(nf4 and nf2 and nf3) then
+            select = value_select3(val4,val2,val3, sig_tol)
+          else if(nf1 and nf4 and nf3) then
+            select = value_select3(val1,val4,val3, sig_tol)
+          else if(nf1 and nf2 and nf4) then
+            select = value_select3(val1,val2,val4, sig_tol)
+          else if(nf1 and nf2) then
+            select = (val1 + val2) / 2.0
+          else if(nf1 and nf3) then
+            select = (val1 + val3) / 2.0
+          else if(nf1 and nf4) then
+            select = (val1 + val4) / 2.0
+          else if(nf2 and nf3) then
+            select = (val2 + val3) / 2.0
+          else if(nf2 and nf4) then
+            select = (val2 + val2) / 2.0
+          else if(nf3 and nf4) then
+            select = (val3 + val4) / 2.0
+          else
+            true;
+  tel;
+
+  node value_select4(val1 : real, val2: real, val3 : real, val4 : real, sig_tol : real)
+  	   returns (ret : real);
+  var
+    min_val : real;
+    max_val : real;
+    mid_val1 : real;
+    mid_val2 : real;
+  let
+    min_val = min(min(val1,val2),min(val3,val4));
+    max_val = max(max(val1,val2),max(val3,val4));
+    mid_val1 = max(min(val1,val2),min(val3,val4));
+    mid_val2 = min(max(val1,val2),max(val3,val4));
+    ret = if(max_val - min_val < sig_tol) then
+            (val1 + val2 + val3 + val4) / 4.0
+          else
+            (mid_val1 + mid_val2) / 2.0;
+  tel;
+  
+  node value_select3(val1 : real, val2: real, val3 : real, sig_tol : real)
+       returns(ret : real);
+  var
+    min_val : real;
+    max_val : real;
+    mid_val : real;
+  let
+    min_val = min(min(val1,val2),val3);
+    max_val = max(max(val1,val2),val3);
+    mid_val = max(max(min(val1,val2),min(val2,val3)),min(val1,val3));
+    ret = if(max_val - min_val < sig_tol) then
+            (val1 + val2 + val3) / 3.0
+          else
+            mid_val;
+  tel;
+
+  node max(val1 : real, val2 : real)
+       returns(ret : real);
+  let
+    ret = if(val1 > val2) then
+            val1
+          else
+            val2;
+  tel;
+  
+  node min(val1 : real, val2 : real)
+       returns(ret : real);
+  let
+    ret = if(val1 < val2) then
+            val1
+          else
+            val2;
+  tel;
+	  
+**};
+
+end ISAS_S_260;

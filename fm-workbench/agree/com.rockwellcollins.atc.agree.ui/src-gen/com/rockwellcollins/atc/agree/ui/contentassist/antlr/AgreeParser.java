@@ -4,8 +4,8 @@
 package com.rockwellcollins.atc.agree.ui.contentassist.antlr;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.antlr.runtime.RecognitionException;
 import org.eclipse.xtext.AbstractElement;
@@ -14,23 +14,23 @@ import org.eclipse.xtext.ui.editor.contentassist.antlr.FollowElement;
 import org.eclipse.xtext.ui.editor.contentassist.antlr.internal.AbstractInternalContentAssistParser;
 
 import com.google.inject.Inject;
+
 import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 
 public class AgreeParser extends AbstractPartialContentAssistParser {
-
+	
 	@Inject
 	private AgreeGrammarAccess grammarAccess;
-
+	
 	private Map<AbstractElement, String> nameMappings;
-
+	
 	@Override
 	protected com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser createParser() {
-		com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser result = new com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser(
-				null);
+		com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser result = new com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser(null);
 		result.setGrammarAccess(grammarAccess);
 		return result;
 	}
-
+	
 	@Override
 	protected String getRuleName(AbstractElement element) {
 		if (nameMappings == null) {
@@ -40,64 +40,41 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getNamedElementAccess().getAlternatives(), "rule__NamedElement__Alternatives");
 					put(grammarAccess.getElementAccess().getAlternatives(), "rule__Element__Alternatives");
 					put(grammarAccess.getSpecStatementAccess().getAlternatives(), "rule__SpecStatement__Alternatives");
-					put(grammarAccess.getSpecStatementAccess().getAlternatives_0_4(),
-							"rule__SpecStatement__Alternatives_0_4");
-					put(grammarAccess.getSpecStatementAccess().getAlternatives_1_4(),
-							"rule__SpecStatement__Alternatives_1_4");
-					put(grammarAccess.getSpecStatementAccess().getAlternatives_2_3(),
-							"rule__SpecStatement__Alternatives_2_3");
-					put(grammarAccess.getSpecStatementAccess().getAlternatives_5_4(),
-							"rule__SpecStatement__Alternatives_5_4");
-					put(grammarAccess.getPatternStatementAccess().getAlternatives(),
-							"rule__PatternStatement__Alternatives");
+					put(grammarAccess.getNamedSpecStatementAccess().getAlternatives(), "rule__NamedSpecStatement__Alternatives");
+					put(grammarAccess.getNamedSpecStatementAccess().getAlternatives_0_5(), "rule__NamedSpecStatement__Alternatives_0_5");
+					put(grammarAccess.getNamedSpecStatementAccess().getAlternatives_1_5(), "rule__NamedSpecStatement__Alternatives_1_5");
+					put(grammarAccess.getNamedSpecStatementAccess().getAlternatives_2_3(), "rule__NamedSpecStatement__Alternatives_2_3");
+					put(grammarAccess.getNamedSpecStatementAccess().getAlternatives_3_5(), "rule__NamedSpecStatement__Alternatives_3_5");
+					put(grammarAccess.getPatternStatementAccess().getAlternatives(), "rule__PatternStatement__Alternatives");
 					put(grammarAccess.getWhenStatementAccess().getAlternatives(), "rule__WhenStatement__Alternatives");
-					put(grammarAccess.getWheneverStatementAccess().getAlternatives(),
-							"rule__WheneverStatement__Alternatives");
-					put(grammarAccess.getWheneverStatementAccess().getAlternatives_0_0_0_6(),
-							"rule__WheneverStatement__Alternatives_0_0_0_6");
-					put(grammarAccess.getWheneverStatementAccess().getAlternatives_1_0_0_7(),
-							"rule__WheneverStatement__Alternatives_1_0_0_7");
-					put(grammarAccess.getRealTimeStatementAccess().getAlternatives(),
-							"rule__RealTimeStatement__Alternatives");
+					put(grammarAccess.getWheneverStatementAccess().getAlternatives(), "rule__WheneverStatement__Alternatives");
+					put(grammarAccess.getWheneverStatementAccess().getAlternatives_0_0_0_6(), "rule__WheneverStatement__Alternatives_0_0_0_6");
+					put(grammarAccess.getWheneverStatementAccess().getAlternatives_1_0_0_7(), "rule__WheneverStatement__Alternatives_1_0_0_7");
+					put(grammarAccess.getRealTimeStatementAccess().getAlternatives(), "rule__RealTimeStatement__Alternatives");
 					put(grammarAccess.getTimeIntervalAccess().getAlternatives(), "rule__TimeInterval__Alternatives");
-					put(grammarAccess.getSynchStatementAccess().getAlternatives(),
-							"rule__SynchStatement__Alternatives");
-					put(grammarAccess.getSynchStatementAccess().getSimAlternatives_0_5_0(),
-							"rule__SynchStatement__SimAlternatives_0_5_0");
+					put(grammarAccess.getSynchStatementAccess().getAlternatives(), "rule__SynchStatement__Alternatives");
+					put(grammarAccess.getSynchStatementAccess().getSimAlternatives_0_5_0(), "rule__SynchStatement__SimAlternatives_0_5_0");
 					put(grammarAccess.getCallDefAccess().getAlternatives(), "rule__CallDef__Alternatives");
 					put(grammarAccess.getNodeStmtAccess().getAlternatives(), "rule__NodeStmt__Alternatives");
 					put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
-					put(grammarAccess.getTypeAccess().getRangeLowAlternatives_0_2_2_0(),
-							"rule__Type__RangeLowAlternatives_0_2_2_0");
-					put(grammarAccess.getTypeAccess().getRangeHighAlternatives_0_2_5_0(),
-							"rule__Type__RangeHighAlternatives_0_2_5_0");
+					put(grammarAccess.getTypeAccess().getRangeLowAlternatives_0_2_2_0(), "rule__Type__RangeLowAlternatives_0_2_2_0");
+					put(grammarAccess.getTypeAccess().getRangeHighAlternatives_0_2_5_0(), "rule__Type__RangeHighAlternatives_0_2_5_0");
 					put(grammarAccess.getPrimTypesAccess().getAlternatives(), "rule__PrimTypes__Alternatives");
 					put(grammarAccess.getRelateOpAccess().getAlternatives(), "rule__RelateOp__Alternatives");
-					put(grammarAccess.getAddSubExprAccess().getOpAlternatives_1_0_0_1_0(),
-							"rule__AddSubExpr__OpAlternatives_1_0_0_1_0");
-					put(grammarAccess.getMultDivExprAccess().getOpAlternatives_1_0_0_1_0(),
-							"rule__MultDivExpr__OpAlternatives_1_0_0_1_0");
+					put(grammarAccess.getAddSubExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__AddSubExpr__OpAlternatives_1_0_0_1_0");
+					put(grammarAccess.getMultDivExprAccess().getOpAlternatives_1_0_0_1_0(), "rule__MultDivExpr__OpAlternatives_1_0_0_1_0");
 					put(grammarAccess.getUnaryExprAccess().getAlternatives(), "rule__UnaryExpr__Alternatives");
-					put(grammarAccess.getUnaryExprAccess().getOpAlternatives_0_1_0(),
-							"rule__UnaryExpr__OpAlternatives_0_1_0");
-					put(grammarAccess.getIfThenElseExprAccess().getAlternatives(),
-							"rule__IfThenElseExpr__Alternatives");
+					put(grammarAccess.getUnaryExprAccess().getOpAlternatives_0_1_0(), "rule__UnaryExpr__OpAlternatives_0_1_0");
+					put(grammarAccess.getIfThenElseExprAccess().getAlternatives(), "rule__IfThenElseExpr__Alternatives");
 					put(grammarAccess.getPreDefFnExprAccess().getAlternatives(), "rule__PreDefFnExpr__Alternatives");
 					put(grammarAccess.getTermExprAccess().getAlternatives(), "rule__TermExpr__Alternatives");
-					put(grammarAccess.getComplexExprAccess().getAlternatives_1(), "rule__ComplexExpr__Alternatives_1");
-					put(grammarAccess.getNestedDotIDAccess().getAlternatives_1_0_1(),
-							"rule__NestedDotID__Alternatives_1_0_1");
-					put(grammarAccess.getQCPREFAccess().getAlternatives(), "rule__QCPREF__Alternatives");
-					put(grammarAccess.getReservedVarTagAccess().getAlternatives(),
-							"rule__ReservedVarTag__Alternatives");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getAlternatives_1(),
-							"rule__ContainedPropertyAssociation__Alternatives_1");
-					put(grammarAccess.getPropertyAssociationAccess().getAlternatives_1(),
-							"rule__PropertyAssociation__Alternatives_1");
-					put(grammarAccess.getPropertyExpressionAccess().getAlternatives(),
-							"rule__PropertyExpression__Alternatives");
-					put(grammarAccess.getBooleanLiteralAccess().getAlternatives_1(),
-							"rule__BooleanLiteral__Alternatives_1");
+					put(grammarAccess.getComplexExprAccess().getAlternatives(), "rule__ComplexExpr__Alternatives");
+					put(grammarAccess.getNestedDotIDAccess().getAlternatives_1_0_1(), "rule__NestedDotID__Alternatives_1_0_1");
+					put(grammarAccess.getReservedVarTagAccess().getAlternatives(), "rule__ReservedVarTag__Alternatives");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getAlternatives_1(), "rule__ContainedPropertyAssociation__Alternatives_1");
+					put(grammarAccess.getPropertyAssociationAccess().getAlternatives_1(), "rule__PropertyAssociation__Alternatives_1");
+					put(grammarAccess.getPropertyExpressionAccess().getAlternatives(), "rule__PropertyExpression__Alternatives");
+					put(grammarAccess.getBooleanLiteralAccess().getAlternatives_1(), "rule__BooleanLiteral__Alternatives_1");
 					put(grammarAccess.getPlusMinusAccess().getAlternatives(), "rule__PlusMinus__Alternatives");
 					put(grammarAccess.getSignedIntAccess().getAlternatives_0(), "rule__SignedInt__Alternatives_0");
 					put(grammarAccess.getSignedRealAccess().getAlternatives_0(), "rule__SignedReal__Alternatives_0");
@@ -105,15 +82,15 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getAgreeLibraryAccess().getGroup(), "rule__AgreeLibrary__Group__0");
 					put(grammarAccess.getAgreeSubclauseAccess().getGroup(), "rule__AgreeSubclause__Group__0");
 					put(grammarAccess.getAgreeContractAccess().getGroup(), "rule__AgreeContract__Group__0");
-					put(grammarAccess.getSpecStatementAccess().getGroup_0(), "rule__SpecStatement__Group_0__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_1(), "rule__SpecStatement__Group_1__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_2(), "rule__SpecStatement__Group_2__0");
-					put(grammarAccess.getSpecStatementAccess().getGroup_2_2(), "rule__SpecStatement__Group_2_2__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_3(), "rule__SpecStatement__Group_3__0");
 					put(grammarAccess.getSpecStatementAccess().getGroup_4(), "rule__SpecStatement__Group_4__0");
-					put(grammarAccess.getSpecStatementAccess().getGroup_5(), "rule__SpecStatement__Group_5__0");
-					put(grammarAccess.getSpecStatementAccess().getGroup_6(), "rule__SpecStatement__Group_6__0");
-					put(grammarAccess.getSpecStatementAccess().getGroup_7(), "rule__SpecStatement__Group_7__0");
+					put(grammarAccess.getNamedSpecStatementAccess().getGroup_0(), "rule__NamedSpecStatement__Group_0__0");
+					put(grammarAccess.getNamedSpecStatementAccess().getGroup_1(), "rule__NamedSpecStatement__Group_1__0");
+					put(grammarAccess.getNamedSpecStatementAccess().getGroup_2(), "rule__NamedSpecStatement__Group_2__0");
+					put(grammarAccess.getNamedSpecStatementAccess().getGroup_2_2(), "rule__NamedSpecStatement__Group_2_2__0");
+					put(grammarAccess.getNamedSpecStatementAccess().getGroup_3(), "rule__NamedSpecStatement__Group_3__0");
 					put(grammarAccess.getPatternStatementAccess().getGroup_1(), "rule__PatternStatement__Group_1__0");
 					put(grammarAccess.getWhenStatementAccess().getGroup_0(), "rule__WhenStatement__Group_0__0");
 					put(grammarAccess.getWhenStatementAccess().getGroup_0_0(), "rule__WhenStatement__Group_0_0__0");
@@ -123,47 +100,29 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getWhenStatementAccess().getGroup_1_0(), "rule__WhenStatement__Group_1_0__0");
 					put(grammarAccess.getWhenStatementAccess().getGroup_1_0_0(), "rule__WhenStatement__Group_1_0_0__0");
 					put(grammarAccess.getWheneverStatementAccess().getGroup_0(), "rule__WheneverStatement__Group_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_0_0(),
-							"rule__WheneverStatement__Group_0_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_0_0_0(),
-							"rule__WheneverStatement__Group_0_0_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_0_1(),
-							"rule__WheneverStatement__Group_0_1__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_0_0(), "rule__WheneverStatement__Group_0_0__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_0_0_0(), "rule__WheneverStatement__Group_0_0_0__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_0_1(), "rule__WheneverStatement__Group_0_1__0");
 					put(grammarAccess.getWheneverStatementAccess().getGroup_1(), "rule__WheneverStatement__Group_1__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_1_0(),
-							"rule__WheneverStatement__Group_1_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_1_0_0(),
-							"rule__WheneverStatement__Group_1_0_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_1_1(),
-							"rule__WheneverStatement__Group_1_1__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_1_0(), "rule__WheneverStatement__Group_1_0__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_1_0_0(), "rule__WheneverStatement__Group_1_0_0__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_1_1(), "rule__WheneverStatement__Group_1_1__0");
 					put(grammarAccess.getWheneverStatementAccess().getGroup_2(), "rule__WheneverStatement__Group_2__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_2_0(),
-							"rule__WheneverStatement__Group_2_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_2_0_0(),
-							"rule__WheneverStatement__Group_2_0_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_2_1(),
-							"rule__WheneverStatement__Group_2_1__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_2_0(), "rule__WheneverStatement__Group_2_0__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_2_0_0(), "rule__WheneverStatement__Group_2_0_0__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_2_1(), "rule__WheneverStatement__Group_2_1__0");
 					put(grammarAccess.getWheneverStatementAccess().getGroup_3(), "rule__WheneverStatement__Group_3__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_3_0(),
-							"rule__WheneverStatement__Group_3_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_3_0_0(),
-							"rule__WheneverStatement__Group_3_0_0__0");
-					put(grammarAccess.getWheneverStatementAccess().getGroup_3_3(),
-							"rule__WheneverStatement__Group_3_3__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_3_0(), "rule__WheneverStatement__Group_3_0__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_3_0_0(), "rule__WheneverStatement__Group_3_0_0__0");
+					put(grammarAccess.getWheneverStatementAccess().getGroup_3_3(), "rule__WheneverStatement__Group_3_3__0");
 					put(grammarAccess.getRealTimeStatementAccess().getGroup_0(), "rule__RealTimeStatement__Group_0__0");
-					put(grammarAccess.getRealTimeStatementAccess().getGroup_0_0(),
-							"rule__RealTimeStatement__Group_0_0__0");
-					put(grammarAccess.getRealTimeStatementAccess().getGroup_0_0_0(),
-							"rule__RealTimeStatement__Group_0_0_0__0");
-					put(grammarAccess.getRealTimeStatementAccess().getGroup_0_2(),
-							"rule__RealTimeStatement__Group_0_2__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_0_0(), "rule__RealTimeStatement__Group_0_0__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_0_0_0(), "rule__RealTimeStatement__Group_0_0_0__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_0_2(), "rule__RealTimeStatement__Group_0_2__0");
 					put(grammarAccess.getRealTimeStatementAccess().getGroup_1(), "rule__RealTimeStatement__Group_1__0");
-					put(grammarAccess.getRealTimeStatementAccess().getGroup_1_0(),
-							"rule__RealTimeStatement__Group_1_0__0");
-					put(grammarAccess.getRealTimeStatementAccess().getGroup_1_0_0(),
-							"rule__RealTimeStatement__Group_1_0_0__0");
-					put(grammarAccess.getRealTimeStatementAccess().getGroup_1_4(),
-							"rule__RealTimeStatement__Group_1_4__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_1_0(), "rule__RealTimeStatement__Group_1_0__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_1_0_0(), "rule__RealTimeStatement__Group_1_0_0__0");
+					put(grammarAccess.getRealTimeStatementAccess().getGroup_1_4(), "rule__RealTimeStatement__Group_1_4__0");
 					put(grammarAccess.getTimeIntervalAccess().getGroup_0(), "rule__TimeInterval__Group_0__0");
 					put(grammarAccess.getTimeIntervalAccess().getGroup_0_0(), "rule__TimeInterval__Group_0_0__0");
 					put(grammarAccess.getTimeIntervalAccess().getGroup_1(), "rule__TimeInterval__Group_1__0");
@@ -198,16 +157,11 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getFnDefExprAccess().getGroup_4(), "rule__FnDefExpr__Group_4__0");
 					put(grammarAccess.getLibraryFnDefExprAccess().getGroup(), "rule__LibraryFnDefExpr__Group__0");
 					put(grammarAccess.getLibraryFnDefExprAccess().getGroup_4(), "rule__LibraryFnDefExpr__Group_4__0");
-					put(grammarAccess.getLinearizationDefExprAccess().getGroup(),
-							"rule__LinearizationDefExpr__Group__0");
-					put(grammarAccess.getLinearizationDefExprAccess().getGroup_4(),
-							"rule__LinearizationDefExpr__Group_4__0");
-					put(grammarAccess.getLinearizationDefExprAccess().getGroup_9(),
-							"rule__LinearizationDefExpr__Group_9__0");
-					put(grammarAccess.getLinearizationDefExprAccess().getGroup_11(),
-							"rule__LinearizationDefExpr__Group_11__0");
-					put(grammarAccess.getLinearizationIntervalAccess().getGroup(),
-							"rule__LinearizationInterval__Group__0");
+					put(grammarAccess.getLinearizationDefExprAccess().getGroup(), "rule__LinearizationDefExpr__Group__0");
+					put(grammarAccess.getLinearizationDefExprAccess().getGroup_4(), "rule__LinearizationDefExpr__Group_4__0");
+					put(grammarAccess.getLinearizationDefExprAccess().getGroup_9(), "rule__LinearizationDefExpr__Group_9__0");
+					put(grammarAccess.getLinearizationDefExprAccess().getGroup_11(), "rule__LinearizationDefExpr__Group_11__0");
+					put(grammarAccess.getLinearizationIntervalAccess().getGroup(), "rule__LinearizationInterval__Group__0");
 					put(grammarAccess.getNodeDefExprAccess().getGroup(), "rule__NodeDefExpr__Group__0");
 					put(grammarAccess.getNodeDefExprAccess().getGroup_3(), "rule__NodeDefExpr__Group_3__0");
 					put(grammarAccess.getNodeDefExprAccess().getGroup_3_1(), "rule__NodeDefExpr__Group_3_1__0");
@@ -268,10 +222,8 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getPreDefFnExprAccess().getGroup_1(), "rule__PreDefFnExpr__Group_1__0");
 					put(grammarAccess.getRecordUpdateExprAccess().getGroup(), "rule__RecordUpdateExpr__Group__0");
 					put(grammarAccess.getRecordUpdateExprAccess().getGroup_1(), "rule__RecordUpdateExpr__Group_1__0");
-					put(grammarAccess.getRecordUpdateExprAccess().getGroup_1_0(),
-							"rule__RecordUpdateExpr__Group_1_0__0");
-					put(grammarAccess.getRecordUpdateExprAccess().getGroup_1_0_1(),
-							"rule__RecordUpdateExpr__Group_1_0_1__0");
+					put(grammarAccess.getRecordUpdateExprAccess().getGroup_1_0(), "rule__RecordUpdateExpr__Group_1_0__0");
+					put(grammarAccess.getRecordUpdateExprAccess().getGroup_1_0_1(), "rule__RecordUpdateExpr__Group_1_0_1__0");
 					put(grammarAccess.getTermExprAccess().getGroup_0(), "rule__TermExpr__Group_0__0");
 					put(grammarAccess.getTermExprAccess().getGroup_2(), "rule__TermExpr__Group_2__0");
 					put(grammarAccess.getTermExprAccess().getGroup_3(), "rule__TermExpr__Group_3__0");
@@ -288,74 +240,55 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getTermExprAccess().getGroup_13(), "rule__TermExpr__Group_13__0");
 					put(grammarAccess.getTermExprAccess().getGroup_14(), "rule__TermExpr__Group_14__0");
 					put(grammarAccess.getTermExprAccess().getGroup_15(), "rule__TermExpr__Group_15__0");
-					put(grammarAccess.getComplexExprAccess().getGroup(), "rule__ComplexExpr__Group__0");
-					put(grammarAccess.getComplexExprAccess().getGroup_1_0(), "rule__ComplexExpr__Group_1_0__0");
-					put(grammarAccess.getComplexExprAccess().getGroup_1_0_0(), "rule__ComplexExpr__Group_1_0_0__0");
-					put(grammarAccess.getComplexExprAccess().getGroup_1_0_0_0(), "rule__ComplexExpr__Group_1_0_0_0__0");
-					put(grammarAccess.getComplexExprAccess().getGroup_1_0_1(), "rule__ComplexExpr__Group_1_0_1__0");
-					put(grammarAccess.getComplexExprAccess().getGroup_1_0_1_1(), "rule__ComplexExpr__Group_1_0_1_1__0");
+					put(grammarAccess.getComplexExprAccess().getGroup_0(), "rule__ComplexExpr__Group_0__0");
+					put(grammarAccess.getComplexExprAccess().getGroup_0_1(), "rule__ComplexExpr__Group_0_1__0");
+					put(grammarAccess.getComplexExprAccess().getGroup_0_1_0(), "rule__ComplexExpr__Group_0_1_0__0");
+					put(grammarAccess.getComplexExprAccess().getGroup_0_3(), "rule__ComplexExpr__Group_0_3__0");
+					put(grammarAccess.getComplexExprAccess().getGroup_1(), "rule__ComplexExpr__Group_1__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_1(), "rule__ComplexExpr__Group_1_1__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_1_0(), "rule__ComplexExpr__Group_1_1_0__0");
 					put(grammarAccess.getComplexExprAccess().getGroup_1_1_0_0(), "rule__ComplexExpr__Group_1_1_0_0__0");
-					put(grammarAccess.getComplexExprAccess().getGroup_1_1_2(), "rule__ComplexExpr__Group_1_1_2__0");
+					put(grammarAccess.getComplexExprAccess().getGroup_1_1_1(), "rule__ComplexExpr__Group_1_1_1__0");
+					put(grammarAccess.getComplexExprAccess().getGroup_1_1_1_1(), "rule__ComplexExpr__Group_1_1_1_1__0");
 					put(grammarAccess.getNestedDotIDAccess().getGroup(), "rule__NestedDotID__Group__0");
 					put(grammarAccess.getNestedDotIDAccess().getGroup_1(), "rule__NestedDotID__Group_1__0");
 					put(grammarAccess.getNestedDotIDAccess().getGroup_1_0(), "rule__NestedDotID__Group_1_0__0");
+					put(grammarAccess.getQCPREFAccess().getGroup(), "rule__QCPREF__Group__0");
 					put(grammarAccess.getQCPREFAccess().getGroup_0(), "rule__QCPREF__Group_0__0");
-					put(grammarAccess.getQCPREFAccess().getGroup_0_0(), "rule__QCPREF__Group_0_0__0");
-					put(grammarAccess.getQCPREFAccess().getGroup_0_0_0(), "rule__QCPREF__Group_0_0_0__0");
-					put(grammarAccess.getQCPREFAccess().getGroup_0_2(), "rule__QCPREF__Group_0_2__0");
-					put(grammarAccess.getQCPREFAccess().getGroup_0_2_0(), "rule__QCPREF__Group_0_2_0__0");
+					put(grammarAccess.getQCPREFAccess().getGroup_2(), "rule__QCPREF__Group_2__0");
+					put(grammarAccess.getEIDAccess().getGroup(), "rule__EID__Group__0");
+					put(grammarAccess.getEIDAccess().getGroup_0(), "rule__EID__Group_0__0");
 					put(grammarAccess.getJavaQualifiedNameAccess().getGroup(), "rule__JavaQualifiedName__Group__0");
 					put(grammarAccess.getJavaQualifiedNameAccess().getGroup_1(), "rule__JavaQualifiedName__Group_1__0");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup(),
-							"rule__ContainedPropertyAssociation__Group__0");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3(),
-							"rule__ContainedPropertyAssociation__Group_3__0");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3_1(),
-							"rule__ContainedPropertyAssociation__Group_3_1__0");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_4(),
-							"rule__ContainedPropertyAssociation__Group_4__0");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_4_2(),
-							"rule__ContainedPropertyAssociation__Group_4_2__0");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_5(),
-							"rule__ContainedPropertyAssociation__Group_5__0");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup(), "rule__ContainedPropertyAssociation__Group__0");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3(), "rule__ContainedPropertyAssociation__Group_3__0");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_3_1(), "rule__ContainedPropertyAssociation__Group_3_1__0");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_4(), "rule__ContainedPropertyAssociation__Group_4__0");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_4_2(), "rule__ContainedPropertyAssociation__Group_4_2__0");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getGroup_5(), "rule__ContainedPropertyAssociation__Group_5__0");
 					put(grammarAccess.getPropertyAssociationAccess().getGroup(), "rule__PropertyAssociation__Group__0");
-					put(grammarAccess.getPropertyAssociationAccess().getGroup_3(),
-							"rule__PropertyAssociation__Group_3__0");
-					put(grammarAccess.getPropertyAssociationAccess().getGroup_3_1(),
-							"rule__PropertyAssociation__Group_3_1__0");
-					put(grammarAccess.getPropertyAssociationAccess().getGroup_4(),
-							"rule__PropertyAssociation__Group_4__0");
-					put(grammarAccess.getBasicPropertyAssociationAccess().getGroup(),
-							"rule__BasicPropertyAssociation__Group__0");
+					put(grammarAccess.getPropertyAssociationAccess().getGroup_3(), "rule__PropertyAssociation__Group_3__0");
+					put(grammarAccess.getPropertyAssociationAccess().getGroup_3_1(), "rule__PropertyAssociation__Group_3_1__0");
+					put(grammarAccess.getPropertyAssociationAccess().getGroup_4(), "rule__PropertyAssociation__Group_4__0");
+					put(grammarAccess.getBasicPropertyAssociationAccess().getGroup(), "rule__BasicPropertyAssociation__Group__0");
 					put(grammarAccess.getModalPropertyValueAccess().getGroup(), "rule__ModalPropertyValue__Group__0");
-					put(grammarAccess.getModalPropertyValueAccess().getGroup_4(),
-							"rule__ModalPropertyValue__Group_4__0");
-					put(grammarAccess.getOptionalModalPropertyValueAccess().getGroup(),
-							"rule__OptionalModalPropertyValue__Group__0");
-					put(grammarAccess.getOptionalModalPropertyValueAccess().getGroup_1(),
-							"rule__OptionalModalPropertyValue__Group_1__0");
-					put(grammarAccess.getOptionalModalPropertyValueAccess().getGroup_1_3(),
-							"rule__OptionalModalPropertyValue__Group_1_3__0");
+					put(grammarAccess.getModalPropertyValueAccess().getGroup_4(), "rule__ModalPropertyValue__Group_4__0");
+					put(grammarAccess.getOptionalModalPropertyValueAccess().getGroup(), "rule__OptionalModalPropertyValue__Group__0");
+					put(grammarAccess.getOptionalModalPropertyValueAccess().getGroup_1(), "rule__OptionalModalPropertyValue__Group_1__0");
+					put(grammarAccess.getOptionalModalPropertyValueAccess().getGroup_1_3(), "rule__OptionalModalPropertyValue__Group_1_3__0");
 					put(grammarAccess.getBooleanLiteralAccess().getGroup(), "rule__BooleanLiteral__Group__0");
 					put(grammarAccess.getReferenceTermAccess().getGroup(), "rule__ReferenceTerm__Group__0");
 					put(grammarAccess.getRecordTermAccess().getGroup(), "rule__RecordTerm__Group__0");
 					put(grammarAccess.getOldRecordTermAccess().getGroup(), "rule__OldRecordTerm__Group__0");
 					put(grammarAccess.getComputedTermAccess().getGroup(), "rule__ComputedTerm__Group__0");
-					put(grammarAccess.getComponentClassifierTermAccess().getGroup(),
-							"rule__ComponentClassifierTerm__Group__0");
+					put(grammarAccess.getComponentClassifierTermAccess().getGroup(), "rule__ComponentClassifierTerm__Group__0");
 					put(grammarAccess.getListTermAccess().getGroup(), "rule__ListTerm__Group__0");
 					put(grammarAccess.getListTermAccess().getGroup_2(), "rule__ListTerm__Group_2__0");
 					put(grammarAccess.getListTermAccess().getGroup_2_1(), "rule__ListTerm__Group_2_1__0");
-					put(grammarAccess.getFieldPropertyAssociationAccess().getGroup(),
-							"rule__FieldPropertyAssociation__Group__0");
-					put(grammarAccess.getContainmentPathElementAccess().getGroup(),
-							"rule__ContainmentPathElement__Group__0");
-					put(grammarAccess.getContainmentPathElementAccess().getGroup_0(),
-							"rule__ContainmentPathElement__Group_0__0");
-					put(grammarAccess.getContainmentPathElementAccess().getGroup_1(),
-							"rule__ContainmentPathElement__Group_1__0");
+					put(grammarAccess.getFieldPropertyAssociationAccess().getGroup(), "rule__FieldPropertyAssociation__Group__0");
+					put(grammarAccess.getContainmentPathElementAccess().getGroup(), "rule__ContainmentPathElement__Group__0");
+					put(grammarAccess.getContainmentPathElementAccess().getGroup_0(), "rule__ContainmentPathElement__Group_0__0");
+					put(grammarAccess.getContainmentPathElementAccess().getGroup_1(), "rule__ContainmentPathElement__Group_1__0");
 					put(grammarAccess.getANNEXREFAccess().getGroup(), "rule__ANNEXREF__Group__0");
 					put(grammarAccess.getArrayRangeAccess().getGroup(), "rule__ArrayRange__Group__0");
 					put(grammarAccess.getArrayRangeAccess().getGroup_3(), "rule__ArrayRange__Group_3__0");
@@ -375,480 +308,272 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getQCREFAccess().getGroup(), "rule__QCREF__Group__0");
 					put(grammarAccess.getQCREFAccess().getGroup_0(), "rule__QCREF__Group_0__0");
 					put(grammarAccess.getQCREFAccess().getGroup_2(), "rule__QCREF__Group_2__0");
-					put(grammarAccess.getAgreeLibraryAccess().getContractAssignment_1(),
-							"rule__AgreeLibrary__ContractAssignment_1");
-					put(grammarAccess.getAgreeSubclauseAccess().getContractAssignment_1(),
-							"rule__AgreeSubclause__ContractAssignment_1");
-					put(grammarAccess.getAgreeContractAccess().getSpecsAssignment_1(),
-							"rule__AgreeContract__SpecsAssignment_1");
-					put(grammarAccess.getSpecStatementAccess().getStrAssignment_0_2(),
-							"rule__SpecStatement__StrAssignment_0_2");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_0_4_0(),
-							"rule__SpecStatement__ExprAssignment_0_4_0");
-					put(grammarAccess.getSpecStatementAccess().getPatternAssignment_0_4_1(),
-							"rule__SpecStatement__PatternAssignment_0_4_1");
-					put(grammarAccess.getSpecStatementAccess().getStrAssignment_1_2(),
-							"rule__SpecStatement__StrAssignment_1_2");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_1_4_0(),
-							"rule__SpecStatement__ExprAssignment_1_4_0");
-					put(grammarAccess.getSpecStatementAccess().getPatternAssignment_1_4_1(),
-							"rule__SpecStatement__PatternAssignment_1_4_1");
-					put(grammarAccess.getSpecStatementAccess().getStrAssignment_2_2_0(),
-							"rule__SpecStatement__StrAssignment_2_2_0");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_2_3_0(),
-							"rule__SpecStatement__ExprAssignment_2_3_0");
-					put(grammarAccess.getSpecStatementAccess().getPatternAssignment_2_3_1(),
-							"rule__SpecStatement__PatternAssignment_2_3_1");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_3_3(),
-							"rule__SpecStatement__ExprAssignment_3_3");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_4_2(),
-							"rule__SpecStatement__ExprAssignment_4_2");
-					put(grammarAccess.getSpecStatementAccess().getTypeAssignment_4_4(),
-							"rule__SpecStatement__TypeAssignment_4_4");
-					put(grammarAccess.getSpecStatementAccess().getStrAssignment_5_2(),
-							"rule__SpecStatement__StrAssignment_5_2");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_5_4_0(),
-							"rule__SpecStatement__ExprAssignment_5_4_0");
-					put(grammarAccess.getSpecStatementAccess().getPatternAssignment_5_4_1(),
-							"rule__SpecStatement__PatternAssignment_5_4_1");
-					put(grammarAccess.getSpecStatementAccess().getSubcompAssignment_6_2(),
-							"rule__SpecStatement__SubcompAssignment_6_2");
-					put(grammarAccess.getSpecStatementAccess().getConnAssignment_7_2(),
-							"rule__SpecStatement__ConnAssignment_7_2");
-					put(grammarAccess.getSpecStatementAccess().getExprAssignment_7_4(),
-							"rule__SpecStatement__ExprAssignment_7_4");
-					put(grammarAccess.getPatternStatementAccess().getExprAssignment_1_2(),
-							"rule__PatternStatement__ExprAssignment_1_2");
-					put(grammarAccess.getWhenStatementAccess().getConditionAssignment_0_0_0_2(),
-							"rule__WhenStatement__ConditionAssignment_0_0_0_2");
-					put(grammarAccess.getWhenStatementAccess().getConditionIntervalAssignment_0_2(),
-							"rule__WhenStatement__ConditionIntervalAssignment_0_2");
-					put(grammarAccess.getWhenStatementAccess().getEventAssignment_0_3(),
-							"rule__WhenStatement__EventAssignment_0_3");
-					put(grammarAccess.getWhenStatementAccess().getExclAssignment_0_4(),
-							"rule__WhenStatement__ExclAssignment_0_4");
-					put(grammarAccess.getWhenStatementAccess().getEventIntervalAssignment_0_6_1(),
-							"rule__WhenStatement__EventIntervalAssignment_0_6_1");
-					put(grammarAccess.getWhenStatementAccess().getConditionAssignment_1_0_0_2(),
-							"rule__WhenStatement__ConditionAssignment_1_0_0_2");
-					put(grammarAccess.getWhenStatementAccess().getTimesAssignment_1_1(),
-							"rule__WhenStatement__TimesAssignment_1_1");
-					put(grammarAccess.getWhenStatementAccess().getIntervalAssignment_1_4(),
-							"rule__WhenStatement__IntervalAssignment_1_4");
-					put(grammarAccess.getWhenStatementAccess().getExclAssignment_1_5(),
-							"rule__WhenStatement__ExclAssignment_1_5");
-					put(grammarAccess.getWhenStatementAccess().getEventAssignment_1_7(),
-							"rule__WhenStatement__EventAssignment_1_7");
-					put(grammarAccess.getWheneverStatementAccess().getCauseAssignment_0_0_0_2(),
-							"rule__WheneverStatement__CauseAssignment_0_0_0_2");
-					put(grammarAccess.getWheneverStatementAccess().getEffectAssignment_0_0_0_4(),
-							"rule__WheneverStatement__EffectAssignment_0_0_0_4");
-					put(grammarAccess.getWheneverStatementAccess().getExclAssignment_0_0_0_5(),
-							"rule__WheneverStatement__ExclAssignment_0_0_0_5");
-					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_0_1_1(),
-							"rule__WheneverStatement__IntervalAssignment_0_1_1");
-					put(grammarAccess.getWheneverStatementAccess().getCauseAssignment_1_0_0_2(),
-							"rule__WheneverStatement__CauseAssignment_1_0_0_2");
-					put(grammarAccess.getWheneverStatementAccess().getEffectAssignment_1_0_0_5(),
-							"rule__WheneverStatement__EffectAssignment_1_0_0_5");
-					put(grammarAccess.getWheneverStatementAccess().getExclAssignment_1_0_0_6(),
-							"rule__WheneverStatement__ExclAssignment_1_0_0_6");
-					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_1_1_1(),
-							"rule__WheneverStatement__IntervalAssignment_1_1_1");
-					put(grammarAccess.getWheneverStatementAccess().getCauseAssignment_2_0_0_2(),
-							"rule__WheneverStatement__CauseAssignment_2_0_0_2");
-					put(grammarAccess.getWheneverStatementAccess().getEffectAssignment_2_0_0_4(),
-							"rule__WheneverStatement__EffectAssignment_2_0_0_4");
-					put(grammarAccess.getWheneverStatementAccess().getExclAssignment_2_0_0_5(),
-							"rule__WheneverStatement__ExclAssignment_2_0_0_5");
-					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_2_1_1(),
-							"rule__WheneverStatement__IntervalAssignment_2_1_1");
-					put(grammarAccess.getWheneverStatementAccess().getCauseAssignment_3_0_0_2(),
-							"rule__WheneverStatement__CauseAssignment_3_0_0_2");
-					put(grammarAccess.getWheneverStatementAccess().getLhsAssignment_3_0_0_4(),
-							"rule__WheneverStatement__LhsAssignment_3_0_0_4");
-					put(grammarAccess.getWheneverStatementAccess().getRhsAssignment_3_1(),
-							"rule__WheneverStatement__RhsAssignment_3_1");
-					put(grammarAccess.getWheneverStatementAccess().getExclAssignment_3_2(),
-							"rule__WheneverStatement__ExclAssignment_3_2");
-					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_3_3_1(),
-							"rule__WheneverStatement__IntervalAssignment_3_3_1");
-					put(grammarAccess.getRealTimeStatementAccess().getEventAssignment_0_0_0_2(),
-							"rule__RealTimeStatement__EventAssignment_0_0_0_2");
-					put(grammarAccess.getRealTimeStatementAccess().getPeriodAssignment_0_1(),
-							"rule__RealTimeStatement__PeriodAssignment_0_1");
-					put(grammarAccess.getRealTimeStatementAccess().getJitterAssignment_0_2_2(),
-							"rule__RealTimeStatement__JitterAssignment_0_2_2");
-					put(grammarAccess.getRealTimeStatementAccess().getEventAssignment_1_0_0_2(),
-							"rule__RealTimeStatement__EventAssignment_1_0_0_2");
-					put(grammarAccess.getRealTimeStatementAccess().getIatAssignment_1_3(),
-							"rule__RealTimeStatement__IatAssignment_1_3");
-					put(grammarAccess.getRealTimeStatementAccess().getJitterAssignment_1_4_2(),
-							"rule__RealTimeStatement__JitterAssignment_1_4_2");
-					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_0_0_2(),
-							"rule__TimeInterval__LowAssignment_0_0_2");
-					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_0_0_4(),
-							"rule__TimeInterval__HighAssignment_0_0_4");
-					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_1_0_2(),
-							"rule__TimeInterval__LowAssignment_1_0_2");
-					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_1_0_4(),
-							"rule__TimeInterval__HighAssignment_1_0_4");
-					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_2_0_2(),
-							"rule__TimeInterval__LowAssignment_2_0_2");
-					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_2_0_4(),
-							"rule__TimeInterval__HighAssignment_2_0_4");
-					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_3_0_2(),
-							"rule__TimeInterval__LowAssignment_3_0_2");
-					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_3_0_4(),
-							"rule__TimeInterval__HighAssignment_3_0_4");
-					put(grammarAccess.getSynchStatementAccess().getValAssignment_0_3(),
-							"rule__SynchStatement__ValAssignment_0_3");
-					put(grammarAccess.getSynchStatementAccess().getVal2Assignment_0_4_1(),
-							"rule__SynchStatement__Val2Assignment_0_4_1");
-					put(grammarAccess.getSynchStatementAccess().getSimAssignment_0_5(),
-							"rule__SynchStatement__SimAssignment_0_5");
-					put(grammarAccess.getSynchStatementAccess().getComp1Assignment_1_3_0(),
-							"rule__SynchStatement__Comp1Assignment_1_3_0");
-					put(grammarAccess.getSynchStatementAccess().getComp2Assignment_1_3_2(),
-							"rule__SynchStatement__Comp2Assignment_1_3_2");
-					put(grammarAccess.getSynchStatementAccess().getMaxAssignment_1_3_4(),
-							"rule__SynchStatement__MaxAssignment_1_3_4");
-					put(grammarAccess.getSynchStatementAccess().getMinAssignment_1_3_6(),
-							"rule__SynchStatement__MinAssignment_1_3_6");
-					put(grammarAccess.getSynchStatementAccess().getElsAssignment_2_3(),
-							"rule__SynchStatement__ElsAssignment_2_3");
-					put(grammarAccess.getSynchStatementAccess().getElsAssignment_2_4_1(),
-							"rule__SynchStatement__ElsAssignment_2_4_1");
-					put(grammarAccess.getOrderStatementAccess().getCompsAssignment_2(),
-							"rule__OrderStatement__CompsAssignment_2");
-					put(grammarAccess.getOrderStatementAccess().getCompsAssignment_3_1(),
-							"rule__OrderStatement__CompsAssignment_3_1");
-					put(grammarAccess.getPropertyStatementAccess().getNameAssignment_1(),
-							"rule__PropertyStatement__NameAssignment_1");
-					put(grammarAccess.getPropertyStatementAccess().getExprAssignment_3(),
-							"rule__PropertyStatement__ExprAssignment_3");
-					put(grammarAccess.getConstStatementAccess().getNameAssignment_1(),
-							"rule__ConstStatement__NameAssignment_1");
-					put(grammarAccess.getConstStatementAccess().getTypeAssignment_3(),
-							"rule__ConstStatement__TypeAssignment_3");
-					put(grammarAccess.getConstStatementAccess().getExprAssignment_5(),
-							"rule__ConstStatement__ExprAssignment_5");
-					put(grammarAccess.getEnumStatementAccess().getNameAssignment_1(),
-							"rule__EnumStatement__NameAssignment_1");
-					put(grammarAccess.getEnumStatementAccess().getEnumsAssignment_4(),
-							"rule__EnumStatement__EnumsAssignment_4");
-					put(grammarAccess.getEnumStatementAccess().getEnumsAssignment_5_1(),
-							"rule__EnumStatement__EnumsAssignment_5_1");
-					put(grammarAccess.getEqStatementAccess().getLhsAssignment_1_0(),
-							"rule__EqStatement__LhsAssignment_1_0");
-					put(grammarAccess.getEqStatementAccess().getLhsAssignment_1_1_1(),
-							"rule__EqStatement__LhsAssignment_1_1_1");
-					put(grammarAccess.getEqStatementAccess().getExprAssignment_2_1(),
-							"rule__EqStatement__ExprAssignment_2_1");
-					put(grammarAccess.getInputStatementAccess().getLhsAssignment_1_0(),
-							"rule__InputStatement__LhsAssignment_1_0");
-					put(grammarAccess.getInputStatementAccess().getLhsAssignment_1_1_1(),
-							"rule__InputStatement__LhsAssignment_1_1_1");
-					put(grammarAccess.getAssignStatementAccess().getIdAssignment_1(),
-							"rule__AssignStatement__IdAssignment_1");
-					put(grammarAccess.getAssignStatementAccess().getExprAssignment_3(),
-							"rule__AssignStatement__ExprAssignment_3");
+					put(grammarAccess.getAgreeLibraryAccess().getContractAssignment_1(), "rule__AgreeLibrary__ContractAssignment_1");
+					put(grammarAccess.getAgreeSubclauseAccess().getContractAssignment_1(), "rule__AgreeSubclause__ContractAssignment_1");
+					put(grammarAccess.getAgreeContractAccess().getSpecsAssignment_1(), "rule__AgreeContract__SpecsAssignment_1");
+					put(grammarAccess.getSpecStatementAccess().getExprAssignment_1_3(), "rule__SpecStatement__ExprAssignment_1_3");
+					put(grammarAccess.getSpecStatementAccess().getExprAssignment_2_2(), "rule__SpecStatement__ExprAssignment_2_2");
+					put(grammarAccess.getSpecStatementAccess().getTypeAssignment_2_4(), "rule__SpecStatement__TypeAssignment_2_4");
+					put(grammarAccess.getSpecStatementAccess().getSubcompAssignment_3_2(), "rule__SpecStatement__SubcompAssignment_3_2");
+					put(grammarAccess.getSpecStatementAccess().getConnAssignment_4_2(), "rule__SpecStatement__ConnAssignment_4_2");
+					put(grammarAccess.getSpecStatementAccess().getExprAssignment_4_4(), "rule__SpecStatement__ExprAssignment_4_4");
+					put(grammarAccess.getNamedSpecStatementAccess().getNameAssignment_0_2(), "rule__NamedSpecStatement__NameAssignment_0_2");
+					put(grammarAccess.getNamedSpecStatementAccess().getStrAssignment_0_3(), "rule__NamedSpecStatement__StrAssignment_0_3");
+					put(grammarAccess.getNamedSpecStatementAccess().getExprAssignment_0_5_0(), "rule__NamedSpecStatement__ExprAssignment_0_5_0");
+					put(grammarAccess.getNamedSpecStatementAccess().getPatternAssignment_0_5_1(), "rule__NamedSpecStatement__PatternAssignment_0_5_1");
+					put(grammarAccess.getNamedSpecStatementAccess().getNameAssignment_1_2(), "rule__NamedSpecStatement__NameAssignment_1_2");
+					put(grammarAccess.getNamedSpecStatementAccess().getStrAssignment_1_3(), "rule__NamedSpecStatement__StrAssignment_1_3");
+					put(grammarAccess.getNamedSpecStatementAccess().getExprAssignment_1_5_0(), "rule__NamedSpecStatement__ExprAssignment_1_5_0");
+					put(grammarAccess.getNamedSpecStatementAccess().getPatternAssignment_1_5_1(), "rule__NamedSpecStatement__PatternAssignment_1_5_1");
+					put(grammarAccess.getNamedSpecStatementAccess().getNameAssignment_2_2_0(), "rule__NamedSpecStatement__NameAssignment_2_2_0");
+					put(grammarAccess.getNamedSpecStatementAccess().getStrAssignment_2_2_1(), "rule__NamedSpecStatement__StrAssignment_2_2_1");
+					put(grammarAccess.getNamedSpecStatementAccess().getExprAssignment_2_3_0(), "rule__NamedSpecStatement__ExprAssignment_2_3_0");
+					put(grammarAccess.getNamedSpecStatementAccess().getPatternAssignment_2_3_1(), "rule__NamedSpecStatement__PatternAssignment_2_3_1");
+					put(grammarAccess.getNamedSpecStatementAccess().getNameAssignment_3_2(), "rule__NamedSpecStatement__NameAssignment_3_2");
+					put(grammarAccess.getNamedSpecStatementAccess().getStrAssignment_3_3(), "rule__NamedSpecStatement__StrAssignment_3_3");
+					put(grammarAccess.getNamedSpecStatementAccess().getExprAssignment_3_5_0(), "rule__NamedSpecStatement__ExprAssignment_3_5_0");
+					put(grammarAccess.getNamedSpecStatementAccess().getPatternAssignment_3_5_1(), "rule__NamedSpecStatement__PatternAssignment_3_5_1");
+					put(grammarAccess.getPatternStatementAccess().getExprAssignment_1_2(), "rule__PatternStatement__ExprAssignment_1_2");
+					put(grammarAccess.getWhenStatementAccess().getConditionAssignment_0_0_0_2(), "rule__WhenStatement__ConditionAssignment_0_0_0_2");
+					put(grammarAccess.getWhenStatementAccess().getConditionIntervalAssignment_0_2(), "rule__WhenStatement__ConditionIntervalAssignment_0_2");
+					put(grammarAccess.getWhenStatementAccess().getEventAssignment_0_3(), "rule__WhenStatement__EventAssignment_0_3");
+					put(grammarAccess.getWhenStatementAccess().getExclAssignment_0_4(), "rule__WhenStatement__ExclAssignment_0_4");
+					put(grammarAccess.getWhenStatementAccess().getEventIntervalAssignment_0_6_1(), "rule__WhenStatement__EventIntervalAssignment_0_6_1");
+					put(grammarAccess.getWhenStatementAccess().getConditionAssignment_1_0_0_2(), "rule__WhenStatement__ConditionAssignment_1_0_0_2");
+					put(grammarAccess.getWhenStatementAccess().getTimesAssignment_1_1(), "rule__WhenStatement__TimesAssignment_1_1");
+					put(grammarAccess.getWhenStatementAccess().getIntervalAssignment_1_4(), "rule__WhenStatement__IntervalAssignment_1_4");
+					put(grammarAccess.getWhenStatementAccess().getExclAssignment_1_5(), "rule__WhenStatement__ExclAssignment_1_5");
+					put(grammarAccess.getWhenStatementAccess().getEventAssignment_1_7(), "rule__WhenStatement__EventAssignment_1_7");
+					put(grammarAccess.getWheneverStatementAccess().getCauseAssignment_0_0_0_2(), "rule__WheneverStatement__CauseAssignment_0_0_0_2");
+					put(grammarAccess.getWheneverStatementAccess().getEffectAssignment_0_0_0_4(), "rule__WheneverStatement__EffectAssignment_0_0_0_4");
+					put(grammarAccess.getWheneverStatementAccess().getExclAssignment_0_0_0_5(), "rule__WheneverStatement__ExclAssignment_0_0_0_5");
+					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_0_1_1(), "rule__WheneverStatement__IntervalAssignment_0_1_1");
+					put(grammarAccess.getWheneverStatementAccess().getCauseAssignment_1_0_0_2(), "rule__WheneverStatement__CauseAssignment_1_0_0_2");
+					put(grammarAccess.getWheneverStatementAccess().getEffectAssignment_1_0_0_5(), "rule__WheneverStatement__EffectAssignment_1_0_0_5");
+					put(grammarAccess.getWheneverStatementAccess().getExclAssignment_1_0_0_6(), "rule__WheneverStatement__ExclAssignment_1_0_0_6");
+					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_1_1_1(), "rule__WheneverStatement__IntervalAssignment_1_1_1");
+					put(grammarAccess.getWheneverStatementAccess().getCauseAssignment_2_0_0_2(), "rule__WheneverStatement__CauseAssignment_2_0_0_2");
+					put(grammarAccess.getWheneverStatementAccess().getEffectAssignment_2_0_0_4(), "rule__WheneverStatement__EffectAssignment_2_0_0_4");
+					put(grammarAccess.getWheneverStatementAccess().getExclAssignment_2_0_0_5(), "rule__WheneverStatement__ExclAssignment_2_0_0_5");
+					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_2_1_1(), "rule__WheneverStatement__IntervalAssignment_2_1_1");
+					put(grammarAccess.getWheneverStatementAccess().getCauseAssignment_3_0_0_2(), "rule__WheneverStatement__CauseAssignment_3_0_0_2");
+					put(grammarAccess.getWheneverStatementAccess().getLhsAssignment_3_0_0_4(), "rule__WheneverStatement__LhsAssignment_3_0_0_4");
+					put(grammarAccess.getWheneverStatementAccess().getRhsAssignment_3_1(), "rule__WheneverStatement__RhsAssignment_3_1");
+					put(grammarAccess.getWheneverStatementAccess().getExclAssignment_3_2(), "rule__WheneverStatement__ExclAssignment_3_2");
+					put(grammarAccess.getWheneverStatementAccess().getIntervalAssignment_3_3_1(), "rule__WheneverStatement__IntervalAssignment_3_3_1");
+					put(grammarAccess.getRealTimeStatementAccess().getEventAssignment_0_0_0_2(), "rule__RealTimeStatement__EventAssignment_0_0_0_2");
+					put(grammarAccess.getRealTimeStatementAccess().getPeriodAssignment_0_1(), "rule__RealTimeStatement__PeriodAssignment_0_1");
+					put(grammarAccess.getRealTimeStatementAccess().getJitterAssignment_0_2_2(), "rule__RealTimeStatement__JitterAssignment_0_2_2");
+					put(grammarAccess.getRealTimeStatementAccess().getEventAssignment_1_0_0_2(), "rule__RealTimeStatement__EventAssignment_1_0_0_2");
+					put(grammarAccess.getRealTimeStatementAccess().getIatAssignment_1_3(), "rule__RealTimeStatement__IatAssignment_1_3");
+					put(grammarAccess.getRealTimeStatementAccess().getJitterAssignment_1_4_2(), "rule__RealTimeStatement__JitterAssignment_1_4_2");
+					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_0_0_2(), "rule__TimeInterval__LowAssignment_0_0_2");
+					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_0_0_4(), "rule__TimeInterval__HighAssignment_0_0_4");
+					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_1_0_2(), "rule__TimeInterval__LowAssignment_1_0_2");
+					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_1_0_4(), "rule__TimeInterval__HighAssignment_1_0_4");
+					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_2_0_2(), "rule__TimeInterval__LowAssignment_2_0_2");
+					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_2_0_4(), "rule__TimeInterval__HighAssignment_2_0_4");
+					put(grammarAccess.getTimeIntervalAccess().getLowAssignment_3_0_2(), "rule__TimeInterval__LowAssignment_3_0_2");
+					put(grammarAccess.getTimeIntervalAccess().getHighAssignment_3_0_4(), "rule__TimeInterval__HighAssignment_3_0_4");
+					put(grammarAccess.getSynchStatementAccess().getValAssignment_0_3(), "rule__SynchStatement__ValAssignment_0_3");
+					put(grammarAccess.getSynchStatementAccess().getVal2Assignment_0_4_1(), "rule__SynchStatement__Val2Assignment_0_4_1");
+					put(grammarAccess.getSynchStatementAccess().getSimAssignment_0_5(), "rule__SynchStatement__SimAssignment_0_5");
+					put(grammarAccess.getSynchStatementAccess().getComp1Assignment_1_3_0(), "rule__SynchStatement__Comp1Assignment_1_3_0");
+					put(grammarAccess.getSynchStatementAccess().getComp2Assignment_1_3_2(), "rule__SynchStatement__Comp2Assignment_1_3_2");
+					put(grammarAccess.getSynchStatementAccess().getMaxAssignment_1_3_4(), "rule__SynchStatement__MaxAssignment_1_3_4");
+					put(grammarAccess.getSynchStatementAccess().getMinAssignment_1_3_6(), "rule__SynchStatement__MinAssignment_1_3_6");
+					put(grammarAccess.getSynchStatementAccess().getElsAssignment_2_3(), "rule__SynchStatement__ElsAssignment_2_3");
+					put(grammarAccess.getSynchStatementAccess().getElsAssignment_2_4_1(), "rule__SynchStatement__ElsAssignment_2_4_1");
+					put(grammarAccess.getOrderStatementAccess().getCompsAssignment_2(), "rule__OrderStatement__CompsAssignment_2");
+					put(grammarAccess.getOrderStatementAccess().getCompsAssignment_3_1(), "rule__OrderStatement__CompsAssignment_3_1");
+					put(grammarAccess.getPropertyStatementAccess().getNameAssignment_1(), "rule__PropertyStatement__NameAssignment_1");
+					put(grammarAccess.getPropertyStatementAccess().getExprAssignment_3(), "rule__PropertyStatement__ExprAssignment_3");
+					put(grammarAccess.getConstStatementAccess().getNameAssignment_1(), "rule__ConstStatement__NameAssignment_1");
+					put(grammarAccess.getConstStatementAccess().getTypeAssignment_3(), "rule__ConstStatement__TypeAssignment_3");
+					put(grammarAccess.getConstStatementAccess().getExprAssignment_5(), "rule__ConstStatement__ExprAssignment_5");
+					put(grammarAccess.getEnumStatementAccess().getNameAssignment_1(), "rule__EnumStatement__NameAssignment_1");
+					put(grammarAccess.getEnumStatementAccess().getEnumsAssignment_4(), "rule__EnumStatement__EnumsAssignment_4");
+					put(grammarAccess.getEnumStatementAccess().getEnumsAssignment_5_1(), "rule__EnumStatement__EnumsAssignment_5_1");
+					put(grammarAccess.getEqStatementAccess().getLhsAssignment_1_0(), "rule__EqStatement__LhsAssignment_1_0");
+					put(grammarAccess.getEqStatementAccess().getLhsAssignment_1_1_1(), "rule__EqStatement__LhsAssignment_1_1_1");
+					put(grammarAccess.getEqStatementAccess().getExprAssignment_2_1(), "rule__EqStatement__ExprAssignment_2_1");
+					put(grammarAccess.getInputStatementAccess().getLhsAssignment_1_0(), "rule__InputStatement__LhsAssignment_1_0");
+					put(grammarAccess.getInputStatementAccess().getLhsAssignment_1_1_1(), "rule__InputStatement__LhsAssignment_1_1_1");
+					put(grammarAccess.getAssignStatementAccess().getIdAssignment_1(), "rule__AssignStatement__IdAssignment_1");
+					put(grammarAccess.getAssignStatementAccess().getExprAssignment_3(), "rule__AssignStatement__ExprAssignment_3");
 					put(grammarAccess.getFnDefExprAccess().getNameAssignment_1(), "rule__FnDefExpr__NameAssignment_1");
 					put(grammarAccess.getFnDefExprAccess().getArgsAssignment_3(), "rule__FnDefExpr__ArgsAssignment_3");
-					put(grammarAccess.getFnDefExprAccess().getArgsAssignment_4_1(),
-							"rule__FnDefExpr__ArgsAssignment_4_1");
+					put(grammarAccess.getFnDefExprAccess().getArgsAssignment_4_1(), "rule__FnDefExpr__ArgsAssignment_4_1");
 					put(grammarAccess.getFnDefExprAccess().getTypeAssignment_7(), "rule__FnDefExpr__TypeAssignment_7");
 					put(grammarAccess.getFnDefExprAccess().getExprAssignment_9(), "rule__FnDefExpr__ExprAssignment_9");
-					put(grammarAccess.getLibraryFnDefExprAccess().getNameAssignment_1(),
-							"rule__LibraryFnDefExpr__NameAssignment_1");
-					put(grammarAccess.getLibraryFnDefExprAccess().getArgsAssignment_3(),
-							"rule__LibraryFnDefExpr__ArgsAssignment_3");
-					put(grammarAccess.getLibraryFnDefExprAccess().getArgsAssignment_4_1(),
-							"rule__LibraryFnDefExpr__ArgsAssignment_4_1");
-					put(grammarAccess.getLibraryFnDefExprAccess().getTypeAssignment_7(),
-							"rule__LibraryFnDefExpr__TypeAssignment_7");
-					put(grammarAccess.getLinearizationDefExprAccess().getNameAssignment_1(),
-							"rule__LinearizationDefExpr__NameAssignment_1");
-					put(grammarAccess.getLinearizationDefExprAccess().getArgsAssignment_3(),
-							"rule__LinearizationDefExpr__ArgsAssignment_3");
-					put(grammarAccess.getLinearizationDefExprAccess().getArgsAssignment_4_1(),
-							"rule__LinearizationDefExpr__ArgsAssignment_4_1");
-					put(grammarAccess.getLinearizationDefExprAccess().getIntervalsAssignment_8(),
-							"rule__LinearizationDefExpr__IntervalsAssignment_8");
-					put(grammarAccess.getLinearizationDefExprAccess().getIntervalsAssignment_9_1(),
-							"rule__LinearizationDefExpr__IntervalsAssignment_9_1");
-					put(grammarAccess.getLinearizationDefExprAccess().getPrecisionAssignment_11_1(),
-							"rule__LinearizationDefExpr__PrecisionAssignment_11_1");
-					put(grammarAccess.getLinearizationDefExprAccess().getExprBodyAssignment_13(),
-							"rule__LinearizationDefExpr__ExprBodyAssignment_13");
-					put(grammarAccess.getLinearizationIntervalAccess().getStartAssignment_0(),
-							"rule__LinearizationInterval__StartAssignment_0");
-					put(grammarAccess.getLinearizationIntervalAccess().getEndAssignment_2(),
-							"rule__LinearizationInterval__EndAssignment_2");
-					put(grammarAccess.getNodeDefExprAccess().getNameAssignment_1(),
-							"rule__NodeDefExpr__NameAssignment_1");
-					put(grammarAccess.getNodeDefExprAccess().getArgsAssignment_3_0(),
-							"rule__NodeDefExpr__ArgsAssignment_3_0");
-					put(grammarAccess.getNodeDefExprAccess().getArgsAssignment_3_1_1(),
-							"rule__NodeDefExpr__ArgsAssignment_3_1_1");
-					put(grammarAccess.getNodeDefExprAccess().getRetsAssignment_7_0(),
-							"rule__NodeDefExpr__RetsAssignment_7_0");
-					put(grammarAccess.getNodeDefExprAccess().getRetsAssignment_7_1_1(),
-							"rule__NodeDefExpr__RetsAssignment_7_1_1");
-					put(grammarAccess.getNodeDefExprAccess().getNodeBodyAssignment_10(),
-							"rule__NodeDefExpr__NodeBodyAssignment_10");
-					put(grammarAccess.getNodeBodyExprAccess().getLocsAssignment_0_1_0(),
-							"rule__NodeBodyExpr__LocsAssignment_0_1_0");
-					put(grammarAccess.getNodeBodyExprAccess().getStmtsAssignment_2(),
-							"rule__NodeBodyExpr__StmtsAssignment_2");
+					put(grammarAccess.getLibraryFnDefExprAccess().getNameAssignment_1(), "rule__LibraryFnDefExpr__NameAssignment_1");
+					put(grammarAccess.getLibraryFnDefExprAccess().getArgsAssignment_3(), "rule__LibraryFnDefExpr__ArgsAssignment_3");
+					put(grammarAccess.getLibraryFnDefExprAccess().getArgsAssignment_4_1(), "rule__LibraryFnDefExpr__ArgsAssignment_4_1");
+					put(grammarAccess.getLibraryFnDefExprAccess().getTypeAssignment_7(), "rule__LibraryFnDefExpr__TypeAssignment_7");
+					put(grammarAccess.getLinearizationDefExprAccess().getNameAssignment_1(), "rule__LinearizationDefExpr__NameAssignment_1");
+					put(grammarAccess.getLinearizationDefExprAccess().getArgsAssignment_3(), "rule__LinearizationDefExpr__ArgsAssignment_3");
+					put(grammarAccess.getLinearizationDefExprAccess().getArgsAssignment_4_1(), "rule__LinearizationDefExpr__ArgsAssignment_4_1");
+					put(grammarAccess.getLinearizationDefExprAccess().getIntervalsAssignment_8(), "rule__LinearizationDefExpr__IntervalsAssignment_8");
+					put(grammarAccess.getLinearizationDefExprAccess().getIntervalsAssignment_9_1(), "rule__LinearizationDefExpr__IntervalsAssignment_9_1");
+					put(grammarAccess.getLinearizationDefExprAccess().getPrecisionAssignment_11_1(), "rule__LinearizationDefExpr__PrecisionAssignment_11_1");
+					put(grammarAccess.getLinearizationDefExprAccess().getExprBodyAssignment_13(), "rule__LinearizationDefExpr__ExprBodyAssignment_13");
+					put(grammarAccess.getLinearizationIntervalAccess().getStartAssignment_0(), "rule__LinearizationInterval__StartAssignment_0");
+					put(grammarAccess.getLinearizationIntervalAccess().getEndAssignment_2(), "rule__LinearizationInterval__EndAssignment_2");
+					put(grammarAccess.getNodeDefExprAccess().getNameAssignment_1(), "rule__NodeDefExpr__NameAssignment_1");
+					put(grammarAccess.getNodeDefExprAccess().getArgsAssignment_3_0(), "rule__NodeDefExpr__ArgsAssignment_3_0");
+					put(grammarAccess.getNodeDefExprAccess().getArgsAssignment_3_1_1(), "rule__NodeDefExpr__ArgsAssignment_3_1_1");
+					put(grammarAccess.getNodeDefExprAccess().getRetsAssignment_7_0(), "rule__NodeDefExpr__RetsAssignment_7_0");
+					put(grammarAccess.getNodeDefExprAccess().getRetsAssignment_7_1_1(), "rule__NodeDefExpr__RetsAssignment_7_1_1");
+					put(grammarAccess.getNodeDefExprAccess().getNodeBodyAssignment_10(), "rule__NodeDefExpr__NodeBodyAssignment_10");
+					put(grammarAccess.getNodeBodyExprAccess().getLocsAssignment_0_1_0(), "rule__NodeBodyExpr__LocsAssignment_0_1_0");
+					put(grammarAccess.getNodeBodyExprAccess().getStmtsAssignment_2(), "rule__NodeBodyExpr__StmtsAssignment_2");
 					put(grammarAccess.getNodeStmtAccess().getLhsAssignment_0_1(), "rule__NodeStmt__LhsAssignment_0_1");
-					put(grammarAccess.getNodeStmtAccess().getLhsAssignment_0_2_1(),
-							"rule__NodeStmt__LhsAssignment_0_2_1");
-					put(grammarAccess.getNodeStmtAccess().getExprAssignment_0_4(),
-							"rule__NodeStmt__ExprAssignment_0_4");
+					put(grammarAccess.getNodeStmtAccess().getLhsAssignment_0_2_1(), "rule__NodeStmt__LhsAssignment_0_2_1");
+					put(grammarAccess.getNodeStmtAccess().getExprAssignment_0_4(), "rule__NodeStmt__ExprAssignment_0_4");
 					put(grammarAccess.getNodeStmtAccess().getStrAssignment_1_2(), "rule__NodeStmt__StrAssignment_1_2");
-					put(grammarAccess.getNodeStmtAccess().getExprAssignment_1_4(),
-							"rule__NodeStmt__ExprAssignment_1_4");
+					put(grammarAccess.getNodeStmtAccess().getExprAssignment_1_4(), "rule__NodeStmt__ExprAssignment_1_4");
 					put(grammarAccess.getArgAccess().getNameAssignment_0(), "rule__Arg__NameAssignment_0");
 					put(grammarAccess.getArgAccess().getTypeAssignment_2(), "rule__Arg__TypeAssignment_2");
 					put(grammarAccess.getTypeAccess().getStringAssignment_0_1(), "rule__Type__StringAssignment_0_1");
-					put(grammarAccess.getTypeAccess().getLowNegAssignment_0_2_1(),
-							"rule__Type__LowNegAssignment_0_2_1");
-					put(grammarAccess.getTypeAccess().getRangeLowAssignment_0_2_2(),
-							"rule__Type__RangeLowAssignment_0_2_2");
-					put(grammarAccess.getTypeAccess().getHighNegAssignment_0_2_4(),
-							"rule__Type__HighNegAssignment_0_2_4");
-					put(grammarAccess.getTypeAccess().getRangeHighAssignment_0_2_5(),
-							"rule__Type__RangeHighAssignment_0_2_5");
+					put(grammarAccess.getTypeAccess().getLowNegAssignment_0_2_1(), "rule__Type__LowNegAssignment_0_2_1");
+					put(grammarAccess.getTypeAccess().getRangeLowAssignment_0_2_2(), "rule__Type__RangeLowAssignment_0_2_2");
+					put(grammarAccess.getTypeAccess().getHighNegAssignment_0_2_4(), "rule__Type__HighNegAssignment_0_2_4");
+					put(grammarAccess.getTypeAccess().getRangeHighAssignment_0_2_5(), "rule__Type__RangeHighAssignment_0_2_5");
 					put(grammarAccess.getTypeAccess().getRecordAssignment_1_1(), "rule__Type__RecordAssignment_1_1");
-					put(grammarAccess.getRecordDefExprAccess().getNameAssignment_1(),
-							"rule__RecordDefExpr__NameAssignment_1");
-					put(grammarAccess.getRecordDefExprAccess().getArgsAssignment_5_0(),
-							"rule__RecordDefExpr__ArgsAssignment_5_0");
-					put(grammarAccess.getRecordDefExprAccess().getArgsAssignment_5_1_1(),
-							"rule__RecordDefExpr__ArgsAssignment_5_1_1");
-					put(grammarAccess.getArrowExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__ArrowExpr__OpAssignment_1_0_0_1");
-					put(grammarAccess.getArrowExprAccess().getRightAssignment_1_1(),
-							"rule__ArrowExpr__RightAssignment_1_1");
-					put(grammarAccess.getImpliesExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__ImpliesExpr__OpAssignment_1_0_0_1");
-					put(grammarAccess.getImpliesExprAccess().getRightAssignment_1_1(),
-							"rule__ImpliesExpr__RightAssignment_1_1");
-					put(grammarAccess.getEquivExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__EquivExpr__OpAssignment_1_0_0_1");
-					put(grammarAccess.getEquivExprAccess().getRightAssignment_1_1(),
-							"rule__EquivExpr__RightAssignment_1_1");
-					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__OrExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getRecordDefExprAccess().getNameAssignment_1(), "rule__RecordDefExpr__NameAssignment_1");
+					put(grammarAccess.getRecordDefExprAccess().getArgsAssignment_5_0(), "rule__RecordDefExpr__ArgsAssignment_5_0");
+					put(grammarAccess.getRecordDefExprAccess().getArgsAssignment_5_1_1(), "rule__RecordDefExpr__ArgsAssignment_5_1_1");
+					put(grammarAccess.getArrowExprAccess().getOpAssignment_1_0_0_1(), "rule__ArrowExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getArrowExprAccess().getRightAssignment_1_1(), "rule__ArrowExpr__RightAssignment_1_1");
+					put(grammarAccess.getImpliesExprAccess().getOpAssignment_1_0_0_1(), "rule__ImpliesExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getImpliesExprAccess().getRightAssignment_1_1(), "rule__ImpliesExpr__RightAssignment_1_1");
+					put(grammarAccess.getEquivExprAccess().getOpAssignment_1_0_0_1(), "rule__EquivExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getEquivExprAccess().getRightAssignment_1_1(), "rule__EquivExpr__RightAssignment_1_1");
+					put(grammarAccess.getOrExprAccess().getOpAssignment_1_0_0_1(), "rule__OrExpr__OpAssignment_1_0_0_1");
 					put(grammarAccess.getOrExprAccess().getRightAssignment_1_1(), "rule__OrExpr__RightAssignment_1_1");
-					put(grammarAccess.getAndExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__AndExpr__OpAssignment_1_0_0_1");
-					put(grammarAccess.getAndExprAccess().getRightAssignment_1_1(),
-							"rule__AndExpr__RightAssignment_1_1");
-					put(grammarAccess.getRelateExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__RelateExpr__OpAssignment_1_0_0_1");
-					put(grammarAccess.getRelateExprAccess().getRightAssignment_1_1(),
-							"rule__RelateExpr__RightAssignment_1_1");
-					put(grammarAccess.getAddSubExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__AddSubExpr__OpAssignment_1_0_0_1");
-					put(grammarAccess.getAddSubExprAccess().getRightAssignment_1_1(),
-							"rule__AddSubExpr__RightAssignment_1_1");
-					put(grammarAccess.getMultDivExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__MultDivExpr__OpAssignment_1_0_0_1");
-					put(grammarAccess.getMultDivExprAccess().getRightAssignment_1_1(),
-							"rule__MultDivExpr__RightAssignment_1_1");
-					put(grammarAccess.getPowerExprAccess().getOpAssignment_1_0_0_1(),
-							"rule__PowerExpr__OpAssignment_1_0_0_1");
-					put(grammarAccess.getPowerExprAccess().getRightAssignment_1_1(),
-							"rule__PowerExpr__RightAssignment_1_1");
+					put(grammarAccess.getAndExprAccess().getOpAssignment_1_0_0_1(), "rule__AndExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getAndExprAccess().getRightAssignment_1_1(), "rule__AndExpr__RightAssignment_1_1");
+					put(grammarAccess.getRelateExprAccess().getOpAssignment_1_0_0_1(), "rule__RelateExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getRelateExprAccess().getRightAssignment_1_1(), "rule__RelateExpr__RightAssignment_1_1");
+					put(grammarAccess.getAddSubExprAccess().getOpAssignment_1_0_0_1(), "rule__AddSubExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getAddSubExprAccess().getRightAssignment_1_1(), "rule__AddSubExpr__RightAssignment_1_1");
+					put(grammarAccess.getMultDivExprAccess().getOpAssignment_1_0_0_1(), "rule__MultDivExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getMultDivExprAccess().getRightAssignment_1_1(), "rule__MultDivExpr__RightAssignment_1_1");
+					put(grammarAccess.getPowerExprAccess().getOpAssignment_1_0_0_1(), "rule__PowerExpr__OpAssignment_1_0_0_1");
+					put(grammarAccess.getPowerExprAccess().getRightAssignment_1_1(), "rule__PowerExpr__RightAssignment_1_1");
 					put(grammarAccess.getUnaryExprAccess().getOpAssignment_0_1(), "rule__UnaryExpr__OpAssignment_0_1");
-					put(grammarAccess.getUnaryExprAccess().getExprAssignment_0_2(),
-							"rule__UnaryExpr__ExprAssignment_0_2");
-					put(grammarAccess.getIfThenElseExprAccess().getAAssignment_0_2(),
-							"rule__IfThenElseExpr__AAssignment_0_2");
-					put(grammarAccess.getIfThenElseExprAccess().getBAssignment_0_4(),
-							"rule__IfThenElseExpr__BAssignment_0_4");
-					put(grammarAccess.getIfThenElseExprAccess().getCAssignment_0_6(),
-							"rule__IfThenElseExpr__CAssignment_0_6");
-					put(grammarAccess.getPreDefFnExprAccess().getDelayAssignment_0_3(),
-							"rule__PreDefFnExpr__DelayAssignment_0_3");
-					put(grammarAccess.getPreDefFnExprAccess().getInitAssignment_0_5(),
-							"rule__PreDefFnExpr__InitAssignment_0_5");
-					put(grammarAccess.getPreDefFnExprAccess().getComponentAssignment_1_3(),
-							"rule__PreDefFnExpr__ComponentAssignment_1_3");
-					put(grammarAccess.getPreDefFnExprAccess().getPropAssignment_1_5(),
-							"rule__PreDefFnExpr__PropAssignment_1_5");
-					put(grammarAccess.getRecordUpdateExprAccess().getArgsAssignment_1_0_1_1(),
-							"rule__RecordUpdateExpr__ArgsAssignment_1_0_1_1");
-					put(grammarAccess.getRecordUpdateExprAccess().getArgExprAssignment_1_0_1_3(),
-							"rule__RecordUpdateExpr__ArgExprAssignment_1_0_1_3");
+					put(grammarAccess.getUnaryExprAccess().getExprAssignment_0_2(), "rule__UnaryExpr__ExprAssignment_0_2");
+					put(grammarAccess.getIfThenElseExprAccess().getAAssignment_0_2(), "rule__IfThenElseExpr__AAssignment_0_2");
+					put(grammarAccess.getIfThenElseExprAccess().getBAssignment_0_4(), "rule__IfThenElseExpr__BAssignment_0_4");
+					put(grammarAccess.getIfThenElseExprAccess().getCAssignment_0_6(), "rule__IfThenElseExpr__CAssignment_0_6");
+					put(grammarAccess.getPreDefFnExprAccess().getDelayAssignment_0_3(), "rule__PreDefFnExpr__DelayAssignment_0_3");
+					put(grammarAccess.getPreDefFnExprAccess().getInitAssignment_0_5(), "rule__PreDefFnExpr__InitAssignment_0_5");
+					put(grammarAccess.getPreDefFnExprAccess().getComponentAssignment_1_3(), "rule__PreDefFnExpr__ComponentAssignment_1_3");
+					put(grammarAccess.getPreDefFnExprAccess().getPropAssignment_1_5(), "rule__PreDefFnExpr__PropAssignment_1_5");
+					put(grammarAccess.getRecordUpdateExprAccess().getArgsAssignment_1_0_1_1(), "rule__RecordUpdateExpr__ArgsAssignment_1_0_1_1");
+					put(grammarAccess.getRecordUpdateExprAccess().getArgExprAssignment_1_0_1_3(), "rule__RecordUpdateExpr__ArgExprAssignment_1_0_1_3");
 					put(grammarAccess.getTermExprAccess().getValAssignment_2_1(), "rule__TermExpr__ValAssignment_2_1");
-					put(grammarAccess.getTermExprAccess().getExprAssignment_3_3(),
-							"rule__TermExpr__ExprAssignment_3_3");
+					put(grammarAccess.getTermExprAccess().getExprAssignment_3_3(), "rule__TermExpr__ExprAssignment_3_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_4_3(), "rule__TermExpr__IdAssignment_4_3");
-					put(grammarAccess.getTermExprAccess().getExprAssignment_5_3(),
-							"rule__TermExpr__ExprAssignment_5_3");
+					put(grammarAccess.getTermExprAccess().getExprAssignment_5_3(), "rule__TermExpr__ExprAssignment_5_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_6_3(), "rule__TermExpr__IdAssignment_6_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_7_3(), "rule__TermExpr__IdAssignment_7_3");
 					put(grammarAccess.getTermExprAccess().getIdAssignment_8_3(), "rule__TermExpr__IdAssignment_8_3");
 					put(grammarAccess.getTermExprAccess().getValAssignment_9_1(), "rule__TermExpr__ValAssignment_9_1");
-					put(grammarAccess.getTermExprAccess().getValAssignment_10_1(),
-							"rule__TermExpr__ValAssignment_10_1");
-					put(grammarAccess.getTermExprAccess().getSubThisAssignment_11_2_1(),
-							"rule__TermExpr__SubThisAssignment_11_2_1");
-					put(grammarAccess.getTermExprAccess().getExprAssignment_12_3(),
-							"rule__TermExpr__ExprAssignment_12_3");
-					put(grammarAccess.getTermExprAccess().getExprAssignment_13_3(),
-							"rule__TermExpr__ExprAssignment_13_3");
-					put(grammarAccess.getTermExprAccess().getEnumTypeAssignment_14_3(),
-							"rule__TermExpr__EnumTypeAssignment_14_3");
-					put(grammarAccess.getTermExprAccess().getValueAssignment_14_5(),
-							"rule__TermExpr__ValueAssignment_14_5");
-					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_0_1_0(),
-							"rule__ComplexExpr__ArgsAssignment_1_0_1_0");
-					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_0_1_1_1(),
-							"rule__ComplexExpr__ArgsAssignment_1_0_1_1_1");
-					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_1_0_0_2(),
-							"rule__ComplexExpr__ArgsAssignment_1_1_0_0_2");
-					put(grammarAccess.getComplexExprAccess().getArgExprAssignment_1_1_1(),
-							"rule__ComplexExpr__ArgExprAssignment_1_1_1");
-					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_1_2_1(),
-							"rule__ComplexExpr__ArgsAssignment_1_1_2_1");
-					put(grammarAccess.getComplexExprAccess().getArgExprAssignment_1_1_2_3(),
-							"rule__ComplexExpr__ArgExprAssignment_1_1_2_3");
-					put(grammarAccess.getNestedDotIDAccess().getBaseAssignment_0(),
-							"rule__NestedDotID__BaseAssignment_0");
-					put(grammarAccess.getNestedDotIDAccess().getTagAssignment_1_0_1_0(),
-							"rule__NestedDotID__TagAssignment_1_0_1_0");
-					put(grammarAccess.getNestedDotIDAccess().getSubAssignment_1_0_1_1(),
-							"rule__NestedDotID__SubAssignment_1_0_1_1");
+					put(grammarAccess.getTermExprAccess().getValAssignment_10_1(), "rule__TermExpr__ValAssignment_10_1");
+					put(grammarAccess.getTermExprAccess().getSubThisAssignment_11_2_1(), "rule__TermExpr__SubThisAssignment_11_2_1");
+					put(grammarAccess.getTermExprAccess().getExprAssignment_12_3(), "rule__TermExpr__ExprAssignment_12_3");
+					put(grammarAccess.getTermExprAccess().getExprAssignment_13_3(), "rule__TermExpr__ExprAssignment_13_3");
+					put(grammarAccess.getTermExprAccess().getEnumTypeAssignment_14_3(), "rule__TermExpr__EnumTypeAssignment_14_3");
+					put(grammarAccess.getTermExprAccess().getValueAssignment_14_5(), "rule__TermExpr__ValueAssignment_14_5");
+					put(grammarAccess.getComplexExprAccess().getArgsAssignment_0_1_0_2(), "rule__ComplexExpr__ArgsAssignment_0_1_0_2");
+					put(grammarAccess.getComplexExprAccess().getArgExprAssignment_0_2(), "rule__ComplexExpr__ArgExprAssignment_0_2");
+					put(grammarAccess.getComplexExprAccess().getArgsAssignment_0_3_1(), "rule__ComplexExpr__ArgsAssignment_0_3_1");
+					put(grammarAccess.getComplexExprAccess().getArgExprAssignment_0_3_3(), "rule__ComplexExpr__ArgExprAssignment_0_3_3");
+					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_1_1_0(), "rule__ComplexExpr__ArgsAssignment_1_1_1_0");
+					put(grammarAccess.getComplexExprAccess().getArgsAssignment_1_1_1_1_1(), "rule__ComplexExpr__ArgsAssignment_1_1_1_1_1");
+					put(grammarAccess.getNestedDotIDAccess().getBaseAssignment_0(), "rule__NestedDotID__BaseAssignment_0");
+					put(grammarAccess.getNestedDotIDAccess().getTagAssignment_1_0_1_0(), "rule__NestedDotID__TagAssignment_1_0_1_0");
+					put(grammarAccess.getNestedDotIDAccess().getSubAssignment_1_0_1_1(), "rule__NestedDotID__SubAssignment_1_0_1_1");
+					put(grammarAccess.getTypeIDAccess().getBaseAssignment(), "rule__TypeID__BaseAssignment");
 					put(grammarAccess.getNamedIDAccess().getNameAssignment(), "rule__NamedID__NameAssignment");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getPropertyAssignment_0(),
-							"rule__ContainedPropertyAssociation__PropertyAssignment_0");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getAppendAssignment_1_1(),
-							"rule__ContainedPropertyAssociation__AppendAssignment_1_1");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getConstantAssignment_2(),
-							"rule__ContainedPropertyAssociation__ConstantAssignment_2");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getOwnedValueAssignment_3_0(),
-							"rule__ContainedPropertyAssociation__OwnedValueAssignment_3_0");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getOwnedValueAssignment_3_1_1(),
-							"rule__ContainedPropertyAssociation__OwnedValueAssignment_3_1_1");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getAppliesToAssignment_4_1(),
-							"rule__ContainedPropertyAssociation__AppliesToAssignment_4_1");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getAppliesToAssignment_4_2_1(),
-							"rule__ContainedPropertyAssociation__AppliesToAssignment_4_2_1");
-					put(grammarAccess.getContainedPropertyAssociationAccess().getInBindingAssignment_5_2(),
-							"rule__ContainedPropertyAssociation__InBindingAssignment_5_2");
-					put(grammarAccess.getPropertyAssociationAccess().getPropertyAssignment_0(),
-							"rule__PropertyAssociation__PropertyAssignment_0");
-					put(grammarAccess.getPropertyAssociationAccess().getAppendAssignment_1_1(),
-							"rule__PropertyAssociation__AppendAssignment_1_1");
-					put(grammarAccess.getPropertyAssociationAccess().getConstantAssignment_2(),
-							"rule__PropertyAssociation__ConstantAssignment_2");
-					put(grammarAccess.getPropertyAssociationAccess().getOwnedValueAssignment_3_0(),
-							"rule__PropertyAssociation__OwnedValueAssignment_3_0");
-					put(grammarAccess.getPropertyAssociationAccess().getOwnedValueAssignment_3_1_1(),
-							"rule__PropertyAssociation__OwnedValueAssignment_3_1_1");
-					put(grammarAccess.getPropertyAssociationAccess().getInBindingAssignment_4_2(),
-							"rule__PropertyAssociation__InBindingAssignment_4_2");
-					put(grammarAccess.getBasicPropertyAssociationAccess().getPropertyAssignment_0(),
-							"rule__BasicPropertyAssociation__PropertyAssignment_0");
-					put(grammarAccess.getBasicPropertyAssociationAccess().getOwnedValueAssignment_2(),
-							"rule__BasicPropertyAssociation__OwnedValueAssignment_2");
-					put(grammarAccess.getContainmentPathAccess().getPathAssignment(),
-							"rule__ContainmentPath__PathAssignment");
-					put(grammarAccess.getModalPropertyValueAccess().getOwnedValueAssignment_0(),
-							"rule__ModalPropertyValue__OwnedValueAssignment_0");
-					put(grammarAccess.getModalPropertyValueAccess().getInModeAssignment_3(),
-							"rule__ModalPropertyValue__InModeAssignment_3");
-					put(grammarAccess.getModalPropertyValueAccess().getInModeAssignment_4_1(),
-							"rule__ModalPropertyValue__InModeAssignment_4_1");
-					put(grammarAccess.getOptionalModalPropertyValueAccess().getOwnedValueAssignment_0(),
-							"rule__OptionalModalPropertyValue__OwnedValueAssignment_0");
-					put(grammarAccess.getOptionalModalPropertyValueAccess().getInModeAssignment_1_2(),
-							"rule__OptionalModalPropertyValue__InModeAssignment_1_2");
-					put(grammarAccess.getOptionalModalPropertyValueAccess().getInModeAssignment_1_3_1(),
-							"rule__OptionalModalPropertyValue__InModeAssignment_1_3_1");
-					put(grammarAccess.getPropertyValueAccess().getOwnedValueAssignment(),
-							"rule__PropertyValue__OwnedValueAssignment");
-					put(grammarAccess.getLiteralorReferenceTermAccess().getNamedValueAssignment(),
-							"rule__LiteralorReferenceTerm__NamedValueAssignment");
-					put(grammarAccess.getBooleanLiteralAccess().getValueAssignment_1_0(),
-							"rule__BooleanLiteral__ValueAssignment_1_0");
-					put(grammarAccess.getConstantValueAccess().getNamedValueAssignment(),
-							"rule__ConstantValue__NamedValueAssignment");
-					put(grammarAccess.getReferenceTermAccess().getPathAssignment_2(),
-							"rule__ReferenceTerm__PathAssignment_2");
-					put(grammarAccess.getRecordTermAccess().getOwnedFieldValueAssignment_1(),
-							"rule__RecordTerm__OwnedFieldValueAssignment_1");
-					put(grammarAccess.getOldRecordTermAccess().getOwnedFieldValueAssignment_1(),
-							"rule__OldRecordTerm__OwnedFieldValueAssignment_1");
-					put(grammarAccess.getComputedTermAccess().getFunctionAssignment_2(),
-							"rule__ComputedTerm__FunctionAssignment_2");
-					put(grammarAccess.getComponentClassifierTermAccess().getClassifierAssignment_2(),
-							"rule__ComponentClassifierTerm__ClassifierAssignment_2");
-					put(grammarAccess.getListTermAccess().getOwnedListElementAssignment_2_0(),
-							"rule__ListTerm__OwnedListElementAssignment_2_0");
-					put(grammarAccess.getListTermAccess().getOwnedListElementAssignment_2_1_1(),
-							"rule__ListTerm__OwnedListElementAssignment_2_1_1");
-					put(grammarAccess.getFieldPropertyAssociationAccess().getPropertyAssignment_0(),
-							"rule__FieldPropertyAssociation__PropertyAssignment_0");
-					put(grammarAccess.getFieldPropertyAssociationAccess().getOwnedValueAssignment_2(),
-							"rule__FieldPropertyAssociation__OwnedValueAssignment_2");
-					put(grammarAccess.getContainmentPathElementAccess().getNamedElementAssignment_0_0(),
-							"rule__ContainmentPathElement__NamedElementAssignment_0_0");
-					put(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1(),
-							"rule__ContainmentPathElement__ArrayRangeAssignment_0_1");
-					put(grammarAccess.getContainmentPathElementAccess().getPathAssignment_1_1(),
-							"rule__ContainmentPathElement__PathAssignment_1_1");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getPropertyAssignment_0(), "rule__ContainedPropertyAssociation__PropertyAssignment_0");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getAppendAssignment_1_1(), "rule__ContainedPropertyAssociation__AppendAssignment_1_1");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getConstantAssignment_2(), "rule__ContainedPropertyAssociation__ConstantAssignment_2");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getOwnedValueAssignment_3_0(), "rule__ContainedPropertyAssociation__OwnedValueAssignment_3_0");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getOwnedValueAssignment_3_1_1(), "rule__ContainedPropertyAssociation__OwnedValueAssignment_3_1_1");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getAppliesToAssignment_4_1(), "rule__ContainedPropertyAssociation__AppliesToAssignment_4_1");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getAppliesToAssignment_4_2_1(), "rule__ContainedPropertyAssociation__AppliesToAssignment_4_2_1");
+					put(grammarAccess.getContainedPropertyAssociationAccess().getInBindingAssignment_5_2(), "rule__ContainedPropertyAssociation__InBindingAssignment_5_2");
+					put(grammarAccess.getPropertyAssociationAccess().getPropertyAssignment_0(), "rule__PropertyAssociation__PropertyAssignment_0");
+					put(grammarAccess.getPropertyAssociationAccess().getAppendAssignment_1_1(), "rule__PropertyAssociation__AppendAssignment_1_1");
+					put(grammarAccess.getPropertyAssociationAccess().getConstantAssignment_2(), "rule__PropertyAssociation__ConstantAssignment_2");
+					put(grammarAccess.getPropertyAssociationAccess().getOwnedValueAssignment_3_0(), "rule__PropertyAssociation__OwnedValueAssignment_3_0");
+					put(grammarAccess.getPropertyAssociationAccess().getOwnedValueAssignment_3_1_1(), "rule__PropertyAssociation__OwnedValueAssignment_3_1_1");
+					put(grammarAccess.getPropertyAssociationAccess().getInBindingAssignment_4_2(), "rule__PropertyAssociation__InBindingAssignment_4_2");
+					put(grammarAccess.getBasicPropertyAssociationAccess().getPropertyAssignment_0(), "rule__BasicPropertyAssociation__PropertyAssignment_0");
+					put(grammarAccess.getBasicPropertyAssociationAccess().getOwnedValueAssignment_2(), "rule__BasicPropertyAssociation__OwnedValueAssignment_2");
+					put(grammarAccess.getContainmentPathAccess().getPathAssignment(), "rule__ContainmentPath__PathAssignment");
+					put(grammarAccess.getModalPropertyValueAccess().getOwnedValueAssignment_0(), "rule__ModalPropertyValue__OwnedValueAssignment_0");
+					put(grammarAccess.getModalPropertyValueAccess().getInModeAssignment_3(), "rule__ModalPropertyValue__InModeAssignment_3");
+					put(grammarAccess.getModalPropertyValueAccess().getInModeAssignment_4_1(), "rule__ModalPropertyValue__InModeAssignment_4_1");
+					put(grammarAccess.getOptionalModalPropertyValueAccess().getOwnedValueAssignment_0(), "rule__OptionalModalPropertyValue__OwnedValueAssignment_0");
+					put(grammarAccess.getOptionalModalPropertyValueAccess().getInModeAssignment_1_2(), "rule__OptionalModalPropertyValue__InModeAssignment_1_2");
+					put(grammarAccess.getOptionalModalPropertyValueAccess().getInModeAssignment_1_3_1(), "rule__OptionalModalPropertyValue__InModeAssignment_1_3_1");
+					put(grammarAccess.getPropertyValueAccess().getOwnedValueAssignment(), "rule__PropertyValue__OwnedValueAssignment");
+					put(grammarAccess.getLiteralorReferenceTermAccess().getNamedValueAssignment(), "rule__LiteralorReferenceTerm__NamedValueAssignment");
+					put(grammarAccess.getBooleanLiteralAccess().getValueAssignment_1_0(), "rule__BooleanLiteral__ValueAssignment_1_0");
+					put(grammarAccess.getConstantValueAccess().getNamedValueAssignment(), "rule__ConstantValue__NamedValueAssignment");
+					put(grammarAccess.getReferenceTermAccess().getPathAssignment_2(), "rule__ReferenceTerm__PathAssignment_2");
+					put(grammarAccess.getRecordTermAccess().getOwnedFieldValueAssignment_1(), "rule__RecordTerm__OwnedFieldValueAssignment_1");
+					put(grammarAccess.getOldRecordTermAccess().getOwnedFieldValueAssignment_1(), "rule__OldRecordTerm__OwnedFieldValueAssignment_1");
+					put(grammarAccess.getComputedTermAccess().getFunctionAssignment_2(), "rule__ComputedTerm__FunctionAssignment_2");
+					put(grammarAccess.getComponentClassifierTermAccess().getClassifierAssignment_2(), "rule__ComponentClassifierTerm__ClassifierAssignment_2");
+					put(grammarAccess.getListTermAccess().getOwnedListElementAssignment_2_0(), "rule__ListTerm__OwnedListElementAssignment_2_0");
+					put(grammarAccess.getListTermAccess().getOwnedListElementAssignment_2_1_1(), "rule__ListTerm__OwnedListElementAssignment_2_1_1");
+					put(grammarAccess.getFieldPropertyAssociationAccess().getPropertyAssignment_0(), "rule__FieldPropertyAssociation__PropertyAssignment_0");
+					put(grammarAccess.getFieldPropertyAssociationAccess().getOwnedValueAssignment_2(), "rule__FieldPropertyAssociation__OwnedValueAssignment_2");
+					put(grammarAccess.getContainmentPathElementAccess().getNamedElementAssignment_0_0(), "rule__ContainmentPathElement__NamedElementAssignment_0_0");
+					put(grammarAccess.getContainmentPathElementAccess().getArrayRangeAssignment_0_1(), "rule__ContainmentPathElement__ArrayRangeAssignment_0_1");
+					put(grammarAccess.getContainmentPathElementAccess().getPathAssignment_1_1(), "rule__ContainmentPathElement__PathAssignment_1_1");
 					put(grammarAccess.getStringTermAccess().getValueAssignment(), "rule__StringTerm__ValueAssignment");
-					put(grammarAccess.getArrayRangeAccess().getLowerBoundAssignment_2(),
-							"rule__ArrayRange__LowerBoundAssignment_2");
-					put(grammarAccess.getArrayRangeAccess().getUpperBoundAssignment_3_1(),
-							"rule__ArrayRange__UpperBoundAssignment_3_1");
-					put(grammarAccess.getSignedConstantAccess().getOpAssignment_0(),
-							"rule__SignedConstant__OpAssignment_0");
-					put(grammarAccess.getSignedConstantAccess().getOwnedPropertyExpressionAssignment_1(),
-							"rule__SignedConstant__OwnedPropertyExpressionAssignment_1");
-					put(grammarAccess.getIntegerTermAccess().getValueAssignment_0(),
-							"rule__IntegerTerm__ValueAssignment_0");
-					put(grammarAccess.getIntegerTermAccess().getUnitAssignment_1(),
-							"rule__IntegerTerm__UnitAssignment_1");
+					put(grammarAccess.getArrayRangeAccess().getLowerBoundAssignment_2(), "rule__ArrayRange__LowerBoundAssignment_2");
+					put(grammarAccess.getArrayRangeAccess().getUpperBoundAssignment_3_1(), "rule__ArrayRange__UpperBoundAssignment_3_1");
+					put(grammarAccess.getSignedConstantAccess().getOpAssignment_0(), "rule__SignedConstant__OpAssignment_0");
+					put(grammarAccess.getSignedConstantAccess().getOwnedPropertyExpressionAssignment_1(), "rule__SignedConstant__OwnedPropertyExpressionAssignment_1");
+					put(grammarAccess.getIntegerTermAccess().getValueAssignment_0(), "rule__IntegerTerm__ValueAssignment_0");
+					put(grammarAccess.getIntegerTermAccess().getUnitAssignment_1(), "rule__IntegerTerm__UnitAssignment_1");
 					put(grammarAccess.getRealTermAccess().getValueAssignment_0(), "rule__RealTerm__ValueAssignment_0");
 					put(grammarAccess.getRealTermAccess().getUnitAssignment_1(), "rule__RealTerm__UnitAssignment_1");
-					put(grammarAccess.getNumericRangeTermAccess().getMinimumAssignment_0(),
-							"rule__NumericRangeTerm__MinimumAssignment_0");
-					put(grammarAccess.getNumericRangeTermAccess().getMaximumAssignment_2(),
-							"rule__NumericRangeTerm__MaximumAssignment_2");
-					put(grammarAccess.getNumericRangeTermAccess().getDeltaAssignment_3_1(),
-							"rule__NumericRangeTerm__DeltaAssignment_3_1");
+					put(grammarAccess.getNumericRangeTermAccess().getMinimumAssignment_0(), "rule__NumericRangeTerm__MinimumAssignment_0");
+					put(grammarAccess.getNumericRangeTermAccess().getMaximumAssignment_2(), "rule__NumericRangeTerm__MaximumAssignment_2");
+					put(grammarAccess.getNumericRangeTermAccess().getDeltaAssignment_3_1(), "rule__NumericRangeTerm__DeltaAssignment_3_1");
 				}
 			};
 		}
 		return nameMappings.get(element);
 	}
-
+	
 	@Override
 	protected Collection<FollowElement> getFollowElements(AbstractInternalContentAssistParser parser) {
 		try {
 			com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser typedParser = (com.rockwellcollins.atc.agree.ui.contentassist.antlr.internal.InternalAgreeParser) parser;
 			typedParser.entryRuleNamedElement();
 			return typedParser.getFollowElements();
-		} catch (RecognitionException ex) {
+		} catch(RecognitionException ex) {
 			throw new RuntimeException(ex);
-		}
+		}		
 	}
-
+	
 	@Override
 	protected String[] getInitialHiddenTokens() {
 		return new String[] { "RULE_WS", "RULE_SL_COMMENT" };
 	}
-
+	
 	public AgreeGrammarAccess getGrammarAccess() {
-		return grammarAccess;
+		return this.grammarAccess;
 	}
-
+	
 	public void setGrammarAccess(AgreeGrammarAccess grammarAccess) {
 		this.grammarAccess = grammarAccess;
 	}

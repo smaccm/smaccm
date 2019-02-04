@@ -1,0 +1,537 @@
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the GPCA_SW behavioral model.
+-------------------------------------------------------------------------- 
+
+package GPCA_SW
+public   with DEFS, DATATYPES, System_Status, Config , Alarm, Infusion_Manager, Top_Level_Mode, Logging, System_Monitor, OutputBus, Communication_Properties;
+   
+  system GPCA_SW
+    features     
+		OP_CMD_IN: in data port DATATYPES::Operator_Commands.Impl;
+		PRES_IN: in data port DATATYPES::Prescription_Inputs.Impl;
+		PATIENT_IN: in data port DATATYPES::Patient_Inputs.Impl;
+		SENSOR_IN: in data port DATATYPES::Device_Sensor_Inputs.Impl;
+		CONST_IN: in data port DATATYPES::Device_Configuration_Inputs.Impl;
+		DB_IN: in data port DATATYPES::Drug_Database_Inputs.Impl;		  
+		GPCA_SW_OUT: out data port DATATYPES::GPCA_SW_Outputs.Impl;   				 
+		 
+	  annex agree {** 
+	  	
+	  	eq sys_initial: bool = true -> false;
+						
+		eq timeUnderMinTolerance : int = 0 ->
+			if DEFS.Is_Infusion_below_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Min)
+				then pre(timeUnderMinTolerance) + 1
+			else
+				0;							
+		eq is_under_infusion : bool =  
+				( (CONST_IN.Max_Duration_Under_Infusion < timeUnderMinTolerance) or
+				(DEFS.Is_Infusion_below_tolerance(SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Max)) or
+				(SENSOR_IN.Flow_Rate < DB_IN.Flow_Rate_Low));
+				
+		eq timeOverMinTolerance : int = 0 -> 
+			if DEFS.Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Min)
+				then pre(timeOverMinTolerance) + 1
+			else
+				0;		
+		
+		eq Is_Over_Infusion : bool = false ->
+				((CONST_IN.Max_Duration_Over_Infusion < timeOverMinTolerance) or
+						DEFS.Is_Infusion_above_tolerance (SENSOR_IN.Flow_Rate, pre(GPCA_SW_OUT.Commanded_Flow_Rate), CONST_IN.Tolerance_Max) or 
+							(SENSOR_IN.Flow_Rate > DB_IN.Flow_Rate_High)); 
+
+		eq pausedTimeCounter : int = 0 -> 
+			if (pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.PAUSE_KVO) or (pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.PAUSE_NO_KVO) or
+				(pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.PAUSE_MANUAL) 
+				then pre(pausedTimeCounter) + 1
+			else
+				0;
+		  
+		eq idleTimeCounter : int = 0 ->
+			if (DEFS.is_idle(pre(GPCA_SW_OUT.Current_System_Mode)))
+				then pre(idleTimeCounter) + 1
+			else 0;
+		
+		eq configTimer : int = 0 ->
+			if (pre(GPCA_SW_OUT.Configured) > 0 )
+				then pre(configTimer) + 1
+			else
+				0;
+				
+		eq Patient_Bolus_Delivered_Count : int = 0 ->
+			if ((GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS) and not (pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.PATIENT_BOLUS))
+				then pre(Patient_Bolus_Delivered_Count) + 1
+			else
+				pre(Patient_Bolus_Delivered_Count);
+				
+				
+				
+	  	eq is_on : bool =  DEFS.is_on(GPCA_SW_OUT.Current_System_Mode); 
+		eq is_therapy : bool =  DEFS.is_therapy(GPCA_SW_OUT.Current_System_Mode);
+		eq is_active : bool =  DEFS.is_active(GPCA_SW_OUT.Current_System_Mode);
+		
+		eq level_4_alarm : bool = (OP_CMD_IN.System_Start and 
+							(((GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir) and pre(is_therapy) ) or SENSOR_IN.Temp or 
+								SENSOR_IN.Air_Pressure or SENSOR_IN.Humidity or 
+								SENSOR_IN.CPU_Error or	SENSOR_IN.Battery_Depleted or 
+								SENSOR_IN.RTC_Error or SENSOR_IN.Memory_Corrupted or 
+								SENSOR_IN.Pump_Too_Hot or SENSOR_IN.Watchdog_Interrupted));
+							 
+		eq level_3_alarm : bool = (OP_CMD_IN.System_Start and 
+										(((GPCA_SW_OUT.Volume_Infused > DB_IN.VTBI_High) and pre(is_therapy) ) or 
+												SENSOR_IN.Air_In_Line or SENSOR_IN.Occlusion or 
+													SENSOR_IN.Door_Open or Is_Over_Infusion));
+						
+		eq level_2_alarm : bool = OP_CMD_IN.System_Start and pre(is_therapy) and (GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Low_Reservoir);
+		
+		
+		eq level_1_alarm : bool = OP_CMD_IN.System_Start and (SENSOR_IN.Pump_Overheated or
+										SENSOR_IN.Supply_Voltage or SENSOR_IN.Battery_Low or 
+										SENSOR_IN.Battery_Unable_To_Charge	or (pre(is_therapy) and SENSOR_IN.Flow_Rate_Not_Stable) or
+									     is_under_infusion   or 
+										 (idleTimeCounter > CONST_IN.Max_Idle_Duration) or
+										(pausedTimeCounter > CONST_IN.Max_Paused_Duration) or 
+										(configTimer > CONST_IN.Config_Warning_Duration)); 							
+	  	
+	  	assume "DB_IN.VTBI_High > 0": (DB_IN.VTBI_High >= 0);	
+	  	assume "CONST_IN.Empty_Reservoir > 0": (CONST_IN.Empty_Reservoir > 0);
+	  	assume "CONST_IN.Low_Reservoir > Empty_Reservoir": (CONST_IN.Empty_Reservoir < CONST_IN.Low_Reservoir);
+	  	assume "not_system_start_and_system_stop" : not(OP_CMD_IN.System_Start and OP_CMD_IN.System_Stop);
+	  	assume "not_inhibit_and_cancel" : not(OP_CMD_IN.Infusion_Inhibit and OP_CMD_IN.Infusion_Cancel);
+	  	assume "GPCA_SW_OUT.Max_Number_of_Patient_Bolus >= 0" : GPCA_SW_OUT.Max_Number_of_Patient_Bolus >= 0;		
+	   ---> If system is on and empty reservoir => Flow_Rate = 0  <-------
+		-- REQ 1 :  MODES RANGE
+		property mode_range =  
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.OFF) or  
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.BASAL) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.SQUARE_BOLUS) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_NO_KVO) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_KVO) or 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_MANUAL);
+		guarantee "PROPERTY 1 : mode_range ":  mode_range; 
+		-- if the system is not start => OFF, then mode is 0.
+		property not_system_start_implies_mode_0 = 
+		  not(OP_CMD_IN.System_Start) => (GPCA_SW_OUT.Current_System_Mode = DEFS.OFF);
+		guarantee "PROPERTY 2 : not_system_start_implies_mode_0 ":  not(OP_CMD_IN.System_Start) => (GPCA_SW_OUT.Current_System_Mode = DEFS.OFF) ;  
+
+	 	-- REQ 4 : System_Start transitions OFF to ON.
+		-- The requirement allocation is : 
+		-- TLM : System_Start to TLM -> System_On.
+		-- IM  : System_On -> Current_System_Mode = 1 if it was previously Current_System_Mode = 0
+ 		
+		-- In the initial step if system is started, then mode is idle.
+		property initial_system_start_implies_mode_idle = 
+		  sys_initial and OP_CMD_IN.System_Start => (GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE);
+		  
+		guarantee "PROPERTY 3 : initial_system_start_implies_mode_idle ":  initial_system_start_implies_mode_idle;   
+		
+		-- after the initial step, OFF to ON => mode idle
+		property off_to_on_implies_mode_idle = 
+			(not(sys_initial)) and (pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.OFF) and (OP_CMD_IN.System_Start) => 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE);
+		guarantee "PROPERTY 4 : off_to_on_implies_mode_idle":  off_to_on_implies_mode_idle; 
+		-- If empty reservoir => Flow_Rate =0 after the first step.
+		property empty_reservoir_and_In_therapy_implies_no_flow = 
+		true -> 
+			(OP_CMD_IN.System_Start and pre(is_therapy) and 
+			 	(GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir) ) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate = 0); 	
+		guarantee "PROPERTY 5 : empty_reservoir_implies_no_flow ":  empty_reservoir_and_In_therapy_implies_no_flow;
+		
+		--Requirement: environmental error impies no flow
+		property environmental_error_implies_no_flow = 
+			 true -> (OP_CMD_IN.System_Start and 
+			 	(SENSOR_IN.Temp or SENSOR_IN.Air_Pressure or SENSOR_IN.CPU_Error or SENSOR_IN.Humidity)) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate = 0);     	
+		guarantee "PROPERTY 6: environmental_error_implies_no_flow ":  environmental_error_implies_no_flow;		
+		
+		
+		--Requirement: hardware error impies no flow
+		property hardware_error_implies_no_flow = 
+			 true -> (OP_CMD_IN.System_Start and 
+			 	(SENSOR_IN.Battery_Depleted or SENSOR_IN.RTC_Error or
+			 	 SENSOR_IN.CPU_Error or SENSOR_IN.Memory_Corrupted or
+			 	  SENSOR_IN.Pump_Too_Hot or SENSOR_IN.Watchdog_Interrupted)) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate = 0);     	
+		guarantee "PROPERTY 7 : hardware_error_implies_no_flow ":  hardware_error_implies_no_flow;		
+		
+		-- Requirement : If Volume Infused > Drug DB VTBI_Hi => Overinfusion => Flow_Rate atmost KVO 
+		property volume_infused_exceeds_VTBI_Hi = 
+			 true -> (OP_CMD_IN.System_Start and pre(is_therapy) and 
+			 	(GPCA_SW_OUT.Volume_Infused > DB_IN.VTBI_High) ) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO);
+						
+		guarantee "PROPERTY 8 : volume_infused_exceeds_VTBI_Hi ":  volume_infused_exceeds_VTBI_Hi;
+		
+		-- Requirement : If FLOW RATE > Drug DB flow rate_Hi => Overinfusion => Flow_Rate atmost KVO 
+		property flow_rate_exceeds_flow_rate_Hi = 
+			 true -> (OP_CMD_IN.System_Start and pre(is_therapy) and 
+			 	(SENSOR_IN.Flow_Rate > DB_IN.Flow_Rate_High) ) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO);
+						
+		guarantee "PROPERTY 9 : flow_rate_exceeds_flow_rate_Hi ":  flow_rate_exceeds_flow_rate_Hi;		
+		
+		-- Requirement : AirInline => Flow_Rate atmost KVO
+		property AirInLine_implies_flow_at_most_KVO = 
+			 (OP_CMD_IN.System_Start and SENSOR_IN.Air_In_Line ) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO); 
+	
+		guarantee "PROPERTY 10 : AirInLine_implies_flow_at_most_KVO ":  AirInLine_implies_flow_at_most_KVO;
+		
+	
+		-- Requirement : Occlusion => Flow_Rate atmost KVO
+		property occlusion_implies_flow_at_most_KVO = 
+			 (OP_CMD_IN.System_Start and SENSOR_IN.Occlusion) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO);					 
+		guarantee "PROPERTY 11 : occlusion_implies_flow_at_most_KVO ":  occlusion_implies_flow_at_most_KVO;
+	
+		-- Requirement : Door Open => Flow_Rate atmost KVO 
+		property door_open_implies_flow_at_most_KVO = 
+			true -> 
+			 (OP_CMD_IN.System_Start and SENSOR_IN.Door_Open ) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO);
+		guarantee "PROPERTY 12 : door_open_implies_flow_at_most_KVO ":  door_open_implies_flow_at_most_KVO;
+		
+	    --If low reservoir => no bolus
+		property low_reservoir_and_In_therapy_implies_no_bolus = 
+			 true -> (OP_CMD_IN.System_Start and pre(is_therapy) and  
+			 	(GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Low_Reservoir) ) => 
+						not(GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS or GPCA_SW_OUT.Current_System_Mode = DEFS.SQUARE_BOLUS) ; 	
+		guarantee "PROPERTY 13 : low_reservoir_and_In_therapy_implies_no_bolus ":  low_reservoir_and_In_therapy_implies_no_bolus;
+		
+		-- Infusion Cancel => Idle
+		property infusion_cancel_implies_idle = 
+			true -> 
+			 (OP_CMD_IN.System_Start and OP_CMD_IN.Infusion_Cancel ) => 
+						(GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE ); 
+		guarantee "PROPERTY 14 : infusion_cancel_implies_idle ":  infusion_cancel_implies_idle;		
+		
+		-- Infusion Pause => <= Flow_Rate KVO
+		property infusion_pause_implies_flow_kvo = 
+			true -> 
+			 (OP_CMD_IN.System_Start and OP_CMD_IN.Infusion_Inhibit ) => 
+						(GPCA_SW_OUT.Commanded_Flow_Rate <= GPCA_SW_OUT.Flow_Rate_KVO);
+		guarantee "PROPERTY 15 : infusion_pause_implies_flow_kvo ":  infusion_pause_implies_flow_kvo;
+		
+		-- Output of ALARM audio = 0 if if the system is ON and audio is disabled.
+		property no_audio_if_audio_disabled = 
+		     ((OP_CMD_IN.System_Start and (OP_CMD_IN.Disable_Audio > 0)) 
+					=> (GPCA_SW_OUT.Audio_Notification_Command = 0) and (GPCA_SW_OUT.Is_Audio_Disabled = OP_CMD_IN.Disable_Audio) );
+		guarantee  "PROPERTY 16 : no_audio_if_audio_disabled": no_audio_if_audio_disabled; 
+		
+		-- noconfig => model 1
+		property no_config_implies_mode_1 = 
+			(OP_CMD_IN.System_Start and GPCA_SW_OUT.Configured < 1) => 
+					(GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE);
+		guarantee "PROPERTY 17 : no_config_implies_mode_1":  no_config_implies_mode_1;
+		
+		-- If empty reservoir and no audio disabled => audio output
+		property empty_reservoir_implies_audio = 
+			 true -> (OP_CMD_IN.System_Start and pre(is_therapy) and 
+			 	(GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir) and  (OP_CMD_IN.Disable_Audio = 0)) => 
+			 		 (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level ) and (GPCA_SW_OUT.Is_Audio_Disabled = OP_CMD_IN.Disable_Audio) ;
+		guarantee "PROPERTY 18 : empty_reservoir_implies_audio ":  empty_reservoir_implies_audio;
+		
+		-- If empty reservoir and no audio disabled => audio output
+		-- If empty reservoir  => display output = 1
+		property empty_reservoir_implies_visual_1 = 
+			 true -> (OP_CMD_IN.System_Start and pre(is_therapy) and 
+			 	(GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir)) => 
+			 		 (GPCA_SW_OUT.Notification_Message = DEFS.EMPTY_RES) ;
+		guarantee "PROPERTY 19 : empty_reservoir_implies_visual_1 ":  empty_reservoir_implies_visual_1;
+
+		property no_patient_request_imples_no_pbolus =
+				(OP_CMD_IN.System_Start and not(pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.PATIENT_BOLUS) and not(PATIENT_IN.Patient_Bolus_Request)) => 
+					not(GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "PROPERTY 20 : no_patient_request_imples_no_pbolus":  no_patient_request_imples_no_pbolus; 
+	
+		-- REQ 6
+		property off_imples_fr_0 =
+				(GPCA_SW_OUT.Current_System_Mode = DEFS.OFF ) => (GPCA_SW_OUT.Commanded_Flow_Rate = 0);
+		guarantee "PROPERTY 21 : off_imples_fr_0":  off_imples_fr_0;
+		
+		-- REQ 14
+		property idle_imples_fr_0 =
+				(GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE ) => (GPCA_SW_OUT.Commanded_Flow_Rate = 0);
+		guarantee "PROPERTY 22 : idle_imples_fr_0":  idle_imples_fr_0;
+		
+		--REQ 5
+		property system_stop_implies_off = 
+			true -> (pre(is_on) and OP_CMD_IN.System_Stop and not OP_CMD_IN.Infusion_Inhibit) => 
+			(GPCA_SW_OUT.Current_System_Mode = DEFS.OFF);
+		guarantee "PROPERTY 23 : system_stop_implies_off": system_stop_implies_off;
+--		 and not OP_CMD_IN.Infusion_Inhibit
+		--REQ 7
+		property infusion_initiation_requires_prescription =
+			(is_on and GPCA_SW_OUT.New_Infusion) =>
+			GPCA_SW_OUT.Configured > 0;
+		guarantee "PROPERTY 24 : infusion_initiation_requires_prescription": infusion_initiation_requires_prescription;
+		
+		--REQ 16
+		property basal_fr =
+			(GPCA_SW_OUT.Current_System_Mode = DEFS.BASAL) =>
+			(GPCA_SW_OUT.Commanded_Flow_Rate = GPCA_SW_OUT.Flow_Rate_Basal);
+		guarantee "PROPERTY 25 : basal_fr": basal_fr;
+		
+		--REQ 25 
+		--Anitha: This requirement means you shouldnt take any action for too many patient bolus
+		property ignore_patient_bolus_request = true ->
+				((PATIENT_IN.Patient_Bolus_Request) and
+				 (level_4_alarm or level_3_alarm or level_2_alarm or (Patient_Bolus_Delivered_Count > GPCA_SW_OUT.Max_Number_of_Patient_Bolus) or
+				GPCA_SW_OUT.Is_Locked_Out or (pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.PATIENT_BOLUS))) =>
+				not (GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "PROPERTY 26 : ignore_patient_bolus_request": ignore_patient_bolus_request;
+		
+		 
+		--REQ 28
+		property infusion_complete_implies_idle =
+			true -> (OP_CMD_IN.System_Start and pre(is_active) and ((GPCA_SW_OUT.Actual_Infusion_Duration >= GPCA_SW_OUT.Infusion_Total_Duration)
+			or (GPCA_SW_OUT.Volume_Infused >= GPCA_SW_OUT.VTBI_Total))) and not OP_CMD_IN.Infusion_Inhibit  => (GPCA_SW_OUT.Current_System_Mode = DEFS.IDLE);
+		guarantee "PROPERTY 27 : infusion_complete_implies_idle" : infusion_complete_implies_idle;
+		 
+		--REQ 29 any paused mode
+		property infusion_inhibit_implies_paused =
+			true -> (pre(is_active) and OP_CMD_IN.Infusion_Inhibit and OP_CMD_IN.System_Start and (GPCA_SW_OUT.Configured > 0)) => (GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_MANUAL) or
+			(GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_KVO) or (GPCA_SW_OUT.Current_System_Mode = DEFS.PAUSE_NO_KVO);
+		guarantee "PROPERTY 28 : infusion_inhibit_implies_paused" : infusion_inhibit_implies_paused;
+		
+		--REQ 32
+		property basal_transition_to_pbolus =
+			true->(pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.BASAL) and PATIENT_IN.Patient_Bolus_Request and not
+			(level_4_alarm or level_3_alarm or level_2_alarm or (Patient_Bolus_Delivered_Count > GPCA_SW_OUT.Max_Number_of_Patient_Bolus) or
+			GPCA_SW_OUT.Is_Locked_Out) => (GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "PROPERTY 29 : basal_transition_to_pbolus" : basal_transition_to_pbolus;
+		
+		--REQ 33
+		property sbolus_transition_to_pbolus =
+			true->(pre(GPCA_SW_OUT.Current_System_Mode) = DEFS.SQUARE_BOLUS) and PATIENT_IN.Patient_Bolus_Request and not
+			(level_4_alarm or level_3_alarm or level_2_alarm or (Patient_Bolus_Delivered_Count > GPCA_SW_OUT.Max_Number_of_Patient_Bolus) or
+			GPCA_SW_OUT.Is_Locked_Out) => (GPCA_SW_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "PROPERTY 30 : sbolus_transition_to_pbolus" : sbolus_transition_to_pbolus;
+			
+		property level_4_alarm_visual = true ->
+			level_4_alarm => (GPCA_SW_OUT.Notification_Message = DEFS.EMPTY_RES) or
+				 (GPCA_SW_OUT.Notification_Message = DEFS.ENVIRO_ERROR) or
+					(GPCA_SW_OUT.Notification_Message = DEFS.HW_ERROR);
+		guarantee "PROPERTY 31 : level_4_alarm_visual" : level_4_alarm_visual;
+		
+		property empty_res_visual_implies_error = true ->
+			(GPCA_SW_OUT.Notification_Message = DEFS.EMPTY_RES) => OP_CMD_IN.System_Start and pre(is_therapy) and 
+				(GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Empty_Reservoir);
+		guarantee "PROPERTY 32 : empty_res_visual_implies_error" : empty_res_visual_implies_error;
+		
+		property enviro_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.ENVIRO_ERROR) =>
+			(SENSOR_IN.Temp or SENSOR_IN.Air_Pressure or SENSOR_IN.CPU_Error or SENSOR_IN.Humidity);
+		guarantee "PROPERTY 33 : enviro_visual_implies_error" : enviro_visual_implies_error;
+		
+		property hardware_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.HW_ERROR) =>
+			(SENSOR_IN.Battery_Depleted or SENSOR_IN.RTC_Error or SENSOR_IN.CPU_Error or SENSOR_IN.Memory_Corrupted or
+			SENSOR_IN.Pump_Too_Hot or SENSOR_IN.Watchdog_Interrupted);
+		guarantee "PROPERTY 34 : hardware_visual_implies_error" : hardware_visual_implies_error; 
+		
+		property level_3_alarm_visual = true ->
+			( (level_3_alarm and not level_4_alarm) => (GPCA_SW_OUT.Notification_Message = DEFS.OVER_FR) or (GPCA_SW_OUT.Notification_Message = 
+			DEFS.OVER_VTBI) or (GPCA_SW_OUT.Notification_Message = DEFS.AIR) or (GPCA_SW_OUT.Notification_Message = DEFS.OCCLUSION) or
+			(GPCA_SW_OUT.Notification_Message = DEFS.DOOR_OPEN)); 
+		guarantee "PROPERTY 35 : level_3_alarm_visual" : level_3_alarm_visual;
+		
+		property over_fr_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.OVER_FR) => Is_Over_Infusion;
+		guarantee "PROPERTY 36 : over_fr_visual_implies_error" : over_fr_visual_implies_error;
+		
+		property over_vtbi_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.OVER_VTBI) => OP_CMD_IN.System_Start and pre(is_therapy) and (GPCA_SW_OUT.Volume_Infused > DB_IN.VTBI_High);
+		guarantee "PROPERTY 37 : over_vtbi_visual_implies_error" : over_vtbi_visual_implies_error;
+		
+		property air_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.AIR) => SENSOR_IN.Air_In_Line;
+		guarantee "PROPERTY 38 : air_visual_implies_error" : air_visual_implies_error;
+		
+		property occlusion_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.OCCLUSION) => SENSOR_IN.Occlusion;
+		guarantee "PROPERTY 39 : occlusion_visual_implies_error" : occlusion_visual_implies_error;
+		
+		property door_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.DOOR_OPEN) => SENSOR_IN.Door_Open;
+		guarantee "PROPERTY 40 : door_visual_implies_error" : door_visual_implies_error;
+		
+		property level_2_alarm_visual = true ->
+			(level_2_alarm and not level_3_alarm and not level_4_alarm) => (GPCA_SW_OUT.Notification_Message = DEFS.LOW_RES);
+		guarantee "PROPERTY 41 : level_2_alarm_visual" : level_2_alarm_visual;
+		
+	
+		property low_res_visial_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.LOW_RES) => OP_CMD_IN.System_Start and pre(is_therapy) and 
+				(GPCA_SW_OUT.Reservoir_Volume < CONST_IN.Low_Reservoir);
+		guarantee "PROPERTY 42 : low_res_visial_implies_error" : low_res_visial_implies_error;
+		
+		property level_1_alarm_visual = true ->
+			(level_1_alarm and not level_2_alarm and not level_3_alarm and not level_4_alarm) => (GPCA_SW_OUT.Notification_Message = DEFS.UNDER_FR) or
+			(GPCA_SW_OUT.Notification_Message = DEFS.UNSTABLE_FR) or (GPCA_SW_OUT.Notification_Message = DEFS.IDLE_TIME) or
+			(GPCA_SW_OUT.Notification_Message = DEFS.PAUSE_TIME) or (GPCA_SW_OUT.Notification_Message = DEFS.CONFIG_TIME) or
+			(GPCA_SW_OUT.Notification_Message = DEFS.BATTERY) or (GPCA_SW_OUT.Notification_Message = DEFS.PUMP_HOT) or
+			(GPCA_SW_OUT.Notification_Message = DEFS.LOG_FAIL) or (GPCA_SW_OUT.Notification_Message = DEFS.SYS_MONITOR);
+		guarantee "PROPERTY 43 : level_1_alarm_visual" : level_1_alarm_visual;
+		
+		property under_fr_visual_implies_error = true -> 
+			(GPCA_SW_OUT.Notification_Message = DEFS.UNDER_FR) => is_under_infusion;
+		guarantee "PROPERTY 44 : under_fr_visual_implies_error" : under_fr_visual_implies_error;
+		
+		property unstable_fr_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.UNSTABLE_FR) => SENSOR_IN.Flow_Rate_Not_Stable;
+		guarantee "PROPERTY 45 : unstable_fr_visual_implies_error" : unstable_fr_visual_implies_error;
+		
+		property idle_time_visual_implies_error = true ->
+			(GPCA_SW_OUT.Notification_Message = DEFS.IDLE_TIME) => (idleTimeCounter > CONST_IN.Max_Idle_Duration);
+		guarantee "PROPERTY 46 : idle_time_visual_implies_error" : idle_time_visual_implies_error;
+		 
+		property pause_time_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.PAUSE_TIME) => (pausedTimeCounter > CONST_IN.Max_Paused_Duration);
+		guarantee "PROPERTY 47 : pause_time_visual_implies_error" : pause_time_visual_implies_error;
+		
+		property config_time_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.CONFIG_TIME) => (configTimer > CONST_IN.Config_Warning_Duration);
+		guarantee "PROPERTY 48 : config_time_visual_implies_error" : config_time_visual_implies_error;
+		
+		property battery_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.BATTERY) => (SENSOR_IN.Supply_Voltage or SENSOR_IN.Battery_Low or SENSOR_IN.Battery_Unable_To_Charge);
+		guarantee "PROPERTY 49 : battery_visual_implies_error" : battery_visual_implies_error;
+		
+		property pump_hot_visual_implies_error =
+			(GPCA_SW_OUT.Notification_Message = DEFS.PUMP_HOT) => SENSOR_IN.Pump_Overheated;
+		guarantee "PROPERTY 50 : pump_hot_visual_implies_error" : pump_hot_visual_implies_error;
+		
+		--REQ 72
+		property alarm_3_or_4_implies_audio = true ->
+			((level_3_alarm or level_4_alarm) and (OP_CMD_IN.Disable_Audio = 0)) => (GPCA_SW_OUT.Audio_Notification_Command = CONST_IN.Audio_Level);
+		guarantee "PROPERTY 51 : alarm_3_or_4_implies_audio" : alarm_3_or_4_implies_audio;
+		
+		--->Configuration Requirements<---
+		
+		property configuration_type_request =
+			OP_CMD_IN.Data_Config => GPCA_SW_OUT.Request_Config_Type;
+		guarantee "PROPERTY 52 : configuration_type_request" : configuration_type_request;
+		
+		property validate_configured_patient_drug_info =
+			(GPCA_SW_OUT.Configured = 1) and ((PRES_IN.Drug_Name = 0) or ((PRES_IN.Drug_Concentration < DB_IN.Drug_Concentration_Low) or
+			(PRES_IN.Drug_Concentration > DB_IN.Drug_Concentration_High)) or (PRES_IN.Entered_Reservoir_Volume < CONST_IN.Empty_Reservoir)) => 
+			(GPCA_SW_OUT.Error_Message_ID = 5) and GPCA_SW_OUT.Request_Patient_Drug_Info;
+		guarantee "PROPERTY 53 : validate_configured_patient_drug_info" : validate_configured_patient_drug_info;
+		
+		property validate_configured_infusion_info =
+			(GPCA_SW_OUT.Configured > 0) and ((PRES_IN.VTBI_Total > DB_IN.VTBI_High) or (PRES_IN.VTBI_Total < DB_IN.VTBI_Low) or
+			(PRES_IN.Flow_Rate_Basal < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Basal > DB_IN.Flow_Rate_High) or 
+			(PRES_IN.Flow_Rate_Intermittent_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Intermittent_Bolus > DB_IN.Flow_Rate_High) or
+			(PRES_IN.Flow_Rate_Patient_Bolus < DB_IN.Flow_Rate_Low) or (PRES_IN.Flow_Rate_Patient_Bolus > DB_IN.Flow_Rate_High) or
+			(PRES_IN.Duration_Intermittent_Bolus > PRES_IN.Interval_Intermittent_Bolus) or (PRES_IN.Max_Number_of_Patient_Bolus 
+			> DB_IN.Number_Max_Patient_Bolus) or (PRES_IN.Flow_Rate_Intermittent_Bolus < PRES_IN.Flow_Rate_Basal) or
+			(PRES_IN.Flow_Rate_Patient_Bolus < PRES_IN.Flow_Rate_Basal)) => GPCA_SW_OUT.Request_Patient_Drug_Info;
+		guarantee "PROPERTY 54 : validate_configured_infusion_info" : validate_configured_infusion_info;
+
+	  **};
+
+end GPCA_SW;
+  
+  system implementation GPCA_SW.Impl
+    subcomponents      
+      TLM: system Top_Level_Mode::Top_Level_Mode.Impl;
+      SYS_STAT: system System_Status::System_Status.Impl;
+      ALARM: system Alarm::Alarm.Impl;
+      CONFIG: system Config::Config.Impl;
+      IM: system Infusion_Manager::Infusion_Manager.Impl;
+      SYS_MON: system System_Monitor::System_Monitor.Impl;
+      LOG: system Logging::Logging.Impl;
+      OUTPUT: system OutputBus::OutputBus.Impl;
+           
+	  connections 
+	  	  
+	  -- TLM
+	  OP_CMDtoTLM: 	port OP_CMD_IN -> TLM.OP_CMD_IN;
+	  CONSTtoTLM: 	port CONST_IN -> TLM.CONST_IN; 
+	  
+	  TLM_OUT_toOUTPUT:  port TLM.TLM_MODE_OUT -> OUTPUT.TLM_MODE_IN;
+          
+     -- data access TLM_MODE_OUT.Request_Confirm_Stop ->  GPCA_SW_OUT.Request_Confirm_Stop;
+	  
+      -- SYSTEM STATUS
+      IM_to_SYS_STAT: 	port IM.IM_OUT -> SYS_STAT.IM_IN{Communication_Properties::Timing => delayed;};
+      TLM_to_SYS_STAT: 	port TLM.TLM_MODE_OUT -> SYS_STAT.TLM_MODE_IN ;
+      SENSOR_to_SYS_STAT: port SENSOR_IN -> SYS_STAT.SENSOR_IN ;
+      CONST_to_SYS_STAT: 	port CONST_IN -> SYS_STAT.CONST_IN; 
+      CONFIG_to_SYS_STAT: port CONFIG.CONFIG_OUT -> SYS_STAT.CONFIG_IN{Communication_Properties::Timing => delayed;};
+     
+      SYS_STAT_OUT_toOUTPUT:  port SYS_STAT.SYS_STAT_OUT -> OUTPUT.SYS_STAT_IN;
+      
+      -- ALARM
+      IM_to_ALARM: 		port IM.IM_OUT -> ALARM.IM_IN{Communication_Properties::Timing => delayed;};
+      TLM_to_ALARM: 	port TLM.TLM_MODE_OUT -> ALARM.TLM_MODE_IN;
+      SYS_MON_to_ALARM: port SYS_MON.SYS_MON_OUT -> ALARM.SYS_MON_IN{Communication_Properties::Timing => delayed;};
+      OP_CMD_to_ALARM: 	port OP_CMD_IN -> ALARM.OP_CMD_IN;
+      DB_to_ALARM: 		port DB_IN -> ALARM.DB_IN;
+      SENSOR_to_ALARM: 	port SENSOR_IN -> ALARM.SENSOR_IN; 
+      CONST_to_ALARM: 	port CONST_IN -> ALARM.CONST_IN; 
+      SYS_STAT_to_ALARM: 	port SYS_STAT.SYS_STAT_OUT -> ALARM.SYS_STAT_IN;
+      CONFIG_to_ALARM: 	port CONFIG.CONFIG_OUT -> ALARM.CONFIG_IN{Communication_Properties::Timing => delayed;}; 
+      
+      ALARM_OUT_toOUTPUT:  port ALARM.ALARM_OUT -> OUTPUT.ALARM_IN;
+      
+     
+     -- CONFIG
+     TLM_to_CONFIG: 		port TLM.TLM_MODE_OUT -> CONFIG.TLM_MODE_IN  ;
+     PRES_to_CONFIG: 		port PRES_IN -> CONFIG.PRES_IN  ;
+     OP_CMD_to_CONFIG:  	port OP_CMD_IN -> CONFIG.OP_CMD_IN;
+     DB_to_CONFIG: 		    port DB_IN -> CONFIG.DB_IN;
+  	 CONS_to_CONFIG: 		port CONST_IN -> CONFIG.CONST_IN; 
+  	 SYS_STAT_to_CONFIG: 	port SYS_STAT.SYS_STAT_OUT -> CONFIG.SYS_STAT_IN  ; 
+  	
+  	 CONFIG_toOUTPUT:  		port CONFIG.CONFIG_OUT -> OUTPUT.CONFIG_IN;
+  	    
+  	  -- IM
+  	  TLM_to_IM : 			port TLM.TLM_MODE_OUT -> IM.TLM_MODE_IN ;   
+  	  OP_CMD_to_IM: 		port OP_CMD_IN-> IM.OP_CMD_IN; 
+  	  PATIENT_to_IM: 		port PATIENT_IN -> IM.PATIENT_IN;  
+  	  CONFIG_to_IM: 		port CONFIG.CONFIG_OUT -> IM.CONFIG_IN;  
+      ALARM_to_IM: 			port ALARM.ALARM_OUT -> IM.ALARM_IN  ; 
+      SYS_STAT_to_IM: 		port SYS_STAT.SYS_STAT_OUT -> IM.SYS_STAT_IN  ; 
+      
+      IM_toOUTPUT:  		port IM.IM_OUT -> OUTPUT.IM_IN;
+  
+      -- SYSTEM MONI_to_R
+      TLM_to_SYS_MON: 		port TLM.TLM_MODE_OUT -> SYS_MON.TLM_MODE_IN  ;
+            
+       SYS_MON_toOUTPUT:  	port SYS_MON.SYS_MON_OUT -> OUTPUT.SYS_MON_IN;
+    
+       -- LOG
+       TLM_to_LOG : 		port TLM.TLM_MODE_OUT -> LOG.TLM_MODE_IN ;   
+  	   CONFIG_to_LOG: 		port CONFIG.CONFIG_OUT -> LOG.CONFIG_IN;
+       ALARM_to_LOG: 		port ALARM.ALARM_OUT -> LOG.ALARM_IN; 
+       SYS_STAT_to_LOG: 	port SYS_STAT.SYS_STAT_OUT -> LOG.SYS_STAT_IN  ; 
+       IM_to_LOG: 			port IM.IM_OUT -> LOG.IM_IN ;
+       
+       LOG_toOUTPUT:  		port LOG.LOG_OUT -> OUTPUT.LOG_IN; 
+      
+       -- OUTPUT_to_GPCA_OUT
+      OUTPUT_to_GPCA_OUT:  port OUTPUT.GPCA_SW_OUT -> GPCA_SW_OUT; 
+      
+--      annex agree {**
+       	--Anitha: I was getting inductive counter examples, 
+       	--where the counter values in system level and component level were not the same
+--      		lemma "idle counters " : idleTimeCounter = ALARM.Idle_Time_Counter;   
+--      		lemma "config counters " : configTimer = ALARM.Config_Timer;   
+--      		lemma "paused counters " : pausedTimeCounter = ALARM.Paused_Time_Counter;   
+--      		lemma "Time_FR_Over_Min_Tol": timeOverMinTolerance  = ALARM.Time_FR_Over_Min_Tol;
+--      		lemma "Time_FR_Under_Min_Tol": timeUnderMinTolerance  = ALARM.Time_FR_Under_Min_Tol;
+--      		lemma "Patient_Bolus_Delivered_Count": Patient_Bolus_Delivered_Count  = IM.Patient_Bolus_Delivered_Count;
+--      **};
+   	  
+  end GPCA_SW.Impl;
+  
+  
+end GPCA_SW;
+

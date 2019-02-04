@@ -1,0 +1,91 @@
+package OSAS_S_180
+public
+
+annex agree {**
+	
+	--this node allows us to compute the actuator gain
+    --by looking at the number of valid channels and
+    --returning 4/(number of valid channels). We use
+    --this node to do this computation to avoid non-linear
+    --arithmatic
+    node actuator_gain(num_valid : int) returns (result : real);
+    let
+      result = if(num_valid = 3) then
+                  1.0
+               else if(num_valid = 2) then
+                  4.0/3.0
+               else if(num_valid = 1) then
+                  2.0
+               else if(num_valid = 0) then
+                  4.0
+               else
+                  1.0;
+    tel;
+  
+-- Why no counter-example? Why only inductive-counter example?
+	node actuator_gain_bad(num_valid : int) returns (result : real);
+    let
+      result = if(num_valid = 3) then
+                  1.0
+               else if(num_valid = 2) then
+                  2.0
+               else if(num_valid = 1) then
+                  4.0/3.0
+               else if(num_valid = 0) then
+                  4.0
+               else
+                  1.0;
+    tel;
+  
+  
+  
+  
+    --OSAS shall compute the actuator command gain as the ratio
+    --of the total number of command channels to the number of
+    --valid command channels (i.e. 4/(number of valid command channels).
+    	
+  node req 
+    (acts_gain : DATA_TYPES::Actuators.impl,
+     acts_num_valid : DATA_TYPES::NumActuators.impl,
+  	 ccdl_failed : bool)
+  returns
+    (res : bool);
+  let
+  	res = req_helper(acts_gain.AILL, acts_num_valid.AILL, ccdl_failed) and  
+  	      req_helper(acts_gain.AILR, acts_num_valid.AILR, ccdl_failed) and
+  	      req_helper(acts_gain.BRAKE, acts_num_valid.BRAKE, ccdl_failed) and
+  	      req_helper(acts_gain.ELLIB, acts_num_valid.ELLIB, ccdl_failed) and 
+  	      req_helper(acts_gain.ELLOB, acts_num_valid.ELLOB, ccdl_failed) and
+  	      req_helper(acts_gain.ELRIB, acts_num_valid.ELRIB, ccdl_failed) and
+  	      req_helper(acts_gain.ELROB, acts_num_valid.ELROB, ccdl_failed) and
+  	      req_helper(acts_gain.FLAPLI, acts_num_valid.FLAPLI, ccdl_failed) and
+  	      req_helper(acts_gain.FLAPLO, acts_num_valid.FLAPLO, ccdl_failed) and
+  	      req_helper(acts_gain.FLAPRI, acts_num_valid.FLAPRI, ccdl_failed) and
+  	      req_helper(acts_gain.FLAPRO, acts_num_valid.FLAPRO, ccdl_failed) and
+  	      req_helper(acts_gain.GEAR, acts_num_valid.GEAR, ccdl_failed) and
+  	      req_helper(acts_gain.RUDLO, acts_num_valid.RUDLO, ccdl_failed) and
+  	      req_helper(acts_gain.RUDUP, acts_num_valid.RUDUP, ccdl_failed) and
+  	      req_helper(acts_gain.SPLLIB, acts_num_valid.SPLLIB, ccdl_failed) and
+  	      req_helper(acts_gain.SPLLOB, acts_num_valid.SPLLOB, ccdl_failed) and
+  	      req_helper(acts_gain.SPLRIB, acts_num_valid.SPLRIB, ccdl_failed) and
+  	      req_helper(acts_gain.SPLROB, acts_num_valid.SPLROB, ccdl_failed) and
+  	      req_helper(acts_gain.STEER, acts_num_valid.STEER, ccdl_failed) and
+  	      req_helper(acts_gain.THROTR, acts_num_valid.THROTR, ccdl_failed) and
+  	      req_helper(acts_gain.THROTL, acts_num_valid.THROTL, ccdl_failed);
+  tel;
+  
+  node req_helper
+    (act_gain : real,
+     num_valid : int,	
+     ccdl_failed : bool)
+  returns
+    (res : bool);
+  let  
+    res = 
+      (not ccdl_failed) => (act_gain = actuator_gain(num_valid));
+  tel;		
+	
+**};
+
+
+end OSAS_S_180;

@@ -3,37 +3,6 @@
  */
 package com.rockwellcollins.atc.agree.serializer;
 
-import java.util.Set;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.xtext.Action;
-import org.eclipse.xtext.Parameter;
-import org.eclipse.xtext.ParserRule;
-import org.eclipse.xtext.serializer.ISerializationContext;
-import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
-import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
-import org.osate.aadl2.Aadl2Package;
-import org.osate.aadl2.ArrayRange;
-import org.osate.aadl2.BasicPropertyAssociation;
-import org.osate.aadl2.BooleanLiteral;
-import org.osate.aadl2.ClassifierValue;
-import org.osate.aadl2.ComputedValue;
-import org.osate.aadl2.ContainedNamedElement;
-import org.osate.aadl2.ContainmentPathElement;
-import org.osate.aadl2.IntegerLiteral;
-import org.osate.aadl2.ListValue;
-import org.osate.aadl2.ModalPropertyValue;
-import org.osate.aadl2.NamedValue;
-import org.osate.aadl2.Operation;
-import org.osate.aadl2.PropertyAssociation;
-import org.osate.aadl2.RangeValue;
-import org.osate.aadl2.RealLiteral;
-import org.osate.aadl2.RecordValue;
-import org.osate.aadl2.ReferenceValue;
-import org.osate.aadl2.StringLiteral;
-import org.osate.xtext.aadl2.properties.serializer.PropertiesSemanticSequencer;
-
 import com.google.inject.Inject;
 import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
@@ -101,6 +70,7 @@ import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
+import com.rockwellcollins.atc.agree.agree.TypeID;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.WhenHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WhenOccursStatment;
@@ -109,339 +79,371 @@ import com.rockwellcollins.atc.agree.agree.WheneverHoldsStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverImpliesStatement;
 import com.rockwellcollins.atc.agree.agree.WheneverOccursStatement;
 import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
+import java.util.Set;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.xtext.Action;
+import org.eclipse.xtext.Parameter;
+import org.eclipse.xtext.ParserRule;
+import org.eclipse.xtext.serializer.ISerializationContext;
+import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
+import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
+import org.osate.aadl2.Aadl2Package;
+import org.osate.aadl2.ArrayRange;
+import org.osate.aadl2.BasicPropertyAssociation;
+import org.osate.aadl2.BooleanLiteral;
+import org.osate.aadl2.ClassifierValue;
+import org.osate.aadl2.ComputedValue;
+import org.osate.aadl2.ContainedNamedElement;
+import org.osate.aadl2.ContainmentPathElement;
+import org.osate.aadl2.IntegerLiteral;
+import org.osate.aadl2.ListValue;
+import org.osate.aadl2.ModalPropertyValue;
+import org.osate.aadl2.NamedValue;
+import org.osate.aadl2.Operation;
+import org.osate.aadl2.PropertyAssociation;
+import org.osate.aadl2.RangeValue;
+import org.osate.aadl2.RealLiteral;
+import org.osate.aadl2.RecordValue;
+import org.osate.aadl2.ReferenceValue;
+import org.osate.aadl2.StringLiteral;
+import org.osate.xtext.aadl2.properties.serializer.PropertiesSemanticSequencer;
 
 @SuppressWarnings("all")
 public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticSequencer {
 
 	@Inject
 	private AgreeGrammarAccess grammarAccess;
-
+	
 	@Override
 	public void sequence(ISerializationContext context, EObject semanticObject) {
 		EPackage epackage = semanticObject.eClass().getEPackage();
 		ParserRule rule = context.getParserRule();
 		Action action = context.getAssignedAction();
 		Set<Parameter> parameters = context.getEnabledBooleanParameters();
-		if (epackage == Aadl2Package.eINSTANCE) {
+		if (epackage == Aadl2Package.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case Aadl2Package.ARRAY_RANGE:
-				sequence_ArrayRange(context, (ArrayRange) semanticObject);
-				return;
+				sequence_ArrayRange(context, (ArrayRange) semanticObject); 
+				return; 
 			case Aadl2Package.BASIC_PROPERTY_ASSOCIATION:
-				sequence_FieldPropertyAssociation(context, (BasicPropertyAssociation) semanticObject);
-				return;
+				sequence_FieldPropertyAssociation(context, (BasicPropertyAssociation) semanticObject); 
+				return; 
 			case Aadl2Package.BOOLEAN_LITERAL:
-				sequence_BooleanLiteral(context, (BooleanLiteral) semanticObject);
-				return;
+				sequence_BooleanLiteral(context, (BooleanLiteral) semanticObject); 
+				return; 
 			case Aadl2Package.CLASSIFIER_VALUE:
-				sequence_ComponentClassifierTerm(context, (ClassifierValue) semanticObject);
-				return;
+				sequence_ComponentClassifierTerm(context, (ClassifierValue) semanticObject); 
+				return; 
 			case Aadl2Package.COMPUTED_VALUE:
-				sequence_ComputedTerm(context, (ComputedValue) semanticObject);
-				return;
+				sequence_ComputedTerm(context, (ComputedValue) semanticObject); 
+				return; 
 			case Aadl2Package.CONTAINED_NAMED_ELEMENT:
-				sequence_ContainmentPath(context, (ContainedNamedElement) semanticObject);
-				return;
+				sequence_ContainmentPath(context, (ContainedNamedElement) semanticObject); 
+				return; 
 			case Aadl2Package.CONTAINMENT_PATH_ELEMENT:
-				sequence_ContainmentPathElement(context, (ContainmentPathElement) semanticObject);
-				return;
+				sequence_ContainmentPathElement(context, (ContainmentPathElement) semanticObject); 
+				return; 
 			case Aadl2Package.INTEGER_LITERAL:
-				sequence_IntegerTerm(context, (IntegerLiteral) semanticObject);
-				return;
+				sequence_IntegerTerm(context, (IntegerLiteral) semanticObject); 
+				return; 
 			case Aadl2Package.LIST_VALUE:
-				sequence_ListTerm(context, (ListValue) semanticObject);
-				return;
+				sequence_ListTerm(context, (ListValue) semanticObject); 
+				return; 
 			case Aadl2Package.MODAL_PROPERTY_VALUE:
 				if (rule == grammarAccess.getModalPropertyValueRule()) {
-					sequence_ModalPropertyValue(context, (ModalPropertyValue) semanticObject);
-					return;
-				} else if (rule == grammarAccess.getOptionalModalPropertyValueRule()) {
-					sequence_OptionalModalPropertyValue(context, (ModalPropertyValue) semanticObject);
-					return;
-				} else if (rule == grammarAccess.getPropertyValueRule()) {
-					sequence_PropertyValue(context, (ModalPropertyValue) semanticObject);
-					return;
-				} else {
-					break;
+					sequence_ModalPropertyValue(context, (ModalPropertyValue) semanticObject); 
+					return; 
 				}
+				else if (rule == grammarAccess.getOptionalModalPropertyValueRule()) {
+					sequence_OptionalModalPropertyValue(context, (ModalPropertyValue) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertyValueRule()) {
+					sequence_PropertyValue(context, (ModalPropertyValue) semanticObject); 
+					return; 
+				}
+				else break;
 			case Aadl2Package.NAMED_VALUE:
-				if (rule == grammarAccess.getConstantValueRule() || rule == grammarAccess.getNumAltRule()) {
-					sequence_ConstantValue(context, (NamedValue) semanticObject);
-					return;
-				} else if (rule == grammarAccess.getPropertyExpressionRule()
-						|| rule == grammarAccess.getLiteralorReferenceTermRule()) {
-					sequence_LiteralorReferenceTerm(context, (NamedValue) semanticObject);
-					return;
-				} else {
-					break;
+				if (rule == grammarAccess.getConstantValueRule()
+						|| rule == grammarAccess.getNumAltRule()) {
+					sequence_ConstantValue(context, (NamedValue) semanticObject); 
+					return; 
 				}
+				else if (rule == grammarAccess.getPropertyExpressionRule()
+						|| rule == grammarAccess.getLiteralorReferenceTermRule()) {
+					sequence_LiteralorReferenceTerm(context, (NamedValue) semanticObject); 
+					return; 
+				}
+				else break;
 			case Aadl2Package.OPERATION:
-				sequence_SignedConstant(context, (Operation) semanticObject);
-				return;
+				sequence_SignedConstant(context, (Operation) semanticObject); 
+				return; 
 			case Aadl2Package.PROPERTY_ASSOCIATION:
 				if (rule == grammarAccess.getBasicPropertyAssociationRule()) {
-					sequence_BasicPropertyAssociation(context, (PropertyAssociation) semanticObject);
-					return;
-				} else if (rule == grammarAccess.getPModelRule()
-						|| rule == grammarAccess.getContainedPropertyAssociationRule()) {
-					sequence_ContainedPropertyAssociation(context, (PropertyAssociation) semanticObject);
-					return;
-				} else if (rule == grammarAccess.getPropertyAssociationRule()) {
-					sequence_PropertyAssociation(context, (PropertyAssociation) semanticObject);
-					return;
-				} else {
-					break;
+					sequence_BasicPropertyAssociation(context, (PropertyAssociation) semanticObject); 
+					return; 
 				}
+				else if (rule == grammarAccess.getPModelRule()
+						|| rule == grammarAccess.getContainedPropertyAssociationRule()) {
+					sequence_ContainedPropertyAssociation(context, (PropertyAssociation) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertyAssociationRule()) {
+					sequence_PropertyAssociation(context, (PropertyAssociation) semanticObject); 
+					return; 
+				}
+				else break;
 			case Aadl2Package.RANGE_VALUE:
-				sequence_NumericRangeTerm(context, (RangeValue) semanticObject);
-				return;
+				sequence_NumericRangeTerm(context, (RangeValue) semanticObject); 
+				return; 
 			case Aadl2Package.REAL_LITERAL:
-				sequence_RealTerm(context, (RealLiteral) semanticObject);
-				return;
+				sequence_RealTerm(context, (RealLiteral) semanticObject); 
+				return; 
 			case Aadl2Package.RECORD_VALUE:
 				if (rule == grammarAccess.getOldRecordTermRule()) {
-					sequence_OldRecordTerm(context, (RecordValue) semanticObject);
-					return;
-				} else if (rule == grammarAccess.getPropertyExpressionRule()
-						|| rule == grammarAccess.getRecordTermRule()) {
-					sequence_RecordTerm(context, (RecordValue) semanticObject);
-					return;
-				} else {
-					break;
+					sequence_OldRecordTerm(context, (RecordValue) semanticObject); 
+					return; 
 				}
+				else if (rule == grammarAccess.getPropertyExpressionRule()
+						|| rule == grammarAccess.getRecordTermRule()) {
+					sequence_RecordTerm(context, (RecordValue) semanticObject); 
+					return; 
+				}
+				else break;
 			case Aadl2Package.REFERENCE_VALUE:
-				sequence_ReferenceTerm(context, (ReferenceValue) semanticObject);
-				return;
+				sequence_ReferenceTerm(context, (ReferenceValue) semanticObject); 
+				return; 
 			case Aadl2Package.STRING_LITERAL:
-				sequence_StringTerm(context, (StringLiteral) semanticObject);
-				return;
+				sequence_StringTerm(context, (StringLiteral) semanticObject); 
+				return; 
 			}
-		} else if (epackage == AgreePackage.eINSTANCE) {
+		else if (epackage == AgreePackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case AgreePackage.AADL_ENUMERATOR:
-				sequence_TermExpr(context, (AADLEnumerator) semanticObject);
-				return;
+				sequence_TermExpr(context, (AADLEnumerator) semanticObject); 
+				return; 
 			case AgreePackage.AGREE_CONTRACT:
-				sequence_AgreeContract(context, (AgreeContract) semanticObject);
-				return;
+				sequence_AgreeContract(context, (AgreeContract) semanticObject); 
+				return; 
 			case AgreePackage.AGREE_CONTRACT_LIBRARY:
-				sequence_AgreeLibrary(context, (AgreeContractLibrary) semanticObject);
-				return;
+				sequence_AgreeLibrary(context, (AgreeContractLibrary) semanticObject); 
+				return; 
 			case AgreePackage.AGREE_CONTRACT_SUBCLAUSE:
-				sequence_AgreeSubclause(context, (AgreeContractSubclause) semanticObject);
-				return;
+				sequence_AgreeSubclause(context, (AgreeContractSubclause) semanticObject); 
+				return; 
 			case AgreePackage.ALWAYS_STATEMENT:
-				sequence_PatternStatement(context, (AlwaysStatement) semanticObject);
-				return;
+				sequence_PatternStatement(context, (AlwaysStatement) semanticObject); 
+				return; 
 			case AgreePackage.ARG:
-				sequence_Arg(context, (Arg) semanticObject);
-				return;
+				sequence_Arg(context, (Arg) semanticObject); 
+				return; 
 			case AgreePackage.ASSERT_STATEMENT:
-				sequence_SpecStatement(context, (AssertStatement) semanticObject);
-				return;
+				sequence_NamedSpecStatement(context, (AssertStatement) semanticObject); 
+				return; 
 			case AgreePackage.ASSIGN_STATEMENT:
-				sequence_AssignStatement(context, (AssignStatement) semanticObject);
-				return;
+				sequence_AssignStatement(context, (AssignStatement) semanticObject); 
+				return; 
 			case AgreePackage.ASSUME_STATEMENT:
-				sequence_SpecStatement(context, (AssumeStatement) semanticObject);
-				return;
+				sequence_NamedSpecStatement(context, (AssumeStatement) semanticObject); 
+				return; 
 			case AgreePackage.ASYNCH_STATEMENT:
-				sequence_SynchStatement(context, (AsynchStatement) semanticObject);
-				return;
+				sequence_SynchStatement(context, (AsynchStatement) semanticObject); 
+				return; 
 			case AgreePackage.BINARY_EXPR:
-				sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_PowerExpr_RelateExpr(
-						context, (BinaryExpr) semanticObject);
-				return;
+				sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_PowerExpr_RelateExpr(context, (BinaryExpr) semanticObject); 
+				return; 
 			case AgreePackage.BOOL_LIT_EXPR:
-				sequence_TermExpr(context, (BoolLitExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (BoolLitExpr) semanticObject); 
+				return; 
 			case AgreePackage.CALEN_STATEMENT:
-				sequence_SynchStatement(context, (CalenStatement) semanticObject);
-				return;
+				sequence_SynchStatement(context, (CalenStatement) semanticObject); 
+				return; 
 			case AgreePackage.CLOSED_TIME_INTERVAL:
-				sequence_TimeInterval(context, (ClosedTimeInterval) semanticObject);
-				return;
+				sequence_TimeInterval(context, (ClosedTimeInterval) semanticObject); 
+				return; 
 			case AgreePackage.CONNECTION_STATEMENT:
-				sequence_SpecStatement(context, (ConnectionStatement) semanticObject);
-				return;
+				sequence_SpecStatement(context, (ConnectionStatement) semanticObject); 
+				return; 
 			case AgreePackage.CONST_STATEMENT:
-				sequence_ConstStatement(context, (ConstStatement) semanticObject);
-				return;
+				sequence_ConstStatement(context, (ConstStatement) semanticObject); 
+				return; 
 			case AgreePackage.ENUM_STATEMENT:
-				sequence_EnumStatement(context, (EnumStatement) semanticObject);
-				return;
+				sequence_EnumStatement(context, (EnumStatement) semanticObject); 
+				return; 
 			case AgreePackage.EQ_STATEMENT:
-				sequence_EqStatement(context, (EqStatement) semanticObject);
-				return;
+				sequence_EqStatement(context, (EqStatement) semanticObject); 
+				return; 
 			case AgreePackage.EVENT_EXPR:
-				sequence_TermExpr(context, (EventExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (EventExpr) semanticObject); 
+				return; 
 			case AgreePackage.FLOOR_CAST:
-				sequence_TermExpr(context, (FloorCast) semanticObject);
-				return;
+				sequence_TermExpr(context, (FloorCast) semanticObject); 
+				return; 
 			case AgreePackage.FN_CALL_EXPR:
-				sequence_ComplexExpr(context, (FnCallExpr) semanticObject);
-				return;
+				sequence_ComplexExpr(context, (FnCallExpr) semanticObject); 
+				return; 
 			case AgreePackage.FN_DEF_EXPR:
-				sequence_FnDefExpr(context, (FnDefExpr) semanticObject);
-				return;
+				sequence_FnDefExpr(context, (FnDefExpr) semanticObject); 
+				return; 
 			case AgreePackage.GET_PROPERTY_EXPR:
-				sequence_PreDefFnExpr(context, (GetPropertyExpr) semanticObject);
-				return;
+				sequence_PreDefFnExpr(context, (GetPropertyExpr) semanticObject); 
+				return; 
 			case AgreePackage.GUARANTEE_STATEMENT:
-				sequence_SpecStatement(context, (GuaranteeStatement) semanticObject);
-				return;
+				sequence_NamedSpecStatement(context, (GuaranteeStatement) semanticObject); 
+				return; 
 			case AgreePackage.IF_THEN_ELSE_EXPR:
-				sequence_IfThenElseExpr(context, (IfThenElseExpr) semanticObject);
-				return;
+				sequence_IfThenElseExpr(context, (IfThenElseExpr) semanticObject); 
+				return; 
 			case AgreePackage.INITIAL_STATEMENT:
-				sequence_SpecStatement(context, (InitialStatement) semanticObject);
-				return;
+				sequence_SpecStatement(context, (InitialStatement) semanticObject); 
+				return; 
 			case AgreePackage.INPUT_STATEMENT:
-				sequence_InputStatement(context, (InputStatement) semanticObject);
-				return;
+				sequence_InputStatement(context, (InputStatement) semanticObject); 
+				return; 
 			case AgreePackage.INT_LIT_EXPR:
-				sequence_TermExpr(context, (IntLitExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (IntLitExpr) semanticObject); 
+				return; 
 			case AgreePackage.LATCHED_EXPR:
-				sequence_TermExpr(context, (LatchedExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (LatchedExpr) semanticObject); 
+				return; 
 			case AgreePackage.LATCHED_STATEMENT:
-				sequence_SynchStatement(context, (LatchedStatement) semanticObject);
-				return;
+				sequence_SynchStatement(context, (LatchedStatement) semanticObject); 
+				return; 
 			case AgreePackage.LEMMA_STATEMENT:
-				sequence_SpecStatement(context, (LemmaStatement) semanticObject);
-				return;
+				sequence_NamedSpecStatement(context, (LemmaStatement) semanticObject); 
+				return; 
 			case AgreePackage.LIBRARY_FN_DEF_EXPR:
-				sequence_LibraryFnDefExpr(context, (LibraryFnDefExpr) semanticObject);
-				return;
+				sequence_LibraryFnDefExpr(context, (LibraryFnDefExpr) semanticObject); 
+				return; 
 			case AgreePackage.LIFT_STATEMENT:
-				sequence_SpecStatement(context, (LiftStatement) semanticObject);
-				return;
+				sequence_SpecStatement(context, (LiftStatement) semanticObject); 
+				return; 
 			case AgreePackage.LINEARIZATION_DEF_EXPR:
-				sequence_LinearizationDefExpr(context, (LinearizationDefExpr) semanticObject);
-				return;
+				sequence_LinearizationDefExpr(context, (LinearizationDefExpr) semanticObject); 
+				return; 
 			case AgreePackage.LINEARIZATION_INTERVAL:
-				sequence_LinearizationInterval(context, (LinearizationInterval) semanticObject);
-				return;
+				sequence_LinearizationInterval(context, (LinearizationInterval) semanticObject); 
+				return; 
 			case AgreePackage.MN_SYNCH_STATEMENT:
-				sequence_SynchStatement(context, (MNSynchStatement) semanticObject);
-				return;
+				sequence_SynchStatement(context, (MNSynchStatement) semanticObject); 
+				return; 
 			case AgreePackage.NAMED_ID:
-				sequence_NamedID(context, (NamedID) semanticObject);
-				return;
+				sequence_NamedID(context, (NamedID) semanticObject); 
+				return; 
 			case AgreePackage.NESTED_DOT_ID:
-				sequence_NestedDotID(context, (NestedDotID) semanticObject);
-				return;
+				sequence_NestedDotID(context, (NestedDotID) semanticObject); 
+				return; 
 			case AgreePackage.NODE_BODY_EXPR:
-				sequence_NodeBodyExpr(context, (NodeBodyExpr) semanticObject);
-				return;
+				sequence_NodeBodyExpr(context, (NodeBodyExpr) semanticObject); 
+				return; 
 			case AgreePackage.NODE_DEF_EXPR:
-				sequence_NodeDefExpr(context, (NodeDefExpr) semanticObject);
-				return;
+				sequence_NodeDefExpr(context, (NodeDefExpr) semanticObject); 
+				return; 
 			case AgreePackage.NODE_EQ:
-				sequence_NodeStmt(context, (NodeEq) semanticObject);
-				return;
+				sequence_NodeStmt(context, (NodeEq) semanticObject); 
+				return; 
 			case AgreePackage.NODE_LEMMA:
-				sequence_NodeStmt(context, (NodeLemma) semanticObject);
-				return;
+				sequence_NodeStmt(context, (NodeLemma) semanticObject); 
+				return; 
 			case AgreePackage.OPEN_LEFT_TIME_INTERVAL:
-				sequence_TimeInterval(context, (OpenLeftTimeInterval) semanticObject);
-				return;
+				sequence_TimeInterval(context, (OpenLeftTimeInterval) semanticObject); 
+				return; 
 			case AgreePackage.OPEN_RIGHT_TIME_INTERVAL:
-				sequence_TimeInterval(context, (OpenRightTimeInterval) semanticObject);
-				return;
+				sequence_TimeInterval(context, (OpenRightTimeInterval) semanticObject); 
+				return; 
 			case AgreePackage.OPEN_TIME_INTERVAL:
-				sequence_TimeInterval(context, (OpenTimeInterval) semanticObject);
-				return;
+				sequence_TimeInterval(context, (OpenTimeInterval) semanticObject); 
+				return; 
 			case AgreePackage.ORDER_STATEMENT:
-				sequence_OrderStatement(context, (OrderStatement) semanticObject);
-				return;
+				sequence_OrderStatement(context, (OrderStatement) semanticObject); 
+				return; 
 			case AgreePackage.PARAM_STATEMENT:
-				sequence_SpecStatement(context, (ParamStatement) semanticObject);
-				return;
+				sequence_SpecStatement(context, (ParamStatement) semanticObject); 
+				return; 
 			case AgreePackage.PERIODIC_STATEMENT:
-				sequence_RealTimeStatement(context, (PeriodicStatement) semanticObject);
-				return;
+				sequence_RealTimeStatement(context, (PeriodicStatement) semanticObject); 
+				return; 
 			case AgreePackage.PRE_EXPR:
-				sequence_TermExpr(context, (PreExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (PreExpr) semanticObject); 
+				return; 
 			case AgreePackage.PREV_EXPR:
-				sequence_PreDefFnExpr(context, (PrevExpr) semanticObject);
-				return;
+				sequence_PreDefFnExpr(context, (PrevExpr) semanticObject); 
+				return; 
 			case AgreePackage.PRIM_TYPE:
-				sequence_Type(context, (PrimType) semanticObject);
-				return;
+				sequence_Type(context, (PrimType) semanticObject); 
+				return; 
 			case AgreePackage.PROPERTY_STATEMENT:
-				sequence_PropertyStatement(context, (PropertyStatement) semanticObject);
-				return;
+				sequence_PropertyStatement(context, (PropertyStatement) semanticObject); 
+				return; 
 			case AgreePackage.REAL_CAST:
-				sequence_TermExpr(context, (RealCast) semanticObject);
-				return;
+				sequence_TermExpr(context, (RealCast) semanticObject); 
+				return; 
 			case AgreePackage.REAL_LIT_EXPR:
-				sequence_TermExpr(context, (RealLitExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (RealLitExpr) semanticObject); 
+				return; 
 			case AgreePackage.RECORD_DEF_EXPR:
-				sequence_RecordDefExpr(context, (RecordDefExpr) semanticObject);
-				return;
+				sequence_RecordDefExpr(context, (RecordDefExpr) semanticObject); 
+				return; 
 			case AgreePackage.RECORD_EXPR:
-				sequence_ComplexExpr(context, (RecordExpr) semanticObject);
-				return;
+				sequence_ComplexExpr(context, (RecordExpr) semanticObject); 
+				return; 
 			case AgreePackage.RECORD_TYPE:
-				sequence_Type(context, (RecordType) semanticObject);
-				return;
+				sequence_Type(context, (RecordType) semanticObject); 
+				return; 
 			case AgreePackage.RECORD_UPDATE_EXPR:
-				sequence_RecordUpdateExpr(context, (RecordUpdateExpr) semanticObject);
-				return;
+				sequence_RecordUpdateExpr(context, (RecordUpdateExpr) semanticObject); 
+				return; 
 			case AgreePackage.SPORADIC_STATEMENT:
-				sequence_RealTimeStatement(context, (SporadicStatement) semanticObject);
-				return;
+				sequence_RealTimeStatement(context, (SporadicStatement) semanticObject); 
+				return; 
 			case AgreePackage.SYNCH_STATEMENT:
-				sequence_SynchStatement(context, (SynchStatement) semanticObject);
-				return;
+				sequence_SynchStatement(context, (SynchStatement) semanticObject); 
+				return; 
 			case AgreePackage.THIS_EXPR:
-				sequence_TermExpr(context, (ThisExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (ThisExpr) semanticObject); 
+				return; 
 			case AgreePackage.TIME_EXPR:
-				sequence_TermExpr(context, (TimeExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (TimeExpr) semanticObject); 
+				return; 
 			case AgreePackage.TIME_FALL_EXPR:
-				sequence_TermExpr(context, (TimeFallExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (TimeFallExpr) semanticObject); 
+				return; 
 			case AgreePackage.TIME_OF_EXPR:
-				sequence_TermExpr(context, (TimeOfExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (TimeOfExpr) semanticObject); 
+				return; 
 			case AgreePackage.TIME_RISE_EXPR:
-				sequence_TermExpr(context, (TimeRiseExpr) semanticObject);
-				return;
+				sequence_TermExpr(context, (TimeRiseExpr) semanticObject); 
+				return; 
+			case AgreePackage.TYPE_ID:
+				sequence_TypeID(context, (TypeID) semanticObject); 
+				return; 
 			case AgreePackage.UNARY_EXPR:
-				sequence_UnaryExpr(context, (UnaryExpr) semanticObject);
-				return;
+				sequence_UnaryExpr(context, (UnaryExpr) semanticObject); 
+				return; 
 			case AgreePackage.WHEN_HOLDS_STATEMENT:
-				sequence_WhenStatement(context, (WhenHoldsStatement) semanticObject);
-				return;
+				sequence_WhenStatement(context, (WhenHoldsStatement) semanticObject); 
+				return; 
 			case AgreePackage.WHEN_OCCURS_STATMENT:
-				sequence_WhenStatement(context, (WhenOccursStatment) semanticObject);
-				return;
+				sequence_WhenStatement(context, (WhenOccursStatment) semanticObject); 
+				return; 
 			case AgreePackage.WHENEVER_BECOMES_TRUE_STATEMENT:
-				sequence_WheneverStatement(context, (WheneverBecomesTrueStatement) semanticObject);
-				return;
+				sequence_WheneverStatement(context, (WheneverBecomesTrueStatement) semanticObject); 
+				return; 
 			case AgreePackage.WHENEVER_HOLDS_STATEMENT:
-				sequence_WheneverStatement(context, (WheneverHoldsStatement) semanticObject);
-				return;
+				sequence_WheneverStatement(context, (WheneverHoldsStatement) semanticObject); 
+				return; 
 			case AgreePackage.WHENEVER_IMPLIES_STATEMENT:
-				sequence_WheneverStatement(context, (WheneverImpliesStatement) semanticObject);
-				return;
+				sequence_WheneverStatement(context, (WheneverImpliesStatement) semanticObject); 
+				return; 
 			case AgreePackage.WHENEVER_OCCURS_STATEMENT:
-				sequence_WheneverStatement(context, (WheneverOccursStatement) semanticObject);
-				return;
+				sequence_WheneverStatement(context, (WheneverOccursStatement) semanticObject); 
+				return; 
 			}
-		}
-		if (errorAcceptor != null) {
+		if (errorAcceptor != null)
 			errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
-		}
 	}
-
+	
 	/**
 	 * Contexts:
 	 *     Element returns BinaryExpr
@@ -473,22 +475,22 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *
 	 * Constraint:
 	 *     (
-	 *         (left=ArrowExpr_BinaryExpr_1_0_0_0 op='->' right=ArrowExpr) |
-	 *         (left=ImpliesExpr_BinaryExpr_1_0_0_0 op='=>' right=ImpliesExpr) |
-	 *         (left=EquivExpr_BinaryExpr_1_0_0_0 op='<=>' right=OrExpr) |
-	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) |
-	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) |
-	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) |
-	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) |
-	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=PowerExpr) |
+	 *         (left=ArrowExpr_BinaryExpr_1_0_0_0 op='->' right=ArrowExpr) | 
+	 *         (left=ImpliesExpr_BinaryExpr_1_0_0_0 op='=>' right=ImpliesExpr) | 
+	 *         (left=EquivExpr_BinaryExpr_1_0_0_0 op='<=>' right=OrExpr) | 
+	 *         (left=OrExpr_BinaryExpr_1_0_0_0 op='or' right=AndExpr) | 
+	 *         (left=AndExpr_BinaryExpr_1_0_0_0 op='and' right=RelateExpr) | 
+	 *         (left=RelateExpr_BinaryExpr_1_0_0_0 op=RelateOp right=AddSubExpr) | 
+	 *         (left=AddSubExpr_BinaryExpr_1_0_0_0 (op='+' | op='-') right=MultDivExpr) | 
+	 *         (left=MultDivExpr_BinaryExpr_1_0_0_0 (op='*' | op='/' | op='div' | op='mod') right=PowerExpr) | 
 	 *         (left=PowerExpr_BinaryExpr_1_0_0_0 op='^' right=UnaryExpr)
 	 *     )
 	 */
-	protected void sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_PowerExpr_RelateExpr(
-			ISerializationContext context, BinaryExpr semanticObject) {
+	protected void sequence_AddSubExpr_AndExpr_ArrowExpr_EquivExpr_ImpliesExpr_MultDivExpr_OrExpr_PowerExpr_RelateExpr(ISerializationContext context, BinaryExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns AgreeContract
@@ -500,7 +502,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_AgreeContract(ISerializationContext context, AgreeContract semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     AnnexLibrary returns AgreeContractLibrary
@@ -511,18 +514,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_AgreeLibrary(ISerializationContext context, AgreeContractLibrary semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.AGREE_CONTRACT_LIBRARY__CONTRACT) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.AGREE_CONTRACT_LIBRARY__CONTRACT));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AGREE_CONTRACT_LIBRARY__CONTRACT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AGREE_CONTRACT_LIBRARY__CONTRACT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAgreeLibraryAccess().getContractAgreeContractParserRuleCall_1_0(),
-				semanticObject.getContract());
+		feeder.accept(grammarAccess.getAgreeLibraryAccess().getContractAgreeContractParserRuleCall_1_0(), semanticObject.getContract());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     AnnexSubclause returns AgreeContractSubclause
@@ -533,18 +533,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_AgreeSubclause(ISerializationContext context, AgreeContractSubclause semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.AGREE_CONTRACT_SUBCLAUSE__CONTRACT) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.AGREE_CONTRACT_SUBCLAUSE__CONTRACT));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AGREE_CONTRACT_SUBCLAUSE__CONTRACT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AGREE_CONTRACT_SUBCLAUSE__CONTRACT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAgreeSubclauseAccess().getContractAgreeContractParserRuleCall_1_0(),
-				semanticObject.getContract());
+		feeder.accept(grammarAccess.getAgreeSubclauseAccess().getContractAgreeContractParserRuleCall_1_0(), semanticObject.getContract());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns Arg
@@ -555,23 +552,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_Arg(ISerializationContext context, Arg semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						Aadl2Package.eINSTANCE.getNamedElement_Name()));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.ARG__TYPE) == ValueTransient.YES) {
-				errorAcceptor.accept(
-						diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ARG__TYPE));
-			}
+			if (transientValues.isValueTransient(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.ARG__TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ARG__TYPE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getArgAccess().getNameIDTerminalRuleCall_0_0(), semanticObject.getName());
 		feeder.accept(grammarAccess.getArgAccess().getTypeTypeParserRuleCall_2_0(), semanticObject.getType());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns AssignStatement
@@ -583,25 +575,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_AssignStatement(ISerializationContext context, AssignStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.ASSIGN_STATEMENT__ID) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.ASSIGN_STATEMENT__ID));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.ASSIGN_STATEMENT__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.ASSIGN_STATEMENT__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.ASSIGN_STATEMENT__ID) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ASSIGN_STATEMENT__ID));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.ASSIGN_STATEMENT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ASSIGN_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAssignStatementAccess().getIdNestedDotIDParserRuleCall_1_0(),
-				semanticObject.getId());
-		feeder.accept(grammarAccess.getAssignStatementAccess().getExprExprParserRuleCall_3_0(),
-				semanticObject.getExpr());
+		feeder.accept(grammarAccess.getAssignStatementAccess().getIdNestedDotIDParserRuleCall_1_0(), semanticObject.getId());
+		feeder.accept(grammarAccess.getAssignStatementAccess().getExprExprParserRuleCall_3_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns FnCallExpr
@@ -633,12 +618,13 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ComplexExpr returns FnCallExpr
 	 *
 	 * Constraint:
-	 *     (fn=ComplexExpr_FnCallExpr_1_0_0_0_0 (args+=Expr args+=Expr*)?)
+	 *     (fn=ComplexExpr_FnCallExpr_1_1_0_0_0 (args+=Expr args+=Expr*)?)
 	 */
 	protected void sequence_ComplexExpr(ISerializationContext context, FnCallExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns RecordExpr
@@ -670,12 +656,13 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ComplexExpr returns RecordExpr
 	 *
 	 * Constraint:
-	 *     (record=ComplexExpr_RecordExpr_1_1_0_0_0 args+=[NamedElement|ID] argExpr+=Expr (args+=[NamedElement|ID] argExpr+=Expr)*)
+	 *     (record=ComplexExpr_RecordExpr_0_1_0_0 args+=[NamedElement|ID] argExpr+=Expr (args+=[NamedElement|ID] argExpr+=Expr)*)
 	 */
 	protected void sequence_ComplexExpr(ISerializationContext context, RecordExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns ConstStatement
@@ -688,32 +675,21 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_ConstStatement(ISerializationContext context, ConstStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						Aadl2Package.eINSTANCE.getNamedElement_Name()));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.CONST_STATEMENT__TYPE) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.CONST_STATEMENT__TYPE));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.CONST_STATEMENT__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.CONST_STATEMENT__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.CONST_STATEMENT__TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.CONST_STATEMENT__TYPE));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.CONST_STATEMENT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.CONST_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getConstStatementAccess().getNameIDTerminalRuleCall_1_0(),
-				semanticObject.getName());
-		feeder.accept(grammarAccess.getConstStatementAccess().getTypeTypeParserRuleCall_3_0(),
-				semanticObject.getType());
-		feeder.accept(grammarAccess.getConstStatementAccess().getExprExprParserRuleCall_5_0(),
-				semanticObject.getExpr());
+		feeder.accept(grammarAccess.getConstStatementAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getConstStatementAccess().getTypeTypeParserRuleCall_3_0(), semanticObject.getType());
+		feeder.accept(grammarAccess.getConstStatementAccess().getExprExprParserRuleCall_5_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns EnumStatement
@@ -727,7 +703,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_EnumStatement(ISerializationContext context, EnumStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns EqStatement
@@ -740,7 +717,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_EqStatement(ISerializationContext context, EqStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns FnDefExpr
@@ -756,7 +734,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_FnDefExpr(ISerializationContext context, FnDefExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns IfThenElseExpr
@@ -791,21 +770,12 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_IfThenElseExpr(ISerializationContext context, IfThenElseExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.IF_THEN_ELSE_EXPR__A) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.IF_THEN_ELSE_EXPR__A));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.IF_THEN_ELSE_EXPR__B) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.IF_THEN_ELSE_EXPR__B));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.IF_THEN_ELSE_EXPR__C) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.IF_THEN_ELSE_EXPR__C));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.IF_THEN_ELSE_EXPR__A) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.IF_THEN_ELSE_EXPR__A));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.IF_THEN_ELSE_EXPR__B) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.IF_THEN_ELSE_EXPR__B));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.IF_THEN_ELSE_EXPR__C) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.IF_THEN_ELSE_EXPR__C));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getIfThenElseExprAccess().getAExprParserRuleCall_0_2_0(), semanticObject.getA());
@@ -813,7 +783,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 		feeder.accept(grammarAccess.getIfThenElseExprAccess().getCExprParserRuleCall_0_6_0(), semanticObject.getC());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns InputStatement
@@ -826,7 +797,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_InputStatement(ISerializationContext context, InputStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns LibraryFnDefExpr
@@ -842,7 +814,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_LibraryFnDefExpr(ISerializationContext context, LibraryFnDefExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns LinearizationDefExpr
@@ -854,19 +827,20 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *
 	 * Constraint:
 	 *     (
-	 *         name=ID
-	 *         args+=Arg
-	 *         args+=Arg*
-	 *         intervals+=LinearizationInterval
-	 *         intervals+=LinearizationInterval*
-	 *         precision=Expr?
+	 *         name=ID 
+	 *         args+=Arg 
+	 *         args+=Arg* 
+	 *         intervals+=LinearizationInterval 
+	 *         intervals+=LinearizationInterval* 
+	 *         precision=Expr? 
 	 *         exprBody=Expr
 	 *     )
 	 */
 	protected void sequence_LinearizationDefExpr(ISerializationContext context, LinearizationDefExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns LinearizationInterval
@@ -877,25 +851,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_LinearizationInterval(ISerializationContext context, LinearizationInterval semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.LINEARIZATION_INTERVAL__START) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.LINEARIZATION_INTERVAL__START));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.LINEARIZATION_INTERVAL__END) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.LINEARIZATION_INTERVAL__END));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.LINEARIZATION_INTERVAL__START) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.LINEARIZATION_INTERVAL__START));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.LINEARIZATION_INTERVAL__END) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.LINEARIZATION_INTERVAL__END));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getLinearizationIntervalAccess().getStartExprParserRuleCall_0_0(),
-				semanticObject.getStart());
-		feeder.accept(grammarAccess.getLinearizationIntervalAccess().getEndExprParserRuleCall_2_0(),
-				semanticObject.getEnd());
+		feeder.accept(grammarAccess.getLinearizationIntervalAccess().getStartExprParserRuleCall_0_0(), semanticObject.getStart());
+		feeder.accept(grammarAccess.getLinearizationIntervalAccess().getEndExprParserRuleCall_2_0(), semanticObject.getEnd());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns NamedID
@@ -906,17 +873,75 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_NamedID(ISerializationContext context, NamedID semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						Aadl2Package.eINSTANCE.getNamedElement_Name()));
-			}
+			if (transientValues.isValueTransient(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getNamedIDAccess().getNameIDTerminalRuleCall_0(), semanticObject.getName());
 		feeder.finish();
 	}
-
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns AssertStatement
+	 *     Element returns AssertStatement
+	 *     SpecStatement returns AssertStatement
+	 *     NamedSpecStatement returns AssertStatement
+	 *
+	 * Constraint:
+	 *     ((name=ID? str=STRING)? (expr=Expr | pattern=PatternStatement))
+	 */
+	protected void sequence_NamedSpecStatement(ISerializationContext context, AssertStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns AssumeStatement
+	 *     Element returns AssumeStatement
+	 *     SpecStatement returns AssumeStatement
+	 *     NamedSpecStatement returns AssumeStatement
+	 *
+	 * Constraint:
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 */
+	protected void sequence_NamedSpecStatement(ISerializationContext context, AssumeStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns GuaranteeStatement
+	 *     Element returns GuaranteeStatement
+	 *     SpecStatement returns GuaranteeStatement
+	 *     NamedSpecStatement returns GuaranteeStatement
+	 *
+	 * Constraint:
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 */
+	protected void sequence_NamedSpecStatement(ISerializationContext context, GuaranteeStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns LemmaStatement
+	 *     Element returns LemmaStatement
+	 *     SpecStatement returns LemmaStatement
+	 *     NamedSpecStatement returns LemmaStatement
+	 *
+	 * Constraint:
+	 *     (name=ID? str=STRING (expr=Expr | pattern=PatternStatement))
+	 */
+	protected void sequence_NamedSpecStatement(ISerializationContext context, LemmaStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns NestedDotID
@@ -946,17 +971,17 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns NestedDotID
 	 *     TermExpr returns NestedDotID
 	 *     ComplexExpr returns NestedDotID
-	 *     ComplexExpr.FnCallExpr_1_0_0_0_0 returns NestedDotID
-	 *     ComplexExpr.RecordExpr_1_1_0_0_0 returns NestedDotID
+	 *     ComplexExpr.FnCallExpr_1_1_0_0_0 returns NestedDotID
 	 *     NestedDotID returns NestedDotID
 	 *
 	 * Constraint:
-	 *     (base=[NamedElement|QCPREF] (tag=ReservedVarTag | sub=NestedDotID)?)
+	 *     (base=[NamedElement|EID] (tag=ReservedVarTag | sub=NestedDotID)?)
 	 */
 	protected void sequence_NestedDotID(ISerializationContext context, NestedDotID semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns NodeBodyExpr
@@ -968,7 +993,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_NodeBodyExpr(ISerializationContext context, NodeBodyExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns NodeDefExpr
@@ -984,7 +1010,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_NodeDefExpr(ISerializationContext context, NodeDefExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns NodeEq
@@ -996,7 +1023,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_NodeStmt(ISerializationContext context, NodeEq semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns NodeLemma
@@ -1007,23 +1035,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_NodeStmt(ISerializationContext context, NodeLemma semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.NODE_LEMMA__STR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.NODE_LEMMA__STR));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.NODE_STMT__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.NODE_STMT__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.NODE_LEMMA__STR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.NODE_LEMMA__STR));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.NODE_STMT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.NODE_STMT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getNodeStmtAccess().getStrSTRINGTerminalRuleCall_1_2_0(), semanticObject.getStr());
 		feeder.accept(grammarAccess.getNodeStmtAccess().getExprExprParserRuleCall_1_4_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns OrderStatement
@@ -1036,7 +1059,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_OrderStatement(ISerializationContext context, OrderStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns AlwaysStatement
@@ -1046,18 +1070,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_PatternStatement(ISerializationContext context, AlwaysStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.ALWAYS_STATEMENT__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.ALWAYS_STATEMENT__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.ALWAYS_STATEMENT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.ALWAYS_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getPatternStatementAccess().getExprExprParserRuleCall_1_2_0(),
-				semanticObject.getExpr());
+		feeder.accept(grammarAccess.getPatternStatementAccess().getExprExprParserRuleCall_1_2_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns GetPropertyExpr
@@ -1092,25 +1113,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_PreDefFnExpr(ISerializationContext context, GetPropertyExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.GET_PROPERTY_EXPR__COMPONENT) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.GET_PROPERTY_EXPR__COMPONENT));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.GET_PROPERTY_EXPR__PROP) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.GET_PROPERTY_EXPR__PROP));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.GET_PROPERTY_EXPR__COMPONENT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.GET_PROPERTY_EXPR__COMPONENT));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.GET_PROPERTY_EXPR__PROP) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.GET_PROPERTY_EXPR__PROP));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getPreDefFnExprAccess().getComponentExprParserRuleCall_1_3_0(),
-				semanticObject.getComponent());
-		feeder.accept(grammarAccess.getPreDefFnExprAccess().getPropNamedElementQCLREFParserRuleCall_1_5_0_1(),
-				semanticObject.eGet(AgreePackage.Literals.GET_PROPERTY_EXPR__PROP, false));
+		feeder.accept(grammarAccess.getPreDefFnExprAccess().getComponentExprParserRuleCall_1_3_0(), semanticObject.getComponent());
+		feeder.accept(grammarAccess.getPreDefFnExprAccess().getPropNamedElementQCLREFParserRuleCall_1_5_0_1(), semanticObject.eGet(AgreePackage.Literals.GET_PROPERTY_EXPR__PROP, false));
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns PrevExpr
@@ -1145,25 +1159,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_PreDefFnExpr(ISerializationContext context, PrevExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.PREV_EXPR__DELAY) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.PREV_EXPR__DELAY));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.PREV_EXPR__INIT) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.PREV_EXPR__INIT));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.PREV_EXPR__DELAY) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PREV_EXPR__DELAY));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.PREV_EXPR__INIT) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PREV_EXPR__INIT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getPreDefFnExprAccess().getDelayExprParserRuleCall_0_3_0(),
-				semanticObject.getDelay());
-		feeder.accept(grammarAccess.getPreDefFnExprAccess().getInitExprParserRuleCall_0_5_0(),
-				semanticObject.getInit());
+		feeder.accept(grammarAccess.getPreDefFnExprAccess().getDelayExprParserRuleCall_0_3_0(), semanticObject.getDelay());
+		feeder.accept(grammarAccess.getPreDefFnExprAccess().getInitExprParserRuleCall_0_5_0(), semanticObject.getInit());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns PropertyStatement
@@ -1176,25 +1183,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_PropertyStatement(ISerializationContext context, PropertyStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						Aadl2Package.eINSTANCE.getNamedElement_Name()));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.PROPERTY_STATEMENT__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.PROPERTY_STATEMENT__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.PROPERTY_STATEMENT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PROPERTY_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getPropertyStatementAccess().getNameIDTerminalRuleCall_1_0(),
-				semanticObject.getName());
-		feeder.accept(grammarAccess.getPropertyStatementAccess().getExprExprParserRuleCall_3_0(),
-				semanticObject.getExpr());
+		feeder.accept(grammarAccess.getPropertyStatementAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getPropertyStatementAccess().getExprExprParserRuleCall_3_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns PeriodicStatement
@@ -1206,7 +1206,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_RealTimeStatement(ISerializationContext context, PeriodicStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns SporadicStatement
@@ -1218,7 +1219,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_RealTimeStatement(ISerializationContext context, SporadicStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     NamedElement returns RecordDefExpr
@@ -1232,7 +1234,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_RecordDefExpr(ISerializationContext context, RecordDefExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns RecordUpdateExpr
@@ -1268,31 +1271,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_RecordUpdateExpr(ISerializationContext context, RecordUpdateExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
-	/**
-	 * Contexts:
-	 *     Element returns AssertStatement
-	 *     SpecStatement returns AssertStatement
-	 *
-	 * Constraint:
-	 *     (str=STRING? (expr=Expr | pattern=PatternStatement))
-	 */
-	protected void sequence_SpecStatement(ISerializationContext context, AssertStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-
-	/**
-	 * Contexts:
-	 *     Element returns AssumeStatement
-	 *     SpecStatement returns AssumeStatement
-	 *
-	 * Constraint:
-	 *     (str=STRING (expr=Expr | pattern=PatternStatement))
-	 */
-	protected void sequence_SpecStatement(ISerializationContext context, AssumeStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns ConnectionStatement
@@ -1303,37 +1283,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_SpecStatement(ISerializationContext context, ConnectionStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.CONNECTION_STATEMENT__CONN) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.CONNECTION_STATEMENT__CONN));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.CONNECTION_STATEMENT__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.CONNECTION_STATEMENT__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.CONNECTION_STATEMENT__CONN) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.CONNECTION_STATEMENT__CONN));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.CONNECTION_STATEMENT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.CONNECTION_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getConnNamedElementIDTerminalRuleCall_7_2_0_1(),
-				semanticObject.eGet(AgreePackage.Literals.CONNECTION_STATEMENT__CONN, false));
-		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_7_4_0(),
-				semanticObject.getExpr());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getConnNamedElementIDTerminalRuleCall_4_2_0_1(), semanticObject.eGet(AgreePackage.Literals.CONNECTION_STATEMENT__CONN, false));
+		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_4_4_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
-	/**
-	 * Contexts:
-	 *     Element returns GuaranteeStatement
-	 *     SpecStatement returns GuaranteeStatement
-	 *
-	 * Constraint:
-	 *     (str=STRING (expr=Expr | pattern=PatternStatement))
-	 */
-	protected void sequence_SpecStatement(ISerializationContext context, GuaranteeStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns InitialStatement
@@ -1344,30 +1305,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_SpecStatement(ISerializationContext context, InitialStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.INITIAL_STATEMENT__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.INITIAL_STATEMENT__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.INITIAL_STATEMENT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.INITIAL_STATEMENT__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_3_3_0(),
-				semanticObject.getExpr());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_1_3_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
-	/**
-	 * Contexts:
-	 *     Element returns LemmaStatement
-	 *     SpecStatement returns LemmaStatement
-	 *
-	 * Constraint:
-	 *     (str=STRING (expr=Expr | pattern=PatternStatement))
-	 */
-	protected void sequence_SpecStatement(ISerializationContext context, LemmaStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns LiftStatement
@@ -1378,18 +1324,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_SpecStatement(ISerializationContext context, LiftStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.LIFT_STATEMENT__SUBCOMP) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.LIFT_STATEMENT__SUBCOMP));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.LIFT_STATEMENT__SUBCOMP) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.LIFT_STATEMENT__SUBCOMP));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getSubcompNestedDotIDParserRuleCall_6_2_0(),
-				semanticObject.getSubcomp());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getSubcompNestedDotIDParserRuleCall_3_2_0(), semanticObject.getSubcomp());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns ParamStatement
@@ -1400,25 +1343,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_SpecStatement(ISerializationContext context, ParamStatement semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.PARAM_STATEMENT__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.PARAM_STATEMENT__EXPR));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.PARAM_STATEMENT__TYPE) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.PARAM_STATEMENT__TYPE));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.PARAM_STATEMENT__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PARAM_STATEMENT__EXPR));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.PARAM_STATEMENT__TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PARAM_STATEMENT__TYPE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_4_2_0(),
-				semanticObject.getExpr());
-		feeder.accept(grammarAccess.getSpecStatementAccess().getTypeTypeParserRuleCall_4_4_0(),
-				semanticObject.getType());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getExprExprParserRuleCall_2_2_0(), semanticObject.getExpr());
+		feeder.accept(grammarAccess.getSpecStatementAccess().getTypeTypeParserRuleCall_2_4_0(), semanticObject.getType());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns AsynchStatement
@@ -1431,7 +1367,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_SynchStatement(ISerializationContext context, AsynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns CalenStatement
@@ -1444,7 +1381,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_SynchStatement(ISerializationContext context, CalenStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns LatchedStatement
@@ -1457,7 +1395,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_SynchStatement(ISerializationContext context, LatchedStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns MNSynchStatement
@@ -1470,7 +1409,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_SynchStatement(ISerializationContext context, MNSynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns SynchStatement
@@ -1483,7 +1423,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_SynchStatement(ISerializationContext context, SynchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns AADLEnumerator
@@ -1518,24 +1459,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, AADLEnumerator semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.AADL_ENUMERATOR__ENUM_TYPE) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.AADL_ENUMERATOR__ENUM_TYPE));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.AADL_ENUMERATOR__VALUE) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.AADL_ENUMERATOR__VALUE));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__ENUM_TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__ENUM_TYPE));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.AADL_ENUMERATOR__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTermExprAccess().getEnumTypeNestedDotIDParserRuleCall_14_3_0(),
-				semanticObject.getEnumType());
+		feeder.accept(grammarAccess.getTermExprAccess().getEnumTypeNestedDotIDParserRuleCall_14_3_0(), semanticObject.getEnumType());
 		feeder.accept(grammarAccess.getTermExprAccess().getValueIDTerminalRuleCall_14_5_0(), semanticObject.getValue());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns BoolLitExpr
@@ -1570,18 +1505,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, BoolLitExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.BOOL_LIT_EXPR__VAL) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.BOOL_LIT_EXPR__VAL));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.BOOL_LIT_EXPR__VAL) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.BOOL_LIT_EXPR__VAL));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTermExprAccess().getValBooleanLiteralParserRuleCall_10_1_0(),
-				semanticObject.getVal());
+		feeder.accept(grammarAccess.getTermExprAccess().getValBooleanLiteralParserRuleCall_10_1_0(), semanticObject.getVal());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns EventExpr
@@ -1616,17 +1548,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, EventExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.EVENT_EXPR__ID) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.EVENT_EXPR__ID));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.EVENT_EXPR__ID) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.EVENT_EXPR__ID));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_4_3_0(), semanticObject.getId());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns FloorCast
@@ -1661,17 +1591,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, FloorCast semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.FLOOR_CAST__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.FLOOR_CAST__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.FLOOR_CAST__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FLOOR_CAST__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_12_3_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns IntLitExpr
@@ -1706,18 +1634,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, IntLitExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.INT_LIT_EXPR__VAL) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.INT_LIT_EXPR__VAL));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.INT_LIT_EXPR__VAL) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.INT_LIT_EXPR__VAL));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTermExprAccess().getValINTEGER_LITTerminalRuleCall_2_1_0(),
-				semanticObject.getVal());
+		feeder.accept(grammarAccess.getTermExprAccess().getValINTEGER_LITTerminalRuleCall_2_1_0(), semanticObject.getVal());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns LatchedExpr
@@ -1752,17 +1677,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, LatchedExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.LATCHED_EXPR__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.LATCHED_EXPR__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.LATCHED_EXPR__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.LATCHED_EXPR__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_5_3_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns PreExpr
@@ -1797,17 +1720,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, PreExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.PRE_EXPR__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.PRE_EXPR__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.PRE_EXPR__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PRE_EXPR__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_3_3_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns RealCast
@@ -1842,17 +1763,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, RealCast semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.REAL_CAST__EXPR) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.REAL_CAST__EXPR));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.REAL_CAST__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.REAL_CAST__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getExprExprParserRuleCall_13_3_0(), semanticObject.getExpr());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns RealLitExpr
@@ -1887,18 +1806,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, RealLitExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.REAL_LIT_EXPR__VAL) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.REAL_LIT_EXPR__VAL));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.REAL_LIT_EXPR__VAL) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.REAL_LIT_EXPR__VAL));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTermExprAccess().getValREAL_LITTerminalRuleCall_9_1_0(),
-				semanticObject.getVal());
+		feeder.accept(grammarAccess.getTermExprAccess().getValREAL_LITTerminalRuleCall_9_1_0(), semanticObject.getVal());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns ThisExpr
@@ -1934,7 +1850,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_TermExpr(ISerializationContext context, ThisExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns TimeExpr
@@ -1970,7 +1887,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_TermExpr(ISerializationContext context, TimeExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns TimeFallExpr
@@ -2005,17 +1923,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, TimeFallExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_FALL_EXPR__ID) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_FALL_EXPR__ID));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_FALL_EXPR__ID) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_FALL_EXPR__ID));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_8_3_0(), semanticObject.getId());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns TimeOfExpr
@@ -2050,17 +1966,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, TimeOfExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_OF_EXPR__ID) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_OF_EXPR__ID));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_OF_EXPR__ID) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_OF_EXPR__ID));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_6_3_0(), semanticObject.getId());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns TimeRiseExpr
@@ -2095,17 +2009,15 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, TimeRiseExpr semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_RISE_EXPR__ID) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_RISE_EXPR__ID));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_RISE_EXPR__ID) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_RISE_EXPR__ID));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTermExprAccess().getIdNestedDotIDParserRuleCall_7_3_0(), semanticObject.getId());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     TimeInterval returns ClosedTimeInterval
@@ -2115,25 +2027,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TimeInterval(ISerializationContext context, ClosedTimeInterval semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_INTERVAL__LOW));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_INTERVAL__HIGH));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_0_0_2_0(),
-				semanticObject.getLow());
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_0_0_4_0(),
-				semanticObject.getHigh());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_0_0_2_0(), semanticObject.getLow());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_0_0_4_0(), semanticObject.getHigh());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     TimeInterval returns OpenLeftTimeInterval
@@ -2143,25 +2048,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TimeInterval(ISerializationContext context, OpenLeftTimeInterval semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_INTERVAL__LOW));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_INTERVAL__HIGH));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_1_0_2_0(),
-				semanticObject.getLow());
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_1_0_4_0(),
-				semanticObject.getHigh());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_1_0_2_0(), semanticObject.getLow());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_1_0_4_0(), semanticObject.getHigh());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     TimeInterval returns OpenRightTimeInterval
@@ -2171,25 +2069,18 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TimeInterval(ISerializationContext context, OpenRightTimeInterval semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_INTERVAL__LOW));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_INTERVAL__HIGH));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_2_0_2_0(),
-				semanticObject.getLow());
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_2_0_4_0(),
-				semanticObject.getHigh());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_2_0_2_0(), semanticObject.getLow());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_2_0_4_0(), semanticObject.getHigh());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     TimeInterval returns OpenTimeInterval
@@ -2199,25 +2090,37 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_TimeInterval(ISerializationContext context, OpenTimeInterval semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_INTERVAL__LOW));
-			}
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.TIME_INTERVAL__HIGH));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__LOW));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TIME_INTERVAL__HIGH));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_3_0_2_0(),
-				semanticObject.getLow());
-		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_3_0_4_0(),
-				semanticObject.getHigh());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getLowExprParserRuleCall_3_0_2_0(), semanticObject.getLow());
+		feeder.accept(grammarAccess.getTimeIntervalAccess().getHighExprParserRuleCall_3_0_4_0(), semanticObject.getHigh());
 		feeder.finish();
 	}
-
+	
+	
+	/**
+	 * Contexts:
+	 *     ComplexExpr.RecordExpr_0_1_0_0 returns TypeID
+	 *     TypeID returns TypeID
+	 *
+	 * Constraint:
+	 *     base=[NamedElement|QCPREF]
+	 */
+	protected void sequence_TypeID(ISerializationContext context, TypeID semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.TYPE_ID__BASE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.TYPE_ID__BASE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getTypeIDAccess().getBaseNamedElementQCPREFParserRuleCall_0_1(), semanticObject.eGet(AgreePackage.Literals.TYPE_ID__BASE, false));
+		feeder.finish();
+	}
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns PrimType
@@ -2229,29 +2132,27 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_Type(ISerializationContext context, PrimType semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns RecordType
 	 *     Type returns RecordType
 	 *
 	 * Constraint:
-	 *     record=NestedDotID
+	 *     record=TypeID
 	 */
 	protected void sequence_Type(ISerializationContext context, RecordType semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject,
-					AgreePackage.Literals.RECORD_TYPE__RECORD) == ValueTransient.YES) {
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject,
-						AgreePackage.Literals.RECORD_TYPE__RECORD));
-			}
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.RECORD_TYPE__RECORD) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.RECORD_TYPE__RECORD));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTypeAccess().getRecordNestedDotIDParserRuleCall_1_1_0(),
-				semanticObject.getRecord());
+		feeder.accept(grammarAccess.getTypeAccess().getRecordTypeIDParserRuleCall_1_1_0(), semanticObject.getRecord());
 		feeder.finish();
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     Element returns UnaryExpr
@@ -2287,7 +2188,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_UnaryExpr(ISerializationContext context, UnaryExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns WhenHoldsStatement
@@ -2299,7 +2201,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_WhenStatement(ISerializationContext context, WhenHoldsStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns WhenOccursStatment
@@ -2311,7 +2214,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_WhenStatement(ISerializationContext context, WhenOccursStatment semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns WheneverBecomesTrueStatement
@@ -2320,11 +2224,11 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 * Constraint:
 	 *     (cause=Expr effect=Expr excl='exclusively'? interval=TimeInterval?)
 	 */
-	protected void sequence_WheneverStatement(ISerializationContext context,
-			WheneverBecomesTrueStatement semanticObject) {
+	protected void sequence_WheneverStatement(ISerializationContext context, WheneverBecomesTrueStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns WheneverHoldsStatement
@@ -2336,7 +2240,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_WheneverStatement(ISerializationContext context, WheneverHoldsStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns WheneverImpliesStatement
@@ -2348,7 +2253,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_WheneverStatement(ISerializationContext context, WheneverImpliesStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 	/**
 	 * Contexts:
 	 *     PatternStatement returns WheneverOccursStatement
@@ -2360,5 +2266,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	protected void sequence_WheneverStatement(ISerializationContext context, WheneverOccursStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
-
+	
+	
 }
