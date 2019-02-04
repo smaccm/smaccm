@@ -1,0 +1,13 @@
+package Simple::Lib
+public
+
+annex agree {**
+
+  fun ident(x: int): int = x;
+
+**};
+   
+
+
+	
+end Simple::Lib;

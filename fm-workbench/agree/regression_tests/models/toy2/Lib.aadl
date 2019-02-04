@@ -1,0 +1,14 @@
+package Lib
+public
+
+
+annex agree {**
+
+  fun ident(x: int): int = x;
+
+**};
+   
+
+
+	
+end Lib;
