@@ -12,6 +12,7 @@ end x.impl;
 annex agree {**
 
   fun ident(x: int): int = x;
+  type rex = struct {x : int};
 
 **};
    

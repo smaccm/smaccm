@@ -1425,6 +1425,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new IdExpr(var.id);
 	}
 
+
 	@Override
 	public Expr caseRecordExpr(RecordExpr recExpr) {
 
@@ -1594,7 +1595,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		NamedElement namedEl = expr.getFn().getBase();
 
-		String fnName = AgreeTypeUtils.getNodeName(namedEl);
+		String fnName = AgreeTypeUtils.getNodeName(namedEl).replace("::", "___");
 		boolean found = false;
 		for (Node node : globalNodes) {
 			if (node.id.equals(fnName)) {
@@ -1623,7 +1624,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseFnDefExpr(FnDefExpr expr) {
-		String nodeName = AgreeTypeUtils.getNodeName(expr);
+		String nodeName = AgreeTypeUtils.getNodeName(expr).replace("::", "___");
 		for (Node node : globalNodes) {
 			if (node.id.equals(nodeName)) {
 				return null;
@@ -1871,11 +1872,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseDoubleDotRef(DoubleDotRef qual) {
-		return doSwitch(qual.getElm());
-	}
-
-	@Override
 	public Expr caseNestedDotID(NestedDotID id) {
 
 		String jKindVar = "";
@@ -1884,7 +1880,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		while (id.getSub() != null
 				&& (base instanceof FeatureGroup || base instanceof AadlPackage || base instanceof Subcomponent)) {
-			jKindVar += base.getName() + dotChar;
+			jKindVar += base.getName().replace("::", "___") + dotChar;
 			aadlVar += base.getName() + ".";
 			id = id.getSub();
 			base = id.getBase();
@@ -1911,10 +1907,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		} else if (namedEl instanceof NamedID) {
 			// Enumeration types get lifted to Lustre global types; accordingly
 			// lift the enumerators to global
-			jKindVar = namedEl.getName();
+			jKindVar = namedEl.getName().replace("::", "___");
 			result = new IdExpr(jKindVar);
 		} else {
-			jKindVar = jKindVar + namedEl.getName();
+			jKindVar = jKindVar + namedEl.getName().replace("::", "___");
 			result = new IdExpr(jKindVar);
 		}
 
@@ -1922,7 +1918,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		while (id.getSub() != null) {
 			id = id.getSub();
 			namedEl = id.getBase();
-			result = new RecordAccessExpr(result, namedEl.getName());
+			result = new RecordAccessExpr(result, namedEl.getName().replace("::", "___"));
 		}
 
 		return result;
