@@ -797,15 +797,6 @@ public interface AgreeFactory extends EFactory
   AADLEnumerator createAADLEnumerator();
 
   /**
-   * Returns a new object of class '<em>Fn Call Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Fn Call Expr</em>'.
-   * @generated
-   */
-  FnCallExpr createFnCallExpr();
-
-  /**
    * Returns a new object of class '<em>Record Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -813,6 +804,15 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   RecordExpr createRecordExpr();
+
+  /**
+   * Returns a new object of class '<em>Fn Call Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Fn Call Expr</em>'.
+   * @generated
+   */
+  FnCallExpr createFnCallExpr();
 
   /**
    * Returns the package supported by this factory.

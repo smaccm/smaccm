@@ -270,14 +270,14 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AADLEnumerator/enumType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//AADLEnumerator/value"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//FnCallExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/fn"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/args"/>
-    </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RecordExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/record"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordExpr/argExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//FnCallExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/fn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnCallExpr/args"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//QualRef">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//QualRef/elm"/>

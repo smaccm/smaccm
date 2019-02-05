@@ -125,7 +125,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Expr" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//Element"/>
   <eClassifiers xsi:type="ecore:EClass" name="ComplexExpr" eSuperTypes="#//Expr"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DoubleDotRef">
+  <eClassifiers xsi:type="ecore:EClass" name="DoubleDotRef" eSuperTypes="#//ComplexExpr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="elm" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NestedDotID" eSuperTypes="#//ComplexExpr">
@@ -323,18 +323,18 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FnCallExpr" eSuperTypes="#//ComplexExpr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fn" eType="#//NestedDotID"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Expr"
-        containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RecordExpr" eSuperTypes="#//ComplexExpr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//NestedDotID"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="record" eType="#//DoubleDotRef"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" unique="false" upperBound="-1"
         eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="argExpr" upperBound="-1"
         eType="#//Expr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FnCallExpr" eSuperTypes="#//ComplexExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fn" eType="#//NestedDotID"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//Expr"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

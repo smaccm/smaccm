@@ -1,17 +1,30 @@
 package EnumExpModel
 public
+	with Base_Types;
 	with Top::EnumExp;
 	with Data_Types;
 	with QS_Properties;
 	
+	data Command
+	end Command;
+
+	data implementation Command.Impl
+		-- The Command structure contains data that the Ground Station passes to the UAV.
+		-- It contains a message header, Map and Flight Pattern.
+		subcomponents
+			header: data Base_Types::Integer;
+	end Command.Impl;
+	
 	process MyProc
 		features
+			EvtInput: in event data port Command.Impl;
 			MyInput: in data port Top::EnumExp::Primary_Color;
 			MyOutput: out data port Top::EnumExp::Primary_Color;
 			DInput: in data port Data_Types::Primary_Color;
 			DOutput: out data port Data_Types::Primary_Color;
 		annex agree {**
 				
+			assume "asdf": 0 < EvtInput.header;
 			assume "hello": Top::EnumExp::ghi(1) = 1;
 			eq y: Top::EnumExp::abc = Top::EnumExp::abc {x=1};
 			eq z: Top::EnumExp::xyz = Top::EnumExp::X;

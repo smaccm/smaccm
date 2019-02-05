@@ -618,7 +618,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ComplexExpr returns FnCallExpr
 	 *
 	 * Constraint:
-	 *     (fn=ComplexExpr_FnCallExpr_1_0_0_0_0 (args+=Expr args+=Expr*)?)
+	 *     (fn=ComplexExpr_FnCallExpr_1_1_0_0_0 (args+=Expr args+=Expr*)?)
 	 */
 	protected void sequence_ComplexExpr(ISerializationContext context, FnCallExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -656,7 +656,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ComplexExpr returns RecordExpr
 	 *
 	 * Constraint:
-	 *     (record=ComplexExpr_RecordExpr_1_1_0_0_0 args+=[NamedElement|ID] argExpr+=Expr (args+=[NamedElement|ID] argExpr+=Expr)*)
+	 *     (record=ComplexExpr_RecordExpr_0_1_0_0 args+=[NamedElement|ID] argExpr+=Expr (args+=[NamedElement|ID] argExpr+=Expr)*)
 	 */
 	protected void sequence_ComplexExpr(ISerializationContext context, RecordExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -692,6 +692,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
+	 *     ComplexExpr.RecordExpr_0_1_0_0 returns DoubleDotRef
 	 *     DoubleDotRef returns DoubleDotRef
 	 *
 	 * Constraint:
@@ -989,8 +990,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns NestedDotID
 	 *     TermExpr returns NestedDotID
 	 *     ComplexExpr returns NestedDotID
-	 *     ComplexExpr.FnCallExpr_1_0_0_0_0 returns NestedDotID
-	 *     ComplexExpr.RecordExpr_1_1_0_0_0 returns NestedDotID
+	 *     ComplexExpr.FnCallExpr_1_1_0_0_0 returns NestedDotID
 	 *     NestedDotID returns NestedDotID
 	 *
 	 * Constraint:

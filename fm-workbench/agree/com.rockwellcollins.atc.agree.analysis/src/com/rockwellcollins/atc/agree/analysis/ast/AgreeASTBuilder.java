@@ -1443,8 +1443,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		}
 
-		NestedDotID recId = recExpr.getRecord();
-		String recName = AgreeTypeUtils.getIDTypeStr(recId.getBase());
+		DoubleDotRef recId = recExpr.getRecord();
+		String recName = AgreeTypeUtils.getIDTypeStr(recId.getElm());
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}

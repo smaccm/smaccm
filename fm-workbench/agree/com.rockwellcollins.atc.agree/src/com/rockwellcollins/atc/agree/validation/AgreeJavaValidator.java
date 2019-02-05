@@ -1365,13 +1365,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkRecordExpr(RecordExpr recExpr) {
 
-		NestedDotID recType = recExpr.getRecord();
+		DoubleDotRef recType = recExpr.getRecord();
 		List<NamedElement> defArgs = getArgNames(recType);
 		EList<NamedElement> exprArgs = recExpr.getArgs();
 		EList<Expr> argExprs = recExpr.getArgExpr();
 
-		NestedDotID recId = recExpr.getRecord();
-		NamedElement finalId = recId.getBase();
+		DoubleDotRef recId = recExpr.getRecord();
+		NamedElement finalId = recId.getElm();
 
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
 			error(recId, "types must be record definition or data implementation");
@@ -1414,9 +1414,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
-	private List<NamedElement> getArgNames(NestedDotID recId) {
+	private List<NamedElement> getArgNames(DoubleDotRef recId) {
 
-		NamedElement rec = recId.getBase();
+		NamedElement rec = recId.getElm();
 		List<NamedElement> names = new ArrayList<>();
 
 		if (rec instanceof RecordDefExpr) {
@@ -1436,9 +1436,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return names;
 	}
 
-	private Map<String, AgreeType> getArgNameMap(NestedDotID recId) {
+	private Map<String, AgreeType> getArgNameMap(DoubleDotRef recId) {
 
-		NamedElement rec = recId.getBase();
+		NamedElement rec = recId.getElm();
 		Map<String, AgreeType> typeMap = new HashMap<>();
 
 		if (rec instanceof RecordDefExpr) {
@@ -3033,7 +3033,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	private AgreeType getAgreeType(RecordExpr recExpr) {
-		return getNamedElmAsType(recExpr.getRecord().getBase());
+		return getNamedElmAsType(recExpr.getRecord().getElm());
 	}
 
 	public static boolean matches(AgreeType expected, AgreeType actual) {

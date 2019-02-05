@@ -272,11 +272,9 @@ TermExpr returns Expr:
 //;
 
 ComplexExpr:
-NestedDotID
- (
-   => ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')'
- | => ({RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
- )?
+	(DoubleDotRef => ( {RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}') 
+|	NestedDotID
+	(=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')')?
 ;
 
 

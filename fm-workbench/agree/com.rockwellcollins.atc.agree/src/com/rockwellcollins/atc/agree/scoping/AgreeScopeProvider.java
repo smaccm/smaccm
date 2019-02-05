@@ -81,8 +81,8 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_RecordExpr_args(RecordExpr ctx, EReference ref) {
-		NestedDotID record = ctx.getRecord();
-		NamedElement recDef = record.getBase();
+		DoubleDotRef record = ctx.getRecord();
+		NamedElement recDef = record.getElm();
 		return RecordExprScoper.getRecordComponents(recDef, IScope.NULLSCOPE);
 	}
 

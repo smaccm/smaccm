@@ -35,12 +35,12 @@ public interface RecordExpr extends ComplexExpr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Record</em>' containment reference.
-   * @see #setRecord(NestedDotID)
+   * @see #setRecord(DoubleDotRef)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getRecordExpr_Record()
    * @model containment="true"
    * @generated
    */
-  NestedDotID getRecord();
+  DoubleDotRef getRecord();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.RecordExpr#getRecord <em>Record</em>}' containment reference.
@@ -50,7 +50,7 @@ public interface RecordExpr extends ComplexExpr
    * @see #getRecord()
    * @generated
    */
-  void setRecord(NestedDotID value);
+  void setRecord(DoubleDotRef value);
 
   /**
    * Returns the value of the '<em><b>Args</b></em>' reference list.

@@ -12,7 +12,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.osate.aadl2.NamedElement;
 
@@ -29,7 +28,7 @@ import org.osate.aadl2.NamedElement;
  *
  * @generated
  */
-public class DoubleDotRefImpl extends MinimalEObjectImpl.Container implements DoubleDotRef
+public class DoubleDotRefImpl extends ComplexExprImpl implements DoubleDotRef
 {
   /**
    * The cached value of the '{@link #getElm() <em>Elm</em>}' reference.

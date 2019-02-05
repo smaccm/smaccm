@@ -6697,77 +6697,16 @@ ruleComplexExpr returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-(
+((
     { 
-        newCompositeNode(grammarAccess.getComplexExprAccess().getNestedDotIDParserRuleCall_0()); 
+        newCompositeNode(grammarAccess.getComplexExprAccess().getDoubleDotRefParserRuleCall_0_0()); 
     }
-    this_NestedDotID_0=ruleNestedDotID
+    this_DoubleDotRef_0=ruleDoubleDotRef
     {
-        $current = $this_NestedDotID_0.current;
+        $current = $this_DoubleDotRef_0.current;
         afterParserOrEnumRuleCall();
     }
-((((((
-)
-LeftParenthesis
-))=>((
-    {
-        $current = forceCreateModelElementAndSet(
-            grammarAccess.getComplexExprAccess().getFnCallExprFnAction_1_0_0_0_0(),
-            $current);
-    }
-)
-	otherlv_2=LeftParenthesis
-    {
-    	newLeafNode(otherlv_2, grammarAccess.getComplexExprAccess().getLeftParenthesisKeyword_1_0_0_0_1());
-    }
-))((
-(
-		{ 
-	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgsExprParserRuleCall_1_0_1_0_0()); 
-	    }
-		lv_args_3_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
-	        }
-       		add(
-       			$current, 
-       			"args",
-        		lv_args_3_0, 
-        		"com.rockwellcollins.atc.agree.Agree.Expr");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-)(
-	otherlv_4=Comma
-    {
-    	newLeafNode(otherlv_4, grammarAccess.getComplexExprAccess().getCommaKeyword_1_0_1_1_0());
-    }
-(
-(
-		{ 
-	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgsExprParserRuleCall_1_0_1_1_1_0()); 
-	    }
-		lv_args_5_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
-	        }
-       		add(
-       			$current, 
-       			"args",
-        		lv_args_5_0, 
-        		"com.rockwellcollins.atc.agree.Agree.Expr");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-))*)?
-	otherlv_6=RightParenthesis
-    {
-    	newLeafNode(otherlv_6, grammarAccess.getComplexExprAccess().getRightParenthesisKeyword_1_0_2());
-    }
-)
-    |(((((
+((((
 )
 LeftCurlyBracket
 (
@@ -6780,13 +6719,13 @@ EqualsSign
 ))=>((
     {
         $current = forceCreateModelElementAndSet(
-            grammarAccess.getComplexExprAccess().getRecordExprRecordAction_1_1_0_0_0(),
+            grammarAccess.getComplexExprAccess().getRecordExprRecordAction_0_1_0_0(),
             $current);
     }
 )
-	otherlv_8=LeftCurlyBracket
+	otherlv_2=LeftCurlyBracket
     {
-    	newLeafNode(otherlv_8, grammarAccess.getComplexExprAccess().getLeftCurlyBracketKeyword_1_1_0_0_1());
+    	newLeafNode(otherlv_2, grammarAccess.getComplexExprAccess().getLeftCurlyBracketKeyword_0_1_0_1());
     }
 (
 (
@@ -6795,39 +6734,39 @@ EqualsSign
 	            $current = createModelElement(grammarAccess.getComplexExprRule());
 	        }
         }
-	otherlv_9=RULE_ID
+	otherlv_3=RULE_ID
 	{
-		newLeafNode(otherlv_9, grammarAccess.getComplexExprAccess().getArgsNamedElementCrossReference_1_1_0_0_2_0()); 
+		newLeafNode(otherlv_3, grammarAccess.getComplexExprAccess().getArgsNamedElementCrossReference_0_1_0_2_0()); 
 	}
 
 )
 )
-	otherlv_10=EqualsSign
+	otherlv_4=EqualsSign
     {
-    	newLeafNode(otherlv_10, grammarAccess.getComplexExprAccess().getEqualsSignKeyword_1_1_0_0_3());
+    	newLeafNode(otherlv_4, grammarAccess.getComplexExprAccess().getEqualsSignKeyword_0_1_0_3());
     }
 ))(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgExprExprParserRuleCall_1_1_1_0()); 
+	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgExprExprParserRuleCall_0_2_0()); 
 	    }
-		lv_argExpr_11_0=ruleExpr		{
+		lv_argExpr_5_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
 	        }
        		add(
        			$current, 
        			"argExpr",
-        		lv_argExpr_11_0, 
+        		lv_argExpr_5_0, 
         		"com.rockwellcollins.atc.agree.Agree.Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 )(
-	otherlv_12=Semicolon
+	otherlv_6=Semicolon
     {
-    	newLeafNode(otherlv_12, grammarAccess.getComplexExprAccess().getSemicolonKeyword_1_1_2_0());
+    	newLeafNode(otherlv_6, grammarAccess.getComplexExprAccess().getSemicolonKeyword_0_3_0());
     }
 (
 (
@@ -6836,41 +6775,111 @@ EqualsSign
 	            $current = createModelElement(grammarAccess.getComplexExprRule());
 	        }
         }
-	otherlv_13=RULE_ID
+	otherlv_7=RULE_ID
 	{
-		newLeafNode(otherlv_13, grammarAccess.getComplexExprAccess().getArgsNamedElementCrossReference_1_1_2_1_0()); 
+		newLeafNode(otherlv_7, grammarAccess.getComplexExprAccess().getArgsNamedElementCrossReference_0_3_1_0()); 
 	}
 
 )
 )
-	otherlv_14=EqualsSign
+	otherlv_8=EqualsSign
     {
-    	newLeafNode(otherlv_14, grammarAccess.getComplexExprAccess().getEqualsSignKeyword_1_1_2_2());
+    	newLeafNode(otherlv_8, grammarAccess.getComplexExprAccess().getEqualsSignKeyword_0_3_2());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgExprExprParserRuleCall_1_1_2_3_0()); 
+	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgExprExprParserRuleCall_0_3_3_0()); 
 	    }
-		lv_argExpr_15_0=ruleExpr		{
+		lv_argExpr_9_0=ruleExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
 	        }
        		add(
        			$current, 
        			"argExpr",
-        		lv_argExpr_15_0, 
+        		lv_argExpr_9_0, 
         		"com.rockwellcollins.atc.agree.Agree.Expr");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
 ))*
-	otherlv_16=RightCurlyBracket
+	otherlv_10=RightCurlyBracket
     {
-    	newLeafNode(otherlv_16, grammarAccess.getComplexExprAccess().getRightCurlyBracketKeyword_1_1_3());
+    	newLeafNode(otherlv_10, grammarAccess.getComplexExprAccess().getRightCurlyBracketKeyword_0_4());
     }
-))?)
+)
+    |(
+    { 
+        newCompositeNode(grammarAccess.getComplexExprAccess().getNestedDotIDParserRuleCall_1_0()); 
+    }
+    this_NestedDotID_11=ruleNestedDotID
+    {
+        $current = $this_NestedDotID_11.current;
+        afterParserOrEnumRuleCall();
+    }
+(((((
+)
+LeftParenthesis
+))=>((
+    {
+        $current = forceCreateModelElementAndSet(
+            grammarAccess.getComplexExprAccess().getFnCallExprFnAction_1_1_0_0_0(),
+            $current);
+    }
+)
+	otherlv_13=LeftParenthesis
+    {
+    	newLeafNode(otherlv_13, grammarAccess.getComplexExprAccess().getLeftParenthesisKeyword_1_1_0_0_1());
+    }
+))((
+(
+		{ 
+	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgsExprParserRuleCall_1_1_1_0_0()); 
+	    }
+		lv_args_14_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_14_0, 
+        		"com.rockwellcollins.atc.agree.Agree.Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(
+	otherlv_15=Comma
+    {
+    	newLeafNode(otherlv_15, grammarAccess.getComplexExprAccess().getCommaKeyword_1_1_1_1_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getComplexExprAccess().getArgsExprParserRuleCall_1_1_1_1_1_0()); 
+	    }
+		lv_args_16_0=ruleExpr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getComplexExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_16_0, 
+        		"com.rockwellcollins.atc.agree.Agree.Expr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*)?
+	otherlv_17=RightParenthesis
+    {
+    	newLeafNode(otherlv_17, grammarAccess.getComplexExprAccess().getRightParenthesisKeyword_1_1_2());
+    }
+)?))
 ;
 
 

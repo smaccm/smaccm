@@ -1891,13 +1891,31 @@ public interface AgreePackage extends EPackage
   int DOUBLE_DOT_REF = 31;
 
   /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DOUBLE_DOT_REF__OWNED_ELEMENT = COMPLEX_EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DOUBLE_DOT_REF__OWNED_COMMENT = COMPLEX_EXPR__OWNED_COMMENT;
+
+  /**
    * The feature id for the '<em><b>Elm</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int DOUBLE_DOT_REF__ELM = 0;
+  int DOUBLE_DOT_REF__ELM = COMPLEX_EXPR_FEATURE_COUNT + 0;
 
   /**
    * The number of structural features of the '<em>Double Dot Ref</em>' class.
@@ -1906,7 +1924,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int DOUBLE_DOT_REF_FEATURE_COUNT = 1;
+  int DOUBLE_DOT_REF_FEATURE_COUNT = COMPLEX_EXPR_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NestedDotIDImpl <em>Nested Dot ID</em>}' class.
@@ -4969,61 +4987,6 @@ public interface AgreePackage extends EPackage
   int AADL_ENUMERATOR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl <em>Fn Call Expr</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
-   * @generated
-   */
-  int FN_CALL_EXPR = 86;
-
-  /**
-   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FN_CALL_EXPR__OWNED_ELEMENT = COMPLEX_EXPR__OWNED_ELEMENT;
-
-  /**
-   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FN_CALL_EXPR__OWNED_COMMENT = COMPLEX_EXPR__OWNED_COMMENT;
-
-  /**
-   * The feature id for the '<em><b>Fn</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FN_CALL_EXPR__FN = COMPLEX_EXPR_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Args</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FN_CALL_EXPR__ARGS = COMPLEX_EXPR_FEATURE_COUNT + 1;
-
-  /**
-   * The number of structural features of the '<em>Fn Call Expr</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FN_CALL_EXPR_FEATURE_COUNT = COMPLEX_EXPR_FEATURE_COUNT + 2;
-
-  /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl <em>Record Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -5031,7 +4994,7 @@ public interface AgreePackage extends EPackage
    * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getRecordExpr()
    * @generated
    */
-  int RECORD_EXPR = 87;
+  int RECORD_EXPR = 86;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -5086,6 +5049,61 @@ public interface AgreePackage extends EPackage
    * @ordered
    */
   int RECORD_EXPR_FEATURE_COUNT = COMPLEX_EXPR_FEATURE_COUNT + 3;
+
+  /**
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl <em>Fn Call Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
+   * @generated
+   */
+  int FN_CALL_EXPR = 87;
+
+  /**
+   * The feature id for the '<em><b>Owned Element</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FN_CALL_EXPR__OWNED_ELEMENT = COMPLEX_EXPR__OWNED_ELEMENT;
+
+  /**
+   * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FN_CALL_EXPR__OWNED_COMMENT = COMPLEX_EXPR__OWNED_COMMENT;
+
+  /**
+   * The feature id for the '<em><b>Fn</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FN_CALL_EXPR__FN = COMPLEX_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FN_CALL_EXPR__ARGS = COMPLEX_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Fn Call Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FN_CALL_EXPR_FEATURE_COUNT = COMPLEX_EXPR_FEATURE_COUNT + 2;
 
 
   /**
@@ -7181,38 +7199,6 @@ public interface AgreePackage extends EPackage
   EAttribute getAADLEnumerator_Value();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr <em>Fn Call Expr</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Fn Call Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.FnCallExpr
-   * @generated
-   */
-  EClass getFnCallExpr();
-
-  /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr#getFn <em>Fn</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Fn</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.FnCallExpr#getFn()
-   * @see #getFnCallExpr()
-   * @generated
-   */
-  EReference getFnCallExpr_Fn();
-
-  /**
-   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr#getArgs <em>Args</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Args</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.FnCallExpr#getArgs()
-   * @see #getFnCallExpr()
-   * @generated
-   */
-  EReference getFnCallExpr_Args();
-
-  /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.RecordExpr <em>Record Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -7254,6 +7240,38 @@ public interface AgreePackage extends EPackage
    * @generated
    */
   EReference getRecordExpr_ArgExpr();
+
+  /**
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr <em>Fn Call Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Fn Call Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.FnCallExpr
+   * @generated
+   */
+  EClass getFnCallExpr();
+
+  /**
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr#getFn <em>Fn</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Fn</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.FnCallExpr#getFn()
+   * @see #getFnCallExpr()
+   * @generated
+   */
+  EReference getFnCallExpr_Fn();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.rockwellcollins.atc.agree.agree.FnCallExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.FnCallExpr#getArgs()
+   * @see #getFnCallExpr()
+   * @generated
+   */
+  EReference getFnCallExpr_Args();
 
   /**
    * Returns the factory that creates the instances of the model.
@@ -9035,32 +9053,6 @@ public interface AgreePackage extends EPackage
     EAttribute AADL_ENUMERATOR__VALUE = eINSTANCE.getAADLEnumerator_Value();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl <em>Fn Call Expr</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
-     * @generated
-     */
-    EClass FN_CALL_EXPR = eINSTANCE.getFnCallExpr();
-
-    /**
-     * The meta object literal for the '<em><b>Fn</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference FN_CALL_EXPR__FN = eINSTANCE.getFnCallExpr_Fn();
-
-    /**
-     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference FN_CALL_EXPR__ARGS = eINSTANCE.getFnCallExpr_Args();
-
-    /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.RecordExprImpl <em>Record Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -9093,6 +9085,32 @@ public interface AgreePackage extends EPackage
      * @generated
      */
     EReference RECORD_EXPR__ARG_EXPR = eINSTANCE.getRecordExpr_ArgExpr();
+
+    /**
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl <em>Fn Call Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.rockwellcollins.atc.agree.agree.impl.FnCallExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFnCallExpr()
+     * @generated
+     */
+    EClass FN_CALL_EXPR = eINSTANCE.getFnCallExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Fn</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference FN_CALL_EXPR__FN = eINSTANCE.getFnCallExpr_Fn();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference FN_CALL_EXPR__ARGS = eINSTANCE.getFnCallExpr_Args();
 
   }
 
