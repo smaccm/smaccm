@@ -1,7 +1,7 @@
 package Integer_Toy_Extended
-public 
-   with Base_Types;
-   with Simple::Lib;
+public 	
+	with Base_Types;
+   with Xyz::Lib;
 
 
    
@@ -66,7 +66,7 @@ system above_top
 		Input: in data port Base_Types::Integer;
 		Output: out data port Base_Types::Integer;
 	annex agree {**
-		assume "System input range" : Simple::Lib::ident(Input) < 10 ; 
+		assume "System input range" : Xyz::Lib::ident(Input) < 10 ; 
 		guarantee "System output range" : Output < 55; 
 	**};
 end above_top; 

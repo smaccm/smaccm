@@ -25,7 +25,6 @@ public
 				MyOutput = enum(Top::EnumExp::Primary_Color, Green);
 				
 	
-
 			eq MyLocalStruct2 : Top::EnumExp::MyStruct.Impl;
 							
 			assume "hello": Data_Types::ghi(1) = 1;

@@ -1,0 +1,19 @@
+package Xyz::Lib
+public
+
+system x
+	
+end x;
+
+system implementation x.impl
+	
+end x.impl;
+
+annex agree {**
+
+  fun ident(x: int): int = x;
+
+**};
+   
+
+end Xyz::Lib;
