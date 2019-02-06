@@ -20,7 +20,6 @@ import org.osate.aadl2.instance.ComponentInstance;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayDef;
-import com.rockwellcollins.atc.agree.agree.ArrayType;
 import com.rockwellcollins.atc.agree.agree.ComponentRef;
 import com.rockwellcollins.atc.agree.agree.CustomType;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
@@ -37,6 +36,7 @@ import jkind.lustre.Type;
 public class AgreeTypeUtils {
 
 	private static final String dotChar = "__";
+
 //
 	// Agree Types to String
 	private static Map<AgreeTypeWrapper, String> agreeTypeToTypeStr;
@@ -48,6 +48,20 @@ public class AgreeTypeUtils {
 		typeStr = typeStr.replace("::", "__");
 		return typeStr;
 	}
+
+	// old code
+//	private static final Expr initBool = new BoolExpr(false);
+//	private static final Expr initReal = new RealExpr(BigDecimal.ZERO);
+//	private static final Expr initInt = new IntExpr(BigInteger.ZERO);
+//
+//	public static String getTypeName(com.rockwellcollins.atc.agree.agree.Type type) {
+//		if (type instanceof PrimType) {
+//			return ((PrimType) type).getString();
+//		} else {
+//			return getIDTypeStr(((((RecordType) type).getRecord().getElm())));
+//		}
+//
+//	}
 
 	private static boolean needsLustreTypeExpression(com.rockwellcollins.atc.agree.agree.Type type) {
 		if (!(type instanceof CustomType)) {
@@ -69,6 +83,13 @@ public class AgreeTypeUtils {
 
 		return (el instanceof ComponentType);
 	}
+
+	// old code
+//	public static String getTypeName(DoubleDotRef recId, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
+//		NamedElement finalId = recId.getElm();
+//		return getTypeName(finalId, typeMap, typeExpressions);
+//
+//	}
 
 	private Type buildLustreComponentImplementation(String typeStr, ComponentImplementation compImpl) {
 		assert (compImpl.getAllSubcomponents().size() > 0);
@@ -137,7 +158,53 @@ public class AgreeTypeUtils {
 		return getNamedType(typeStr);
 	}
 
+
 	private Type buildLustreType(String typeStr, NamedElement el) {
+
+// old code
+//				private static void recordType(NamedElement el, Map<NamedElement, String> typeMap, Set<Type> typeExpressions) {
+//			Map<String, Type> subTypeMap = new HashMap<>();
+//			if (el instanceof ComponentImplementation) {
+//				ComponentImplementation compImpl = (ComponentImplementation) el;
+//				String typeStr = null;
+//				Type subType = null;
+//				if (compImpl.getAllSubcomponents().size() == 0) {
+//					typeStr = getIDTypeStr(compImpl.getType());
+//					typeMap.put(el, typeStr);
+//					return;
+//				}
+//				for (Subcomponent subComp : compImpl.getAllSubcomponents()) {
+//					ComponentImplementation subCompImpl = subComp.getComponentImplementation();
+//					if (subCompImpl == null) {
+//						ComponentType subCompType = subComp.getComponentType();
+//						subType = getType(subCompType, typeMap, typeExpressions);
+//					} else {
+//						subType = getType(subCompImpl, typeMap, typeExpressions);
+//					}
+//					if (subType != null) {
+//						subTypeMap.put(subComp.getName(), subType);
+//					}
+//				}
+//			} else if (el instanceof RecordDefExpr) {
+//				RecordDefExpr agreeRecDef = (RecordDefExpr) el;
+//				for (Arg arg : agreeRecDef.getArgs()) {
+//
+//					com.rockwellcollins.atc.agree.agree.Type argType = arg.getType();
+//					String typeStr = null;
+//					Type subType = null;
+//					if (argType instanceof PrimType) {
+//						typeStr = ((PrimType) argType).getString();
+//					} else {
+//						DoubleDotRef nestId = ((RecordType) argType).getRecord();
+//						NamedElement namedEl = (nestId.getElm());
+//						subType = getType(namedEl, typeMap, typeExpressions);
+//					}
+//					if (typeStr != null) {
+//						subType = getNamedType(typeStr);
+//					}
+//					subTypeMap.put(arg.getName(), subType);
+//				}
+//
 
 		// Order matters: check for AADL enumeration before general DataType
 		if (el instanceof ComponentImplementation) {
@@ -180,6 +247,7 @@ public class AgreeTypeUtils {
 		throw new AgreeException("ERROR: " + typeStr + " unhandled");
 	}
 
+
 	public AgreeTypeUtils() {
 		agreeTypeToTypeStr = new HashMap<>();
 		agreeTypeToLustreType = new HashMap<>();
@@ -193,6 +261,52 @@ public class AgreeTypeUtils {
 
 		if (lustreType == null) {
 			lustreType = buildLustreType(agreeType);
+			// old code
+//			=======
+//					public static String getIDTypeStr(NamedElement record) {
+//				String typeStr = null;
+//				EObject container = record.eContainer();
+//
+//				if (record instanceof ComponentType && !AgreeAADLEnumerationUtils.isAADLEnumeration(record)) {
+//					ComponentType type = (ComponentType) record;
+//					do {
+//						String name = type.getQualifiedName();
+//						switch (name) {
+//						case "Base_Types::Boolean":
+//						case "Base_Types::Integer":
+//						case "Base_Types::Unsigned":
+//						case "Base_Types::Unsigned_64":
+//						case "Base_Types::Unsigned_32":
+//						case "Base_Types::Unsigned_16":
+//						case "Base_Types::Unsigned_8":
+//						case "Base_Types::Integer_64":
+//						case "Base_Types::Integer_32":
+//						case "Base_Types::Integer_16":
+//						case "Base_Types::Integer_8":
+//						case "Base_Types::Float":
+//						case "Base_Types::Float_32":
+//						case "Base_Types::Float_64":
+//							return name.replace("::", "__");
+//						}
+//						type = type.getExtended();
+//
+//					} while (type != null);
+//					AgreeLogger.logWarning("Reference to component type '" + record.getName()
+//					+ "' is not among the types reasoned about by AGREE");
+//					return null;
+//				} else if (record instanceof ComponentImplementation) {
+//					typeStr = record.getName();
+//				} else {
+//					while (!(container instanceof ComponentClassifier) && !(container instanceof AadlPackage)) {
+//						container = container.eContainer();
+//					}
+//					if (container instanceof ComponentClassifier) {
+//						ComponentClassifier compClass = (ComponentClassifier) container;
+//						typeStr = compClass.getName() + AgreeASTBuilder.dotChar + record.getName();
+//					} else {
+//						typeStr = record.getName();
+//					}
+//					>>>>>>> origin/develop
 		}
 
 		agreeTypeToLustreType.put(wrapper, lustreType);

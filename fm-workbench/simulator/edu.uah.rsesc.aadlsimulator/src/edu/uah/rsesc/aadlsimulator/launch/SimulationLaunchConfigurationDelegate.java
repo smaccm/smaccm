@@ -139,8 +139,7 @@ public class SimulationLaunchConfigurationDelegate implements ILaunchConfigurati
 		final QualifiedName qualifiedName = QualifiedName.create(qualifiedNameStr.split("::"));
 
 		final IPath projectPath = project == null ? null : project.getFullPath();
-//		final Injector injector = OsateCorePlugin.getDefault()
-//				.getInjector("org.osate.xtext.aadl2.properties.Properties");
+
 		Injector injector = IResourceServiceProvider.Registry.INSTANCE
 				.getResourceServiceProvider(URI.createFileURI("dummy.aadl")).get(Injector.class);
 		final ResourceDescriptionsProvider resourceDescProvider = injector.getInstance(ResourceDescriptionsProvider.class);

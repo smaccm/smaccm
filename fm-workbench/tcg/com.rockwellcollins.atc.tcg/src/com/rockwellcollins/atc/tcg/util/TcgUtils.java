@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016, Rockwell Collins.
+Copyright (c) 2018, Rockwell Collins.
 Developed with the sponsorship of Defense Advanced Research Projects Agency (DARPA).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this data,
@@ -24,12 +24,6 @@ package com.rockwellcollins.atc.tcg.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.osate.aadl2.Classifier;
-import org.osate.aadl2.ComponentImplementation;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
-
-import com.rockwellcollins.atc.tcg.TcgException;
-
 public class TcgUtils {
 
 	public static String getNestedMessages(Throwable e) {
@@ -45,13 +39,4 @@ public class TcgUtils {
 		return sw.toString();
 	}
 
-	public static ComponentImplementation getComponentImplFromString(String qualifiedName) {
-		Classifier cl = EMFIndexRetrieval.getClassifierInWorkspace(qualifiedName);
-		if (cl instanceof ComponentImplementation) {
-			return (ComponentImplementation)cl;
-		} else {
-			throw new TcgException("Error: test suite implementation under test: [" + qualifiedName + "] does not correspond to any " +
-		     "system implementation in the workspace.\n");
-		}
-	}
 }

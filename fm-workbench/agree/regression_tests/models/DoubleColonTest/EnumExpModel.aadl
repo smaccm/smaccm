@@ -1,0 +1,60 @@
+package EnumExpModel
+public
+	with Base_Types;
+	with Top::EnumExp;
+	with Data_Types;
+	with QS_Properties;
+	
+	data Command
+	end Command;
+
+	data implementation Command.Impl
+		-- The Command structure contains data that the Ground Station passes to the UAV.
+		-- It contains a message header, Map and Flight Pattern.
+		subcomponents
+			header: data Base_Types::Integer;
+	end Command.Impl;
+	
+	process MyProc
+		features
+			EvtInput: in event data port Command.Impl;
+			MyInput: in data port Top::EnumExp::Primary_Color;
+			MyOutput: out data port Top::EnumExp::Primary_Color;
+			DInput: in data port Data_Types::Primary_Color;
+			DOutput: out data port Data_Types::Primary_Color;
+		annex agree {**
+				
+			assume "asdf": 0 < EvtInput.header;
+			assume "hello": Top::EnumExp::ghi(1) = 1;
+			eq y: Top::EnumExp::abc = Top::EnumExp::abc {x=1};
+			eq z: Top::EnumExp::xyz = Top::EnumExp::X;
+			eq t: bool = Top::EnumExp::efg;
+		
+			assume "hello3": Top::EnumExp::ghi3(1) = 1;
+			assume "hello4": Top::EnumExp::sq(1.0) > 0.0;
+			assume "MyInput is Blue" : 
+				MyInput = enum(Top::EnumExp::Primary_Color, Blue);
+			guarantee "MyOutput is Green" :
+				MyOutput = enum(Top::EnumExp::Primary_Color, Green);
+				
+	
+			eq MyLocalStruct2 : Top::EnumExp::MyStruct.Impl;
+							
+			assume "hello": Data_Types::ghi(1) = 1;
+			eq qq: Data_Types::abc = Data_Types::abc {x=1};
+			eq ww: Data_Types::xyz = Data_Types::X;
+			assume "MyInput is Blue" : 
+				DInput = enum(Data_Types::Primary_Color, Blue);
+			guarantee "MyOutput is Green" :
+				DOutput = enum(Data_Types::Primary_Color, Green);
+			
+			eq MyLocalSturct3 : Data_Types::Example_Record_Type.Impl;
+			
+      		eq qqq: bool = Get_Property(this, QS_Properties::Init_Bool);   
+		**};		
+	end MyProc;
+	
+
+	
+	
+end EnumExpModel;

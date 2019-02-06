@@ -1,0 +1,194 @@
+-- Copyright (c) 2013 University of Minnesota
+-- Author: Anitha Murugesan 
+-- Date 7/18/2013
+-- The features matches the Infusion Manager behavioral model.
+--------------------------------------------------------------------------
+
+package Infusion_Manager
+public
+  with DATATYPES, DEFS;
+  
+  system Infusion_Manager
+    features    
+      TLM_MODE_IN: in data port DATATYPES::Top_Level_Mode_Outputs.Impl;
+      OP_CMD_IN: in data port DATATYPES::Operator_Commands.Impl;      
+      PATIENT_IN: in data port DATATYPES::Patient_Inputs.Impl;
+      CONFIG_IN: in data port DATATYPES::Config_Outputs.Impl;
+      ALARM_IN: in data port DATATYPES::Alarm_Outputs.Impl;
+      SYS_STAT_IN: in data port DATATYPES::System_Status_Outputs.Impl;      
+      IM_OUT: out data port DATATYPES::Infusion_Manager_Outputs.Impl;          
+      
+      annex agree {**      	
+	-- assume "not_inhibit_and_cancel" : not(OP_CMD_IN.Infusion_Inhibit and OP_CMD_IN.Infusion_Cancel);
+      	      	
+    -- REQ 1 :  MODES RANGE
+		property mode_range = 
+			(IM_OUT.Current_System_Mode = DEFS.OFF and IM_OUT.Commanded_Flow_Rate = 0) or  
+					(IM_OUT.Current_System_Mode = DEFS.IDLE and IM_OUT.Commanded_Flow_Rate = 0) or 
+					(IM_OUT.Current_System_Mode = DEFS.BASAL and SYS_STAT_IN.In_Therapy) or 
+					(IM_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS and SYS_STAT_IN.In_Therapy) or 
+					(IM_OUT.Current_System_Mode = DEFS.SQUARE_BOLUS and SYS_STAT_IN.In_Therapy) or 
+					(IM_OUT.Current_System_Mode = DEFS.PAUSE_KVO and SYS_STAT_IN.In_Therapy) or 
+					(IM_OUT.Current_System_Mode = DEFS.PAUSE_NO_KVO and SYS_STAT_IN.In_Therapy) or 
+					(IM_OUT.Current_System_Mode = DEFS.PAUSE_MANUAL);-- and SYS_STAT_IN.In_Therapy);
+		guarantee "mode_range":   mode_range;
+
+	
+	  --REQ 4 : System_Start transitions OFF to ON.
+		--The requirement allocation is : 
+		 --TLM : System_Start to TLM -> System_On.
+		 --IM  : System_On -> Current_System_Mode = 1 if it was previously Current_System_Mode = 0
+ 
+		eq IM_initial: bool = true -> false;
+		
+		property initial_system_on_implies_idle = 
+			IM_initial and TLM_MODE_IN.System_On => (IM_OUT.Current_System_Mode = DEFS.IDLE);
+		guarantee "initial_system_on_implies_idle":   initial_system_on_implies_idle; 
+		
+		property system_on_implies_idle = 
+			not(IM_initial) and (pre(IM_OUT.Current_System_Mode) = DEFS.OFF) and (TLM_MODE_IN.System_On) => (IM_OUT.Current_System_Mode = DEFS.IDLE and IM_OUT.Commanded_Flow_Rate = 0);
+		guarantee "system_on_implies_idle":   system_on_implies_idle; 
+
+	 -- REQ 5 : System_Stop transitions to OFF.
+		-- The requirement allocation is : 
+		-- TLM : System_Stop to TLM -> !System_On.
+		-- IM  : !System_On -> Current_System_Mode = 0
+
+		property not_system_on_implies_mode_0 = 
+			not(TLM_MODE_IN.System_On) => (IM_OUT.Current_System_Mode = DEFS.OFF);
+		guarantee "not_system_on_implies_mode_0":   not_system_on_implies_mode_0; 	
+		
+		-- mode 0 and 1 flow rate 0
+		property mode_0_1_implies_flow_rate_0 = 
+			not(TLM_MODE_IN.System_On) and (IM_OUT.Current_System_Mode < 2) => (IM_OUT.Commanded_Flow_Rate = 0);
+		guarantee "mode_0_1_implies_flow_rate_0":   mode_0_1_implies_flow_rate_0; 	
+
+	   ------->  highest_level_alarm_4_implies_flow_rate_zero <------- 
+	
+		property alarm_L4_implies_flow_rate_zero = 
+			(((TLM_MODE_IN.System_On) and (ALARM_IN.Highest_Level_Alarm = 4)) => (IM_OUT.Commanded_Flow_Rate = 0));
+
+		guarantee "alarm_L4_implies_flow_rate_zero":  alarm_L4_implies_flow_rate_zero;
+		
+		------>  highest_level_alarm_3_implies_flow_rate_kvo <------- 
+		
+		--Realizability: DEFS::is_therapy(IM_OUT.Current_System_Mode)
+		property alarm_L3_implies_flow_rate_kvo = 
+			(((TLM_MODE_IN.System_On) and (ALARM_IN.Highest_Level_Alarm = 3) and DEFS::is_therapy(IM_OUT.Current_System_Mode)) 
+					=> (IM_OUT.Commanded_Flow_Rate = CONFIG_IN.Flow_Rate_KVO));
+
+		guarantee "alarm_L3_implies_flow_rate_kvo":   alarm_L3_implies_flow_rate_kvo;
+		
+	    ------->  highest_level_alarm_3_implies_flow_rate_kvo <------- 
+
+		property alarm_L2_implies_no_bolus = 
+			(((TLM_MODE_IN.System_On) and (ALARM_IN.Highest_Level_Alarm >= 2)) 
+					=> not(IM_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS or IM_OUT.Current_System_Mode = DEFS.SQUARE_BOLUS) );
+
+		guarantee "alarm_L2_implies_no_bolus": alarm_L2_implies_no_bolus;
+		
+		-- Infusion Cancel => Flow_Rate 0
+		property infusion_cancel_implies_flow_0 = 
+			true -> 
+			 (TLM_MODE_IN.System_On and OP_CMD_IN.Infusion_Cancel ) => 
+						(IM_OUT.Current_System_Mode = DEFS.IDLE);
+		guarantee "infusion_cancel_implies_flow_0 ":  infusion_cancel_implies_flow_0;		
+		
+		-- Infusion Pause => <= Flow_Rate KVO (Realizability: not (ALARM_IN.Highest_Level_Alarm = 4) and DEFS::is_therapy(IM_OUT.Current_System_Mode))
+		property infusion_pause_implies_flow_kvo = 
+			true ->  
+			 (TLM_MODE_IN.System_On and OP_CMD_IN.Infusion_Inhibit and not (ALARM_IN.Highest_Level_Alarm = 4) and DEFS::is_therapy(IM_OUT.Current_System_Mode) ) => 
+						(IM_OUT.Commanded_Flow_Rate <= CONFIG_IN.Flow_Rate_KVO);
+		guarantee "infusion_pause_implies_flow_kvo ":  infusion_pause_implies_flow_kvo;
+		
+				-- after noconfig => model 1
+		property no_config_implies_mode_1 = 
+			(TLM_MODE_IN.System_On and CONFIG_IN.Configured < 1) => 
+					(IM_OUT.Current_System_Mode = DEFS.IDLE);
+		guarantee "no_config_implies_mode_1":  no_config_implies_mode_1; 
+		
+		property no_patient_request_imples_no_pbolus =
+				(TLM_MODE_IN.System_On and not(pre(IM_OUT.Current_System_Mode) = DEFS.PATIENT_BOLUS) and not(PATIENT_IN.Patient_Bolus_Request)) => 
+					not(IM_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "no_patient_request_imples_no_pbolus":  no_patient_request_imples_no_pbolus;
+		
+		--REQ 7
+		property infusion_initiation_requires_prescription =
+			(IM_OUT.Current_System_Mode >= 1 and IM_OUT.New_Infusion) =>
+			CONFIG_IN.Configured > 0;
+		guarantee "infusion_initiation_requires_prescription": infusion_initiation_requires_prescription;
+		
+		--REQ 16
+		property basal_fr =
+			(IM_OUT.Current_System_Mode = DEFS.BASAL) =>
+			(IM_OUT.Commanded_Flow_Rate = CONFIG_IN.Flow_Rate_Basal);
+		guarantee "PROPERTY 25 : basal_fr": basal_fr;
+				
+		eq Patient_Bolus_Delivered_Count : int = 0 ->
+			if ((IM_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS) and not (pre(IM_OUT.Current_System_Mode) = DEFS.PATIENT_BOLUS))
+				then pre(Patient_Bolus_Delivered_Count) + 1
+			else
+				pre(Patient_Bolus_Delivered_Count);
+	
+				
+		--REQ 25
+		property ignore_patient_bolus_request = true ->
+				((PATIENT_IN.Patient_Bolus_Request) and
+				 ((ALARM_IN.Highest_Level_Alarm >= 2) or (Patient_Bolus_Delivered_Count > CONFIG_IN.Max_Number_of_Patient_Bolus) or
+				IM_OUT.Is_Locked_Out or (pre(IM_OUT.Current_System_Mode) = DEFS.PATIENT_BOLUS))) =>
+				not (IM_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "PROPERTY 33 : ignore_patient_bolus_request": ignore_patient_bolus_request;
+		----->REALIZABILITY<------
+		--REQ 28
+		property infusion_complete_implies_idle =
+			true -> (TLM_MODE_IN.System_On and pre(DEFS::is_active(IM_OUT.Current_System_Mode)) and ((IM_OUT.Actual_Infusion_Duration 
+				>= CONFIG_IN.Infusion_Total_Duration) or (SYS_STAT_IN.Volume_Infused >= CONFIG_IN.VTBI_Total))) and not 
+					OP_CMD_IN.Infusion_Inhibit => (IM_OUT.Current_System_Mode = DEFS.IDLE);
+		guarantee "infusion_complete_implies_idle" : infusion_complete_implies_idle;
+		
+		--REQ 29
+		property infusion_inhibit_implies_paused =
+			true -> (TLM_MODE_IN.System_On and pre(DEFS::is_active(IM_OUT.Current_System_Mode)) and OP_CMD_IN.Infusion_Inhibit and (CONFIG_IN.Configured > 0)) 
+			=> (IM_OUT.Current_System_Mode = DEFS.PAUSE_KVO) or (IM_OUT.Current_System_Mode = DEFS.PAUSE_MANUAL) or 
+			(IM_OUT.Current_System_Mode = DEFS.PAUSE_NO_KVO);
+		guarantee "infusion_inhibit_implies_paused" : infusion_inhibit_implies_paused;
+		
+		--REQ 32
+		property basal_transition_to_pbolus =
+			true -> (pre(IM_OUT.Current_System_Mode) = DEFS.BASAL) and PATIENT_IN.Patient_Bolus_Request and not
+			((ALARM_IN.Highest_Level_Alarm >= 2) or (Patient_Bolus_Delivered_Count > CONFIG_IN.Max_Number_of_Patient_Bolus) or
+			IM_OUT.Is_Locked_Out) => (IM_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "basal_transition_to_pbolus" : basal_transition_to_pbolus;
+		
+		--REQ 33
+		property sbolus_transition_to_pbolus =
+			true -> (pre(IM_OUT.Current_System_Mode) = DEFS.SQUARE_BOLUS) and PATIENT_IN.Patient_Bolus_Request and not
+			((ALARM_IN.Highest_Level_Alarm >= 2) or (Patient_Bolus_Delivered_Count > CONFIG_IN.Max_Number_of_Patient_Bolus) or
+			IM_OUT.Is_Locked_Out) => (IM_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "sbolus_transition_to_pbolus" : sbolus_transition_to_pbolus;
+		
+		property transition_to_pbolus =
+			true -> ((ALARM_IN.Highest_Level_Alarm >= 2) or not PATIENT_IN.Patient_Bolus_Request or
+						(Patient_Bolus_Delivered_Count > CONFIG_IN.Max_Number_of_Patient_Bolus) or
+							IM_OUT.Is_Locked_Out) => not(IM_OUT.Current_System_Mode = DEFS.PATIENT_BOLUS);
+		guarantee "transition_to_pbolus" : transition_to_pbolus;
+		
+		
+--		property not_system_on_implies_no_alarm =
+--			ALARM_IN.Highest_Level_Alarm = 4 => TLM_MODE_IN.System_On;
+--		guarantee "not_system_on_implies_no_alarm" : not_system_on_implies_no_alarm;
+
+			
+	
+	
+
+	**};
+	
+	
+       
+  end Infusion_Manager;
+  
+  system implementation Infusion_Manager.Impl
+  end Infusion_Manager.Impl;
+    
+end Infusion_Manager;

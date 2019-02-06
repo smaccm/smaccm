@@ -14,7 +14,11 @@ import org.osate.aadl2.NamedElement;
 
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
+<<<<<<< HEAD
 import com.rockwellcollins.atc.agree.agree.CustomType;
+=======
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
+>>>>>>> origin/develop
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
@@ -70,8 +74,14 @@ public class RecordExprScoper {
 	public static IScope getScope(NamedElement recStatement, IScope outerScope) {
 		if (recStatement instanceof Arg) {
 			Type type = ((Arg) recStatement).getType();
+<<<<<<< HEAD
 			if (type instanceof CustomType) {
 				return getRecordComponents(((CustomType) type).getNamedElm(), outerScope);
+=======
+			if (type instanceof RecordType) {
+				DoubleDotRef nestExpr = ((RecordType) type).getRecord();
+				return getRecordComponents(nestExpr.getElm(), outerScope);
+>>>>>>> origin/develop
 			}
 		} else if (recStatement instanceof DataPort) {
 			DataSubcomponentType dataClass = ((DataPort) recStatement).getDataFeatureClassifier();

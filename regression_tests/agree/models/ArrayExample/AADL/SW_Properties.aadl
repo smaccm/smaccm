@@ -5,9 +5,12 @@ property set SW_Properties is
 	MAX_LONGITUDE : constant aadlreal => 180.0;
 	MIN_LONGITUDE : constant aadlreal => -180.00;
 	
+<<<<<<< HEAD
 	LOWER : constant aadlinteger => 10;
 	UPPER : constant aadlinteger => 20;
 		
+=======
+>>>>>>> origin/develop
 	Dimension : type aadlinteger;
 	MAP_DIMENSION : constant SW_Properties::Dimension => 4;
 	MISSION_DIMENSION : constant SW_Properties::Dimension => 10;

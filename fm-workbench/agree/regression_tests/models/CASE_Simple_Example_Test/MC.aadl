@@ -1,0 +1,139 @@
+package MC
+public
+	
+	with SW;
+	with UAV;
+	with UAS;
+	with CASE_Model_Transformations;
+	
+	
+	-- The radio communication hardware
+	device Radio
+		features
+			MCA: requires bus access MC_Bus.Impl;
+			RFA: requires bus access UAS::RF.Impl;
+			recv_data_in: in event data port;
+			recv_data_out: out event data port CASE_Model_Transformations::CASE_RF_Msg.Impl;
+			send_data_in: in event data port CASE_Model_Transformations::CASE_RF_Msg.Impl;
+			send_data_out: out event data port;
+	end Radio;
+	
+	device implementation Radio.Impl	
+	end Radio.Impl;
+
+
+	-- The serial communication hardware
+	device UART
+		features
+			MCA: requires bus access MC_Bus.Impl;
+			UARTA: requires bus access UAV::Serial.Impl;
+			recv_data_in: in event data port;
+			recv_data_out: out event data port UAV::UART_Msg.Impl;
+			send_data_in: in event data port UAV::UART_Msg.Impl;
+			send_data_out: out event data port;
+	end UART;
+	
+	device implementation UART.Impl
+	end UART.Impl;
+	
+	
+	-- The Wifi communication hardware
+	device Wifi
+		features
+			MCA: requires bus access MC_Bus.Impl;
+			WIFIA: requires bus access UAV::Wifi.Impl;
+			recv_data_in: in event data port;
+			recv_data_out: out event data port UAV::WIFI_Msg.Impl;
+			send_data_in: in event data port UAV::WIFI_Msg.Impl;
+			send_data_out: out event data port;
+	end Wifi;
+	
+	device implementation Wifi.Impl
+	end Wifi.Impl;
+
+
+	-- The Mission Computer processor
+	processor MC_Proc
+		features
+			MCA: requires bus access MC_Bus.Impl;			
+	end MC_Proc;
+	
+	processor implementation MC_Proc.Impl
+	end MC_Proc.Impl;
+	
+	
+	-- The Mission Computer RAM
+	memory MC_Mem
+		features
+			MCA: requires bus access MC_Bus.Impl;		
+	end MC_Mem;
+	
+	memory implementation MC_Mem.Impl
+	end MC_Mem.Impl;
+	
+	
+	-- The Mission Computer on-board bus
+	bus MC_Bus
+	end MC_Bus;
+	
+	bus implementation MC_Bus.Impl
+	end MC_Bus.Impl;
+
+
+	-- The MissionComputer onboard the UAV
+	system MissionComputer
+		
+		features
+			radio_recv: in event data port;
+			radio_send: out event data port;
+			uart_recv: in event data port;
+			uart_send: out event data port;
+			wifi_recv: in event data port;
+			wifi_send: out event data port;
+			UARTA: requires bus access UAV::Serial.Impl;
+			RFA: requires bus access UAS::RF.Impl;
+			WIFIA: requires bus access UAV::Wifi.Impl;
+
+	end MissionComputer;
+	
+	system implementation MissionComputer.Impl
+		
+		subcomponents
+			RADIO_HW: device Radio.Impl;
+			UART_HW: device UART.Impl;
+			PROC_HW: processor MC_Proc.Impl;
+			MEM_HW: memory MC_Mem.Impl;
+			BUS_HW: bus MC_Bus.Impl;
+			PROC_SW: process SW::SW.Impl;
+			WIFI_HW: device Wifi.Impl;
+			
+		connections
+			bac1: bus access RADIO_HW.MCA <-> BUS_HW;
+			bac2: bus access UART_HW.MCA <-> BUS_HW;
+			bac3: bus access PROC_HW.MCA <-> BUS_HW;
+			bac4: bus access MEM_HW.MCA <-> BUS_HW;
+			bac5: bus access WIFI_HW.MCA <-> BUS_HW;
+			bac6: bus access RADIO_HW.RFA <-> RFA;
+			bac7: bus access UART_HW.UARTA <-> UARTA;
+			bac8: bus access WIFI_HW.WIFIA <-> WIFIA;
+			c1: port radio_recv -> RADIO_HW.recv_data_in;
+			c2: port RADIO_HW.recv_data_out -> PROC_SW.radio_recv;
+			c3: port PROC_SW.radio_send -> RADIO_HW.send_data_in;
+			c4: port RADIO_HW.send_data_out -> radio_send;
+			c5: port uart_recv -> UART_HW.recv_data_in;
+			c6: port UART_HW.recv_data_out -> PROC_SW.uart_recv;
+			c7: port PROC_SW.uart_send -> UART_HW.send_data_in;
+			c8: port UART_HW.send_data_out -> uart_send;
+			c9: port wifi_recv -> WIFI_HW.recv_data_in;
+			c10: port WIFI_HW.recv_data_out -> PROC_SW.wifi_recv;
+			c11: port PROC_SW.wifi_send -> WIFI_HW.send_data_in;
+			c12: port WIFI_HW.send_data_out -> wifi_send;
+		
+		properties
+			Actual_Processor_Binding => (reference (PROC_HW)) applies to PROC_SW;
+			Actual_Memory_Binding => (reference (MEM_HW)) applies to PROC_SW;
+			Actual_Connection_Binding => (reference (BUS_HW)) applies to c2, c3, c6, c7, c10, c11;
+		
+	end MissionComputer.Impl;
+	
+end MC;

@@ -15,9 +15,9 @@ import org.osate.aadl2.Aadl2Package;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
+import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
 import org.osate.aadl2.util.Aadl2Util;
 import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
 
 import com.rockwellcollins.atc.resolute.resolute.ClaimArg;
 import com.rockwellcollins.atc.resolute.resolute.FnCallExpr;
@@ -64,7 +64,8 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
                 return e;
             }
 
-			Iterable<IEObjectDescription> allObjectTypes = EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context,
+
+			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
 					reference.getEReferenceType());
 
             URI contextUri = context.eResource().getURI();
@@ -119,14 +120,13 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
     private static UnitLiteral getUnitLiteral(EObject context, String name) {
         // TODO: Scope literals by type, but how to do we know the type of an
         // expression?
-		for (IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(context, UNITS_TYPE)) {
+		for (IEObjectDescription desc : Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context, UNITS_TYPE)) {
             UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
             UnitLiteral literal = unitsType.findLiteral(name);
             if (literal != null) {
                 return literal;
             }
         }
-
         return null;
     }
 

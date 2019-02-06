@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+<<<<<<< HEAD
+=======
+import org.osate.aadl2.Aadl2Package;
+import org.osate.aadl2.AadlBoolean;
+import org.osate.aadl2.AadlInteger;
+>>>>>>> origin/develop
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.AnnexSubclause;
@@ -38,20 +45,25 @@ import org.osate.aadl2.EventPort;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
+import org.osate.aadl2.ModelUnit;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.Port;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.impl.SubcomponentImpl;
+import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.annexsupport.AnnexUtil;
 
+import com.google.common.collect.HashMultimap;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayDef;
 import com.rockwellcollins.atc.agree.agree.Abstraction;
 import com.rockwellcollins.atc.agree.agree.AbstractionRef;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -70,9 +82,13 @@ import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.ComponentRef;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
+<<<<<<< HEAD
 import com.rockwellcollins.atc.agree.agree.CustomType;
 import com.rockwellcollins.atc.agree.agree.EnumID;
 import com.rockwellcollins.atc.agree.agree.EnumLitExpr;
+=======
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
+>>>>>>> origin/develop
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -93,7 +109,13 @@ import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
+<<<<<<< HEAD
 import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
+=======
+import com.rockwellcollins.atc.agree.agree.NamedID;
+import com.rockwellcollins.atc.agree.agree.NamedSpecStatement;
+import com.rockwellcollins.atc.agree.agree.NestedDotID;
+>>>>>>> origin/develop
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
@@ -604,6 +626,110 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
+	private void getPackageDependencies(AadlPackage pkg, Set<AadlPackage> pkgs) {
+
+		// Add the parent package if it's not there, otherwise return
+		if (pkgs.contains(pkg)) {
+			return;
+		}
+		pkgs.add(pkg);
+
+		// Look at direct dependencies in private section
+		if (pkg.getPrivateSection() != null) {
+			for (ModelUnit mu : pkg.getPrivateSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
+		// Look at direct dependencies in public section
+		if (pkg.getPublicSection() != null) {
+			for (ModelUnit mu : pkg.getPublicSection().getImportedUnits()) {
+				if (mu instanceof AadlPackage) {
+					getPackageDependencies((AadlPackage) mu, pkgs);
+				}
+			}
+		}
+
+	}
+
+	private List<NamedSpecStatement> getNamedSpecStatements(AadlPackage pkg) {
+		List<NamedSpecStatement> specs = new ArrayList<NamedSpecStatement>();
+		for (Classifier classifier : EcoreUtil2.getAllContentsOfType(pkg, Classifier.class)) {
+			for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(classifier,
+					AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+				AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+				for (SpecStatement spec : contract.getSpecs()) {
+					if (spec instanceof NamedSpecStatement) {
+						specs.add((NamedSpecStatement) spec);
+					}
+				}
+			}
+		}
+
+		for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(pkg,
+				AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+			AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+			for (SpecStatement spec : contract.getSpecs()) {
+				if (spec instanceof NamedSpecStatement) {
+					specs.add((NamedSpecStatement) spec);
+				}
+			}
+
+		}
+		return specs;
+	}
+
+	@Check(CheckType.NORMAL)
+	public void checkNoDuplicateIdInSpec(AadlPackage toppkg) {
+
+		// namedSpecs associates an agree spec ID with all the agree specs that have that ID
+		HashMultimap<String, NamedSpecStatement> namedSpecs = HashMultimap.create();
+
+		// Get the set of packages referenced in model
+		Set<AadlPackage> pkgs = new HashSet<>();
+		getPackageDependencies(toppkg, pkgs);
+
+		for (AadlPackage pkg : pkgs) {
+
+			// Get the list of agree specs in each package
+			List<NamedSpecStatement> specs = getNamedSpecStatements(pkg);
+
+			for (NamedSpecStatement spec : specs) {
+				String id = spec.getName();
+
+				if (id != null) {
+					namedSpecs.put(id, spec);
+				}
+			}
+		}
+
+		// Get the agree specs in the current package
+		List<NamedSpecStatement> specs = getNamedSpecStatements(toppkg);
+		Iterator<NamedSpecStatement> i = specs.iterator();
+		while (i.hasNext()) {
+
+			NamedSpecStatement spec = i.next();
+			String id = spec.getName();
+			// If the current spec name is associated with multiple agree specs, we've found a duplicate
+			if (namedSpecs.get(id).size() > 1) {
+				Iterator<NamedSpecStatement> ii = namedSpecs.get(id).iterator();
+				while (ii.hasNext()) {
+					String pkgName = AadlUtil.getContainingPackage(ii.next()).getName();
+//					// If the specs are from the same package, the error will be generated from the
+//					// NamedElement check.
+//					if (!pkgName.contentEquals(AadlUtil.getContainingPackage(spec).getName())) {
+					error("Duplicate AGREE property ID in package " + pkgName, spec,
+							Aadl2Package.eINSTANCE.getNamedElement_Name());
+//					}
+				}
+				namedSpecs.removeAll(id);
+			}
+		}
+
+	}
+
 	@Check(CheckType.FAST)
 	public void checkAssume(AssumeStatement assume) {
 		Classifier comp = assume.getContainingClassifier();
@@ -683,9 +809,15 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 
 	@Check(CheckType.FAST)
+<<<<<<< HEAD
 	public void checkAADLEnumerator(EnumLitExpr aadlEnum) {
 		CustomType enumType = aadlEnum.getEnumType();
 		NamedElement enumTypeNamedElement = enumType.getNamedElm();
+=======
+	public void checkAADLEnumerator(AADLEnumerator aadlEnum) {
+		DoubleDotRef enumType = aadlEnum.getEnumType();
+		NamedElement enumTypeNamedElement = enumType.getElm();
+>>>>>>> origin/develop
 		if (!AgreeAADLEnumerationUtils.isAADLEnumeration(enumTypeNamedElement)) {
 			error(enumType, "AADL Enumerations must refer to a Data Type with \"Enum\" data representation "
 					+ "property and have an \"Enumerators\' property value list.");
@@ -1173,7 +1305,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	@Check(CheckType.FAST)
+<<<<<<< HEAD
 	public void checkArrayLiteralExpr(ArrayLiteralExpr alit) {
+=======
+	public void checkRecordType(RecordType recType) {
+		DoubleDotRef recId = recType.getRecord();
+		NamedElement finalId = recId.getElm();
+>>>>>>> origin/develop
 
 		List<Expr> exprs = alit.getElems();
 		if (exprs.size() == 0) {
@@ -1271,14 +1409,30 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkRecordLitExpr(RecordLitExpr recExpr) {
 
+<<<<<<< HEAD
 		CustomType recType = recExpr.getRecordType();
+=======
+		DoubleDotRef recType = recExpr.getRecord();
+>>>>>>> origin/develop
 		List<NamedElement> defArgs = getArgNames(recType);
 		EList<NamedElement> exprArgs = recExpr.getArgs();
 		EList<Expr> argExprs = recExpr.getArgExpr();
 
+<<<<<<< HEAD
 		NamedElement finalId = recExpr.getRecordType().getNamedElm();
 		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDef)) {
 			error(recType, "types must be record definition or data implementation");
+=======
+		DoubleDotRef recId = recExpr.getRecord();
+		NamedElement finalId = recId.getElm();
+
+		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDefExpr)) {
+			error(recId, "types must be record definition or data implementation");
+		}
+
+		if (finalId instanceof DataImplementation) {
+			dataImplCycleCheck(recId);
+>>>>>>> origin/develop
 		}
 
 		if (exprArgs.size() != defArgs.size()) {
@@ -1316,10 +1470,16 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
+<<<<<<< HEAD
 
 	private List<NamedElement> getArgNames(CustomType recType) {
 
 		NamedElement rec = recType.getNamedElm();
+=======
+	private List<NamedElement> getArgNames(DoubleDotRef recId) {
+
+		NamedElement rec = recId.getElm();
+>>>>>>> origin/develop
 		List<NamedElement> names = new ArrayList<>();
 
 		if (rec instanceof RecordDef) {
@@ -1339,10 +1499,17 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return names;
 	}
 
+<<<<<<< HEAD
 	private Map<String, Type> getFieldTypes(CustomType recType) {
 
 		NamedElement rec = recType.getNamedElm();
 		Map<String, Type> typeMap = new HashMap<>();
+=======
+	private Map<String, AgreeType> getArgNameMap(DoubleDotRef recId) {
+
+		NamedElement rec = recId.getElm();
+		Map<String, AgreeType> typeMap = new HashMap<>();
+>>>>>>> origin/develop
 
 		if (rec instanceof RecordDef) {
 			RecordDef recDef = (RecordDef) rec;
@@ -1361,6 +1528,73 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return typeMap;
 	}
 
+<<<<<<< HEAD
+=======
+//    private List<AgreeType> getArgTypes(NestedDotID recId){
+//
+//    	NamedElement rec = getFinalNestId(recId);
+//    	List<AgreeType> types = new ArrayList<AgreeType>();
+//
+//    	if(rec instanceof RecordDefExpr){
+//    		RecordDefExpr recDef = (RecordDefExpr)rec;
+//    		for(Arg arg : recDef.getArgs()){
+//    			types.add(getAgreeType(arg.getType()));
+//    		}
+//    	}else if(rec instanceof FeatureGroupType){
+//    		FeatureGroupType featGroup = (FeatureGroupType)rec;
+//    		for(Feature feat : featGroup.getAllFeatures()){
+//    			types.add(getAgreeType(feat));
+//    		}
+//    	}
+//
+//    	return types;
+//    }
+
+	private void dataImplCycleCheck(NestedDotID dataID) {
+		NamedElement finalId = dataID.getBase();
+		DataImplementation dataImpl = (DataImplementation) finalId;
+		dataImplCycleCheck(dataImpl, dataID);
+	}
+
+	private void dataImplCycleCheck(DoubleDotRef dataID) {
+		NamedElement finalId = dataID.getElm();
+		DataImplementation dataImpl = (DataImplementation) finalId;
+		dataImplCycleCheck(dataImpl, dataID);
+	}
+
+
+	private void dataImplCycleCheck(DataImplementation dataImpl, EObject errorSource) {
+		Set<DataImplementation> dataClosure = new HashSet<>();
+		Set<DataImplementation> prevClosure = null;
+
+		for (Subcomponent sub : dataImpl.getAllSubcomponents()) {
+			ComponentImplementation subImpl = sub.getComponentImplementation();
+			if (subImpl != null) {
+				dataClosure.add((DataImplementation) subImpl);
+			}
+		}
+
+		do {
+			prevClosure = new HashSet<>(dataClosure);
+			for (DataImplementation subImpl : prevClosure) {
+				if (subImpl == dataImpl) {
+					error(errorSource, "The component implementation '" + dataImpl.getName()
+					+ "' has a cyclic definition.  This cannot be reasoned about by AGREE.");
+					break;
+				}
+				for (Subcomponent subSub : subImpl.getAllSubcomponents()) {
+					ComponentImplementation subSubImpl = subSub.getComponentImplementation();
+					if (subSubImpl != null) {
+						dataClosure.add((DataImplementation) subSubImpl);
+					}
+				}
+
+			}
+
+		} while (!prevClosure.equals(dataClosure));
+
+	}
+>>>>>>> origin/develop
 
 	@Check(CheckType.FAST)
 	public void checkRecordDefExpr(RecordDef recordDef) {
@@ -1370,8 +1604,14 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 		for (Arg arg : recordDef.getArgs()) {
 			Type type = arg.getType();
+<<<<<<< HEAD
 			if (type instanceof CustomType) {
 				NamedElement finalId = ((CustomType) type).getNamedElm();
+=======
+			if (type instanceof RecordType) {
+				DoubleDotRef subRec = ((RecordType) type).getRecord();
+				NamedElement finalId = subRec.getElm();
+>>>>>>> origin/develop
 
 				if (finalId instanceof RecordDef) {
 					recordClosure.add((RecordDef) finalId);
@@ -1390,10 +1630,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 				}
 				for (Arg arg : subRecDef.getArgs()) {
 					Type type = arg.getType();
+<<<<<<< HEAD
 					if (type instanceof CustomType) {
 						NamedElement subFinalEl = ((CustomType) type).getNamedElm();
 						if (subFinalEl instanceof RecordDef) {
 							recordClosure.add((RecordDef) subFinalEl);
+=======
+					if (type instanceof RecordType) {
+						DoubleDotRef subRecId = ((RecordType) type).getRecord();
+						NamedElement subFinalEl = subRecId.getElm();
+						if (subFinalEl instanceof RecordDefExpr) {
+							recordClosure.add((RecordDefExpr) subFinalEl);
+>>>>>>> origin/develop
 						}
 					}
 				}
@@ -1459,6 +1707,59 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	protected AgreeType getAgreeType(Type type) {
+		String typeName = null;
+		if (type instanceof PrimType) {
+			typeName = ((PrimType) type).getString();
+			return new AgreeType(typeName);
+		} else {
+			RecordType recType = (RecordType) type;
+			DoubleDotRef recId = recType.getRecord();
+			return getNamedElmAsType(recId.getElm());
+		}
+	}
+
+	private AgreeType getNamedElmAsType(NamedElement recEl) {
+		String typeName = "";
+		EObject aadlPack = recEl.eContainer();
+
+		while (!(aadlPack instanceof AadlPackage)) {
+			aadlPack = aadlPack.eContainer();
+		}
+
+		String packName = ((AadlPackage) aadlPack).getName();
+
+		if (recEl instanceof RecordDefExpr) {
+			EObject component = recEl.eContainer();
+			while (!(component instanceof ComponentClassifier) && !(component instanceof AadlPackage)) {
+				component = component.eContainer();
+			}
+
+			if (component == aadlPack) {
+				typeName = recEl.getName();
+			} else {
+				typeName = ((ComponentClassifier) component).getName() + "." + recEl.getName();
+			}
+
+		} else if (recEl instanceof DataImplementation) {
+			AgreeType nativeType = getNativeType((DataImplementation) recEl);
+			if (nativeType != null) {
+				return nativeType;
+			}
+			typeName = recEl.getName();
+		} else if (recEl instanceof DataType) {
+			return getAgreeType((ComponentClassifier) recEl);
+		} else if (recEl instanceof EnumStatement) {
+			typeName = recEl.getFullName();
+		}
+		typeName = packName + "::" + typeName;
+
+		return new AgreeType(typeName);
+	}
+
+>>>>>>> origin/develop
 	public boolean isPossibleConstant(Expr e) {
 		if (e instanceof PrevExpr || e instanceof PreExpr) {
 			return false;
@@ -1618,10 +1919,18 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 		List<Type> agreeRhsTypes = new ArrayList<>();
 
+<<<<<<< HEAD
 		if (rhsExpr instanceof CallExpr) {
 			NamedElement namedEl = ((CallExpr) rhsExpr).getAbstractionRef().getNamedElm();
 			if (namedEl instanceof NodeDef) {
 				NodeDef nodeDef = (NodeDef) namedEl;
+=======
+		if (rhsExpr instanceof FnCallExpr) {
+
+			NamedElement namedEl = (((FnCallExpr) rhsExpr).getFn().getBase());
+			if (namedEl instanceof NodeDefExpr) {
+				NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
+>>>>>>> origin/develop
 				for (Arg var : nodeDef.getRets()) {
 					agreeRhsTypes.add(var.getType());
 				}
@@ -1722,8 +2031,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		for (AgreeSubclause subclause : EcoreUtil2.getAllContentsOfType(ci, AgreeSubclause.class)) {
 			List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
 			for (NamedElement e : es) {
+<<<<<<< HEAD
 				if (!(e.eContainer() instanceof NodeDef)) { // ignore elements in node defs
 					if (parentNames.contains(e.getName())) {
+=======
+				if (!(e.eContainer() instanceof NodeDefExpr)) { // ignore elements in node defs
+					if (e.getName() != null && parentNames.contains(e.getName())) {
+>>>>>>> origin/develop
 						error(e, e.getName() + " already defined in component type contract");
 					}
 				}
@@ -1981,6 +2295,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		}
 	}
 
+<<<<<<< HEAD
 	public List<Type> typesFromArgs(List<Arg> args) {
 		List<Type> types = new ArrayList<Type>();
 		for (Arg arg : args) {
@@ -1992,6 +2307,13 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkInputsVsActuals(CallExpr call) {
 		AbstractionRef dotId = call.getAbstractionRef();
 		NamedElement namedEl = dotId.getNamedElm();
+=======
+	public void checkInputsVsActuals(FnCallExpr fnCall) {
+
+		// if the id has a 'tag' then it is using a resrved variable
+
+		NamedElement namedEl = fnCall.getFn().getBase();
+>>>>>>> origin/develop
 
 		if (!(namedEl instanceof Abstraction)) {
 			// this error will be caught elsewhere
@@ -2051,11 +2373,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	@Check(CheckType.FAST)
+<<<<<<< HEAD
 	public void checkCallExpr(CallExpr call) {
 		NamedElement fn = call.getAbstractionRef().getNamedElm();
 		if (isInLinearizationBody(call)) {
 			if (fn instanceof NodeDef) {
 				error(call, "Node definitions cannot be applied in a linearization definition");
+=======
+	public void checkFnCallExpr(FnCallExpr fnCall) {
+		NamedElement fn = (fnCall.getFn().getBase());
+		if (isInLinearizationBody(fnCall)) {
+			if (fn instanceof NodeDefExpr) {
+				error(fnCall, "Node definitions cannot be applied in a linearization definition");
+>>>>>>> origin/develop
 			}
 		} else {
 			if (fn instanceof LibraryFnDef) {
@@ -2337,4 +2667,466 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
+//	// TODO: Don't we need more validation here? What if the Id of the IdExpr
+//	private Boolean hasCallDefParent(Element e) {
+//		while (e != null) {
+//			if (e instanceof CallDef) {
+//				return true;
+//			}
+//			e = e.getOwner();
+//		}
+//		return false;
+//	}
+//
+//	private void checkScope(Expr expr, NamedElement id) {
+//		if (hasCallDefParent(expr)) {
+//			if (!hasCallDefParent(id) && !(id instanceof ConstStatement)) {
+//				error("Unknown identifier Id: '" + id
+//						+ "' (Note that nodes can refer only to inputs, outputs, and local variables and global constants).");
+//			}
+//		}
+//	}
+
+	public static NamedElement getFinalNestId(NestedDotID dotId) {
+		while (dotId.getSub() != null) {
+			dotId = dotId.getSub();
+		}
+
+		return dotId.getBase();
+	}
+
+	public String getNestedDotIDTag(NestedDotID dotId) {
+		while (dotId.getSub() != null) {
+			dotId = dotId.getSub();
+		}
+
+		return dotId.getTag();
+	}
+
+	public AgreeType getAgreeType(Arg arg) {
+		return getAgreeType(arg.getType());
+	}
+
+	private AgreeType getAgreeType(UnaryExpr unaryExpr) {
+		return getAgreeType(unaryExpr.getExpr());
+	}
+
+
+	private AgreeType getAgreeType(NestedDotID nestDotIdExpr) {
+
+		String tag = getNestedDotIDTag(nestDotIdExpr);
+
+		if (tag != null) {
+			switch (tag) {
+			case "_CLK":
+			case "_INSERT":
+			case "_REMOVE":
+				return BOOL;
+			case "_COUNT":
+				return INT;
+			default:
+				return ERROR;
+			}
+		}
+
+		return getAgreeType(getFinalNestId(nestDotIdExpr));
+	}
+
+	protected AgreeType getAgreeType(NamedElement namedEl) {
+		if (namedEl instanceof DataSubcomponent) {
+			// this is for checking "Base_Types::Boolean" etc...
+			ComponentClassifier compClass = ((DataSubcomponent) namedEl).getAllClassifier();
+			if (compClass instanceof DataImplementation) {
+				return getAgreeType((DataImplementation) compClass);
+			}
+			return getAgreeType(compClass);
+		} else if (namedEl instanceof Arg) {
+			return getAgreeType((Arg) namedEl);
+		} else if (namedEl instanceof ClassifierType || namedEl instanceof Subcomponent) {
+			return new AgreeType("component");
+		} else if (namedEl instanceof PropertyStatement) {
+			return getAgreeType((PropertyStatement) namedEl);
+		} else if (namedEl instanceof ConstStatement) {
+			return getAgreeType((ConstStatement) namedEl);
+		} else if (namedEl instanceof EqStatement) {
+			return getAgreeType(namedEl);
+		} else if (namedEl instanceof DataPort) {
+			return getAgreeType(((DataPort) namedEl).getDataFeatureClassifier());
+		} else if (namedEl instanceof EventDataPort) {
+			return getAgreeType(((EventDataPort) namedEl).getDataFeatureClassifier());
+		} else if (namedEl instanceof DataAccess) {
+			return getAgreeType((NamedElement) ((DataAccess) namedEl).getFeatureClassifier());
+		} else if (namedEl instanceof DataType) {
+			return getAgreeType((ComponentClassifier) namedEl);
+		} else if (namedEl instanceof DataImplementation) {
+			return getAgreeType((DataImplementation) namedEl);
+		} else if (namedEl instanceof NamedID) {
+			return getAgreeType((NamedID) namedEl);
+		}
+
+		return ERROR;
+	}
+
+	private AgreeType getAgreeType(NamedID id) {
+		EObject container = id.eContainer();
+		if (!(container instanceof EnumStatement)) {
+			throw new IllegalArgumentException("NamedIDs allowed only in enum statements.");
+		}
+		return getAgreeType((EnumStatement) container);
+	}
+
+	private AgreeType getAgreeType(EnumStatement statement) {
+		String name = statement.getName();
+		EObject container = statement.eContainer();
+
+		while (!(container instanceof AadlPackage)) {
+			if (container instanceof ComponentClassifier) {
+				name = ((ComponentClassifier) container).getName() + "::" + name;
+			}
+			container = container.eContainer();
+		}
+		name = ((AadlPackage) container).getName() + "::" + name;
+		return new AgreeType(name);
+	}
+
+	private AgreeType getAgreeType(DataImplementation dataImpl) {
+
+		AgreeType nativeType = getNativeType(dataImpl);
+		if (nativeType != null) {
+			return nativeType;
+		}
+
+		AadlPackage aadlPack = (AadlPackage) dataImpl.eContainer().eContainer();
+
+		String typeStr = aadlPack.getName() + "::" + dataImpl.getName();
+
+		return new AgreeType(typeStr);
+	}
+
+	private AgreeType getNativeType(DataImplementation dataImpl) {
+		EList<Subcomponent> subComps = dataImpl.getAllSubcomponents();
+		// if there are no subcomponents, use the component type
+		if (subComps.size() == 0) {
+			return getAgreeType((ComponentClassifier) dataImpl.getType());
+		}
+		return null;
+	}
+
+	private AgreeType getAgreeType(ComponentClassifier dataClass) {
+
+		while (dataClass != null) {
+			switch (dataClass.getQualifiedName()) {
+			case "Base_Types::Boolean":
+				return BOOL;
+			case "Base_Types::Integer":
+				return INT;
+			case "Base_Types::Float":
+				return REAL;
+			}
+
+			boolean is_aadl_enum = AgreeAADLEnumerationUtils.isAADLEnumeration(dataClass);
+			if (is_aadl_enum) {
+				String name = dataClass.getName();
+				EObject container = dataClass.eContainer();
+
+				while (!(container instanceof AadlPackage)) {
+					if (container instanceof ComponentClassifier) {
+						name = ((ComponentClassifier) container).getName() + "::" + name;
+					}
+					container = container.eContainer();
+				}
+				name = ((AadlPackage) container).getName() + "::" + name;
+				return new AgreeType(name);
+			}
+
+			DataType dataType = (DataType) dataClass;
+			dataClass = dataType.getExtended();
+		}
+
+		return ERROR;
+	}
+
+	private AgreeType getAgreeType(ComponentType compType) {
+
+		while (compType.getExtended() != null) {
+			compType = compType.getExtended();
+		}
+
+		String qualName = compType.getQualifiedName();
+		switch (qualName) {
+		case "Base_Types::Boolean":
+			return BOOL;
+		case "Base_Types::Integer":
+			return INT;
+		case "Base_Types::Float":
+			return REAL;
+		}
+
+		return new AgreeType(qualName);
+
+	}
+
+	private AgreeType getAgreeType(DataSubcomponentType data) {
+		if (data instanceof DataType) {
+			ComponentType compType = ((DataType) data).getExtended();
+			if (compType != null && !AgreeAADLEnumerationUtils.isAADLEnumeration(data)) {
+				return getAgreeType(compType);
+			}
+		}
+		String qualName = data.getQualifiedName();
+		if (qualName == null) {
+			return ERROR;
+		}
+		switch (qualName) {
+		case "Base_Types::Boolean":
+			return BOOL;
+		case "Base_Types::Integer":
+			return INT;
+		case "Base_Types::Float":
+			return REAL;
+		}
+		return new AgreeType(qualName);
+	}
+
+	private AgreeType getAgreeType(PropertyStatement propStat) {
+		return getAgreeType(propStat.getExpr());
+	}
+
+	private AgreeType getAgreeType(ConstStatement constStat) {
+		return getAgreeType(constStat.getType());
+	}
+
+	private AgreeType getAgreeType(GetPropertyExpr getPropExpr) {
+		NamedElement namedEl = getPropExpr.getProp();
+		if ((namedEl instanceof Property) || namedEl instanceof PropertyConstant) {
+			PropertyType propType;
+			if (namedEl instanceof Property) {
+				propType = ((Property) namedEl).getPropertyType();
+			} else {
+				propType = ((PropertyConstant) namedEl).getPropertyType();
+			}
+
+			if (propType instanceof AadlBoolean) {
+				return BOOL;
+			} else if (propType instanceof AadlString || propType instanceof EnumerationType) {
+				return new AgreeType("string");
+			} else if (propType instanceof AadlInteger) {
+				return INT;
+			} else if (propType instanceof AadlReal) {
+				return REAL;
+			} else if (propType instanceof ClassifierType) {
+				return new AgreeType("component");
+			}
+		}
+		return ERROR;
+	}
+
+	private AgreeType getAgreeType(PrevExpr prevExpr) {
+		return getAgreeType(prevExpr.getDelay());
+	}
+
+	private List<AgreeType> getAgreeTypes(List<? extends Expr> exprs) {
+		ArrayList<AgreeType> list = new ArrayList<>();
+		for (Expr expr : exprs) {
+			list.add(getAgreeType(expr));
+		}
+		return list;
+	}
+
+	public List<AgreeType> typesFromArgs(List<Arg> args) {
+		ArrayList<AgreeType> list = new ArrayList<>();
+		for (Arg arg : args) {
+			list.add(getAgreeType(arg));
+		}
+		return list;
+	}
+
+	private AgreeType getAgreeType(FnCallExpr fnCall) {
+		// TODO: Examine type system in more detail
+		// TODO: Fix to make support type lists.
+
+		NamedElement namedEl = fnCall.getFn().getBase();
+
+		if (isInLinearizationBody(fnCall)) {
+			// extract in/out arguments
+			if (namedEl instanceof FnDefExpr || namedEl instanceof NodeDefExpr) {
+				error(fnCall, "Calls to AGREE nodes and functions not allowed in linearization bodies");
+				return ERROR;
+			} else if (namedEl instanceof LinearizationDefExpr) {
+				return REAL;
+			} else if (namedEl instanceof LibraryFnDefExpr) {
+				LibraryFnDefExpr fnDef = (LibraryFnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
+			} else {
+				error(fnCall, "Node, function or linearization definition name expected.");
+				return ERROR;
+			}
+
+		} else {
+			// extract in/out arguments
+			if (namedEl instanceof FnDefExpr) {
+				FnDefExpr fnDef = (FnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
+			} else if (namedEl instanceof NodeDefExpr) {
+				NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
+				List<AgreeType> outDefTypes = typesFromArgs(nodeDef.getRets());
+				if (outDefTypes.size() == 1) {
+					return outDefTypes.get(0);
+				} else {
+					error(fnCall, "Nodes embedded in expressions must have exactly one return value." + "  Node "
+							+ nodeDef.getName() + " contains " + outDefTypes.size() + " return values");
+					return ERROR;
+				}
+			} else if (namedEl instanceof LinearizationDefExpr) {
+				return REAL;
+			} else if (namedEl instanceof LibraryFnDefExpr) {
+				LibraryFnDefExpr fnDef = (LibraryFnDefExpr) namedEl;
+				return getAgreeType(fnDef.getType());
+			} else {
+				error(fnCall, "Node, function or linearization definition name expected.");
+				return ERROR;
+			}
+		}
+	}
+
+	private AgreeType getAgreeType(BinaryExpr binExpr) {
+		AgreeType typeLeft = getAgreeType(binExpr.getLeft());
+		String op = binExpr.getOp();
+
+		switch (op) {
+		case "->":
+			return typeLeft;
+		case "=>":
+		case "<=>":
+		case "and":
+		case "or":
+			return BOOL;
+		case "<>":
+		case "!=":
+			return BOOL;
+		case "<":
+		case "<=":
+		case ">":
+		case ">=":
+		case "=":
+			return BOOL;
+		case "+":
+		case "-":
+		case "*":
+		case "/":
+		case "mod":
+		case "div":
+		case "^":
+			return typeLeft;
+		}
+
+		return ERROR;
+	}
+
+	protected AgreeType getAgreeType(Expr expr) {
+		if (expr instanceof BinaryExpr) {
+			return getAgreeType((BinaryExpr) expr);
+		} else if (expr instanceof FnCallExpr) {
+			return getAgreeType((FnCallExpr) expr);
+		} else if (expr instanceof IfThenElseExpr) {
+			return getAgreeType((IfThenElseExpr) expr);
+		} else if (expr instanceof PrevExpr) {
+			return getAgreeType((PrevExpr) expr);
+		} else if (expr instanceof GetPropertyExpr) {
+			return getAgreeType((GetPropertyExpr) expr);
+		} else if (expr instanceof DoubleDotRef) {
+			return getAgreeType((DoubleDotRef) expr);
+		} else if (expr instanceof NestedDotID) {
+			return getAgreeType((NestedDotID) expr);
+		} else if (expr instanceof NestedDotID) {
+			return getAgreeType((NestedDotID) expr);
+		} else if (expr instanceof UnaryExpr) {
+			return getAgreeType((UnaryExpr) expr);
+		} else if (expr instanceof IntLitExpr) {
+			return INT;
+		} else if (expr instanceof RealLitExpr) {
+			return REAL;
+		} else if (expr instanceof BoolLitExpr) {
+			return BOOL;
+		} else if (expr instanceof ThisExpr) {
+			return new AgreeType("component");
+		} else if (expr instanceof PreExpr) {
+			return getAgreeType(((PreExpr) expr).getExpr());
+		} else if (expr instanceof RecordExpr) {
+			return getAgreeType((RecordExpr) expr);
+		} else if (expr instanceof RecordUpdateExpr) {
+			return getAgreeType((RecordUpdateExpr) expr);
+		} else if (expr instanceof FloorCast) {
+			return INT;
+		} else if (expr instanceof RealCast) {
+			return REAL;
+		} else if (expr instanceof EventExpr) {
+			return BOOL;
+		} else if (expr instanceof TimeExpr) {
+			return REAL;
+		} else if (expr instanceof AADLEnumerator) {
+			return getAgreeType((AADLEnumerator) expr);
+		} else if (expr instanceof LatchedExpr) {
+			return getAgreeType(((LatchedExpr) expr).getExpr());
+		} else if (expr instanceof TimeOfExpr || expr instanceof TimeRiseExpr || expr instanceof TimeFallExpr) {
+			return REAL;
+		} /*
+		 * else if (expr instanceof UnaryNonLinearExpr ||
+		 * expr instanceof BinaryNonLinearExpr) {
+		 * return REAL;
+		 * }
+		 */
+
+		return ERROR;
+	}
+
+	private AgreeType getAgreeType(AADLEnumerator enumExpr) {
+		return getAgreeType(enumExpr.getEnumType());
+	}
+
+	private AgreeType getAgreeType(DoubleDotRef DoubleDotRef) {
+		return getAgreeType(DoubleDotRef.getElm());
+	}
+
+	private AgreeType getAgreeType(RecordUpdateExpr upExpr) {
+		return getAgreeType(upExpr.getRecord());
+	}
+
+	private AgreeType getAgreeType(RecordExpr recExpr) {
+		return getNamedElmAsType(recExpr.getRecord().getElm());
+	}
+
+	public static boolean matches(AgreeType expected, AgreeType actual) {
+		if (expected.equals(ERROR) || actual.equals(ERROR)) {
+			return false;
+		} else if (integerMatch(expected, actual)) {
+			return true;
+		} else if (floatingPointMatch(expected, actual)) {
+			return true;
+		}
+		return expected.equals(actual);
+	}
+
+	private static boolean floatingPointMatch(AgreeType expected, AgreeType actual) {
+		if (expected.toString().equals("real") && actual.toString().startsWith("Base_Types::Float")) {
+			return true;
+		}
+		if (actual.toString().equals("real") && expected.toString().startsWith("Base_Types::Float")) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean integerMatch(AgreeType expected, AgreeType actual) {
+		if (expected.toString().equals("int") && actual.toString().startsWith("Base_Types::Integer")) {
+			return true;
+		}
+		if (actual.toString().equals("int") && expected.toString().startsWith("Base_Types::Integer")) {
+			return true;
+		}
+		return false;
+	}
+>>>>>>> origin/develop
 }

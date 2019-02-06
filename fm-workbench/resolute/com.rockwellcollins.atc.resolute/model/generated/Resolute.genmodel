@@ -4,7 +4,7 @@
     editorDirectory="/com.rockwellcollins.atc.resolute.editor/src" modelPluginID="com.rockwellcollins.atc.resolute"
     forceOverwrite="true" modelName="Resolute" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="6.0" copyrightFields="false" editPluginID="com.rockwellcollins.atc.resolute.edit"
-    editorPluginID="com.rockwellcollins.atc.resolute.editor" runtimeVersion="2.11"
+    editorPluginID="com.rockwellcollins.atc.resolute.editor" runtimeVersion="2.13"
     usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/resource/org.osate.aadl2/model/aadl2.genmodel#//aadl2">
   <genPackages prefix="Resolute" basePackage="com.rockwellcollins.atc.resolute" disposableProviderFactory="true"
       ecorePackage="Resolute.ecore#/">
@@ -53,6 +53,11 @@
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//SetType">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//SetType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//LibraryFnType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//LibraryFnType/libName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//LibraryFnType/fnType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//LibraryFnType/name"/>
     </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//QuantArg">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantArg/expr"/>
@@ -119,6 +124,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantifiedExpr/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//QuantifiedExpr/expr"/>
     </genClasses>
+    <genClasses ecoreClass="Resolute.ecore#//LibraryFnCallExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//LibraryFnCallExpr/libName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//LibraryFnCallExpr/fnName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//LibraryFnCallExpr/args"/>
+    </genClasses>
     <genClasses ecoreClass="Resolute.ecore#//BuiltInFnCallExpr">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//BuiltInFnCallExpr/fn"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//BuiltInFnCallExpr/args"/>
@@ -147,10 +157,10 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//LetExpr/binding"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//LetExpr/expr"/>
     </genClasses>
-    <genClasses ecoreClass="Resolute.ecore#//FilterMapExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/map"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/args"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//FilterMapExpr/filter"/>
+    <genClasses ecoreClass="Resolute.ecore#//AnalysisExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//AnalysisExpr/libName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Resolute.ecore#//AnalysisExpr/fnName"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Resolute.ecore#//AnalysisExpr/args"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

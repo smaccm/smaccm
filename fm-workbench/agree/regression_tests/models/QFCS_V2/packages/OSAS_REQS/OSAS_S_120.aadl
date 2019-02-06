@@ -1,0 +1,58 @@
+package OSAS_S_120
+
+public
+	with RUN_LENGTH;
+	with OCCURRED;
+annex agree{**
+	
+	
+  node req 
+  	(acts : DATA_TYPES::Actuators.impl,
+  	 acts_ret : DATA_TYPES::Actuators.impl,
+  	 fails : DATA_TYPES::BoolActuators.impl)
+  returns
+    (res : bool);
+  let
+  	res = req_helper(acts.AILL, acts_ret.AILL, fails.AILL) and 
+  	      req_helper(acts.AILR, acts_ret.AILR, fails.AILR) and
+  	      req_helper(acts.BRAKE, acts_ret.BRAKE, fails.BRAKE) and
+  	      req_helper(acts.ELLIB, acts_ret.ELLIB, fails.ELLIB) and 
+  	      req_helper(acts.ELLOB, acts_ret.ELLOB, fails.ELLOB) and
+  	      req_helper(acts.ELRIB, acts_ret.ELRIB, fails.ELRIB) and
+  	      req_helper(acts.ELROB, acts_ret.ELROB, fails.ELROB) and
+  	      req_helper(acts.FLAPLI, acts_ret.FLAPLI, fails.FLAPLI) and
+  	      req_helper(acts.FLAPLO, acts_ret.FLAPLO, fails.FLAPLO) and
+  	      req_helper(acts.FLAPRI, acts_ret.FLAPRI, fails.FLAPRI) and
+  	      req_helper(acts.FLAPRO, acts_ret.FLAPRO, fails.FLAPRO) and 
+  	      req_helper(acts.GEAR, acts_ret.GEAR, fails.GEAR) and
+  	      req_helper(acts.RUDLO, acts_ret.RUDLO, fails.RUDLO) and
+  	      req_helper(acts.RUDUP, acts_ret.RUDUP, fails.RUDUP) and
+  	      req_helper(acts.SPLLIB, acts_ret.SPLLIB, fails.SPLLIB) and
+  	      req_helper(acts.SPLLOB, acts_ret.SPLLOB, fails.SPLLOB) and
+  	      req_helper(acts.SPLRIB, acts_ret.SPLRIB, fails.SPLRIB) and
+  	      req_helper(acts.SPLROB, acts_ret.SPLROB, fails.SPLROB) and
+  	      req_helper(acts.STEER, acts_ret.STEER, fails.STEER) and
+  	      req_helper(acts.THROTR, acts_ret.THROTR, fails.THROTR) and
+  	      req_helper(acts.THROTL, acts_ret.THROTL, fails.THROTL);
+  tel;
+  
+  node req_helper
+    (act : real,
+     act_ret : real,
+     fail : bool)
+  returns
+    (res : bool);
+  let  
+    res = 
+    	fail = 
+    		if(OCCURRED::f(RUN_LENGTH::f(OSAS_S_100::req(act,act_ret))>= 5)) then
+    			true
+    		else 
+    			(false -> pre (fail));
+  tel;
+	
+  
+  
+**};
+
+end OSAS_S_120;

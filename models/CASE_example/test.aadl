@@ -1,0 +1,50 @@
+package test
+public
+	with Base_Types;
+
+	with Data_Model;
+
+	thread a
+		features
+			a_out: out event data port MyInt;
+			
+						annex agree {**
+				guarantee "trivial a" : a_out >= 10;
+			**};
+	end a;
+
+	thread b
+		features
+			b_in: in event data port MyInt;
+					annex agree {**
+				assume "trivial b" : b_in < 10;
+			**};
+	end b;
+
+	data MyInt extends Base_Types::Integer
+		properties
+			Data_Model::Integer_Range => 0 .. 90;
+	end MyInt;
+
+	
+	process c
+			annex agree {**
+				guarantee "trivial" : true;
+			**};
+		
+	end c;
+	
+	process implementation c.imp
+		subcomponents
+			a: thread a;
+			b: thread b;
+		connections
+			c1: port a.a_out -> b.b_in;
+			
+			annex agree {**
+				lemma "trivial" : true;
+			**};
+	end c.imp;
+			
+	
+end test;

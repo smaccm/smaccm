@@ -1,0 +1,39 @@
+package FC
+public
+	
+	with UAV;
+	with CASE_Properties;
+	
+	-- GPS receiver hardware
+	-- We are not yet modeling incoming satellite signals here
+	device GPS_Receiver
+		features
+			position: out event data port;
+	end GPS_Receiver;
+	
+	device implementation GPS_Receiver.Impl
+	end GPS_Receiver.Impl;
+	
+	
+	-- Flight controller
+	system FlightController
+		features
+			uart_recv: in event data port;
+			uart_send: out event data port;
+			UARTA: requires bus access UAV::Serial.Impl;
+		properties
+			CASE_Properties::CONFIDENTIALITY => MEDIUM;
+			CASE_Properties::INTEGRITY => MEDIUM;
+			CASE_Properties::AVAILABILITY => HIGH;
+			CASE_Properties::BOUNDARY => (PHYSICAL, TRUSTED);
+	end FlightController;
+	
+	
+	system implementation FlightController.Impl
+		subcomponents
+			GPS: device GPS_Receiver.Impl;
+		connections
+			c1: port GPS.position -> uart_send;
+	end FlightController.Impl;
+	
+end FC;

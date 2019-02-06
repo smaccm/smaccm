@@ -1,0 +1,51 @@
+package Top::EnumExp
+public
+	with Data_Model;
+	with Base_Types;
+	
+	data Primary_Color
+		properties
+			Data_Model::Data_Representation => Enum;
+			Data_Model::Enumerators => ("Red", "Green", "Blue");
+	end Primary_Color;
+	
+	
+		data MyStruct
+	end MyStruct;
+	
+	data implementation MyStruct.impl
+		subcomponents
+			MyBool : data Base_Types::Boolean;
+	end MyStruct.impl;
+	
+	annex agree {**
+		type abc = struct {x: int};
+		fun ghi(x: int): int = x;
+		enum xyz = {X, Y, Z};
+		const efg: bool = true;
+		external ghi2(x: int): int;
+		
+		node ghi3 (x: int) returns (y :int);
+		let
+			y = x;
+		tel;
+		
+		linearization sq (y: real) over [-1.0 .. 1.0] within 0.01 : y^2.0;
+		
+	**};
+	
+	
+	
+	thread something
+		annex agree {**
+			assume "hello": ghi(1) = 1;
+			
+			eq y: abc = abc {x=1};
+			eq z: xyz = X;
+			assume "hello3": ghi3(1) = 1;
+			assume "hello4": sq(1.0) > 0.0;
+			
+			**};
+	end something;
+
+end Top::EnumExp;

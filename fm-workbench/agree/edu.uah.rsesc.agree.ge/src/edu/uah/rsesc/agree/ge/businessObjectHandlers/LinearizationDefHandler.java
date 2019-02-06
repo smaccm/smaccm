@@ -119,8 +119,14 @@ public class LinearizationDefHandler {
 						newBo.setPrecision(precisionExpr);
 
 						// Body
+
 						final NamedElmExpr body = AgreeFactory.eINSTANCE.createNamedElmExpr();
 						body.setNamedElm(newArg);
+//=======
+//						final NestedDotID body = AgreeFactory.eINSTANCE.createNestedDotID();
+//						body.setBase(newArg);
+//
+//>>>>>>> origin/develop
 						newBo.setExprBody(body);
 
 						agreeContract.getSpecs().add(newBo);

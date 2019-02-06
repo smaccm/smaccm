@@ -1,0 +1,97 @@
+package UAV
+public
+	
+	with MC;
+	with FC;
+	with UAS;
+	with Base_Types;
+	with CASE_Properties;
+	
+	-- UART Message structure
+	data UART_Msg
+	end UART_Msg;
+	
+	data implementation UART_Msg.Impl
+		subcomponents
+			crc: data Base_Types::Boolean;
+			message: data Base_Types::String;
+	end UART_Msg.Impl;
+	
+	-- WIFI Message structure
+	data WIFI_Msg
+	end WIFI_Msg;
+	
+	data implementation WIFI_Msg.Impl
+		subcomponents
+			crc: data Base_Types::Boolean;
+			message: data Base_Types::String;
+	end WIFI_Msg.Impl;
+	
+	-- UAV on-board serial bus
+	bus Serial
+		properties
+			CASE_Properties::COMM_MODALITY => SERIAL;
+	end Serial;
+	
+	bus implementation Serial.Impl
+	end Serial.Impl;
+	
+	
+	-- UAV on-board wifi bus
+	bus Wifi
+		properties
+			CASE_Properties::COMM_MODALITY => WIFI;
+	end Wifi;
+	
+	bus implementation Wifi.Impl
+	end Wifi.Impl;
+	
+	
+	-- UAV on-board camera
+	device Camera
+		features
+			wifi_recv: in event data port;
+			wifi_send: out event data port;
+			WIFIA: requires bus access Wifi.Impl;
+	end Camera;
+	
+	device implementation Camera.Impl
+	end Camera.Impl;
+	
+	
+	-- UAV
+	system UAV
+		features
+			radio_recv: in event data port;
+			radio_send: out event data port;
+			RFA: requires bus access UAS::RF.Impl;
+		properties
+			CASE_Properties::BOUNDARY => (PHYSICAL);
+	end UAV;
+	
+	system implementation UAV.Impl
+		subcomponents
+			MCMP: system MC::MissionComputer.Impl;
+			FCTL: system FC::FlightController.Impl;
+			SBUS: bus Serial.Impl;
+			CAM: device Camera.Impl;
+			WBUS: bus Wifi.Impl;
+		connections
+			bac1: bus access SBUS <-> MCMP.UARTA;
+			bac2: bus access SBUS <-> FCTL.UARTA;
+			bac3: bus access RFA -> MCMP.RFA;
+			bac4: bus access WBUS <-> MCMP.WIFIA;
+			bac5: bus access WBUS <-> CAM.WIFIA;
+			c1: port radio_recv -> MCMP.radio_recv;
+			c2: port MCMP.radio_send -> radio_send;
+			c3: port MCMP.uart_send -> FCTL.uart_recv;
+			c4: port FCTL.uart_send -> MCMP.uart_recv;
+			c5: port MCMP.wifi_send -> CAM.wifi_recv;
+			c6: port CAM.wifi_send -> MCMP.wifi_recv;
+		properties
+			Actual_Connection_Binding => (reference (SBUS)) applies to c3, c4;
+			Actual_Connection_Binding => (reference (WBUS)) applies to c5, c6;
+			
+	end UAV.Impl;
+	
+end UAV;

@@ -34,10 +34,11 @@
             id="com.rockwellcollins.atc.agree.analysis.commands"
             name="Commands related to AGREE">
       </category>     
-      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
+      <command
+            categoryId="com.rockwellcollins.atc.agree.analysis.commands"
             description="Re-run last AGREE analysis"
             id="com.rockwellcollins.atc.agree.analysis.commands.rerunAgree"
-            name="Re-run AGREE Analysis">
+            name="Re-run AGREE Analysis"> 
      </command>
      <command categoryId="com.rockwellcollins.atc.agree.analysis.commands"
             description="Terminate the current AGREE analysis"
@@ -100,7 +101,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+            locationURI="menu:org.osate.ui.analysesMenu?after=additions">
          <menu
                id="com.rockwellcollins.atc.agree.analysis.menus.main"
                label="AGREE"
@@ -169,7 +170,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.osate.xtext.aadl2.ui.outline?after=additions">
+            locationURI="popup:org.osate.ui.analysesOutlinePopup?after=additions">
          <menu
                id="com.rockwellcollins.atc.agree.analysis.popups.main"
                label="AGREE"

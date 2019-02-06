@@ -1,0 +1,26 @@
+property set XCASE_Properties is
+
+	-- CASE MODEL TRANSFORMATION TYPE
+	COMP_TYPE: enumeration (FILTER, ATTESTATION, MONITOR, ROUTER, ISOLATOR, COMM_DRIVER) applies to (system, process, thread, device, abstract);
+	-- IMPLEMENTATION LANGUAGE OF THIS COMPONENT (eg CakeML)
+	COMP_IMPL: aadlstring applies to (thread);
+	-- ID OF THE AGREE CONTRACT THAT SPECIFIES THIS COMPONENT
+	COMP_SPEC: aadlstring applies to (thread);
+	
+	-- REMOTE ATTESTATION
+	CACHE_TIMEOUT: aadlinteger applies to (system, process, thread, device, abstract);
+	CACHE_SIZE: aadlinteger applies to (system, process, thread, device, abstract);
+	LOG_SIZE: aadlinteger applies to (system, process, thread, device, abstract);
+	
+	-- BOUNDARY
+	BOUNDARY: list of enumeration(TRUSTED, PHYSICAL) applies to (system, process, thread, device, abstract);
+	
+	-- CIA
+	CONFIDENTIALITY: enumeration (HIGH, MEDIUM, LOW) applies to (system, process, thread, device, abstract);
+	INTEGRITY: enumeration (HIGH, MEDIUM, LOW) applies to (system, process, thread, device, abstract);
+	AVAILABILITY: enumeration (HIGH, MEDIUM, LOW) applies to  (system, process, thread, device, abstract);
+	
+	-- COMMUNICATION MODALITY
+	COMM_MODALITY: enumeration (RF, WIFI, WIRED_ETHERNET, SERIAL, BT) applies to (bus);
+
+end CASE_Properties;

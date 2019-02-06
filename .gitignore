@@ -4,7 +4,15 @@ instances
 *.sacm
 .svn
 .#*
+.sw?
 TAGS
 .aadlbin-gen
 *~
+<<<<<<< HEAD
 .sw?
+=======
+.DS_Store
+*.class
+
+>>>>>>> origin/develop
+*~HEAD

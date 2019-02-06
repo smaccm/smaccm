@@ -47,7 +47,12 @@ import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.ComponentRef;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
+<<<<<<< HEAD
 import com.rockwellcollins.atc.agree.agree.CustomType;
+=======
+import com.rockwellcollins.atc.agree.agree.ConstStatement;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
+>>>>>>> origin/develop
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.ExistsExpr;
@@ -102,6 +107,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 
+<<<<<<< HEAD
 	private Set<NamedElement> getNamedElements(EObject ctx) {
 
 		Set<NamedElement> components = new HashSet<>();
@@ -148,6 +154,12 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		}
 
 		return components;
+=======
+	IScope scope_RecordExpr_args(RecordExpr ctx, EReference ref) {
+		DoubleDotRef record = ctx.getRecord();
+		NamedElement recDef = record.getElm();
+		return RecordExprScoper.getRecordComponents(recDef, IScope.NULLSCOPE);
+>>>>>>> origin/develop
 	}
 
 
@@ -220,14 +232,24 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return IScope.NULLSCOPE;
 	}
 
+<<<<<<< HEAD
 	IScope scope_NamedElement(FnDef ctx, EReference ref) {
 		return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
+=======
+//	protected IScope scope_NamedElement(DoubleDotRef ctx, EReference ref) {
+//		return getScope(ctx.eContainer(), ref);
+//	}
+
+	protected IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
+		return Scopes.scopeFor(getCorrespondingAadlElement(ctx, ref), getScope(ctx.eContainer(), ref));
+>>>>>>> origin/develop
 	}
 
 	IScope scope_NamedElement(LinearizationDef ctx, EReference ref) {
 		return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
 	}
 
+<<<<<<< HEAD
 	IScope scope_NamedElement(LibraryFnDef ctx, EReference ref) {
 		return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
 	}
@@ -326,6 +348,62 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 						for (Property p : propSet.getOwnedProperties()) {
 							ps.add(p);
 						}
+=======
+		EList<EObject> refs  = null;
+
+		if (container instanceof NestedDotID) {
+			NestedDotID parent = (NestedDotID) container;
+			refs = parent.eCrossReferences();
+
+			if (refs.size() != 1) {
+				return new HashSet<>(); // this will throw a parsing error
+			}
+			container = refs.get(0); // figure out what this type this portion
+
+			// of the nest id is so we can figure out
+			// what we could possibly link to
+
+			if (container instanceof ThreadSubcomponent) {
+				container = ((ThreadSubcomponent) container).getComponentType();
+				result.addAll(getAadlElements(container));
+			} else if (container instanceof Subcomponent) {
+				container = ((Subcomponent) container).getComponentImplementation();
+				if (container == null) { // no implementation is provided
+					container = refs.get(0);
+					container = ((Subcomponent) container).getClassifier();
+				}
+				result.addAll(getAadlElements(container));
+			} else if (container instanceof DataPort) {
+				container = ((DataPort) container).getDataFeatureClassifier();
+				result.addAll(getAadlElements(container));
+			} else if (container instanceof EventDataPort) {
+				container = ((EventDataPort) container).getDataFeatureClassifier();
+				result.addAll(getAadlElements(container));
+			} else if (container instanceof AadlPackage) {
+				result.addAll(getAadlElements(container));
+			} else if (container instanceof FeatureGroupImpl) {
+				container = ((FeatureGroupImpl) container).getAllFeatureGroupType();
+				result.addAll(getAadlElements(container));
+			} else if (container instanceof Arg || container instanceof ConstStatement) {
+				Type type;
+
+				if (container instanceof Arg) {
+					type = ((Arg) container).getType();
+				} else {
+					type = ((ConstStatement) container).getType();
+				}
+
+				if (type instanceof RecordType) {
+					DoubleDotRef elID = ((RecordType) type).getRecord();
+					NamedElement namedEl = elID.getElm();
+
+					if (namedEl instanceof ComponentImplementation) {
+						ComponentImplementation componentImplementation = (ComponentImplementation) namedEl;
+						EList<Subcomponent> subs = componentImplementation.getAllSubcomponents();
+						result.addAll(subs);
+					} else if (namedEl instanceof RecordDefExpr) {
+						result.addAll(((RecordDefExpr) namedEl).getArgs());
+>>>>>>> origin/develop
 					}
 					container = null;
 				} else {
@@ -360,8 +438,22 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return prevScope;
 	}
 
+<<<<<<< HEAD
 	private List<NamedElement> getFieldsFromType(Type typ) {
 
+=======
+	protected Set<Element> getAadlElements(EObject ctx) {
+		Set<Element> components = new HashSet<>();
+		if (ctx instanceof ComponentType) {
+			components.addAll(getAllAgreeElements(ctx));
+			components.addAll(((ComponentType) ctx).getAllFeatures());
+
+		} else if (ctx instanceof ComponentImplementation) {
+			components.addAll(((ComponentImplementation) ctx).getAllSubcomponents());
+			components.addAll(((ComponentImplementation) ctx).getAllConnections());
+			components.addAll(getAllAgreeElements(ctx));
+			components.addAll(getAadlElements(((ComponentImplementation) ctx).getType()));
+>>>>>>> origin/develop
 
 		if (typ instanceof CustomType) {
 

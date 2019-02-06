@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AGREE front-end
 Bundle-Vendor: Rockwell Collins, Inc.
-Bundle-Version: 2.1.3.qualifier
+Bundle-Version: 2.4.0.qualifier
 Bundle-SymbolicName: com.rockwellcollins.atc.agree.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.rockwellcollins.atc.agree;visibility:=reexport,
@@ -25,7 +25,6 @@ Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.rockwellcollins.atc.agree.ui.contentassist,
- com.rockwellcollins.atc.agree.ui.contentassist.antlr,
  com.rockwellcollins.atc.agree.ui.internal,
  com.rockwellcollins.atc.agree.ui.quickfix,
  com.rockwellcollins.atc.agree.unparsing

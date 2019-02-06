@@ -1,0 +1,76 @@
+package Xyz::Toy
+public 
+   with Base_Types;
+   with Xyz::Lib;
+   
+   
+system A
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		assume "A input range" : Input < 20;
+		guarantee "A output range" : Output < 2*Input;
+	**};	
+end A ; 
+
+system B
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+		assume "B input range" : Input < 20;
+		guarantee "B output range" : Output < Input + 15;
+		
+		eq x: Xyz::Lib::rex = Xyz::Lib::rex {x=1};
+	**};	
+end B ; 
+
+system C
+	features
+		Input1: in data port Base_Types::Integer;
+		Input2: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+			
+	annex agree {** 
+	  eq mode : int;
+	  
+	  guarantee "mode always is increasing" : mode >= 0 -> mode > pre(mode);
+		guarantee "C output range" : Output = if mode = 3 then (Input1 + Input2) else 0;
+	**};	
+end C ; 
+   
+system top_level
+	features
+		Input: in data port Base_Types::Integer;
+		Output: out data port Base_Types::Integer;
+	annex agree {** 
+	    
+	  eq mode : int;
+		assume "System input range " : Xyz::Lib::ident(Input) < 10;
+		guarantee "mode is always positive" : mode >= 0;
+		guarantee "System output range" : Output < 50;
+	**};	
+end top_level;
+
+system implementation top_level.Impl
+	subcomponents
+		A_sub : system A ; 
+		B_sub : system B ; 
+		C_sub : system C ; 
+	connections
+		IN_TO_A : port Input -> A_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_B : port A_sub.Output -> B_sub.Input {Communication_Properties::Timing => immediate;};
+		A_TO_C : port A_sub.Output -> C_sub.Input1 {Communication_Properties::Timing => immediate;};
+		B_TO_C : port B_sub.Output -> C_sub.Input2 {Communication_Properties::Timing => immediate;};
+		C_TO_Output : port C_sub.Output -> Output {Communication_Properties::Timing => immediate;}; 
+		
+	annex agree{**
+	  assign mode = C_sub.mode;
+	**};
+	
+end top_level.Impl;
+	
+end Xyz::Toy;

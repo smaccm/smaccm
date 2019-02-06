@@ -1,0 +1,100 @@
+package Feature_Groups
+public
+  with Base_Types;
+
+data EGI_Data
+end EGI_Data;
+
+data implementation EGI_Data.impl
+  subcomponents
+    aoa:  data  Base_Types::Integer;
+    time_val:  data  Base_Types::Integer;
+    lat:  data  Base_Types::Integer;
+    long:  data  Base_Types::Integer;
+    alt:  data  Base_Types::Integer;
+    egi_health:  data  Base_Types::Integer;
+    bank:  data  Base_Types::Integer;
+    bank_rate:  data  Base_Types::Integer;
+    pitch:  data  Base_Types::Integer;
+    pitch_rate:  data  Base_Types::Integer;
+    heading:  data  Base_Types::Integer;
+    heading_rate:  data  Base_Types::Integer;
+    velocity_x :  data  Base_Types::Integer;
+    velocity_y :  data  Base_Types::Integer;
+    velocity_z :  data  Base_Types::Integer;
+    accel_x:  data  Base_Types::Integer;
+    accel_y:  data  Base_Types::Integer;
+    accel_z:  data  Base_Types::Integer;
+end EGI_Data.impl;
+
+data AOA_Data
+end AOA_Data;
+
+data implementation AOA_Data.impl
+  subcomponents
+    aoa : data Base_Types::Integer;
+end AOA_Data.impl;
+
+data ADS_Data
+end ADS_Data;
+
+data implementation ADS_Data.impl
+  subcomponents
+    amb_press:  data  Base_Types::Integer;
+    amb_temp:  data  Base_Types::Integer;
+    total_press:  data Base_Types::Integer;
+end ADS_Data.impl;
+
+data ACTUATORS_Data
+end ACTUATORS_Data;
+
+data implementation ACTUATORS_Data.impl
+  subcomponents
+    ailerons:  data  Base_Types::Float;
+    elevators:  data  Base_Types::Float;
+    rudder:  data  Base_Types::Float;
+    spoiler:  data  Base_Types::Float;
+    flaps_gt:  data  Base_Types::Float;
+    flaps_lt:  data  base_Types::Float;
+end ACTUATORS_Data.impl;
+
+data ACTUATORS_SOV_Data
+end ACTUATORS_SOV_Data;
+
+data implementation ACTUATORS_SOV_Data.impl
+  subcomponents
+    ailerons_sov1_open:  data  Base_Types::Boolean;
+    elevators_sov1_open:  data  Base_Types::Boolean;
+    rudder_sov1_open:  data  Base_Types::Boolean;
+    spoiler_sov1_open:  data  Base_Types::Boolean;
+    flaps_gt_sov1_open:  data  Base_Types::Boolean;
+    flaps_lt_sov1_open:  data  base_Types::Boolean;
+    ailerons_sov2_open:  data  Base_Types::Boolean;
+    elevators_sov2_open:  data  Base_Types::Boolean;
+    rudder_sov2_open:  data  Base_Types::Boolean;
+    spoiler_sov2_open:  data  Base_Types::Boolean;
+    flaps_gt_sov2_open:  data  Base_Types::Boolean;
+    flaps_lt_sov2_open:  data  base_Types::Boolean;
+end ACTUATORS_SOV_Data.impl;
+
+data time_stamps
+end time_stamps;
+
+data implementation time_stamps.impl
+  subcomponents
+    egi1:  data  Base_Types::Integer;
+    egi2:  data  Base_Types::Integer;
+    egi3:  data  Base_Types::Integer;
+    egi4:  data  Base_Types::Integer;
+    aoa1:  data  Base_Types::Integer;
+    aoa2:  data  Base_Types::Integer;
+    ads1:  data  Base_Types::Integer;
+    ads2:  data  Base_Types::Integer;
+    acts1_sense:  data  Base_Types::Integer;
+    acts2_sense:  data  Base_Types::Integer;
+    acts3_sense:  data  Base_Types::Integer;
+    acts4_sense:  data  Base_Types::Integer;
+    acts_ret:  data  Base_Types::Integer;
+end time_stamps.impl;
+
+end Feature_Groups;

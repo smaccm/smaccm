@@ -1,0 +1,183 @@
+package Ground_Vehicle_C
+public
+	with Base_Types;
+	
+	annex agree {**
+		const ACCEL_BOUND : real = 80.0;
+		const TARGET_SPEED_BOUND : real = 200.0;
+		const MEASURED_SPEED_BOUND : real = 260.0;
+	**};
+	
+	system Car
+		features
+			target_speed : in data port Base_Types::Float;
+			brake_pressure : in data port Base_Types::Float;
+			measured_speed : out data port Base_Types::Float;			
+	    annex agree {**	    	
+	    		
+	    	--problems to solve:
+	    	--1. Make sure subcomponent assumptions prove
+	    	--2. Find proper bound for measured speed
+	    	--3. Figure out why the acceleration is not bounded
+	    	--4. Prove that measured speed approaches constant target speed
+	    	--5. Introduce error in speedometer and prove all guarantees
+	    		
+	    	assume "input brake pressure is positve" :
+	    	  0.0 <= brake_pressure;
+	    	  
+	    	assume "brake pressure is bounded" :
+	    	  brake_pressure <= 50.0;
+	    	  
+	    	assume "target speed is always positive" :
+	    	  0.0 <= target_speed;
+	    	  
+	    	assume "target speed is bounded" :
+	    	 target_speed <= Ground_Vehicle_C.TARGET_SPEED_BOUND;
+	    		    	  
+	    	guarantee "Measured speed is always positive" :
+	    	  0.0 <= measured_speed;
+	    	  
+	    	guarantee "Measured speed is bounded" :
+	    	  measured_speed <= Ground_Vehicle_C.MEASURED_SPEED_BOUND;  
+	    		
+	    	eq accel : real = 0.0 -> measured_speed - pre(measured_speed);
+	    	guarantee "The acceleration is bounded" :
+	    	  Lib::abs(accel) <= Ground_Vehicle_C::ACCEL_BOUND;
+	    	  
+	    	eq const_target_speed : bool = true -> target_speed = pre(target_speed) and pre(const_target_speed);
+	    	guarantee "measured speed approaches target speed" :
+	    	  const_target_speed => measured_speed <= target_speed + 51.0;
+	    	   	  
+	    **};
+			
+	end Car;
+	
+	
+	system implementation Car.i
+		subcomponents
+			speedometer : system Speedometer;
+			speed_controller : system Speed_Controller;
+			maws : system Motor_And_Wheels;
+			
+		connections
+			conn0 : port target_speed -> speed_controller.target_speed;
+			conn1 : port speedometer.speed -> speed_controller.measured_speed;
+			conn2 : port speed_controller.to_intake -> maws.intake;
+			conn3 : port speed_controller.to_brakes -> maws.brake_pressure;
+			conn4 : port maws.rpms -> speedometer.rpms  {Communication_Properties::Timing => delayed;};
+			conn5 : port speedometer.speed -> measured_speed;
+			conn6 : port brake_pressure -> speed_controller.brake_pressure;
+			
+	    annex agree {**
+	    	lemma "motor rpms are bounded" :
+	    	  maws.rpms <= 250.0;
+	    	  
+	    	lemma "motor rpms are less than target speed" :
+	    	  const_target_speed => maws.rpms <= target_speed + 50.0;
+	    **};
+			
+	end Car.i;
+	
+	system Speedometer
+		features
+			rpms : in data port Base_Types::Float;
+			speed : out data port Base_Types::Float;
+		annex agree {**
+			
+            guarantee "speed error range" :
+              Lib::abs(1.0*rpms - speed) <= 1.0;
+              
+            guarantee "speed is positve" :
+              0.0 <= speed;
+			  
+--			guarantee "speed with no error" :
+--			  speed = 1.0*rpms;
+		**};
+	end Speedometer;
+	
+	system Motor_And_Wheels
+		features
+			intake : in data port Base_Types::Float;
+			brake_pressure : in data port Base_Types::Float;
+			rpms : out data port Base_Types::Float;
+	    annex agree {**
+	    	assume "intake is always positive" :
+	    	  0.0 <= intake;
+	    	  
+	    	assume "brake pressure is always positive" :
+	    	  0.0 <= brake_pressure;
+	    	  
+	    	eq rpm_calc : real = (0.0 -> pre(rpms)) + intake - brake_pressure;
+	    	
+	    	guarantee "rpm calculation" :
+	    	  rpms = if rpm_calc < 0.0 then 0.0 else rpm_calc;
+	    **};
+	end Motor_And_Wheels;
+	
+	
+	
+	system Speed_Controller
+		features
+			target_speed : in data port Base_Types::Float;
+			measured_speed : in data port Base_Types::Float;
+			brake_pressure : in data port Base_Types::Float;
+			to_intake : out data port Base_Types::Float;
+			to_brakes : out data port Base_Types::Float;
+		annex agree {**
+		
+	    	const p : real = 0.2;
+	    	const i : real = 0.01;
+	    	const d : real = 0.0;
+	    		    	
+	    	eq error : real =  
+	    	  if brake_pressure > 0.0 then 
+	    	    0.0 
+	    	  else 
+	    	    target_speed - measured_speed;
+	    	                      
+	    	eq new_i_error : real = 
+	    	  if brake_pressure > 0.0 then 
+	    	    0.0 
+	    	  else 
+	    	    (0.0 -> pre(i_error)) + error;
+	    	    
+	    	eq i_error : real = 
+	    	  if new_i_error < -500.0 then 
+	    	    -500.0 
+	    	  else if new_i_error > 500.0 then 
+	    	    500.0
+	    	  else 
+	    	    new_i_error;
+	    	    
+	    	eq d_error : real = 
+	    	  if brake_pressure > 0.0 then 
+	    	    0.0 
+	    	  else 
+	    	    error - (0.0 -> pre(error));
+	    	
+	    	eq act_val : real = p * error + i * i_error + d * d_error;
+	    	
+	    	
+	    	guarantee "to_brake behavior" :
+			  to_brakes = if(Lib::abs(act_val) < brake_pressure) then
+			                brake_pressure
+			              else if measured_speed < 0.0 and act_val > 0.0 then
+			                act_val
+			              else if measured_speed > 0.0 and act_val < 0.0 then
+			                -1.0 * act_val
+			              else
+			                brake_pressure;
+			               
+			guarantee "to_intake behavior" :
+			  to_intake = if to_brakes > 0.0 then
+			                0.0
+			              else if act_val < 0.0 then
+			                -1.0 * act_val
+			              else
+			                act_val;
+	    	
+	    **};
+	end speed_controller;
+	
+	
+end Ground_Vehicle_C;

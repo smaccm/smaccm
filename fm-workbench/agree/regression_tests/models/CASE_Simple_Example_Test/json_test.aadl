@@ -1,0 +1,64 @@
+package json_test
+public
+	with AADL_Project;
+	with CASE_Model_Transformations;
+	with CASE_Properties;
+	with Base_Types;
+	renames CASE_Model_Transformations::all;
+	BT renames package Base_Types;
+	
+	data Coordinate
+	end Coordinate;
+
+	data implementation Coordinate.Impl
+		subcomponents
+			latitude: data Base_Types::Integer;
+			longitude: data Base_Types::Integer;
+			altitude: data Base_Types::Integer;
+	end Coordinate.Impl;
+	
+	thread FlightPlanner
+		features
+			recv: in event port;
+			request_nofly_zones: out event data port Coordinate.Impl;
+			nofly_zones: in event data port Coordinate.Impl;
+			send: out event port;
+		properties
+			CASE_Properties::COMP_TYPE => FILTER;
+			CASE_Properties::Boundary => (PHYSICAL, TRUSTED);
+	end FlightPlanner;
+
+	thread implementation FlightPlanner.Impl
+	end FlightPlanner.Impl;
+
+	thread NoFlyZoneDatabase
+		features
+			map: in event data port Coordinate.Impl;
+			zones: out event data port Coordinate.Impl;			
+	end NoFlyZoneDatabase;
+
+	thread implementation NoFlyZoneDatabase.Impl
+	end NoFlyZoneDatabase.Impl;
+	
+	process SW
+		features
+			radio_recv: in event port;
+			radio_send: out event port;
+	end SW;
+
+	process implementation SW.Impl
+		subcomponents
+			FPLN: thread FlightPlanner.Impl;
+			NFDB: thread NoFlyZoneDatabase.Impl;
+		connections
+			c1: port radio_recv -> FPLN.recv;
+			c2: port FPLN.request_nofly_zones -> NFDB.map;
+			c3: port NFDB.zones -> FPLN.nofly_zones;
+			c4: port FPLN.send -> radio_send;
+
+	end SW.Impl;
+	
+private
+	with Base_Types;
+		
+end json_test;

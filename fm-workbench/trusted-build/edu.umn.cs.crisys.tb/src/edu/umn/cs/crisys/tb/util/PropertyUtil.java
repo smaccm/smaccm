@@ -28,9 +28,8 @@ import org.osate.aadl2.impl.ListValueImpl;
 import org.osate.aadl2.impl.StringLiteralImpl;
 import org.osate.aadl2.impl.ThreadTypeImpl;
 import org.osate.aadl2.instance.ComponentInstance;
-import org.osate.aadl2.instance.InstanceObject;
 import org.osate.aadl2.instance.impl.InstanceReferenceValueImpl;
-import org.osate.xtext.aadl2.properties.util.EMFIndexRetrieval;
+import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import edu.umn.cs.crisys.tb.TbException;
@@ -56,11 +55,11 @@ public abstract class PropertyUtil {
    final public static Property TB_SYS_SIGNAL_NUMBER = Util
          .getPropertyDefinitionInWorkspace("TB_SYS::Signal_Number");
 
-   final public static String TB_SYS_COMMPRIM_SOURCE_HEADER_NAME = 
-         "TB_SYS::CommPrim_Source_Header"; 
+   final public static String TB_SYS_COMMPRIM_SOURCE_HEADER_NAME =
+         "TB_SYS::CommPrim_Source_Header";
    final public static Property TB_SYS_COMMPRIM_SOURCE_HEADER = Util
          .getPropertyDefinitionInWorkspace(TB_SYS_COMMPRIM_SOURCE_HEADER_NAME);
-   
+
    final public static Property TB_SYS_COMMPRIM_SOURCE_TEXT = Util
          .getPropertyDefinitionInWorkspace("TB_SYS::CommPrim_Source_Text");
    final public static Property TB_SYS_OS = Util
@@ -70,9 +69,9 @@ public abstract class PropertyUtil {
    final public static Property TB_SYS_OUTPUT_DIRECTORY = Util
          .getPropertyDefinitionInWorkspace("TB_SYS::Output_Directory");
 
-   final public static Property PERIOD = 
+   final public static Property PERIOD =
          Util.getPropertyDefinitionInWorkspace("Period");
-   final public static Property PRIORITY = 
+   final public static Property PRIORITY =
          Util.getPropertyDefinitionInWorkspace("Priority");
 
    final public static Property LEGACY = Util.getPropertyDefinitionInWorkspace("TB_SYS::Is_External");
@@ -114,7 +113,7 @@ public abstract class PropertyUtil {
    final public static Property CAMKES_TIME_SERVER_AADL_THREAD_MIN_INDEX = Util
          .getPropertyDefinitionInWorkspace("TB_SYS::CAmkES_Time_Server_AADL_Thread_Min_Index");
    final public static Property MAILBOX = Util
-         .getPropertyDefinitionInWorkspace("TB_SYS::Mailbox"); 
+         .getPropertyDefinitionInWorkspace("TB_SYS::Mailbox");
    final public static Property REQUIRES_TIME_SERVICES = Util
          .getPropertyDefinitionInWorkspace("TB_SYS::Requires_Time_Services");
    final public static Property CAMKES_DATAPORT_RPC_MIN_INDEX = Util
@@ -143,7 +142,7 @@ public abstract class PropertyUtil {
       boolean legacy = false;
 
       try {
-         legacy = (boolean) PropertyUtils.getBooleanValue(tti, PropertyUtil.LEGACY);
+         legacy = PropertyUtils.getBooleanValue(tti, PropertyUtil.LEGACY);
       } catch(Exception e) {}
       return legacy;
    }
@@ -152,7 +151,7 @@ public abstract class PropertyUtil {
       boolean pbr = false;
 
       try {
-         pbr = (boolean) PropertyUtils.getBooleanValue(tti, PropertyUtil.PASS_BY_REFERENCE);
+         pbr = PropertyUtils.getBooleanValue(tti, PropertyUtil.PASS_BY_REFERENCE);
       } catch(Exception e) {}
       return pbr;
    }
@@ -161,7 +160,7 @@ public abstract class PropertyUtil {
       Map<String, String> m = new HashMap<>();
       List<String> elems = getStringList(tti, PropertyUtil.TB_SYS_MEMORY_PAGES);
       if (elems.size() % 2 != 0) {
-         throw new TbException("Property 'Memory_Regions' should be list of strings arranged as string, hexidecimal integer pairs representing the name and memory region");	      
+         throw new TbException("Property 'Memory_Regions' should be list of strings arranged as string, hexidecimal integer pairs representing the name and memory region");
       }
       for (Iterator<String> it = elems.iterator(); it.hasNext(); ) {
          String name = it.next();
@@ -193,7 +192,7 @@ public abstract class PropertyUtil {
    }
 
    public static boolean getThreadType(NamedElement tti) {
-      EnumerationLiteral lit = null; 
+      EnumerationLiteral lit = null;
       try {
          lit = PropertyUtils.getEnumLiteral(tti, PropertyUtil.THREAD_TYPE);
       } catch (Exception e) {
@@ -209,7 +208,7 @@ public abstract class PropertyUtil {
    }
 
    public static String getOS(NamedElement tti) {
-      EnumerationLiteral lit = null; 
+      EnumerationLiteral lit = null;
       try {
          lit = PropertyUtils.getEnumLiteral(tti, PropertyUtil.TB_SYS_OS);
       } catch (Exception e) {
@@ -248,14 +247,14 @@ public abstract class PropertyUtil {
 
    // returns null if there is no handler list.
    public static List<String> getComputeEntrypointList(NamedElement container) {
-      ArrayList<String> handlerList = new ArrayList<String>(); 
+      ArrayList<String> handlerList = new ArrayList<String>();
       try {
-         EList<Element> eList = 
-               PropertyUtils.getSimplePropertyListValue(container,  
+         EList<Element> eList =
+               PropertyUtils.getSimplePropertyListValue(container,
                      PropertyUtil.TB_SYS_COMPUTE_ENTRYPOINT_SOURCE_TEXT).getChildren();
 
          for (Element e : eList) {
-            StringLiteralImpl str = (StringLiteralImpl) e; 
+            StringLiteralImpl str = (StringLiteralImpl) e;
             handlerList.add(str.getValue());
          }
          return handlerList;
@@ -264,9 +263,9 @@ public abstract class PropertyUtil {
       try {
          String str = Util.getStringValue(container, PropertyUtil.COMPUTE_ENTRYPOINT_SOURCE_TEXT);
          handlerList.add(str);
-         return handlerList;			
+         return handlerList;
       } catch (Exception e) {
-         return null; 
+         return null;
       }
    }
 
@@ -291,8 +290,8 @@ public abstract class PropertyUtil {
 
    final private static EClass UNITS_TYPE = Aadl2Package.eINSTANCE.getUnitsType();
    public static UnitLiteral findUnitLiteral(Element context, String name) {
-      for (IEObjectDescription desc : EMFIndexRetrieval
-            .getAllEObjectsOfTypeInWorkspace(UNITS_TYPE)) {
+
+		for (IEObjectDescription desc : Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context, UNITS_TYPE)) {
          UnitsType unitsType = (UnitsType) EcoreUtil.resolve(desc.getEObjectOrProxy(), context);
          UnitLiteral literal = unitsType.findLiteral(name);
          if (literal != null) {
@@ -300,14 +299,14 @@ public abstract class PropertyUtil {
          }
       }
 
-      return null; 
+      return null;
    }
 
 
 
    public static double getPeriodInMicroseconds(NamedElement t) {
       try {
-         final IntegerLiteral intLit = 
+         final IntegerLiteral intLit =
                (IntegerLiteral) PropertyUtils.getSimplePropertyValue(t, PropertyUtil.PERIOD);
          double valInPicoseconds = intLit.getScaledValue();
          return valInPicoseconds / 1000000.0; // microseconds per picosecond.
@@ -346,20 +345,20 @@ public abstract class PropertyUtil {
       try {
          int queueSize = (int) PropertyUtils.getIntegerValue(port,
                PropertyUtil.QUEUE_SIZE);
-         return queueSize; 
+         return queueSize;
       } catch (Exception e) {
          throw new TbException("Error: required property 'Queue_Size' missing from port: " + port.getName());
-      }   
+      }
    }
 
    public static boolean getUseOsRealTimeExtensions(NamedElement elem) {
-      return (boolean) PropertyUtils.getBooleanValue(elem, PropertyUtil.USE_OS_REAL_TIME_EXTENSIONS);
+      return PropertyUtils.getBooleanValue(elem, PropertyUtil.USE_OS_REAL_TIME_EXTENSIONS);
    }
 
    /**********************************************************
-    * 
+    *
     * Element typing functions
-    * 
+    *
     */
 
 
@@ -385,7 +384,7 @@ public abstract class PropertyUtil {
          value = PropertyUtils
                .getSimplePropertyListValue(tti, DATA_MODEL_BASE_TYPE);
       } catch (Exception e) {
-         throw new TbException("Required property 'Base_Type' not found for type: " + tti.getName());      
+         throw new TbException("Required property 'Base_Type' not found for type: " + tti.getName());
       }
       if (value instanceof ListValueImpl) {
          ListValueImpl listValue = (ListValueImpl) value;
@@ -393,9 +392,9 @@ public abstract class PropertyUtil {
             throw new TbException("For array type: " + tti.getName() + " base type list has more than one element.");
          }
          PropertyExpression sizeExpr = listValue.getOwnedListElements().get(0);
-         if (sizeExpr instanceof ClassifierValueImpl && 
+         if (sizeExpr instanceof ClassifierValueImpl &&
                ((ClassifierValueImpl)sizeExpr).getClassifier() instanceof DataClassifier) {
-            ClassifierValueImpl castedSize =(ClassifierValueImpl) sizeExpr;  
+            ClassifierValueImpl castedSize =(ClassifierValueImpl) sizeExpr;
             Classifier c = castedSize.getClassifier();
             return (DataClassifier)c;
          } else {
@@ -421,7 +420,7 @@ public abstract class PropertyUtil {
             PropertyExpression sizeExpr = listValue.getOwnedListElements().get(0);
             IntegerLiteral intLit = (IntegerLiteral) sizeExpr;
             double scaledDim = intLit.getScaledValue();
-            return (int)(new Integer((int)scaledDim)); // bits per byte.
+            return (new Integer((int)scaledDim)); // bits per byte.
          } else {
             throw new TbException("Classifier returned by Dimension property does not correspond to list for array type: " + tti.getName());
          }
@@ -435,16 +434,16 @@ public abstract class PropertyUtil {
       try {
          value = PropertyUtils.getSimplePropertyListValue(procInstance, ACTUAL_PROCESSOR_BINDING);
       } catch (Exception e) {
-         throw new TbException("Required property 'Actual_Processor_Binding' not found for object: " + procInstance.getName());      
+         throw new TbException("Required property 'Actual_Processor_Binding' not found for object: " + procInstance.getName());
       }
 
       ListValueImpl listValue = (ListValueImpl) value;
       if (listValue.getOwnedListElements().size() != 1) {
          throw new TbException("For processor instance: " + procInstance.getName() + " no processor binding!");
       }
-      InstanceReferenceValueImpl refVal = 
+      InstanceReferenceValueImpl refVal =
             (InstanceReferenceValueImpl)listValue.getOwnedListElements().get(0);
-      ComponentInstance theResult = 
+      ComponentInstance theResult =
             (ComponentInstance)refVal.getReferencedInstanceObject();
       return theResult;
    }
