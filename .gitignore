@@ -1,5 +1,6 @@
 bin
 instances
+.DS_Store
 *.sacm
 .svn
 .#*

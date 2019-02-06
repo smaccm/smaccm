@@ -169,7 +169,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'occurs' | 'occur'
+	 *     'occur' | 'occurs'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval
@@ -183,7 +183,7 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'occurs' | 'occur'
+	 *     'occur' | 'occurs'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     effect=Expr (ambiguity) 'during' interval=TimeInterval
