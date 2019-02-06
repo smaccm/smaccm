@@ -136,20 +136,12 @@ public class SimulationTab extends AbstractLaunchConfigurationTab {
 				final IProject selectedProject = getSelectedProject();
 				final IPath selectedProjectPath = selectedProject == null ? null : selectedProject.getFullPath();
 				if(selectedProjectPath != null) {
-<<<<<<< HEAD
-					for(final IEObjectDescription desc : EMFIndexRetrieval.getAllEObjectsOfTypeInWorkspace(Aadl2Package.eINSTANCE.getComponentImplementation())) {
-						final URI objUri = desc.getEObjectURI();
-						final IPath objPath = new Path(objUri.toPlatformString(true));
-						if(selectedProjectPath.isPrefixOf(objPath)) {
-							componentImplementationDescriptions.add(desc);
-=======
 					for (IEObjectDescription eobjDesc : resourceDescriptions
 							.getExportedObjectsByType(Aadl2Package.eINSTANCE.getComponentImplementation())) {
 						final URI objUri = eobjDesc.getEObjectURI();
 						final IPath objPath = new Path(objUri.toPlatformString(true));
 						if (selectedProjectPath.isPrefixOf(objPath)) {
 							componentImplementationDescriptions.add(eobjDesc);
->>>>>>> origin/develop
 						}
 					}
 				}
