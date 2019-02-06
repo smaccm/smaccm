@@ -26,17 +26,10 @@ import com.rockwellcollins.atc.agree.agree.AgreeLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
-<<<<<<< HEAD
-import com.rockwellcollins.atc.agree.agree.CustomType;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
-=======
-import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
->>>>>>> origin/develop
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.ui.contentassist.AgreeProposalProvider;
@@ -128,14 +121,14 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 
 	private List<String> getNestedDotIDCandidates(ProjectionExpr id) {
 
-		NamedElement base = ((NamedElmExpr) id).getNamedElm();
+		NamedElement base = ((NamedElmExpr) id).getElm();
 		NamedElement namedEl = null;
 
 		if (base instanceof Arg) {
 			Type type = ((Arg) base).getType();
 
-			CustomType elID = ((CustomType) type);
-			namedEl = elID.getNamedElm();
+			DoubleDotRef elID = ((DoubleDotRef) type);
+			namedEl = elID.getElm();
 //=======
 //			DoubleDotRef elID = ((RecordType) type).getRecord();
 //			namedEl = elID.getElm();

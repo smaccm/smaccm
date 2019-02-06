@@ -27,8 +27,8 @@ import org.osate.ge.operations.StepResultBuilder;
 
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
-import com.rockwellcollins.atc.agree.agree.EnumID;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 
 import edu.uah.rsesc.agree.ge.AgreeCategories;
 
@@ -82,7 +82,7 @@ public class EnumerationStatementHandler {
 						newBo.setName(
 								AgreeBusinessObjectHandlerUtil.buildUniqueIdentifier(agreeContract, "enumeration"));
 
-						final EnumID enumId = AgreeFactory.eINSTANCE.createEnumID();
+						final NamedID enumId = AgreeFactory.eINSTANCE.createNamedID();
 						enumId.setName(newBo.getName() + "_enumerator");
 						newBo.getEnums().add(enumId);
 

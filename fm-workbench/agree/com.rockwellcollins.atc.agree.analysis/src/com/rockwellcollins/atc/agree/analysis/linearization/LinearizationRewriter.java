@@ -173,16 +173,16 @@ public class LinearizationRewriter {
 		resultSlopeExpr.setVal(Double.toString((seg.stopY - seg.startY) / (seg.stopX - seg.startX)));
 
 		NamedElmExpr inputId = af.createNamedElmExpr();
-		inputId.setNamedElm(EcoreUtil.copy(inputArg));
+		inputId.setElm(EcoreUtil.copy(inputArg));
 
-<<<<<<< HEAD
+
 		NamedElmExpr resultId = af.createNamedElmExpr();
-		resultId.setNamedElm(EcoreUtil.copy(resultArg));
-=======
-
-		NestedDotID resultId = af.createNestedDotID();
-		resultId.setBase(EcoreUtil.copy(resultArg));
->>>>>>> origin/develop
+		resultId.setElm(EcoreUtil.copy(resultArg));
+//=======
+//
+//		NestedDotID resultId = af.createNestedDotID();
+//		resultId.setBase(EcoreUtil.copy(resultArg));
+//>>>>>>> origin/develop
 
 
 		BinaryExpr rangeMinExpr = af.createBinaryExpr();
@@ -254,7 +254,7 @@ public class LinearizationRewriter {
 		result.getRets().add(constraintArg);
 
 		NamedElmExpr inputId = af.createNamedElmExpr();
-		inputId.setNamedElm(EcoreUtil.copy(inputArg));
+		inputId.setElm(EcoreUtil.copy(inputArg));
 
 		RealLitExpr domainCheckLowerLit = af.createRealLitExpr();
 		domainCheckLowerLit.setVal(Double.toString(segs.lower.getFirst().startX));

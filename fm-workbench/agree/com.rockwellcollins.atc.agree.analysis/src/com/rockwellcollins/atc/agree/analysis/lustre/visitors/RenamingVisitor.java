@@ -16,7 +16,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.CustomType;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
@@ -137,7 +137,7 @@ public class RenamingVisitor extends AstIterVisitor {
 			}
 		} else {
 
-			result += ((CustomType) arg.getType()).getNamedElm().getName();
+			result += ((DoubleDotRef) arg.getType()).getElm().getName();
 //=======
 //			result += ((RecordType) arg.getType()).getRecord().getElm().getName();
 //>>>>>>> origin/develop

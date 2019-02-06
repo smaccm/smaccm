@@ -24,5 +24,17 @@ Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib,
  org.osate.annexsupport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: com.rockwellcollins.atc.agree,
+ com.rockwellcollins.atc.agree.services,
+ com.rockwellcollins.atc.agree.agree,
+ com.rockwellcollins.atc.agree.agree.impl,
+ com.rockwellcollins.atc.agree.agree.util,
+ com.rockwellcollins.atc.agree.parser.antlr,
+ com.rockwellcollins.atc.agree.parser.antlr.internal,
+ com.rockwellcollins.atc.agree.validation,
+ com.rockwellcollins.atc.agree.scoping,
+ com.rockwellcollins.atc.agree.formatting,
+ com.rockwellcollins.atc.agree.linking,
+ com.rockwellcollins.atc.agree.serializer,
+ com.rockwellcollins.atc.agree.parser.antlr.lexer
 Automatic-Module-Name: com.rockwellcollins.atc.agree
-

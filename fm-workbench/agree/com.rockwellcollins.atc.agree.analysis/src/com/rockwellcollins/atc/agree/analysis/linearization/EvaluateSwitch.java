@@ -34,16 +34,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 
-import jkind.lustre.BinaryExpr;
-import jkind.lustre.UnaryExpr;
 
 public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Double>> {
 
@@ -146,7 +146,7 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 
 	@Override
 	public Function<Map<String, Double>, Double> caseCallExpr(CallExpr ctx) {
-		org.osate.aadl2.NamedElement fn = ctx.getAbstractionRef().getNamedElm();
+		org.osate.aadl2.NamedElement fn = ctx.getRef().getElm();
 //=======
 //	public Function<Map<String, Double>, Double> caseFnCallExpr(FnCallExpr ctx) {
 //		org.osate.aadl2.NamedElement fn = (ctx.getFn().getBase());

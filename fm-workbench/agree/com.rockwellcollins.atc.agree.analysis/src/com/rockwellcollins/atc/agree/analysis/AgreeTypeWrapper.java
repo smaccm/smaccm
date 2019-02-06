@@ -3,7 +3,7 @@ package com.rockwellcollins.atc.agree.analysis;
 import java.util.Objects;
 
 import com.rockwellcollins.atc.agree.agree.ArrayType;
-import com.rockwellcollins.atc.agree.agree.CustomType;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.Type;
 
@@ -32,8 +32,8 @@ public class AgreeTypeWrapper {
 			return Objects.hash(a.getSize(), a.getStem());
 		}
 
-		if (type instanceof CustomType) {
-			return Objects.hash(((CustomType) type).getNamedElm());
+		if (type instanceof DoubleDotRef) {
+			return Objects.hash(((DoubleDotRef) type).getElm());
 		}
 
 		throw new AgreeException("ERROR: unhandled type in hashCode");
@@ -60,8 +60,8 @@ public class AgreeTypeWrapper {
 			return equalsPrimType((PrimType) left, (PrimType) right);
 		}
 
-		if (left instanceof CustomType) {
-			return equalsCustomType((CustomType) left, (CustomType) right);
+		if (left instanceof DoubleDotRef) {
+			return equalsDoubleDotRef((DoubleDotRef) left, (DoubleDotRef) right);
 		}
 
 		if (left instanceof ArrayType) {
@@ -71,8 +71,8 @@ public class AgreeTypeWrapper {
 		throw new AgreeException("ERROR: unhandled type in equalTypes");
 	}
 
-	private static boolean equalsCustomType(CustomType left, CustomType right) {
-		return Objects.equals(left.getNamedElm(), right.getNamedElm());
+	private static boolean equalsDoubleDotRef(DoubleDotRef left, DoubleDotRef right) {
+		return Objects.equals(left.getElm(), right.getElm());
 	}
 
 	private static boolean equalsPrimType(PrimType left, PrimType right) {

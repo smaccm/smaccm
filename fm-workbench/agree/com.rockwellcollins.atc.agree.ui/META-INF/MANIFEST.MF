@@ -25,6 +25,7 @@ Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.rockwellcollins.atc.agree.ui.contentassist,
+ com.rockwellcollins.atc.agree.ui.internal,
  com.rockwellcollins.atc.agree.ui.quickfix,
  com.rockwellcollins.atc.agree.unparsing
 Bundle-Activator: com.rockwellcollins.atc.agree.ui.internal.AgreeActivator

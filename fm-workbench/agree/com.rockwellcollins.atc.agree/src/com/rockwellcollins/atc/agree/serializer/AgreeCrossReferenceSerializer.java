@@ -18,7 +18,7 @@ public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer
 	protected String getCrossReferenceNameFromScope(EObject semanticObject, CrossReference crossref, EObject target,
 			final IScope scope, org.eclipse.xtext.serializer.diagnostic.ISerializationDiagnostic.Acceptor errors) {
 		if (semanticObject instanceof NamedElmExpr) {
-			NamedElement base = ((NamedElmExpr) semanticObject).getNamedElm();
+			NamedElement base = ((NamedElmExpr) semanticObject).getElm();
 			if (base instanceof Subcomponent) {
 				return base.getName();
 			} else if (scope.getElements(target).iterator().hasNext()) {

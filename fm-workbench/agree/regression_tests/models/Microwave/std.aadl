@@ -73,17 +73,10 @@ annex agree {**
 	node WithinN(evt: bool, i: bool, n: int) returns (o: bool);
 	var 
 		after_event: bool; 
-<<<<<<< HEAD:models/Microwave/std.aadl
-		time_val: int;
-	let
-		after_event = if i then false else if evt then true else (false -> pre(after_event));
-		
-=======
 		time_val: int; 
 	let
 		after_event = if i then false else if evt then true else 
 			(false -> pre(after_event)); 
->>>>>>> origin/develop:fm-workbench/agree/regression_tests/models/Microwave/std.aadl
 		time_val = if i then 0 else 
 				(0 -> pre(time_val)) + if after_event then 1 else 0;
 		o = time_val <= n;

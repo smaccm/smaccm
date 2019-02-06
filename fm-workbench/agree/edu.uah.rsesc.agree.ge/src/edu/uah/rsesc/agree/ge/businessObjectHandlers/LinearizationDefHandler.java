@@ -121,7 +121,7 @@ public class LinearizationDefHandler {
 						// Body
 
 						final NamedElmExpr body = AgreeFactory.eINSTANCE.createNamedElmExpr();
-						body.setNamedElm(newArg);
+						body.setElm(newArg);
 //=======
 //						final NestedDotID body = AgreeFactory.eINSTANCE.createNestedDotID();
 //						body.setBase(newArg);

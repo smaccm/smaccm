@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.rockwellcollins.atc.agree.agree.Abstraction;
-import com.rockwellcollins.atc.agree.agree.AbstractionRef;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.CallExpr;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FnDef;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
@@ -20,6 +20,7 @@ import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
+
 
 public class CallRecursionHelper extends AgreeSwitch<Expr> {
 
@@ -122,22 +123,22 @@ public class CallRecursionHelper extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-<<<<<<< HEAD:fm-workbench/agree/com.rockwellcollins.atc.agree/src/com/rockwellcollins/atc/agree/validation/CallRecursionHelper.java
 	public Expr caseCallExpr(CallExpr object) {
-		AbstractionRef id = object.getAbstractionRef();
+		DoubleDotRef id = object.getRef();
 
 		Abstraction callDef = null;
 
 		try {
-			callDef = (Abstraction) id.getNamedElm();
-=======
-	public Expr caseFnCallExpr(FnCallExpr object) {
-
-		CallDef callDef = null;
-
-		try {
-			callDef = (CallDef) object.getFn().getBase();
->>>>>>> origin/develop:fm-workbench/agree/com.rockwellcollins.atc.agree/src/com/rockwellcollins/atc/agree/validation/FnCallRecursionHelper.java
+			callDef = (Abstraction) id.getElm();
+//=======
+//	public Expr caseFnCallExpr(FnCallExpr object) {
+//
+//		CallDef callDef = null;
+//
+//		try {
+//			callDef = (CallDef) object.getFn().getBase();
+//>>>>>>> origin/develop:fm-workbench/agree/com.rockwellcollins.atc.agree/src/com/rockwellcollins/atc/agree/validation/FnCallRecursionHelper.java
+//
 		} catch (ClassCastException e) {
 			return null;
 		}

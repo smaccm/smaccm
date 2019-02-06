@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.rockwellcollins.atc.agree/src-gen" editDirectory="/com.rockwellcollins.atc.agree.edit/src"
+    editorDirectory="/com.rockwellcollins.atc.agree.editor/src" modelPluginID="com.rockwellcollins.atc.agree"
+    forceOverwrite="true" modelName="Agree" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="com.rockwellcollins.atc.agree.edit"
+    editorPluginID="com.rockwellcollins.atc.agree.editor" runtimeVersion="2.13" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/resource/org.osate.aadl2/model/aadl2.genmodel#//aadl2">
+  <genPackages prefix="Agree" basePackage="com.rockwellcollins.atc.agree" disposableProviderFactory="true"
+      ecorePackage="Agree.ecore#/">
+    <genClasses ecoreClass="Agree.ecore#//AgreeLibrary"/>
+    <genClasses ecoreClass="Agree.ecore#//AgreeSubclause"/>
+    <genClasses ecoreClass="Agree.ecore#//Contract"/>
+    <genClasses ecoreClass="Agree.ecore#//SpecStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//NamedSpecStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NamedSpecStatement/str"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedSpecStatement/expr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedSpecStatement/pattern"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//PatternStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//WhenStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WhenStatement/condition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WhenStatement/event"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//WhenStatement/excl"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//WheneverStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverStatement/cause"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//WheneverStatement/excl"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverStatement/interval"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RealTimeStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RealTimeStatement/event"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RealTimeStatement/jitter"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeInterval">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeInterval/low"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeInterval/high"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//SynchStatement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/val"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/val2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//SynchStatement/sim"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//OrderStatement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//OrderStatement/comps"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//Abstraction"/>
+    <genClasses ecoreClass="Agree.ecore#//PropertyStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PropertyStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ConstStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ConstStatement/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ConstStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//EqStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EqStatement/lhs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EqStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//InputStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//InputStatement/lhs"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//AssignStatement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//AssignStatement/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AssignStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//FnDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnDef/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnDef/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FnDef/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LibraryFnDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LibraryFnDef/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LibraryFnDef/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LinearizationDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationDef/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationDef/intervals"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationDef/precision"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationDef/exprBody"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LinearizationInterval">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationInterval/start"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LinearizationInterval/end"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NodeDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeDef/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeDef/rets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeDef/nodeBody"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NodeBodyExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeBodyExpr/locs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeBodyExpr/stmts"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NodeStmt">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeStmt/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//Arg">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//Arg/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//Type"/>
+    <genClasses ecoreClass="Agree.ecore#//RecordDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordDef/args"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//EnumStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EnumStatement/enums"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//Expr"/>
+    <genClasses ecoreClass="Agree.ecore#//ComponentRef"/>
+    <genClasses ecoreClass="Agree.ecore#//ArrayLiteralExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayLiteralExpr/elems"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//DoubleDotRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//DoubleDotRef/elm"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NamedID"/>
+    <genClasses ecoreClass="Agree.ecore#//ArraySubBinding"/>
+    <genClasses ecoreClass="Agree.ecore#//Acc"/>
+    <genClasses ecoreClass="Agree.ecore#//AgreeContractLibrary">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContractLibrary/contract"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//AgreeContractSubclause">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContractSubclause/contract"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//AgreeContract">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContract/specs"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//InitialStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//InitialStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ParamStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ParamStatement/expr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ParamStatement/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LiftStatement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//LiftStatement/subcomp"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ConnectionStatement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ConnectionStatement/conn"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ConnectionStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//AssumeStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//GuaranteeStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//AssertStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//LemmaStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//AlwaysStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AlwaysStatement/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//WhenHoldsStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WhenHoldsStatement/conditionInterval"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WhenHoldsStatement/eventInterval"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//WhenOccursStatment">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WhenOccursStatment/times"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WhenOccursStatment/interval"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//WheneverOccursStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverOccursStatement/effect"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//WheneverBecomesTrueStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverBecomesTrueStatement/effect"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//WheneverHoldsStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverHoldsStatement/effect"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//WheneverImpliesStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverImpliesStatement/lhs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//WheneverImpliesStatement/rhs"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//PeriodicStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PeriodicStatement/period"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//SporadicStatement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//SporadicStatement/iat"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ClosedTimeInterval"/>
+    <genClasses ecoreClass="Agree.ecore#//OpenLeftTimeInterval"/>
+    <genClasses ecoreClass="Agree.ecore#//OpenRightTimeInterval"/>
+    <genClasses ecoreClass="Agree.ecore#//OpenTimeInterval"/>
+    <genClasses ecoreClass="Agree.ecore#//MNSynchStatement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//MNSynchStatement/comp1"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//MNSynchStatement/comp2"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//MNSynchStatement/max"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//MNSynchStatement/min"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//CalenStatement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//CalenStatement/els"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//AsynchStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//LatchedStatement"/>
+    <genClasses ecoreClass="Agree.ecore#//NodeEq">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NodeEq/lhs"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NodeLemma">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//NodeLemma/str"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ArrayType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayType/stem"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//ArrayType/size"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//PrimType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/lowNeg"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/rangeLow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/highNeg"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//PrimType/rangeHigh"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ForallExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ForallExpr/binding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ForallExpr/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ForallExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ExistsExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ExistsExpr/binding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ExistsExpr/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ExistsExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ForeachExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ForeachExpr/binding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ForeachExpr/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ForeachExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//FoldLeftExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldLeftExpr/binding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldLeftExpr/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldLeftExpr/accumulator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldLeftExpr/initial"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldLeftExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//FoldRightExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldRightExpr/binding"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldRightExpr/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldRightExpr/accumulator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldRightExpr/initial"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FoldRightExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//BinaryExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryExpr/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//BinaryExpr/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BinaryExpr/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//UnaryExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//UnaryExpr/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//UnaryExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//IfThenElseExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//IfThenElseExpr/a"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//IfThenElseExpr/b"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//IfThenElseExpr/c"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ThisRef"/>
+    <genClasses ecoreClass="Agree.ecore#//PrevExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PrevExpr/delay"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PrevExpr/init"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//GetPropertyExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//GetPropertyExpr/componentRef"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//GetPropertyExpr/prop"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ArrayUpdateExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayUpdateExpr/array"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayUpdateExpr/indices"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArrayUpdateExpr/valueExprs"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RecordUpdateExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/record"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/key"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordUpdateExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ArraySubExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArraySubExpr/expr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ArraySubExpr/index"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TagExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TagExpr/stem"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//TagExpr/tag"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ProjectionExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/expr"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/field"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//NamedElmExpr">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedElmExpr/elm"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeExpr"/>
+    <genClasses ecoreClass="Agree.ecore#//IndicesExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//IndicesExpr/array"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//CallExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//CallExpr/ref"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//CallExpr/args"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RecordLitExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordLitExpr/recordType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordLitExpr/args"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RecordLitExpr/argExpr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//EnumLitExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EnumLitExpr/enumType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//EnumLitExpr/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//IntLitExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//IntLitExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//PreExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//PreExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//EventExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//EventExpr/id"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//LatchedExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//LatchedExpr/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeOfExpr">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeOfExpr/id"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeRiseExpr">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeRiseExpr/id"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//TimeFallExpr">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//TimeFallExpr/id"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RealLitExpr">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//RealLitExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//BoolLitExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//BoolLitExpr/val"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//FloorCast">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//FloorCast/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//RealCast">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RealCast/expr"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

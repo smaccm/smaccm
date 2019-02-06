@@ -20,12 +20,12 @@ import org.osate.aadl2.instance.ComponentInstance;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayDef;
+import com.rockwellcollins.atc.agree.agree.ArrayType;
 import com.rockwellcollins.atc.agree.agree.ComponentRef;
-import com.rockwellcollins.atc.agree.agree.CustomType;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
-import com.rockwellcollins.atc.agree.agree.SubcomponentRef;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
@@ -64,11 +64,11 @@ public class AgreeTypeUtils {
 //	}
 
 	private static boolean needsLustreTypeExpression(com.rockwellcollins.atc.agree.agree.Type type) {
-		if (!(type instanceof CustomType)) {
+		if (!(type instanceof DoubleDotRef)) {
 			return false;
 		}
 
-		NamedElement el = ((CustomType) type).getNamedElm();
+		NamedElement el = ((DoubleDotRef) type).getElm();
 		if (el instanceof RecordDef || el instanceof EnumStatement) {
 			return true;
 		}
@@ -227,8 +227,8 @@ public class AgreeTypeUtils {
 		String typeStr = getTypeString(agreeType);
 
 		if (needsLustreTypeExpression(agreeType)) {
-			assert (agreeType instanceof CustomType);
-			NamedElement el = ((CustomType) agreeType).getNamedElm();
+			assert (agreeType instanceof DoubleDotRef);
+			NamedElement el = ((DoubleDotRef) agreeType).getElm();
 			return buildLustreType(typeStr, el);
 		}
 
@@ -387,8 +387,8 @@ public class AgreeTypeUtils {
 	}
 
 	public static NamedElement namedElFromId(ComponentRef obj, ComponentInstance compInst) {
-		if (obj instanceof SubcomponentRef) {
-			return ((SubcomponentRef) obj).getNamedElm();
+		if (obj instanceof DoubleDotRef) {
+			return ((DoubleDotRef) obj).getElm();
 		} else if (obj instanceof ThisRef) {
 			return compInst;
 		}
@@ -457,7 +457,7 @@ public class AgreeTypeUtils {
 //				if (argType instanceof PrimType) {
 //					typeStr = ((PrimType) argType).getName();
 //				} else {
-//					CustomType nestId = ((CustomType) argType);
+//					DoubleDotRef nestId = ((DoubleDotRef) argType);
 //					NamedElement namedEl = nestId.getNamedElm();
 //					subType = getType(namedEl, typeMap, typeExpressions);
 //				}

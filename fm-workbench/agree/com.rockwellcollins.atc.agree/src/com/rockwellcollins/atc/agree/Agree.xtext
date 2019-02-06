@@ -16,7 +16,7 @@ NamedElement returns aadl2::NamedElement:
 	| LinearizationDef
 	| LibraryFnDef
 	| RecordDef
-	| => NameID
+	| => NamedID
 	| => ArraySubBinding
 	| => Acc
 	;
@@ -49,23 +49,23 @@ AgreeContract returns Contract:
 	
 SpecStatement:
 	NamedSpecStatement
-	| {InitialStatement} 'initially' ':' expr=Expr  ';'
-	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
-	| {LiftStatement} 'lift' subcomp=[aadl2::NamedElement] ';'
-	| {ConnectionStatement} 'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';'
-	| SynchStatement
-	| OrderStatement
-	| PropertyStatement
-	| ConstStatement
-	| EnumStatement
-	| EqStatement
-	| AssignStatement
-	| LinearizationDef
-	| FnDef
-	| LibraryFnDef
-	| NodeDef
-	| RecordDef
-	| InputStatement;
+|	{InitialStatement} 'initially' ':' expr=Expr  ';'
+|	{ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
+|	{LiftStatement} 'lift' subcomp=[aadl2::NamedElement] ';'
+|	{ConnectionStatement} 'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';'
+|	SynchStatement
+|	OrderStatement
+|	PropertyStatement
+|	ConstStatement
+|	EnumStatement
+|	EqStatement
+|	AssignStatement
+|	LinearizationDef
+|	FnDef
+|	LibraryFnDef
+|	NodeDef
+|	RecordDef
+|	InputStatement;
 	
 NamedSpecStatement:
 	{AssumeStatement} 'assume' (name=ID)? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
@@ -202,7 +202,7 @@ RecordDef:
 
 	
 EnumStatement:
-	'enum' name=ID '=' '{' enums+=NameID (',' enums+=NameID)* '}' ';';
+	'enum' name=ID '=' '{' enums+=NamedID (',' enums+=NamedID)* '}' ';';
 
 
 Expr returns Expr:
@@ -298,10 +298,10 @@ ProjectionExpr returns Expr:
   TermExpr (=>({ProjectionExpr.expr=current} '.' field=[aadl2::NamedElement|ID]))*;
   
 TermExpr returns Expr:
-	=> ({NamedElmExpr} namedElm=[aadl2::NamedElement|DCID])
+	=> ({NamedElmExpr} elm=[aadl2::NamedElement|DCID])
 	| {TimeExpr} 'time'
 	| {IndicesExpr} 'indices' '(' array=Expr ')'
-	| => ({CallExpr} abstractionRef=DoubleDotRef '(') (args+=Expr (',' args+=Expr)*)? ')' 
+	| => ({CallExpr} ref=DoubleDotRef '(') (args+=Expr (',' args+=Expr)*)? ')' 
 	| => ({RecordLitExpr} recordType=DoubleDotRef '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
 	| => ({EnumLitExpr} 'enum' '(') enumType=DoubleDotRef ',' value=ID ')'
 	| ArrayLiteralExpr
@@ -359,7 +359,7 @@ ReservedVarTag:
 |   '_CLK';
 
 
-NameID:
+NamedID:
 	name=ID
 ;
 

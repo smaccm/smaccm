@@ -32,7 +32,6 @@ import org.osate.aadl2.PropertyType;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.Subcomponent;
 
-import com.rockwellcollins.atc.agree.agree.AbstractionRef;
 import com.rockwellcollins.atc.agree.agree.Acc;
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
 import com.rockwellcollins.atc.agree.agree.Arg;
@@ -46,8 +45,7 @@ import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.ComponentRef;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
-import com.rockwellcollins.atc.agree.agree.CustomType;
-import com.rockwellcollins.atc.agree.agree.EnumID;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumLitExpr;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
@@ -67,6 +65,7 @@ import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LibraryFnDef;
 import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
@@ -77,7 +76,6 @@ import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
-import com.rockwellcollins.atc.agree.agree.SubcomponentRef;
 import com.rockwellcollins.atc.agree.agree.TagExpr;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
@@ -101,9 +99,9 @@ public class AgreeTypeSystem {
 
 		if (typ instanceof PrimType) {
 			return ((PrimType) typ).getName();
-		} else if (typ instanceof CustomType) {
+		} else if (typ instanceof DoubleDotRef) {
 
-			Classifier c = (Classifier) ((CustomType) typ).getNamedElm();
+			Classifier c = (Classifier) ((DoubleDotRef) typ).getElm();
 			return classifierToString(c);
 
 		} else if (typ instanceof ArrayType) {
@@ -146,10 +144,10 @@ public class AgreeTypeSystem {
 	}
 
 
-	public static Type mkCustomType(NamedElement cc) {
+	public static Type mkDoubleDotRef(NamedElement cc) {
 
 		if (cc instanceof ComponentType && ((ComponentType) cc).getExtended() != null) {
-			return mkCustomType(((Classifier) cc).getExtended());
+			return mkDoubleDotRef(((Classifier) cc).getExtended());
 		}
 
 		// TODO: verify that all the base_types are covered
@@ -167,8 +165,8 @@ public class AgreeTypeSystem {
 			return realType;
 		}
 
-		CustomType ct = AgreeFactory.eINSTANCE.createCustomType();
-		ct.setNamedElm(cc);
+		DoubleDotRef ct = AgreeFactory.eINSTANCE.createDoubleDotRef();
+		ct.setElm(cc);
 		return ct;
 	}
 
@@ -192,7 +190,7 @@ public class AgreeTypeSystem {
 		} else {
 			if (c.getExtended() != null) {
 				Classifier ct = baseAadlClassifier(c);
-				return normalizeType(mkCustomType(ct));
+				return normalizeType(mkDoubleDotRef(ct));
 			} else if (c instanceof DataType) {
 				ArrayDef ad = arrayDefFromAadl((DataType) c);
 				if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
@@ -214,8 +212,8 @@ public class AgreeTypeSystem {
 			String size = ((ArrayType) t).getSize();
 			Type stem = ((ArrayType) t).getStem();
 			return normalizeType(stem) + "[" + size + "]";
-		} else if (t instanceof CustomType) {
-			NamedElement ne = ((CustomType) t).getNamedElm();
+		} else if (t instanceof DoubleDotRef) {
+			NamedElement ne = ((DoubleDotRef) t).getElm();
 			if (ne instanceof Classifier) {
 				return normalizeClassifier((Classifier) ne);
 			}
@@ -347,14 +345,14 @@ public class AgreeTypeSystem {
 
 				Type t = ((ArrayType) arrType).getStem();
 				return t;
-			} else if (arrType instanceof CustomType) {
-				NamedElement typedef = ((CustomType) arrType).getNamedElm();
+			} else if (arrType instanceof DoubleDotRef) {
+				NamedElement typedef = ((DoubleDotRef) arrType).getElm();
 
 				if (typedef instanceof DataType) {
 					ArrayDef ad = arrayDefFromAadl((DataType) typedef);
 
 					if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
-						return mkCustomType(ad.baseType);
+						return mkDoubleDotRef(ad.baseType);
 					}
 
 				}
@@ -363,8 +361,8 @@ public class AgreeTypeSystem {
 		} else if (expr instanceof IndicesExpr) {
 			Type arrType = infer(((IndicesExpr) expr).getArray());
 
-			if (arrType instanceof CustomType) {
-				NamedElement typedef = ((CustomType) arrType).getNamedElm();
+			if (arrType instanceof DoubleDotRef) {
+				NamedElement typedef = ((DoubleDotRef) arrType).getElm();
 				if (typedef instanceof DataType) {
 					ArrayDef ad = arrayDefFromAadl((DataType) typedef);
 					return mkArrayType(intType, ad.dimension);
@@ -386,8 +384,8 @@ public class AgreeTypeSystem {
 			if (arrType instanceof ArrayType) {
 				int size = Integer.parseInt(((ArrayType) arrType).getSize());
 				return mkArrayType(stemType, size);
-			} else if (arrType instanceof CustomType) {
-				NamedElement typedef = ((CustomType) arrType).getNamedElm();
+			} else if (arrType instanceof DoubleDotRef) {
+				NamedElement typedef = ((DoubleDotRef) arrType).getElm();
 				if (typedef instanceof DataType) {
 					ArrayDef ad = arrayDefFromAadl((DataType) typedef);
 					if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
@@ -451,7 +449,7 @@ public class AgreeTypeSystem {
 
 				if (prop instanceof Property) {
 					PropertyType pt = ((Property) prop).getPropertyType();
-					return mkCustomType(pt);
+					return mkDoubleDotRef(pt);
 
 				} else {
 
@@ -460,12 +458,12 @@ public class AgreeTypeSystem {
 					for (PropertyAssociation choice : pas) {
 						if (choice.getProperty().getName().equals(prop.getName())) {
 							PropertyType pt = choice.getProperty().getPropertyType();
-							return mkCustomType(pt);
+							return mkDoubleDotRef(pt);
 						}
 					}
 				}
 
-			} else if (cr instanceof SubcomponentRef) {
+			} else if (cr instanceof DoubleDotRef) {
 
 				EObject container = expr.getContainingComponentImpl();
 				if (container instanceof ComponentImplementation) {
@@ -477,7 +475,7 @@ public class AgreeTypeSystem {
 
 							if (pchoice.getProperty().getName().equals(prop.getName())) {
 								PropertyType pt = pchoice.getProperty().getPropertyType();
-								return mkCustomType(pt);
+								return mkDoubleDotRef(pt);
 							}
 						}
 
@@ -553,14 +551,14 @@ public class AgreeTypeSystem {
 			return infer(((RecordUpdateExpr) expr).getRecord());
 
 		} else if (expr instanceof NamedElmExpr) {
-			NamedElement ne = ((NamedElmExpr) expr).getNamedElm();
+			NamedElement ne = ((NamedElmExpr) expr).getElm();
 			return typeFromID(ne);
 
 		} else if (expr instanceof CallExpr) {
 
 			CallExpr fnCall = ((CallExpr) expr);
-			AbstractionRef dotId = fnCall.getAbstractionRef();
-			NamedElement namedEl = dotId.getNamedElm();
+			DoubleDotRef dotId = fnCall.getRef();
+			NamedElement namedEl = dotId.getElm();
 
 			if (isInLinearizationBody(fnCall)) {
 				// extract in/out arguments
@@ -603,9 +601,9 @@ public class AgreeTypeSystem {
 		if (ne instanceof PropertyStatement) {
 			return infer(((PropertyStatement) ne).getExpr());
 
-		} else if (ne instanceof EnumID && ne.eContainer() instanceof EnumStatement) {
+		} else if (ne instanceof NamedID && ne.eContainer() instanceof EnumStatement) {
 
-			return mkCustomType((EnumStatement) ne.eContainer());
+			return mkDoubleDotRef((EnumStatement) ne.eContainer());
 
 		} else if (ne instanceof ArraySubBinding) {
 
@@ -636,12 +634,12 @@ public class AgreeTypeSystem {
 					Type stem = ((ArrayType) arrType).getStem();
 					return stem;
 
-				} else if (arrType instanceof CustomType) {
-					NamedElement typedef = ((CustomType) arrType).getNamedElm();
+				} else if (arrType instanceof DoubleDotRef) {
+					NamedElement typedef = ((DoubleDotRef) arrType).getElm();
 					if (typedef instanceof DataType) {
 						ArrayDef ad = arrayDefFromAadl((DataType) typedef);
 						if (ad.isArray && ad.dimension > 0 && ad.baseType != null) {
-							return mkCustomType(ad.baseType);
+							return mkDoubleDotRef(ad.baseType);
 						}
 					}
 				}
@@ -674,10 +672,10 @@ public class AgreeTypeSystem {
 			Classifier cl = sub.getClassifier();
 			List<ArrayDimension> dims = sub.getArrayDimensions();
 			if (dims.size() == 0) {
-				return mkCustomType(cl);
+				return mkDoubleDotRef(cl);
 			} else if (dims.size() == 1) {
 				long size = getArrayDimension(dims.get(0));
-				return mkArrayType(mkCustomType(cl), java.lang.Math.toIntExact(size));
+				return mkArrayType(mkDoubleDotRef(cl), java.lang.Math.toIntExact(size));
 
 			}
 
@@ -685,24 +683,24 @@ public class AgreeTypeSystem {
 			Classifier cl = ((Feature) ne).getClassifier();
 			List<ArrayDimension> dims = ((Feature) ne).getArrayDimensions();
 			if (dims.size() == 0) {
-				return mkCustomType(cl);
+				return mkDoubleDotRef(cl);
 			} else if (dims.size() == 1) {
 				long size = getArrayDimension(dims.get(0));
-				return mkArrayType(mkCustomType(cl), java.lang.Math.toIntExact(size));
+				return mkArrayType(mkDoubleDotRef(cl), java.lang.Math.toIntExact(size));
 
 			}
 
 		} else if (ne instanceof AadlPackage) {
-			return mkCustomType(ne);
+			return mkDoubleDotRef(ne);
 
 		} else if (ne instanceof PropertyConstant) {
 			PropertyExpression pe = ((PropertyConstant) ne).getConstantValue();
 			return typeFromPropExp(pe);
 
 		} else if (ne instanceof ComponentImplementation) {
-			return mkCustomType(ne);
+			return mkDoubleDotRef(ne);
 		} else if (ne instanceof ComponentType) {
-			return mkCustomType(ne);
+			return mkDoubleDotRef(ne);
 		}
 
 		return errorType;
