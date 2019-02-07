@@ -171,7 +171,7 @@ ruleNamedElement returns [EObject current=null]
         afterParserOrEnumRuleCall();
     }
 
-    |((ruleNamedID)=>
+    |
     { 
         newCompositeNode(grammarAccess.getNamedElementAccess().getNamedIDParserRuleCall_10()); 
     }
@@ -181,26 +181,6 @@ ruleNamedElement returns [EObject current=null]
         afterParserOrEnumRuleCall();
     }
 )
-    |((ruleArraySubBinding)=>
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getArraySubBindingParserRuleCall_11()); 
-    }
-    this_ArraySubBinding_11=ruleArraySubBinding
-    {
-        $current = $this_ArraySubBinding_11.current;
-        afterParserOrEnumRuleCall();
-    }
-)
-    |((ruleAcc)=>
-    { 
-        newCompositeNode(grammarAccess.getNamedElementAccess().getAccParserRuleCall_12()); 
-    }
-    this_Acc_12=ruleAcc
-    {
-        $current = $this_Acc_12.current;
-        afterParserOrEnumRuleCall();
-    }
-))
 ;
 
 
@@ -4943,9 +4923,9 @@ ruleForallExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getForallExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0()); 
+	        newCompositeNode(grammarAccess.getForallExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
 	    }
-		lv_binding_2_0=ruleArraySubBinding		{
+		lv_binding_2_0=ruleNamedID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getForallExprRule());
 	        }
@@ -4953,7 +4933,7 @@ ruleForallExpr returns [EObject current=null]
        			$current, 
        			"binding",
         		lv_binding_2_0, 
-        		"com.rockwellcollins.atc.agree.Agree.ArraySubBinding");
+        		"com.rockwellcollins.atc.agree.Agree.NamedID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -5049,9 +5029,9 @@ ruleExistsExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getExistsExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0()); 
+	        newCompositeNode(grammarAccess.getExistsExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
 	    }
-		lv_binding_2_0=ruleArraySubBinding		{
+		lv_binding_2_0=ruleNamedID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getExistsExprRule());
 	        }
@@ -5059,7 +5039,7 @@ ruleExistsExpr returns [EObject current=null]
        			$current, 
        			"binding",
         		lv_binding_2_0, 
-        		"com.rockwellcollins.atc.agree.Agree.ArraySubBinding");
+        		"com.rockwellcollins.atc.agree.Agree.NamedID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -5155,9 +5135,9 @@ ruleForeachExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getForeachExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0()); 
+	        newCompositeNode(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
 	    }
-		lv_binding_2_0=ruleArraySubBinding		{
+		lv_binding_2_0=ruleNamedID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getForeachExprRule());
 	        }
@@ -5165,7 +5145,7 @@ ruleForeachExpr returns [EObject current=null]
        			$current, 
        			"binding",
         		lv_binding_2_0, 
-        		"com.rockwellcollins.atc.agree.Agree.ArraySubBinding");
+        		"com.rockwellcollins.atc.agree.Agree.NamedID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -5261,9 +5241,9 @@ ruleFoldLeftExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getFoldLeftExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0()); 
+	        newCompositeNode(grammarAccess.getFoldLeftExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
 	    }
-		lv_binding_2_0=ruleArraySubBinding		{
+		lv_binding_2_0=ruleNamedID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getFoldLeftExprRule());
 	        }
@@ -5271,7 +5251,7 @@ ruleFoldLeftExpr returns [EObject current=null]
        			$current, 
        			"binding",
         		lv_binding_2_0, 
-        		"com.rockwellcollins.atc.agree.Agree.ArraySubBinding");
+        		"com.rockwellcollins.atc.agree.Agree.NamedID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -5307,9 +5287,9 @@ ruleFoldLeftExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getFoldLeftExprAccess().getAccumulatorAccParserRuleCall_0_6_0()); 
+	        newCompositeNode(grammarAccess.getFoldLeftExprAccess().getAccumulatorNamedIDParserRuleCall_0_6_0()); 
 	    }
-		lv_accumulator_6_0=ruleAcc		{
+		lv_accumulator_6_0=ruleNamedID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getFoldLeftExprRule());
 	        }
@@ -5317,7 +5297,7 @@ ruleFoldLeftExpr returns [EObject current=null]
        			$current, 
        			"accumulator",
         		lv_accumulator_6_0, 
-        		"com.rockwellcollins.atc.agree.Agree.Acc");
+        		"com.rockwellcollins.atc.agree.Agree.NamedID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -5413,9 +5393,9 @@ ruleFoldRightExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getFoldRightExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0()); 
+	        newCompositeNode(grammarAccess.getFoldRightExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
 	    }
-		lv_binding_2_0=ruleArraySubBinding		{
+		lv_binding_2_0=ruleNamedID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getFoldRightExprRule());
 	        }
@@ -5423,7 +5403,7 @@ ruleFoldRightExpr returns [EObject current=null]
        			$current, 
        			"binding",
         		lv_binding_2_0, 
-        		"com.rockwellcollins.atc.agree.Agree.ArraySubBinding");
+        		"com.rockwellcollins.atc.agree.Agree.NamedID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -5459,9 +5439,9 @@ ruleFoldRightExpr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getFoldRightExprAccess().getAccumulatorAccParserRuleCall_0_6_0()); 
+	        newCompositeNode(grammarAccess.getFoldRightExprAccess().getAccumulatorNamedIDParserRuleCall_0_6_0()); 
 	    }
-		lv_accumulator_6_0=ruleAcc		{
+		lv_accumulator_6_0=ruleNamedID		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getFoldRightExprRule());
 	        }
@@ -5469,7 +5449,7 @@ ruleFoldRightExpr returns [EObject current=null]
        			$current, 
        			"accumulator",
         		lv_accumulator_6_0, 
-        		"com.rockwellcollins.atc.agree.Agree.Acc");
+        		"com.rockwellcollins.atc.agree.Agree.NamedID");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -7676,20 +7656,15 @@ LeftParenthesis
     }
 (
 (
-		{ 
-	        newCompositeNode(grammarAccess.getTermExprAccess().getIdExprParserRuleCall_9_3_0()); 
-	    }
-		lv_id_45_0=ruleExpr		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getTermExprRule());
+		{
+			if ($current==null) {
+	            $current = createModelElement(grammarAccess.getTermExprRule());
 	        }
-       		set(
-       			$current, 
-       			"id",
-        		lv_id_45_0, 
-        		"com.rockwellcollins.atc.agree.Agree.Expr");
-	        afterParserOrEnumRuleCall();
-	    }
+        }
+	otherlv_45=RULE_ID
+	{
+		newLeafNode(otherlv_45, grammarAccess.getTermExprAccess().getIdNamedElementCrossReference_9_3_0()); 
+	}
 
 )
 )
@@ -8345,84 +8320,6 @@ ruleNamedID returns [EObject current=null]
 		{
 	        if ($current==null) {
 	            $current = createModelElement(grammarAccess.getNamedIDRule());
-	        }
-       		setWithLastConsumed(
-       			$current, 
-       			"name",
-        		lv_name_0_0, 
-        		"org.osate.xtext.aadl2.properties.Properties.ID");
-	    }
-
-)
-)
-;
-
-
-
-
-
-// Entry rule entryRuleArraySubBinding
-entryRuleArraySubBinding returns [EObject current=null]
-	:
-	{ newCompositeNode(grammarAccess.getArraySubBindingRule()); }
-	 iv_ruleArraySubBinding=ruleArraySubBinding 
-	 { $current=$iv_ruleArraySubBinding.current; } 
-	 EOF 
-;
-
-// Rule ArraySubBinding
-ruleArraySubBinding returns [EObject current=null] 
-    @init { enterRule(); 
-    }
-    @after { leaveRule(); }:
-(
-(
-		lv_name_0_0=RULE_ID
-		{
-			newLeafNode(lv_name_0_0, grammarAccess.getArraySubBindingAccess().getNameIDTerminalRuleCall_0()); 
-		}
-		{
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getArraySubBindingRule());
-	        }
-       		setWithLastConsumed(
-       			$current, 
-       			"name",
-        		lv_name_0_0, 
-        		"org.osate.xtext.aadl2.properties.Properties.ID");
-	    }
-
-)
-)
-;
-
-
-
-
-
-// Entry rule entryRuleAcc
-entryRuleAcc returns [EObject current=null]
-	:
-	{ newCompositeNode(grammarAccess.getAccRule()); }
-	 iv_ruleAcc=ruleAcc 
-	 { $current=$iv_ruleAcc.current; } 
-	 EOF 
-;
-
-// Rule Acc
-ruleAcc returns [EObject current=null] 
-    @init { enterRule(); 
-    }
-    @after { leaveRule(); }:
-(
-(
-		lv_name_0_0=RULE_ID
-		{
-			newLeafNode(lv_name_0_0, grammarAccess.getAccAccess().getNameIDTerminalRuleCall_0()); 
-		}
-		{
-	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getAccRule());
 	        }
        		setWithLastConsumed(
        			$current, 

@@ -32,8 +32,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cLibraryFnDefParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
 		private final RuleCall cRecordDefParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
 		private final RuleCall cNamedIDParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
-		private final RuleCall cArraySubBindingParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
-		private final RuleCall cAccParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
 		
 		//NamedElement aadl2::NamedElement:
 		//	Arg
@@ -46,13 +44,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| LinearizationDef
 		//	| LibraryFnDef
 		//	| RecordDef
-		//	| => NamedID
-		//	| => ArraySubBinding
-		//	| => Acc;
+		//	| NamedID;
 		@Override public ParserRule getRule() { return rule; }
 
 		//Arg | NamedSpecStatement | FnDef | PropertyStatement | ConstStatement | EnumStatement | NodeDef | LinearizationDef |
-		//LibraryFnDef | RecordDef | => NamedID | => ArraySubBinding | => Acc
+		//LibraryFnDef | RecordDef | NamedID
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//Arg
@@ -85,14 +81,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//RecordDef
 		public RuleCall getRecordDefParserRuleCall_9() { return cRecordDefParserRuleCall_9; }
 
-		//=> NamedID
+		//NamedID
 		public RuleCall getNamedIDParserRuleCall_10() { return cNamedIDParserRuleCall_10; }
-
-		//=> ArraySubBinding
-		public RuleCall getArraySubBindingParserRuleCall_11() { return cArraySubBindingParserRuleCall_11; }
-
-		//=> Acc
-		public RuleCall getAccParserRuleCall_12() { return cAccParserRuleCall_12; }
 	}
 
 	public class ElementElements extends AbstractParserRuleElementFinder {
@@ -3157,7 +3147,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cForallExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
 		private final Keyword cForallKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cBindingAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cBindingArraySubBindingParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
+		private final RuleCall cBindingNamedIDParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
 		private final Keyword cInKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
 		private final Assignment cArrayAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
 		private final RuleCall cArrayExprParserRuleCall_0_4_0 = (RuleCall)cArrayAssignment_0_4.eContents().get(0);
@@ -3167,14 +3157,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cExistsExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//ForallExpr Expr:
-		//	{ForallExpr} 'forall' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+		//	{ForallExpr} 'forall' binding=NamedID 'in' array=Expr ',' expr=Expr
 		//	| ExistsExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{ForallExpr} 'forall' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr | ExistsExpr
+		//{ForallExpr} 'forall' binding=NamedID 'in' array=Expr ',' expr=Expr | ExistsExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{ForallExpr} 'forall' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+		//{ForallExpr} 'forall' binding=NamedID 'in' array=Expr ',' expr=Expr
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{ForallExpr}
@@ -3183,11 +3173,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'forall'
 		public Keyword getForallKeyword_0_1() { return cForallKeyword_0_1; }
 
-		//binding=ArraySubBinding
+		//binding=NamedID
 		public Assignment getBindingAssignment_0_2() { return cBindingAssignment_0_2; }
 
-		//ArraySubBinding
-		public RuleCall getBindingArraySubBindingParserRuleCall_0_2_0() { return cBindingArraySubBindingParserRuleCall_0_2_0; }
+		//NamedID
+		public RuleCall getBindingNamedIDParserRuleCall_0_2_0() { return cBindingNamedIDParserRuleCall_0_2_0; }
 
 		//'in'
 		public Keyword getInKeyword_0_3() { return cInKeyword_0_3; }
@@ -3218,7 +3208,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cExistsExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
 		private final Keyword cExistsKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cBindingAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cBindingArraySubBindingParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
+		private final RuleCall cBindingNamedIDParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
 		private final Keyword cInKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
 		private final Assignment cArrayAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
 		private final RuleCall cArrayExprParserRuleCall_0_4_0 = (RuleCall)cArrayAssignment_0_4.eContents().get(0);
@@ -3228,14 +3218,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cForeachExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//ExistsExpr Expr:
-		//	{ExistsExpr} 'exists' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+		//	{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr
 		//	| ForeachExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{ExistsExpr} 'exists' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr | ForeachExpr
+		//{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr | ForeachExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{ExistsExpr} 'exists' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+		//{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{ExistsExpr}
@@ -3244,11 +3234,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'exists'
 		public Keyword getExistsKeyword_0_1() { return cExistsKeyword_0_1; }
 
-		//binding=ArraySubBinding
+		//binding=NamedID
 		public Assignment getBindingAssignment_0_2() { return cBindingAssignment_0_2; }
 
-		//ArraySubBinding
-		public RuleCall getBindingArraySubBindingParserRuleCall_0_2_0() { return cBindingArraySubBindingParserRuleCall_0_2_0; }
+		//NamedID
+		public RuleCall getBindingNamedIDParserRuleCall_0_2_0() { return cBindingNamedIDParserRuleCall_0_2_0; }
 
 		//'in'
 		public Keyword getInKeyword_0_3() { return cInKeyword_0_3; }
@@ -3279,7 +3269,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cForeachExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
 		private final Keyword cForeachKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cBindingAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cBindingArraySubBindingParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
+		private final RuleCall cBindingNamedIDParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
 		private final Keyword cInKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
 		private final Assignment cArrayAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
 		private final RuleCall cArrayExprParserRuleCall_0_4_0 = (RuleCall)cArrayAssignment_0_4.eContents().get(0);
@@ -3289,14 +3279,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFoldLeftExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//ForeachExpr Expr:
-		//	{ForeachExpr} 'foreach' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+		//	{ForeachExpr} 'foreach' binding=NamedID 'in' array=Expr ',' expr=Expr
 		//	| FoldLeftExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{ForeachExpr} 'foreach' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr | FoldLeftExpr
+		//{ForeachExpr} 'foreach' binding=NamedID 'in' array=Expr ',' expr=Expr | FoldLeftExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{ForeachExpr} 'foreach' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+		//{ForeachExpr} 'foreach' binding=NamedID 'in' array=Expr ',' expr=Expr
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{ForeachExpr}
@@ -3305,11 +3295,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'foreach'
 		public Keyword getForeachKeyword_0_1() { return cForeachKeyword_0_1; }
 
-		//binding=ArraySubBinding
+		//binding=NamedID
 		public Assignment getBindingAssignment_0_2() { return cBindingAssignment_0_2; }
 
-		//ArraySubBinding
-		public RuleCall getBindingArraySubBindingParserRuleCall_0_2_0() { return cBindingArraySubBindingParserRuleCall_0_2_0; }
+		//NamedID
+		public RuleCall getBindingNamedIDParserRuleCall_0_2_0() { return cBindingNamedIDParserRuleCall_0_2_0; }
 
 		//'in'
 		public Keyword getInKeyword_0_3() { return cInKeyword_0_3; }
@@ -3340,13 +3330,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cFoldLeftExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
 		private final Keyword cFoldlKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cBindingAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cBindingArraySubBindingParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
+		private final RuleCall cBindingNamedIDParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
 		private final Keyword cInKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
 		private final Assignment cArrayAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
 		private final RuleCall cArrayExprParserRuleCall_0_4_0 = (RuleCall)cArrayAssignment_0_4.eContents().get(0);
 		private final Keyword cIntoKeyword_0_5 = (Keyword)cGroup_0.eContents().get(5);
 		private final Assignment cAccumulatorAssignment_0_6 = (Assignment)cGroup_0.eContents().get(6);
-		private final RuleCall cAccumulatorAccParserRuleCall_0_6_0 = (RuleCall)cAccumulatorAssignment_0_6.eContents().get(0);
+		private final RuleCall cAccumulatorNamedIDParserRuleCall_0_6_0 = (RuleCall)cAccumulatorAssignment_0_6.eContents().get(0);
 		private final Keyword cEqualsSignKeyword_0_7 = (Keyword)cGroup_0.eContents().get(7);
 		private final Assignment cInitialAssignment_0_8 = (Assignment)cGroup_0.eContents().get(8);
 		private final RuleCall cInitialExprParserRuleCall_0_8_0 = (RuleCall)cInitialAssignment_0_8.eContents().get(0);
@@ -3356,15 +3346,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFoldRightExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//FoldLeftExpr Expr:
-		//	{FoldLeftExpr} 'foldl' binding=ArraySubBinding 'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr
+		//	{FoldLeftExpr} 'foldl' binding=NamedID 'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
 		//	| FoldRightExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{FoldLeftExpr} 'foldl' binding=ArraySubBinding 'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr |
+		//{FoldLeftExpr} 'foldl' binding=NamedID 'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr |
 		//FoldRightExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{FoldLeftExpr} 'foldl' binding=ArraySubBinding 'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr
+		//{FoldLeftExpr} 'foldl' binding=NamedID 'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{FoldLeftExpr}
@@ -3373,11 +3363,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'foldl'
 		public Keyword getFoldlKeyword_0_1() { return cFoldlKeyword_0_1; }
 
-		//binding=ArraySubBinding
+		//binding=NamedID
 		public Assignment getBindingAssignment_0_2() { return cBindingAssignment_0_2; }
 
-		//ArraySubBinding
-		public RuleCall getBindingArraySubBindingParserRuleCall_0_2_0() { return cBindingArraySubBindingParserRuleCall_0_2_0; }
+		//NamedID
+		public RuleCall getBindingNamedIDParserRuleCall_0_2_0() { return cBindingNamedIDParserRuleCall_0_2_0; }
 
 		//'in'
 		public Keyword getInKeyword_0_3() { return cInKeyword_0_3; }
@@ -3391,11 +3381,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'into'
 		public Keyword getIntoKeyword_0_5() { return cIntoKeyword_0_5; }
 
-		//accumulator=Acc
+		//accumulator=NamedID
 		public Assignment getAccumulatorAssignment_0_6() { return cAccumulatorAssignment_0_6; }
 
-		//Acc
-		public RuleCall getAccumulatorAccParserRuleCall_0_6_0() { return cAccumulatorAccParserRuleCall_0_6_0; }
+		//NamedID
+		public RuleCall getAccumulatorNamedIDParserRuleCall_0_6_0() { return cAccumulatorNamedIDParserRuleCall_0_6_0; }
 
 		//'='
 		public Keyword getEqualsSignKeyword_0_7() { return cEqualsSignKeyword_0_7; }
@@ -3426,13 +3416,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cFoldRightExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
 		private final Keyword cFoldrKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cBindingAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
-		private final RuleCall cBindingArraySubBindingParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
+		private final RuleCall cBindingNamedIDParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
 		private final Keyword cInKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
 		private final Assignment cArrayAssignment_0_4 = (Assignment)cGroup_0.eContents().get(4);
 		private final RuleCall cArrayExprParserRuleCall_0_4_0 = (RuleCall)cArrayAssignment_0_4.eContents().get(0);
 		private final Keyword cIntoKeyword_0_5 = (Keyword)cGroup_0.eContents().get(5);
 		private final Assignment cAccumulatorAssignment_0_6 = (Assignment)cGroup_0.eContents().get(6);
-		private final RuleCall cAccumulatorAccParserRuleCall_0_6_0 = (RuleCall)cAccumulatorAssignment_0_6.eContents().get(0);
+		private final RuleCall cAccumulatorNamedIDParserRuleCall_0_6_0 = (RuleCall)cAccumulatorAssignment_0_6.eContents().get(0);
 		private final Keyword cEqualsSignKeyword_0_7 = (Keyword)cGroup_0.eContents().get(7);
 		private final Assignment cInitialAssignment_0_8 = (Assignment)cGroup_0.eContents().get(8);
 		private final RuleCall cInitialExprParserRuleCall_0_8_0 = (RuleCall)cInitialAssignment_0_8.eContents().get(0);
@@ -3442,15 +3432,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cArrowExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//FoldRightExpr Expr:
-		//	{FoldRightExpr} 'foldr' binding=ArraySubBinding 'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr
+		//	{FoldRightExpr} 'foldr' binding=NamedID 'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
 		//	| ArrowExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{FoldRightExpr} 'foldr' binding=ArraySubBinding 'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr |
+		//{FoldRightExpr} 'foldr' binding=NamedID 'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr |
 		//ArrowExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{FoldRightExpr} 'foldr' binding=ArraySubBinding 'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr
+		//{FoldRightExpr} 'foldr' binding=NamedID 'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
 		public Group getGroup_0() { return cGroup_0; }
 
 		//{FoldRightExpr}
@@ -3459,11 +3449,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'foldr'
 		public Keyword getFoldrKeyword_0_1() { return cFoldrKeyword_0_1; }
 
-		//binding=ArraySubBinding
+		//binding=NamedID
 		public Assignment getBindingAssignment_0_2() { return cBindingAssignment_0_2; }
 
-		//ArraySubBinding
-		public RuleCall getBindingArraySubBindingParserRuleCall_0_2_0() { return cBindingArraySubBindingParserRuleCall_0_2_0; }
+		//NamedID
+		public RuleCall getBindingNamedIDParserRuleCall_0_2_0() { return cBindingNamedIDParserRuleCall_0_2_0; }
 
 		//'in'
 		public Keyword getInKeyword_0_3() { return cInKeyword_0_3; }
@@ -3477,11 +3467,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'into'
 		public Keyword getIntoKeyword_0_5() { return cIntoKeyword_0_5; }
 
-		//accumulator=Acc
+		//accumulator=NamedID
 		public Assignment getAccumulatorAssignment_0_6() { return cAccumulatorAssignment_0_6; }
 
-		//Acc
-		public RuleCall getAccumulatorAccParserRuleCall_0_6_0() { return cAccumulatorAccParserRuleCall_0_6_0; }
+		//NamedID
+		public RuleCall getAccumulatorNamedIDParserRuleCall_0_6_0() { return cAccumulatorNamedIDParserRuleCall_0_6_0; }
 
 		//'='
 		public Keyword getEqualsSignKeyword_0_7() { return cEqualsSignKeyword_0_7; }
@@ -4604,7 +4594,8 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cEventKeyword_9_1 = (Keyword)cGroup_9.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_9_2 = (Keyword)cGroup_9.eContents().get(2);
 		private final Assignment cIdAssignment_9_3 = (Assignment)cGroup_9.eContents().get(3);
-		private final RuleCall cIdExprParserRuleCall_9_3_0 = (RuleCall)cIdAssignment_9_3.eContents().get(0);
+		private final CrossReference cIdNamedElementCrossReference_9_3_0 = (CrossReference)cIdAssignment_9_3.eContents().get(0);
+		private final RuleCall cIdNamedElementIDTerminalRuleCall_9_3_0_1 = (RuleCall)cIdNamedElementCrossReference_9_3_0.eContents().get(1);
 		private final Keyword cRightParenthesisKeyword_9_4 = (Keyword)cGroup_9.eContents().get(4);
 		private final Group cGroup_10 = (Group)cAlternatives.eContents().get(10);
 		private final Action cLatchedExprAction_10_0 = (Action)cGroup_10.eContents().get(0);
@@ -4674,7 +4665,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//	| ArrayLiteralExpr
 		//	| {IntLitExpr} val=INTEGER_LIT
 		//	| {PreExpr} 'pre' '(' expr=Expr ')'
-		//	| {EventExpr} 'event' '(' id=Expr ')'
+		//	| {EventExpr} 'event' '(' id=[aadl2::NamedElement] ')'
 		//	| {LatchedExpr} 'latched' '(' expr=Expr ')'
 		//	| {TimeOfExpr} 'timeof' '(' id=[aadl2::NamedElement] ')'
 		//	| {TimeRiseExpr} 'timerise' '(' id=[aadl2::NamedElement] ')'
@@ -4690,10 +4681,11 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//({CallExpr} ref=DoubleDotRef '(') (args+=Expr (',' args+=Expr)*)? ')' | => ({RecordLitExpr} recordType=DoubleDotRef '{'
 		//args+=[aadl2::NamedElement] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement] '=' argExpr+=Expr)* '}' | =>
 		//({EnumLitExpr} 'enum' '(') enumType=DoubleDotRef ',' value=ID ')' | ArrayLiteralExpr | {IntLitExpr} val=INTEGER_LIT |
-		//{PreExpr} 'pre' '(' expr=Expr ')' | {EventExpr} 'event' '(' id=Expr ')' | {LatchedExpr} 'latched' '(' expr=Expr ')' |
-		//{TimeOfExpr} 'timeof' '(' id=[aadl2::NamedElement] ')' | {TimeRiseExpr} 'timerise' '(' id=[aadl2::NamedElement] ')' |
-		//{TimeFallExpr} 'timefall' '(' id=[aadl2::NamedElement] ')' | {RealLitExpr} val=REAL_LIT | {BoolLitExpr}
-		//val=BooleanLiteral | {FloorCast} 'floor' '(' expr=Expr ')' | {RealCast} 'real' '(' expr=Expr ')' | '(' Expr ')'
+		//{PreExpr} 'pre' '(' expr=Expr ')' | {EventExpr} 'event' '(' id=[aadl2::NamedElement] ')' | {LatchedExpr} 'latched' '('
+		//expr=Expr ')' | {TimeOfExpr} 'timeof' '(' id=[aadl2::NamedElement] ')' | {TimeRiseExpr} 'timerise' '('
+		//id=[aadl2::NamedElement] ')' | {TimeFallExpr} 'timefall' '(' id=[aadl2::NamedElement] ')' | {RealLitExpr} val=REAL_LIT
+		//| {BoolLitExpr} val=BooleanLiteral | {FloorCast} 'floor' '(' expr=Expr ')' | {RealCast} 'real' '(' expr=Expr ')' | '('
+		//Expr ')'
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//=> ({NamedElmExpr} elm=[aadl2::NamedElement|DCID])
@@ -4928,7 +4920,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//')'
 		public Keyword getRightParenthesisKeyword_8_4() { return cRightParenthesisKeyword_8_4; }
 
-		//{EventExpr} 'event' '(' id=Expr ')'
+		//{EventExpr} 'event' '(' id=[aadl2::NamedElement] ')'
 		public Group getGroup_9() { return cGroup_9; }
 
 		//{EventExpr}
@@ -4940,11 +4932,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//'('
 		public Keyword getLeftParenthesisKeyword_9_2() { return cLeftParenthesisKeyword_9_2; }
 
-		//id=Expr
+		//id=[aadl2::NamedElement]
 		public Assignment getIdAssignment_9_3() { return cIdAssignment_9_3; }
 
-		//Expr
-		public RuleCall getIdExprParserRuleCall_9_3_0() { return cIdExprParserRuleCall_9_3_0; }
+		//[aadl2::NamedElement]
+		public CrossReference getIdNamedElementCrossReference_9_3_0() { return cIdNamedElementCrossReference_9_3_0; }
+
+		//ID
+		public RuleCall getIdNamedElementIDTerminalRuleCall_9_3_0_1() { return cIdNamedElementIDTerminalRuleCall_9_3_0_1; }
 
 		//')'
 		public Keyword getRightParenthesisKeyword_9_4() { return cRightParenthesisKeyword_9_4; }
@@ -5354,38 +5349,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getNameIDTerminalRuleCall_0() { return cNameIDTerminalRuleCall_0; }
 	}
 
-	public class ArraySubBindingElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.ArraySubBinding");
-		private final Assignment cNameAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_0 = (RuleCall)cNameAssignment.eContents().get(0);
-		
-		//ArraySubBinding:
-		//	name=ID;
-		@Override public ParserRule getRule() { return rule; }
-
-		//name=ID
-		public Assignment getNameAssignment() { return cNameAssignment; }
-
-		//ID
-		public RuleCall getNameIDTerminalRuleCall_0() { return cNameIDTerminalRuleCall_0; }
-	}
-
-	public class AccElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.Acc");
-		private final Assignment cNameAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_0 = (RuleCall)cNameAssignment.eContents().get(0);
-		
-		//Acc:
-		//	name=ID;
-		@Override public ParserRule getRule() { return rule; }
-
-		//name=ID
-		public Assignment getNameAssignment() { return cNameAssignment; }
-
-		//ID
-		public RuleCall getNameIDTerminalRuleCall_0() { return cNameIDTerminalRuleCall_0; }
-	}
-
 	public class JavaQualifiedNameElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.JavaQualifiedName");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -5483,8 +5446,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final DCIDElements pDCID;
 	private final ReservedVarTagElements pReservedVarTag;
 	private final NamedIDElements pNamedID;
-	private final ArraySubBindingElements pArraySubBinding;
-	private final AccElements pAcc;
 	private final JavaQualifiedNameElements pJavaQualifiedName;
 	
 	private final Grammar grammar;
@@ -5564,8 +5525,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pDCID = new DCIDElements();
 		this.pReservedVarTag = new ReservedVarTagElements();
 		this.pNamedID = new NamedIDElements();
-		this.pArraySubBinding = new ArraySubBindingElements();
-		this.pAcc = new AccElements();
 		this.pJavaQualifiedName = new JavaQualifiedNameElements();
 	}
 	
@@ -5607,9 +5566,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	| LinearizationDef
 	//	| LibraryFnDef
 	//	| RecordDef
-	//	| => NamedID
-	//	| => ArraySubBinding
-	//	| => Acc;
+	//	| NamedID;
 	public NamedElementElements getNamedElementAccess() {
 		return pNamedElement;
 	}
@@ -6044,7 +6001,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ForallExpr Expr:
-	//	{ForallExpr} 'forall' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+	//	{ForallExpr} 'forall' binding=NamedID 'in' array=Expr ',' expr=Expr
 	//	| ExistsExpr;
 	public ForallExprElements getForallExprAccess() {
 		return pForallExpr;
@@ -6055,7 +6012,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ExistsExpr Expr:
-	//	{ExistsExpr} 'exists' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+	//	{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr
 	//	| ForeachExpr;
 	public ExistsExprElements getExistsExprAccess() {
 		return pExistsExpr;
@@ -6066,7 +6023,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//ForeachExpr Expr:
-	//	{ForeachExpr} 'foreach' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+	//	{ForeachExpr} 'foreach' binding=NamedID 'in' array=Expr ',' expr=Expr
 	//	| FoldLeftExpr;
 	public ForeachExprElements getForeachExprAccess() {
 		return pForeachExpr;
@@ -6077,7 +6034,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//FoldLeftExpr Expr:
-	//	{FoldLeftExpr} 'foldl' binding=ArraySubBinding 'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr
+	//	{FoldLeftExpr} 'foldl' binding=NamedID 'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
 	//	| FoldRightExpr;
 	public FoldLeftExprElements getFoldLeftExprAccess() {
 		return pFoldLeftExpr;
@@ -6088,7 +6045,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//FoldRightExpr Expr:
-	//	{FoldRightExpr} 'foldr' binding=ArraySubBinding 'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr
+	//	{FoldRightExpr} 'foldr' binding=NamedID 'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
 	//	| ArrowExpr;
 	public FoldRightExprElements getFoldRightExprAccess() {
 		return pFoldRightExpr;
@@ -6305,7 +6262,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	//	| ArrayLiteralExpr
 	//	| {IntLitExpr} val=INTEGER_LIT
 	//	| {PreExpr} 'pre' '(' expr=Expr ')'
-	//	| {EventExpr} 'event' '(' id=Expr ')'
+	//	| {EventExpr} 'event' '(' id=[aadl2::NamedElement] ')'
 	//	| {LatchedExpr} 'latched' '(' expr=Expr ')'
 	//	| {TimeOfExpr} 'timeof' '(' id=[aadl2::NamedElement] ')'
 	//	| {TimeRiseExpr} 'timerise' '(' id=[aadl2::NamedElement] ')'
@@ -6390,26 +6347,6 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getNamedIDRule() {
 		return getNamedIDAccess().getRule();
-	}
-
-	//ArraySubBinding:
-	//	name=ID;
-	public ArraySubBindingElements getArraySubBindingAccess() {
-		return pArraySubBinding;
-	}
-	
-	public ParserRule getArraySubBindingRule() {
-		return getArraySubBindingAccess().getRule();
-	}
-
-	//Acc:
-	//	name=ID;
-	public AccElements getAccAccess() {
-		return pAcc;
-	}
-	
-	public ParserRule getAccRule() {
-		return getAccAccess().getRule();
 	}
 
 	//JavaQualifiedName:

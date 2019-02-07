@@ -4,7 +4,6 @@
 package com.rockwellcollins.atc.agree.serializer;
 
 import com.google.inject.Inject;
-import com.rockwellcollins.atc.agree.agree.Acc;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -12,7 +11,6 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AlwaysStatement;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ArrayLiteralExpr;
-import com.rockwellcollins.atc.agree.agree.ArraySubBinding;
 import com.rockwellcollins.atc.agree.agree.ArraySubExpr;
 import com.rockwellcollins.atc.agree.agree.ArrayType;
 import com.rockwellcollins.atc.agree.agree.ArrayUpdateExpr;
@@ -233,9 +231,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			}
 		else if (epackage == AgreePackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
-			case AgreePackage.ACC:
-				sequence_Acc(context, (Acc) semanticObject); 
-				return; 
 			case AgreePackage.AGREE_CONTRACT:
 				sequence_AgreeContract(context, (AgreeContract) semanticObject); 
 				return; 
@@ -253,9 +248,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.ARRAY_LITERAL_EXPR:
 				sequence_ArrayLiteralExpr(context, (ArrayLiteralExpr) semanticObject); 
-				return; 
-			case AgreePackage.ARRAY_SUB_BINDING:
-				sequence_ArraySubBinding(context, (ArraySubBinding) semanticObject); 
 				return; 
 			case AgreePackage.ARRAY_SUB_EXPR:
 				sequence_ArraySubExpr(context, (ArraySubExpr) semanticObject); 
@@ -498,25 +490,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns Acc
-	 *     Acc returns Acc
-	 *
-	 * Constraint:
-	 *     name=ID
-	 */
-	protected void sequence_Acc(ISerializationContext context, Acc semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAccAccess().getNameIDTerminalRuleCall_0(), semanticObject.getName());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     Element returns BinaryExpr
 	 *     Expr returns BinaryExpr
 	 *     ForallExpr returns BinaryExpr
@@ -696,25 +669,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 */
 	protected void sequence_ArrayLiteralExpr(ISerializationContext context, ArrayLiteralExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     NamedElement returns ArraySubBinding
-	 *     ArraySubBinding returns ArraySubBinding
-	 *
-	 * Constraint:
-	 *     name=ID
-	 */
-	protected void sequence_ArraySubBinding(ISerializationContext context, ArraySubBinding semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, Aadl2Package.eINSTANCE.getNamedElement_Name()));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getArraySubBindingAccess().getNameIDTerminalRuleCall_0(), semanticObject.getName());
-		feeder.finish();
 	}
 	
 	
@@ -999,7 +953,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     TermExpr returns ExistsExpr
 	 *
 	 * Constraint:
-	 *     (binding=ArraySubBinding array=Expr expr=Expr)
+	 *     (binding=NamedID array=Expr expr=Expr)
 	 */
 	protected void sequence_ExistsExpr(ISerializationContext context, ExistsExpr semanticObject) {
 		if (errorAcceptor != null) {
@@ -1011,7 +965,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.EXISTS_EXPR__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getExistsExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0(), semanticObject.getBinding());
+		feeder.accept(grammarAccess.getExistsExprAccess().getBindingNamedIDParserRuleCall_0_2_0(), semanticObject.getBinding());
 		feeder.accept(grammarAccess.getExistsExprAccess().getArrayExprParserRuleCall_0_4_0(), semanticObject.getArray());
 		feeder.accept(grammarAccess.getExistsExprAccess().getExprExprParserRuleCall_0_6_0(), semanticObject.getExpr());
 		feeder.finish();
@@ -1078,7 +1032,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     TermExpr returns FoldLeftExpr
 	 *
 	 * Constraint:
-	 *     (binding=ArraySubBinding array=Expr accumulator=Acc initial=Expr expr=Expr)
+	 *     (binding=NamedID array=Expr accumulator=NamedID initial=Expr expr=Expr)
 	 */
 	protected void sequence_FoldLeftExpr(ISerializationContext context, FoldLeftExpr semanticObject) {
 		if (errorAcceptor != null) {
@@ -1094,9 +1048,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FOLD_LEFT_EXPR__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getFoldLeftExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0(), semanticObject.getBinding());
+		feeder.accept(grammarAccess.getFoldLeftExprAccess().getBindingNamedIDParserRuleCall_0_2_0(), semanticObject.getBinding());
 		feeder.accept(grammarAccess.getFoldLeftExprAccess().getArrayExprParserRuleCall_0_4_0(), semanticObject.getArray());
-		feeder.accept(grammarAccess.getFoldLeftExprAccess().getAccumulatorAccParserRuleCall_0_6_0(), semanticObject.getAccumulator());
+		feeder.accept(grammarAccess.getFoldLeftExprAccess().getAccumulatorNamedIDParserRuleCall_0_6_0(), semanticObject.getAccumulator());
 		feeder.accept(grammarAccess.getFoldLeftExprAccess().getInitialExprParserRuleCall_0_8_0(), semanticObject.getInitial());
 		feeder.accept(grammarAccess.getFoldLeftExprAccess().getExprExprParserRuleCall_0_10_0(), semanticObject.getExpr());
 		feeder.finish();
@@ -1146,7 +1100,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     TermExpr returns FoldRightExpr
 	 *
 	 * Constraint:
-	 *     (binding=ArraySubBinding array=Expr accumulator=Acc initial=Expr expr=Expr)
+	 *     (binding=NamedID array=Expr accumulator=NamedID initial=Expr expr=Expr)
 	 */
 	protected void sequence_FoldRightExpr(ISerializationContext context, FoldRightExpr semanticObject) {
 		if (errorAcceptor != null) {
@@ -1162,9 +1116,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FOLD_RIGHT_EXPR__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getFoldRightExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0(), semanticObject.getBinding());
+		feeder.accept(grammarAccess.getFoldRightExprAccess().getBindingNamedIDParserRuleCall_0_2_0(), semanticObject.getBinding());
 		feeder.accept(grammarAccess.getFoldRightExprAccess().getArrayExprParserRuleCall_0_4_0(), semanticObject.getArray());
-		feeder.accept(grammarAccess.getFoldRightExprAccess().getAccumulatorAccParserRuleCall_0_6_0(), semanticObject.getAccumulator());
+		feeder.accept(grammarAccess.getFoldRightExprAccess().getAccumulatorNamedIDParserRuleCall_0_6_0(), semanticObject.getAccumulator());
 		feeder.accept(grammarAccess.getFoldRightExprAccess().getInitialExprParserRuleCall_0_8_0(), semanticObject.getInitial());
 		feeder.accept(grammarAccess.getFoldRightExprAccess().getExprExprParserRuleCall_0_10_0(), semanticObject.getExpr());
 		feeder.finish();
@@ -1214,7 +1168,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     TermExpr returns ForallExpr
 	 *
 	 * Constraint:
-	 *     (binding=ArraySubBinding array=Expr expr=Expr)
+	 *     (binding=NamedID array=Expr expr=Expr)
 	 */
 	protected void sequence_ForallExpr(ISerializationContext context, ForallExpr semanticObject) {
 		if (errorAcceptor != null) {
@@ -1226,7 +1180,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FORALL_EXPR__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getForallExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0(), semanticObject.getBinding());
+		feeder.accept(grammarAccess.getForallExprAccess().getBindingNamedIDParserRuleCall_0_2_0(), semanticObject.getBinding());
 		feeder.accept(grammarAccess.getForallExprAccess().getArrayExprParserRuleCall_0_4_0(), semanticObject.getArray());
 		feeder.accept(grammarAccess.getForallExprAccess().getExprExprParserRuleCall_0_6_0(), semanticObject.getExpr());
 		feeder.finish();
@@ -1276,7 +1230,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     TermExpr returns ForeachExpr
 	 *
 	 * Constraint:
-	 *     (binding=ArraySubBinding array=Expr expr=Expr)
+	 *     (binding=NamedID array=Expr expr=Expr)
 	 */
 	protected void sequence_ForeachExpr(ISerializationContext context, ForeachExpr semanticObject) {
 		if (errorAcceptor != null) {
@@ -1288,7 +1242,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FOREACH_EXPR__EXPR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getForeachExprAccess().getBindingArraySubBindingParserRuleCall_0_2_0(), semanticObject.getBinding());
+		feeder.accept(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0(), semanticObject.getBinding());
 		feeder.accept(grammarAccess.getForeachExprAccess().getArrayExprParserRuleCall_0_4_0(), semanticObject.getArray());
 		feeder.accept(grammarAccess.getForeachExprAccess().getExprExprParserRuleCall_0_6_0(), semanticObject.getExpr());
 		feeder.finish();
@@ -2334,7 +2288,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     TermExpr returns EventExpr
 	 *
 	 * Constraint:
-	 *     id=Expr
+	 *     id=[NamedElement|ID]
 	 */
 	protected void sequence_TermExpr(ISerializationContext context, EventExpr semanticObject) {
 		if (errorAcceptor != null) {
@@ -2342,7 +2296,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.EVENT_EXPR__ID));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTermExprAccess().getIdExprParserRuleCall_9_3_0(), semanticObject.getId());
+		feeder.accept(grammarAccess.getTermExprAccess().getIdNamedElementIDTerminalRuleCall_9_3_0_1(), semanticObject.eGet(AgreePackage.Literals.EVENT_EXPR__ID, false));
 		feeder.finish();
 	}
 	

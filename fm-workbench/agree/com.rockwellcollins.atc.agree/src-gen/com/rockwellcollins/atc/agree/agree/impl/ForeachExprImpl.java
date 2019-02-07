@@ -3,9 +3,9 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.ArraySubBinding;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.ForeachExpr;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -40,7 +40,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
    * @generated
    * @ordered
    */
-  protected ArraySubBinding binding;
+  protected NamedID binding;
 
   /**
    * The cached value of the '{@link #getArray() <em>Array</em>}' containment reference.
@@ -88,7 +88,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public ArraySubBinding getBinding()
+  public NamedID getBinding()
   {
     return binding;
   }
@@ -98,9 +98,9 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetBinding(ArraySubBinding newBinding, NotificationChain msgs)
+  public NotificationChain basicSetBinding(NamedID newBinding, NotificationChain msgs)
   {
-    ArraySubBinding oldBinding = binding;
+    NamedID oldBinding = binding;
     binding = newBinding;
     if (eNotificationRequired())
     {
@@ -115,7 +115,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setBinding(ArraySubBinding newBinding)
+  public void setBinding(NamedID newBinding)
   {
     if (newBinding != binding)
     {
@@ -278,7 +278,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
     switch (featureID)
     {
       case AgreePackage.FOREACH_EXPR__BINDING:
-        setBinding((ArraySubBinding)newValue);
+        setBinding((NamedID)newValue);
         return;
       case AgreePackage.FOREACH_EXPR__ARRAY:
         setArray((Expr)newValue);
@@ -301,7 +301,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
     switch (featureID)
     {
       case AgreePackage.FOREACH_EXPR__BINDING:
-        setBinding((ArraySubBinding)null);
+        setBinding((NamedID)null);
         return;
       case AgreePackage.FOREACH_EXPR__ARRAY:
         setArray((Expr)null);

@@ -4,15 +4,16 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
-import com.rockwellcollins.atc.agree.agree.Expr;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,14 +31,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 public class EventExprImpl extends ExprImpl implements EventExpr
 {
   /**
-   * The cached value of the '{@link #getId() <em>Id</em>}' containment reference.
+   * The cached value of the '{@link #getId() <em>Id</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getId()
    * @generated
    * @ordered
    */
-  protected Expr id;
+  protected NamedElement id;
 
   /**
    * <!-- begin-user-doc -->
@@ -65,7 +66,27 @@ public class EventExprImpl extends ExprImpl implements EventExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public Expr getId()
+  public NamedElement getId()
+  {
+    if (id != null && ((EObject)id).eIsProxy())
+    {
+      InternalEObject oldId = (InternalEObject)id;
+      id = (NamedElement)eResolveProxy(oldId);
+      if (id != oldId)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.EVENT_EXPR__ID, oldId, id));
+      }
+    }
+    return id;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NamedElement basicGetId()
   {
     return id;
   }
@@ -75,53 +96,12 @@ public class EventExprImpl extends ExprImpl implements EventExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetId(Expr newId, NotificationChain msgs)
+  public void setId(NamedElement newId)
   {
-    Expr oldId = id;
+    NamedElement oldId = id;
     id = newId;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.EVENT_EXPR__ID, oldId, newId);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setId(Expr newId)
-  {
-    if (newId != id)
-    {
-      NotificationChain msgs = null;
-      if (id != null)
-        msgs = ((InternalEObject)id).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.EVENT_EXPR__ID, null, msgs);
-      if (newId != null)
-        msgs = ((InternalEObject)newId).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.EVENT_EXPR__ID, null, msgs);
-      msgs = basicSetId(newId, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.EVENT_EXPR__ID, newId, newId));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case AgreePackage.EVENT_EXPR__ID:
-        return basicSetId(null, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.EVENT_EXPR__ID, oldId, id));
   }
 
   /**
@@ -135,7 +115,8 @@ public class EventExprImpl extends ExprImpl implements EventExpr
     switch (featureID)
     {
       case AgreePackage.EVENT_EXPR__ID:
-        return getId();
+        if (resolve) return getId();
+        return basicGetId();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -151,7 +132,7 @@ public class EventExprImpl extends ExprImpl implements EventExpr
     switch (featureID)
     {
       case AgreePackage.EVENT_EXPR__ID:
-        setId((Expr)newValue);
+        setId((NamedElement)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -168,7 +149,7 @@ public class EventExprImpl extends ExprImpl implements EventExpr
     switch (featureID)
     {
       case AgreePackage.EVENT_EXPR__ID:
-        setId((Expr)null);
+        setId((NamedElement)null);
         return;
     }
     super.eUnset(featureID);

@@ -32,12 +32,12 @@ public interface ForallExpr extends Expr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Binding</em>' containment reference.
-   * @see #setBinding(ArraySubBinding)
+   * @see #setBinding(NamedID)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getForallExpr_Binding()
    * @model containment="true"
    * @generated
    */
-  ArraySubBinding getBinding();
+  NamedID getBinding();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.ForallExpr#getBinding <em>Binding</em>}' containment reference.
@@ -47,7 +47,7 @@ public interface ForallExpr extends Expr
    * @see #getBinding()
    * @generated
    */
-  void setBinding(ArraySubBinding value);
+  void setBinding(NamedID value);
 
   /**
    * Returns the value of the '<em><b>Array</b></em>' containment reference.

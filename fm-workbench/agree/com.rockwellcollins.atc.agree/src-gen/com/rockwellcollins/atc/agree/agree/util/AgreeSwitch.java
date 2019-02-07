@@ -385,24 +385,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.ARRAY_SUB_BINDING:
-      {
-        ArraySubBinding arraySubBinding = (ArraySubBinding)theEObject;
-        T result = caseArraySubBinding(arraySubBinding);
-        if (result == null) result = caseNamedElement(arraySubBinding);
-        if (result == null) result = caseElement(arraySubBinding);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.ACC:
-      {
-        Acc acc = (Acc)theEObject;
-        T result = caseAcc(acc);
-        if (result == null) result = caseNamedElement(acc);
-        if (result == null) result = caseElement(acc);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.AGREE_CONTRACT_LIBRARY:
       {
         AgreeContractLibrary agreeContractLibrary = (AgreeContractLibrary)theEObject;
@@ -1543,38 +1525,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNamedID(NamedID object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Array Sub Binding</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Array Sub Binding</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseArraySubBinding(ArraySubBinding object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Acc</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Acc</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseAcc(Acc object)
   {
     return null;
   }

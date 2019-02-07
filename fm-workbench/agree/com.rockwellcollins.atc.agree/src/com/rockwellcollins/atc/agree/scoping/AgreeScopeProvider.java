@@ -13,6 +13,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
@@ -225,14 +226,6 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 	IScope scope_NamedElement(FnDef ctx, EReference ref) {
 		return Scopes.scopeFor(ctx.getArgs(), getScope(ctx.eContainer(), ref));
-//			=======
-////	protected IScope scope_NamedElement(DoubleDotRef ctx, EReference ref) {
-////		return getScope(ctx.eContainer(), ref);
-////	}
-//
-//					protected IScope scope_NamedElement(NestedDotID ctx, EReference ref) {
-//				return Scopes.scopeFor(getCorrespondingAadlElement(ctx, ref), getScope(ctx.eContainer(), ref));
-//				>>>>>>> origin/develop
 	}
 
 	IScope scope_NamedElement(LinearizationDef ctx, EReference ref) {
@@ -255,44 +248,71 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	// Expressions
 
 	IScope scope_NamedElement(ForallExpr ctx, EReference ref) {
-
 		IScope prevScope = getScope(ctx.eContainer(), ref);
-		List<NamedElement> bs = new ArrayList<NamedElement>();
+		List<EObject> bs = new ArrayList<EObject>();
 		bs.add(ctx.getBinding());
-		return Scopes.scopeFor(bs, prevScope);
+		for (IEObjectDescription ieod : prevScope.getAllElements()) {
+			if (!ieod.getName().toString().equals(ctx.getBinding().getName())) {
+				bs.add(ieod.getEObjectOrProxy());
+			}
+		}
+		return Scopes.scopeFor(bs);
 	}
 
 	IScope scope_NamedElement(ExistsExpr ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
-
-		List<NamedElement> bs = new ArrayList<NamedElement>();
+		List<EObject> bs = new ArrayList<EObject>();
 		bs.add(ctx.getBinding());
-		return Scopes.scopeFor(bs, prevScope);
+		for (IEObjectDescription ieod : prevScope.getAllElements()) {
+			if (!ieod.getName().toString().equals(ctx.getBinding().getName())) {
+				bs.add(ieod.getEObjectOrProxy());
+			}
+		}
+		return Scopes.scopeFor(bs);
 	}
 
 	IScope scope_NamedElement(ForeachExpr ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
-
-		List<NamedElement> bs = new ArrayList<NamedElement>();
+		List<EObject> bs = new ArrayList<EObject>();
 		bs.add(ctx.getBinding());
-		return Scopes.scopeFor(bs, prevScope);
+		for (IEObjectDescription ieod : prevScope.getAllElements()) {
+			if (!ieod.getName().toString().equals(ctx.getBinding().getName())) {
+				bs.add(ieod.getEObjectOrProxy());
+			}
+		}
+		return Scopes.scopeFor(bs);
 	}
 
 	IScope scope_NamedElement(FoldLeftExpr ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
 
-		List<NamedElement> bs = new ArrayList<NamedElement>();
+		List<EObject> bs = new ArrayList<EObject>();
+
 		bs.add(ctx.getAccumulator());
 		bs.add(ctx.getBinding());
-		return Scopes.scopeFor(bs, prevScope);
+		for (IEObjectDescription ieod : prevScope.getAllElements()) {
+			if (!ieod.getName().toString().equals(ctx.getBinding().getName())
+					&& !ieod.getName().toString().equals(ctx.getAccumulator().getName())) {
+				bs.add(ieod.getEObjectOrProxy());
+			}
+		}
+		return Scopes.scopeFor(bs);
 	}
 
 	IScope scope_NamedElement(FoldRightExpr ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
-		List<NamedElement> bs = new ArrayList<NamedElement>();
+
+		List<EObject> bs = new ArrayList<EObject>();
+
 		bs.add(ctx.getAccumulator());
 		bs.add(ctx.getBinding());
-		return Scopes.scopeFor(bs, prevScope);
+		for (IEObjectDescription ieod : prevScope.getAllElements()) {
+			if (!ieod.getName().toString().equals(ctx.getBinding().getName())
+					&& !ieod.getName().toString().equals(ctx.getAccumulator().getName())) {
+				bs.add(ieod.getEObjectOrProxy());
+			}
+		}
+		return Scopes.scopeFor(bs);
 	}
 
 

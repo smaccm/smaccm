@@ -2,11 +2,10 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
-import com.rockwellcollins.atc.agree.agree.Acc;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.ArraySubBinding;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
+import com.rockwellcollins.atc.agree.agree.NamedID;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -43,7 +42,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * @generated
    * @ordered
    */
-  protected ArraySubBinding binding;
+  protected NamedID binding;
 
   /**
    * The cached value of the '{@link #getArray() <em>Array</em>}' containment reference.
@@ -63,7 +62,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * @generated
    * @ordered
    */
-  protected Acc accumulator;
+  protected NamedID accumulator;
 
   /**
    * The cached value of the '{@link #getInitial() <em>Initial</em>}' containment reference.
@@ -111,7 +110,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public ArraySubBinding getBinding()
+  public NamedID getBinding()
   {
     return binding;
   }
@@ -121,9 +120,9 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetBinding(ArraySubBinding newBinding, NotificationChain msgs)
+  public NotificationChain basicSetBinding(NamedID newBinding, NotificationChain msgs)
   {
-    ArraySubBinding oldBinding = binding;
+    NamedID oldBinding = binding;
     binding = newBinding;
     if (eNotificationRequired())
     {
@@ -138,7 +137,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setBinding(ArraySubBinding newBinding)
+  public void setBinding(NamedID newBinding)
   {
     if (newBinding != binding)
     {
@@ -207,7 +206,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public Acc getAccumulator()
+  public NamedID getAccumulator()
   {
     return accumulator;
   }
@@ -217,9 +216,9 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetAccumulator(Acc newAccumulator, NotificationChain msgs)
+  public NotificationChain basicSetAccumulator(NamedID newAccumulator, NotificationChain msgs)
   {
-    Acc oldAccumulator = accumulator;
+    NamedID oldAccumulator = accumulator;
     accumulator = newAccumulator;
     if (eNotificationRequired())
     {
@@ -234,7 +233,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setAccumulator(Acc newAccumulator)
+  public void setAccumulator(NamedID newAccumulator)
   {
     if (newAccumulator != accumulator)
     {
@@ -405,13 +404,13 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
     switch (featureID)
     {
       case AgreePackage.FOLD_LEFT_EXPR__BINDING:
-        setBinding((ArraySubBinding)newValue);
+        setBinding((NamedID)newValue);
         return;
       case AgreePackage.FOLD_LEFT_EXPR__ARRAY:
         setArray((Expr)newValue);
         return;
       case AgreePackage.FOLD_LEFT_EXPR__ACCUMULATOR:
-        setAccumulator((Acc)newValue);
+        setAccumulator((NamedID)newValue);
         return;
       case AgreePackage.FOLD_LEFT_EXPR__INITIAL:
         setInitial((Expr)newValue);
@@ -434,13 +433,13 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
     switch (featureID)
     {
       case AgreePackage.FOLD_LEFT_EXPR__BINDING:
-        setBinding((ArraySubBinding)null);
+        setBinding((NamedID)null);
         return;
       case AgreePackage.FOLD_LEFT_EXPR__ARRAY:
         setArray((Expr)null);
         return;
       case AgreePackage.FOLD_LEFT_EXPR__ACCUMULATOR:
-        setAccumulator((Acc)null);
+        setAccumulator((NamedID)null);
         return;
       case AgreePackage.FOLD_LEFT_EXPR__INITIAL:
         setInitial((Expr)null);

@@ -16,9 +16,7 @@ NamedElement returns aadl2::NamedElement:
 	| LinearizationDef
 	| LibraryFnDef
 	| RecordDef
-	| => NamedID
-	| => ArraySubBinding
-	| => Acc
+	| NamedID
 	;
 
 Element returns aadl2::Element:
@@ -209,23 +207,23 @@ Expr returns Expr:
 	ForallExpr;
 	
 ForallExpr returns Expr:
-    {ForallExpr} 'forall' binding=ArraySubBinding 'in' array=Expr ',' expr=Expr
+    {ForallExpr} 'forall' binding=NamedID 'in' array=Expr ',' expr=Expr
     | ExistsExpr;
 
 ExistsExpr returns Expr:
-    {ExistsExpr} 'exists' binding=ArraySubBinding  'in' array=Expr ',' expr=Expr
+    {ExistsExpr} 'exists' binding=NamedID  'in' array=Expr ',' expr=Expr
     | ForeachExpr;
     
 ForeachExpr returns Expr:
-    {ForeachExpr} 'foreach' binding=ArraySubBinding  'in' array=Expr ',' expr=Expr
+    {ForeachExpr} 'foreach' binding=NamedID  'in' array=Expr ',' expr=Expr
     | FoldLeftExpr;
 
 FoldLeftExpr returns Expr:
-    {FoldLeftExpr} 'foldl' binding=ArraySubBinding  'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr
+    {FoldLeftExpr} 'foldl' binding=NamedID  'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
     | FoldRightExpr;
 
 FoldRightExpr returns Expr:
-    {FoldRightExpr} 'foldr' binding=ArraySubBinding  'in' array=Expr 'into' accumulator=Acc '=' initial=Expr ',' expr=Expr
+    {FoldRightExpr} 'foldr' binding=NamedID  'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
     | ArrowExpr;
 
 ArrowExpr returns Expr:
@@ -307,7 +305,7 @@ TermExpr returns Expr:
 	| ArrayLiteralExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
-	| {EventExpr} 'event' '(' id = Expr ')'
+	| {EventExpr} 'event' '(' id = [aadl2::NamedElement] ')'
 	| {LatchedExpr} 'latched' '(' expr = Expr ')'
 	| {TimeOfExpr} 'timeof' '(' id = [aadl2::NamedElement] ')'
 	| {TimeRiseExpr} 'timerise' '(' id = [aadl2::NamedElement] ')'
@@ -361,14 +359,6 @@ ReservedVarTag:
 
 NamedID:
 	name=ID
-;
-
-ArraySubBinding:
-	name=ID
-;
-
-Acc:
-name=ID
 ;
 
 JavaQualifiedName:

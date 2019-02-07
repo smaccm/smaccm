@@ -34,12 +34,12 @@ public interface FoldRightExpr extends Expr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Binding</em>' containment reference.
-   * @see #setBinding(ArraySubBinding)
+   * @see #setBinding(NamedID)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getFoldRightExpr_Binding()
    * @model containment="true"
    * @generated
    */
-  ArraySubBinding getBinding();
+  NamedID getBinding();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.FoldRightExpr#getBinding <em>Binding</em>}' containment reference.
@@ -49,7 +49,7 @@ public interface FoldRightExpr extends Expr
    * @see #getBinding()
    * @generated
    */
-  void setBinding(ArraySubBinding value);
+  void setBinding(NamedID value);
 
   /**
    * Returns the value of the '<em><b>Array</b></em>' containment reference.
@@ -86,12 +86,12 @@ public interface FoldRightExpr extends Expr
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Accumulator</em>' containment reference.
-   * @see #setAccumulator(Acc)
+   * @see #setAccumulator(NamedID)
    * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getFoldRightExpr_Accumulator()
    * @model containment="true"
    * @generated
    */
-  Acc getAccumulator();
+  NamedID getAccumulator();
 
   /**
    * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.FoldRightExpr#getAccumulator <em>Accumulator</em>}' containment reference.
@@ -101,7 +101,7 @@ public interface FoldRightExpr extends Expr
    * @see #getAccumulator()
    * @generated
    */
-  void setAccumulator(Acc value);
+  void setAccumulator(NamedID value);
 
   /**
    * Returns the value of the '<em><b>Initial</b></em>' containment reference.

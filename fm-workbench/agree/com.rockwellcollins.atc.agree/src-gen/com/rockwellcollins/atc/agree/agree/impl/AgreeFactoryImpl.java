@@ -98,8 +98,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.ARRAY_LITERAL_EXPR: return createArrayLiteralExpr();
       case AgreePackage.DOUBLE_DOT_REF: return createDoubleDotRef();
       case AgreePackage.NAMED_ID: return createNamedID();
-      case AgreePackage.ARRAY_SUB_BINDING: return createArraySubBinding();
-      case AgreePackage.ACC: return createAcc();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
       case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
       case AgreePackage.AGREE_CONTRACT: return createAgreeContract();
@@ -542,28 +540,6 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
   {
     NamedIDImpl namedID = new NamedIDImpl();
     return namedID;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ArraySubBinding createArraySubBinding()
-  {
-    ArraySubBindingImpl arraySubBinding = new ArraySubBindingImpl();
-    return arraySubBinding;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Acc createAcc()
-  {
-    AccImpl acc = new AccImpl();
-    return acc;
   }
 
   /**

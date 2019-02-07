@@ -53,7 +53,7 @@ import org.osate.annexsupport.AnnexUtil;
 import com.google.common.collect.HashMultimap;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem;
-import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayDef;
+import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayTypeDef;
 import com.rockwellcollins.atc.agree.agree.Abstraction;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
@@ -335,7 +335,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			}
 		}
 
-		Type lhsType = (AgreeTypeSystem.typeFromID(namedEl));
+		Type lhsType = (AgreeTypeSystem.typeDefFromNE(namedEl));
 		Type rhsType = (AgreeTypeSystem.infer(expr));
 
 		if (!AgreeTypeSystem.typesEqual(lhsType, rhsType)) {
@@ -1113,7 +1113,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	public void checkTimeExpr(EObject expr, NamedElement id) {
-		Type type = AgreeTypeSystem.typeFromID(id);
+		Type type = AgreeTypeSystem.typeDefFromNE(id);
 
 		if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.boolType, type)) {
 			error(expr, "Time functions can be applied only to Boolean identifiers");
@@ -1255,36 +1255,37 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	public void checkRecordType(DoubleDotRef recType) {
 		NamedElement finalId = recType.getElm();
 
-//		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDef)
-//				&& !(finalId instanceof DataType) && !(finalId instanceof EnumStatement)) {
-//			error(recType, "types must be record definition, array definition, data implementation, enumeration, or datatype");
-//		}
+		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDef)
+				&& !(finalId instanceof DataType) && !(finalId instanceof EnumStatement)) {
+			error(recType,
+					"types must be record definition, array definition, data implementation, enumeration, or datatype");
+		}
 
-//		if (finalId instanceof DataImplementation) {
-//			if (AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.errorType)) {
-//				error(recType, "Data Implementations with no subcomponents must extend"
-//						+ " a Base_Type that AGREE can reason about.");
-//				return;
-//			}
-//			if (((DataImplementation) finalId).getAllSubcomponents().size() != 0) {
-//				if (AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.boolType)
-//						|| AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.intType)
-//						|| AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.realType)) {
-//					error(finalId, "Data implementations with subcomponents cannot be"
-//							+ " interpreted by AGREE if they extend Base_Types");
-//				}
-//			}
-//
-//			// dataImplCycleCheck(recId);
-//			return;
-//		}
+		if (finalId instanceof DataImplementation) {
+			if (AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.errorType)) {
+				error(recType, "Data Implementations with no subcomponents must extend"
+						+ " a Base_Type that AGREE can reason about.");
+				return;
+			}
+			if (((DataImplementation) finalId).getAllSubcomponents().size() != 0) {
+				if (AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.boolType)
+						|| AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.intType)
+						|| AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.realType)) {
+					error(finalId, "Data implementations with subcomponents cannot be"
+							+ " interpreted by AGREE if they extend Base_Types");
+				}
+			}
 
-//		if (finalId instanceof DataType) {
-//			if (AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.errorType)) {
-//				error(recType, "AADL Datatypes must extend" + " a Base_Type that AGREE can reason about.");
-//				return;
-//			}
-//		}
+			// dataImplCycleCheck(recId);
+			return;
+		}
+
+		if (finalId instanceof DataType) {
+			if (AgreeTypeSystem.typesEqual(recType, AgreeTypeSystem.errorType)) {
+				error(recType, "AADL Datatypes must extend" + " a Base_Type that AGREE can reason about.");
+				return;
+			}
+		}
 	}
 
 	@Check(CheckType.FAST)
@@ -1328,7 +1329,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (arrType instanceof DoubleDotRef) {
 			NamedElement typedef = ((DoubleDotRef) arrType).getElm();
 			if (typedef instanceof DataType) {
-				ArrayDef ad = AgreeTypeSystem.arrayDefFromAadl((DataType) typedef);
+				ArrayTypeDef ad = AgreeTypeSystem.arrayTypeDefFromClassifier((DataType) typedef);
 
 				if (!ad.isArray || ad.dimension <= 0 || ad.baseType == null) {
 					error(arrExpr, "expression must evaluate to an array");
@@ -1366,7 +1367,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			NamedElement typedef = ((DoubleDotRef) arrayType).getElm();
 
 			if (typedef instanceof DataType) {
-				ArrayDef ad = AgreeTypeSystem.arrayDefFromAadl((DataType) typedef);
+				ArrayTypeDef ad = AgreeTypeSystem.arrayTypeDefFromClassifier((DataType) typedef);
 
 				if (!ad.isArray || ad.dimension <= 0 || ad.baseType == null) {
 

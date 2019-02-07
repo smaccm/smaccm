@@ -132,8 +132,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="elm" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedID" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ArraySubBinding" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Acc" eSuperTypes="platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="AgreeContractLibrary" eSuperTypes="#//AgreeLibrary">
     <eStructuralFeatures xsi:type="ecore:EReference" name="contract" eType="#//Contract"
         containment="true"/>
@@ -241,43 +239,43 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rangeHigh" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ForallExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//ArraySubBinding"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//NamedID"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//Expr"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExistsExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//ArraySubBinding"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//NamedID"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//Expr"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ForeachExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//ArraySubBinding"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//NamedID"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//Expr"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FoldLeftExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//ArraySubBinding"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//NamedID"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//Expr"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="accumulator" eType="#//Acc"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="accumulator" eType="#//NamedID"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//Expr"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FoldRightExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//ArraySubBinding"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//NamedID"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="array" eType="#//Expr"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="accumulator" eType="#//Acc"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="accumulator" eType="#//NamedID"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//Expr"
         containment="true"/>
@@ -370,7 +368,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EventExpr" eSuperTypes="#//Expr">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="id" eType="#//Expr" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="id" eType="ecore:EClass platform:/resource/org.osate.aadl2/model/aadl2.ecore#//NamedElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LatchedExpr" eSuperTypes="#//Expr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" eType="#//Expr" containment="true"/>

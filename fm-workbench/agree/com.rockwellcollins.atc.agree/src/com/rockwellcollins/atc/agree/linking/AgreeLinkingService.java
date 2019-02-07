@@ -20,7 +20,6 @@ import org.osate.aadl2.Element;
 import org.osate.aadl2.Namespace;
 import org.osate.aadl2.PropertySet;
 import org.osate.aadl2.PropertyValue;
-import org.osate.aadl2.RecordType;
 import org.osate.aadl2.UnitLiteral;
 import org.osate.aadl2.UnitsType;
 import org.osate.aadl2.modelsupport.scoping.Aadl2GlobalScopeUtil;
@@ -101,7 +100,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 				|| context instanceof NamedElmExpr
 				|| context instanceof AssignStatement
 				|| context instanceof NodeEq || context instanceof SynchStatement
-				|| context instanceof RecordLitExpr || context instanceof RecordType || context instanceof GetPropertyExpr
+				|| context instanceof RecordLitExpr || context instanceof GetPropertyExpr
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
 				|| context instanceof OrderStatement || context instanceof ConnectionStatement) {
 

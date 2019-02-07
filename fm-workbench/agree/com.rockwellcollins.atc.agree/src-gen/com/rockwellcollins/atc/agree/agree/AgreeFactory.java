@@ -329,24 +329,6 @@ public interface AgreeFactory extends EFactory
   NamedID createNamedID();
 
   /**
-   * Returns a new object of class '<em>Array Sub Binding</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Array Sub Binding</em>'.
-   * @generated
-   */
-  ArraySubBinding createArraySubBinding();
-
-  /**
-   * Returns a new object of class '<em>Acc</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Acc</em>'.
-   * @generated
-   */
-  Acc createAcc();
-
-  /**
    * Returns a new object of class '<em>Contract Library</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

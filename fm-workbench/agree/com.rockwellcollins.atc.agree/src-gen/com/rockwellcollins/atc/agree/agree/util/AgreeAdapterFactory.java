@@ -251,16 +251,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createNamedIDAdapter();
       }
       @Override
-      public Adapter caseArraySubBinding(ArraySubBinding object)
-      {
-        return createArraySubBindingAdapter();
-      }
-      @Override
-      public Adapter caseAcc(Acc object)
-      {
-        return createAccAdapter();
-      }
-      @Override
       public Adapter caseAgreeContractLibrary(AgreeContractLibrary object)
       {
         return createAgreeContractLibraryAdapter();
@@ -1138,36 +1128,6 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNamedIDAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ArraySubBinding <em>Array Sub Binding</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.ArraySubBinding
-   * @generated
-   */
-  public Adapter createArraySubBindingAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.Acc <em>Acc</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.Acc
-   * @generated
-   */
-  public Adapter createAccAdapter()
   {
     return null;
   }

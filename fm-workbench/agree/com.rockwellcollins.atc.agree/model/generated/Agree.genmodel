@@ -112,8 +112,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//DoubleDotRef/elm"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//NamedID"/>
-    <genClasses ecoreClass="Agree.ecore#//ArraySubBinding"/>
-    <genClasses ecoreClass="Agree.ecore#//Acc"/>
     <genClasses ecoreClass="Agree.ecore#//AgreeContractLibrary">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//AgreeContractLibrary/contract"/>
     </genClasses>
@@ -330,5 +328,7 @@
     <genClasses ecoreClass="Agree.ecore#//RealCast">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RealCast/expr"/>
     </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//Acc"/>
+    <genClasses ecoreClass="Agree.ecore#//ArraySubBinding"/>
   </genPackages>
 </genmodel:GenModel>
