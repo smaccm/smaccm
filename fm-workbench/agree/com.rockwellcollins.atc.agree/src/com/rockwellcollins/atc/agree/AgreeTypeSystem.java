@@ -484,8 +484,7 @@ public class AgreeTypeSystem {
 			Expr arrExpr = ((ArraySubExpr) expr).getExpr();
 			TypeDef arrType = infer(arrExpr);
 			if (arrType instanceof ArrayTypeDef) {
-				TypeDef t = typeDefFromType(((ArrayType) arrType).getStem());
-				return t;
+				return ((ArrayTypeDef) arrType).baseType;
 			}
 
 		} else if (expr instanceof IndicesExpr) {
@@ -754,8 +753,7 @@ public class AgreeTypeSystem {
 			if (arrExpr != null) {
 				TypeDef arrType = infer(arrExpr);
 				if (arrType instanceof ArrayTypeDef) {
-					TypeDef stem = typeDefFromType(((ArrayType) arrType).getStem());
-					return stem;
+					return ((ArrayTypeDef) arrType).baseType;
 				}
 			}
 
@@ -780,7 +778,7 @@ public class AgreeTypeSystem {
 		} else if (ne instanceof Subcomponent) {
 			Subcomponent sub = (Subcomponent) ne;
 			Classifier cl = sub.getClassifier();
-			List<ArrayDimension> dims = ((Feature) ne).getArrayDimensions();
+			List<ArrayDimension> dims = sub.getArrayDimensions();
 			TypeDef clsTypeDef = typeDefFromClassifier(cl);
 			if (dims.size() == 0) {
 				return clsTypeDef;

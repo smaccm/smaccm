@@ -54,6 +54,7 @@ import com.google.common.collect.HashMultimap;
 import com.rockwellcollins.atc.agree.AgreeAADLEnumerationUtils;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayTypeDef;
+import com.rockwellcollins.atc.agree.AgreeTypeSystem.RecordTypeDef;
 import com.rockwellcollins.atc.agree.AgreeTypeSystem.TypeDef;
 import com.rockwellcollins.atc.agree.agree.Abstraction;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
@@ -398,6 +399,47 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 				if (low >= high) {
 					error(arg, "The low value of the interval is greater than or equal to the high end");
+				}
+			}
+
+		} else if (type instanceof DoubleDotRef) {
+			DoubleDotRef recType = (DoubleDotRef) type;
+			NamedElement finalId = recType.getElm();
+
+			if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDef)
+					&& !(finalId instanceof DataType) && !(finalId instanceof EnumStatement)) {
+				error(recType,
+						"types must be record definition, array definition, data implementation, enumeration, or datatype");
+			}
+
+			if (finalId instanceof DataImplementation) {
+				if (AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
+						AgreeTypeSystem.Prim.ErrorTypeDef)) {
+					error(recType, "Data Implementations with no subcomponents must extend"
+							+ " a Base_Type that AGREE can reason about.");
+					return;
+				}
+				if (((DataImplementation) finalId).getAllSubcomponents().size() != 0) {
+					if (AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
+							AgreeTypeSystem.Prim.BoolTypeDef)
+							|| AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
+									AgreeTypeSystem.Prim.IntTypeDef)
+							|| AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
+									AgreeTypeSystem.Prim.RealTypeDef)) {
+						error(finalId, "Data implementations with subcomponents cannot be"
+								+ " interpreted by AGREE if they extend Base_Types");
+					}
+				}
+
+				// dataImplCycleCheck(recId);
+				return;
+			}
+
+			if (finalId instanceof DataType) {
+				if (AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
+						AgreeTypeSystem.Prim.ErrorTypeDef)) {
+					error(recType, "AADL Datatypes must extend" + " a Base_Type that AGREE can reason about.");
+					return;
 				}
 			}
 
@@ -1214,35 +1256,19 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		TypeDef recordType = AgreeTypeSystem.infer(upExpr.getRecord());
 
 
-		if (recordType instanceof DoubleDotRef) {
-			NamedElement ne = ((DoubleDotRef) recordType).getElm();
-			if (ne instanceof RecordDef) {
-				// scoping should ensure the key is a proper Arg
-				Arg arg = (Arg) upExpr.getKey();
-				TypeDef keyType = AgreeTypeSystem.typeDefFromType(arg.getType());
-				checkTypeExists(upExpr.getExpr());
-				TypeDef expType = AgreeTypeSystem.infer(upExpr.getExpr());
+		if (recordType instanceof RecordTypeDef) {
 
-				if (!AgreeTypeSystem.typesEqual(keyType, expType)) {
-					error(upExpr, "the update field is of type '" + nameOfTypeDef(keyType)
-					+ "', but the expression is of type '" + nameOfTypeDef(expType) + "'");
-				}
+			// scoping should ensure the key is a proper Arg
+			Arg arg = (Arg) upExpr.getKey();
+			TypeDef keyType = AgreeTypeSystem.typeDefFromType(arg.getType());
+			checkTypeExists(upExpr.getExpr());
+			TypeDef expType = AgreeTypeSystem.infer(upExpr.getExpr());
 
-			} else if (ne instanceof DataImplementation) {
-				// scoping should ensure the key is a proper Subcomponent
-				Subcomponent subcomp = (Subcomponent) upExpr.getKey();
-				TypeDef keyType = AgreeTypeSystem.typeDefFromClassifier(subcomp.getClassifier());
-				checkTypeExists(upExpr.getExpr());
-				TypeDef expType = AgreeTypeSystem.infer(upExpr.getExpr());
-				if (!AgreeTypeSystem.typesEqual(keyType, expType)) {
-					error(upExpr, "the update field is of type '" + nameOfTypeDef(keyType)
-					+ "', but the expression is of type '" + nameOfTypeDef(expType) + "'");
-				}
-			} else {
-				error("Record to be updated must be a data implementation or AGREE record type.  " + "Found type '"
-						+ nameOfTypeDef(recordType) + "'.", upExpr,
-						AgreePackage.Literals.RECORD_UPDATE_EXPR__RECORD, -1);
+			if (!AgreeTypeSystem.typesEqual(keyType, expType)) {
+				error(upExpr, "the update field is of type '" + nameOfTypeDef(keyType)
+				+ "', but the expression is of type '" + nameOfTypeDef(expType) + "'");
 			}
+
 		} else {
 			error("Record to be updated must be a data implementation or AGREE record type.  " + "Found type '"
 					+ nameOfTypeDef(recordType) + "'.", upExpr,
@@ -1251,47 +1277,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 	}
 
-	@Check(CheckType.FAST)
-	public void checkRecordType(DoubleDotRef recType) {
-		NamedElement finalId = recType.getElm();
 
-		if (!(finalId instanceof DataImplementation) && !(finalId instanceof RecordDef)
-				&& !(finalId instanceof DataType) && !(finalId instanceof EnumStatement)) {
-			error(recType,
-					"types must be record definition, array definition, data implementation, enumeration, or datatype");
-		}
-
-		if (finalId instanceof DataImplementation) {
-			if (AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
-					AgreeTypeSystem.Prim.ErrorTypeDef)) {
-				error(recType, "Data Implementations with no subcomponents must extend"
-						+ " a Base_Type that AGREE can reason about.");
-				return;
-			}
-			if (((DataImplementation) finalId).getAllSubcomponents().size() != 0) {
-				if (AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
-						AgreeTypeSystem.Prim.BoolTypeDef)
-						|| AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
-								AgreeTypeSystem.Prim.IntTypeDef)
-						|| AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
-								AgreeTypeSystem.Prim.RealTypeDef)) {
-					error(finalId, "Data implementations with subcomponents cannot be"
-							+ " interpreted by AGREE if they extend Base_Types");
-				}
-			}
-
-			// dataImplCycleCheck(recId);
-			return;
-		}
-
-		if (finalId instanceof DataType) {
-			if (AgreeTypeSystem.typesEqual(AgreeTypeSystem.typeDefFromType(recType),
-					AgreeTypeSystem.Prim.ErrorTypeDef)) {
-				error(recType, "AADL Datatypes must extend" + " a Base_Type that AGREE can reason about.");
-				return;
-			}
-		}
-	}
 
 	@Check(CheckType.FAST)
 

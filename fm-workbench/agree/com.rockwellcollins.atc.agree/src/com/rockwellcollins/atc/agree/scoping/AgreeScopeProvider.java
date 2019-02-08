@@ -465,15 +465,15 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 //
 //
 //
-//	protected IScope scope_DoubleDotRef_elm(DoubleDotRef ctx, EReference ref) {
-//
-//		IScope prevScope = getScope(ctx.eContainer(), ref);
-//		EObject container = ((GetPropertyExpr) ctx.eContainer()).getContainingComponentImpl();
-//		if (container instanceof ComponentImplementation) {
-//			return Scopes.scopeFor(((ComponentImplementation) ctx).getAllSubcomponents(), prevScope);
-//		}
-//		return prevScope;
-//	}
+	protected IScope scope_DoubleDotRef_elm(DoubleDotRef ctx, EReference ref) {
+
+		IScope prevScope = getScope(ctx.eContainer(), ref);
+		EObject container = ((GetPropertyExpr) ctx.eContainer()).getContainingComponentImpl();
+		if (container instanceof ComponentImplementation) {
+			return Scopes.scopeFor(((ComponentImplementation) ctx).getAllSubcomponents(), prevScope);
+		}
+		return prevScope;
+	}
 
 
 	private List<NamedElement> getFieldsOfNE(NamedElement leaf) {
