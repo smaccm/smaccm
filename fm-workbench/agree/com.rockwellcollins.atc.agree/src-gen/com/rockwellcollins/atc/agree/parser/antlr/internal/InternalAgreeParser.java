@@ -20337,7 +20337,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleQCPREF"
-    // InternalAgreeParser.g:8164:1: ruleQCPREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (this_ID_0= RULE_ID kw= ColonColon )? this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )? ) ;
+    // InternalAgreeParser.g:8164:1: ruleQCPREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : ( (this_ID_0= RULE_ID kw= ColonColon )* this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )? ) ;
     public final AntlrDatatypeRuleToken ruleQCPREF() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -20349,50 +20349,59 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // InternalAgreeParser.g:8168:6: ( ( (this_ID_0= RULE_ID kw= ColonColon )? this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )? ) )
-            // InternalAgreeParser.g:8169:1: ( (this_ID_0= RULE_ID kw= ColonColon )? this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )? )
+            // InternalAgreeParser.g:8168:6: ( ( (this_ID_0= RULE_ID kw= ColonColon )* this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )? ) )
+            // InternalAgreeParser.g:8169:1: ( (this_ID_0= RULE_ID kw= ColonColon )* this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )? )
             {
-            // InternalAgreeParser.g:8169:1: ( (this_ID_0= RULE_ID kw= ColonColon )? this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )? )
-            // InternalAgreeParser.g:8169:2: (this_ID_0= RULE_ID kw= ColonColon )? this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )?
+            // InternalAgreeParser.g:8169:1: ( (this_ID_0= RULE_ID kw= ColonColon )* this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )? )
+            // InternalAgreeParser.g:8169:2: (this_ID_0= RULE_ID kw= ColonColon )* this_ID_2= RULE_ID (kw= FullStop this_ID_4= RULE_ID )?
             {
-            // InternalAgreeParser.g:8169:2: (this_ID_0= RULE_ID kw= ColonColon )?
-            int alt103=2;
-            int LA103_0 = input.LA(1);
+            // InternalAgreeParser.g:8169:2: (this_ID_0= RULE_ID kw= ColonColon )*
+            loop103:
+            do {
+                int alt103=2;
+                int LA103_0 = input.LA(1);
 
-            if ( (LA103_0==RULE_ID) ) {
-                int LA103_1 = input.LA(2);
+                if ( (LA103_0==RULE_ID) ) {
+                    int LA103_1 = input.LA(2);
 
-                if ( (LA103_1==ColonColon) ) {
-                    alt103=1;
+                    if ( (LA103_1==ColonColon) ) {
+                        alt103=1;
+                    }
+
+
                 }
-            }
-            switch (alt103) {
-                case 1 :
-                    // InternalAgreeParser.g:8169:7: this_ID_0= RULE_ID kw= ColonColon
-                    {
-                    this_ID_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_92); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
 
-                      		current.merge(this_ID_0);
-                          
-                    }
-                    if ( state.backtracking==0 ) {
-                       
-                          newLeafNode(this_ID_0, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_0_0()); 
-                          
-                    }
-                    kw=(Token)match(input,ColonColon,FollowSets000.FOLLOW_8); if (state.failed) return current;
-                    if ( state.backtracking==0 ) {
 
-                              current.merge(kw);
-                              newLeafNode(kw, grammarAccess.getQCPREFAccess().getColonColonKeyword_0_1()); 
-                          
-                    }
+                switch (alt103) {
+            	case 1 :
+            	    // InternalAgreeParser.g:8169:7: this_ID_0= RULE_ID kw= ColonColon
+            	    {
+            	    this_ID_0=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_92); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
 
-                    }
-                    break;
+            	      		current.merge(this_ID_0);
+            	          
+            	    }
+            	    if ( state.backtracking==0 ) {
+            	       
+            	          newLeafNode(this_ID_0, grammarAccess.getQCPREFAccess().getIDTerminalRuleCall_0_0()); 
+            	          
+            	    }
+            	    kw=(Token)match(input,ColonColon,FollowSets000.FOLLOW_8); if (state.failed) return current;
+            	    if ( state.backtracking==0 ) {
 
-            }
+            	              current.merge(kw);
+            	              newLeafNode(kw, grammarAccess.getQCPREFAccess().getColonColonKeyword_0_1()); 
+            	          
+            	    }
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop103;
+                }
+            } while (true);
 
             this_ID_2=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_86); if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -25281,6 +25290,11 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             case HyphenMinus:
                 {
                 switch ( input.LA(2) ) {
+                case RULE_ID:
+                    {
+                    alt129=3;
+                    }
+                    break;
                 case RULE_REAL_LIT:
                     {
                     alt129=1;
@@ -25289,11 +25303,6 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                 case RULE_INTEGER_LIT:
                     {
                     alt129=2;
-                    }
-                    break;
-                case RULE_ID:
-                    {
-                    alt129=3;
                     }
                     break;
                 default:
@@ -28431,12 +28440,12 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             throw nvae;
         }
     }
-    static final String dfa_15s = "\115\uffff";
-    static final String dfa_16s = "\1\uffff\1\61\77\uffff\1\61\4\uffff\1\112\6\uffff";
-    static final String dfa_17s = "\1\30\1\10\20\uffff\1\u008b\1\33\1\u008b\54\uffff\1\10\4\uffff\1\10\1\144\5\uffff";
-    static final String dfa_18s = "\1\u008b\1\u0081\20\uffff\3\u008b\54\uffff\1\u0081\4\uffff\1\u0081\1\173\5\uffff";
-    static final String dfa_19s = "\2\uffff\1\2\1\3\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\3\uffff\1\4\53\1\1\uffff\4\1\2\uffff\4\1\1\5";
-    static final String dfa_20s = "\1\3\1\4\21\uffff\1\5\55\uffff\1\1\4\uffff\1\2\1\0\5\uffff}>";
+    static final String dfa_15s = "\113\uffff";
+    static final String dfa_16s = "\1\uffff\1\61\77\uffff\1\110\11\uffff";
+    static final String dfa_17s = "\1\30\1\10\20\uffff\1\u008b\1\33\1\u008b\54\uffff\1\10\4\uffff\1\144\4\uffff";
+    static final String dfa_18s = "\1\u008b\1\u0081\20\uffff\3\u008b\54\uffff\1\u0081\4\uffff\1\173\4\uffff";
+    static final String dfa_19s = "\2\uffff\1\2\1\3\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\3\uffff\1\4\53\1\1\uffff\4\1\1\uffff\3\1\1\5";
+    static final String dfa_20s = "\1\0\1\3\21\uffff\1\4\55\uffff\1\2\4\uffff\1\1\4\uffff}>";
     static final String[] dfa_21s = {
             "\1\14\1\13\11\uffff\1\3\1\11\16\uffff\1\12\3\uffff\1\10\1\16\1\17\13\uffff\1\4\5\uffff\1\20\2\uffff\1\2\1\16\15\uffff\1\7\13\uffff\1\5\6\uffff\1\21\25\uffff\1\15\1\uffff\1\6\2\uffff\1\1",
             "\1\56\25\uffff\1\63\3\uffff\1\64\10\uffff\1\65\3\uffff\1\57\14\uffff\1\55\2\uffff\1\62\1\60\3\uffff\1\75\1\uffff\1\73\5\uffff\1\74\5\uffff\1\66\1\uffff\1\50\1\uffff\1\46\1\33\3\uffff\1\34\4\uffff\1\45\1\52\1\72\1\22\1\76\1\40\1\44\1\51\1\42\1\27\3\uffff\1\47\1\uffff\1\77\1\25\1\71\1\31\1\35\1\67\1\36\1\23\1\32\1\54\1\53\1\37\1\43\1\41\1\26\1\70\1\30\1\24\1\100",
@@ -28456,9 +28465,9 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             "",
             "",
             "",
-            "\1\101",
-            "\1\103\1\102\11\uffff\1\104\32\uffff\1\105\111\uffff\1\106",
-            "\1\107",
+            "\1\1",
+            "\1\103\1\102\11\uffff\1\104\32\uffff\1\105\111\uffff\1\101",
+            "\1\106",
             "",
             "",
             "",
@@ -28503,14 +28512,12 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             "",
             "",
             "",
-            "\1\56\25\uffff\1\63\3\uffff\1\64\10\uffff\1\65\3\uffff\1\57\14\uffff\1\55\2\uffff\1\62\1\60\3\uffff\1\75\1\uffff\1\73\5\uffff\1\74\5\uffff\1\66\1\uffff\1\50\1\uffff\1\46\1\33\3\uffff\1\34\4\uffff\1\45\1\52\1\72\1\110\1\76\1\40\1\44\1\51\1\42\1\27\3\uffff\1\47\1\uffff\1\77\1\25\1\71\1\31\1\35\1\67\1\36\1\23\1\32\1\54\1\53\1\37\1\43\1\41\1\26\1\70\1\30\1\24\1\100",
+            "\1\56\25\uffff\1\63\3\uffff\1\64\10\uffff\1\65\3\uffff\1\57\14\uffff\1\55\2\uffff\1\62\1\60\3\uffff\1\75\1\uffff\1\73\5\uffff\1\74\5\uffff\1\66\1\uffff\1\50\1\uffff\1\46\1\33\3\uffff\1\34\4\uffff\1\45\1\52\1\72\1\uffff\1\76\1\40\1\44\1\51\1\42\1\27\3\uffff\1\47\1\uffff\1\77\1\25\1\71\1\31\1\35\1\67\1\36\1\107\1\32\1\54\1\53\1\37\1\43\1\41\1\26\1\70\1\30\1\24\1\100",
             "",
             "",
             "",
             "",
-            "\1\56\25\uffff\1\63\3\uffff\1\64\10\uffff\1\65\3\uffff\1\57\14\uffff\1\55\2\uffff\1\62\1\60\3\uffff\1\75\1\uffff\1\73\5\uffff\1\74\5\uffff\1\66\1\uffff\1\50\1\uffff\1\46\1\33\3\uffff\1\34\4\uffff\1\45\1\52\1\72\1\uffff\1\76\1\40\1\44\1\51\1\42\1\27\3\uffff\1\47\1\uffff\1\77\1\25\1\71\1\31\1\35\1\67\1\36\1\111\1\32\1\54\1\53\1\37\1\43\1\41\1\26\1\70\1\30\1\24\1\100",
-            "\1\113\26\uffff\1\114",
-            "",
+            "\1\111\26\uffff\1\112",
             "",
             "",
             "",
@@ -28546,34 +28553,77 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA100_71 = input.LA(1);
+                        int LA100_0 = input.LA(1);
 
                          
-                        int index100_71 = input.index();
+                        int index100_0 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA100_71==ColonEqualsSign) && (synpred28_InternalAgreeParser())) {s = 75;}
+                        if ( (LA100_0==RULE_ID) ) {s = 1;}
 
-                        else if ( (LA100_71==EqualsSign) && (synpred30_InternalAgreeParser())) {s = 76;}
+                        else if ( (LA100_0==Time) ) {s = 2;}
+
+                        else if ( (LA100_0==Indices) ) {s = 3;}
+
+                        else if ( (LA100_0==Enum) && (synpred31_InternalAgreeParser())) {s = 4;}
+
+                        else if ( (LA100_0==LeftSquareBracketVerticalLine) ) {s = 5;}
+
+                        else if ( (LA100_0==RULE_INTEGER_LIT) ) {s = 6;}
+
+                        else if ( (LA100_0==Pre) ) {s = 7;}
+
+                        else if ( (LA100_0==Event) ) {s = 8;}
+
+                        else if ( (LA100_0==Latched) ) {s = 9;}
+
+                        else if ( (LA100_0==Timeof) ) {s = 10;}
+
+                        else if ( (LA100_0==Timerise) ) {s = 11;}
+
+                        else if ( (LA100_0==Timefall) ) {s = 12;}
+
+                        else if ( (LA100_0==RULE_REAL_LIT) ) {s = 13;}
+
+                        else if ( (LA100_0==False||LA100_0==True) ) {s = 14;}
+
+                        else if ( (LA100_0==Floor) ) {s = 15;}
+
+                        else if ( (LA100_0==Real) ) {s = 16;}
+
+                        else if ( (LA100_0==LeftParenthesis) ) {s = 17;}
 
                          
-                        input.seek(index100_71);
+                        input.seek(index100_0);
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
+                        int LA100_70 = input.LA(1);
+
+                         
+                        int index100_70 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA100_70==ColonEqualsSign) && (synpred28_InternalAgreeParser())) {s = 73;}
+
+                        else if ( (LA100_70==EqualsSign) && (synpred30_InternalAgreeParser())) {s = 74;}
+
+                         
+                        input.seek(index100_70);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
                         int LA100_65 = input.LA(1);
 
                          
                         int index100_65 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA100_65==ColonColon) && (synpred28_InternalAgreeParser())) {s = 72;}
-
-                        else if ( (LA100_65==FullStop) ) {s = 19;}
+                        if ( (LA100_65==LeftParenthesis) && (synpred29_InternalAgreeParser())) {s = 21;}
 
                         else if ( (LA100_65==LeftCurlyBracket) ) {s = 20;}
 
-                        else if ( (LA100_65==LeftParenthesis) && (synpred29_InternalAgreeParser())) {s = 21;}
+                        else if ( (LA100_65==FullStop) && (synpred28_InternalAgreeParser())) {s = 71;}
 
                         else if ( (LA100_65==LeftSquareBracket) && (synpred28_InternalAgreeParser())) {s = 22;}
 
@@ -28629,7 +28679,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
                         else if ( (LA100_65==Times) && (synpred28_InternalAgreeParser())) {s = 48;}
 
-                        else if ( (LA100_65==EOF) && (synpred28_InternalAgreeParser())) {s = 49;}
+                        else if ( (LA100_65==EOF) && (synpred28_InternalAgreeParser())) {s = 72;}
 
                         else if ( (LA100_65==Occur) && (synpred28_InternalAgreeParser())) {s = 50;}
 
@@ -28665,155 +28715,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         input.seek(index100_65);
                         if ( s>=0 ) return s;
                         break;
-                    case 2 : 
-                        int LA100_70 = input.LA(1);
-
-                         
-                        int index100_70 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA100_70==LeftParenthesis) && (synpred29_InternalAgreeParser())) {s = 21;}
-
-                        else if ( (LA100_70==LeftCurlyBracket) ) {s = 20;}
-
-                        else if ( (LA100_70==FullStop) && (synpred28_InternalAgreeParser())) {s = 73;}
-
-                        else if ( (LA100_70==LeftSquareBracket) && (synpred28_InternalAgreeParser())) {s = 22;}
-
-                        else if ( (LA100_70==LeftSquareBracketVerticalLine) && (synpred28_InternalAgreeParser())) {s = 23;}
-
-                        else if ( (LA100_70==CircumflexAccent) && (synpred28_InternalAgreeParser())) {s = 24;}
-
-                        else if ( (LA100_70==Asterisk) && (synpred28_InternalAgreeParser())) {s = 25;}
-
-                        else if ( (LA100_70==Solidus) && (synpred28_InternalAgreeParser())) {s = 26;}
-
-                        else if ( (LA100_70==Div) && (synpred28_InternalAgreeParser())) {s = 27;}
-
-                        else if ( (LA100_70==Mod) && (synpred28_InternalAgreeParser())) {s = 28;}
-
-                        else if ( (LA100_70==PlusSign) && (synpred28_InternalAgreeParser())) {s = 29;}
-
-                        else if ( (LA100_70==HyphenMinus) && (synpred28_InternalAgreeParser())) {s = 30;}
-
-                        else if ( (LA100_70==LessThanSign) && (synpred28_InternalAgreeParser())) {s = 31;}
-
-                        else if ( (LA100_70==LessThanSignEqualsSign) && (synpred28_InternalAgreeParser())) {s = 32;}
-
-                        else if ( (LA100_70==GreaterThanSign) && (synpred28_InternalAgreeParser())) {s = 33;}
-
-                        else if ( (LA100_70==GreaterThanSignEqualsSign) && (synpred28_InternalAgreeParser())) {s = 34;}
-
-                        else if ( (LA100_70==EqualsSign) && (synpred28_InternalAgreeParser())) {s = 35;}
-
-                        else if ( (LA100_70==LessThanSignGreaterThanSign) && (synpred28_InternalAgreeParser())) {s = 36;}
-
-                        else if ( (LA100_70==ExclamationMarkEqualsSign) && (synpred28_InternalAgreeParser())) {s = 37;}
-
-                        else if ( (LA100_70==And) && (synpred28_InternalAgreeParser())) {s = 38;}
-
-                        else if ( (LA100_70==Or) && (synpred28_InternalAgreeParser())) {s = 39;}
-
-                        else if ( (LA100_70==LessThanSignEqualsSignGreaterThanSign) && (synpred28_InternalAgreeParser())) {s = 40;}
-
-                        else if ( (LA100_70==EqualsSignGreaterThanSign) && (synpred28_InternalAgreeParser())) {s = 41;}
-
-                        else if ( (LA100_70==HyphenMinusGreaterThanSign) && (synpred28_InternalAgreeParser())) {s = 42;}
-
-                        else if ( (LA100_70==Semicolon) && (synpred28_InternalAgreeParser())) {s = 43;}
-
-                        else if ( (LA100_70==Colon) && (synpred28_InternalAgreeParser())) {s = 44;}
-
-                        else if ( (LA100_70==Holds) && (synpred28_InternalAgreeParser())) {s = 45;}
-
-                        else if ( (LA100_70==Exclusively) && (synpred28_InternalAgreeParser())) {s = 46;}
-
-                        else if ( (LA100_70==Occurs) && (synpred28_InternalAgreeParser())) {s = 47;}
-
-                        else if ( (LA100_70==Times) && (synpred28_InternalAgreeParser())) {s = 48;}
-
-                        else if ( (LA100_70==EOF) && (synpred28_InternalAgreeParser())) {s = 74;}
-
-                        else if ( (LA100_70==Occur) && (synpred28_InternalAgreeParser())) {s = 50;}
-
-                        else if ( (LA100_70==Becomes) && (synpred28_InternalAgreeParser())) {s = 51;}
-
-                        else if ( (LA100_70==Implies) && (synpred28_InternalAgreeParser())) {s = 52;}
-
-                        else if ( (LA100_70==During) && (synpred28_InternalAgreeParser())) {s = 53;}
-
-                        else if ( (LA100_70==With) && (synpred28_InternalAgreeParser())) {s = 54;}
-
-                        else if ( (LA100_70==Comma) && (synpred28_InternalAgreeParser())) {s = 55;}
-
-                        else if ( (LA100_70==RightSquareBracket) && (synpred28_InternalAgreeParser())) {s = 56;}
-
-                        else if ( (LA100_70==RightParenthesis) && (synpred28_InternalAgreeParser())) {s = 57;}
-
-                        else if ( (LA100_70==FullStopFullStop) && (synpred28_InternalAgreeParser())) {s = 58;}
-
-                        else if ( (LA100_70==Into) && (synpred28_InternalAgreeParser())) {s = 59;}
-
-                        else if ( (LA100_70==Then) && (synpred28_InternalAgreeParser())) {s = 60;}
-
-                        else if ( (LA100_70==Else) && (synpred28_InternalAgreeParser())) {s = 61;}
-
-                        else if ( (LA100_70==ColonEqualsSign) && (synpred28_InternalAgreeParser())) {s = 62;}
-
-                        else if ( (LA100_70==VerticalLineRightSquareBracket) && (synpred28_InternalAgreeParser())) {s = 63;}
-
-                        else if ( (LA100_70==RightCurlyBracket) && (synpred28_InternalAgreeParser())) {s = 64;}
-
-                         
-                        input.seek(index100_70);
-                        if ( s>=0 ) return s;
-                        break;
                     case 3 : 
-                        int LA100_0 = input.LA(1);
-
-                         
-                        int index100_0 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (LA100_0==RULE_ID) ) {s = 1;}
-
-                        else if ( (LA100_0==Time) ) {s = 2;}
-
-                        else if ( (LA100_0==Indices) ) {s = 3;}
-
-                        else if ( (LA100_0==Enum) && (synpred31_InternalAgreeParser())) {s = 4;}
-
-                        else if ( (LA100_0==LeftSquareBracketVerticalLine) ) {s = 5;}
-
-                        else if ( (LA100_0==RULE_INTEGER_LIT) ) {s = 6;}
-
-                        else if ( (LA100_0==Pre) ) {s = 7;}
-
-                        else if ( (LA100_0==Event) ) {s = 8;}
-
-                        else if ( (LA100_0==Latched) ) {s = 9;}
-
-                        else if ( (LA100_0==Timeof) ) {s = 10;}
-
-                        else if ( (LA100_0==Timerise) ) {s = 11;}
-
-                        else if ( (LA100_0==Timefall) ) {s = 12;}
-
-                        else if ( (LA100_0==RULE_REAL_LIT) ) {s = 13;}
-
-                        else if ( (LA100_0==False||LA100_0==True) ) {s = 14;}
-
-                        else if ( (LA100_0==Floor) ) {s = 15;}
-
-                        else if ( (LA100_0==Real) ) {s = 16;}
-
-                        else if ( (LA100_0==LeftParenthesis) ) {s = 17;}
-
-                         
-                        input.seek(index100_0);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
                         int LA100_1 = input.LA(1);
 
                          
@@ -28918,22 +28820,22 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                         input.seek(index100_1);
                         if ( s>=0 ) return s;
                         break;
-                    case 5 : 
+                    case 4 : 
                         int LA100_19 = input.LA(1);
 
                          
                         int index100_19 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA100_19==KW__REMOVE) && (synpred28_InternalAgreeParser())) {s = 66;}
+                        if ( (LA100_19==RULE_ID) ) {s = 65;}
+
+                        else if ( (LA100_19==KW__REMOVE) && (synpred28_InternalAgreeParser())) {s = 66;}
 
                         else if ( (LA100_19==KW__INSERT) && (synpred28_InternalAgreeParser())) {s = 67;}
 
                         else if ( (LA100_19==KW__COUNT) && (synpred28_InternalAgreeParser())) {s = 68;}
 
                         else if ( (LA100_19==KW__CLK) && (synpred28_InternalAgreeParser())) {s = 69;}
-
-                        else if ( (LA100_19==RULE_ID) ) {s = 70;}
 
                          
                         input.seek(index100_19);

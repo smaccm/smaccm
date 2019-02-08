@@ -122,49 +122,49 @@ public
 			r.ranged < 10;
 	**};
 
-		thread CompTest
+	thread CompTest
 			
 		annex agree {**
 				
-			eq qq: int[190,200];
-			eq ww: int[180,181];
-			eq bb : bool = ww != qq;
-			
-			eq a0 : int = 1;
-			fun idnt(x: int) : int = x;
-			fun something(xs: int[3]) : int[3] = xs;
-			eq a1 : int[3] = [| 1, 2, 3 |];
-			eq b1 : bool = forall ya in a1, ya > 0;
-			eq b8 : bool = forall yb in a1, yb > 0;
-			eq a2 : int[3] = a1[|0 := 2; 1 := 3 |];
-			type roo = struct {g : int, y: int};
-			eq r1 : roo = roo {g = 7; y = 8};
-			eq i1 : int = r1.y;
-			eq r2 : roo = r1{y := 4};
-			eq a5 : roo[2] = [| (roo {g = 4; y=2}), (roo {g = 5; y=3}) |];
-	
-			eq i4 : int = (a5[0]).y;
-			
-			eq arr1: simple_int_array;
+--			eq qq: int[190,200];
+--			eq ww: int[180,181];
+--			eq bb : bool = ww != qq;
+--			
+--			eq a0 : int = 1;
+--			fun idnt(x: int) : int = x;
+--			fun something(xs: int[3]) : int[3] = xs;
+--			eq a1 : int[3] = [| 1, 2, 3 |];
+--			eq b1 : bool = forall ya in a1, ya > 0;
+--			eq b8 : bool = forall yb in a1, yb > 0;
+--			eq a2 : int[3] = a1[|0 := 2; 1 := 3 |];
+--			type roo = struct {g : int, y: int};
+--			eq r1 : roo = roo {g = 7; y = 8};
+--			eq i1 : int = r1.y;
+--			eq r2 : roo = r1{y := 4};
+--			eq a5 : roo[2] = [| (roo {g = 4; y=2}), (roo {g = 5; y=3}) |];
+--	
+--			eq i4 : int = (a5[0]).y;
+--			
+--			eq arr1: simple_int_array;
 			
 --			TODO:
-			eq b2 : bool = exists x in a1, (x > 0);
-			eq a3 : bool[3] = foreach q in a1, (q > 0);
-			eq i0 : int = foldl g in a1 into asdf = 0 , asdf + g;
-			eq i2 : int = foldr p in a1 into acc = 0 , acc + p;
-			eq b3 : bool = forall v in a2, v > 0; 
-			eq a4 : int[3] = foreach i in  indices(a3), if a3[i] then 1 else 0;
-			eq i3 : int = a4[0];
+--			eq b2 : bool = exists x in a1, (x > 0);
+--			eq a3 : bool[3] = foreach q in a1, (q > 0);
+--			eq i0 : int = foldl g in a1 into asdf = 0 , asdf + g;
+--			eq i2 : int = foldr p in a1 into acc = 0 , acc + p;
+--			eq b3 : bool = forall v in a2, v > 0; 
+--			eq a4 : int[3] = foreach i in  indices(a3), if a3[i] then 1 else 0;
+--			eq i3 : int = a4[0];
 
 			
 --			TODO:
-			eq arr2: simple_int_array = foreach aa in arr1, (aa * 4);
-			
-			fun foo1(x: int): int = x;
-			fun foo2(x: int): int = x;
-			assume "array_sorted" : forall ii in indices(arr1), ii = 0 or arr1[ii - 1] <= arr1[ii]; 
---			assume "array_sorted2" : forall ii in indices(arr1), ii = 0 or arr1[ii - 1] <= arr1[ii]; 
-			guarantee "sortednes_preserved" : forall iii in indices(arr2), iii = 0 or arr1[iii - 1] <= arr1[iii]; 
+--			eq arr2: simple_int_array = foreach aa in arr1, (aa * 4);
+--			
+--			fun foo1(x: int): int = x;
+--			fun foo2(x: int): int = x;
+--			assume "array_sorted" : forall ii in indices(arr1), ii = 0 or arr1[ii - 1] <= arr1[ii]; 
+----			assume "array_sorted2" : forall ii in indices(arr1), ii = 0 or arr1[ii - 1] <= arr1[ii]; 
+--			guarantee "sortednes_preserved" : forall iii in indices(arr2), iii = 0 or arr1[iii - 1] <= arr1[iii]; 
 
 			
 		**};
@@ -177,6 +177,7 @@ public
 			arr2: data simple_int_array;
 			
 		annex agree {**
+--				lemma "array_stuff" : forall iq in arr1, iq <= 0 or iq > 0 ; 
 --			lemma "array_sorted" : forall iq in indices(arr1), iq = 0 or arr1[iq - 1] <= arr1[iq]; 
 		**};
 		

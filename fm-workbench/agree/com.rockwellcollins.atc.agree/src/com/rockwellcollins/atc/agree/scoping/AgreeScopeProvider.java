@@ -61,6 +61,7 @@ import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LibraryFnDef;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
 import com.rockwellcollins.atc.agree.agree.LinearizationDef;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
 import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
@@ -475,6 +476,20 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return prevScope;
 	}
 
+	private List<NamedElement> getAadlElements(EObject ctx) {
+		List<NamedElement> components = new ArrayList<>();
+		if (ctx instanceof ComponentType) {
+			components.addAll(getAadlElements(ctx));
+			components.addAll(((ComponentType) ctx).getAllFeatures());
+
+		} else if (ctx instanceof ComponentImplementation) {
+			components.addAll(((ComponentImplementation) ctx).getAllSubcomponents());
+			components.addAll(((ComponentImplementation) ctx).getAllConnections());
+			components.addAll(getAadlElements(ctx));
+			components.addAll(getAadlElements(((ComponentImplementation) ctx).getType()));
+		}
+		return components;
+	}
 
 	private List<NamedElement> getFieldsOfNE(NamedElement leaf) {
 
@@ -490,46 +505,15 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 			result.addAll(subs);
 			return result;
 
-//		} else if (leaf instanceof Classifier) {
-//
-//			return new ArrayList<NamedElement>(getNamedElements(leaf));
-//
-//		} else if (leaf instanceof AadlPackage) {
-//
-//			List<NamedElement> result = new LinkedList<>();
-//			AadlPackage ap = (AadlPackage) leaf;
-//			List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
-//
-//			for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(ap,
-//					AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
-//
-//				AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
-//				namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
-//
-//			}
-//
-//			result.addAll(namedSpecs);
-//			return result;
-
 		} else {
-			return new LinkedList<>();
+
+			return new ArrayList<NamedElement>(getNamedElements(leaf));
+
 		}
 
-//		=======
-//				protected Set<Element> getAadlElements(EObject ctx) {
-//			Set<Element> components = new HashSet<>();
-//			if (ctx instanceof ComponentType) {
-//				components.addAll(getAllAgreeElements(ctx));
-//				components.addAll(((ComponentType) ctx).getAllFeatures());
-//
-//			} else if (ctx instanceof ComponentImplementation) {
-//				components.addAll(((ComponentImplementation) ctx).getAllSubcomponents());
-//				components.addAll(((ComponentImplementation) ctx).getAllConnections());
-//				components.addAll(getAllAgreeElements(ctx));
-//				components.addAll(getAadlElements(((ComponentImplementation) ctx).getType()));
-//				>>>>>>> origin/develop
-
 	}
+
+
 
 	IScope scope_RecordLitExpr_args(RecordLitExpr ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
@@ -562,7 +546,11 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		if (typ instanceof RecordTypeDef) {
 			NamedElement ne = ((RecordTypeDef) typ).namedElement;
 			return Scopes.scopeFor(getFieldsOfNE(ne));
+		} else if (ctx.getExpr() instanceof NamedElmExpr) {
+			NamedElement ne = ((NamedElmExpr) ctx.getExpr()).getElm();
+			return Scopes.scopeFor(getFieldsOfNE(ne));
 		} else {
+
 			return IScope.NULLSCOPE;
 		}
 	}

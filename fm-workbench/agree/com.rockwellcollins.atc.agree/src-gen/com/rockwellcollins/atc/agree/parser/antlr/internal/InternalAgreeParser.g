@@ -8179,7 +8179,7 @@ ruleQCPREF returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
         $current.merge(kw);
         newLeafNode(kw, grammarAccess.getQCPREFAccess().getColonColonKeyword_0_1()); 
     }
-)?    this_ID_2=RULE_ID    {
+)*    this_ID_2=RULE_ID    {
 		$current.merge(this_ID_2);
     }
 

@@ -26250,7 +26250,7 @@ rule__QCPREF__Group__0__Impl
 :
 (
 { before(grammarAccess.getQCPREFAccess().getGroup_0()); }
-(rule__QCPREF__Group_0__0)?
+(rule__QCPREF__Group_0__0)*
 { after(grammarAccess.getQCPREFAccess().getGroup_0()); }
 )
 

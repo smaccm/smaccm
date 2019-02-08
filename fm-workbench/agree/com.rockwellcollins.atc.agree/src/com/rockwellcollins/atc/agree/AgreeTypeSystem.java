@@ -172,39 +172,9 @@ public class AgreeTypeSystem {
 		} else if (td instanceof RecordTypeDef) {
 			return ((RecordTypeDef) td).name;
 		} else {
-			throw new RuntimeException("Error: typeDefName");
+			return "<error>";
 		}
 	}
-
-//	public static String classifierToString(Classifier c) {
-//		EObject o = c.eContainer();
-//		while (!(o instanceof AadlPackage)) {
-//			o = o.eContainer();
-//		}
-//		return ((AadlPackage) o).getName() + "::" + c.getName();
-//	}
-//
-//	public static String typeToString(Type typ) {
-//
-//		if (typ instanceof PrimType) {
-//			return ((PrimType) typ).getName();
-//		} else if (typ instanceof DoubleDotRef) {
-//
-//			NamedElement ne = ((DoubleDotRef) typ).getElm();
-//			if (ne instanceof Classifier) {
-//				return classifierToString((Classifier) ne);
-//			} else if (ne instanceof RecordDef) {
-//				return ne.getFullName();
-//			}
-//
-//		} else if (typ instanceof ArrayType) {
-//			String stemString = typeToString(((ArrayType) typ).getStem());
-//			return stemString + "[" + ((ArrayType) typ).getSize() + "]";
-//		}
-//
-//		return "<type_error>//" + typ.toString();
-//	}
-
 
 	private static Classifier baseAadlClassifier(Classifier dt) {
 
@@ -797,9 +767,6 @@ public class AgreeTypeSystem {
 				long size = getArrayDimension(dims.get(0));
 				return new ArrayTypeDef(clsTypeDef, Math.toIntExact(size));
 			}
-
-//		} else if (ne instanceof AadlPackage) {
-//			return mkDoubleDotRef(ne);
 
 		} else if (ne instanceof PropertyConstant) {
 			PropertyExpression pe = ((PropertyConstant) ne).getConstantValue();

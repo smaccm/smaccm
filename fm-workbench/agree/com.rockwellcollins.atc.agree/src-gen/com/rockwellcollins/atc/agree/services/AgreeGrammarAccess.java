@@ -5246,13 +5246,13 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cIDTerminalRuleCall_2_1 = (RuleCall)cGroup_2.eContents().get(1);
 		
 		//QCPREF:
-		//	(ID '::')? ID ('.' ID)?;
+		//	(ID '::')* ID ('.' ID)?;
 		@Override public ParserRule getRule() { return rule; }
 
-		//(ID '::')? ID ('.' ID)?
+		//(ID '::')* ID ('.' ID)?
 		public Group getGroup() { return cGroup; }
 
-		//(ID '::')?
+		//(ID '::')*
 		public Group getGroup_0() { return cGroup_0; }
 
 		//ID
@@ -6307,7 +6307,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//QCPREF:
-	//	(ID '::')? ID ('.' ID)?;
+	//	(ID '::')* ID ('.' ID)?;
 	public QCPREFElements getQCPREFAccess() {
 		return pQCPREF;
 	}

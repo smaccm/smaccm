@@ -340,7 +340,7 @@ DoubleDotRef:
 
 	
 QCPREF:
-	(ID '::')? ID ('.' ID)?
+	(ID '::')* ID ('.' ID)?
  ;
  
 

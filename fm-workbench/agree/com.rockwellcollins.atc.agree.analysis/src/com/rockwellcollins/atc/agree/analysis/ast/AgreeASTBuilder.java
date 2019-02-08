@@ -1751,11 +1751,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseCallExpr(CallExpr expr) {
 		NamedElement namedEl = expr.getRef().getElm();
-//		=======
-//				public Expr caseFnCallExpr(FnCallExpr expr) {
-//			>>>>>>> origin/develop
-
-		String fnName = AgreeTypeUtils.getNodeName(namedEl).replace("::", "___");
+		String fnName = AgreeTypeUtils.getNodeName(namedEl);
 		boolean found = false;
 		for (Node node : globalNodes) {
 			if (node.id.equals(fnName)) {
@@ -1767,9 +1763,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		if (!found) {
 			DoubleDotRef fn = expr.getRef();
 			doSwitch(fn.getElm());
-//			=======
-//					doSwitch(expr.getFn().getBase());
-//			>>>>>>> origin/develop
 			// for dReal integration
 			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
 				fnName = namedEl.getName();
@@ -1782,17 +1775,15 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			argResults.add(doSwitch(argExpr));
 		}
 
-		NodeCallExpr nodeCall = new NodeCallExpr(fnName, argResults);
+		NodeCallExpr nodeCall = new NodeCallExpr(fnName.replace("::", "___"), argResults);
 		return nodeCall;
 	}
 
 	@Override
 	public Expr caseFnDef(FnDef fnDef) {
-		String nodeName = AgreeTypeUtils.getNodeName(fnDef);
-//		=======
-//				public Expr caseFnDefExpr(FnDefExpr expr) {
-//			String nodeName = AgreeTypeUtils.getNodeName(expr).replace("::", "___");
-//			>>>>>>> origin/develop
+
+		String nodeName = AgreeTypeUtils.getNodeName(fnDef).replace("::", "___");
+
 		for (Node node : globalNodes) {
 			if (node.id.equals(nodeName)) {
 				return null;

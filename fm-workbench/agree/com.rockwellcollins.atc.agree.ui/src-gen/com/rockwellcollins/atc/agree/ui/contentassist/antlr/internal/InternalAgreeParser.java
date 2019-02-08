@@ -14792,11 +14792,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             case PlusSign:
                 {
                 switch ( input.LA(2) ) {
-                case RULE_ID:
-                    {
-                    alt45=3;
-                    }
-                    break;
                 case RULE_INTEGER_LIT:
                     {
                     alt45=2;
@@ -14805,6 +14800,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                 case RULE_REAL_LIT:
                     {
                     alt45=1;
+                    }
+                    break;
+                case RULE_ID:
+                    {
+                    alt45=3;
                     }
                     break;
                 default:
@@ -72544,46 +72544,55 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__QCPREF__Group__0__Impl"
-    // InternalAgreeParser.g:26246:1: rule__QCPREF__Group__0__Impl : ( ( rule__QCPREF__Group_0__0 )? ) ;
+    // InternalAgreeParser.g:26246:1: rule__QCPREF__Group__0__Impl : ( ( rule__QCPREF__Group_0__0 )* ) ;
     public final void rule__QCPREF__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:26250:1: ( ( ( rule__QCPREF__Group_0__0 )? ) )
-            // InternalAgreeParser.g:26251:1: ( ( rule__QCPREF__Group_0__0 )? )
+            // InternalAgreeParser.g:26250:1: ( ( ( rule__QCPREF__Group_0__0 )* ) )
+            // InternalAgreeParser.g:26251:1: ( ( rule__QCPREF__Group_0__0 )* )
             {
-            // InternalAgreeParser.g:26251:1: ( ( rule__QCPREF__Group_0__0 )? )
-            // InternalAgreeParser.g:26252:1: ( rule__QCPREF__Group_0__0 )?
+            // InternalAgreeParser.g:26251:1: ( ( rule__QCPREF__Group_0__0 )* )
+            // InternalAgreeParser.g:26252:1: ( rule__QCPREF__Group_0__0 )*
             {
             if ( state.backtracking==0 ) {
                before(grammarAccess.getQCPREFAccess().getGroup_0()); 
             }
-            // InternalAgreeParser.g:26253:1: ( rule__QCPREF__Group_0__0 )?
-            int alt111=2;
-            int LA111_0 = input.LA(1);
+            // InternalAgreeParser.g:26253:1: ( rule__QCPREF__Group_0__0 )*
+            loop111:
+            do {
+                int alt111=2;
+                int LA111_0 = input.LA(1);
 
-            if ( (LA111_0==RULE_ID) ) {
-                int LA111_1 = input.LA(2);
+                if ( (LA111_0==RULE_ID) ) {
+                    int LA111_1 = input.LA(2);
 
-                if ( (LA111_1==ColonColon) ) {
-                    alt111=1;
-                }
-            }
-            switch (alt111) {
-                case 1 :
-                    // InternalAgreeParser.g:26253:2: rule__QCPREF__Group_0__0
-                    {
-                    pushFollow(FollowSets000.FOLLOW_2);
-                    rule__QCPREF__Group_0__0();
-
-                    state._fsp--;
-                    if (state.failed) return ;
-
+                    if ( (LA111_1==ColonColon) ) {
+                        alt111=1;
                     }
-                    break;
 
-            }
+
+                }
+
+
+                switch (alt111) {
+            	case 1 :
+            	    // InternalAgreeParser.g:26253:2: rule__QCPREF__Group_0__0
+            	    {
+            	    pushFollow(FollowSets000.FOLLOW_51);
+            	    rule__QCPREF__Group_0__0();
+
+            	    state._fsp--;
+            	    if (state.failed) return ;
+
+            	    }
+            	    break;
+
+            	default :
+            	    break loop111;
+                }
+            } while (true);
 
             if ( state.backtracking==0 ) {
                after(grammarAccess.getQCPREFAccess().getGroup_0()); 
@@ -95173,14 +95182,14 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     protected DFA40 dfa40 = new DFA40(this);
     protected DFA97 dfa97 = new DFA97(this);
     static final String dfa_1s = "\15\uffff";
-    static final String dfa_2s = "\1\uffff\1\13\13\uffff";
+    static final String dfa_2s = "\1\uffff\1\14\13\uffff";
     static final String dfa_3s = "\1\4\1\170\13\uffff";
     static final String dfa_4s = "\1\u008b\1\170\13\uffff";
-    static final String dfa_5s = "\2\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\1";
+    static final String dfa_5s = "\2\uffff\1\2\1\3\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\1\1\13";
     static final String dfa_6s = "\15\uffff}>";
     static final String[] dfa_7s = {
             "\1\10\7\uffff\1\2\7\uffff\1\11\1\uffff\1\4\21\uffff\1\2\1\uffff\1\2\12\uffff\1\5\7\uffff\1\2\7\uffff\1\6\2\uffff\1\7\7\uffff\1\12\7\uffff\1\3\62\uffff\1\1",
-            "\1\14",
+            "\1\13",
             "",
             "",
             "",
@@ -95219,15 +95228,15 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             return "2958:1: rule__NamedElement__Alternatives : ( ( ruleArg ) | ( ruleNamedSpecStatement ) | ( ruleFnDef ) | ( rulePropertyStatement ) | ( ruleConstStatement ) | ( ruleEnumStatement ) | ( ruleNodeDef ) | ( ruleLinearizationDef ) | ( ruleLibraryFnDef ) | ( ruleRecordDef ) | ( ruleNamedID ) );";
         }
     }
-    static final String dfa_8s = "\33\uffff";
-    static final String dfa_9s = "\1\uffff\1\24\25\uffff\1\24\1\uffff\1\24\1\uffff";
-    static final String dfa_10s = "\1\30\1\10\20\uffff\1\33\1\u008b\2\uffff\1\u008b\1\10\1\144\1\10\1\uffff";
-    static final String dfa_11s = "\1\u008b\1\u0081\20\uffff\2\u008b\2\uffff\1\u008b\1\u0081\1\173\1\u0081\1\uffff";
-    static final String dfa_12s = "\2\uffff\1\2\1\3\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\2\uffff\1\1\1\4\4\uffff\1\5";
-    static final String dfa_13s = "\33\uffff}>";
+    static final String dfa_8s = "\32\uffff";
+    static final String dfa_9s = "\1\uffff\1\25\25\uffff\1\25\2\uffff";
+    static final String dfa_10s = "\1\30\1\10\20\uffff\1\u008b\1\33\1\u008b\2\uffff\1\10\1\144\1\uffff";
+    static final String dfa_11s = "\1\u008b\1\u0081\20\uffff\3\u008b\2\uffff\1\u0081\1\173\1\uffff";
+    static final String dfa_12s = "\2\uffff\1\2\1\3\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16\1\17\1\20\1\21\1\22\1\23\3\uffff\1\1\1\4\2\uffff\1\5";
+    static final String dfa_13s = "\32\uffff}>";
     static final String[] dfa_14s = {
             "\1\14\1\13\11\uffff\1\3\1\11\16\uffff\1\12\3\uffff\1\10\1\16\1\17\13\uffff\1\4\5\uffff\1\20\2\uffff\1\2\1\16\15\uffff\1\7\13\uffff\1\5\6\uffff\1\21\25\uffff\1\15\1\uffff\1\6\2\uffff\1\1",
-            "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\3\24\1\26\6\24\3\uffff\1\24\1\uffff\1\24\1\25\5\24\1\22\11\24\1\23\1\24",
+            "\1\25\25\uffff\1\25\3\uffff\1\25\10\uffff\1\25\3\uffff\1\25\14\uffff\1\25\2\uffff\2\25\3\uffff\1\25\1\uffff\1\25\5\uffff\1\25\5\uffff\1\25\1\uffff\1\25\1\uffff\2\25\3\uffff\1\25\4\uffff\3\25\1\22\6\25\3\uffff\1\25\1\uffff\1\25\1\26\5\25\1\23\11\25\1\24\1\25",
             "",
             "",
             "",
@@ -95244,14 +95253,13 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             "",
             "",
             "",
-            "\2\24\11\uffff\1\24\32\uffff\1\24\111\uffff\1\27",
+            "\1\1",
+            "\2\25\11\uffff\1\25\32\uffff\1\25\111\uffff\1\27",
             "\1\30",
             "",
             "",
-            "\1\31",
-            "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\3\24\1\uffff\6\24\3\uffff\1\24\1\uffff\1\24\1\25\17\24\1\23\1\24",
-            "\1\24\26\uffff\1\32",
-            "\1\24\25\uffff\1\24\3\uffff\1\24\10\uffff\1\24\3\uffff\1\24\14\uffff\1\24\2\uffff\2\24\3\uffff\1\24\1\uffff\1\24\5\uffff\1\24\5\uffff\1\24\1\uffff\1\24\1\uffff\2\24\3\uffff\1\24\4\uffff\12\24\3\uffff\1\24\1\uffff\1\24\1\25\5\24\1\22\11\24\1\23\1\24",
+            "\1\25\25\uffff\1\25\3\uffff\1\25\10\uffff\1\25\3\uffff\1\25\14\uffff\1\25\2\uffff\2\25\3\uffff\1\25\1\uffff\1\25\5\uffff\1\25\5\uffff\1\25\1\uffff\1\25\1\uffff\2\25\3\uffff\1\25\4\uffff\3\25\1\uffff\6\25\3\uffff\1\25\1\uffff\1\25\1\26\17\25\1\24\1\25",
+            "\1\25\26\uffff\1\31",
             ""
     };
 
@@ -95340,7 +95348,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     static final String dfa_24s = "\1\10\7\0\2\uffff";
     static final String dfa_25s = "\1\u0081\7\0\2\uffff";
     static final String dfa_26s = "\10\uffff\1\2\1\1";
-    static final String dfa_27s = "\1\uffff\1\2\1\0\1\6\1\5\1\3\1\1\1\4\2\uffff}>";
+    static final String dfa_27s = "\1\uffff\1\0\1\5\1\4\1\3\1\1\1\6\1\2\2\uffff}>";
     static final String[] dfa_28s = {
             "\1\10\25\uffff\1\10\3\uffff\1\10\10\uffff\1\10\3\uffff\1\10\14\uffff\1\10\2\uffff\2\10\3\uffff\1\10\1\uffff\1\10\5\uffff\1\10\5\uffff\1\10\1\uffff\1\10\1\uffff\2\10\3\uffff\1\10\4\uffff\1\7\2\10\1\uffff\1\10\1\2\1\6\1\10\1\4\4\uffff\1\10\1\uffff\1\10\1\uffff\5\10\1\uffff\3\10\1\1\1\5\1\3\1\uffff\2\10\1\uffff\1\10",
             "\1\uffff",
@@ -95383,36 +95391,6 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA97_2 = input.LA(1);
-
-                         
-                        int index97_2 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred174_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index97_2);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 1 : 
-                        int LA97_6 = input.LA(1);
-
-                         
-                        int index97_6 = input.index();
-                        input.rewind();
-                        s = -1;
-                        if ( (synpred174_InternalAgreeParser()) ) {s = 9;}
-
-                        else if ( (true) ) {s = 8;}
-
-                         
-                        input.seek(index97_6);
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
                         int LA97_1 = input.LA(1);
 
                          
@@ -95427,7 +95405,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         input.seek(index97_1);
                         if ( s>=0 ) return s;
                         break;
-                    case 3 : 
+                    case 1 : 
                         int LA97_5 = input.LA(1);
 
                          
@@ -95442,7 +95420,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         input.seek(index97_5);
                         if ( s>=0 ) return s;
                         break;
-                    case 4 : 
+                    case 2 : 
                         int LA97_7 = input.LA(1);
 
                          
@@ -95457,7 +95435,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         input.seek(index97_7);
                         if ( s>=0 ) return s;
                         break;
-                    case 5 : 
+                    case 3 : 
                         int LA97_4 = input.LA(1);
 
                          
@@ -95472,7 +95450,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                         input.seek(index97_4);
                         if ( s>=0 ) return s;
                         break;
-                    case 6 : 
+                    case 4 : 
                         int LA97_3 = input.LA(1);
 
                          
@@ -95485,6 +95463,36 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
                          
                         input.seek(index97_3);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA97_2 = input.LA(1);
+
+                         
+                        int index97_2 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred174_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index97_2);
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA97_6 = input.LA(1);
+
+                         
+                        int index97_6 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (synpred174_InternalAgreeParser()) ) {s = 9;}
+
+                        else if ( (true) ) {s = 8;}
+
+                         
+                        input.seek(index97_6);
                         if ( s>=0 ) return s;
                         break;
             }
