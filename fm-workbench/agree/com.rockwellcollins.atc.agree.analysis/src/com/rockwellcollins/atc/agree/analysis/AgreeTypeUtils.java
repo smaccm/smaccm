@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
@@ -25,8 +26,10 @@ import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 
+import jkind.lustre.ArrayType;
 import jkind.lustre.EnumType;
 import jkind.lustre.NamedType;
+import jkind.lustre.RecordType;
 import jkind.lustre.Type;
 
 public class AgreeTypeUtils {
@@ -87,7 +90,7 @@ public class AgreeTypeUtils {
 
 			assert (agreeType != AgreeTypeSystem.Prim.ErrorTypeDef);
 
-			Type lustreType = getLustreType(agreeType);
+			Type lustreType = updateLustreTypeMap(agreeType);
 			subTypeMap.put(subComp.getName(), lustreType);
 		}
 
@@ -245,21 +248,66 @@ public class AgreeTypeUtils {
 	}
 
 
-	public Type getLustreType(com.rockwellcollins.atc.agree.AgreeTypeSystem.TypeDef agreeType) {
+	public Type updateLustreTypeMap(AgreeTypeSystem.TypeDef agreeType) {
 		Type lustreType = typeNameToLustreType.get(AgreeTypeSystem.nameOfTypeDef(agreeType));
-
 		if (lustreType == null) {
-			lustreType = buildLustreType(agreeType);
+			lustreType = getLustreType(agreeType);
 			typeNameToLustreType.put(AgreeTypeSystem.nameOfTypeDef(agreeType), lustreType);
 		}
 		return lustreType;
 	}
 
-//	public Type getLustreType(NamedElement ne) {
-//		com.rockwellcollins.atc.agree.agree.Type agreeType = AgreeTypeSystem.typeFromID(ne);
-//		assert (agreeType != AgreeTypeSystem.errorType);
-//		return getLustreType(agreeType);
-//	}
+	public Type getLustreType(AgreeTypeSystem.TypeDef agreeType) {
+
+		if (agreeType == AgreeTypeSystem.Prim.IntTypeDef) {
+			return NamedType.INT;
+
+		} else if (agreeType == AgreeTypeSystem.Prim.RealTypeDef) {
+			return NamedType.REAL;
+
+		} else if (agreeType == AgreeTypeSystem.Prim.BoolTypeDef) {
+			return NamedType.BOOL;
+
+		} else if (agreeType instanceof AgreeTypeSystem.RangeIntTypeDef) {
+			return NamedType.INT;
+
+		} else if (agreeType instanceof AgreeTypeSystem.RangeRealTypeDef) {
+			return NamedType.REAL;
+
+		} else if (agreeType instanceof AgreeTypeSystem.RecordTypeDef) {
+			String name = ((AgreeTypeSystem.RecordTypeDef) agreeType).name;
+			Map<String, AgreeTypeSystem.TypeDef> agreeFields = ((AgreeTypeSystem.RecordTypeDef) agreeType).fields;
+
+			Map<String, Type> lustreFields = new HashMap<>();
+			for (Entry<String, AgreeTypeSystem.TypeDef> entry : agreeFields.entrySet()) {
+				String key = entry.getKey();
+				Type lt = updateLustreTypeMap(entry.getValue());
+				lustreFields.put(key, lt);
+			}
+			RecordType lustreRecType = new RecordType(name, lustreFields);
+			return lustreRecType;
+
+		} else if (agreeType instanceof AgreeTypeSystem.EnumTypeDef) {
+			String name = ((AgreeTypeSystem.EnumTypeDef) agreeType).name;
+			List<String> enumValues = ((AgreeTypeSystem.EnumTypeDef) agreeType).values;
+			EnumType lustreEnumType = new EnumType(name, enumValues);
+			return lustreEnumType;
+
+		} else if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+			AgreeTypeSystem.TypeDef agreeBaseType = ((AgreeTypeSystem.ArrayTypeDef) agreeType).baseType;
+			int dimension = ((AgreeTypeSystem.ArrayTypeDef) agreeType).dimension;
+
+			Type lustreBaseType = updateLustreTypeMap(agreeBaseType);
+			ArrayType lustreArrayType = new ArrayType(lustreBaseType, dimension);
+			return lustreArrayType;
+
+
+		} else {
+			throw new RuntimeException("Error: - getLustreType");
+		}
+
+	}
+
 
 	public List<Type> getLustreTypes() {
 		List<Type> typeList = new ArrayList<>(typeNameToLustreType.values());

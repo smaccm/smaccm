@@ -207,11 +207,43 @@ public class AgreeTypeSystem {
 
 
 	private static Classifier baseAadlClassifier(Classifier dt) {
+
 		Classifier parent = dt.getExtended();
 		if (parent == null) {
 			return dt;
 		} else {
 			return baseAadlClassifier(parent);
+		}
+
+	}
+
+	public static TypeDef typeDefFromNE(NamedElement ne) {
+		if (ne instanceof Classifier) {
+			return typeDefFromClassifier((Classifier) ne);
+		} else if (ne instanceof Classifier) {
+			return typeDefFromClassifier((Classifier) ne);
+		} else if (ne instanceof RecordDef) {
+
+			EList<Arg> args = ((RecordDef) ne).getArgs();
+			Map<String, TypeDef> fields = new HashMap<>();
+			for (Arg arg : args) {
+				String key = arg.getName();
+				TypeDef typeDef = typeDefFromType(arg.getType());
+				fields.put(key, typeDef);
+			}
+			return new RecordTypeDef(ne.getQualifiedName(), fields, ne);
+
+		} else if (ne instanceof EnumStatement) {
+			String name = ne.getQualifiedName();
+			List<String> enumValues = new ArrayList<String>();
+
+			for (NamedID nid : ((EnumStatement) ne).getEnums()) {
+				enumValues.add(nid.getQualifiedName());
+			}
+			return new EnumTypeDef(name, enumValues);
+
+		} else {
+			return Prim.ErrorTypeDef;
 		}
 	}
 
@@ -374,32 +406,7 @@ public class AgreeTypeSystem {
 			return new ArrayTypeDef(baseTypeDef, Integer.parseInt(size));
 
 		} else if (t instanceof DoubleDotRef) {
-			NamedElement ne = ((DoubleDotRef) t).getElm();
-			if (ne instanceof Classifier) {
-				return typeDefFromClassifier((Classifier) ne);
-			} else if (ne instanceof RecordDef) {
-
-				EList<Arg> args = ((RecordDef) ne).getArgs();
-				Map<String, TypeDef> fields = new HashMap<>();
-				for (Arg arg : args) {
-					String key = arg.getName();
-					TypeDef typeDef = typeDefFromType(arg.getType());
-					fields.put(key, typeDef);
-				}
-				return new RecordTypeDef(ne.getQualifiedName(), fields, ne);
-
-			} else if (ne instanceof EnumStatement) {
-				String name = ne.getQualifiedName();
-				List<String> enumValues = new ArrayList<String>();
-
-				for (NamedID nid : ((EnumStatement) ne).getEnums()) {
-					enumValues.add(nid.getQualifiedName());
-				}
-				return new EnumTypeDef(name, enumValues);
-
-			} else {
-				return Prim.ErrorTypeDef;
-			}
+			return typeDefFromNE(((DoubleDotRef) t).getElm());
 		} else {
 			return Prim.ErrorTypeDef;
 		}

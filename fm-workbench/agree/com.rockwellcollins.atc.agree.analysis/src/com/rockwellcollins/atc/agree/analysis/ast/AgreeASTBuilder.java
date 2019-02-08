@@ -668,13 +668,16 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			List<AgreeStatement> guarantees) {
 
 		Feature dataFeature = feature.getFeature();
-		DataSubcomponentType dataClass;
+		NamedElement dataClass;
 		if (dataFeature instanceof DataPort) {
 			DataPort dataPort = (DataPort) dataFeature;
 			dataClass = dataPort.getDataFeatureClassifier();
 		} else if (dataFeature instanceof EventDataPort) {
 			EventDataPort eventDataPort = (EventDataPort) dataFeature;
 			dataClass = eventDataPort.getDataFeatureClassifier();
+//
+//			System.out.println("Classifier: " + eventDataPort.getClassifier());
+//			System.out.println("DataFeatureClassifier: " + eventDataPort.getDataFeatureClassifier());
 		} else {
 			dataClass = null;
 		}
@@ -703,9 +706,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			return;
 		}
 
-		// EGM: array-backend
-//		Type type = AgreeTypeUtils.getType(dataClass, typeMap, typeExpressions);
-		Type type = symbolTable.getLustreType(dataClass);
+
+		Type type = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromNE(dataClass));
 
 		if (type == null) {
 			// we do not reason about this type
@@ -850,13 +852,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private Type getConnectionEndType(ConnectionEnd port) {
-		DataSubcomponentType dataClass = getConnectionEndDataClass(port);
+		NamedElement dataClass = getConnectionEndDataClass(port);
 		if (dataClass == null) {
 			return null;
 		}
 		// EGM: array-backend
 		// Type lustreType = AgreeTypeUtils.getType(dataClass, typeMap, globalTypes);
-		Type lustreType = symbolTable.getLustreType(dataClass);
+		Type lustreType = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromNE(dataClass));
 		return lustreType;
 	}
 
@@ -1093,7 +1095,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				// this will record them to the global types
 				// EGM: array-backend
 				// AgreeTypeUtils.getType((NamedElement) spec, typeMap, globalTypes);
-				symbolTable.getLustreType((NamedElement) spec);
+				symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromNE((NamedElement) spec));
 			}
 		}
 		return types;
@@ -1112,7 +1114,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	public VarDecl agreeVarFromArg(Arg arg, ComponentInstance compInst) {
 		// EGM: array-backend
 		// String typeStr = AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes);
-		Type type = symbolTable.getLustreType(arg.getType());
+		Type type = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromType(arg.getType()));
 		return new AgreeVar(arg.getName(), type, arg, compInst, null);
 	}
 
@@ -1276,7 +1278,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private List<Expr> getArrayRangeConstraint(String namePrefix, ArrayTypeDef array) {
 		List<Expr> constraints = new ArrayList<>();
 		assert (array.baseType instanceof DataClassifier);
-		Expr expr = getDataClassifierRangeConstraintExprs(array.baseType.getName(), (DataClassifier) array.baseType)
+		Expr expr = getDataClassifierRangeConstraintExprs(AgreeTypeSystem.nameOfTypeDef(array.baseType),
+				(DataClassifier) array.baseType)
 				.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
 		for (int i = 0; i < array.dimension; ++i) {
 			String name = namePrefix + "[" + i + "]";
@@ -1800,7 +1803,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		// EGM: array-backend
 		// Type outType = getNamedType(AgreeTypeUtils.getTypeName(fnDef.getType(), typeMap, globalTypes));
-		Type outType = symbolTable.getLustreType(fnDef.getType());
+		Type outType = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromType(fnDef.getType()));
 
 		VarDecl outVar = new VarDecl("_outvar", outType);
 		List<VarDecl> outputs = Collections.singletonList(outVar);
@@ -2173,30 +2176,18 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new ArrayAccessExpr(array, index);
 	}
 
-	private int getArraySize(com.rockwellcollins.atc.agree.agree.Type agreeType) {
-		if (agreeType instanceof ArrayType) {
-			Integer.parseInt(((ArrayType) agreeType).getSize());
-		}
-
-		if (agreeType instanceof DoubleDotRef) {
-			NamedElement ne = ((DoubleDotRef) agreeType).getElm();
-			assert (ne instanceof DataType);
-			ArrayTypeDef ad = AgreeTypeSystem.arrayTypeDefFromClassifier((DataType) ne);
-			assert (ad.isArray);
-			return ad.dimension;
-		}
-
-		throw new AgreeException("ERROR: '" + agreeType.getClass() + "' not handled");
-	}
-
 	@Override
 	public Expr caseForallExpr(ForallExpr expr) {
 		com.rockwellcollins.atc.agree.agree.Expr arrayExpr = expr.getArray();
 		Expr array = doSwitch(arrayExpr);
 
-		com.rockwellcollins.atc.agree.agree.Type agreeType = AgreeTypeSystem.infer(arrayExpr);
-		int size = getArraySize(agreeType);
-
+		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(arrayExpr);
+		int size = 0;
+		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).dimension;
+		} else {
+			throw new AgreeException("ERROR: caseForallExpr - '" + agreeType.getClass() + "' not handled");
+		}
 		NamedID binding = expr.getBinding();
 		boolean isIndices = arrayExpr instanceof IndicesExpr;
 		Expr final_expr = new BoolExpr(true);
