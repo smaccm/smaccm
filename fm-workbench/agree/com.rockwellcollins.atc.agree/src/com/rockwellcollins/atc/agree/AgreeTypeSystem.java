@@ -9,6 +9,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
+import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.ArrayDimension;
@@ -73,6 +74,7 @@ import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.TagExpr;
@@ -90,7 +92,7 @@ public class AgreeTypeSystem {
 	}
 
 	public static enum Prim implements TypeDef {
-		IntTypeDef("int"), RealTypeDef("real"), BoolTypeDef("bool");
+		IntTypeDef("int"), RealTypeDef("real"), BoolTypeDef("bool"), ErrorTypeDef("<error>");
 
 		public final String name;
 
@@ -98,18 +100,6 @@ public class AgreeTypeSystem {
 			this.name = name;
 		}
 
-	}
-
-	public static class IntTypeDef implements TypeDef {
-		public final String name = "int";
-	}
-
-	public static class RealTypeDef implements TypeDef {
-		public final String name = "real";
-	}
-
-	public static class BoolTypeDef implements TypeDef {
-		public final String name = "bool";
 	}
 
 	public static class EnumTypeDef implements TypeDef {
@@ -126,11 +116,13 @@ public class AgreeTypeSystem {
 	public static class RecordTypeDef implements TypeDef {
 		public final String name;
 		public final Map<String, TypeDef> fields;
+		public final NamedElement namedElement;
 
-		public RecordTypeDef(String name, Map<String, TypeDef> fields) {
+		public RecordTypeDef(String name, Map<String, TypeDef> fields, NamedElement namedElement) {
 			this.name = name;
 			this.fields = new HashMap<>();
 			this.fields.putAll(fields);
+			this.namedElement = namedElement;
 		}
 	}
 
@@ -160,34 +152,34 @@ public class AgreeTypeSystem {
 		}
 	}
 
-//	public static String classifierToString(Classifier c) {
-//		EObject o = c.eContainer();
-//		while (!(o instanceof AadlPackage)) {
-//			o = o.eContainer();
-//		}
-//		return ((AadlPackage) o).getName() + "::" + c.getName();
-//	}
-//
-//	public static String typeToString(Type typ) {
-//
-//		if (typ instanceof PrimType) {
-//			return ((PrimType) typ).getName();
-//		} else if (typ instanceof DoubleDotRef) {
-//
-//			NamedElement ne = ((DoubleDotRef) typ).getElm();
-//			if (ne instanceof Classifier) {
-//				return classifierToString((Classifier) ne);
-//			} else if (ne instanceof RecordDef) {
-//				return ne.getFullName();
-//			}
-//
-//		} else if (typ instanceof ArrayType) {
-//			String stemString = typeToString(((ArrayType) typ).getStem());
-//			return stemString + "[" + ((ArrayType) typ).getSize() + "]";
-//		}
-//
-//		return "<type_error>//" + typ.toString();
-//	}
+	public static String classifierToString(Classifier c) {
+		EObject o = c.eContainer();
+		while (!(o instanceof AadlPackage)) {
+			o = o.eContainer();
+		}
+		return ((AadlPackage) o).getName() + "::" + c.getName();
+	}
+
+	public static String typeToString(Type typ) {
+
+		if (typ instanceof PrimType) {
+			return ((PrimType) typ).getName();
+		} else if (typ instanceof DoubleDotRef) {
+
+			NamedElement ne = ((DoubleDotRef) typ).getElm();
+			if (ne instanceof Classifier) {
+				return classifierToString((Classifier) ne);
+			} else if (ne instanceof RecordDef) {
+				return ne.getFullName();
+			}
+
+		} else if (typ instanceof ArrayType) {
+			String stemString = typeToString(((ArrayType) typ).getStem());
+			return stemString + "[" + ((ArrayType) typ).getSize() + "]";
+		}
+
+		return "<type_error>//" + typ.toString();
+	}
 
 
 	private static Classifier baseAadlClassifier(Classifier dt) {
@@ -234,10 +226,10 @@ public class AgreeTypeSystem {
 							prop_isArray = el.getName().equals("Array");
 							prop_isEnum = el.getName().equals("Enum");
 						} else {
-							throw new RuntimeException("Error: typeDefFromClassifier - NamedValue");
+							return Prim.ErrorTypeDef;
 						}
 					} else {
-						throw new RuntimeException("Error: typeDefFromClassifier - Data_Model::Data_Representation");
+						return Prim.ErrorTypeDef;
 					}
 
 				} else if (key.equals("Data_Model::Enumerators")) {
@@ -249,11 +241,11 @@ public class AgreeTypeSystem {
 								String enumString = ((StringLiteral) pe).getValue();
 								prop_enumValues.add(enumString);
 							} else {
-								throw new RuntimeException("Error: typeDefFromClassifier - ListValue");
+								return Prim.ErrorTypeDef;
 							}
 						}
 					} else {
-						throw new RuntimeException("Error: typeDefFromClassifier - Data_Model::Enumerators");
+						return Prim.ErrorTypeDef;
 					}
 
 				} else if (key.equals("Data_Model::Base_Type")) {
@@ -263,11 +255,11 @@ public class AgreeTypeSystem {
 						if (pe instanceof ClassifierValue) {
 							prop_arrayBaseType = typeDefFromClassifier(((ClassifierValue) pe).getClassifier());
 						} else {
-							throw new RuntimeException("Error: typeDefFromClassifier - ListValue");
+							return Prim.ErrorTypeDef;
 						}
 
 					} else {
-						throw new RuntimeException("Error: typeDefFromClassifier - Data_Model::Base_Type");
+						return Prim.ErrorTypeDef;
 					}
 
 				} else if (key.equals("Data_Model::Dimension")) {
@@ -277,10 +269,10 @@ public class AgreeTypeSystem {
 						prop_arraySize = intFromPropExp(pe);
 
 					} else {
-						throw new RuntimeException("Error: typeDefFromClassifier - Data_Model::Dimension");
+						return Prim.ErrorTypeDef;
 					}
 				} else {
-					throw new RuntimeException("Error: typeDefFromClassifier - PropertyAssociation");
+					return Prim.ErrorTypeDef;
 				}
 
 			}
@@ -295,7 +287,7 @@ public class AgreeTypeSystem {
 				return new EnumTypeDef(name, prop_enumValues);
 
 			} else {
-				throw new RuntimeException("Error: typeDefFromClassifier - DataType");
+				return Prim.ErrorTypeDef;
 			}
 
 
@@ -308,11 +300,11 @@ public class AgreeTypeSystem {
 				fields.put(fieldName, typeDef);
 			}
 			String name = c.getQualifiedName();
-			return new RecordTypeDef(name, fields);
+			return new RecordTypeDef(name, fields, c);
 
 
 		} else {
-			throw new RuntimeException("Error: TypeDef cannot be determined");
+			return Prim.ErrorTypeDef;
 		}
 	}
 
@@ -327,7 +319,7 @@ public class AgreeTypeSystem {
 			} else if (((PrimType) t).getName().equals("bool")) {
 				return Prim.BoolTypeDef;
 			} else {
-				throw new RuntimeException("Error: typeDefFromType - PrimType");
+				return Prim.ErrorTypeDef;
 			}
 
 		} else if (t instanceof ArrayType) {
@@ -340,17 +332,41 @@ public class AgreeTypeSystem {
 			NamedElement ne = ((DoubleDotRef) t).getElm();
 			if (ne instanceof Classifier) {
 				return typeDefFromClassifier((Classifier) ne);
+			} else if (ne instanceof RecordDef) {
+
+				EList<Arg> args = ((RecordDef) ne).getArgs();
+				Map<String, TypeDef> fields = new HashMap<>();
+				for (Arg arg : args) {
+					String key = arg.getName();
+					TypeDef typeDef = typeDefFromType(arg.getType());
+					fields.put(key, typeDef);
+				}
+				return new RecordTypeDef(ne.getQualifiedName(), fields, ne);
+
+			} else if (ne instanceof EnumStatement) {
+				String name = ne.getQualifiedName();
+				List<String> enumValues = new ArrayList<String>();
+
+				for (NamedID nid : ((EnumStatement) ne).getEnums()) {
+					enumValues.add(nid.getQualifiedName());
+				}
+				return new EnumTypeDef(name, enumValues);
+
 			} else {
-				throw new RuntimeException("Error: typeDefFromType - DoubleDotRef");
+				return Prim.ErrorTypeDef;
 			}
 		} else {
-			throw new RuntimeException("Error: typeDefFromType");
+			return Prim.ErrorTypeDef;
 		}
 
 	}
 
-	public static boolean typesEqual(Type t1, Type t2) {
-		return nameOfTypeDef(typeDefFromType(t1)).contentEquals(nameOfTypeDef(typeDefFromType(t2)));
+	public static boolean typesEqual(TypeDef t1, TypeDef t2) {
+		if (t1 instanceof Prim || t2 instanceof Prim) {
+			return t1 == t2;
+		} else {
+			return nameOfTypeDef((t1)).contentEquals(nameOfTypeDef((t2)));
+		}
 	}
 
 
@@ -396,7 +412,7 @@ public class AgreeTypeSystem {
 
 		if (expr instanceof ProjectionExpr) {
 			NamedElement field = ((ProjectionExpr) expr).getField();
-			return typeDefFromNE(field);
+			return inferFromNamedElement(field);
 
 		} else if (expr instanceof TagExpr) {
 
@@ -423,8 +439,8 @@ public class AgreeTypeSystem {
 		} else if (expr instanceof IndicesExpr) {
 			TypeDef arrType = infer(((IndicesExpr) expr).getArray());
 			if (arrType instanceof ArrayTypeDef) {
-				TypeDef t = typeDefFromType(((ArrayType) arrType).getStem());
-				return t;
+				int dimension = ((ArrayTypeDef) arrType).dimension;
+				return new ArrayTypeDef(Prim.IntTypeDef, dimension);
 			}
 
 		} else if (expr instanceof ForallExpr) {
@@ -496,7 +512,7 @@ public class AgreeTypeSystem {
 				if (prop instanceof Property) {
 					PropertyType pt = ((Property) prop).getPropertyType();
 
-					return typeDefFromNE(pt);
+					return inferFromNamedElement(pt);
 
 				} else {
 
@@ -505,7 +521,7 @@ public class AgreeTypeSystem {
 					for (PropertyAssociation choice : pas) {
 						if (choice.getProperty().getName().equals(prop.getName())) {
 							PropertyType pt = choice.getProperty().getPropertyType();
-							return typeDefFromNE(pt);
+							return inferFromNamedElement(pt);
 						}
 					}
 				}
@@ -522,7 +538,7 @@ public class AgreeTypeSystem {
 
 							if (pchoice.getProperty().getName().equals(prop.getName())) {
 								PropertyType pt = pchoice.getProperty().getPropertyType();
-								return typeDefFromNE(pt);
+								return inferFromNamedElement(pt);
 							}
 						}
 
@@ -600,7 +616,7 @@ public class AgreeTypeSystem {
 
 		} else if (expr instanceof NamedElmExpr) {
 			NamedElement ne = ((NamedElmExpr) expr).getElm();
-			return typeDefFromNE(ne);
+			return inferFromNamedElement(ne);
 
 		} else if (expr instanceof CallExpr) {
 
@@ -639,11 +655,11 @@ public class AgreeTypeSystem {
 
 
 		}
-		throw new RuntimeException("Error: type infer");
+		return Prim.ErrorTypeDef;
 
 	}
 
-	public static TypeDef typeDefFromNE(NamedElement ne) {
+	public static TypeDef inferFromNamedElement(NamedElement ne) {
 
 
 		if (ne instanceof PropertyStatement) {
@@ -739,11 +755,9 @@ public class AgreeTypeSystem {
 			PropertyExpression pe = ((PropertyConstant) ne).getConstantValue();
 			return inferPropExp(pe);
 
-		} else if (ne instanceof Classifier) {
-			return typeDefFromClassifier((Classifier) ne);
 		}
 
-		throw new RuntimeException("Error: typeDefFromNE");
+		return Prim.ErrorTypeDef;
 
 	}
 
@@ -762,12 +776,7 @@ public class AgreeTypeSystem {
 	}
 
 	public static boolean hasType(NamedElement ne) {
-		try {
-			AgreeTypeSystem.typeDefFromNE(ne);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+		return AgreeTypeSystem.inferFromNamedElement(ne) != (Prim.ErrorTypeDef);
 	}
 
 	public static boolean isInLinearizationBody(Expr expr) {

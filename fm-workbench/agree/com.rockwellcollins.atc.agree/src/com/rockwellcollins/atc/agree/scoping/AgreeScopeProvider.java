@@ -38,6 +38,8 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.annexsupport.AnnexUtil;
 
 import com.rockwellcollins.atc.agree.AgreeTypeSystem;
+import com.rockwellcollins.atc.agree.AgreeTypeSystem.RecordTypeDef;
+import com.rockwellcollins.atc.agree.AgreeTypeSystem.TypeDef;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -68,7 +70,6 @@ import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
-import com.rockwellcollins.atc.agree.agree.Type;
 
 /**
  * This class contains custom scoping description.
@@ -475,7 +476,44 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 //	}
 
 
-	private List<NamedElement> getFieldsFromType(Type typ) {
+	private List<NamedElement> getFieldsOfNE(NamedElement leaf) {
+
+		if (leaf instanceof RecordDef) {
+			List<NamedElement> result = new LinkedList<>();
+			result.addAll(((RecordDef) leaf).getArgs());
+			return result;
+
+		} else if (leaf instanceof DataImplementation) {
+			List<NamedElement> result = new LinkedList<>();
+			ComponentImplementation componentImplementation = (ComponentImplementation) leaf;
+			List<Subcomponent> subs = componentImplementation.getAllSubcomponents();
+			result.addAll(subs);
+			return result;
+
+//		} else if (leaf instanceof Classifier) {
+//
+//			return new ArrayList<NamedElement>(getNamedElements(leaf));
+//
+//		} else if (leaf instanceof AadlPackage) {
+//
+//			List<NamedElement> result = new LinkedList<>();
+//			AadlPackage ap = (AadlPackage) leaf;
+//			List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
+//
+//			for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(ap,
+//					AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+//
+//				AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+//				namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
+//
+//			}
+//
+//			result.addAll(namedSpecs);
+//			return result;
+
+		} else {
+			return new LinkedList<>();
+		}
 
 //		=======
 //				protected Set<Element> getAadlElements(EObject ctx) {
@@ -490,51 +528,6 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 //				components.addAll(getAllAgreeElements(ctx));
 //				components.addAll(getAadlElements(((ComponentImplementation) ctx).getType()));
 //				>>>>>>> origin/develop
-
-		if (typ instanceof DoubleDotRef) {
-
-			NamedElement leaf = ((DoubleDotRef) typ).getElm();
-
-
-
-			if (leaf instanceof RecordDef) {
-				List<NamedElement> result = new LinkedList<>();
-				result.addAll(((RecordDef) leaf).getArgs());
-				return result;
-
-			} else if (leaf instanceof DataImplementation) {
-				List<NamedElement> result = new LinkedList<>();
-				ComponentImplementation componentImplementation = (ComponentImplementation) leaf;
-				List<Subcomponent> subs = componentImplementation.getAllSubcomponents();
-				result.addAll(subs);
-				return result;
-
-			} else if (leaf instanceof Classifier) {
-
-				return new ArrayList<NamedElement>(getNamedElements(leaf));
-
-			} else if (leaf instanceof AadlPackage) {
-
-				List<NamedElement> result = new LinkedList<>();
-				AadlPackage ap = (AadlPackage) leaf;
-				List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
-
-				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(ap,
-						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
-
-					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
-					namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
-
-				}
-
-				result.addAll(namedSpecs);
-				return result;
-
-			} else {
-				return new LinkedList<>();
-			}
-		}
-		return new LinkedList<>();
 
 	}
 
@@ -554,14 +547,24 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 	IScope scope_RecordUpdateExpr_key(RecordUpdateExpr ctx, EReference ref) {
 		IScope prevScope = getScope(ctx.eContainer(), ref);
-		Type typ = AgreeTypeSystem.infer(ctx.getRecord());
-		return Scopes.scopeFor(getFieldsFromType(typ), prevScope);
+		TypeDef typ = AgreeTypeSystem.infer(ctx.getRecord());
+		if (typ instanceof RecordTypeDef) {
+			NamedElement ne = ((RecordTypeDef) typ).namedElement;
+			return Scopes.scopeFor(getFieldsOfNE(ne), prevScope);
+		} else {
+			return IScope.NULLSCOPE;
+		}
 	}
 
 
 	protected IScope scope_ProjectionExpr_field(ProjectionExpr ctx, EReference ref) {
-		Type typ = AgreeTypeSystem.infer(ctx.getExpr());
-		return Scopes.scopeFor(getFieldsFromType(typ));
+		TypeDef typ = AgreeTypeSystem.infer(ctx.getExpr());
+		if (typ instanceof RecordTypeDef) {
+			NamedElement ne = ((RecordTypeDef) typ).namedElement;
+			return Scopes.scopeFor(getFieldsOfNE(ne));
+		} else {
+			return IScope.NULLSCOPE;
+		}
 	}
 
 
