@@ -9,7 +9,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
-import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.ArrayDimension;
@@ -152,34 +151,34 @@ public class AgreeTypeSystem {
 		}
 	}
 
-	public static String classifierToString(Classifier c) {
-		EObject o = c.eContainer();
-		while (!(o instanceof AadlPackage)) {
-			o = o.eContainer();
-		}
-		return ((AadlPackage) o).getName() + "::" + c.getName();
-	}
-
-	public static String typeToString(Type typ) {
-
-		if (typ instanceof PrimType) {
-			return ((PrimType) typ).getName();
-		} else if (typ instanceof DoubleDotRef) {
-
-			NamedElement ne = ((DoubleDotRef) typ).getElm();
-			if (ne instanceof Classifier) {
-				return classifierToString((Classifier) ne);
-			} else if (ne instanceof RecordDef) {
-				return ne.getFullName();
-			}
-
-		} else if (typ instanceof ArrayType) {
-			String stemString = typeToString(((ArrayType) typ).getStem());
-			return stemString + "[" + ((ArrayType) typ).getSize() + "]";
-		}
-
-		return "<type_error>//" + typ.toString();
-	}
+//	public static String classifierToString(Classifier c) {
+//		EObject o = c.eContainer();
+//		while (!(o instanceof AadlPackage)) {
+//			o = o.eContainer();
+//		}
+//		return ((AadlPackage) o).getName() + "::" + c.getName();
+//	}
+//
+//	public static String typeToString(Type typ) {
+//
+//		if (typ instanceof PrimType) {
+//			return ((PrimType) typ).getName();
+//		} else if (typ instanceof DoubleDotRef) {
+//
+//			NamedElement ne = ((DoubleDotRef) typ).getElm();
+//			if (ne instanceof Classifier) {
+//				return classifierToString((Classifier) ne);
+//			} else if (ne instanceof RecordDef) {
+//				return ne.getFullName();
+//			}
+//
+//		} else if (typ instanceof ArrayType) {
+//			String stemString = typeToString(((ArrayType) typ).getStem());
+//			return stemString + "[" + ((ArrayType) typ).getSize() + "]";
+//		}
+//
+//		return "<type_error>//" + typ.toString();
+//	}
 
 
 	private static Classifier baseAadlClassifier(Classifier dt) {
