@@ -88,6 +88,7 @@ import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 public class AgreeTypeSystem {
 
 	public static interface TypeDef {
+
 	}
 
 	public static enum Prim implements TypeDef {
@@ -99,6 +100,30 @@ public class AgreeTypeSystem {
 			this.name = name;
 		}
 
+	}
+
+	public static class RangeIntTypeDef implements TypeDef {
+		public final String name;
+		public final long low;
+		public final long high;
+
+		public RangeIntTypeDef(long low, long high) {
+			this.name = "int<" + low + "," + high + ">";
+			this.low = low;
+			this.high = high;
+		}
+	}
+
+	public static class RangeRealTypeDef implements TypeDef {
+		public final String name;
+		public final double low;
+		public final double high;
+
+		public RangeRealTypeDef(double f, double g) {
+			this.name = "real<" + f + "," + g + ">";
+			this.low = f;
+			this.high = g;
+		}
 	}
 
 	public static class EnumTypeDef implements TypeDef {
@@ -311,10 +336,31 @@ public class AgreeTypeSystem {
 	public static TypeDef typeDefFromType(Type t) {
 
 		if (t instanceof PrimType) {
+
+			int lowSign = ((PrimType) t).getLowNeg() == null ? 1 : -1;
+			int highSign = ((PrimType) t).getHighNeg() == null ? 1 : -1;
+
+			String lowStr = ((PrimType) t).getRangeLow();
+			String highStr = ((PrimType) t).getRangeHigh();
+
+
 			if (((PrimType) t).getName().equals("int")) {
-				return Prim.IntTypeDef;
+				if (lowStr == null || highStr == null) {
+					return Prim.IntTypeDef;
+				} else {
+
+					long low = Long.valueOf(lowStr) * lowSign;
+					long high = Long.valueOf(highStr) * highSign;
+					return new RangeIntTypeDef(low, high);
+				}
 			} else if (((PrimType) t).getName().equals("real")) {
-				return Prim.RealTypeDef;
+				if (lowStr == null || highStr == null) {
+					return Prim.RealTypeDef;
+				} else {
+					double low = Double.valueOf(lowStr) * lowSign;
+					double high = Double.valueOf(highStr) * highSign;
+					return new RangeRealTypeDef(low, high);
+				}
 			} else if (((PrimType) t).getName().equals("bool")) {
 				return Prim.BoolTypeDef;
 			} else {

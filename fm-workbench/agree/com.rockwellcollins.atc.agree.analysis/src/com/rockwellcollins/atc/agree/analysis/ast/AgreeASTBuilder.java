@@ -180,6 +180,7 @@ import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
 
+
 public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	public static final String clockIDSuffix = "___CLOCK_";
@@ -243,14 +244,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		List<AgreeNode> agreeNodes = gatherNodes(topNode);
 
 		// EGM: array-backend
-		// List<Type> lustreTypes = new ArrayList<>(globalTypes);
-//		List<Type> lustreTypes = symbolTable.getLustreTypes();
+		List<Type> lustreTypes = symbolTable.getLustreTypes();
 
 
 		// have to convert the types. The reason we use Record types in the
 		// first place rather than the more general types is so we can check set
 		// containment easily
-		AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), new ArrayList<>(globalTypes),
+		AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), lustreTypes,
 				topNode);
 
 		// if there are any patterns in the AgreeProgram we need to inline them
@@ -704,7 +704,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		// EGM: array-backend
-		// Type type = AgreeTypeUtils.getType(dataClass, typeMap, typeExpressions);
+//		Type type = AgreeTypeUtils.getType(dataClass, typeMap, typeExpressions);
 		Type type = symbolTable.getLustreType(dataClass);
 
 		if (type == null) {
