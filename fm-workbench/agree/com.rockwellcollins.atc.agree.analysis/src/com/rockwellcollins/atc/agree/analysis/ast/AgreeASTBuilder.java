@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -67,7 +67,6 @@ import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.rockwellcollins.atc.agree.AgreeTypeSystem;
-import com.rockwellcollins.atc.agree.AgreeTypeSystem.ArrayTypeDef;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
@@ -675,9 +674,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		} else if (dataFeature instanceof EventDataPort) {
 			EventDataPort eventDataPort = (EventDataPort) dataFeature;
 			dataClass = eventDataPort.getDataFeatureClassifier();
-//
-//			System.out.println("Classifier: " + eventDataPort.getClassifier());
-//			System.out.println("DataFeatureClassifier: " + eventDataPort.getDataFeatureClassifier());
+
 		} else {
 			dataClass = null;
 		}
@@ -1259,33 +1256,34 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return null;
 	}
 
-	private double getScaledValue(PropertyExpression pe) {
-		return getNumberValue(pe).getScaledValue();
-	}
+//
+//	private double getScaledValue(PropertyExpression pe) {
+//		return getNumberValue(pe).getScaledValue();
+//	}
 
-	private Expr createExprForBound(String name, RangeValue rv, Function<BigDecimal, Expr> makeExpr) {
-		double min = getScaledValue(rv.getMinimum());
-		double max = getScaledValue(rv.getMaximum());
-		IdExpr id = new IdExpr(name);
-		Expr lowVal = makeExpr.apply(BigDecimal.valueOf(min));
-		Expr highVal = makeExpr.apply(BigDecimal.valueOf(max));
-		Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-		Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-		return LustreExprFactory.makeANDExpr(lowBound, highBound);
-	}
+//	private Expr createExprForBound(String name, RangeValue rv, Function<BigDecimal, Expr> makeExpr) {
+//		double min = getScaledValue(rv.getMinimum());
+//		double max = getScaledValue(rv.getMaximum());
+//		IdExpr id = new IdExpr(name);
+//		Expr lowVal = makeExpr.apply(BigDecimal.valueOf(min));
+//		Expr highVal = makeExpr.apply(BigDecimal.valueOf(max));
+//		Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+//		Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+//		return LustreExprFactory.makeANDExpr(lowBound, highBound);
+//	}
 
 
-	private List<Expr> getArrayRangeConstraint(String namePrefix, ArrayTypeDef array) {
-		List<Expr> constraints = new ArrayList<>();
-		assert (array.baseType instanceof DataClassifier);
-		Expr expr = getDataClassifierRangeConstraintExprs(AgreeTypeSystem.nameOfTypeDef(array.baseType),
-				(DataClassifier) array.baseType)
-				.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
-		for (int i = 0; i < array.dimension; ++i) {
-			String name = namePrefix + "[" + i + "]";
-		}
-		return constraints;
-	}
+//	private List<Expr> getArrayRangeConstraint(String namePrefix, ArrayTypeDef array) {
+//		List<Expr> constraints = new ArrayList<>();
+//		assert (array.baseType instanceof DataClassifier);
+//		Expr expr = getDataClassifierRangeConstraintExprs(AgreeTypeSystem.nameOfTypeDef(array.baseType),
+//				(DataClassifier) array.baseType)
+//				.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
+//		for (int i = 0; i < array.dimension; ++i) {
+//			String name = namePrefix + "[" + i + "]";
+//		}
+//		return constraints;
+//	}
 
 	private List<Expr> getDataClassifierRangeConstraintExprs(String name, DataClassifier dataClassifier) {
 		List<Expr> constraints = new ArrayList<>();
@@ -1359,9 +1357,71 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					.map(sub -> getDataClassifierRangeConstraintExprs(name + "." + sub.getName(),
 							(DataClassifier) sub.getSubcomponentType()))
 					.flatMap(List::stream).collect(Collectors.toList()));
-		}
+		} else if (dataClassifier instanceof DataType) {
 
+			AgreeTypeSystem.TypeDef typeDef = AgreeTypeSystem.typeDefFromClassifier(dataClassifier);
+			if (typeDef instanceof AgreeTypeSystem.ArrayTypeDef) {
+
+				AgreeTypeSystem.TypeDef baseType = ((AgreeTypeSystem.ArrayTypeDef) typeDef).baseType;
+				int size = ((AgreeTypeSystem.ArrayTypeDef) typeDef).dimension;
+
+				if (baseType instanceof AgreeTypeSystem.RangeIntTypeDef) {
+					for (int i = 0; i < size; ++i) {
+
+						Expr childName = new IdExpr(name + "[" + i + "]");
+						long lowl = ((AgreeTypeSystem.RangeIntTypeDef) baseType).low;
+						long highl = ((AgreeTypeSystem.RangeIntTypeDef) baseType).high;
+						Expr lowVal = new IntExpr(BigInteger.valueOf(lowl));
+						Expr highVal = new IntExpr(BigInteger.valueOf(highl));
+						Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, childName);
+						Expr highBound = new BinaryExpr(childName, BinaryOp.LESSEQUAL, highVal);
+						constraints.add(lowBound);
+						constraints.add(highBound);
+					}
+
+				} else if (baseType instanceof AgreeTypeSystem.RangeRealTypeDef) {
+					for (int i = 0; i < size; ++i) {
+						Expr childName = new IdExpr(name + "[" + i + "]");
+
+						double lowd = ((AgreeTypeSystem.RangeRealTypeDef) baseType).low;
+						double highd = ((AgreeTypeSystem.RangeRealTypeDef) baseType).high;
+						Expr lowVal = new RealExpr(BigDecimal.valueOf(lowd));
+						Expr highVal = new RealExpr(BigDecimal.valueOf(highd));
+						Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, childName);
+						Expr highBound = new BinaryExpr(childName, BinaryOp.LESSEQUAL, highVal);
+						constraints.add(lowBound);
+						constraints.add(highBound);
+
+					}
+				} else {
+
+
+					Optional<NamedElement> elmOp = Optional.empty();
+					if (baseType instanceof AgreeTypeSystem.RecordTypeDef) {
+						elmOp = Optional.of(((AgreeTypeSystem.RecordTypeDef) baseType).namedElement);
+					} else if (baseType instanceof AgreeTypeSystem.ArrayTypeDef) {
+						elmOp = ((AgreeTypeSystem.ArrayTypeDef) baseType).elmOp;
+					} else {
+
+						elmOp.map(elm -> {
+							if (elm instanceof DataClassifier) {
+								for (int i = 0; i < size; ++i) {
+									String childName = name + "[" + i + "]";
+									constraints.addAll(getDataClassifierRangeConstraintExprs(childName, (DataClassifier) elm));
+								}
+
+							}
+							return null;
+						});
+					}
+
+
+				}
+			}
+		}
 		return constraints;
+
+
 	}
 
 
@@ -1512,21 +1572,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return null;
 	}
 
-	private static NamedType getNamedType(String name) {
-		if (name == null) {
-			return null;
-		}
-		switch (name) {
-		case "bool":
-			return NamedType.BOOL;
-		case "real":
-			return NamedType.REAL;
-		case "int":
-			return NamedType.INT;
-		default:
-			return new NamedType(name);
-		}
-	}
 
 // BEGIN CASE EXPRESSION STATEMENTS
 	@Override

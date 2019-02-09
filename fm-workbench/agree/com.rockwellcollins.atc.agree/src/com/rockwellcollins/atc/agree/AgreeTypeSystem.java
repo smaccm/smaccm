@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -30,6 +31,7 @@ import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
 import org.osate.aadl2.PropertyType;
+import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
@@ -108,7 +110,7 @@ public class AgreeTypeSystem {
 		public final long high;
 
 		public RangeIntTypeDef(long low, long high) {
-			this.name = "int<" + low + "," + high + ">";
+			this.name = Prim.IntTypeDef.name;
 			this.low = low;
 			this.high = high;
 		}
@@ -120,7 +122,7 @@ public class AgreeTypeSystem {
 		public final double high;
 
 		public RangeRealTypeDef(double f, double g) {
-			this.name = "real<" + f + "," + g + ">";
+			this.name = Prim.RealTypeDef.name;
 			this.low = f;
 			this.high = g;
 		}
@@ -129,11 +131,13 @@ public class AgreeTypeSystem {
 	public static class EnumTypeDef implements TypeDef {
 		public final String name;
 		public final List<String> values;
+		public final NamedElement elm;
 
-		public EnumTypeDef(String name, List<String> values) {
+		public EnumTypeDef(String name, List<String> values, NamedElement elm) {
 			this.name = name;
 			this.values = new ArrayList<>();
 			this.values.addAll(values);
+			this.elm = elm;
 		}
 	}
 
@@ -154,17 +158,23 @@ public class AgreeTypeSystem {
 		public final String name;
 		public final TypeDef baseType;
 		public final int dimension;
+		public final Optional<NamedElement> elmOp;
 
-		public ArrayTypeDef(TypeDef baseType, int dimension) {
+		public ArrayTypeDef(TypeDef baseType, int dimension, Optional<NamedElement> elmOp) {
 			this.name = "__" + nameOfTypeDef(baseType) + "[" + dimension + "]";
 			this.dimension = dimension;
 			this.baseType = baseType;
+			this.elmOp = elmOp;
 		}
 	}
 
 	public static String nameOfTypeDef(TypeDef td) {
 		if (td instanceof Prim) {
-			return ((Prim) td).name();
+			return ((Prim) td).name;
+		} else if (td instanceof RangeIntTypeDef) {
+			return ((RangeIntTypeDef) td).name;
+		} else if (td instanceof RangeRealTypeDef) {
+			return ((RangeRealTypeDef) td).name;
 		} else if (td instanceof EnumTypeDef) {
 			return ((EnumTypeDef) td).name;
 		} else if (td instanceof ArrayTypeDef) {
@@ -174,17 +184,6 @@ public class AgreeTypeSystem {
 		} else {
 			return "<error>";
 		}
-	}
-
-	private static Classifier baseAadlClassifier(Classifier dt) {
-
-		Classifier parent = dt.getExtended();
-		if (parent == null) {
-			return dt;
-		} else {
-			return baseAadlClassifier(parent);
-		}
-
 	}
 
 	public static TypeDef typeDefFromNE(NamedElement ne) {
@@ -210,17 +209,72 @@ public class AgreeTypeSystem {
 			for (NamedID nid : ((EnumStatement) ne).getEnums()) {
 				enumValues.add(nid.getQualifiedName());
 			}
-			return new EnumTypeDef(name, enumValues);
+			return new EnumTypeDef(name, enumValues, ne);
 
 		} else {
 			return Prim.ErrorTypeDef;
 		}
 	}
 
-	public static TypeDef typeDefFromClassifier(Classifier clsfr) {
-		Classifier c = baseAadlClassifier(clsfr);
+	public static TypeDef typeDefFromClassifier(Classifier c) {
 
-		if (c instanceof AadlBoolean || c.getName().contains("Boolean")) {
+		if (c.getExtended() != null) {
+			Classifier ext = c.getExtended();
+//			return typeDefFromClassifier(c.getExtended());
+			if (ext instanceof AadlInteger || ext.getName().contains("Integer") || ext.getName().contains("Natural")
+					|| ext.getName().contains("Unsigned")) {
+
+
+				List<PropertyAssociation> pas = c.getAllPropertyAssociations();
+				for (PropertyAssociation choice : pas) {
+					Property p = choice.getProperty();
+
+					PropertyExpression v = choice.getOwnedValues().get(0).getOwnedValue();
+
+					String key = p.getQualifiedName();
+
+					if (key.equals("Data_Model::Integer_Range")) {
+						if (v instanceof RangeValue) {
+							try {
+								RangeValue rangeValue = (RangeValue) v;
+								long min = (long) rangeValue.getMinimumValue().getScaledValue();
+								long max = (long) rangeValue.getMaximumValue().getScaledValue();
+								return new RangeIntTypeDef(min, max);
+							} catch (Exception e) {
+
+							}
+						}
+					}
+				}
+				return Prim.IntTypeDef;
+
+			} else if (ext instanceof AadlReal || ext.getName().contains("Float")) {
+
+				List<PropertyAssociation> pas = c.getAllPropertyAssociations();
+				for (PropertyAssociation choice : pas) {
+					Property p = choice.getProperty();
+
+					PropertyExpression v = choice.getOwnedValues().get(0).getOwnedValue();
+
+					String key = p.getQualifiedName();
+
+					if (key.equals("Data_Model::Real_Range")) {
+						if (v instanceof RangeValue) {
+							try {
+								RangeValue rangeValue = (RangeValue) v;
+								double min = rangeValue.getMinimumValue().getScaledValue();
+								double max = rangeValue.getMaximumValue().getScaledValue();
+
+								return new RangeRealTypeDef(min, max);
+							} catch (Exception e) {
+
+							}
+						}
+					}
+				}
+				return Prim.RealTypeDef;
+			}
+		} else if (c instanceof AadlBoolean || c.getName().contains("Boolean")) {
 			return Prim.BoolTypeDef;
 		} else if (c instanceof AadlInteger || c.getName().contains("Integer") || c.getName().contains("Natural")
 				|| c.getName().contains("Unsigned")) {
@@ -234,8 +288,10 @@ public class AgreeTypeSystem {
 			boolean prop_isArray = false;
 			int prop_arraySize = 0;
 			TypeDef prop_arrayBaseType = null;
+
 			boolean prop_isEnum = false;
 			List<String> prop_enumValues = null;
+
 
 			for (PropertyAssociation choice : pas) {
 				Property p = choice.getProperty();
@@ -251,11 +307,7 @@ public class AgreeTypeSystem {
 							EnumerationLiteral el = (EnumerationLiteral) anv;
 							prop_isArray = el.getName().equals("Array");
 							prop_isEnum = el.getName().equals("Enum");
-						} else {
-							return Prim.ErrorTypeDef;
 						}
-					} else {
-						return Prim.ErrorTypeDef;
 					}
 
 				} else if (key.equals("Data_Model::Enumerators")) {
@@ -266,12 +318,8 @@ public class AgreeTypeSystem {
 							if (pe instanceof StringLiteral) {
 								String enumString = ((StringLiteral) pe).getValue();
 								prop_enumValues.add(enumString);
-							} else {
-								return Prim.ErrorTypeDef;
 							}
 						}
-					} else {
-						return Prim.ErrorTypeDef;
 					}
 
 				} else if (key.equals("Data_Model::Base_Type")) {
@@ -280,12 +328,8 @@ public class AgreeTypeSystem {
 						PropertyExpression pe = l.getOwnedListElements().get(0);
 						if (pe instanceof ClassifierValue) {
 							prop_arrayBaseType = typeDefFromClassifier(((ClassifierValue) pe).getClassifier());
-						} else {
-							return Prim.ErrorTypeDef;
 						}
 
-					} else {
-						return Prim.ErrorTypeDef;
 					}
 
 				} else if (key.equals("Data_Model::Dimension")) {
@@ -294,26 +338,21 @@ public class AgreeTypeSystem {
 						PropertyExpression pe = l.getOwnedListElements().get(0);
 						prop_arraySize = intFromPropExp(pe);
 
-					} else {
-						return Prim.ErrorTypeDef;
 					}
-				} else {
-					return Prim.ErrorTypeDef;
 				}
+
 
 			}
 
 
 			if (prop_isArray && prop_arraySize > 0 && prop_arrayBaseType != null) {
 
-				return new ArrayTypeDef(prop_arrayBaseType, prop_arraySize);
+				return new ArrayTypeDef(prop_arrayBaseType, prop_arraySize, Optional.of(c));
 
 			} else if (prop_isEnum && prop_enumValues != null) {
 				String name = c.getQualifiedName();
-				return new EnumTypeDef(name, prop_enumValues);
+				return new EnumTypeDef(name, prop_enumValues, c);
 
-			} else {
-				return Prim.ErrorTypeDef;
 			}
 
 
@@ -329,9 +368,9 @@ public class AgreeTypeSystem {
 			return new RecordTypeDef(name, fields, c);
 
 
-		} else {
-			return Prim.ErrorTypeDef;
 		}
+		return Prim.ErrorTypeDef;
+
 	}
 
 
@@ -373,7 +412,7 @@ public class AgreeTypeSystem {
 			String size = ((ArrayType) t).getSize();
 			TypeDef baseTypeDef = typeDefFromType(((ArrayType) t).getStem());
 
-			return new ArrayTypeDef(baseTypeDef, Integer.parseInt(size));
+			return new ArrayTypeDef(baseTypeDef, Integer.parseInt(size), Optional.empty());
 
 		} else if (t instanceof DoubleDotRef) {
 			return typeDefFromNE(((DoubleDotRef) t).getElm());
@@ -384,11 +423,9 @@ public class AgreeTypeSystem {
 	}
 
 	public static boolean typesEqual(TypeDef t1, TypeDef t2) {
-		if (t1 instanceof Prim || t2 instanceof Prim) {
-			return t1 == t2;
-		} else {
-			return nameOfTypeDef((t1)).contentEquals(nameOfTypeDef((t2)));
-		}
+		String str1 = nameOfTypeDef(t1);
+		String str2 = nameOfTypeDef(t2);
+		return str1.equals(str2);
 	}
 
 
@@ -461,7 +498,7 @@ public class AgreeTypeSystem {
 			TypeDef arrType = infer(((IndicesExpr) expr).getArray());
 			if (arrType instanceof ArrayTypeDef) {
 				int dimension = ((ArrayTypeDef) arrType).dimension;
-				return new ArrayTypeDef(Prim.IntTypeDef, dimension);
+				return new ArrayTypeDef(Prim.IntTypeDef, dimension, Optional.empty());
 			}
 
 		} else if (expr instanceof ForallExpr) {
@@ -476,7 +513,7 @@ public class AgreeTypeSystem {
 
 			if (arrType instanceof ArrayTypeDef) {
 				int dimension = ((ArrayTypeDef) arrType).dimension;
-				return new ArrayTypeDef(stemType, dimension);
+				return new ArrayTypeDef(stemType, dimension, Optional.empty());
 			}
 
 		} else if (expr instanceof FoldLeftExpr) {
@@ -624,7 +661,7 @@ public class AgreeTypeSystem {
 			int size = elems.size();
 			TypeDef firstType = infer(first);
 
-			return new ArrayTypeDef(firstType, size);
+			return new ArrayTypeDef(firstType, size, Optional.empty());
 
 		} else if (expr instanceof ArrayUpdateExpr) {
 			return infer(((ArrayUpdateExpr) expr).getArray());
@@ -695,7 +732,7 @@ public class AgreeTypeSystem {
 			for (NamedID nid : enumDef.getEnums()) {
 				enumValues.add(nid.getQualifiedName());
 			}
-			return new EnumTypeDef(name, enumValues);
+			return new EnumTypeDef(name, enumValues, enumDef);
 
 		} else if (ne instanceof NamedID) {
 
@@ -754,7 +791,7 @@ public class AgreeTypeSystem {
 				return clsTypeDef;
 			} else if (dims.size() == 1) {
 				long size = getArrayDimension(dims.get(0));
-				return new ArrayTypeDef(clsTypeDef, Math.toIntExact(size));
+				return new ArrayTypeDef(clsTypeDef, Math.toIntExact(size), Optional.empty());
 			}
 
 		} else if (ne instanceof Feature) {
@@ -765,7 +802,7 @@ public class AgreeTypeSystem {
 				return clsTypeDef;
 			} else if (dims.size() == 1) {
 				long size = getArrayDimension(dims.get(0));
-				return new ArrayTypeDef(clsTypeDef, Math.toIntExact(size));
+				return new ArrayTypeDef(clsTypeDef, Math.toIntExact(size), Optional.empty());
 			}
 
 		} else if (ne instanceof PropertyConstant) {

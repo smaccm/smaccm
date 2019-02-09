@@ -1,0 +1,7 @@
+property set CASE is
+	COMP_TYPE: enumeration (FILTER, MONITOR) applies to (system, process, thread, device);
+	COMP_IMPL: aadlstring applies to (thread);
+	COMP_SPEC: aadlstring applies to (thread);
+	AGREE_PROPERTIES_PASSED: list of aadlstring applies to (system, process, thread, device);
+	
+end CASE;

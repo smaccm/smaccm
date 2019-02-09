@@ -1872,13 +1872,6 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			NamedElement namedEl = ((CallExpr) rhsExpr).getRef().getElm();
 			if (namedEl instanceof NodeDef) {
 				NodeDef nodeDef = (NodeDef) namedEl;
-//				=======
-//						if (rhsExpr instanceof FnCallExpr) {
-//
-//							NamedElement namedEl = (((FnCallExpr) rhsExpr).getFn().getBase());
-//							if (namedEl instanceof NodeDefExpr) {
-//								NodeDefExpr nodeDef = (NodeDefExpr) namedEl;
-//								>>>>>>> origin/develop
 				for (Arg var : nodeDef.getRets()) {
 					agreeRhsTypes.add(AgreeTypeSystem.typeDefFromType(var.getType()));
 				}
@@ -2524,7 +2517,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			if (!AgreeTypeSystem.typesEqual(typeRight, typeLeft)) {
 				error(binExpr,
 						"left and right sides of binary expression '" + op + "' are of type '" + nameOfTypeDef(typeLeft)
-						+ "' and '" + typeRight + "', but must be of the same type");
+								+ "' and '" + nameOfTypeDef(typeRight) + "', but must be of the same type");
 			}
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.Prim.IntTypeDef, typeLeft)
 					&& !AgreeTypeSystem.typesEqual(AgreeTypeSystem.Prim.RealTypeDef, typeLeft)) {
