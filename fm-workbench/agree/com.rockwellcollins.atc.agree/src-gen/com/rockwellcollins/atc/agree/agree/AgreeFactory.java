@@ -752,13 +752,13 @@ public interface AgreeFactory extends EFactory
   TagExpr createTagExpr();
 
   /**
-   * Returns a new object of class '<em>Projection Expr</em>'.
+   * Returns a new object of class '<em>Selection Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Projection Expr</em>'.
+   * @return a new object of class '<em>Selection Expr</em>'.
    * @generated
    */
-  ProjectionExpr createProjectionExpr();
+  SelectionExpr createSelectionExpr();
 
   /**
    * Returns a new object of class '<em>Named Elm Expr</em>'.

@@ -819,12 +819,12 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.PROJECTION_EXPR:
+      case AgreePackage.SELECTION_EXPR:
       {
-        ProjectionExpr projectionExpr = (ProjectionExpr)theEObject;
-        T result = caseProjectionExpr(projectionExpr);
-        if (result == null) result = caseExpr(projectionExpr);
-        if (result == null) result = caseElement(projectionExpr);
+        SelectionExpr selectionExpr = (SelectionExpr)theEObject;
+        T result = caseSelectionExpr(selectionExpr);
+        if (result == null) result = caseExpr(selectionExpr);
+        if (result == null) result = caseElement(selectionExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -2282,17 +2282,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Projection Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Selection Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Projection Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Selection Expr</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseProjectionExpr(ProjectionExpr object)
+  public T caseSelectionExpr(SelectionExpr object)
   {
     return null;
   }

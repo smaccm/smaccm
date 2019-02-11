@@ -271,9 +271,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//TagExpr/stem"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Agree.ecore#//TagExpr/tag"/>
     </genClasses>
-    <genClasses ecoreClass="Agree.ecore#//ProjectionExpr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/expr"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/field"/>
+    <genClasses ecoreClass="Agree.ecore#//SelectionExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//SelectionExpr/target"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//SelectionExpr/field"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//NamedElmExpr">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//NamedElmExpr/elm"/>
@@ -327,6 +327,11 @@
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//RealCast">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//RealCast/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Agree.ecore#//ProjectionExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/target"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/field"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Agree.ecore#//ProjectionExpr/expr"/>
     </genClasses>
     <genClasses ecoreClass="Agree.ecore#//Acc"/>
     <genClasses ecoreClass="Agree.ecore#//ArraySubBinding"/>

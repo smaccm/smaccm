@@ -486,9 +486,9 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createTagExprAdapter();
       }
       @Override
-      public Adapter caseProjectionExpr(ProjectionExpr object)
+      public Adapter caseSelectionExpr(SelectionExpr object)
       {
-        return createProjectionExprAdapter();
+        return createSelectionExprAdapter();
       }
       @Override
       public Adapter caseNamedElmExpr(NamedElmExpr object)
@@ -1838,16 +1838,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ProjectionExpr <em>Projection Expr</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.SelectionExpr <em>Selection Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.ProjectionExpr
+   * @see com.rockwellcollins.atc.agree.agree.SelectionExpr
    * @generated
    */
-  public Adapter createProjectionExprAdapter()
+  public Adapter createSelectionExprAdapter()
   {
     return null;
   }

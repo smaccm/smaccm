@@ -112,13 +112,13 @@ import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -504,8 +504,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		NamedElement namedEl = null;
 		if (event.getId() instanceof NamedElmExpr) {
 			namedEl = ((NamedElmExpr) event.getId()).getElm();
-		} else if (event.getId() instanceof ProjectionExpr) {
-			namedEl = ((ProjectionExpr) event.getId()).getField();
+		} else if (event.getId() instanceof SelectionExpr) {
+			namedEl = ((SelectionExpr) event.getId()).getField();
 
 		}
 		if (!(namedEl instanceof EventPort || namedEl instanceof EventDataPort)) {
@@ -920,8 +920,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		if (expr instanceof RealLitExpr) {
 			RealLitExpr realLit = (RealLitExpr) expr;
 			return Double.valueOf(realLit.getVal());
-		} else if (expr instanceof ProjectionExpr) {
-			ProjectionExpr id = (ProjectionExpr) expr;
+		} else if (expr instanceof SelectionExpr) {
+			SelectionExpr id = (SelectionExpr) expr;
 			NamedElement finalId = id.getField();
 			if (finalId instanceof ConstStatement) {
 				ConstStatement constState = (ConstStatement) finalId;
@@ -1129,8 +1129,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 	}
 
 	protected boolean isConst(Expr expr) {
-		if (expr instanceof ProjectionExpr) {
-			ProjectionExpr id = (ProjectionExpr) expr;
+		if (expr instanceof SelectionExpr) {
+			SelectionExpr id = (SelectionExpr) expr;
 			NamedElement finalId = id.getField();
 			return (finalId instanceof ConstStatement);
 		} else if (expr instanceof EnumLitExpr) {
@@ -1184,8 +1184,8 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		NamedElement ne = null;
 		if (e instanceof NamedElmExpr) {
 			ne = ((NamedElmExpr) e).getElm();
-		} else if (e instanceof ProjectionExpr) {
-			ne = ((ProjectionExpr) e).getField();
+		} else if (e instanceof SelectionExpr) {
+			ne = ((SelectionExpr) e).getField();
 		}
 
 		if (ne != null && !AgreeTypeSystem.hasType(ne)) {
@@ -1318,7 +1318,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		TypeDef arrType = AgreeTypeSystem.infer(arrExpr);
 
 		if (arrType instanceof ArrayTypeDef) {
-			TypeDef t = ((ArrayTypeDef) arrType).baseType;
+			TypeDef t = ((ArrayTypeDef) arrType).stemType;
 			TypeDef elmType = AgreeTypeSystem.infer(exprs.get(0));
 			if (!AgreeTypeSystem.typesEqual(elmType, t)) {
 				error(exprs.get(0),
@@ -1617,10 +1617,10 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 		do {
 			prevClosure = new HashSet<>(constClosure);
 			for (ConstStatement constFrontElem : prevClosure) {
-				List<ProjectionExpr> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem, ProjectionExpr.class);
+				List<SelectionExpr> nestIds = EcoreUtil2.getAllContentsOfType(constFrontElem, SelectionExpr.class);
 				for (Expr nestId : nestIds) {
-					while (nestId instanceof ProjectionExpr) {
-						NamedElement base = ((ProjectionExpr) nestId).getField();
+					while (nestId instanceof SelectionExpr) {
+						NamedElement base = ((SelectionExpr) nestId).getField();
 						if (base instanceof ConstStatement) {
 							ConstStatement closConst = (ConstStatement) base;
 							if (closConst.equals(constStat)) {
@@ -1630,7 +1630,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 							}
 							constClosure.add(closConst);
 						}
-						nestId = ((ProjectionExpr) nestId).getExpr();
+						nestId = ((SelectionExpr) nestId).getTarget();
 					}
 
 					NamedElement base = ((NamedElmExpr) nestId).getElm();
@@ -2054,9 +2054,9 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 
 			// restrict the elements that are single names or the last projection.
 			boolean restrictedElm = true;
-			if (dotId.eContainer() instanceof ProjectionExpr) {
-				NamedElement ne = ((ProjectionExpr) dotId.eContainer()).getField();
-				restrictedElm = ne == id && !(dotId.eContainer().eContainer() instanceof ProjectionExpr);
+			if (dotId.eContainer() instanceof SelectionExpr) {
+				NamedElement ne = ((SelectionExpr) dotId.eContainer()).getField();
+				restrictedElm = ne == id && !(dotId.eContainer().eContainer() instanceof SelectionExpr);
 			}
 
 			if (restrictedElm &&
@@ -2517,7 +2517,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			if (!AgreeTypeSystem.typesEqual(typeRight, typeLeft)) {
 				error(binExpr,
 						"left and right sides of binary expression '" + op + "' are of type '" + nameOfTypeDef(typeLeft)
-								+ "' and '" + nameOfTypeDef(typeRight) + "', but must be of the same type");
+						+ "' and '" + nameOfTypeDef(typeRight) + "', but must be of the same type");
 			}
 			if (!AgreeTypeSystem.typesEqual(AgreeTypeSystem.Prim.IntTypeDef, typeLeft)
 					&& !AgreeTypeSystem.typesEqual(AgreeTypeSystem.Prim.RealTypeDef, typeLeft)) {

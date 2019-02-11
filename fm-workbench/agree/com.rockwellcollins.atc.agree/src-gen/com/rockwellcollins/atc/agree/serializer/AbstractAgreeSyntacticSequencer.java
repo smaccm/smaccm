@@ -133,8 +133,8 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) {ArraySubExpr.expr=}
 	 *     (rule start) (ambiguity) {ArrayUpdateExpr.array=}
 	 *     (rule start) (ambiguity) {BinaryExpr.left=}
-	 *     (rule start) (ambiguity) {ProjectionExpr.expr=}
 	 *     (rule start) (ambiguity) {RecordUpdateExpr.record=}
+	 *     (rule start) (ambiguity) {SelectionExpr.target=}
 	 *     (rule start) (ambiguity) {TagExpr.stem=}
 	 */
 	protected void emit_TermExpr_LeftParenthesisKeyword_18_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -159,8 +159,8 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) {ArraySubExpr.expr=}
 	 *     (rule start) (ambiguity) {ArrayUpdateExpr.array=}
 	 *     (rule start) (ambiguity) {BinaryExpr.left=}
-	 *     (rule start) (ambiguity) {ProjectionExpr.expr=}
 	 *     (rule start) (ambiguity) {RecordUpdateExpr.record=}
+	 *     (rule start) (ambiguity) {SelectionExpr.target=}
 	 *     (rule start) (ambiguity) {TagExpr.stem=}
 	 */
 	protected void emit_TermExpr_LeftParenthesisKeyword_18_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

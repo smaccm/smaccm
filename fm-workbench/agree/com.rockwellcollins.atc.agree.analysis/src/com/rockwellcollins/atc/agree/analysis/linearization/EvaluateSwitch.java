@@ -38,8 +38,8 @@ import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationDef;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
@@ -92,7 +92,7 @@ public class EvaluateSwitch extends AgreeSwitch<Function<Map<String, Double>, Do
 	}
 
 	@Override
-	public Function<Map<String, Double>, Double> caseProjectionExpr(ProjectionExpr ctx) {
+	public Function<Map<String, Double>, Double> caseSelectionExpr(SelectionExpr ctx) {
 		String id = ctx.getField().getName();
 		if (!vars.contains(id)) {
 			throw new IllegalArgumentException("Unknown variable: " + id);

@@ -75,7 +75,6 @@ import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
@@ -83,6 +82,7 @@ import com.rockwellcollins.atc.agree.agree.RealTimeStatement;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
@@ -694,7 +694,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass projectionExprEClass = null;
+  private EClass selectionExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2927,9 +2927,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getProjectionExpr()
+  public EClass getSelectionExpr()
   {
-    return projectionExprEClass;
+    return selectionExprEClass;
   }
 
   /**
@@ -2937,9 +2937,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getProjectionExpr_Expr()
+  public EReference getSelectionExpr_Target()
   {
-    return (EReference)projectionExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)selectionExprEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2947,9 +2947,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getProjectionExpr_Field()
+  public EReference getSelectionExpr_Field()
   {
-    return (EReference)projectionExprEClass.getEStructuralFeatures().get(1);
+    return (EReference)selectionExprEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -3637,9 +3637,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(tagExprEClass, TAG_EXPR__STEM);
     createEAttribute(tagExprEClass, TAG_EXPR__TAG);
 
-    projectionExprEClass = createEClass(PROJECTION_EXPR);
-    createEReference(projectionExprEClass, PROJECTION_EXPR__EXPR);
-    createEReference(projectionExprEClass, PROJECTION_EXPR__FIELD);
+    selectionExprEClass = createEClass(SELECTION_EXPR);
+    createEReference(selectionExprEClass, SELECTION_EXPR__TARGET);
+    createEReference(selectionExprEClass, SELECTION_EXPR__FIELD);
 
     namedElmExprEClass = createEClass(NAMED_ELM_EXPR);
     createEReference(namedElmExprEClass, NAMED_ELM_EXPR__ELM);
@@ -3823,7 +3823,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     recordUpdateExprEClass.getESuperTypes().add(this.getExpr());
     arraySubExprEClass.getESuperTypes().add(this.getExpr());
     tagExprEClass.getESuperTypes().add(this.getExpr());
-    projectionExprEClass.getESuperTypes().add(this.getExpr());
+    selectionExprEClass.getESuperTypes().add(this.getExpr());
     namedElmExprEClass.getESuperTypes().add(this.getExpr());
     timeExprEClass.getESuperTypes().add(this.getExpr());
     indicesExprEClass.getESuperTypes().add(this.getExpr());
@@ -4128,9 +4128,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getTagExpr_Stem(), this.getExpr(), null, "stem", null, 0, 1, TagExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getTagExpr_Tag(), theEcorePackage.getEString(), "tag", null, 0, 1, TagExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(projectionExprEClass, ProjectionExpr.class, "ProjectionExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getProjectionExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, ProjectionExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getProjectionExpr_Field(), theAadl2Package.getNamedElement(), null, "field", null, 0, 1, ProjectionExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(selectionExprEClass, SelectionExpr.class, "SelectionExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getSelectionExpr_Target(), this.getExpr(), null, "target", null, 0, 1, SelectionExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSelectionExpr_Field(), theAadl2Package.getNamedElement(), null, "field", null, 0, 1, SelectionExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(namedElmExprEClass, NamedElmExpr.class, "NamedElmExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNamedElmExpr_Elm(), theAadl2Package.getNamedElement(), null, "elm", null, 0, 1, NamedElmExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

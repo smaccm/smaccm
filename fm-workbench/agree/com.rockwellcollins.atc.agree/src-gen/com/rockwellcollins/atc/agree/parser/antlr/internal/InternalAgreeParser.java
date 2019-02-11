@@ -17806,12 +17806,12 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleTagExpr"
-    // InternalAgreeParser.g:7083:1: ruleTagExpr returns [EObject current=null] : (this_ProjectionExpr_0= ruleProjectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )? ) ;
+    // InternalAgreeParser.g:7083:1: ruleTagExpr returns [EObject current=null] : (this_SelectionExpr_0= ruleSelectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )? ) ;
     public final EObject ruleTagExpr() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_2=null;
-        EObject this_ProjectionExpr_0 = null;
+        EObject this_SelectionExpr_0 = null;
 
         AntlrDatatypeRuleToken lv_tag_3_0 = null;
 
@@ -17819,25 +17819,25 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // InternalAgreeParser.g:7086:28: ( (this_ProjectionExpr_0= ruleProjectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )? ) )
-            // InternalAgreeParser.g:7087:1: (this_ProjectionExpr_0= ruleProjectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )? )
+            // InternalAgreeParser.g:7086:28: ( (this_SelectionExpr_0= ruleSelectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )? ) )
+            // InternalAgreeParser.g:7087:1: (this_SelectionExpr_0= ruleSelectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )? )
             {
-            // InternalAgreeParser.g:7087:1: (this_ProjectionExpr_0= ruleProjectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )? )
-            // InternalAgreeParser.g:7088:5: this_ProjectionExpr_0= ruleProjectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )?
+            // InternalAgreeParser.g:7087:1: (this_SelectionExpr_0= ruleSelectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )? )
+            // InternalAgreeParser.g:7088:5: this_SelectionExpr_0= ruleSelectionExpr ( () otherlv_2= FullStop ( (lv_tag_3_0= ruleReservedVarTag ) ) )?
             {
             if ( state.backtracking==0 ) {
                
-                      newCompositeNode(grammarAccess.getTagExprAccess().getProjectionExprParserRuleCall_0()); 
+                      newCompositeNode(grammarAccess.getTagExprAccess().getSelectionExprParserRuleCall_0()); 
                   
             }
             pushFollow(FollowSets000.FOLLOW_86);
-            this_ProjectionExpr_0=ruleProjectionExpr();
+            this_SelectionExpr_0=ruleSelectionExpr();
 
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-                      current = this_ProjectionExpr_0;
+                      current = this_SelectionExpr_0;
                       afterParserOrEnumRuleCall();
                   
             }
@@ -17934,28 +17934,28 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleTagExpr"
 
 
-    // $ANTLR start "entryRuleProjectionExpr"
-    // InternalAgreeParser.g:7133:1: entryRuleProjectionExpr returns [EObject current=null] : iv_ruleProjectionExpr= ruleProjectionExpr EOF ;
-    public final EObject entryRuleProjectionExpr() throws RecognitionException {
+    // $ANTLR start "entryRuleSelectionExpr"
+    // InternalAgreeParser.g:7133:1: entryRuleSelectionExpr returns [EObject current=null] : iv_ruleSelectionExpr= ruleSelectionExpr EOF ;
+    public final EObject entryRuleSelectionExpr() throws RecognitionException {
         EObject current = null;
 
-        EObject iv_ruleProjectionExpr = null;
+        EObject iv_ruleSelectionExpr = null;
 
 
         try {
-            // InternalAgreeParser.g:7134:2: (iv_ruleProjectionExpr= ruleProjectionExpr EOF )
-            // InternalAgreeParser.g:7135:2: iv_ruleProjectionExpr= ruleProjectionExpr EOF
+            // InternalAgreeParser.g:7134:2: (iv_ruleSelectionExpr= ruleSelectionExpr EOF )
+            // InternalAgreeParser.g:7135:2: iv_ruleSelectionExpr= ruleSelectionExpr EOF
             {
             if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getProjectionExprRule()); 
+               newCompositeNode(grammarAccess.getSelectionExprRule()); 
             }
             pushFollow(FollowSets000.FOLLOW_1);
-            iv_ruleProjectionExpr=ruleProjectionExpr();
+            iv_ruleSelectionExpr=ruleSelectionExpr();
 
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
-               current =iv_ruleProjectionExpr; 
+               current =iv_ruleSelectionExpr; 
             }
             match(input,EOF,FollowSets000.FOLLOW_2); if (state.failed) return current;
 
@@ -17971,12 +17971,12 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "entryRuleProjectionExpr"
+    // $ANTLR end "entryRuleSelectionExpr"
 
 
-    // $ANTLR start "ruleProjectionExpr"
-    // InternalAgreeParser.g:7142:1: ruleProjectionExpr returns [EObject current=null] : (this_TermExpr_0= ruleTermExpr ( ( ( () FullStop ( ( RULE_ID ) ) ) )=> ( () otherlv_2= FullStop ( (otherlv_3= RULE_ID ) ) ) )* ) ;
-    public final EObject ruleProjectionExpr() throws RecognitionException {
+    // $ANTLR start "ruleSelectionExpr"
+    // InternalAgreeParser.g:7142:1: ruleSelectionExpr returns [EObject current=null] : (this_TermExpr_0= ruleTermExpr ( ( ( () FullStop ( ( RULE_ID ) ) ) )=> ( () otherlv_2= FullStop ( (otherlv_3= RULE_ID ) ) ) )* ) ;
+    public final EObject ruleSelectionExpr() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_2=null;
@@ -17995,7 +17995,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             {
             if ( state.backtracking==0 ) {
                
-                      newCompositeNode(grammarAccess.getProjectionExprAccess().getTermExprParserRuleCall_0()); 
+                      newCompositeNode(grammarAccess.getSelectionExprAccess().getTermExprParserRuleCall_0()); 
                   
             }
             pushFollow(FollowSets000.FOLLOW_86);
@@ -18039,7 +18039,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             	    if ( state.backtracking==0 ) {
 
             	              current = forceCreateModelElementAndSet(
-            	                  grammarAccess.getProjectionExprAccess().getProjectionExprExprAction_1_0_0(),
+            	                  grammarAccess.getSelectionExprAccess().getSelectionExprTargetAction_1_0_0(),
             	                  current);
             	          
             	    }
@@ -18049,7 +18049,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             	    otherlv_2=(Token)match(input,FullStop,FollowSets000.FOLLOW_8); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	          	newLeafNode(otherlv_2, grammarAccess.getProjectionExprAccess().getFullStopKeyword_1_0_1());
+            	          	newLeafNode(otherlv_2, grammarAccess.getSelectionExprAccess().getFullStopKeyword_1_0_1());
             	          
             	    }
             	    // InternalAgreeParser.g:7174:1: ( (otherlv_3= RULE_ID ) )
@@ -18061,14 +18061,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             	    if ( state.backtracking==0 ) {
 
             	      			if (current==null) {
-            	      	            current = createModelElement(grammarAccess.getProjectionExprRule());
+            	      	            current = createModelElement(grammarAccess.getSelectionExprRule());
             	      	        }
             	              
             	    }
             	    otherlv_3=(Token)match(input,RULE_ID,FollowSets000.FOLLOW_86); if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
 
-            	      		newLeafNode(otherlv_3, grammarAccess.getProjectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
+            	      		newLeafNode(otherlv_3, grammarAccess.getSelectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
             	      	
             	    }
 
@@ -18108,7 +18108,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "ruleProjectionExpr"
+    // $ANTLR end "ruleSelectionExpr"
 
 
     // $ANTLR start "entryRuleTermExpr"

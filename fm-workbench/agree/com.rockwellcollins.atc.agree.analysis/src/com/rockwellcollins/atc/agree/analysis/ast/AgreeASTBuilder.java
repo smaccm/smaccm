@@ -117,13 +117,13 @@ import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.TagExpr;
@@ -703,7 +703,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			return;
 		}
 
-
 		Type type = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromNE(dataClass));
 
 		if (type == null) {
@@ -1112,7 +1111,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		// EGM: array-backend
 		// String typeStr = AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes);
 		Type type = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromType(arg.getType()));
-		return new AgreeVar(arg.getName(), type, arg, compInst, null);
+		if (type != null) {
+			return new AgreeVar(arg.getName(), type, arg, compInst, null);
+		} else {
+			return null;
+		}
 	}
 
 	// MWW: made this public.
@@ -1362,8 +1365,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			AgreeTypeSystem.TypeDef typeDef = AgreeTypeSystem.typeDefFromClassifier(dataClassifier);
 			if (typeDef instanceof AgreeTypeSystem.ArrayTypeDef) {
 
-				AgreeTypeSystem.TypeDef baseType = ((AgreeTypeSystem.ArrayTypeDef) typeDef).baseType;
-				int size = ((AgreeTypeSystem.ArrayTypeDef) typeDef).dimension;
+				AgreeTypeSystem.TypeDef baseType = ((AgreeTypeSystem.ArrayTypeDef) typeDef).stemType;
+				int size = ((AgreeTypeSystem.ArrayTypeDef) typeDef).size;
 
 				if (baseType instanceof AgreeTypeSystem.RangeIntTypeDef) {
 					for (int i = 0; i < size; ++i) {
@@ -1841,18 +1844,21 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		// Type outType = getNamedType(AgreeTypeUtils.getTypeName(fnDef.getType(), typeMap, globalTypes));
 		Type outType = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromType(fnDef.getType()));
 
-		VarDecl outVar = new VarDecl("_outvar", outType);
-		List<VarDecl> outputs = Collections.singletonList(outVar);
-		Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
-		List<Equation> eqs = Collections.singletonList(eq);
+		if (outType != null) {
 
-		NodeBuilder builder = new NodeBuilder(nodeName);
-		builder.addInputs(inputs);
-		builder.addOutputs(outputs);
-		builder.addEquations(eqs);
+			VarDecl outVar = new VarDecl("_outvar", outType);
+			List<VarDecl> outputs = Collections.singletonList(outVar);
+			Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
+			List<Equation> eqs = Collections.singletonList(eq);
 
-		Node node = builder.build();
-		addToNodeList(node);
+			NodeBuilder builder = new NodeBuilder(nodeName);
+			builder.addInputs(inputs);
+			builder.addOutputs(outputs);
+			builder.addEquations(eqs);
+
+			Node node = builder.build();
+			addToNodeList(node);
+		}
 
 		return null;
 	}
@@ -2089,9 +2095,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private String dottedNameToString(com.rockwellcollins.atc.agree.agree.Expr e) {
 		if (e instanceof NamedElmExpr) {
 			return ((NamedElmExpr) e).getElm().getName();
-		} else if (e instanceof ProjectionExpr) {
-			return dottedNameToString(((ProjectionExpr) e).getExpr()) + dotChar
-					+ ((ProjectionExpr) e).getField().getName();
+		} else if (e instanceof SelectionExpr) {
+			return dottedNameToString(((SelectionExpr) e).getTarget()) + dotChar
+					+ ((SelectionExpr) e).getField().getName();
 		}
 
 		throw new AgreeException("Pattern");
@@ -2104,7 +2110,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		String stemString = null;
 		if (e.getStem() instanceof NamedElmExpr) {
 			stemString = ((NamedElmExpr) e.getStem()).getElm().getName();
-		} else if (e.getStem() instanceof ProjectionExpr) {
+		} else if (e.getStem() instanceof SelectionExpr) {
 			stemString = dottedNameToString(e.getStem());
 		} else {
 			throw new AgreeException("Pattern");
@@ -2137,10 +2143,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseProjectionExpr(ProjectionExpr e) {
+	public Expr caseSelectionExpr(SelectionExpr e) {
 
-		if (e.getExpr() instanceof NamedElmExpr) {
-			NamedElement base = ((NamedElmExpr) e.getExpr()).getElm();
+		if (e.getTarget() instanceof NamedElmExpr) {
+			NamedElement base = ((NamedElmExpr) e.getTarget()).getElm();
 			if (base instanceof AadlPackage || base instanceof Subcomponent || base instanceof FeatureGroup) {
 				NamedElement field = e.getField();
 				if (field instanceof ConstStatement) {
@@ -2150,10 +2156,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					return new IdExpr(base.getName() + dotChar + field.getName());
 				}
 			} else {
-				return new RecordAccessExpr(doSwitch(e.getExpr()), e.getField().getName());
+				return new RecordAccessExpr(doSwitch(e.getTarget()), e.getField().getName());
 			}
 		} else {
-			return new RecordAccessExpr(doSwitch(e.getExpr()), e.getField().getName());
+			return new RecordAccessExpr(doSwitch(e.getTarget()), e.getField().getName());
 		}
 
 	}
@@ -2220,7 +2226,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(arrayExpr);
 		int size = 0;
 		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
-			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).dimension;
+			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
 		} else {
 			throw new AgreeException("ERROR: caseForallExpr - '" + agreeType.getClass() + "' not handled");
 		}

@@ -64,10 +64,10 @@ import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
@@ -250,7 +250,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	// Expressions
 
 	IScope scope_NamedElement(ForallExpr ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 		List<EObject> bs = new ArrayList<EObject>();
 		bs.add(ctx.getBinding());
 		for (IEObjectDescription ieod : prevScope.getAllElements()) {
@@ -262,7 +262,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_NamedElement(ExistsExpr ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 		List<EObject> bs = new ArrayList<EObject>();
 		bs.add(ctx.getBinding());
 		for (IEObjectDescription ieod : prevScope.getAllElements()) {
@@ -274,7 +274,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_NamedElement(ForeachExpr ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 		List<EObject> bs = new ArrayList<EObject>();
 		bs.add(ctx.getBinding());
 		for (IEObjectDescription ieod : prevScope.getAllElements()) {
@@ -286,7 +286,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_NamedElement(FoldLeftExpr ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 
 		List<EObject> bs = new ArrayList<EObject>();
 
@@ -302,7 +302,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_NamedElement(FoldRightExpr ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 
 		List<EObject> bs = new ArrayList<EObject>();
 
@@ -341,7 +341,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 	protected IScope scope_GetPropertyExpr_prop(GetPropertyExpr ctx, EReference ref) {
 
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 
 		ComponentRef cr = ctx.getComponentRef();
 		if (cr instanceof ThisRef) {
@@ -468,7 +468,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 //
 	protected IScope scope_DoubleDotRef_elm(DoubleDotRef ctx, EReference ref) {
 
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 		EObject container = ((GetPropertyExpr) ctx.eContainer()).getContainingComponentImpl();
 		if (container instanceof ComponentImplementation) {
 			return Scopes.scopeFor(((ComponentImplementation) ctx).getAllSubcomponents(), prevScope);
@@ -516,7 +516,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 
 
 	IScope scope_RecordLitExpr_args(RecordLitExpr ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 		NamedElement recDef = ctx.getRecordType().getElm();
 		Set<Element> components = new HashSet<>();
 		if (recDef instanceof DataImplementation) {
@@ -530,7 +530,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	IScope scope_RecordUpdateExpr_key(RecordUpdateExpr ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 		TypeDef typ = AgreeTypeSystem.infer(ctx.getRecord());
 		if (typ instanceof RecordTypeDef) {
 			NamedElement ne = ((RecordTypeDef) typ).namedElement;
@@ -540,25 +540,38 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		}
 	}
 
+	private IScope prevScope(EObject ctx, EReference ref) {
+		EObject container = ctx.eContainer();
+		while (container instanceof SelectionExpr) {
+			container = container.eContainer();
+		}
+		IScope prevScope = getScope(container, ref);
+		return prevScope;
 
-	protected IScope scope_ProjectionExpr_field(ProjectionExpr ctx, EReference ref) {
-		TypeDef typ = AgreeTypeSystem.infer(ctx.getExpr());
+	}
+
+	protected IScope scope_NamedElmExpr_elm(NamedElmExpr ctx, EReference ref) {
+		return prevScope(ctx, ref);
+	}
+
+	protected IScope scope_SelectionExpr_field(SelectionExpr ctx, EReference ref) {
+
+		TypeDef typ = AgreeTypeSystem.infer(ctx.getTarget());
+
 		if (typ instanceof RecordTypeDef) {
 			NamedElement ne = ((RecordTypeDef) typ).namedElement;
 			return Scopes.scopeFor(getFieldsOfNE(ne));
-		} else if (ctx.getExpr() instanceof NamedElmExpr) {
-			NamedElement ne = ((NamedElmExpr) ctx.getExpr()).getElm();
-			return Scopes.scopeFor(getFieldsOfNE(ne));
-		} else {
-
-			return IScope.NULLSCOPE;
 		}
+
+
+		return IScope.NULLSCOPE;
+
 	}
 
 
 
 	IScope scope_LiftStatement_subcomp(LiftStatement ctx, EReference ref) {
-		IScope prevScope = getScope(ctx.eContainer(), ref);
+		IScope prevScope = prevScope(ctx, ref);
 		ComponentImplementation container = ctx.getContainingComponentImpl();
 		return Scopes.scopeFor(container.getAllSubcomponents(), prevScope);
 	}

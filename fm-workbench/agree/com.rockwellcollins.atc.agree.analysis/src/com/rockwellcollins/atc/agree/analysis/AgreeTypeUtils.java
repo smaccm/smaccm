@@ -252,7 +252,9 @@ public class AgreeTypeUtils {
 		Type lustreType = typeNameToLustreType.get(AgreeTypeSystem.nameOfTypeDef(agreeType));
 		if (lustreType == null) {
 			lustreType = getLustreType(agreeType);
-			typeNameToLustreType.put(AgreeTypeSystem.nameOfTypeDef(agreeType), lustreType);
+			if (lustreType != null) {
+				typeNameToLustreType.put(AgreeTypeSystem.nameOfTypeDef(agreeType), lustreType);
+			}
 		}
 		return lustreType;
 	}
@@ -275,36 +277,40 @@ public class AgreeTypeUtils {
 			return NamedType.REAL;
 
 		} else if (agreeType instanceof AgreeTypeSystem.RecordTypeDef) {
-			String name = ((AgreeTypeSystem.RecordTypeDef) agreeType).name;
+			String name = ((AgreeTypeSystem.RecordTypeDef) agreeType).name.replace("::", "___").replace(".", "__");
 			Map<String, AgreeTypeSystem.TypeDef> agreeFields = ((AgreeTypeSystem.RecordTypeDef) agreeType).fields;
 
 			Map<String, Type> lustreFields = new HashMap<>();
 			for (Entry<String, AgreeTypeSystem.TypeDef> entry : agreeFields.entrySet()) {
 				String key = entry.getKey();
 				Type lt = updateLustreTypeMap(entry.getValue());
-				lustreFields.put(key, lt);
+				if (lt != null) {
+					lustreFields.put(key, lt);
+				}
 			}
 			RecordType lustreRecType = new RecordType(name, lustreFields);
 			return lustreRecType;
 
 		} else if (agreeType instanceof AgreeTypeSystem.EnumTypeDef) {
-			String name = ((AgreeTypeSystem.EnumTypeDef) agreeType).name;
+			String name = ((AgreeTypeSystem.EnumTypeDef) agreeType).name.replace("::", "___").replace(".", "__");
 			List<String> enumValues = ((AgreeTypeSystem.EnumTypeDef) agreeType).values;
 			EnumType lustreEnumType = new EnumType(name, enumValues);
 			return lustreEnumType;
 
 		} else if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
-			AgreeTypeSystem.TypeDef agreeBaseType = ((AgreeTypeSystem.ArrayTypeDef) agreeType).baseType;
-			int dimension = ((AgreeTypeSystem.ArrayTypeDef) agreeType).dimension;
+			AgreeTypeSystem.TypeDef agreeBaseType = ((AgreeTypeSystem.ArrayTypeDef) agreeType).stemType;
+			int dimension = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
 
 			Type lustreBaseType = updateLustreTypeMap(agreeBaseType);
-			ArrayType lustreArrayType = new ArrayType(lustreBaseType, dimension);
-			return lustreArrayType;
-
-
-		} else {
-			throw new RuntimeException("Error: - getLustreType");
+			if (lustreBaseType != null) {
+				ArrayType lustreArrayType = new ArrayType(lustreBaseType, dimension);
+				return lustreArrayType;
+			}
 		}
+
+		// Jkind does not reason over this.
+		return null;
+
 
 	}
 

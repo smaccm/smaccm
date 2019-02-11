@@ -4432,7 +4432,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	public class TagExprElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.TagExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cProjectionExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cSelectionExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Action cTagExprStemAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cFullStopKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
@@ -4440,14 +4440,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTagReservedVarTagParserRuleCall_1_2_0 = (RuleCall)cTagAssignment_1_2.eContents().get(0);
 		
 		//TagExpr Expr:
-		//	ProjectionExpr ({TagExpr.stem=current} '.' tag=ReservedVarTag)?;
+		//	SelectionExpr ({TagExpr.stem=current} '.' tag=ReservedVarTag)?;
 		@Override public ParserRule getRule() { return rule; }
 
-		//ProjectionExpr ({TagExpr.stem=current} '.' tag=ReservedVarTag)?
+		//SelectionExpr ({TagExpr.stem=current} '.' tag=ReservedVarTag)?
 		public Group getGroup() { return cGroup; }
 
-		//ProjectionExpr
-		public RuleCall getProjectionExprParserRuleCall_0() { return cProjectionExprParserRuleCall_0; }
+		//SelectionExpr
+		public RuleCall getSelectionExprParserRuleCall_0() { return cSelectionExprParserRuleCall_0; }
 
 		//({TagExpr.stem=current} '.' tag=ReservedVarTag)?
 		public Group getGroup_1() { return cGroup_1; }
@@ -4465,36 +4465,36 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getTagReservedVarTagParserRuleCall_1_2_0() { return cTagReservedVarTagParserRuleCall_1_2_0; }
 	}
 
-	public class ProjectionExprElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.ProjectionExpr");
+	public class SelectionExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.SelectionExpr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final RuleCall cTermExprParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cGroup_1.eContents().get(0);
-		private final Action cProjectionExprExprAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
+		private final Action cSelectionExprTargetAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
 		private final Keyword cFullStopKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
 		private final Assignment cFieldAssignment_1_0_2 = (Assignment)cGroup_1_0.eContents().get(2);
 		private final CrossReference cFieldNamedElementCrossReference_1_0_2_0 = (CrossReference)cFieldAssignment_1_0_2.eContents().get(0);
 		private final RuleCall cFieldNamedElementIDTerminalRuleCall_1_0_2_0_1 = (RuleCall)cFieldNamedElementCrossReference_1_0_2_0.eContents().get(1);
 		
-		//ProjectionExpr Expr:
-		//	TermExpr => ({ProjectionExpr.expr=current} '.' field=[aadl2::NamedElement])*;
+		//SelectionExpr Expr:
+		//	TermExpr => ({SelectionExpr.target=current} '.' field=[aadl2::NamedElement])*;
 		@Override public ParserRule getRule() { return rule; }
 
-		//TermExpr => ({ProjectionExpr.expr=current} '.' field=[aadl2::NamedElement])*
+		//TermExpr => ({SelectionExpr.target=current} '.' field=[aadl2::NamedElement])*
 		public Group getGroup() { return cGroup; }
 
 		//TermExpr
 		public RuleCall getTermExprParserRuleCall_0() { return cTermExprParserRuleCall_0; }
 
-		//=> ({ProjectionExpr.expr=current} '.' field=[aadl2::NamedElement])*
+		//=> ({SelectionExpr.target=current} '.' field=[aadl2::NamedElement])*
 		public Group getGroup_1() { return cGroup_1; }
 
-		//{ProjectionExpr.expr=current} '.' field=[aadl2::NamedElement]
+		//{SelectionExpr.target=current} '.' field=[aadl2::NamedElement]
 		public Group getGroup_1_0() { return cGroup_1_0; }
 
-		//{ProjectionExpr.expr=current}
-		public Action getProjectionExprExprAction_1_0_0() { return cProjectionExprExprAction_1_0_0; }
+		//{SelectionExpr.target=current}
+		public Action getSelectionExprTargetAction_1_0_0() { return cSelectionExprTargetAction_1_0_0; }
 
 		//'.'
 		public Keyword getFullStopKeyword_1_0_1() { return cFullStopKeyword_1_0_1; }
@@ -5438,7 +5438,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final RecordUpdateExprElements pRecordUpdateExpr;
 	private final ArraySubExprElements pArraySubExpr;
 	private final TagExprElements pTagExpr;
-	private final ProjectionExprElements pProjectionExpr;
+	private final SelectionExprElements pSelectionExpr;
 	private final TermExprElements pTermExpr;
 	private final ArrayLiteralExprElements pArrayLiteralExpr;
 	private final DoubleDotRefElements pDoubleDotRef;
@@ -5517,7 +5517,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pRecordUpdateExpr = new RecordUpdateExprElements();
 		this.pArraySubExpr = new ArraySubExprElements();
 		this.pTagExpr = new TagExprElements();
-		this.pProjectionExpr = new ProjectionExprElements();
+		this.pSelectionExpr = new SelectionExprElements();
 		this.pTermExpr = new TermExprElements();
 		this.pArrayLiteralExpr = new ArrayLiteralExprElements();
 		this.pDoubleDotRef = new DoubleDotRefElements();
@@ -6233,7 +6233,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//TagExpr Expr:
-	//	ProjectionExpr ({TagExpr.stem=current} '.' tag=ReservedVarTag)?;
+	//	SelectionExpr ({TagExpr.stem=current} '.' tag=ReservedVarTag)?;
 	public TagExprElements getTagExprAccess() {
 		return pTagExpr;
 	}
@@ -6242,14 +6242,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getTagExprAccess().getRule();
 	}
 
-	//ProjectionExpr Expr:
-	//	TermExpr => ({ProjectionExpr.expr=current} '.' field=[aadl2::NamedElement])*;
-	public ProjectionExprElements getProjectionExprAccess() {
-		return pProjectionExpr;
+	//SelectionExpr Expr:
+	//	TermExpr => ({SelectionExpr.target=current} '.' field=[aadl2::NamedElement])*;
+	public SelectionExprElements getSelectionExprAccess() {
+		return pSelectionExpr;
 	}
 	
-	public ParserRule getProjectionExprRule() {
-		return getProjectionExprAccess().getRule();
+	public ParserRule getSelectionExprRule() {
+		return getSelectionExprAccess().getRule();
 	}
 
 	//TermExpr Expr:

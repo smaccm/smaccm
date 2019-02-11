@@ -12,13 +12,15 @@ import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlReal;
 import org.osate.aadl2.AbstractNamedValue;
+import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ArrayDimension;
 import org.osate.aadl2.ArraySize;
 import org.osate.aadl2.ArraySizeProperty;
 import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ClassifierValue;
+import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
-import org.osate.aadl2.DataImplementation;
+import org.osate.aadl2.ComponentType;
 import org.osate.aadl2.DataType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.Feature;
@@ -35,7 +37,11 @@ import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
+import org.osate.annexsupport.AnnexUtil;
 
+import com.rockwellcollins.atc.agree.agree.AgreeContract;
+import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
+import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ArrayLiteralExpr;
 import com.rockwellcollins.atc.agree.agree.ArraySubExpr;
@@ -49,6 +55,7 @@ import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumLitExpr;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
+import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.ExistsExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
@@ -61,6 +68,7 @@ import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IndicesExpr;
+import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LibraryFnDef;
@@ -71,13 +79,14 @@ import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
+import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.TagExpr;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
@@ -156,14 +165,14 @@ public class AgreeTypeSystem {
 
 	public static class ArrayTypeDef implements TypeDef {
 		public final String name;
-		public final TypeDef baseType;
-		public final int dimension;
+		public final TypeDef stemType;
+		public final int size;
 		public final Optional<NamedElement> elmOp;
 
-		public ArrayTypeDef(TypeDef baseType, int dimension, Optional<NamedElement> elmOp) {
-			this.name = "__" + nameOfTypeDef(baseType) + "[" + dimension + "]";
-			this.dimension = dimension;
-			this.baseType = baseType;
+		public ArrayTypeDef(TypeDef stemType, int size, Optional<NamedElement> elmOp) {
+			this.name = "__" + nameOfTypeDef(stemType) + "[" + size + "]";
+			this.size = size;
+			this.stemType = stemType;
 			this.elmOp = elmOp;
 		}
 	}
@@ -189,8 +198,7 @@ public class AgreeTypeSystem {
 	public static TypeDef typeDefFromNE(NamedElement ne) {
 		if (ne instanceof Classifier) {
 			return typeDefFromClassifier((Classifier) ne);
-		} else if (ne instanceof Classifier) {
-			return typeDefFromClassifier((Classifier) ne);
+
 		} else if (ne instanceof RecordDef) {
 
 			EList<Arg> args = ((RecordDef) ne).getArgs();
@@ -211,6 +219,9 @@ public class AgreeTypeSystem {
 			}
 			return new EnumTypeDef(name, enumValues, ne);
 
+		} else if (ne instanceof Arg) {
+			return typeDefFromType(((Arg) ne).getType());
+
 		} else {
 			return Prim.ErrorTypeDef;
 		}
@@ -220,7 +231,6 @@ public class AgreeTypeSystem {
 
 		if (c.getExtended() != null) {
 			Classifier ext = c.getExtended();
-//			return typeDefFromClassifier(c.getExtended());
 			if (ext instanceof AadlInteger || ext.getName().contains("Integer") || ext.getName().contains("Natural")
 					|| ext.getName().contains("Unsigned")) {
 
@@ -356,19 +366,61 @@ public class AgreeTypeSystem {
 			}
 
 
-		} else if (c instanceof DataImplementation) {
-			EList<Subcomponent> subcomps = ((DataImplementation) c).getAllSubcomponents();
+		} else if (c instanceof ComponentClassifier) {
+
 			Map<String, TypeDef> fields = new HashMap<>();
-			for (Subcomponent sub : subcomps) {
-				String fieldName = sub.getName();
-				TypeDef typeDef = typeDefFromClassifier(sub.getClassifier());
-				fields.put(fieldName, typeDef);
+
+			ComponentType ct = null;
+			if (c instanceof ComponentImplementation) {
+				EList<Subcomponent> subcomps = ((ComponentImplementation) c).getAllSubcomponents();
+				for (Subcomponent sub : subcomps) {
+					String fieldName = sub.getName();
+					TypeDef typeDef = typeDefFromClassifier(sub.getClassifier());
+					fields.put(fieldName, typeDef);
+				}
+
+				ct = ((ComponentImplementation) c).getType();
+			} else if (c instanceof ComponentType) {
+				ct = (ComponentType) c;
 			}
+
+			if (ct != null) {
+
+				EList<Feature> features = ct.getAllFeatures();
+				for (Feature feature : features) {
+					String fieldName = feature.getName();
+					TypeDef typeDef = typeDefFromClassifier(feature.getClassifier());
+					fields.put(fieldName, typeDef);
+				}
+
+				for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(c,
+						AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+					AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+
+					for (SpecStatement spec : contract.getSpecs()) {
+
+						List<Arg> args = new ArrayList<>();
+						if (spec instanceof EqStatement) {
+							args = ((EqStatement) spec).getLhs();
+						} else if (spec instanceof InputStatement) {
+							args = ((InputStatement) spec).getLhs();
+						}
+
+						for (Arg arg : args) {
+							String fieldName = arg.getName();
+							TypeDef typeDef = typeDefFromNE(arg);
+							fields.put(fieldName, typeDef);
+						}
+					}
+
+				}
+			}
+
 			String name = c.getQualifiedName();
 			return new RecordTypeDef(name, fields, c);
 
-
 		}
+
 		return Prim.ErrorTypeDef;
 
 	}
@@ -457,21 +509,29 @@ public class AgreeTypeSystem {
 			AbstractNamedValue anv = nv.getNamedValue();
 			if (anv instanceof PropertyConstant) {
 				return inferPropExp(((PropertyConstant) anv).getConstantValue());
-			} else {
-				throw new RuntimeException("Error: typeFromPropExp - NamedValue");
 			}
-		} else {
-			throw new RuntimeException("Error: typeFromPropExp");
 		}
+
+		return Prim.ErrorTypeDef;
 
 	}
 
 
 	public static TypeDef infer(Expr expr) {
 
-		if (expr instanceof ProjectionExpr) {
-			NamedElement field = ((ProjectionExpr) expr).getField();
-			return inferFromNamedElement(field);
+		if (expr instanceof SelectionExpr) {
+
+			Expr target = ((SelectionExpr) expr).getTarget();
+			TypeDef targetType = infer(target);
+			String field = ((SelectionExpr) expr).getField().getName();
+
+			if (targetType instanceof AgreeTypeSystem.RecordTypeDef) {
+				Map<String, TypeDef> fields = ((AgreeTypeSystem.RecordTypeDef) targetType).fields;
+				if (fields.containsKey(field)) {
+					return fields.get(field);
+				}
+
+			}
 
 		} else if (expr instanceof TagExpr) {
 
@@ -491,13 +551,13 @@ public class AgreeTypeSystem {
 			Expr arrExpr = ((ArraySubExpr) expr).getExpr();
 			TypeDef arrType = infer(arrExpr);
 			if (arrType instanceof ArrayTypeDef) {
-				return ((ArrayTypeDef) arrType).baseType;
+				return ((ArrayTypeDef) arrType).stemType;
 			}
 
 		} else if (expr instanceof IndicesExpr) {
 			TypeDef arrType = infer(((IndicesExpr) expr).getArray());
 			if (arrType instanceof ArrayTypeDef) {
-				int dimension = ((ArrayTypeDef) arrType).dimension;
+				int dimension = ((ArrayTypeDef) arrType).size;
 				return new ArrayTypeDef(Prim.IntTypeDef, dimension, Optional.empty());
 			}
 
@@ -512,7 +572,7 @@ public class AgreeTypeSystem {
 			TypeDef arrType = infer(((ForeachExpr) expr).getArray());
 
 			if (arrType instanceof ArrayTypeDef) {
-				int dimension = ((ArrayTypeDef) arrType).dimension;
+				int dimension = ((ArrayTypeDef) arrType).size;
 				return new ArrayTypeDef(stemType, dimension, Optional.empty());
 			}
 
@@ -760,7 +820,7 @@ public class AgreeTypeSystem {
 			if (arrExpr != null) {
 				TypeDef arrType = infer(arrExpr);
 				if (arrType instanceof ArrayTypeDef) {
-					return ((ArrayTypeDef) arrType).baseType;
+					return ((ArrayTypeDef) arrType).stemType;
 				}
 			}
 
@@ -783,6 +843,7 @@ public class AgreeTypeSystem {
 			return typeDefFromType(((Arg) ne).getType());
 
 		} else if (ne instanceof Subcomponent) {
+
 			Subcomponent sub = (Subcomponent) ne;
 			Classifier cl = sub.getClassifier();
 			List<ArrayDimension> dims = sub.getArrayDimensions();
@@ -795,6 +856,7 @@ public class AgreeTypeSystem {
 			}
 
 		} else if (ne instanceof Feature) {
+
 			Classifier cl = ((Feature) ne).getClassifier();
 			List<ArrayDimension> dims = ((Feature) ne).getArrayDimensions();
 			TypeDef clsTypeDef = typeDefFromClassifier(cl);

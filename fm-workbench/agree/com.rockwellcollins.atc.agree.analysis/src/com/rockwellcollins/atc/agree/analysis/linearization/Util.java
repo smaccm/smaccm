@@ -38,8 +38,8 @@ import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.validation.AgreeJavaValidator;
@@ -79,8 +79,8 @@ public class Util {
 			if (expr instanceof ConstStatement) {
 				result = getDoubleValue(((ConstStatement) expr).getExpr());
 			}
-		} else if (expr instanceof ProjectionExpr) {
-			NamedElement finalId = ((ProjectionExpr) expr).getField();
+		} else if (expr instanceof SelectionExpr) {
+			NamedElement finalId = ((SelectionExpr) expr).getField();
 			if (finalId instanceof ConstStatement) {
 				result = getDoubleValue(((ConstStatement) finalId).getExpr());
 			}

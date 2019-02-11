@@ -67,13 +67,13 @@ import com.rockwellcollins.atc.agree.agree.PeriodicStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
 import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.TagExpr;
@@ -417,9 +417,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.PRIM_TYPE:
 				sequence_BaseType(context, (PrimType) semanticObject); 
 				return; 
-			case AgreePackage.PROJECTION_EXPR:
-				sequence_ProjectionExpr(context, (ProjectionExpr) semanticObject); 
-				return; 
 			case AgreePackage.PROPERTY_STATEMENT:
 				sequence_PropertyStatement(context, (PropertyStatement) semanticObject); 
 				return; 
@@ -437,6 +434,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.RECORD_UPDATE_EXPR:
 				sequence_RecordUpdateExpr(context, (RecordUpdateExpr) semanticObject); 
+				return; 
+			case AgreePackage.SELECTION_EXPR:
+				sequence_SelectionExpr(context, (SelectionExpr) semanticObject); 
 				return; 
 			case AgreePackage.SPORADIC_STATEMENT:
 				sequence_RealTimeStatement(context, (SporadicStatement) semanticObject); 
@@ -526,8 +526,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns BinaryExpr
 	 *     TagExpr returns BinaryExpr
 	 *     TagExpr.TagExpr_1_0 returns BinaryExpr
-	 *     ProjectionExpr returns BinaryExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns BinaryExpr
+	 *     SelectionExpr returns BinaryExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns BinaryExpr
 	 *     TermExpr returns BinaryExpr
 	 *
 	 * Constraint:
@@ -659,8 +659,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArrayLiteralExpr
 	 *     TagExpr returns ArrayLiteralExpr
 	 *     TagExpr.TagExpr_1_0 returns ArrayLiteralExpr
-	 *     ProjectionExpr returns ArrayLiteralExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ArrayLiteralExpr
+	 *     SelectionExpr returns ArrayLiteralExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns ArrayLiteralExpr
 	 *     TermExpr returns ArrayLiteralExpr
 	 *     ArrayLiteralExpr returns ArrayLiteralExpr
 	 *
@@ -710,8 +710,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArraySubExpr
 	 *     TagExpr returns ArraySubExpr
 	 *     TagExpr.TagExpr_1_0 returns ArraySubExpr
-	 *     ProjectionExpr returns ArraySubExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ArraySubExpr
+	 *     SelectionExpr returns ArraySubExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns ArraySubExpr
 	 *     TermExpr returns ArraySubExpr
 	 *
 	 * Constraint:
@@ -769,8 +769,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ArrayUpdateExpr
 	 *     TagExpr returns ArrayUpdateExpr
 	 *     TagExpr.TagExpr_1_0 returns ArrayUpdateExpr
-	 *     ProjectionExpr returns ArrayUpdateExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ArrayUpdateExpr
+	 *     SelectionExpr returns ArrayUpdateExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns ArrayUpdateExpr
 	 *     TermExpr returns ArrayUpdateExpr
 	 *
 	 * Constraint:
@@ -948,8 +948,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ExistsExpr
 	 *     TagExpr returns ExistsExpr
 	 *     TagExpr.TagExpr_1_0 returns ExistsExpr
-	 *     ProjectionExpr returns ExistsExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ExistsExpr
+	 *     SelectionExpr returns ExistsExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns ExistsExpr
 	 *     TermExpr returns ExistsExpr
 	 *
 	 * Constraint:
@@ -1027,8 +1027,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FoldLeftExpr
 	 *     TagExpr returns FoldLeftExpr
 	 *     TagExpr.TagExpr_1_0 returns FoldLeftExpr
-	 *     ProjectionExpr returns FoldLeftExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns FoldLeftExpr
+	 *     SelectionExpr returns FoldLeftExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns FoldLeftExpr
 	 *     TermExpr returns FoldLeftExpr
 	 *
 	 * Constraint:
@@ -1095,8 +1095,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FoldRightExpr
 	 *     TagExpr returns FoldRightExpr
 	 *     TagExpr.TagExpr_1_0 returns FoldRightExpr
-	 *     ProjectionExpr returns FoldRightExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns FoldRightExpr
+	 *     SelectionExpr returns FoldRightExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns FoldRightExpr
 	 *     TermExpr returns FoldRightExpr
 	 *
 	 * Constraint:
@@ -1163,8 +1163,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ForallExpr
 	 *     TagExpr returns ForallExpr
 	 *     TagExpr.TagExpr_1_0 returns ForallExpr
-	 *     ProjectionExpr returns ForallExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ForallExpr
+	 *     SelectionExpr returns ForallExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns ForallExpr
 	 *     TermExpr returns ForallExpr
 	 *
 	 * Constraint:
@@ -1225,8 +1225,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ForeachExpr
 	 *     TagExpr returns ForeachExpr
 	 *     TagExpr.TagExpr_1_0 returns ForeachExpr
-	 *     ProjectionExpr returns ForeachExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ForeachExpr
+	 *     SelectionExpr returns ForeachExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns ForeachExpr
 	 *     TermExpr returns ForeachExpr
 	 *
 	 * Constraint:
@@ -1287,8 +1287,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IfThenElseExpr
 	 *     TagExpr returns IfThenElseExpr
 	 *     TagExpr.TagExpr_1_0 returns IfThenElseExpr
-	 *     ProjectionExpr returns IfThenElseExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns IfThenElseExpr
+	 *     SelectionExpr returns IfThenElseExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns IfThenElseExpr
 	 *     TermExpr returns IfThenElseExpr
 	 *
 	 * Constraint:
@@ -1603,8 +1603,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns GetPropertyExpr
 	 *     TagExpr returns GetPropertyExpr
 	 *     TagExpr.TagExpr_1_0 returns GetPropertyExpr
-	 *     ProjectionExpr returns GetPropertyExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns GetPropertyExpr
+	 *     SelectionExpr returns GetPropertyExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns GetPropertyExpr
 	 *     TermExpr returns GetPropertyExpr
 	 *
 	 * Constraint:
@@ -1662,8 +1662,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns PrevExpr
 	 *     TagExpr returns PrevExpr
 	 *     TagExpr.TagExpr_1_0 returns PrevExpr
-	 *     ProjectionExpr returns PrevExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns PrevExpr
+	 *     SelectionExpr returns PrevExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns PrevExpr
 	 *     TermExpr returns PrevExpr
 	 *
 	 * Constraint:
@@ -1679,65 +1679,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getPreDefFnExprAccess().getDelayExprParserRuleCall_0_3_0(), semanticObject.getDelay());
 		feeder.accept(grammarAccess.getPreDefFnExprAccess().getInitExprParserRuleCall_0_5_0(), semanticObject.getInit());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     Element returns ProjectionExpr
-	 *     Expr returns ProjectionExpr
-	 *     ForallExpr returns ProjectionExpr
-	 *     ExistsExpr returns ProjectionExpr
-	 *     ForeachExpr returns ProjectionExpr
-	 *     FoldLeftExpr returns ProjectionExpr
-	 *     FoldRightExpr returns ProjectionExpr
-	 *     ArrowExpr returns ProjectionExpr
-	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     ImpliesExpr returns ProjectionExpr
-	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     EquivExpr returns ProjectionExpr
-	 *     EquivExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     OrExpr returns ProjectionExpr
-	 *     OrExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     AndExpr returns ProjectionExpr
-	 *     AndExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     RelateExpr returns ProjectionExpr
-	 *     RelateExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     AddSubExpr returns ProjectionExpr
-	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     MultDivExpr returns ProjectionExpr
-	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     PowerExpr returns ProjectionExpr
-	 *     PowerExpr.BinaryExpr_1_0_0_0 returns ProjectionExpr
-	 *     UnaryExpr returns ProjectionExpr
-	 *     IfThenElseExpr returns ProjectionExpr
-	 *     PreDefFnExpr returns ProjectionExpr
-	 *     ArrayUpdateExpr returns ProjectionExpr
-	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ProjectionExpr
-	 *     RecordUpdateExpr returns ProjectionExpr
-	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ProjectionExpr
-	 *     ArraySubExpr returns ProjectionExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ProjectionExpr
-	 *     TagExpr returns ProjectionExpr
-	 *     TagExpr.TagExpr_1_0 returns ProjectionExpr
-	 *     ProjectionExpr returns ProjectionExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns ProjectionExpr
-	 *     TermExpr returns ProjectionExpr
-	 *
-	 * Constraint:
-	 *     (expr=ProjectionExpr_ProjectionExpr_1_0_0 field=[NamedElement|ID])
-	 */
-	protected void sequence_ProjectionExpr(ISerializationContext context, ProjectionExpr semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.PROJECTION_EXPR__EXPR) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PROJECTION_EXPR__EXPR));
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.PROJECTION_EXPR__FIELD) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.PROJECTION_EXPR__FIELD));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getProjectionExprAccess().getProjectionExprExprAction_1_0_0(), semanticObject.getExpr());
-		feeder.accept(grammarAccess.getProjectionExprAccess().getFieldNamedElementIDTerminalRuleCall_1_0_2_0_1(), semanticObject.eGet(AgreePackage.Literals.PROJECTION_EXPR__FIELD, false));
 		feeder.finish();
 	}
 	
@@ -1845,8 +1786,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RecordUpdateExpr
 	 *     TagExpr returns RecordUpdateExpr
 	 *     TagExpr.TagExpr_1_0 returns RecordUpdateExpr
-	 *     ProjectionExpr returns RecordUpdateExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns RecordUpdateExpr
+	 *     SelectionExpr returns RecordUpdateExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns RecordUpdateExpr
 	 *     TermExpr returns RecordUpdateExpr
 	 *
 	 * Constraint:
@@ -1865,6 +1806,65 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 		feeder.accept(grammarAccess.getRecordUpdateExprAccess().getRecordUpdateExprRecordAction_1_0_0(), semanticObject.getRecord());
 		feeder.accept(grammarAccess.getRecordUpdateExprAccess().getKeyNamedElementIDTerminalRuleCall_1_0_2_0_1(), semanticObject.eGet(AgreePackage.Literals.RECORD_UPDATE_EXPR__KEY, false));
 		feeder.accept(grammarAccess.getRecordUpdateExprAccess().getExprExprParserRuleCall_1_0_4_0(), semanticObject.getExpr());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Element returns SelectionExpr
+	 *     Expr returns SelectionExpr
+	 *     ForallExpr returns SelectionExpr
+	 *     ExistsExpr returns SelectionExpr
+	 *     ForeachExpr returns SelectionExpr
+	 *     FoldLeftExpr returns SelectionExpr
+	 *     FoldRightExpr returns SelectionExpr
+	 *     ArrowExpr returns SelectionExpr
+	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     ImpliesExpr returns SelectionExpr
+	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     EquivExpr returns SelectionExpr
+	 *     EquivExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     OrExpr returns SelectionExpr
+	 *     OrExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     AndExpr returns SelectionExpr
+	 *     AndExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     RelateExpr returns SelectionExpr
+	 *     RelateExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     AddSubExpr returns SelectionExpr
+	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     MultDivExpr returns SelectionExpr
+	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     PowerExpr returns SelectionExpr
+	 *     PowerExpr.BinaryExpr_1_0_0_0 returns SelectionExpr
+	 *     UnaryExpr returns SelectionExpr
+	 *     IfThenElseExpr returns SelectionExpr
+	 *     PreDefFnExpr returns SelectionExpr
+	 *     ArrayUpdateExpr returns SelectionExpr
+	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns SelectionExpr
+	 *     RecordUpdateExpr returns SelectionExpr
+	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns SelectionExpr
+	 *     ArraySubExpr returns SelectionExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns SelectionExpr
+	 *     TagExpr returns SelectionExpr
+	 *     TagExpr.TagExpr_1_0 returns SelectionExpr
+	 *     SelectionExpr returns SelectionExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns SelectionExpr
+	 *     TermExpr returns SelectionExpr
+	 *
+	 * Constraint:
+	 *     (target=SelectionExpr_SelectionExpr_1_0_0 field=[NamedElement|ID])
+	 */
+	protected void sequence_SelectionExpr(ISerializationContext context, SelectionExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.SELECTION_EXPR__TARGET) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.SELECTION_EXPR__TARGET));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.SELECTION_EXPR__FIELD) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.SELECTION_EXPR__FIELD));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getSelectionExprAccess().getSelectionExprTargetAction_1_0_0(), semanticObject.getTarget());
+		feeder.accept(grammarAccess.getSelectionExprAccess().getFieldNamedElementIDTerminalRuleCall_1_0_2_0_1(), semanticObject.eGet(AgreePackage.Literals.SELECTION_EXPR__FIELD, false));
 		feeder.finish();
 	}
 	
@@ -2059,8 +2059,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TagExpr
 	 *     TagExpr returns TagExpr
 	 *     TagExpr.TagExpr_1_0 returns TagExpr
-	 *     ProjectionExpr returns TagExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TagExpr
+	 *     SelectionExpr returns TagExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns TagExpr
 	 *     TermExpr returns TagExpr
 	 *
 	 * Constraint:
@@ -2118,8 +2118,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns BoolLitExpr
 	 *     TagExpr returns BoolLitExpr
 	 *     TagExpr.TagExpr_1_0 returns BoolLitExpr
-	 *     ProjectionExpr returns BoolLitExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns BoolLitExpr
+	 *     SelectionExpr returns BoolLitExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns BoolLitExpr
 	 *     TermExpr returns BoolLitExpr
 	 *
 	 * Constraint:
@@ -2174,8 +2174,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns CallExpr
 	 *     TagExpr returns CallExpr
 	 *     TagExpr.TagExpr_1_0 returns CallExpr
-	 *     ProjectionExpr returns CallExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns CallExpr
+	 *     SelectionExpr returns CallExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns CallExpr
 	 *     TermExpr returns CallExpr
 	 *
 	 * Constraint:
@@ -2224,8 +2224,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns EnumLitExpr
 	 *     TagExpr returns EnumLitExpr
 	 *     TagExpr.TagExpr_1_0 returns EnumLitExpr
-	 *     ProjectionExpr returns EnumLitExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns EnumLitExpr
+	 *     SelectionExpr returns EnumLitExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns EnumLitExpr
 	 *     TermExpr returns EnumLitExpr
 	 *
 	 * Constraint:
@@ -2283,8 +2283,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns EventExpr
 	 *     TagExpr returns EventExpr
 	 *     TagExpr.TagExpr_1_0 returns EventExpr
-	 *     ProjectionExpr returns EventExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns EventExpr
+	 *     SelectionExpr returns EventExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns EventExpr
 	 *     TermExpr returns EventExpr
 	 *
 	 * Constraint:
@@ -2339,8 +2339,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FloorCast
 	 *     TagExpr returns FloorCast
 	 *     TagExpr.TagExpr_1_0 returns FloorCast
-	 *     ProjectionExpr returns FloorCast
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns FloorCast
+	 *     SelectionExpr returns FloorCast
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns FloorCast
 	 *     TermExpr returns FloorCast
 	 *
 	 * Constraint:
@@ -2395,8 +2395,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IndicesExpr
 	 *     TagExpr returns IndicesExpr
 	 *     TagExpr.TagExpr_1_0 returns IndicesExpr
-	 *     ProjectionExpr returns IndicesExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns IndicesExpr
+	 *     SelectionExpr returns IndicesExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns IndicesExpr
 	 *     TermExpr returns IndicesExpr
 	 *
 	 * Constraint:
@@ -2451,8 +2451,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns IntLitExpr
 	 *     TagExpr returns IntLitExpr
 	 *     TagExpr.TagExpr_1_0 returns IntLitExpr
-	 *     ProjectionExpr returns IntLitExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns IntLitExpr
+	 *     SelectionExpr returns IntLitExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns IntLitExpr
 	 *     TermExpr returns IntLitExpr
 	 *
 	 * Constraint:
@@ -2507,8 +2507,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns LatchedExpr
 	 *     TagExpr returns LatchedExpr
 	 *     TagExpr.TagExpr_1_0 returns LatchedExpr
-	 *     ProjectionExpr returns LatchedExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns LatchedExpr
+	 *     SelectionExpr returns LatchedExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns LatchedExpr
 	 *     TermExpr returns LatchedExpr
 	 *
 	 * Constraint:
@@ -2563,8 +2563,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns NamedElmExpr
 	 *     TagExpr returns NamedElmExpr
 	 *     TagExpr.TagExpr_1_0 returns NamedElmExpr
-	 *     ProjectionExpr returns NamedElmExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns NamedElmExpr
+	 *     SelectionExpr returns NamedElmExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns NamedElmExpr
 	 *     TermExpr returns NamedElmExpr
 	 *
 	 * Constraint:
@@ -2619,8 +2619,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns PreExpr
 	 *     TagExpr returns PreExpr
 	 *     TagExpr.TagExpr_1_0 returns PreExpr
-	 *     ProjectionExpr returns PreExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns PreExpr
+	 *     SelectionExpr returns PreExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns PreExpr
 	 *     TermExpr returns PreExpr
 	 *
 	 * Constraint:
@@ -2675,8 +2675,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RealCast
 	 *     TagExpr returns RealCast
 	 *     TagExpr.TagExpr_1_0 returns RealCast
-	 *     ProjectionExpr returns RealCast
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns RealCast
+	 *     SelectionExpr returns RealCast
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns RealCast
 	 *     TermExpr returns RealCast
 	 *
 	 * Constraint:
@@ -2731,8 +2731,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RealLitExpr
 	 *     TagExpr returns RealLitExpr
 	 *     TagExpr.TagExpr_1_0 returns RealLitExpr
-	 *     ProjectionExpr returns RealLitExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns RealLitExpr
+	 *     SelectionExpr returns RealLitExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns RealLitExpr
 	 *     TermExpr returns RealLitExpr
 	 *
 	 * Constraint:
@@ -2787,8 +2787,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns RecordLitExpr
 	 *     TagExpr returns RecordLitExpr
 	 *     TagExpr.TagExpr_1_0 returns RecordLitExpr
-	 *     ProjectionExpr returns RecordLitExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns RecordLitExpr
+	 *     SelectionExpr returns RecordLitExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns RecordLitExpr
 	 *     TermExpr returns RecordLitExpr
 	 *
 	 * Constraint:
@@ -2837,8 +2837,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeExpr
 	 *     TagExpr returns TimeExpr
 	 *     TagExpr.TagExpr_1_0 returns TimeExpr
-	 *     ProjectionExpr returns TimeExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TimeExpr
+	 *     SelectionExpr returns TimeExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns TimeExpr
 	 *     TermExpr returns TimeExpr
 	 *
 	 * Constraint:
@@ -2887,8 +2887,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeFallExpr
 	 *     TagExpr returns TimeFallExpr
 	 *     TagExpr.TagExpr_1_0 returns TimeFallExpr
-	 *     ProjectionExpr returns TimeFallExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TimeFallExpr
+	 *     SelectionExpr returns TimeFallExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns TimeFallExpr
 	 *     TermExpr returns TimeFallExpr
 	 *
 	 * Constraint:
@@ -2943,8 +2943,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeOfExpr
 	 *     TagExpr returns TimeOfExpr
 	 *     TagExpr.TagExpr_1_0 returns TimeOfExpr
-	 *     ProjectionExpr returns TimeOfExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TimeOfExpr
+	 *     SelectionExpr returns TimeOfExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns TimeOfExpr
 	 *     TermExpr returns TimeOfExpr
 	 *
 	 * Constraint:
@@ -2999,8 +2999,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns TimeRiseExpr
 	 *     TagExpr returns TimeRiseExpr
 	 *     TagExpr.TagExpr_1_0 returns TimeRiseExpr
-	 *     ProjectionExpr returns TimeRiseExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns TimeRiseExpr
+	 *     SelectionExpr returns TimeRiseExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns TimeRiseExpr
 	 *     TermExpr returns TimeRiseExpr
 	 *
 	 * Constraint:
@@ -3162,8 +3162,8 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns UnaryExpr
 	 *     TagExpr returns UnaryExpr
 	 *     TagExpr.TagExpr_1_0 returns UnaryExpr
-	 *     ProjectionExpr returns UnaryExpr
-	 *     ProjectionExpr.ProjectionExpr_1_0_0 returns UnaryExpr
+	 *     SelectionExpr returns UnaryExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns UnaryExpr
 	 *     TermExpr returns UnaryExpr
 	 *
 	 * Constraint:

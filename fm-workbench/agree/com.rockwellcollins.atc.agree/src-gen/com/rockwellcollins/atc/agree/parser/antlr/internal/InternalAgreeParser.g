@@ -7086,11 +7086,11 @@ ruleTagExpr returns [EObject current=null]
     @after { leaveRule(); }:
 (
     { 
-        newCompositeNode(grammarAccess.getTagExprAccess().getProjectionExprParserRuleCall_0()); 
+        newCompositeNode(grammarAccess.getTagExprAccess().getSelectionExprParserRuleCall_0()); 
     }
-    this_ProjectionExpr_0=ruleProjectionExpr
+    this_SelectionExpr_0=ruleSelectionExpr
     {
-        $current = $this_ProjectionExpr_0.current;
+        $current = $this_SelectionExpr_0.current;
         afterParserOrEnumRuleCall();
     }
 ((
@@ -7129,23 +7129,23 @@ ruleTagExpr returns [EObject current=null]
 
 
 
-// Entry rule entryRuleProjectionExpr
-entryRuleProjectionExpr returns [EObject current=null]
+// Entry rule entryRuleSelectionExpr
+entryRuleSelectionExpr returns [EObject current=null]
 	:
-	{ newCompositeNode(grammarAccess.getProjectionExprRule()); }
-	 iv_ruleProjectionExpr=ruleProjectionExpr 
-	 { $current=$iv_ruleProjectionExpr.current; } 
+	{ newCompositeNode(grammarAccess.getSelectionExprRule()); }
+	 iv_ruleSelectionExpr=ruleSelectionExpr 
+	 { $current=$iv_ruleSelectionExpr.current; } 
 	 EOF 
 ;
 
-// Rule ProjectionExpr
-ruleProjectionExpr returns [EObject current=null] 
+// Rule SelectionExpr
+ruleSelectionExpr returns [EObject current=null] 
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
 (
     { 
-        newCompositeNode(grammarAccess.getProjectionExprAccess().getTermExprParserRuleCall_0()); 
+        newCompositeNode(grammarAccess.getSelectionExprAccess().getTermExprParserRuleCall_0()); 
     }
     this_TermExpr_0=ruleTermExpr
     {
@@ -7163,24 +7163,24 @@ FullStop
 )))=>((
     {
         $current = forceCreateModelElementAndSet(
-            grammarAccess.getProjectionExprAccess().getProjectionExprExprAction_1_0_0(),
+            grammarAccess.getSelectionExprAccess().getSelectionExprTargetAction_1_0_0(),
             $current);
     }
 )
 	otherlv_2=FullStop
     {
-    	newLeafNode(otherlv_2, grammarAccess.getProjectionExprAccess().getFullStopKeyword_1_0_1());
+    	newLeafNode(otherlv_2, grammarAccess.getSelectionExprAccess().getFullStopKeyword_1_0_1());
     }
 (
 (
 		{
 			if ($current==null) {
-	            $current = createModelElement(grammarAccess.getProjectionExprRule());
+	            $current = createModelElement(grammarAccess.getSelectionExprRule());
 	        }
         }
 	otherlv_3=RULE_ID
 	{
-		newLeafNode(otherlv_3, grammarAccess.getProjectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
+		newLeafNode(otherlv_3, grammarAccess.getSelectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
 	}
 
 )

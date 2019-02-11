@@ -145,7 +145,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
       case AgreePackage.ARRAY_SUB_EXPR: return createArraySubExpr();
       case AgreePackage.TAG_EXPR: return createTagExpr();
-      case AgreePackage.PROJECTION_EXPR: return createProjectionExpr();
+      case AgreePackage.SELECTION_EXPR: return createSelectionExpr();
       case AgreePackage.NAMED_ELM_EXPR: return createNamedElmExpr();
       case AgreePackage.TIME_EXPR: return createTimeExpr();
       case AgreePackage.INDICES_EXPR: return createIndicesExpr();
@@ -1064,10 +1064,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ProjectionExpr createProjectionExpr()
+  public SelectionExpr createSelectionExpr()
   {
-    ProjectionExprImpl projectionExpr = new ProjectionExprImpl();
-    return projectionExpr;
+    SelectionExprImpl selectionExpr = new SelectionExprImpl();
+    return selectionExpr;
   }
 
   /**

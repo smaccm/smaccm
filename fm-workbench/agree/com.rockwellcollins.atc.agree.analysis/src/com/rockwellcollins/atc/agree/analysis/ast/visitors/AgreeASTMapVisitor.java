@@ -62,7 +62,7 @@ import jkind.lustre.Node;
 import jkind.lustre.Type;
 
 public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
-		implements AgreeASTVisitor<AgreeASTElement> {
+implements AgreeASTVisitor<AgreeASTElement> {
 
 	protected jkind.lustre.visitors.TypeMapVisitor lustreTypeMapVisitor;
 

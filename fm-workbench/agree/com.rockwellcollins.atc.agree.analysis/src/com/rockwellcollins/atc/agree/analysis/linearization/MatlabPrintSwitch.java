@@ -30,8 +30,8 @@ import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LinearizationDef;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.UnaryExpr;
 import com.rockwellcollins.atc.agree.agree.util.AgreeSwitch;
 
@@ -59,17 +59,13 @@ public class MatlabPrintSwitch extends AgreeSwitch<String> {
 	}
 
 	@Override
-	public String caseProjectionExpr(ProjectionExpr ctx) {
+	public String caseSelectionExpr(SelectionExpr ctx) {
 		return ctx.getField().getName();
 	}
 
 	@Override
 	public String caseCallExpr(CallExpr ctx) {
 		String fn = ctx.getRef().getElm().getName();
-//=======
-//	public String caseFnCallExpr(FnCallExpr ctx) {
-//		String fn = (ctx.getFn().getBase()).getName();
-//>>>>>>> origin/develop
 		String arg = doSwitch(ctx.getArgs().get(0));
 		return fn + "(" + arg + ")";
 	}

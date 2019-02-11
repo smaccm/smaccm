@@ -46,10 +46,10 @@ import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
 import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.TagExpr;
@@ -96,7 +96,7 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 		if (context instanceof DoubleDotRef || context instanceof ThisRef
 				|| context instanceof LiftStatement
 				|| context instanceof TagExpr
-				|| context instanceof ProjectionExpr
+				|| context instanceof SelectionExpr
 				|| context instanceof NamedElmExpr
 				|| context instanceof AssignStatement
 				|| context instanceof NodeEq || context instanceof SynchStatement

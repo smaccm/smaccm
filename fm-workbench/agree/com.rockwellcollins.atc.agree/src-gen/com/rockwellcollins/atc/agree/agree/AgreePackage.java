@@ -4865,14 +4865,14 @@ public interface AgreePackage extends EPackage
   int TAG_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ProjectionExprImpl <em>Projection Expr</em>}' class.
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.SelectionExprImpl <em>Selection Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.ProjectionExprImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getProjectionExpr()
+   * @see com.rockwellcollins.atc.agree.agree.impl.SelectionExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getSelectionExpr()
    * @generated
    */
-  int PROJECTION_EXPR = 81;
+  int SELECTION_EXPR = 81;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4881,7 +4881,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int PROJECTION_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+  int SELECTION_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -4890,16 +4890,16 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int PROJECTION_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+  int SELECTION_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
 
   /**
-   * The feature id for the '<em><b>Expr</b></em>' containment reference.
+   * The feature id for the '<em><b>Target</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int PROJECTION_EXPR__EXPR = EXPR_FEATURE_COUNT + 0;
+  int SELECTION_EXPR__TARGET = EXPR_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Field</b></em>' reference.
@@ -4908,16 +4908,16 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int PROJECTION_EXPR__FIELD = EXPR_FEATURE_COUNT + 1;
+  int SELECTION_EXPR__FIELD = EXPR_FEATURE_COUNT + 1;
 
   /**
-   * The number of structural features of the '<em>Projection Expr</em>' class.
+   * The number of structural features of the '<em>Selection Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int PROJECTION_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
+  int SELECTION_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.NamedElmExprImpl <em>Named Elm Expr</em>}' class.
@@ -7893,36 +7893,36 @@ public interface AgreePackage extends EPackage
   EAttribute getTagExpr_Tag();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.ProjectionExpr <em>Projection Expr</em>}'.
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.SelectionExpr <em>Selection Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Projection Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ProjectionExpr
+   * @return the meta object for class '<em>Selection Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.SelectionExpr
    * @generated
    */
-  EClass getProjectionExpr();
+  EClass getSelectionExpr();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ProjectionExpr#getExpr <em>Expr</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.SelectionExpr#getTarget <em>Target</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ProjectionExpr#getExpr()
-   * @see #getProjectionExpr()
+   * @return the meta object for the containment reference '<em>Target</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.SelectionExpr#getTarget()
+   * @see #getSelectionExpr()
    * @generated
    */
-  EReference getProjectionExpr_Expr();
+  EReference getSelectionExpr_Target();
 
   /**
-   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.ProjectionExpr#getField <em>Field</em>}'.
+   * Returns the meta object for the reference '{@link com.rockwellcollins.atc.agree.agree.SelectionExpr#getField <em>Field</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the reference '<em>Field</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ProjectionExpr#getField()
-   * @see #getProjectionExpr()
+   * @see com.rockwellcollins.atc.agree.agree.SelectionExpr#getField()
+   * @see #getSelectionExpr()
    * @generated
    */
-  EReference getProjectionExpr_Field();
+  EReference getSelectionExpr_Field();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.NamedElmExpr <em>Named Elm Expr</em>}'.
@@ -10132,22 +10132,22 @@ public interface AgreePackage extends EPackage
     EAttribute TAG_EXPR__TAG = eINSTANCE.getTagExpr_Tag();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ProjectionExprImpl <em>Projection Expr</em>}' class.
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.SelectionExprImpl <em>Selection Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.ProjectionExprImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getProjectionExpr()
+     * @see com.rockwellcollins.atc.agree.agree.impl.SelectionExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getSelectionExpr()
      * @generated
      */
-    EClass PROJECTION_EXPR = eINSTANCE.getProjectionExpr();
+    EClass SELECTION_EXPR = eINSTANCE.getSelectionExpr();
 
     /**
-     * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Target</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference PROJECTION_EXPR__EXPR = eINSTANCE.getProjectionExpr_Expr();
+    EReference SELECTION_EXPR__TARGET = eINSTANCE.getSelectionExpr_Target();
 
     /**
      * The meta object literal for the '<em><b>Field</b></em>' reference feature.
@@ -10155,7 +10155,7 @@ public interface AgreePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference PROJECTION_EXPR__FIELD = eINSTANCE.getProjectionExpr_Field();
+    EReference SELECTION_EXPR__FIELD = eINSTANCE.getSelectionExpr_Field();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.NamedElmExprImpl <em>Named Elm Expr</em>}' class.

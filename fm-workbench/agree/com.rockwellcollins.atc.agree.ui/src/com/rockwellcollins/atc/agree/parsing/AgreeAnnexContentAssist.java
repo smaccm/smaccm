@@ -28,8 +28,8 @@ import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
 import com.rockwellcollins.atc.agree.agree.RecordDef;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.ui.contentassist.AgreeProposalProvider;
@@ -74,8 +74,8 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		}
 
 		List<String> results = new ArrayList<>();
-		if (grammerObject instanceof ProjectionExpr) {
-			results.addAll(getNestedDotIDCandidates((ProjectionExpr) grammerObject));
+		if (grammerObject instanceof SelectionExpr) {
+			results.addAll(getNestedDotIDCandidates((SelectionExpr) grammerObject));
 		}
 
 		return results;
@@ -119,7 +119,7 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		return results;
 	}
 
-	private List<String> getNestedDotIDCandidates(ProjectionExpr id) {
+	private List<String> getNestedDotIDCandidates(SelectionExpr id) {
 
 		NamedElement base = ((NamedElmExpr) id).getElm();
 		NamedElement namedEl = null;

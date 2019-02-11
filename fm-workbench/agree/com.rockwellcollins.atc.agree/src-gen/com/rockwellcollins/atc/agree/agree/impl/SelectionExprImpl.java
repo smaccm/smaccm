@@ -4,7 +4,7 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Expr;
-import com.rockwellcollins.atc.agree.agree.ProjectionExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -19,29 +19,29 @@ import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Projection Expr</b></em>'.
+ * An implementation of the model object '<em><b>Selection Expr</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ProjectionExprImpl#getExpr <em>Expr</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ProjectionExprImpl#getField <em>Field</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.SelectionExprImpl#getTarget <em>Target</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.SelectionExprImpl#getField <em>Field</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
+public class SelectionExprImpl extends ExprImpl implements SelectionExpr
 {
   /**
-   * The cached value of the '{@link #getExpr() <em>Expr</em>}' containment reference.
+   * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getExpr()
+   * @see #getTarget()
    * @generated
    * @ordered
    */
-  protected Expr expr;
+  protected Expr target;
 
   /**
    * The cached value of the '{@link #getField() <em>Field</em>}' reference.
@@ -58,7 +58,7 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  protected ProjectionExprImpl()
+  protected SelectionExprImpl()
   {
     super();
   }
@@ -71,7 +71,7 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
   @Override
   protected EClass eStaticClass()
   {
-    return AgreePackage.Literals.PROJECTION_EXPR;
+    return AgreePackage.Literals.SELECTION_EXPR;
   }
 
   /**
@@ -79,9 +79,9 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public Expr getExpr()
+  public Expr getTarget()
   {
-    return expr;
+    return target;
   }
 
   /**
@@ -89,13 +89,13 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetExpr(Expr newExpr, NotificationChain msgs)
+  public NotificationChain basicSetTarget(Expr newTarget, NotificationChain msgs)
   {
-    Expr oldExpr = expr;
-    expr = newExpr;
+    Expr oldTarget = target;
+    target = newTarget;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.PROJECTION_EXPR__EXPR, oldExpr, newExpr);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.SELECTION_EXPR__TARGET, oldTarget, newTarget);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -106,20 +106,20 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setExpr(Expr newExpr)
+  public void setTarget(Expr newTarget)
   {
-    if (newExpr != expr)
+    if (newTarget != target)
     {
       NotificationChain msgs = null;
-      if (expr != null)
-        msgs = ((InternalEObject)expr).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.PROJECTION_EXPR__EXPR, null, msgs);
-      if (newExpr != null)
-        msgs = ((InternalEObject)newExpr).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.PROJECTION_EXPR__EXPR, null, msgs);
-      msgs = basicSetExpr(newExpr, msgs);
+      if (target != null)
+        msgs = ((InternalEObject)target).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.SELECTION_EXPR__TARGET, null, msgs);
+      if (newTarget != null)
+        msgs = ((InternalEObject)newTarget).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.SELECTION_EXPR__TARGET, null, msgs);
+      msgs = basicSetTarget(newTarget, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.PROJECTION_EXPR__EXPR, newExpr, newExpr));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.SELECTION_EXPR__TARGET, newTarget, newTarget));
   }
 
   /**
@@ -136,7 +136,7 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
       if (field != oldField)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.PROJECTION_EXPR__FIELD, oldField, field));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.SELECTION_EXPR__FIELD, oldField, field));
       }
     }
     return field;
@@ -162,7 +162,7 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
     NamedElement oldField = field;
     field = newField;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.PROJECTION_EXPR__FIELD, oldField, field));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.SELECTION_EXPR__FIELD, oldField, field));
   }
 
   /**
@@ -175,8 +175,8 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
   {
     switch (featureID)
     {
-      case AgreePackage.PROJECTION_EXPR__EXPR:
-        return basicSetExpr(null, msgs);
+      case AgreePackage.SELECTION_EXPR__TARGET:
+        return basicSetTarget(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -191,9 +191,9 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
   {
     switch (featureID)
     {
-      case AgreePackage.PROJECTION_EXPR__EXPR:
-        return getExpr();
-      case AgreePackage.PROJECTION_EXPR__FIELD:
+      case AgreePackage.SELECTION_EXPR__TARGET:
+        return getTarget();
+      case AgreePackage.SELECTION_EXPR__FIELD:
         if (resolve) return getField();
         return basicGetField();
     }
@@ -210,10 +210,10 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
   {
     switch (featureID)
     {
-      case AgreePackage.PROJECTION_EXPR__EXPR:
-        setExpr((Expr)newValue);
+      case AgreePackage.SELECTION_EXPR__TARGET:
+        setTarget((Expr)newValue);
         return;
-      case AgreePackage.PROJECTION_EXPR__FIELD:
+      case AgreePackage.SELECTION_EXPR__FIELD:
         setField((NamedElement)newValue);
         return;
     }
@@ -230,10 +230,10 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
   {
     switch (featureID)
     {
-      case AgreePackage.PROJECTION_EXPR__EXPR:
-        setExpr((Expr)null);
+      case AgreePackage.SELECTION_EXPR__TARGET:
+        setTarget((Expr)null);
         return;
-      case AgreePackage.PROJECTION_EXPR__FIELD:
+      case AgreePackage.SELECTION_EXPR__FIELD:
         setField((NamedElement)null);
         return;
     }
@@ -250,12 +250,12 @@ public class ProjectionExprImpl extends ExprImpl implements ProjectionExpr
   {
     switch (featureID)
     {
-      case AgreePackage.PROJECTION_EXPR__EXPR:
-        return expr != null;
-      case AgreePackage.PROJECTION_EXPR__FIELD:
+      case AgreePackage.SELECTION_EXPR__TARGET:
+        return target != null;
+      case AgreePackage.SELECTION_EXPR__FIELD:
         return field != null;
     }
     return super.eIsSet(featureID);
   }
 
-} //ProjectionExprImpl
+} //SelectionExprImpl

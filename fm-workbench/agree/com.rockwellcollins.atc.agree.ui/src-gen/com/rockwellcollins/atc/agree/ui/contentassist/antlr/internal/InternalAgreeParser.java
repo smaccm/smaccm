@@ -5091,23 +5091,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "ruleTagExpr"
 
 
-    // $ANTLR start "entryRuleProjectionExpr"
-    // InternalAgreeParser.g:1766:1: entryRuleProjectionExpr : ruleProjectionExpr EOF ;
-    public final void entryRuleProjectionExpr() throws RecognitionException {
+    // $ANTLR start "entryRuleSelectionExpr"
+    // InternalAgreeParser.g:1766:1: entryRuleSelectionExpr : ruleSelectionExpr EOF ;
+    public final void entryRuleSelectionExpr() throws RecognitionException {
         try {
-            // InternalAgreeParser.g:1767:1: ( ruleProjectionExpr EOF )
-            // InternalAgreeParser.g:1768:1: ruleProjectionExpr EOF
+            // InternalAgreeParser.g:1767:1: ( ruleSelectionExpr EOF )
+            // InternalAgreeParser.g:1768:1: ruleSelectionExpr EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprRule()); 
+               before(grammarAccess.getSelectionExprRule()); 
             }
             pushFollow(FollowSets000.FOLLOW_1);
-            ruleProjectionExpr();
+            ruleSelectionExpr();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprRule()); 
+               after(grammarAccess.getSelectionExprRule()); 
             }
             match(input,EOF,FollowSets000.FOLLOW_2); if (state.failed) return ;
 
@@ -5122,30 +5122,30 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "entryRuleProjectionExpr"
+    // $ANTLR end "entryRuleSelectionExpr"
 
 
-    // $ANTLR start "ruleProjectionExpr"
-    // InternalAgreeParser.g:1775:1: ruleProjectionExpr : ( ( rule__ProjectionExpr__Group__0 ) ) ;
-    public final void ruleProjectionExpr() throws RecognitionException {
+    // $ANTLR start "ruleSelectionExpr"
+    // InternalAgreeParser.g:1775:1: ruleSelectionExpr : ( ( rule__SelectionExpr__Group__0 ) ) ;
+    public final void ruleSelectionExpr() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:1779:5: ( ( ( rule__ProjectionExpr__Group__0 ) ) )
-            // InternalAgreeParser.g:1780:1: ( ( rule__ProjectionExpr__Group__0 ) )
+            // InternalAgreeParser.g:1779:5: ( ( ( rule__SelectionExpr__Group__0 ) ) )
+            // InternalAgreeParser.g:1780:1: ( ( rule__SelectionExpr__Group__0 ) )
             {
-            // InternalAgreeParser.g:1780:1: ( ( rule__ProjectionExpr__Group__0 ) )
-            // InternalAgreeParser.g:1781:1: ( rule__ProjectionExpr__Group__0 )
+            // InternalAgreeParser.g:1780:1: ( ( rule__SelectionExpr__Group__0 ) )
+            // InternalAgreeParser.g:1781:1: ( rule__SelectionExpr__Group__0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getGroup()); 
+               before(grammarAccess.getSelectionExprAccess().getGroup()); 
             }
-            // InternalAgreeParser.g:1782:1: ( rule__ProjectionExpr__Group__0 )
-            // InternalAgreeParser.g:1782:2: rule__ProjectionExpr__Group__0
+            // InternalAgreeParser.g:1782:1: ( rule__SelectionExpr__Group__0 )
+            // InternalAgreeParser.g:1782:2: rule__SelectionExpr__Group__0
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__Group__0();
+            rule__SelectionExpr__Group__0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -5153,7 +5153,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getGroup()); 
+               after(grammarAccess.getSelectionExprAccess().getGroup()); 
             }
 
             }
@@ -5173,7 +5173,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "ruleProjectionExpr"
+    // $ANTLR end "ruleSelectionExpr"
 
 
     // $ANTLR start "entryRuleTermExpr"
@@ -62845,28 +62845,28 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__TagExpr__Group__0__Impl"
-    // InternalAgreeParser.g:22489:1: rule__TagExpr__Group__0__Impl : ( ruleProjectionExpr ) ;
+    // InternalAgreeParser.g:22489:1: rule__TagExpr__Group__0__Impl : ( ruleSelectionExpr ) ;
     public final void rule__TagExpr__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22493:1: ( ( ruleProjectionExpr ) )
-            // InternalAgreeParser.g:22494:1: ( ruleProjectionExpr )
+            // InternalAgreeParser.g:22493:1: ( ( ruleSelectionExpr ) )
+            // InternalAgreeParser.g:22494:1: ( ruleSelectionExpr )
             {
-            // InternalAgreeParser.g:22494:1: ( ruleProjectionExpr )
-            // InternalAgreeParser.g:22495:1: ruleProjectionExpr
+            // InternalAgreeParser.g:22494:1: ( ruleSelectionExpr )
+            // InternalAgreeParser.g:22495:1: ruleSelectionExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getTagExprAccess().getProjectionExprParserRuleCall_0()); 
+               before(grammarAccess.getTagExprAccess().getSelectionExprParserRuleCall_0()); 
             }
             pushFollow(FollowSets000.FOLLOW_2);
-            ruleProjectionExpr();
+            ruleSelectionExpr();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getTagExprAccess().getProjectionExprParserRuleCall_0()); 
+               after(grammarAccess.getTagExprAccess().getSelectionExprParserRuleCall_0()); 
             }
 
             }
@@ -63226,23 +63226,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__TagExpr__Group_1__2__Impl"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group__0"
-    // InternalAgreeParser.g:22634:1: rule__ProjectionExpr__Group__0 : rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1 ;
-    public final void rule__ProjectionExpr__Group__0() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group__0"
+    // InternalAgreeParser.g:22634:1: rule__SelectionExpr__Group__0 : rule__SelectionExpr__Group__0__Impl rule__SelectionExpr__Group__1 ;
+    public final void rule__SelectionExpr__Group__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22638:1: ( rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1 )
-            // InternalAgreeParser.g:22639:2: rule__ProjectionExpr__Group__0__Impl rule__ProjectionExpr__Group__1
+            // InternalAgreeParser.g:22638:1: ( rule__SelectionExpr__Group__0__Impl rule__SelectionExpr__Group__1 )
+            // InternalAgreeParser.g:22639:2: rule__SelectionExpr__Group__0__Impl rule__SelectionExpr__Group__1
             {
             pushFollow(FollowSets000.FOLLOW_114);
-            rule__ProjectionExpr__Group__0__Impl();
+            rule__SelectionExpr__Group__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__Group__1();
+            rule__SelectionExpr__Group__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -63261,12 +63261,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group__0"
+    // $ANTLR end "rule__SelectionExpr__Group__0"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group__0__Impl"
-    // InternalAgreeParser.g:22646:1: rule__ProjectionExpr__Group__0__Impl : ( ruleTermExpr ) ;
-    public final void rule__ProjectionExpr__Group__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group__0__Impl"
+    // InternalAgreeParser.g:22646:1: rule__SelectionExpr__Group__0__Impl : ( ruleTermExpr ) ;
+    public final void rule__SelectionExpr__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -63278,7 +63278,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:22652:1: ruleTermExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getTermExprParserRuleCall_0()); 
+               before(grammarAccess.getSelectionExprAccess().getTermExprParserRuleCall_0()); 
             }
             pushFollow(FollowSets000.FOLLOW_2);
             ruleTermExpr();
@@ -63286,7 +63286,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getTermExprParserRuleCall_0()); 
+               after(grammarAccess.getSelectionExprAccess().getTermExprParserRuleCall_0()); 
             }
 
             }
@@ -63306,21 +63306,21 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group__0__Impl"
+    // $ANTLR end "rule__SelectionExpr__Group__0__Impl"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group__1"
-    // InternalAgreeParser.g:22663:1: rule__ProjectionExpr__Group__1 : rule__ProjectionExpr__Group__1__Impl ;
-    public final void rule__ProjectionExpr__Group__1() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group__1"
+    // InternalAgreeParser.g:22663:1: rule__SelectionExpr__Group__1 : rule__SelectionExpr__Group__1__Impl ;
+    public final void rule__SelectionExpr__Group__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22667:1: ( rule__ProjectionExpr__Group__1__Impl )
-            // InternalAgreeParser.g:22668:2: rule__ProjectionExpr__Group__1__Impl
+            // InternalAgreeParser.g:22667:1: ( rule__SelectionExpr__Group__1__Impl )
+            // InternalAgreeParser.g:22668:2: rule__SelectionExpr__Group__1__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__Group__1__Impl();
+            rule__SelectionExpr__Group__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -63339,26 +63339,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group__1"
+    // $ANTLR end "rule__SelectionExpr__Group__1"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group__1__Impl"
-    // InternalAgreeParser.g:22674:1: rule__ProjectionExpr__Group__1__Impl : ( ( rule__ProjectionExpr__Group_1__0 )* ) ;
-    public final void rule__ProjectionExpr__Group__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group__1__Impl"
+    // InternalAgreeParser.g:22674:1: rule__SelectionExpr__Group__1__Impl : ( ( rule__SelectionExpr__Group_1__0 )* ) ;
+    public final void rule__SelectionExpr__Group__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22678:1: ( ( ( rule__ProjectionExpr__Group_1__0 )* ) )
-            // InternalAgreeParser.g:22679:1: ( ( rule__ProjectionExpr__Group_1__0 )* )
+            // InternalAgreeParser.g:22678:1: ( ( ( rule__SelectionExpr__Group_1__0 )* ) )
+            // InternalAgreeParser.g:22679:1: ( ( rule__SelectionExpr__Group_1__0 )* )
             {
-            // InternalAgreeParser.g:22679:1: ( ( rule__ProjectionExpr__Group_1__0 )* )
-            // InternalAgreeParser.g:22680:1: ( rule__ProjectionExpr__Group_1__0 )*
+            // InternalAgreeParser.g:22679:1: ( ( rule__SelectionExpr__Group_1__0 )* )
+            // InternalAgreeParser.g:22680:1: ( rule__SelectionExpr__Group_1__0 )*
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getGroup_1()); 
+               before(grammarAccess.getSelectionExprAccess().getGroup_1()); 
             }
-            // InternalAgreeParser.g:22681:1: ( rule__ProjectionExpr__Group_1__0 )*
+            // InternalAgreeParser.g:22681:1: ( rule__SelectionExpr__Group_1__0 )*
             loop106:
             do {
                 int alt106=2;
@@ -63377,10 +63377,10 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
                 switch (alt106) {
             	case 1 :
-            	    // InternalAgreeParser.g:22681:2: rule__ProjectionExpr__Group_1__0
+            	    // InternalAgreeParser.g:22681:2: rule__SelectionExpr__Group_1__0
             	    {
             	    pushFollow(FollowSets000.FOLLOW_116);
-            	    rule__ProjectionExpr__Group_1__0();
+            	    rule__SelectionExpr__Group_1__0();
 
             	    state._fsp--;
             	    if (state.failed) return ;
@@ -63394,7 +63394,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             } while (true);
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getGroup_1()); 
+               after(grammarAccess.getSelectionExprAccess().getGroup_1()); 
             }
 
             }
@@ -63414,21 +63414,21 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group__1__Impl"
+    // $ANTLR end "rule__SelectionExpr__Group__1__Impl"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group_1__0"
-    // InternalAgreeParser.g:22695:1: rule__ProjectionExpr__Group_1__0 : rule__ProjectionExpr__Group_1__0__Impl ;
-    public final void rule__ProjectionExpr__Group_1__0() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group_1__0"
+    // InternalAgreeParser.g:22695:1: rule__SelectionExpr__Group_1__0 : rule__SelectionExpr__Group_1__0__Impl ;
+    public final void rule__SelectionExpr__Group_1__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22699:1: ( rule__ProjectionExpr__Group_1__0__Impl )
-            // InternalAgreeParser.g:22700:2: rule__ProjectionExpr__Group_1__0__Impl
+            // InternalAgreeParser.g:22699:1: ( rule__SelectionExpr__Group_1__0__Impl )
+            // InternalAgreeParser.g:22700:2: rule__SelectionExpr__Group_1__0__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__Group_1__0__Impl();
+            rule__SelectionExpr__Group_1__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -63447,30 +63447,30 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group_1__0"
+    // $ANTLR end "rule__SelectionExpr__Group_1__0"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group_1__0__Impl"
-    // InternalAgreeParser.g:22706:1: rule__ProjectionExpr__Group_1__0__Impl : ( ( rule__ProjectionExpr__Group_1_0__0 ) ) ;
-    public final void rule__ProjectionExpr__Group_1__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group_1__0__Impl"
+    // InternalAgreeParser.g:22706:1: rule__SelectionExpr__Group_1__0__Impl : ( ( rule__SelectionExpr__Group_1_0__0 ) ) ;
+    public final void rule__SelectionExpr__Group_1__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22710:1: ( ( ( rule__ProjectionExpr__Group_1_0__0 ) ) )
-            // InternalAgreeParser.g:22711:1: ( ( rule__ProjectionExpr__Group_1_0__0 ) )
+            // InternalAgreeParser.g:22710:1: ( ( ( rule__SelectionExpr__Group_1_0__0 ) ) )
+            // InternalAgreeParser.g:22711:1: ( ( rule__SelectionExpr__Group_1_0__0 ) )
             {
-            // InternalAgreeParser.g:22711:1: ( ( rule__ProjectionExpr__Group_1_0__0 ) )
-            // InternalAgreeParser.g:22712:1: ( rule__ProjectionExpr__Group_1_0__0 )
+            // InternalAgreeParser.g:22711:1: ( ( rule__SelectionExpr__Group_1_0__0 ) )
+            // InternalAgreeParser.g:22712:1: ( rule__SelectionExpr__Group_1_0__0 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getGroup_1_0()); 
+               before(grammarAccess.getSelectionExprAccess().getGroup_1_0()); 
             }
-            // InternalAgreeParser.g:22713:1: ( rule__ProjectionExpr__Group_1_0__0 )
-            // InternalAgreeParser.g:22713:2: rule__ProjectionExpr__Group_1_0__0
+            // InternalAgreeParser.g:22713:1: ( rule__SelectionExpr__Group_1_0__0 )
+            // InternalAgreeParser.g:22713:2: rule__SelectionExpr__Group_1_0__0
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__Group_1_0__0();
+            rule__SelectionExpr__Group_1_0__0();
 
             state._fsp--;
             if (state.failed) return ;
@@ -63478,7 +63478,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getGroup_1_0()); 
+               after(grammarAccess.getSelectionExprAccess().getGroup_1_0()); 
             }
 
             }
@@ -63498,26 +63498,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group_1__0__Impl"
+    // $ANTLR end "rule__SelectionExpr__Group_1__0__Impl"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group_1_0__0"
-    // InternalAgreeParser.g:22725:1: rule__ProjectionExpr__Group_1_0__0 : rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1 ;
-    public final void rule__ProjectionExpr__Group_1_0__0() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group_1_0__0"
+    // InternalAgreeParser.g:22725:1: rule__SelectionExpr__Group_1_0__0 : rule__SelectionExpr__Group_1_0__0__Impl rule__SelectionExpr__Group_1_0__1 ;
+    public final void rule__SelectionExpr__Group_1_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22729:1: ( rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1 )
-            // InternalAgreeParser.g:22730:2: rule__ProjectionExpr__Group_1_0__0__Impl rule__ProjectionExpr__Group_1_0__1
+            // InternalAgreeParser.g:22729:1: ( rule__SelectionExpr__Group_1_0__0__Impl rule__SelectionExpr__Group_1_0__1 )
+            // InternalAgreeParser.g:22730:2: rule__SelectionExpr__Group_1_0__0__Impl rule__SelectionExpr__Group_1_0__1
             {
             pushFollow(FollowSets000.FOLLOW_114);
-            rule__ProjectionExpr__Group_1_0__0__Impl();
+            rule__SelectionExpr__Group_1_0__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__Group_1_0__1();
+            rule__SelectionExpr__Group_1_0__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -63536,12 +63536,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group_1_0__0"
+    // $ANTLR end "rule__SelectionExpr__Group_1_0__0"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group_1_0__0__Impl"
-    // InternalAgreeParser.g:22737:1: rule__ProjectionExpr__Group_1_0__0__Impl : ( () ) ;
-    public final void rule__ProjectionExpr__Group_1_0__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group_1_0__0__Impl"
+    // InternalAgreeParser.g:22737:1: rule__SelectionExpr__Group_1_0__0__Impl : ( () ) ;
+    public final void rule__SelectionExpr__Group_1_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -63553,7 +63553,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:22743:1: ()
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getProjectionExprExprAction_1_0_0()); 
+               before(grammarAccess.getSelectionExprAccess().getSelectionExprTargetAction_1_0_0()); 
             }
             // InternalAgreeParser.g:22744:1: ()
             // InternalAgreeParser.g:22746:1: 
@@ -63561,7 +63561,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getProjectionExprExprAction_1_0_0()); 
+               after(grammarAccess.getSelectionExprAccess().getSelectionExprTargetAction_1_0_0()); 
             }
 
             }
@@ -63577,26 +63577,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group_1_0__0__Impl"
+    // $ANTLR end "rule__SelectionExpr__Group_1_0__0__Impl"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group_1_0__1"
-    // InternalAgreeParser.g:22756:1: rule__ProjectionExpr__Group_1_0__1 : rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2 ;
-    public final void rule__ProjectionExpr__Group_1_0__1() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group_1_0__1"
+    // InternalAgreeParser.g:22756:1: rule__SelectionExpr__Group_1_0__1 : rule__SelectionExpr__Group_1_0__1__Impl rule__SelectionExpr__Group_1_0__2 ;
+    public final void rule__SelectionExpr__Group_1_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22760:1: ( rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2 )
-            // InternalAgreeParser.g:22761:2: rule__ProjectionExpr__Group_1_0__1__Impl rule__ProjectionExpr__Group_1_0__2
+            // InternalAgreeParser.g:22760:1: ( rule__SelectionExpr__Group_1_0__1__Impl rule__SelectionExpr__Group_1_0__2 )
+            // InternalAgreeParser.g:22761:2: rule__SelectionExpr__Group_1_0__1__Impl rule__SelectionExpr__Group_1_0__2
             {
             pushFollow(FollowSets000.FOLLOW_12);
-            rule__ProjectionExpr__Group_1_0__1__Impl();
+            rule__SelectionExpr__Group_1_0__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__Group_1_0__2();
+            rule__SelectionExpr__Group_1_0__2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -63615,12 +63615,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group_1_0__1"
+    // $ANTLR end "rule__SelectionExpr__Group_1_0__1"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group_1_0__1__Impl"
-    // InternalAgreeParser.g:22768:1: rule__ProjectionExpr__Group_1_0__1__Impl : ( FullStop ) ;
-    public final void rule__ProjectionExpr__Group_1_0__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group_1_0__1__Impl"
+    // InternalAgreeParser.g:22768:1: rule__SelectionExpr__Group_1_0__1__Impl : ( FullStop ) ;
+    public final void rule__SelectionExpr__Group_1_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -63632,11 +63632,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:22774:1: FullStop
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getFullStopKeyword_1_0_1()); 
+               before(grammarAccess.getSelectionExprAccess().getFullStopKeyword_1_0_1()); 
             }
             match(input,FullStop,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getFullStopKeyword_1_0_1()); 
+               after(grammarAccess.getSelectionExprAccess().getFullStopKeyword_1_0_1()); 
             }
 
             }
@@ -63656,21 +63656,21 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group_1_0__1__Impl"
+    // $ANTLR end "rule__SelectionExpr__Group_1_0__1__Impl"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group_1_0__2"
-    // InternalAgreeParser.g:22787:1: rule__ProjectionExpr__Group_1_0__2 : rule__ProjectionExpr__Group_1_0__2__Impl ;
-    public final void rule__ProjectionExpr__Group_1_0__2() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group_1_0__2"
+    // InternalAgreeParser.g:22787:1: rule__SelectionExpr__Group_1_0__2 : rule__SelectionExpr__Group_1_0__2__Impl ;
+    public final void rule__SelectionExpr__Group_1_0__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22791:1: ( rule__ProjectionExpr__Group_1_0__2__Impl )
-            // InternalAgreeParser.g:22792:2: rule__ProjectionExpr__Group_1_0__2__Impl
+            // InternalAgreeParser.g:22791:1: ( rule__SelectionExpr__Group_1_0__2__Impl )
+            // InternalAgreeParser.g:22792:2: rule__SelectionExpr__Group_1_0__2__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__Group_1_0__2__Impl();
+            rule__SelectionExpr__Group_1_0__2__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -63689,30 +63689,30 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group_1_0__2"
+    // $ANTLR end "rule__SelectionExpr__Group_1_0__2"
 
 
-    // $ANTLR start "rule__ProjectionExpr__Group_1_0__2__Impl"
-    // InternalAgreeParser.g:22798:1: rule__ProjectionExpr__Group_1_0__2__Impl : ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) ) ;
-    public final void rule__ProjectionExpr__Group_1_0__2__Impl() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__Group_1_0__2__Impl"
+    // InternalAgreeParser.g:22798:1: rule__SelectionExpr__Group_1_0__2__Impl : ( ( rule__SelectionExpr__FieldAssignment_1_0_2 ) ) ;
+    public final void rule__SelectionExpr__Group_1_0__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:22802:1: ( ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) ) )
-            // InternalAgreeParser.g:22803:1: ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) )
+            // InternalAgreeParser.g:22802:1: ( ( ( rule__SelectionExpr__FieldAssignment_1_0_2 ) ) )
+            // InternalAgreeParser.g:22803:1: ( ( rule__SelectionExpr__FieldAssignment_1_0_2 ) )
             {
-            // InternalAgreeParser.g:22803:1: ( ( rule__ProjectionExpr__FieldAssignment_1_0_2 ) )
-            // InternalAgreeParser.g:22804:1: ( rule__ProjectionExpr__FieldAssignment_1_0_2 )
+            // InternalAgreeParser.g:22803:1: ( ( rule__SelectionExpr__FieldAssignment_1_0_2 ) )
+            // InternalAgreeParser.g:22804:1: ( rule__SelectionExpr__FieldAssignment_1_0_2 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getFieldAssignment_1_0_2()); 
+               before(grammarAccess.getSelectionExprAccess().getFieldAssignment_1_0_2()); 
             }
-            // InternalAgreeParser.g:22805:1: ( rule__ProjectionExpr__FieldAssignment_1_0_2 )
-            // InternalAgreeParser.g:22805:2: rule__ProjectionExpr__FieldAssignment_1_0_2
+            // InternalAgreeParser.g:22805:1: ( rule__SelectionExpr__FieldAssignment_1_0_2 )
+            // InternalAgreeParser.g:22805:2: rule__SelectionExpr__FieldAssignment_1_0_2
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ProjectionExpr__FieldAssignment_1_0_2();
+            rule__SelectionExpr__FieldAssignment_1_0_2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -63720,7 +63720,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getFieldAssignment_1_0_2()); 
+               after(grammarAccess.getSelectionExprAccess().getFieldAssignment_1_0_2()); 
             }
 
             }
@@ -63740,7 +63740,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__Group_1_0__2__Impl"
+    // $ANTLR end "rule__SelectionExpr__Group_1_0__2__Impl"
 
 
     // $ANTLR start "rule__TermExpr__Group_0__0"
@@ -91220,9 +91220,9 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__TagExpr__TagAssignment_1_2"
 
 
-    // $ANTLR start "rule__ProjectionExpr__FieldAssignment_1_0_2"
-    // InternalAgreeParser.g:32964:1: rule__ProjectionExpr__FieldAssignment_1_0_2 : ( ( RULE_ID ) ) ;
-    public final void rule__ProjectionExpr__FieldAssignment_1_0_2() throws RecognitionException {
+    // $ANTLR start "rule__SelectionExpr__FieldAssignment_1_0_2"
+    // InternalAgreeParser.g:32964:1: rule__SelectionExpr__FieldAssignment_1_0_2 : ( ( RULE_ID ) ) ;
+    public final void rule__SelectionExpr__FieldAssignment_1_0_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -91234,23 +91234,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:32970:1: ( RULE_ID )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
+               before(grammarAccess.getSelectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
             }
             // InternalAgreeParser.g:32971:1: ( RULE_ID )
             // InternalAgreeParser.g:32972:1: RULE_ID
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getProjectionExprAccess().getFieldNamedElementIDTerminalRuleCall_1_0_2_0_1()); 
+               before(grammarAccess.getSelectionExprAccess().getFieldNamedElementIDTerminalRuleCall_1_0_2_0_1()); 
             }
             match(input,RULE_ID,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getFieldNamedElementIDTerminalRuleCall_1_0_2_0_1()); 
+               after(grammarAccess.getSelectionExprAccess().getFieldNamedElementIDTerminalRuleCall_1_0_2_0_1()); 
             }
 
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getProjectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
+               after(grammarAccess.getSelectionExprAccess().getFieldNamedElementCrossReference_1_0_2_0()); 
             }
 
             }
@@ -91270,7 +91270,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ProjectionExpr__FieldAssignment_1_0_2"
+    // $ANTLR end "rule__SelectionExpr__FieldAssignment_1_0_2"
 
 
     // $ANTLR start "rule__TermExpr__ElmAssignment_0_0_1"
