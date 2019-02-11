@@ -34,18 +34,18 @@ import jkind.lustre.Type;
 
 public class AgreeTypeUtils {
 
-	private static final String dotChar = "__";
+//	private static final String dotChar = "__";
 
 //
 	// Agree Types to String
-	private static Map<AgreeTypeWrapper, String> agreeTypeToTypeStr;
+//	private static Map<AgreeTypeWrapper, String> agreeTypeToTypeStr;
 
-	private static String typeToString(com.rockwellcollins.atc.agree.agree.Type type) {
-		String typeStr = AgreeTypeSystem.nameOfTypeDef(AgreeTypeSystem.typeDefFromType(type));
-		typeStr = typeStr.replace(".", "__");
-		typeStr = typeStr.replace("::", "__");
-		return typeStr;
-	}
+//	private static String typeToString(com.rockwellcollins.atc.agree.agree.Type type) {
+//		String typeStr = AgreeTypeSystem.nameOfTypeDef(AgreeTypeSystem.typeDefFromType(type));
+//		typeStr = typeStr.replace(".", "__");
+//		typeStr = typeStr.replace("::", "__");
+//		return typeStr;
+//	}
 
 	// old code
 //	private static final Expr initBool = new BoolExpr(false);
@@ -277,7 +277,7 @@ public class AgreeTypeUtils {
 			return NamedType.REAL;
 
 		} else if (agreeType instanceof AgreeTypeSystem.RecordTypeDef) {
-			String name = ((AgreeTypeSystem.RecordTypeDef) agreeType).name.replace("::", "___").replace(".", "__");
+			String name = ((AgreeTypeSystem.RecordTypeDef) agreeType).name.replace("::", "__").replace(".", "__");
 			Map<String, AgreeTypeSystem.TypeDef> agreeFields = ((AgreeTypeSystem.RecordTypeDef) agreeType).fields;
 
 			Map<String, Type> lustreFields = new HashMap<>();
@@ -292,7 +292,7 @@ public class AgreeTypeUtils {
 			return lustreRecType;
 
 		} else if (agreeType instanceof AgreeTypeSystem.EnumTypeDef) {
-			String name = ((AgreeTypeSystem.EnumTypeDef) agreeType).name.replace("::", "___").replace(".", "__");
+			String name = ((AgreeTypeSystem.EnumTypeDef) agreeType).name.replace("::", "__").replace(".", "__");
 			List<String> enumValues = ((AgreeTypeSystem.EnumTypeDef) agreeType).values;
 			EnumType lustreEnumType = new EnumType(name, enumValues);
 			return lustreEnumType;
