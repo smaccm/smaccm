@@ -215,7 +215,8 @@ public class AgreeTypeSystem {
 			List<String> enumValues = new ArrayList<String>();
 
 			for (NamedID nid : ((EnumStatement) ne).getEnums()) {
-				enumValues.add(nid.getQualifiedName());
+				String enumValue = name + "_" + nid.getName();
+				enumValues.add(enumValue);
 			}
 			return new EnumTypeDef(name, enumValues, ne);
 
@@ -323,10 +324,11 @@ public class AgreeTypeSystem {
 				} else if (key.equals("Data_Model::Enumerators")) {
 					if (v instanceof ListValue) {
 						EList<PropertyExpression> peList = ((ListValue) v).getOwnedListElements();
+						String prefix = c.getQualifiedName() + "_";
 						prop_enumValues = new ArrayList<>();
 						for (PropertyExpression pe : peList) {
 							if (pe instanceof StringLiteral) {
-								String enumString = ((StringLiteral) pe).getValue();
+								String enumString = prefix + ((StringLiteral) pe).getValue();
 								prop_enumValues.add(enumString);
 							}
 						}
@@ -375,8 +377,18 @@ public class AgreeTypeSystem {
 				EList<Subcomponent> subcomps = ((ComponentImplementation) c).getAllSubcomponents();
 				for (Subcomponent sub : subcomps) {
 					String fieldName = sub.getName();
-					TypeDef typeDef = typeDefFromClassifier(sub.getClassifier());
-					fields.put(fieldName, typeDef);
+
+					if (sub.getArrayDimensions().size() == 0) {
+						TypeDef typeDef = typeDefFromClassifier(sub.getClassifier());
+
+						fields.put(fieldName, typeDef);
+					} else if (sub.getArrayDimensions().size() == 1) {
+						TypeDef stem = typeDefFromClassifier(sub.getClassifier());
+						ArrayDimension ad = sub.getArrayDimensions().get(0);
+						int size = Math.toIntExact((ad.getSize().getSize()));
+						TypeDef typeDef = new ArrayTypeDef(stem, size, Optional.empty());
+						fields.put(fieldName, typeDef);
+					}
 				}
 
 				ct = ((ComponentImplementation) c).getType();
@@ -389,8 +401,16 @@ public class AgreeTypeSystem {
 				EList<Feature> features = ct.getAllFeatures();
 				for (Feature feature : features) {
 					String fieldName = feature.getName();
-					TypeDef typeDef = typeDefFromClassifier(feature.getClassifier());
-					fields.put(fieldName, typeDef);
+					if (feature.getArrayDimensions().size() == 0) {
+						TypeDef typeDef = typeDefFromClassifier(feature.getClassifier());
+						fields.put(fieldName, typeDef);
+					} else if (feature.getArrayDimensions().size() == 1) {
+						TypeDef stem = typeDefFromClassifier(feature.getClassifier());
+						ArrayDimension ad = feature.getArrayDimensions().get(0);
+						int size = Math.toIntExact((ad.getSize().getSize()));
+						TypeDef typeDef = new ArrayTypeDef(stem, size, Optional.empty());
+						fields.put(fieldName, typeDef);
+					}
 				}
 
 				for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(c,
@@ -790,7 +810,8 @@ public class AgreeTypeSystem {
 			List<String> enumValues = new ArrayList<String>();
 
 			for (NamedID nid : enumDef.getEnums()) {
-				enumValues.add(nid.getQualifiedName());
+				String enumValue = name + "_" + nid.getName();
+				enumValues.add(enumValue);
 			}
 			return new EnumTypeDef(name, enumValues, enumDef);
 

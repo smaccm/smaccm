@@ -293,7 +293,11 @@ public class AgreeTypeUtils {
 
 		} else if (agreeType instanceof AgreeTypeSystem.EnumTypeDef) {
 			String name = ((AgreeTypeSystem.EnumTypeDef) agreeType).name.replace("::", "__").replace(".", "__");
-			List<String> enumValues = ((AgreeTypeSystem.EnumTypeDef) agreeType).values;
+			List<String> enumValues = new ArrayList<String>();
+			for (String raw : ((AgreeTypeSystem.EnumTypeDef) agreeType).values) {
+				String enumValue = raw.replace("::", "__");
+				enumValues.add(enumValue);
+			}
 			EnumType lustreEnumType = new EnumType(name, enumValues);
 			return lustreEnumType;
 

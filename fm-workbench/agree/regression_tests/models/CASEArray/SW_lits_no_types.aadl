@@ -72,7 +72,7 @@ public
 
 	data implementation MissionWindow.Impl
 		subcomponents
-			wps: data Coordinate.Impl[SW_Properties::MISSION_WINDOW_DIMENSION];
+			wps: data Coordinate.Impl[4];
 			crc: data Base_Types::Boolean;
 	end MissionWindow.Impl;
 	
