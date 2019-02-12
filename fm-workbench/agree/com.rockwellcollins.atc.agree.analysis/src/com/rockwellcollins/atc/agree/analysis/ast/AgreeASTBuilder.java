@@ -127,9 +127,9 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
-import com.rockwellcollins.atc.agree.analysis.TypeTable;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
+import com.rockwellcollins.atc.agree.analysis.TypeTable;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
@@ -1622,7 +1622,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		DoubleDotRef recId = recExpr.getRecordType();
-		String recName = recId.getElm().getFullName().replace("::", "__").replace(".", dotChar);
+		String recName = recId.getElm().getQualifiedName().replace("::", "__").replace(".", dotChar);
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1929,7 +1929,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					unspecifiedAadlProperties.put(propInputName, expr);
 					return new IdExpr(propInputName);
 				} else {
-					throw new AgreeException("Could not locate property value '" + prop.getFullName()
+					throw new AgreeException("Could not locate property value '" + prop.getQualifiedName()
 					+ "' in component '" + compName.getName() + "'.  Is it possible "
 					+ "that a 'this' statement is used in a context in which it wasn't supposed to?"
 					+ "  Analysis of unspecified AADL properties as inputs may be enabled in the AGREE preferences.");
@@ -1940,7 +1940,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			propVal = AgreeUtils.getPropExpression((PropertyConstant) propName);
 
 			if (propVal == null) {
-				throw new AgreeException("Could not locate property value '" + propName.getFullName());
+				throw new AgreeException("Could not locate property value '" + propName.getQualifiedName());
 			}
 		}
 
@@ -1950,14 +1950,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				// StringLiteral value = (StringLiteral) propVal;
 				// nodeStr += value.getValue() + ")";
 				throw new AgreeException(
-						"Property value for '" + propName.getFullName() + "' cannot be of string type");
+						"Property value for '" + propName.getQualifiedName() + "' cannot be of string type");
 			} else if (propVal instanceof NamedValue) {
 				// NamedValue namedVal = (NamedValue) propVal;
 				// AbstractNamedValue absVal = namedVal.getNamedValue();
 				// assert (absVal instanceof EnumerationLiteral);
 				// EnumerationLiteral enVal = (EnumerationLiteral) absVal;
 				throw new AgreeException(
-						"Property value for '" + propName.getFullName() + "' cannot be of enumeration type");
+						"Property value for '" + propName.getQualifiedName() + "' cannot be of enumeration type");
 			} else if (propVal instanceof BooleanLiteral) {
 				BooleanLiteral value = (BooleanLiteral) propVal;
 				res = new BoolExpr(value.getValue());
