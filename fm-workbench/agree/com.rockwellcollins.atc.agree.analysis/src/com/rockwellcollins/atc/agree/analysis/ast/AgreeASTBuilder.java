@@ -1652,7 +1652,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		DoubleDotRef recId = recExpr.getRecordType();
-		String recName = recId.getElm().getFullName().replace("::", "___").replace(".", dotChar);
+		String recName = recId.getElm().getFullName().replace("::", "__").replace(".", dotChar);
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1823,14 +1823,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			argResults.add(doSwitch(argExpr));
 		}
 
-		NodeCallExpr nodeCall = new NodeCallExpr(fnName.replace("::", "___"), argResults);
+		NodeCallExpr nodeCall = new NodeCallExpr(fnName.replace("::", "__"), argResults);
 		return nodeCall;
 	}
 
 	@Override
 	public Expr caseFnDef(FnDef fnDef) {
 
-		String nodeName = AgreeTypeUtils.getNodeName(fnDef).replace("::", "___");
+		String nodeName = AgreeTypeUtils.getNodeName(fnDef).replace("::", "__");
 
 		for (Node node : globalNodes) {
 			if (node.id.equals(nodeName)) {
@@ -2117,7 +2117,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 //			=======
 //					while (id.getSub() != null
 //					&& (base instanceof FeatureGroup || base instanceof AadlPackage || base instanceof Subcomponent)) {
-//						jKindVar += base.getName().replace("::", "___") + dotChar;
+//						jKindVar += base.getName().replace("::", "__") + dotChar;
 //						aadlVar += base.getName() + ".";
 //						id = id.getSub();
 //						base = id.getBase();
@@ -2182,10 +2182,10 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 //			} else if (namedEl instanceof NamedID) {
 //				// Enumeration types get lifted to Lustre global types; accordingly
 //				// lift the enumerators to global
-//				jKindVar = namedEl.getName().replace("::", "___");
+//				jKindVar = namedEl.getName().replace("::", "__");
 //				result = new IdExpr(jKindVar);
 //			} else {
-//				jKindVar = jKindVar + namedEl.getName().replace("::", "___");
+//				jKindVar = jKindVar + namedEl.getName().replace("::", "__");
 //				result = new IdExpr(jKindVar);
 //			}
 //
@@ -2193,7 +2193,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 //			while (id.getSub() != null) {
 //				id = id.getSub();
 //				namedEl = id.getBase();
-//				result = new RecordAccessExpr(result, namedEl.getName().replace("::", "___"));
+//				result = new RecordAccessExpr(result, namedEl.getName().replace("::", "__"));
 //				>>>>>>> origin/develop
 		}
 
@@ -2286,8 +2286,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseEnumLitExpr(EnumLitExpr aadlEnum) {
 		NamedElement ne = aadlEnum.getEnumType().getElm();
-		String typeStr = ne.getFullName().replace("::", "___").replace(".", dotChar);
-		return new IdExpr(typeStr.replace("__", "_") + "_" + aadlEnum.getValue());
+		String typeStr = ne.getQualifiedName().replace("::", "__").replace(".", dotChar);
+		return new IdExpr(typeStr + "_" + aadlEnum.getValue());
 	}
 
 	@Override
