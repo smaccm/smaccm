@@ -170,7 +170,7 @@ public class AgreeTypeSystem {
 		public final Optional<NamedElement> elmOp;
 
 		public ArrayTypeDef(TypeDef stemType, int size, Optional<NamedElement> elmOp) {
-			this.name = "__" + nameOfTypeDef(stemType) + "[" + size + "]";
+			this.name = nameOfTypeDef(stemType) + "[" + size + "]";
 			this.size = size;
 			this.stemType = stemType;
 			this.elmOp = elmOp;
@@ -248,11 +248,11 @@ public class AgreeTypeSystem {
 						if (v instanceof RangeValue) {
 							try {
 								RangeValue rangeValue = (RangeValue) v;
-								long min = (long) rangeValue.getMinimumValue().getScaledValue();
-								long max = (long) rangeValue.getMaximumValue().getScaledValue();
+								long min = intFromPropExp(rangeValue.getMinimum()).get();
+								long max = intFromPropExp(rangeValue.getMaximum()).get();
 								return new RangeIntTypeDef(min, max);
 							} catch (Exception e) {
-
+								return Prim.ErrorTypeDef;
 							}
 						}
 					}
@@ -273,12 +273,11 @@ public class AgreeTypeSystem {
 						if (v instanceof RangeValue) {
 							try {
 								RangeValue rangeValue = (RangeValue) v;
-								double min = rangeValue.getMinimumValue().getScaledValue();
-								double max = rangeValue.getMaximumValue().getScaledValue();
-
+								double min = realFromPropExp(rangeValue.getMinimum()).get();
+								double max = realFromPropExp(rangeValue.getMaximum()).get();
 								return new RangeRealTypeDef(min, max);
 							} catch (Exception e) {
-
+								return Prim.ErrorTypeDef;
 							}
 						}
 					}
@@ -348,7 +347,7 @@ public class AgreeTypeSystem {
 					if (v instanceof ListValue) {
 						ListValue l = (ListValue) v;
 						PropertyExpression pe = l.getOwnedListElements().get(0);
-						prop_arraySize = intFromPropExp(pe);
+						prop_arraySize = Math.toIntExact(intFromPropExp(pe).orElse((long) -1).longValue());
 
 					}
 				}
@@ -380,14 +379,15 @@ public class AgreeTypeSystem {
 
 					if (sub.getArrayDimensions().size() == 0) {
 						TypeDef typeDef = typeDefFromClassifier(sub.getClassifier());
-
 						fields.put(fieldName, typeDef);
 					} else if (sub.getArrayDimensions().size() == 1) {
-						TypeDef stem = typeDefFromClassifier(sub.getClassifier());
 						ArrayDimension ad = sub.getArrayDimensions().get(0);
-						int size = Math.toIntExact((ad.getSize().getSize()));
+						int size = Math.toIntExact(getArraySize(ad));
+
+						TypeDef stem = typeDefFromClassifier(sub.getClassifier());
 						TypeDef typeDef = new ArrayTypeDef(stem, size, Optional.empty());
 						fields.put(fieldName, typeDef);
+
 					}
 				}
 
@@ -405,11 +405,12 @@ public class AgreeTypeSystem {
 						TypeDef typeDef = typeDefFromClassifier(feature.getClassifier());
 						fields.put(fieldName, typeDef);
 					} else if (feature.getArrayDimensions().size() == 1) {
-						TypeDef stem = typeDefFromClassifier(feature.getClassifier());
 						ArrayDimension ad = feature.getArrayDimensions().get(0);
-						int size = Math.toIntExact((ad.getSize().getSize()));
+						int size = Math.toIntExact(getArraySize(ad));
+						TypeDef stem = typeDefFromClassifier(feature.getClassifier());
 						TypeDef typeDef = new ArrayTypeDef(stem, size, Optional.empty());
 						fields.put(fieldName, typeDef);
+
 					}
 				}
 
@@ -500,11 +501,26 @@ public class AgreeTypeSystem {
 		return str1.equals(str2);
 	}
 
+	public static Optional<Double> realFromPropExp(PropertyExpression pe) {
+		if (pe instanceof RealLiteral) {
+			return Optional.of(((RealLiteral) pe).getValue());
+
+		} else if (pe instanceof NamedValue) {
+			NamedValue nv = (NamedValue) pe;
+			AbstractNamedValue anv = nv.getNamedValue();
+			if (anv instanceof PropertyConstant) {
+				return realFromPropExp(((PropertyConstant) anv).getConstantValue());
+			}
+		}
+
+		return Optional.empty();
+	}
 
 
-	private static int intFromPropExp(PropertyExpression pe) {
+
+	public static Optional<Long> intFromPropExp(PropertyExpression pe) {
 		if (pe instanceof IntegerLiteral) {
-			return java.lang.Math.toIntExact(((IntegerLiteral) pe).getValue());
+			return Optional.of(((IntegerLiteral) pe).getValue());
 
 		} else if (pe instanceof NamedValue) {
 			NamedValue nv = (NamedValue) pe;
@@ -514,7 +530,7 @@ public class AgreeTypeSystem {
 			}
 		}
 
-		return -1;
+		return Optional.empty();
 	}
 
 	private static TypeDef inferPropExp(PropertyExpression pe) {
@@ -872,7 +888,7 @@ public class AgreeTypeSystem {
 			if (dims.size() == 0) {
 				return clsTypeDef;
 			} else if (dims.size() == 1) {
-				long size = getArrayDimension(dims.get(0));
+				long size = getArraySize(dims.get(0));
 				return new ArrayTypeDef(clsTypeDef, Math.toIntExact(size), Optional.empty());
 			}
 
@@ -884,8 +900,9 @@ public class AgreeTypeSystem {
 			if (dims.size() == 0) {
 				return clsTypeDef;
 			} else if (dims.size() == 1) {
-				long size = getArrayDimension(dims.get(0));
+				long size = getArraySize(dims.get(0));
 				return new ArrayTypeDef(clsTypeDef, Math.toIntExact(size), Optional.empty());
+
 			}
 
 		} else if (ne instanceof PropertyConstant) {
@@ -898,14 +915,14 @@ public class AgreeTypeSystem {
 
 	}
 
-	private static long getArrayDimension(ArrayDimension arrayDimension) {
+	private static long getArraySize(ArrayDimension arrayDimension) {
 		ArraySize arraySize = arrayDimension.getSize();
 		long size = arraySize.getSize();
 		if (size == 0) {
 			ArraySizeProperty arraySizeProperty = arraySize.getSizeProperty();
 			if (arraySizeProperty instanceof PropertyConstant) {
 				PropertyExpression pe = ((PropertyConstant) arraySizeProperty).getConstantValue();
-				size = intFromPropExp(pe);
+				size = intFromPropExp(pe).orElse((long) -1);
 			}
 		}
 		assert size > 0;
@@ -936,5 +953,6 @@ public class AgreeTypeSystem {
 		}
 		return list;
 	}
+
 
 }

@@ -177,7 +177,7 @@ public
 			arr2: data simple_int_array;
 			
 		annex agree {**
-				lemma "array_stuff" : forall iq in arr1, iq <= 0 or iq > 0 ; 
+				lemma "array_stuff" : (forall iq in arr1, iq <= 0 or iq > 0) and true ; 
 --			lemma "array_sorted" : forall iq in indices(arr1), iq = 0 or arr1[iq - 1] <= arr1[iq]; 
 		**};
 		
