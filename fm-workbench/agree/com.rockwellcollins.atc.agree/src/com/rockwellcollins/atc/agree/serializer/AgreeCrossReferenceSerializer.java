@@ -11,7 +11,6 @@ import org.osate.aadl2.Subcomponent;
 import org.osate.aadl2.modelsupport.util.AadlUtil;
 import org.osate.xtext.aadl2.serializer.Aadl2CrossReferenceSerializer;
 
-import com.rockwellcollins.atc.agree.agree.FnDefExpr;
 import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.RecordExpr;
@@ -32,8 +31,10 @@ public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer
 
 			if (base instanceof Subcomponent) {
 				return base.getName();
-			} else if (base instanceof FnDefExpr) {
-				String fnDefName = base.getName();
+
+			} else if (scope.getElements(target).iterator().hasNext()) {
+
+				String defName = base.getName();
 
 				Namespace defNamespace = AadlUtil.getContainingTopLevelNamespace(base);
 				String prefix = "";
@@ -45,9 +46,8 @@ public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer
 					prefix = pkgName + "::";
 				}
 
-				return prefix + fnDefName;
-			} else if (scope.getElements(target).iterator().hasNext()) {
-				return base.getName();
+				return prefix + defName;
+
 			} else {
 				return base.getQualifiedName();
 			}
