@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -86,6 +87,7 @@ import com.rockwellcollins.atc.agree.agree.FnDef;
 import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
 import com.rockwellcollins.atc.agree.agree.FoldRightExpr;
 import com.rockwellcollins.atc.agree.agree.ForallExpr;
+import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IndicesExpr;
@@ -148,12 +150,15 @@ import com.rockwellcollins.atc.agree.analysis.realtime.AgreeSporadicPattern;
 import com.rockwellcollins.atc.agree.analysis.translation.LustreExprFactory;
 
 import jkind.lustre.ArrayAccessExpr;
+import jkind.lustre.ArrayExpr;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
 import jkind.lustre.CastExpr;
+import jkind.lustre.CondactExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
+import jkind.lustre.FunctionCallExpr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
@@ -162,6 +167,7 @@ import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.RecordAccessExpr;
+import jkind.lustre.RecordExpr;
 import jkind.lustre.TupleExpr;
 import jkind.lustre.Type;
 import jkind.lustre.UnaryExpr;
@@ -184,8 +190,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	// Symbol table to gather all the globalTypes
 	private static TypeTable symbolTable;
-	// Connects the NamedID in forall, foreach, exists, to a Lustre array-reference
-	private static Map<NamedID, Expr> arraySubBindingMap;
 
 	// EGM: end-array-backend
 
@@ -227,7 +231,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		// EGM: array-backend
 		symbolTable = new TypeTable();
-		arraySubBindingMap = new HashMap<>();
 
 		AgreeNode topNode = getAgreeNode(compInst, true);
 		List<AgreeNode> agreeNodes = gatherNodes(topNode);
@@ -1602,7 +1605,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new IdExpr(var.id);
 	}
 
-
 	@Override
 	public Expr caseRecordLitExpr(RecordLitExpr recExpr) {
 
@@ -1907,7 +1909,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		NamedElement propName = expr.getProp();
 		PropertyExpression propVal;
 
-
 		if (propName instanceof Property) {
 
 			ComponentRef cr = expr.getComponentRef();
@@ -1976,9 +1977,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private void gatherUnspecifiedAadlProperties(Map<String, GetPropertyExpr> unspecifiedAadlProperties,
-			List<AgreeVar> inputs,
-			List<AgreeStatement> assumptions,
-			List<AgreeStatement> guarantees) {
+			List<AgreeVar> inputs, List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
 
 		for (Entry<String, GetPropertyExpr> entry : unspecifiedAadlProperties.entrySet()) {
 			String propInputName = entry.getKey();
@@ -2045,7 +2044,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				new BinaryExpr(expr, BinaryOp.EQUAL, new UnaryExpr(UnaryOp.PRE, expr)));
 	}
 
-
 	@Override
 	public Expr caseIfThenElseExpr(com.rockwellcollins.atc.agree.agree.IfThenElseExpr expr) {
 		Expr condExpr = doSwitch(expr.getA());
@@ -2076,7 +2074,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	@Override
 	public Expr caseTagExpr(TagExpr e) {
 
-
 		String stemString = null;
 		if (e.getStem() instanceof NamedElmExpr) {
 			stemString = ((NamedElmExpr) e.getStem()).getElm().getName();
@@ -2094,7 +2091,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 //						>>>>>>> origin/develop
 		}
 
-
 		String tag = e.getTag();
 		if (tag != null) {
 
@@ -2106,7 +2102,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				throw new AgreeException("use of uknown tag: '" + tag + "' in expression following " + stemString);
 			}
 		}
-
 
 		throw new AgreeException("Pattern");
 
@@ -2142,43 +2137,30 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			return doSwitch(((ConstStatement) ne).getExpr());
 		}
 
-		if (ne instanceof NamedID) {
-			return doSwitch(ne);
-//			=======
-//					Expr result;
-//			if (namedEl instanceof ConstStatement) {
-//				// evaluate the constant
-//				result = doSwitch(((ConstStatement) namedEl).getExpr());
-//			} else if (namedEl instanceof NamedID) {
-//				// Enumeration types get lifted to Lustre global types; accordingly
-//				// lift the enumerators to global
-//				jKindVar = namedEl.getName().replace("::", "__");
-//				result = new IdExpr(jKindVar);
-//			} else {
-//				jKindVar = jKindVar + namedEl.getName().replace("::", "__");
-//				result = new IdExpr(jKindVar);
-//			}
-//
-//			// this is a record accessrecord
-//			while (id.getSub() != null) {
-//				id = id.getSub();
-//				namedEl = id.getBase();
-//				result = new RecordAccessExpr(result, namedEl.getName().replace("::", "__"));
-//				>>>>>>> origin/develop
-		}
-
 		return new IdExpr(ne.getName());
 	}
 
-// TODO: implement translation for array expressions.
 	@Override
-	public Expr caseArrayLiteralExpr(ArrayLiteralExpr expr) {
-		throw new NotImplementedException("TODO: ArrayLiteral");
+	public Expr caseArrayLiteralExpr(ArrayLiteralExpr agreeExpr) {
+		List<Expr> elems = new ArrayList<>();
+		for (com.rockwellcollins.atc.agree.agree.Expr agreeElem : agreeExpr.getElems()) {
+			Expr elem = doSwitch(agreeElem);
+			elems.add(elem);
+		}
+		return new ArrayExpr(elems);
 	}
+
 
 	@Override
 	public Expr caseArrayUpdateExpr(ArrayUpdateExpr expr) {
-		throw new NotImplementedException("TODO: ArrayUpdate");
+		Expr arrayExpr = doSwitch(expr.getArray());
+		for (int i = 0; i < expr.getIndices().size(); i++) {
+			Expr indexExpr = doSwitch(expr.getIndices().get(i));
+			Expr newExpr = doSwitch(expr.getValueExprs().get(i));
+			arrayExpr = new jkind.lustre.ArrayUpdateExpr(arrayExpr, indexExpr, newExpr);
+
+		}
+		return arrayExpr;
 	}
 
 	@Override
@@ -2186,6 +2168,137 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		Expr index = doSwitch(expr.getIndex());
 		Expr array = doSwitch(expr.getExpr());
 		return new ArrayAccessExpr(array, index);
+	}
+
+	@Override
+	public Expr caseIndicesExpr(IndicesExpr expr) {
+		AgreeTypeSystem.TypeDef arrayTypeDef = AgreeTypeSystem.infer(expr.getArray());
+
+		if (arrayTypeDef instanceof AgreeTypeSystem.ArrayTypeDef) {
+			int size = ((AgreeTypeSystem.ArrayTypeDef) arrayTypeDef).size;
+			List<Expr> elems = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				elems.add(new IntExpr(i));
+			}
+
+			return new ArrayExpr(elems);
+		}
+		throw new RuntimeException("Error caseIndicesExpr");
+	}
+
+	private Expr substitute(Expr context, String name, Expr newExpr) {
+
+		if (context instanceof IdExpr) {
+			if (((IdExpr) context).id.equals(name)) {
+				return newExpr;
+			} else {
+				return context;
+			}
+		} else if (context instanceof ArrayAccessExpr) {
+
+			Expr arrayExpr = substitute(((ArrayAccessExpr) context).array, name, newExpr);
+			Expr indexExpr = substitute(((ArrayAccessExpr) context).index, name, newExpr);
+			return new ArrayAccessExpr(arrayExpr, indexExpr);
+
+		} else if (context instanceof ArrayExpr) {
+			List<Expr> elems = new ArrayList<>();
+			for (Expr raw : ((ArrayExpr) context).elements) {
+				Expr elem = substitute(raw, name, newExpr);
+				elems.add(elem);
+			}
+			return new ArrayExpr(elems);
+
+		} else if (context instanceof jkind.lustre.ArrayUpdateExpr) {
+			Expr arrayExpr = substitute(((jkind.lustre.ArrayUpdateExpr) context).array, name, newExpr);
+			Expr indexExpr = substitute(((jkind.lustre.ArrayUpdateExpr) context).index, name, newExpr);
+			Expr valExpr = substitute(((jkind.lustre.ArrayUpdateExpr) context).value, name, newExpr);
+			return new jkind.lustre.ArrayUpdateExpr(arrayExpr, indexExpr, valExpr);
+
+		} else if (context instanceof BinaryExpr) {
+			Expr left = substitute(((BinaryExpr) context).left, name, newExpr);
+			Expr right = substitute(((BinaryExpr) context).right, name, newExpr);
+			return new BinaryExpr(left, ((BinaryExpr) context).op, right);
+
+		} else if (context instanceof BoolExpr) {
+			return context;
+		} else if (context instanceof CastExpr) {
+			Expr expr = substitute(((CastExpr) context).expr, name, newExpr);
+			return new CastExpr(((CastExpr) context).type, expr);
+		} else if (context instanceof CondactExpr) {
+			Expr clock = substitute(((CondactExpr) context).clock, name, newExpr);
+			Expr call = substitute(((CondactExpr) context).call, name, newExpr);
+			List<Expr> args = new ArrayList<>();
+			for (Expr raw : ((CondactExpr) context).args) {
+				Expr arg = substitute(raw, name, newExpr);
+				args.add(arg);
+			}
+			return new CondactExpr(clock, (NodeCallExpr) call, args);
+
+
+		} else if (context instanceof FunctionCallExpr) {
+			List<Expr> args = new ArrayList<>();
+			for (Expr raw : ((FunctionCallExpr) context).args) {
+				Expr arg = substitute(raw, name, newExpr);
+				args.add(arg);
+			}
+			return new FunctionCallExpr(((FunctionCallExpr) context).function, args);
+
+		} else if (context instanceof IfThenElseExpr) {
+			Expr cond = substitute(((IfThenElseExpr) context).cond, name, newExpr);
+			Expr thenExpr = substitute(((IfThenElseExpr) context).thenExpr, name, newExpr);
+			Expr elseExpr = substitute(((IfThenElseExpr) context).elseExpr, name, newExpr);
+			return new IfThenElseExpr(cond, thenExpr, elseExpr);
+
+		} else if (context instanceof IntExpr) {
+			return context;
+
+		} else if (context instanceof NodeCallExpr) {
+			List<Expr> args = new ArrayList<>();
+			for (Expr raw : ((NodeCallExpr) context).args) {
+				Expr arg = substitute(raw, name, newExpr);
+				args.add(arg);
+			}
+			return new FunctionCallExpr(((NodeCallExpr) context).node, args);
+
+		} else if (context instanceof RealExpr) {
+			return context;
+
+		} else if (context instanceof RecordAccessExpr) {
+			Expr rec = substitute(((RecordAccessExpr) context).record, name, newExpr);
+			return new RecordAccessExpr(rec, ((RecordAccessExpr) context).field);
+
+		} else if (context instanceof RecordExpr) {
+
+			Map<String, Expr> fields = new TreeMap<>();
+			for (Entry<String, Expr> raw : ((RecordExpr) context).fields.entrySet()) {
+				String key = raw.getKey();
+				Expr fieldExpr = substitute(raw.getValue(), name, newExpr);
+				fields.put(key, fieldExpr);
+			}
+
+			return new RecordExpr(((RecordExpr) context).id, fields);
+
+		} else if (context instanceof jkind.lustre.RecordUpdateExpr) {
+
+			Expr rec = substitute(((jkind.lustre.RecordUpdateExpr) context).record, name, newExpr);
+			Expr valueExpr = substitute(((jkind.lustre.RecordUpdateExpr) context).value, name, newExpr);
+			return new jkind.lustre.RecordUpdateExpr(rec, ((jkind.lustre.RecordUpdateExpr) context).field, valueExpr);
+
+		} else if (context instanceof TupleExpr) {
+
+			List<Expr> elems = new ArrayList<>();
+			for (Expr raw : ((TupleExpr) context).elements) {
+				Expr elem = substitute(raw, name, newExpr);
+				elems.add(elem);
+			}
+			return new TupleExpr(elems);
+
+		} else if (context instanceof UnaryExpr) {
+			Expr expr = substitute(((UnaryExpr) context).expr, name, newExpr);
+			return new UnaryExpr(((UnaryExpr) context).op, expr);
+		}
+
+		throw new RuntimeException("Error: substitute - " + context);
 	}
 
 	@Override
@@ -2201,19 +2314,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			throw new AgreeException("ERROR: caseForallExpr - '" + agreeType.getClass() + "' not handled");
 		}
 		NamedID binding = expr.getBinding();
-		boolean isIndices = arrayExpr instanceof IndicesExpr;
 		Expr final_expr = new BoolExpr(true);
 
 		for (int i = 0; i < size; ++i) {
-			Expr arrayAccess = null;
-			if (isIndices) {
-				arrayAccess = new IntExpr(i);
-			} else {
-				arrayAccess = new ArrayAccessExpr(array, i);
-			}
-
-			AgreeASTBuilder.arraySubBindingMap.put(binding, arrayAccess);
-			Expr body = doSwitch(expr.getExpr());
+			Expr arrayAccess = new ArrayAccessExpr(array, i);
+			Expr body = substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess);
 			final_expr = LustreExprFactory.makeANDExpr(final_expr, body);
 		}
 
@@ -2221,19 +2326,32 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseNamedID(NamedID object) {
-		Expr e = arraySubBindingMap.get(object);
-		if (e != null) {
-			return e;
+	public Expr caseExistsExpr(ExistsExpr expr) {
+		com.rockwellcollins.atc.agree.agree.Expr arrayExpr = expr.getArray();
+		Expr array = doSwitch(arrayExpr);
+
+		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(arrayExpr);
+		int size = 0;
+		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+		} else {
+			throw new AgreeException("ERROR: caseExistsExpr - '" + agreeType.getClass() + "' not handled");
+		}
+		NamedID binding = expr.getBinding();
+		Expr final_expr = new BoolExpr(true);
+
+		for (int i = 0; i < size; ++i) {
+			Expr arrayAccess = new ArrayAccessExpr(array, i);
+			Expr body = substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess);
+			final_expr = LustreExprFactory.makeORExpr(final_expr, body);
 		}
 
-		// TODO: check what happens when the NamedID is a literal (code assumes a variable)
-		return new IdExpr(object.getName());
+		return final_expr;
 	}
 
 	@Override
-	public Expr caseExistsExpr(ExistsExpr expr) {
-		throw new NotImplementedException("TODO: Exists");
+	public Expr caseForeachExpr(ForeachExpr expr) {
+		throw new NotImplementedException("TODO: Foreach");
 	}
 
 	@Override
@@ -2246,12 +2364,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		throw new NotImplementedException("TODO: FoldRight");
 	}
 
-	@Override
-	public Expr caseIndicesExpr(IndicesExpr expr) {
-		// Lift out the array in the call to indices()
-		return doSwitch(expr.getArray());
-	}
-//////////
 
 	@Override
 	public Expr caseEnumLitExpr(EnumLitExpr aadlEnum) {

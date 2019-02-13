@@ -25,4 +25,22 @@ public class LustreExprFactory {
 		return new BinaryExpr(left, BinaryOp.AND, right);
 	}
 
+	public static Expr makeORExpr(Expr left, Expr right) {
+		if (left instanceof BoolExpr) {
+			if (((BoolExpr) left).value == false) {
+				return right;
+			}
+			return new BoolExpr(true);
+		}
+
+		if (right instanceof BoolExpr) {
+			if (((BoolExpr) right).value == false) {
+				return left;
+			}
+			return new BoolExpr(true);
+		}
+
+		return new BinaryExpr(left, BinaryOp.OR, right);
+	}
+
 }
