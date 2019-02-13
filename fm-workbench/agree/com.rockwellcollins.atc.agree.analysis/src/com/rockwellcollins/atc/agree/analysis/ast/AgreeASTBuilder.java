@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.osate.aadl2.Aadl2Package;
@@ -2351,17 +2350,70 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseForeachExpr(ForeachExpr expr) {
-		throw new NotImplementedException("TODO: Foreach");
+//		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(expr.getArray());
+//		int size = 0;
+//		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+//			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+//		} else {
+//			throw new AgreeException("ERROR: caseForeachExpr");
+//		}
+//		Expr array = doSwitch(expr.getArray());
+//		NamedID binding = expr.getBinding();
+//		List<Expr> elems = new ArrayList<>();
+//		for (int i = 0; i < size; ++i) {
+//			Expr arrayAccess = new ArrayAccessExpr(array, i);
+//			Expr body = substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess);
+//			elems.add(body);
+//		}
+//		return new ArrayExpr(elems);
+		return null;
+
 	}
 
 	@Override
 	public Expr caseFoldLeftExpr(FoldLeftExpr expr) {
-		throw new NotImplementedException("TODO: FoldLeft");
+//		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(expr.getArray());
+//
+//		int size = 0;
+//		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+//			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+//		} else {
+//			throw new AgreeException("ERROR: caseFoldLeftExpr");
+//		}
+//		Expr array = doSwitch(expr.getArray());
+//		Expr accExpr = doSwitch(expr.getInitial());
+//		NamedID binding = expr.getBinding();
+//		NamedID accBinding = expr.getAccumulator();
+//		for (int i = 0; i < size; i++) {
+//			Expr arrayAccess = new ArrayAccessExpr(array, i);
+//			accExpr = substitute(substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess),
+//					accBinding.getName(), accExpr);
+//		}
+//		return accExpr;
+		return null;
 	}
 
 	@Override
 	public Expr caseFoldRightExpr(FoldRightExpr expr) {
-		throw new NotImplementedException("TODO: FoldRight");
+//		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(expr.getArray());
+//
+//		int size = 0;
+//		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+//			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+//		} else {
+//			throw new AgreeException("ERROR: caseFoldRightExpr");
+//		}
+//		Expr array = doSwitch(expr.getArray());
+//		Expr accExpr = doSwitch(expr.getInitial());
+//		NamedID binding = expr.getBinding();
+//		NamedID accBinding = expr.getAccumulator();
+//		for (int i = size - 1; i >= 0; i--) {
+//			Expr arrayAccess = new ArrayAccessExpr(array, i);
+//			accExpr = substitute(substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess),
+//					accBinding.getName(), accExpr);
+//		}
+//		return accExpr;
+		return null;
 	}
 
 
@@ -2381,9 +2433,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseEventExpr(EventExpr expr) {
-
-		IdExpr nestIdExpr = (IdExpr) doSwitch(expr.getId());
-		String eventStr = nestIdExpr.id + eventSuffix;
+		String eventStr = expr.getId()+ eventSuffix;
 		return new IdExpr(eventStr);
 	}
 
