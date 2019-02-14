@@ -36,14 +36,18 @@ public class AgreeCrossReferenceSerializer extends Aadl2CrossReferenceSerializer
 
 				String defName = base.getName();
 
-				Namespace defNamespace = AadlUtil.getContainingTopLevelNamespace(base);
 				String prefix = "";
-				String pkgName = defNamespace.getElementRoot().getName();
+				if (dotID.getSub() == null) {
 
-				PropertySet propSet = AadlUtil.findImportedPropertySet(pkgName, namespace);
-				AadlPackage aadlPackage = AadlUtil.findImportedPackage(pkgName, namespace);
-				if (propSet != null || aadlPackage != null) {
-					prefix = pkgName + "::";
+					Namespace defNamespace = AadlUtil.getContainingTopLevelNamespace(base);
+					String pkgName = defNamespace.getElementRoot().getName();
+
+					PropertySet propSet = AadlUtil.findImportedPropertySet(pkgName, namespace);
+					AadlPackage aadlPackage = AadlUtil.findImportedPackage(pkgName, namespace);
+
+					if (propSet != null || aadlPackage != null) {
+						prefix = pkgName + "::";
+					}
 				}
 
 				return prefix + defName;
