@@ -13,6 +13,7 @@ import jkind.lustre.BoolExpr;
 import jkind.lustre.CastExpr;
 import jkind.lustre.CondactExpr;
 import jkind.lustre.Expr;
+import jkind.lustre.FunctionCallExpr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
@@ -65,16 +66,15 @@ public class AgreeCycleVisitor implements jkind.lustre.visitors.ExprVisitor<Set<
 		return new HashSet<>();
 	}
 
-	// TODO: temporarily commented this out till mivc jkind has been synced with the master jkind
-//	@Override
-//	public Set<String> visit(FunctionCallExpr e) {
-//		// TODO this may generate false positives
-//		HashSet<String> argSet = new HashSet<>();
-//		for (Expr expr : e.args) {
-//			argSet.addAll(expr.accept(this));
-//		}
-//		return argSet;
-//	}
+	@Override
+	public Set<String> visit(FunctionCallExpr e) {
+		// TODO this may generate false positives
+		HashSet<String> argSet = new HashSet<>();
+		for (Expr expr : e.args) {
+			argSet.addAll(expr.accept(this));
+		}
+		return argSet;
+	}
 
 	@Override
 	public Set<String> visit(NodeCallExpr e) {

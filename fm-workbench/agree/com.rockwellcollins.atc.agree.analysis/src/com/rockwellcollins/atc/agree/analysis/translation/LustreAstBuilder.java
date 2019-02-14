@@ -194,6 +194,7 @@ public class LustreAstBuilder {
 			if (flatNode.getFaultTreeFlag() == false) {
 				ivcs.add(assumId.id);
 			}
+			// temporarily comment out the code to add assumpmtion to top level
 //			// If the fault analysis is running or we are at the top level system instance
 //			// (the "real" top node), then add assumptions to IVC list.
 //			if ((flatNode.getFaultTreeFlag() == false) || (flatNode.compInst instanceof SystemInstanceImpl)) {
