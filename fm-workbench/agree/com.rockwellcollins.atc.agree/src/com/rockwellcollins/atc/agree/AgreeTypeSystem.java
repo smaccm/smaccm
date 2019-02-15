@@ -230,10 +230,19 @@ public class AgreeTypeSystem {
 
 	public static TypeDef typeDefFromClassifier(Classifier c) {
 
-		if (c.getExtended() != null) {
+
+
+		if (c instanceof AadlBoolean || c.getName().contains("Boolean")) {
+			return Prim.BoolTypeDef;
+		} else if (c instanceof AadlInteger || c.getName().contains("Integer") || c.getName().contains("Natural")
+				|| c.getName().contains("Unsigned")) {
+			return Prim.IntTypeDef;
+		} else if (c instanceof AadlReal || c.getName().contains("Float")) {
+			return Prim.RealTypeDef;
+		} else if (c instanceof DataType) {
 			Classifier ext = c.getExtended();
-			if (ext instanceof AadlInteger || ext.getName().contains("Integer") || ext.getName().contains("Natural")
-					|| ext.getName().contains("Unsigned")) {
+			if (ext != null && (ext instanceof AadlInteger || ext.getName().contains("Integer")
+					|| ext.getName().contains("Natural") || ext.getName().contains("Unsigned"))) {
 
 
 				List<PropertyAssociation> pas = c.getAllPropertyAssociations();
@@ -259,7 +268,7 @@ public class AgreeTypeSystem {
 				}
 				return Prim.IntTypeDef;
 
-			} else if (ext instanceof AadlReal || ext.getName().contains("Float")) {
+			} else if (ext != null && (ext instanceof AadlReal || ext.getName().contains("Float"))) {
 
 				List<PropertyAssociation> pas = c.getAllPropertyAssociations();
 				for (PropertyAssociation choice : pas) {
@@ -284,14 +293,7 @@ public class AgreeTypeSystem {
 				}
 				return Prim.RealTypeDef;
 			}
-		} else if (c instanceof AadlBoolean || c.getName().contains("Boolean")) {
-			return Prim.BoolTypeDef;
-		} else if (c instanceof AadlInteger || c.getName().contains("Integer") || c.getName().contains("Natural")
-				|| c.getName().contains("Unsigned")) {
-			return Prim.IntTypeDef;
-		} else if (c instanceof AadlReal || c.getName().contains("Float")) {
-			return Prim.RealTypeDef;
-		} else if (c instanceof DataType) {
+
 
 			List<PropertyAssociation> pas = c.getAllPropertyAssociations();
 
@@ -371,70 +373,81 @@ public class AgreeTypeSystem {
 
 			Map<String, TypeDef> fields = new HashMap<>();
 
-			ComponentType ct = null;
-			if (c instanceof ComponentImplementation) {
-				EList<Subcomponent> subcomps = ((ComponentImplementation) c).getAllSubcomponents();
-				for (Subcomponent sub : subcomps) {
-					String fieldName = sub.getName();
+			Classifier currClsfr = c;
+			while (currClsfr != null) {
+				ComponentType ct = null;
+				if (currClsfr instanceof ComponentImplementation) {
+					EList<Subcomponent> subcomps = ((ComponentImplementation) currClsfr).getAllSubcomponents();
+					for (Subcomponent sub : subcomps) {
+						String fieldName = sub.getName();
+						if (sub.getClassifier() != null) {
 
-					if (sub.getArrayDimensions().size() == 0) {
-						TypeDef typeDef = typeDefFromClassifier(sub.getClassifier());
-						fields.put(fieldName, typeDef);
-					} else if (sub.getArrayDimensions().size() == 1) {
-						ArrayDimension ad = sub.getArrayDimensions().get(0);
-						int size = Math.toIntExact(getArraySize(ad));
+							if (sub.getArrayDimensions().size() == 0) {
+								TypeDef typeDef = typeDefFromClassifier(sub.getClassifier());
+								fields.putIfAbsent(fieldName, typeDef);
+							} else if (sub.getArrayDimensions().size() == 1) {
+								ArrayDimension ad = sub.getArrayDimensions().get(0);
+								int size = Math.toIntExact(getArraySize(ad));
 
-						TypeDef stem = typeDefFromClassifier(sub.getClassifier());
-						TypeDef typeDef = new ArrayTypeDef(stem, size, Optional.empty());
-						fields.put(fieldName, typeDef);
+								TypeDef stem = typeDefFromClassifier(sub.getClassifier());
+								TypeDef typeDef = new ArrayTypeDef(stem, size, Optional.empty());
+								fields.putIfAbsent(fieldName, typeDef);
 
-					}
-				}
-
-				ct = ((ComponentImplementation) c).getType();
-			} else if (c instanceof ComponentType) {
-				ct = (ComponentType) c;
-			}
-
-			if (ct != null) {
-
-				EList<Feature> features = ct.getAllFeatures();
-				for (Feature feature : features) {
-					String fieldName = feature.getName();
-					if (feature.getArrayDimensions().size() == 0) {
-						TypeDef typeDef = typeDefFromClassifier(feature.getClassifier());
-						fields.put(fieldName, typeDef);
-					} else if (feature.getArrayDimensions().size() == 1) {
-						ArrayDimension ad = feature.getArrayDimensions().get(0);
-						int size = Math.toIntExact(getArraySize(ad));
-						TypeDef stem = typeDefFromClassifier(feature.getClassifier());
-						TypeDef typeDef = new ArrayTypeDef(stem, size, Optional.empty());
-						fields.put(fieldName, typeDef);
-
-					}
-				}
-
-				for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(c,
-						AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
-					AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
-
-					for (SpecStatement spec : contract.getSpecs()) {
-
-						List<Arg> args = new ArrayList<>();
-						if (spec instanceof EqStatement) {
-							args = ((EqStatement) spec).getLhs();
-						} else if (spec instanceof InputStatement) {
-							args = ((InputStatement) spec).getLhs();
-						}
-
-						for (Arg arg : args) {
-							String fieldName = arg.getName();
-							TypeDef typeDef = typeDefFromNE(arg);
-							fields.put(fieldName, typeDef);
+							}
 						}
 					}
 
+					ct = ((ComponentImplementation) currClsfr).getType();
+				} else if (c instanceof ComponentType) {
+					ct = (ComponentType) currClsfr;
 				}
+
+				if (ct != null) {
+
+					EList<Feature> features = ct.getAllFeatures();
+					for (Feature feature : features) {
+						String fieldName = feature.getName();
+
+						if (feature.getClassifier() != null) {
+							if (feature.getArrayDimensions().size() == 0) {
+								TypeDef typeDef = typeDefFromClassifier(feature.getClassifier());
+								fields.putIfAbsent(fieldName, typeDef);
+							} else if (feature.getArrayDimensions().size() == 1) {
+								ArrayDimension ad = feature.getArrayDimensions().get(0);
+								int size = Math.toIntExact(getArraySize(ad));
+								TypeDef stem = typeDefFromClassifier(feature.getClassifier());
+								TypeDef typeDef = new ArrayTypeDef(stem, size, Optional.empty());
+
+								fields.putIfAbsent(fieldName, typeDef);
+
+							}
+						}
+					}
+
+					for (AnnexSubclause annex : AnnexUtil.getAllAnnexSubclauses(currClsfr,
+							AgreePackage.eINSTANCE.getAgreeContractSubclause())) {
+						AgreeContract contract = (AgreeContract) ((AgreeContractSubclause) annex).getContract();
+
+						for (SpecStatement spec : contract.getSpecs()) {
+
+							List<Arg> args = new ArrayList<>();
+							if (spec instanceof EqStatement) {
+								args = ((EqStatement) spec).getLhs();
+							} else if (spec instanceof InputStatement) {
+								args = ((InputStatement) spec).getLhs();
+							}
+
+							for (Arg arg : args) {
+								String fieldName = arg.getName();
+								TypeDef typeDef = typeDefFromNE(arg);
+								fields.putIfAbsent(fieldName, typeDef);
+							}
+						}
+
+					}
+				}
+
+				currClsfr = currClsfr.getExtended();
 			}
 
 			String name = c.getQualifiedName();

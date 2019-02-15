@@ -50,6 +50,7 @@ import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
+import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.ExistsExpr;
 import com.rockwellcollins.atc.agree.agree.FnDef;
 import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
@@ -71,6 +72,9 @@ import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
 import com.rockwellcollins.atc.agree.agree.ThisRef;
+import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
+import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
+import com.rockwellcollins.atc.agree.agree.TimeRiseExpr;
 
 /**
  * This class contains custom scoping description.
@@ -148,12 +152,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		}
 
 		return components;
-//		=======
-//				IScope scope_RecordExpr_args(RecordExpr ctx, EReference ref) {
-//			DoubleDotRef record = ctx.getRecord();
-//			NamedElement recDef = record.getElm();
-//			return RecordExprScoper.getRecordComponents(recDef, IScope.NULLSCOPE);
-//			>>>>>>> origin/develop
+
 	}
 
 
@@ -248,6 +247,39 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 	// Expressions
+
+	private List<NamedElement> getAadlComponentElements(EObject ctx) {
+		List<NamedElement> components = new ArrayList<>();
+		if (ctx instanceof ComponentType) {
+			components.addAll(((ComponentType) ctx).getAllFeatures());
+
+		} else if (ctx instanceof ComponentImplementation) {
+			components.addAll(((ComponentImplementation) ctx).getAllSubcomponents());
+			components.addAll(((ComponentImplementation) ctx).getAllConnections());
+			components.addAll(getAadlComponentElements(((ComponentImplementation) ctx).getType()));
+		}
+		return components;
+	}
+
+	IScope scope_NamedElement(EventExpr ctx, EReference ref) {
+		EObject container = ctx.getContainingClassifier();
+		return Scopes.scopeFor(getAadlComponentElements(container));
+	}
+
+	IScope scope_NamedElement(TimeOfExpr ctx, EReference ref) {
+		EObject container = ctx.getContainingClassifier();
+		return Scopes.scopeFor(getAadlComponentElements(container));
+	}
+
+	IScope scope_NamedElement(TimeRiseExpr ctx, EReference ref) {
+		EObject container = ctx.getContainingClassifier();
+		return Scopes.scopeFor(getAadlComponentElements(container));
+	}
+
+	IScope scope_NamedElement(TimeFallExpr ctx, EReference ref) {
+		EObject container = ctx.getContainingClassifier();
+		return Scopes.scopeFor(getAadlComponentElements(container));
+	}
 
 	IScope scope_NamedElement(ForallExpr ctx, EReference ref) {
 		IScope prevScope = prevScope(ctx, ref);
@@ -476,20 +508,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return prevScope;
 	}
 
-	private List<NamedElement> getAadlElements(EObject ctx) {
-		List<NamedElement> components = new ArrayList<>();
-		if (ctx instanceof ComponentType) {
-			components.addAll(getAadlElements(ctx));
-			components.addAll(((ComponentType) ctx).getAllFeatures());
 
-		} else if (ctx instanceof ComponentImplementation) {
-			components.addAll(((ComponentImplementation) ctx).getAllSubcomponents());
-			components.addAll(((ComponentImplementation) ctx).getAllConnections());
-			components.addAll(getAadlElements(ctx));
-			components.addAll(getAadlElements(((ComponentImplementation) ctx).getType()));
-		}
-		return components;
-	}
 
 	private List<NamedElement> getFieldsOfNE(NamedElement leaf) {
 

@@ -501,13 +501,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			return;
 		}
 
-		NamedElement namedEl = null;
-		if (event.getId() instanceof NamedElmExpr) {
-			namedEl = ((NamedElmExpr) event.getId()).getElm();
-		} else if (event.getId() instanceof SelectionExpr) {
-			namedEl = ((SelectionExpr) event.getId()).getField();
-
-		}
+		NamedElement namedEl = event.getId();
 		if (!(namedEl instanceof EventPort || namedEl instanceof EventDataPort)) {
 			error(event, "Argument of event expression must be an event port or event data port");
 		}
