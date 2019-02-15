@@ -86,6 +86,7 @@ public class LibraryFnDefImpl extends NamedElementImpl implements LibraryFnDef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Arg> getArgs()
   {
     if (args == null)
@@ -100,6 +101,7 @@ public class LibraryFnDefImpl extends NamedElementImpl implements LibraryFnDef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Type getType()
   {
     return type;
@@ -127,6 +129,7 @@ public class LibraryFnDefImpl extends NamedElementImpl implements LibraryFnDef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setType(Type newType)
   {
     if (newType != type)

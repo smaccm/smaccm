@@ -76,6 +76,7 @@ public class WheneverImpliesStatementImpl extends WheneverStatementImpl implemen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getLhs()
   {
     return lhs;
@@ -103,6 +104,7 @@ public class WheneverImpliesStatementImpl extends WheneverStatementImpl implemen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setLhs(Expr newLhs)
   {
     if (newLhs != lhs)
@@ -124,6 +126,7 @@ public class WheneverImpliesStatementImpl extends WheneverStatementImpl implemen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getRhs()
   {
     return rhs;
@@ -151,6 +154,7 @@ public class WheneverImpliesStatementImpl extends WheneverStatementImpl implemen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRhs(Expr newRhs)
   {
     if (newRhs != rhs)

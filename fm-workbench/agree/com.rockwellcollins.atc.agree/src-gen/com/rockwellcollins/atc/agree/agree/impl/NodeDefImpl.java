@@ -97,6 +97,7 @@ public class NodeDefImpl extends NamedElementImpl implements NodeDef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Arg> getArgs()
   {
     if (args == null)
@@ -111,6 +112,7 @@ public class NodeDefImpl extends NamedElementImpl implements NodeDef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Arg> getRets()
   {
     if (rets == null)
@@ -125,6 +127,7 @@ public class NodeDefImpl extends NamedElementImpl implements NodeDef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NodeBodyExpr getNodeBody()
   {
     return nodeBody;
@@ -152,6 +155,7 @@ public class NodeDefImpl extends NamedElementImpl implements NodeDef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNodeBody(NodeBodyExpr newNodeBody)
   {
     if (newNodeBody != nodeBody)

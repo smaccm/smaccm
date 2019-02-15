@@ -66,6 +66,7 @@ public class OrderStatementImpl extends SpecStatementImpl implements OrderStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<NamedElement> getComps()
   {
     if (comps == null)

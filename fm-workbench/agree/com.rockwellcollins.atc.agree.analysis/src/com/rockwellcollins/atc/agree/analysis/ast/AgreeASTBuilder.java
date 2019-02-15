@@ -2433,7 +2433,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseEventExpr(EventExpr expr) {
-		String eventStr = expr.getId()+ eventSuffix;
+		String eventStr = expr.getId().getName() + eventSuffix;
 		return new IdExpr(eventStr);
 	}
 

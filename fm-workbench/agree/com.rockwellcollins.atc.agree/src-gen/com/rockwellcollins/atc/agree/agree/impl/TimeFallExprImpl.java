@@ -66,6 +66,7 @@ public class TimeFallExprImpl extends ExprImpl implements TimeFallExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NamedElement getId()
   {
     if (id != null && ((EObject)id).eIsProxy())
@@ -96,6 +97,7 @@ public class TimeFallExprImpl extends ExprImpl implements TimeFallExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setId(NamedElement newId)
   {
     NamedElement oldId = id;

@@ -76,6 +76,7 @@ public class ArraySubExprImpl extends ExprImpl implements ArraySubExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExpr()
   {
     return expr;
@@ -103,6 +104,7 @@ public class ArraySubExprImpl extends ExprImpl implements ArraySubExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(Expr newExpr)
   {
     if (newExpr != expr)
@@ -124,6 +126,7 @@ public class ArraySubExprImpl extends ExprImpl implements ArraySubExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getIndex()
   {
     return index;
@@ -151,6 +154,7 @@ public class ArraySubExprImpl extends ExprImpl implements ArraySubExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setIndex(Expr newIndex)
   {
     if (newIndex != index)

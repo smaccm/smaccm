@@ -109,6 +109,7 @@ public class LinearizationDefImpl extends NamedElementImpl implements Linearizat
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Arg> getArgs()
   {
     if (args == null)
@@ -123,6 +124,7 @@ public class LinearizationDefImpl extends NamedElementImpl implements Linearizat
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<LinearizationInterval> getIntervals()
   {
     if (intervals == null)
@@ -137,6 +139,7 @@ public class LinearizationDefImpl extends NamedElementImpl implements Linearizat
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getPrecision()
   {
     return precision;
@@ -164,6 +167,7 @@ public class LinearizationDefImpl extends NamedElementImpl implements Linearizat
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPrecision(Expr newPrecision)
   {
     if (newPrecision != precision)
@@ -185,6 +189,7 @@ public class LinearizationDefImpl extends NamedElementImpl implements Linearizat
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExprBody()
   {
     return exprBody;
@@ -212,6 +217,7 @@ public class LinearizationDefImpl extends NamedElementImpl implements Linearizat
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExprBody(Expr newExprBody)
   {
     if (newExprBody != exprBody)

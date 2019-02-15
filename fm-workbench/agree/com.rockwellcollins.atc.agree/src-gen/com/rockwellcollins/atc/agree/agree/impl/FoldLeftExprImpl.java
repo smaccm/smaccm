@@ -110,6 +110,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NamedID getBinding()
   {
     return binding;
@@ -137,6 +138,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setBinding(NamedID newBinding)
   {
     if (newBinding != binding)
@@ -158,6 +160,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getArray()
   {
     return array;
@@ -185,6 +188,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setArray(Expr newArray)
   {
     if (newArray != array)
@@ -206,6 +210,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NamedID getAccumulator()
   {
     return accumulator;
@@ -233,6 +238,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setAccumulator(NamedID newAccumulator)
   {
     if (newAccumulator != accumulator)
@@ -254,6 +260,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getInitial()
   {
     return initial;
@@ -281,6 +288,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setInitial(Expr newInitial)
   {
     if (newInitial != initial)
@@ -302,6 +310,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExpr()
   {
     return expr;
@@ -329,6 +338,7 @@ public class FoldLeftExprImpl extends ExprImpl implements FoldLeftExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(Expr newExpr)
   {
     if (newExpr != expr)

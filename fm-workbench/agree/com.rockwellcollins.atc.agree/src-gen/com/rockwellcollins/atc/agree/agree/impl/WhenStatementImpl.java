@@ -97,6 +97,7 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getCondition()
   {
     return condition;
@@ -124,6 +125,7 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCondition(Expr newCondition)
   {
     if (newCondition != condition)
@@ -145,6 +147,7 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getEvent()
   {
     return event;
@@ -172,6 +175,7 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setEvent(Expr newEvent)
   {
     if (newEvent != event)
@@ -193,6 +197,7 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getExcl()
   {
     return excl;
@@ -203,6 +208,7 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExcl(String newExcl)
   {
     String oldExcl = excl;
@@ -325,7 +331,7 @@ public class WhenStatementImpl extends PatternStatementImpl implements WhenState
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (excl: ");
     result.append(excl);
     result.append(')');

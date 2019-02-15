@@ -65,6 +65,7 @@ public class NodeEqImpl extends NodeStmtImpl implements NodeEq
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Arg> getLhs()
   {
     if (lhs == null)

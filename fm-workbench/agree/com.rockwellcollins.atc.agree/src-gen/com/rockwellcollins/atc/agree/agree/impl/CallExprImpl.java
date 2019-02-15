@@ -84,6 +84,7 @@ public class CallExprImpl extends ExprImpl implements CallExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public DoubleDotRef getRef()
   {
     return ref;
@@ -111,6 +112,7 @@ public class CallExprImpl extends ExprImpl implements CallExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRef(DoubleDotRef newRef)
   {
     if (newRef != ref)
@@ -132,6 +134,7 @@ public class CallExprImpl extends ExprImpl implements CallExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Expr> getArgs()
   {
     if (args == null)

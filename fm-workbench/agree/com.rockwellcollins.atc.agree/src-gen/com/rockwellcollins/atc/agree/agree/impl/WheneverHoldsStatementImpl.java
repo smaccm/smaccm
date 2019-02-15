@@ -65,6 +65,7 @@ public class WheneverHoldsStatementImpl extends WheneverStatementImpl implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getEffect()
   {
     return effect;
@@ -92,6 +93,7 @@ public class WheneverHoldsStatementImpl extends WheneverStatementImpl implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setEffect(Expr newEffect)
   {
     if (newEffect != effect)

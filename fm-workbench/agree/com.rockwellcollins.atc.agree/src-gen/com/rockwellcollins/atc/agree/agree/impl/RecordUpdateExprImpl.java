@@ -90,6 +90,7 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getRecord()
   {
     return record;
@@ -117,6 +118,7 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRecord(Expr newRecord)
   {
     if (newRecord != record)
@@ -138,6 +140,7 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NamedElement getKey()
   {
     if (key != null && ((EObject)key).eIsProxy())
@@ -168,6 +171,7 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setKey(NamedElement newKey)
   {
     NamedElement oldKey = key;
@@ -181,6 +185,7 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExpr()
   {
     return expr;
@@ -208,6 +213,7 @@ public class RecordUpdateExprImpl extends ExprImpl implements RecordUpdateExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(Expr newExpr)
   {
     if (newExpr != expr)

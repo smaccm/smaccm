@@ -69,6 +69,7 @@ public class AgreeContractImpl extends ContractImpl implements AgreeContract
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<SpecStatement> getSpecs()
   {
     if (specs == null)

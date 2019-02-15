@@ -83,6 +83,7 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Arg> getLocs()
   {
     if (locs == null)
@@ -97,6 +98,7 @@ public class NodeBodyExprImpl extends ElementImpl implements NodeBodyExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<NodeStmt> getStmts()
   {
     if (stmts == null)

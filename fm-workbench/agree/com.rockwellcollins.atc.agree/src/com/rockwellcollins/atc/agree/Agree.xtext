@@ -306,11 +306,11 @@ TermExpr returns Expr:
 	| ArrayLiteralExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
-	| {EventExpr} 'event' '(' id = [aadl2::NamedElement] ')'
+	| {EventExpr} 'event' '(' id = [aadl2::NamedElement|ID] ')'
 	| {LatchedExpr} 'latched' '(' expr = Expr ')'
-	| {TimeOfExpr} 'timeof' '(' id = [aadl2::NamedElement] ')'
-	| {TimeRiseExpr} 'timerise' '(' id = [aadl2::NamedElement] ')'
-	| {TimeFallExpr} 'timefall' '(' id = [aadl2::NamedElement] ')'
+	| {TimeOfExpr} 'timeof' '(' id = [aadl2::NamedElement|ID] ')'
+	| {TimeRiseExpr} 'timerise' '(' id = [aadl2::NamedElement|ID] ')'
+	| {TimeFallExpr} 'timefall' '(' id = [aadl2::NamedElement|ID] ')'
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
 	| {FloorCast} 'floor' '(' expr=Expr ')'

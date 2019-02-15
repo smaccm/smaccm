@@ -86,6 +86,7 @@ public class TagExprImpl extends ExprImpl implements TagExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getStem()
   {
     return stem;
@@ -113,6 +114,7 @@ public class TagExprImpl extends ExprImpl implements TagExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setStem(Expr newStem)
   {
     if (newStem != stem)
@@ -134,6 +136,7 @@ public class TagExprImpl extends ExprImpl implements TagExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getTag()
   {
     return tag;
@@ -144,6 +147,7 @@ public class TagExprImpl extends ExprImpl implements TagExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setTag(String newTag)
   {
     String oldTag = tag;
@@ -254,7 +258,7 @@ public class TagExprImpl extends ExprImpl implements TagExpr
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (tag: ");
     result.append(tag);
     result.append(')');

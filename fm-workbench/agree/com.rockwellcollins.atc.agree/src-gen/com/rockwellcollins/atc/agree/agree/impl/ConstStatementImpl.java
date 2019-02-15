@@ -79,6 +79,7 @@ public class ConstStatementImpl extends NamedElementImpl implements ConstStateme
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Type getType()
   {
     return type;
@@ -106,6 +107,7 @@ public class ConstStatementImpl extends NamedElementImpl implements ConstStateme
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setType(Type newType)
   {
     if (newType != type)
@@ -127,6 +129,7 @@ public class ConstStatementImpl extends NamedElementImpl implements ConstStateme
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExpr()
   {
     return expr;
@@ -154,6 +157,7 @@ public class ConstStatementImpl extends NamedElementImpl implements ConstStateme
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(Expr newExpr)
   {
     if (newExpr != expr)

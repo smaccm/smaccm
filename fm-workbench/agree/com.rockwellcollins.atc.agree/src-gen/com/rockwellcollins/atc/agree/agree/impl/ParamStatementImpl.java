@@ -77,6 +77,7 @@ public class ParamStatementImpl extends SpecStatementImpl implements ParamStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExpr()
   {
     return expr;
@@ -104,6 +105,7 @@ public class ParamStatementImpl extends SpecStatementImpl implements ParamStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(Expr newExpr)
   {
     if (newExpr != expr)
@@ -125,6 +127,7 @@ public class ParamStatementImpl extends SpecStatementImpl implements ParamStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Type getType()
   {
     return type;
@@ -152,6 +155,7 @@ public class ParamStatementImpl extends SpecStatementImpl implements ParamStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setType(Type newType)
   {
     if (newType != type)

@@ -98,6 +98,7 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getCause()
   {
     return cause;
@@ -125,6 +126,7 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCause(Expr newCause)
   {
     if (newCause != cause)
@@ -146,6 +148,7 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getExcl()
   {
     return excl;
@@ -156,6 +159,7 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExcl(String newExcl)
   {
     String oldExcl = excl;
@@ -169,6 +173,7 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TimeInterval getInterval()
   {
     return interval;
@@ -196,6 +201,7 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setInterval(TimeInterval newInterval)
   {
     if (newInterval != interval)
@@ -326,7 +332,7 @@ public class WheneverStatementImpl extends PatternStatementImpl implements Whene
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (excl: ");
     result.append(excl);
     result.append(')');

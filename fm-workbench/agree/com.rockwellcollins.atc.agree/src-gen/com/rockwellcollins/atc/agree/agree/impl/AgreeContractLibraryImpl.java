@@ -65,6 +65,7 @@ public class AgreeContractLibraryImpl extends AgreeLibraryImpl implements AgreeC
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Contract getContract()
   {
     return contract;
@@ -92,6 +93,7 @@ public class AgreeContractLibraryImpl extends AgreeLibraryImpl implements AgreeC
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setContract(Contract newContract)
   {
     if (newContract != contract)
