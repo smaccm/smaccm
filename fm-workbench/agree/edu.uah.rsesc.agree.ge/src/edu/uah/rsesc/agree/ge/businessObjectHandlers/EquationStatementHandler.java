@@ -93,7 +93,7 @@ public class EquationStatementHandler {
 				final Arg newArg = AgreeFactory.eINSTANCE.createArg();
 						newArg.setName(AgreeBusinessObjectHandlerUtil.buildUniqueIdentifier(agreeContract, "var"));
 				final PrimType type = AgreeFactory.eINSTANCE.createPrimType();
-				type.setString("bool");
+				type.setName("bool");
 				newArg.setType(type);
 				newBo.getLhs().add(newArg);
 				final BoolLitExpr trueExpr = AgreeFactory.eINSTANCE.createBoolLitExpr();

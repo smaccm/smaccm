@@ -3,7 +3,7 @@ package edu.uah.rsesc.agree.ge.ui.properties;
 import org.eclipse.jface.viewers.IFilter;
 import org.osate.ge.ui.properties.PropertySectionUtil;
 
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 
 import edu.uah.rsesc.agree.ge.businessObjectHandlers.LinearizationDefHandler;
 
@@ -25,12 +25,12 @@ public class LinearizationDefinitionsPropertySection extends GenericPropertySect
 
 	@Override
 	protected String getName(final Object element) {
-		return handler.getName((LinearizationDefExpr) element);
+		return handler.getName((LinearizationDef) element);
 	}
 
 	@Override
 	protected Object[] getSpecStatements() {
-		return getSpecStatements(AgreePropertySectionUtil::asPackageOrComponentClassifier, LinearizationDefExpr.class);
+		return getSpecStatements(AgreePropertySectionUtil::asPackageOrComponentClassifier, LinearizationDef.class);
 	}
 
 }

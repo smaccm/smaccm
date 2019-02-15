@@ -84,7 +84,7 @@ public class ConstStatementHandler {
 					.map(AgreeHandlerUtil.toBusinessObjectToModify()).modifyPreviousResult(modifyBo -> {
 						final AgreeContract agreeContract = AgreeHandlerUtil.getOrCreateAgreeContract(modifyBo);
 						final PrimType type = AgreeFactory.eINSTANCE.createPrimType();
-						type.setString("bool");
+						type.setName("bool");
 
 						final BoolLitExpr trueExpr = AgreeFactory.eINSTANCE.createBoolLitExpr();
 						final BooleanLiteral trueLit = Aadl2Factory.eINSTANCE.createBooleanLiteral();

@@ -1,0 +1,12 @@
+property set SW_Properties is
+	MAX_ALTITUDE : constant aadlinteger => 15000;
+	MIN_LATTITUDE : constant aadlinteger => -90;
+	MAX_LATTITUDE : constant aadlinteger => 90;
+	MAX_LONGITUDE : constant aadlinteger => 180;
+	MIN_LONGITUDE : constant aadlinteger => -180;
+	
+	Dimension : type aadlinteger;
+	MAP_DIMENSION : constant SW_Properties::Dimension => 4;
+	MISSION_DIMENSION : constant SW_Properties::Dimension => 10;
+	MISSION_WINDOW_DIMENSION : constant SW_Properties::Dimension => 4; 
+end SW_Properties;

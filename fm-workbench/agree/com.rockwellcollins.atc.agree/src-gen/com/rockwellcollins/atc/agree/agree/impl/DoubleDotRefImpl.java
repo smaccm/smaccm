@@ -28,7 +28,7 @@ import org.osate.aadl2.NamedElement;
  *
  * @generated
  */
-public class DoubleDotRefImpl extends ComplexExprImpl implements DoubleDotRef
+public class DoubleDotRefImpl extends TypeImpl implements DoubleDotRef
 {
   /**
    * The cached value of the '{@link #getElm() <em>Elm</em>}' reference.
@@ -66,6 +66,7 @@ public class DoubleDotRefImpl extends ComplexExprImpl implements DoubleDotRef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NamedElement getElm()
   {
     if (elm != null && ((EObject)elm).eIsProxy())
@@ -96,6 +97,7 @@ public class DoubleDotRefImpl extends ComplexExprImpl implements DoubleDotRef
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setElm(NamedElement newElm)
   {
     NamedElement oldElm = elm;

@@ -31,7 +31,7 @@ import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeFactory;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.PrimType;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
 
 import edu.uah.rsesc.agree.ge.AgreeCategories;
 
@@ -40,7 +40,7 @@ public class RecordDefExpressionHandler {
 
 	@IsApplicable
 	@CanDelete
-	public boolean isApplicable(final @Named(Names.BUSINESS_OBJECT) RecordDefExpr bo) {
+	public boolean isApplicable(final @Named(Names.BUSINESS_OBJECT) RecordDef bo) {
 		return true;
 	}
 
@@ -82,7 +82,7 @@ public class RecordDefExpressionHandler {
 					.map(AgreeHandlerUtil.toBusinessObjectToModify()).modifyPreviousResult(modifyBo -> {
 						final AgreeContract agreeContract = AgreeHandlerUtil.getOrCreateAgreeContract(modifyBo);
 
-						final RecordDefExpr newBo = AgreeFactory.eINSTANCE.createRecordDefExpr();
+						final RecordDef newBo = AgreeFactory.eINSTANCE.createRecordDef();
 						agreeContract.getSpecs().add(newBo);
 						newBo.setName(
 								AgreeBusinessObjectHandlerUtil.buildUniqueIdentifier(agreeContract, "record"));
@@ -94,7 +94,7 @@ public class RecordDefExpressionHandler {
 
 						// Create return type
 						final PrimType boolType = AgreeFactory.eINSTANCE.createPrimType();
-						boolType.setString("bool");
+						boolType.setName("bool");
 						field.setType(boolType);
 
 						return StepResultBuilder.create(newBo).showNewBusinessObject(targetBoc, newBo).build();
@@ -103,18 +103,18 @@ public class RecordDefExpressionHandler {
 	}
 
 	@GetName
-	public String getName(final @Named(Names.BUSINESS_OBJECT) RecordDefExpr bo) {
+	public String getName(final @Named(Names.BUSINESS_OBJECT) RecordDef bo) {
 		return bo.getName();
 	}
 
 	@ValidateName
-	public String validateName(final @Named(Names.BUSINESS_OBJECT) RecordDefExpr bo,
+	public String validateName(final @Named(Names.BUSINESS_OBJECT) RecordDef bo,
 			final @Named(Names.NAME) String value) {
 		return AgreeBusinessObjectHandlerUtil.validateName(bo, value);
 	}
 
 	@Rename
-	public void setName(final @Named(Names.BUSINESS_OBJECT) RecordDefExpr bo,
+	public void setName(final @Named(Names.BUSINESS_OBJECT) RecordDef bo,
 			final @Named(Names.NAME) String value) {
 		bo.setName(value);
 	}

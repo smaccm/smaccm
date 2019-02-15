@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: edu.uah.rsesc.agree.ge;singleton:=true
+Export-Package: edu.uah.rsesc.agree.ge,edu.uah.rsesc.agree.ge.business
+ ObjectHandlers
+Bundle-Name: AGREE extensions to the OSATE Graphical Editor
+Bundle-Version: 2.1.3.v20190103-1414
+Require-Bundle: org.eclipse.core.runtime,com.rockwellcollins.atc.agree
+ ,org.osate.aadl2,org.osate.ge,org.osate.annexsupport
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+

@@ -100,6 +100,7 @@ public class NamedSpecStatementImpl extends NamedElementImpl implements NamedSpe
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getStr()
   {
     return str;
@@ -110,6 +111,7 @@ public class NamedSpecStatementImpl extends NamedElementImpl implements NamedSpe
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setStr(String newStr)
   {
     String oldStr = str;
@@ -123,6 +125,7 @@ public class NamedSpecStatementImpl extends NamedElementImpl implements NamedSpe
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExpr()
   {
     return expr;
@@ -150,6 +153,7 @@ public class NamedSpecStatementImpl extends NamedElementImpl implements NamedSpe
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(Expr newExpr)
   {
     if (newExpr != expr)
@@ -171,6 +175,7 @@ public class NamedSpecStatementImpl extends NamedElementImpl implements NamedSpe
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PatternStatement getPattern()
   {
     return pattern;
@@ -198,6 +203,7 @@ public class NamedSpecStatementImpl extends NamedElementImpl implements NamedSpe
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPattern(PatternStatement newPattern)
   {
     if (newPattern != pattern)
@@ -328,7 +334,7 @@ public class NamedSpecStatementImpl extends NamedElementImpl implements NamedSpe
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (str: ");
     result.append(str);
     result.append(')');

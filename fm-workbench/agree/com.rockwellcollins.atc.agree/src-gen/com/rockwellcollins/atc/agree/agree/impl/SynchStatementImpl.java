@@ -114,6 +114,7 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getVal()
   {
     return val;
@@ -124,6 +125,7 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setVal(String newVal)
   {
     String oldVal = val;
@@ -137,6 +139,7 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getVal2()
   {
     return val2;
@@ -147,6 +150,7 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setVal2(String newVal2)
   {
     String oldVal2 = val2;
@@ -160,6 +164,7 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getSim()
   {
     return sim;
@@ -170,6 +175,7 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSim(String newSim)
   {
     String oldSim = sim;
@@ -274,7 +280,7 @@ public class SynchStatementImpl extends SpecStatementImpl implements SynchStatem
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (val: ");
     result.append(val);
     result.append(", val2: ");

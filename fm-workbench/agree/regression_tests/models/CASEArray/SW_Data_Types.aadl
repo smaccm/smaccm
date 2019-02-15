@@ -1,0 +1,12 @@
+package SW_Data_Types
+public
+    with Base_Types;
+    with Data_Model;
+    with SW_Properties;
+    
+	data Longitude extends Base_Types::Integer
+	     properties
+             Data_Model::Integer_Range => SW_Properties::MIN_LONGITUDE .. SW_Properties::MAX_LONGITUDE;
+	end Longitude;
+	
+end SW_Data_Types;

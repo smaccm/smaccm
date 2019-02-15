@@ -71,7 +71,7 @@ annex agree {**
 	tel; 	
 
 	node WithinN(evt: bool, i: bool, n: int) returns (o: bool);
-	var
+	var 
 		after_event: bool; 
 		time_val: int; 
 	let

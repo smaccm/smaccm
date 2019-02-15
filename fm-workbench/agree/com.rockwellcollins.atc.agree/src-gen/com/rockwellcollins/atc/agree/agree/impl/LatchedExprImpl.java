@@ -65,6 +65,7 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExpr()
   {
     return expr;
@@ -92,6 +93,7 @@ public class LatchedExprImpl extends ExprImpl implements LatchedExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(Expr newExpr)
   {
     if (newExpr != expr)

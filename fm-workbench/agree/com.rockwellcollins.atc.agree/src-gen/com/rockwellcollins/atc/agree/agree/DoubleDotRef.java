@@ -20,7 +20,7 @@ import org.osate.aadl2.NamedElement;
  * @model
  * @generated
  */
-public interface DoubleDotRef extends ComplexExpr
+public interface DoubleDotRef extends Type, ComponentRef
 {
   /**
    * Returns the value of the '<em><b>Elm</b></em>' reference.

@@ -3,16 +3,17 @@
 package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,14 +31,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 public class TimeOfExprImpl extends ExprImpl implements TimeOfExpr
 {
   /**
-   * The cached value of the '{@link #getId() <em>Id</em>}' containment reference.
+   * The cached value of the '{@link #getId() <em>Id</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getId()
    * @generated
    * @ordered
    */
-  protected NestedDotID id;
+  protected NamedElement id;
 
   /**
    * <!-- begin-user-doc -->
@@ -65,7 +66,28 @@ public class TimeOfExprImpl extends ExprImpl implements TimeOfExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getId()
+  @Override
+  public NamedElement getId()
+  {
+    if (id != null && ((EObject)id).eIsProxy())
+    {
+      InternalEObject oldId = (InternalEObject)id;
+      id = (NamedElement)eResolveProxy(oldId);
+      if (id != oldId)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.TIME_OF_EXPR__ID, oldId, id));
+      }
+    }
+    return id;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NamedElement basicGetId()
   {
     return id;
   }
@@ -75,53 +97,13 @@ public class TimeOfExprImpl extends ExprImpl implements TimeOfExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetId(NestedDotID newId, NotificationChain msgs)
+  @Override
+  public void setId(NamedElement newId)
   {
-    NestedDotID oldId = id;
+    NamedElement oldId = id;
     id = newId;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.TIME_OF_EXPR__ID, oldId, newId);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setId(NestedDotID newId)
-  {
-    if (newId != id)
-    {
-      NotificationChain msgs = null;
-      if (id != null)
-        msgs = ((InternalEObject)id).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.TIME_OF_EXPR__ID, null, msgs);
-      if (newId != null)
-        msgs = ((InternalEObject)newId).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.TIME_OF_EXPR__ID, null, msgs);
-      msgs = basicSetId(newId, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.TIME_OF_EXPR__ID, newId, newId));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case AgreePackage.TIME_OF_EXPR__ID:
-        return basicSetId(null, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.TIME_OF_EXPR__ID, oldId, id));
   }
 
   /**
@@ -135,7 +117,8 @@ public class TimeOfExprImpl extends ExprImpl implements TimeOfExpr
     switch (featureID)
     {
       case AgreePackage.TIME_OF_EXPR__ID:
-        return getId();
+        if (resolve) return getId();
+        return basicGetId();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -151,7 +134,7 @@ public class TimeOfExprImpl extends ExprImpl implements TimeOfExpr
     switch (featureID)
     {
       case AgreePackage.TIME_OF_EXPR__ID:
-        setId((NestedDotID)newValue);
+        setId((NamedElement)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -168,7 +151,7 @@ public class TimeOfExprImpl extends ExprImpl implements TimeOfExpr
     switch (featureID)
     {
       case AgreePackage.TIME_OF_EXPR__ID:
-        setId((NestedDotID)null);
+        setId((NamedElement)null);
         return;
     }
     super.eUnset(featureID);

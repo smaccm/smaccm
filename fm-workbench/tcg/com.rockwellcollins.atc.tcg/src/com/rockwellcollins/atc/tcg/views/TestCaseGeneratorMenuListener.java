@@ -51,7 +51,7 @@ import org.osate.ui.dialogs.Dialog;
 
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
+import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
@@ -239,7 +239,7 @@ public class TestCaseGeneratorMenuListener implements IMenuListener {
 				if (property instanceof AssumeStatement) {
 					manager.add(createHyperlinkAction("Go To Assumption", property));
 				}
-				if (property instanceof FnCallExpr) {
+				if (property instanceof CallExpr) {
 					manager.add(createHyperlinkAction("Go To Node Call", property));
 				}
 			}

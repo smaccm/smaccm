@@ -362,7 +362,7 @@ public class LustreAstBuilder {
 			IdExpr stuffAssumptionId = new IdExpr(stuffAssumptionVar.id);
 			equations.add(new Equation(stuffAssumptionId, assumption.expr));
 
-			stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, stuffAssumptionId);
+			stuffConj = LustreExprFactory.makeANDExpr(stuffConj, stuffAssumptionId);
 		}
 
 		int stuffGuaranteeIndex = 0;
@@ -374,7 +374,7 @@ public class LustreAstBuilder {
 			IdExpr stuffGuaranteeId = new IdExpr(stuffGuaranteeVar.id);
 			equations.add(new Equation(stuffGuaranteeId, guarantee.expr));
 
-			stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, stuffGuaranteeId);
+			stuffConj = LustreExprFactory.makeANDExpr(stuffConj, stuffGuaranteeId);
 		}
 
 		if (withAssertions) {
@@ -400,7 +400,7 @@ public class LustreAstBuilder {
 				IdExpr stuffAssertionId = new IdExpr(stuffAssertionVar.id);
 				equations.add(new Equation(stuffAssertionId, assertion.expr));
 
-				stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, stuffAssertionId);
+				stuffConj = LustreExprFactory.makeANDExpr(stuffConj, stuffAssertionId);
 			}
 		} else {
 			// perhaps we should break out eq statements into implementation
@@ -413,7 +413,7 @@ public class LustreAstBuilder {
 					IdExpr stuffAssertionId = new IdExpr(stuffAssertionVar.id);
 					equations.add(new Equation(stuffAssertionId, assertion.expr));
 
-					stuffConj = new BinaryExpr(stuffConj, BinaryOp.AND, stuffAssertionId);
+					stuffConj = LustreExprFactory.makeANDExpr(stuffConj, stuffAssertionId);
 				}
 			}
 		}
@@ -469,7 +469,7 @@ public class LustreAstBuilder {
 		equations.add(new Equation(stuffId, stuffConj));
 
 		Expr histExpr = new UnaryExpr(UnaryOp.PRE, histId);
-		histExpr = new BinaryExpr(histExpr, BinaryOp.AND, stuffId);
+		histExpr = LustreExprFactory.makeANDExpr(histExpr, stuffId);
 		histExpr = new BinaryExpr(stuffId, BinaryOp.ARROW, histExpr);
 		equations.add(new Equation(histId, histExpr));
 
@@ -512,7 +512,7 @@ public class LustreAstBuilder {
 
 	protected static Equation getHist(IdExpr histId, Expr expr) {
 		Expr preHist = new UnaryExpr(UnaryOp.PRE, histId);
-		Expr preAndNow = new BinaryExpr(preHist, BinaryOp.AND, expr);
+		Expr preAndNow = LustreExprFactory.makeANDExpr(preHist, expr);
 		return new Equation(histId, new BinaryExpr(expr, BinaryOp.ARROW, preAndNow));
 	}
 
@@ -552,10 +552,10 @@ public class LustreAstBuilder {
 			IdExpr guarId = new IdExpr(inputName);
 			equations.add(new Equation(guarId, statement.expr));
 			ivcs.add(guarId.id);
-			guarConjExpr = new BinaryExpr(guarId, BinaryOp.AND, guarConjExpr);
+			guarConjExpr = LustreExprFactory.makeANDExpr(guarId, guarConjExpr);
 		}
 		for (AgreeStatement statement : agreeNode.lemmas) {
-			guarConjExpr = new BinaryExpr(statement.expr, BinaryOp.AND, guarConjExpr);
+			guarConjExpr = LustreExprFactory.makeANDExpr(statement.expr, guarConjExpr);
 		}
 
 		// assert that if the assumptions have held historically, then the
@@ -576,7 +576,7 @@ public class LustreAstBuilder {
 
 		Expr assertExpr = new BoolExpr(true);
 		for (Expr expr : assertions) {
-			assertExpr = new BinaryExpr(expr, BinaryOp.AND, assertExpr);
+			assertExpr = LustreExprFactory.makeANDExpr(expr, assertExpr);
 		}
 
 		String outputName = "__ASSERT";
@@ -694,7 +694,7 @@ public class LustreAstBuilder {
 			AgreeVar var = (AgreeVar) lustreVar;
 			if (var.reference instanceof AssumeStatement || var.reference instanceof LemmaStatement) {
 				Expr varId = new IdExpr(prefix + var.id);
-				assumConj = new BinaryExpr(varId, BinaryOp.AND, assumConj);
+				assumConj = LustreExprFactory.makeANDExpr(varId, assumConj);
 			}
 		}
 		// assumConj = new BinaryExpr(clockExpr, BinaryOp.IMPLIES, assumConj);

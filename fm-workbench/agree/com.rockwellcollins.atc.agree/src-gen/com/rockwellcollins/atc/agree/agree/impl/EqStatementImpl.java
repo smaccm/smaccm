@@ -86,6 +86,7 @@ public class EqStatementImpl extends ElementImpl implements EqStatement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Arg> getLhs()
   {
     if (lhs == null)
@@ -100,6 +101,7 @@ public class EqStatementImpl extends ElementImpl implements EqStatement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getExpr()
   {
     return expr;
@@ -127,6 +129,7 @@ public class EqStatementImpl extends ElementImpl implements EqStatement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(Expr newExpr)
   {
     if (newExpr != expr)

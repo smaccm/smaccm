@@ -4,15 +4,16 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.osate.aadl2.NamedElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,14 +31,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 public class LiftStatementImpl extends SpecStatementImpl implements LiftStatement
 {
   /**
-   * The cached value of the '{@link #getSubcomp() <em>Subcomp</em>}' containment reference.
+   * The cached value of the '{@link #getSubcomp() <em>Subcomp</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getSubcomp()
    * @generated
    * @ordered
    */
-  protected NestedDotID subcomp;
+  protected NamedElement subcomp;
 
   /**
    * <!-- begin-user-doc -->
@@ -65,7 +66,28 @@ public class LiftStatementImpl extends SpecStatementImpl implements LiftStatemen
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID getSubcomp()
+  @Override
+  public NamedElement getSubcomp()
+  {
+    if (subcomp != null && ((EObject)subcomp).eIsProxy())
+    {
+      InternalEObject oldSubcomp = (InternalEObject)subcomp;
+      subcomp = (NamedElement)eResolveProxy(oldSubcomp);
+      if (subcomp != oldSubcomp)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, AgreePackage.LIFT_STATEMENT__SUBCOMP, oldSubcomp, subcomp));
+      }
+    }
+    return subcomp;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NamedElement basicGetSubcomp()
   {
     return subcomp;
   }
@@ -75,53 +97,13 @@ public class LiftStatementImpl extends SpecStatementImpl implements LiftStatemen
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetSubcomp(NestedDotID newSubcomp, NotificationChain msgs)
+  @Override
+  public void setSubcomp(NamedElement newSubcomp)
   {
-    NestedDotID oldSubcomp = subcomp;
+    NamedElement oldSubcomp = subcomp;
     subcomp = newSubcomp;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.LIFT_STATEMENT__SUBCOMP, oldSubcomp, newSubcomp);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setSubcomp(NestedDotID newSubcomp)
-  {
-    if (newSubcomp != subcomp)
-    {
-      NotificationChain msgs = null;
-      if (subcomp != null)
-        msgs = ((InternalEObject)subcomp).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LIFT_STATEMENT__SUBCOMP, null, msgs);
-      if (newSubcomp != null)
-        msgs = ((InternalEObject)newSubcomp).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.LIFT_STATEMENT__SUBCOMP, null, msgs);
-      msgs = basicSetSubcomp(newSubcomp, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.LIFT_STATEMENT__SUBCOMP, newSubcomp, newSubcomp));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case AgreePackage.LIFT_STATEMENT__SUBCOMP:
-        return basicSetSubcomp(null, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.LIFT_STATEMENT__SUBCOMP, oldSubcomp, subcomp));
   }
 
   /**
@@ -135,7 +117,8 @@ public class LiftStatementImpl extends SpecStatementImpl implements LiftStatemen
     switch (featureID)
     {
       case AgreePackage.LIFT_STATEMENT__SUBCOMP:
-        return getSubcomp();
+        if (resolve) return getSubcomp();
+        return basicGetSubcomp();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -151,7 +134,7 @@ public class LiftStatementImpl extends SpecStatementImpl implements LiftStatemen
     switch (featureID)
     {
       case AgreePackage.LIFT_STATEMENT__SUBCOMP:
-        setSubcomp((NestedDotID)newValue);
+        setSubcomp((NamedElement)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -168,7 +151,7 @@ public class LiftStatementImpl extends SpecStatementImpl implements LiftStatemen
     switch (featureID)
     {
       case AgreePackage.LIFT_STATEMENT__SUBCOMP:
-        setSubcomp((NestedDotID)null);
+        setSubcomp((NamedElement)null);
         return;
     }
     super.eUnset(featureID);

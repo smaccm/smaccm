@@ -14,6 +14,7 @@ import com.rockwellcollins.atc.agree.analysis.ast.AgreeVar;
 
 import jkind.lustre.Location;
 import jkind.lustre.Node;
+import jkind.lustre.RecordType;
 import jkind.lustre.Type;
 import jkind.lustre.TypeDef;
 import jkind.lustre.visitors.PrettyPrintVisitor;
@@ -52,7 +53,12 @@ public class AgreeASTPrettyprinter extends PrettyPrintVisitor implements AgreeAS
 
 		if (!program.globalTypes.isEmpty()) {
 			for (Type type : program.globalTypes) {
-				TypeDef typeDef = new TypeDef(Location.NULL, "dummy", type);
+
+				String name = "dummy";
+				if (type instanceof RecordType) {
+					name = ((RecordType) type).id;
+				}
+				TypeDef typeDef = new TypeDef(Location.NULL, name, type);
 				typeDef.accept(this);
 				newline();
 			}

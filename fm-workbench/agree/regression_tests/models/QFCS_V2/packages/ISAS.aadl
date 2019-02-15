@@ -37,7 +37,7 @@ system ISAS_Sys
     
     annex agree {**
     	    	
-    	eq elevators_failed_update : DATA_TYPES.quad_bool; 
+    	eq elevators_failed_update : DATA_TYPES.quad_bool;
 		eq ailerons_failed_update : DATA_TYPES.quad_bool;
         eq rudders_failed_update : DATA_TYPES.quad_bool;
         eq flaps_failed_update : DATA_TYPES.quad_bool;

@@ -21,6 +21,7 @@ public class AgreeAADLConnection implements AgreeConnection {
 
 	public AgreeAADLConnection(AgreeNode sourceNode, AgreeNode destinationNode, AgreeVar sourceVarName,
 			AgreeVar destinationVarName, ConnectionType type, boolean latched, boolean delayed, EObject reference) {
+
 		this.sourceNode = sourceNode;
 		this.destinationNode = destinationNode;
 		this.sourceVarName = sourceVarName;

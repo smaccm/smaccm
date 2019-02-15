@@ -131,13 +131,13 @@ public interface AgreeFactory extends EFactory
   OrderStatement createOrderStatement();
 
   /**
-   * Returns a new object of class '<em>Call Def</em>'.
+   * Returns a new object of class '<em>Abstraction</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Call Def</em>'.
+   * @return a new object of class '<em>Abstraction</em>'.
    * @generated
    */
-  CallDef createCallDef();
+  Abstraction createAbstraction();
 
   /**
    * Returns a new object of class '<em>Property Statement</em>'.
@@ -156,15 +156,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   ConstStatement createConstStatement();
-
-  /**
-   * Returns a new object of class '<em>Enum Statement</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Enum Statement</em>'.
-   * @generated
-   */
-  EnumStatement createEnumStatement();
 
   /**
    * Returns a new object of class '<em>Eq Statement</em>'.
@@ -194,31 +185,31 @@ public interface AgreeFactory extends EFactory
   AssignStatement createAssignStatement();
 
   /**
-   * Returns a new object of class '<em>Fn Def Expr</em>'.
+   * Returns a new object of class '<em>Fn Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Fn Def Expr</em>'.
+   * @return a new object of class '<em>Fn Def</em>'.
    * @generated
    */
-  FnDefExpr createFnDefExpr();
+  FnDef createFnDef();
 
   /**
-   * Returns a new object of class '<em>Library Fn Def Expr</em>'.
+   * Returns a new object of class '<em>Library Fn Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Library Fn Def Expr</em>'.
+   * @return a new object of class '<em>Library Fn Def</em>'.
    * @generated
    */
-  LibraryFnDefExpr createLibraryFnDefExpr();
+  LibraryFnDef createLibraryFnDef();
 
   /**
-   * Returns a new object of class '<em>Linearization Def Expr</em>'.
+   * Returns a new object of class '<em>Linearization Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Linearization Def Expr</em>'.
+   * @return a new object of class '<em>Linearization Def</em>'.
    * @generated
    */
-  LinearizationDefExpr createLinearizationDefExpr();
+  LinearizationDef createLinearizationDef();
 
   /**
    * Returns a new object of class '<em>Linearization Interval</em>'.
@@ -230,13 +221,13 @@ public interface AgreeFactory extends EFactory
   LinearizationInterval createLinearizationInterval();
 
   /**
-   * Returns a new object of class '<em>Node Def Expr</em>'.
+   * Returns a new object of class '<em>Node Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Node Def Expr</em>'.
+   * @return a new object of class '<em>Node Def</em>'.
    * @generated
    */
-  NodeDefExpr createNodeDefExpr();
+  NodeDef createNodeDef();
 
   /**
    * Returns a new object of class '<em>Node Body Expr</em>'.
@@ -275,13 +266,22 @@ public interface AgreeFactory extends EFactory
   Type createType();
 
   /**
-   * Returns a new object of class '<em>Record Def Expr</em>'.
+   * Returns a new object of class '<em>Record Def</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Record Def Expr</em>'.
+   * @return a new object of class '<em>Record Def</em>'.
    * @generated
    */
-  RecordDefExpr createRecordDefExpr();
+  RecordDef createRecordDef();
+
+  /**
+   * Returns a new object of class '<em>Enum Statement</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Enum Statement</em>'.
+   * @generated
+   */
+  EnumStatement createEnumStatement();
 
   /**
    * Returns a new object of class '<em>Expr</em>'.
@@ -293,13 +293,22 @@ public interface AgreeFactory extends EFactory
   Expr createExpr();
 
   /**
-   * Returns a new object of class '<em>Complex Expr</em>'.
+   * Returns a new object of class '<em>Component Ref</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Complex Expr</em>'.
+   * @return a new object of class '<em>Component Ref</em>'.
    * @generated
    */
-  ComplexExpr createComplexExpr();
+  ComponentRef createComponentRef();
+
+  /**
+   * Returns a new object of class '<em>Array Literal Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Array Literal Expr</em>'.
+   * @generated
+   */
+  ArrayLiteralExpr createArrayLiteralExpr();
 
   /**
    * Returns a new object of class '<em>Double Dot Ref</em>'.
@@ -309,15 +318,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   DoubleDotRef createDoubleDotRef();
-
-  /**
-   * Returns a new object of class '<em>Nested Dot ID</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Nested Dot ID</em>'.
-   * @generated
-   */
-  NestedDotID createNestedDotID();
 
   /**
    * Returns a new object of class '<em>Named ID</em>'.
@@ -599,6 +599,15 @@ public interface AgreeFactory extends EFactory
   NodeLemma createNodeLemma();
 
   /**
+   * Returns a new object of class '<em>Array Type</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Array Type</em>'.
+   * @generated
+   */
+  ArrayType createArrayType();
+
+  /**
    * Returns a new object of class '<em>Prim Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -608,13 +617,49 @@ public interface AgreeFactory extends EFactory
   PrimType createPrimType();
 
   /**
-   * Returns a new object of class '<em>Record Type</em>'.
+   * Returns a new object of class '<em>Forall Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Record Type</em>'.
+   * @return a new object of class '<em>Forall Expr</em>'.
    * @generated
    */
-  RecordType createRecordType();
+  ForallExpr createForallExpr();
+
+  /**
+   * Returns a new object of class '<em>Exists Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Exists Expr</em>'.
+   * @generated
+   */
+  ExistsExpr createExistsExpr();
+
+  /**
+   * Returns a new object of class '<em>Foreach Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Foreach Expr</em>'.
+   * @generated
+   */
+  ForeachExpr createForeachExpr();
+
+  /**
+   * Returns a new object of class '<em>Fold Left Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Fold Left Expr</em>'.
+   * @generated
+   */
+  FoldLeftExpr createFoldLeftExpr();
+
+  /**
+   * Returns a new object of class '<em>Fold Right Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Fold Right Expr</em>'.
+   * @generated
+   */
+  FoldRightExpr createFoldRightExpr();
 
   /**
    * Returns a new object of class '<em>Binary Expr</em>'.
@@ -644,6 +689,15 @@ public interface AgreeFactory extends EFactory
   IfThenElseExpr createIfThenElseExpr();
 
   /**
+   * Returns a new object of class '<em>This Ref</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>This Ref</em>'.
+   * @generated
+   */
+  ThisRef createThisRef();
+
+  /**
    * Returns a new object of class '<em>Prev Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -662,6 +716,15 @@ public interface AgreeFactory extends EFactory
   GetPropertyExpr createGetPropertyExpr();
 
   /**
+   * Returns a new object of class '<em>Array Update Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Array Update Expr</em>'.
+   * @generated
+   */
+  ArrayUpdateExpr createArrayUpdateExpr();
+
+  /**
    * Returns a new object of class '<em>Record Update Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -671,6 +734,42 @@ public interface AgreeFactory extends EFactory
   RecordUpdateExpr createRecordUpdateExpr();
 
   /**
+   * Returns a new object of class '<em>Array Sub Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Array Sub Expr</em>'.
+   * @generated
+   */
+  ArraySubExpr createArraySubExpr();
+
+  /**
+   * Returns a new object of class '<em>Tag Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Tag Expr</em>'.
+   * @generated
+   */
+  TagExpr createTagExpr();
+
+  /**
+   * Returns a new object of class '<em>Selection Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Selection Expr</em>'.
+   * @generated
+   */
+  SelectionExpr createSelectionExpr();
+
+  /**
+   * Returns a new object of class '<em>Named Elm Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Named Elm Expr</em>'.
+   * @generated
+   */
+  NamedElmExpr createNamedElmExpr();
+
+  /**
    * Returns a new object of class '<em>Time Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -678,6 +777,42 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   TimeExpr createTimeExpr();
+
+  /**
+   * Returns a new object of class '<em>Indices Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Indices Expr</em>'.
+   * @generated
+   */
+  IndicesExpr createIndicesExpr();
+
+  /**
+   * Returns a new object of class '<em>Call Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Call Expr</em>'.
+   * @generated
+   */
+  CallExpr createCallExpr();
+
+  /**
+   * Returns a new object of class '<em>Record Lit Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Record Lit Expr</em>'.
+   * @generated
+   */
+  RecordLitExpr createRecordLitExpr();
+
+  /**
+   * Returns a new object of class '<em>Enum Lit Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Enum Lit Expr</em>'.
+   * @generated
+   */
+  EnumLitExpr createEnumLitExpr();
 
   /**
    * Returns a new object of class '<em>Int Lit Expr</em>'.
@@ -761,15 +896,6 @@ public interface AgreeFactory extends EFactory
   BoolLitExpr createBoolLitExpr();
 
   /**
-   * Returns a new object of class '<em>This Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>This Expr</em>'.
-   * @generated
-   */
-  ThisExpr createThisExpr();
-
-  /**
    * Returns a new object of class '<em>Floor Cast</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -786,33 +912,6 @@ public interface AgreeFactory extends EFactory
    * @generated
    */
   RealCast createRealCast();
-
-  /**
-   * Returns a new object of class '<em>AADL Enumerator</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>AADL Enumerator</em>'.
-   * @generated
-   */
-  AADLEnumerator createAADLEnumerator();
-
-  /**
-   * Returns a new object of class '<em>Record Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Record Expr</em>'.
-   * @generated
-   */
-  RecordExpr createRecordExpr();
-
-  /**
-   * Returns a new object of class '<em>Fn Call Expr</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Fn Call Expr</em>'.
-   * @generated
-   */
-  FnCallExpr createFnCallExpr();
 
   /**
    * Returns the package supported by this factory.

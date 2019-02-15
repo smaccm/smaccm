@@ -64,6 +64,7 @@ public class ResoluteLinkingService extends PropertiesLinkingService {
                 return e;
             }
 
+
 			Iterable<IEObjectDescription> allObjectTypes = Aadl2GlobalScopeUtil.getAllEObjectDescriptions(context,
 					reference.getEReferenceType());
 

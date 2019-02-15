@@ -2,7 +2,7 @@
  */
 package com.rockwellcollins.atc.agree.agree.impl;
 
-import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
+import com.rockwellcollins.atc.agree.agree.Abstraction;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
@@ -12,6 +12,10 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.AgreeSubclause;
 import com.rockwellcollins.atc.agree.agree.AlwaysStatement;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ArrayLiteralExpr;
+import com.rockwellcollins.atc.agree.agree.ArraySubExpr;
+import com.rockwellcollins.atc.agree.agree.ArrayType;
+import com.rockwellcollins.atc.agree.agree.ArrayUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
@@ -19,39 +23,45 @@ import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
-import com.rockwellcollins.atc.agree.agree.CallDef;
+import com.rockwellcollins.atc.agree.agree.CallExpr;
 import com.rockwellcollins.atc.agree.agree.ClosedTimeInterval;
-import com.rockwellcollins.atc.agree.agree.ComplexExpr;
+import com.rockwellcollins.atc.agree.agree.ComponentRef;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.Contract;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
+import com.rockwellcollins.atc.agree.agree.EnumLitExpr;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.ExistsExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
-import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.FnDef;
+import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
+import com.rockwellcollins.atc.agree.agree.FoldRightExpr;
+import com.rockwellcollins.atc.agree.agree.ForallExpr;
+import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
+import com.rockwellcollins.atc.agree.agree.IndicesExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDef;
 import com.rockwellcollins.atc.agree.agree.LiftStatement;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.agree.LinearizationInterval;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NamedID;
 import com.rockwellcollins.atc.agree.agree.NamedSpecStatement;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
@@ -69,14 +79,15 @@ import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
 import com.rockwellcollins.atc.agree.agree.RealTimeStatement;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
+import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SporadicStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
-import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TagExpr;
+import com.rockwellcollins.atc.agree.agree.ThisRef;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeInterval;
@@ -200,7 +211,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass callDefEClass = null;
+  private EClass abstractionEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -215,13 +226,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass constStatementEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass enumStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -249,21 +253,21 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass fnDefExprEClass = null;
+  private EClass fnDefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass libraryFnDefExprEClass = null;
+  private EClass libraryFnDefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass linearizationDefExprEClass = null;
+  private EClass linearizationDefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -277,7 +281,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass nodeDefExprEClass = null;
+  private EClass nodeDefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -312,7 +316,14 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass recordDefExprEClass = null;
+  private EClass recordDefEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass enumStatementEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -326,7 +337,14 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass complexExprEClass = null;
+  private EClass componentRefEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass arrayLiteralExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -334,13 +352,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass doubleDotRefEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass nestedDotIDEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -564,6 +575,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass arrayTypeEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass primTypeEClass = null;
 
   /**
@@ -571,7 +589,35 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass recordTypeEClass = null;
+  private EClass forallExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass existsExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass foreachExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass foldLeftExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass foldRightExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -599,6 +645,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass thisRefEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass prevExprEClass = null;
 
   /**
@@ -613,6 +666,13 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass arrayUpdateExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass recordUpdateExprEClass = null;
 
   /**
@@ -620,7 +680,63 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass arraySubExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass tagExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass selectionExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass namedElmExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass timeExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass indicesExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass callExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass recordLitExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass enumLitExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -690,13 +806,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass thisExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   private EClass floorCastEClass = null;
 
   /**
@@ -705,27 +814,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   private EClass realCastEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass aadlEnumeratorEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass recordExprEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass fnCallExprEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -756,7 +844,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
   /**
    * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-   * 
+   *
    * <p>This method is used to initialize {@link AgreePackage#eINSTANCE} when that field is accessed.
    * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
    * <!-- begin-user-doc -->
@@ -771,7 +859,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     if (isInited) return (AgreePackage)EPackage.Registry.INSTANCE.getEPackage(AgreePackage.eNS_URI);
 
     // Obtain or create and register package
-    AgreePackageImpl theAgreePackage = (AgreePackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof AgreePackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new AgreePackageImpl());
+    Object registeredAgreePackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+    AgreePackageImpl theAgreePackage = registeredAgreePackage instanceof AgreePackageImpl ? (AgreePackageImpl)registeredAgreePackage : new AgreePackageImpl();
 
     isInited = true;
 
@@ -788,7 +877,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     // Mark meta-data to indicate it can't be changed
     theAgreePackage.freeze();
 
-  
     // Update the registry and return the package
     EPackage.Registry.INSTANCE.put(AgreePackage.eNS_URI, theAgreePackage);
     return theAgreePackage;
@@ -799,6 +887,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAgreeLibrary()
   {
     return agreeLibraryEClass;
@@ -809,6 +898,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAgreeSubclause()
   {
     return agreeSubclauseEClass;
@@ -819,6 +909,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getContract()
   {
     return contractEClass;
@@ -829,6 +920,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSpecStatement()
   {
     return specStatementEClass;
@@ -839,6 +931,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getNamedSpecStatement()
   {
     return namedSpecStatementEClass;
@@ -849,6 +942,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getNamedSpecStatement_Str()
   {
     return (EAttribute)namedSpecStatementEClass.getEStructuralFeatures().get(0);
@@ -859,6 +953,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getNamedSpecStatement_Expr()
   {
     return (EReference)namedSpecStatementEClass.getEStructuralFeatures().get(1);
@@ -869,6 +964,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getNamedSpecStatement_Pattern()
   {
     return (EReference)namedSpecStatementEClass.getEStructuralFeatures().get(2);
@@ -879,6 +975,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPatternStatement()
   {
     return patternStatementEClass;
@@ -889,6 +986,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWhenStatement()
   {
     return whenStatementEClass;
@@ -899,6 +997,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWhenStatement_Condition()
   {
     return (EReference)whenStatementEClass.getEStructuralFeatures().get(0);
@@ -909,6 +1008,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWhenStatement_Event()
   {
     return (EReference)whenStatementEClass.getEStructuralFeatures().get(1);
@@ -919,6 +1019,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getWhenStatement_Excl()
   {
     return (EAttribute)whenStatementEClass.getEStructuralFeatures().get(2);
@@ -929,6 +1030,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWheneverStatement()
   {
     return wheneverStatementEClass;
@@ -939,6 +1041,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWheneverStatement_Cause()
   {
     return (EReference)wheneverStatementEClass.getEStructuralFeatures().get(0);
@@ -949,6 +1052,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getWheneverStatement_Excl()
   {
     return (EAttribute)wheneverStatementEClass.getEStructuralFeatures().get(1);
@@ -959,6 +1063,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWheneverStatement_Interval()
   {
     return (EReference)wheneverStatementEClass.getEStructuralFeatures().get(2);
@@ -969,6 +1074,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRealTimeStatement()
   {
     return realTimeStatementEClass;
@@ -979,6 +1085,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRealTimeStatement_Event()
   {
     return (EReference)realTimeStatementEClass.getEStructuralFeatures().get(0);
@@ -989,6 +1096,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRealTimeStatement_Jitter()
   {
     return (EReference)realTimeStatementEClass.getEStructuralFeatures().get(1);
@@ -999,6 +1107,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getTimeInterval()
   {
     return timeIntervalEClass;
@@ -1009,6 +1118,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTimeInterval_Low()
   {
     return (EReference)timeIntervalEClass.getEStructuralFeatures().get(0);
@@ -1019,6 +1129,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTimeInterval_High()
   {
     return (EReference)timeIntervalEClass.getEStructuralFeatures().get(1);
@@ -1029,6 +1140,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSynchStatement()
   {
     return synchStatementEClass;
@@ -1039,6 +1151,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getSynchStatement_Val()
   {
     return (EAttribute)synchStatementEClass.getEStructuralFeatures().get(0);
@@ -1049,6 +1162,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getSynchStatement_Val2()
   {
     return (EAttribute)synchStatementEClass.getEStructuralFeatures().get(1);
@@ -1059,6 +1173,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getSynchStatement_Sim()
   {
     return (EAttribute)synchStatementEClass.getEStructuralFeatures().get(2);
@@ -1069,6 +1184,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrderStatement()
   {
     return orderStatementEClass;
@@ -1079,6 +1195,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrderStatement_Comps()
   {
     return (EReference)orderStatementEClass.getEStructuralFeatures().get(0);
@@ -1089,9 +1206,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getCallDef()
+  @Override
+  public EClass getAbstraction()
   {
-    return callDefEClass;
+    return abstractionEClass;
   }
 
   /**
@@ -1099,6 +1217,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPropertyStatement()
   {
     return propertyStatementEClass;
@@ -1109,6 +1228,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPropertyStatement_Expr()
   {
     return (EReference)propertyStatementEClass.getEStructuralFeatures().get(0);
@@ -1119,6 +1239,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getConstStatement()
   {
     return constStatementEClass;
@@ -1129,6 +1250,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getConstStatement_Type()
   {
     return (EReference)constStatementEClass.getEStructuralFeatures().get(0);
@@ -1139,6 +1261,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getConstStatement_Expr()
   {
     return (EReference)constStatementEClass.getEStructuralFeatures().get(1);
@@ -1149,26 +1272,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getEnumStatement()
-  {
-    return enumStatementEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getEnumStatement_Enums()
-  {
-    return (EReference)enumStatementEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+  @Override
   public EClass getEqStatement()
   {
     return eqStatementEClass;
@@ -1179,6 +1283,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getEqStatement_Lhs()
   {
     return (EReference)eqStatementEClass.getEStructuralFeatures().get(0);
@@ -1189,6 +1294,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getEqStatement_Expr()
   {
     return (EReference)eqStatementEClass.getEStructuralFeatures().get(1);
@@ -1199,6 +1305,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getInputStatement()
   {
     return inputStatementEClass;
@@ -1209,6 +1316,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getInputStatement_Lhs()
   {
     return (EReference)inputStatementEClass.getEStructuralFeatures().get(0);
@@ -1219,6 +1327,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAssignStatement()
   {
     return assignStatementEClass;
@@ -1229,6 +1338,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAssignStatement_Id()
   {
     return (EReference)assignStatementEClass.getEStructuralFeatures().get(0);
@@ -1239,6 +1349,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAssignStatement_Expr()
   {
     return (EReference)assignStatementEClass.getEStructuralFeatures().get(1);
@@ -1249,9 +1360,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getFnDefExpr()
+  @Override
+  public EClass getFnDef()
   {
-    return fnDefExprEClass;
+    return fnDefEClass;
   }
 
   /**
@@ -1259,9 +1371,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFnDefExpr_Args()
+  @Override
+  public EReference getFnDef_Args()
   {
-    return (EReference)fnDefExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)fnDefEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1269,9 +1382,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFnDefExpr_Type()
+  @Override
+  public EReference getFnDef_Type()
   {
-    return (EReference)fnDefExprEClass.getEStructuralFeatures().get(1);
+    return (EReference)fnDefEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1279,9 +1393,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getFnDefExpr_Expr()
+  @Override
+  public EReference getFnDef_Expr()
   {
-    return (EReference)fnDefExprEClass.getEStructuralFeatures().get(2);
+    return (EReference)fnDefEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1289,9 +1404,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getLibraryFnDefExpr()
+  @Override
+  public EClass getLibraryFnDef()
   {
-    return libraryFnDefExprEClass;
+    return libraryFnDefEClass;
   }
 
   /**
@@ -1299,9 +1415,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getLibraryFnDefExpr_Args()
+  @Override
+  public EReference getLibraryFnDef_Args()
   {
-    return (EReference)libraryFnDefExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)libraryFnDefEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1309,9 +1426,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getLibraryFnDefExpr_Type()
+  @Override
+  public EReference getLibraryFnDef_Type()
   {
-    return (EReference)libraryFnDefExprEClass.getEStructuralFeatures().get(1);
+    return (EReference)libraryFnDefEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1319,9 +1437,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getLinearizationDefExpr()
+  @Override
+  public EClass getLinearizationDef()
   {
-    return linearizationDefExprEClass;
+    return linearizationDefEClass;
   }
 
   /**
@@ -1329,9 +1448,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getLinearizationDefExpr_Args()
+  @Override
+  public EReference getLinearizationDef_Args()
   {
-    return (EReference)linearizationDefExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)linearizationDefEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1339,9 +1459,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getLinearizationDefExpr_Intervals()
+  @Override
+  public EReference getLinearizationDef_Intervals()
   {
-    return (EReference)linearizationDefExprEClass.getEStructuralFeatures().get(1);
+    return (EReference)linearizationDefEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1349,9 +1470,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getLinearizationDefExpr_Precision()
+  @Override
+  public EReference getLinearizationDef_Precision()
   {
-    return (EReference)linearizationDefExprEClass.getEStructuralFeatures().get(2);
+    return (EReference)linearizationDefEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1359,9 +1481,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getLinearizationDefExpr_ExprBody()
+  @Override
+  public EReference getLinearizationDef_ExprBody()
   {
-    return (EReference)linearizationDefExprEClass.getEStructuralFeatures().get(3);
+    return (EReference)linearizationDefEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1369,6 +1492,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLinearizationInterval()
   {
     return linearizationIntervalEClass;
@@ -1379,6 +1503,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLinearizationInterval_Start()
   {
     return (EReference)linearizationIntervalEClass.getEStructuralFeatures().get(0);
@@ -1389,6 +1514,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLinearizationInterval_End()
   {
     return (EReference)linearizationIntervalEClass.getEStructuralFeatures().get(1);
@@ -1399,9 +1525,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getNodeDefExpr()
+  @Override
+  public EClass getNodeDef()
   {
-    return nodeDefExprEClass;
+    return nodeDefEClass;
   }
 
   /**
@@ -1409,9 +1536,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNodeDefExpr_Args()
+  @Override
+  public EReference getNodeDef_Args()
   {
-    return (EReference)nodeDefExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)nodeDefEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1419,9 +1547,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNodeDefExpr_Rets()
+  @Override
+  public EReference getNodeDef_Rets()
   {
-    return (EReference)nodeDefExprEClass.getEStructuralFeatures().get(1);
+    return (EReference)nodeDefEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1429,9 +1558,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getNodeDefExpr_NodeBody()
+  @Override
+  public EReference getNodeDef_NodeBody()
   {
-    return (EReference)nodeDefExprEClass.getEStructuralFeatures().get(2);
+    return (EReference)nodeDefEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1439,6 +1569,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getNodeBodyExpr()
   {
     return nodeBodyExprEClass;
@@ -1449,6 +1580,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getNodeBodyExpr_Locs()
   {
     return (EReference)nodeBodyExprEClass.getEStructuralFeatures().get(0);
@@ -1459,6 +1591,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getNodeBodyExpr_Stmts()
   {
     return (EReference)nodeBodyExprEClass.getEStructuralFeatures().get(1);
@@ -1469,6 +1602,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getNodeStmt()
   {
     return nodeStmtEClass;
@@ -1479,6 +1613,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getNodeStmt_Expr()
   {
     return (EReference)nodeStmtEClass.getEStructuralFeatures().get(0);
@@ -1489,6 +1624,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getArg()
   {
     return argEClass;
@@ -1499,6 +1635,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getArg_Type()
   {
     return (EReference)argEClass.getEStructuralFeatures().get(0);
@@ -1509,6 +1646,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getType()
   {
     return typeEClass;
@@ -1519,9 +1657,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getRecordDefExpr()
+  @Override
+  public EClass getRecordDef()
   {
-    return recordDefExprEClass;
+    return recordDefEClass;
   }
 
   /**
@@ -1529,9 +1668,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getRecordDefExpr_Args()
+  @Override
+  public EReference getRecordDef_Args()
   {
-    return (EReference)recordDefExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)recordDefEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1539,6 +1679,29 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EClass getEnumStatement()
+  {
+    return enumStatementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getEnumStatement_Enums()
+  {
+    return (EReference)enumStatementEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getExpr()
   {
     return exprEClass;
@@ -1549,9 +1712,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getComplexExpr()
+  @Override
+  public EClass getComponentRef()
   {
-    return complexExprEClass;
+    return componentRefEClass;
   }
 
   /**
@@ -1559,6 +1723,29 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EClass getArrayLiteralExpr()
+  {
+    return arrayLiteralExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getArrayLiteralExpr_Elems()
+  {
+    return (EReference)arrayLiteralExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getDoubleDotRef()
   {
     return doubleDotRefEClass;
@@ -1569,6 +1756,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getDoubleDotRef_Elm()
   {
     return (EReference)doubleDotRefEClass.getEStructuralFeatures().get(0);
@@ -1579,46 +1767,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getNestedDotID()
-  {
-    return nestedDotIDEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getNestedDotID_Base()
-  {
-    return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getNestedDotID_Tag()
-  {
-    return (EAttribute)nestedDotIDEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getNestedDotID_Sub()
-  {
-    return (EReference)nestedDotIDEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+  @Override
   public EClass getNamedID()
   {
     return namedIDEClass;
@@ -1629,6 +1778,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAgreeContractLibrary()
   {
     return agreeContractLibraryEClass;
@@ -1639,6 +1789,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAgreeContractLibrary_Contract()
   {
     return (EReference)agreeContractLibraryEClass.getEStructuralFeatures().get(0);
@@ -1649,6 +1800,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAgreeContractSubclause()
   {
     return agreeContractSubclauseEClass;
@@ -1659,6 +1811,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAgreeContractSubclause_Contract()
   {
     return (EReference)agreeContractSubclauseEClass.getEStructuralFeatures().get(0);
@@ -1669,6 +1822,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAgreeContract()
   {
     return agreeContractEClass;
@@ -1679,6 +1833,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAgreeContract_Specs()
   {
     return (EReference)agreeContractEClass.getEStructuralFeatures().get(0);
@@ -1689,6 +1844,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getInitialStatement()
   {
     return initialStatementEClass;
@@ -1699,6 +1855,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getInitialStatement_Expr()
   {
     return (EReference)initialStatementEClass.getEStructuralFeatures().get(0);
@@ -1709,6 +1866,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getParamStatement()
   {
     return paramStatementEClass;
@@ -1719,6 +1877,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getParamStatement_Expr()
   {
     return (EReference)paramStatementEClass.getEStructuralFeatures().get(0);
@@ -1729,6 +1888,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getParamStatement_Type()
   {
     return (EReference)paramStatementEClass.getEStructuralFeatures().get(1);
@@ -1739,6 +1899,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLiftStatement()
   {
     return liftStatementEClass;
@@ -1749,6 +1910,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLiftStatement_Subcomp()
   {
     return (EReference)liftStatementEClass.getEStructuralFeatures().get(0);
@@ -1759,6 +1921,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getConnectionStatement()
   {
     return connectionStatementEClass;
@@ -1769,6 +1932,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getConnectionStatement_Conn()
   {
     return (EReference)connectionStatementEClass.getEStructuralFeatures().get(0);
@@ -1779,6 +1943,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getConnectionStatement_Expr()
   {
     return (EReference)connectionStatementEClass.getEStructuralFeatures().get(1);
@@ -1789,6 +1954,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAssumeStatement()
   {
     return assumeStatementEClass;
@@ -1799,6 +1965,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getGuaranteeStatement()
   {
     return guaranteeStatementEClass;
@@ -1809,6 +1976,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAssertStatement()
   {
     return assertStatementEClass;
@@ -1819,6 +1987,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLemmaStatement()
   {
     return lemmaStatementEClass;
@@ -1829,6 +1998,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAlwaysStatement()
   {
     return alwaysStatementEClass;
@@ -1839,6 +2009,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAlwaysStatement_Expr()
   {
     return (EReference)alwaysStatementEClass.getEStructuralFeatures().get(0);
@@ -1849,6 +2020,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWhenHoldsStatement()
   {
     return whenHoldsStatementEClass;
@@ -1859,6 +2031,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWhenHoldsStatement_ConditionInterval()
   {
     return (EReference)whenHoldsStatementEClass.getEStructuralFeatures().get(0);
@@ -1869,6 +2042,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWhenHoldsStatement_EventInterval()
   {
     return (EReference)whenHoldsStatementEClass.getEStructuralFeatures().get(1);
@@ -1879,6 +2053,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWhenOccursStatment()
   {
     return whenOccursStatmentEClass;
@@ -1889,6 +2064,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWhenOccursStatment_Times()
   {
     return (EReference)whenOccursStatmentEClass.getEStructuralFeatures().get(0);
@@ -1899,6 +2075,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWhenOccursStatment_Interval()
   {
     return (EReference)whenOccursStatmentEClass.getEStructuralFeatures().get(1);
@@ -1909,6 +2086,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWheneverOccursStatement()
   {
     return wheneverOccursStatementEClass;
@@ -1919,6 +2097,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWheneverOccursStatement_Effect()
   {
     return (EReference)wheneverOccursStatementEClass.getEStructuralFeatures().get(0);
@@ -1929,6 +2108,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWheneverBecomesTrueStatement()
   {
     return wheneverBecomesTrueStatementEClass;
@@ -1939,6 +2119,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWheneverBecomesTrueStatement_Effect()
   {
     return (EReference)wheneverBecomesTrueStatementEClass.getEStructuralFeatures().get(0);
@@ -1949,6 +2130,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWheneverHoldsStatement()
   {
     return wheneverHoldsStatementEClass;
@@ -1959,6 +2141,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWheneverHoldsStatement_Effect()
   {
     return (EReference)wheneverHoldsStatementEClass.getEStructuralFeatures().get(0);
@@ -1969,6 +2152,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWheneverImpliesStatement()
   {
     return wheneverImpliesStatementEClass;
@@ -1979,6 +2163,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWheneverImpliesStatement_Lhs()
   {
     return (EReference)wheneverImpliesStatementEClass.getEStructuralFeatures().get(0);
@@ -1989,6 +2174,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWheneverImpliesStatement_Rhs()
   {
     return (EReference)wheneverImpliesStatementEClass.getEStructuralFeatures().get(1);
@@ -1999,6 +2185,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPeriodicStatement()
   {
     return periodicStatementEClass;
@@ -2009,6 +2196,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPeriodicStatement_Period()
   {
     return (EReference)periodicStatementEClass.getEStructuralFeatures().get(0);
@@ -2019,6 +2207,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSporadicStatement()
   {
     return sporadicStatementEClass;
@@ -2029,6 +2218,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSporadicStatement_Iat()
   {
     return (EReference)sporadicStatementEClass.getEStructuralFeatures().get(0);
@@ -2039,6 +2229,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getClosedTimeInterval()
   {
     return closedTimeIntervalEClass;
@@ -2049,6 +2240,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpenLeftTimeInterval()
   {
     return openLeftTimeIntervalEClass;
@@ -2059,6 +2251,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpenRightTimeInterval()
   {
     return openRightTimeIntervalEClass;
@@ -2069,6 +2262,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpenTimeInterval()
   {
     return openTimeIntervalEClass;
@@ -2079,6 +2273,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getMNSynchStatement()
   {
     return mnSynchStatementEClass;
@@ -2089,6 +2284,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getMNSynchStatement_Comp1()
   {
     return (EReference)mnSynchStatementEClass.getEStructuralFeatures().get(0);
@@ -2099,6 +2295,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getMNSynchStatement_Comp2()
   {
     return (EReference)mnSynchStatementEClass.getEStructuralFeatures().get(1);
@@ -2109,6 +2306,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getMNSynchStatement_Max()
   {
     return (EAttribute)mnSynchStatementEClass.getEStructuralFeatures().get(2);
@@ -2119,6 +2317,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getMNSynchStatement_Min()
   {
     return (EAttribute)mnSynchStatementEClass.getEStructuralFeatures().get(3);
@@ -2129,6 +2328,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCalenStatement()
   {
     return calenStatementEClass;
@@ -2139,6 +2339,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getCalenStatement_Els()
   {
     return (EReference)calenStatementEClass.getEStructuralFeatures().get(0);
@@ -2149,6 +2350,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAsynchStatement()
   {
     return asynchStatementEClass;
@@ -2159,6 +2361,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLatchedStatement()
   {
     return latchedStatementEClass;
@@ -2169,6 +2372,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getNodeEq()
   {
     return nodeEqEClass;
@@ -2179,6 +2383,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getNodeEq_Lhs()
   {
     return (EReference)nodeEqEClass.getEStructuralFeatures().get(0);
@@ -2189,6 +2394,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getNodeLemma()
   {
     return nodeLemmaEClass;
@@ -2199,6 +2405,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getNodeLemma_Str()
   {
     return (EAttribute)nodeLemmaEClass.getEStructuralFeatures().get(0);
@@ -2209,6 +2416,40 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EClass getArrayType()
+  {
+    return arrayTypeEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getArrayType_Stem()
+  {
+    return (EReference)arrayTypeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getArrayType_Size()
+  {
+    return (EAttribute)arrayTypeEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getPrimType()
   {
     return primTypeEClass;
@@ -2219,7 +2460,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getPrimType_String()
+  @Override
+  public EAttribute getPrimType_Name()
   {
     return (EAttribute)primTypeEClass.getEStructuralFeatures().get(0);
   }
@@ -2229,6 +2471,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getPrimType_LowNeg()
   {
     return (EAttribute)primTypeEClass.getEStructuralFeatures().get(1);
@@ -2239,6 +2482,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getPrimType_RangeLow()
   {
     return (EAttribute)primTypeEClass.getEStructuralFeatures().get(2);
@@ -2249,6 +2493,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getPrimType_HighNeg()
   {
     return (EAttribute)primTypeEClass.getEStructuralFeatures().get(3);
@@ -2259,6 +2504,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getPrimType_RangeHigh()
   {
     return (EAttribute)primTypeEClass.getEStructuralFeatures().get(4);
@@ -2269,9 +2515,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getRecordType()
+  @Override
+  public EClass getForallExpr()
   {
-    return recordTypeEClass;
+    return forallExprEClass;
   }
 
   /**
@@ -2279,9 +2526,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getRecordType_Record()
+  @Override
+  public EReference getForallExpr_Binding()
   {
-    return (EReference)recordTypeEClass.getEStructuralFeatures().get(0);
+    return (EReference)forallExprEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2289,6 +2537,249 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EReference getForallExpr_Array()
+  {
+    return (EReference)forallExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getForallExpr_Expr()
+  {
+    return (EReference)forallExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getExistsExpr()
+  {
+    return existsExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getExistsExpr_Binding()
+  {
+    return (EReference)existsExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getExistsExpr_Array()
+  {
+    return (EReference)existsExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getExistsExpr_Expr()
+  {
+    return (EReference)existsExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getForeachExpr()
+  {
+    return foreachExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getForeachExpr_Binding()
+  {
+    return (EReference)foreachExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getForeachExpr_Array()
+  {
+    return (EReference)foreachExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getForeachExpr_Expr()
+  {
+    return (EReference)foreachExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getFoldLeftExpr()
+  {
+    return foldLeftExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldLeftExpr_Binding()
+  {
+    return (EReference)foldLeftExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldLeftExpr_Array()
+  {
+    return (EReference)foldLeftExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldLeftExpr_Accumulator()
+  {
+    return (EReference)foldLeftExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldLeftExpr_Initial()
+  {
+    return (EReference)foldLeftExprEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldLeftExpr_Expr()
+  {
+    return (EReference)foldLeftExprEClass.getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getFoldRightExpr()
+  {
+    return foldRightExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldRightExpr_Binding()
+  {
+    return (EReference)foldRightExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldRightExpr_Array()
+  {
+    return (EReference)foldRightExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldRightExpr_Accumulator()
+  {
+    return (EReference)foldRightExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldRightExpr_Initial()
+  {
+    return (EReference)foldRightExprEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getFoldRightExpr_Expr()
+  {
+    return (EReference)foldRightExprEClass.getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getBinaryExpr()
   {
     return binaryExprEClass;
@@ -2299,6 +2790,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getBinaryExpr_Left()
   {
     return (EReference)binaryExprEClass.getEStructuralFeatures().get(0);
@@ -2309,6 +2801,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getBinaryExpr_Op()
   {
     return (EAttribute)binaryExprEClass.getEStructuralFeatures().get(1);
@@ -2319,6 +2812,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getBinaryExpr_Right()
   {
     return (EReference)binaryExprEClass.getEStructuralFeatures().get(2);
@@ -2329,6 +2823,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUnaryExpr()
   {
     return unaryExprEClass;
@@ -2339,6 +2834,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getUnaryExpr_Op()
   {
     return (EAttribute)unaryExprEClass.getEStructuralFeatures().get(0);
@@ -2349,6 +2845,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getUnaryExpr_Expr()
   {
     return (EReference)unaryExprEClass.getEStructuralFeatures().get(1);
@@ -2359,6 +2856,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getIfThenElseExpr()
   {
     return ifThenElseExprEClass;
@@ -2369,6 +2867,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getIfThenElseExpr_A()
   {
     return (EReference)ifThenElseExprEClass.getEStructuralFeatures().get(0);
@@ -2379,6 +2878,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getIfThenElseExpr_B()
   {
     return (EReference)ifThenElseExprEClass.getEStructuralFeatures().get(1);
@@ -2389,6 +2889,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getIfThenElseExpr_C()
   {
     return (EReference)ifThenElseExprEClass.getEStructuralFeatures().get(2);
@@ -2399,6 +2900,18 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EClass getThisRef()
+  {
+    return thisRefEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getPrevExpr()
   {
     return prevExprEClass;
@@ -2409,6 +2922,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPrevExpr_Delay()
   {
     return (EReference)prevExprEClass.getEStructuralFeatures().get(0);
@@ -2419,6 +2933,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPrevExpr_Init()
   {
     return (EReference)prevExprEClass.getEStructuralFeatures().get(1);
@@ -2429,6 +2944,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getGetPropertyExpr()
   {
     return getPropertyExprEClass;
@@ -2439,7 +2955,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getGetPropertyExpr_Component()
+  @Override
+  public EReference getGetPropertyExpr_ComponentRef()
   {
     return (EReference)getPropertyExprEClass.getEStructuralFeatures().get(0);
   }
@@ -2449,6 +2966,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getGetPropertyExpr_Prop()
   {
     return (EReference)getPropertyExprEClass.getEStructuralFeatures().get(1);
@@ -2459,6 +2977,51 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EClass getArrayUpdateExpr()
+  {
+    return arrayUpdateExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getArrayUpdateExpr_Array()
+  {
+    return (EReference)arrayUpdateExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getArrayUpdateExpr_Indices()
+  {
+    return (EReference)arrayUpdateExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getArrayUpdateExpr_ValueExprs()
+  {
+    return (EReference)arrayUpdateExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getRecordUpdateExpr()
   {
     return recordUpdateExprEClass;
@@ -2469,6 +3032,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRecordUpdateExpr_Record()
   {
     return (EReference)recordUpdateExprEClass.getEStructuralFeatures().get(0);
@@ -2479,7 +3043,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getRecordUpdateExpr_Args()
+  @Override
+  public EReference getRecordUpdateExpr_Key()
   {
     return (EReference)recordUpdateExprEClass.getEStructuralFeatures().get(1);
   }
@@ -2489,7 +3054,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getRecordUpdateExpr_ArgExpr()
+  @Override
+  public EReference getRecordUpdateExpr_Expr()
   {
     return (EReference)recordUpdateExprEClass.getEStructuralFeatures().get(2);
   }
@@ -2499,6 +3065,128 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EClass getArraySubExpr()
+  {
+    return arraySubExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getArraySubExpr_Expr()
+  {
+    return (EReference)arraySubExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getArraySubExpr_Index()
+  {
+    return (EReference)arraySubExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getTagExpr()
+  {
+    return tagExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getTagExpr_Stem()
+  {
+    return (EReference)tagExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getTagExpr_Tag()
+  {
+    return (EAttribute)tagExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getSelectionExpr()
+  {
+    return selectionExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getSelectionExpr_Target()
+  {
+    return (EReference)selectionExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getSelectionExpr_Field()
+  {
+    return (EReference)selectionExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getNamedElmExpr()
+  {
+    return namedElmExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getNamedElmExpr_Elm()
+  {
+    return (EReference)namedElmExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getTimeExpr()
   {
     return timeExprEClass;
@@ -2509,6 +3197,139 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EClass getIndicesExpr()
+  {
+    return indicesExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getIndicesExpr_Array()
+  {
+    return (EReference)indicesExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getCallExpr()
+  {
+    return callExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getCallExpr_Ref()
+  {
+    return (EReference)callExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getCallExpr_Args()
+  {
+    return (EReference)callExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getRecordLitExpr()
+  {
+    return recordLitExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getRecordLitExpr_RecordType()
+  {
+    return (EReference)recordLitExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getRecordLitExpr_Args()
+  {
+    return (EReference)recordLitExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getRecordLitExpr_ArgExpr()
+  {
+    return (EReference)recordLitExprEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getEnumLitExpr()
+  {
+    return enumLitExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getEnumLitExpr_EnumType()
+  {
+    return (EReference)enumLitExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getEnumLitExpr_Value()
+  {
+    return (EAttribute)enumLitExprEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getIntLitExpr()
   {
     return intLitExprEClass;
@@ -2519,6 +3340,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getIntLitExpr_Val()
   {
     return (EAttribute)intLitExprEClass.getEStructuralFeatures().get(0);
@@ -2529,6 +3351,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPreExpr()
   {
     return preExprEClass;
@@ -2539,6 +3362,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPreExpr_Expr()
   {
     return (EReference)preExprEClass.getEStructuralFeatures().get(0);
@@ -2549,6 +3373,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getEventExpr()
   {
     return eventExprEClass;
@@ -2559,6 +3384,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getEventExpr_Id()
   {
     return (EReference)eventExprEClass.getEStructuralFeatures().get(0);
@@ -2569,6 +3395,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLatchedExpr()
   {
     return latchedExprEClass;
@@ -2579,6 +3406,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLatchedExpr_Expr()
   {
     return (EReference)latchedExprEClass.getEStructuralFeatures().get(0);
@@ -2589,6 +3417,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getTimeOfExpr()
   {
     return timeOfExprEClass;
@@ -2599,6 +3428,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTimeOfExpr_Id()
   {
     return (EReference)timeOfExprEClass.getEStructuralFeatures().get(0);
@@ -2609,6 +3439,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getTimeRiseExpr()
   {
     return timeRiseExprEClass;
@@ -2619,6 +3450,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTimeRiseExpr_Id()
   {
     return (EReference)timeRiseExprEClass.getEStructuralFeatures().get(0);
@@ -2629,6 +3461,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getTimeFallExpr()
   {
     return timeFallExprEClass;
@@ -2639,6 +3472,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTimeFallExpr_Id()
   {
     return (EReference)timeFallExprEClass.getEStructuralFeatures().get(0);
@@ -2649,6 +3483,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRealLitExpr()
   {
     return realLitExprEClass;
@@ -2659,6 +3494,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getRealLitExpr_Val()
   {
     return (EAttribute)realLitExprEClass.getEStructuralFeatures().get(0);
@@ -2669,6 +3505,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getBoolLitExpr()
   {
     return boolLitExprEClass;
@@ -2679,6 +3516,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getBoolLitExpr_Val()
   {
     return (EReference)boolLitExprEClass.getEStructuralFeatures().get(0);
@@ -2689,26 +3527,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getThisExpr()
-  {
-    return thisExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getThisExpr_SubThis()
-  {
-    return (EReference)thisExprEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+  @Override
   public EClass getFloorCast()
   {
     return floorCastEClass;
@@ -2719,6 +3538,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFloorCast_Expr()
   {
     return (EReference)floorCastEClass.getEStructuralFeatures().get(0);
@@ -2729,6 +3549,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRealCast()
   {
     return realCastEClass;
@@ -2739,6 +3560,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRealCast_Expr()
   {
     return (EReference)realCastEClass.getEStructuralFeatures().get(0);
@@ -2749,106 +3571,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAADLEnumerator()
-  {
-    return aadlEnumeratorEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getAADLEnumerator_EnumType()
-  {
-    return (EReference)aadlEnumeratorEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getAADLEnumerator_Value()
-  {
-    return (EAttribute)aadlEnumeratorEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getRecordExpr()
-  {
-    return recordExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getRecordExpr_Record()
-  {
-    return (EReference)recordExprEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getRecordExpr_Args()
-  {
-    return (EReference)recordExprEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getRecordExpr_ArgExpr()
-  {
-    return (EReference)recordExprEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getFnCallExpr()
-  {
-    return fnCallExprEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getFnCallExpr_Fn()
-  {
-    return (EReference)fnCallExprEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getFnCallExpr_Args()
-  {
-    return (EReference)fnCallExprEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+  @Override
   public AgreeFactory getAgreeFactory()
   {
     return (AgreeFactory)getEFactoryInstance();
@@ -2915,7 +3638,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     orderStatementEClass = createEClass(ORDER_STATEMENT);
     createEReference(orderStatementEClass, ORDER_STATEMENT__COMPS);
 
-    callDefEClass = createEClass(CALL_DEF);
+    abstractionEClass = createEClass(ABSTRACTION);
 
     propertyStatementEClass = createEClass(PROPERTY_STATEMENT);
     createEReference(propertyStatementEClass, PROPERTY_STATEMENT__EXPR);
@@ -2923,9 +3646,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     constStatementEClass = createEClass(CONST_STATEMENT);
     createEReference(constStatementEClass, CONST_STATEMENT__TYPE);
     createEReference(constStatementEClass, CONST_STATEMENT__EXPR);
-
-    enumStatementEClass = createEClass(ENUM_STATEMENT);
-    createEReference(enumStatementEClass, ENUM_STATEMENT__ENUMS);
 
     eqStatementEClass = createEClass(EQ_STATEMENT);
     createEReference(eqStatementEClass, EQ_STATEMENT__LHS);
@@ -2938,29 +3658,29 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(assignStatementEClass, ASSIGN_STATEMENT__ID);
     createEReference(assignStatementEClass, ASSIGN_STATEMENT__EXPR);
 
-    fnDefExprEClass = createEClass(FN_DEF_EXPR);
-    createEReference(fnDefExprEClass, FN_DEF_EXPR__ARGS);
-    createEReference(fnDefExprEClass, FN_DEF_EXPR__TYPE);
-    createEReference(fnDefExprEClass, FN_DEF_EXPR__EXPR);
+    fnDefEClass = createEClass(FN_DEF);
+    createEReference(fnDefEClass, FN_DEF__ARGS);
+    createEReference(fnDefEClass, FN_DEF__TYPE);
+    createEReference(fnDefEClass, FN_DEF__EXPR);
 
-    libraryFnDefExprEClass = createEClass(LIBRARY_FN_DEF_EXPR);
-    createEReference(libraryFnDefExprEClass, LIBRARY_FN_DEF_EXPR__ARGS);
-    createEReference(libraryFnDefExprEClass, LIBRARY_FN_DEF_EXPR__TYPE);
+    libraryFnDefEClass = createEClass(LIBRARY_FN_DEF);
+    createEReference(libraryFnDefEClass, LIBRARY_FN_DEF__ARGS);
+    createEReference(libraryFnDefEClass, LIBRARY_FN_DEF__TYPE);
 
-    linearizationDefExprEClass = createEClass(LINEARIZATION_DEF_EXPR);
-    createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__ARGS);
-    createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__INTERVALS);
-    createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__PRECISION);
-    createEReference(linearizationDefExprEClass, LINEARIZATION_DEF_EXPR__EXPR_BODY);
+    linearizationDefEClass = createEClass(LINEARIZATION_DEF);
+    createEReference(linearizationDefEClass, LINEARIZATION_DEF__ARGS);
+    createEReference(linearizationDefEClass, LINEARIZATION_DEF__INTERVALS);
+    createEReference(linearizationDefEClass, LINEARIZATION_DEF__PRECISION);
+    createEReference(linearizationDefEClass, LINEARIZATION_DEF__EXPR_BODY);
 
     linearizationIntervalEClass = createEClass(LINEARIZATION_INTERVAL);
     createEReference(linearizationIntervalEClass, LINEARIZATION_INTERVAL__START);
     createEReference(linearizationIntervalEClass, LINEARIZATION_INTERVAL__END);
 
-    nodeDefExprEClass = createEClass(NODE_DEF_EXPR);
-    createEReference(nodeDefExprEClass, NODE_DEF_EXPR__ARGS);
-    createEReference(nodeDefExprEClass, NODE_DEF_EXPR__RETS);
-    createEReference(nodeDefExprEClass, NODE_DEF_EXPR__NODE_BODY);
+    nodeDefEClass = createEClass(NODE_DEF);
+    createEReference(nodeDefEClass, NODE_DEF__ARGS);
+    createEReference(nodeDefEClass, NODE_DEF__RETS);
+    createEReference(nodeDefEClass, NODE_DEF__NODE_BODY);
 
     nodeBodyExprEClass = createEClass(NODE_BODY_EXPR);
     createEReference(nodeBodyExprEClass, NODE_BODY_EXPR__LOCS);
@@ -2974,20 +3694,21 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     typeEClass = createEClass(TYPE);
 
-    recordDefExprEClass = createEClass(RECORD_DEF_EXPR);
-    createEReference(recordDefExprEClass, RECORD_DEF_EXPR__ARGS);
+    recordDefEClass = createEClass(RECORD_DEF);
+    createEReference(recordDefEClass, RECORD_DEF__ARGS);
+
+    enumStatementEClass = createEClass(ENUM_STATEMENT);
+    createEReference(enumStatementEClass, ENUM_STATEMENT__ENUMS);
 
     exprEClass = createEClass(EXPR);
 
-    complexExprEClass = createEClass(COMPLEX_EXPR);
+    componentRefEClass = createEClass(COMPONENT_REF);
+
+    arrayLiteralExprEClass = createEClass(ARRAY_LITERAL_EXPR);
+    createEReference(arrayLiteralExprEClass, ARRAY_LITERAL_EXPR__ELEMS);
 
     doubleDotRefEClass = createEClass(DOUBLE_DOT_REF);
     createEReference(doubleDotRefEClass, DOUBLE_DOT_REF__ELM);
-
-    nestedDotIDEClass = createEClass(NESTED_DOT_ID);
-    createEReference(nestedDotIDEClass, NESTED_DOT_ID__BASE);
-    createEAttribute(nestedDotIDEClass, NESTED_DOT_ID__TAG);
-    createEReference(nestedDotIDEClass, NESTED_DOT_ID__SUB);
 
     namedIDEClass = createEClass(NAMED_ID);
 
@@ -3079,15 +3800,45 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     nodeLemmaEClass = createEClass(NODE_LEMMA);
     createEAttribute(nodeLemmaEClass, NODE_LEMMA__STR);
 
+    arrayTypeEClass = createEClass(ARRAY_TYPE);
+    createEReference(arrayTypeEClass, ARRAY_TYPE__STEM);
+    createEAttribute(arrayTypeEClass, ARRAY_TYPE__SIZE);
+
     primTypeEClass = createEClass(PRIM_TYPE);
-    createEAttribute(primTypeEClass, PRIM_TYPE__STRING);
+    createEAttribute(primTypeEClass, PRIM_TYPE__NAME);
     createEAttribute(primTypeEClass, PRIM_TYPE__LOW_NEG);
     createEAttribute(primTypeEClass, PRIM_TYPE__RANGE_LOW);
     createEAttribute(primTypeEClass, PRIM_TYPE__HIGH_NEG);
     createEAttribute(primTypeEClass, PRIM_TYPE__RANGE_HIGH);
 
-    recordTypeEClass = createEClass(RECORD_TYPE);
-    createEReference(recordTypeEClass, RECORD_TYPE__RECORD);
+    forallExprEClass = createEClass(FORALL_EXPR);
+    createEReference(forallExprEClass, FORALL_EXPR__BINDING);
+    createEReference(forallExprEClass, FORALL_EXPR__ARRAY);
+    createEReference(forallExprEClass, FORALL_EXPR__EXPR);
+
+    existsExprEClass = createEClass(EXISTS_EXPR);
+    createEReference(existsExprEClass, EXISTS_EXPR__BINDING);
+    createEReference(existsExprEClass, EXISTS_EXPR__ARRAY);
+    createEReference(existsExprEClass, EXISTS_EXPR__EXPR);
+
+    foreachExprEClass = createEClass(FOREACH_EXPR);
+    createEReference(foreachExprEClass, FOREACH_EXPR__BINDING);
+    createEReference(foreachExprEClass, FOREACH_EXPR__ARRAY);
+    createEReference(foreachExprEClass, FOREACH_EXPR__EXPR);
+
+    foldLeftExprEClass = createEClass(FOLD_LEFT_EXPR);
+    createEReference(foldLeftExprEClass, FOLD_LEFT_EXPR__BINDING);
+    createEReference(foldLeftExprEClass, FOLD_LEFT_EXPR__ARRAY);
+    createEReference(foldLeftExprEClass, FOLD_LEFT_EXPR__ACCUMULATOR);
+    createEReference(foldLeftExprEClass, FOLD_LEFT_EXPR__INITIAL);
+    createEReference(foldLeftExprEClass, FOLD_LEFT_EXPR__EXPR);
+
+    foldRightExprEClass = createEClass(FOLD_RIGHT_EXPR);
+    createEReference(foldRightExprEClass, FOLD_RIGHT_EXPR__BINDING);
+    createEReference(foldRightExprEClass, FOLD_RIGHT_EXPR__ARRAY);
+    createEReference(foldRightExprEClass, FOLD_RIGHT_EXPR__ACCUMULATOR);
+    createEReference(foldRightExprEClass, FOLD_RIGHT_EXPR__INITIAL);
+    createEReference(foldRightExprEClass, FOLD_RIGHT_EXPR__EXPR);
 
     binaryExprEClass = createEClass(BINARY_EXPR);
     createEReference(binaryExprEClass, BINARY_EXPR__LEFT);
@@ -3103,20 +3854,58 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(ifThenElseExprEClass, IF_THEN_ELSE_EXPR__B);
     createEReference(ifThenElseExprEClass, IF_THEN_ELSE_EXPR__C);
 
+    thisRefEClass = createEClass(THIS_REF);
+
     prevExprEClass = createEClass(PREV_EXPR);
     createEReference(prevExprEClass, PREV_EXPR__DELAY);
     createEReference(prevExprEClass, PREV_EXPR__INIT);
 
     getPropertyExprEClass = createEClass(GET_PROPERTY_EXPR);
-    createEReference(getPropertyExprEClass, GET_PROPERTY_EXPR__COMPONENT);
+    createEReference(getPropertyExprEClass, GET_PROPERTY_EXPR__COMPONENT_REF);
     createEReference(getPropertyExprEClass, GET_PROPERTY_EXPR__PROP);
+
+    arrayUpdateExprEClass = createEClass(ARRAY_UPDATE_EXPR);
+    createEReference(arrayUpdateExprEClass, ARRAY_UPDATE_EXPR__ARRAY);
+    createEReference(arrayUpdateExprEClass, ARRAY_UPDATE_EXPR__INDICES);
+    createEReference(arrayUpdateExprEClass, ARRAY_UPDATE_EXPR__VALUE_EXPRS);
 
     recordUpdateExprEClass = createEClass(RECORD_UPDATE_EXPR);
     createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__RECORD);
-    createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__ARGS);
-    createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__ARG_EXPR);
+    createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__KEY);
+    createEReference(recordUpdateExprEClass, RECORD_UPDATE_EXPR__EXPR);
+
+    arraySubExprEClass = createEClass(ARRAY_SUB_EXPR);
+    createEReference(arraySubExprEClass, ARRAY_SUB_EXPR__EXPR);
+    createEReference(arraySubExprEClass, ARRAY_SUB_EXPR__INDEX);
+
+    tagExprEClass = createEClass(TAG_EXPR);
+    createEReference(tagExprEClass, TAG_EXPR__STEM);
+    createEAttribute(tagExprEClass, TAG_EXPR__TAG);
+
+    selectionExprEClass = createEClass(SELECTION_EXPR);
+    createEReference(selectionExprEClass, SELECTION_EXPR__TARGET);
+    createEReference(selectionExprEClass, SELECTION_EXPR__FIELD);
+
+    namedElmExprEClass = createEClass(NAMED_ELM_EXPR);
+    createEReference(namedElmExprEClass, NAMED_ELM_EXPR__ELM);
 
     timeExprEClass = createEClass(TIME_EXPR);
+
+    indicesExprEClass = createEClass(INDICES_EXPR);
+    createEReference(indicesExprEClass, INDICES_EXPR__ARRAY);
+
+    callExprEClass = createEClass(CALL_EXPR);
+    createEReference(callExprEClass, CALL_EXPR__REF);
+    createEReference(callExprEClass, CALL_EXPR__ARGS);
+
+    recordLitExprEClass = createEClass(RECORD_LIT_EXPR);
+    createEReference(recordLitExprEClass, RECORD_LIT_EXPR__RECORD_TYPE);
+    createEReference(recordLitExprEClass, RECORD_LIT_EXPR__ARGS);
+    createEReference(recordLitExprEClass, RECORD_LIT_EXPR__ARG_EXPR);
+
+    enumLitExprEClass = createEClass(ENUM_LIT_EXPR);
+    createEReference(enumLitExprEClass, ENUM_LIT_EXPR__ENUM_TYPE);
+    createEAttribute(enumLitExprEClass, ENUM_LIT_EXPR__VALUE);
 
     intLitExprEClass = createEClass(INT_LIT_EXPR);
     createEAttribute(intLitExprEClass, INT_LIT_EXPR__VAL);
@@ -3145,27 +3934,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     boolLitExprEClass = createEClass(BOOL_LIT_EXPR);
     createEReference(boolLitExprEClass, BOOL_LIT_EXPR__VAL);
 
-    thisExprEClass = createEClass(THIS_EXPR);
-    createEReference(thisExprEClass, THIS_EXPR__SUB_THIS);
-
     floorCastEClass = createEClass(FLOOR_CAST);
     createEReference(floorCastEClass, FLOOR_CAST__EXPR);
 
     realCastEClass = createEClass(REAL_CAST);
     createEReference(realCastEClass, REAL_CAST__EXPR);
-
-    aadlEnumeratorEClass = createEClass(AADL_ENUMERATOR);
-    createEReference(aadlEnumeratorEClass, AADL_ENUMERATOR__ENUM_TYPE);
-    createEAttribute(aadlEnumeratorEClass, AADL_ENUMERATOR__VALUE);
-
-    recordExprEClass = createEClass(RECORD_EXPR);
-    createEReference(recordExprEClass, RECORD_EXPR__RECORD);
-    createEReference(recordExprEClass, RECORD_EXPR__ARGS);
-    createEReference(recordExprEClass, RECORD_EXPR__ARG_EXPR);
-
-    fnCallExprEClass = createEClass(FN_CALL_EXPR);
-    createEReference(fnCallExprEClass, FN_CALL_EXPR__FN);
-    createEReference(fnCallExprEClass, FN_CALL_EXPR__ARGS);
   }
 
   /**
@@ -3212,41 +3985,41 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     realTimeStatementEClass.getESuperTypes().add(this.getPatternStatement());
     synchStatementEClass.getESuperTypes().add(this.getSpecStatement());
     orderStatementEClass.getESuperTypes().add(this.getSpecStatement());
-    callDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    abstractionEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     propertyStatementEClass.getESuperTypes().add(this.getSpecStatement());
     constStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     constStatementEClass.getESuperTypes().add(this.getSpecStatement());
-    enumStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    enumStatementEClass.getESuperTypes().add(this.getSpecStatement());
     eqStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     eqStatementEClass.getESuperTypes().add(this.getSpecStatement());
     inputStatementEClass.getESuperTypes().add(theAadl2Package.getElement());
     inputStatementEClass.getESuperTypes().add(this.getSpecStatement());
     assignStatementEClass.getESuperTypes().add(this.getSpecStatement());
-    fnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    fnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
-    fnDefExprEClass.getESuperTypes().add(this.getCallDef());
-    libraryFnDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    libraryFnDefExprEClass.getESuperTypes().add(this.getSpecStatement());
-    libraryFnDefExprEClass.getESuperTypes().add(this.getCallDef());
-    linearizationDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    linearizationDefExprEClass.getESuperTypes().add(this.getSpecStatement());
-    linearizationDefExprEClass.getESuperTypes().add(this.getCallDef());
+    fnDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    fnDefEClass.getESuperTypes().add(this.getSpecStatement());
+    fnDefEClass.getESuperTypes().add(this.getAbstraction());
+    libraryFnDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    libraryFnDefEClass.getESuperTypes().add(this.getSpecStatement());
+    libraryFnDefEClass.getESuperTypes().add(this.getAbstraction());
+    linearizationDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    linearizationDefEClass.getESuperTypes().add(this.getSpecStatement());
+    linearizationDefEClass.getESuperTypes().add(this.getAbstraction());
     linearizationIntervalEClass.getESuperTypes().add(theAadl2Package.getElement());
-    nodeDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    nodeDefExprEClass.getESuperTypes().add(this.getSpecStatement());
-    nodeDefExprEClass.getESuperTypes().add(this.getCallDef());
+    nodeDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    nodeDefEClass.getESuperTypes().add(this.getSpecStatement());
+    nodeDefEClass.getESuperTypes().add(this.getAbstraction());
     nodeBodyExprEClass.getESuperTypes().add(theAadl2Package.getElement());
     nodeStmtEClass.getESuperTypes().add(theAadl2Package.getElement());
     argEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     typeEClass.getESuperTypes().add(theAadl2Package.getElement());
-    recordDefExprEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
-    recordDefExprEClass.getESuperTypes().add(this.getSpecStatement());
+    recordDefEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    recordDefEClass.getESuperTypes().add(this.getSpecStatement());
+    enumStatementEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
+    enumStatementEClass.getESuperTypes().add(this.getSpecStatement());
     exprEClass.getESuperTypes().add(theAadl2Package.getElement());
-    complexExprEClass.getESuperTypes().add(this.getExpr());
-    doubleDotRefEClass.getESuperTypes().add(this.getComplexExpr());
-    nestedDotIDEClass.getESuperTypes().add(this.getComplexExpr());
+    arrayLiteralExprEClass.getESuperTypes().add(this.getExpr());
+    doubleDotRefEClass.getESuperTypes().add(this.getType());
+    doubleDotRefEClass.getESuperTypes().add(this.getComponentRef());
     namedIDEClass.getESuperTypes().add(theAadl2Package.getNamedElement());
     agreeContractLibraryEClass.getESuperTypes().add(this.getAgreeLibrary());
     agreeContractSubclauseEClass.getESuperTypes().add(this.getAgreeSubclause());
@@ -3278,15 +4051,30 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     latchedStatementEClass.getESuperTypes().add(this.getSynchStatement());
     nodeEqEClass.getESuperTypes().add(this.getNodeStmt());
     nodeLemmaEClass.getESuperTypes().add(this.getNodeStmt());
+    arrayTypeEClass.getESuperTypes().add(this.getType());
     primTypeEClass.getESuperTypes().add(this.getType());
-    recordTypeEClass.getESuperTypes().add(this.getType());
+    forallExprEClass.getESuperTypes().add(this.getExpr());
+    existsExprEClass.getESuperTypes().add(this.getExpr());
+    foreachExprEClass.getESuperTypes().add(this.getExpr());
+    foldLeftExprEClass.getESuperTypes().add(this.getExpr());
+    foldRightExprEClass.getESuperTypes().add(this.getExpr());
     binaryExprEClass.getESuperTypes().add(this.getExpr());
     unaryExprEClass.getESuperTypes().add(this.getExpr());
     ifThenElseExprEClass.getESuperTypes().add(this.getExpr());
+    thisRefEClass.getESuperTypes().add(this.getComponentRef());
     prevExprEClass.getESuperTypes().add(this.getExpr());
     getPropertyExprEClass.getESuperTypes().add(this.getExpr());
+    arrayUpdateExprEClass.getESuperTypes().add(this.getExpr());
     recordUpdateExprEClass.getESuperTypes().add(this.getExpr());
+    arraySubExprEClass.getESuperTypes().add(this.getExpr());
+    tagExprEClass.getESuperTypes().add(this.getExpr());
+    selectionExprEClass.getESuperTypes().add(this.getExpr());
+    namedElmExprEClass.getESuperTypes().add(this.getExpr());
     timeExprEClass.getESuperTypes().add(this.getExpr());
+    indicesExprEClass.getESuperTypes().add(this.getExpr());
+    callExprEClass.getESuperTypes().add(this.getExpr());
+    recordLitExprEClass.getESuperTypes().add(this.getExpr());
+    enumLitExprEClass.getESuperTypes().add(this.getExpr());
     intLitExprEClass.getESuperTypes().add(this.getExpr());
     preExprEClass.getESuperTypes().add(this.getExpr());
     eventExprEClass.getESuperTypes().add(this.getExpr());
@@ -3296,12 +4084,8 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     timeFallExprEClass.getESuperTypes().add(this.getExpr());
     realLitExprEClass.getESuperTypes().add(this.getExpr());
     boolLitExprEClass.getESuperTypes().add(this.getExpr());
-    thisExprEClass.getESuperTypes().add(this.getExpr());
     floorCastEClass.getESuperTypes().add(this.getExpr());
     realCastEClass.getESuperTypes().add(this.getExpr());
-    aadlEnumeratorEClass.getESuperTypes().add(this.getExpr());
-    recordExprEClass.getESuperTypes().add(this.getComplexExpr());
-    fnCallExprEClass.getESuperTypes().add(this.getComplexExpr());
 
     // Initialize classes and features; add operations and parameters
     initEClass(agreeLibraryEClass, AgreeLibrary.class, "AgreeLibrary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3345,7 +4129,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(orderStatementEClass, OrderStatement.class, "OrderStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getOrderStatement_Comps(), theAadl2Package.getNamedElement(), null, "comps", null, 0, -1, OrderStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(callDefEClass, CallDef.class, "CallDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(abstractionEClass, Abstraction.class, "Abstraction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(propertyStatementEClass, PropertyStatement.class, "PropertyStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPropertyStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, PropertyStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3353,9 +4137,6 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(constStatementEClass, ConstStatement.class, "ConstStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getConstStatement_Type(), this.getType(), null, "type", null, 0, 1, ConstStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getConstStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, ConstStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(enumStatementEClass, EnumStatement.class, "EnumStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getEnumStatement_Enums(), this.getNamedID(), null, "enums", null, 0, -1, EnumStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(eqStatementEClass, EqStatement.class, "EqStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getEqStatement_Lhs(), this.getArg(), null, "lhs", null, 0, -1, EqStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3365,32 +4146,32 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getInputStatement_Lhs(), this.getArg(), null, "lhs", null, 0, -1, InputStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(assignStatementEClass, AssignStatement.class, "AssignStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAssignStatement_Id(), this.getNestedDotID(), null, "id", null, 0, 1, AssignStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAssignStatement_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, AssignStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAssignStatement_Expr(), this.getExpr(), null, "expr", null, 0, 1, AssignStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(fnDefExprEClass, FnDefExpr.class, "FnDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getFnDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFnDefExpr_Type(), this.getType(), null, "type", null, 0, 1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFnDefExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, FnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(fnDefEClass, FnDef.class, "FnDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getFnDef_Args(), this.getArg(), null, "args", null, 0, -1, FnDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFnDef_Type(), this.getType(), null, "type", null, 0, 1, FnDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFnDef_Expr(), this.getExpr(), null, "expr", null, 0, 1, FnDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(libraryFnDefExprEClass, LibraryFnDefExpr.class, "LibraryFnDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getLibraryFnDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, LibraryFnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getLibraryFnDefExpr_Type(), this.getType(), null, "type", null, 0, 1, LibraryFnDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(libraryFnDefEClass, LibraryFnDef.class, "LibraryFnDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLibraryFnDef_Args(), this.getArg(), null, "args", null, 0, -1, LibraryFnDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLibraryFnDef_Type(), this.getType(), null, "type", null, 0, 1, LibraryFnDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(linearizationDefExprEClass, LinearizationDefExpr.class, "LinearizationDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getLinearizationDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, LinearizationDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getLinearizationDefExpr_Intervals(), this.getLinearizationInterval(), null, "intervals", null, 0, -1, LinearizationDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getLinearizationDefExpr_Precision(), this.getExpr(), null, "precision", null, 0, 1, LinearizationDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getLinearizationDefExpr_ExprBody(), this.getExpr(), null, "exprBody", null, 0, 1, LinearizationDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(linearizationDefEClass, LinearizationDef.class, "LinearizationDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLinearizationDef_Args(), this.getArg(), null, "args", null, 0, -1, LinearizationDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLinearizationDef_Intervals(), this.getLinearizationInterval(), null, "intervals", null, 0, -1, LinearizationDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLinearizationDef_Precision(), this.getExpr(), null, "precision", null, 0, 1, LinearizationDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLinearizationDef_ExprBody(), this.getExpr(), null, "exprBody", null, 0, 1, LinearizationDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(linearizationIntervalEClass, LinearizationInterval.class, "LinearizationInterval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getLinearizationInterval_Start(), this.getExpr(), null, "start", null, 0, 1, LinearizationInterval.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLinearizationInterval_End(), this.getExpr(), null, "end", null, 0, 1, LinearizationInterval.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(nodeDefExprEClass, NodeDefExpr.class, "NodeDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getNodeDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, NodeDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getNodeDefExpr_Rets(), this.getArg(), null, "rets", null, 0, -1, NodeDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getNodeDefExpr_NodeBody(), this.getNodeBodyExpr(), null, "nodeBody", null, 0, 1, NodeDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(nodeDefEClass, NodeDef.class, "NodeDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNodeDef_Args(), this.getArg(), null, "args", null, 0, -1, NodeDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNodeDef_Rets(), this.getArg(), null, "rets", null, 0, -1, NodeDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNodeDef_NodeBody(), this.getNodeBodyExpr(), null, "nodeBody", null, 0, 1, NodeDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(nodeBodyExprEClass, NodeBodyExpr.class, "NodeBodyExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNodeBodyExpr_Locs(), this.getArg(), null, "locs", null, 0, -1, NodeBodyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3404,20 +4185,21 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
 
     initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(recordDefExprEClass, RecordDefExpr.class, "RecordDefExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getRecordDefExpr_Args(), this.getArg(), null, "args", null, 0, -1, RecordDefExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(recordDefEClass, RecordDef.class, "RecordDef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getRecordDef_Args(), this.getArg(), null, "args", null, 0, -1, RecordDef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(enumStatementEClass, EnumStatement.class, "EnumStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getEnumStatement_Enums(), this.getNamedID(), null, "enums", null, 0, -1, EnumStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(exprEClass, Expr.class, "Expr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(complexExprEClass, ComplexExpr.class, "ComplexExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(componentRefEClass, ComponentRef.class, "ComponentRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(arrayLiteralExprEClass, ArrayLiteralExpr.class, "ArrayLiteralExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getArrayLiteralExpr_Elems(), this.getExpr(), null, "elems", null, 0, -1, ArrayLiteralExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(doubleDotRefEClass, DoubleDotRef.class, "DoubleDotRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getDoubleDotRef_Elm(), theAadl2Package.getNamedElement(), null, "elm", null, 0, 1, DoubleDotRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(nestedDotIDEClass, NestedDotID.class, "NestedDotID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getNestedDotID_Base(), theAadl2Package.getNamedElement(), null, "base", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getNestedDotID_Tag(), theEcorePackage.getEString(), "tag", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getNestedDotID_Sub(), this.getNestedDotID(), null, "sub", null, 0, 1, NestedDotID.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(namedIDEClass, NamedID.class, "NamedID", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3438,7 +4220,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getParamStatement_Type(), this.getType(), null, "type", null, 0, 1, ParamStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(liftStatementEClass, LiftStatement.class, "LiftStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getLiftStatement_Subcomp(), this.getNestedDotID(), null, "subcomp", null, 0, 1, LiftStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLiftStatement_Subcomp(), theAadl2Package.getNamedElement(), null, "subcomp", null, 0, 1, LiftStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(connectionStatementEClass, ConnectionStatement.class, "ConnectionStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getConnectionStatement_Conn(), theAadl2Package.getNamedElement(), null, "conn", null, 0, 1, ConnectionStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3509,15 +4291,45 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(nodeLemmaEClass, NodeLemma.class, "NodeLemma", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getNodeLemma_Str(), theEcorePackage.getEString(), "str", null, 0, 1, NodeLemma.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(arrayTypeEClass, ArrayType.class, "ArrayType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getArrayType_Stem(), this.getType(), null, "stem", null, 0, 1, ArrayType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getArrayType_Size(), theEcorePackage.getEString(), "size", null, 0, 1, ArrayType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(primTypeEClass, PrimType.class, "PrimType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getPrimType_String(), theEcorePackage.getEString(), "string", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getPrimType_Name(), theEcorePackage.getEString(), "name", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getPrimType_LowNeg(), theEcorePackage.getEString(), "lowNeg", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getPrimType_RangeLow(), theEcorePackage.getEString(), "rangeLow", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getPrimType_HighNeg(), theEcorePackage.getEString(), "highNeg", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getPrimType_RangeHigh(), theEcorePackage.getEString(), "rangeHigh", null, 0, 1, PrimType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(recordTypeEClass, RecordType.class, "RecordType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getRecordType_Record(), this.getDoubleDotRef(), null, "record", null, 0, 1, RecordType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(forallExprEClass, ForallExpr.class, "ForallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getForallExpr_Binding(), this.getNamedID(), null, "binding", null, 0, 1, ForallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getForallExpr_Array(), this.getExpr(), null, "array", null, 0, 1, ForallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getForallExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, ForallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(existsExprEClass, ExistsExpr.class, "ExistsExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getExistsExpr_Binding(), this.getNamedID(), null, "binding", null, 0, 1, ExistsExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getExistsExpr_Array(), this.getExpr(), null, "array", null, 0, 1, ExistsExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getExistsExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, ExistsExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(foreachExprEClass, ForeachExpr.class, "ForeachExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getForeachExpr_Binding(), this.getNamedID(), null, "binding", null, 0, 1, ForeachExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getForeachExpr_Array(), this.getExpr(), null, "array", null, 0, 1, ForeachExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getForeachExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, ForeachExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(foldLeftExprEClass, FoldLeftExpr.class, "FoldLeftExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getFoldLeftExpr_Binding(), this.getNamedID(), null, "binding", null, 0, 1, FoldLeftExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFoldLeftExpr_Array(), this.getExpr(), null, "array", null, 0, 1, FoldLeftExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFoldLeftExpr_Accumulator(), this.getNamedID(), null, "accumulator", null, 0, 1, FoldLeftExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFoldLeftExpr_Initial(), this.getExpr(), null, "initial", null, 0, 1, FoldLeftExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFoldLeftExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, FoldLeftExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(foldRightExprEClass, FoldRightExpr.class, "FoldRightExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getFoldRightExpr_Binding(), this.getNamedID(), null, "binding", null, 0, 1, FoldRightExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFoldRightExpr_Array(), this.getExpr(), null, "array", null, 0, 1, FoldRightExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFoldRightExpr_Accumulator(), this.getNamedID(), null, "accumulator", null, 0, 1, FoldRightExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFoldRightExpr_Initial(), this.getExpr(), null, "initial", null, 0, 1, FoldRightExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFoldRightExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, FoldRightExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(binaryExprEClass, BinaryExpr.class, "BinaryExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getBinaryExpr_Left(), this.getExpr(), null, "left", null, 0, 1, BinaryExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3533,20 +4345,58 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getIfThenElseExpr_B(), this.getExpr(), null, "b", null, 0, 1, IfThenElseExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getIfThenElseExpr_C(), this.getExpr(), null, "c", null, 0, 1, IfThenElseExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(thisRefEClass, ThisRef.class, "ThisRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
     initEClass(prevExprEClass, PrevExpr.class, "PrevExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPrevExpr_Delay(), this.getExpr(), null, "delay", null, 0, 1, PrevExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getPrevExpr_Init(), this.getExpr(), null, "init", null, 0, 1, PrevExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(getPropertyExprEClass, GetPropertyExpr.class, "GetPropertyExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getGetPropertyExpr_Component(), this.getExpr(), null, "component", null, 0, 1, GetPropertyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getGetPropertyExpr_ComponentRef(), this.getComponentRef(), null, "componentRef", null, 0, 1, GetPropertyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getGetPropertyExpr_Prop(), theAadl2Package.getNamedElement(), null, "prop", null, 0, 1, GetPropertyExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(arrayUpdateExprEClass, ArrayUpdateExpr.class, "ArrayUpdateExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getArrayUpdateExpr_Array(), this.getExpr(), null, "array", null, 0, 1, ArrayUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getArrayUpdateExpr_Indices(), this.getExpr(), null, "indices", null, 0, -1, ArrayUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getArrayUpdateExpr_ValueExprs(), this.getExpr(), null, "valueExprs", null, 0, -1, ArrayUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(recordUpdateExprEClass, RecordUpdateExpr.class, "RecordUpdateExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRecordUpdateExpr_Record(), this.getExpr(), null, "record", null, 0, 1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getRecordUpdateExpr_Args(), theAadl2Package.getNamedElement(), null, "args", null, 0, -1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getRecordUpdateExpr_ArgExpr(), this.getExpr(), null, "argExpr", null, 0, -1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRecordUpdateExpr_Key(), theAadl2Package.getNamedElement(), null, "key", null, 0, 1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRecordUpdateExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, RecordUpdateExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(arraySubExprEClass, ArraySubExpr.class, "ArraySubExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getArraySubExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, ArraySubExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getArraySubExpr_Index(), this.getExpr(), null, "index", null, 0, 1, ArraySubExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(tagExprEClass, TagExpr.class, "TagExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getTagExpr_Stem(), this.getExpr(), null, "stem", null, 0, 1, TagExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getTagExpr_Tag(), theEcorePackage.getEString(), "tag", null, 0, 1, TagExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(selectionExprEClass, SelectionExpr.class, "SelectionExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getSelectionExpr_Target(), this.getExpr(), null, "target", null, 0, 1, SelectionExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSelectionExpr_Field(), theAadl2Package.getNamedElement(), null, "field", null, 0, 1, SelectionExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(namedElmExprEClass, NamedElmExpr.class, "NamedElmExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNamedElmExpr_Elm(), theAadl2Package.getNamedElement(), null, "elm", null, 0, 1, NamedElmExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(timeExprEClass, TimeExpr.class, "TimeExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(indicesExprEClass, IndicesExpr.class, "IndicesExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getIndicesExpr_Array(), this.getExpr(), null, "array", null, 0, 1, IndicesExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(callExprEClass, CallExpr.class, "CallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getCallExpr_Ref(), this.getDoubleDotRef(), null, "ref", null, 0, 1, CallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCallExpr_Args(), this.getExpr(), null, "args", null, 0, -1, CallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(recordLitExprEClass, RecordLitExpr.class, "RecordLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getRecordLitExpr_RecordType(), this.getDoubleDotRef(), null, "recordType", null, 0, 1, RecordLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRecordLitExpr_Args(), theAadl2Package.getNamedElement(), null, "args", null, 0, -1, RecordLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRecordLitExpr_ArgExpr(), this.getExpr(), null, "argExpr", null, 0, -1, RecordLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(enumLitExprEClass, EnumLitExpr.class, "EnumLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getEnumLitExpr_EnumType(), this.getDoubleDotRef(), null, "enumType", null, 0, 1, EnumLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getEnumLitExpr_Value(), theEcorePackage.getEString(), "value", null, 0, 1, EnumLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(intLitExprEClass, IntLitExpr.class, "IntLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getIntLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, IntLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3555,19 +4405,19 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getPreExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, PreExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(eventExprEClass, EventExpr.class, "EventExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getEventExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, EventExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getEventExpr_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, EventExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(latchedExprEClass, LatchedExpr.class, "LatchedExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getLatchedExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, LatchedExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(timeOfExprEClass, TimeOfExpr.class, "TimeOfExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTimeOfExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, TimeOfExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTimeOfExpr_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, TimeOfExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(timeRiseExprEClass, TimeRiseExpr.class, "TimeRiseExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTimeRiseExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, TimeRiseExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTimeRiseExpr_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, TimeRiseExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(timeFallExprEClass, TimeFallExpr.class, "TimeFallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTimeFallExpr_Id(), this.getNestedDotID(), null, "id", null, 0, 1, TimeFallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTimeFallExpr_Id(), theAadl2Package.getNamedElement(), null, "id", null, 0, 1, TimeFallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(realLitExprEClass, RealLitExpr.class, "RealLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRealLitExpr_Val(), theEcorePackage.getEString(), "val", null, 0, 1, RealLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3575,27 +4425,11 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEClass(boolLitExprEClass, BoolLitExpr.class, "BoolLitExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getBoolLitExpr_Val(), theAadl2Package.getBooleanLiteral(), null, "val", null, 0, 1, BoolLitExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(thisExprEClass, ThisExpr.class, "ThisExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getThisExpr_SubThis(), this.getNestedDotID(), null, "subThis", null, 0, 1, ThisExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(floorCastEClass, FloorCast.class, "FloorCast", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFloorCast_Expr(), this.getExpr(), null, "expr", null, 0, 1, FloorCast.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(realCastEClass, RealCast.class, "RealCast", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRealCast_Expr(), this.getExpr(), null, "expr", null, 0, 1, RealCast.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(aadlEnumeratorEClass, AADLEnumerator.class, "AADLEnumerator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAADLEnumerator_EnumType(), this.getDoubleDotRef(), null, "enumType", null, 0, 1, AADLEnumerator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAADLEnumerator_Value(), theEcorePackage.getEString(), "value", null, 0, 1, AADLEnumerator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(recordExprEClass, RecordExpr.class, "RecordExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getRecordExpr_Record(), this.getDoubleDotRef(), null, "record", null, 0, 1, RecordExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getRecordExpr_Args(), theAadl2Package.getNamedElement(), null, "args", null, 0, -1, RecordExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getRecordExpr_ArgExpr(), this.getExpr(), null, "argExpr", null, 0, -1, RecordExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(fnCallExprEClass, FnCallExpr.class, "FnCallExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getFnCallExpr_Fn(), this.getNestedDotID(), null, "fn", null, 0, 1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFnCallExpr_Args(), this.getExpr(), null, "args", null, 0, -1, FnCallExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

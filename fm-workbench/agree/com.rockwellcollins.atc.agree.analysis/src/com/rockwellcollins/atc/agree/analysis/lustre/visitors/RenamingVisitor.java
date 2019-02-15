@@ -16,6 +16,7 @@ import org.osate.aadl2.instance.ComponentInstance;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
@@ -23,7 +24,6 @@ import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
-import com.rockwellcollins.atc.agree.agree.RecordType;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout;
 import com.rockwellcollins.atc.agree.analysis.AgreeLayout.SigType;
@@ -128,7 +128,7 @@ public class RenamingVisitor extends AstIterVisitor {
 		String result = arg.getName() + " : ";
 		if (arg.getType() instanceof PrimType) {
 			PrimType primType = (PrimType) arg.getType();
-			result += primType.getString();
+			result += primType.getName();
 			String lowLit = (primType.getLowNeg() != null) ? primType.getLowNeg() : "";
 			String highLit = (primType.getHighNeg() != null) ? primType.getHighNeg() : "";
 			if (primType.getRangeLow() != null) {
@@ -136,7 +136,11 @@ public class RenamingVisitor extends AstIterVisitor {
 						+ primType.getRangeHigh() + "]";
 			}
 		} else {
-			result += ((RecordType) arg.getType()).getRecord().getElm().getName();
+
+			result += ((DoubleDotRef) arg.getType()).getElm().getName();
+//=======
+//			result += ((RecordType) arg.getType()).getRecord().getElm().getName();
+//>>>>>>> origin/develop
 		}
 		return result;
 	}

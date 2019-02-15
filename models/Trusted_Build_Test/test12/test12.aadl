@@ -32,7 +32,7 @@ end a_array.impl;
 thread sender
 	features
 		Output1: out event data port a_array.impl {
-	      TB_SYS::CommPrim_Source_Text => "ping_Output1";			
+	      TB_SYS::CommPrim_Source_Text => "ping_Output1";		
 		};
 	
 	properties 

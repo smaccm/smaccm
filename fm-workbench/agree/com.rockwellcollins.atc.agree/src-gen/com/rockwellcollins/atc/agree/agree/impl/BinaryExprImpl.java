@@ -97,6 +97,7 @@ public class BinaryExprImpl extends ExprImpl implements BinaryExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getLeft()
   {
     return left;
@@ -124,6 +125,7 @@ public class BinaryExprImpl extends ExprImpl implements BinaryExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setLeft(Expr newLeft)
   {
     if (newLeft != left)
@@ -145,6 +147,7 @@ public class BinaryExprImpl extends ExprImpl implements BinaryExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOp()
   {
     return op;
@@ -155,6 +158,7 @@ public class BinaryExprImpl extends ExprImpl implements BinaryExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp(String newOp)
   {
     String oldOp = op;
@@ -168,6 +172,7 @@ public class BinaryExprImpl extends ExprImpl implements BinaryExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getRight()
   {
     return right;
@@ -195,6 +200,7 @@ public class BinaryExprImpl extends ExprImpl implements BinaryExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRight(Expr newRight)
   {
     if (newRight != right)
@@ -325,7 +331,7 @@ public class BinaryExprImpl extends ExprImpl implements BinaryExpr
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (op: ");
     result.append(op);
     result.append(')');

@@ -181,12 +181,12 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.CALL_DEF:
+      case AgreePackage.ABSTRACTION:
       {
-        CallDef callDef = (CallDef)theEObject;
-        T result = caseCallDef(callDef);
-        if (result == null) result = caseNamedElement(callDef);
-        if (result == null) result = caseElement(callDef);
+        Abstraction abstraction = (Abstraction)theEObject;
+        T result = caseAbstraction(abstraction);
+        if (result == null) result = caseNamedElement(abstraction);
+        if (result == null) result = caseElement(abstraction);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -207,16 +207,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = caseNamedElement(constStatement);
         if (result == null) result = caseSpecStatement(constStatement);
         if (result == null) result = caseElement(constStatement);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.ENUM_STATEMENT:
-      {
-        EnumStatement enumStatement = (EnumStatement)theEObject;
-        T result = caseEnumStatement(enumStatement);
-        if (result == null) result = caseNamedElement(enumStatement);
-        if (result == null) result = caseSpecStatement(enumStatement);
-        if (result == null) result = caseElement(enumStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -247,36 +237,36 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.FN_DEF_EXPR:
+      case AgreePackage.FN_DEF:
       {
-        FnDefExpr fnDefExpr = (FnDefExpr)theEObject;
-        T result = caseFnDefExpr(fnDefExpr);
-        if (result == null) result = caseSpecStatement(fnDefExpr);
-        if (result == null) result = caseCallDef(fnDefExpr);
-        if (result == null) result = caseNamedElement(fnDefExpr);
-        if (result == null) result = caseElement(fnDefExpr);
+        FnDef fnDef = (FnDef)theEObject;
+        T result = caseFnDef(fnDef);
+        if (result == null) result = caseSpecStatement(fnDef);
+        if (result == null) result = caseAbstraction(fnDef);
+        if (result == null) result = caseNamedElement(fnDef);
+        if (result == null) result = caseElement(fnDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.LIBRARY_FN_DEF_EXPR:
+      case AgreePackage.LIBRARY_FN_DEF:
       {
-        LibraryFnDefExpr libraryFnDefExpr = (LibraryFnDefExpr)theEObject;
-        T result = caseLibraryFnDefExpr(libraryFnDefExpr);
-        if (result == null) result = caseSpecStatement(libraryFnDefExpr);
-        if (result == null) result = caseCallDef(libraryFnDefExpr);
-        if (result == null) result = caseNamedElement(libraryFnDefExpr);
-        if (result == null) result = caseElement(libraryFnDefExpr);
+        LibraryFnDef libraryFnDef = (LibraryFnDef)theEObject;
+        T result = caseLibraryFnDef(libraryFnDef);
+        if (result == null) result = caseSpecStatement(libraryFnDef);
+        if (result == null) result = caseAbstraction(libraryFnDef);
+        if (result == null) result = caseNamedElement(libraryFnDef);
+        if (result == null) result = caseElement(libraryFnDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.LINEARIZATION_DEF_EXPR:
+      case AgreePackage.LINEARIZATION_DEF:
       {
-        LinearizationDefExpr linearizationDefExpr = (LinearizationDefExpr)theEObject;
-        T result = caseLinearizationDefExpr(linearizationDefExpr);
-        if (result == null) result = caseSpecStatement(linearizationDefExpr);
-        if (result == null) result = caseCallDef(linearizationDefExpr);
-        if (result == null) result = caseNamedElement(linearizationDefExpr);
-        if (result == null) result = caseElement(linearizationDefExpr);
+        LinearizationDef linearizationDef = (LinearizationDef)theEObject;
+        T result = caseLinearizationDef(linearizationDef);
+        if (result == null) result = caseSpecStatement(linearizationDef);
+        if (result == null) result = caseAbstraction(linearizationDef);
+        if (result == null) result = caseNamedElement(linearizationDef);
+        if (result == null) result = caseElement(linearizationDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -288,14 +278,14 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.NODE_DEF_EXPR:
+      case AgreePackage.NODE_DEF:
       {
-        NodeDefExpr nodeDefExpr = (NodeDefExpr)theEObject;
-        T result = caseNodeDefExpr(nodeDefExpr);
-        if (result == null) result = caseSpecStatement(nodeDefExpr);
-        if (result == null) result = caseCallDef(nodeDefExpr);
-        if (result == null) result = caseNamedElement(nodeDefExpr);
-        if (result == null) result = caseElement(nodeDefExpr);
+        NodeDef nodeDef = (NodeDef)theEObject;
+        T result = caseNodeDef(nodeDef);
+        if (result == null) result = caseSpecStatement(nodeDef);
+        if (result == null) result = caseAbstraction(nodeDef);
+        if (result == null) result = caseNamedElement(nodeDef);
+        if (result == null) result = caseElement(nodeDef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -332,13 +322,23 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.RECORD_DEF_EXPR:
+      case AgreePackage.RECORD_DEF:
       {
-        RecordDefExpr recordDefExpr = (RecordDefExpr)theEObject;
-        T result = caseRecordDefExpr(recordDefExpr);
-        if (result == null) result = caseNamedElement(recordDefExpr);
-        if (result == null) result = caseSpecStatement(recordDefExpr);
-        if (result == null) result = caseElement(recordDefExpr);
+        RecordDef recordDef = (RecordDef)theEObject;
+        T result = caseRecordDef(recordDef);
+        if (result == null) result = caseNamedElement(recordDef);
+        if (result == null) result = caseSpecStatement(recordDef);
+        if (result == null) result = caseElement(recordDef);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ENUM_STATEMENT:
+      {
+        EnumStatement enumStatement = (EnumStatement)theEObject;
+        T result = caseEnumStatement(enumStatement);
+        if (result == null) result = caseNamedElement(enumStatement);
+        if (result == null) result = caseSpecStatement(enumStatement);
+        if (result == null) result = caseElement(enumStatement);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -350,12 +350,19 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.COMPLEX_EXPR:
+      case AgreePackage.COMPONENT_REF:
       {
-        ComplexExpr complexExpr = (ComplexExpr)theEObject;
-        T result = caseComplexExpr(complexExpr);
-        if (result == null) result = caseExpr(complexExpr);
-        if (result == null) result = caseElement(complexExpr);
+        ComponentRef componentRef = (ComponentRef)theEObject;
+        T result = caseComponentRef(componentRef);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ARRAY_LITERAL_EXPR:
+      {
+        ArrayLiteralExpr arrayLiteralExpr = (ArrayLiteralExpr)theEObject;
+        T result = caseArrayLiteralExpr(arrayLiteralExpr);
+        if (result == null) result = caseExpr(arrayLiteralExpr);
+        if (result == null) result = caseElement(arrayLiteralExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -363,19 +370,9 @@ public class AgreeSwitch<T> extends Switch<T>
       {
         DoubleDotRef doubleDotRef = (DoubleDotRef)theEObject;
         T result = caseDoubleDotRef(doubleDotRef);
-        if (result == null) result = caseComplexExpr(doubleDotRef);
-        if (result == null) result = caseExpr(doubleDotRef);
+        if (result == null) result = caseType(doubleDotRef);
+        if (result == null) result = caseComponentRef(doubleDotRef);
         if (result == null) result = caseElement(doubleDotRef);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.NESTED_DOT_ID:
-      {
-        NestedDotID nestedDotID = (NestedDotID)theEObject;
-        T result = caseNestedDotID(nestedDotID);
-        if (result == null) result = caseComplexExpr(nestedDotID);
-        if (result == null) result = caseExpr(nestedDotID);
-        if (result == null) result = caseElement(nestedDotID);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -670,6 +667,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ARRAY_TYPE:
+      {
+        ArrayType arrayType = (ArrayType)theEObject;
+        T result = caseArrayType(arrayType);
+        if (result == null) result = caseType(arrayType);
+        if (result == null) result = caseElement(arrayType);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.PRIM_TYPE:
       {
         PrimType primType = (PrimType)theEObject;
@@ -679,12 +685,48 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.RECORD_TYPE:
+      case AgreePackage.FORALL_EXPR:
       {
-        RecordType recordType = (RecordType)theEObject;
-        T result = caseRecordType(recordType);
-        if (result == null) result = caseType(recordType);
-        if (result == null) result = caseElement(recordType);
+        ForallExpr forallExpr = (ForallExpr)theEObject;
+        T result = caseForallExpr(forallExpr);
+        if (result == null) result = caseExpr(forallExpr);
+        if (result == null) result = caseElement(forallExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.EXISTS_EXPR:
+      {
+        ExistsExpr existsExpr = (ExistsExpr)theEObject;
+        T result = caseExistsExpr(existsExpr);
+        if (result == null) result = caseExpr(existsExpr);
+        if (result == null) result = caseElement(existsExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.FOREACH_EXPR:
+      {
+        ForeachExpr foreachExpr = (ForeachExpr)theEObject;
+        T result = caseForeachExpr(foreachExpr);
+        if (result == null) result = caseExpr(foreachExpr);
+        if (result == null) result = caseElement(foreachExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.FOLD_LEFT_EXPR:
+      {
+        FoldLeftExpr foldLeftExpr = (FoldLeftExpr)theEObject;
+        T result = caseFoldLeftExpr(foldLeftExpr);
+        if (result == null) result = caseExpr(foldLeftExpr);
+        if (result == null) result = caseElement(foldLeftExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.FOLD_RIGHT_EXPR:
+      {
+        FoldRightExpr foldRightExpr = (FoldRightExpr)theEObject;
+        T result = caseFoldRightExpr(foldRightExpr);
+        if (result == null) result = caseExpr(foldRightExpr);
+        if (result == null) result = caseElement(foldRightExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -715,6 +757,14 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.THIS_REF:
+      {
+        ThisRef thisRef = (ThisRef)theEObject;
+        T result = caseThisRef(thisRef);
+        if (result == null) result = caseComponentRef(thisRef);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.PREV_EXPR:
       {
         PrevExpr prevExpr = (PrevExpr)theEObject;
@@ -733,6 +783,15 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ARRAY_UPDATE_EXPR:
+      {
+        ArrayUpdateExpr arrayUpdateExpr = (ArrayUpdateExpr)theEObject;
+        T result = caseArrayUpdateExpr(arrayUpdateExpr);
+        if (result == null) result = caseExpr(arrayUpdateExpr);
+        if (result == null) result = caseElement(arrayUpdateExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.RECORD_UPDATE_EXPR:
       {
         RecordUpdateExpr recordUpdateExpr = (RecordUpdateExpr)theEObject;
@@ -742,12 +801,84 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case AgreePackage.ARRAY_SUB_EXPR:
+      {
+        ArraySubExpr arraySubExpr = (ArraySubExpr)theEObject;
+        T result = caseArraySubExpr(arraySubExpr);
+        if (result == null) result = caseExpr(arraySubExpr);
+        if (result == null) result = caseElement(arraySubExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.TAG_EXPR:
+      {
+        TagExpr tagExpr = (TagExpr)theEObject;
+        T result = caseTagExpr(tagExpr);
+        if (result == null) result = caseExpr(tagExpr);
+        if (result == null) result = caseElement(tagExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.SELECTION_EXPR:
+      {
+        SelectionExpr selectionExpr = (SelectionExpr)theEObject;
+        T result = caseSelectionExpr(selectionExpr);
+        if (result == null) result = caseExpr(selectionExpr);
+        if (result == null) result = caseElement(selectionExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.NAMED_ELM_EXPR:
+      {
+        NamedElmExpr namedElmExpr = (NamedElmExpr)theEObject;
+        T result = caseNamedElmExpr(namedElmExpr);
+        if (result == null) result = caseExpr(namedElmExpr);
+        if (result == null) result = caseElement(namedElmExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case AgreePackage.TIME_EXPR:
       {
         TimeExpr timeExpr = (TimeExpr)theEObject;
         T result = caseTimeExpr(timeExpr);
         if (result == null) result = caseExpr(timeExpr);
         if (result == null) result = caseElement(timeExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.INDICES_EXPR:
+      {
+        IndicesExpr indicesExpr = (IndicesExpr)theEObject;
+        T result = caseIndicesExpr(indicesExpr);
+        if (result == null) result = caseExpr(indicesExpr);
+        if (result == null) result = caseElement(indicesExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.CALL_EXPR:
+      {
+        CallExpr callExpr = (CallExpr)theEObject;
+        T result = caseCallExpr(callExpr);
+        if (result == null) result = caseExpr(callExpr);
+        if (result == null) result = caseElement(callExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.RECORD_LIT_EXPR:
+      {
+        RecordLitExpr recordLitExpr = (RecordLitExpr)theEObject;
+        T result = caseRecordLitExpr(recordLitExpr);
+        if (result == null) result = caseExpr(recordLitExpr);
+        if (result == null) result = caseElement(recordLitExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case AgreePackage.ENUM_LIT_EXPR:
+      {
+        EnumLitExpr enumLitExpr = (EnumLitExpr)theEObject;
+        T result = caseEnumLitExpr(enumLitExpr);
+        if (result == null) result = caseExpr(enumLitExpr);
+        if (result == null) result = caseElement(enumLitExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -832,15 +963,6 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.THIS_EXPR:
-      {
-        ThisExpr thisExpr = (ThisExpr)theEObject;
-        T result = caseThisExpr(thisExpr);
-        if (result == null) result = caseExpr(thisExpr);
-        if (result == null) result = caseElement(thisExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case AgreePackage.FLOOR_CAST:
       {
         FloorCast floorCast = (FloorCast)theEObject;
@@ -856,35 +978,6 @@ public class AgreeSwitch<T> extends Switch<T>
         T result = caseRealCast(realCast);
         if (result == null) result = caseExpr(realCast);
         if (result == null) result = caseElement(realCast);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.AADL_ENUMERATOR:
-      {
-        AADLEnumerator aadlEnumerator = (AADLEnumerator)theEObject;
-        T result = caseAADLEnumerator(aadlEnumerator);
-        if (result == null) result = caseExpr(aadlEnumerator);
-        if (result == null) result = caseElement(aadlEnumerator);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.RECORD_EXPR:
-      {
-        RecordExpr recordExpr = (RecordExpr)theEObject;
-        T result = caseRecordExpr(recordExpr);
-        if (result == null) result = caseComplexExpr(recordExpr);
-        if (result == null) result = caseExpr(recordExpr);
-        if (result == null) result = caseElement(recordExpr);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case AgreePackage.FN_CALL_EXPR:
-      {
-        FnCallExpr fnCallExpr = (FnCallExpr)theEObject;
-        T result = caseFnCallExpr(fnCallExpr);
-        if (result == null) result = caseComplexExpr(fnCallExpr);
-        if (result == null) result = caseExpr(fnCallExpr);
-        if (result == null) result = caseElement(fnCallExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1085,17 +1178,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Call Def</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Abstraction</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Call Def</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Abstraction</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseCallDef(CallDef object)
+  public T caseAbstraction(Abstraction object)
   {
     return null;
   }
@@ -1128,22 +1221,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseConstStatement(ConstStatement object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Enum Statement</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Enum Statement</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseEnumStatement(EnumStatement object)
   {
     return null;
   }
@@ -1197,49 +1274,49 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Fn Def Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Fn Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Fn Def Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Fn Def</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseFnDefExpr(FnDefExpr object)
+  public T caseFnDef(FnDef object)
   {
     return null;
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Library Fn Def Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Library Fn Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Library Fn Def Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Library Fn Def</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseLibraryFnDefExpr(LibraryFnDefExpr object)
+  public T caseLibraryFnDef(LibraryFnDef object)
   {
     return null;
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Linearization Def Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Linearization Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Linearization Def Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Linearization Def</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseLinearizationDefExpr(LinearizationDefExpr object)
+  public T caseLinearizationDef(LinearizationDef object)
   {
     return null;
   }
@@ -1261,17 +1338,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Node Def Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Node Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Node Def Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Node Def</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseNodeDefExpr(NodeDefExpr object)
+  public T caseNodeDef(NodeDef object)
   {
     return null;
   }
@@ -1341,17 +1418,33 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Record Def Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Record Def</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Record Def Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Record Def</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseRecordDefExpr(RecordDefExpr object)
+  public T caseRecordDef(RecordDef object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Enum Statement</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Enum Statement</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEnumStatement(EnumStatement object)
   {
     return null;
   }
@@ -1373,17 +1466,33 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Complex Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Component Ref</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Complex Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Component Ref</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseComplexExpr(ComplexExpr object)
+  public T caseComponentRef(ComponentRef object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Array Literal Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Array Literal Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseArrayLiteralExpr(ArrayLiteralExpr object)
   {
     return null;
   }
@@ -1400,22 +1509,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseDoubleDotRef(DoubleDotRef object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Nested Dot ID</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Nested Dot ID</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseNestedDotID(NestedDotID object)
   {
     return null;
   }
@@ -1917,6 +2010,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Array Type</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Array Type</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseArrayType(ArrayType object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Prim Type</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1933,17 +2042,81 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Record Type</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Forall Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Record Type</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Forall Expr</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseRecordType(RecordType object)
+  public T caseForallExpr(ForallExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Exists Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Exists Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseExistsExpr(ExistsExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Foreach Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Foreach Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseForeachExpr(ForeachExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Fold Left Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Fold Left Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseFoldLeftExpr(FoldLeftExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Fold Right Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Fold Right Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseFoldRightExpr(FoldRightExpr object)
   {
     return null;
   }
@@ -1997,6 +2170,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>This Ref</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>This Ref</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseThisRef(ThisRef object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Prev Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -2029,6 +2218,22 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Array Update Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Array Update Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseArrayUpdateExpr(ArrayUpdateExpr object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Record Update Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -2045,6 +2250,70 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Array Sub Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Array Sub Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseArraySubExpr(ArraySubExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Tag Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Tag Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTagExpr(TagExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Selection Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Selection Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSelectionExpr(SelectionExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Named Elm Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Named Elm Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNamedElmExpr(NamedElmExpr object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Time Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -2056,6 +2325,70 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseTimeExpr(TimeExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Indices Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Indices Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseIndicesExpr(IndicesExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Call Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Call Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseCallExpr(CallExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Record Lit Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Record Lit Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRecordLitExpr(RecordLitExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Enum Lit Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Enum Lit Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEnumLitExpr(EnumLitExpr object)
   {
     return null;
   }
@@ -2205,22 +2538,6 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>This Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>This Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseThisExpr(ThisExpr object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Floor Cast</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -2248,54 +2565,6 @@ public class AgreeSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseRealCast(RealCast object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>AADL Enumerator</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>AADL Enumerator</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseAADLEnumerator(AADLEnumerator object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Record Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Record Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseRecordExpr(RecordExpr object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Fn Call Expr</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Fn Call Expr</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseFnCallExpr(FnCallExpr object)
   {
     return null;
   }

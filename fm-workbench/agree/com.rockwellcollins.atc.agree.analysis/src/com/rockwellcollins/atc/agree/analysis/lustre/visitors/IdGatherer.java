@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.rockwellcollins.atc.agree.analysis.AgreeException;
-
 import jkind.lustre.ArrayAccessExpr;
 import jkind.lustre.ArrayExpr;
 import jkind.lustre.ArrayUpdateExpr;
@@ -32,17 +30,28 @@ public class IdGatherer implements ExprVisitor<Set<String>> {
 
 	@Override
 	public Set<String> visit(ArrayAccessExpr e) {
-		throw new AgreeException("We do not support array expressions");
+		Set<String> ids = new HashSet<>();
+		ids.addAll(e.array.accept(this));
+		ids.addAll(e.index.accept(this));
+		return ids;
 	}
 
 	@Override
 	public Set<String> visit(ArrayExpr e) {
-		throw new AgreeException("We do not support array expressions");
+		Set<String> ids = new HashSet<>();
+		for (Expr sub : e.elements) {
+			ids.addAll(sub.accept(this));
+		}
+		return ids;
 	}
 
 	@Override
 	public Set<String> visit(ArrayUpdateExpr e) {
-		throw new AgreeException("We do not support array expressions");
+		Set<String> ids = new HashSet<>();
+		ids.addAll(e.array.accept(this));
+		ids.addAll(e.index.accept(this));
+		ids.addAll(e.value.accept(this));
+		return ids;
 	}
 
 	@Override

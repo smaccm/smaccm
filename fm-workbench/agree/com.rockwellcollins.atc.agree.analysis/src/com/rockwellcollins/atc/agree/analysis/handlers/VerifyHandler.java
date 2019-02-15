@@ -76,7 +76,6 @@ import jkind.api.results.JKindResult;
 import jkind.api.results.JRealizabilityResult;
 import jkind.lustre.Node;
 import jkind.lustre.Program;
-
 public abstract class VerifyHandler extends AadlHandler {
 	protected AgreeResultsLinker linker = new AgreeResultsLinker();
 	protected Queue<JKindResult> queue = new ArrayDeque<>();
@@ -300,6 +299,30 @@ public abstract class VerifyHandler extends AadlHandler {
 
 	private AnalysisResult createVerification(String resultName, ComponentInstance compInst, Program lustreProgram,
 			AgreeProgram agreeProgram, AnalysisType analysisType) {
+
+		/////////
+//		Logger logger = Logger.getLogger("MyLog");
+//		FileHandler fh;
+//		try {
+
+		// This block configure the logger with handler and formatter
+//			fh = new FileHandler("/home/thomas/zzz.log");
+//			logger.addHandler(fh);
+//			SimpleFormatter formatter = new SimpleFormatter();
+//			fh.setFormatter(formatter);
+//			logger.info("Agree Program:");
+//			AgreeASTPrettyprinter pp = new AgreeASTPrettyprinter();
+//			pp.visit(agreeProgram);
+//			logger.info(pp.toString());
+
+//		} catch (SecurityException ex) {
+//			ex.printStackTrace();
+//		}
+//		catch (IOException ex) {
+//			ex.printStackTrace();
+//		}
+		////////////////
+
 		AgreeAutomaterRegistry aAReg = (AgreeAutomaterRegistry) ExtensionRegistry
 				.getRegistry(ExtensionRegistry.AGREE_AUTOMATER_EXT_ID);
 		List<AgreeAutomater> automaters = aAReg.getAgreeAutomaters();
@@ -321,6 +344,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		RenamingVisitor.addRenamings(lustreProgram, renaming, compInst, layout);
 		addProperties(renaming, properties, mainNode, agreeProgram);
 
+
 		for (AgreeAutomater aa : automaters) {
 			renaming = aa.rename(renaming);
 			layout = aa.transformLayout(layout);
@@ -340,6 +364,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		default:
 			throw new AgreeException("Unhandled Analysis Type");
 		}
+
 		queue.add(result);
 
 		ComponentImplementation compImpl = AgreeUtils.getInstanceImplementation(compInst);
@@ -350,6 +375,7 @@ public abstract class VerifyHandler extends AadlHandler {
 		linker.setReferenceMap(result, renaming.getRefMap());
 		linker.setLog(result, AgreeLogger.getLog());
 		linker.setRenaming(result, renaming);
+
 
 		// System.out.println(program);
 		return result;
@@ -480,6 +506,7 @@ public abstract class VerifyHandler extends AadlHandler {
 						((JKindApi) api).setWriteAdviceFile(adviceFileName);
 					}
 
+
 					try {
 						if (result instanceof ConsistencyResult) {
 							consistApi.execute(program, result, subMonitor);
@@ -492,13 +519,27 @@ public abstract class VerifyHandler extends AadlHandler {
 
 						System.out.println("******** JKindException Text ********");
 						e.printStackTrace(System.out);
-						System.out.println("******** JKind Output ********");
-						System.out.println(result.getText());
-						System.out.println("******** Agree Lustre ********");
-						System.out.println(program);
 
 
-						System.out.println(e.getMessage());
+//						System.out.println("******** JKind Output ********");
+//						System.out.println(result.getText());
+//						System.out.println("******** Agree Lustre ********");
+//						System.out.println(program);
+
+
+						String errStr = e.getMessage();
+						int l = Math.min(errStr.length(), 300);
+						System.out.println(e.getMessage().substring(0, l));
+
+//=======
+//						System.out.println("******** JKind Output ********");
+//						System.out.println(result.getText());
+//						System.out.println("******** Agree Lustre ********");
+//						System.out.println(program);
+//
+//
+//						System.out.println(e.getMessage());
+//>>>>>>> origin/develop
 						break;
 					}
 

@@ -12,7 +12,7 @@ package com.rockwellcollins.atc.agree.agree;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getString <em>String</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getName <em>Name</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getLowNeg <em>Low Neg</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getRangeLow <em>Range Low</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.PrimType#getHighNeg <em>High Neg</em>}</li>
@@ -26,30 +26,30 @@ package com.rockwellcollins.atc.agree.agree;
 public interface PrimType extends Type
 {
   /**
-   * Returns the value of the '<em><b>String</b></em>' attribute.
+   * Returns the value of the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>String</em>' attribute isn't clear,
+   * If the meaning of the '<em>Name</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>String</em>' attribute.
-   * @see #setString(String)
-   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getPrimType_String()
+   * @return the value of the '<em>Name</em>' attribute.
+   * @see #setName(String)
+   * @see com.rockwellcollins.atc.agree.agree.AgreePackage#getPrimType_Name()
    * @model
    * @generated
    */
-  String getString();
+  String getName();
 
   /**
-   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.PrimType#getString <em>String</em>}' attribute.
+   * Sets the value of the '{@link com.rockwellcollins.atc.agree.agree.PrimType#getName <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>String</em>' attribute.
-   * @see #getString()
+   * @param value the new value of the '<em>Name</em>' attribute.
+   * @see #getName()
    * @generated
    */
-  void setString(String value);
+  void setName(String value);
 
   /**
    * Returns the value of the '<em><b>Low Neg</b></em>' attribute.

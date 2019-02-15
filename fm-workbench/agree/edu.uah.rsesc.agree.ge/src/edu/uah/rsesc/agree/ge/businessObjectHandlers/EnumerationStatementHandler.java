@@ -82,9 +82,9 @@ public class EnumerationStatementHandler {
 						newBo.setName(
 								AgreeBusinessObjectHandlerUtil.buildUniqueIdentifier(agreeContract, "enumeration"));
 
-						final NamedID enumValue = AgreeFactory.eINSTANCE.createNamedID();
-						enumValue.setName(newBo.getName() + "_enumerator");
-						newBo.getEnums().add(enumValue);
+						final NamedID enumId = AgreeFactory.eINSTANCE.createNamedID();
+						enumId.setName(newBo.getName() + "_enumerator");
+						newBo.getEnums().add(enumId);
 
 						agreeContract.getSpecs().add(newBo);
 

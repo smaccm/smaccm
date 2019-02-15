@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getString <em>String</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getName <em>Name</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getLowNeg <em>Low Neg</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getRangeLow <em>Range Low</em>}</li>
  *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.PrimTypeImpl#getHighNeg <em>High Neg</em>}</li>
@@ -31,24 +31,24 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 public class PrimTypeImpl extends TypeImpl implements PrimType
 {
   /**
-   * The default value of the '{@link #getString() <em>String</em>}' attribute.
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getString()
+   * @see #getName()
    * @generated
    * @ordered
    */
-  protected static final String STRING_EDEFAULT = null;
+  protected static final String NAME_EDEFAULT = null;
 
   /**
-   * The cached value of the '{@link #getString() <em>String</em>}' attribute.
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getString()
+   * @see #getName()
    * @generated
    * @ordered
    */
-  protected String string = STRING_EDEFAULT;
+  protected String name = NAME_EDEFAULT;
 
   /**
    * The default value of the '{@link #getLowNeg() <em>Low Neg</em>}' attribute.
@@ -156,9 +156,10 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getString()
+  @Override
+  public String getName()
   {
-    return string;
+    return name;
   }
 
   /**
@@ -166,12 +167,13 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setString(String newString)
+  @Override
+  public void setName(String newName)
   {
-    String oldString = string;
-    string = newString;
+    String oldName = name;
+    name = newName;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.PRIM_TYPE__STRING, oldString, string));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.PRIM_TYPE__NAME, oldName, name));
   }
 
   /**
@@ -179,6 +181,7 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getLowNeg()
   {
     return lowNeg;
@@ -189,6 +192,7 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setLowNeg(String newLowNeg)
   {
     String oldLowNeg = lowNeg;
@@ -202,6 +206,7 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getRangeLow()
   {
     return rangeLow;
@@ -212,6 +217,7 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRangeLow(String newRangeLow)
   {
     String oldRangeLow = rangeLow;
@@ -225,6 +231,7 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getHighNeg()
   {
     return highNeg;
@@ -235,6 +242,7 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setHighNeg(String newHighNeg)
   {
     String oldHighNeg = highNeg;
@@ -248,6 +256,7 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getRangeHigh()
   {
     return rangeHigh;
@@ -258,6 +267,7 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRangeHigh(String newRangeHigh)
   {
     String oldRangeHigh = rangeHigh;
@@ -276,8 +286,8 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
   {
     switch (featureID)
     {
-      case AgreePackage.PRIM_TYPE__STRING:
-        return getString();
+      case AgreePackage.PRIM_TYPE__NAME:
+        return getName();
       case AgreePackage.PRIM_TYPE__LOW_NEG:
         return getLowNeg();
       case AgreePackage.PRIM_TYPE__RANGE_LOW:
@@ -300,8 +310,8 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
   {
     switch (featureID)
     {
-      case AgreePackage.PRIM_TYPE__STRING:
-        setString((String)newValue);
+      case AgreePackage.PRIM_TYPE__NAME:
+        setName((String)newValue);
         return;
       case AgreePackage.PRIM_TYPE__LOW_NEG:
         setLowNeg((String)newValue);
@@ -329,8 +339,8 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
   {
     switch (featureID)
     {
-      case AgreePackage.PRIM_TYPE__STRING:
-        setString(STRING_EDEFAULT);
+      case AgreePackage.PRIM_TYPE__NAME:
+        setName(NAME_EDEFAULT);
         return;
       case AgreePackage.PRIM_TYPE__LOW_NEG:
         setLowNeg(LOW_NEG_EDEFAULT);
@@ -358,8 +368,8 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
   {
     switch (featureID)
     {
-      case AgreePackage.PRIM_TYPE__STRING:
-        return STRING_EDEFAULT == null ? string != null : !STRING_EDEFAULT.equals(string);
+      case AgreePackage.PRIM_TYPE__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case AgreePackage.PRIM_TYPE__LOW_NEG:
         return LOW_NEG_EDEFAULT == null ? lowNeg != null : !LOW_NEG_EDEFAULT.equals(lowNeg);
       case AgreePackage.PRIM_TYPE__RANGE_LOW:
@@ -382,9 +392,9 @@ public class PrimTypeImpl extends TypeImpl implements PrimType
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (string: ");
-    result.append(string);
+    StringBuilder result = new StringBuilder(super.toString());
+    result.append(" (name: ");
+    result.append(name);
     result.append(", lowNeg: ");
     result.append(lowNeg);
     result.append(", rangeLow: ");

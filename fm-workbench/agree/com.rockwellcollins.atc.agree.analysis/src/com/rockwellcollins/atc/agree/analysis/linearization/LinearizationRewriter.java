@@ -41,15 +41,15 @@ import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.BinaryExpr;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
-import com.rockwellcollins.atc.agree.analysis.AgreeTypeUtils;
+import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode;
 import com.rockwellcollins.atc.agree.analysis.linearization.Linearize.BoundingSegments;
 import com.rockwellcollins.atc.agree.analysis.linearization.Linearize.Segment;
@@ -104,8 +104,8 @@ public class LinearizationRewriter {
 	}
 
 	@SuppressWarnings("unused")
-	private static jkind.lustre.Node generateLustreConstraintForm(LinearizationDefExpr linDef, BoundingSegments segs) {
-		String nodeName = getConstraintFormName(AgreeTypeUtils.getNodeName(linDef));
+	private static jkind.lustre.Node generateLustreConstraintForm(LinearizationDef linDef, BoundingSegments segs) {
+		String nodeName = getConstraintFormName(AgreeUtils.getNodeName(linDef));
 
 		List<VarDecl> inputs = new ArrayList<>();
 		inputs.add(new jkind.lustre.VarDecl(inputId, jkind.lustre.NamedType.REAL));
@@ -172,12 +172,17 @@ public class LinearizationRewriter {
 		RealLitExpr resultSlopeExpr = af.createRealLitExpr();
 		resultSlopeExpr.setVal(Double.toString((seg.stopY - seg.startY) / (seg.stopX - seg.startX)));
 
-		NestedDotID inputId = af.createNestedDotID();
-		inputId.setBase(EcoreUtil.copy(inputArg));
+		NamedElmExpr inputId = af.createNamedElmExpr();
+		inputId.setElm(EcoreUtil.copy(inputArg));
 
 
-		NestedDotID resultId = af.createNestedDotID();
-		resultId.setBase(EcoreUtil.copy(resultArg));
+		NamedElmExpr resultId = af.createNamedElmExpr();
+		resultId.setElm(EcoreUtil.copy(resultArg));
+//=======
+//
+//		NestedDotID resultId = af.createNestedDotID();
+//		resultId.setBase(EcoreUtil.copy(resultArg));
+//>>>>>>> origin/develop
 
 
 		BinaryExpr rangeMinExpr = af.createBinaryExpr();
@@ -223,33 +228,33 @@ public class LinearizationRewriter {
 		return result;
 	}
 
-	private static NodeDefExpr generateAgreeConstraintForm(LinearizationDefExpr linDef, BoundingSegments segs) {
-		NodeDefExpr result = af.createNodeDefExpr();
-		result.setName(getConstraintFormName(AgreeTypeUtils.getNodeName(linDef)));
+	private static NodeDef generateAgreeConstraintForm(LinearizationDef linDef, BoundingSegments segs) {
+		NodeDef result = af.createNodeDef();
+		result.setName(getConstraintFormName(AgreeUtils.getNodeName(linDef)));
 
 		Arg inputArg = af.createArg();
 		PrimType inputArgType = af.createPrimType();
-		inputArgType.setString("real");
+		inputArgType.setName("real");
 		inputArg.setType(inputArgType);
 		inputArg.setName("inp");
 		result.getArgs().add(inputArg);
 
 		Arg outputArg = af.createArg();
 		PrimType outputArgType = af.createPrimType();
-		outputArgType.setString("real");
+		outputArgType.setName("real");
 		outputArg.setType(outputArgType);
 		outputArg.setName("result");
 		result.getArgs().add(outputArg);
 
 		Arg constraintArg = af.createArg();
 		PrimType constraintArgType = af.createPrimType();
-		constraintArgType.setString("bool");
+		constraintArgType.setName("bool");
 		constraintArg.setType(constraintArgType);
 		constraintArg.setName("constraint");
 		result.getRets().add(constraintArg);
 
-		NestedDotID inputId = af.createNestedDotID();
-		inputId.setBase(EcoreUtil.copy(inputArg));
+		NamedElmExpr inputId = af.createNamedElmExpr();
+		inputId.setElm(EcoreUtil.copy(inputArg));
 
 		RealLitExpr domainCheckLowerLit = af.createRealLitExpr();
 		domainCheckLowerLit.setVal(Double.toString(segs.lower.getFirst().startX));
@@ -323,31 +328,31 @@ public class LinearizationRewriter {
 		return result;
 	}
 
-	private HashMap<LinearizationDefExpr, NodeDefExpr> linearizationDefToConstraintNodeDefMap;
+	private HashMap<LinearizationDef, NodeDef> linearizationDefToConstraintNodeDefMap;
 
 	public LinearizationRewriter() {
 		linearizationDefToConstraintNodeDefMap = new HashMap<>();
 	}
 
-	protected Map<LinearizationDefExpr, NodeDefExpr> getLinearizationDefToConstraintNodeDefMap() {
+	protected Map<LinearizationDef, NodeDef> getLinearizationDefToConstraintNodeDefMap() {
 		return linearizationDefToConstraintNodeDefMap;
 	}
 
-	public NodeDefExpr getAgreeConstraintNodeDefFor(LinearizationDefExpr linDef) {
+	public NodeDef getAgreeConstraintNodeDefFor(LinearizationDef linDef) {
 		return linearizationDefToConstraintNodeDefMap.get(linDef);
 	}
 
-	public NodeDefExpr addLinearization(LinearizationDefExpr linDef) {
+	public NodeDef addLinearization(LinearizationDef linDef) {
 		Linearize linearization = new Linearize(linDef);
-		NodeDefExpr nodeDef = generateAgreeConstraintForm(linDef, linearization.segments);
+		NodeDef nodeDef = generateAgreeConstraintForm(linDef, linearization.segments);
 		linearizationDefToConstraintNodeDefMap.put(linDef, nodeDef);
 		return nodeDef;
 	}
 
 	public AgreeNode visit(AgreeNode agreeNode) {
 		Map<String, String> linearizationMap = new HashMap<>();
-		for (Map.Entry<LinearizationDefExpr, NodeDefExpr> entry : linearizationDefToConstraintNodeDefMap.entrySet()) {
-			linearizationMap.put(AgreeTypeUtils.getNodeName(entry.getKey()), entry.getValue().getName());
+		for (Map.Entry<LinearizationDef, NodeDef> entry : linearizationDefToConstraintNodeDefMap.entrySet()) {
+			linearizationMap.put(AgreeUtils.getNodeName(entry.getKey()), entry.getValue().getName());
 		}
 		LinearizationAgreeASTVisitor visitor = new LinearizationAgreeASTVisitor(linearizationMap);
 		return visitor.visit(agreeNode);

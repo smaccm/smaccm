@@ -4,6 +4,16 @@ public
 	with Data_Model;
 	with SW_Properties;
 	
+<<<<<<< HEAD
+	data ranged_type extends Base_Types::Integer
+		properties
+			Data_Model::Integer_Range => SW_Properties::LOWER .. SW_Properties::UPPER;
+	end ranged_type;
+	
+	data struct_with_array
+	end struct_with_array;
+	
+=======
 	data struct_with_array
 	end struct_with_array;
 	
@@ -12,6 +22,7 @@ public
 			Data_Model::Integer_Range => SW_Properties::MIN_LONGITUDE .. SW_Properties::MAX_LONGITUDE;
 	end ranged_type;
 	
+>>>>>>> origin/develop
 	data implementation struct_with_array.i
 		subcomponents
 			array : data Base_Types::Integer[4];
@@ -72,8 +83,11 @@ public
 		
 		-- Correct: assign integer array element to integer literal
 		
+<<<<<<< HEAD
+=======
 		
 		
+>>>>>>> origin/develop
 		fun array_foo(t : struct_with_array.i) : int[4] = t.array;
 		
 		fun array_test2(t : struct_with_array.i) : bool = 
@@ -112,7 +126,13 @@ public
 		
 		fun tll1(x: int) : real = SW_Properties::MAX_LATTITUDE;
 			
+<<<<<<< HEAD
+		fun tll2(arr: simple_int_array) : bool = arr = [|5, 5, 5, 5|] ;
+		
+        fun ranged_type_test0(r : ranged_type) : bool = 
+=======
 		fun ranged_type_test0(r : ranged_type) : bool = 
+>>>>>>> origin/develop
 			r != SW_Properties::MAX_ALTITUDE;
 			
 		fun ranged_type_test1(r : ranged_type) : bool =
@@ -120,11 +140,14 @@ public
 				
 		fun ranged_type_test2(r : struct_with_array.i) : bool =
 			r.ranged < 10;
+<<<<<<< HEAD
+=======
 			
 		fun tll2(arr: simple_int_array) : bool = arr = [|5, 5, 5, 5|] ;
 			
 			
 						
+>>>>>>> origin/develop
 	**};
 
 		thread CompTest
@@ -155,10 +178,34 @@ public
 			eq a5 : roo[2] = [| (roo {g = 4; y=2}), (roo {g = 5; y=3}) |];
 			eq i3 : int = a4[0];
 			eq i4 : int = (a5[0]).y;
+<<<<<<< HEAD
+			
+			eq arr1: simple_int_array;
+			eq arr2: simple_int_array = foreach aa in arr1, (aa * 4);
+			
+			assume "array_sorted" : forall ii in indices(arr1), ii = 0 or arr1[ii - 1] <= arr1[ii]; 
+			guarantee "sortednes_preserved" : forall iii in indices(arr2), iii = 0 or arr1[iii - 1] <= arr1[iii]; 
+=======
+>>>>>>> origin/develop
 
 			
 		**};
 		
 	end CompTest;
 	
+<<<<<<< HEAD
+	thread implementation CompTest.i
+		subcomponents
+			arr1: data simple_int_array;
+			arr2: data simple_int_array;
+			
+		annex agree {**
+--			lemma "array_sorted" : forall iq in indices(arr1), iq = 0 or arr1[iq - 1] <= arr1[iq]; 
+		**};
+		
+	end CompTest.i;
+	
 end array;
+=======
+end array;
+>>>>>>> origin/develop

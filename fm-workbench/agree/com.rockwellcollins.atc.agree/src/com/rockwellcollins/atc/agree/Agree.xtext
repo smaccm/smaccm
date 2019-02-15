@@ -8,14 +8,14 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 NamedElement returns aadl2::NamedElement:
 	Arg
 	| NamedSpecStatement
-	| FnDefExpr
+	| FnDef
 	| PropertyStatement
 	| ConstStatement
 	| EnumStatement
-	| NodeDefExpr
-	| LinearizationDefExpr
-	| LibraryFnDefExpr
-	| RecordDefExpr
+	| NodeDef
+	| LinearizationDef
+	| LibraryFnDef
+	| RecordDef
 	| NamedID
 	;
 
@@ -47,23 +47,23 @@ AgreeContract returns Contract:
 	
 SpecStatement:
 	NamedSpecStatement
-	| {InitialStatement} 'initially' ':' expr=Expr  ';'
-	| {ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
-	| {LiftStatement} 'lift' subcomp=NestedDotID ';'
-	| {ConnectionStatement} 'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';'
-	| SynchStatement
-	| OrderStatement
-	| PropertyStatement
-	| ConstStatement
-	| EnumStatement
-	| EqStatement
-	| AssignStatement
-	| LinearizationDefExpr
-	| FnDefExpr
-	| LibraryFnDefExpr
-	| NodeDefExpr
-	| RecordDefExpr
-	| InputStatement;
+|	{InitialStatement} 'initially' ':' expr=Expr  ';'
+|	{ParamStatement} 'parameter' expr=Expr ':' type=Type ';'
+|	{LiftStatement} 'lift' subcomp=[aadl2::NamedElement] ';'
+|	{ConnectionStatement} 'connection' conn=[aadl2::NamedElement] ':' expr=Expr ';'
+|	SynchStatement
+|	OrderStatement
+|	PropertyStatement
+|	ConstStatement
+|	EnumStatement
+|	EqStatement
+|	AssignStatement
+|	LinearizationDef
+|	FnDef
+|	LibraryFnDef
+|	NodeDef
+|	RecordDef
+|	InputStatement;
 	
 NamedSpecStatement:
 	{AssumeStatement} 'assume' (name=ID)? str=STRING ':' (expr=Expr | pattern=PatternStatement) ';'
@@ -123,23 +123,20 @@ OrderStatement:
 	'ordering' ':' comps += [aadl2::NamedElement] ("," comps+=[aadl2::NamedElement])* ';'
 ;
 
-NamedCallDef returns aadl2::NamedElement:
-	CallDef;
+NamedAbstraction returns aadl2::NamedElement:
+	Abstraction;
 
-CallDef returns CallDef:
-	LinearizationDefExpr
-	| LibraryFnDefExpr
-	| FnDefExpr
-	| NodeDefExpr;
+Abstraction returns Abstraction:
+	LinearizationDef
+	| LibraryFnDef
+	| FnDef
+	| NodeDef;
 
 PropertyStatement:
 	'property' name=ID '=' expr=Expr ';';
 
 ConstStatement:
 	'const' name=ID ':' type=Type '=' expr=Expr ';'; //this should really be an "Arg"
-	
-EnumStatement:
-	'enum' name=ID '=' '{' enums+=NamedID (',' enums+=NamedID)* '}' ';';
 
 EqStatement:
 	'eq' (lhs+=Arg (',' lhs+=Arg)*) ('=' expr=Expr)? ';';
@@ -148,15 +145,15 @@ InputStatement:
 	'agree_input' (lhs+=Arg (',' lhs+=Arg)*) ';';
 
 AssignStatement:
-	'assign' id=NestedDotID '=' expr=Expr ';';
+	'assign' id=[aadl2::NamedElement|QCPREF] '=' expr=Expr ';';
 
-FnDefExpr:
+FnDef:
 	'fun' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type '=' expr=Expr ';';
-
-LibraryFnDefExpr:
+	
+LibraryFnDef:
 	'external' name=ID '(' args+=Arg (',' args+=Arg)* ')' ':' type=Type ';';
 
-LinearizationDefExpr:
+LinearizationDef:
 	'linearization' name=ID '(' args+=Arg (',' args+=Arg)* ')'
 	'over' '[' intervals+=LinearizationInterval (',' intervals+=LinearizationInterval)* ']'
 	('within' precision=Expr)? ':' exprBody=Expr ';'
@@ -165,7 +162,7 @@ LinearizationDefExpr:
 LinearizationInterval:
 	start=Expr '..' end=Expr;
 
-NodeDefExpr:
+NodeDef:
 	'node' name=ID '(' (args+=Arg (',' args+=Arg)*)? ')' 'returns'
 	'(' (rets+=Arg (',' rets+=Arg)*)? ')' ';'
 	nodeBody=NodeBodyExpr;
@@ -181,22 +178,53 @@ NodeStmt:
 	| {NodeLemma} 'lemma' str=STRING ':' expr=Expr ';';
 
 Arg returns Arg:
-	name=ID ':' type=Type;
-
+	=> (name=ID ':' type=Type);
+	
 Type returns Type:
-	{PrimType} string=primTypes ('[' (lowNeg='-')? rangeLow=(INTEGER_LIT|REAL_LIT) ',' (highNeg='-')? rangeHigh=(INTEGER_LIT|REAL_LIT) ']')?
-|	{RecordType} record=DoubleDotRef
+	BaseType (=> ({ArrayType.stem = current} '[' size=INTEGER_LIT ']'))*
+;
+
+
+BaseType returns Type:
+	{PrimType} name=primTypes ('[' (lowNeg='-')? rangeLow=(INTEGER_LIT|REAL_LIT) ',' (highNeg='-')? rangeHigh=(INTEGER_LIT|REAL_LIT) ']')?
+|	DoubleDotRef
 ;
 
 primTypes:
   'real' | 'bool' | 'int';
+  
 
-RecordDefExpr:
+RecordDef:
 	'type' name=ID '=' 'struct' '{' (args+=Arg (',' args+=Arg)*) '}' ';'
 ;
 
+	
+EnumStatement:
+	'enum' name=ID '=' '{' enums+=NamedID (',' enums+=NamedID)* '}' ';';
+
+
 Expr returns Expr:
-	ArrowExpr;
+	ForallExpr;
+	
+ForallExpr returns Expr:
+    {ForallExpr} 'forall' binding=NamedID 'in' array=Expr ',' expr=Expr
+    | ExistsExpr;
+
+ExistsExpr returns Expr:
+    {ExistsExpr} 'exists' binding=NamedID  'in' array=Expr ',' expr=Expr
+    | ForeachExpr;
+    
+ForeachExpr returns Expr:
+    {ForeachExpr} 'foreach' binding=NamedID  'in' array=Expr ',' expr=Expr
+    | FoldLeftExpr;
+
+FoldLeftExpr returns Expr:
+    {FoldLeftExpr} 'foldl' binding=NamedID  'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
+    | FoldRightExpr;
+
+FoldRightExpr returns Expr:
+    {FoldRightExpr} 'foldr' binding=NamedID  'in' array=Expr 'into' accumulator=NamedID '=' initial=Expr ',' expr=Expr
+    | ArrowExpr;
 
 ArrowExpr returns Expr:
 	ImpliesExpr (=> ({BinaryExpr.left=current} op='->') right=ArrowExpr)?;
@@ -235,47 +263,75 @@ UnaryExpr returns Expr:
 IfThenElseExpr returns Expr:
 	{IfThenElseExpr} 'if' a=Expr 'then' b=Expr 'else' c=Expr
 	| PreDefFnExpr;
+	
+	  
+ComponentRef:
+	{ThisRef} 'this' |
+	DoubleDotRef
+;
 
 PreDefFnExpr returns Expr:
 	{PrevExpr} 'prev' '(' delay=Expr ',' init=Expr ')'
-	| {GetPropertyExpr} 'Get_Property' '(' component=Expr ',' prop=[aadl2::NamedElement|QCLREF] ')'
-	| RecordUpdateExpr;
+	| {GetPropertyExpr} 'Get_Property' '(' componentRef=ComponentRef ',' prop=[aadl2::NamedElement|QCLREF] ')'
+	| ArrayUpdateExpr;
+
+
+ArrayUpdateExpr returns Expr:
+        RecordUpdateExpr (=> ({ArrayUpdateExpr.array=current}
+                              '[|' indices+=Expr ':=' ) valueExprs+=Expr
+                              (';' indices+=Expr ':=' valueExprs+=Expr)* '|]')?;
 
 RecordUpdateExpr returns Expr:
-	TermExpr (=> ({RecordUpdateExpr.record=current} ('{' args+=[aadl2::NamedElement|ID] ':=' argExpr+=Expr '}')+))?
+	ArraySubExpr (=> ({RecordUpdateExpr.record=current} '{' key=[aadl2::NamedElement|ID] ':=' expr=Expr '}'))*
 ;
 
+ArraySubExpr returns Expr:
+  TagExpr (=>({ArraySubExpr.expr=current} '[' index=Expr ']'))*;
+  
+TagExpr returns Expr:
+	SelectionExpr ({TagExpr.stem=current} '.' tag=ReservedVarTag)?
+;
+  
+SelectionExpr returns Expr:
+  TermExpr (=>({SelectionExpr.target=current} '.' field=[aadl2::NamedElement|ID]))*;
+  
+ 
 TermExpr returns Expr:
-	{TimeExpr} 'time'
-	| ComplexExpr
+	=> ({NamedElmExpr} elm=[aadl2::NamedElement|DCID])
+	| {TimeExpr} 'time'
+	| {IndicesExpr} 'indices' '(' array=Expr ')'
+	| => ({CallExpr} ref=DoubleDotRef '(') (args+=Expr (',' args+=Expr)*)? ')' 
+	| => ({RecordLitExpr} recordType=DoubleDotRef '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}'
+	| => ({EnumLitExpr} 'enum' '(') enumType=DoubleDotRef ',' value=ID ')'
+	| ArrayLiteralExpr
 	| {IntLitExpr} val=INTEGER_LIT
 	| {PreExpr} 'pre' '(' expr=Expr ')'
-	| {EventExpr} 'event' '(' id = NestedDotID ')'
+	| {EventExpr} 'event' '(' id = [aadl2::NamedElement|ID] ')'
 	| {LatchedExpr} 'latched' '(' expr = Expr ')'
-	| {TimeOfExpr} 'timeof' '(' id = NestedDotID ')'
-	| {TimeRiseExpr} 'timerise' '(' id = NestedDotID ')'
-	| {TimeFallExpr} 'timefall' '(' id = NestedDotID ')'
+	| {TimeOfExpr} 'timeof' '(' id = [aadl2::NamedElement|ID] ')'
+	| {TimeRiseExpr} 'timerise' '(' id = [aadl2::NamedElement|ID] ')'
+	| {TimeFallExpr} 'timefall' '(' id = [aadl2::NamedElement|ID] ')'
 	| {RealLitExpr} val=REAL_LIT
 	| {BoolLitExpr} val=BooleanLiteral
-	| {ThisExpr} 'this' ('.' subThis=NestedDotID)?
 	| {FloorCast} 'floor' '(' expr=Expr ')'
 	| {RealCast}  'real' '(' expr=Expr ')'
-	| {AADLEnumerator} 'enum' '(' enumType=DoubleDotRef ',' value=ID ')'
 	| '(' Expr ')';
+
 	
 
-//ComplexExpr:
-//
-// (DoubleDotRef ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')' )
-//| (DoubleDotRef => ( {RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}') 
-//| NestedDotID
-//;
-
-ComplexExpr:
-	(DoubleDotRef => ( {RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}') 
-|	NestedDotID
-	(=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')')?
+ArrayLiteralExpr:
+	=>('[|' elems+=Expr '|]') |
+	=>('[|' elems+=Expr ',') (elems+=Expr) (',' elems+=Expr)* '|]'
 ;
+
+
+
+
+//ComplexExpr:
+//	(DoubleDotRef => ( {RecordExpr.record=current} '{' args+=[aadl2::NamedElement|ID] '=') argExpr+=Expr (';' args+=[aadl2::NamedElement|ID] '=' argExpr+=Expr)* '}') 
+//|	NestedDotID
+//	(=> ({FnCallExpr.fn=current} '(') (args+=Expr (',' args+=Expr)*)? ')')?
+//;
 
 
 DoubleDotRef:
@@ -283,13 +339,12 @@ DoubleDotRef:
 ;
 
 
-NestedDotID:
-	base=[aadl2::NamedElement|DCID] (=> ('.' (( tag=ReservedVarTag) | sub=NestedDotID)))?;
 	
-
 QCPREF:
-	(ID '::')* ID =>('.' ID)?	
+	(ID '::')* ID ('.' ID)?
  ;
+ 
+
  
  DCID:
 	(ID '::')* ID
@@ -301,6 +356,7 @@ ReservedVarTag:
 |	'_INSERT'
 |	'_COUNT'
 |   '_CLK';
+
 
 NamedID:
 	name=ID

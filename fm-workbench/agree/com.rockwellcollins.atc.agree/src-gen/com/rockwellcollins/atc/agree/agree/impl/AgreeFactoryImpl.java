@@ -76,27 +76,27 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.TIME_INTERVAL: return createTimeInterval();
       case AgreePackage.SYNCH_STATEMENT: return createSynchStatement();
       case AgreePackage.ORDER_STATEMENT: return createOrderStatement();
-      case AgreePackage.CALL_DEF: return createCallDef();
+      case AgreePackage.ABSTRACTION: return createAbstraction();
       case AgreePackage.PROPERTY_STATEMENT: return createPropertyStatement();
       case AgreePackage.CONST_STATEMENT: return createConstStatement();
-      case AgreePackage.ENUM_STATEMENT: return createEnumStatement();
       case AgreePackage.EQ_STATEMENT: return createEqStatement();
       case AgreePackage.INPUT_STATEMENT: return createInputStatement();
       case AgreePackage.ASSIGN_STATEMENT: return createAssignStatement();
-      case AgreePackage.FN_DEF_EXPR: return createFnDefExpr();
-      case AgreePackage.LIBRARY_FN_DEF_EXPR: return createLibraryFnDefExpr();
-      case AgreePackage.LINEARIZATION_DEF_EXPR: return createLinearizationDefExpr();
+      case AgreePackage.FN_DEF: return createFnDef();
+      case AgreePackage.LIBRARY_FN_DEF: return createLibraryFnDef();
+      case AgreePackage.LINEARIZATION_DEF: return createLinearizationDef();
       case AgreePackage.LINEARIZATION_INTERVAL: return createLinearizationInterval();
-      case AgreePackage.NODE_DEF_EXPR: return createNodeDefExpr();
+      case AgreePackage.NODE_DEF: return createNodeDef();
       case AgreePackage.NODE_BODY_EXPR: return createNodeBodyExpr();
       case AgreePackage.NODE_STMT: return createNodeStmt();
       case AgreePackage.ARG: return createArg();
       case AgreePackage.TYPE: return createType();
-      case AgreePackage.RECORD_DEF_EXPR: return createRecordDefExpr();
+      case AgreePackage.RECORD_DEF: return createRecordDef();
+      case AgreePackage.ENUM_STATEMENT: return createEnumStatement();
       case AgreePackage.EXPR: return createExpr();
-      case AgreePackage.COMPLEX_EXPR: return createComplexExpr();
+      case AgreePackage.COMPONENT_REF: return createComponentRef();
+      case AgreePackage.ARRAY_LITERAL_EXPR: return createArrayLiteralExpr();
       case AgreePackage.DOUBLE_DOT_REF: return createDoubleDotRef();
-      case AgreePackage.NESTED_DOT_ID: return createNestedDotID();
       case AgreePackage.NAMED_ID: return createNamedID();
       case AgreePackage.AGREE_CONTRACT_LIBRARY: return createAgreeContractLibrary();
       case AgreePackage.AGREE_CONTRACT_SUBCLAUSE: return createAgreeContractSubclause();
@@ -128,15 +128,30 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.LATCHED_STATEMENT: return createLatchedStatement();
       case AgreePackage.NODE_EQ: return createNodeEq();
       case AgreePackage.NODE_LEMMA: return createNodeLemma();
+      case AgreePackage.ARRAY_TYPE: return createArrayType();
       case AgreePackage.PRIM_TYPE: return createPrimType();
-      case AgreePackage.RECORD_TYPE: return createRecordType();
+      case AgreePackage.FORALL_EXPR: return createForallExpr();
+      case AgreePackage.EXISTS_EXPR: return createExistsExpr();
+      case AgreePackage.FOREACH_EXPR: return createForeachExpr();
+      case AgreePackage.FOLD_LEFT_EXPR: return createFoldLeftExpr();
+      case AgreePackage.FOLD_RIGHT_EXPR: return createFoldRightExpr();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
       case AgreePackage.UNARY_EXPR: return createUnaryExpr();
       case AgreePackage.IF_THEN_ELSE_EXPR: return createIfThenElseExpr();
+      case AgreePackage.THIS_REF: return createThisRef();
       case AgreePackage.PREV_EXPR: return createPrevExpr();
       case AgreePackage.GET_PROPERTY_EXPR: return createGetPropertyExpr();
+      case AgreePackage.ARRAY_UPDATE_EXPR: return createArrayUpdateExpr();
       case AgreePackage.RECORD_UPDATE_EXPR: return createRecordUpdateExpr();
+      case AgreePackage.ARRAY_SUB_EXPR: return createArraySubExpr();
+      case AgreePackage.TAG_EXPR: return createTagExpr();
+      case AgreePackage.SELECTION_EXPR: return createSelectionExpr();
+      case AgreePackage.NAMED_ELM_EXPR: return createNamedElmExpr();
       case AgreePackage.TIME_EXPR: return createTimeExpr();
+      case AgreePackage.INDICES_EXPR: return createIndicesExpr();
+      case AgreePackage.CALL_EXPR: return createCallExpr();
+      case AgreePackage.RECORD_LIT_EXPR: return createRecordLitExpr();
+      case AgreePackage.ENUM_LIT_EXPR: return createEnumLitExpr();
       case AgreePackage.INT_LIT_EXPR: return createIntLitExpr();
       case AgreePackage.PRE_EXPR: return createPreExpr();
       case AgreePackage.EVENT_EXPR: return createEventExpr();
@@ -146,12 +161,8 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.TIME_FALL_EXPR: return createTimeFallExpr();
       case AgreePackage.REAL_LIT_EXPR: return createRealLitExpr();
       case AgreePackage.BOOL_LIT_EXPR: return createBoolLitExpr();
-      case AgreePackage.THIS_EXPR: return createThisExpr();
       case AgreePackage.FLOOR_CAST: return createFloorCast();
       case AgreePackage.REAL_CAST: return createRealCast();
-      case AgreePackage.AADL_ENUMERATOR: return createAADLEnumerator();
-      case AgreePackage.RECORD_EXPR: return createRecordExpr();
-      case AgreePackage.FN_CALL_EXPR: return createFnCallExpr();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -162,6 +173,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AgreeLibrary createAgreeLibrary()
   {
     AgreeLibraryImpl agreeLibrary = new AgreeLibraryImpl();
@@ -173,6 +185,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AgreeSubclause createAgreeSubclause()
   {
     AgreeSubclauseImpl agreeSubclause = new AgreeSubclauseImpl();
@@ -184,6 +197,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Contract createContract()
   {
     ContractImpl contract = new ContractImpl();
@@ -195,6 +209,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SpecStatement createSpecStatement()
   {
     SpecStatementImpl specStatement = new SpecStatementImpl();
@@ -206,6 +221,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NamedSpecStatement createNamedSpecStatement()
   {
     NamedSpecStatementImpl namedSpecStatement = new NamedSpecStatementImpl();
@@ -217,6 +233,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PatternStatement createPatternStatement()
   {
     PatternStatementImpl patternStatement = new PatternStatementImpl();
@@ -228,6 +245,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WhenStatement createWhenStatement()
   {
     WhenStatementImpl whenStatement = new WhenStatementImpl();
@@ -239,6 +257,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WheneverStatement createWheneverStatement()
   {
     WheneverStatementImpl wheneverStatement = new WheneverStatementImpl();
@@ -250,6 +269,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RealTimeStatement createRealTimeStatement()
   {
     RealTimeStatementImpl realTimeStatement = new RealTimeStatementImpl();
@@ -261,6 +281,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TimeInterval createTimeInterval()
   {
     TimeIntervalImpl timeInterval = new TimeIntervalImpl();
@@ -272,6 +293,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SynchStatement createSynchStatement()
   {
     SynchStatementImpl synchStatement = new SynchStatementImpl();
@@ -283,6 +305,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrderStatement createOrderStatement()
   {
     OrderStatementImpl orderStatement = new OrderStatementImpl();
@@ -294,10 +317,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public CallDef createCallDef()
+  @Override
+  public Abstraction createAbstraction()
   {
-    CallDefImpl callDef = new CallDefImpl();
-    return callDef;
+    AbstractionImpl abstraction = new AbstractionImpl();
+    return abstraction;
   }
 
   /**
@@ -305,6 +329,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PropertyStatement createPropertyStatement()
   {
     PropertyStatementImpl propertyStatement = new PropertyStatementImpl();
@@ -316,6 +341,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ConstStatement createConstStatement()
   {
     ConstStatementImpl constStatement = new ConstStatementImpl();
@@ -327,17 +353,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public EnumStatement createEnumStatement()
-  {
-    EnumStatementImpl enumStatement = new EnumStatementImpl();
-    return enumStatement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+  @Override
   public EqStatement createEqStatement()
   {
     EqStatementImpl eqStatement = new EqStatementImpl();
@@ -349,6 +365,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public InputStatement createInputStatement()
   {
     InputStatementImpl inputStatement = new InputStatementImpl();
@@ -360,6 +377,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AssignStatement createAssignStatement()
   {
     AssignStatementImpl assignStatement = new AssignStatementImpl();
@@ -371,10 +389,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public FnDefExpr createFnDefExpr()
+  @Override
+  public FnDef createFnDef()
   {
-    FnDefExprImpl fnDefExpr = new FnDefExprImpl();
-    return fnDefExpr;
+    FnDefImpl fnDef = new FnDefImpl();
+    return fnDef;
   }
 
   /**
@@ -382,10 +401,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public LibraryFnDefExpr createLibraryFnDefExpr()
+  @Override
+  public LibraryFnDef createLibraryFnDef()
   {
-    LibraryFnDefExprImpl libraryFnDefExpr = new LibraryFnDefExprImpl();
-    return libraryFnDefExpr;
+    LibraryFnDefImpl libraryFnDef = new LibraryFnDefImpl();
+    return libraryFnDef;
   }
 
   /**
@@ -393,10 +413,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public LinearizationDefExpr createLinearizationDefExpr()
+  @Override
+  public LinearizationDef createLinearizationDef()
   {
-    LinearizationDefExprImpl linearizationDefExpr = new LinearizationDefExprImpl();
-    return linearizationDefExpr;
+    LinearizationDefImpl linearizationDef = new LinearizationDefImpl();
+    return linearizationDef;
   }
 
   /**
@@ -404,6 +425,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LinearizationInterval createLinearizationInterval()
   {
     LinearizationIntervalImpl linearizationInterval = new LinearizationIntervalImpl();
@@ -415,10 +437,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public NodeDefExpr createNodeDefExpr()
+  @Override
+  public NodeDef createNodeDef()
   {
-    NodeDefExprImpl nodeDefExpr = new NodeDefExprImpl();
-    return nodeDefExpr;
+    NodeDefImpl nodeDef = new NodeDefImpl();
+    return nodeDef;
   }
 
   /**
@@ -426,6 +449,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NodeBodyExpr createNodeBodyExpr()
   {
     NodeBodyExprImpl nodeBodyExpr = new NodeBodyExprImpl();
@@ -437,6 +461,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NodeStmt createNodeStmt()
   {
     NodeStmtImpl nodeStmt = new NodeStmtImpl();
@@ -448,6 +473,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Arg createArg()
   {
     ArgImpl arg = new ArgImpl();
@@ -459,6 +485,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Type createType()
   {
     TypeImpl type = new TypeImpl();
@@ -470,10 +497,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RecordDefExpr createRecordDefExpr()
+  @Override
+  public RecordDef createRecordDef()
   {
-    RecordDefExprImpl recordDefExpr = new RecordDefExprImpl();
-    return recordDefExpr;
+    RecordDefImpl recordDef = new RecordDefImpl();
+    return recordDef;
   }
 
   /**
@@ -481,6 +509,19 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EnumStatement createEnumStatement()
+  {
+    EnumStatementImpl enumStatement = new EnumStatementImpl();
+    return enumStatement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public Expr createExpr()
   {
     ExprImpl expr = new ExprImpl();
@@ -492,10 +533,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ComplexExpr createComplexExpr()
+  @Override
+  public ComponentRef createComponentRef()
   {
-    ComplexExprImpl complexExpr = new ComplexExprImpl();
-    return complexExpr;
+    ComponentRefImpl componentRef = new ComponentRefImpl();
+    return componentRef;
   }
 
   /**
@@ -503,6 +545,19 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public ArrayLiteralExpr createArrayLiteralExpr()
+  {
+    ArrayLiteralExprImpl arrayLiteralExpr = new ArrayLiteralExprImpl();
+    return arrayLiteralExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public DoubleDotRef createDoubleDotRef()
   {
     DoubleDotRefImpl doubleDotRef = new DoubleDotRefImpl();
@@ -514,17 +569,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public NestedDotID createNestedDotID()
-  {
-    NestedDotIDImpl nestedDotID = new NestedDotIDImpl();
-    return nestedDotID;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+  @Override
   public NamedID createNamedID()
   {
     NamedIDImpl namedID = new NamedIDImpl();
@@ -536,6 +581,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AgreeContractLibrary createAgreeContractLibrary()
   {
     AgreeContractLibraryImpl agreeContractLibrary = new AgreeContractLibraryImpl();
@@ -547,6 +593,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AgreeContractSubclause createAgreeContractSubclause()
   {
     AgreeContractSubclauseImpl agreeContractSubclause = new AgreeContractSubclauseImpl();
@@ -558,6 +605,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AgreeContract createAgreeContract()
   {
     AgreeContractImpl agreeContract = new AgreeContractImpl();
@@ -569,6 +617,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public InitialStatement createInitialStatement()
   {
     InitialStatementImpl initialStatement = new InitialStatementImpl();
@@ -580,6 +629,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ParamStatement createParamStatement()
   {
     ParamStatementImpl paramStatement = new ParamStatementImpl();
@@ -591,6 +641,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LiftStatement createLiftStatement()
   {
     LiftStatementImpl liftStatement = new LiftStatementImpl();
@@ -602,6 +653,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ConnectionStatement createConnectionStatement()
   {
     ConnectionStatementImpl connectionStatement = new ConnectionStatementImpl();
@@ -613,6 +665,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AssumeStatement createAssumeStatement()
   {
     AssumeStatementImpl assumeStatement = new AssumeStatementImpl();
@@ -624,6 +677,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public GuaranteeStatement createGuaranteeStatement()
   {
     GuaranteeStatementImpl guaranteeStatement = new GuaranteeStatementImpl();
@@ -635,6 +689,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AssertStatement createAssertStatement()
   {
     AssertStatementImpl assertStatement = new AssertStatementImpl();
@@ -646,6 +701,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LemmaStatement createLemmaStatement()
   {
     LemmaStatementImpl lemmaStatement = new LemmaStatementImpl();
@@ -657,6 +713,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AlwaysStatement createAlwaysStatement()
   {
     AlwaysStatementImpl alwaysStatement = new AlwaysStatementImpl();
@@ -668,6 +725,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WhenHoldsStatement createWhenHoldsStatement()
   {
     WhenHoldsStatementImpl whenHoldsStatement = new WhenHoldsStatementImpl();
@@ -679,6 +737,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WhenOccursStatment createWhenOccursStatment()
   {
     WhenOccursStatmentImpl whenOccursStatment = new WhenOccursStatmentImpl();
@@ -690,6 +749,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WheneverOccursStatement createWheneverOccursStatement()
   {
     WheneverOccursStatementImpl wheneverOccursStatement = new WheneverOccursStatementImpl();
@@ -701,6 +761,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WheneverBecomesTrueStatement createWheneverBecomesTrueStatement()
   {
     WheneverBecomesTrueStatementImpl wheneverBecomesTrueStatement = new WheneverBecomesTrueStatementImpl();
@@ -712,6 +773,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WheneverHoldsStatement createWheneverHoldsStatement()
   {
     WheneverHoldsStatementImpl wheneverHoldsStatement = new WheneverHoldsStatementImpl();
@@ -723,6 +785,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WheneverImpliesStatement createWheneverImpliesStatement()
   {
     WheneverImpliesStatementImpl wheneverImpliesStatement = new WheneverImpliesStatementImpl();
@@ -734,6 +797,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PeriodicStatement createPeriodicStatement()
   {
     PeriodicStatementImpl periodicStatement = new PeriodicStatementImpl();
@@ -745,6 +809,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SporadicStatement createSporadicStatement()
   {
     SporadicStatementImpl sporadicStatement = new SporadicStatementImpl();
@@ -756,6 +821,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ClosedTimeInterval createClosedTimeInterval()
   {
     ClosedTimeIntervalImpl closedTimeInterval = new ClosedTimeIntervalImpl();
@@ -767,6 +833,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpenLeftTimeInterval createOpenLeftTimeInterval()
   {
     OpenLeftTimeIntervalImpl openLeftTimeInterval = new OpenLeftTimeIntervalImpl();
@@ -778,6 +845,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpenRightTimeInterval createOpenRightTimeInterval()
   {
     OpenRightTimeIntervalImpl openRightTimeInterval = new OpenRightTimeIntervalImpl();
@@ -789,6 +857,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpenTimeInterval createOpenTimeInterval()
   {
     OpenTimeIntervalImpl openTimeInterval = new OpenTimeIntervalImpl();
@@ -800,6 +869,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public MNSynchStatement createMNSynchStatement()
   {
     MNSynchStatementImpl mnSynchStatement = new MNSynchStatementImpl();
@@ -811,6 +881,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public CalenStatement createCalenStatement()
   {
     CalenStatementImpl calenStatement = new CalenStatementImpl();
@@ -822,6 +893,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AsynchStatement createAsynchStatement()
   {
     AsynchStatementImpl asynchStatement = new AsynchStatementImpl();
@@ -833,6 +905,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LatchedStatement createLatchedStatement()
   {
     LatchedStatementImpl latchedStatement = new LatchedStatementImpl();
@@ -844,6 +917,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NodeEq createNodeEq()
   {
     NodeEqImpl nodeEq = new NodeEqImpl();
@@ -855,6 +929,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public NodeLemma createNodeLemma()
   {
     NodeLemmaImpl nodeLemma = new NodeLemmaImpl();
@@ -866,6 +941,19 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public ArrayType createArrayType()
+  {
+    ArrayTypeImpl arrayType = new ArrayTypeImpl();
+    return arrayType;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public PrimType createPrimType()
   {
     PrimTypeImpl primType = new PrimTypeImpl();
@@ -877,10 +965,11 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RecordType createRecordType()
+  @Override
+  public ForallExpr createForallExpr()
   {
-    RecordTypeImpl recordType = new RecordTypeImpl();
-    return recordType;
+    ForallExprImpl forallExpr = new ForallExprImpl();
+    return forallExpr;
   }
 
   /**
@@ -888,6 +977,55 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public ExistsExpr createExistsExpr()
+  {
+    ExistsExprImpl existsExpr = new ExistsExprImpl();
+    return existsExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ForeachExpr createForeachExpr()
+  {
+    ForeachExprImpl foreachExpr = new ForeachExprImpl();
+    return foreachExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public FoldLeftExpr createFoldLeftExpr()
+  {
+    FoldLeftExprImpl foldLeftExpr = new FoldLeftExprImpl();
+    return foldLeftExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public FoldRightExpr createFoldRightExpr()
+  {
+    FoldRightExprImpl foldRightExpr = new FoldRightExprImpl();
+    return foldRightExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public BinaryExpr createBinaryExpr()
   {
     BinaryExprImpl binaryExpr = new BinaryExprImpl();
@@ -899,6 +1037,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public UnaryExpr createUnaryExpr()
   {
     UnaryExprImpl unaryExpr = new UnaryExprImpl();
@@ -910,6 +1049,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public IfThenElseExpr createIfThenElseExpr()
   {
     IfThenElseExprImpl ifThenElseExpr = new IfThenElseExprImpl();
@@ -921,6 +1061,19 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public ThisRef createThisRef()
+  {
+    ThisRefImpl thisRef = new ThisRefImpl();
+    return thisRef;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public PrevExpr createPrevExpr()
   {
     PrevExprImpl prevExpr = new PrevExprImpl();
@@ -932,6 +1085,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public GetPropertyExpr createGetPropertyExpr()
   {
     GetPropertyExprImpl getPropertyExpr = new GetPropertyExprImpl();
@@ -943,6 +1097,19 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public ArrayUpdateExpr createArrayUpdateExpr()
+  {
+    ArrayUpdateExprImpl arrayUpdateExpr = new ArrayUpdateExprImpl();
+    return arrayUpdateExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public RecordUpdateExpr createRecordUpdateExpr()
   {
     RecordUpdateExprImpl recordUpdateExpr = new RecordUpdateExprImpl();
@@ -954,6 +1121,55 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public ArraySubExpr createArraySubExpr()
+  {
+    ArraySubExprImpl arraySubExpr = new ArraySubExprImpl();
+    return arraySubExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public TagExpr createTagExpr()
+  {
+    TagExprImpl tagExpr = new TagExprImpl();
+    return tagExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public SelectionExpr createSelectionExpr()
+  {
+    SelectionExprImpl selectionExpr = new SelectionExprImpl();
+    return selectionExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NamedElmExpr createNamedElmExpr()
+  {
+    NamedElmExprImpl namedElmExpr = new NamedElmExprImpl();
+    return namedElmExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public TimeExpr createTimeExpr()
   {
     TimeExprImpl timeExpr = new TimeExprImpl();
@@ -965,6 +1181,55 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public IndicesExpr createIndicesExpr()
+  {
+    IndicesExprImpl indicesExpr = new IndicesExprImpl();
+    return indicesExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public CallExpr createCallExpr()
+  {
+    CallExprImpl callExpr = new CallExprImpl();
+    return callExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public RecordLitExpr createRecordLitExpr()
+  {
+    RecordLitExprImpl recordLitExpr = new RecordLitExprImpl();
+    return recordLitExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EnumLitExpr createEnumLitExpr()
+  {
+    EnumLitExprImpl enumLitExpr = new EnumLitExprImpl();
+    return enumLitExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public IntLitExpr createIntLitExpr()
   {
     IntLitExprImpl intLitExpr = new IntLitExprImpl();
@@ -976,6 +1241,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PreExpr createPreExpr()
   {
     PreExprImpl preExpr = new PreExprImpl();
@@ -987,6 +1253,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EventExpr createEventExpr()
   {
     EventExprImpl eventExpr = new EventExprImpl();
@@ -998,6 +1265,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LatchedExpr createLatchedExpr()
   {
     LatchedExprImpl latchedExpr = new LatchedExprImpl();
@@ -1009,6 +1277,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TimeOfExpr createTimeOfExpr()
   {
     TimeOfExprImpl timeOfExpr = new TimeOfExprImpl();
@@ -1020,6 +1289,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TimeRiseExpr createTimeRiseExpr()
   {
     TimeRiseExprImpl timeRiseExpr = new TimeRiseExprImpl();
@@ -1031,6 +1301,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TimeFallExpr createTimeFallExpr()
   {
     TimeFallExprImpl timeFallExpr = new TimeFallExprImpl();
@@ -1042,6 +1313,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RealLitExpr createRealLitExpr()
   {
     RealLitExprImpl realLitExpr = new RealLitExprImpl();
@@ -1053,6 +1325,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public BoolLitExpr createBoolLitExpr()
   {
     BoolLitExprImpl boolLitExpr = new BoolLitExprImpl();
@@ -1064,17 +1337,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ThisExpr createThisExpr()
-  {
-    ThisExprImpl thisExpr = new ThisExprImpl();
-    return thisExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+  @Override
   public FloorCast createFloorCast()
   {
     FloorCastImpl floorCast = new FloorCastImpl();
@@ -1086,6 +1349,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RealCast createRealCast()
   {
     RealCastImpl realCast = new RealCastImpl();
@@ -1097,39 +1361,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AADLEnumerator createAADLEnumerator()
-  {
-    AADLEnumeratorImpl aadlEnumerator = new AADLEnumeratorImpl();
-    return aadlEnumerator;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public RecordExpr createRecordExpr()
-  {
-    RecordExprImpl recordExpr = new RecordExprImpl();
-    return recordExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public FnCallExpr createFnCallExpr()
-  {
-    FnCallExprImpl fnCallExpr = new FnCallExprImpl();
-    return fnCallExpr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+  @Override
   public AgreePackage getAgreePackage()
   {
     return (AgreePackage)getEPackage();

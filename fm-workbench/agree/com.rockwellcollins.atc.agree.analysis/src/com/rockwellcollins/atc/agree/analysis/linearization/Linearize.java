@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.function.Function;
 
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 
 public class Linearize {
@@ -46,7 +46,7 @@ public class Linearize {
 	String ml; // MATLAB specification of the function
 	BoundingSegments segments;
 
-	public Linearize(LinearizationDefExpr linDef) {
+	public Linearize(LinearizationDef linDef) {
 		fn = linDef.getName();
 		// TODO: For now, linearizations are over one variable only
 		assert (linDef.getArgs().size() == 1);

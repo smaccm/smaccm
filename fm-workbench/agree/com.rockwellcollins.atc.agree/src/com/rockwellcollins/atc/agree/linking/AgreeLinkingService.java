@@ -30,27 +30,30 @@ import org.osate.xtext.aadl2.properties.linking.PropertiesLinkingService;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractLibrary;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
+import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
 import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
-import com.rockwellcollins.atc.agree.agree.Expr;
-import com.rockwellcollins.atc.agree.agree.FnDefExpr;
-import com.rockwellcollins.atc.agree.agree.LibraryFnDefExpr;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.FnDef;
+import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
+import com.rockwellcollins.atc.agree.agree.LibraryFnDef;
+import com.rockwellcollins.atc.agree.agree.LiftStatement;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NamedID;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.OrderStatement;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
+import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
-
+import com.rockwellcollins.atc.agree.agree.TagExpr;
+import com.rockwellcollins.atc.agree.agree.ThisRef;
 public class AgreeLinkingService extends PropertiesLinkingService {
 	public AgreeLinkingService() {
 		super();
@@ -89,16 +92,20 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 		}
 
 
-		if (context instanceof DoubleDotRef || context instanceof NestedDotID
-				|| context instanceof NodeEq
-				|| context instanceof SynchStatement
-				|| context instanceof RecordExpr || context instanceof RecordType || context instanceof Expr
+
+		if (context instanceof DoubleDotRef || context instanceof ThisRef
+				|| context instanceof LiftStatement
+				|| context instanceof TagExpr
+				|| context instanceof SelectionExpr
+				|| context instanceof NamedElmExpr
+				|| context instanceof AssignStatement
+				|| context instanceof NodeEq || context instanceof SynchStatement
+				|| context instanceof RecordLitExpr || context instanceof GetPropertyExpr
 				|| context instanceof RecordUpdateExpr || context instanceof EventExpr
 				|| context instanceof OrderStatement || context instanceof ConnectionStatement) {
 
 
 			EObject e = getIndexedObject(context, reference, name);
-
 			if (e == null) {
 				e = findClassifier(context, reference, name);
 			}
@@ -146,28 +153,28 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
 				AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
 				for (SpecStatement spec : contract.getSpecs()) {
-					if (spec instanceof RecordDefExpr) {
-						if (((RecordDefExpr) spec).getName().equals(statementName)) {
+					if (spec instanceof RecordDef) {
+						if (((RecordDef) spec).getName().equals(statementName)) {
 							return (spec);
 						}
 
-					} else if (spec instanceof FnDefExpr) {
-						if (((FnDefExpr) spec).getName().equals(statementName)) {
+					} else if (spec instanceof FnDef) {
+						if (((FnDef) spec).getName().equals(statementName)) {
 							return (spec);
 						}
 
-					} else if (spec instanceof LibraryFnDefExpr) {
-						if (((LibraryFnDefExpr) spec).getName().equals(statementName)) {
+					} else if (spec instanceof LibraryFnDef) {
+						if (((LibraryFnDef) spec).getName().equals(statementName)) {
 							return (spec);
 						}
 
-					} else if (spec instanceof NodeDefExpr) {
-						if (((NodeDefExpr) spec).getName().equals(statementName)) {
+					} else if (spec instanceof NodeDef) {
+						if (((NodeDef) spec).getName().equals(statementName)) {
 							return (spec);
 						}
 
-					} else if (spec instanceof LinearizationDefExpr) {
-						if (((LinearizationDefExpr) spec).getName().equals(statementName)) {
+					} else if (spec instanceof LinearizationDef) {
+						if (((LinearizationDef) spec).getName().equals(statementName)) {
 							return (spec);
 						}
 

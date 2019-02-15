@@ -66,6 +66,7 @@ public class CalenStatementImpl extends SynchStatementImpl implements CalenState
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<NamedElement> getEls()
   {
     if (els == null)

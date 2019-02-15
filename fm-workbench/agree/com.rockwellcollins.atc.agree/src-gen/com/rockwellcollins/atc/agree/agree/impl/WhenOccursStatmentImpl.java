@@ -77,6 +77,7 @@ public class WhenOccursStatmentImpl extends WhenStatementImpl implements WhenOcc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Expr getTimes()
   {
     return times;
@@ -104,6 +105,7 @@ public class WhenOccursStatmentImpl extends WhenStatementImpl implements WhenOcc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setTimes(Expr newTimes)
   {
     if (newTimes != times)
@@ -125,6 +127,7 @@ public class WhenOccursStatmentImpl extends WhenStatementImpl implements WhenOcc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TimeInterval getInterval()
   {
     return interval;
@@ -152,6 +155,7 @@ public class WhenOccursStatmentImpl extends WhenStatementImpl implements WhenOcc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setInterval(TimeInterval newInterval)
   {
     if (newInterval != interval)

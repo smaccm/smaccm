@@ -27,9 +27,9 @@ import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.Type;
 import com.rockwellcollins.atc.agree.ui.contentassist.AgreeProposalProvider;
@@ -74,8 +74,8 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		}
 
 		List<String> results = new ArrayList<>();
-		if (grammerObject instanceof NestedDotID) {
-			results.addAll(getNestedDotIDCandidates((NestedDotID) grammerObject));
+		if (grammerObject instanceof SelectionExpr) {
+			results.addAll(getNestedDotIDCandidates((SelectionExpr) grammerObject));
 		}
 
 		return results;
@@ -110,8 +110,8 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		List<NamedElement> namedEls = new ArrayList<>();
 		if (namedEl instanceof ComponentImplementation) {
 			namedEls.addAll(((ComponentImplementation) namedEl).getAllSubcomponents());
-		} else if (namedEl instanceof RecordDefExpr) {
-			namedEls.addAll(((RecordDefExpr) namedEl).getArgs());
+		} else if (namedEl instanceof RecordDef) {
+			namedEls.addAll(((RecordDef) namedEl).getArgs());
 		}
 		for (NamedElement el : namedEls) {
 			results.add(el.getName());
@@ -119,15 +119,20 @@ public class AgreeAnnexContentAssist implements AnnexContentAssist {
 		return results;
 	}
 
-	private List<String> getNestedDotIDCandidates(NestedDotID id) {
+	private List<String> getNestedDotIDCandidates(SelectionExpr id) {
 
-		NamedElement base = id.getBase();
+		NamedElement base = ((NamedElmExpr) id).getElm();
 		NamedElement namedEl = null;
 
 		if (base instanceof Arg) {
 			Type type = ((Arg) base).getType();
-			DoubleDotRef elID = ((RecordType) type).getRecord();
+
+			DoubleDotRef elID = ((DoubleDotRef) type);
 			namedEl = elID.getElm();
+//=======
+//			DoubleDotRef elID = ((RecordType) type).getRecord();
+//			namedEl = elID.getElm();
+//>>>>>>> origin/develop
 		} else if (base instanceof DataPort) {
 			namedEl = ((DataPort) base).getDataFeatureClassifier();
 		} else if (base instanceof EventDataPort) {

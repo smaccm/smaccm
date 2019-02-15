@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.TreeMap;
+import java.util.function.Predicate;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -19,9 +20,9 @@ import org.osate.aadl2.AadlBoolean;
 import org.osate.aadl2.AadlInteger;
 import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AadlReal;
+import org.osate.aadl2.AbstractNamedValue;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.BooleanLiteral;
-import org.osate.aadl2.Classifier;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
 import org.osate.aadl2.ConnectedElement;
@@ -29,11 +30,9 @@ import org.osate.aadl2.Connection;
 import org.osate.aadl2.ConnectionEnd;
 import org.osate.aadl2.Context;
 import org.osate.aadl2.DataClassifier;
-import org.osate.aadl2.DataImplementation;
 import org.osate.aadl2.DataPort;
 import org.osate.aadl2.DataSubcomponent;
 import org.osate.aadl2.DataSubcomponentType;
-import org.osate.aadl2.DataType;
 import org.osate.aadl2.EnumerationLiteral;
 import org.osate.aadl2.EventDataPort;
 import org.osate.aadl2.EventPort;
@@ -41,14 +40,13 @@ import org.osate.aadl2.Feature;
 import org.osate.aadl2.FeatureGroup;
 import org.osate.aadl2.FeatureGroupType;
 import org.osate.aadl2.IntegerLiteral;
-import org.osate.aadl2.ModalPropertyValue;
 import org.osate.aadl2.NamedElement;
 import org.osate.aadl2.NamedValue;
+import org.osate.aadl2.NumberValue;
+import org.osate.aadl2.Operation;
 import org.osate.aadl2.Property;
-import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertyConstant;
 import org.osate.aadl2.PropertyExpression;
-import org.osate.aadl2.RangeValue;
 import org.osate.aadl2.RealLiteral;
 import org.osate.aadl2.StringLiteral;
 import org.osate.aadl2.Subcomponent;
@@ -60,56 +58,67 @@ import org.osate.aadl2.properties.PropertyDoesNotApplyToHolderException;
 import org.osate.annexsupport.AnnexUtil;
 import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
-import com.rockwellcollins.atc.agree.agree.AADLEnumerator;
+import com.rockwellcollins.atc.agree.AgreeTypeSystem;
 import com.rockwellcollins.atc.agree.agree.AgreeContract;
 import com.rockwellcollins.atc.agree.agree.AgreeContractSubclause;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Arg;
+import com.rockwellcollins.atc.agree.agree.ArrayLiteralExpr;
+import com.rockwellcollins.atc.agree.agree.ArraySubExpr;
+import com.rockwellcollins.atc.agree.agree.ArrayUpdateExpr;
 import com.rockwellcollins.atc.agree.agree.AssertStatement;
 import com.rockwellcollins.atc.agree.agree.AssignStatement;
 import com.rockwellcollins.atc.agree.agree.AssumeStatement;
 import com.rockwellcollins.atc.agree.agree.AsynchStatement;
 import com.rockwellcollins.atc.agree.agree.BoolLitExpr;
 import com.rockwellcollins.atc.agree.agree.CalenStatement;
+import com.rockwellcollins.atc.agree.agree.CallExpr;
+import com.rockwellcollins.atc.agree.agree.ComponentRef;
 import com.rockwellcollins.atc.agree.agree.ConnectionStatement;
 import com.rockwellcollins.atc.agree.agree.ConstStatement;
 import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
+import com.rockwellcollins.atc.agree.agree.EnumLitExpr;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
+import com.rockwellcollins.atc.agree.agree.ExistsExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
-import com.rockwellcollins.atc.agree.agree.FnCallExpr;
-import com.rockwellcollins.atc.agree.agree.FnDefExpr;
+import com.rockwellcollins.atc.agree.agree.FnDef;
+import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
+import com.rockwellcollins.atc.agree.agree.FoldRightExpr;
+import com.rockwellcollins.atc.agree.agree.ForallExpr;
+import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
+import com.rockwellcollins.atc.agree.agree.IndicesExpr;
 import com.rockwellcollins.atc.agree.agree.InitialStatement;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.IntLitExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedExpr;
 import com.rockwellcollins.atc.agree.agree.LatchedStatement;
 import com.rockwellcollins.atc.agree.agree.LemmaStatement;
-import com.rockwellcollins.atc.agree.agree.LinearizationDefExpr;
+import com.rockwellcollins.atc.agree.agree.LinearizationDef;
 import com.rockwellcollins.atc.agree.agree.MNSynchStatement;
+import com.rockwellcollins.atc.agree.agree.NamedElmExpr;
 import com.rockwellcollins.atc.agree.agree.NamedID;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
 import com.rockwellcollins.atc.agree.agree.NodeBodyExpr;
-import com.rockwellcollins.atc.agree.agree.NodeDefExpr;
+import com.rockwellcollins.atc.agree.agree.NodeDef;
 import com.rockwellcollins.atc.agree.agree.NodeEq;
 import com.rockwellcollins.atc.agree.agree.NodeLemma;
 import com.rockwellcollins.atc.agree.agree.NodeStmt;
 import com.rockwellcollins.atc.agree.agree.PatternStatement;
 import com.rockwellcollins.atc.agree.agree.PreExpr;
 import com.rockwellcollins.atc.agree.agree.PrevExpr;
-import com.rockwellcollins.atc.agree.agree.PrimType;
 import com.rockwellcollins.atc.agree.agree.PropertyStatement;
 import com.rockwellcollins.atc.agree.agree.RealCast;
 import com.rockwellcollins.atc.agree.agree.RealLitExpr;
-import com.rockwellcollins.atc.agree.agree.RecordDefExpr;
-import com.rockwellcollins.atc.agree.agree.RecordExpr;
-import com.rockwellcollins.atc.agree.agree.RecordType;
+import com.rockwellcollins.atc.agree.agree.RecordDef;
+import com.rockwellcollins.atc.agree.agree.RecordLitExpr;
 import com.rockwellcollins.atc.agree.agree.RecordUpdateExpr;
+import com.rockwellcollins.atc.agree.agree.SelectionExpr;
 import com.rockwellcollins.atc.agree.agree.SpecStatement;
 import com.rockwellcollins.atc.agree.agree.SynchStatement;
-import com.rockwellcollins.atc.agree.agree.ThisExpr;
+import com.rockwellcollins.atc.agree.agree.TagExpr;
+import com.rockwellcollins.atc.agree.agree.ThisRef;
 import com.rockwellcollins.atc.agree.agree.TimeExpr;
 import com.rockwellcollins.atc.agree.agree.TimeFallExpr;
 import com.rockwellcollins.atc.agree.agree.TimeOfExpr;
@@ -119,9 +128,9 @@ import com.rockwellcollins.atc.agree.analysis.Activator;
 import com.rockwellcollins.atc.agree.analysis.AgreeCalendarUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeException;
 import com.rockwellcollins.atc.agree.analysis.AgreeLogger;
-import com.rockwellcollins.atc.agree.analysis.AgreeTypeUtils;
 import com.rockwellcollins.atc.agree.analysis.AgreeUtils;
 import com.rockwellcollins.atc.agree.analysis.MNSynchronyElement;
+import com.rockwellcollins.atc.agree.analysis.TypeTable;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeAADLConnection.ConnectionType;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeNode.TimingModel;
 import com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeInlineLatchedConnections;
@@ -137,13 +146,18 @@ import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternBuilder;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePatternTranslator;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreePeriodicPattern;
 import com.rockwellcollins.atc.agree.analysis.realtime.AgreeSporadicPattern;
+import com.rockwellcollins.atc.agree.analysis.translation.LustreExprFactory;
 
+import jkind.lustre.ArrayAccessExpr;
+import jkind.lustre.ArrayExpr;
 import jkind.lustre.BinaryExpr;
 import jkind.lustre.BinaryOp;
 import jkind.lustre.BoolExpr;
 import jkind.lustre.CastExpr;
+import jkind.lustre.CondactExpr;
 import jkind.lustre.Equation;
 import jkind.lustre.Expr;
+import jkind.lustre.FunctionCallExpr;
 import jkind.lustre.IdExpr;
 import jkind.lustre.IfThenElseExpr;
 import jkind.lustre.IntExpr;
@@ -152,12 +166,14 @@ import jkind.lustre.Node;
 import jkind.lustre.NodeCallExpr;
 import jkind.lustre.RealExpr;
 import jkind.lustre.RecordAccessExpr;
+import jkind.lustre.RecordExpr;
 import jkind.lustre.TupleExpr;
 import jkind.lustre.Type;
 import jkind.lustre.UnaryExpr;
 import jkind.lustre.UnaryOp;
 import jkind.lustre.VarDecl;
 import jkind.lustre.builders.NodeBuilder;
+
 
 public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
@@ -168,7 +184,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	public static List<Node> globalNodes;
 	private static Set<Type> globalTypes;
-	private static Map<NamedElement, String> typeMap;
+
+	// EGM: array-backend
+
+	// Symbol table to gather all the globalTypes
+	private static TypeTable symbolTable;
+
+	// EGM: end-array-backend
+
 	private static Map<String, AgreeVar> timeOfVarMap;
 	private static Map<String, AgreeVar> timeRiseVarMap;
 	private static Map<String, AgreeVar> timeFallVarMap;
@@ -202,17 +225,23 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		this.isMonolithic = isMonolithic;
 		globalNodes = new ArrayList<>();
 		globalTypes = new HashSet<>();
-		typeMap = new HashMap<>();
 		renamings = new HashMap<>();
 		refMap = new HashMap<>();
+
+		// EGM: array-backend
+		symbolTable = new TypeTable();
 
 		AgreeNode topNode = getAgreeNode(compInst, true);
 		List<AgreeNode> agreeNodes = gatherNodes(topNode);
 
+		// EGM: array-backend
+		List<Type> lustreTypes = symbolTable.getLustreTypes();
+
+
 		// have to convert the types. The reason we use Record types in the
 		// first place rather than the more general types is so we can check set
 		// containment easily
-		AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), new ArrayList<>(globalTypes),
+		AgreeProgram program = new AgreeProgram(agreeNodes, new ArrayList<>(globalNodes), lustreTypes,
 				topNode);
 
 		// if there are any patterns in the AgreeProgram we need to inline them
@@ -232,6 +261,13 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		program.containsRealTimePatterns(containsRTPatterns);
+
+		// EGM: DEBUG
+		System.out.println("getAgreeProgram");
+		com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter pp = new com.rockwellcollins.atc.agree.analysis.ast.visitors.AgreeASTPrettyprinter();
+		program.accept(pp);
+		System.out.println(pp.toString());
+		System.out.println(AgreeLogger.getLog());
 
 		return program;
 	}
@@ -355,13 +391,12 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			gatherLustreTypes(contract.getSpecs());
 		}
 
-		gatherUnspecifiedAadlProperties(unspecifiedAadlProperties, typeMap, globalTypes, inputs, assumptions,
-				guarantees);
+		gatherUnspecifiedAadlProperties(unspecifiedAadlProperties, inputs, assumptions, guarantees);
 
 		if (!(foundSubNode || hasDirectAnnex)) {
 			return null;
 		}
-		gatherOutputsInputsAndTypes(outputs, inputs, compInst.getFeatureInstances(), typeMap, globalTypes, assumptions, guarantees);
+		gatherOutputsInputsAndTypes(outputs, inputs, compInst.getFeatureInstances(), assumptions, guarantees);
 
 		// verify that every variable that is reasoned about is
 		// in a component containing an annex
@@ -374,6 +409,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		builder.addLocalEquation(localEquations);
 		builder.addConnection(connections);
 		builder.addSubNode(subNodes);
+
+		// Clean up any vacuous true predicates
+		Predicate<AgreeStatement> isBoolExprAndisTrue = st -> (st.expr instanceof BoolExpr)
+				&& ((BoolExpr) st.expr).value;
+		assertions.removeIf(isBoolExprAndisTrue);
+		assumptions.removeIf(isBoolExprAndisTrue);
+		guarantees.removeIf(isBoolExprAndisTrue);
+
 		builder.addAssertion(assertions);
 		builder.addAssumption(assumptions);
 		builder.addGuarantee(guarantees);
@@ -443,7 +486,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				for (VarDecl var : vars) {
 					result.variables.add((AgreeVar) var);
 				}
-				result.assertions.addAll(getVariableRangeConstraints(args, spec));
+				result.assertions.addAll(getConstraintsFromArgs(args, spec));
 			}
 		}
 		return result;
@@ -570,24 +613,21 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private void gatherOutputsInputsAndTypes(List<AgreeVar> outputs, List<AgreeVar> inputs,
-			EList<FeatureInstance> features, Map<NamedElement, String> typeMap, Set<Type> typeExpressions,
-			List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
+			EList<FeatureInstance> features, List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
 		for (FeatureInstance feature : features) {
-			featureToAgreeVars(outputs, inputs, feature, typeMap, typeExpressions, assumptions, guarantees);
+			featureToAgreeVars(outputs, inputs, feature, assumptions, guarantees);
 		}
 
 	}
 
 	private void featureToAgreeVars(List<AgreeVar> outputs, List<AgreeVar> inputs, FeatureInstance feature,
-			Map<NamedElement, String> typeMap, Set<Type> typeExpressions, List<AgreeStatement> assumptions,
-			List<AgreeStatement> guarantees) {
+			List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
 
 		switch (feature.getCategory()) {
 		case FEATURE_GROUP:
 			List<AgreeVar> newInputs = new ArrayList<>();
 			List<AgreeVar> newOutputs = new ArrayList<>();
-			gatherOutputsInputsAndTypes(newOutputs, newInputs, feature.getFeatureInstances(), typeMap, typeExpressions,
-					assumptions, guarantees);
+			gatherOutputsInputsAndTypes(newOutputs, newInputs, feature.getFeatureInstances(), assumptions, guarantees);
 			for (AgreeVar agreeVar : newInputs) {
 				String newName = feature.getName() + dotChar + agreeVar.id;
 				inputs.add(new AgreeVar(newName, agreeVar.type, feature.getFeature(), feature.getComponentInstance(),
@@ -602,7 +642,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		case DATA_PORT:
 		case EVENT_PORT:
 		case EVENT_DATA_PORT:
-			portToAgreeVar(outputs, inputs, feature, typeMap, typeExpressions, assumptions, guarantees);
+			portToAgreeVar(outputs, inputs, feature, assumptions, guarantees);
 			return;
 		case DATA_ACCESS:
 			break;
@@ -613,18 +653,20 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return;
 	}
 
+
 	private void portToAgreeVar(List<AgreeVar> outputs, List<AgreeVar> inputs, FeatureInstance feature,
-			Map<NamedElement, String> typeMap, Set<Type> typeExpressions, List<AgreeStatement> assumptions,
+			List<AgreeStatement> assumptions,
 			List<AgreeStatement> guarantees) {
 
-		DataSubcomponentType dataClass;
 		Feature dataFeature = feature.getFeature();
+		NamedElement dataClass;
 		if (dataFeature instanceof DataPort) {
 			DataPort dataPort = (DataPort) dataFeature;
 			dataClass = dataPort.getDataFeatureClassifier();
 		} else if (dataFeature instanceof EventDataPort) {
 			EventDataPort eventDataPort = (EventDataPort) dataFeature;
 			dataClass = eventDataPort.getDataFeatureClassifier();
+
 		} else {
 			dataClass = null;
 		}
@@ -653,7 +695,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			return;
 		}
 
-		Type type = AgreeTypeUtils.getType(dataClass, typeMap, typeExpressions);
+		Type type = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromNE(dataClass));
+
 		if (type == null) {
 			// we do not reason about this type
 			return;
@@ -666,7 +709,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			inputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
 
-				List<Expr> constraints = getDataClassifierRangeConstraintExprs(name, (DataClassifier) dataClass);
+				List<Expr> constraints = getConstraintsFromTypeDef(name, AgreeTypeSystem.typeDefFromNE(dataClass));
 				if (!constraints.isEmpty()) {
 					assumptions.add(getDataClassifierTypePredicate(feature.getName(), constraints, dataFeature));
 				}
@@ -675,7 +718,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		case OUT:
 			outputs.add(agreeVar);
 			if (dataClass instanceof DataClassifier) {
-				List<Expr> constraints = getDataClassifierRangeConstraintExprs(name, (DataClassifier) dataClass);
+				List<Expr> constraints = getConstraintsFromTypeDef(name, AgreeTypeSystem.typeDefFromNE(dataClass));
 				if (!constraints.isEmpty()) {
 					guarantees.add(getDataClassifierTypePredicate(feature.getName(), constraints, dataFeature));
 				}
@@ -797,11 +840,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private Type getConnectionEndType(ConnectionEnd port) {
-		DataSubcomponentType dataClass = getConnectionEndDataClass(port);
+		NamedElement dataClass = getConnectionEndDataClass(port);
 		if (dataClass == null) {
 			return null;
 		}
-		return AgreeTypeUtils.getType(dataClass, typeMap, globalTypes);
+		// EGM: array-backend
+		// Type lustreType = AgreeTypeUtils.getType(dataClass, typeMap, globalTypes);
+		Type lustreType = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromNE(dataClass));
+		return lustreType;
 	}
 
 	private List<AgreeVar> getAgreePortNames(ConnectionEnd port, String prefix, ComponentInstance compInst) {
@@ -924,6 +970,23 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new BoolExpr(true);
 	}
 
+	private static String getObjectLocationPrefix(EObject obj) {
+		String objPrefix = "";
+		EObject container = obj.eContainer();
+
+		while (!(container instanceof AadlPackage)) {
+			if (container instanceof ComponentClassifier) {
+				objPrefix = ((ComponentClassifier) container).getName();
+				objPrefix = dotChar + objPrefix;
+				objPrefix = objPrefix.replace(".", dotChar);
+			}
+			container = container.eContainer();
+		}
+		objPrefix = ((AadlPackage) container).getName() + objPrefix + dotChar;
+
+		return objPrefix;
+	}
+
 	private Expr getSynchConstraint(SynchStatement spec, List<AgreeNode> subNodes) {
 
 		int val1 = Integer.decode(spec.getVal());
@@ -937,7 +1000,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			clockIds.add(new IdExpr(subNode.clockVar.id));
 		}
 
-		String dfaPrefix = AgreeTypeUtils.getObjectLocationPrefix(spec);
+		String dfaPrefix = getObjectLocationPrefix(spec);
 
 		if (spec.getVal2() == null) {
 			Node dfaNode = AgreeCalendarUtils.getDFANode(dfaPrefix + "__DFA_NODE", val1);
@@ -972,9 +1035,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				for (j = i + 1; j < clockIds.size(); j++) {
 					Expr clock2 = clockIds.get(j);
 					NodeCallExpr nodeCall = new NodeCallExpr(nodeName, clock1, clock2);
-					clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+					clockAssertion = LustreExprFactory.makeANDExpr(clockAssertion, nodeCall);
 					nodeCall = new NodeCallExpr(nodeName, clock2, clock1);
-					clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+					clockAssertion = LustreExprFactory.makeANDExpr(clockAssertion, nodeCall);
 				}
 			}
 		}
@@ -997,7 +1060,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			MNSynchronyElement elem = new MNSynchronyElement(maxClock, minClock, max, min);
 
 			String nodeName = "__calendar_node_" + elem.max + "_" + elem.min;
-			nodeName = AgreeTypeUtils.getObjectLocationPrefix(sync) + nodeName;
+			nodeName = getObjectLocationPrefix(sync) + nodeName;
 			if (!nodeNames.contains(nodeName)) {
 				nodeNames.add(nodeName);
 				Node calNode = AgreeCalendarUtils.getMNCalendar(nodeName, elem.max, elem.min);
@@ -1005,9 +1068,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			}
 
 			NodeCallExpr nodeCall = new NodeCallExpr(nodeName, elem.maxClock, elem.minClock);
-			clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+			clockAssertion = LustreExprFactory.makeANDExpr(clockAssertion, nodeCall);
 			nodeCall = new NodeCallExpr(nodeName, elem.minClock, elem.maxClock);
-			clockAssertion = new BinaryExpr(clockAssertion, BinaryOp.AND, nodeCall);
+			clockAssertion = LustreExprFactory.makeANDExpr(clockAssertion, nodeCall);
 		}
 
 		return clockAssertion;
@@ -1016,9 +1079,11 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private List<Type> gatherLustreTypes(EList<SpecStatement> specs) {
 		List<Type> types = new ArrayList<>();
 		for (SpecStatement spec : specs) {
-			if (spec instanceof RecordDefExpr) {
+			if (spec instanceof RecordDef) {
 				// this will record them to the global types
-				AgreeTypeUtils.getType((NamedElement) spec, typeMap, globalTypes);
+				// EGM: array-backend
+				// AgreeTypeUtils.getType((NamedElement) spec, typeMap, globalTypes);
+				symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromNE((NamedElement) spec));
 			}
 		}
 		return types;
@@ -1027,7 +1092,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private List<Node> addLustreNodes(EList<SpecStatement> specs) {
 		List<Node> nodes = new ArrayList<>();
 		for (SpecStatement spec : specs) {
-			if (spec instanceof NodeDefExpr || spec instanceof FnDefExpr) {
+			if (spec instanceof NodeDef || spec instanceof FnDef) {
 				doSwitch(spec);
 			}
 		}
@@ -1035,8 +1100,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	public VarDecl agreeVarFromArg(Arg arg, ComponentInstance compInst) {
-		NamedType type = getNamedType(AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes));
-		return new AgreeVar(arg.getName(), type, arg, compInst, null);
+		// EGM: array-backend
+		// String typeStr = AgreeTypeUtils.getTypeName(arg.getType(), typeMap, globalTypes);
+		Type type = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromType(arg.getType()));
+		if (type != null) {
+			return new AgreeVar(arg.getName(), type, arg, compInst, null);
+		} else {
+			return null;
+		}
 	}
 
 	// MWW: made this public.
@@ -1085,7 +1156,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		for (SpecStatement spec : specs) {
 			if (spec instanceof AssignStatement) {
 				Expr expr = doSwitch(((AssignStatement) spec).getExpr());
-				expr = new BinaryExpr(new IdExpr(((AssignStatement) spec).getId().getBase().getName()), BinaryOp.EQUAL,
+				NamedElement id = ((AssignStatement) spec).getId();
+				expr = new BinaryExpr(new IdExpr(id.getName()), BinaryOp.EQUAL,
 						expr);
 				assigns.add(new AgreeStatement("", expr, spec));
 			}
@@ -1112,6 +1184,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				EqStatement eq = (EqStatement) spec;
 				EList<Arg> lhs = eq.getLhs();
 				if (eq.getExpr() != null) {
+
 					Expr expr = doSwitch(eq.getExpr());
 
 					if (lhs.size() != 1) {
@@ -1126,141 +1199,271 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					}
 					result.assertions.add(new AgreeStatement("", expr, spec));
 				}
-				result.obligations.addAll(getVariableRangeConstraints(lhs, eq));
+				result.obligations.addAll(getConstraintsFromArgs(lhs, eq));
 			}
 		}
 		return result;
 	}
 
-	private List<Expr> getDataClassifierRangeConstraintExprs(String name, DataClassifier dataClassifier) {
+
+
+
+	private PropertyExpression getPropertyExpression (AbstractNamedValue nv) {
+		if (nv instanceof PropertyConstant) {
+			return ((PropertyConstant) nv).getConstantValue();
+		}
+
+		// TODO: EGM need to pull out the property value rather that the default value,
+		// but I am not sure how to do that.
+		if (nv instanceof Property) {
+			assert ("ERROR: default property value in AgreeASTBuilder::PropertyExpression" == null);
+			return ((Property) nv).getDefaultValue();
+		}
+
+		// nv is an enumeration literal
+		assert ("ERROR: enumeration literal in AgreeASTBuildter::getPropertyExpression" == null);
+		return null;
+	}
+
+	// EGM-COMMENT: RangeValueImpl::getNumberValue(pe) does not cover the NamedValue instance
+	// of a property expression. The getNumberValue here duplicates that code and adds the
+	// missing type. RangeValueImpl::getNumberValue(pe) is used by RangeValueImpl::getMavimumValue()
+	// and its minimum value counterpart. These are needed for the range constraints.
+	private NumberValue getNumberValue(PropertyExpression pe) {
+		if (pe instanceof Operation) {
+			pe = ((Operation) pe).getOwnedPropertyExpressions().get(0);
+		}
+
+		if (pe instanceof NumberValue) {
+			return (NumberValue) pe;
+		}
+
+		if (pe instanceof PropertyConstant) {
+			return (NumberValue) ((PropertyConstant) pe).getConstantValue();
+		}
+
+		if (pe instanceof NamedValue) {
+			pe = getPropertyExpression(((NamedValue) pe).getNamedValue());
+			return getNumberValue(pe);
+		}
+
+		assert ("ERROR: missing type in AgreeASTBuilder::getNumberValue" == null);
+		return null;
+	}
+
+//
+//	private double getScaledValue(PropertyExpression pe) {
+//		return getNumberValue(pe).getScaledValue();
+//	}
+
+//	private Expr createExprForBound(String name, RangeValue rv, Function<BigDecimal, Expr> makeExpr) {
+//		double min = getScaledValue(rv.getMinimum());
+//		double max = getScaledValue(rv.getMaximum());
+//		IdExpr id = new IdExpr(name);
+//		Expr lowVal = makeExpr.apply(BigDecimal.valueOf(min));
+//		Expr highVal = makeExpr.apply(BigDecimal.valueOf(max));
+//		Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+//		Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+//		return LustreExprFactory.makeANDExpr(lowBound, highBound);
+//	}
+
+
+//	private List<Expr> getArrayRangeConstraint(String namePrefix, ArrayTypeDef array) {
+//		List<Expr> constraints = new ArrayList<>();
+//		assert (array.baseType instanceof DataClassifier);
+//		Expr expr = getDataClassifierRangeConstraintExprs(AgreeTypeSystem.nameOfTypeDef(array.baseType),
+//				(DataClassifier) array.baseType)
+//				.stream().reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b));
+//		for (int i = 0; i < array.dimension; ++i) {
+//			String name = namePrefix + "[" + i + "]";
+//		}
+//		return constraints;
+//	}
+
+	private List<Expr> getConstraintsFromTypeDef(String name, AgreeTypeSystem.TypeDef typeDef) {
 		List<Expr> constraints = new ArrayList<>();
 
-		if (dataClassifier instanceof DataType) {
-			if (hasIntegerRangeProperty(dataClassifier)) {
-				for (PropertyAssociation pa : getIntegerRangePropertyAssociations(dataClassifier)) {
-					for (ModalPropertyValue pv : pa.getOwnedValues()) {
-						PropertyExpression propExpr = pv.getOwnedValue();
-						if (propExpr instanceof RangeValue) {
-							RangeValue rangeValue = (RangeValue) propExpr;
-							IdExpr id = new IdExpr(name);
-							List<Expr> boundExprs = new ArrayList<>();
-							try {
-								double min = rangeValue.getMinimumValue().getScaledValue();
-								Expr lowVal = new IntExpr(BigDecimal.valueOf(min).toBigInteger());
-								boundExprs.add(new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id));
-							} catch (Exception e) {
-								System.out.println("Could not find value for " + name + " lower bound.");
-							}
-							try {
-								double max = rangeValue.getMaximumValue().getScaledValue();
-								Expr highVal = new IntExpr(BigDecimal.valueOf(max).toBigInteger());
-								boundExprs.add(new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal));
-							} catch (Exception e) {
-								System.out.println("Could not find value for " + name + " upper bound.");
-							}
-							if (boundExprs.size() == 2) {
-								constraints.add(new BinaryExpr(boundExprs.get(0), BinaryOp.AND, boundExprs.get(1)));
-							} else if (boundExprs.size() == 1) {
-								constraints.add(boundExprs.get(0));
-							}
-						}
-					}
-				}
-			} else if (hasRealRangeProperty(dataClassifier)) {
-				for (PropertyAssociation pa : getRealRangePropertyAssociations(dataClassifier)) {
-					for (ModalPropertyValue pv : pa.getOwnedValues()) {
-						PropertyExpression propExpr = pv.getOwnedValue();
-						if (propExpr instanceof RangeValue) {
-							RangeValue rangeValue = (RangeValue) propExpr;
-							IdExpr id = new IdExpr(name);
-							List<Expr> boundExprs = new ArrayList<>();
-							try {
-								double min = rangeValue.getMinimumValue().getScaledValue();
-								Expr lowVal = new RealExpr(BigDecimal.valueOf(min));
-								boundExprs.add(new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id));
-							} catch (Exception e) {
-								System.out.println("Could not find value for " + name + " lower bound.");
-							}
-							try {
-								double max = rangeValue.getMaximumValue().getScaledValue();
-								Expr highVal = new RealExpr(BigDecimal.valueOf(max));
-								boundExprs.add(new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal));
-							} catch (Exception e) {
-								System.out.println("Could not find value for " + name + " upper bound.");
-							}
-							if (boundExprs.size() == 2) {
-								constraints.add(new BinaryExpr(boundExprs.get(0), BinaryOp.AND, boundExprs.get(1)));
-							} else if (boundExprs.size() == 1) {
-								constraints.add(boundExprs.get(0));
-							}
-						}
-					}
-				}
+		if (typeDef instanceof AgreeTypeSystem.RangeIntTypeDef) {
+
+			Expr childName = new IdExpr(name);
+			long lowl = ((AgreeTypeSystem.RangeIntTypeDef) typeDef).low;
+			long highl = ((AgreeTypeSystem.RangeIntTypeDef) typeDef).high;
+			Expr lowVal = new IntExpr(BigInteger.valueOf(lowl));
+			Expr highVal = new IntExpr(BigInteger.valueOf(highl));
+			Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, childName);
+			Expr highBound = new BinaryExpr(childName, BinaryOp.LESSEQUAL, highVal);
+			constraints.add(lowBound);
+			constraints.add(highBound);
+
+		} else if (typeDef instanceof AgreeTypeSystem.RangeRealTypeDef) {
+
+			Expr childName = new IdExpr(name);
+
+			double lowd = ((AgreeTypeSystem.RangeRealTypeDef) typeDef).low;
+			double highd = ((AgreeTypeSystem.RangeRealTypeDef) typeDef).high;
+			Expr lowVal = new RealExpr(BigDecimal.valueOf(lowd));
+			Expr highVal = new RealExpr(BigDecimal.valueOf(highd));
+			Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, childName);
+			Expr highBound = new BinaryExpr(childName, BinaryOp.LESSEQUAL, highVal);
+			constraints.add(lowBound);
+			constraints.add(highBound);
+
+		} else if (typeDef instanceof AgreeTypeSystem.ArrayTypeDef) {
+			AgreeTypeSystem.TypeDef stemType = ((AgreeTypeSystem.ArrayTypeDef) typeDef).stemType;
+			int size = ((AgreeTypeSystem.ArrayTypeDef) typeDef).size;
+			for (int i = 0; i < size; ++i) {
+				String childName = name + "[" + i + "]";
+				constraints.addAll(getConstraintsFromTypeDef(childName, stemType));
 			}
 
-		} else if (dataClassifier instanceof DataImplementation) {
-			constraints.addAll(((DataImplementation) dataClassifier).getAllSubcomponents().stream()
-					.filter(sub -> sub.getSubcomponentType() instanceof DataClassifier)
-					.map(sub -> getDataClassifierRangeConstraintExprs(name + "." + sub.getName(),
-							(DataClassifier) sub.getSubcomponentType()))
-					.flatMap(List::stream).collect(Collectors.toList()));
+		} else if (typeDef instanceof AgreeTypeSystem.RecordTypeDef) {
+			Map<String, AgreeTypeSystem.TypeDef> fields = ((AgreeTypeSystem.RecordTypeDef) typeDef).fields;
+			for (Entry<String, AgreeTypeSystem.TypeDef> entry : fields.entrySet()) {
+				String childName = name + "." + entry.getKey();
+				AgreeTypeSystem.TypeDef childType = entry.getValue();
+				constraints.addAll(getConstraintsFromTypeDef(childName, childType));
+			}
+
 		}
 
 		return constraints;
+
 	}
 
-	private List<Expr> getVariableRangeConstraintExprs(String name, com.rockwellcollins.atc.agree.agree.Type type) {
-		List<Expr> result = new ArrayList<>();
-		if (type instanceof PrimType) {
-			PrimType primType = (PrimType) type;
-			String lowStr = primType.getRangeLow();
-			String highStr = primType.getRangeHigh();
+//	private List<Expr> getDataClassifierRangeConstraintExprs(String name, DataClassifier dataClassifier) {
+//		List<Expr> constraints = new ArrayList<>();
+//
+//		if (dataClassifier instanceof DataImplementation) {
+//			constraints.addAll(((DataImplementation) dataClassifier).getAllSubcomponents().stream()
+//					.filter(sub -> sub.getSubcomponentType() instanceof DataClassifier)
+//					.map(sub -> getDataClassifierRangeConstraintExprs(name + "." + sub.getName(),
+//							(DataClassifier) sub.getSubcomponentType()))
+//					.flatMap(List::stream).collect(Collectors.toList()));
+//		} else if (dataClassifier instanceof DataType) {
+//
+//			AgreeTypeSystem.TypeDef typeDef = AgreeTypeSystem.typeDefFromClassifier(dataClassifier);
+//			if (typeDef instanceof AgreeTypeSystem.ArrayTypeDef) {
+//
+//				AgreeTypeSystem.TypeDef baseType = ((AgreeTypeSystem.ArrayTypeDef) typeDef).stemType;
+//				int size = ((AgreeTypeSystem.ArrayTypeDef) typeDef).size;
+//
+//				if (baseType instanceof AgreeTypeSystem.RangeIntTypeDef) {
+//					for (int i = 0; i < size; ++i) {
+//
+//						Expr childName = new IdExpr(name + "[" + i + "]");
+//						long lowl = ((AgreeTypeSystem.RangeIntTypeDef) baseType).low;
+//						long highl = ((AgreeTypeSystem.RangeIntTypeDef) baseType).high;
+//						Expr lowVal = new IntExpr(BigInteger.valueOf(lowl));
+//						Expr highVal = new IntExpr(BigInteger.valueOf(highl));
+//						Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, childName);
+//						Expr highBound = new BinaryExpr(childName, BinaryOp.LESSEQUAL, highVal);
+//						constraints.add(lowBound);
+//						constraints.add(highBound);
+//					}
+//
+//				} else if (baseType instanceof AgreeTypeSystem.RangeRealTypeDef) {
+//					for (int i = 0; i < size; ++i) {
+//						Expr childName = new IdExpr(name + "[" + i + "]");
+//
+//						double lowd = ((AgreeTypeSystem.RangeRealTypeDef) baseType).low;
+//						double highd = ((AgreeTypeSystem.RangeRealTypeDef) baseType).high;
+//						Expr lowVal = new RealExpr(BigDecimal.valueOf(lowd));
+//						Expr highVal = new RealExpr(BigDecimal.valueOf(highd));
+//						Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, childName);
+//						Expr highBound = new BinaryExpr(childName, BinaryOp.LESSEQUAL, highVal);
+//						constraints.add(lowBound);
+//						constraints.add(highBound);
+//
+//					}
+//				} else {
+//
+//
+//					Optional<NamedElement> elmOp = Optional.empty();
+//					if (baseType instanceof AgreeTypeSystem.RecordTypeDef) {
+//						elmOp = Optional.of(((AgreeTypeSystem.RecordTypeDef) baseType).namedElement);
+//					} else if (baseType instanceof AgreeTypeSystem.ArrayTypeDef) {
+//						elmOp = ((AgreeTypeSystem.ArrayTypeDef) baseType).elmOp;
+//					} else {
+//
+//						elmOp.map(elm -> {
+//							if (elm instanceof DataClassifier) {
+//								for (int i = 0; i < size; ++i) {
+//									String childName = name + "[" + i + "]";
+//									constraints.addAll(getDataClassifierRangeConstraintExprs(childName, (DataClassifier) elm));
+//								}
+//
+//							}
+//							return null;
+//						});
+//					}
+//
+//
+//				}
+//			}
+//		}
+//		return constraints;
+//
+//
+//	}
 
-			if (lowStr != null && highStr != null) {
-				IdExpr id = new IdExpr(name);
-				int lowSign = primType.getLowNeg() == null ? 1 : -1;
-				int highSign = primType.getHighNeg() == null ? 1 : -1;
-				Expr lowVal = null;
-				Expr highVal = null;
 
-				switch (primType.getString()) {
-				case "int":
-					long lowl = Long.valueOf(lowStr) * lowSign;
-					long highl = Long.valueOf(highStr) * highSign;
-					lowVal = new IntExpr(BigInteger.valueOf(lowl));
-					highVal = new IntExpr(BigInteger.valueOf(highl));
-					break;
-				case "real":
-					double lowd = Double.valueOf(lowStr) * lowSign;
-					double highd = Double.valueOf(highStr) * highSign;
-					lowVal = new RealExpr(BigDecimal.valueOf(lowd));
-					highVal = new RealExpr(BigDecimal.valueOf(highd));
-					break;
-				default:
-					throw new AgreeException("Unhandled type '" + primType.getString() + "' in ranged type");
-				}
-				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
-				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
-				result.add(new BinaryExpr(lowBound, BinaryOp.AND, highBound));
-			}
-		} else if (type instanceof RecordType) {
-			RecordType recType = (RecordType) type;
-			NamedElement recordTypeName = recType.getRecord().getElm();
-			if (recordTypeName instanceof DataClassifier) {
-				result.addAll(getDataClassifierRangeConstraintExprs(name, (DataClassifier) recordTypeName));
-			} else if (recordTypeName instanceof RecordDefExpr) {
-				result.addAll(((RecordDefExpr) recordTypeName).getArgs().stream()
-						.map(arg -> getVariableRangeConstraintExprs(name + "." + arg.getName(), arg.getType()))
-						.flatMap(List::stream).collect(Collectors.toList()));
-			}
-		}
-		return result;
-	}
+//	private List<Expr> getVariableRangeConstraintExprs(String name, com.rockwellcollins.atc.agree.agree.Type type) {
+//		List<Expr> result = new ArrayList<>();
+//		if (type instanceof PrimType) {
+//			PrimType primType = (PrimType) type;
+//			String lowStr = primType.getRangeLow();
+//			String highStr = primType.getRangeHigh();
+//
+//			if (lowStr != null && highStr != null) {
+//				IdExpr id = new IdExpr(name);
+//				int lowSign = primType.getLowNeg() == null ? 1 : -1;
+//				int highSign = primType.getHighNeg() == null ? 1 : -1;
+//				Expr lowVal = null;
+//				Expr highVal = null;
+//
+//				switch (primType.getName()) {
+//				case "int":
+//					long lowl = Long.valueOf(lowStr) * lowSign;
+//					long highl = Long.valueOf(highStr) * highSign;
+//					lowVal = new IntExpr(BigInteger.valueOf(lowl));
+//					highVal = new IntExpr(BigInteger.valueOf(highl));
+//					break;
+//				case "real":
+//					double lowd = Double.valueOf(lowStr) * lowSign;
+//					double highd = Double.valueOf(highStr) * highSign;
+//					lowVal = new RealExpr(BigDecimal.valueOf(lowd));
+//					highVal = new RealExpr(BigDecimal.valueOf(highd));
+//					break;
+//				default:
+//					throw new AgreeException("Unhandled type '" + primType.getName() + "' in ranged type");
+//				}
+//				Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, id);
+//				Expr highBound = new BinaryExpr(id, BinaryOp.LESSEQUAL, highVal);
+//
+//				result.add(LustreExprFactory.makeANDExpr(lowBound, highBound));
+//			}
+//		} else if (type instanceof DoubleDotRef) {
+//			DoubleDotRef recType = (DoubleDotRef) type;
+//			NamedElement recordTypeName = recType.getElm();
+//			if (recordTypeName instanceof DataClassifier) {
+//				result.addAll(getDataClassifierRangeConstraintExprs(name, (DataClassifier) recordTypeName));
+//			} else if (recordTypeName instanceof RecordDef) {
+//				result.addAll(((RecordDef) recordTypeName).getArgs().stream()
+//						.map(arg -> getVariableRangeConstraintExprs(name + "." + arg.getName(), arg.getType()))
+//						.flatMap(List::stream).collect(Collectors.toList()));
+//			}
+//		} else if (type instanceof ArrayType) {
+//			ArrayType arrayType = (ArrayType) type;
+//			throw new AgreeException("ERROR: " + arrayType.getStem().getOwner().getElementRoot().getFullName()
+//					+ " unhandled in ranged type");
+//		}
+//		return result;
+//	}
 
-	private List<AgreeStatement> getVariableRangeConstraints(List<Arg> args, EObject reference) {
+	private List<AgreeStatement> getConstraintsFromArgs(List<Arg> args, EObject reference) {
 		List<AgreeStatement> constraints = new ArrayList<>();
 		for (Arg arg : args) {
-			List<Expr> argConstraints = getVariableRangeConstraintExprs(arg.getName(), arg.getType());
+			List<Expr> argConstraints = getConstraintsFromTypeDef(arg.getName(), AgreeTypeSystem.typeDefFromType(arg.getType()));
 			if (!argConstraints.isEmpty()) {
 				constraints.add(new AgreeStatement("Type predicate on '" + arg.getName() + "'", argConstraints.stream()
 						.reduce(new BoolExpr(true), (a, b) -> new BinaryExpr(a, BinaryOp.AND, b)), reference));
@@ -1269,26 +1472,26 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return constraints;
 	}
 
-	private static boolean hasIntegerRangeProperty(Classifier classifier) {
-		return classifier.getAllPropertyAssociations().stream()
-				.anyMatch(pa -> "Integer_Range".equals(pa.getProperty().getName()));
-	}
-
-	private static boolean hasRealRangeProperty(Classifier classifier) {
-		return classifier.getAllPropertyAssociations().stream()
-				.anyMatch(pa -> "Real_Range".equals(pa.getProperty().getName()));
-	}
-
-	private static List<PropertyAssociation> getIntegerRangePropertyAssociations(
-			Classifier classifier) {
-		return classifier.getAllPropertyAssociations().stream()
-				.filter(pa -> "Integer_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
-	}
-
-	private static List<PropertyAssociation> getRealRangePropertyAssociations(Classifier classifier) {
-		return classifier.getAllPropertyAssociations().stream()
-				.filter(pa -> "Real_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
-	}
+//	private static boolean hasIntegerRangeProperty(Classifier classifier) {
+//		return classifier.getAllPropertyAssociations().stream()
+//				.anyMatch(pa -> "Integer_Range".equals(pa.getProperty().getName()));
+//	}
+//
+//	private static boolean hasRealRangeProperty(Classifier classifier) {
+//		return classifier.getAllPropertyAssociations().stream()
+//				.anyMatch(pa -> "Real_Range".equals(pa.getProperty().getName()));
+//	}
+//
+//	private static List<PropertyAssociation> getIntegerRangePropertyAssociations(
+//			Classifier classifier) {
+//		return classifier.getAllPropertyAssociations().stream()
+//				.filter(pa -> "Integer_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
+//	}
+//
+//	private static List<PropertyAssociation> getRealRangePropertyAssociations(Classifier classifier) {
+//		return classifier.getAllPropertyAssociations().stream()
+//				.filter(pa -> "Real_Range".equals(pa.getProperty().getName())).collect(Collectors.toList());
+//	}
 
 	private List<AgreeStatement> getAssumptionStatements(EList<SpecStatement> specs) {
 		List<AgreeStatement> assumptions = new ArrayList<>();
@@ -1344,43 +1547,21 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return null;
 	}
 
-	private static NamedType getNamedType(String name) {
-		if (name == null) {
-			return null;
-		}
-		switch (name) {
-		case "bool":
-			return NamedType.BOOL;
-		case "real":
-			return NamedType.REAL;
-		case "int":
-			return NamedType.INT;
-		default:
-			return new NamedType(name);
-		}
-	}
 
-	// BEGIN CASE EXPRESSION STATEMENTS
+// BEGIN CASE EXPRESSION STATEMENTS
 	@Override
 	public Expr caseRecordUpdateExpr(RecordUpdateExpr upExpr) {
-		EList<NamedElement> args = upExpr.getArgs();
-		EList<com.rockwellcollins.atc.agree.agree.Expr> argExprs = upExpr.getArgExpr();
 
 		Expr lustreExpr = doSwitch(upExpr.getRecord());
-		for (int i = 0; i < args.size(); i++) {
-			com.rockwellcollins.atc.agree.agree.Expr argExpr = argExprs.get(i);
-			NamedElement arg = args.get(i);
-			Expr lustreArgExpr = doSwitch(argExpr);
-			lustreExpr = new jkind.lustre.RecordUpdateExpr(lustreExpr, arg.getName(), lustreArgExpr);
-		}
+		Expr lustreArgExpr = doSwitch(upExpr.getExpr());
+		lustreExpr = new jkind.lustre.RecordUpdateExpr(lustreExpr, upExpr.getKey().getName(), lustreArgExpr);
 
 		return lustreExpr;
 	}
 
 	@Override
 	public Expr caseTimeOfExpr(TimeOfExpr timeExpr) {
-		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = timeExpr.getId();
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeOfVarMap.get(idStr);
@@ -1395,8 +1576,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseTimeRiseExpr(TimeRiseExpr timeExpr) {
-		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = timeExpr.getId();
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeRiseVarMap.get(idStr);
@@ -1411,8 +1591,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseTimeFallExpr(TimeFallExpr timeExpr) {
-		NestedDotID nestId = timeExpr.getId();
-		NamedElement namedEl = nestId.getBase();
+		NamedElement namedEl = timeExpr.getId();
 		String idStr = namedEl.getName();
 
 		AgreeVar var = timeFallVarMap.get(idStr);
@@ -1425,9 +1604,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new IdExpr(var.id);
 	}
 
-
 	@Override
-	public Expr caseRecordExpr(RecordExpr recExpr) {
+	public Expr caseRecordLitExpr(RecordLitExpr recExpr) {
 
 		EList<NamedElement> agreeArgs = recExpr.getArgs();
 		EList<com.rockwellcollins.atc.agree.agree.Expr> agreeArgExprs = recExpr.getArgExpr();
@@ -1444,8 +1622,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		}
 
-		DoubleDotRef recId = recExpr.getRecord();
-		String recName = AgreeTypeUtils.getIDTypeStr(recId.getElm());
+		DoubleDotRef recId = recExpr.getRecordType();
+		String recName = recId.getElm().getQualifiedName().replace("::", "__").replace(".", dotChar);
 		return new jkind.lustre.RecordExpr(recName, argExprMap);
 
 	}
@@ -1566,7 +1744,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			break;
 		case "and":
 			binOp = BinaryOp.AND;
-			break;
+			return LustreExprFactory.makeANDExpr(leftExpr, rightExpr);
 		case "xor":
 			binOp = BinaryOp.XOR;
 			break;
@@ -1590,12 +1768,9 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	@Override
-	public Expr caseFnCallExpr(FnCallExpr expr) {
-
-
-		NamedElement namedEl = expr.getFn().getBase();
-
-		String fnName = AgreeTypeUtils.getNodeName(namedEl).replace("::", "___");
+	public Expr caseCallExpr(CallExpr expr) {
+		NamedElement namedEl = expr.getRef().getElm();
+		String fnName = AgreeUtils.getNodeName(namedEl);
 		boolean found = false;
 		for (Node node : globalNodes) {
 			if (node.id.equals(fnName)) {
@@ -1605,7 +1780,8 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		}
 
 		if (!found) {
-			doSwitch(expr.getFn().getBase());
+			DoubleDotRef fn = expr.getRef();
+			doSwitch(fn.getElm());
 			// for dReal integration
 			if (fnName.substring(0, 7).equalsIgnoreCase("dreal__")) {
 				fnName = namedEl.getName();
@@ -1618,47 +1794,57 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			argResults.add(doSwitch(argExpr));
 		}
 
-		NodeCallExpr nodeCall = new NodeCallExpr(fnName, argResults);
+		NodeCallExpr nodeCall = new NodeCallExpr(fnName.replace("::", "__"), argResults);
 		return nodeCall;
 	}
 
 	@Override
-	public Expr caseFnDefExpr(FnDefExpr expr) {
-		String nodeName = AgreeTypeUtils.getNodeName(expr).replace("::", "___");
+	public Expr caseFnDef(FnDef fnDef) {
+
+		String nodeName = AgreeUtils.getNodeName(fnDef).replace("::", "__");
+
 		for (Node node : globalNodes) {
 			if (node.id.equals(nodeName)) {
 				return null;
 			}
 		}
-		List<VarDecl> inputs = agreeVarsFromArgs(expr.getArgs(), null);
-		Expr bodyExpr = doSwitch(expr.getExpr());
-		NamedType outType = getNamedType(AgreeTypeUtils.getTypeName(expr.getType(), typeMap, globalTypes));
-		VarDecl outVar = new VarDecl("_outvar", outType);
-		List<VarDecl> outputs = Collections.singletonList(outVar);
-		Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
-		List<Equation> eqs = Collections.singletonList(eq);
+		List<VarDecl> inputs = agreeVarsFromArgs(fnDef.getArgs(), null);
+		Expr bodyExpr = doSwitch(fnDef.getExpr());
 
-		NodeBuilder builder = new NodeBuilder(nodeName);
-		builder.addInputs(inputs);
-		builder.addOutputs(outputs);
-		builder.addEquations(eqs);
+		// EGM: array-backend
+		// Type outType = getNamedType(AgreeTypeUtils.getTypeName(fnDef.getType(), typeMap, globalTypes));
+		Type outType = symbolTable.updateLustreTypeMap(AgreeTypeSystem.typeDefFromType(fnDef.getType()));
 
-		Node node = builder.build();
-		addToNodeList(node);
+		if (outType != null) {
+
+			VarDecl outVar = new VarDecl("_outvar", outType);
+			List<VarDecl> outputs = Collections.singletonList(outVar);
+			Equation eq = new Equation(new IdExpr("_outvar"), bodyExpr);
+			List<Equation> eqs = Collections.singletonList(eq);
+
+			NodeBuilder builder = new NodeBuilder(nodeName);
+			builder.addInputs(inputs);
+			builder.addOutputs(outputs);
+			builder.addEquations(eqs);
+
+			Node node = builder.build();
+			addToNodeList(node);
+		}
+
 		return null;
 	}
 
 	@Override
-	public Expr caseLinearizationDefExpr(LinearizationDefExpr expr) {
-		NodeDefExpr linearization = linearizationRewriter.addLinearization(expr);
-		caseNodeDefExpr(linearization);
+	public Expr caseLinearizationDef(LinearizationDef expr) {
+		NodeDef linearization = linearizationRewriter.addLinearization(expr);
+		caseNodeDef(linearization);
 		return null;
 	}
 
 	@Override
-	public Expr caseNodeDefExpr(NodeDefExpr expr) {
+	public Expr caseNodeDef(NodeDef expr) {
 
-		String nodeName = AgreeTypeUtils.getNodeName(expr);
+		String nodeName = AgreeUtils.getNodeName(expr);
 
 		for (Node node : globalNodes) {
 			if (node.id.equals(nodeName)) {
@@ -1705,7 +1891,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return null;
 	}
 
-	// helper method for above
+// helper method for above
 	private Equation nodeEqToEq(NodeEq nodeEq) {
 		Expr expr = doSwitch(nodeEq.getExpr());
 		List<IdExpr> ids = new ArrayList<>();
@@ -1721,8 +1907,17 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 		NamedElement propName = expr.getProp();
 		PropertyExpression propVal;
+
 		if (propName instanceof Property) {
-			NamedElement compName = AgreeTypeUtils.namedElFromId(expr.getComponent(), curInst);
+
+			ComponentRef cr = expr.getComponentRef();
+			NamedElement compName = null;
+			if (cr instanceof DoubleDotRef) {
+				compName = ((DoubleDotRef) cr).getElm();
+			} else if (cr instanceof ThisRef) {
+				compName = curInst;
+			}
+
 			Property prop = (Property) propName;
 			propVal = AgreeUtils.getPropExpression(compName, prop);
 
@@ -1734,7 +1929,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					unspecifiedAadlProperties.put(propInputName, expr);
 					return new IdExpr(propInputName);
 				} else {
-					throw new AgreeException("Could not locate property value '" + prop.getFullName()
+					throw new AgreeException("Could not locate property value '" + prop.getQualifiedName()
 					+ "' in component '" + compName.getName() + "'.  Is it possible "
 					+ "that a 'this' statement is used in a context in which it wasn't supposed to?"
 					+ "  Analysis of unspecified AADL properties as inputs may be enabled in the AGREE preferences.");
@@ -1745,7 +1940,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 			propVal = AgreeUtils.getPropExpression((PropertyConstant) propName);
 
 			if (propVal == null) {
-				throw new AgreeException("Could not locate property value '" + propName.getFullName());
+				throw new AgreeException("Could not locate property value '" + propName.getQualifiedName());
 			}
 		}
 
@@ -1755,14 +1950,14 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 				// StringLiteral value = (StringLiteral) propVal;
 				// nodeStr += value.getValue() + ")";
 				throw new AgreeException(
-						"Property value for '" + propName.getFullName() + "' cannot be of string type");
+						"Property value for '" + propName.getQualifiedName() + "' cannot be of string type");
 			} else if (propVal instanceof NamedValue) {
 				// NamedValue namedVal = (NamedValue) propVal;
 				// AbstractNamedValue absVal = namedVal.getNamedValue();
 				// assert (absVal instanceof EnumerationLiteral);
 				// EnumerationLiteral enVal = (EnumerationLiteral) absVal;
 				throw new AgreeException(
-						"Property value for '" + propName.getFullName() + "' cannot be of enumeration type");
+						"Property value for '" + propName.getQualifiedName() + "' cannot be of enumeration type");
 			} else if (propVal instanceof BooleanLiteral) {
 				BooleanLiteral value = (BooleanLiteral) propVal;
 				res = new BoolExpr(value.getValue());
@@ -1781,9 +1976,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	}
 
 	private void gatherUnspecifiedAadlProperties(Map<String, GetPropertyExpr> unspecifiedAadlProperties,
-			Map<NamedElement, String> typeMap, Set<Type> globalTypes, List<AgreeVar> inputs,
-			List<AgreeStatement> assumptions,
-			List<AgreeStatement> guarantees) {
+			List<AgreeVar> inputs, List<AgreeStatement> assumptions, List<AgreeStatement> guarantees) {
 
 		for (Entry<String, GetPropertyExpr> entry : unspecifiedAadlProperties.entrySet()) {
 			String propInputName = entry.getKey();
@@ -1809,7 +2002,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 							BigDecimal.valueOf(((IntegerLiteral) upperBound).getScaledValue()).toBigInteger());
 					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
 					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
-					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+					bound = LustreExprFactory.makeANDExpr(lowBound, highBound);
 				}
 			} else if (prop.getReferencedPropertyType() instanceof AadlReal) {
 				AadlReal aadlReal = (AadlReal) prop.getReferencedPropertyType();
@@ -1823,7 +2016,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 					Expr highVal = new RealExpr(BigDecimal.valueOf(((RealLiteral) upperBound).getValue()));
 					Expr lowBound = new BinaryExpr(lowVal, BinaryOp.LESSEQUAL, propInputIdExpr);
 					Expr highBound = new BinaryExpr(propInputIdExpr, BinaryOp.LESSEQUAL, highVal);
-					bound = new BinaryExpr(lowBound, BinaryOp.AND, highBound);
+					bound = LustreExprFactory.makeANDExpr(lowBound, highBound);
 				}
 			} else {
 				throw new AgreeException(
@@ -1837,7 +2030,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 			Expr constraint = getUnchangingConstraintExpr(propInputIdExpr);
 			if (bound != null) {
-				constraint = new BinaryExpr(constraint, BinaryOp.AND, bound);
+				constraint = LustreExprFactory.makeANDExpr(constraint, bound);
 			}
 
 			inputs.add(propInputVar);
@@ -1848,11 +2041,6 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 	private static Expr getUnchangingConstraintExpr(Expr expr) {
 		return new BinaryExpr(new BoolExpr(true), BinaryOp.ARROW,
 				new BinaryExpr(expr, BinaryOp.EQUAL, new UnaryExpr(UnaryOp.PRE, expr)));
-	}
-
-	@Override
-	public Expr caseThisExpr(ThisExpr expr) {
-		throw new AgreeException("A 'this' expression should never be called in a case statement");
 	}
 
 	@Override
@@ -1871,63 +2059,369 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 		return new IntExpr(BigInteger.valueOf(Integer.parseInt(expr.getVal())));
 	}
 
-	@Override
-	public Expr caseNestedDotID(NestedDotID id) {
-
-		String jKindVar = "";
-		String aadlVar = "";
-		NamedElement base = id.getBase();
-
-		while (id.getSub() != null
-				&& (base instanceof FeatureGroup || base instanceof AadlPackage || base instanceof Subcomponent)) {
-			jKindVar += base.getName().replace("::", "___") + dotChar;
-			aadlVar += base.getName() + ".";
-			id = id.getSub();
-			base = id.getBase();
+	private String dottedNameToString(com.rockwellcollins.atc.agree.agree.Expr e) {
+		if (e instanceof NamedElmExpr) {
+			return ((NamedElmExpr) e).getElm().getName();
+		} else if (e instanceof SelectionExpr) {
+			return dottedNameToString(((SelectionExpr) e).getTarget()) + dotChar
+					+ ((SelectionExpr) e).getField().getName();
 		}
 
-		NamedElement namedEl = id.getBase();
+		throw new AgreeException("Pattern");
+	}
 
-		String tag = id.getTag();
+	@Override
+	public Expr caseTagExpr(TagExpr e) {
+
+		String stemString = null;
+		if (e.getStem() instanceof NamedElmExpr) {
+			stemString = ((NamedElmExpr) e.getStem()).getElm().getName();
+		} else if (e.getStem() instanceof SelectionExpr) {
+			stemString = dottedNameToString(e.getStem());
+		} else {
+			throw new AgreeException("Pattern");
+//			=======
+//					while (id.getSub() != null
+//					&& (base instanceof FeatureGroup || base instanceof AadlPackage || base instanceof Subcomponent)) {
+//						jKindVar += base.getName().replace("::", "__") + dotChar;
+//						aadlVar += base.getName() + ".";
+//						id = id.getSub();
+//						base = id.getBase();
+//						>>>>>>> origin/develop
+		}
+
+		String tag = e.getTag();
 		if (tag != null) {
 
 			switch (tag) {
 			case "_CLK":
-				IdExpr clockId = new IdExpr(namedEl.getName() + clockIDSuffix);
+				IdExpr clockId = new IdExpr(stemString + clockIDSuffix);
 				return clockId;
 			default:
-				throw new AgreeException("use of uknown tag: '" + tag + "' in expression: '" + aadlVar + tag + "'");
+				throw new AgreeException("use of uknown tag: '" + tag + "' in expression following " + stemString);
 			}
 		}
 
-		Expr result;
-		if (namedEl instanceof ConstStatement) {
-			// evaluate the constant
-			result = doSwitch(((ConstStatement) namedEl).getExpr());
-		} else if (namedEl instanceof NamedID) {
-			// Enumeration types get lifted to Lustre global types; accordingly
-			// lift the enumerators to global
-			jKindVar = namedEl.getName().replace("::", "___");
-			result = new IdExpr(jKindVar);
-		} else {
-			jKindVar = jKindVar + namedEl.getName().replace("::", "___");
-			result = new IdExpr(jKindVar);
-		}
+		throw new AgreeException("Pattern");
 
-		// this is a record accessrecord
-		while (id.getSub() != null) {
-			id = id.getSub();
-			namedEl = id.getBase();
-			result = new RecordAccessExpr(result, namedEl.getName().replace("::", "___"));
-		}
-
-		return result;
 	}
 
 	@Override
-	public Expr caseAADLEnumerator(AADLEnumerator aadlEnum) {
-		String typeStr = AgreeTypeUtils.getIDTypeStr(aadlEnum.getEnumType().getElm());
-		return new IdExpr(typeStr.replace("__", "_") + "_" + aadlEnum.getValue());
+	public Expr caseSelectionExpr(SelectionExpr e) {
+
+		if (e.getTarget() instanceof NamedElmExpr) {
+			NamedElement base = ((NamedElmExpr) e.getTarget()).getElm();
+			if (base instanceof AadlPackage || base instanceof Subcomponent || base instanceof FeatureGroup) {
+				NamedElement field = e.getField();
+				if (field instanceof ConstStatement) {
+					// constant propagation
+					return doSwitch(((ConstStatement) field).getExpr());
+				} else {
+					return new IdExpr(base.getName() + dotChar + field.getName());
+				}
+			} else {
+				return new RecordAccessExpr(doSwitch(e.getTarget()), e.getField().getName());
+			}
+		} else {
+			return new RecordAccessExpr(doSwitch(e.getTarget()), e.getField().getName());
+		}
+
+	}
+
+	@Override
+	public Expr caseNamedElmExpr(NamedElmExpr nelmExpr) {
+		NamedElement ne = nelmExpr.getElm();
+		if (ne instanceof ConstStatement) {
+			// constant propagation
+			return doSwitch(((ConstStatement) ne).getExpr());
+		}
+
+		return new IdExpr(ne.getName());
+	}
+
+	@Override
+	public Expr caseArrayLiteralExpr(ArrayLiteralExpr agreeExpr) {
+		List<Expr> elems = new ArrayList<>();
+		for (com.rockwellcollins.atc.agree.agree.Expr agreeElem : agreeExpr.getElems()) {
+			Expr elem = doSwitch(agreeElem);
+			elems.add(elem);
+		}
+		return new ArrayExpr(elems);
+	}
+
+
+	@Override
+	public Expr caseArrayUpdateExpr(ArrayUpdateExpr expr) {
+		Expr arrayExpr = doSwitch(expr.getArray());
+		for (int i = 0; i < expr.getIndices().size(); i++) {
+			Expr indexExpr = doSwitch(expr.getIndices().get(i));
+			Expr newExpr = doSwitch(expr.getValueExprs().get(i));
+			arrayExpr = new jkind.lustre.ArrayUpdateExpr(arrayExpr, indexExpr, newExpr);
+
+		}
+		return arrayExpr;
+	}
+
+	@Override
+	public Expr caseArraySubExpr(ArraySubExpr expr) {
+		Expr index = doSwitch(expr.getIndex());
+		Expr array = doSwitch(expr.getExpr());
+		return new ArrayAccessExpr(array, index);
+	}
+
+	@Override
+	public Expr caseIndicesExpr(IndicesExpr expr) {
+		AgreeTypeSystem.TypeDef arrayTypeDef = AgreeTypeSystem.infer(expr.getArray());
+
+		if (arrayTypeDef instanceof AgreeTypeSystem.ArrayTypeDef) {
+			int size = ((AgreeTypeSystem.ArrayTypeDef) arrayTypeDef).size;
+			List<Expr> elems = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				elems.add(new IntExpr(i));
+			}
+
+			return new ArrayExpr(elems);
+		}
+		throw new RuntimeException("Error caseIndicesExpr");
+	}
+
+	private Expr substitute(Expr context, String name, Expr newExpr) {
+
+		if (context instanceof IdExpr) {
+			if (((IdExpr) context).id.equals(name)) {
+				return newExpr;
+			} else {
+				return context;
+			}
+		} else if (context instanceof ArrayAccessExpr) {
+
+			Expr arrayExpr = substitute(((ArrayAccessExpr) context).array, name, newExpr);
+			Expr indexExpr = substitute(((ArrayAccessExpr) context).index, name, newExpr);
+			return new ArrayAccessExpr(arrayExpr, indexExpr);
+
+		} else if (context instanceof ArrayExpr) {
+			List<Expr> elems = new ArrayList<>();
+			for (Expr raw : ((ArrayExpr) context).elements) {
+				Expr elem = substitute(raw, name, newExpr);
+				elems.add(elem);
+			}
+			return new ArrayExpr(elems);
+
+		} else if (context instanceof jkind.lustre.ArrayUpdateExpr) {
+			Expr arrayExpr = substitute(((jkind.lustre.ArrayUpdateExpr) context).array, name, newExpr);
+			Expr indexExpr = substitute(((jkind.lustre.ArrayUpdateExpr) context).index, name, newExpr);
+			Expr valExpr = substitute(((jkind.lustre.ArrayUpdateExpr) context).value, name, newExpr);
+			return new jkind.lustre.ArrayUpdateExpr(arrayExpr, indexExpr, valExpr);
+
+		} else if (context instanceof BinaryExpr) {
+			Expr left = substitute(((BinaryExpr) context).left, name, newExpr);
+			Expr right = substitute(((BinaryExpr) context).right, name, newExpr);
+			return new BinaryExpr(left, ((BinaryExpr) context).op, right);
+
+		} else if (context instanceof BoolExpr) {
+			return context;
+		} else if (context instanceof CastExpr) {
+			Expr expr = substitute(((CastExpr) context).expr, name, newExpr);
+			return new CastExpr(((CastExpr) context).type, expr);
+		} else if (context instanceof CondactExpr) {
+			Expr clock = substitute(((CondactExpr) context).clock, name, newExpr);
+			Expr call = substitute(((CondactExpr) context).call, name, newExpr);
+			List<Expr> args = new ArrayList<>();
+			for (Expr raw : ((CondactExpr) context).args) {
+				Expr arg = substitute(raw, name, newExpr);
+				args.add(arg);
+			}
+			return new CondactExpr(clock, (NodeCallExpr) call, args);
+
+
+		} else if (context instanceof FunctionCallExpr) {
+			List<Expr> args = new ArrayList<>();
+			for (Expr raw : ((FunctionCallExpr) context).args) {
+				Expr arg = substitute(raw, name, newExpr);
+				args.add(arg);
+			}
+			return new FunctionCallExpr(((FunctionCallExpr) context).function, args);
+
+		} else if (context instanceof IfThenElseExpr) {
+			Expr cond = substitute(((IfThenElseExpr) context).cond, name, newExpr);
+			Expr thenExpr = substitute(((IfThenElseExpr) context).thenExpr, name, newExpr);
+			Expr elseExpr = substitute(((IfThenElseExpr) context).elseExpr, name, newExpr);
+			return new IfThenElseExpr(cond, thenExpr, elseExpr);
+
+		} else if (context instanceof IntExpr) {
+			return context;
+
+		} else if (context instanceof NodeCallExpr) {
+			List<Expr> args = new ArrayList<>();
+			for (Expr raw : ((NodeCallExpr) context).args) {
+				Expr arg = substitute(raw, name, newExpr);
+				args.add(arg);
+			}
+			return new FunctionCallExpr(((NodeCallExpr) context).node, args);
+
+		} else if (context instanceof RealExpr) {
+			return context;
+
+		} else if (context instanceof RecordAccessExpr) {
+			Expr rec = substitute(((RecordAccessExpr) context).record, name, newExpr);
+			return new RecordAccessExpr(rec, ((RecordAccessExpr) context).field);
+
+		} else if (context instanceof RecordExpr) {
+
+			Map<String, Expr> fields = new TreeMap<>();
+			for (Entry<String, Expr> raw : ((RecordExpr) context).fields.entrySet()) {
+				String key = raw.getKey();
+				Expr fieldExpr = substitute(raw.getValue(), name, newExpr);
+				fields.put(key, fieldExpr);
+			}
+
+			return new RecordExpr(((RecordExpr) context).id, fields);
+
+		} else if (context instanceof jkind.lustre.RecordUpdateExpr) {
+
+			Expr rec = substitute(((jkind.lustre.RecordUpdateExpr) context).record, name, newExpr);
+			Expr valueExpr = substitute(((jkind.lustre.RecordUpdateExpr) context).value, name, newExpr);
+			return new jkind.lustre.RecordUpdateExpr(rec, ((jkind.lustre.RecordUpdateExpr) context).field, valueExpr);
+
+		} else if (context instanceof TupleExpr) {
+
+			List<Expr> elems = new ArrayList<>();
+			for (Expr raw : ((TupleExpr) context).elements) {
+				Expr elem = substitute(raw, name, newExpr);
+				elems.add(elem);
+			}
+			return new TupleExpr(elems);
+
+		} else if (context instanceof UnaryExpr) {
+			Expr expr = substitute(((UnaryExpr) context).expr, name, newExpr);
+			return new UnaryExpr(((UnaryExpr) context).op, expr);
+		}
+
+		throw new RuntimeException("Error: substitute - " + context);
+	}
+
+	@Override
+	public Expr caseForallExpr(ForallExpr expr) {
+		com.rockwellcollins.atc.agree.agree.Expr arrayExpr = expr.getArray();
+		Expr array = doSwitch(arrayExpr);
+
+		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(arrayExpr);
+		int size = 0;
+		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+		} else {
+			throw new AgreeException("ERROR: caseForallExpr - '" + agreeType.getClass() + "' not handled");
+		}
+		NamedID binding = expr.getBinding();
+		Expr final_expr = new BoolExpr(true);
+
+		for (int i = 0; i < size; ++i) {
+			Expr arrayAccess = new ArrayAccessExpr(array, i);
+			Expr body = substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess);
+			final_expr = LustreExprFactory.makeANDExpr(final_expr, body);
+		}
+
+		return final_expr;
+	}
+
+	@Override
+	public Expr caseExistsExpr(ExistsExpr expr) {
+		com.rockwellcollins.atc.agree.agree.Expr arrayExpr = expr.getArray();
+		Expr array = doSwitch(arrayExpr);
+
+		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(arrayExpr);
+		int size = 0;
+		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+		} else {
+			throw new AgreeException("ERROR: caseExistsExpr - '" + agreeType.getClass() + "' not handled");
+		}
+		NamedID binding = expr.getBinding();
+		Expr final_expr = new BoolExpr(true);
+
+		for (int i = 0; i < size; ++i) {
+			Expr arrayAccess = new ArrayAccessExpr(array, i);
+			Expr body = substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess);
+			final_expr = LustreExprFactory.makeORExpr(final_expr, body);
+		}
+
+		return final_expr;
+	}
+
+	@Override
+	public Expr caseForeachExpr(ForeachExpr expr) {
+//		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(expr.getArray());
+//		int size = 0;
+//		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+//			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+//		} else {
+//			throw new AgreeException("ERROR: caseForeachExpr");
+//		}
+//		Expr array = doSwitch(expr.getArray());
+//		NamedID binding = expr.getBinding();
+//		List<Expr> elems = new ArrayList<>();
+//		for (int i = 0; i < size; ++i) {
+//			Expr arrayAccess = new ArrayAccessExpr(array, i);
+//			Expr body = substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess);
+//			elems.add(body);
+//		}
+//		return new ArrayExpr(elems);
+		return null;
+
+	}
+
+	@Override
+	public Expr caseFoldLeftExpr(FoldLeftExpr expr) {
+//		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(expr.getArray());
+//
+//		int size = 0;
+//		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+//			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+//		} else {
+//			throw new AgreeException("ERROR: caseFoldLeftExpr");
+//		}
+//		Expr array = doSwitch(expr.getArray());
+//		Expr accExpr = doSwitch(expr.getInitial());
+//		NamedID binding = expr.getBinding();
+//		NamedID accBinding = expr.getAccumulator();
+//		for (int i = 0; i < size; i++) {
+//			Expr arrayAccess = new ArrayAccessExpr(array, i);
+//			accExpr = substitute(substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess),
+//					accBinding.getName(), accExpr);
+//		}
+//		return accExpr;
+		return null;
+	}
+
+	@Override
+	public Expr caseFoldRightExpr(FoldRightExpr expr) {
+//		AgreeTypeSystem.TypeDef agreeType = AgreeTypeSystem.infer(expr.getArray());
+//
+//		int size = 0;
+//		if (agreeType instanceof AgreeTypeSystem.ArrayTypeDef) {
+//			size = ((AgreeTypeSystem.ArrayTypeDef) agreeType).size;
+//		} else {
+//			throw new AgreeException("ERROR: caseFoldRightExpr");
+//		}
+//		Expr array = doSwitch(expr.getArray());
+//		Expr accExpr = doSwitch(expr.getInitial());
+//		NamedID binding = expr.getBinding();
+//		NamedID accBinding = expr.getAccumulator();
+//		for (int i = size - 1; i >= 0; i--) {
+//			Expr arrayAccess = new ArrayAccessExpr(array, i);
+//			accExpr = substitute(substitute(doSwitch(expr.getExpr()), binding.getName(), arrayAccess),
+//					accBinding.getName(), accExpr);
+//		}
+//		return accExpr;
+		return null;
+	}
+
+
+	@Override
+	public Expr caseEnumLitExpr(EnumLitExpr aadlEnum) {
+		NamedElement ne = aadlEnum.getEnumType().getElm();
+		String typeStr = ne.getQualifiedName().replace("::", "__").replace(".", dotChar);
+		return new IdExpr(typeStr + "_" + aadlEnum.getValue());
 	}
 
 	@Override
@@ -1939,9 +2433,7 @@ public class AgreeASTBuilder extends AgreeSwitch<Expr> {
 
 	@Override
 	public Expr caseEventExpr(EventExpr expr) {
-
-		IdExpr nestIdExpr = (IdExpr) doSwitch(expr.getId());
-		String eventStr = nestIdExpr.id + eventSuffix;
+		String eventStr = expr.getId().getName() + eventSuffix;
 		return new IdExpr(eventStr);
 	}
 

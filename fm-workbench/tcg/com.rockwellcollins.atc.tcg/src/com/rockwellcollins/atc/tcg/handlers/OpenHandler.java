@@ -98,6 +98,7 @@ public class OpenHandler extends NoElementHandler {
 		throw new TcgException("Unexpected jkind 'result' type when opening test suite");
 	}
 
+
 	/**
 	 * Search the workspace for a component implementation matching the given qualified name.
 	 *
@@ -133,7 +134,9 @@ public class OpenHandler extends NoElementHandler {
 			System.out.println("Loading test suite...");
 			TestSuite testSuite = loadTests();
 			if (testSuite != null) {
+
 				ComponentImplementation ci = getComponentImplFromString(testSuite.getSystemImplUnderTest());
+
 				TcgLinkerFactory linkerFactory = new TcgLinkerFactory(ci, false, false);
 
 				showSuiteView(testSuite,

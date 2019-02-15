@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.ui.editor.GlobalURIEditorOpener;
+import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexSubclause;
 import org.osate.aadl2.ComponentClassifier;
 import org.osate.aadl2.ComponentImplementation;
@@ -35,7 +36,10 @@ import org.osate.xtext.aadl2.properties.util.PropertyUtils;
 
 import com.google.inject.Injector;
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
-import com.rockwellcollins.atc.agree.agree.NestedDotID;
+import com.rockwellcollins.atc.agree.agree.ComponentRef;
+import com.rockwellcollins.atc.agree.agree.DoubleDotRef;
+import com.rockwellcollins.atc.agree.agree.ThisRef;
+import com.rockwellcollins.atc.agree.analysis.ast.AgreeASTBuilder;
 import com.rockwellcollins.atc.agree.analysis.ast.AgreeProgram;
 import com.rockwellcollins.atc.agree.analysis.preferences.PreferenceConstants;
 import com.rockwellcollins.atc.agree.ui.internal.AgreeActivator;
@@ -57,6 +61,30 @@ import jkind.lustre.TypeDef;
 public class AgreeUtils {
 
 	private static GlobalURIEditorOpener globalURIEditorOpener;
+
+	public static String getNodeName(NamedElement nodeDef) {
+		EObject container = nodeDef.eContainer();
+		List<String> segments = new ArrayList<>();
+
+		segments.add(nodeDef.getName());
+		while (container != null) {
+			if (container instanceof ComponentClassifier || container instanceof AadlPackage) {
+				segments.add(0, ((NamedElement) container).getName().replace(".", AgreeASTBuilder.dotChar));
+			}
+			container = container.eContainer();
+		}
+
+		return String.join(AgreeASTBuilder.dotChar, segments);
+	}
+
+	public static NamedElement namedElFromId(ComponentRef obj, ComponentInstance compInst) {
+		if (obj instanceof DoubleDotRef) {
+			return ((DoubleDotRef) obj).getElm();
+		} else if (obj instanceof ThisRef) {
+			return compInst;
+		}
+		return null;
+	}
 
 	static public boolean usingKind2() {
 		IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
@@ -89,13 +117,6 @@ public class AgreeUtils {
 		} catch (PropertyNotPresentException propNotPresentException) {
 			return null;
 		}
-	}
-
-	public static NamedElement getFinalNestId(NestedDotID dotId) {
-		while (dotId.getSub() != null) {
-			dotId = dotId.getSub();
-		}
-		return dotId.getBase();
 	}
 
 	public static ComponentImplementation getInstanceImplementation(ComponentInstance compInst) {

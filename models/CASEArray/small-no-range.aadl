@@ -1,0 +1,50 @@
+package smallarray
+public
+	with Base_Types;
+	
+	annex agree {**
+
+		fun good_longitude(long : Base_Types::Integer) : bool =
+				long >= -180
+			and long <= 180;										
+	**};
+
+	thread LongitudeDriver
+		features
+			recv_in: in event data port Base_Types::Integer;
+			recv_out: out event data port Base_Types::Integer;
+		annex agree {**
+			assume "LongitudeDriver: Valid Longitude" : good_longitude(recv_in) = True;
+			guarantee "LongitudeDriver: Updated Longitude" : recv_out = prev(recv_in + 10, 0);
+		**};
+	end LongitudeDriver;
+
+    thread check
+    	features
+    		recv_in: in event data port Base_Types::Integer;
+    	annex agree {**
+    	    assume "Check: Valid Longitude" : good_longitude(recv_in) = True;
+    	**};
+    end check;
+    
+	process MC_SW
+		features
+			recv_in: in event data port Base_Types::Integer;
+			recv_out: out event data port Base_Types::Integer;
+		annex agree {**
+			-- we abstract away the authentication and just assume the message has undergone authenticity verification
+			assume "MC_SW: Valid Longitude" : good_longitude(recv_in);
+			guarantee "MC_SW: Valid Longitude" : good_longitude(recv_out);
+		**};
+	end MC_SW;
+
+	process implementation MC_SW.Impl
+		subcomponents
+			LONG: thread LongitudeDriver;
+			CHECK: thread check;
+		connections
+			c1: port recv_in -> LONG.recv_in;
+			c2: port LONG.recv_out -> CHECK.recv_in;
+			c3: port LONG.recv_out -> recv_out;
+	end MC_SW.Impl;
+end smallarray;
