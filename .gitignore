@@ -8,11 +8,8 @@ instances
 TAGS
 .aadlbin-gen
 *~
-<<<<<<< HEAD
 .sw?
-=======
 .DS_Store
 *.class
-
->>>>>>> origin/develop
 *~HEAD
+target
