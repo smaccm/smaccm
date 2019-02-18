@@ -1967,7 +1967,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
 			for (NamedElement e : es) {
 
-				if (!(e.eContainer() instanceof NodeDef)) { // ignore elements in node defs
+				if (!(e.eContainer() instanceof NodeDef || e instanceof NamedSpecStatement)) { // ignore elements in node defs
 					if (parentNames.contains(e.getName())) {
 //								=======
 //										if (!(e.eContainer() instanceof NodeDefExpr)) { // ignore elements in node defs
@@ -1987,7 +1987,7 @@ public class AgreeJavaValidator extends AbstractAgreeJavaValidator {
 			List<NamedElement> es = EcoreUtil2.getAllContentsOfType(subclause, NamedElement.class);
 			for (NamedElement e : es) {
 				if (!(e.eContainer() instanceof NodeDef || e.eContainer() instanceof LinearizationDef
-						|| e.eContainer() instanceof RecordDef)) {
+						|| e.eContainer() instanceof RecordDef || e instanceof NamedSpecStatement)) {
 					result.add(e.getName());
 				}
 			}
