@@ -147,57 +147,59 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 
 			AadlPackage aadlPackage = AadlUtil.findImportedPackage(pkgName, namespace);
 
+			if (aadlPackage != null) {
 
-			for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(aadlPackage,
-					AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
+				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(aadlPackage,
+						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
 
-				AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
-				for (SpecStatement spec : contract.getSpecs()) {
-					if (spec instanceof RecordDef) {
-						if (((RecordDef) spec).getName().equals(statementName)) {
-							return (spec);
-						}
-
-					} else if (spec instanceof FnDef) {
-						if (((FnDef) spec).getName().equals(statementName)) {
-							return (spec);
-						}
-
-					} else if (spec instanceof LibraryFnDef) {
-						if (((LibraryFnDef) spec).getName().equals(statementName)) {
-							return (spec);
-						}
-
-					} else if (spec instanceof NodeDef) {
-						if (((NodeDef) spec).getName().equals(statementName)) {
-							return (spec);
-						}
-
-					} else if (spec instanceof LinearizationDef) {
-						if (((LinearizationDef) spec).getName().equals(statementName)) {
-							return (spec);
-						}
-
-					} else if (spec instanceof ConstStatement) {
-						if (((ConstStatement) spec).getName().equals(statementName)) {
-							return (spec);
-						}
-
-					} else if (spec instanceof EnumStatement) {
-						if (((EnumStatement) spec).getName().equals(statementName)) {
-							return (spec);
-						}
-
-						EList<NamedID> enums = ((EnumStatement) spec).getEnums();
-						for (NamedID nid : enums) {
-							if (nid.getName().contentEquals(statementName)) {
-								return nid;
+					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
+					for (SpecStatement spec : contract.getSpecs()) {
+						if (spec instanceof RecordDef) {
+							if (((RecordDef) spec).getName().equals(statementName)) {
+								return (spec);
 							}
+
+						} else if (spec instanceof FnDef) {
+							if (((FnDef) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof LibraryFnDef) {
+							if (((LibraryFnDef) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof NodeDef) {
+							if (((NodeDef) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof LinearizationDef) {
+							if (((LinearizationDef) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof ConstStatement) {
+							if (((ConstStatement) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+						} else if (spec instanceof EnumStatement) {
+							if (((EnumStatement) spec).getName().equals(statementName)) {
+								return (spec);
+							}
+
+							EList<NamedID> enums = ((EnumStatement) spec).getEnums();
+							for (NamedID nid : enums) {
+								if (nid.getName().contentEquals(statementName)) {
+									return nid;
+								}
+							}
+
 						}
-
 					}
-				}
 
+				}
 			}
 		}
 
