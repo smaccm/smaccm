@@ -45,6 +45,9 @@
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.ngrep</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.schedule.analysis</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.ui</module>
+		<module>../../../resolute/com.rockwellcollins.atc.resolute.agreelib</module>
+		<module>../../../resolute/com.rockwellcollins.atc.resolute.agreecheck</module>
+		<module>../../../resolute/com.rockwellcollins.atc.resolute.stringlib</module>
 		<module>../../../resolute/org.osate.resolute.help</module>
 		<module>../../../resolute/com.rockwellcollins.atc.resolute.feature</module>
 		
