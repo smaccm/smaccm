@@ -138,9 +138,6 @@ public class RenamingVisitor extends AstIterVisitor {
 		} else {
 
 			result += ((DoubleDotRef) arg.getType()).getElm().getName();
-//=======
-//			result += ((RecordType) arg.getType()).getRecord().getElm().getName();
-//>>>>>>> origin/develop
 		}
 		return result;
 	}
