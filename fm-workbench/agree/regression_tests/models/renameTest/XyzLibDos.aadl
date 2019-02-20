@@ -1,0 +1,20 @@
+package Xyz::LibDos
+public
+
+system x
+	
+end x;
+
+system implementation x.impl
+	
+end x.impl;
+
+annex agree {**
+
+  fun ident(x: int): int = x;
+  type rex = struct {x : int};
+
+**};
+   
+
+end Xyz::LibDos;

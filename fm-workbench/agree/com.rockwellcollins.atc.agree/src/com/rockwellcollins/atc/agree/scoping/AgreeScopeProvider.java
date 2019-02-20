@@ -30,6 +30,7 @@ import org.osate.aadl2.DataType;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Feature;
 import org.osate.aadl2.NamedElement;
+import org.osate.aadl2.PackageRename;
 import org.osate.aadl2.Property;
 import org.osate.aadl2.PropertyAssociation;
 import org.osate.aadl2.PropertySet;
@@ -105,7 +106,6 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 
-
 	private Set<NamedElement> getNamedElements(EObject ctx) {
 
 		Set<NamedElement> components = new HashSet<>();
@@ -170,10 +170,35 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		}
 	}
 
+	private AadlPackage getContainingPackage(EObject o) {
+
+		EObject container = o.eContainer();
+		if (container == null) {
+			return null;
+		} else if (container instanceof AadlPackage) {
+			return (AadlPackage) container;
+		} else {
+			return getContainingPackage(o.eContainer());
+		}
+	}
+
 
 	IScope scope_NamedElement(AgreeContract ctx, EReference ref) {
 		EObject container = getAadlContainer(ctx);
-		return Scopes.scopeFor(getNamedElements(container), getScope(ctx.eContainer().eContainer(), ref));
+		AadlPackage pkg = getContainingPackage(container);
+
+		List<NamedElement> elems = new ArrayList<>();
+
+		for (PackageRename rename : EcoreUtil2.getAllContentsOfType(pkg, PackageRename.class)) {
+			if (rename.isRenameAll()) {
+				AadlPackage renamedPackage = rename.getRenamedPackage();
+				elems.addAll(getNamedElements(renamedPackage));
+			}
+		}
+
+		elems.addAll(getNamedElements(container));
+
+		return Scopes.scopeFor(elems, getScope(ctx.eContainer().eContainer(), ref));
 	}
 
 	IScope scope_NamedElement(NodeDef ctx, EReference ref) {
@@ -350,27 +375,6 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 
-//	protected IScope scope_DoubleDotRef_namedElm(DoubleDotRef ctx, EReference ref) {
-//		if (ctx.getStem() == null) {
-//			return getScope(ctx.eContainer(), ref);
-//		} else {
-//			NamedElement stem = ctx.getStem();
-//
-//			List<NamedElement> namedSpecs = new ArrayList<NamedElement>();
-//			if (stem instanceof AadlPackage) {
-//				for (AnnexLibrary annex : AnnexUtil.getAllActualAnnexLibraries(((AadlPackage) stem),
-//						AgreePackage.eINSTANCE.getAgreeContractLibrary())) {
-//
-//					AgreeContract contract = (AgreeContract) ((AgreeContractLibrary) annex).getContract();
-//					namedSpecs.addAll(getNamedElementsFromSpecs(contract.getSpecs()));
-//
-//				}
-//			}
-//
-//			return Scopes.scopeFor(namedSpecs, getScope(stem, ref));
-//		}
-//	}
-
 	protected IScope scope_GetPropertyExpr_prop(GetPropertyExpr ctx, EReference ref) {
 
 		IScope prevScope = prevScope(ctx, ref);
@@ -473,31 +477,6 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 	}
 
 
-
-//	IScope scope_DoubleDotRef_stem(DoubleDotRef ctx, EReference ref) {
-//		IScope prevScope = getScope(ctx.eContainer(), ref);
-//		return Scopes.scopeFor(new ArrayList<EObject>(), prevScope);
-//	}
-
-//	IScope scope_DoubleDotRef_elm(DoubleDotRef ctx, EReference ref) {
-//		IScope prevScope = getScope(ctx.eContainer(), ref);
-//
-//		CallExpr ce = (CallExpr) ctx.eContainer();
-//		Classifier cc = ce.getContainingClassifier();
-//		List<Abstraction> abstractions = EcoreUtil2.getAllContentsOfType(cc, Abstraction.class);
-//
-//		if (cc instanceof ComponentImplementation) {
-//			Classifier c = ((ComponentImplementation) cc).getType();
-//			List<Abstraction> parentAbstractions = EcoreUtil2.getAllContentsOfType(c, Abstraction.class);
-//			abstractions.addAll(parentAbstractions);
-//		}
-//
-//		return Scopes.scopeFor(abstractions, prevScope);
-//
-//	}
-//
-//
-//
 	protected IScope scope_DoubleDotRef_elm(DoubleDotRef ctx, EReference ref) {
 
 		IScope prevScope = prevScope(ctx, ref);

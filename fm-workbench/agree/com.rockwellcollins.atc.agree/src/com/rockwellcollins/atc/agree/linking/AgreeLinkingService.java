@@ -9,6 +9,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.linking.impl.IllegalNodeException;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
@@ -18,6 +19,7 @@ import org.osate.aadl2.AadlPackage;
 import org.osate.aadl2.AnnexLibrary;
 import org.osate.aadl2.Element;
 import org.osate.aadl2.Namespace;
+import org.osate.aadl2.PackageRename;
 import org.osate.aadl2.PropertySet;
 import org.osate.aadl2.PropertyValue;
 import org.osate.aadl2.UnitLiteral;
@@ -146,6 +148,17 @@ public class AgreeLinkingService extends PropertiesLinkingService {
 			}
 
 			AadlPackage aadlPackage = AadlUtil.findImportedPackage(pkgName, namespace);
+
+			if (aadlPackage == null) {
+
+				for (PackageRename rename : EcoreUtil2.getAllContentsOfType(namespace.getElementRoot(),
+						PackageRename.class)) {
+					if (rename.getName() != null && pkgName.equals(rename.getName())) {
+						aadlPackage = rename.getRenamedPackage();
+					}
+				}
+
+			}
 
 			if (aadlPackage != null) {
 
