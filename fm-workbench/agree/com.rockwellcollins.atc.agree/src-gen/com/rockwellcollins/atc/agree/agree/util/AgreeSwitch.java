@@ -703,12 +703,12 @@ public class AgreeSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case AgreePackage.FOREACH_EXPR:
+      case AgreePackage.FLATMAP_EXPR:
       {
-        ForeachExpr foreachExpr = (ForeachExpr)theEObject;
-        T result = caseForeachExpr(foreachExpr);
-        if (result == null) result = caseExpr(foreachExpr);
-        if (result == null) result = caseElement(foreachExpr);
+        FlatmapExpr flatmapExpr = (FlatmapExpr)theEObject;
+        T result = caseFlatmapExpr(flatmapExpr);
+        if (result == null) result = caseExpr(flatmapExpr);
+        if (result == null) result = caseElement(flatmapExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -2074,17 +2074,17 @@ public class AgreeSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Foreach Expr</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Flatmap Expr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Foreach Expr</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Flatmap Expr</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseForeachExpr(ForeachExpr object)
+  public T caseFlatmapExpr(FlatmapExpr object)
   {
     return null;
   }

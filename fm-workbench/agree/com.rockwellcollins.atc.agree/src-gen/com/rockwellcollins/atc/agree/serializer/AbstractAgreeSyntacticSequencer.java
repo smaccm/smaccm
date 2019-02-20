@@ -107,11 +107,11 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 *     (rule start) (ambiguity) 'enum' '(' enumType=DoubleDotRef
 	 *     (rule start) (ambiguity) 'event' '(' id=[NamedElement|ID]
 	 *     (rule start) (ambiguity) 'exists' binding=NamedID
+	 *     (rule start) (ambiguity) 'flatmap' binding=NamedID
 	 *     (rule start) (ambiguity) 'floor' '(' expr=Expr
 	 *     (rule start) (ambiguity) 'foldl' binding=NamedID
 	 *     (rule start) (ambiguity) 'foldr' binding=NamedID
 	 *     (rule start) (ambiguity) 'forall' binding=NamedID
-	 *     (rule start) (ambiguity) 'foreach' binding=NamedID
 	 *     (rule start) (ambiguity) 'if' a=Expr
 	 *     (rule start) (ambiguity) 'indices' '(' array=Expr
 	 *     (rule start) (ambiguity) 'latched' '(' expr=Expr
@@ -148,10 +148,10 @@ public abstract class AbstractAgreeSyntacticSequencer extends AbstractSyntacticS
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) 'Get_Property' '(' componentRef=ComponentRef
 	 *     (rule start) (ambiguity) 'exists' binding=NamedID
+	 *     (rule start) (ambiguity) 'flatmap' binding=NamedID
 	 *     (rule start) (ambiguity) 'foldl' binding=NamedID
 	 *     (rule start) (ambiguity) 'foldr' binding=NamedID
 	 *     (rule start) (ambiguity) 'forall' binding=NamedID
-	 *     (rule start) (ambiguity) 'foreach' binding=NamedID
 	 *     (rule start) (ambiguity) 'if' a=Expr
 	 *     (rule start) (ambiguity) 'prev' '(' delay=Expr
 	 *     (rule start) (ambiguity) op='-'

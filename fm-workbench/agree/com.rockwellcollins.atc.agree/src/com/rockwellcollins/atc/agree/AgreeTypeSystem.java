@@ -59,12 +59,12 @@ import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.ExistsExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
+import com.rockwellcollins.atc.agree.agree.FlatmapExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnDef;
 import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
 import com.rockwellcollins.atc.agree.agree.FoldRightExpr;
 import com.rockwellcollins.atc.agree.agree.ForallExpr;
-import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
 import com.rockwellcollins.atc.agree.agree.IndicesExpr;
@@ -606,8 +606,8 @@ public class AgreeTypeSystem {
 		} else if (expr instanceof IndicesExpr) {
 			TypeDef arrType = infer(((IndicesExpr) expr).getArray());
 			if (arrType instanceof ArrayTypeDef) {
-				int dimension = ((ArrayTypeDef) arrType).size;
-				return new ArrayTypeDef(Prim.IntTypeDef, dimension, Optional.empty());
+				int size = ((ArrayTypeDef) arrType).size;
+				return new ArrayTypeDef(Prim.IntTypeDef, size, Optional.empty());
 			}
 
 		} else if (expr instanceof ForallExpr) {
@@ -616,14 +616,19 @@ public class AgreeTypeSystem {
 		} else if (expr instanceof ExistsExpr) {
 			return Prim.BoolTypeDef;
 
-		} else if (expr instanceof ForeachExpr) {
-			TypeDef stemType = infer(((ForeachExpr) expr).getExpr());
-			TypeDef arrType = infer(((ForeachExpr) expr).getArray());
+		} else if (expr instanceof FlatmapExpr) {
+			TypeDef innerArrType = infer(((FlatmapExpr) expr).getExpr());
+			if (innerArrType instanceof ArrayTypeDef) {
+				TypeDef stemType = ((ArrayTypeDef) innerArrType).stemType;
+				TypeDef arrType = infer(((FlatmapExpr) expr).getArray());
 
-			if (arrType instanceof ArrayTypeDef) {
-				int dimension = ((ArrayTypeDef) arrType).size;
-				return new ArrayTypeDef(stemType, dimension, Optional.empty());
+				if (arrType instanceof ArrayTypeDef) {
+					int size = ((ArrayTypeDef) arrType).size;
+					return new ArrayTypeDef(stemType, size, Optional.empty());
+				}
 			}
+
+
 
 		} else if (expr instanceof FoldLeftExpr) {
 			return infer(((FoldLeftExpr) expr).getExpr());
@@ -856,8 +861,8 @@ public class AgreeTypeSystem {
 			} else if (container instanceof ExistsExpr) {
 				arrExpr = ((ExistsExpr) container).getArray();
 
-			} else if (container instanceof ForeachExpr) {
-				arrExpr = ((ForeachExpr) container).getArray();
+			} else if (container instanceof FlatmapExpr) {
+				arrExpr = ((FlatmapExpr) container).getArray();
 
 			} else if (container instanceof FoldLeftExpr) {
 				arrExpr = ((FoldLeftExpr) container).getArray();

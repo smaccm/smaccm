@@ -3215,14 +3215,14 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cCommaKeyword_0_5 = (Keyword)cGroup_0.eContents().get(5);
 		private final Assignment cExprAssignment_0_6 = (Assignment)cGroup_0.eContents().get(6);
 		private final RuleCall cExprExprParserRuleCall_0_6_0 = (RuleCall)cExprAssignment_0_6.eContents().get(0);
-		private final RuleCall cForeachExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cFlatmapExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//ExistsExpr Expr:
 		//	{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr
-		//	| ForeachExpr;
+		//	| FlatmapExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr | ForeachExpr
+		//{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr | FlatmapExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr
@@ -3258,16 +3258,16 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		//Expr
 		public RuleCall getExprExprParserRuleCall_0_6_0() { return cExprExprParserRuleCall_0_6_0; }
 
-		//ForeachExpr
-		public RuleCall getForeachExprParserRuleCall_1() { return cForeachExprParserRuleCall_1; }
+		//FlatmapExpr
+		public RuleCall getFlatmapExprParserRuleCall_1() { return cFlatmapExprParserRuleCall_1; }
 	}
 
-	public class ForeachExprElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.ForeachExpr");
+	public class FlatmapExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "com.rockwellcollins.atc.agree.Agree.FlatmapExpr");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Action cForeachExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
-		private final Keyword cForeachKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Action cFlatmapExprAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Keyword cFlatmapKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cBindingAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
 		private final RuleCall cBindingNamedIDParserRuleCall_0_2_0 = (RuleCall)cBindingAssignment_0_2.eContents().get(0);
 		private final Keyword cInKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
@@ -3278,22 +3278,22 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cExprExprParserRuleCall_0_6_0 = (RuleCall)cExprAssignment_0_6.eContents().get(0);
 		private final RuleCall cFoldLeftExprParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
-		//ForeachExpr Expr:
-		//	{ForeachExpr} 'foreach' binding=NamedID 'in' array=Expr ',' expr=Expr
+		//FlatmapExpr Expr:
+		//	{FlatmapExpr} 'flatmap' binding=NamedID 'in' array=Expr ',' expr=Expr
 		//	| FoldLeftExpr;
 		@Override public ParserRule getRule() { return rule; }
 
-		//{ForeachExpr} 'foreach' binding=NamedID 'in' array=Expr ',' expr=Expr | FoldLeftExpr
+		//{FlatmapExpr} 'flatmap' binding=NamedID 'in' array=Expr ',' expr=Expr | FoldLeftExpr
 		public Alternatives getAlternatives() { return cAlternatives; }
 
-		//{ForeachExpr} 'foreach' binding=NamedID 'in' array=Expr ',' expr=Expr
+		//{FlatmapExpr} 'flatmap' binding=NamedID 'in' array=Expr ',' expr=Expr
 		public Group getGroup_0() { return cGroup_0; }
 
-		//{ForeachExpr}
-		public Action getForeachExprAction_0_0() { return cForeachExprAction_0_0; }
+		//{FlatmapExpr}
+		public Action getFlatmapExprAction_0_0() { return cFlatmapExprAction_0_0; }
 
-		//'foreach'
-		public Keyword getForeachKeyword_0_1() { return cForeachKeyword_0_1; }
+		//'flatmap'
+		public Keyword getFlatmapKeyword_0_1() { return cFlatmapKeyword_0_1; }
 
 		//binding=NamedID
 		public Assignment getBindingAssignment_0_2() { return cBindingAssignment_0_2; }
@@ -5417,7 +5417,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 	private final ExprElements pExpr;
 	private final ForallExprElements pForallExpr;
 	private final ExistsExprElements pExistsExpr;
-	private final ForeachExprElements pForeachExpr;
+	private final FlatmapExprElements pFlatmapExpr;
 	private final FoldLeftExprElements pFoldLeftExpr;
 	private final FoldRightExprElements pFoldRightExpr;
 	private final ArrowExprElements pArrowExpr;
@@ -5496,7 +5496,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		this.pExpr = new ExprElements();
 		this.pForallExpr = new ForallExprElements();
 		this.pExistsExpr = new ExistsExprElements();
-		this.pForeachExpr = new ForeachExprElements();
+		this.pFlatmapExpr = new FlatmapExprElements();
 		this.pFoldLeftExpr = new FoldLeftExprElements();
 		this.pFoldRightExpr = new FoldRightExprElements();
 		this.pArrowExpr = new ArrowExprElements();
@@ -6013,7 +6013,7 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 
 	//ExistsExpr Expr:
 	//	{ExistsExpr} 'exists' binding=NamedID 'in' array=Expr ',' expr=Expr
-	//	| ForeachExpr;
+	//	| FlatmapExpr;
 	public ExistsExprElements getExistsExprAccess() {
 		return pExistsExpr;
 	}
@@ -6022,15 +6022,15 @@ public class AgreeGrammarAccess extends AbstractGrammarElementFinder {
 		return getExistsExprAccess().getRule();
 	}
 
-	//ForeachExpr Expr:
-	//	{ForeachExpr} 'foreach' binding=NamedID 'in' array=Expr ',' expr=Expr
+	//FlatmapExpr Expr:
+	//	{FlatmapExpr} 'flatmap' binding=NamedID 'in' array=Expr ',' expr=Expr
 	//	| FoldLeftExpr;
-	public ForeachExprElements getForeachExprAccess() {
-		return pForeachExpr;
+	public FlatmapExprElements getFlatmapExprAccess() {
+		return pFlatmapExpr;
 	}
 	
-	public ParserRule getForeachExprRule() {
-		return getForeachExprAccess().getRule();
+	public ParserRule getFlatmapExprRule() {
+		return getFlatmapExprAccess().getRule();
 	}
 
 	//FoldLeftExpr Expr:

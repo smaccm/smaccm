@@ -5093,11 +5093,11 @@ ruleExistsExpr returns [EObject current=null]
 ))
     |
     { 
-        newCompositeNode(grammarAccess.getExistsExprAccess().getForeachExprParserRuleCall_1()); 
+        newCompositeNode(grammarAccess.getExistsExprAccess().getFlatmapExprParserRuleCall_1()); 
     }
-    this_ForeachExpr_7=ruleForeachExpr
+    this_FlatmapExpr_7=ruleFlatmapExpr
     {
-        $current = $this_ForeachExpr_7.current;
+        $current = $this_FlatmapExpr_7.current;
         afterParserOrEnumRuleCall();
     }
 )
@@ -5107,39 +5107,39 @@ ruleExistsExpr returns [EObject current=null]
 
 
 
-// Entry rule entryRuleForeachExpr
-entryRuleForeachExpr returns [EObject current=null]
+// Entry rule entryRuleFlatmapExpr
+entryRuleFlatmapExpr returns [EObject current=null]
 	:
-	{ newCompositeNode(grammarAccess.getForeachExprRule()); }
-	 iv_ruleForeachExpr=ruleForeachExpr 
-	 { $current=$iv_ruleForeachExpr.current; } 
+	{ newCompositeNode(grammarAccess.getFlatmapExprRule()); }
+	 iv_ruleFlatmapExpr=ruleFlatmapExpr 
+	 { $current=$iv_ruleFlatmapExpr.current; } 
 	 EOF 
 ;
 
-// Rule ForeachExpr
-ruleForeachExpr returns [EObject current=null] 
+// Rule FlatmapExpr
+ruleFlatmapExpr returns [EObject current=null] 
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
 (((
     {
         $current = forceCreateModelElement(
-            grammarAccess.getForeachExprAccess().getForeachExprAction_0_0(),
+            grammarAccess.getFlatmapExprAccess().getFlatmapExprAction_0_0(),
             $current);
     }
 )
-	otherlv_1=Foreach
+	otherlv_1=Flatmap
     {
-    	newLeafNode(otherlv_1, grammarAccess.getForeachExprAccess().getForeachKeyword_0_1());
+    	newLeafNode(otherlv_1, grammarAccess.getFlatmapExprAccess().getFlatmapKeyword_0_1());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
+	        newCompositeNode(grammarAccess.getFlatmapExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
 	    }
 		lv_binding_2_0=ruleNamedID		{
 	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getForeachExprRule());
+	            $current = createModelElementForParent(grammarAccess.getFlatmapExprRule());
 	        }
        		set(
        			$current, 
@@ -5153,16 +5153,16 @@ ruleForeachExpr returns [EObject current=null]
 )
 	otherlv_3=In
     {
-    	newLeafNode(otherlv_3, grammarAccess.getForeachExprAccess().getInKeyword_0_3());
+    	newLeafNode(otherlv_3, grammarAccess.getFlatmapExprAccess().getInKeyword_0_3());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getForeachExprAccess().getArrayExprParserRuleCall_0_4_0()); 
+	        newCompositeNode(grammarAccess.getFlatmapExprAccess().getArrayExprParserRuleCall_0_4_0()); 
 	    }
 		lv_array_4_0=ruleExpr		{
 	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getForeachExprRule());
+	            $current = createModelElementForParent(grammarAccess.getFlatmapExprRule());
 	        }
        		set(
        			$current, 
@@ -5176,16 +5176,16 @@ ruleForeachExpr returns [EObject current=null]
 )
 	otherlv_5=Comma
     {
-    	newLeafNode(otherlv_5, grammarAccess.getForeachExprAccess().getCommaKeyword_0_5());
+    	newLeafNode(otherlv_5, grammarAccess.getFlatmapExprAccess().getCommaKeyword_0_5());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getForeachExprAccess().getExprExprParserRuleCall_0_6_0()); 
+	        newCompositeNode(grammarAccess.getFlatmapExprAccess().getExprExprParserRuleCall_0_6_0()); 
 	    }
 		lv_expr_6_0=ruleExpr		{
 	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getForeachExprRule());
+	            $current = createModelElementForParent(grammarAccess.getFlatmapExprRule());
 	        }
        		set(
        			$current, 
@@ -5199,7 +5199,7 @@ ruleForeachExpr returns [EObject current=null]
 ))
     |
     { 
-        newCompositeNode(grammarAccess.getForeachExprAccess().getFoldLeftExprParserRuleCall_1()); 
+        newCompositeNode(grammarAccess.getFlatmapExprAccess().getFoldLeftExprParserRuleCall_1()); 
     }
     this_FoldLeftExpr_7=ruleFoldLeftExpr
     {

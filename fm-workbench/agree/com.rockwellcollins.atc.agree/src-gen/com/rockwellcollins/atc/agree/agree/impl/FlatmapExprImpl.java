@@ -4,7 +4,7 @@ package com.rockwellcollins.atc.agree.agree.impl;
 
 import com.rockwellcollins.atc.agree.agree.AgreePackage;
 import com.rockwellcollins.atc.agree.agree.Expr;
-import com.rockwellcollins.atc.agree.agree.ForeachExpr;
+import com.rockwellcollins.atc.agree.agree.FlatmapExpr;
 import com.rockwellcollins.atc.agree.agree.NamedID;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -17,20 +17,20 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Foreach Expr</b></em>'.
+ * An implementation of the model object '<em><b>Flatmap Expr</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ForeachExprImpl#getBinding <em>Binding</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ForeachExprImpl#getArray <em>Array</em>}</li>
- *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.ForeachExprImpl#getExpr <em>Expr</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FlatmapExprImpl#getBinding <em>Binding</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FlatmapExprImpl#getArray <em>Array</em>}</li>
+ *   <li>{@link com.rockwellcollins.atc.agree.agree.impl.FlatmapExprImpl#getExpr <em>Expr</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ForeachExprImpl extends ExprImpl implements ForeachExpr
+public class FlatmapExprImpl extends ExprImpl implements FlatmapExpr
 {
   /**
    * The cached value of the '{@link #getBinding() <em>Binding</em>}' containment reference.
@@ -67,7 +67,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  protected ForeachExprImpl()
+  protected FlatmapExprImpl()
   {
     super();
   }
@@ -80,7 +80,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
   @Override
   protected EClass eStaticClass()
   {
-    return AgreePackage.Literals.FOREACH_EXPR;
+    return AgreePackage.Literals.FLATMAP_EXPR;
   }
 
   /**
@@ -105,7 +105,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
     binding = newBinding;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.FOREACH_EXPR__BINDING, oldBinding, newBinding);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.FLATMAP_EXPR__BINDING, oldBinding, newBinding);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -123,14 +123,14 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
     {
       NotificationChain msgs = null;
       if (binding != null)
-        msgs = ((InternalEObject)binding).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FOREACH_EXPR__BINDING, null, msgs);
+        msgs = ((InternalEObject)binding).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FLATMAP_EXPR__BINDING, null, msgs);
       if (newBinding != null)
-        msgs = ((InternalEObject)newBinding).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FOREACH_EXPR__BINDING, null, msgs);
+        msgs = ((InternalEObject)newBinding).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FLATMAP_EXPR__BINDING, null, msgs);
       msgs = basicSetBinding(newBinding, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.FOREACH_EXPR__BINDING, newBinding, newBinding));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.FLATMAP_EXPR__BINDING, newBinding, newBinding));
   }
 
   /**
@@ -155,7 +155,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
     array = newArray;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.FOREACH_EXPR__ARRAY, oldArray, newArray);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.FLATMAP_EXPR__ARRAY, oldArray, newArray);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -173,14 +173,14 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
     {
       NotificationChain msgs = null;
       if (array != null)
-        msgs = ((InternalEObject)array).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FOREACH_EXPR__ARRAY, null, msgs);
+        msgs = ((InternalEObject)array).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FLATMAP_EXPR__ARRAY, null, msgs);
       if (newArray != null)
-        msgs = ((InternalEObject)newArray).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FOREACH_EXPR__ARRAY, null, msgs);
+        msgs = ((InternalEObject)newArray).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FLATMAP_EXPR__ARRAY, null, msgs);
       msgs = basicSetArray(newArray, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.FOREACH_EXPR__ARRAY, newArray, newArray));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.FLATMAP_EXPR__ARRAY, newArray, newArray));
   }
 
   /**
@@ -205,7 +205,7 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
     expr = newExpr;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.FOREACH_EXPR__EXPR, oldExpr, newExpr);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, AgreePackage.FLATMAP_EXPR__EXPR, oldExpr, newExpr);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -223,14 +223,14 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
     {
       NotificationChain msgs = null;
       if (expr != null)
-        msgs = ((InternalEObject)expr).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FOREACH_EXPR__EXPR, null, msgs);
+        msgs = ((InternalEObject)expr).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FLATMAP_EXPR__EXPR, null, msgs);
       if (newExpr != null)
-        msgs = ((InternalEObject)newExpr).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FOREACH_EXPR__EXPR, null, msgs);
+        msgs = ((InternalEObject)newExpr).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - AgreePackage.FLATMAP_EXPR__EXPR, null, msgs);
       msgs = basicSetExpr(newExpr, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.FOREACH_EXPR__EXPR, newExpr, newExpr));
+      eNotify(new ENotificationImpl(this, Notification.SET, AgreePackage.FLATMAP_EXPR__EXPR, newExpr, newExpr));
   }
 
   /**
@@ -243,11 +243,11 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
   {
     switch (featureID)
     {
-      case AgreePackage.FOREACH_EXPR__BINDING:
+      case AgreePackage.FLATMAP_EXPR__BINDING:
         return basicSetBinding(null, msgs);
-      case AgreePackage.FOREACH_EXPR__ARRAY:
+      case AgreePackage.FLATMAP_EXPR__ARRAY:
         return basicSetArray(null, msgs);
-      case AgreePackage.FOREACH_EXPR__EXPR:
+      case AgreePackage.FLATMAP_EXPR__EXPR:
         return basicSetExpr(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -263,11 +263,11 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
   {
     switch (featureID)
     {
-      case AgreePackage.FOREACH_EXPR__BINDING:
+      case AgreePackage.FLATMAP_EXPR__BINDING:
         return getBinding();
-      case AgreePackage.FOREACH_EXPR__ARRAY:
+      case AgreePackage.FLATMAP_EXPR__ARRAY:
         return getArray();
-      case AgreePackage.FOREACH_EXPR__EXPR:
+      case AgreePackage.FLATMAP_EXPR__EXPR:
         return getExpr();
     }
     return super.eGet(featureID, resolve, coreType);
@@ -283,13 +283,13 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
   {
     switch (featureID)
     {
-      case AgreePackage.FOREACH_EXPR__BINDING:
+      case AgreePackage.FLATMAP_EXPR__BINDING:
         setBinding((NamedID)newValue);
         return;
-      case AgreePackage.FOREACH_EXPR__ARRAY:
+      case AgreePackage.FLATMAP_EXPR__ARRAY:
         setArray((Expr)newValue);
         return;
-      case AgreePackage.FOREACH_EXPR__EXPR:
+      case AgreePackage.FLATMAP_EXPR__EXPR:
         setExpr((Expr)newValue);
         return;
     }
@@ -306,13 +306,13 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
   {
     switch (featureID)
     {
-      case AgreePackage.FOREACH_EXPR__BINDING:
+      case AgreePackage.FLATMAP_EXPR__BINDING:
         setBinding((NamedID)null);
         return;
-      case AgreePackage.FOREACH_EXPR__ARRAY:
+      case AgreePackage.FLATMAP_EXPR__ARRAY:
         setArray((Expr)null);
         return;
-      case AgreePackage.FOREACH_EXPR__EXPR:
+      case AgreePackage.FLATMAP_EXPR__EXPR:
         setExpr((Expr)null);
         return;
     }
@@ -329,14 +329,14 @@ public class ForeachExprImpl extends ExprImpl implements ForeachExpr
   {
     switch (featureID)
     {
-      case AgreePackage.FOREACH_EXPR__BINDING:
+      case AgreePackage.FLATMAP_EXPR__BINDING:
         return binding != null;
-      case AgreePackage.FOREACH_EXPR__ARRAY:
+      case AgreePackage.FLATMAP_EXPR__ARRAY:
         return array != null;
-      case AgreePackage.FOREACH_EXPR__EXPR:
+      case AgreePackage.FLATMAP_EXPR__EXPR:
         return expr != null;
     }
     return super.eIsSet(featureID);
   }
 
-} //ForeachExprImpl
+} //FlatmapExprImpl

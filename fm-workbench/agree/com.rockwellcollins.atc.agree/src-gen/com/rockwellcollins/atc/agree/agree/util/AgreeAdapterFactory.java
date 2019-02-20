@@ -421,9 +421,9 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
         return createExistsExprAdapter();
       }
       @Override
-      public Adapter caseForeachExpr(ForeachExpr object)
+      public Adapter caseFlatmapExpr(FlatmapExpr object)
       {
-        return createForeachExprAdapter();
+        return createFlatmapExprAdapter();
       }
       @Override
       public Adapter caseFoldLeftExpr(FoldLeftExpr object)
@@ -1643,16 +1643,16 @@ public class AgreeAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.ForeachExpr <em>Foreach Expr</em>}'.
+   * Creates a new adapter for an object of class '{@link com.rockwellcollins.atc.agree.agree.FlatmapExpr <em>Flatmap Expr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see com.rockwellcollins.atc.agree.agree.ForeachExpr
+   * @see com.rockwellcollins.atc.agree.agree.FlatmapExpr
    * @generated
    */
-  public Adapter createForeachExprAdapter()
+  public Adapter createFlatmapExprAdapter()
   {
     return null;
   }

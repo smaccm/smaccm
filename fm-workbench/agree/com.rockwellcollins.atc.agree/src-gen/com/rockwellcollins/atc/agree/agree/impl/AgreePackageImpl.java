@@ -36,12 +36,12 @@ import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.ExistsExpr;
 import com.rockwellcollins.atc.agree.agree.Expr;
+import com.rockwellcollins.atc.agree.agree.FlatmapExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnDef;
 import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
 import com.rockwellcollins.atc.agree.agree.FoldRightExpr;
 import com.rockwellcollins.atc.agree.agree.ForallExpr;
-import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
@@ -603,7 +603,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass foreachExprEClass = null;
+  private EClass flatmapExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2604,9 +2604,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   @Override
-  public EClass getForeachExpr()
+  public EClass getFlatmapExpr()
   {
-    return foreachExprEClass;
+    return flatmapExprEClass;
   }
 
   /**
@@ -2615,9 +2615,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   @Override
-  public EReference getForeachExpr_Binding()
+  public EReference getFlatmapExpr_Binding()
   {
-    return (EReference)foreachExprEClass.getEStructuralFeatures().get(0);
+    return (EReference)flatmapExprEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2626,9 +2626,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   @Override
-  public EReference getForeachExpr_Array()
+  public EReference getFlatmapExpr_Array()
   {
-    return (EReference)foreachExprEClass.getEStructuralFeatures().get(1);
+    return (EReference)flatmapExprEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2637,9 +2637,9 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
    * @generated
    */
   @Override
-  public EReference getForeachExpr_Expr()
+  public EReference getFlatmapExpr_Expr()
   {
-    return (EReference)foreachExprEClass.getEStructuralFeatures().get(2);
+    return (EReference)flatmapExprEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -3821,10 +3821,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     createEReference(existsExprEClass, EXISTS_EXPR__ARRAY);
     createEReference(existsExprEClass, EXISTS_EXPR__EXPR);
 
-    foreachExprEClass = createEClass(FOREACH_EXPR);
-    createEReference(foreachExprEClass, FOREACH_EXPR__BINDING);
-    createEReference(foreachExprEClass, FOREACH_EXPR__ARRAY);
-    createEReference(foreachExprEClass, FOREACH_EXPR__EXPR);
+    flatmapExprEClass = createEClass(FLATMAP_EXPR);
+    createEReference(flatmapExprEClass, FLATMAP_EXPR__BINDING);
+    createEReference(flatmapExprEClass, FLATMAP_EXPR__ARRAY);
+    createEReference(flatmapExprEClass, FLATMAP_EXPR__EXPR);
 
     foldLeftExprEClass = createEClass(FOLD_LEFT_EXPR);
     createEReference(foldLeftExprEClass, FOLD_LEFT_EXPR__BINDING);
@@ -4055,7 +4055,7 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     primTypeEClass.getESuperTypes().add(this.getType());
     forallExprEClass.getESuperTypes().add(this.getExpr());
     existsExprEClass.getESuperTypes().add(this.getExpr());
-    foreachExprEClass.getESuperTypes().add(this.getExpr());
+    flatmapExprEClass.getESuperTypes().add(this.getExpr());
     foldLeftExprEClass.getESuperTypes().add(this.getExpr());
     foldRightExprEClass.getESuperTypes().add(this.getExpr());
     binaryExprEClass.getESuperTypes().add(this.getExpr());
@@ -4312,10 +4312,10 @@ public class AgreePackageImpl extends EPackageImpl implements AgreePackage
     initEReference(getExistsExpr_Array(), this.getExpr(), null, "array", null, 0, 1, ExistsExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getExistsExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, ExistsExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(foreachExprEClass, ForeachExpr.class, "ForeachExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getForeachExpr_Binding(), this.getNamedID(), null, "binding", null, 0, 1, ForeachExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getForeachExpr_Array(), this.getExpr(), null, "array", null, 0, 1, ForeachExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getForeachExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, ForeachExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(flatmapExprEClass, FlatmapExpr.class, "FlatmapExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getFlatmapExpr_Binding(), this.getNamedID(), null, "binding", null, 0, 1, FlatmapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFlatmapExpr_Array(), this.getExpr(), null, "array", null, 0, 1, FlatmapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFlatmapExpr_Expr(), this.getExpr(), null, "expr", null, 0, 1, FlatmapExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(foldLeftExprEClass, FoldLeftExpr.class, "FoldLeftExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFoldLeftExpr_Binding(), this.getNamedID(), null, "binding", null, 0, 1, FoldLeftExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

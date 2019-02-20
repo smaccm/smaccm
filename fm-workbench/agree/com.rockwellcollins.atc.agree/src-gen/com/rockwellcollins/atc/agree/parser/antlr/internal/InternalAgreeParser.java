@@ -22,7 +22,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalAgreeParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Linearization", "Get_Property", "Asynchronous", "Agree_input", "Exclusively", "Classifier", "Connection", "Condition", "Guarantee", "Initially", "No_simult", "Parameter", "Reference", "Synchrony", "Calendar", "Constant", "External", "Ordering", "Property", "Sporadic", "Timefall", "Timerise", "Whenever", "KW__INSERT", "KW__REMOVE", "Applies", "Becomes", "Binding", "Compute", "Foreach", "Implies", "Indices", "Latched", "Returns", "KW__COUNT", "Always", "Assert", "Assign", "Assume", "During", "Exists", "Forall", "Jitter", "Occurs", "Raises", "Simult", "Struct", "Timeof", "Within", "Const", "Delta", "Event", "False", "Floor", "Foldl", "Foldr", "Holds", "Lemma", "Modes", "Occur", "Times", "KW__CLK", "Bool", "Each", "Else", "Enum", "Into", "Lift", "Node", "Over", "Prev", "Real", "Then", "This", "Time", "True", "Type", "When", "With", "PlusSignEqualsSignGreaterThanSign", "LessThanSignEqualsSignGreaterThanSign", "IAT", "And", "Div", "Fun", "Int", "Let", "Mod", "Not", "Pre", "Tel", "Var", "ExclamationMarkEqualsSign", "HyphenMinusGreaterThanSign", "FullStopFullStop", "ColonColon", "ColonEqualsSign", "LessThanSignEqualsSign", "LessThanSignGreaterThanSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "LeftSquareBracketVerticalLine", "Eq", "If", "In", "Or", "To", "VerticalLineRightSquareBracket", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "RightCurlyBracket", "RULE_SL_COMMENT", "RULE_DIGIT", "RULE_EXPONENT", "RULE_INT_EXPONENT", "RULE_REAL_LIT", "RULE_BASED_INTEGER", "RULE_INTEGER_LIT", "RULE_EXTENDED_DIGIT", "RULE_STRING", "RULE_ID", "RULE_WS"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Linearization", "Get_Property", "Asynchronous", "Agree_input", "Exclusively", "Classifier", "Connection", "Condition", "Guarantee", "Initially", "No_simult", "Parameter", "Reference", "Synchrony", "Calendar", "Constant", "External", "Ordering", "Property", "Sporadic", "Timefall", "Timerise", "Whenever", "KW__INSERT", "KW__REMOVE", "Applies", "Becomes", "Binding", "Compute", "Flatmap", "Implies", "Indices", "Latched", "Returns", "KW__COUNT", "Always", "Assert", "Assign", "Assume", "During", "Exists", "Forall", "Jitter", "Occurs", "Raises", "Simult", "Struct", "Timeof", "Within", "Const", "Delta", "Event", "False", "Floor", "Foldl", "Foldr", "Holds", "Lemma", "Modes", "Occur", "Times", "KW__CLK", "Bool", "Each", "Else", "Enum", "Into", "Lift", "Node", "Over", "Prev", "Real", "Then", "This", "Time", "True", "Type", "When", "With", "PlusSignEqualsSignGreaterThanSign", "LessThanSignEqualsSignGreaterThanSign", "IAT", "And", "Div", "Fun", "Int", "Let", "Mod", "Not", "Pre", "Tel", "Var", "ExclamationMarkEqualsSign", "HyphenMinusGreaterThanSign", "FullStopFullStop", "ColonColon", "ColonEqualsSign", "LessThanSignEqualsSign", "LessThanSignGreaterThanSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "LeftSquareBracketVerticalLine", "Eq", "If", "In", "Or", "To", "VerticalLineRightSquareBracket", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "RightCurlyBracket", "RULE_SL_COMMENT", "RULE_DIGIT", "RULE_EXPONENT", "RULE_INT_EXPONENT", "RULE_REAL_LIT", "RULE_BASED_INTEGER", "RULE_INTEGER_LIT", "RULE_EXTENDED_DIGIT", "RULE_STRING", "RULE_ID", "RULE_WS"
     };
     public static final int Enum=69;
     public static final int Each=67;
@@ -153,13 +153,13 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     public static final int RULE_WS=140;
     public static final int LeftCurlyBracket=128;
     public static final int CircumflexAccent=127;
+    public static final int Flatmap=33;
     public static final int LeftSquareBracketVerticalLine=105;
     public static final int Exists=44;
     public static final int Compute=32;
     public static final int Times=64;
     public static final int Timefall=24;
     public static final int Within=52;
-    public static final int Foreach=33;
     public static final int Let=90;
     public static final int Tel=94;
 
@@ -2062,7 +2062,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt5=2;
                     int LA5_0 = input.LA(1);
 
-                    if ( (LA5_0==Get_Property||(LA5_0>=Timefall && LA5_0<=Timerise)||LA5_0==Foreach||(LA5_0>=Indices && LA5_0<=Latched)||(LA5_0>=Exists && LA5_0<=Forall)||LA5_0==Timeof||(LA5_0>=Event && LA5_0<=Foldr)||LA5_0==Enum||(LA5_0>=Prev && LA5_0<=Real)||(LA5_0>=Time && LA5_0<=True)||(LA5_0>=Not && LA5_0<=Pre)||LA5_0==LeftSquareBracketVerticalLine||LA5_0==If||LA5_0==LeftParenthesis||LA5_0==HyphenMinus||LA5_0==RULE_REAL_LIT||LA5_0==RULE_INTEGER_LIT||LA5_0==RULE_ID) ) {
+                    if ( (LA5_0==Get_Property||(LA5_0>=Timefall && LA5_0<=Timerise)||LA5_0==Flatmap||(LA5_0>=Indices && LA5_0<=Latched)||(LA5_0>=Exists && LA5_0<=Forall)||LA5_0==Timeof||(LA5_0>=Event && LA5_0<=Foldr)||LA5_0==Enum||(LA5_0>=Prev && LA5_0<=Real)||(LA5_0>=Time && LA5_0<=True)||(LA5_0>=Not && LA5_0<=Pre)||LA5_0==LeftSquareBracketVerticalLine||LA5_0==If||LA5_0==LeftParenthesis||LA5_0==HyphenMinus||LA5_0==RULE_REAL_LIT||LA5_0==RULE_INTEGER_LIT||LA5_0==RULE_ID) ) {
                         alt5=1;
                     }
                     else if ( (LA5_0==Condition||LA5_0==Whenever||LA5_0==Always||LA5_0==When) ) {
@@ -2279,7 +2279,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt7=2;
                     int LA7_0 = input.LA(1);
 
-                    if ( (LA7_0==Get_Property||(LA7_0>=Timefall && LA7_0<=Timerise)||LA7_0==Foreach||(LA7_0>=Indices && LA7_0<=Latched)||(LA7_0>=Exists && LA7_0<=Forall)||LA7_0==Timeof||(LA7_0>=Event && LA7_0<=Foldr)||LA7_0==Enum||(LA7_0>=Prev && LA7_0<=Real)||(LA7_0>=Time && LA7_0<=True)||(LA7_0>=Not && LA7_0<=Pre)||LA7_0==LeftSquareBracketVerticalLine||LA7_0==If||LA7_0==LeftParenthesis||LA7_0==HyphenMinus||LA7_0==RULE_REAL_LIT||LA7_0==RULE_INTEGER_LIT||LA7_0==RULE_ID) ) {
+                    if ( (LA7_0==Get_Property||(LA7_0>=Timefall && LA7_0<=Timerise)||LA7_0==Flatmap||(LA7_0>=Indices && LA7_0<=Latched)||(LA7_0>=Exists && LA7_0<=Forall)||LA7_0==Timeof||(LA7_0>=Event && LA7_0<=Foldr)||LA7_0==Enum||(LA7_0>=Prev && LA7_0<=Real)||(LA7_0>=Time && LA7_0<=True)||(LA7_0>=Not && LA7_0<=Pre)||LA7_0==LeftSquareBracketVerticalLine||LA7_0==If||LA7_0==LeftParenthesis||LA7_0==HyphenMinus||LA7_0==RULE_REAL_LIT||LA7_0==RULE_INTEGER_LIT||LA7_0==RULE_ID) ) {
                         alt7=1;
                     }
                     else if ( (LA7_0==Condition||LA7_0==Whenever||LA7_0==Always||LA7_0==When) ) {
@@ -2520,7 +2520,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt10=2;
                     int LA10_0 = input.LA(1);
 
-                    if ( (LA10_0==Get_Property||(LA10_0>=Timefall && LA10_0<=Timerise)||LA10_0==Foreach||(LA10_0>=Indices && LA10_0<=Latched)||(LA10_0>=Exists && LA10_0<=Forall)||LA10_0==Timeof||(LA10_0>=Event && LA10_0<=Foldr)||LA10_0==Enum||(LA10_0>=Prev && LA10_0<=Real)||(LA10_0>=Time && LA10_0<=True)||(LA10_0>=Not && LA10_0<=Pre)||LA10_0==LeftSquareBracketVerticalLine||LA10_0==If||LA10_0==LeftParenthesis||LA10_0==HyphenMinus||LA10_0==RULE_REAL_LIT||LA10_0==RULE_INTEGER_LIT||LA10_0==RULE_ID) ) {
+                    if ( (LA10_0==Get_Property||(LA10_0>=Timefall && LA10_0<=Timerise)||LA10_0==Flatmap||(LA10_0>=Indices && LA10_0<=Latched)||(LA10_0>=Exists && LA10_0<=Forall)||LA10_0==Timeof||(LA10_0>=Event && LA10_0<=Foldr)||LA10_0==Enum||(LA10_0>=Prev && LA10_0<=Real)||(LA10_0>=Time && LA10_0<=True)||(LA10_0>=Not && LA10_0<=Pre)||LA10_0==LeftSquareBracketVerticalLine||LA10_0==If||LA10_0==LeftParenthesis||LA10_0==HyphenMinus||LA10_0==RULE_REAL_LIT||LA10_0==RULE_INTEGER_LIT||LA10_0==RULE_ID) ) {
                         alt10=1;
                     }
                     else if ( (LA10_0==Condition||LA10_0==Whenever||LA10_0==Always||LA10_0==When) ) {
@@ -2737,7 +2737,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt12=2;
                     int LA12_0 = input.LA(1);
 
-                    if ( (LA12_0==Get_Property||(LA12_0>=Timefall && LA12_0<=Timerise)||LA12_0==Foreach||(LA12_0>=Indices && LA12_0<=Latched)||(LA12_0>=Exists && LA12_0<=Forall)||LA12_0==Timeof||(LA12_0>=Event && LA12_0<=Foldr)||LA12_0==Enum||(LA12_0>=Prev && LA12_0<=Real)||(LA12_0>=Time && LA12_0<=True)||(LA12_0>=Not && LA12_0<=Pre)||LA12_0==LeftSquareBracketVerticalLine||LA12_0==If||LA12_0==LeftParenthesis||LA12_0==HyphenMinus||LA12_0==RULE_REAL_LIT||LA12_0==RULE_INTEGER_LIT||LA12_0==RULE_ID) ) {
+                    if ( (LA12_0==Get_Property||(LA12_0>=Timefall && LA12_0<=Timerise)||LA12_0==Flatmap||(LA12_0>=Indices && LA12_0<=Latched)||(LA12_0>=Exists && LA12_0<=Forall)||LA12_0==Timeof||(LA12_0>=Event && LA12_0<=Foldr)||LA12_0==Enum||(LA12_0>=Prev && LA12_0<=Real)||(LA12_0>=Time && LA12_0<=True)||(LA12_0>=Not && LA12_0<=Pre)||LA12_0==LeftSquareBracketVerticalLine||LA12_0==If||LA12_0==LeftParenthesis||LA12_0==HyphenMinus||LA12_0==RULE_REAL_LIT||LA12_0==RULE_INTEGER_LIT||LA12_0==RULE_ID) ) {
                         alt12=1;
                     }
                     else if ( (LA12_0==Condition||LA12_0==Whenever||LA12_0==Always||LA12_0==When) ) {
@@ -12170,7 +12170,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             if ( (LA69_0==Forall) ) {
                 alt69=1;
             }
-            else if ( (LA69_0==Get_Property||(LA69_0>=Timefall && LA69_0<=Timerise)||LA69_0==Foreach||(LA69_0>=Indices && LA69_0<=Latched)||LA69_0==Exists||LA69_0==Timeof||(LA69_0>=Event && LA69_0<=Foldr)||LA69_0==Enum||(LA69_0>=Prev && LA69_0<=Real)||(LA69_0>=Time && LA69_0<=True)||(LA69_0>=Not && LA69_0<=Pre)||LA69_0==LeftSquareBracketVerticalLine||LA69_0==If||LA69_0==LeftParenthesis||LA69_0==HyphenMinus||LA69_0==RULE_REAL_LIT||LA69_0==RULE_INTEGER_LIT||LA69_0==RULE_ID) ) {
+            else if ( (LA69_0==Get_Property||(LA69_0>=Timefall && LA69_0<=Timerise)||LA69_0==Flatmap||(LA69_0>=Indices && LA69_0<=Latched)||LA69_0==Exists||LA69_0==Timeof||(LA69_0>=Event && LA69_0<=Foldr)||LA69_0==Enum||(LA69_0>=Prev && LA69_0<=Real)||(LA69_0>=Time && LA69_0<=True)||(LA69_0>=Not && LA69_0<=Pre)||LA69_0==LeftSquareBracketVerticalLine||LA69_0==If||LA69_0==LeftParenthesis||LA69_0==HyphenMinus||LA69_0==RULE_REAL_LIT||LA69_0==RULE_INTEGER_LIT||LA69_0==RULE_ID) ) {
                 alt69=2;
             }
             else {
@@ -12414,7 +12414,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExistsExpr"
-    // InternalAgreeParser.g:5014:1: ruleExistsExpr returns [EObject current=null] : ( ( () otherlv_1= Exists ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_ForeachExpr_7= ruleForeachExpr ) ;
+    // InternalAgreeParser.g:5014:1: ruleExistsExpr returns [EObject current=null] : ( ( () otherlv_1= Exists ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FlatmapExpr_7= ruleFlatmapExpr ) ;
     public final EObject ruleExistsExpr() throws RecognitionException {
         EObject current = null;
 
@@ -12427,23 +12427,23 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
 
         EObject lv_expr_6_0 = null;
 
-        EObject this_ForeachExpr_7 = null;
+        EObject this_FlatmapExpr_7 = null;
 
 
          enterRule(); 
             
         try {
-            // InternalAgreeParser.g:5017:28: ( ( ( () otherlv_1= Exists ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_ForeachExpr_7= ruleForeachExpr ) )
-            // InternalAgreeParser.g:5018:1: ( ( () otherlv_1= Exists ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_ForeachExpr_7= ruleForeachExpr )
+            // InternalAgreeParser.g:5017:28: ( ( ( () otherlv_1= Exists ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FlatmapExpr_7= ruleFlatmapExpr ) )
+            // InternalAgreeParser.g:5018:1: ( ( () otherlv_1= Exists ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FlatmapExpr_7= ruleFlatmapExpr )
             {
-            // InternalAgreeParser.g:5018:1: ( ( () otherlv_1= Exists ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_ForeachExpr_7= ruleForeachExpr )
+            // InternalAgreeParser.g:5018:1: ( ( () otherlv_1= Exists ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FlatmapExpr_7= ruleFlatmapExpr )
             int alt70=2;
             int LA70_0 = input.LA(1);
 
             if ( (LA70_0==Exists) ) {
                 alt70=1;
             }
-            else if ( (LA70_0==Get_Property||(LA70_0>=Timefall && LA70_0<=Timerise)||LA70_0==Foreach||(LA70_0>=Indices && LA70_0<=Latched)||LA70_0==Timeof||(LA70_0>=Event && LA70_0<=Foldr)||LA70_0==Enum||(LA70_0>=Prev && LA70_0<=Real)||(LA70_0>=Time && LA70_0<=True)||(LA70_0>=Not && LA70_0<=Pre)||LA70_0==LeftSquareBracketVerticalLine||LA70_0==If||LA70_0==LeftParenthesis||LA70_0==HyphenMinus||LA70_0==RULE_REAL_LIT||LA70_0==RULE_INTEGER_LIT||LA70_0==RULE_ID) ) {
+            else if ( (LA70_0==Get_Property||(LA70_0>=Timefall && LA70_0<=Timerise)||LA70_0==Flatmap||(LA70_0>=Indices && LA70_0<=Latched)||LA70_0==Timeof||(LA70_0>=Event && LA70_0<=Foldr)||LA70_0==Enum||(LA70_0>=Prev && LA70_0<=Real)||(LA70_0>=Time && LA70_0<=True)||(LA70_0>=Not && LA70_0<=Pre)||LA70_0==LeftSquareBracketVerticalLine||LA70_0==If||LA70_0==LeftParenthesis||LA70_0==HyphenMinus||LA70_0==RULE_REAL_LIT||LA70_0==RULE_INTEGER_LIT||LA70_0==RULE_ID) ) {
                 alt70=2;
             }
             else {
@@ -12603,21 +12603,21 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalAgreeParser.g:5095:5: this_ForeachExpr_7= ruleForeachExpr
+                    // InternalAgreeParser.g:5095:5: this_FlatmapExpr_7= ruleFlatmapExpr
                     {
                     if ( state.backtracking==0 ) {
                        
-                              newCompositeNode(grammarAccess.getExistsExprAccess().getForeachExprParserRuleCall_1()); 
+                              newCompositeNode(grammarAccess.getExistsExprAccess().getFlatmapExprParserRuleCall_1()); 
                           
                     }
                     pushFollow(FollowSets000.FOLLOW_2);
-                    this_ForeachExpr_7=ruleForeachExpr();
+                    this_FlatmapExpr_7=ruleFlatmapExpr();
 
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                              current = this_ForeachExpr_7;
+                              current = this_FlatmapExpr_7;
                               afterParserOrEnumRuleCall();
                           
                     }
@@ -12646,28 +12646,28 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleExistsExpr"
 
 
-    // $ANTLR start "entryRuleForeachExpr"
-    // InternalAgreeParser.g:5111:1: entryRuleForeachExpr returns [EObject current=null] : iv_ruleForeachExpr= ruleForeachExpr EOF ;
-    public final EObject entryRuleForeachExpr() throws RecognitionException {
+    // $ANTLR start "entryRuleFlatmapExpr"
+    // InternalAgreeParser.g:5111:1: entryRuleFlatmapExpr returns [EObject current=null] : iv_ruleFlatmapExpr= ruleFlatmapExpr EOF ;
+    public final EObject entryRuleFlatmapExpr() throws RecognitionException {
         EObject current = null;
 
-        EObject iv_ruleForeachExpr = null;
+        EObject iv_ruleFlatmapExpr = null;
 
 
         try {
-            // InternalAgreeParser.g:5112:2: (iv_ruleForeachExpr= ruleForeachExpr EOF )
-            // InternalAgreeParser.g:5113:2: iv_ruleForeachExpr= ruleForeachExpr EOF
+            // InternalAgreeParser.g:5112:2: (iv_ruleFlatmapExpr= ruleFlatmapExpr EOF )
+            // InternalAgreeParser.g:5113:2: iv_ruleFlatmapExpr= ruleFlatmapExpr EOF
             {
             if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getForeachExprRule()); 
+               newCompositeNode(grammarAccess.getFlatmapExprRule()); 
             }
             pushFollow(FollowSets000.FOLLOW_1);
-            iv_ruleForeachExpr=ruleForeachExpr();
+            iv_ruleFlatmapExpr=ruleFlatmapExpr();
 
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
-               current =iv_ruleForeachExpr; 
+               current =iv_ruleFlatmapExpr; 
             }
             match(input,EOF,FollowSets000.FOLLOW_2); if (state.failed) return current;
 
@@ -12683,12 +12683,12 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "entryRuleForeachExpr"
+    // $ANTLR end "entryRuleFlatmapExpr"
 
 
-    // $ANTLR start "ruleForeachExpr"
-    // InternalAgreeParser.g:5120:1: ruleForeachExpr returns [EObject current=null] : ( ( () otherlv_1= Foreach ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FoldLeftExpr_7= ruleFoldLeftExpr ) ;
-    public final EObject ruleForeachExpr() throws RecognitionException {
+    // $ANTLR start "ruleFlatmapExpr"
+    // InternalAgreeParser.g:5120:1: ruleFlatmapExpr returns [EObject current=null] : ( ( () otherlv_1= Flatmap ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FoldLeftExpr_7= ruleFoldLeftExpr ) ;
+    public final EObject ruleFlatmapExpr() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_1=null;
@@ -12706,14 +12706,14 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // InternalAgreeParser.g:5123:28: ( ( ( () otherlv_1= Foreach ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FoldLeftExpr_7= ruleFoldLeftExpr ) )
-            // InternalAgreeParser.g:5124:1: ( ( () otherlv_1= Foreach ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FoldLeftExpr_7= ruleFoldLeftExpr )
+            // InternalAgreeParser.g:5123:28: ( ( ( () otherlv_1= Flatmap ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FoldLeftExpr_7= ruleFoldLeftExpr ) )
+            // InternalAgreeParser.g:5124:1: ( ( () otherlv_1= Flatmap ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FoldLeftExpr_7= ruleFoldLeftExpr )
             {
-            // InternalAgreeParser.g:5124:1: ( ( () otherlv_1= Foreach ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FoldLeftExpr_7= ruleFoldLeftExpr )
+            // InternalAgreeParser.g:5124:1: ( ( () otherlv_1= Flatmap ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) ) | this_FoldLeftExpr_7= ruleFoldLeftExpr )
             int alt71=2;
             int LA71_0 = input.LA(1);
 
-            if ( (LA71_0==Foreach) ) {
+            if ( (LA71_0==Flatmap) ) {
                 alt71=1;
             }
             else if ( (LA71_0==Get_Property||(LA71_0>=Timefall && LA71_0<=Timerise)||(LA71_0>=Indices && LA71_0<=Latched)||LA71_0==Timeof||(LA71_0>=Event && LA71_0<=Foldr)||LA71_0==Enum||(LA71_0>=Prev && LA71_0<=Real)||(LA71_0>=Time && LA71_0<=True)||(LA71_0>=Not && LA71_0<=Pre)||LA71_0==LeftSquareBracketVerticalLine||LA71_0==If||LA71_0==LeftParenthesis||LA71_0==HyphenMinus||LA71_0==RULE_REAL_LIT||LA71_0==RULE_INTEGER_LIT||LA71_0==RULE_ID) ) {
@@ -12728,10 +12728,10 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
             }
             switch (alt71) {
                 case 1 :
-                    // InternalAgreeParser.g:5124:2: ( () otherlv_1= Foreach ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) )
+                    // InternalAgreeParser.g:5124:2: ( () otherlv_1= Flatmap ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) )
                     {
-                    // InternalAgreeParser.g:5124:2: ( () otherlv_1= Foreach ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) )
-                    // InternalAgreeParser.g:5124:3: () otherlv_1= Foreach ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) )
+                    // InternalAgreeParser.g:5124:2: ( () otherlv_1= Flatmap ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) ) )
+                    // InternalAgreeParser.g:5124:3: () otherlv_1= Flatmap ( (lv_binding_2_0= ruleNamedID ) ) otherlv_3= In ( (lv_array_4_0= ruleExpr ) ) otherlv_5= Comma ( (lv_expr_6_0= ruleExpr ) )
                     {
                     // InternalAgreeParser.g:5124:3: ()
                     // InternalAgreeParser.g:5125:5: 
@@ -12739,17 +12739,17 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     if ( state.backtracking==0 ) {
 
                               current = forceCreateModelElement(
-                                  grammarAccess.getForeachExprAccess().getForeachExprAction_0_0(),
+                                  grammarAccess.getFlatmapExprAccess().getFlatmapExprAction_0_0(),
                                   current);
                           
                     }
 
                     }
 
-                    otherlv_1=(Token)match(input,Foreach,FollowSets000.FOLLOW_8); if (state.failed) return current;
+                    otherlv_1=(Token)match(input,Flatmap,FollowSets000.FOLLOW_8); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                          	newLeafNode(otherlv_1, grammarAccess.getForeachExprAccess().getForeachKeyword_0_1());
+                          	newLeafNode(otherlv_1, grammarAccess.getFlatmapExprAccess().getFlatmapKeyword_0_1());
                           
                     }
                     // InternalAgreeParser.g:5135:1: ( (lv_binding_2_0= ruleNamedID ) )
@@ -12760,7 +12760,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
                        
-                      	        newCompositeNode(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
+                      	        newCompositeNode(grammarAccess.getFlatmapExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
                       	    
                     }
                     pushFollow(FollowSets000.FOLLOW_67);
@@ -12771,7 +12771,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     if ( state.backtracking==0 ) {
 
                       	        if (current==null) {
-                      	            current = createModelElementForParent(grammarAccess.getForeachExprRule());
+                      	            current = createModelElementForParent(grammarAccess.getFlatmapExprRule());
                       	        }
                              		set(
                              			current, 
@@ -12790,7 +12790,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     otherlv_3=(Token)match(input,In,FollowSets000.FOLLOW_5); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                          	newLeafNode(otherlv_3, grammarAccess.getForeachExprAccess().getInKeyword_0_3());
+                          	newLeafNode(otherlv_3, grammarAccess.getFlatmapExprAccess().getInKeyword_0_3());
                           
                     }
                     // InternalAgreeParser.g:5158:1: ( (lv_array_4_0= ruleExpr ) )
@@ -12801,7 +12801,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
                        
-                      	        newCompositeNode(grammarAccess.getForeachExprAccess().getArrayExprParserRuleCall_0_4_0()); 
+                      	        newCompositeNode(grammarAccess.getFlatmapExprAccess().getArrayExprParserRuleCall_0_4_0()); 
                       	    
                     }
                     pushFollow(FollowSets000.FOLLOW_35);
@@ -12812,7 +12812,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     if ( state.backtracking==0 ) {
 
                       	        if (current==null) {
-                      	            current = createModelElementForParent(grammarAccess.getForeachExprRule());
+                      	            current = createModelElementForParent(grammarAccess.getFlatmapExprRule());
                       	        }
                              		set(
                              			current, 
@@ -12831,7 +12831,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     otherlv_5=(Token)match(input,Comma,FollowSets000.FOLLOW_5); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
 
-                          	newLeafNode(otherlv_5, grammarAccess.getForeachExprAccess().getCommaKeyword_0_5());
+                          	newLeafNode(otherlv_5, grammarAccess.getFlatmapExprAccess().getCommaKeyword_0_5());
                           
                     }
                     // InternalAgreeParser.g:5181:1: ( (lv_expr_6_0= ruleExpr ) )
@@ -12842,7 +12842,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
                        
-                      	        newCompositeNode(grammarAccess.getForeachExprAccess().getExprExprParserRuleCall_0_6_0()); 
+                      	        newCompositeNode(grammarAccess.getFlatmapExprAccess().getExprExprParserRuleCall_0_6_0()); 
                       	    
                     }
                     pushFollow(FollowSets000.FOLLOW_2);
@@ -12853,7 +12853,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     if ( state.backtracking==0 ) {
 
                       	        if (current==null) {
-                      	            current = createModelElementForParent(grammarAccess.getForeachExprRule());
+                      	            current = createModelElementForParent(grammarAccess.getFlatmapExprRule());
                       	        }
                              		set(
                              			current, 
@@ -12880,7 +12880,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     {
                     if ( state.backtracking==0 ) {
                        
-                              newCompositeNode(grammarAccess.getForeachExprAccess().getFoldLeftExprParserRuleCall_1()); 
+                              newCompositeNode(grammarAccess.getFlatmapExprAccess().getFoldLeftExprParserRuleCall_1()); 
                           
                     }
                     pushFollow(FollowSets000.FOLLOW_2);
@@ -12916,7 +12916,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    // $ANTLR end "ruleForeachExpr"
+    // $ANTLR end "ruleFlatmapExpr"
 
 
     // $ANTLR start "entryRuleFoldLeftExpr"
@@ -18498,7 +18498,7 @@ public class InternalAgreeParser extends AbstractInternalAntlrParser {
                     int alt98=2;
                     int LA98_0 = input.LA(1);
 
-                    if ( (LA98_0==Get_Property||(LA98_0>=Timefall && LA98_0<=Timerise)||LA98_0==Foreach||(LA98_0>=Indices && LA98_0<=Latched)||(LA98_0>=Exists && LA98_0<=Forall)||LA98_0==Timeof||(LA98_0>=Event && LA98_0<=Foldr)||LA98_0==Enum||(LA98_0>=Prev && LA98_0<=Real)||(LA98_0>=Time && LA98_0<=True)||(LA98_0>=Not && LA98_0<=Pre)||LA98_0==LeftSquareBracketVerticalLine||LA98_0==If||LA98_0==LeftParenthesis||LA98_0==HyphenMinus||LA98_0==RULE_REAL_LIT||LA98_0==RULE_INTEGER_LIT||LA98_0==RULE_ID) ) {
+                    if ( (LA98_0==Get_Property||(LA98_0>=Timefall && LA98_0<=Timerise)||LA98_0==Flatmap||(LA98_0>=Indices && LA98_0<=Latched)||(LA98_0>=Exists && LA98_0<=Forall)||LA98_0==Timeof||(LA98_0>=Event && LA98_0<=Foldr)||LA98_0==Enum||(LA98_0>=Prev && LA98_0<=Real)||(LA98_0>=Time && LA98_0<=True)||(LA98_0>=Not && LA98_0<=Pre)||LA98_0==LeftSquareBracketVerticalLine||LA98_0==If||LA98_0==LeftParenthesis||LA98_0==HyphenMinus||LA98_0==RULE_REAL_LIT||LA98_0==RULE_INTEGER_LIT||LA98_0==RULE_ID) ) {
                         alt98=1;
                     }
                     switch (alt98) {

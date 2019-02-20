@@ -4087,14 +4087,14 @@ public interface AgreePackage extends EPackage
   int EXISTS_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
   /**
-   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.ForeachExprImpl <em>Foreach Expr</em>}' class.
+   * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.FlatmapExprImpl <em>Flatmap Expr</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see com.rockwellcollins.atc.agree.agree.impl.ForeachExprImpl
-   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getForeachExpr()
+   * @see com.rockwellcollins.atc.agree.agree.impl.FlatmapExprImpl
+   * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFlatmapExpr()
    * @generated
    */
-  int FOREACH_EXPR = 68;
+  int FLATMAP_EXPR = 68;
 
   /**
    * The feature id for the '<em><b>Owned Element</b></em>' reference list.
@@ -4103,7 +4103,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FOREACH_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
+  int FLATMAP_EXPR__OWNED_ELEMENT = EXPR__OWNED_ELEMENT;
 
   /**
    * The feature id for the '<em><b>Owned Comment</b></em>' containment reference list.
@@ -4112,7 +4112,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FOREACH_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
+  int FLATMAP_EXPR__OWNED_COMMENT = EXPR__OWNED_COMMENT;
 
   /**
    * The feature id for the '<em><b>Binding</b></em>' containment reference.
@@ -4121,7 +4121,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FOREACH_EXPR__BINDING = EXPR_FEATURE_COUNT + 0;
+  int FLATMAP_EXPR__BINDING = EXPR_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Array</b></em>' containment reference.
@@ -4130,7 +4130,7 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FOREACH_EXPR__ARRAY = EXPR_FEATURE_COUNT + 1;
+  int FLATMAP_EXPR__ARRAY = EXPR_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Expr</b></em>' containment reference.
@@ -4139,16 +4139,16 @@ public interface AgreePackage extends EPackage
    * @generated
    * @ordered
    */
-  int FOREACH_EXPR__EXPR = EXPR_FEATURE_COUNT + 2;
+  int FLATMAP_EXPR__EXPR = EXPR_FEATURE_COUNT + 2;
 
   /**
-   * The number of structural features of the '<em>Foreach Expr</em>' class.
+   * The number of structural features of the '<em>Flatmap Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FOREACH_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
+  int FLATMAP_EXPR_FEATURE_COUNT = EXPR_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link com.rockwellcollins.atc.agree.agree.impl.FoldLeftExprImpl <em>Fold Left Expr</em>}' class.
@@ -7378,47 +7378,47 @@ public interface AgreePackage extends EPackage
   EReference getExistsExpr_Expr();
 
   /**
-   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.ForeachExpr <em>Foreach Expr</em>}'.
+   * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.FlatmapExpr <em>Flatmap Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Foreach Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ForeachExpr
+   * @return the meta object for class '<em>Flatmap Expr</em>'.
+   * @see com.rockwellcollins.atc.agree.agree.FlatmapExpr
    * @generated
    */
-  EClass getForeachExpr();
+  EClass getFlatmapExpr();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ForeachExpr#getBinding <em>Binding</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.FlatmapExpr#getBinding <em>Binding</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Binding</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ForeachExpr#getBinding()
-   * @see #getForeachExpr()
+   * @see com.rockwellcollins.atc.agree.agree.FlatmapExpr#getBinding()
+   * @see #getFlatmapExpr()
    * @generated
    */
-  EReference getForeachExpr_Binding();
+  EReference getFlatmapExpr_Binding();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ForeachExpr#getArray <em>Array</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.FlatmapExpr#getArray <em>Array</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Array</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ForeachExpr#getArray()
-   * @see #getForeachExpr()
+   * @see com.rockwellcollins.atc.agree.agree.FlatmapExpr#getArray()
+   * @see #getFlatmapExpr()
    * @generated
    */
-  EReference getForeachExpr_Array();
+  EReference getFlatmapExpr_Array();
 
   /**
-   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.ForeachExpr#getExpr <em>Expr</em>}'.
+   * Returns the meta object for the containment reference '{@link com.rockwellcollins.atc.agree.agree.FlatmapExpr#getExpr <em>Expr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference '<em>Expr</em>'.
-   * @see com.rockwellcollins.atc.agree.agree.ForeachExpr#getExpr()
-   * @see #getForeachExpr()
+   * @see com.rockwellcollins.atc.agree.agree.FlatmapExpr#getExpr()
+   * @see #getFlatmapExpr()
    * @generated
    */
-  EReference getForeachExpr_Expr();
+  EReference getFlatmapExpr_Expr();
 
   /**
    * Returns the meta object for class '{@link com.rockwellcollins.atc.agree.agree.FoldLeftExpr <em>Fold Left Expr</em>}'.
@@ -9722,14 +9722,14 @@ public interface AgreePackage extends EPackage
     EReference EXISTS_EXPR__EXPR = eINSTANCE.getExistsExpr_Expr();
 
     /**
-     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.ForeachExprImpl <em>Foreach Expr</em>}' class.
+     * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.FlatmapExprImpl <em>Flatmap Expr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see com.rockwellcollins.atc.agree.agree.impl.ForeachExprImpl
-     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getForeachExpr()
+     * @see com.rockwellcollins.atc.agree.agree.impl.FlatmapExprImpl
+     * @see com.rockwellcollins.atc.agree.agree.impl.AgreePackageImpl#getFlatmapExpr()
      * @generated
      */
-    EClass FOREACH_EXPR = eINSTANCE.getForeachExpr();
+    EClass FLATMAP_EXPR = eINSTANCE.getFlatmapExpr();
 
     /**
      * The meta object literal for the '<em><b>Binding</b></em>' containment reference feature.
@@ -9737,7 +9737,7 @@ public interface AgreePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference FOREACH_EXPR__BINDING = eINSTANCE.getForeachExpr_Binding();
+    EReference FLATMAP_EXPR__BINDING = eINSTANCE.getFlatmapExpr_Binding();
 
     /**
      * The meta object literal for the '<em><b>Array</b></em>' containment reference feature.
@@ -9745,7 +9745,7 @@ public interface AgreePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference FOREACH_EXPR__ARRAY = eINSTANCE.getForeachExpr_Array();
+    EReference FLATMAP_EXPR__ARRAY = eINSTANCE.getFlatmapExpr_Array();
 
     /**
      * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
@@ -9753,7 +9753,7 @@ public interface AgreePackage extends EPackage
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference FOREACH_EXPR__EXPR = eINSTANCE.getForeachExpr_Expr();
+    EReference FLATMAP_EXPR__EXPR = eINSTANCE.getFlatmapExpr_Expr();
 
     /**
      * The meta object literal for the '{@link com.rockwellcollins.atc.agree.agree.impl.FoldLeftExprImpl <em>Fold Left Expr</em>}' class.

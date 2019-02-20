@@ -135,7 +135,7 @@ import com.rockwellcollins.atc.agree.services.AgreeGrammarAccess;
 		tokenNameToValue.put("Becomes", "'becomes'");
 		tokenNameToValue.put("Binding", "'binding'");
 		tokenNameToValue.put("Compute", "'compute'");
-		tokenNameToValue.put("Foreach", "'foreach'");
+		tokenNameToValue.put("Flatmap", "'flatmap'");
 		tokenNameToValue.put("Implies", "'implies'");
 		tokenNameToValue.put("Indices", "'indices'");
 		tokenNameToValue.put("Latched", "'latched'");
@@ -1174,25 +1174,25 @@ finally {
 
 
 
-// Entry rule entryRuleForeachExpr
-entryRuleForeachExpr 
+// Entry rule entryRuleFlatmapExpr
+entryRuleFlatmapExpr 
 :
-{ before(grammarAccess.getForeachExprRule()); }
-	 ruleForeachExpr
-{ after(grammarAccess.getForeachExprRule()); } 
+{ before(grammarAccess.getFlatmapExprRule()); }
+	 ruleFlatmapExpr
+{ after(grammarAccess.getFlatmapExprRule()); } 
 	 EOF 
 ;
 
-// Rule ForeachExpr
-ruleForeachExpr 
+// Rule FlatmapExpr
+ruleFlatmapExpr 
     @init {
 		int stackSize = keepStackSize();
     }
     :
 (
-{ before(grammarAccess.getForeachExprAccess().getAlternatives()); }
-(rule__ForeachExpr__Alternatives)
-{ after(grammarAccess.getForeachExprAccess().getAlternatives()); }
+{ before(grammarAccess.getFlatmapExprAccess().getAlternatives()); }
+(rule__FlatmapExpr__Alternatives)
+{ after(grammarAccess.getFlatmapExprAccess().getAlternatives()); }
 )
 
 ;
@@ -3726,9 +3726,9 @@ rule__ExistsExpr__Alternatives
 )
 
     |(
-{ before(grammarAccess.getExistsExprAccess().getForeachExprParserRuleCall_1()); }
-	ruleForeachExpr
-{ after(grammarAccess.getExistsExprAccess().getForeachExprParserRuleCall_1()); }
+{ before(grammarAccess.getExistsExprAccess().getFlatmapExprParserRuleCall_1()); }
+	ruleFlatmapExpr
+{ after(grammarAccess.getExistsExprAccess().getFlatmapExprParserRuleCall_1()); }
 )
 
 ;
@@ -3736,21 +3736,21 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__Alternatives
+rule__FlatmapExpr__Alternatives
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getGroup_0()); }
-(rule__ForeachExpr__Group_0__0)
-{ after(grammarAccess.getForeachExprAccess().getGroup_0()); }
+{ before(grammarAccess.getFlatmapExprAccess().getGroup_0()); }
+(rule__FlatmapExpr__Group_0__0)
+{ after(grammarAccess.getFlatmapExprAccess().getGroup_0()); }
 )
 
     |(
-{ before(grammarAccess.getForeachExprAccess().getFoldLeftExprParserRuleCall_1()); }
+{ before(grammarAccess.getFlatmapExprAccess().getFoldLeftExprParserRuleCall_1()); }
 	ruleFoldLeftExpr
-{ after(grammarAccess.getForeachExprAccess().getFoldLeftExprParserRuleCall_1()); }
+{ after(grammarAccess.getFlatmapExprAccess().getFoldLeftExprParserRuleCall_1()); }
 )
 
 ;
@@ -17800,60 +17800,29 @@ finally {
 
 
 
-rule__ForeachExpr__Group_0__0
+rule__FlatmapExpr__Group_0__0
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__ForeachExpr__Group_0__0__Impl
-	rule__ForeachExpr__Group_0__1
+	rule__FlatmapExpr__Group_0__0__Impl
+	rule__FlatmapExpr__Group_0__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__Group_0__0__Impl
+rule__FlatmapExpr__Group_0__0__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getForeachExprAction_0_0()); }
+{ before(grammarAccess.getFlatmapExprAccess().getFlatmapExprAction_0_0()); }
 (
 
 )
-{ after(grammarAccess.getForeachExprAccess().getForeachExprAction_0_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__ForeachExpr__Group_0__1
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-	rule__ForeachExpr__Group_0__1__Impl
-	rule__ForeachExpr__Group_0__2
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__ForeachExpr__Group_0__1__Impl
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getForeachExprAccess().getForeachKeyword_0_1()); }
-
-	Foreach 
-
-{ after(grammarAccess.getForeachExprAccess().getForeachKeyword_0_1()); }
+{ after(grammarAccess.getFlatmapExprAccess().getFlatmapExprAction_0_0()); }
 )
 
 ;
@@ -17862,27 +17831,29 @@ finally {
 }
 
 
-rule__ForeachExpr__Group_0__2
+rule__FlatmapExpr__Group_0__1
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__ForeachExpr__Group_0__2__Impl
-	rule__ForeachExpr__Group_0__3
+	rule__FlatmapExpr__Group_0__1__Impl
+	rule__FlatmapExpr__Group_0__2
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__Group_0__2__Impl
+rule__FlatmapExpr__Group_0__1__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getBindingAssignment_0_2()); }
-(rule__ForeachExpr__BindingAssignment_0_2)
-{ after(grammarAccess.getForeachExprAccess().getBindingAssignment_0_2()); }
+{ before(grammarAccess.getFlatmapExprAccess().getFlatmapKeyword_0_1()); }
+
+	Flatmap 
+
+{ after(grammarAccess.getFlatmapExprAccess().getFlatmapKeyword_0_1()); }
 )
 
 ;
@@ -17891,29 +17862,58 @@ finally {
 }
 
 
-rule__ForeachExpr__Group_0__3
+rule__FlatmapExpr__Group_0__2
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__ForeachExpr__Group_0__3__Impl
-	rule__ForeachExpr__Group_0__4
+	rule__FlatmapExpr__Group_0__2__Impl
+	rule__FlatmapExpr__Group_0__3
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__Group_0__3__Impl
+rule__FlatmapExpr__Group_0__2__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getInKeyword_0_3()); }
+{ before(grammarAccess.getFlatmapExprAccess().getBindingAssignment_0_2()); }
+(rule__FlatmapExpr__BindingAssignment_0_2)
+{ after(grammarAccess.getFlatmapExprAccess().getBindingAssignment_0_2()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+rule__FlatmapExpr__Group_0__3
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__FlatmapExpr__Group_0__3__Impl
+	rule__FlatmapExpr__Group_0__4
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__FlatmapExpr__Group_0__3__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getFlatmapExprAccess().getInKeyword_0_3()); }
 
 	In 
 
-{ after(grammarAccess.getForeachExprAccess().getInKeyword_0_3()); }
+{ after(grammarAccess.getFlatmapExprAccess().getInKeyword_0_3()); }
 )
 
 ;
@@ -17922,27 +17922,27 @@ finally {
 }
 
 
-rule__ForeachExpr__Group_0__4
+rule__FlatmapExpr__Group_0__4
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__ForeachExpr__Group_0__4__Impl
-	rule__ForeachExpr__Group_0__5
+	rule__FlatmapExpr__Group_0__4__Impl
+	rule__FlatmapExpr__Group_0__5
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__Group_0__4__Impl
+rule__FlatmapExpr__Group_0__4__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getArrayAssignment_0_4()); }
-(rule__ForeachExpr__ArrayAssignment_0_4)
-{ after(grammarAccess.getForeachExprAccess().getArrayAssignment_0_4()); }
+{ before(grammarAccess.getFlatmapExprAccess().getArrayAssignment_0_4()); }
+(rule__FlatmapExpr__ArrayAssignment_0_4)
+{ after(grammarAccess.getFlatmapExprAccess().getArrayAssignment_0_4()); }
 )
 
 ;
@@ -17951,29 +17951,29 @@ finally {
 }
 
 
-rule__ForeachExpr__Group_0__5
+rule__FlatmapExpr__Group_0__5
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__ForeachExpr__Group_0__5__Impl
-	rule__ForeachExpr__Group_0__6
+	rule__FlatmapExpr__Group_0__5__Impl
+	rule__FlatmapExpr__Group_0__6
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__Group_0__5__Impl
+rule__FlatmapExpr__Group_0__5__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getCommaKeyword_0_5()); }
+{ before(grammarAccess.getFlatmapExprAccess().getCommaKeyword_0_5()); }
 
 	Comma 
 
-{ after(grammarAccess.getForeachExprAccess().getCommaKeyword_0_5()); }
+{ after(grammarAccess.getFlatmapExprAccess().getCommaKeyword_0_5()); }
 )
 
 ;
@@ -17982,26 +17982,26 @@ finally {
 }
 
 
-rule__ForeachExpr__Group_0__6
+rule__FlatmapExpr__Group_0__6
     @init {
 		int stackSize = keepStackSize();
     }
 :
-	rule__ForeachExpr__Group_0__6__Impl
+	rule__FlatmapExpr__Group_0__6__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__Group_0__6__Impl
+rule__FlatmapExpr__Group_0__6__Impl
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getExprAssignment_0_6()); }
-(rule__ForeachExpr__ExprAssignment_0_6)
-{ after(grammarAccess.getForeachExprAccess().getExprAssignment_0_6()); }
+{ before(grammarAccess.getFlatmapExprAccess().getExprAssignment_0_6()); }
+(rule__FlatmapExpr__ExprAssignment_0_6)
+{ after(grammarAccess.getFlatmapExprAccess().getExprAssignment_0_6()); }
 )
 
 ;
@@ -32182,14 +32182,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__BindingAssignment_0_2
+rule__FlatmapExpr__BindingAssignment_0_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); }
-	ruleNamedID{ after(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); }
+{ before(grammarAccess.getFlatmapExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); }
+	ruleNamedID{ after(grammarAccess.getFlatmapExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); }
 )
 
 ;
@@ -32197,14 +32197,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__ArrayAssignment_0_4
+rule__FlatmapExpr__ArrayAssignment_0_4
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getArrayExprParserRuleCall_0_4_0()); }
-	ruleExpr{ after(grammarAccess.getForeachExprAccess().getArrayExprParserRuleCall_0_4_0()); }
+{ before(grammarAccess.getFlatmapExprAccess().getArrayExprParserRuleCall_0_4_0()); }
+	ruleExpr{ after(grammarAccess.getFlatmapExprAccess().getArrayExprParserRuleCall_0_4_0()); }
 )
 
 ;
@@ -32212,14 +32212,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ForeachExpr__ExprAssignment_0_6
+rule__FlatmapExpr__ExprAssignment_0_6
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getForeachExprAccess().getExprExprParserRuleCall_0_6_0()); }
-	ruleExpr{ after(grammarAccess.getForeachExprAccess().getExprExprParserRuleCall_0_6_0()); }
+{ before(grammarAccess.getFlatmapExprAccess().getExprExprParserRuleCall_0_6_0()); }
+	ruleExpr{ after(grammarAccess.getFlatmapExprAccess().getExprExprParserRuleCall_0_6_0()); }
 )
 
 ;

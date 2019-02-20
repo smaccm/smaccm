@@ -52,11 +52,11 @@ import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.ExistsExpr;
+import com.rockwellcollins.atc.agree.agree.FlatmapExpr;
 import com.rockwellcollins.atc.agree.agree.FnDef;
 import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
 import com.rockwellcollins.atc.agree.agree.FoldRightExpr;
 import com.rockwellcollins.atc.agree.agree.ForallExpr;
-import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.InputStatement;
 import com.rockwellcollins.atc.agree.agree.LibraryFnDef;
@@ -305,7 +305,7 @@ public class AgreeScopeProvider extends org.osate.xtext.aadl2.properties.scoping
 		return Scopes.scopeFor(bs);
 	}
 
-	IScope scope_NamedElement(ForeachExpr ctx, EReference ref) {
+	IScope scope_NamedElement(FlatmapExpr ctx, EReference ref) {
 		IScope prevScope = prevScope(ctx, ref);
 		List<EObject> bs = new ArrayList<EObject>();
 		bs.add(ctx.getBinding());

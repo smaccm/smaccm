@@ -62,11 +62,11 @@
 'exists'=44
 'external'=20
 'false'=56
+'flatmap'=33
 'floor'=57
 'foldl'=58
 'foldr'=59
 'forall'=45
-'foreach'=33
 'fun'=88
 'guarantee'=12
 'holds'=60

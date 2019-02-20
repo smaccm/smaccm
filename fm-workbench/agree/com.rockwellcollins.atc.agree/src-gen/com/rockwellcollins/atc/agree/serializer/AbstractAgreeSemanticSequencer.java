@@ -31,12 +31,12 @@ import com.rockwellcollins.atc.agree.agree.EnumStatement;
 import com.rockwellcollins.atc.agree.agree.EqStatement;
 import com.rockwellcollins.atc.agree.agree.EventExpr;
 import com.rockwellcollins.atc.agree.agree.ExistsExpr;
+import com.rockwellcollins.atc.agree.agree.FlatmapExpr;
 import com.rockwellcollins.atc.agree.agree.FloorCast;
 import com.rockwellcollins.atc.agree.agree.FnDef;
 import com.rockwellcollins.atc.agree.agree.FoldLeftExpr;
 import com.rockwellcollins.atc.agree.agree.FoldRightExpr;
 import com.rockwellcollins.atc.agree.agree.ForallExpr;
-import com.rockwellcollins.atc.agree.agree.ForeachExpr;
 import com.rockwellcollins.atc.agree.agree.GetPropertyExpr;
 import com.rockwellcollins.atc.agree.agree.GuaranteeStatement;
 import com.rockwellcollins.atc.agree.agree.IfThenElseExpr;
@@ -309,6 +309,9 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 			case AgreePackage.EXISTS_EXPR:
 				sequence_ExistsExpr(context, (ExistsExpr) semanticObject); 
 				return; 
+			case AgreePackage.FLATMAP_EXPR:
+				sequence_FlatmapExpr(context, (FlatmapExpr) semanticObject); 
+				return; 
 			case AgreePackage.FLOOR_CAST:
 				sequence_TermExpr(context, (FloorCast) semanticObject); 
 				return; 
@@ -323,9 +326,6 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 				return; 
 			case AgreePackage.FORALL_EXPR:
 				sequence_ForallExpr(context, (ForallExpr) semanticObject); 
-				return; 
-			case AgreePackage.FOREACH_EXPR:
-				sequence_ForeachExpr(context, (ForeachExpr) semanticObject); 
 				return; 
 			case AgreePackage.GET_PROPERTY_EXPR:
 				sequence_PreDefFnExpr(context, (GetPropertyExpr) semanticObject); 
@@ -494,7 +494,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns BinaryExpr
 	 *     ForallExpr returns BinaryExpr
 	 *     ExistsExpr returns BinaryExpr
-	 *     ForeachExpr returns BinaryExpr
+	 *     FlatmapExpr returns BinaryExpr
 	 *     FoldLeftExpr returns BinaryExpr
 	 *     FoldRightExpr returns BinaryExpr
 	 *     ArrowExpr returns BinaryExpr
@@ -627,7 +627,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns ArrayLiteralExpr
 	 *     ForallExpr returns ArrayLiteralExpr
 	 *     ExistsExpr returns ArrayLiteralExpr
-	 *     ForeachExpr returns ArrayLiteralExpr
+	 *     FlatmapExpr returns ArrayLiteralExpr
 	 *     FoldLeftExpr returns ArrayLiteralExpr
 	 *     FoldRightExpr returns ArrayLiteralExpr
 	 *     ArrowExpr returns ArrayLiteralExpr
@@ -678,7 +678,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns ArraySubExpr
 	 *     ForallExpr returns ArraySubExpr
 	 *     ExistsExpr returns ArraySubExpr
-	 *     ForeachExpr returns ArraySubExpr
+	 *     FlatmapExpr returns ArraySubExpr
 	 *     FoldLeftExpr returns ArraySubExpr
 	 *     FoldRightExpr returns ArraySubExpr
 	 *     ArrowExpr returns ArraySubExpr
@@ -737,7 +737,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns ArrayUpdateExpr
 	 *     ForallExpr returns ArrayUpdateExpr
 	 *     ExistsExpr returns ArrayUpdateExpr
-	 *     ForeachExpr returns ArrayUpdateExpr
+	 *     FlatmapExpr returns ArrayUpdateExpr
 	 *     FoldLeftExpr returns ArrayUpdateExpr
 	 *     FoldRightExpr returns ArrayUpdateExpr
 	 *     ArrowExpr returns ArrayUpdateExpr
@@ -916,7 +916,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns ExistsExpr
 	 *     ForallExpr returns ExistsExpr
 	 *     ExistsExpr returns ExistsExpr
-	 *     ForeachExpr returns ExistsExpr
+	 *     FlatmapExpr returns ExistsExpr
 	 *     FoldLeftExpr returns ExistsExpr
 	 *     FoldRightExpr returns ExistsExpr
 	 *     ArrowExpr returns ExistsExpr
@@ -974,6 +974,68 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
+	 *     Element returns FlatmapExpr
+	 *     Expr returns FlatmapExpr
+	 *     ForallExpr returns FlatmapExpr
+	 *     ExistsExpr returns FlatmapExpr
+	 *     FlatmapExpr returns FlatmapExpr
+	 *     FoldLeftExpr returns FlatmapExpr
+	 *     FoldRightExpr returns FlatmapExpr
+	 *     ArrowExpr returns FlatmapExpr
+	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     ImpliesExpr returns FlatmapExpr
+	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     EquivExpr returns FlatmapExpr
+	 *     EquivExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     OrExpr returns FlatmapExpr
+	 *     OrExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     AndExpr returns FlatmapExpr
+	 *     AndExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     RelateExpr returns FlatmapExpr
+	 *     RelateExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     AddSubExpr returns FlatmapExpr
+	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     MultDivExpr returns FlatmapExpr
+	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     PowerExpr returns FlatmapExpr
+	 *     PowerExpr.BinaryExpr_1_0_0_0 returns FlatmapExpr
+	 *     UnaryExpr returns FlatmapExpr
+	 *     IfThenElseExpr returns FlatmapExpr
+	 *     PreDefFnExpr returns FlatmapExpr
+	 *     ArrayUpdateExpr returns FlatmapExpr
+	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns FlatmapExpr
+	 *     RecordUpdateExpr returns FlatmapExpr
+	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns FlatmapExpr
+	 *     ArraySubExpr returns FlatmapExpr
+	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns FlatmapExpr
+	 *     TagExpr returns FlatmapExpr
+	 *     TagExpr.TagExpr_1_0 returns FlatmapExpr
+	 *     SelectionExpr returns FlatmapExpr
+	 *     SelectionExpr.SelectionExpr_1_0_0 returns FlatmapExpr
+	 *     TermExpr returns FlatmapExpr
+	 *
+	 * Constraint:
+	 *     (binding=NamedID array=Expr expr=Expr)
+	 */
+	protected void sequence_FlatmapExpr(ISerializationContext context, FlatmapExpr semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.FLATMAP_EXPR__BINDING) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FLATMAP_EXPR__BINDING));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.FLATMAP_EXPR__ARRAY) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FLATMAP_EXPR__ARRAY));
+			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.FLATMAP_EXPR__EXPR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FLATMAP_EXPR__EXPR));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getFlatmapExprAccess().getBindingNamedIDParserRuleCall_0_2_0(), semanticObject.getBinding());
+		feeder.accept(grammarAccess.getFlatmapExprAccess().getArrayExprParserRuleCall_0_4_0(), semanticObject.getArray());
+		feeder.accept(grammarAccess.getFlatmapExprAccess().getExprExprParserRuleCall_0_6_0(), semanticObject.getExpr());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     NamedElement returns FnDef
 	 *     Element returns FnDef
 	 *     SpecStatement returns FnDef
@@ -995,7 +1057,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns FoldLeftExpr
 	 *     ForallExpr returns FoldLeftExpr
 	 *     ExistsExpr returns FoldLeftExpr
-	 *     ForeachExpr returns FoldLeftExpr
+	 *     FlatmapExpr returns FoldLeftExpr
 	 *     FoldLeftExpr returns FoldLeftExpr
 	 *     FoldRightExpr returns FoldLeftExpr
 	 *     ArrowExpr returns FoldLeftExpr
@@ -1063,7 +1125,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns FoldRightExpr
 	 *     ForallExpr returns FoldRightExpr
 	 *     ExistsExpr returns FoldRightExpr
-	 *     ForeachExpr returns FoldRightExpr
+	 *     FlatmapExpr returns FoldRightExpr
 	 *     FoldLeftExpr returns FoldRightExpr
 	 *     FoldRightExpr returns FoldRightExpr
 	 *     ArrowExpr returns FoldRightExpr
@@ -1131,7 +1193,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns ForallExpr
 	 *     ForallExpr returns ForallExpr
 	 *     ExistsExpr returns ForallExpr
-	 *     ForeachExpr returns ForallExpr
+	 *     FlatmapExpr returns ForallExpr
 	 *     FoldLeftExpr returns ForallExpr
 	 *     FoldRightExpr returns ForallExpr
 	 *     ArrowExpr returns ForallExpr
@@ -1189,73 +1251,11 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	
 	/**
 	 * Contexts:
-	 *     Element returns ForeachExpr
-	 *     Expr returns ForeachExpr
-	 *     ForallExpr returns ForeachExpr
-	 *     ExistsExpr returns ForeachExpr
-	 *     ForeachExpr returns ForeachExpr
-	 *     FoldLeftExpr returns ForeachExpr
-	 *     FoldRightExpr returns ForeachExpr
-	 *     ArrowExpr returns ForeachExpr
-	 *     ArrowExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     ImpliesExpr returns ForeachExpr
-	 *     ImpliesExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     EquivExpr returns ForeachExpr
-	 *     EquivExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     OrExpr returns ForeachExpr
-	 *     OrExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     AndExpr returns ForeachExpr
-	 *     AndExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     RelateExpr returns ForeachExpr
-	 *     RelateExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     AddSubExpr returns ForeachExpr
-	 *     AddSubExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     MultDivExpr returns ForeachExpr
-	 *     MultDivExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     PowerExpr returns ForeachExpr
-	 *     PowerExpr.BinaryExpr_1_0_0_0 returns ForeachExpr
-	 *     UnaryExpr returns ForeachExpr
-	 *     IfThenElseExpr returns ForeachExpr
-	 *     PreDefFnExpr returns ForeachExpr
-	 *     ArrayUpdateExpr returns ForeachExpr
-	 *     ArrayUpdateExpr.ArrayUpdateExpr_1_0_0_0 returns ForeachExpr
-	 *     RecordUpdateExpr returns ForeachExpr
-	 *     RecordUpdateExpr.RecordUpdateExpr_1_0_0 returns ForeachExpr
-	 *     ArraySubExpr returns ForeachExpr
-	 *     ArraySubExpr.ArraySubExpr_1_0_0 returns ForeachExpr
-	 *     TagExpr returns ForeachExpr
-	 *     TagExpr.TagExpr_1_0 returns ForeachExpr
-	 *     SelectionExpr returns ForeachExpr
-	 *     SelectionExpr.SelectionExpr_1_0_0 returns ForeachExpr
-	 *     TermExpr returns ForeachExpr
-	 *
-	 * Constraint:
-	 *     (binding=NamedID array=Expr expr=Expr)
-	 */
-	protected void sequence_ForeachExpr(ISerializationContext context, ForeachExpr semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.FOREACH_EXPR__BINDING) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FOREACH_EXPR__BINDING));
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.FOREACH_EXPR__ARRAY) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FOREACH_EXPR__ARRAY));
-			if (transientValues.isValueTransient(semanticObject, AgreePackage.Literals.FOREACH_EXPR__EXPR) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, AgreePackage.Literals.FOREACH_EXPR__EXPR));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0(), semanticObject.getBinding());
-		feeder.accept(grammarAccess.getForeachExprAccess().getArrayExprParserRuleCall_0_4_0(), semanticObject.getArray());
-		feeder.accept(grammarAccess.getForeachExprAccess().getExprExprParserRuleCall_0_6_0(), semanticObject.getExpr());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     Element returns IfThenElseExpr
 	 *     Expr returns IfThenElseExpr
 	 *     ForallExpr returns IfThenElseExpr
 	 *     ExistsExpr returns IfThenElseExpr
-	 *     ForeachExpr returns IfThenElseExpr
+	 *     FlatmapExpr returns IfThenElseExpr
 	 *     FoldLeftExpr returns IfThenElseExpr
 	 *     FoldRightExpr returns IfThenElseExpr
 	 *     ArrowExpr returns IfThenElseExpr
@@ -1571,7 +1571,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns GetPropertyExpr
 	 *     ForallExpr returns GetPropertyExpr
 	 *     ExistsExpr returns GetPropertyExpr
-	 *     ForeachExpr returns GetPropertyExpr
+	 *     FlatmapExpr returns GetPropertyExpr
 	 *     FoldLeftExpr returns GetPropertyExpr
 	 *     FoldRightExpr returns GetPropertyExpr
 	 *     ArrowExpr returns GetPropertyExpr
@@ -1630,7 +1630,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns PrevExpr
 	 *     ForallExpr returns PrevExpr
 	 *     ExistsExpr returns PrevExpr
-	 *     ForeachExpr returns PrevExpr
+	 *     FlatmapExpr returns PrevExpr
 	 *     FoldLeftExpr returns PrevExpr
 	 *     FoldRightExpr returns PrevExpr
 	 *     ArrowExpr returns PrevExpr
@@ -1754,7 +1754,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns RecordUpdateExpr
 	 *     ForallExpr returns RecordUpdateExpr
 	 *     ExistsExpr returns RecordUpdateExpr
-	 *     ForeachExpr returns RecordUpdateExpr
+	 *     FlatmapExpr returns RecordUpdateExpr
 	 *     FoldLeftExpr returns RecordUpdateExpr
 	 *     FoldRightExpr returns RecordUpdateExpr
 	 *     ArrowExpr returns RecordUpdateExpr
@@ -1816,7 +1816,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns SelectionExpr
 	 *     ForallExpr returns SelectionExpr
 	 *     ExistsExpr returns SelectionExpr
-	 *     ForeachExpr returns SelectionExpr
+	 *     FlatmapExpr returns SelectionExpr
 	 *     FoldLeftExpr returns SelectionExpr
 	 *     FoldRightExpr returns SelectionExpr
 	 *     ArrowExpr returns SelectionExpr
@@ -2027,7 +2027,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns TagExpr
 	 *     ForallExpr returns TagExpr
 	 *     ExistsExpr returns TagExpr
-	 *     ForeachExpr returns TagExpr
+	 *     FlatmapExpr returns TagExpr
 	 *     FoldLeftExpr returns TagExpr
 	 *     FoldRightExpr returns TagExpr
 	 *     ArrowExpr returns TagExpr
@@ -2086,7 +2086,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns BoolLitExpr
 	 *     ForallExpr returns BoolLitExpr
 	 *     ExistsExpr returns BoolLitExpr
-	 *     ForeachExpr returns BoolLitExpr
+	 *     FlatmapExpr returns BoolLitExpr
 	 *     FoldLeftExpr returns BoolLitExpr
 	 *     FoldRightExpr returns BoolLitExpr
 	 *     ArrowExpr returns BoolLitExpr
@@ -2142,7 +2142,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns CallExpr
 	 *     ForallExpr returns CallExpr
 	 *     ExistsExpr returns CallExpr
-	 *     ForeachExpr returns CallExpr
+	 *     FlatmapExpr returns CallExpr
 	 *     FoldLeftExpr returns CallExpr
 	 *     FoldRightExpr returns CallExpr
 	 *     ArrowExpr returns CallExpr
@@ -2192,7 +2192,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns EnumLitExpr
 	 *     ForallExpr returns EnumLitExpr
 	 *     ExistsExpr returns EnumLitExpr
-	 *     ForeachExpr returns EnumLitExpr
+	 *     FlatmapExpr returns EnumLitExpr
 	 *     FoldLeftExpr returns EnumLitExpr
 	 *     FoldRightExpr returns EnumLitExpr
 	 *     ArrowExpr returns EnumLitExpr
@@ -2251,7 +2251,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns EventExpr
 	 *     ForallExpr returns EventExpr
 	 *     ExistsExpr returns EventExpr
-	 *     ForeachExpr returns EventExpr
+	 *     FlatmapExpr returns EventExpr
 	 *     FoldLeftExpr returns EventExpr
 	 *     FoldRightExpr returns EventExpr
 	 *     ArrowExpr returns EventExpr
@@ -2307,7 +2307,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns FloorCast
 	 *     ForallExpr returns FloorCast
 	 *     ExistsExpr returns FloorCast
-	 *     ForeachExpr returns FloorCast
+	 *     FlatmapExpr returns FloorCast
 	 *     FoldLeftExpr returns FloorCast
 	 *     FoldRightExpr returns FloorCast
 	 *     ArrowExpr returns FloorCast
@@ -2363,7 +2363,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns IndicesExpr
 	 *     ForallExpr returns IndicesExpr
 	 *     ExistsExpr returns IndicesExpr
-	 *     ForeachExpr returns IndicesExpr
+	 *     FlatmapExpr returns IndicesExpr
 	 *     FoldLeftExpr returns IndicesExpr
 	 *     FoldRightExpr returns IndicesExpr
 	 *     ArrowExpr returns IndicesExpr
@@ -2419,7 +2419,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns IntLitExpr
 	 *     ForallExpr returns IntLitExpr
 	 *     ExistsExpr returns IntLitExpr
-	 *     ForeachExpr returns IntLitExpr
+	 *     FlatmapExpr returns IntLitExpr
 	 *     FoldLeftExpr returns IntLitExpr
 	 *     FoldRightExpr returns IntLitExpr
 	 *     ArrowExpr returns IntLitExpr
@@ -2475,7 +2475,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns LatchedExpr
 	 *     ForallExpr returns LatchedExpr
 	 *     ExistsExpr returns LatchedExpr
-	 *     ForeachExpr returns LatchedExpr
+	 *     FlatmapExpr returns LatchedExpr
 	 *     FoldLeftExpr returns LatchedExpr
 	 *     FoldRightExpr returns LatchedExpr
 	 *     ArrowExpr returns LatchedExpr
@@ -2531,7 +2531,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns NamedElmExpr
 	 *     ForallExpr returns NamedElmExpr
 	 *     ExistsExpr returns NamedElmExpr
-	 *     ForeachExpr returns NamedElmExpr
+	 *     FlatmapExpr returns NamedElmExpr
 	 *     FoldLeftExpr returns NamedElmExpr
 	 *     FoldRightExpr returns NamedElmExpr
 	 *     ArrowExpr returns NamedElmExpr
@@ -2587,7 +2587,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns PreExpr
 	 *     ForallExpr returns PreExpr
 	 *     ExistsExpr returns PreExpr
-	 *     ForeachExpr returns PreExpr
+	 *     FlatmapExpr returns PreExpr
 	 *     FoldLeftExpr returns PreExpr
 	 *     FoldRightExpr returns PreExpr
 	 *     ArrowExpr returns PreExpr
@@ -2643,7 +2643,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns RealCast
 	 *     ForallExpr returns RealCast
 	 *     ExistsExpr returns RealCast
-	 *     ForeachExpr returns RealCast
+	 *     FlatmapExpr returns RealCast
 	 *     FoldLeftExpr returns RealCast
 	 *     FoldRightExpr returns RealCast
 	 *     ArrowExpr returns RealCast
@@ -2699,7 +2699,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns RealLitExpr
 	 *     ForallExpr returns RealLitExpr
 	 *     ExistsExpr returns RealLitExpr
-	 *     ForeachExpr returns RealLitExpr
+	 *     FlatmapExpr returns RealLitExpr
 	 *     FoldLeftExpr returns RealLitExpr
 	 *     FoldRightExpr returns RealLitExpr
 	 *     ArrowExpr returns RealLitExpr
@@ -2755,7 +2755,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns RecordLitExpr
 	 *     ForallExpr returns RecordLitExpr
 	 *     ExistsExpr returns RecordLitExpr
-	 *     ForeachExpr returns RecordLitExpr
+	 *     FlatmapExpr returns RecordLitExpr
 	 *     FoldLeftExpr returns RecordLitExpr
 	 *     FoldRightExpr returns RecordLitExpr
 	 *     ArrowExpr returns RecordLitExpr
@@ -2805,7 +2805,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns TimeExpr
 	 *     ForallExpr returns TimeExpr
 	 *     ExistsExpr returns TimeExpr
-	 *     ForeachExpr returns TimeExpr
+	 *     FlatmapExpr returns TimeExpr
 	 *     FoldLeftExpr returns TimeExpr
 	 *     FoldRightExpr returns TimeExpr
 	 *     ArrowExpr returns TimeExpr
@@ -2855,7 +2855,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns TimeFallExpr
 	 *     ForallExpr returns TimeFallExpr
 	 *     ExistsExpr returns TimeFallExpr
-	 *     ForeachExpr returns TimeFallExpr
+	 *     FlatmapExpr returns TimeFallExpr
 	 *     FoldLeftExpr returns TimeFallExpr
 	 *     FoldRightExpr returns TimeFallExpr
 	 *     ArrowExpr returns TimeFallExpr
@@ -2911,7 +2911,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns TimeOfExpr
 	 *     ForallExpr returns TimeOfExpr
 	 *     ExistsExpr returns TimeOfExpr
-	 *     ForeachExpr returns TimeOfExpr
+	 *     FlatmapExpr returns TimeOfExpr
 	 *     FoldLeftExpr returns TimeOfExpr
 	 *     FoldRightExpr returns TimeOfExpr
 	 *     ArrowExpr returns TimeOfExpr
@@ -2967,7 +2967,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns TimeRiseExpr
 	 *     ForallExpr returns TimeRiseExpr
 	 *     ExistsExpr returns TimeRiseExpr
-	 *     ForeachExpr returns TimeRiseExpr
+	 *     FlatmapExpr returns TimeRiseExpr
 	 *     FoldLeftExpr returns TimeRiseExpr
 	 *     FoldRightExpr returns TimeRiseExpr
 	 *     ArrowExpr returns TimeRiseExpr
@@ -3130,7 +3130,7 @@ public abstract class AbstractAgreeSemanticSequencer extends PropertiesSemanticS
 	 *     Expr returns UnaryExpr
 	 *     ForallExpr returns UnaryExpr
 	 *     ExistsExpr returns UnaryExpr
-	 *     ForeachExpr returns UnaryExpr
+	 *     FlatmapExpr returns UnaryExpr
 	 *     FoldLeftExpr returns UnaryExpr
 	 *     FoldRightExpr returns UnaryExpr
 	 *     ArrowExpr returns UnaryExpr

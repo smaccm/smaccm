@@ -62,7 +62,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getPrimTypesAccess().getAlternatives(), "rule__PrimTypes__Alternatives");
 					put(grammarAccess.getForallExprAccess().getAlternatives(), "rule__ForallExpr__Alternatives");
 					put(grammarAccess.getExistsExprAccess().getAlternatives(), "rule__ExistsExpr__Alternatives");
-					put(grammarAccess.getForeachExprAccess().getAlternatives(), "rule__ForeachExpr__Alternatives");
+					put(grammarAccess.getFlatmapExprAccess().getAlternatives(), "rule__FlatmapExpr__Alternatives");
 					put(grammarAccess.getFoldLeftExprAccess().getAlternatives(), "rule__FoldLeftExpr__Alternatives");
 					put(grammarAccess.getFoldRightExprAccess().getAlternatives(), "rule__FoldRightExpr__Alternatives");
 					put(grammarAccess.getRelateOpAccess().getAlternatives(), "rule__RelateOp__Alternatives");
@@ -190,7 +190,7 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getEnumStatementAccess().getGroup_5(), "rule__EnumStatement__Group_5__0");
 					put(grammarAccess.getForallExprAccess().getGroup_0(), "rule__ForallExpr__Group_0__0");
 					put(grammarAccess.getExistsExprAccess().getGroup_0(), "rule__ExistsExpr__Group_0__0");
-					put(grammarAccess.getForeachExprAccess().getGroup_0(), "rule__ForeachExpr__Group_0__0");
+					put(grammarAccess.getFlatmapExprAccess().getGroup_0(), "rule__FlatmapExpr__Group_0__0");
 					put(grammarAccess.getFoldLeftExprAccess().getGroup_0(), "rule__FoldLeftExpr__Group_0__0");
 					put(grammarAccess.getFoldRightExprAccess().getGroup_0(), "rule__FoldRightExpr__Group_0__0");
 					put(grammarAccess.getArrowExprAccess().getGroup(), "rule__ArrowExpr__Group__0");
@@ -480,9 +480,9 @@ public class AgreeParser extends AbstractPartialContentAssistParser {
 					put(grammarAccess.getExistsExprAccess().getBindingAssignment_0_2(), "rule__ExistsExpr__BindingAssignment_0_2");
 					put(grammarAccess.getExistsExprAccess().getArrayAssignment_0_4(), "rule__ExistsExpr__ArrayAssignment_0_4");
 					put(grammarAccess.getExistsExprAccess().getExprAssignment_0_6(), "rule__ExistsExpr__ExprAssignment_0_6");
-					put(grammarAccess.getForeachExprAccess().getBindingAssignment_0_2(), "rule__ForeachExpr__BindingAssignment_0_2");
-					put(grammarAccess.getForeachExprAccess().getArrayAssignment_0_4(), "rule__ForeachExpr__ArrayAssignment_0_4");
-					put(grammarAccess.getForeachExprAccess().getExprAssignment_0_6(), "rule__ForeachExpr__ExprAssignment_0_6");
+					put(grammarAccess.getFlatmapExprAccess().getBindingAssignment_0_2(), "rule__FlatmapExpr__BindingAssignment_0_2");
+					put(grammarAccess.getFlatmapExprAccess().getArrayAssignment_0_4(), "rule__FlatmapExpr__ArrayAssignment_0_4");
+					put(grammarAccess.getFlatmapExprAccess().getExprAssignment_0_6(), "rule__FlatmapExpr__ExprAssignment_0_6");
 					put(grammarAccess.getFoldLeftExprAccess().getBindingAssignment_0_2(), "rule__FoldLeftExpr__BindingAssignment_0_2");
 					put(grammarAccess.getFoldLeftExprAccess().getArrayAssignment_0_4(), "rule__FoldLeftExpr__ArrayAssignment_0_4");
 					put(grammarAccess.getFoldLeftExprAccess().getAccumulatorAssignment_0_6(), "rule__FoldLeftExpr__AccumulatorAssignment_0_6");

@@ -635,13 +635,13 @@ public interface AgreeFactory extends EFactory
   ExistsExpr createExistsExpr();
 
   /**
-   * Returns a new object of class '<em>Foreach Expr</em>'.
+   * Returns a new object of class '<em>Flatmap Expr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Foreach Expr</em>'.
+   * @return a new object of class '<em>Flatmap Expr</em>'.
    * @generated
    */
-  ForeachExpr createForeachExpr();
+  FlatmapExpr createFlatmapExpr();
 
   /**
    * Returns a new object of class '<em>Fold Left Expr</em>'.

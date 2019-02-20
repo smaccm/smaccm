@@ -212,10 +212,10 @@ ForallExpr returns Expr:
 
 ExistsExpr returns Expr:
     {ExistsExpr} 'exists' binding=NamedID  'in' array=Expr ',' expr=Expr
-    | ForeachExpr;
+    | FlatmapExpr;
     
-ForeachExpr returns Expr:
-    {ForeachExpr} 'foreach' binding=NamedID  'in' array=Expr ',' expr=Expr
+FlatmapExpr returns Expr:
+    {FlatmapExpr} 'flatmap' binding=NamedID  'in' array=Expr ',' expr=Expr
     | FoldLeftExpr;
 
 FoldLeftExpr returns Expr:

@@ -26,7 +26,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Linearization", "Get_Property", "Asynchronous", "Agree_input", "Exclusively", "Classifier", "Connection", "Condition", "Guarantee", "Initially", "No_simult", "Parameter", "Reference", "Synchrony", "Calendar", "Constant", "External", "Ordering", "Property", "Sporadic", "Timefall", "Timerise", "Whenever", "KW__INSERT", "KW__REMOVE", "Applies", "Becomes", "Binding", "Compute", "Foreach", "Implies", "Indices", "Latched", "Returns", "KW__COUNT", "Always", "Assert", "Assign", "Assume", "During", "Exists", "Forall", "Jitter", "Occurs", "Raises", "Simult", "Struct", "Timeof", "Within", "Const", "Delta", "Event", "False", "Floor", "Foldl", "Foldr", "Holds", "Lemma", "Modes", "Occur", "Times", "KW__CLK", "Bool", "Each", "Else", "Enum", "Into", "Lift", "Node", "Over", "Prev", "Real", "Then", "This", "Time", "True", "Type", "When", "With", "PlusSignEqualsSignGreaterThanSign", "LessThanSignEqualsSignGreaterThanSign", "IAT", "And", "Div", "Fun", "Int", "Let", "Mod", "Not", "Pre", "Tel", "Var", "ExclamationMarkEqualsSign", "HyphenMinusGreaterThanSign", "FullStopFullStop", "ColonColon", "ColonEqualsSign", "LessThanSignEqualsSign", "LessThanSignGreaterThanSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "LeftSquareBracketVerticalLine", "Eq", "If", "In", "Or", "To", "VerticalLineRightSquareBracket", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "RightCurlyBracket", "RULE_SL_COMMENT", "RULE_DIGIT", "RULE_EXPONENT", "RULE_INT_EXPONENT", "RULE_REAL_LIT", "RULE_BASED_INTEGER", "RULE_INTEGER_LIT", "RULE_EXTENDED_DIGIT", "RULE_STRING", "RULE_ID", "RULE_WS"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Linearization", "Get_Property", "Asynchronous", "Agree_input", "Exclusively", "Classifier", "Connection", "Condition", "Guarantee", "Initially", "No_simult", "Parameter", "Reference", "Synchrony", "Calendar", "Constant", "External", "Ordering", "Property", "Sporadic", "Timefall", "Timerise", "Whenever", "KW__INSERT", "KW__REMOVE", "Applies", "Becomes", "Binding", "Compute", "Flatmap", "Implies", "Indices", "Latched", "Returns", "KW__COUNT", "Always", "Assert", "Assign", "Assume", "During", "Exists", "Forall", "Jitter", "Occurs", "Raises", "Simult", "Struct", "Timeof", "Within", "Const", "Delta", "Event", "False", "Floor", "Foldl", "Foldr", "Holds", "Lemma", "Modes", "Occur", "Times", "KW__CLK", "Bool", "Each", "Else", "Enum", "Into", "Lift", "Node", "Over", "Prev", "Real", "Then", "This", "Time", "True", "Type", "When", "With", "PlusSignEqualsSignGreaterThanSign", "LessThanSignEqualsSignGreaterThanSign", "IAT", "And", "Div", "Fun", "Int", "Let", "Mod", "Not", "Pre", "Tel", "Var", "ExclamationMarkEqualsSign", "HyphenMinusGreaterThanSign", "FullStopFullStop", "ColonColon", "ColonEqualsSign", "LessThanSignEqualsSign", "LessThanSignGreaterThanSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "LeftSquareBracketVerticalLine", "Eq", "If", "In", "Or", "To", "VerticalLineRightSquareBracket", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "RightCurlyBracket", "RULE_SL_COMMENT", "RULE_DIGIT", "RULE_EXPONENT", "RULE_INT_EXPONENT", "RULE_REAL_LIT", "RULE_BASED_INTEGER", "RULE_INTEGER_LIT", "RULE_EXTENDED_DIGIT", "RULE_STRING", "RULE_ID", "RULE_WS"
     };
     public static final int Enum=69;
     public static final int Each=67;
@@ -157,13 +157,13 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     public static final int RULE_WS=140;
     public static final int LeftCurlyBracket=128;
     public static final int CircumflexAccent=127;
+    public static final int Flatmap=33;
     public static final int LeftSquareBracketVerticalLine=105;
     public static final int Exists=44;
     public static final int Compute=32;
     public static final int Times=64;
     public static final int Timefall=24;
     public static final int Within=52;
-    public static final int Foreach=33;
     public static final int Let=90;
     public static final int Tel=94;
 
@@ -288,7 +288,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     		tokenNameToValue.put("Becomes", "'becomes'");
     		tokenNameToValue.put("Binding", "'binding'");
     		tokenNameToValue.put("Compute", "'compute'");
-    		tokenNameToValue.put("Foreach", "'foreach'");
+    		tokenNameToValue.put("Flatmap", "'flatmap'");
     		tokenNameToValue.put("Implies", "'implies'");
     		tokenNameToValue.put("Indices", "'indices'");
     		tokenNameToValue.put("Latched", "'latched'");
@@ -3306,23 +3306,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "ruleExistsExpr"
 
 
-    // $ANTLR start "entryRuleForeachExpr"
-    // InternalAgreeParser.g:1178:1: entryRuleForeachExpr : ruleForeachExpr EOF ;
-    public final void entryRuleForeachExpr() throws RecognitionException {
+    // $ANTLR start "entryRuleFlatmapExpr"
+    // InternalAgreeParser.g:1178:1: entryRuleFlatmapExpr : ruleFlatmapExpr EOF ;
+    public final void entryRuleFlatmapExpr() throws RecognitionException {
         try {
-            // InternalAgreeParser.g:1179:1: ( ruleForeachExpr EOF )
-            // InternalAgreeParser.g:1180:1: ruleForeachExpr EOF
+            // InternalAgreeParser.g:1179:1: ( ruleFlatmapExpr EOF )
+            // InternalAgreeParser.g:1180:1: ruleFlatmapExpr EOF
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprRule()); 
+               before(grammarAccess.getFlatmapExprRule()); 
             }
             pushFollow(FollowSets000.FOLLOW_1);
-            ruleForeachExpr();
+            ruleFlatmapExpr();
 
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprRule()); 
+               after(grammarAccess.getFlatmapExprRule()); 
             }
             match(input,EOF,FollowSets000.FOLLOW_2); if (state.failed) return ;
 
@@ -3337,30 +3337,30 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "entryRuleForeachExpr"
+    // $ANTLR end "entryRuleFlatmapExpr"
 
 
-    // $ANTLR start "ruleForeachExpr"
-    // InternalAgreeParser.g:1187:1: ruleForeachExpr : ( ( rule__ForeachExpr__Alternatives ) ) ;
-    public final void ruleForeachExpr() throws RecognitionException {
+    // $ANTLR start "ruleFlatmapExpr"
+    // InternalAgreeParser.g:1187:1: ruleFlatmapExpr : ( ( rule__FlatmapExpr__Alternatives ) ) ;
+    public final void ruleFlatmapExpr() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:1191:5: ( ( ( rule__ForeachExpr__Alternatives ) ) )
-            // InternalAgreeParser.g:1192:1: ( ( rule__ForeachExpr__Alternatives ) )
+            // InternalAgreeParser.g:1191:5: ( ( ( rule__FlatmapExpr__Alternatives ) ) )
+            // InternalAgreeParser.g:1192:1: ( ( rule__FlatmapExpr__Alternatives ) )
             {
-            // InternalAgreeParser.g:1192:1: ( ( rule__ForeachExpr__Alternatives ) )
-            // InternalAgreeParser.g:1193:1: ( rule__ForeachExpr__Alternatives )
+            // InternalAgreeParser.g:1192:1: ( ( rule__FlatmapExpr__Alternatives ) )
+            // InternalAgreeParser.g:1193:1: ( rule__FlatmapExpr__Alternatives )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getAlternatives()); 
+               before(grammarAccess.getFlatmapExprAccess().getAlternatives()); 
             }
-            // InternalAgreeParser.g:1194:1: ( rule__ForeachExpr__Alternatives )
-            // InternalAgreeParser.g:1194:2: rule__ForeachExpr__Alternatives
+            // InternalAgreeParser.g:1194:1: ( rule__FlatmapExpr__Alternatives )
+            // InternalAgreeParser.g:1194:2: rule__FlatmapExpr__Alternatives
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__Alternatives();
+            rule__FlatmapExpr__Alternatives();
 
             state._fsp--;
             if (state.failed) return ;
@@ -3368,7 +3368,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getAlternatives()); 
+               after(grammarAccess.getFlatmapExprAccess().getAlternatives()); 
             }
 
             }
@@ -3388,7 +3388,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "ruleForeachExpr"
+    // $ANTLR end "ruleFlatmapExpr"
 
 
     // $ANTLR start "entryRuleFoldLeftExpr"
@@ -9663,7 +9663,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             int alt4=2;
             int LA4_0 = input.LA(1);
 
-            if ( (LA4_0==Get_Property||(LA4_0>=Timefall && LA4_0<=Timerise)||LA4_0==Foreach||(LA4_0>=Indices && LA4_0<=Latched)||(LA4_0>=Exists && LA4_0<=Forall)||LA4_0==Timeof||(LA4_0>=Event && LA4_0<=Foldr)||LA4_0==Enum||(LA4_0>=Prev && LA4_0<=Real)||(LA4_0>=Time && LA4_0<=True)||(LA4_0>=Not && LA4_0<=Pre)||LA4_0==LeftSquareBracketVerticalLine||LA4_0==If||LA4_0==LeftParenthesis||LA4_0==HyphenMinus||LA4_0==RULE_REAL_LIT||LA4_0==RULE_INTEGER_LIT||LA4_0==RULE_ID) ) {
+            if ( (LA4_0==Get_Property||(LA4_0>=Timefall && LA4_0<=Timerise)||LA4_0==Flatmap||(LA4_0>=Indices && LA4_0<=Latched)||(LA4_0>=Exists && LA4_0<=Forall)||LA4_0==Timeof||(LA4_0>=Event && LA4_0<=Foldr)||LA4_0==Enum||(LA4_0>=Prev && LA4_0<=Real)||(LA4_0>=Time && LA4_0<=True)||(LA4_0>=Not && LA4_0<=Pre)||LA4_0==LeftSquareBracketVerticalLine||LA4_0==If||LA4_0==LeftParenthesis||LA4_0==HyphenMinus||LA4_0==RULE_REAL_LIT||LA4_0==RULE_INTEGER_LIT||LA4_0==RULE_ID) ) {
                 alt4=1;
             }
             else if ( (LA4_0==Condition||LA4_0==Whenever||LA4_0==Always||LA4_0==When) ) {
@@ -9763,7 +9763,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             int alt5=2;
             int LA5_0 = input.LA(1);
 
-            if ( (LA5_0==Get_Property||(LA5_0>=Timefall && LA5_0<=Timerise)||LA5_0==Foreach||(LA5_0>=Indices && LA5_0<=Latched)||(LA5_0>=Exists && LA5_0<=Forall)||LA5_0==Timeof||(LA5_0>=Event && LA5_0<=Foldr)||LA5_0==Enum||(LA5_0>=Prev && LA5_0<=Real)||(LA5_0>=Time && LA5_0<=True)||(LA5_0>=Not && LA5_0<=Pre)||LA5_0==LeftSquareBracketVerticalLine||LA5_0==If||LA5_0==LeftParenthesis||LA5_0==HyphenMinus||LA5_0==RULE_REAL_LIT||LA5_0==RULE_INTEGER_LIT||LA5_0==RULE_ID) ) {
+            if ( (LA5_0==Get_Property||(LA5_0>=Timefall && LA5_0<=Timerise)||LA5_0==Flatmap||(LA5_0>=Indices && LA5_0<=Latched)||(LA5_0>=Exists && LA5_0<=Forall)||LA5_0==Timeof||(LA5_0>=Event && LA5_0<=Foldr)||LA5_0==Enum||(LA5_0>=Prev && LA5_0<=Real)||(LA5_0>=Time && LA5_0<=True)||(LA5_0>=Not && LA5_0<=Pre)||LA5_0==LeftSquareBracketVerticalLine||LA5_0==If||LA5_0==LeftParenthesis||LA5_0==HyphenMinus||LA5_0==RULE_REAL_LIT||LA5_0==RULE_INTEGER_LIT||LA5_0==RULE_ID) ) {
                 alt5=1;
             }
             else if ( (LA5_0==Condition||LA5_0==Whenever||LA5_0==Always||LA5_0==When) ) {
@@ -9863,7 +9863,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             int alt6=2;
             int LA6_0 = input.LA(1);
 
-            if ( (LA6_0==Get_Property||(LA6_0>=Timefall && LA6_0<=Timerise)||LA6_0==Foreach||(LA6_0>=Indices && LA6_0<=Latched)||(LA6_0>=Exists && LA6_0<=Forall)||LA6_0==Timeof||(LA6_0>=Event && LA6_0<=Foldr)||LA6_0==Enum||(LA6_0>=Prev && LA6_0<=Real)||(LA6_0>=Time && LA6_0<=True)||(LA6_0>=Not && LA6_0<=Pre)||LA6_0==LeftSquareBracketVerticalLine||LA6_0==If||LA6_0==LeftParenthesis||LA6_0==HyphenMinus||LA6_0==RULE_REAL_LIT||LA6_0==RULE_INTEGER_LIT||LA6_0==RULE_ID) ) {
+            if ( (LA6_0==Get_Property||(LA6_0>=Timefall && LA6_0<=Timerise)||LA6_0==Flatmap||(LA6_0>=Indices && LA6_0<=Latched)||(LA6_0>=Exists && LA6_0<=Forall)||LA6_0==Timeof||(LA6_0>=Event && LA6_0<=Foldr)||LA6_0==Enum||(LA6_0>=Prev && LA6_0<=Real)||(LA6_0>=Time && LA6_0<=True)||(LA6_0>=Not && LA6_0<=Pre)||LA6_0==LeftSquareBracketVerticalLine||LA6_0==If||LA6_0==LeftParenthesis||LA6_0==HyphenMinus||LA6_0==RULE_REAL_LIT||LA6_0==RULE_INTEGER_LIT||LA6_0==RULE_ID) ) {
                 alt6=1;
             }
             else if ( (LA6_0==Condition||LA6_0==Whenever||LA6_0==Always||LA6_0==When) ) {
@@ -9963,7 +9963,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             int alt7=2;
             int LA7_0 = input.LA(1);
 
-            if ( (LA7_0==Get_Property||(LA7_0>=Timefall && LA7_0<=Timerise)||LA7_0==Foreach||(LA7_0>=Indices && LA7_0<=Latched)||(LA7_0>=Exists && LA7_0<=Forall)||LA7_0==Timeof||(LA7_0>=Event && LA7_0<=Foldr)||LA7_0==Enum||(LA7_0>=Prev && LA7_0<=Real)||(LA7_0>=Time && LA7_0<=True)||(LA7_0>=Not && LA7_0<=Pre)||LA7_0==LeftSquareBracketVerticalLine||LA7_0==If||LA7_0==LeftParenthesis||LA7_0==HyphenMinus||LA7_0==RULE_REAL_LIT||LA7_0==RULE_INTEGER_LIT||LA7_0==RULE_ID) ) {
+            if ( (LA7_0==Get_Property||(LA7_0>=Timefall && LA7_0<=Timerise)||LA7_0==Flatmap||(LA7_0>=Indices && LA7_0<=Latched)||(LA7_0>=Exists && LA7_0<=Forall)||LA7_0==Timeof||(LA7_0>=Event && LA7_0<=Foldr)||LA7_0==Enum||(LA7_0>=Prev && LA7_0<=Real)||(LA7_0>=Time && LA7_0<=True)||(LA7_0>=Not && LA7_0<=Pre)||LA7_0==LeftSquareBracketVerticalLine||LA7_0==If||LA7_0==LeftParenthesis||LA7_0==HyphenMinus||LA7_0==RULE_REAL_LIT||LA7_0==RULE_INTEGER_LIT||LA7_0==RULE_ID) ) {
                 alt7=1;
             }
             else if ( (LA7_0==Condition||LA7_0==Whenever||LA7_0==Always||LA7_0==When) ) {
@@ -11879,7 +11879,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             if ( (LA23_0==Forall) ) {
                 alt23=1;
             }
-            else if ( (LA23_0==Get_Property||(LA23_0>=Timefall && LA23_0<=Timerise)||LA23_0==Foreach||(LA23_0>=Indices && LA23_0<=Latched)||LA23_0==Exists||LA23_0==Timeof||(LA23_0>=Event && LA23_0<=Foldr)||LA23_0==Enum||(LA23_0>=Prev && LA23_0<=Real)||(LA23_0>=Time && LA23_0<=True)||(LA23_0>=Not && LA23_0<=Pre)||LA23_0==LeftSquareBracketVerticalLine||LA23_0==If||LA23_0==LeftParenthesis||LA23_0==HyphenMinus||LA23_0==RULE_REAL_LIT||LA23_0==RULE_INTEGER_LIT||LA23_0==RULE_ID) ) {
+            else if ( (LA23_0==Get_Property||(LA23_0>=Timefall && LA23_0<=Timerise)||LA23_0==Flatmap||(LA23_0>=Indices && LA23_0<=Latched)||LA23_0==Exists||LA23_0==Timeof||(LA23_0>=Event && LA23_0<=Foldr)||LA23_0==Enum||(LA23_0>=Prev && LA23_0<=Real)||(LA23_0>=Time && LA23_0<=True)||(LA23_0>=Not && LA23_0<=Pre)||LA23_0==LeftSquareBracketVerticalLine||LA23_0==If||LA23_0==LeftParenthesis||LA23_0==HyphenMinus||LA23_0==RULE_REAL_LIT||LA23_0==RULE_INTEGER_LIT||LA23_0==RULE_ID) ) {
                 alt23=2;
             }
             else {
@@ -11960,20 +11960,20 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__ExistsExpr__Alternatives"
-    // InternalAgreeParser.g:3717:1: rule__ExistsExpr__Alternatives : ( ( ( rule__ExistsExpr__Group_0__0 ) ) | ( ruleForeachExpr ) );
+    // InternalAgreeParser.g:3717:1: rule__ExistsExpr__Alternatives : ( ( ( rule__ExistsExpr__Group_0__0 ) ) | ( ruleFlatmapExpr ) );
     public final void rule__ExistsExpr__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:3721:1: ( ( ( rule__ExistsExpr__Group_0__0 ) ) | ( ruleForeachExpr ) )
+            // InternalAgreeParser.g:3721:1: ( ( ( rule__ExistsExpr__Group_0__0 ) ) | ( ruleFlatmapExpr ) )
             int alt24=2;
             int LA24_0 = input.LA(1);
 
             if ( (LA24_0==Exists) ) {
                 alt24=1;
             }
-            else if ( (LA24_0==Get_Property||(LA24_0>=Timefall && LA24_0<=Timerise)||LA24_0==Foreach||(LA24_0>=Indices && LA24_0<=Latched)||LA24_0==Timeof||(LA24_0>=Event && LA24_0<=Foldr)||LA24_0==Enum||(LA24_0>=Prev && LA24_0<=Real)||(LA24_0>=Time && LA24_0<=True)||(LA24_0>=Not && LA24_0<=Pre)||LA24_0==LeftSquareBracketVerticalLine||LA24_0==If||LA24_0==LeftParenthesis||LA24_0==HyphenMinus||LA24_0==RULE_REAL_LIT||LA24_0==RULE_INTEGER_LIT||LA24_0==RULE_ID) ) {
+            else if ( (LA24_0==Get_Property||(LA24_0>=Timefall && LA24_0<=Timerise)||LA24_0==Flatmap||(LA24_0>=Indices && LA24_0<=Latched)||LA24_0==Timeof||(LA24_0>=Event && LA24_0<=Foldr)||LA24_0==Enum||(LA24_0>=Prev && LA24_0<=Real)||(LA24_0>=Time && LA24_0<=True)||(LA24_0>=Not && LA24_0<=Pre)||LA24_0==LeftSquareBracketVerticalLine||LA24_0==If||LA24_0==LeftParenthesis||LA24_0==HyphenMinus||LA24_0==RULE_REAL_LIT||LA24_0==RULE_INTEGER_LIT||LA24_0==RULE_ID) ) {
                 alt24=2;
             }
             else {
@@ -12014,21 +12014,21 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                     }
                     break;
                 case 2 :
-                    // InternalAgreeParser.g:3728:6: ( ruleForeachExpr )
+                    // InternalAgreeParser.g:3728:6: ( ruleFlatmapExpr )
                     {
-                    // InternalAgreeParser.g:3728:6: ( ruleForeachExpr )
-                    // InternalAgreeParser.g:3729:1: ruleForeachExpr
+                    // InternalAgreeParser.g:3728:6: ( ruleFlatmapExpr )
+                    // InternalAgreeParser.g:3729:1: ruleFlatmapExpr
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getExistsExprAccess().getForeachExprParserRuleCall_1()); 
+                       before(grammarAccess.getExistsExprAccess().getFlatmapExprParserRuleCall_1()); 
                     }
                     pushFollow(FollowSets000.FOLLOW_2);
-                    ruleForeachExpr();
+                    ruleFlatmapExpr();
 
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getExistsExprAccess().getForeachExprParserRuleCall_1()); 
+                       after(grammarAccess.getExistsExprAccess().getFlatmapExprParserRuleCall_1()); 
                     }
 
                     }
@@ -12053,18 +12053,18 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ExistsExpr__Alternatives"
 
 
-    // $ANTLR start "rule__ForeachExpr__Alternatives"
-    // InternalAgreeParser.g:3739:1: rule__ForeachExpr__Alternatives : ( ( ( rule__ForeachExpr__Group_0__0 ) ) | ( ruleFoldLeftExpr ) );
-    public final void rule__ForeachExpr__Alternatives() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Alternatives"
+    // InternalAgreeParser.g:3739:1: rule__FlatmapExpr__Alternatives : ( ( ( rule__FlatmapExpr__Group_0__0 ) ) | ( ruleFoldLeftExpr ) );
+    public final void rule__FlatmapExpr__Alternatives() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:3743:1: ( ( ( rule__ForeachExpr__Group_0__0 ) ) | ( ruleFoldLeftExpr ) )
+            // InternalAgreeParser.g:3743:1: ( ( ( rule__FlatmapExpr__Group_0__0 ) ) | ( ruleFoldLeftExpr ) )
             int alt25=2;
             int LA25_0 = input.LA(1);
 
-            if ( (LA25_0==Foreach) ) {
+            if ( (LA25_0==Flatmap) ) {
                 alt25=1;
             }
             else if ( (LA25_0==Get_Property||(LA25_0>=Timefall && LA25_0<=Timerise)||(LA25_0>=Indices && LA25_0<=Latched)||LA25_0==Timeof||(LA25_0>=Event && LA25_0<=Foldr)||LA25_0==Enum||(LA25_0>=Prev && LA25_0<=Real)||(LA25_0>=Time && LA25_0<=True)||(LA25_0>=Not && LA25_0<=Pre)||LA25_0==LeftSquareBracketVerticalLine||LA25_0==If||LA25_0==LeftParenthesis||LA25_0==HyphenMinus||LA25_0==RULE_REAL_LIT||LA25_0==RULE_INTEGER_LIT||LA25_0==RULE_ID) ) {
@@ -12079,19 +12079,19 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
             switch (alt25) {
                 case 1 :
-                    // InternalAgreeParser.g:3744:1: ( ( rule__ForeachExpr__Group_0__0 ) )
+                    // InternalAgreeParser.g:3744:1: ( ( rule__FlatmapExpr__Group_0__0 ) )
                     {
-                    // InternalAgreeParser.g:3744:1: ( ( rule__ForeachExpr__Group_0__0 ) )
-                    // InternalAgreeParser.g:3745:1: ( rule__ForeachExpr__Group_0__0 )
+                    // InternalAgreeParser.g:3744:1: ( ( rule__FlatmapExpr__Group_0__0 ) )
+                    // InternalAgreeParser.g:3745:1: ( rule__FlatmapExpr__Group_0__0 )
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getForeachExprAccess().getGroup_0()); 
+                       before(grammarAccess.getFlatmapExprAccess().getGroup_0()); 
                     }
-                    // InternalAgreeParser.g:3746:1: ( rule__ForeachExpr__Group_0__0 )
-                    // InternalAgreeParser.g:3746:2: rule__ForeachExpr__Group_0__0
+                    // InternalAgreeParser.g:3746:1: ( rule__FlatmapExpr__Group_0__0 )
+                    // InternalAgreeParser.g:3746:2: rule__FlatmapExpr__Group_0__0
                     {
                     pushFollow(FollowSets000.FOLLOW_2);
-                    rule__ForeachExpr__Group_0__0();
+                    rule__FlatmapExpr__Group_0__0();
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -12099,7 +12099,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                     }
 
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getForeachExprAccess().getGroup_0()); 
+                       after(grammarAccess.getFlatmapExprAccess().getGroup_0()); 
                     }
 
                     }
@@ -12114,7 +12114,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                     // InternalAgreeParser.g:3751:1: ruleFoldLeftExpr
                     {
                     if ( state.backtracking==0 ) {
-                       before(grammarAccess.getForeachExprAccess().getFoldLeftExprParserRuleCall_1()); 
+                       before(grammarAccess.getFlatmapExprAccess().getFoldLeftExprParserRuleCall_1()); 
                     }
                     pushFollow(FollowSets000.FOLLOW_2);
                     ruleFoldLeftExpr();
@@ -12122,7 +12122,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
                     state._fsp--;
                     if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                       after(grammarAccess.getForeachExprAccess().getFoldLeftExprParserRuleCall_1()); 
+                       after(grammarAccess.getFlatmapExprAccess().getFoldLeftExprParserRuleCall_1()); 
                     }
 
                     }
@@ -12144,7 +12144,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Alternatives"
+    // $ANTLR end "rule__FlatmapExpr__Alternatives"
 
 
     // $ANTLR start "rule__FoldLeftExpr__Alternatives"
@@ -50161,23 +50161,23 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ExistsExpr__Group_0__6__Impl"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__0"
-    // InternalAgreeParser.g:17803:1: rule__ForeachExpr__Group_0__0 : rule__ForeachExpr__Group_0__0__Impl rule__ForeachExpr__Group_0__1 ;
-    public final void rule__ForeachExpr__Group_0__0() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__0"
+    // InternalAgreeParser.g:17803:1: rule__FlatmapExpr__Group_0__0 : rule__FlatmapExpr__Group_0__0__Impl rule__FlatmapExpr__Group_0__1 ;
+    public final void rule__FlatmapExpr__Group_0__0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17807:1: ( rule__ForeachExpr__Group_0__0__Impl rule__ForeachExpr__Group_0__1 )
-            // InternalAgreeParser.g:17808:2: rule__ForeachExpr__Group_0__0__Impl rule__ForeachExpr__Group_0__1
+            // InternalAgreeParser.g:17807:1: ( rule__FlatmapExpr__Group_0__0__Impl rule__FlatmapExpr__Group_0__1 )
+            // InternalAgreeParser.g:17808:2: rule__FlatmapExpr__Group_0__0__Impl rule__FlatmapExpr__Group_0__1
             {
             pushFollow(FollowSets000.FOLLOW_83);
-            rule__ForeachExpr__Group_0__0__Impl();
+            rule__FlatmapExpr__Group_0__0__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__Group_0__1();
+            rule__FlatmapExpr__Group_0__1();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50196,12 +50196,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__0"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__0"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__0__Impl"
-    // InternalAgreeParser.g:17815:1: rule__ForeachExpr__Group_0__0__Impl : ( () ) ;
-    public final void rule__ForeachExpr__Group_0__0__Impl() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__0__Impl"
+    // InternalAgreeParser.g:17815:1: rule__FlatmapExpr__Group_0__0__Impl : ( () ) ;
+    public final void rule__FlatmapExpr__Group_0__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -50213,7 +50213,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17821:1: ()
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getForeachExprAction_0_0()); 
+               before(grammarAccess.getFlatmapExprAccess().getFlatmapExprAction_0_0()); 
             }
             // InternalAgreeParser.g:17822:1: ()
             // InternalAgreeParser.g:17824:1: 
@@ -50221,7 +50221,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getForeachExprAction_0_0()); 
+               after(grammarAccess.getFlatmapExprAccess().getFlatmapExprAction_0_0()); 
             }
 
             }
@@ -50237,26 +50237,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__0__Impl"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__0__Impl"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__1"
-    // InternalAgreeParser.g:17834:1: rule__ForeachExpr__Group_0__1 : rule__ForeachExpr__Group_0__1__Impl rule__ForeachExpr__Group_0__2 ;
-    public final void rule__ForeachExpr__Group_0__1() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__1"
+    // InternalAgreeParser.g:17834:1: rule__FlatmapExpr__Group_0__1 : rule__FlatmapExpr__Group_0__1__Impl rule__FlatmapExpr__Group_0__2 ;
+    public final void rule__FlatmapExpr__Group_0__1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17838:1: ( rule__ForeachExpr__Group_0__1__Impl rule__ForeachExpr__Group_0__2 )
-            // InternalAgreeParser.g:17839:2: rule__ForeachExpr__Group_0__1__Impl rule__ForeachExpr__Group_0__2
+            // InternalAgreeParser.g:17838:1: ( rule__FlatmapExpr__Group_0__1__Impl rule__FlatmapExpr__Group_0__2 )
+            // InternalAgreeParser.g:17839:2: rule__FlatmapExpr__Group_0__1__Impl rule__FlatmapExpr__Group_0__2
             {
             pushFollow(FollowSets000.FOLLOW_12);
-            rule__ForeachExpr__Group_0__1__Impl();
+            rule__FlatmapExpr__Group_0__1__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__Group_0__2();
+            rule__FlatmapExpr__Group_0__2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50275,28 +50275,28 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__1"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__1"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__1__Impl"
-    // InternalAgreeParser.g:17846:1: rule__ForeachExpr__Group_0__1__Impl : ( Foreach ) ;
-    public final void rule__ForeachExpr__Group_0__1__Impl() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__1__Impl"
+    // InternalAgreeParser.g:17846:1: rule__FlatmapExpr__Group_0__1__Impl : ( Flatmap ) ;
+    public final void rule__FlatmapExpr__Group_0__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17850:1: ( ( Foreach ) )
-            // InternalAgreeParser.g:17851:1: ( Foreach )
+            // InternalAgreeParser.g:17850:1: ( ( Flatmap ) )
+            // InternalAgreeParser.g:17851:1: ( Flatmap )
             {
-            // InternalAgreeParser.g:17851:1: ( Foreach )
-            // InternalAgreeParser.g:17852:1: Foreach
+            // InternalAgreeParser.g:17851:1: ( Flatmap )
+            // InternalAgreeParser.g:17852:1: Flatmap
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getForeachKeyword_0_1()); 
+               before(grammarAccess.getFlatmapExprAccess().getFlatmapKeyword_0_1()); 
             }
-            match(input,Foreach,FollowSets000.FOLLOW_2); if (state.failed) return ;
+            match(input,Flatmap,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getForeachKeyword_0_1()); 
+               after(grammarAccess.getFlatmapExprAccess().getFlatmapKeyword_0_1()); 
             }
 
             }
@@ -50316,26 +50316,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__1__Impl"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__1__Impl"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__2"
-    // InternalAgreeParser.g:17865:1: rule__ForeachExpr__Group_0__2 : rule__ForeachExpr__Group_0__2__Impl rule__ForeachExpr__Group_0__3 ;
-    public final void rule__ForeachExpr__Group_0__2() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__2"
+    // InternalAgreeParser.g:17865:1: rule__FlatmapExpr__Group_0__2 : rule__FlatmapExpr__Group_0__2__Impl rule__FlatmapExpr__Group_0__3 ;
+    public final void rule__FlatmapExpr__Group_0__2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17869:1: ( rule__ForeachExpr__Group_0__2__Impl rule__ForeachExpr__Group_0__3 )
-            // InternalAgreeParser.g:17870:2: rule__ForeachExpr__Group_0__2__Impl rule__ForeachExpr__Group_0__3
+            // InternalAgreeParser.g:17869:1: ( rule__FlatmapExpr__Group_0__2__Impl rule__FlatmapExpr__Group_0__3 )
+            // InternalAgreeParser.g:17870:2: rule__FlatmapExpr__Group_0__2__Impl rule__FlatmapExpr__Group_0__3
             {
             pushFollow(FollowSets000.FOLLOW_81);
-            rule__ForeachExpr__Group_0__2__Impl();
+            rule__FlatmapExpr__Group_0__2__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__Group_0__3();
+            rule__FlatmapExpr__Group_0__3();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50354,30 +50354,30 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__2"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__2"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__2__Impl"
-    // InternalAgreeParser.g:17877:1: rule__ForeachExpr__Group_0__2__Impl : ( ( rule__ForeachExpr__BindingAssignment_0_2 ) ) ;
-    public final void rule__ForeachExpr__Group_0__2__Impl() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__2__Impl"
+    // InternalAgreeParser.g:17877:1: rule__FlatmapExpr__Group_0__2__Impl : ( ( rule__FlatmapExpr__BindingAssignment_0_2 ) ) ;
+    public final void rule__FlatmapExpr__Group_0__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17881:1: ( ( ( rule__ForeachExpr__BindingAssignment_0_2 ) ) )
-            // InternalAgreeParser.g:17882:1: ( ( rule__ForeachExpr__BindingAssignment_0_2 ) )
+            // InternalAgreeParser.g:17881:1: ( ( ( rule__FlatmapExpr__BindingAssignment_0_2 ) ) )
+            // InternalAgreeParser.g:17882:1: ( ( rule__FlatmapExpr__BindingAssignment_0_2 ) )
             {
-            // InternalAgreeParser.g:17882:1: ( ( rule__ForeachExpr__BindingAssignment_0_2 ) )
-            // InternalAgreeParser.g:17883:1: ( rule__ForeachExpr__BindingAssignment_0_2 )
+            // InternalAgreeParser.g:17882:1: ( ( rule__FlatmapExpr__BindingAssignment_0_2 ) )
+            // InternalAgreeParser.g:17883:1: ( rule__FlatmapExpr__BindingAssignment_0_2 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getBindingAssignment_0_2()); 
+               before(grammarAccess.getFlatmapExprAccess().getBindingAssignment_0_2()); 
             }
-            // InternalAgreeParser.g:17884:1: ( rule__ForeachExpr__BindingAssignment_0_2 )
-            // InternalAgreeParser.g:17884:2: rule__ForeachExpr__BindingAssignment_0_2
+            // InternalAgreeParser.g:17884:1: ( rule__FlatmapExpr__BindingAssignment_0_2 )
+            // InternalAgreeParser.g:17884:2: rule__FlatmapExpr__BindingAssignment_0_2
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__BindingAssignment_0_2();
+            rule__FlatmapExpr__BindingAssignment_0_2();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50385,7 +50385,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getBindingAssignment_0_2()); 
+               after(grammarAccess.getFlatmapExprAccess().getBindingAssignment_0_2()); 
             }
 
             }
@@ -50405,26 +50405,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__2__Impl"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__2__Impl"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__3"
-    // InternalAgreeParser.g:17894:1: rule__ForeachExpr__Group_0__3 : rule__ForeachExpr__Group_0__3__Impl rule__ForeachExpr__Group_0__4 ;
-    public final void rule__ForeachExpr__Group_0__3() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__3"
+    // InternalAgreeParser.g:17894:1: rule__FlatmapExpr__Group_0__3 : rule__FlatmapExpr__Group_0__3__Impl rule__FlatmapExpr__Group_0__4 ;
+    public final void rule__FlatmapExpr__Group_0__3() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17898:1: ( rule__ForeachExpr__Group_0__3__Impl rule__ForeachExpr__Group_0__4 )
-            // InternalAgreeParser.g:17899:2: rule__ForeachExpr__Group_0__3__Impl rule__ForeachExpr__Group_0__4
+            // InternalAgreeParser.g:17898:1: ( rule__FlatmapExpr__Group_0__3__Impl rule__FlatmapExpr__Group_0__4 )
+            // InternalAgreeParser.g:17899:2: rule__FlatmapExpr__Group_0__3__Impl rule__FlatmapExpr__Group_0__4
             {
             pushFollow(FollowSets000.FOLLOW_7);
-            rule__ForeachExpr__Group_0__3__Impl();
+            rule__FlatmapExpr__Group_0__3__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__Group_0__4();
+            rule__FlatmapExpr__Group_0__4();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50443,12 +50443,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__3"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__3"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__3__Impl"
-    // InternalAgreeParser.g:17906:1: rule__ForeachExpr__Group_0__3__Impl : ( In ) ;
-    public final void rule__ForeachExpr__Group_0__3__Impl() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__3__Impl"
+    // InternalAgreeParser.g:17906:1: rule__FlatmapExpr__Group_0__3__Impl : ( In ) ;
+    public final void rule__FlatmapExpr__Group_0__3__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -50460,11 +50460,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17912:1: In
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getInKeyword_0_3()); 
+               before(grammarAccess.getFlatmapExprAccess().getInKeyword_0_3()); 
             }
             match(input,In,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getInKeyword_0_3()); 
+               after(grammarAccess.getFlatmapExprAccess().getInKeyword_0_3()); 
             }
 
             }
@@ -50484,26 +50484,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__3__Impl"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__3__Impl"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__4"
-    // InternalAgreeParser.g:17925:1: rule__ForeachExpr__Group_0__4 : rule__ForeachExpr__Group_0__4__Impl rule__ForeachExpr__Group_0__5 ;
-    public final void rule__ForeachExpr__Group_0__4() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__4"
+    // InternalAgreeParser.g:17925:1: rule__FlatmapExpr__Group_0__4 : rule__FlatmapExpr__Group_0__4__Impl rule__FlatmapExpr__Group_0__5 ;
+    public final void rule__FlatmapExpr__Group_0__4() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17929:1: ( rule__ForeachExpr__Group_0__4__Impl rule__ForeachExpr__Group_0__5 )
-            // InternalAgreeParser.g:17930:2: rule__ForeachExpr__Group_0__4__Impl rule__ForeachExpr__Group_0__5
+            // InternalAgreeParser.g:17929:1: ( rule__FlatmapExpr__Group_0__4__Impl rule__FlatmapExpr__Group_0__5 )
+            // InternalAgreeParser.g:17930:2: rule__FlatmapExpr__Group_0__4__Impl rule__FlatmapExpr__Group_0__5
             {
             pushFollow(FollowSets000.FOLLOW_44);
-            rule__ForeachExpr__Group_0__4__Impl();
+            rule__FlatmapExpr__Group_0__4__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__Group_0__5();
+            rule__FlatmapExpr__Group_0__5();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50522,30 +50522,30 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__4"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__4"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__4__Impl"
-    // InternalAgreeParser.g:17937:1: rule__ForeachExpr__Group_0__4__Impl : ( ( rule__ForeachExpr__ArrayAssignment_0_4 ) ) ;
-    public final void rule__ForeachExpr__Group_0__4__Impl() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__4__Impl"
+    // InternalAgreeParser.g:17937:1: rule__FlatmapExpr__Group_0__4__Impl : ( ( rule__FlatmapExpr__ArrayAssignment_0_4 ) ) ;
+    public final void rule__FlatmapExpr__Group_0__4__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17941:1: ( ( ( rule__ForeachExpr__ArrayAssignment_0_4 ) ) )
-            // InternalAgreeParser.g:17942:1: ( ( rule__ForeachExpr__ArrayAssignment_0_4 ) )
+            // InternalAgreeParser.g:17941:1: ( ( ( rule__FlatmapExpr__ArrayAssignment_0_4 ) ) )
+            // InternalAgreeParser.g:17942:1: ( ( rule__FlatmapExpr__ArrayAssignment_0_4 ) )
             {
-            // InternalAgreeParser.g:17942:1: ( ( rule__ForeachExpr__ArrayAssignment_0_4 ) )
-            // InternalAgreeParser.g:17943:1: ( rule__ForeachExpr__ArrayAssignment_0_4 )
+            // InternalAgreeParser.g:17942:1: ( ( rule__FlatmapExpr__ArrayAssignment_0_4 ) )
+            // InternalAgreeParser.g:17943:1: ( rule__FlatmapExpr__ArrayAssignment_0_4 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getArrayAssignment_0_4()); 
+               before(grammarAccess.getFlatmapExprAccess().getArrayAssignment_0_4()); 
             }
-            // InternalAgreeParser.g:17944:1: ( rule__ForeachExpr__ArrayAssignment_0_4 )
-            // InternalAgreeParser.g:17944:2: rule__ForeachExpr__ArrayAssignment_0_4
+            // InternalAgreeParser.g:17944:1: ( rule__FlatmapExpr__ArrayAssignment_0_4 )
+            // InternalAgreeParser.g:17944:2: rule__FlatmapExpr__ArrayAssignment_0_4
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__ArrayAssignment_0_4();
+            rule__FlatmapExpr__ArrayAssignment_0_4();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50553,7 +50553,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getArrayAssignment_0_4()); 
+               after(grammarAccess.getFlatmapExprAccess().getArrayAssignment_0_4()); 
             }
 
             }
@@ -50573,26 +50573,26 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__4__Impl"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__4__Impl"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__5"
-    // InternalAgreeParser.g:17954:1: rule__ForeachExpr__Group_0__5 : rule__ForeachExpr__Group_0__5__Impl rule__ForeachExpr__Group_0__6 ;
-    public final void rule__ForeachExpr__Group_0__5() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__5"
+    // InternalAgreeParser.g:17954:1: rule__FlatmapExpr__Group_0__5 : rule__FlatmapExpr__Group_0__5__Impl rule__FlatmapExpr__Group_0__6 ;
+    public final void rule__FlatmapExpr__Group_0__5() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17958:1: ( rule__ForeachExpr__Group_0__5__Impl rule__ForeachExpr__Group_0__6 )
-            // InternalAgreeParser.g:17959:2: rule__ForeachExpr__Group_0__5__Impl rule__ForeachExpr__Group_0__6
+            // InternalAgreeParser.g:17958:1: ( rule__FlatmapExpr__Group_0__5__Impl rule__FlatmapExpr__Group_0__6 )
+            // InternalAgreeParser.g:17959:2: rule__FlatmapExpr__Group_0__5__Impl rule__FlatmapExpr__Group_0__6
             {
             pushFollow(FollowSets000.FOLLOW_7);
-            rule__ForeachExpr__Group_0__5__Impl();
+            rule__FlatmapExpr__Group_0__5__Impl();
 
             state._fsp--;
             if (state.failed) return ;
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__Group_0__6();
+            rule__FlatmapExpr__Group_0__6();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50611,12 +50611,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__5"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__5"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__5__Impl"
-    // InternalAgreeParser.g:17966:1: rule__ForeachExpr__Group_0__5__Impl : ( Comma ) ;
-    public final void rule__ForeachExpr__Group_0__5__Impl() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__5__Impl"
+    // InternalAgreeParser.g:17966:1: rule__FlatmapExpr__Group_0__5__Impl : ( Comma ) ;
+    public final void rule__FlatmapExpr__Group_0__5__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -50628,11 +50628,11 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:17972:1: Comma
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getCommaKeyword_0_5()); 
+               before(grammarAccess.getFlatmapExprAccess().getCommaKeyword_0_5()); 
             }
             match(input,Comma,FollowSets000.FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getCommaKeyword_0_5()); 
+               after(grammarAccess.getFlatmapExprAccess().getCommaKeyword_0_5()); 
             }
 
             }
@@ -50652,21 +50652,21 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__5__Impl"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__5__Impl"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__6"
-    // InternalAgreeParser.g:17985:1: rule__ForeachExpr__Group_0__6 : rule__ForeachExpr__Group_0__6__Impl ;
-    public final void rule__ForeachExpr__Group_0__6() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__6"
+    // InternalAgreeParser.g:17985:1: rule__FlatmapExpr__Group_0__6 : rule__FlatmapExpr__Group_0__6__Impl ;
+    public final void rule__FlatmapExpr__Group_0__6() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:17989:1: ( rule__ForeachExpr__Group_0__6__Impl )
-            // InternalAgreeParser.g:17990:2: rule__ForeachExpr__Group_0__6__Impl
+            // InternalAgreeParser.g:17989:1: ( rule__FlatmapExpr__Group_0__6__Impl )
+            // InternalAgreeParser.g:17990:2: rule__FlatmapExpr__Group_0__6__Impl
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__Group_0__6__Impl();
+            rule__FlatmapExpr__Group_0__6__Impl();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50685,30 +50685,30 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__6"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__6"
 
 
-    // $ANTLR start "rule__ForeachExpr__Group_0__6__Impl"
-    // InternalAgreeParser.g:17996:1: rule__ForeachExpr__Group_0__6__Impl : ( ( rule__ForeachExpr__ExprAssignment_0_6 ) ) ;
-    public final void rule__ForeachExpr__Group_0__6__Impl() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__Group_0__6__Impl"
+    // InternalAgreeParser.g:17996:1: rule__FlatmapExpr__Group_0__6__Impl : ( ( rule__FlatmapExpr__ExprAssignment_0_6 ) ) ;
+    public final void rule__FlatmapExpr__Group_0__6__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // InternalAgreeParser.g:18000:1: ( ( ( rule__ForeachExpr__ExprAssignment_0_6 ) ) )
-            // InternalAgreeParser.g:18001:1: ( ( rule__ForeachExpr__ExprAssignment_0_6 ) )
+            // InternalAgreeParser.g:18000:1: ( ( ( rule__FlatmapExpr__ExprAssignment_0_6 ) ) )
+            // InternalAgreeParser.g:18001:1: ( ( rule__FlatmapExpr__ExprAssignment_0_6 ) )
             {
-            // InternalAgreeParser.g:18001:1: ( ( rule__ForeachExpr__ExprAssignment_0_6 ) )
-            // InternalAgreeParser.g:18002:1: ( rule__ForeachExpr__ExprAssignment_0_6 )
+            // InternalAgreeParser.g:18001:1: ( ( rule__FlatmapExpr__ExprAssignment_0_6 ) )
+            // InternalAgreeParser.g:18002:1: ( rule__FlatmapExpr__ExprAssignment_0_6 )
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getExprAssignment_0_6()); 
+               before(grammarAccess.getFlatmapExprAccess().getExprAssignment_0_6()); 
             }
-            // InternalAgreeParser.g:18003:1: ( rule__ForeachExpr__ExprAssignment_0_6 )
-            // InternalAgreeParser.g:18003:2: rule__ForeachExpr__ExprAssignment_0_6
+            // InternalAgreeParser.g:18003:1: ( rule__FlatmapExpr__ExprAssignment_0_6 )
+            // InternalAgreeParser.g:18003:2: rule__FlatmapExpr__ExprAssignment_0_6
             {
             pushFollow(FollowSets000.FOLLOW_2);
-            rule__ForeachExpr__ExprAssignment_0_6();
+            rule__FlatmapExpr__ExprAssignment_0_6();
 
             state._fsp--;
             if (state.failed) return ;
@@ -50716,7 +50716,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             }
 
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getExprAssignment_0_6()); 
+               after(grammarAccess.getFlatmapExprAccess().getExprAssignment_0_6()); 
             }
 
             }
@@ -50736,7 +50736,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__Group_0__6__Impl"
+    // $ANTLR end "rule__FlatmapExpr__Group_0__6__Impl"
 
 
     // $ANTLR start "rule__FoldLeftExpr__Group_0__0"
@@ -64690,7 +64690,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             int alt107=2;
             int LA107_0 = input.LA(1);
 
-            if ( (LA107_0==Get_Property||(LA107_0>=Timefall && LA107_0<=Timerise)||LA107_0==Foreach||(LA107_0>=Indices && LA107_0<=Latched)||(LA107_0>=Exists && LA107_0<=Forall)||LA107_0==Timeof||(LA107_0>=Event && LA107_0<=Foldr)||LA107_0==Enum||(LA107_0>=Prev && LA107_0<=Real)||(LA107_0>=Time && LA107_0<=True)||(LA107_0>=Not && LA107_0<=Pre)||LA107_0==LeftSquareBracketVerticalLine||LA107_0==If||LA107_0==LeftParenthesis||LA107_0==HyphenMinus||LA107_0==RULE_REAL_LIT||LA107_0==RULE_INTEGER_LIT||LA107_0==RULE_ID) ) {
+            if ( (LA107_0==Get_Property||(LA107_0>=Timefall && LA107_0<=Timerise)||LA107_0==Flatmap||(LA107_0>=Indices && LA107_0<=Latched)||(LA107_0>=Exists && LA107_0<=Forall)||LA107_0==Timeof||(LA107_0>=Event && LA107_0<=Foldr)||LA107_0==Enum||(LA107_0>=Prev && LA107_0<=Real)||(LA107_0>=Time && LA107_0<=True)||(LA107_0>=Not && LA107_0<=Pre)||LA107_0==LeftSquareBracketVerticalLine||LA107_0==If||LA107_0==LeftParenthesis||LA107_0==HyphenMinus||LA107_0==RULE_REAL_LIT||LA107_0==RULE_INTEGER_LIT||LA107_0==RULE_ID) ) {
                 alt107=1;
             }
             switch (alt107) {
@@ -88974,9 +88974,9 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ExistsExpr__ExprAssignment_0_6"
 
 
-    // $ANTLR start "rule__ForeachExpr__BindingAssignment_0_2"
-    // InternalAgreeParser.g:32185:1: rule__ForeachExpr__BindingAssignment_0_2 : ( ruleNamedID ) ;
-    public final void rule__ForeachExpr__BindingAssignment_0_2() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__BindingAssignment_0_2"
+    // InternalAgreeParser.g:32185:1: rule__FlatmapExpr__BindingAssignment_0_2 : ( ruleNamedID ) ;
+    public final void rule__FlatmapExpr__BindingAssignment_0_2() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -88988,7 +88988,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:32191:1: ruleNamedID
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
+               before(grammarAccess.getFlatmapExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
             }
             pushFollow(FollowSets000.FOLLOW_2);
             ruleNamedID();
@@ -88996,7 +88996,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
+               after(grammarAccess.getFlatmapExprAccess().getBindingNamedIDParserRuleCall_0_2_0()); 
             }
 
             }
@@ -89016,12 +89016,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__BindingAssignment_0_2"
+    // $ANTLR end "rule__FlatmapExpr__BindingAssignment_0_2"
 
 
-    // $ANTLR start "rule__ForeachExpr__ArrayAssignment_0_4"
-    // InternalAgreeParser.g:32200:1: rule__ForeachExpr__ArrayAssignment_0_4 : ( ruleExpr ) ;
-    public final void rule__ForeachExpr__ArrayAssignment_0_4() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__ArrayAssignment_0_4"
+    // InternalAgreeParser.g:32200:1: rule__FlatmapExpr__ArrayAssignment_0_4 : ( ruleExpr ) ;
+    public final void rule__FlatmapExpr__ArrayAssignment_0_4() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -89033,7 +89033,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:32206:1: ruleExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getArrayExprParserRuleCall_0_4_0()); 
+               before(grammarAccess.getFlatmapExprAccess().getArrayExprParserRuleCall_0_4_0()); 
             }
             pushFollow(FollowSets000.FOLLOW_2);
             ruleExpr();
@@ -89041,7 +89041,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getArrayExprParserRuleCall_0_4_0()); 
+               after(grammarAccess.getFlatmapExprAccess().getArrayExprParserRuleCall_0_4_0()); 
             }
 
             }
@@ -89061,12 +89061,12 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__ArrayAssignment_0_4"
+    // $ANTLR end "rule__FlatmapExpr__ArrayAssignment_0_4"
 
 
-    // $ANTLR start "rule__ForeachExpr__ExprAssignment_0_6"
-    // InternalAgreeParser.g:32215:1: rule__ForeachExpr__ExprAssignment_0_6 : ( ruleExpr ) ;
-    public final void rule__ForeachExpr__ExprAssignment_0_6() throws RecognitionException {
+    // $ANTLR start "rule__FlatmapExpr__ExprAssignment_0_6"
+    // InternalAgreeParser.g:32215:1: rule__FlatmapExpr__ExprAssignment_0_6 : ( ruleExpr ) ;
+    public final void rule__FlatmapExpr__ExprAssignment_0_6() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -89078,7 +89078,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             // InternalAgreeParser.g:32221:1: ruleExpr
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getForeachExprAccess().getExprExprParserRuleCall_0_6_0()); 
+               before(grammarAccess.getFlatmapExprAccess().getExprExprParserRuleCall_0_6_0()); 
             }
             pushFollow(FollowSets000.FOLLOW_2);
             ruleExpr();
@@ -89086,7 +89086,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
             state._fsp--;
             if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getForeachExprAccess().getExprExprParserRuleCall_0_6_0()); 
+               after(grammarAccess.getFlatmapExprAccess().getExprExprParserRuleCall_0_6_0()); 
             }
 
             }
@@ -89106,7 +89106,7 @@ public class InternalAgreeParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__ForeachExpr__ExprAssignment_0_6"
+    // $ANTLR end "rule__FlatmapExpr__ExprAssignment_0_6"
 
 
     // $ANTLR start "rule__FoldLeftExpr__BindingAssignment_0_2"

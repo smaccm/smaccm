@@ -132,7 +132,7 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
       case AgreePackage.PRIM_TYPE: return createPrimType();
       case AgreePackage.FORALL_EXPR: return createForallExpr();
       case AgreePackage.EXISTS_EXPR: return createExistsExpr();
-      case AgreePackage.FOREACH_EXPR: return createForeachExpr();
+      case AgreePackage.FLATMAP_EXPR: return createFlatmapExpr();
       case AgreePackage.FOLD_LEFT_EXPR: return createFoldLeftExpr();
       case AgreePackage.FOLD_RIGHT_EXPR: return createFoldRightExpr();
       case AgreePackage.BINARY_EXPR: return createBinaryExpr();
@@ -990,10 +990,10 @@ public class AgreeFactoryImpl extends EFactoryImpl implements AgreeFactory
    * @generated
    */
   @Override
-  public ForeachExpr createForeachExpr()
+  public FlatmapExpr createFlatmapExpr()
   {
-    ForeachExprImpl foreachExpr = new ForeachExprImpl();
-    return foreachExpr;
+    FlatmapExprImpl flatmapExpr = new FlatmapExprImpl();
+    return flatmapExpr;
   }
 
   /**

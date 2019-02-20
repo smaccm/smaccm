@@ -149,11 +149,11 @@ public
 			
 --			TODO:
 			eq b2 : bool = exists x in a1, (x > 0);
-			eq a3 : bool[3] = foreach q in a1, (q > 0);
+			eq a3 : bool[3] = flatmap q in a1, [|(q > 0)|];
 			eq i0 : int = foldl g in a1 into asdf = 0 , asdf + g;
 			eq i2 : int = foldr p in a1 into acc = 0 , acc + p;
 			eq b3 : bool = forall v in a2, v > 0; 
-			eq a4 : int[3] = foreach i in  indices(a3), if a3[i] then 1 else 0;
+			eq a4 : int[3] = flatmap i in indices(a3), [| if a3[i] then 1 else 0 |];
 			eq i3 : int = a4[0];
 
 			
@@ -178,7 +178,7 @@ public
 			
 		annex agree {**
 				
-			lemma "foreach" : not a3[0] and a3[1] and a3[2];
+			lemma "flatmap" : not a3[0] and a3[1] and a3[2];
 			lemma "sum" : i0 = 4 and i2 = 4;
 			lemma "array_stuff" : (forall iqq in arr1, iqq <= 0 or iqq > 0);
 --			lemma "array_sorted" : forall iq in indices(arr1), iq = 0 or arr1[iq - 1] <= arr1[iq]; 
