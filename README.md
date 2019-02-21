@@ -1,3 +1,10 @@
+DEVELOPMENT HAS MOVED
+======
+develop branch has been merged into formal-methods-workbench at (https://github.com/loonwerks/formal-methods-workbench).
+Please make additional changes there.
+
+
+
 SMACCM
 ======
 
