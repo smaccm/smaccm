@@ -62,7 +62,7 @@ import jkind.lustre.Node;
 import jkind.lustre.Type;
 
 public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
-		implements AgreeASTVisitor<AgreeASTElement> {
+implements AgreeASTVisitor<AgreeASTElement> {
 
 	protected jkind.lustre.visitors.TypeMapVisitor lustreTypeMapVisitor;
 
@@ -203,6 +203,7 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		// ComponentInstance compinst = e.compInst;
 
 		AgreeNodeBuilder builder = new AgreeNodeBuilder(id);
+
 		builder.addInput(inputs);
 		builder.addOutput(outputs);
 		builder.addLocal(locals);
@@ -223,6 +224,7 @@ public class AgreeASTMapVisitor extends jkind.lustre.visitors.AstMapVisitor
 		builder.addTimeFall(e.timeFallMap);
 		builder.addTimeRise(e.timeRiseMap);
 		builder.addTimeOf(e.timeOfMap);
+		builder.setFaultTreeFlag(e.faultTreeFlag);
 
 		AgreeNode result = builder.build();
 		visitedNodes.put(e.compInst, result);
